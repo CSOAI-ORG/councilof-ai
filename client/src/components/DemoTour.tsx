@@ -21,7 +21,7 @@ export default function DemoTour() {
     if (!tourActive() && !tourSeen()) { const t = setTimeout(() => setInvite(true), 3500); return () => clearTimeout(t); }
   }, []);
 
-  const STEPS = tourSteps(); // persona-aware: DEFONEOS mode adds the System Card assurance stop
+  const STEPS = tourSteps(); // persona-aware: assurance mode adds the System Card assurance stop
   const s = active ? STEPS[step] : null;
   const here = !!s && typeof window !== "undefined" && window.location.pathname === s.path;
 
@@ -74,7 +74,7 @@ export default function DemoTour() {
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-lg">{"◉"}</div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={"text-sm font-black " + (getPersonaId() === "defoneos" ? "text-amber-100" : "text-emerald-100")}>{s.title}</span>
+              <span className={"text-sm font-black " + (getPersonaId() === "assurance" ? "text-amber-100" : "text-emerald-100")}>{s.title}</span>
               <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Sovereign tour {"·"} {step + 1}/{STEPS.length}</span>
             </div>
             {s.usp && <div className="mt-1 inline-flex items-center gap-1 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-300/90">{"✦"} {s.usp}</div>}
