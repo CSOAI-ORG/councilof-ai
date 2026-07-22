@@ -4,6 +4,7 @@ import { chargeSovereign } from "../lib/sovCharge";
 import { askSovereign } from "../lib/sovAsk";
 import { fetchHealth } from "../lib/sovHealth";
 import { startTour } from "../lib/demoTour";
+import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, personaSpeak, DOCTRINE_RE, DOCTRINE_REFUSAL } from "../lib/sovPersona";
 
 // SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
 // acts: routes you to the right surface, answers from the framework knowledge
@@ -18,6 +19,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/sov-space", label: "Sov Space" },
   { re: /sovereign town|\btown\b|incident/i, href: "/sovereign-town", label: "Sovereign Town" },
   { re: /distribution|\bmcp\b|pypi|npm|glama|mcpize|registry/i, href: "/distribution", label: "Distribution & Layer 0 coverage" },
+  { re: /jsp ?936|defence assurance|defense assurance|system card|mod evidence|evidence pack|dependable ai/i, href: "/system-card", label: "the Signed System Card — JSP 936 assurance" },
   { re: /evidence|connect|integrat|webhook/i, href: "/evidence", label: "Evidence Hub" },
   { re: /certif|attest|train/i, href: "/certification", label: "Certification" },
   { re: /policy/i, href: "/policy-generator", label: "Policy Generator" },
@@ -53,8 +55,8 @@ const QUICK: { label: string; href: string }[] = [
 const GW = "https://os.meok.ai/api";
 const INDUSTRIES = ["healthcare","health","hospital","clinical","finance","fintech","banking","insurance","education","edtech","retail","ecommerce","legal","law firm","government","public sector","defense","energy","utilities","automotive","telecom","pharma","biotech","manufacturing","logistics","supply chain","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing","advertising"];
 
-async function askChat(msg: string): Promise<string | null> {
-  const res = await askSovereign(msg);
+async function askChat(msg: string, system?: string): Promise<string | null> {
+  const res = await askSovereign(msg, system ? { system } : undefined);
   return res.ok ? res.text : null;
 }
 
@@ -115,6 +117,13 @@ export default function SovereignDock() {
   const [hz, setHz] = useState<any>(null);
   const [brainOpen, setBrainOpen] = useState(false);
   const [brainMode, setBrainMode] = useState<string>(() => { try { return localStorage.getItem("sov_brain_mode") || "hosted"; } catch (e) { return "hosted"; } });
+  const [personaId, setPersona] = useState<SovPersonaId>(() => getPersonaId());
+  const persona = personaOf(personaId);
+  function switchPersona(id: SovPersonaId) {
+    if (id === personaId) return;
+    setPersonaId(id); setPersona(id);
+    setMsgs((m) => m.concat({ role: "sov", text: personaOf(id).greeting }));
+  }
   const endRef = useRef<HTMLDivElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
@@ -139,7 +148,7 @@ export default function SovereignDock() {
     if (!voiceOn || msgs.length <= 1) return;
     var last = msgs[msgs.length - 1];
     if (last && last.role === "sov") {
-      try { var u = new SpeechSynthesisUtterance(last.text); u.rate = 1.03; var vs = window.speechSynthesis.getVoices(); var pick = vs.find((vo) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(vo.name + " " + vo.lang)); if (pick) u.voice = pick; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {}
+      personaSpeak(last.text);
     }
   }, [msgs, voiceOn]);
 
@@ -148,6 +157,8 @@ export default function SovereignDock() {
     if (!t) return;
     setMsgs((m) => m.concat({ role: "you", text: t }));
     setInput("");
+    // Doctrine hard-stop — enforced before any network call, in every persona.
+    if (DOCTRINE_RE.test(t)) { setMsgs((m) => m.concat({ role: "sov", text: DOCTRINE_REFUSAL })); return; }
     chargeSovereign(4); // every question teaches your Sovereign
     // Only treat input as a navigation command when it's an explicit nav verb or a
     // short topic phrase - never when the user is asking a question (answer those).
@@ -180,7 +191,7 @@ export default function SovereignDock() {
     setMsgs((m) => m.concat({ role: "sov", text: "Reasoning over live governance data…" }));
     // Reason via the live Sovereign gateway; in parallel map the industry to its framework stack.
     const ind = INDUSTRIES.find((w) => new RegExp("\\b" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i").test(t));
-    const [answer, gov] = await Promise.all([askChat(t), ind ? askGovern(ind) : Promise.resolve(null)]);
+    const [answer, gov] = await Promise.all([askChat(t, persona.system), ind ? askGovern(ind) : Promise.resolve(null)]);
     let out = answer || "";
     if (gov) {
       const names = gov.frameworks.map((f: any) => f.name).join(", ");
@@ -224,15 +235,18 @@ export default function SovereignDock() {
       {open && (
         <div className="fixed right-0 top-0 z-[9999] flex h-screen w-[340px] max-w-[88vw] flex-col border-l border-emerald-500/20 bg-[#05080e]/95 text-[#e7f6ef] backdrop-blur-xl shadow-2xl">
           <div className="flex items-center gap-3 border-b border-emerald-500/15 px-4 py-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-lg">{"\u25C9"}</div>
+            <div className={"flex h-9 w-9 items-center justify-center rounded-full border text-lg " + (personaId === "defoneos" ? "border-amber-300/50 bg-amber-500/15 text-amber-200" : "border-emerald-300/40 bg-emerald-500/15")}>{persona.glyph}</div>
             <div className="flex-1">
-              <div className="text-sm font-bold text-emerald-100">Your Sovereign</div>
-              <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">{hz && hz.ok && <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 align-middle" style={{ boxShadow: "0 0 6px #34d399" }} />}{hz && hz.ok ? "Sovereign - connected" : "CSOAI OS - agent-first"}</div>
+              <div className={"text-sm font-bold " + (personaId === "defoneos" ? "text-amber-100" : "text-emerald-100")}>{persona.name}</div>
+              <div className={"font-mono text-[10px] uppercase tracking-[2px] " + (personaId === "defoneos" ? "text-amber-300/60" : "text-emerald-300/50")}>{hz && hz.ok && <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 align-middle" style={{ boxShadow: "0 0 6px #34d399" }} />}{hz && hz.ok ? persona.sub + " - connected" : persona.sub}</div>
             </div>
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} aria-label="Toggle voice" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{voiceOn ? "On" : "Off"}</button>
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
           </div>
           <div className="flex flex-wrap gap-1.5 border-b border-emerald-500/10 px-3 py-2">
+            {(Object.keys(PERSONAS) as SovPersonaId[]).map((id) => (
+              <button key={id} onClick={() => switchPersona(id)} title={id === "defoneos" ? "Defence assurance voice — JSP 936, signed System Cards. Assurance, never weapons." : "Civil governance voice"} className={"rounded-full px-2.5 py-1 text-[11px] font-bold " + (personaId === id ? (id === "defoneos" ? "border border-amber-400/60 bg-amber-500/25 text-amber-100" : "border border-emerald-400/60 bg-emerald-500/30 text-emerald-100") : "border border-white/15 bg-white/[0.03] text-white/50 hover:bg-white/10")}>{id === "defoneos" ? "✦ DEFONEOS" : "◉ CSOAI"}</button>
+            ))}
             <button onClick={() => { startTour(); go("/"); }} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live tour</button>
             <button onClick={() => act("explain this page and what I can do here")} className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-100 hover:bg-emerald-500/30">Explain this page</button>
             {QUICK.map((q) => (<button key={q.label} onClick={() => go(q.href)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</button>))}
@@ -261,7 +275,7 @@ export default function SovereignDock() {
               <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") act(input); }} placeholder="Ask me anything..." className="flex-1 bg-transparent text-sm text-emerald-50 placeholder-emerald-300/40 focus:outline-none" />
               <button onClick={() => act(input)} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Send</button>
             </div>
-            <div className="mt-2 text-center font-mono text-[9px] uppercase tracking-[2px] text-emerald-300/40">You command {"\u00B7"} the Sovereign acts {"\u00B7"} Layer 0 signed</div>
+            <div className={"mt-2 text-center font-mono text-[9px] uppercase tracking-[2px] " + (personaId === "defoneos" ? "text-amber-300/50" : "text-emerald-300/40")}>{personaId === "defoneos" ? "Assurance, never weapons \u00B7 provenance is not truth \u00B7 Layer 0 signed" : "You command \u00B7 the Sovereign acts \u00B7 Layer 0 signed"}</div>
           </div>
         </div>
       )}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { currentPersona } from "../lib/sovPersona";
 
 // DemoOS - the immersive AI-OS experience. A live Cesium globe (globe3d.html,
 // driven by postMessage) is the backdrop; the Sovereign narrates step by step
@@ -277,7 +278,7 @@ export default function DemoOS() {
       if (ly) bridgeT.current.push(setTimeout(() => post({ cmd: "layer", tag: ly.tag, on: true }), at));
     });
   }
-  function speak(t: string) { try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.04; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; u.onstart = () => { speaking.current = true; }; u.onend = () => { speaking.current = false; }; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
+  function speak(t: string) { try { const p = currentPersona(); const u = new SpeechSynthesisUtterance(t); u.rate = p.rate; u.pitch = p.pitch; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => p.voiceRe.test(v.name + " " + v.lang)); if (pick) u.voice = pick; u.onstart = () => { speaking.current = true; }; u.onend = () => { speaking.current = false; }; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
 
   function startRec() {
     const SR = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition; if (!SR || !handsFree) return;
