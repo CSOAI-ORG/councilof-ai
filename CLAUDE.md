@@ -2,10 +2,10 @@
 
 Shared working agreement for ALL Claude agents on this repo (cloud + M4 local). Read this first; update the work-claim list when you take or finish a lane.
 
-## Deployed truth (verified 2026-06-25)
-- THIS repo CSOAI-ORG/councilof-ai -> Vercel project **csoai-v2-app** -> live at https://csoai-v2-app.vercel.app and councilof.ai. App builds from client/ (Vite + React + wouter + Tailwind). Root src/ is DEAD — ignore it.
+## Deployed truth (verified 2026-07-22 — supersedes 2026-06-25)
+- THIS repo CSOAI-ORG/councilof-ai -> Vercel project **csoai-v2-app** -> live at **https://csoai.org + https://www.csoai.org** (owner-confirmed canonical 2026-07-22, domains moved via API; apex 308→www) plus os.csoai.org and csoai-v2-app.vercel.app. App builds from client/ (Vite + React + wouter + Tailwind). Root src/ is DEAD — ignore it.
 - app.csoai.org = the emerald OS from a SEPARATE repo (csoai-dashboard / csoai-v2-master).
-- csoai.org apex = the STATIC 'Layer 0' marketing + Stripe site (separate static-deploy project). This is LIVE REVENUE. Do NOT repoint or break it without explicit owner confirmation.
+- The old static apex site (csoai-static-deploy2) is RETIRED: its index.html was a cross-wired DEFONEOS page, now in _quarantine/; its good tools (article50 passport, realtime dashboard, heatmap, BFT pages) were consolidated into the clawd/csoai-org-v2 dark platform at /tools (reachable at csoai-org-v2.vercel.app). Local worktree for THIS repo: ~/councilof-ai-wt.
 
 ## The OS ('OpenGridWorks OS')
 - Home: client/src/pages/OsLauncher.tsx -> route /os. 18 app tiles + hero 'Get certified' CTA + live Sovereign Town heartbeat + Layer 0 readiness ring.
