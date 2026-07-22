@@ -20,16 +20,16 @@ export default function EUAIActCountdown() {
   const [currentMilestone, setCurrentMilestone] = useState("EU AI Act Enforcement Deadline");
 
   useEffect(() => {
-    // EU AI Act key milestones:
+    // EU AI Act key milestones (verified against amended timeline):
     // Feb 2, 2025: Prohibited AI systems banned
     // Aug 2, 2025: General-purpose AI rules apply
     // Feb 2, 2026: AI literacy obligations begin
-    // Aug 2, 2026: High-risk AI system obligations begin (MAJOR)
-    // Aug 2, 2027: All rules fully applied
+    // Aug 2, 2026: General application — GPAI supervision + Article 101 penalties enforceable
+    // 2027: High-risk (Annex III) obligations apply on the amended timeline
     const milestones = [
       { date: "2026-02-02T00:00:00Z", label: "AI Literacy Obligations Begin" },
-      { date: "2026-08-02T00:00:00Z", label: "High-Risk AI Obligations Begin" },
-      { date: "2027-08-02T00:00:00Z", label: "Full EU AI Act Enforcement" },
+      { date: "2026-08-02T00:00:00Z", label: "GPAI Supervision + Penalties Enforceable" },
+      { date: "2027-08-02T00:00:00Z", label: "High-Risk AI Obligations Apply" },
     ];
 
     const updateCountdown = () => {
