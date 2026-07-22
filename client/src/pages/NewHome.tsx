@@ -792,8 +792,8 @@ export default function NewHome() {
                 33-Agent Byzantine Consensus
               </h3>
               <p className="text-gray-600">
-                Decentralized decision-making across 5 LLM providers. 
-                No single point of failure. Fault-tolerant governance.
+                Decentralized decision-making — a BFT-replicated vote runs today,
+                expanding to 5 LLM providers (beta). No single point of failure.
               </p>
             </Card>
 
