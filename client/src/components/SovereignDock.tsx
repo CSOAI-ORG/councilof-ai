@@ -235,17 +235,17 @@ export default function SovereignDock() {
       {open && (
         <div className="fixed right-0 top-0 z-[9999] flex h-screen w-[340px] max-w-[88vw] flex-col border-l border-emerald-500/20 bg-[#05080e]/95 text-[#e7f6ef] backdrop-blur-xl shadow-2xl">
           <div className="flex items-center gap-3 border-b border-emerald-500/15 px-4 py-3">
-            <div className={"flex h-9 w-9 items-center justify-center rounded-full border text-lg " + (personaId === "defoneos" ? "border-amber-300/50 bg-amber-500/15 text-amber-200" : "border-emerald-300/40 bg-emerald-500/15")}>{persona.glyph}</div>
+            <div className={"flex h-9 w-9 items-center justify-center rounded-full border text-lg " + (personaId === "assurance" ? "border-amber-300/50 bg-amber-500/15 text-amber-200" : "border-emerald-300/40 bg-emerald-500/15")}>{persona.glyph}</div>
             <div className="flex-1">
-              <div className={"text-sm font-bold " + (personaId === "defoneos" ? "text-amber-100" : "text-emerald-100")}>{persona.name}</div>
-              <div className={"font-mono text-[10px] uppercase tracking-[2px] " + (personaId === "defoneos" ? "text-amber-300/60" : "text-emerald-300/50")}>{hz && hz.ok && <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 align-middle" style={{ boxShadow: "0 0 6px #34d399" }} />}{hz && hz.ok ? persona.sub + " - connected" : persona.sub}</div>
+              <div className={"text-sm font-bold " + (personaId === "assurance" ? "text-amber-100" : "text-emerald-100")}>{persona.name}</div>
+              <div className={"font-mono text-[10px] uppercase tracking-[2px] " + (personaId === "assurance" ? "text-amber-300/60" : "text-emerald-300/50")}>{hz && hz.ok && <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 align-middle" style={{ boxShadow: "0 0 6px #34d399" }} />}{hz && hz.ok ? persona.sub + " - connected" : persona.sub}</div>
             </div>
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} aria-label="Toggle voice" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{voiceOn ? "On" : "Off"}</button>
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
           </div>
           <div className="flex flex-wrap gap-1.5 border-b border-emerald-500/10 px-3 py-2">
             {(Object.keys(PERSONAS) as SovPersonaId[]).map((id) => (
-              <button key={id} onClick={() => switchPersona(id)} title={id === "defoneos" ? "Defence assurance voice — JSP 936, signed System Cards. Assurance, never weapons." : "Civil governance voice"} className={"rounded-full px-2.5 py-1 text-[11px] font-bold " + (personaId === id ? (id === "defoneos" ? "border border-amber-400/60 bg-amber-500/25 text-amber-100" : "border border-emerald-400/60 bg-emerald-500/30 text-emerald-100") : "border border-white/15 bg-white/[0.03] text-white/50 hover:bg-white/10")}>{id === "defoneos" ? "✦ DEFONEOS" : "◉ CSOAI"}</button>
+              <button key={id} onClick={() => switchPersona(id)} title={id === "assurance" ? "Defence assurance voice — JSP 936, signed System Cards. Assurance, never weapons." : "Civil governance voice"} className={"rounded-full px-2.5 py-1 text-[11px] font-bold " + (personaId === id ? (id === "assurance" ? "border border-amber-400/60 bg-amber-500/25 text-amber-100" : "border border-emerald-400/60 bg-emerald-500/30 text-emerald-100") : "border border-white/15 bg-white/[0.03] text-white/50 hover:bg-white/10")}>{id === "assurance" ? "✦ Assurance" : "◉ Civil"}</button>
             ))}
             <button onClick={() => { startTour(); go("/"); }} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live tour</button>
             <button onClick={() => act("explain this page and what I can do here")} className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-100 hover:bg-emerald-500/30">Explain this page</button>
@@ -275,7 +275,7 @@ export default function SovereignDock() {
               <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") act(input); }} placeholder="Ask me anything..." className="flex-1 bg-transparent text-sm text-emerald-50 placeholder-emerald-300/40 focus:outline-none" />
               <button onClick={() => act(input)} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Send</button>
             </div>
-            <div className={"mt-2 text-center font-mono text-[9px] uppercase tracking-[2px] " + (personaId === "defoneos" ? "text-amber-300/50" : "text-emerald-300/40")}>{personaId === "defoneos" ? "Assurance, never weapons \u00B7 provenance is not truth \u00B7 Layer 0 signed" : "You command \u00B7 the Sovereign acts \u00B7 Layer 0 signed"}</div>
+            <div className={"mt-2 text-center font-mono text-[9px] uppercase tracking-[2px] " + (personaId === "assurance" ? "text-amber-300/50" : "text-emerald-300/40")}>{personaId === "assurance" ? "Assurance, never weapons \u00B7 provenance is not truth \u00B7 Layer 0 signed" : "You command \u00B7 the Sovereign acts \u00B7 Layer 0 signed"}</div>
           </div>
         </div>
       )}
