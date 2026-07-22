@@ -16,7 +16,7 @@ function osRoute(a: any): string | null { if (!a || !a.command) return null; if 
 type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean; pro?: boolean };
 
 const APPS: App[] = [
-  { name: "Try the Council", desc: "30-second WOW — type a compliance question, watch 5 AI agents debate it live, get a signed verdict. The front door.", href: "/try", glyph: "◆", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
+  { name: "Try the Council", desc: "30-second WOW — type a compliance question, watch the council debate it and seal a signed verdict. The front door.", href: "/try", glyph: "◆", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
   { name: "Live Demo & Tour", desc: "Watch the OS run itself — the Sovereign flies the globe, opens the tools and narrates it all, by voice and chat. 2-min demo or 6-min tour.", href: "/demo", glyph: "▶", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
   { name: "Governance Graph", desc: "The governed Google — ask about any company, place or AI system and get jurisdiction, live framework stack and a reasoned read.", href: "/graph", glyph: "❖", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
   { name: "The Framework Hive", desc: "Click any framework — EU AI Act, NIST, ISO 42001, GDPR, cyber (CRA/NIS2/DORA) — and get everything collected: obligations, penalties, sectors, threats, crosswalks, deadline clock. Then simulate, comply, train.", href: "/hive", glyph: "⬡", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
@@ -92,8 +92,8 @@ function fmt(n: number) {
 }
 
 export default function OsLauncher() {
-  const [ep, setEp] = useState(1446621120);
-  const [ung, setUng] = useState(121043036);
+  const [ep, setEp] = useState(649000000); // ledger-verified floor (2026-07); live feed overrides when reachable
+  const [ung, setUng] = useState(54300000); // ledger-verified counterfactual floor (2026-07); live feed overrides
   const [live, setLive] = useState(false);
   const [ring, setRing] = useState(0);
   const [ask, setAsk] = useState("");
