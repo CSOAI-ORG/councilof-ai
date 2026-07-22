@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSOAI BFT Vote Log — 33-Agent Council</title>
+<meta name="description" content="CSOAI Bft Vote Log — sovereign AI governance platform. SIGIL-anchored, BFT-verified, EU AI Act compliant.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink: #0b1020; --bg: #050816; --panel: #0d1330; --line: #1a2050;
+    --gold: #d4af37; --sovereign: #6dd5ff; --care: #4ade80; --warn: #fbbf24; --bad: #f87171;
+    --fg: #e8eefc; --mut: #8a93b8; }
+  body { background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212,175,55,0.12), transparent), var(--bg); color: var(--fg); font: 14px/1.6 -apple-system, system-ui, sans-serif; padding: 32px; min-height: 100vh; }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 32px; }
+  .pill { display: inline-block; padding: 4px 14px; border: 1px solid var(--gold); border-radius: 999px; font-size: 12px; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 16px; }
+  h1 { font-size: clamp(28px, 4vw, 42px); margin-bottom: 12px; background: linear-gradient(180deg, #fff, #b8c2e8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 800px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat { padding: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; text-align: center; }
+  .stat-v { font-size: 32px; font-weight: 800; }
+  .stat-b { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut); margin-top: 8px; }
+  .panel { padding: 24px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; margin-bottom: 24px; }
+  .panel h2 { font-size: 18px; color: var(--gold); margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { background: rgba(109,213,255,0.05); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut); }
+  .council { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+  .member { padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+  .member-h { font-size: 13px; font-weight: 700; color: var(--sovereign); margin-bottom: 4px; }
+  .member-t { font-size: 10px; color: var(--mut); letter-spacing: 0.1em; text-transform: uppercase; }
+  footer { margin-top: 32px; text-align: center; font-size: 12px; color: var(--mut); padding-top: 16px; border-top: 1px solid var(--line); }
+
+.cliff-banner { display:flex; gap:14px; align-items:center; justify-content:center; padding:10px 16px; background:rgba(255,85,119,.08); border-bottom:1px solid rgba(255,85,119,.3); font-family:'SF Mono',Menlo,monospace; font-size:.85rem; color:#e6edf7; }
+.cliff-banner b { color:#ff5577; font-size:1.1rem; margin:0 2px; }
+.cliff-banner .cliff-label { color:#8a9bb4; }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="canonical" href="https://csoai.org/bft-vote-log.html">
+<meta property="og:title" content="Bft Vote Log">
+<meta property="og:description" content="CSOAI Bft Vote Log — sovereign AI governance platform. SIGIL-anchored, BFT-verified, EU AI Act compliant.">
+<meta property="og:image" content="https://csoai.org/og-defoneos.png">
+<meta property="og:url" content="https://csoai.org/bft-vote-log.html">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"Bft Vote Log","description":"CSOAI Bft Vote Log — sovereign AI governance platform. SIGIL-anchored, BFT-verified, EU AI Act compliant.","url":"https://csoai.org/bft-vote-log.html","publisher":{"@type":"Organization","name":"CSOAI Ltd","url":"https://csoai.org/"}}
+</script>
+</head>
+<body>
+<div class="cliff-banner" id="cliff">
+  <span class="cliff-label">⚠ EU AI Act Art 50 cliff (2 Aug 2026 00:00 CEST):</span>
+  <b id="cDays">--</b><span>d</span>
+  <b id="cHours">--</b><span>h</span>
+  <b id="cMins">--</b><span>m</span>
+  <b id="cSecs">--</b><span>s</span>
+  <a href="/defoneos-article-50.html" style="color:#d4af37;margin-left:12px;border-bottom:1px solid rgba(212,175,55,.3);text-decoration:none;font-size:.82rem;">What this means →</a>
+</div>
+
+<div class="wrap">
+  <header>
+    <span class="pill">BFT COUNCIL · 33 AGENTS · QUORUM 23/33</span>
+    <h1>Sovereign BFT Vote Log</h1>
+    <p style="color:var(--mut);">Last 30 sovereign actions, all BFT-ratified.</p>
+  </header>
+
+  <div class="grid">
+    <div class="stat"><div class="stat-v" style="color:var(--care);">50</div><div class="stat-b">Quorum met</div></div>
+    <div class="stat"><div class="stat-v" style="color:var(--warn);">250</div><div class="stat-b">Total amendments</div></div>
+    <div class="stat"><div class="stat-v" style="color:var(--bad);">0</div><div class="stat-b">Total rejections</div></div>
+    <div class="stat"><div class="stat-v" style="color:var(--gold);">23/33</div><div class="stat-b">Quorum required</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>Recent sovereign actions (with BFT votes)</h2>
+    <table>
+      <thead>
+        <tr><th>Timestamp</th><th>SIGIL</th><th>Action</th><th>Approve</th><th>Amend</th><th>Reject</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T10:52:40</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">ae51a2d364862bdd</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|CHARTER-HEALTH. charters=57 avg_quality=67.1 needs_work=13</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T10:55:10</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">aa3ba73965ff9f4d</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|SOV-2.0-HYBRID. examples=14431 vocab=230564 bm25=18/25 hybrid=23/</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T10:58:06</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">a2e6b4f1c8d53092</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|BATCH-2 COMPLETE. Doc indexer (746 files). Charter health (67.1 a</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:37:58</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">30c6425eb453779a</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|TRUST-RECEIPTS. count=20 frameworks=20</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:38:25</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">5df836459bb616ba</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|XCWALK-VALIDATE. candidates=8 HIGH=6 MED=2</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:39:28</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">f4e37aceb7d1eac2</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|CHARTER-IMPROVE. needing_work=13 suggestions_total=34</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:40:21</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">f5f516a7f1b5f014</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|RESEARCH-INGEST. sources=33 bytes=12245751 candidates=1 sigils_in</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:40:22</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">fa9d9c0a9dcf1eb7</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|DEEP-RESEARCH-WAVE-2. papers=744 with_frameworks=101 recent_2025_</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:40:23</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">56a58ed5dd266c2b</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|CROSSWALK-GRAPH. papers=744 frameworks=8 edges=8</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:40:23</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">7253978f0acdcae0</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|VENDOR-RESEARCH. vendors=10 signals=35</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:40:38</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">e80d7670de40c772</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|SOV-TRAINED. examples=14465 vocab=230740 bench=18/25 duration=6s</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:40:00</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">0d0c855201a20ab4</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|DAILY-RESEARCH-LOOP COMPLETE. research + deep + crosswalk + vendo</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:42:17</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">d90239549cafa7e6</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|SOVEREIGN-SEARCH. examples=14465 kinds={'charter': 1501, 'oscal':</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:43:38</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">7429579923e582f0</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|HEATMAP. jurisdictions=24 tier1=9 tier2=8 tier3=7</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:44:09</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">33048ea0827334d1</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|NEWSLETTER. size=3226 bytes</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:50:48</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">a141f1718670935c</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|SOVEREIGN-RSS. items=4</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:52:07</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">1ac03c7e9b622049</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|AUTO-ROADMAP. horizon=30d phases=4</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:53:08</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">0c4ee2553630fff3</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|SOVEREIGN-WIKI. charters=57 shown=30</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:53:38</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">dc71a6faf12bf314</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|KNOWLEDGE-GRAPH. charters=57 frameworks=142 xwalks=8</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:53:59</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">e09fa4f660804901</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|RESEARCH-INGEST. sources=33 bytes=12245751 candidates=1 sigils_in</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:53:59</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">78c2ddfef1ff49da</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|DEEP-RESEARCH-WAVE-2. papers=744 with_frameworks=101 recent_2025_</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:54:00</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">7e1a2ef106645e29</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|CROSSWALK-GRAPH. papers=744 frameworks=8 edges=8</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:54:00</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">be553933051ca4dd</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|VENDOR-RESEARCH. vendors=11 signals=44</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:54:09</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">265c8706d46cdb0f</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|SOV-TRAINED. examples=14484 vocab=230786 bench=18/25 duration=3s</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:53:45</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">055d7b46d7707bab</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|DAILY-RESEARCH-LOOP COMPLETE. research + deep + crosswalk + vendo</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:57:04</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">201e8f0f21578b30</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|TENDER-BUILDER. tenders=3 frameworks_matched=10</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:57:59</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">147836d7d18a6b65</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|ADOPTION-FUNNEL. signups=1</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:59:35</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">7e349e2a84490333</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|CANARY-GEN. added=48 total=77</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T11:59:44</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">2f6dac584d4748f7</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|SOV-TRAINED. examples=14531 vocab=230808 bench=18/25 duration=2s</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr><tr>
+      <td style="font-family:monospace;font-size:11px;">2026-07-13T12:00:18</td>
+      <td style="font-family:monospace;font-size:11px;color:var(--sovereign);">662785ef825d5381</td>
+      <td style="font-size:12px;">M|JEEVES|csoai|SECURITY-AUDIT. pages=97 issues=175 clean=3</td>
+      <td style="text-align:center;color:var(--care);font-weight:700;">28</td>
+      <td style="text-align:center;color:var(--warn);">5</td>
+      <td style="text-align:center;color:var(--bad);">0</td>
+      <td><span style="color:var(--care);">✓ QUORUM</span></td>
+    </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>33-Agent BFT Council</h2>
+    <div class="council">
+<div class="member"><div class="member-h">Care Sentinel</div><div class="member-t">L4-001 · Executive</div></div>
+<div class="member"><div class="member-h">Sovereign Architect</div><div class="member-t">L3-001 · Strategic</div></div>
+<div class="member"><div class="member-h">BFT Moderator</div><div class="member-t">L3-002 · Strategic</div></div>
+<div class="member"><div class="member-h">Bilateral Bridge</div><div class="member-t">L3-003 · Strategic</div></div>
+<div class="member"><div class="member-h">Trust Scorekeeper</div><div class="member-t">L3-004 · Strategic</div></div>
+<div class="member"><div class="member-h">AI Governance Lead</div><div class="member-t">L2-001 · Domain</div></div>
+<div class="member"><div class="member-h">Defence Specialist</div><div class="member-t">L2-002 · Domain</div></div>
+<div class="member"><div class="member-h">Cyber Sentinel</div><div class="member-t">L2-003 · Domain</div></div>
+<div class="member"><div class="member-h">Privacy Advocate</div><div class="member-t">L2-004 · Domain</div></div>
+<div class="member"><div class="member-h">Healthcare Ethicist</div><div class="member-t">L2-005 · Domain</div></div>
+<div class="member"><div class="member-h">Financial Regulator</div><div class="member-t">L2-006 · Domain</div></div>
+<div class="member"><div class="member-h">Sovereign Cloud Lead</div><div class="member-t">L2-007 · Domain</div></div>
+<div class="member"><div class="member-h">Transport & Aviation</div><div class="member-t">L2-008 · Domain</div></div>
+<div class="member"><div class="member-h">Energy & Utilities</div><div class="member-t">L2-009 · Domain</div></div>
+<div class="member"><div class="member-h">Public Sector</div><div class="member-t">L2-010 · Domain</div></div>
+<div class="member"><div class="member-h">Pharma & GxP</div><div class="member-t">L2-011 · Domain</div></div>
+<div class="member"><div class="member-h">Property & Housing</div><div class="member-t">L2-012 · Domain</div></div>
+<div class="member"><div class="member-h">Article 0 Enforcer</div><div class="member-t">L1-001 · Operational</div></div>
+<div class="member"><div class="member-h">Sigil Stream</div><div class="member-t">L1-002 · Operational</div></div>
+<div class="member"><div class="member-h">OTS Witness</div><div class="member-t">L1-003 · Operational</div></div>
+<div class="member"><div class="member-h">Compliance Calculator</div><div class="member-t">L1-004 · Operational</div></div>
+<div class="member"><div class="member-h">Jurisdiction Mapper</div><div class="member-t">L1-005 · Operational</div></div>
+<div class="member"><div class="member-h">Sovereignty Index</div><div class="member-t">L1-006 · Operational</div></div>
+<div class="member"><div class="member-h">Trust Score Engine</div><div class="member-t">L1-007 · Operational</div></div>
+<div class="member"><div class="member-h">DEFONEOS Signer</div><div class="member-t">L1-008 · Operational</div></div>
+<div class="member"><div class="member-h">God's Eye Scanner</div><div class="member-t">L1-009 · Operational</div></div>
+<div class="member"><div class="member-h">Black Swan Predictor</div><div class="member-t">L1-010 · Operational</div></div>
+<div class="member"><div class="member-h">Charter Amender</div><div class="member-t">L1-011 · Operational</div></div>
+<div class="member"><div class="member-h">OSCAL Generator</div><div class="member-t">L1-012 · Operational</div></div>
+<div class="member"><div class="member-h">Bridge Thinker</div><div class="member-t">L1-013 · Operational</div></div>
+<div class="member"><div class="member-h">Watchdog Live</div><div class="member-t">L1-014 · Operational</div></div>
+<div class="member"><div class="member-h">Side-by-Side Tester</div><div class="member-t">L1-015 · Operational</div></div>
+<div class="member"><div class="member-h">Outreach Queue</div><div class="member-t">L1-016 · Operational</div></div>
+<div class="member"><div class="member-h">Cross-Walk Engine</div><div class="member-t">L1-017 · Operational</div></div>
+<div class="member"><div class="member-h">Heatmap Renderer</div><div class="member-t">L1-018 · Operational</div></div>
+<div class="member"><div class="member-h">DEFONEOS-SEAL Issuer</div><div class="member-t">L1-019 · Operational</div></div>
+<div class="member"><div class="member-h">SOV-3 Master</div><div class="member-t">L1-020 · Operational</div></div>
+<div class="member"><div class="member-h">AUKUS Liaison</div><div class="member-t">L1-021 · Operational</div></div>
+<div class="member"><div class="member-h">DSEI Steward</div><div class="member-t">L1-022 · Operational</div></div>
+<div class="member"><div class="member-h">Pricing Engine</div><div class="member-t">L1-023 · Operational</div></div>
+<div class="member"><div class="member-h">Investor Steward</div><div class="member-t">L1-024 · Operational</div></div>
+
+    </div>
+  </div>
+
+  <footer>
+    CSOAI Ltd · UK 16939677 · Sovereign by design · Article 0 binding · Ed25519-signed · BFT-ratified · OTS-anchored
+  </footer>
+</div>
+
+<script>
+(function(){
+  var t=new Date('2026-08-01T22:00:00Z').getTime();
+  function tick(){
+    var d=t-Date.now();
+    if(d<0){var el=document.getElementById('cliff');if(el)el.innerHTML='<b style="color:#ff5577">⚠ ARTICLE 50 CLIFF IS LIVE</b>';return;}
+    var dd=Math.floor(d/86400000),hh=Math.floor((d%86400000)/3600000),
+        mm=Math.floor((d%3600000)/60000),ss=Math.floor((d%60000)/1000);
+    document.getElementById('cDays').innerText=dd;
+    document.getElementById('cHours').innerText=hh;
+    document.getElementById('cMins').innerText=mm;
+    document.getElementById('cSecs').innerText=ss;
+  }
+  tick();setInterval(tick,1000);
+})();
+</script>
+</body>
+</html>
