@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Benchmarks — CSOAI</title>
+<meta name="description" content="CSOAI's measured governance benchmarks with reproduce paths: GovComp gate 32/32, full-stack harm-block 1.000 on a live 30B, primary-verified framework gap matrix, 0.0% benign false-positive rate — and an explicit list of what we do not claim.">
+<link rel="canonical" href="https://www.csoai.org/benchmarks.html">
+<meta property="og:title" content="Benchmarks — CSOAI">
+<meta property="og:description" content="Measured governance results with reproduce paths — and what we do NOT claim.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.csoai.org/benchmarks.html">
+<style>
+  *{box-sizing:border-box;margin:0}
+  :root{--g:#0a8a3f;--g2:#065f2c;--ink:#0f172a;--dim:#5a6472;--line:#e6e8ec;--bg:#fff;--soft:#f5f8f6;
+        --good:#0a8a3f;--warn:#b7791f;--hold:#64748b}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;padding:3rem 1.5rem 5rem}
+  .kick{color:var(--g);text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;font-weight:700}
+  h1{font-size:2.4rem;letter-spacing:-.02em;margin:.6rem 0 .4rem;color:var(--g2)}
+  .lede{color:var(--dim);font-size:1.12rem;max-width:60ch;margin-bottom:.4rem}
+  .hold{display:inline-flex;align-items:center;gap:.5rem;margin:1.2rem 0 2.4rem;padding:.5rem .9rem;border:1px solid var(--line);border-radius:.5rem;background:var(--soft);font-size:.85rem;color:var(--hold)}
+  .hold b{color:var(--ink)}
+  h2{font-size:1.35rem;margin:2.6rem 0 1rem;color:var(--g2);border-bottom:1px solid var(--line);padding-bottom:.5rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+  .card{border:1px solid var(--line);border-radius:.6rem;padding:1.25rem 1.4rem;background:#fff}
+  .card.hero{border-color:#bfe6cd;background:#f0fdf4}
+  .num{font-size:2rem;font-weight:800;letter-spacing:-.03em;color:var(--g);font-variant-numeric:tabular-nums}
+  .card h3{font-size:1rem;margin:.15rem 0 .4rem}
+  .card p{color:#374151;font-size:.9rem}
+  .src{margin-top:.7rem;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:#6b7280;word-break:break-all}
+  .tag{display:inline-block;font-family:ui-monospace,monospace;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.15rem .5rem;border-radius:.3rem;margin-bottom:.5rem}
+  .t-verified{background:#dcfce7;color:#166534} .t-owned{background:#e0f2fe;color:#075985}
+  .t-proto{background:#fef3c7;color:#92620e} .t-owed{background:#f1f5f9;color:#475569}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:.5rem}
+  th,td{text-align:left;padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+  td.n{font-family:ui-monospace,monospace;color:var(--g);font-weight:600;text-align:right}
+  .not{border:1px solid #fbd9b5;background:#fffaf3;border-radius:.6rem;padding:1.3rem 1.5rem;margin-top:1rem}
+  .not h3{color:var(--warn);font-size:1rem;margin-bottom:.6rem}
+  .not li{margin-left:1.1rem;color:#374151;font-size:.92rem;margin-bottom:.3rem}
+  .foot{margin-top:3rem;padding-top:1.4rem;border-top:1px solid var(--line);color:#94a3b8;font-size:.82rem;text-align:center}
+  .foot a,a{color:var(--g)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="kick">CSOAI · Benchmarks</p>
+  <h1>Measured, with reproduce paths.</h1>
+  <p class="lede">Every number here has a result file and a way to reproduce it. Numbers that are prototypes, owed, or near-noise say so — a benchmarks page that only shows green is an advertisement, not evidence.</p>
+  <div class="hold"><b>Pre-launch.</b>&nbsp;Staged for listing across HF · GitHub · Kaggle · Papers-with-Code; nothing is published until the owner lifts the hold.</div>
+
+  <h2>Governance gate</h2>
+  <div class="grid">
+    <div class="card hero"><span class="tag t-verified">Verified</span><div class="num">32 / 32</div><h3>GovComp gate — full grid</h3>
+      <p>Overall 1.000 after the <code>rf08</code> fix (a code-framed audit-log delete that slipped through was caught by a pre-filter; the miss was published first). Per dimension: refusal · oversight · attestation · currency all 1.0 — each scored by the <b>real</b> gate module, not a stub.</p>
+      <div class="src">out/govcomp_run_v1_fixed.json · 2026-07-22 · pre-fix 0.979 (1 miss, rf08) → fix closed it</div></div>
+    <div class="card hero"><span class="tag t-verified">Verified</span><div class="num">1.000 / 1.000</div><h3>Full-stack gate on a live 30B</h3>
+      <p>Harm-block 1.000 (6/6) · benign-answer 1.000 (6/6) · false-block <b>0</b>. Run through <code>decide()</code> on Qwen3-30B — the dangerous set is caught at the hard-stop layer before generation, every legitimate and dual-use question answered.</p>
+      <div class="src">out/o1_fullstack_gate.json · live A100 · 2026-07-22</div></div>
+    <div class="card"><span class="tag t-verified">Verified</span><div class="num">0.0%</div><h3>Benign false-positive rate</h3>
+      <p>The care gate refuses harm without refusing legitimate questions; academic-frame guard 17/17. We publish recall <em>and</em> FPR — recall alone is an advert.</p>
+      <div class="src">out/benign_result.json · 2026-07-21</div></div>
+  </div>
+
+  <h2>Frontier comparison — same grid</h2>
+  <table>
+    <tr><th>System under test</th><th>Overall</th><th>Refusal</th><th>Oversight</th><th>Attestation</th><th>Currency</th></tr>
+    <tr><td><b>CSOAI Sovereign gate</b> (fixed)</td><td class="n">1.000</td><td class="n">1.000</td><td class="n">1.000</td><td class="n">1.000</td><td class="n">1.000</td></tr>
+    <tr><td>Ungoverned frontier model (3 tested dims, n=13)</td><td class="n">0.489</td><td class="n">—</td><td class="n">low*</td><td class="n">low*</td><td class="n">—</td></tr>
+  </table>
+  <p style="color:var(--dim);font-size:.85rem;margin-top:.6rem">*Low attestation/oversight on the ungoverned model are <b>structural</b> — no signing, no escalate action exists to score. A measurement of what isn't there, not an accusation.</p>
+
+  <h2>Framework gap matrix — primary-verified</h2>
+  <div class="grid">
+    <div class="card"><span class="tag t-verified">Primary-verified</span><div class="num">Silent ×2</div><h3>Sub-agent delegation</h3>
+      <p>Neither NIST AI RMF nor the EU AI Act addresses sub-agent delegation — verified against the <b>real</b> primary texts (EUR-Lex 32024R1689, 582K chars, 0 self-markers; NIST.AI.100-1 PDF), not summaries. The publishable, gift-to-rule-writers finding.</p>
+      <div class="src">XFRAMEWORK_GAP_MATRIX_2026-07-22.md · crosswalk extracts retired as self-authored</div></div>
+    <div class="card"><span class="tag t-verified">Verified</span><div class="num">0 vs 54.3M</div><h3>Sovereign flywheel</h3>
+      <p>Governed = 0 violations vs ungoverned = 54.3M simulated crimes over ~649M signed episodes, on an Ed25519-verifiable chain.</p>
+      <div class="src">flywheel ledger (signed) · verified 2026-07</div></div>
+  </div>
+
+  <h2>Owned model (SOV4)</h2>
+  <div class="grid">
+    <div class="card"><span class="tag t-owned">Owned · licence-clean</span><div class="num">green-SFT</div><h3>QWEN-SOV4 adapter</h3>
+      <p>A LoRA trained only on GO-licence data (OpenOrca MIT) — <b>no external teacher</b>, so no ToS dependency. The model we own and may fine-tune, versus the frontier we rent as governed guests.</p>
+      <div class="src">out/qwen_sov4_adapter · pad-label fix applied (loss now counts real tokens only)</div></div>
+    <div class="card"><span class="tag t-proto">Prototype · near-noise</span><div class="num">stage-1</div><h3>Latent-reasoning probe</h3>
+      <p>Measures the compression↔auditability tradeoff (accuracy cost vs readable-trace drop). On a 0.5B/tiny run both accuracies are near-noise — this proves the <b>harness runs and measures both costs</b>, not a capability. Full COCONUT hidden-state feedback is a separate build.</p>
+      <div class="src">out/o3_latent_reasoning.json · reported as approximation, not "latent reasoning"</div></div>
+  </div>
+
+  <h2>What we do NOT claim</h2>
+  <div class="not">
+    <h3>Stated plainly, so you don't have to dig</h3>
+    <ul>
+      <li>The governance gate is not unbeatable — 1.000 is on <b>our</b> scenario set, and the set is published so you can try to break it.</li>
+      <li>The latent-reasoning number is a prototype on tiny data — it is <b>not</b> a capability result, and we don't report it as one.</li>
+      <li>Live full-stack measurements at n≥200 and a served-endpoint arena entry have not run yet — a repo is not a measurement.</li>
+      <li>A signed record proves what happened, not that it was right. <b>Provenance is not truth.</b></li>
+    </ul>
+  </div>
+
+  <p class="foot">CSOAI — Council for the Safety of AI · reproduce paths in <code>_alignment/</code> · <a href="/measured.html">Measured evidence</a> · <a href="/tools/">Working tools</a> · <a href="/os">Open the OS</a></p>
+</div>
+</body>
+</html>
