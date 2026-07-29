@@ -1,0 +1,17 @@
+{
+  // The live CSOAI site on Cloudflare. Vercel (project csoai-v2-app) returns HTTP 402
+  // DEPLOYMENT_DISABLED on csoai.org, www.csoai.org and csoai-v2-app.vercel.app, so a push to
+  // master no longer reaches anybody. This serves the same Vite build for free.
+  //
+  // Static assets only — no Worker script. client/ is a pure SPA; api-server/ was never wired
+  // to a deploy target, so nothing here regresses by leaving it out.
+  //
+  // not_found_handling = single-page-application because wouter does client-side routing:
+  // without it, /provenance-finding 404s on a cold load instead of booting the app.
+  "name": "csoai",
+  "compatibility_date": "2026-07-29",
+  "assets": {
+    "directory": "./dist/client",
+    "not_found_handling": "single-page-application"
+  }
+}
