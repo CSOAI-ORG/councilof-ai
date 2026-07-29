@@ -88,6 +88,7 @@ const Sov3SystemCard = lazy(() => import("./pages/Sov3SystemCard"));
 const Sov3Whitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
 const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const ProvenanceFinding = lazy(() => import("./pages/ProvenanceFinding"));
+const AiTransparency = lazy(() => import("./pages/AiTransparency"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const Ecosystem = lazy(() => import("./pages/Ecosystem"));
 const Protect = lazy(() => import("./pages/Protect"));
@@ -411,6 +412,7 @@ function App() {
                   <Route path="/sov3-whitepaper" component={Sov3Whitepaper} />
                   <Route path="/research-transparency" component={ResearchTransparency} />
                   <Route path="/provenance-finding" component={ProvenanceFinding} />
+                  <Route path="/ai-transparency" component={AiTransparency} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/safe-space" component={Ecosystem} />
                   <Route path="/governance-commons" component={Ecosystem} />
