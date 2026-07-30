@@ -117,6 +117,24 @@ const RETRACTED = [
   { claim: "Context-aware decoding (CAD) α-sweep", was: "—", now: "null" },
 ];
 
+// ── Flywheel results — daily run on a 45-item battery, held-out split by
+// salted hash, export_fuel guarded by item identity. The page reads
+// /flywheel/board.json (published from the cron job) and surfaces the
+// tokens-per-correct column — the number nobody else publishes.
+type FlywheelRun = {
+  run_id: string;
+  model: string;
+  practice: { n: number; acc: number | null };
+  held_out: { n: number; acc: number | null };
+  overfit_gap: number;
+  alarm: string;
+  exported_pairs: number;
+  exported_kb_rows: number;
+  guard: string;
+  ts: string;
+};
+const FLYWHEEL_BOARD_URL = "/flywheel/board.json";
+
 export default function Benchmarks() {
   useEffect(() => { document.title = "The four axes — an AI governance benchmark estate that publishes its own failures | CSOAI"; }, []);
   return (
