@@ -219,16 +219,30 @@ if(viewer){
 }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // postMessage API — the parent (WorldGlobe.tsx) drives the globe through here.
-  // This listener did not exist until 2026-07-30: drive() posted into a void and
-  // every flyTo/pulse from the React side silently did nothing.
+  // postMessage API — the parent (SovSpace.tsx / WorldGlobe.tsx) drives the
+  // globe through here. This listener did not exist until 2026-07-30: drive()
+  // posted into a void and every flyTo/pulse from the React side silently did
+  // nothing.
   //   {cmd:'flyTo', lng, lat, height?, duration?}
   //   {cmd:'pulse', lng, lat, col?}            — expanding ring at a point
   //   {cmd:'layer', tag, on}                    — toggle entities by layerTag
   //   {cmd:'layer0', nodes:[{id,name,lng,lat,status,col}]} — plot the anchor nodes
   //   {cmd:'neutralize'}                        — clear pulses
+  //   {cmd:'stamps', stamps:[{id,kind,region,lng,lat,claim,ts,scenario?,tag?,weight?,space?}]}
+  //                                           — plot the sov-time stamps as
+  //                                             clickable glyphs. Each stamp
+  //                                             represents a position on the
+  //                                             dome — presence, cspace-step,
+  //                                             cspace-verdict. Clicking it
+  //                                             surfaces the underlying
+  //                                             position + scenario it came
+  //                                             from via postMessage {cmd:'stampClick',id}.
+  //   {cmd:'stampsClear'}                       — remove all stamp glyphs
+  //   {cmd:'stampClick', id, payload}          — outgoing: a stamp was clicked
   var L0 = {};      // id -> entity
   var pulses = [];
+  var STAMPS = {};  // stamp id -> entity
+  var STAMPS_META = {};  // stamp id -> full payload (for click handler)
   window.addEventListener('message', function(ev){
     var d = ev && ev.data; if(!d || !d.cmd || !viewer) return;
     try{
@@ -270,8 +284,100 @@ if(viewer){
         });
         try{ ev.source && ev.source.postMessage({ack:'layer0', n:Object.keys(L0).length}, '*'); }catch(e){}
       }
+      else if(d.cmd==='stamps' && Array.isArray(d.stamps)){
+        // Each stamp is a position on the dome. The kind field chooses the
+        // visual encoding: presence = amber sky, cspace-step = emerald,
+        // cspace-verdict = bright emerald with white ring. Click surfaces the
+        // underlying payload so the parent can render the scenario it came
+        // from.
+        var KIND_COL = {
+          presence: '#fbbf24',
+          'cspace-step': '#34d399',
+          'cspace-verdict': '#10b981',
+          'cspace': '#34d399',
+        };
+        var KIND_SIZE = {
+          presence: 7,
+          'cspace-step': 5,
+          'cspace-verdict': 9,
+          'cspace': 6,
+        };
+        d.stamps.forEach(function(s){
+          if(!s || s.lng==null || s.lat==null) return;
+          // Idempotent: same id replaces, doesn't duplicate.
+          if(STAMPS[s.id]){ viewer.entities.remove(STAMPS[s.id]); }
+          var col = KIND_COL[s.kind] || '#34d399';
+          var sz = KIND_SIZE[s.kind] || 5;
+          STAMPS_META[s.id] = s;
+          var ent = viewer.entities.add({
+            layerTag: 'stamps',
+            position: Cesium.Cartesian3.fromDegrees(s.lng, s.lat, 50000),
+            point: {
+              pixelSize: sz,
+              color: Cesium.Color.fromCssColorString(col),
+              outlineColor: Cesium.Color.fromCssColorString('#05080e'),
+              outlineWidth: 1.5,
+              scaleByDistance: new Cesium.NearFarScalar(1.5e6, 1.4, 2.0e7, 0.4),
+            },
+            label: {
+              text: s.claim ? (s.claim.length > 32 ? s.claim.slice(0, 30) + '…' : s.claim) : (s.kind || 'stamp'),
+              font: '500 10px Inter, sans-serif',
+              fillColor: Cesium.Color.fromCssColorString(col),
+              outlineColor: Cesium.Color.fromCssColorString('#05080e'),
+              outlineWidth: 2,
+              style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+              pixelOffset: new Cesium.Cartesian2(0, -12),
+              scaleByDistance: new Cesium.NearFarScalar(1.5e6, 1.0, 1.0e7, 0),
+              translucencyByDistance: new Cesium.NearFarScalar(2.0e6, 1, 1.6e7, 0),
+              showBackground: true,
+              backgroundColor: Cesium.Color.fromCssColorString('#0a1015').withAlpha(0.78),
+              backgroundPadding: new Cesium.Cartesian2(5, 3),
+            },
+          });
+          STAMPS[s.id] = ent;
+        });
+      }
+      else if(d.cmd==='stampsClear'){
+        Object.values(STAMPS).forEach(function(e){ viewer.entities.remove(e); });
+        STAMPS = {};
+        STAMPS_META = {};
+      }
+      else if(d.cmd==='stampFlyTo' && d.id && STAMPS_META[d.id]){
+        var m = STAMPS_META[d.id];
+        viewer.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(m.lng, m.lat - 4, 1500000),
+          duration: 1.4,
+        });
+      }
     }catch(e){ /* a bad command must never kill the globe */ }
   });
+
+  // Click handler on stamps — surfaces the underlying payload to the parent.
+  // Cesium uses ScreenSpaceEventHandler for screen-space picks. LEFT_CLICK
+  // on an entity with layerTag 'stamps' posts the payload back.
+  var stampClickHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+  stampClickHandler.setInputAction(function(click){
+    var picked = viewer.scene.pick(click.position);
+    if(picked && picked.id && picked.id.layerTag === 'stamps'){
+      // Find the stamp id by entity reference.
+      var id = null;
+      for(var k in STAMPS){
+        if(STAMPS[k] === picked.id){ id = k; break; }
+      }
+      if(id && STAMPS_META[id]){
+        // Fly on click + post the payload to the parent.
+        try{
+          viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(STAMPS_META[id].lng, STAMPS_META[id].lat - 4, 1500000),
+            duration: 1.4,
+          });
+        }catch(e){}
+        try{
+          window.parent.postMessage({cmd:'stampClick', id: id, payload: STAMPS_META[id]}, '*');
+        }catch(e){}
+      }
+    }
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
 </script>
 </body>

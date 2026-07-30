@@ -6,7 +6,7 @@ import { flyAndConvene, neutralize } from "../lib/globeDrive";
 import SovNav from "../components/SovNav";
 import { useLedger, type DecisionRecord } from "../hooks/useLedger";
 import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
-import SovSpaceGalaxy, { type FlywheelPlanet, type HiveLayer } from "../components/SovSpaceGalaxy";
+import SovSpaceGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } from "../components/SovSpaceGalaxy";
 
 // Map the agent's region → the codes the embedded 3D globe understands (loads local).
 const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -204,10 +204,13 @@ export default function SovSpace() {
   const [cSpaceEvents, setCSpaceEvents] = useState<TimelineEvent[]>([]);
   const [kbMatches, setKbMatches] = useState<KbMatch[]>([]);
   const [flywheels, setFlywheels] = useState<FlywheelPlanet[]>(FLYWHEELS);
+  const [citizens, setCitizens] = useState<CitizenNode[]>([]);
   const [kbStats, setKbStats] = useState<KbStats | null>(null);
   const [kbOnline, setKbOnline] = useState<boolean | null>(null);
   const [ledgerOnline, setLedgerOnline] = useState<boolean | null>(null);
   const [ledgerCount, setLedgerCount] = useState<number>(0);
+  const [stamps, setStamps] = useState<Array<{ id: string; kind: string; region: string; lng: number; lat: number; claim: string; ts: number; scenario?: string; tag?: string; weight?: number; space?: string }>>([]);
+  const [selectedStamp, setSelectedStamp] = useState<{ id: string; kind: string; region: string; lng: number; lat: number; claim: string; ts: number; scenario?: string; tag?: string; weight?: number; space?: string } | null>(null);
   const globeRef = useRef<HTMLIFrameElement | null>(null);
   const { data: ledger, loading: ledgerLoading, error: ledgerError, fetchedAt: ledgerFetchedAt } = useLedger();
   const jrecords = (ledger?.records || []).slice(0, 3);
@@ -287,6 +290,78 @@ export default function SovSpace() {
       }),
     }).catch(() => { /* ledger append is best-effort */ });
   }
+
+  // Sync ledger stamps → Cesium globe stamps. Each stamp is a position on the
+  // dome with a kind (presence/cspace-step/cspace-verdict) that determines its
+  // visual encoding. The iframe accepts a `stamps` postMessage that plots them
+  // all as clickable glyphs. We poll the ledger every 5s and re-send the lot —
+  // the iframe is idempotent so re-sends just replace.
+  useEffect(() => {
+    let alive = true;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    async function tick() {
+      try {
+        const r = await fetch(LOCAL_GW + "/sov-time");
+        if (!alive) return;
+        if (r.ok) {
+          const d = await r.json();
+          const events = Array.isArray(d.events) ? d.events : [];
+          // Map ledger records to stamp shapes. Resolve lat/lng from the
+          // REGIONS table by region code; fall back to GLOBAL (0,20).
+          const mapped = events.map((e: any) => {
+            const p = e.payload ?? {};
+            const region = p.region || "GLOBAL";
+            const prof = (REGIONS as any)[region] || REGIONS.GLOBAL;
+            const [lng, lat] = (p.lng != null && p.lat != null) ? [p.lng, p.lat] : prof.globe;
+            return {
+              id: e.id,
+              kind: p.kind || e.kind || "cspace",
+              region,
+              lng,
+              lat,
+              claim: p.claim || p.scenario || `${region} ${p.kind ?? ""}`.trim(),
+              ts: e.ts,
+              scenario: p.scenario,
+              tag: p.tag,
+              weight: p.weight,
+              space: p.space || "C",
+            };
+          });
+          setStamps(mapped);
+          setLedgerCount(d.total ?? 0);
+          setLedgerOnline(true);
+          // Push to the iframe.
+          const win = globeRef.current?.contentWindow;
+          if (win) {
+            win.postMessage({ cmd: "stampsClear" }, "*");
+            if (mapped.length > 0) {
+              win.postMessage({ cmd: "stamps", stamps: mapped }, "*");
+            }
+          }
+        } else {
+          setLedgerOnline(false);
+        }
+      } catch {
+        if (alive) setLedgerOnline(false);
+      }
+      if (alive) timer = setTimeout(tick, 5000);
+    }
+    tick();
+    return () => { alive = false; if (timer) clearTimeout(timer); };
+  }, []);
+
+  // Listen for click events from the iframe. The globe posts
+  // {cmd:'stampClick', id, payload} when a stamp is clicked; we surface the
+  // underlying payload so the user can see the position + scenario it came from.
+  useEffect(() => {
+    function onMessage(ev: MessageEvent) {
+      const d = ev.data;
+      if (!d || d.cmd !== "stampClick" || !d.payload) return;
+      setSelectedStamp(d.payload);
+    }
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
   // The Sovereign flies the embedded globe to the scenario's jurisdiction (auto-pulses),
   // convenes the 33-agent council spiral there, and neutralizes any rogue-swarm threat.
   function flyToScenario(text: string) {
@@ -319,9 +394,10 @@ export default function SovSpace() {
     let cancelled = false;
     fetch("/flywheel-snapshot.json")
       .then((r) => (r.ok ? r.json() : null))
-      .then((snap: { planets?: FlywheelPlanet[] } | null) => {
-        if (cancelled || !snap || !Array.isArray(snap.planets) || snap.planets.length === 0) return;
-        setFlywheels(snap.planets);
+      .then((snap: { planets?: FlywheelPlanet[]; citizens?: CitizenNode[] } | null) => {
+        if (cancelled || !snap) return;
+        if (Array.isArray(snap.planets) && snap.planets.length > 0) setFlywheels(snap.planets);
+        if (Array.isArray(snap.citizens)) setCitizens(snap.citizens);
       })
       .catch(() => {
         // best-effort — keep the static list
@@ -569,6 +645,7 @@ export default function SovSpace() {
               cspace={cSpaceEvents.length}
               jspace={jrecords.length}
               flywheels={flywheels}
+              citizens={citizens}
               height={520}
             />
           </div>
@@ -637,6 +714,46 @@ export default function SovSpace() {
             <a href={"/globe" + (scenario ? "?ask=" + encodeURIComponent(scenario) : "")} className="text-[11px] font-semibold text-sky-200 hover:underline">Open the full globe →</a>
           </div>
           <iframe ref={globeRef} src={"/globe3d.html" + (loc.region.code !== "GLOBAL" ? "?region=" + loc.region.code : "")} title="Sovereign globe" loading="lazy" className="block h-[360px] w-full" style={{ border: 0 }} />
+          {selectedStamp && (
+            <div className="border-t border-sky-500/15 px-4 py-3">
+              <div className="flex items-center justify-between">
+                <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">
+                  Stamp · {selectedStamp.kind} · {selectedStamp.region}
+                </div>
+                <button
+                  onClick={() => setSelectedStamp(null)}
+                  className="font-mono text-[10px] text-sky-300/50 hover:text-sky-100"
+                >
+                  ✕ close
+                </button>
+              </div>
+              <div className="mt-2 text-[12px] text-sky-100/90">
+                <strong className="text-sky-200">{selectedStamp.claim || "(no claim)"}</strong>
+              </div>
+              {selectedStamp.scenario && (
+                <div className="mt-1 text-[11px] text-sky-200/70">
+                  <span className="font-mono text-[10px] text-sky-300/50">scenario: </span>
+                  {selectedStamp.scenario}
+                </div>
+              )}
+              <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[10px] font-mono text-sky-300/60">
+                <div>id: {selectedStamp.id}</div>
+                <div>ts: {new Date(selectedStamp.ts).toISOString().replace("T", " ").slice(0, 19)}Z</div>
+                <div>lng: {selectedStamp.lng?.toFixed(2)}</div>
+                <div>lat: {selectedStamp.lat?.toFixed(2)}</div>
+                {selectedStamp.tag && <div>tag: {selectedStamp.tag}</div>}
+                {selectedStamp.weight != null && <div>weight: {selectedStamp.weight}</div>}
+              </div>
+              <div className="mt-2 text-[10px] text-sky-300/50">
+                Click another stamp on the dome to inspect its underlying position + scenario.
+              </div>
+            </div>
+          )}
+          {!selectedStamp && stamps.length > 0 && (
+            <div className="border-t border-sky-500/15 px-4 py-2 text-[10px] font-mono text-sky-300/50">
+              {stamps.length} stamp{stamps.length === 1 ? "" : "s"} on the dome · click any glyph to inspect
+            </div>
+          )}
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-6 pb-16">
