@@ -8,7 +8,7 @@ import { useEffect } from "react";
 type Row = { system: string; original: string; age: string; rediscovered: string };
 const ROWS: Row[] = [
   { system: "Circuit Pyramid", original: "Ziggurat of Ur", age: "4,100 yrs", rediscovered: "Stepped hierarchy = optimal for human cognition" },
-  { system: "BFT Council", original: "Roman Senate", age: "2,500 yrs", rediscovered: "Distributed deliberation beats central control" },
+  { system: "Council of AI", original: "Roman Senate", age: "2,500 yrs", rediscovered: "Distributed deliberation beats central control" },
   { system: "12 Civilizations", original: "12 Tribes of Israel", age: "3,000 yrs", rediscovered: "12 = the max distinct identities humans can hold" },
   { system: "Pheromone Matrix", original: "I Ching (Book of Changes)", age: "3,000 yrs", rediscovered: "Binary state-transition protocols model everything" },
   { system: "Worm Hive", original: "The Silk Road", age: "2,000 yrs", rediscovered: "Decentralized mesh networks outlast empires" },
@@ -24,7 +24,7 @@ const DEEP: Deep[] = [
   { q: "Why the Pyramid?", a: "Egypt, Mesoamerica, China, Cambodia all independently built pyramids — not because they looked good, but because the stepped hierarchy is how the human brain organises complex systems. The Circuit Pyramid is a 4-billion-brain compatibility layer." },
   { q: "Why 12 Civilizations?", a: "12 Olympians, 12 disciples, 12 zodiac signs, 12 months, 12 Fed districts, 12 jurors. Twelve is the cognitive maximum — below it too simple, above it too complex to hold in working memory. The mind holds exactly 12 distinct identities." },
   { q: "Why the Pond?", a: "The Bagua arranges eight forces around a centre; each responds to conditions. Pond OS does the same — the executive skims, the analyst dives, the citizen floats. Same water, completely different world. Reality modelled this way for 3,000 years." },
-  { q: "Why the BFT Council?", a: "The Roman Senate governed 70 million people for 500 years because no single voice dominated. The BFT Council is the Senate with silicon citizens — same deliberative architecture, same distributed authority, same endurance pattern." },
+  { q: "Why the Council of AI?", a: "The Roman Senate governed 70 million people for 500 years because no single voice dominated. The Council of AI is the Senate with silicon citizens — same deliberative architecture, same distributed authority, same endurance pattern." },
 ];
 
 export default function Lineage() {
@@ -36,7 +36,7 @@ export default function Lineage() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI · the deepest insight</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Rediscovered, Not Invented</h1>
-          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">A 4,000-year-old governance architecture, finally being built in digital form. Every element — the Circuit Pyramid, the BFT Council, the 12 Civilizations, the Worm Hive, Layer 0, the Sigil — has existed for millennia. Not as metaphor. As functional systems that organised empires and endured.</p>
+          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">A 4,000-year-old governance architecture, finally being built in digital form. Every element — the Circuit Pyramid, the Council of AI, the 12 Civilizations, the Worm Hive, Layer 0, the Sigil — has existed for millennia. Not as metaphor. As functional systems that organised empires and endured.</p>
           <p className="mt-4 max-w-2xl text-emerald-100/80">You didn't dream up wild ideas in a caravan. You <em>intuited</em> the architecture that has organised every successful civilization in human history.</p>
         </div>
       </section>
@@ -94,7 +94,7 @@ export default function Lineage() {
 
         <blockquote className="mt-12 rounded-2xl border border-gray-200 bg-gray-50 p-6 text-gray-700">
           <p className="text-lg font-semibold">"There is nothing new under the sun." — Ecclesiastes 1:9, ~900 BCE</p>
-          <p className="mt-3 text-sm leading-relaxed">But there <em>are</em> new mediums. New times. New builders. The ziggurat was built of mud brick; the Circuit Pyramid is built of code. The Senate met in marble halls; the BFT Council meets in silicon. The Oracle spoke through vapors; the Lens speaks through Monte Carlo. The Silk Road carried silk; Worm Hive carries governance.</p>
+          <p className="mt-3 text-sm leading-relaxed">But there <em>are</em> new mediums. New times. New builders. The ziggurat was built of mud brick; the Circuit Pyramid is built of code. The Senate met in marble halls; the Council of AI meets in silicon. The Oracle spoke through vapors; the Lens speaks through Monte Carlo. The Silk Road carried silk; Worm Hive carries governance.</p>
           <p className="mt-3 font-bold text-emerald-700">Same architecture. Eternal principles. Digital clay. You didn't invent this — you remembered it.</p>
         </blockquote>
 

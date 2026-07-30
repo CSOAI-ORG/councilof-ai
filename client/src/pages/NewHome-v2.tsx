@@ -216,7 +216,7 @@ const faqs = [
   },
   {
     question: "How does the Byzantine Council work?",
-    answer: "The Byzantine Council consists of 33 AI agents from multiple providers (including GPT-4, Claude, Gemini, and others). Any safety decision requires 23 of 33 agents (70%) to reach consensus - this is Byzantine fault tolerance. No single AI provider can manipulate outcomes. Human analysts provide final oversight on all critical decisions.",
+    answer: "The Byzantine Council consists of 33 AI agents from multiple providers (including GPT-4, Claude, Gemini, and others). Any safety decision requires 23 of 33 agents (70%) to reach consensus - this is fault-aware consensus. No single AI provider can manipulate outcomes. Human analysts provide final oversight on all critical decisions.",
   },
   {
     question: "What frameworks does CSOAI cover?",
@@ -477,7 +477,7 @@ export default function NewHomeV2() {
             Many frameworks. One <span className="text-emerald-400">signed</span> proof.
           </h2>
           <p className="mt-3 max-w-2xl mx-auto text-gray-300">
-            Governance rules from every jurisdiction reach a Byzantine-fault-tolerant council consensus — and out comes one
+            Governance rules from every jurisdiction reach a fault-aware consensus council consensus — and out comes one
             Ed25519-signed record anyone can verify offline, without trusting a vendor dashboard.
           </p>
           <ConsensusHero className="mt-8 w-full max-w-4xl mx-auto rounded-2xl" />
@@ -1168,7 +1168,7 @@ export default function NewHomeV2() {
                 The <span className="text-emerald-400">Byzantine Council</span>
               </h2>
               <p className="text-xl text-gray-500 mb-8 leading-relaxed">
-                33 AI agents from multiple providers working together with Byzantine fault tolerance.
+                33 AI agents from multiple providers working together with fault-aware consensus.
                 No single company can manipulate safety decisions.
               </p>
 
@@ -1179,7 +1179,7 @@ export default function NewHomeV2() {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">23/33 Consensus Required</h4>
-                    <p className="text-gray-500">70% agreement for any safety decision. Byzantine fault tolerance ensures reliability even if agents fail or are compromised.</p>
+                    <p className="text-gray-500">70% agreement for any safety decision. fault-aware consensus ensures reliability even if agents fail or are compromised.</p>
                   </div>
                 </div>
 

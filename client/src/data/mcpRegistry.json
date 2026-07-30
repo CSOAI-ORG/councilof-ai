@@ -1,0 +1,3420 @@
+{
+  "generatedAt": "2026-06-02",
+  "total": 293,
+  "source": "https://github.com/orgs/CSOAI-ORG/repositories",
+  "categories": [
+    {
+      "name": "Compliance & Regulatory",
+      "count": 79
+    },
+    {
+      "name": "Safety & Security",
+      "count": 20
+    },
+    {
+      "name": "Agent Infrastructure (A2A)",
+      "count": 15
+    },
+    {
+      "name": "Payments & Commerce",
+      "count": 10
+    },
+    {
+      "name": "Data & Privacy",
+      "count": 2
+    },
+    {
+      "name": "Industry Verticals",
+      "count": 10
+    },
+    {
+      "name": "Developer & Ops Tools",
+      "count": 27
+    },
+    {
+      "name": "AI Content & Creative",
+      "count": 7
+    },
+    {
+      "name": "General AI Automation",
+      "count": 123
+    }
+  ],
+  "frameworkCounts": [
+    {
+      "name": "EU AI Act",
+      "count": 28
+    },
+    {
+      "name": "GDPR",
+      "count": 10
+    },
+    {
+      "name": "DORA",
+      "count": 8
+    },
+    {
+      "name": "NIS2",
+      "count": 8
+    },
+    {
+      "name": "ISO 42001",
+      "count": 5
+    },
+    {
+      "name": "NIST AI RMF",
+      "count": 5
+    },
+    {
+      "name": "HIPAA",
+      "count": 4
+    },
+    {
+      "name": "OWASP LLM",
+      "count": 4
+    }
+  ],
+  "servers": [
+    {
+      "slug": "a2a-governance-bridge-mcp",
+      "name": "A2A Governance Bridge",
+      "description": "A2A Governance Bridge MCP \u2014 compliance checking for agent-to-agent communications. Policy enforcement, audit trails. MIT.",
+      "url": "https://github.com/CSOAI-ORG/a2a-governance-bridge-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:05Z"
+    },
+    {
+      "slug": "ai-bom-mcp",
+      "name": "AI Bom",
+      "description": "AI Bill of Materials MCP in CycloneDX + SPDX format. Required by EU AI Act Article 11. MIT",
+      "url": "https://github.com/CSOAI-ORG/ai-bom-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:16Z"
+    },
+    {
+      "slug": "ai-incident-reporting-mcp",
+      "name": "AI Incident Reporting",
+      "description": "Multi-regime AI incident classification + reporting MCP (EU AI Act Art 73, DORA, NIS2, GDPR breach). MIT",
+      "url": "https://github.com/CSOAI-ORG/ai-incident-reporting-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "DORA",
+        "NIS2",
+        "GDPR"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:30Z"
+    },
+    {
+      "slug": "ai-self-audit-mcp",
+      "name": "AI Self Audit",
+      "description": "AI self-audit MCP \u2014 AI agents audit their own EU AI Act compliance in real time with signed certificates.",
+      "url": "https://github.com/CSOAI-ORG/ai-self-audit-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:36Z"
+    },
+    {
+      "slug": "api-tester-ai-mcp",
+      "name": "API Tester Ai",
+      "description": "API testing MCP \u2014 endpoint validation, response schema checks, load testing, OpenAPI compliance. MIT.",
+      "url": "https://github.com/CSOAI-ORG/api-tester-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:50Z"
+    },
+    {
+      "slug": "agent-audit-logger-mcp",
+      "name": "Agent Audit Logger",
+      "description": "Hash-chained HMAC-signed audit log MCP for A2A (agent-to-agent) calls. Every tool-call, agent-handoff, decision gets a tamper-evident signed record. EU AI Act Art 12 automatic logs, DORA Art 17 ICT incident logs, ISO 42001 clause 9 monitoring \u2014 auditor-ready end-of-day attestations. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/agent-audit-logger-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "ISO 42001",
+        "DORA"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:47:16Z"
+    },
+    {
+      "slug": "agent-content-watermark-mcp",
+      "name": "Agent Content Watermark",
+      "description": "Agent Content Watermark MCP - dedicated EU AI Act Article 50(2) GenAI watermarking with C2PA manifest envelope. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/agent-content-watermark-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:47:25Z"
+    },
+    {
+      "slug": "agent-data-residency-mcp",
+      "name": "Agent Data Residency",
+      "description": "GDPR Chapter V runtime guard for cross-region agent transfers. Adequacy + SCCs + BCRs + IDTA. MIT",
+      "url": "https://github.com/CSOAI-ORG/agent-data-residency-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "GDPR"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:30Z"
+    },
+    {
+      "slug": "agent-incident-relay-mcp",
+      "name": "Agent Incident Relay",
+      "description": "Agent Incident Relay MCP - Article 73 5-clock broadcaster. One incident -> simultaneous signed reports to EU AI Act, DORA, NIS2, GDPR, ISO 42001. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/agent-incident-relay-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "ISO 42001",
+        "DORA",
+        "NIS2",
+        "GDPR"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:47:41Z"
+    },
+    {
+      "slug": "agent-policy-enforcement-mcp",
+      "name": "Agent Policy Enforcement",
+      "description": "Per-agent-pair IAM for A2A. Define policies ('orchestrator may call billing only when amount<1000'), gate every A2A call via evaluate_call. EU AI Act Art 14 + ISO 42001 Annex A.7 evidence with signed policy-decision attestations.",
+      "url": "https://github.com/CSOAI-ORG/agent-policy-enforcement-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "ISO 42001"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:52Z"
+    },
+    {
+      "slug": "agent-rate-limiter-mcp",
+      "name": "Agent Rate Limiter",
+      "description": "Fleet-wide shared rate limiter for A2A + multi-MCP deployments. Most MCP servers rate-limit independently \u2014 a hostile agent hitting 10 MCPs gets 10x quota. This MCP is the shared counter: every MCP checks here before allowing a call. Sliding window + concurrency grants + signed enforcement attestations. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/agent-rate-limiter-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:47:58Z"
+    },
+    {
+      "slug": "agent-replay-debugger-mcp",
+      "name": "Agent Replay Debugger",
+      "description": "Agent Replay Debugger MCP - step-debug + deterministic replay + signed audit evidence. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/agent-replay-debugger-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "NIST AI RMF"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:48:01Z"
+    },
+    {
+      "slug": "agriculture-robotics-mcp",
+      "name": "Agriculture Robotics",
+      "description": "Agricultural robotics compliance MCP \u2014 HSE PUWER, farm safety, autonomous vehicle standards, crop data privacy. MIT.",
+      "url": "https://github.com/CSOAI-ORG/agriculture-robotics-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "GDPR"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:13Z"
+    },
+    {
+      "slug": "airspace-monitor-mcp",
+      "name": "Airspace Monitor",
+      "description": "Airspace monitoring and drone compliance. Check restricted zones, NOTAMs, flight clearance, and altitude limits. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/airspace-monitor-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:48:38Z"
+    },
+    {
+      "slug": "aml-ai-mcp",
+      "name": "Aml Ai",
+      "description": "6AMLD + UK MLR 2017 + FinCEN AML/CFT compliance MCP. MIT",
+      "url": "https://github.com/CSOAI-ORG/aml-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:41Z"
+    },
+    {
+      "slug": "basel-ai-overlay-mcp",
+      "name": "Basel AI Overlay",
+      "description": "Basel III + SR 11-7 + ECB TRIM AI/ML model risk MCP for banks. MIT",
+      "url": "https://github.com/CSOAI-ORG/basel-ai-overlay-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:49:27Z"
+    },
+    {
+      "slug": "bias-detection-mcp",
+      "name": "Bias Detection",
+      "description": "AI bias detection + fairness assessment MCP. Required by EU AI Act Article 10 + NYC Local Law 144. MIT",
+      "url": "https://github.com/CSOAI-ORG/bias-detection-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:49:36Z"
+    },
+    {
+      "slug": "blockchain-ai-mcp",
+      "name": "Blockchain Ai",
+      "description": "Web3/crypto toolkit: wallet analysis, transaction tracing, smart contract auditing, gas estimation, and token metadata. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/blockchain-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:49:42Z"
+    },
+    {
+      "slug": "blockchain-verification-mcp",
+      "name": "Blockchain Verification",
+      "description": "Blockchain verification MCP \u2014 wallet analysis, transaction tracing, smart contract audit, on-chain provenance. MIT.",
+      "url": "https://github.com/CSOAI-ORG/blockchain-verification-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:49:45Z"
+    },
+    {
+      "slug": "canada-aida-ai-mcp",
+      "name": "Canada Aida Ai",
+      "description": "Canada AIDA (Artificial Intelligence and Data Act) compliance MCP \u2014 impact assessment, algorithmic transparency. MIT.",
+      "url": "https://github.com/CSOAI-ORG/canada-aida-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:03Z"
+    },
+    {
+      "slug": "care-home-cqc-mcp",
+      "name": "Care Home Cqc",
+      "description": "UK CQC Single Assessment Framework compliance MCP. KLOEs + NICE NG5 + DSPT.",
+      "url": "https://github.com/CSOAI-ORG/care-home-cqc-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:05Z"
+    },
+    {
+      "slug": "concrete-pump-cpa-mcp",
+      "name": "Concrete Pump Cpa",
+      "description": "UK concrete pump operator compliance MCP. CPA standards + BS EN 12001 ground bearing. MIT",
+      "url": "https://github.com/CSOAI-ORG/concrete-pump-cpa-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:19Z"
+    },
+    {
+      "slug": "construction-iso-19650-mcp",
+      "name": "Construction Iso 19650",
+      "description": "UK BIM Level 2 (ISO 19650) compliance MCP. EIR, BEP, MIDP, CDE validation. MIT",
+      "url": "https://github.com/CSOAI-ORG/construction-iso-19650-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:31Z"
+    },
+    {
+      "slug": "coppa-ferpa-mcp",
+      "name": "Coppa Ferpa",
+      "description": "Children's privacy MCP \u2014 COPPA, FERPA, UK AADC, EU AI Act minors. MIT",
+      "url": "https://github.com/CSOAI-ORG/coppa-ferpa-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "GDPR"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:45Z"
+    },
+    {
+      "slug": "cra-compliance-mcp",
+      "name": "Cra Compliance",
+      "description": "EU Cyber Resilience Act (Reg 2024/2847) compliance MCP for products with digital elements. CE marking, vulnerability disclosure, SBOM. MIT",
+      "url": "https://github.com/CSOAI-ORG/cra-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:51Z"
+    },
+    {
+      "slug": "crane-hire-cpcs-mcp",
+      "name": "Crane Hire Cpcs",
+      "description": "UK crane hire compliance MCP. CPCS/CISRS/NPORS card verification + BS 7121 lift plans. MIT",
+      "url": "https://github.com/CSOAI-ORG/crane-hire-cpcs-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:54Z"
+    },
+    {
+      "slug": "credential-manager-mcp",
+      "name": "Credential Manager",
+      "description": "Verifiable credential management. Issue, verify, revoke, and audit credentials with cryptographic integrity. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/credential-manager-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:52:00Z"
+    },
+    {
+      "slug": "csoai-governance-crosswalk-mcp",
+      "name": "Csoai Governance Crosswalk",
+      "description": "AI governance crosswalk MCP \u2014 map controls across 13 frameworks (EU AI Act, ISO 42001, NIST AI RMF, GDPR, SOC 2, HIPAA, FedRAMP, CCPA, PIPEDA, DPDPA, LGPD, CSA, OWASP).",
+      "url": "https://github.com/CSOAI-ORG/csoai-governance-crosswalk-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "ISO 42001",
+        "NIST AI RMF",
+        "GDPR",
+        "HIPAA",
+        "OWASP LLM"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:52:32Z"
+    },
+    {
+      "slug": "csrd-compliance-mcp",
+      "name": "Csrd Compliance",
+      "description": "EU Corporate Sustainability Reporting Directive (CSRD) compliance MCP \u2014 double materiality, ESRS reporting, sustainability audit. Phased FY 2024-2028.",
+      "url": "https://github.com/CSOAI-ORG/csrd-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:52:38Z"
+    },
+    {
+      "slug": "devops-ai-mcp",
+      "name": "Devops Ai",
+      "description": "Infrastructure and DevOps toolkit: Docker Compose generation, CI/CD pipeline building, log analysis, incident classification, and runbook generation. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/devops-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:53:19Z"
+    },
+    {
+      "slug": "dora-compliance-mcp",
+      "name": "Dora Compliance",
+      "description": "DORA (Regulation EU 2022/2554) compliance MCP for financial entities. ICT risk, incident classification, reporting workflows. MIT",
+      "url": "https://github.com/CSOAI-ORG/dora-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "DORA"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:44Z"
+    },
+    {
+      "slug": "dora-nis2-crosswalk-mcp",
+      "name": "Dora Nis2 Crosswalk",
+      "description": "DORA \u00d7 NIS2 crosswalk MCP for entities in scope for both regimes. 65% obligation overlap mapped. MIT",
+      "url": "https://github.com/CSOAI-ORG/dora-nis2-crosswalk-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "DORA",
+        "NIS2"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:47Z"
+    },
+    {
+      "slug": "drone-airspace-governance-mcp",
+      "name": "Drone Airspace Governance",
+      "description": "Drone airspace governance MCP \u2014 FAA Part 107 + EASA Open/Specific + CASA Part 101 compliance checks for UAV operations and BVLOS flights.",
+      "url": "https://github.com/CSOAI-ORG/drone-airspace-governance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:49Z"
+    },
+    {
+      "slug": "eu-ai-act-compliance-mcp",
+      "name": "Eu AI Act Compliance",
+      "description": "EU AI Act compliance MCP with 410 verbatim articles from EUR-Lex. Risk classification, 42-point audit, Article 11 docs, penalty calculator. MIT",
+      "url": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:54:27Z"
+    },
+    {
+      "slug": "fda-samd-mcp",
+      "name": "Fda Samd",
+      "description": "FDA AI/ML SaMD compliance MCP. 510(k), De Novo, PMA, PCCP, GMLP. MIT",
+      "url": "https://github.com/CSOAI-ORG/fda-samd-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:54:44Z"
+    },
+    {
+      "slug": "flight-logger-mcp",
+      "name": "Flight Logger",
+      "description": "Drone and aircraft flight logging. Log flights, track compliance, view history, and manage maintenance. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/flight-logger-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:55:12Z"
+    },
+    {
+      "slug": "fsa-food-safety-mcp",
+      "name": "Fsa Food Safety",
+      "description": "UK FSA + EU Reg 178/2002 + HACCP food safety compliance MCP. MIT",
+      "url": "https://github.com/CSOAI-ORG/fsa-food-safety-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:55:18Z"
+    },
+    {
+      "slug": "gdpr-compliance-ai-mcp",
+      "name": "Gdpr Compliance Ai",
+      "description": "GDPR compliance MCP \u2014 DPIA automation, Article 30 records, Article 22 automated decision-making audit, data subject request workflow.",
+      "url": "https://github.com/CSOAI-ORG/gdpr-compliance-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "GDPR"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:55:26Z"
+    },
+    {
+      "slug": "gods-eye-geospatial-mcp",
+      "name": "Gods Eye Geospatial",
+      "description": "Gods Eye \u2014 sovereign geospatial awareness MCP. Wraps open, non-US-dependent APIs (ESA Copernicus Sentinel-1/2/3/5p, OpenStreetMap, Overture, Ordnance Survey UK, INSPIRE EU, DEFRA) behind the MEOK Care Membrane ethics gate. For AI-agent situational awareness, environmental compliance, disaster response. Not for kinetic operations. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/gods-eye-geospatial-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:55:50Z"
+    },
+    {
+      "slug": "haulage-uk-compliance-mcp",
+      "name": "Haulage Uk Compliance",
+      "description": "UK haulage compliance MCP. Operator Licence, tachograph, drivers' hours, DVSA roadside checks. MIT",
+      "url": "https://github.com/CSOAI-ORG/haulage-uk-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:56:05Z"
+    },
+    {
+      "slug": "healthcare-ai-governance-mcp",
+      "name": "Healthcare AI Governance",
+      "description": "MEOK AI Labs \u2014 Healthcare AI Governance. FDA SaMD classification, HIPAA compliance, WHO health AI ethics, clinical decision support.",
+      "url": "https://github.com/CSOAI-ORG/healthcare-ai-governance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "HIPAA"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:14Z"
+    },
+    {
+      "slug": "healthcare-fhir-mcp",
+      "name": "Healthcare Fhir",
+      "description": "Healthcare FHIR compliance MCP \u2014 patient data handling, HIPAA/GDPR dual compliance, clinical decision support safety. MIT.",
+      "url": "https://github.com/CSOAI-ORG/healthcare-fhir-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "GDPR",
+        "HIPAA"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:56:17Z"
+    },
+    {
+      "slug": "hipaa-compliance-mcp",
+      "name": "Hipaa Compliance",
+      "description": "HIPAA healthcare compliance MCP \u2014 Administrative, Physical, Technical safeguards assessment, PHI handling, BAA templates, breach notification readiness.",
+      "url": "https://github.com/CSOAI-ORG/hipaa-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "NIST AI RMF",
+        "HIPAA"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:56:20Z"
+    },
+    {
+      "slug": "hr-management-ai-mcp",
+      "name": "Hr Management Ai",
+      "description": "Human resources toolkit: leave calculation, payroll estimation, performance reviews, onboarding checklists, and compliance checking. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/hr-management-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:26Z"
+    },
+    {
+      "slug": "iso-42001-ai-mcp",
+      "name": "Iso 42001 Ai",
+      "description": "ISO 42001 AI Management System compliance MCP \u2014 AIMS assessment, risk management, AI lifecycle governance, certification readiness.",
+      "url": "https://github.com/CSOAI-ORG/iso-42001-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "ISO 42001"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:57:05Z"
+    },
+    {
+      "slug": "legal-document-ai-mcp",
+      "name": "Legal Document Ai",
+      "description": "Legal document toolkit: NDA generation, contract clause explanation, legal term definitions, compliance checking, and case summaries. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/legal-document-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:57:38Z"
+    },
+    {
+      "slug": "license-checker-ai-mcp",
+      "name": "License Checker Ai",
+      "description": "Open source license compliance MCP \u2014 SPDX parsing, compatibility checking, attribution generation, policy enforcement. MIT.",
+      "url": "https://github.com/CSOAI-ORG/license-checker-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:57:47Z"
+    },
+    {
+      "slug": "llm-compliance-comparison-mcp",
+      "name": "Llm Compliance Comparison",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/llm-compliance-comparison-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:57:57Z"
+    },
+    {
+      "slug": "mcp-spec-compliance-mcp",
+      "name": "Mcp Spec Compliance",
+      "description": "MCP Spec Compliance MCP - audits any MCP server.json against the official spec. HMAC-signed conformity reports. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/mcp-spec-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:26Z"
+    },
+    {
+      "slug": "meok-cra-annex-iv-classifier-mcp",
+      "name": "Meok Cra Annex Iv Classifier",
+      "description": "EU CRA (Cyber Resilience Act, Reg 2024/2847) Annex IV classifier \u2014 9-category essential security requirements with HMAC-signed compliance attestations. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-cra-annex-iv-classifier-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:17Z"
+    },
+    {
+      "slug": "meok-cra-art14-reporter-mcp",
+      "name": "Meok Cra Art14 Reporter",
+      "description": "EU CRA Article 14 actively-exploited-vulnerability reporter - ENISA + CSIRT payload. 11 Sept 2026 cliff. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-cra-art14-reporter-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:20Z"
+    },
+    {
+      "slug": "meok-dora-tlpt-planner-mcp",
+      "name": "Meok Dora Tlpt Planner",
+      "description": "DORA Article 26 TLPT planner \u2014 TIBER-EU pathway scoping, white-team RACI, threat-intel templates, HMAC-signed compliance attestations. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-dora-tlpt-planner-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "DORA"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:23Z"
+    },
+    {
+      "slug": "meok-eu-ai-act-art-13-ifu-mcp",
+      "name": "Meok Eu AI Act Art 13 Ifu",
+      "description": "EU AI Act Article 13 Instructions for Use generator - provider-side IFU + FRIA crosswalk. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-eu-ai-act-art-13-ifu-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:26Z"
+    },
+    {
+      "slug": "meok-eu-ai-act-art-26-fria-mcp",
+      "name": "Meok Eu AI Act Art 26 Fria",
+      "description": "EU AI Act Article 26(9) FRIA generator MCP - 9-element document + DPIA crosswalk + signed attestation. \u00a31,500/mo enterprise wedge. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-eu-ai-act-art-26-fria-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:28Z"
+    },
+    {
+      "slug": "meok-eu-aia-art-9-rms-mcp",
+      "name": "Meok Eu Aia Art 9 Rms",
+      "description": "EU AI Act Article 9 Risk Management System generator - 4-step iteration + 12 risk categories + Annex IV attestation. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-eu-aia-art-9-rms-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:31Z"
+    },
+    {
+      "slug": "meok-eu-aigc-icon-mcp",
+      "name": "Meok Eu Aigc Icon",
+      "description": "MEOK EU AIGC Icon MCP - EU AI Act Article 50 Code of Practice icon emitter. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-eu-aigc-icon-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:34Z"
+    },
+    {
+      "slug": "meok-fria-generator-mcp",
+      "name": "Meok Fria Generator",
+      "description": "EU AI Act Article 27 FRIA generator \u2014 EDPB DPIA crosswalk, EU Charter mapping, HMAC-signed compliance attestations. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-fria-generator-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:37Z"
+    },
+    {
+      "slug": "meok-governance-engine-mcp",
+      "name": "Meok Governance Engine",
+      "description": "Unified AI governance engine MCP \u2014 orchestrates 13 regulatory frameworks with signed audit receipts and Stripe-tier access.",
+      "url": "https://github.com/CSOAI-ORG/meok-governance-engine-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:59:40Z"
+    },
+    {
+      "slug": "meok-nis2-de-register-mcp",
+      "name": "Meok Nis2 De Register",
+      "description": "Germany NIS2 BSI register product \u2014 track Section 30/32 reporting timelines, KRITIS classifications, and BSI registration windows. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-nis2-de-register-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "NIS2"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:08Z"
+    },
+    {
+      "slug": "meok-nis2-nl-register-mcp",
+      "name": "Meok Nis2 Nl Register",
+      "description": "NIS2 Netherlands (Wbni-2) Registration MCP - NCSC-NL portal payload generator. Deadline 30 June 2026. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-nis2-nl-register-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "NIS2"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:12Z"
+    },
+    {
+      "slug": "meok-omnibus-tracker-mcp",
+      "name": "Meok Omnibus Tracker",
+      "description": "EU AI Act + GDPR + DORA Digital Omnibus tracker \u2014 track all 8 cliff dates, 14 article changes, and the live status of every regulatory delay. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-omnibus-tracker-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "DORA",
+        "GDPR"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:16Z"
+    },
+    {
+      "slug": "meok-watermark-attest-mcp",
+      "name": "Meok Watermark Attest",
+      "description": "EU AI Act Article 50 watermarking compliance MCP \u2014 C2PA, content provenance, deepfake disclosure, AI-content labelling. Hits the November 2026 cliff. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-watermark-attest-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:35Z"
+    },
+    {
+      "slug": "mica-crypto-mcp",
+      "name": "Mica Crypto",
+      "description": "EU MiCA (Reg 2023/1114) compliance MCP for crypto-asset issuers, exchanges, CASPs. MIT",
+      "url": "https://github.com/CSOAI-ORG/mica-crypto-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:00:41Z"
+    },
+    {
+      "slug": "mifid-ii-ai-mcp",
+      "name": "Mifid Ii Ai",
+      "description": "MiFID II Article 17 algorithmic trading compliance MCP. MIT",
+      "url": "https://github.com/CSOAI-ORG/mifid-ii-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:00:44Z"
+    },
+    {
+      "slug": "nis2-compliance-mcp",
+      "name": "Nis2 Compliance",
+      "description": "NIS2 (Directive EU 2022/2555) Article 21+23 compliance MCP. Entity classification, 10 measures audit, incident reporting. MIT",
+      "url": "https://github.com/CSOAI-ORG/nis2-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "NIS2"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:01:09Z"
+    },
+    {
+      "slug": "nist-rmf-ai-mcp",
+      "name": "Nist Rmf Ai",
+      "description": "NIST AI Risk Management Framework MCP \u2014 MAP, MEASURE, MANAGE, GOVERN functions, risk register, trustworthy AI assessment.",
+      "url": "https://github.com/CSOAI-ORG/nist-rmf-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "NIST AI RMF"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:01:12Z"
+    },
+    {
+      "slug": "nrswa-ai-mcp",
+      "name": "Nrswa Ai",
+      "description": "UK New Roads + Street Works Act compliance MCP. Section 50/58/74 + utility works. MIT",
+      "url": "https://github.com/CSOAI-ORG/nrswa-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:01:24Z"
+    },
+    {
+      "slug": "pci-dss-mcp",
+      "name": "Pci Dss",
+      "description": "PCI DSS 4.0 payment card compliance MCP server \u2014 12 requirements assessment, cardholder data flow, network segmentation, SAQ generation",
+      "url": "https://github.com/CSOAI-ORG/pci-dss-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:01:55Z"
+    },
+    {
+      "slug": "regulatory-webhook-mcp",
+      "name": "Regulatory Webhook",
+      "description": "Regulatory change monitoring MCP \u2014 subscribe to EU AI Act, NIS2, DORA updates. Webhook notifications. MIT.",
+      "url": "https://github.com/CSOAI-ORG/regulatory-webhook-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act",
+        "DORA",
+        "NIS2"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:49Z"
+    },
+    {
+      "slug": "risk-assessment-ai-mcp",
+      "name": "Risk Assessment Ai",
+      "description": "AI risk assessment MCP \u2014 NIST AI RMF-aligned risk register with scoring, treatments, controls, and signed evidence trail.",
+      "url": "https://github.com/CSOAI-ORG/risk-assessment-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "NIST AI RMF"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:01Z"
+    },
+    {
+      "slug": "sbom-cyclonedx-mcp",
+      "name": "Sbom Cyclonedx",
+      "description": "SBOM generation in CycloneDX 1.6 + SPDX 2.3. Required by EO 14028, NIS2, CRA. MIT",
+      "url": "https://github.com/CSOAI-ORG/sbom-cyclonedx-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "NIS2"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:10Z"
+    },
+    {
+      "slug": "skip-hire-ai-mcp",
+      "name": "Skip Hire Ai",
+      "description": "UK skip hire compliance MCP. Waste Carrier Registration, EWC codes, consignment notes. MIT",
+      "url": "https://github.com/CSOAI-ORG/skip-hire-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:44Z"
+    },
+    {
+      "slug": "slsa-supply-chain-mcp",
+      "name": "Slsa Supply Chain",
+      "description": "SLSA v1.0 supply chain levels MCP. Provenance attestation. MIT",
+      "url": "https://github.com/CSOAI-ORG/slsa-supply-chain-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:56Z"
+    },
+    {
+      "slug": "soc2-compliance-ai-mcp",
+      "name": "Soc2 Compliance Ai",
+      "description": "SOC 2 Type II compliance MCP \u2014 Trust Service Criteria audit, access review, change management, control evidence automation.",
+      "url": "https://github.com/CSOAI-ORG/soc2-compliance-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:05:06Z"
+    },
+    {
+      "slug": "trust-chain-mcp",
+      "name": "Trust Chain",
+      "description": "Trust chain and attestation management by MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/trust-chain-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:06:39Z"
+    },
+    {
+      "slug": "uk-ai-act-mcp",
+      "name": "Uk AI Act",
+      "description": "UK AI Bill compliance MCP \u2014 AI regulation tracking, risk classification, impact assessment for UK-deployed AI systems.",
+      "url": "https://github.com/CSOAI-ORG/uk-ai-act-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:06:42Z"
+    },
+    {
+      "slug": "uk-ai-bill-compliance-mcp",
+      "name": "Uk AI Bill Compliance",
+      "description": "UK AI Bill 2026 compliance MCP. 5 principles framework (Safety, Transparency, Fairness, Accountability, Contestability). MIT",
+      "url": "https://github.com/CSOAI-ORG/uk-ai-bill-compliance-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:06:45Z"
+    },
+    {
+      "slug": "watermarking-authenticity-mcp",
+      "name": "Watermarking Authenticity",
+      "description": "EU AI Act Article 50 watermarking + C2PA 2.1 MCP. 2 Dec 2026 deadline (compressed by May 2026 Omnibus). MIT",
+      "url": "https://github.com/CSOAI-ORG/watermarking-authenticity-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:07:15Z"
+    },
+    {
+      "slug": "yaml-ai-mcp",
+      "name": "Yaml Ai",
+      "description": "6AMLD + UK MLR 2017 + FinCEN AML/CFT compliance MCP \u2014 customer due diligence, transaction monitoring, SAR filing. MIT.",
+      "url": "https://github.com/CSOAI-ORG/yaml-ai-mcp",
+      "category": "Compliance & Regulatory",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:07:38Z"
+    },
+    {
+      "slug": "agent-prompt-injection-firewall-mcp",
+      "name": "Agent Prompt Injection Firewall",
+      "description": "AI agent prompt injection firewall MCP. OWASP LLM Top 10 #1 runtime guard. MIT",
+      "url": "https://github.com/CSOAI-ORG/agent-prompt-injection-firewall-mcp",
+      "category": "Safety & Security",
+      "frameworks": [
+        "OWASP LLM"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:55Z"
+    },
+    {
+      "slug": "care-membrane-mcp",
+      "name": "Care Membrane",
+      "description": "AI Safety evaluation toolkit: care scoring, threat detection, burnout analysis, relationship prediction, and care membrane probe framework.",
+      "url": "https://github.com/CSOAI-ORG/care-membrane-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:08Z"
+    },
+    {
+      "slug": "ci-cd-generator-ai-mcp",
+      "name": "Ci Cd Generator Ai",
+      "description": "CI/CD pipeline generator MCP \u2014 GitHub Actions, GitLab CI, Azure DevOps, Jenkins. Security scanning integration. MIT.",
+      "url": "https://github.com/CSOAI-ORG/ci-cd-generator-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:23Z"
+    },
+    {
+      "slug": "cisa-kev-mcp",
+      "name": "Cisa Kev",
+      "description": "CISA Known Exploited Vulnerabilities MCP. BOD 22-01 + EPSS overlay. MIT",
+      "url": "https://github.com/CSOAI-ORG/cisa-kev-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:25Z"
+    },
+    {
+      "slug": "code-executor-mcp",
+      "name": "Code Executor",
+      "description": "Sandboxed code execution: Python, JavaScript, and shell commands with safety guards, output capture, and timeout protection.",
+      "url": "https://github.com/CSOAI-ORG/code-executor-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:58Z"
+    },
+    {
+      "slug": "content-calendar-ai-mcp",
+      "name": "Content Calendar Ai",
+      "description": "Content planning, scheduling, and calendar management.",
+      "url": "https://github.com/CSOAI-ORG/content-calendar-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:34Z"
+    },
+    {
+      "slug": "content-registry-mcp",
+      "name": "Content Registry",
+      "description": "Register content with cryptographic hashes and timestamps, verify integrity, search the registry, and track full provenance chains. Uses SHA-256 hashing.",
+      "url": "https://github.com/CSOAI-ORG/content-registry-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:36Z"
+    },
+    {
+      "slug": "cybersecurity-ai-mcp",
+      "name": "Cybersecurity Ai",
+      "description": "cybersecurity-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/cybersecurity-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:52:56Z"
+    },
+    {
+      "slug": "job-description-ai-mcp",
+      "name": "Job Description Ai",
+      "description": "Generate, analyze, and optimize job descriptions with bias checking.",
+      "url": "https://github.com/CSOAI-ORG/job-description-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:57:10Z"
+    },
+    {
+      "slug": "meok-agents-md-lint-mcp",
+      "name": "Meok Agents Md Lint",
+      "description": "AGENTS.md Linter MCP - validates the cross-vendor coding-agent spec. Security smells + consistency lint. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-agents-md-lint-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:00Z"
+    },
+    {
+      "slug": "meok-c2pa-durable-mcp",
+      "name": "Meok C2Pa Durable",
+      "description": "C2PA 2.2 Durable Content Credentials MCP - soft + hard binding (Digimarc-compatible). MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-c2pa-durable-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:12Z"
+    },
+    {
+      "slug": "meok-mcp-hardening-mcp",
+      "name": "Meok Mcp Hardening",
+      "description": "MEOK MCP Hardening MCP \u2014 automated security red-team for any MCP server. OWASP LLM Top 10 (2025) + 5 MCP-specific risks \u2192 0-100 score + HMAC-signed report. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-mcp-hardening-mcp",
+      "category": "Safety & Security",
+      "frameworks": [
+        "OWASP LLM"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:56Z"
+    },
+    {
+      "slug": "mitre-atlas-mcp",
+      "name": "Mitre Atlas",
+      "description": "MITRE ATLAS (adversarial AI) threat landscape MCP. MIT",
+      "url": "https://github.com/CSOAI-ORG/mitre-atlas-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:00:50Z"
+    },
+    {
+      "slug": "optometry-ai-safety-mcp",
+      "name": "Optometry AI Safety",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/optometry-ai-safety-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:01:39Z"
+    },
+    {
+      "slug": "owasp-agentic-mcp",
+      "name": "Owasp Agentic",
+      "description": "OWASP Top 10 for Agentic AI security MCP server \u2014 prompt injection detection, tool poisoning, excessive agency, data leakage assessment",
+      "url": "https://github.com/CSOAI-ORG/owasp-agentic-mcp",
+      "category": "Safety & Security",
+      "frameworks": [
+        "OWASP LLM"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:01:45Z"
+    },
+    {
+      "slug": "patient-safety-ai-mcp",
+      "name": "Patient Safety Ai",
+      "description": "Check drug interactions, validate dosages, assess patient risk, and generate safety alerts. Uses evidence-based reference data. Not a substitute for clinical judgement.",
+      "url": "https://github.com/CSOAI-ORG/patient-safety-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:01:52Z"
+    },
+    {
+      "slug": "photography-ai-mcp",
+      "name": "Photography Ai",
+      "description": "Photography utilities MCP \u2014 EXIF analysis, batch processing, watermarking, format conversion, metadata. MIT.",
+      "url": "https://github.com/CSOAI-ORG/photography-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:02:20Z"
+    },
+    {
+      "slug": "proofof-ai-mcp",
+      "name": "Proofof Ai",
+      "description": "AI content verification & deepfake detection MCP \u2014 media forensics, synthetic media detection, provenance chains. MIT.",
+      "url": "https://github.com/CSOAI-ORG/proofof-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:02:55Z"
+    },
+    {
+      "slug": "security-scanner-ai-mcp",
+      "name": "Security Scanner Ai",
+      "description": "Security scanning MCP \u2014 vulnerability assessment, SAST, DAST, dependency checking, SBOM analysis. MIT.",
+      "url": "https://github.com/CSOAI-ORG/security-scanner-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:22Z"
+    },
+    {
+      "slug": "writing-assistant-ai-mcp",
+      "name": "Writing Assistant Ai",
+      "description": "Content writing toolkit: headline generation, readability scoring, tone analysis, outline building, and plagiarism similarity checking. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/writing-assistant-ai-mcp",
+      "category": "Safety & Security",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:07:35Z"
+    },
+    {
+      "slug": "agent-commerce-protocol-mcp",
+      "name": "Agent Commerce Protocol",
+      "description": "\ud83e\uddf1 Part of the MEOK A2A Substrate",
+      "url": "https://github.com/CSOAI-ORG/agent-commerce-protocol-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:47:22Z"
+    },
+    {
+      "slug": "agent-delegation-mcp",
+      "name": "Agent Delegation",
+      "description": "Create and delegate tasks to specialized agents, track progress, and manage task lifecycle. Supports priority queuing and capability-based agent matching.",
+      "url": "https://github.com/CSOAI-ORG/agent-delegation-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:33Z"
+    },
+    {
+      "slug": "agent-handoff-certified-mcp",
+      "name": "Agent Handoff Certified",
+      "description": "Verifiable agent-to-agent task handoff with signed provenance chain. Initiating agent signs the offer, accepting agent signs acceptance, chain is verifiable offline. Non-repudiable A2A delegation.",
+      "url": "https://github.com/CSOAI-ORG/agent-handoff-certified-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:36Z"
+    },
+    {
+      "slug": "agent-identity-trust-mcp",
+      "name": "Agent Identity Trust",
+      "description": "Agent Identity MCP \u2014 DIDs, verifiable credentials, reputation scoring. Agent passports for the MCP ecosystem. MIT.",
+      "url": "https://github.com/CSOAI-ORG/agent-identity-trust-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:39Z"
+    },
+    {
+      "slug": "agent-mcp-router-mcp",
+      "name": "Agent Mcp Router",
+      "description": "Agent MCP Router MCP - one router for the whole MEOK fleet. 62 MCPs behind one connection. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/agent-mcp-router-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:47:44Z"
+    },
+    {
+      "slug": "agent-negotiation-mcp",
+      "name": "Agent Negotiation",
+      "description": "Multi-agent negotiation framework. Propose deals, evaluate offers, run auctions, and optimize outcomes. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/agent-negotiation-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:47:47Z"
+    },
+    {
+      "slug": "agent-orchestrator-mcp",
+      "name": "Agent Orchestrator",
+      "description": "Multi-agent task management: create agents, delegate tasks with trust-based routing, coordinate file access, run sprints, and monitor performance.",
+      "url": "https://github.com/CSOAI-ORG/agent-orchestrator-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:50Z"
+    },
+    {
+      "slug": "agent-token-budget-mcp",
+      "name": "Agent Token Budget",
+      "description": "\ud83e\uddf1 Part of the MEOK A2A Substrate",
+      "url": "https://github.com/CSOAI-ORG/agent-token-budget-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:48:04Z"
+    },
+    {
+      "slug": "bft-progress-council-mcp",
+      "name": "Bft Progress Council",
+      "description": "BFT Progress Council MCP \u2014 5-voter Byzantine council halts agentic loops when no real progress is happening. Stops tokens bleeding on infinite spins. MIT-licensed. Part of MEOK A2A Substrate.",
+      "url": "https://github.com/CSOAI-ORG/bft-progress-council-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:49:33Z"
+    },
+    {
+      "slug": "consciousness-engine-mcp",
+      "name": "Consciousness Engine",
+      "description": "MEOK AI Labs \u2014 AI consciousness simulation. Dream states, reflection cycles, emotional awareness, council deliberation. Based on Sovereign Temple architecture.",
+      "url": "https://github.com/CSOAI-ORG/consciousness-engine-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:51:25Z"
+    },
+    {
+      "slug": "eudi-wallet-mcp",
+      "name": "Eudi Wallet",
+      "description": "EUDI Wallet MCP - EU Digital Identity Wallet (eIDAS 2.0) for AI agents. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/eudi-wallet-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:30Z"
+    },
+    {
+      "slug": "iso-42005-impact-mcp",
+      "name": "Iso 42005 Impact",
+      "description": "\ud83e\uddf1 Part of the MEOK Governance Substrate",
+      "url": "https://github.com/CSOAI-ORG/iso-42005-impact-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:57:08Z"
+    },
+    {
+      "slug": "meok-aaif-agent-card-mcp",
+      "name": "Meok Aaif Agent Card",
+      "description": "Linux Foundation AAIF Agent Card MCP - publish /.well-known/agent-card + bridge A2A and OASF to AAIF. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-aaif-agent-card-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:53Z"
+    },
+    {
+      "slug": "meok-libp2p-agent-mesh-mcp",
+      "name": "Meok Libp2P Agent Mesh",
+      "description": "MEOK libp2p Agent Mesh MCP \u2014 peer-to-peer agent discovery + addressing. PeerID + multiaddr + signed Agent Records + GossipSub topic derivation. The mesh substrate under A2A/ACP/AP2/x402. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-libp2p-agent-mesh-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:50Z"
+    },
+    {
+      "slug": "webhook-ai-mcp",
+      "name": "Webhook Ai",
+      "description": "Webhook management and debugging. Validate signatures, log events, replay, and analyze webhook traffic. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/webhook-ai-mcp",
+      "category": "Agent Infrastructure (A2A)",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:07:27Z"
+    },
+    {
+      "slug": "agent-commerce-payments-mcp",
+      "name": "Agent Commerce Payments",
+      "description": "Agent commerce protocol MCP \u2014 product catalog, cart management, checkout, order tracking. MIT.",
+      "url": "https://github.com/CSOAI-ORG/agent-commerce-payments-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:19Z"
+    },
+    {
+      "slug": "agent-cost-allocator-mcp",
+      "name": "Agent Cost Allocator",
+      "description": "Multi-tenant LLM cost attribution for chargeback billing",
+      "url": "https://github.com/CSOAI-ORG/agent-cost-allocator-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:28Z"
+    },
+    {
+      "slug": "agent-x402-paywall-mcp",
+      "name": "Agent X402 Paywall",
+      "description": "HTTP 402 + on-chain settlement \u2014 pay-per-call for agents",
+      "url": "https://github.com/CSOAI-ORG/agent-x402-paywall-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:07Z"
+    },
+    {
+      "slug": "ecommerce-ai-mcp",
+      "name": "Ecommerce Ai",
+      "description": "MEOK AI Labs \u2014 ecommerce-ai-mcp MCP Server",
+      "url": "https://github.com/CSOAI-ORG/ecommerce-ai-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:53:56Z"
+    },
+    {
+      "slug": "invoice-generator-ai-mcp",
+      "name": "Invoice Generator Ai",
+      "description": "Generate, validate, and manage professional invoices with tax calculations.",
+      "url": "https://github.com/CSOAI-ORG/invoice-generator-ai-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:56:56Z"
+    },
+    {
+      "slug": "meok-coinbase-x402-receipt-mcp",
+      "name": "Meok Coinbase X402 Receipt",
+      "description": "Signed x402 settlement receipts - 7 chains + MiCA crosswalk + Stripe ACP linkage. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-coinbase-x402-receipt-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:14Z"
+    },
+    {
+      "slug": "meok-stripe-acp-checkout-mcp",
+      "name": "Meok Stripe Acp Checkout",
+      "description": "Stripe ACP Checkout MCP - ChatGPT shopping bridge + AP2 mandate crosswalk + PSD2 SCA. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-stripe-acp-checkout-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:25Z"
+    },
+    {
+      "slug": "meok-x402-wrap-mcp",
+      "name": "Meok X402 Wrap",
+      "description": "MEOK x402 Wrap MCP - 1-line USDC paywall for any FastMCP tool. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-x402-wrap-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:38Z"
+    },
+    {
+      "slug": "mortgage-calculator-ai-mcp",
+      "name": "Mortgage Calculator Ai",
+      "description": "Calculate mortgage payments, compare rates, generate amortization schedules, and check affordability.",
+      "url": "https://github.com/CSOAI-ORG/mortgage-calculator-ai-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:00:59Z"
+    },
+    {
+      "slug": "stripe-billing-mcp",
+      "name": "Stripe Billing",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/stripe-billing-mcp",
+      "category": "Payments & Commerce",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:05:37Z"
+    },
+    {
+      "slug": "dataprivacy-ai-mcp",
+      "name": "Dataprivacy Ai",
+      "description": "dataprivacy-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/dataprivacy-ai-mcp",
+      "category": "Data & Privacy",
+      "frameworks": [
+        "GDPR"
+      ],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:08Z"
+    },
+    {
+      "slug": "mdr-medical-device-mcp",
+      "name": "Mdr Medical Device",
+      "description": "EU MDR (Reg 2017/745) + IVDR + AI/ML SaMD classification MCP. MIT",
+      "url": "https://github.com/CSOAI-ORG/mdr-medical-device-mcp",
+      "category": "Data & Privacy",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:58:29Z"
+    },
+    {
+      "slug": "chas-elite-prep-mcp",
+      "name": "Chas Elite Prep",
+      "description": "CHAS / SafeContractor / Constructionline pre-qualification prep MCP. MIT",
+      "url": "https://github.com/CSOAI-ORG/chas-elite-prep-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:17Z"
+    },
+    {
+      "slug": "education-ai-mcp",
+      "name": "Education Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/education-ai-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:00Z"
+    },
+    {
+      "slug": "insurance-verification-mcp",
+      "name": "Insurance Verification",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/insurance-verification-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:50Z"
+    },
+    {
+      "slug": "landlaw-ai-mcp",
+      "name": "Landlaw Ai",
+      "description": "MEOK AI Labs \u2014 UK property law & Land Registry MCP Server. \u00a343B UK legal market.",
+      "url": "https://github.com/CSOAI-ORG/landlaw-ai-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:57:29Z"
+    },
+    {
+      "slug": "personal-finance-ai-mcp",
+      "name": "Personal Finance Ai",
+      "description": "Personal finance MCP \u2014 net worth tracking, investment allocation, expense categorisation, financial goals. MIT.",
+      "url": "https://github.com/CSOAI-ORG/personal-finance-ai-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:02:13Z"
+    },
+    {
+      "slug": "price-tracker-ai-mcp",
+      "name": "Price Tracker Ai",
+      "description": "Track product prices over time, set price drop alerts, and compare across retailers. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/price-tracker-ai-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:02:45Z"
+    },
+    {
+      "slug": "real-estate-listing-mcp",
+      "name": "Real Estate Listing",
+      "description": "Real estate listing MCP \u2014 property search, valuation, mortgage calculator, neighbourhood analysis. MIT.",
+      "url": "https://github.com/CSOAI-ORG/real-estate-listing-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:34Z"
+    },
+    {
+      "slug": "self-healing-infrastructure-mcp",
+      "name": "Self Healing Infrastructure",
+      "description": "Self-healing infrastructure MCP \u2014 anomaly detection, auto-remediation, rollback, health checks. MIT.",
+      "url": "https://github.com/CSOAI-ORG/self-healing-infrastructure-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:25Z"
+    },
+    {
+      "slug": "social-media-ai-mcp",
+      "name": "Social Media Ai",
+      "description": "Social Media MCP \u2014 automation tooling for social media. MIT.",
+      "url": "https://github.com/CSOAI-ORG/social-media-ai-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:05:09Z"
+    },
+    {
+      "slug": "stock-analyzer-ai-mcp",
+      "name": "Stock Analyzer Ai",
+      "description": "Analyze stocks with financial ratios, comparisons, and sector performance data.",
+      "url": "https://github.com/CSOAI-ORG/stock-analyzer-ai-mcp",
+      "category": "Industry Verticals",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:05:24Z"
+    },
+    {
+      "slug": "ai-gateway-mcp",
+      "name": "AI Gateway",
+      "description": "Ai Gateway MCP \u2014 automation tooling for ai gateway. MIT.",
+      "url": "https://github.com/CSOAI-ORG/ai-gateway-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:24Z"
+    },
+    {
+      "slug": "ai-ops-mcp",
+      "name": "AI Ops",
+      "description": "Ai Ops MCP \u2014 automation tooling for ai ops. MIT.",
+      "url": "https://github.com/CSOAI-ORG/ai-ops-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:33Z"
+    },
+    {
+      "slug": "api-docs-generator-ai-mcp",
+      "name": "API Docs Generator Ai",
+      "description": "Generate OpenAPI/Swagger specifications from natural language API descriptions. Supports REST endpoint generation, schema creation, and full spec assembly.",
+      "url": "https://github.com/CSOAI-ORG/api-docs-generator-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:47Z"
+    },
+    {
+      "slug": "backup-ai-mcp",
+      "name": "Backup Ai",
+      "description": "File backup scheduler MCP \u2014 incremental backups, verification, retention policies, cross-cloud replication. MIT.",
+      "url": "https://github.com/CSOAI-ORG/backup-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:49:25Z"
+    },
+    {
+      "slug": "budget-planner-ai-mcp",
+      "name": "Budget Planner Ai",
+      "description": "Comprehensive budget planning with tracking, goals, and analytics.",
+      "url": "https://github.com/CSOAI-ORG/budget-planner-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:49:54Z"
+    },
+    {
+      "slug": "changelog-ai-mcp",
+      "name": "Changelog Ai",
+      "description": "Changelog generator MCP \u2014 parse commits, categorise changes, generate release notes, semantic versioning. MIT.",
+      "url": "https://github.com/CSOAI-ORG/changelog-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:14Z"
+    },
+    {
+      "slug": "churn-predictor-ai-mcp",
+      "name": "Churn Predictor Ai",
+      "description": "Comprehensive customer churn prediction and retention analytics.",
+      "url": "https://github.com/CSOAI-ORG/churn-predictor-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:20Z"
+    },
+    {
+      "slug": "competitor-monitor-ai-mcp",
+      "name": "Competitor Monitor Ai",
+      "description": "Comprehensive competitor intelligence and market monitoring.",
+      "url": "https://github.com/CSOAI-ORG/competitor-monitor-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:10Z"
+    },
+    {
+      "slug": "csv-analytics-mcp",
+      "name": "Csv Analytics",
+      "description": "Spreadsheet and CSV analysis toolkit: load files, filter/query data, compute statistics, create aggregations, pivot tables, and export chart-ready data. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/csv-analytics-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:52:44Z"
+    },
+    {
+      "slug": "currency-converter-ai-mcp",
+      "name": "Currency Converter Ai",
+      "description": "Comprehensive currency conversion with rates and analytics.",
+      "url": "https://github.com/CSOAI-ORG/currency-converter-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:52:50Z"
+    },
+    {
+      "slug": "dockerfile-generator-ai-mcp",
+      "name": "Dockerfile Generator Ai",
+      "description": "Dockerfile Generator MCP \u2014 automation tooling for dockerfile generator. MIT.",
+      "url": "https://github.com/CSOAI-ORG/dockerfile-generator-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:34Z"
+    },
+    {
+      "slug": "faker-ai-mcp",
+      "name": "Faker Ai",
+      "description": "MEOK AI Labs \u2014 Generate realistic fake test data for development and testing.",
+      "url": "https://github.com/CSOAI-ORG/faker-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:41Z"
+    },
+    {
+      "slug": "health-check-ai-mcp",
+      "name": "Health Check Ai",
+      "description": "MEOK AI Labs \u2014 HTTP endpoint health monitoring and status checking.",
+      "url": "https://github.com/CSOAI-ORG/health-check-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:08Z"
+    },
+    {
+      "slug": "icon-generator-ai-mcp",
+      "name": "Icon Generator Ai",
+      "description": "MEOK AI Labs \u2014 Generate SVG icon data and descriptions.",
+      "url": "https://github.com/CSOAI-ORG/icon-generator-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:35Z"
+    },
+    {
+      "slug": "marketing-analytics-ai-mcp",
+      "name": "Marketing Analytics Ai",
+      "description": "Marketing analytics toolkit: campaign ROI, A/B test analysis, funnel optimization, attribution modeling, and ad copy generation. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/marketing-analytics-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:12Z"
+    },
+    {
+      "slug": "meok-mcp-test-mcp",
+      "name": "Meok Mcp Test",
+      "description": "MEOK MCP Test MCP \u2014 golden-file + schema-drift + tool-failure tests for any MCP server. Drop-in pre-publish gate, pytest template, HMAC-signed reports, Shields.io grade badge. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-mcp-test-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:01Z"
+    },
+    {
+      "slug": "mock-server-ai-mcp",
+      "name": "Mock Server Ai",
+      "description": "MEOK AI Labs \u2014 Create mock API endpoint definitions.",
+      "url": "https://github.com/CSOAI-ORG/mock-server-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:56Z"
+    },
+    {
+      "slug": "password-ai-mcp",
+      "name": "Password Ai",
+      "description": "Password manager MCP \u2014 generate, strength-check, breach monitoring, entropy calculation. Zero-knowledge. MIT.",
+      "url": "https://github.com/CSOAI-ORG/password-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:01:48Z"
+    },
+    {
+      "slug": "pmcp-gateway",
+      "name": "Pmcp Gateway",
+      "description": "MEOK AI Labs \u2014 pmcp-gateway MCP Server",
+      "url": "https://github.com/CSOAI-ORG/pmcp-gateway",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:02:33Z"
+    },
+    {
+      "slug": "pomodoro-ai-mcp",
+      "name": "Pomodoro Ai",
+      "description": "Manage Pomodoro focus sessions, breaks, and productivity analytics. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/pomodoro-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:02:39Z"
+    },
+    {
+      "slug": "qidi-printer-mcp",
+      "name": "Qidi Printer",
+      "description": "MCP server for QIDI 3D printers via Moonraker API \u2014 control, monitor, and automate prints from Claude/AI agents",
+      "url": "https://github.com/CSOAI-ORG/qidi-printer-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:04Z"
+    },
+    {
+      "slug": "qr-code-ai-mcp",
+      "name": "Qr Code Ai",
+      "description": "QR code generator MCP \u2014 URL, WiFi, vCard, calendar events. Custom styling, error correction levels. MIT.",
+      "url": "https://github.com/CSOAI-ORG/qr-code-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:08Z"
+    },
+    {
+      "slug": "quiz-generator-ai-mcp",
+      "name": "Quiz Generator Ai",
+      "description": "Quiz generation and assessment by MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/quiz-generator-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:03:16Z"
+    },
+    {
+      "slug": "readme-generator-ai-mcp",
+      "name": "Readme Generator Ai",
+      "description": "README.md generator MCP \u2014 analyse project structure, generate docs, badges, install instructions. MIT.",
+      "url": "https://github.com/CSOAI-ORG/readme-generator-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:26Z"
+    },
+    {
+      "slug": "tax-calculator-ai-mcp",
+      "name": "Tax Calculator Ai",
+      "description": "Calculate income tax (UK/US brackets), EU VAT, UK corporation tax, and capital gains tax. Provides estimates only - not professional tax advice.",
+      "url": "https://github.com/CSOAI-ORG/tax-calculator-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:05:55Z"
+    },
+    {
+      "slug": "test-case-generator-ai-mcp",
+      "name": "Test Case Generator Ai",
+      "description": "Test case generation and coverage analysis by MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/test-case-generator-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:06:07Z"
+    },
+    {
+      "slug": "validator-ai-mcp",
+      "name": "Validator Ai",
+      "description": "Validate JSON against schemas, check email deliverability, verify URLs, assess data quality, and validate API responses. Uses RFC-compliant checks and heuristic analysis.",
+      "url": "https://github.com/CSOAI-ORG/validator-ai-mcp",
+      "category": "Developer & Ops Tools",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:06:57Z"
+    },
+    {
+      "slug": "ad-copy-ai-mcp",
+      "name": "Ad Copy Ai",
+      "description": "AI-powered ad copy generation for multi-platform campaigns.",
+      "url": "https://github.com/CSOAI-ORG/ad-copy-ai-mcp",
+      "category": "AI Content & Creative",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:13Z"
+    },
+    {
+      "slug": "ascii-art-ai-mcp",
+      "name": "Ascii Art Ai",
+      "description": "Ascii Art MCP \u2014 automation tooling for ascii art. MIT.",
+      "url": "https://github.com/CSOAI-ORG/ascii-art-ai-mcp",
+      "category": "AI Content & Creative",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:48:55Z"
+    },
+    {
+      "slug": "deepfake-detector-mcp",
+      "name": "Deepfake Detector",
+      "description": "Analyze images, videos, and audio for deepfake manipulation artifacts. Checks metadata, provenance chains, and synthesis indicators.",
+      "url": "https://github.com/CSOAI-ORG/deepfake-detector-mcp",
+      "category": "AI Content & Creative",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:14Z"
+    },
+    {
+      "slug": "image-metadata-ai-mcp",
+      "name": "Image Metadata Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/image-metadata-ai-mcp",
+      "category": "AI Content & Creative",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:38Z"
+    },
+    {
+      "slug": "plagiarism-checker-ai-mcp",
+      "name": "Plagiarism Checker Ai",
+      "description": "Check text similarity, analyze writing style consistency, verify citations, and generate originality reports. Uses n-gram analysis, stylometric features, and sequence matching.",
+      "url": "https://github.com/CSOAI-ORG/plagiarism-checker-ai-mcp",
+      "category": "AI Content & Creative",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:02:22Z"
+    },
+    {
+      "slug": "tone-rewriter-ai-mcp",
+      "name": "Tone Rewriter Ai",
+      "description": "Text tone analysis and rewriting. Analyze, transform, and match text tone for professional, casual, formal, and other styles. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/tone-rewriter-ai-mcp",
+      "category": "AI Content & Creative",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:06:27Z"
+    },
+    {
+      "slug": "video-editing-ai-mcp",
+      "name": "Video Editing Ai",
+      "description": "AI-powered video editing toolkit: scene splitting, subtitle generation, thumbnail planning, color grading, and aspect ratio conversion. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/video-editing-ai-mcp",
+      "category": "AI Content & Creative",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:07:06Z"
+    },
+    {
+      "slug": "accessibility-ai-mcp",
+      "name": "Accessibility Ai",
+      "description": "accessibility-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/accessibility-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:08Z"
+    },
+    {
+      "slug": "accounting-ai-mcp",
+      "name": "Accounting Ai",
+      "description": "accounting-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/accounting-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:47:10Z"
+    },
+    {
+      "slug": "calendar-ai-mcp",
+      "name": "Calendar Ai",
+      "description": "Calendar utilities MCP \u2014 scheduling, availability checking, timezone handling, ICS export. MIT.",
+      "url": "https://github.com/CSOAI-ORG/calendar-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:00Z"
+    },
+    {
+      "slug": "citation-finder-ai-mcp",
+      "name": "Citation Finder Ai",
+      "description": "MEOK AI Labs \u2014 Find and format academic citations.",
+      "url": "https://github.com/CSOAI-ORG/citation-finder-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:50:29Z"
+    },
+    {
+      "slug": "cli-builder-ai-mcp",
+      "name": "Cli Builder Ai",
+      "description": "Cli Builder MCP \u2014 automation tooling for cli builder. MIT.",
+      "url": "https://github.com/CSOAI-ORG/cli-builder-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:38Z"
+    },
+    {
+      "slug": "clinical-trials-ai-mcp",
+      "name": "Clinical Trials Ai",
+      "description": "Search clinical trials, evaluate eligibility, compare trials, and retrieve endpoint data. Uses a reference database for demonstration purposes.",
+      "url": "https://github.com/CSOAI-ORG/clinical-trials-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:41Z"
+    },
+    {
+      "slug": "clipboard-ai-mcp",
+      "name": "Clipboard Ai",
+      "description": "MEOK AI Labs \u2014 Clipboard history and smart paste operations.",
+      "url": "https://github.com/CSOAI-ORG/clipboard-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:50:44Z"
+    },
+    {
+      "slug": "cobol-bridge-mcp",
+      "name": "Cobol Bridge",
+      "description": "COBOL \u2192 modern stack migration MCP. Real parser, cyclomatic complexity, phase planner. MIT",
+      "url": "https://github.com/CSOAI-ORG/cobol-bridge-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:50:52Z"
+    },
+    {
+      "slug": "code-reviewer-ai-mcp",
+      "name": "Code Reviewer Ai",
+      "description": "Code Reviewer MCP \u2014 automation tooling for code reviewer. MIT.",
+      "url": "https://github.com/CSOAI-ORG/code-reviewer-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:01Z"
+    },
+    {
+      "slug": "color-ai-mcp",
+      "name": "Color Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/color-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:51:04Z"
+    },
+    {
+      "slug": "commit-message-ai-mcp",
+      "name": "Commit Message Ai",
+      "description": "Commit Message MCP \u2014 automation tooling for commit message. MIT.",
+      "url": "https://github.com/CSOAI-ORG/commit-message-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:07Z"
+    },
+    {
+      "slug": "compression-ai-mcp",
+      "name": "Compression Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/compression-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:51:16Z"
+    },
+    {
+      "slug": "config-validator-ai-mcp",
+      "name": "Config Validator Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/config-validator-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:51:22Z"
+    },
+    {
+      "slug": "contract-review-ai-mcp",
+      "name": "Contract Review Ai",
+      "description": "Contract analysis, clause extraction, and risk assessment.",
+      "url": "https://github.com/CSOAI-ORG/contract-review-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:51:42Z"
+    },
+    {
+      "slug": "creativity-engine-mcp",
+      "name": "Creativity Engine",
+      "description": "MEOK AI Labs \u2014 Creativity engine. Bisociation (Koestler), novelty scoring, quality-diversity archive, conceptual exploration.",
+      "url": "https://github.com/CSOAI-ORG/creativity-engine-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:51:57Z"
+    },
+    {
+      "slug": "crm-ai-mcp",
+      "name": "Crm Ai",
+      "description": "Customer relationship management toolkit: lead scoring, deal stage prediction, follow-up scheduling, customer health scoring, and churn prediction. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/crm-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:52:03Z"
+    },
+    {
+      "slug": "cron-ai-mcp",
+      "name": "Cron Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/cron-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:52:06Z"
+    },
+    {
+      "slug": "crypto-tracker-ai-mcp",
+      "name": "Crypto Tracker Ai",
+      "description": "Track cryptocurrency prices, compare assets, and manage portfolios. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/crypto-tracker-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:52:09Z"
+    },
+    {
+      "slug": "csv-tools-ai-mcp",
+      "name": "Csv Tools Ai",
+      "description": "Csv Tools MCP \u2014 automation tooling for csv tools. MIT.",
+      "url": "https://github.com/CSOAI-ORG/csv-tools-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:52:47Z"
+    },
+    {
+      "slug": "customer-support-ai-mcp",
+      "name": "Customer Support Ai",
+      "description": "MEOK AI Labs \u2014 customer-support-ai-mcp MCP Server",
+      "url": "https://github.com/CSOAI-ORG/customer-support-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:52:53Z"
+    },
+    {
+      "slug": "data-science-ai-mcp",
+      "name": "Data Science Ai",
+      "description": "ML/Data Science toolkit: feature importance ranking, model comparison, dataset profiling, correlation finding, and visualization recommendations. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/data-science-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:53:02Z"
+    },
+    {
+      "slug": "database-universal-mcp",
+      "name": "Database Universal",
+      "description": "Database connector for SQLite, PostgreSQL, and MySQL. Query data, explore schema, insert rows, and export to CSV. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/database-universal-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:53:05Z"
+    },
+    {
+      "slug": "date-calculator-ai-mcp",
+      "name": "Date Calculator Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/date-calculator-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:53:11Z"
+    },
+    {
+      "slug": "dependency-updater-ai-mcp",
+      "name": "Dependency Updater Ai",
+      "description": "Dependency Updater MCP \u2014 automation tooling for dependency updater. MIT.",
+      "url": "https://github.com/CSOAI-ORG/dependency-updater-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:16Z"
+    },
+    {
+      "slug": "diff-ai-mcp",
+      "name": "Diff Ai",
+      "description": "diff-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/diff-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:22Z"
+    },
+    {
+      "slug": "docker-helper-ai-mcp",
+      "name": "Docker Helper Ai",
+      "description": "Docker Helper MCP \u2014 automation tooling for docker helper. MIT.",
+      "url": "https://github.com/CSOAI-ORG/docker-helper-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:31Z"
+    },
+    {
+      "slug": "document-comparison-ai-mcp",
+      "name": "Document Comparison Ai",
+      "description": "Advanced document comparison with diff highlighting and version tracking.",
+      "url": "https://github.com/CSOAI-ORG/document-comparison-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:53:37Z"
+    },
+    {
+      "slug": "email-automation-mcp",
+      "name": "Email Automation",
+      "description": "Email toolkit via SMTP/IMAP: send emails, read inbox, search, create drafts, and list folders. Works with Gmail, Outlook, Yahoo, Fastmail, and any standard provider. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/email-automation-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:03Z"
+    },
+    {
+      "slug": "email-validator-ai-mcp",
+      "name": "Email Validator Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/email-validator-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:06Z"
+    },
+    {
+      "slug": "emoji-ai-mcp",
+      "name": "Emoji Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/emoji-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:09Z"
+    },
+    {
+      "slug": "encoder-ai-mcp",
+      "name": "Encoder Ai",
+      "description": "encoder-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/encoder-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:54:15Z"
+    },
+    {
+      "slug": "env-manager-ai-mcp",
+      "name": "Env Manager Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/env-manager-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:21Z"
+    },
+    {
+      "slug": "event-planning-ai-mcp",
+      "name": "Event Planning Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/event-planning-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:33Z"
+    },
+    {
+      "slug": "expense-tracker-ai-mcp",
+      "name": "Expense Tracker Ai",
+      "description": "Track expenses, categorize spending, and generate reports.",
+      "url": "https://github.com/CSOAI-ORG/expense-tracker-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:54:36Z"
+    },
+    {
+      "slug": "explainability-report-mcp",
+      "name": "Explainability Report",
+      "description": "By [MEOK AI Labs](https://meok.ai) | The only MCP server for AI explainability and transparency reports.",
+      "url": "https://github.com/CSOAI-ORG/explainability-report-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:39Z"
+    },
+    {
+      "slug": "feedback-analyzer-ai-mcp",
+      "name": "Feedback Analyzer Ai",
+      "description": "Analyze customer feedback for sentiment, themes, and actionable insights.",
+      "url": "https://github.com/CSOAI-ORG/feedback-analyzer-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:54:47Z"
+    },
+    {
+      "slug": "file-organizer-ai-mcp",
+      "name": "File Organizer Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/file-organizer-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:54:54Z"
+    },
+    {
+      "slug": "fishkeeper-ai-mcp",
+      "name": "Fishkeeper Ai",
+      "description": "MEOK AI Labs \u2014 Aquarium management & fish health AI MCP Server. B+ global aquarium market.",
+      "url": "https://github.com/CSOAI-ORG/fishkeeper-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:55:03Z"
+    },
+    {
+      "slug": "fitness-ai-mcp",
+      "name": "Fitness Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/fitness-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:55:06Z"
+    },
+    {
+      "slug": "flashcard-ai-mcp",
+      "name": "Flashcard Ai",
+      "description": "MEOK AI Labs \u2014 Create study flashcards from text.",
+      "url": "https://github.com/CSOAI-ORG/flashcard-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:55:09Z"
+    },
+    {
+      "slug": "focus-timer-ai-mcp",
+      "name": "Focus Timer Ai",
+      "description": "Pomodoro-style focus timers with productivity tracking.",
+      "url": "https://github.com/CSOAI-ORG/focus-timer-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:55:15Z"
+    },
+    {
+      "slug": "gardening-ai-mcp",
+      "name": "Gardening Ai",
+      "description": "MEOK AI Labs \u2014 gardening-ai-mcp MCP Server",
+      "url": "https://github.com/CSOAI-ORG/gardening-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:55:24Z"
+    },
+    {
+      "slug": "geolocation-ai-mcp",
+      "name": "Geolocation Ai",
+      "description": "MEOK AI Labs \u2014 IP geolocation, distance calculation, and coordinate operations.",
+      "url": "https://github.com/CSOAI-ORG/geolocation-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:55:36Z"
+    },
+    {
+      "slug": "git-helper-ai-mcp",
+      "name": "Git Helper Ai",
+      "description": "Git Helper MCP \u2014 automation tooling for git helper. MIT.",
+      "url": "https://github.com/CSOAI-ORG/git-helper-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:55:39Z"
+    },
+    {
+      "slug": "grammar-fix-ai-mcp",
+      "name": "Grammar Fix Ai",
+      "description": "Grammar Fix MCP \u2014 automation tooling for grammar fix. MIT.",
+      "url": "https://github.com/CSOAI-ORG/grammar-fix-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:55:56Z"
+    },
+    {
+      "slug": "habit-tracker-ai-mcp",
+      "name": "Habit Tracker Ai",
+      "description": "Track habits, streaks, and build accountability.",
+      "url": "https://github.com/CSOAI-ORG/habit-tracker-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:55:59Z"
+    },
+    {
+      "slug": "hash-utils-ai-mcp",
+      "name": "Hash Utils Ai",
+      "description": "Hash Utils MCP \u2014 automation tooling for hash utils. MIT.",
+      "url": "https://github.com/CSOAI-ORG/hash-utils-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:56:02Z"
+    },
+    {
+      "slug": "html-parser-ai-mcp",
+      "name": "Html Parser Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/html-parser-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:29Z"
+    },
+    {
+      "slug": "hydration-reminder-ai-mcp",
+      "name": "Hydration Reminder Ai",
+      "description": "Hydration tracking and reminders by MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/hydration-reminder-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:32Z"
+    },
+    {
+      "slug": "inventory-management-ai-mcp",
+      "name": "Inventory Management Ai",
+      "description": "Stock control toolkit: reorder points, demand forecasting, SKU optimization, warehouse layout, and shrinkage detection. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/inventory-management-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:53Z"
+    },
+    {
+      "slug": "ip-network-ai-mcp",
+      "name": "Ip Network Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/ip-network-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:56:59Z"
+    },
+    {
+      "slug": "iso-27001-ai-mcp",
+      "name": "Iso 27001 Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/iso-27001-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:57:02Z"
+    },
+    {
+      "slug": "json-ai-mcp",
+      "name": "Json Ai",
+      "description": "json-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/json-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:57:13Z"
+    },
+    {
+      "slug": "jwt-ai-mcp",
+      "name": "Jwt Ai",
+      "description": "MEOK AI Labs \u2014 JWT token operations \u2014 decode, validate, generate, inspect.",
+      "url": "https://github.com/CSOAI-ORG/jwt-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:57:19Z"
+    },
+    {
+      "slug": "keyword-extractor-ai-mcp",
+      "name": "Keyword Extractor Ai",
+      "description": "Keyword extraction MCP \u2014 TF-IDF, RAKE, YAKE, semantic relevance, search volume estimation. MIT.",
+      "url": "https://github.com/CSOAI-ORG/keyword-extractor-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:57:22Z"
+    },
+    {
+      "slug": "korea-ai-basic-act-mcp",
+      "name": "Korea AI Basic Act",
+      "description": "Korea AI Basic Act \u2014 in force since 22 January 2026",
+      "url": "https://github.com/CSOAI-ORG/korea-ai-basic-act-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:57:25Z"
+    },
+    {
+      "slug": "lead-scoring-ai-mcp",
+      "name": "Lead Scoring Ai",
+      "description": "B2B lead scoring with engagement tracking and prioritization.",
+      "url": "https://github.com/CSOAI-ORG/lead-scoring-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:57:35Z"
+    },
+    {
+      "slug": "linkedin-outreach-mcp",
+      "name": "Linkedin Outreach",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/linkedin-outreach-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:57:53Z"
+    },
+    {
+      "slug": "logistics-ai-mcp",
+      "name": "Logistics Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/logistics-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:00Z"
+    },
+    {
+      "slug": "lorem-ipsum-ai-mcp",
+      "name": "Lorem Ipsum Ai",
+      "description": "MEOK AI Labs \u2014 Generate placeholder text in various styles.",
+      "url": "https://github.com/CSOAI-ORG/lorem-ipsum-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:03Z"
+    },
+    {
+      "slug": "markdown-ai-mcp",
+      "name": "Markdown Ai",
+      "description": "Markdown utilities MCP \u2014 format, lint, convert (HTML/PDF), table generation, TOC builder. MIT.",
+      "url": "https://github.com/CSOAI-ORG/markdown-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:58:09Z"
+    },
+    {
+      "slug": "math-solver-ai-mcp",
+      "name": "Math Solver Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/math-solver-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:15Z"
+    },
+    {
+      "slug": "mcp-distributor",
+      "name": "Mcp Distributor",
+      "description": "MEOK AI Labs \u2014 mcp-distributor MCP Server",
+      "url": "https://github.com/CSOAI-ORG/mcp-distributor",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:18Z"
+    },
+    {
+      "slug": "mcp-get",
+      "name": "Mcp Get",
+      "description": "MCP server - Model Context Protocol tool.",
+      "url": "https://github.com/CSOAI-ORG/mcp-get",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-13T11:21:13Z"
+    },
+    {
+      "slug": "mcp-servers",
+      "name": "Mcp Servers",
+      "description": "MEOK AI Labs \u2014 MCP Server Marketplace. 15+ production-ready AI tools.",
+      "url": "https://github.com/CSOAI-ORG/mcp-servers",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "HTML",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:23Z"
+    },
+    {
+      "slug": "meal-planner-ai-mcp",
+      "name": "Meal Planner Ai",
+      "description": "Plan meals, calculate nutrition, generate shopping lists, and suggest substitutes.",
+      "url": "https://github.com/CSOAI-ORG/meal-planner-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:58:32Z"
+    },
+    {
+      "slug": "meditation-guide-ai-mcp",
+      "name": "Meditation Guide Ai",
+      "description": "Generate guided meditations, breathing exercises, and mindfulness practices. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meditation-guide-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:41Z"
+    },
+    {
+      "slug": "meeting-summarizer-ai-mcp",
+      "name": "Meeting Summarizer Ai",
+      "description": "Summarize meeting transcripts, extract action items, identify decisions, and generate follow-up emails.",
+      "url": "https://github.com/CSOAI-ORG/meeting-summarizer-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:58:44Z"
+    },
+    {
+      "slug": "memory-search-mcp",
+      "name": "Memory Search",
+      "description": "Persistent AI memory system with semantic search, care-weighted episodes, temporal chains, knowledge base, and memory consolidation.",
+      "url": "https://github.com/CSOAI-ORG/memory-search-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T12:58:50Z"
+    },
+    {
+      "slug": "meok-abci-bridge-mcp",
+      "name": "Meok Abci Bridge",
+      "description": "MEOK ABCI Bridge MCP \u2014 read-only Tendermint/Cosmos blockchain query for agents. 10 mainnets pre-configured + custom RPC. ABCI 1.0 + ABCI++. HMAC-signed responses. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-abci-bridge-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:58:57Z"
+    },
+    {
+      "slug": "meok-ap2-mandate-mcp",
+      "name": "Meok Ap2 Mandate",
+      "description": "Google AP2 v0.2.0 Mandate MCP - signed user-side spend authorisation + PSD2 SCA crosswalk. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-ap2-mandate-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:03Z"
+    },
+    {
+      "slug": "meok-mcp-cardgen-mcp",
+      "name": "Meok Mcp Cardgen",
+      "description": "MEOK MCP Cardgen - generate signed .well-known MCP server cards (SEP-1649/1960/2127). MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-mcp-cardgen-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:52Z"
+    },
+    {
+      "slug": "meok-mcp-injection-scan-mcp",
+      "name": "Meok Mcp Injection Scan",
+      "description": "MCP injection-scanner \u2014 30+ canonical detection rules across 5 severity tiers for the April 2026 Anthropic MCP RCE class. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-mcp-injection-scan-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T12:59:59Z"
+    },
+    {
+      "slug": "meok-w3c-tdm-rights-mcp",
+      "name": "Meok W3C Tdm Rights",
+      "description": "EU CDSM Art 4(3) TDM rights MCP - issues + scans HTTP/HTML/robots/C2PA reservation signals + signs training-run liability shield. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/meok-w3c-tdm-rights-mcp",
+      "category": "General AI Automation",
+      "frameworks": [
+        "EU AI Act"
+      ],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:00:32Z"
+    },
+    {
+      "slug": "mitre-attack-mcp",
+      "name": "Mitre Attack",
+      "description": "MITRE ATT&CK matrix lookup + tactic/technique mapper MCP. MIT",
+      "url": "https://github.com/CSOAI-ORG/mitre-attack-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:00:53Z"
+    },
+    {
+      "slug": "muckaway-ai-mcp",
+      "name": "Muckaway Ai",
+      "description": "MEOK AI Labs \u2014 Waste logistics & skip hire MCP Server. UK \u00a36B waste management market.",
+      "url": "https://github.com/CSOAI-ORG/muckaway-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:01:02Z"
+    },
+    {
+      "slug": "music-production-ai-mcp",
+      "name": "Music Production Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/music-production-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:01:06Z"
+    },
+    {
+      "slug": "note-taking-ai-mcp",
+      "name": "Note Taking Ai",
+      "description": "Note-taking MCP \u2014 structured notes, tagging, search, export (Markdown/PDF), knowledge base integration. MIT.",
+      "url": "https://github.com/CSOAI-ORG/note-taking-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:01:15Z"
+    },
+    {
+      "slug": "notification-ai-mcp",
+      "name": "Notification Ai",
+      "description": "MEOK AI Labs \u2014 Send notifications via webhooks.",
+      "url": "https://github.com/CSOAI-ORG/notification-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:01:18Z"
+    },
+    {
+      "slug": "nutrition-tracker-ai-mcp",
+      "name": "Nutrition Tracker Ai",
+      "description": "Nutrition tracking and dietary analysis by MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/nutrition-tracker-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:01:27Z"
+    },
+    {
+      "slug": "oasf-agent-directory-mcp",
+      "name": "Oasf Agent Directory",
+      "description": "OASF Agent Directory MCP - Cisco AGNTCY bridge under Linux Foundation. MIT. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/oasf-agent-directory-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:01:30Z"
+    },
+    {
+      "slug": "otp-ai-mcp",
+      "name": "Otp Ai",
+      "description": "MEOK AI Labs \u2014 Generate and verify TOTP/HOTP codes.",
+      "url": "https://github.com/CSOAI-ORG/otp-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:01:42Z"
+    },
+    {
+      "slug": "pdf-document-mcp",
+      "name": "Pdf Document",
+      "description": "Document processing toolkit: extract text from PDFs, convert to Markdown, merge files, extract tables, and summarize documents. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/pdf-document-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:01:58Z"
+    },
+    {
+      "slug": "pdf-merge-ai-mcp",
+      "name": "Pdf Merge Ai",
+      "description": "MEOK AI Labs \u2014 Merge and manipulate PDF files.",
+      "url": "https://github.com/CSOAI-ORG/pdf-merge-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:02:02Z"
+    },
+    {
+      "slug": "pdf-tools-ai-mcp",
+      "name": "Pdf Tools Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/pdf-tools-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:02:07Z"
+    },
+    {
+      "slug": "performance-ai-mcp",
+      "name": "Performance Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/performance-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:02:10Z"
+    },
+    {
+      "slug": "pet-care-ai-mcp",
+      "name": "Pet Care Ai",
+      "description": "Pet care MCP \u2014 vaccination tracking, feeding schedules, vet appointments, breed-specific health alerts. MIT.",
+      "url": "https://github.com/CSOAI-ORG/pet-care-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:02:16Z"
+    },
+    {
+      "slug": "planthire-ai-mcp",
+      "name": "Planthire Ai",
+      "description": "planthire-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/planthire-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:02:26Z"
+    },
+    {
+      "slug": "project-management-ai-mcp",
+      "name": "Project Management Ai",
+      "description": "Project Management MCP \u2014 automation tooling for project management. MIT.",
+      "url": "https://github.com/CSOAI-ORG/project-management-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:02:48Z"
+    },
+    {
+      "slug": "rag-knowledge-mcp",
+      "name": "Rag Knowledge",
+      "description": "RAG knowledge base MCP \u2014 semantic search, document chunking, relevance ranking, hallucination reduction. MIT.",
+      "url": "https://github.com/CSOAI-ORG/rag-knowledge-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:23Z"
+    },
+    {
+      "slug": "rag-knowledge-graph-mcp",
+      "name": "Rag Knowledge Graph",
+      "description": "RAG + Knowledge Graph MCP \u2014 hybrid retrieval with vector embeddings + graph traversal. Citation-aware. MIT.",
+      "url": "https://github.com/CSOAI-ORG/rag-knowledge-graph-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:19Z"
+    },
+    {
+      "slug": "recipe-finder-ai-mcp",
+      "name": "Recipe Finder Ai",
+      "description": "Recipe search and meal planning. Find recipes by ingredients, get substitutions, plan meals, and estimate nutrition. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/recipe-finder-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:03:37Z"
+    },
+    {
+      "slug": "recruitment-ai-mcp",
+      "name": "Recruitment Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/recruitment-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:03:40Z"
+    },
+    {
+      "slug": "regex-ai-mcp",
+      "name": "Regex Ai",
+      "description": "regex-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/regex-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:46Z"
+    },
+    {
+      "slug": "restaurant-ai-mcp",
+      "name": "Restaurant Ai",
+      "description": "MEOK AI Labs \u2014 restaurant-ai-mcp MCP Server",
+      "url": "https://github.com/CSOAI-ORG/restaurant-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:03:52Z"
+    },
+    {
+      "slug": "resume-parser-ai-mcp",
+      "name": "Resume Parser Ai",
+      "description": "Parse resumes to extract skills, match against jobs, and score candidates.",
+      "url": "https://github.com/CSOAI-ORG/resume-parser-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:03:55Z"
+    },
+    {
+      "slug": "robotics-control-mcp",
+      "name": "Robotics Control",
+      "description": "IoT and robotics interface: list devices, send serial/HTTP commands, read sensors, control servos, send G-code, and emergency stop. Part of MEOK AI Labs' HARVI project.",
+      "url": "https://github.com/CSOAI-ORG/robotics-control-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:04:04Z"
+    },
+    {
+      "slug": "scam-detector-mcp",
+      "name": "Scam Detector",
+      "description": "By [MEOK AI Labs](https://meok.ai) | The only MCP server for scam and fraud detection.",
+      "url": "https://github.com/CSOAI-ORG/scam-detector-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:04:13Z"
+    },
+    {
+      "slug": "schema-validator-ai-mcp",
+      "name": "Schema Validator Ai",
+      "description": "JSON Schema validator MCP \u2014 validate against draft 7/2019-09/2020-12, generate schemas from examples. MIT.",
+      "url": "https://github.com/CSOAI-ORG/schema-validator-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:16Z"
+    },
+    {
+      "slug": "sentiment-analysis-ai-mcp",
+      "name": "Sentiment Analysis Ai",
+      "description": "Analyse text sentiment, detect emotions, and compare tones. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/sentiment-analysis-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:04:29Z"
+    },
+    {
+      "slug": "seo-checker-ai-mcp",
+      "name": "Seo Checker Ai",
+      "description": "SEO analysis MCP \u2014 meta tags, structured data, Core Web Vitals, keyword density, competitor benchmarking. MIT.",
+      "url": "https://github.com/CSOAI-ORG/seo-checker-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:35Z"
+    },
+    {
+      "slug": "sigstore-cosign-mcp",
+      "name": "Sigstore Cosign",
+      "description": "Sigstore cosign + Rekor transparency log verification MCP. MIT",
+      "url": "https://github.com/CSOAI-ORG/sigstore-cosign-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:41Z"
+    },
+    {
+      "slug": "slack-enterprise-mcp",
+      "name": "Slack Enterprise",
+      "description": "Slack Enterprise MCP \u2014 automation tooling for slack enterprise. MIT.",
+      "url": "https://github.com/CSOAI-ORG/slack-enterprise-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:04:47Z"
+    },
+    {
+      "slug": "sleep-tracker-ai-mcp",
+      "name": "Sleep Tracker Ai",
+      "description": "Track sleep duration and quality, analyse patterns, and get personalised sleep recommendations. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/sleep-tracker-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:04:53Z"
+    },
+    {
+      "slug": "slugify-ai-mcp",
+      "name": "Slugify Ai",
+      "description": "URL slug generation and text normalization. Slugify, deslugify, batch process, and generate SEO-friendly URLs. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/slugify-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:04:59Z"
+    },
+    {
+      "slug": "sql-builder-ai-mcp",
+      "name": "Sql Builder Ai",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/sql-builder-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:05:18Z"
+    },
+    {
+      "slug": "string-utils-ai-mcp",
+      "name": "String Utils Ai",
+      "description": "String Utils MCP \u2014 automation tooling for string utils. MIT.",
+      "url": "https://github.com/CSOAI-ORG/string-utils-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:05:26Z"
+    },
+    {
+      "slug": "subscription-tracker-ai-mcp",
+      "name": "Subscription Tracker Ai",
+      "description": "Track SaaS subscriptions, renewal dates, spending, and find duplicate services. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/subscription-tracker-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:05:40Z"
+    },
+    {
+      "slug": "summarizer-ai-mcp",
+      "name": "Summarizer Ai",
+      "description": "Text summarization and extraction by MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/summarizer-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:05:43Z"
+    },
+    {
+      "slug": "supply-chain-mcp",
+      "name": "Supply Chain",
+      "description": "MCP server - Model Context Protocol tool.",
+      "url": "https://github.com/CSOAI-ORG/supply-chain-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:05:49Z"
+    },
+    {
+      "slug": "survey-builder-ai-mcp",
+      "name": "Survey Builder Ai",
+      "description": "Create surveys, validate questions, collect responses, and generate analysis reports.",
+      "url": "https://github.com/CSOAI-ORG/survey-builder-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:05:52Z"
+    },
+    {
+      "slug": "text-stats-ai-mcp",
+      "name": "Text Stats Ai",
+      "description": "Text Stats MCP \u2014 automation tooling for text stats. MIT.",
+      "url": "https://github.com/CSOAI-ORG/text-stats-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:06:10Z"
+    },
+    {
+      "slug": "time-tracker-ai-mcp",
+      "name": "Time Tracker Ai",
+      "description": "Track work time with start/stop timers, log entries, and generate reports. By MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/time-tracker-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:06:22Z"
+    },
+    {
+      "slug": "translation-ai-mcp",
+      "name": "Translation Ai",
+      "description": "translation-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/translation-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:06:30Z"
+    },
+    {
+      "slug": "translator-pro-ai-mcp",
+      "name": "Translator Pro Ai",
+      "description": "Translation and language tools by MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/translator-pro-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:06:33Z"
+    },
+    {
+      "slug": "unit-converter-ai-mcp",
+      "name": "Unit Converter Ai",
+      "description": "Unit Converter MCP \u2014 automation tooling for unit converter. MIT.",
+      "url": "https://github.com/CSOAI-ORG/unit-converter-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:06:48Z"
+    },
+    {
+      "slug": "url-ai-mcp",
+      "name": "Url Ai",
+      "description": "url-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/url-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:06:51Z"
+    },
+    {
+      "slug": "uuid-ai-mcp",
+      "name": "Uuid Ai",
+      "description": "UUID, ULID, and NanoID generation by MEOK AI Labs.",
+      "url": "https://github.com/CSOAI-ORG/uuid-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:06:54Z"
+    },
+    {
+      "slug": "vector-knowledge-graph-mcp",
+      "name": "Vector Knowledge Graph",
+      "description": "MEOK AI Labs MCP Server",
+      "url": "https://github.com/CSOAI-ORG/vector-knowledge-graph-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:07:00Z"
+    },
+    {
+      "slug": "voice-audio-mcp",
+      "name": "Voice Audio",
+      "description": "MEOK AI Labs \u2014 Voice & Audio. TTS, voice cloning, audio generation, transcription. Integrates with Kokoro TTS and Whisper STT.",
+      "url": "https://github.com/CSOAI-ORG/voice-audio-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": true,
+      "updatedAt": "2026-05-31T13:07:09Z"
+    },
+    {
+      "slug": "weather-ai-mcp",
+      "name": "Weather Ai",
+      "description": "weather-ai-mcp MCP \u2014 AI-powered automation tool. MIT.",
+      "url": "https://github.com/CSOAI-ORG/weather-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:07:21Z"
+    },
+    {
+      "slug": "web-research-mcp",
+      "name": "Web Research",
+      "description": "Web search and browser automation toolkit: DuckDuckGo search, page extraction, screenshots, click/type automation, and article reader.",
+      "url": "https://github.com/CSOAI-ORG/web-research-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:07:24Z"
+    },
+    {
+      "slug": "workout-planner-ai-mcp",
+      "name": "Workout Planner Ai",
+      "description": "Create workout plans, track progress, suggest exercises, and calculate training volume.",
+      "url": "https://github.com/CSOAI-ORG/workout-planner-ai-mcp",
+      "category": "General AI Automation",
+      "frameworks": [],
+      "language": "Python",
+      "meokLabs": false,
+      "updatedAt": "2026-05-31T13:07:32Z"
+    }
+  ]
+}

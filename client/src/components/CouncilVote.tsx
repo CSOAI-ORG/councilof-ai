@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-// CouncilVote — a live visualization of the 33-agent Byzantine fault-tolerant
+// CouncilVote — a live visualization of the 33-agent fault-aware consensus
 // council reaching consensus. 33 nodes in a ring vote toward a 2/3 quorum; a
 // care-floor gauge holds at 0.95. Pure SVG + rAF, zero deps. Makes the abstract
-// "BFT council" real and visual. Re-runs when `trigger` changes (e.g. a new query).
+// "Council of AI" real and visual. Re-runs when `trigger` changes (e.g. a new query).
 const N = 33;
 const QUORUM = Math.ceil((2 * N) / 3); // 22 — Byzantine 2/3
 const R = 120, CX = 150, CY = 150;
@@ -38,7 +38,7 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
   return (
     <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
       <div className="flex items-center justify-between">
-        <div className="text-sm font-black text-emerald-100">33-agent Byzantine council</div>
+        <div className="text-sm font-black text-emerald-100">33-agent Council of AI</div>
         <span className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (reached ? "bg-emerald-500/20 text-emerald-300" : "bg-white/5 text-emerald-300/60")}>{phase === "done" ? (reached ? "consensus reached" : "no quorum") : "voting…"}</span>
       </div>
       <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row">

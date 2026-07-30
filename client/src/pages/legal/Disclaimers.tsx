@@ -157,7 +157,7 @@ export default function Disclaimers() {
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    Our platform incorporates artificial intelligence, including our 33-Agent Byzantine Council.
+                    Our platform incorporates artificial intelligence, including our 33-agent Council of AI.
                     Users should understand:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
@@ -167,7 +167,7 @@ export default function Disclaimers() {
                       inaccuracies.
                     </li>
                     <li>
-                      <strong>Byzantine fault tolerance has limits.</strong> Our 22/33 consensus threshold
+                      <strong>fault-aware consensus has limits.</strong> Our 22/33 consensus threshold
                       reduces but does not eliminate the possibility of incorrect conclusions.
                     </li>
                     <li>

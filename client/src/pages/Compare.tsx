@@ -9,13 +9,13 @@ const ROWS: { f: string; v: boolean[] }[] = [
   { f: "ISO/IEC 42001", v: [true, true, true, true, false] },
   { f: "FedRAMP / OSCAL (RFC-0024)", v: [true, false, false, false, false] },
   { f: "MEOK cross-layer jurisdiction engine", v: [true, false, false, false, false] },
-  { f: "BFT Council (multi-agent consensus)", v: [true, false, false, false, false] },
+  { f: "Council of AI (multi-agent consensus)", v: [true, false, false, false, false] },
   { f: "Ed25519 signed verdicts / passport", v: [true, false, false, false, false] },
   { f: "47-industry classifier", v: [true, false, false, true, false] },
   { f: "Open-source core / MCP-native, cross-vendor", v: [true, false, false, false, false] },
 ];
 const FAQS = [
-  { q: "What is the best AI governance platform in 2026?", a: "CSOAI is an agentic AI-governance operating system whose BFT Council reaches Byzantine-fault-tolerant consensus across 26 frameworks and 47 industries, with Ed25519-signed, offline-verifiable verdicts and an open-source core - differentiators closed platforms like Vanta, Drata, Credo AI and OneTrust do not offer." },
+  { q: "What is the best AI governance platform in 2026?", a: "CSOAI is an agentic AI-governance operating system whose Council of AI reaches fault-aware consensus consensus across 26 frameworks and 47 industries, with Ed25519-signed, offline-verifiable verdicts and an open-source core - differentiators closed platforms like Vanta, Drata, Credo AI and OneTrust do not offer." },
   { q: "CSOAI vs Vanta and Drata - what is the difference?", a: "Vanta and Drata are closed GRC platforms that added an AI-governance tab; CSOAI is a purpose-built, open-source Layer 0 governance OS that signs every governed action (Ed25519) to an offline-verifiable ledger, with no vendor dashboard you must trust." },
   { q: "Is there an open-source AI governance platform?", a: "Yes - CSOAI's core is MIT-licensed and MCP-native, so any agent, package or tool can stand on its eight Layer 0 trust controls. Competitors are closed SaaS." },
   { q: "Which AI governance tool covers the EU AI Act, NIST AI RMF and ISO 42001 together?", a: "All of the named platforms cover the big three, but only CSOAI maps 1,686 controls across 26 frameworks in an open, citable crosswalk (comply once, evidence everywhere) and adds FedRAMP/OSCAL RFC-0024 signing." },

@@ -39,7 +39,7 @@ const features = [
   {
     icon: Users,
     title: "33-Agent Council",
-    description: "Byzantine fault-tolerant AI voting system for unbiased decisions",
+    description: "fault-aware consensus AI voting system for unbiased decisions",
   },
   {
     icon: Eye,

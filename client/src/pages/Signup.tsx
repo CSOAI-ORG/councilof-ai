@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 
 const PLAN_INFO: Record<string, { label: string; blurb: string; accent: 'amber' | 'emerald' }> = {
   operator: { label: 'Operator — Defence-grade', blurb: 'ONE OS live agent + humanoid tracking, pre-emptive rogue-swarm stop, Emergence dome & Watchdog console. $249/mo.', accent: 'amber' },
-  pro: { label: 'Pro', blurb: 'Premium hosted models, EU AI Act audit, BFT council & real-world Sov Space. From $82.50/mo.', accent: 'emerald' },
+  pro: { label: 'Pro', blurb: 'Premium hosted models, EU AI Act audit, Council of AI & real-world Sov Space. From $82.50/mo.', accent: 'emerald' },
   team: { label: 'Team', blurb: 'Everything in Pro per seat, SSO + SCIM, shared council & audit logs.', accent: 'emerald' },
   enterprise: { label: 'Enterprise', blurb: 'Full EU AI Act audit suite, dedicated council + defence, data residency & SLA.', accent: 'emerald' },
 };

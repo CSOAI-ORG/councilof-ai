@@ -106,13 +106,13 @@ export default function Council() {
           >
             <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-400/30">
               <Shield className="h-3.5 w-3.5 mr-1" />
-              Byzantine Fault Tolerant
+              fault-aware consensus
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               The <span className="text-emerald-400">Byzantine Council</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-              33 AI agents from 7 different providers working together with Byzantine fault tolerance.
+              33 AI agents from 7 different providers working together with fault-aware consensus.
               No single company can manipulate safety decisions. Ever.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -133,7 +133,7 @@ export default function Council() {
         </div>
       </section>
 
-      {/* What is Byzantine Fault Tolerance */}
+      {/* What is fault-aware consensus */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <motion.div
@@ -147,7 +147,7 @@ export default function Council() {
               Core Technology
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              What is <span className="text-emerald-600">Byzantine Fault Tolerance?</span>
+              What is <span className="text-emerald-600">fault-aware consensus?</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Named after the Byzantine Generals' Problem in distributed computing,
@@ -173,7 +173,7 @@ export default function Council() {
                         <h4 className="font-bold text-gray-900 mb-2">23/33 Consensus Required</h4>
                         <p className="text-gray-600">
                           Every safety decision requires 70% agreement (23 of 33 agents).
-                          This threshold ensures Byzantine fault tolerance.
+                          This threshold ensures fault-aware consensus.
                         </p>
                       </div>
                     </div>

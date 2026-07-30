@@ -4,7 +4,7 @@
 // disclosure, the BFT care-floor, and the real UK company registration.
 const SIGNALS: { icon: string; label: string; sub: string; href?: string }[] = [
   { icon: "✶", label: "Ed25519 · Layer 0", sub: "Every decision cryptographically signed", href: "/workbench" },
-  { icon: "⚖", label: "33-agent BFT council", sub: "Care-floor 0.95 · no single point of capture", href: "/try" },
+  { icon: "⚖", label: "33-agent Council of AI", sub: "Care-floor 0.95 · no single point of capture", href: "/try" },
   { icon: "◫", label: "Aligned to 13 frameworks", sub: "EU AI Act · NIST · ISO 42001 · DORA · NIS2", href: "/crosswalk" },
   { icon: "◍", label: "Open source · MIT", sub: "300+ governed MCP tools, inspectable", href: "/tool-commons" },
   { icon: "🛡", label: "Coordinated disclosure", sub: "Published security.txt + CVD policy", href: "/vulnerability-disclosure" },

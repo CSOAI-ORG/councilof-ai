@@ -24,7 +24,7 @@ const STEPS: Step[] = [
   { say: "Across to New York - the OS sees the whole real world, wherever you are. Here's the public street cam, live.", wins: [{ title: "◉ Public street cam - New York (live)", src: "/livecam.html?loc=New%20York", slot: "tr" }], fly: { lng: -74.0, lat: 40.71, height: 16000 }, full: true },
   { say: "And up to Canada - Toronto. Critical infrastructure and power, all live on the governed map - and the local public feed follows.", wins: [{ title: "◉ Public street cam - Toronto (live)", src: "/livecam.html?loc=Toronto", slot: "tr" }], fly: { lng: -79.38, lat: 43.65, height: 16000 }, layer: { tag: "plants", on: true }, full: true },
   { say: "Here's the Governance Graph. Name any company, place or AI system and I map the jurisdiction and every framework that applies.", wins: [{ title: "Governance Graph", src: "/graph?demo=a%20hospital%20in%20Texas", slot: "tr" }], fly: { lng: -99, lat: 31, height: 2600000 } },
-  { say: "Now the Council - and this is a first: no single model decides. A Byzantine fault-tolerant council of agents deliberates, held to a 0.95 care-floor, then seals a signed verdict that can't be captured or bribed. Describe any AI system and watch it rule.", wins: [{ title: "The BFT Council", src: "/try?demo=We%20use%20AI%20to%20screen%20job%20applicants", slot: "tr" }], fly: { lng: 4.3, lat: 50.8, height: 2600000 } },
+  { say: "Now the Council - and this is a first: no single model decides. A Council of AI of agents deliberates, held to a 0.95 care-floor, then seals a signed verdict that can't be captured or bribed. Describe any AI system and watch it rule.", wins: [{ title: "The Council of AI", src: "/try?demo=We%20use%20AI%20to%20screen%20job%20applicants", slot: "tr" }], fly: { lng: 4.3, lat: 50.8, height: 2600000 } },
   { say: "But here's what nobody else has: the governance floor. This is the SOV3 Workbench. Any AI task - a policy, a risk classification, a crosswalk - becomes a signed, reproducible, council-reviewed artifact, sealed with Ed25519. It sits UNDER Claude Science, Claude Code, any agent. They generate; we make it provable.", wins: [{ title: "SOV3 Workbench - signed, reproducible artifacts", src: "/workbench", slot: "tr" }], fly: { lng: -0.1, lat: 51.5, height: 3000000 } },
   { say: "And it's not a dashboard - it's a whole operating system. 370+ governed tools, keyless and live, from crosswalks to cyber to attestation, all running on one Sovereign brain. An app store for AI governance. No one else ships it this way.", wins: [{ title: "The Sovereign OS - 370+ governed tools", src: "/os", slot: "c" }], full: true },
   { say: "This is our public Watchdog - humans, agents, humanoids and systems report incidents, and the world heat-maps by problem layer.", wins: [{ title: "Global AI Watchdog", src: "/watchdog-map", slot: "c" }], layer: { tag: "nodes", on: true } },
@@ -60,7 +60,7 @@ const STEPS: Step[] = [
   { say: "Own your AI. Own your data. Start free, scale when you need. That's your OS - and I'm always right here. Ask me anything, any time.", wins: [{ title: "Plans", src: "/pricing", slot: "tr" }], home: true },
 ];
 
-const BOOT = ["Establishing governed link", "Loading Sovereign Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "33-agent BFT council online", "Care-floor engaged"];
+const BOOT = ["Establishing governed link", "Loading Sovereign Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "33-agent Council of AI online", "Care-floor engaged"];
 
 // Navigation surfaces for the OS drawer + bottom bar (end-user tool navigation).
 const NAV_GROUPS: { g: string; items: { n: string; src: string }[] }[] = [
@@ -73,7 +73,7 @@ const NAV_LAYERS: { n: string; tag: string }[] = [
   { n: "Frameworks", tag: "frameworks" }, { n: "Regulators", tag: "regulators" }, { n: "Governments", tag: "gov" }, { n: "Fortune / companies", tag: "fortune" }, { n: "Cyber / CNI", tag: "cyber" }, { n: "AI compute", tag: "compute" }, { n: "AI labs & safety", tag: "labs" }, { n: "Autonomous systems", tag: "auton" }, { n: "Sovereign network", tag: "network" }, { n: "Robotics", tag: "robotics" }, { n: "Humanoids", tag: "humanoids" }, { n: "AI-security intel", tag: "intel" }, { n: "Space & satellites", tag: "space" }, { n: "AI-critical energy", tag: "energy" }, { n: "Internet backbone", tag: "cables" }, { n: "Industries → AI", tag: "industries" }, { n: "Live aircraft", tag: "aircraft" }, { n: "Ontology", tag: "ontology" }, { n: "Cross-region mesh", tag: "arcs" },
 ];
 const NAV_SHOW: { n: string; cmd: any }[] = [
-  { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ BFT council spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◱ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
+  { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ Council of AI spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◱ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
 ];
 // Sovereign Network directory — signed agent domains, opened in a new tab.
 const NET_DOMAINS: { d: string; n: string }[] = [

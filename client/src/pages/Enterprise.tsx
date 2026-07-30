@@ -45,7 +45,7 @@ const faqData = [
   },
   {
     question: "How does automated assessment work?",
-    answer: "Our 33-Agent Byzantine Council uses 12 different AI providers to independently assess your AI systems. Each agent evaluates your system against the selected frameworks, and consensus is reached through Byzantine fault-tolerant voting. This ensures unbiased, accurate assessments without single-vendor conflicts of interest."
+    answer: "Our 33-agent Council of AI uses 12 different AI providers to independently assess your AI systems. Each agent evaluates your system against the selected frameworks, and consensus is reached through fault-aware consensus voting. This ensures unbiased, accurate assessments without single-vendor conflicts of interest."
   },
   {
     question: "Is my data secure?",
@@ -252,7 +252,7 @@ export default function Enterprise() {
                 <Zap className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Automated Assessment</h3>
                 <p className="text-sm text-gray-600">
-                  33-Agent Byzantine Council evaluates your systems against selected compliance frameworks.
+                  33-agent Council of AI evaluates your systems against selected compliance frameworks.
                 </p>
               </Card>
             </div>

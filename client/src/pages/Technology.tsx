@@ -51,10 +51,10 @@ export default function Technology() {
       id: 'analysis-engine',
       title: 'Analysis Engine',
       icon: Brain,
-      description: '33-agent Byzantine council processes in parallel',
+      description: '33-agent Council of AI processes in parallel',
       details: [
         'Distributed processing across multiple nodes',
-        'Byzantine Fault Tolerant consensus algorithm',
+        'fault-aware consensus consensus algorithm',
         '22/33 threshold for compliance decisions',
         'Sub-100ms response time for standard audits',
         'Horizontal scaling for variable loads'
@@ -114,7 +114,7 @@ export default function Technology() {
             The Technology Behind <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Trustworthy AI Governance</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-            Built on Byzantine Fault-Tolerant consensus architecture, CSOAI's 33-agent council delivers bulletproof compliance verification across any AI system.
+            Built on fault-aware consensus consensus architecture, CSOAI's 33-agent council delivers bulletproof compliance verification across any AI system.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing">
@@ -135,7 +135,7 @@ export default function Technology() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold text-white mb-4">How the 33-Agent Byzantine Council Works</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">How the 33-agent Council of AI Works</h2>
             <p className="text-blue-200 text-lg">Distributed consensus for uncompromising compliance verification</p>
           </div>
 
@@ -263,7 +263,7 @@ export default function Technology() {
                 <Brain className="text-blue-400 flex-shrink-0" size={28} />
                 <div>
                   <h4 className="font-bold text-white">Analysis Engine</h4>
-                  <p className="text-sm text-blue-200">33-agent Byzantine council (22/33 consensus)</p>
+                  <p className="text-sm text-blue-200">33-agent Council of AI (22/33 consensus)</p>
                 </div>
               </div>
 

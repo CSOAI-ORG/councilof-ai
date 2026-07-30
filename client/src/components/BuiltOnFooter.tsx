@@ -13,7 +13,7 @@ import { ExternalLink, Scale, Package, Landmark, FileCheck } from "lucide-react"
  *   1. **It would be a false association.** We have no partnership with Oracle or NVIDIA. We
  *      can reach an NVIDIA API endpoint (and today not even that — the key is a placeholder).
  *      Displaying a company's mark implies endorsement, and that is the same class of claim as
- *      the "CSOAI is ISO 17065 certified" line removed from the live site today.
+ *      the false accreditation line (never claim ISO 17065 certification) removed from the live site today.
  *   2. **Logos are trademarks.** Using them to borrow status is a trademark problem before it
  *      is a credibility problem, and most vendor brand guidelines forbid exactly this use.
  *   3. **It fails the one test that matters here.** A reader who checks a single logo, finds no

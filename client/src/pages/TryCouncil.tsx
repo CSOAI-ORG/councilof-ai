@@ -4,7 +4,7 @@ import CouncilVote from "../components/CouncilVote";
 
 // TryCouncil — the 30-second WOW. The world's first AI Governance Council, live.
 // Type a compliance question; five specialised agents (Oracle, Skeptic, Architect,
-// Ethicist, Strategist) deliberate with Byzantine-fault-tolerant voting and return a
+// Ethicist, Strategist) deliberate with fault-aware consensus voting and return a
 // risk classification mapped to global frameworks. Runs entirely client-side as a
 // deterministic governance engine — the production council + emailed 13-framework
 // report switch on with the Layer 0 backend.
@@ -176,7 +176,7 @@ export default function TryCouncil() {
 
             {shown >= AGENTS.length && (
               <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-                <div className="font-bold text-emerald-900">Consensus reached — Byzantine-fault-tolerant vote</div>
+                <div className="font-bold text-emerald-900">Consensus reached — fault-aware consensus vote</div>
                 <p className="mt-1 text-sm text-emerald-800">The council agrees: <strong>{result.tier}</strong>. {result.tier === "High-risk" ? "Begin a conformity programme against the six EU AI Act duties (Art. 9-15) before the August 2026 deadline." : result.tier === "Prohibited" ? "Do not deploy — redesign the use case." : "Apply the transparency duties now and re-assess at every material change."}</p>
                 {liveState === "idle" && <button onClick={convene} className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800">Convene the live 5-agent council →</button>}
                 {liveState === "running" && <div className="mt-3 text-sm text-emerald-700">The five agents are deliberating live over the gateway…</div>}

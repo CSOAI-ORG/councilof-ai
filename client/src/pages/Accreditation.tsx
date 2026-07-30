@@ -330,7 +330,7 @@ export default function Accreditation() {
                 Enterprise Accreditation Program
               </h2>
               <p className="text-xl text-blue-100">
-                Get your entire organization CSOAI-certified and demonstrate compliance
+                Put your whole team through CSOAI training and hold a signed assessment you can show
                 to regulators, customers, and stakeholders.
               </p>
             </div>
@@ -374,7 +374,7 @@ export default function Accreditation() {
       <section className="py-20">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Ready to Become CSOAI Certified?
+            Ready to train your team with CSOAI?
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
             Join certified AI Safety Analysts building careers in the fastest-growing

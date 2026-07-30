@@ -89,6 +89,61 @@ const Sov3Whitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
 const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const ProvenanceFinding = lazy(() => import("./pages/ProvenanceFinding"));
 const AiTransparency = lazy(() => import("./pages/AiTransparency"));
+const ABTesting = lazy(() => import("./pages/ABTesting"));
+const AboutCEASAI = lazy(() => import("./pages/AboutCEASAI"));
+const Accessibility = lazy(() => import("./pages/Accessibility"));
+const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
+const ByzantineConsensus = lazy(() => import("./pages/ByzantineConsensus"));
+const CEASAITraining = lazy(() => import("./pages/CEASAITraining"));
+const AustraliaAIGovernanceCompliance = lazy(() => import("./pages/AustraliaAIGovernanceCompliance"));
+const CanadaAIActCompliance = lazy(() => import("./pages/CanadaAIActCompliance"));
+const EUAIActCompliance = lazy(() => import("./pages/EUAIActCompliance"));
+const NISTAIRMFCompliance = lazy(() => import("./pages/NISTAIRMFCompliance"));
+const TC260Compliance = lazy(() => import("./pages/TC260Compliance"));
+const UKAIBillCompliance = lazy(() => import("./pages/UKAIBillCompliance"));
+const ConformityRoute = lazy(() => import("./pages/ConformityRoute"));
+const Contact = lazy(() => import("./pages/Contact"));
+const CouncilDetail = lazy(() => import("./pages/CouncilDetail"));
+const CouncilLicensingLanding = lazy(() => import("./pages/CouncilLicensingLanding"));
+const CourseDetail = lazy(() => import("./pages/CourseDetail"));
+const Documentation = lazy(() => import("./pages/Documentation"));
+const EarlyAccessLanding = lazy(() => import("./pages/EarlyAccessLanding"));
+const EI3 = lazy(() => import("./pages/EI3"));
+const EnterprisePlansLanding = lazy(() => import("./pages/EnterprisePlansLanding"));
+const EUAIActClassifier = lazy(() => import("./pages/EUAIActClassifier"));
+const EUAIActUrgency = lazy(() => import("./pages/EUAIActUrgency"));
+const RegulationFeed = lazy(() => import("./pages/RegulationFeed"));
+const FrameworkDetail = lazy(() => import("./pages/FrameworkDetail"));
+const AustraliaAIGovernance = lazy(() => import("./pages/AustraliaAIGovernance"));
+const CanadaAIAct = lazy(() => import("./pages/CanadaAIAct"));
+const UKAIBill = lazy(() => import("./pages/UKAIBill"));
+const GlobalAISafetyInitiative = lazy(() => import("./pages/GlobalAISafetyInitiative"));
+const GovBench = lazy(() => import("./pages/GovBench"));
+const GovernmentLinks = lazy(() => import("./pages/GovernmentLinks"));
+const GovernmentPortal = lazy(() => import("./pages/GovernmentPortal"));
+const HelpCenter = lazy(() => import("./pages/HelpCenter"));
+const HorusIntel = lazy(() => import("./pages/HorusIntel"));
+const CertificationHowItWorks = lazy(() => import("./pages/CertificationHowItWorks"));
+const ComplianceHowItWorks = lazy(() => import("./pages/ComplianceHowItWorks"));
+const DashboardHowItWorks = lazy(() => import("./pages/DashboardHowItWorks"));
+const EnterpriseHowItWorks = lazy(() => import("./pages/EnterpriseHowItWorks"));
+const TrainingHowItWorks = lazy(() => import("./pages/TrainingHowItWorks"));
+const Landscape = lazy(() => import("./pages/Landscape"));
+const MCPRegistry = lazy(() => import("./pages/MCPRegistry"));
+const MCPDetail = lazy(() => import("./pages/MCPDetail"));
+const Home = lazy(() => import("./pages/Home"));
+const OpenGridWorks = lazy(() => import("./pages/OpenGridWorks"));
+const Outreach = lazy(() => import("./pages/Outreach"));
+const RegulationRadar = lazy(() => import("./pages/RegulationRadar"));
+const RegionSettings = lazy(() => import("./pages/RegionSettings"));
+const RegionalAnalytics = lazy(() => import("./pages/RegionalAnalytics"));
+const RegulatoryAuthority = lazy(() => import("./pages/RegulatoryAuthority"));
+const RegulatoryCompliance = lazy(() => import("./pages/RegulatoryCompliance"));
+const Support = lazy(() => import("./pages/Support"));
+const Status = lazy(() => import("./pages/Status"));
+const PublicWatchdogHub = lazy(() => import("./pages/PublicWatchdogHub"));
+const WatchdogHelpProtectHumanity = lazy(() => import("./pages/WatchdogHelpProtectHumanity"));
+const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport"));
 const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
@@ -415,6 +470,67 @@ function App() {
                   <Route path="/research-transparency" component={ResearchTransparency} />
                   <Route path="/provenance-finding" component={ProvenanceFinding} />
                   <Route path="/ai-transparency" component={AiTransparency} />
+                  <Route path="/ab-testing" component={ABTesting} />
+                  <Route path="/about-ceasai" component={AboutCEASAI} />
+                  <Route path="/accessibility" component={Accessibility} />
+                  <Route path="/analytics" component={AnalyticsDashboard} />
+                  <Route path="/byzantine-consensus" component={ByzantineConsensus} />
+                  <Route path="/ceasai-training" component={CEASAITraining} />
+                  <Route path="/certificate-verification" component={CertificateVerification} />
+                  <Route path="/compliance/australia-ai-governance" component={AustraliaAIGovernanceCompliance} />
+                  <Route path="/compliance/canada-ai-act" component={CanadaAIActCompliance} />
+                  <Route path="/compliance/eu-ai-act" component={EUAIActCompliance} />
+                  <Route path="/compliance/nist-ai-rmf" component={NISTAIRMFCompliance} />
+                  <Route path="/compliance/tc260" component={TC260Compliance} />
+                  <Route path="/compliance/uk-ai-bill" component={UKAIBillCompliance} />
+                  <Route path="/conformity-route" component={ConformityRoute} />
+                  <Route path="/contact" component={Contact} />
+                  <Route path="/council-detail" component={CouncilDetail} />
+                  <Route path="/council-licensing" component={CouncilLicensingLanding} />
+                  <Route path="/courses/:id" component={CourseDetail} />
+                  <Route path="/docs" component={Documentation} />
+                  <Route path="/early-access" component={EarlyAccessLanding} />
+                  <Route path="/ei3" component={EI3} />
+                  <Route path="/enterprise-plans" component={EnterprisePlansLanding} />
+                  <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />
+                  <Route path="/eu-ai-act-urgency" component={EUAIActUrgency} />
+                  <Route path="/feed" component={RegulationFeed} />
+                  <Route path="/frameworks/australia-ai" component={AustraliaAIGovernance} />
+                  <Route path="/frameworks/canada-ai-act" component={CanadaAIAct} />
+                  <Route path="/frameworks/uk-ai-bill" component={UKAIBill} />
+                  <Route path="/global-ai-safety-initiative" component={GlobalAISafetyInitiative} />
+                  <Route path="/govbench" component={GovBench} />
+                  <Route path="/government-links" component={GovernmentLinks} />
+                  <Route path="/government-portal" component={GovernmentPortal} />
+                  <Route path="/help" component={HelpCenter} />
+                  <Route path="/help-center" component={HelpCenter} />
+                  <Route path="/horus" component={HorusIntel} />
+                  <Route path="/how-it-works/certification" component={CertificationHowItWorks} />
+                  <Route path="/how-it-works/compliance" component={ComplianceHowItWorks} />
+                  <Route path="/how-it-works/dashboard" component={DashboardHowItWorks} />
+                  <Route path="/how-it-works/enterprise" component={EnterpriseHowItWorks} />
+                  <Route path="/how-it-works/training" component={TrainingHowItWorks} />
+                  <Route path="/landscape" component={Landscape} />
+                  <Route path="/mcp" component={MCPRegistry} />
+                  <Route path="/mcp/:slug" component={MCPDetail} />
+                  <Route path="/mcps" component={MCPRegistry} />
+                  <Route path="/old-home" component={Home} />
+                  <Route path="/opengridworks" component={OpenGridWorks} />
+                  <Route path="/outreach" component={Outreach} />
+                  <Route path="/radar" component={RegulationRadar} />
+                  <Route path="/region-settings" component={RegionSettings} />
+                  <Route path="/regional-analytics" component={RegionalAnalytics} />
+                  <Route path="/regulatory-authority" component={RegulatoryAuthority} />
+                  <Route path="/regulatory-compliance" component={RegulatoryCompliance} />
+                  <Route path="/soai-pdca/government" component={GovernmentPortal} />
+                  <Route path="/support" component={Support} />
+                  <Route path="/system-status" component={Status} />
+                  <Route path="/verify/:certificateNumber" component={VerifyCertificate} />
+                  <Route path="/watchdog-hub" component={PublicWatchdogHub} />
+                  <Route path="/watchdog-leaderboard" component={WatchdogLeaderboard} />
+                  <Route path="/watchdog/help-protect-humanity" component={WatchdogHelpProtectHumanity} />
+                  <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
+                  <Route path="/watchdog/report" component={PublicWatchdogHub} />
                   <Route path="/benchmarks" component={Benchmarks} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />

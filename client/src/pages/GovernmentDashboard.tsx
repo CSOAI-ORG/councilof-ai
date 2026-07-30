@@ -290,7 +290,7 @@ const byzantineCouncilFeatures = [
   },
   {
     title: "Consensus-Based Decisions",
-    description: "Byzantine fault-tolerant voting ensures no single point of failure. Requires supermajority (22/33) for enforcement actions.",
+    description: "fault-aware consensus voting ensures no single point of failure. Requires supermajority (22/33) for enforcement actions.",
     icon: Users,
     stats: "99.97% decision accuracy",
   },
@@ -959,7 +959,7 @@ export default function GovernmentDashboard() {
               AI-Powered Regulatory Support
             </h2>
             <p className="text-lg text-emerald-100 max-w-3xl mx-auto">
-              Our 33-agent Byzantine Council provides automated, tamper-proof compliance monitoring
+              Our 33-agent Council of AI provides automated, tamper-proof compliance monitoring
               that supports regulatory decision-making with unprecedented accuracy and speed.
             </p>
           </div>
@@ -994,7 +994,7 @@ export default function GovernmentDashboard() {
                 Recent Council Actions
               </CardTitle>
               <CardDescription className="text-emerald-200">
-                Enforcement decisions by the 33-agent Byzantine Council
+                Enforcement decisions by the 33-agent Council of AI
               </CardDescription>
             </CardHeader>
             <CardContent>

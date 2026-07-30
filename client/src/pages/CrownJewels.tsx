@@ -19,7 +19,7 @@ const JEWELS: Jewel[] = [
   { name: "AegisAI", domain: "AI GRC", stars: "~300", why: "Full AI-GRC: EU AI Act + LLM Guard + RAG intelligence", use: "Governance platform", tier: "Gold" },
   { name: "forkd", domain: "Isolation", stars: "~200", why: "fork() for AI microVMs — 100 children in 101ms", use: "Agent sandboxing", tier: "Gold" },
   { name: "chromem-go", domain: "Vector DB", stars: "976", why: "Zero deps, embeddable, 100K docs in 40ms, WASM", use: "On-device search", tier: "Gold" },
-  { name: "ByzFL", domain: "Federated", stars: "36", why: "Byzantine-resilient federated learning", use: "BFT Council", tier: "Gold" },
+  { name: "ByzFL", domain: "Federated", stars: "36", why: "Byzantine-resilient federated learning", use: "Council of AI", tier: "Gold" },
   { name: "Mnemosyne", domain: "AI Memory", stars: "85", why: "7-memory-type taxonomy for agent personality", use: "Agent memory", tier: "Silver" },
   { name: "Attestix", domain: "Identity", stars: "~100", why: "DID-based identity, W3C verifiable credentials", use: "Identity layer", tier: "Silver" },
   { name: "PeerPigeon", domain: "P2P Mesh", stars: "~150", why: "WebRTC mesh, XOR routing, gossip, CRDT", use: "Worm Hive mesh", tier: "Silver" },

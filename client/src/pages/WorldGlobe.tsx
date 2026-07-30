@@ -29,7 +29,7 @@ async function globeGovern(q: string): Promise<any> { try { const r = await fetc
 
 // WorldGlobe - a living, layered, zero-dependency world globe. Auto-rotates (pure SVG
 // orthographic projection), pins every framework temple at its real lat/long, layers
-// the BFT Council, and lets you click any pin for its detail. No external deps.
+// the Council of AI, and lets you click any pin for its detail. No external deps.
 
 type Pin = { id: string; name: string; region: string; lat: number; lng: number; color: string; href: string; note: string };
 type HiveAccount = { id: string; name: string; type: string; region: string; country: string; hq: [number, number]; play: string; gap: number; maxGap: number; confidence: string; topUsp: string | null };
@@ -216,7 +216,7 @@ export default function WorldGlobe() {
         <div className="mt-4 flex flex-wrap gap-2">
           <button onClick={() => setMode((m) => (m === "3d" ? "2d" : "3d"))} className="rounded-full border border-sky-400/50 bg-sky-500/10 px-4 py-1.5 text-sm font-bold text-sky-200 hover:bg-sky-500/20">{mode === "3d" ? "◉ 3D globe" : "◍ 2D classic"}</button>
           <button onClick={() => setLayers((l) => ({ ...l, fw: !l.fw }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.fw ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Frameworks</button>
-          <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>BFT Council</button>
+          <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Council of AI</button>
           <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
           <button onClick={() => setLayers((l) => ({ ...l, ontology: !l.ontology, fw: true }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.ontology ? "border-violet-400 bg-violet-600 text-white" : "border-white/20 text-white/60")}>Ontology</button>
           <button onClick={() => setLayers((l) => ({ ...l, hive: !l.hive }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.hive ? "border-sky-400 bg-sky-600 text-white" : "border-white/20 text-white/60")}>Hive coverage{hiveAccounts.length ? " (" + hiveAccounts.length + ")" : ""}</button>
@@ -314,7 +314,7 @@ export default function WorldGlobe() {
           ) : (
             <div className="text-white/60">
               <div className="text-lg font-bold text-white/80">Click a node</div>
-              <p className="mt-2 text-sm">Frameworks sit at the city where they are made - EU AI Act in Brussels, NIST near DC, PIPL in Beijing. Toggle the BFT Council to see the five agents that govern across them.</p>
+              <p className="mt-2 text-sm">Frameworks sit at the city where they are made - EU AI Act in Brussels, NIST near DC, PIPL in Beijing. Toggle the Council of AI to see the five agents that govern across them.</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <a href="/meok-law" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">MEOK Law -&gt;</a>
                 <a href="/regions" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">By region -&gt;</a>

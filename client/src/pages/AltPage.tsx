@@ -13,7 +13,7 @@ const COMPS: Record<string, Comp> = {
     rows: [
       { dim: "Primary origin", csoai: "AI-governance-native", them: "Security + SOC 2 compliance" },
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Built around it: checklist, GPAI, penalties, sector pages", them: "Covered as one framework among many" },
-      { dim: "Decision governance", csoai: "BFT Council - multi-agent consensus, Ed25519-signed verdicts", them: "Control monitoring + automation" },
+      { dim: "Decision governance", csoai: "Council of AI - multi-agent consensus, Ed25519-signed verdicts", them: "Control monitoring + automation" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "Broad security/privacy framework library" },
       { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
     ],
@@ -27,7 +27,7 @@ const COMPS: Record<string, Comp> = {
     rows: [
       { dim: "Primary origin", csoai: "AI-governance-native", them: "Privacy + GRC + data governance" },
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Built around it: checklist, GPAI, penalties, sector pages", them: "Part of a broad GRC suite" },
-      { dim: "Decision governance", csoai: "BFT Council - multi-agent consensus, Ed25519-signed verdicts", them: "Policy + assessment workflows" },
+      { dim: "Decision governance", csoai: "Council of AI - multi-agent consensus, Ed25519-signed verdicts", them: "Policy + assessment workflows" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "Extensive privacy + GRC framework coverage" },
       { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
     ],
@@ -41,13 +41,13 @@ const COMPS: Record<string, Comp> = {
     rows: [
       { dim: "Primary origin", csoai: "AI-governance-native", them: "AI-governance-native" },
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Checklist, GPAI, penalties, sector pages, live countdown", them: "AI-Act policy + assessment coverage" },
-      { dim: "Decision governance", csoai: "BFT Council - multi-agent consensus, Ed25519-signed verdicts", them: "Policy packs + governance reporting" },
+      { dim: "Decision governance", csoai: "Council of AI - multi-agent consensus, Ed25519-signed verdicts", them: "Policy packs + governance reporting" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "AI-governance frameworks + policy" },
       { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
     ],
     faqs: [
-      { q: "Is CSOAI an alternative to Credo AI?", a: "Yes - both are AI-governance-native. CSOAI differentiates with a Byzantine-fault-tolerant Council for multi-agent decision consensus, Ed25519-signed verdicts, and an open-patent model." },
-      { q: "What makes CSOAI different from other AI-governance tools?", a: "The BFT Council: instead of a single model deciding, a configurable multi-agent council reaches consensus and signs every verdict - and the topology is published open-patent at openpatent.ai." },
+      { q: "Is CSOAI an alternative to Credo AI?", a: "Yes - both are AI-governance-native. CSOAI differentiates with a fault-aware consensus Council for multi-agent decision consensus, Ed25519-signed verdicts, and an open-patent model." },
+      { q: "What makes CSOAI different from other AI-governance tools?", a: "The Council of AI: instead of a single model deciding, a configurable multi-agent council reaches consensus and signs every verdict - and the topology is published open-patent at openpatent.ai." },
     ],
   },
 };

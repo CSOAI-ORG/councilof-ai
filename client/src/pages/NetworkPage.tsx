@@ -10,7 +10,7 @@ const GW = "https://os.meok.ai/api";
 type Agent = { domain: string; role: string; blurb: string; group: "core" | "governance" | "protection" | "applied" };
 const CROWN: Agent = { domain: "csoai.org", role: "the standards crown", blurb: "The Charter, the frameworks and the council that every agent below answers to.", group: "core" };
 const AGENTS: Agent[] = [
-  { domain: "councilof.ai", role: "the BFT council", blurb: "33 agents deliberate every governance verdict with Byzantine-fault-tolerant voting.", group: "core" },
+  { domain: "councilof.ai", role: "the Council of AI", blurb: "33 agents deliberate every governance verdict with fault-aware consensus voting.", group: "core" },
   { domain: "meok.ai", role: "the sovereign brain", blurb: "The reasoning substrate — routes any model, left-brain / right-brain, on your terms.", group: "core" },
   { domain: "proofof.ai", role: "deepfake & identity proof", blurb: "Sign what's really you; a deepfake carries no seal and fails verification.", group: "protection" },
   { domain: "safetyof.ai", role: "AI safety", blurb: "Safety evaluation and harm monitoring across the AI estate.", group: "governance" },

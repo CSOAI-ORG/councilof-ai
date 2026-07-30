@@ -5,7 +5,7 @@ import { useEffect } from "react";
 const STEPS = [
   { t: "Ingest your control set", d: "Import existing SSP, controls, and evidence - any format." },
   { t: "Generate OSCAL packages", d: "Machine-readable SSP, SAP, SAR, and POA&M as RFC-0024 requires." },
-  { t: "Council reviews + signs", d: "The BFT Council checks completeness; every package is Ed25519-signed." },
+  { t: "Council reviews + signs", d: "The Council of AI checks completeness; every package is Ed25519-signed." },
   { t: "Submit + monitor", d: "Track the 30 Sep 2026 deadline with a live readiness score." },
 ];
 export default function Fedramp() {

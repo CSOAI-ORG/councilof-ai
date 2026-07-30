@@ -8,7 +8,7 @@ import { useEffect } from "react";
 const MATRIX: { cap: string; csoai: string; others: string }[] = [
   { cap: "Core software", csoai: "Open-source, self-hostable, no lock-in", others: "Closed SaaS, per-seat lock-in" },
   { cap: "Training & certification", csoai: "Free to learn + verifiable credential", others: "$$$ courses + paid certificates" },
-  { cap: "How verdicts are reached", csoai: "33-agent Byzantine-fault-tolerant council", others: "Single checklist / one model" },
+  { cap: "How verdicts are reached", csoai: "33-agent fault-aware consensus council", others: "Single checklist / one model" },
   { cap: "Proof", csoai: "Ed25519-signed to Layer 0 — offline-verifiable", others: "PDF reports, trust-us attestations" },
   { cap: "Coverage", csoai: "AI + cyber + data, one evidence set, crosswalked", others: "Siloed per framework, re-work each time" },
   { cap: "Cyber testing", csoai: "God's Eye — you scan with open-source, Sovereign fixes", others: "Upsell to a separate pen-test vendor" },
@@ -19,7 +19,7 @@ const MATRIX: { cap: string; csoai: string; others: string }[] = [
 const USPS: { t: string; d: string }[] = [
   { t: "Open-source core", d: "The engine is open. Fork it, self-host it, audit it. Governance you can't trust to read the source isn't governance." },
   { t: "Free training + certification", d: "Learn the frameworks and earn a verifiable Sovereign credential for free. Competence shouldn't be paywalled." },
-  { t: "The BFT Council", d: "Five to thirty-three specialised agents deliberate every verdict with Byzantine-fault-tolerant voting — a council beats one model." },
+  { t: "The Council of AI", d: "Five to thirty-three specialised agents deliberate every verdict with fault-aware consensus voting — a council beats one model." },
   { t: "Layer 0 signing", d: "Every decision sealed with Ed25519 and written to a tamper-evident ledger — provable, not promised." },
   { t: "God's Eye self-scan", d: "A stack of reputable open-source security tools so any CISO can test their own cyber — the Sovereign triages and fixes." },
   { t: "The Care Floor", d: "A hard 0.95 care threshold below which the system won't act — safety is a floor, not a marketing line." },

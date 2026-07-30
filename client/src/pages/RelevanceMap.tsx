@@ -116,7 +116,7 @@ export default function RelevanceMap() {
                 <div className="mt-2 flex flex-wrap gap-2">
                   {gaps.map((g) => <span key={g} className="rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-amber-800 border border-amber-200">{g}</span>)}
                 </div>
-                <p className="mt-2 text-xs text-amber-800/80">These apply to almost every AI deployer regardless of sector. The BFT Council + Layer 0 cover them at the policy layer; a dedicated bridge is the roadmap.</p>
+                <p className="mt-2 text-xs text-amber-800/80">These apply to almost every AI deployer regardless of sector. The Council of AI + Layer 0 cover them at the policy layer; a dedicated bridge is the roadmap.</p>
               </div>
             )}
 

@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 
 const PLAN: Record<string, { label: string; price: string; accent: "amber" | "emerald"; feats: string[] }> = {
   operator: { label: "Operator", price: "$249/mo · defence-grade", accent: "amber", feats: ["ONE OS - live agent + humanoid tracking", "Pre-emptive rogue-swarm stop, signed to Layer 0", "Emergence dome + defence layers", "Global Watchdog operator console", "Priority Layer 0 signing + support"] },
-  pro: { label: "Pro", price: "from $82.50/mo", accent: "emerald", feats: ["Premium hosted models", "Passport + EU AI Act audit", "BFT council + governance", "Real-world Sov Space", "PAYG credits included"] },
+  pro: { label: "Pro", price: "from $82.50/mo", accent: "emerald", feats: ["Premium hosted models", "Passport + EU AI Act audit", "Council of AI + governance", "Real-world Sov Space", "PAYG credits included"] },
   team: { label: "Team", price: "from $124/seat/mo", accent: "emerald", feats: ["Everything in Pro, per seat", "SSO + SCIM", "Shared council + audit logs", "Admin and roles", "Priority support"] },
-  enterprise: { label: "Enterprise", price: "custom", accent: "emerald", feats: ["Full EU AI Act audit suite", "Dedicated BFT council + defence", "Data residency + SLA", "Audit export (CSV/JSON/Parquet)", "Onboarding + success"] },
+  enterprise: { label: "Enterprise", price: "custom", accent: "emerald", feats: ["Full EU AI Act audit suite", "Dedicated Council of AI + defence", "Data residency + SLA", "Audit export (CSV/JSON/Parquet)", "Onboarding + success"] },
 };
 
 export default function Welcome() {

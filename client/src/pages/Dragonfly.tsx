@@ -43,7 +43,7 @@ export default function Dragonfly() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the architecture</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Dragonfly - 4-Wing Model</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The dragonfly has four wings; so does CSOAI. Four independent subsystems - Governance, Intelligence, Safety, Cybersecurity - that must all agree for any major decision. Byzantine Fault Tolerance applied to AI, rediscovered from 4,000 years of governance.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The dragonfly has four wings; so does CSOAI. Four independent subsystems - Governance, Intelligence, Safety, Cybersecurity - that must all agree for any major decision. council cross-checking applied to AI.</p>
           <p className="mt-3 max-w-2xl text-emerald-100/75 text-sm">360-degree vision, reacts in milliseconds, 300 million years of survival. The metaphor is the architecture.</p>
         </div>
       </section>
@@ -90,8 +90,8 @@ export default function Dragonfly() {
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-14">
-        <h2 className="text-xl font-bold text-gray-900">The BFT Council - five agents, Byzantine consensus</h2>
-        <p className="mt-1 text-sm text-gray-500">Five is the minimum for Byzantine Fault Tolerance with one fault (f=1): the system stays correct even if one agent is compromised - the same math that secures Bitcoin.</p>
+        <h2 className="text-xl font-bold text-gray-900">The Council of AI - five agents, Byzantine consensus</h2>
+        <p className="mt-1 text-sm text-gray-500">Five independent legs is the design target; measured effective independence is published on /benchmarks rather than assumed</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {COUNCIL.map((m) => (
             <div key={m.name} className="rounded-2xl border border-gray-200 p-4 text-center">

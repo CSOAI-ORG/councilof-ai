@@ -93,7 +93,7 @@ Safety verification shall be proportionate to risk level and reviewed by certifi
     title: "Byzantine Council",
     part: 1,
     partTitle: "Foundational Principles",
-    content: `Establishment of the 33-agent Byzantine Fault-Tolerant (BFT) consensus monitoring system. This council consists of 33 independent AI agents, each trained to evaluate whether other AI systems are operating safely within their defined parameters.
+    content: `Establishment of the 33-agent fault-aware consensus (BFT) consensus monitoring system. This council consists of 33 independent AI agents, each trained to evaluate whether other AI systems are operating safely within their defined parameters.
 
 The Byzantine Council requires 22 out of 33 agents to agree (66.67% supermajority) before any governance decision is executed or any AI system receives approval for high-risk deployment. This architecture is resistant to up to 10 simultaneous agent failures, corruptions, or biases.
 
@@ -280,11 +280,11 @@ All licenses require periodic renewal and continuing education. Schedule E provi
     title: "Byzantine Council Specifications",
     part: 2,
     partTitle: "Governance Structure",
-    content: `Technical specifications for the 33-node Byzantine Fault-Tolerant consensus system that implements distributed AI governance.
+    content: `Technical specifications for the 33-node fault-aware consensus consensus system that implements distributed AI governance.
 
 Architecture:
 - 33 independent AI agents, each trained on diverse datasets to minimize correlated failures
-- Agents use Practical Byzantine Fault Tolerance (PBFT) consensus algorithm
+- Agents use Practical fault-aware consensus (PBFT) consensus algorithm
 - Each agent maintains complete copy of governance ledger
 - Communication encrypted with quantum-resistant cryptography
 - Agents are geographically distributed across 15+ countries
@@ -448,7 +448,7 @@ Assessment Criteria:
 - Data governance and privacy (10%)
 - Operational excellence (10%)
 
-Organizations successfully assessed receive CSOAI Certified status and public recognition.`,
+Organizations successfully assessed receive a signed CSOAI assessment report they can publish. CSOAI attests to what was measured; it does not certify systems — that requires an accreditation chain (UKAS → ISO/IEC 42006) we do not yet hold.`,
     frameworks: {
       euAIAct: "Articles 15-28 (High-risk requirements)",
       nist: "PM (Process Management), GV (Governance)",
@@ -498,7 +498,7 @@ Embodied AI creates unique risks because failures affect not just data but physi
     title: "Enforcement Mechanisms",
     part: 2,
     partTitle: "Governance Structure",
-    content: `CSOAI maintains graduated enforcement powers to ensure compliance with Charter requirements while providing proportionate responses to violations.
+    content: `The Charter defines graduated responses for participants in CSOAI programmes — from advisory notice to removal from the programme. Enforcement powers over AI systems are conferred by statute on market-surveillance authorities and the AI Office; CSOAI holds none, and the Charter binds only those who opt into it.
 
 Enforcement Tiers:
 

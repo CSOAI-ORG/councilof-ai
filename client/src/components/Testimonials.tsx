@@ -31,7 +31,7 @@ const personas: Persona[] = [
   },
   {
     headline: "Accountability by design",
-    body: "A 33-agent Byzantine council drawn from different providers means no single company can game the outcome — accountability that's structural, not promised.",
+    body: "A 33-agent Council of AI drawn from different providers means no single company can game the outcome — accountability that's structural, not promised.",
     role: "For policy & research",
     category: "government",
   },
@@ -136,7 +136,7 @@ export default function Testimonials() {
         >
           {[
             { value: "7+", label: "Frameworks crosswalked" },
-            { value: "33", label: "BFT council agents" },
+            { value: "33", label: "Council of AI agents" },
             { value: "Layer 0", label: "Signed & verifiable" },
             { value: "Free", label: "Open-source core" },
           ].map((stat, index) => (

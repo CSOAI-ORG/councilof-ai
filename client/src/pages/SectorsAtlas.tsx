@@ -107,7 +107,7 @@ export default function SectorsAtlas() {
           })}
         </div>
         <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          This atlas shows representative sectors per domain. The live classifier resolves any product description to its exact tier and full framework set, then routes it through the BFT Council. Bring yours at <a href="/try" className="font-semibold underline">/try</a> or find your full sector playbook at <a href="/playbooks" className="font-semibold underline">/playbooks</a>.
+          This atlas shows representative sectors per domain. The live classifier resolves any product description to its exact tier and full framework set, then routes it through the Council of AI. Bring yours at <a href="/try" className="font-semibold underline">/try</a> or find your full sector playbook at <a href="/playbooks" className="font-semibold underline">/playbooks</a>.
         </div>
       </section>
     </div>

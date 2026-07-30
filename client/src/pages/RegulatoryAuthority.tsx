@@ -1,0 +1,371 @@
+import { useEffect } from "react";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ArrowRight, CheckCircle2, Globe, Shield, Zap } from "lucide-react";
+
+export default function RegulatoryAuthority() {
+  useEffect(() => { document.title = "RegulatoryAuthority | CSOAI"; }, []);
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-br from-emerald-50 to-white border-b-2 border-emerald-200">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+              CSOAI: The Global Authority for AI Safety Governance
+            </h1>
+            <p className="text-xl text-gray-700 mb-8">
+              Recognized by regulators worldwide. Trusted by enterprises globally. Certified by international standards bodies.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/regulatory/iso-17065">
+                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+                  Learn About ISO 17065
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/regulatory/roadmap">
+                <Button size="lg" variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50">
+                  View 5-Year Roadmap
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Three-Pillar Overview */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
+              Three Pillars of Regulatory Authority
+            </h2>
+            <p className="text-xl text-gray-700 text-center mb-12">
+              How CSOAI becomes the mandatory infrastructure for global AI safety governance
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Pillar 1 */}
+              <Card className="p-8 border-2 border-emerald-200 hover:shadow-lg transition">
+                <div className="flex items-center gap-3 mb-4">
+                  <Shield className="h-8 w-8 text-emerald-600" />
+                  <h3 className="text-2xl font-bold text-gray-900">Accreditation Authority</h3>
+                </div>
+                <ul className="space-y-3 text-gray-700 mb-6">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>ISO 17065 certified accreditation body</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>Formal recognition of training and certification processes</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>International credibility and legitimacy</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>Enables global recognition of certifications</span>
+                  </li>
+                </ul>
+                <Link href="/regulatory/iso-17065">
+                  <Button variant="outline" className="w-full border-emerald-600 text-emerald-600 hover:bg-emerald-50">
+                    Learn More
+                  </Button>
+                </Link>
+              </Card>
+
+              {/* Pillar 2 */}
+              <Card className="p-8 border-2 border-emerald-200 hover:shadow-lg transition">
+                <div className="flex items-center gap-3 mb-4">
+                  <Globe className="h-8 w-8 text-emerald-600" />
+                  <h3 className="text-2xl font-bold text-gray-900">Regional Recognition</h3>
+                </div>
+                <ul className="space-y-3 text-gray-700 mb-6">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>EU Notified Body status (Europe)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>NIST recognition (United States)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>TC260 alignment (China)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>Coverage across all major regulatory regions</span>
+                  </li>
+                </ul>
+                <Link href="/regulatory/roadmap">
+                  <Button variant="outline" className="w-full border-emerald-600 text-emerald-600 hover:bg-emerald-50">
+                    View Roadmap
+                  </Button>
+                </Link>
+              </Card>
+
+              {/* Pillar 3 */}
+              <Card className="p-8 border-2 border-emerald-200 hover:shadow-lg transition">
+                <div className="flex items-center gap-3 mb-4">
+                  <Zap className="h-8 w-8 text-emerald-600" />
+                  <h3 className="text-2xl font-bold text-gray-900">Mandatory Infrastructure</h3>
+                </div>
+                <ul className="space-y-3 text-gray-700 mb-6">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>Governments mandate CSOAI compliance</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>Enterprises have no choice but to integrate</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>Creates switching costs and competitive moat</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span>Generates recurring infrastructure revenue</span>
+                  </li>
+                </ul>
+                <Link href="/government-portal">
+                  <Button variant="outline" className="w-full border-emerald-600 text-emerald-600 hover:bg-emerald-50">
+                    Government Portal
+                  </Button>
+                </Link>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Regulatory Bodies Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
+              Global Regulatory Recognition
+            </h2>
+            <p className="text-xl text-gray-700 text-center mb-12">
+              CSOAI is recognized by the world's leading regulatory bodies
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* ISO 17065 */}
+              <Card className="p-8 border-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-4xl font-bold text-blue-600">ISO</div>
+                  <h3 className="text-2xl font-bold text-gray-900">17065</h3>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  International standard for accreditation bodies certifying products, processes, and services.
+                </p>
+                <ul className="space-y-2 text-gray-700 text-sm mb-6">
+                  <li>✓ Formal recognition as accreditation body</li>
+                  <li>✓ International credibility</li>
+                  <li>✓ Foundation for all other recognitions</li>
+                  <li>✓ Timeline: 12 months (2025)</li>
+                </ul>
+                <Link href="/regulatory/iso-17065">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    Learn More
+                  </Button>
+                </Link>
+              </Card>
+
+              {/* EU Notified Body */}
+              <Card className="p-8 border-2 border-yellow-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-4xl">🇪🇺</div>
+                  <h3 className="text-2xl font-bold text-gray-900">Notified Body</h3>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  Official EU authority for AI system compliance assessment under EU AI Act.
+                </p>
+                <ul className="space-y-2 text-gray-700 text-sm mb-6">
+                  <li>✓ Mandatory for high-risk AI in Europe</li>
+                  <li>✓ Legally binding compliance certificates</li>
+                  <li>✓ €30M fines for non-compliance</li>
+                  <li>✓ Timeline: 24 months (2026-2027)</li>
+                </ul>
+                <Link href="/regulatory/eu-notified-body">
+                  <Button className="w-full bg-yellow-600 hover:bg-yellow-700">
+                    Learn More
+                  </Button>
+                </Link>
+              </Card>
+
+              {/* NIST */}
+              <Card className="p-8 border-2 border-red-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-4xl">🇺🇸</div>
+                  <h3 className="text-2xl font-bold text-gray-900">NIST Recognition</h3>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  US government recognition of alignment with AI Risk Management Framework.
+                </p>
+                <ul className="space-y-2 text-gray-700 text-sm mb-6">
+                  <li>✓ US government agency credibility</li>
+                  <li>✓ Procurement compliance support</li>
+                  <li>✓ Voluntary but increasingly required</li>
+                  <li>✓ Timeline: 12 months (2026)</li>
+                </ul>
+                <Link href="/regulatory/nist-recognition">
+                  <Button className="w-full bg-red-600 hover:bg-red-700">
+                    Learn More
+                  </Button>
+                </Link>
+              </Card>
+
+              {/* TC260 */}
+              <Card className="p-8 border-2 border-orange-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-4xl">🇨🇳</div>
+                  <h3 className="text-2xl font-bold text-gray-900">TC260 Alignment</h3>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  China's AI safety standards for systems deployed in or serving Chinese users.
+                </p>
+                <ul className="space-y-2 text-gray-700 text-sm mb-6">
+                  <li>✓ Mandatory for China market</li>
+                  <li>✓ Algorithm transparency requirements</li>
+                  <li>✓ Data security and content safety</li>
+                  <li>✓ Timeline: 12 months (2027)</li>
+                </ul>
+                <Link href="/regulatory/tc260-alignment">
+                  <Button className="w-full bg-orange-600 hover:bg-orange-700">
+                    Learn More
+                  </Button>
+                </Link>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 text-center">
+              5-Year Roadmap to Global Standard
+            </h2>
+            <p className="text-xl text-gray-700 text-center mb-12">
+              From accreditation body to mandatory global infrastructure
+            </p>
+
+            <div className="space-y-8">
+              {/* 2025 */}
+              <div className="flex gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-24 h-24 bg-emerald-600 text-white rounded-lg flex items-center justify-center font-bold text-2xl">
+                    2025
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Foundation</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>✓ ISO 17065 certification achieved</li>
+                    <li>✓ Analyst network scaled to 1,500</li>
+                    <li>✓ Government Portal launched (beta)</li>
+                    <li>✓ Revenue: $41M</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* 2026 */}
+              <div className="flex gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-24 h-24 bg-emerald-600 text-white rounded-lg flex items-center justify-center font-bold text-2xl">
+                    2026
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Expansion</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>✓ EU legal entity established</li>
+                    <li>✓ Enterprise APIs launched</li>
+                    <li>✓ Analyst network scaled to 5,000</li>
+                    <li>✓ NIST recognition achieved</li>
+                    <li>✓ Revenue: $150M</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* 2027 */}
+              <div className="flex gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-24 h-24 bg-emerald-600 text-white rounded-lg flex items-center justify-center font-bold text-2xl">
+                    2027
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Authority</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>✓ EU Notified Body status approved</li>
+                    <li>✓ Analyst network scaled to 10,000</li>
+                    <li>✓ TC260 recognition achieved</li>
+                    <li>✓ Mandatory compliance begins in EU</li>
+                    <li>✓ Revenue: $400M</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* 2028-2030 */}
+              <div className="flex gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-24 h-24 bg-emerald-600 text-white rounded-lg flex items-center justify-center font-bold text-2xl">
+                    2028+
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Dominance & Global Standard</h3>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>✓ 60-80% market penetration</li>
+                    <li>✓ 20,000+ analysts worldwide</li>
+                    <li>✓ CSOAI is de facto global standard</li>
+                    <li>✓ Revenue: $800M-$1.34B</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-emerald-600 text-white">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl font-bold mb-4">Ready to Lead AI Safety Governance?</h2>
+            <p className="text-lg text-emerald-100 mb-8">
+              Join CSOAI as we build the global standard for AI safety. Whether you're an enterprise, regulator, or analyst, there's a role for you.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/enterprise">
+                <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100">
+                  For Enterprises
+                </Button>
+              </Link>
+              <Link href="/government-portal">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-emerald-700">
+                  For Governments
+                </Button>
+              </Link>
+              <Link href="/training">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-emerald-700">
+                  Become an Analyst
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

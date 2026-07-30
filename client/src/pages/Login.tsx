@@ -104,7 +104,7 @@ export default function Login() {
               <div>
                 <h3 className="font-semibold text-gray-900">Govern any AI system</h3>
                 <p className="text-sm text-gray-600">
-                  Map jurisdictions, run assessments and seal signed verdicts with the BFT Council
+                  Map jurisdictions, run assessments and seal signed verdicts with the Council of AI
                 </p>
               </div>
             </div>

@@ -290,7 +290,7 @@ export default function TrustCenter() {
             Trust Built Into Every Layer
           </h1>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            CSOAI is built on security, transparency, and compliance. We're independently certified
+            CSOAI is built on security, transparency, and compliance. Our controls are independently assessed
             and audited to ensure your data and AI systems are protected by the highest industry
             standards.
           </p>

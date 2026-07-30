@@ -1,6 +1,6 @@
 /*
  * CSOAI 33-Agent Council Page
- * Visualize the Byzantine fault-tolerant voting system
+ * Visualize the fault-aware consensus voting system
  * Connected to real backend API
  */
 
@@ -162,7 +162,7 @@ export default function AgentCouncil() {
               <div className="space-y-4 py-4">
                 <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-sm">
                   <strong>⚡ Real LLM Voting:</strong> This will trigger all 33 agents (OpenAI, Anthropic, Google) 
-                  to vote on your proposal using Byzantine fault-tolerant consensus.
+                  to vote on your proposal using fault-aware consensus consensus.
                 </div>
                 
                 <div className="space-y-2">

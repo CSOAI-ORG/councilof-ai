@@ -8,7 +8,7 @@ const LAYERS: Layer[] = [
   { name: "Voice + Cognition", what: "Your Sovereign companion - it understands, navigates, and acts with you across the OS.", status: "Live demo", href: "/minds", glyph: "VOX" },
   { name: "Social Character + Avatar", what: "Your AI character with your avatar, governing and posting across 12 platforms.", status: "Configurable", href: "/connect", glyph: "AVA" },
   { name: "Compliance Passport", what: "Your Ed25519-signed governance identity - provable, portable, never deniable.", status: "Live", href: "/readiness", glyph: "PASS" },
-  { name: "Your BFT Setup", what: "Choose how much Byzantine fault tolerance your decisions run on - 5, 12, or 33.", status: "Live", href: "/bft", glyph: "BFT" },
+  { name: "Your BFT Setup", what: "Choose how much fault-aware consensus your decisions run on - 5, 12, or 33.", status: "Live", href: "/bft", glyph: "BFT" },
 ];
 export default function SovereignHub() {
   useEffect(() => { document.title = "Your Sovereign - one identity across the OS | CSOAI"; }, []);

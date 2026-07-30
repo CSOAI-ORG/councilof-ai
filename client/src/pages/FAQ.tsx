@@ -53,7 +53,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "How is CSOAI different from other AI governance platforms?",
     answer:
-      "CSOAI uniquely combines automated governance tools with human expertise through our Watchdog analyst network. Unlike competitors like Credo AI, Holistic AI, or OneTrust, we focus on solving two problems simultaneously: ensuring AI safety AND creating jobs for workers displaced by automation. Our 33-Agent Byzantine Council provides unprecedented consensus-driven decision-making.",
+      "CSOAI uniquely combines automated governance tools with human expertise through our Watchdog analyst network. Unlike competitors like Credo AI, Holistic AI, or OneTrust, we focus on solving two problems simultaneously: ensuring AI safety AND creating jobs for workers displaced by automation. Our 33-agent Council of AI provides unprecedented consensus-driven decision-making.",
     tags: ["comparison", "differentiation"],
   },
   {
@@ -67,7 +67,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "What is the 33-Agent Council?",
     answer:
-      "The 33-Agent Council is CSOAI's unique Byzantine fault-tolerant consensus mechanism. It uses 33 specialized AI agents representing different governance perspectives (ethics, compliance, technical safety, etc.) to make decisions about AI system classifications, risk assessments, and compliance recommendations. This distributed approach ensures no single point of failure and balanced decision-making.",
+      "The 33-Agent Council is CSOAI's unique fault-aware consensus consensus mechanism. It uses 33 specialized AI agents representing different governance perspectives (ethics, compliance, technical safety, etc.) to make decisions about AI system classifications, risk assessments, and compliance recommendations. This distributed approach ensures no single point of failure and balanced decision-making.",
     tags: ["technology", "council"],
   },
   {
@@ -408,7 +408,7 @@ const faqData: FAQItem[] = [
     category: "TECHNICAL",
     question: "How does the 33-Agent Byzantine consensus work?",
     answer:
-      "The 33-Agent Council uses Byzantine Fault Tolerant (BFT) consensus where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). If up to 10 agents malfunction or provide incorrect information, the council can still reach correct consensus with mathematical certainty. Decisions require approval from at least 23 agents (67%), ensuring robust, reliable governance outcomes.",
+      "The 33-Agent Council uses fault-aware consensus (BFT) consensus where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). If up to 10 agents malfunction or provide incorrect information, the council can still reach correct consensus with mathematical certainty. Decisions require approval from at least 23 agents (67%), ensuring robust, reliable governance outcomes.",
     tags: ["technical", "council"],
   },
   {

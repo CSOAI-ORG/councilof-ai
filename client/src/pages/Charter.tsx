@@ -195,7 +195,7 @@ const faqItems = [
   },
   {
     question: "Is this legally binding?",
-    answer: "The Charter is not government legislation—it's a voluntary framework. However, it becomes contractually binding when organizations sign the Partnership Agreement and obtain a CSOAI license. Licensed organizations commit to following Charter requirements as a condition of their license. The Charter is designed to work alongside existing laws (EU AI Act, GDPR, etc.) and often exceeds their requirements. Organizations that violate Charter terms face license revocation, public disclosure through the Watchdog system, and potential loss of their 'CSOAI Certified' status."
+    answer: "The Charter is not government legislation—it's a voluntary framework. However, it becomes contractually binding on those who sign the Partnership Agreement and obtain a CSOAI license. Licensed organizations commit to following Charter requirements as a condition of their license. The Charter is designed to work alongside existing laws (EU AI Act, GDPR, etc.) and often exceeds their requirements. Organizations that violate Charter terms face license revocation, public disclosure through the Watchdog system, and potential loss of their 'CSOAI Certified Analyst' status."
   },
   {
     question: "How do I become a signatory?",

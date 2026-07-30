@@ -155,7 +155,7 @@ const glossaryTerms: GlossaryTerm[] = [
 
   // B
   {
-    term: "Byzantine Fault Tolerance",
+    term: "fault-aware consensus",
     definition:
       "A distributed computing concept where a system continues to function correctly even if some nodes (agents) provide incorrect or malicious information. Used in CSOAI's 33-Agent Council for robust decision-making.",
     category: "Technical",

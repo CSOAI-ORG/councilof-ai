@@ -66,7 +66,7 @@ const implementationArticles = [
   },
   {
     num: 3,
-    title: "Byzantine Fault-Tolerant Council",
+    title: "Council of AI",
     desc: "33-agent oversight ensuring no single AI can override protective instincts",
     icon: Users,
     color: "purple"
