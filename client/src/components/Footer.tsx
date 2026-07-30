@@ -205,6 +205,62 @@ export function Footer() {
 
         <BuiltOnFooter />
 
+        {/* Anchored To — live watcher timestamps */}
+        <div className="border-t border-gray-200 mt-8 pt-8">
+          <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-3">
+            Anchored To
+          </h4>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500">
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              UK legislation.gov.uk · OGL v3.0
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              EU AI Act · EUR-Lex CELLAR
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              NIST IR 8547 · FIPS 204
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              RFC 9964 (ML-DSA for COSE)
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+              C2PA Specification 2.4
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+              EU EUR-Lex CELLAR · last checked 2d ago
+            </span>
+          </div>
+        </div>
+
+        {/* What We Don't Claim */}
+        <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <h4 className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-2">
+            What We Don&apos;t Claim
+          </h4>
+          <ul className="space-y-1 text-xs text-gray-600">
+            <li>Not a certifier · not an enforcer · no accreditation chain</li>
+            <li>Our own systems are scored on this board, no exemption</li>
+            <li>We measure. Others enforce. The distinction is the business.</li>
+          </ul>
+        </div>
+
+        {/* Refutation Ledger — prominent link */}
+        <div className="mt-6 text-center">
+          <Link
+            href="/refutation-ledger"
+            className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-600 transition hover:bg-rose-100"
+          >
+            <span className="h-2 w-2 rounded-full bg-rose-500" />
+            8 published refutations · 4 killed our own bets
+          </Link>
+        </div>
+
         {/* Independence Statement */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">

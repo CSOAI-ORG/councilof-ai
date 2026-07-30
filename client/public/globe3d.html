@@ -50,10 +50,10 @@
   <div class="brand"><span class="dot"></span>CSOAI · Sovereign <small>3D Governance Earth</small> <span class="beta">BETA</span></div>
   <div class="stats">
     <div class="stat"><b>417</b><span>Frozen provisions</span></div>
-    <div class="stat"><b>15</b><span>Live anchor nodes</span></div>
+    <div class="stat"><b id="s-nodes">15</b><span>Live anchor nodes</span></div>
     <div class="stat"><b>531</b><span>MCPs catalogued</span></div>
-    <div class="stat sov"><b id="s-ung">2</b><span>Watchers UNKNOWN</span></div>
-    <div class="stat sov"><b id="s-ep">0/20</b><span>Marks survived (CP 13.9%)</span></div>
+    <div class="stat sov"><b id="s-ung">—</b><span>Watchers UNKNOWN</span></div>
+    <div class="stat sov"><b>0/20</b><span>Marks survived (CP 13.9%)</span></div>
   </div>
 </div>
 
@@ -171,6 +171,43 @@ if(viewer){
   // compliance ring → 73%
   (function(){var arc=document.getElementById('ring-arc'),pct=document.getElementById('ring-pct'),C=138.2,target=73,v=0;
     var iv=setInterval(function(){v+=2;if(v>=target){v=target;clearInterval(iv);}arc.setAttribute('stroke-dashoffset',(C*(1-v/100)).toFixed(1));pct.textContent=v+'%';},22);})();
+
+  // Fetch live anchor nodes from Workers API (D1-backed)
+  (function(){
+    var API='https://csoai-gspc-api.nicholastempleman.workers.dev';
+    // Node coordinates for the 15 anchor sources
+    var COORDS={
+      'UK legislation.gov.uk':{lng:-0.12,lat:51.5},
+      'EU EUR-Lex CELLAR':{lng:4.4,lat:50.8},
+      'C2PA Specification 2.4':{lng:-122.4,lat:37.8},
+      'NIST IR 8547 / FIPS 204':{lng:-77,lat:38.9},
+      'RFC 9964 (ML-DSA for COSE)':{lng:-122.4,lat:37.8},
+      'Crosswalk registry':{lng:0,lat:20},
+      'US GovInfo USLM':{lng:-77,lat:38.9},
+      'Canada Justice XML':{lng:-75.7,lat:45.4},
+      'Japan e-Gov Law API':{lng:139.7,lat:35.7},
+      'China NPC':{lng:116.4,lat:39.9},
+      'MITRE ATT&CK':{lng:-77,lat:38.9},
+      'UK ATRS':{lng:-0.12,lat:51.5},
+      'Sigstore / cosign':{lng:-122.4,lat:37.8},
+      'OpenSSF Scorecard':{lng:-122.4,lat:37.8},
+      'NVD / CVE':{lng:-77,lat:38.9}
+    };
+    var STATUS_COL={'LIVE':'#34d399','STALE':'#f59e0b','UNKNOWN':'#f59e0b','UNREACHABLE':'#ef4444','CITED':'#64748b','AUTHORED':'#64748b'};
+    fetch(API+'/api/anchors',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.watchers)return;
+      var nodes=d.watchers.map(function(w){
+        var c=COORDS[w.source]||{lng:0,lat:0};
+        return{id:w.source,name:w.source,lng:c.lng,lat:c.lat,status:w.status,col:STATUS_COL[w.status]||'#64748b'};
+      });
+      // Send to globe via postMessage (self-hosted, same window)
+      window.postMessage({cmd:'layer0',nodes:nodes},'*');
+      // Update HUD stats
+      var live=d.watchers.filter(function(w){return w.status==='LIVE';}).length;
+      var unknown=d.watchers.filter(function(w){return w.status!=='LIVE'&&w.status!=='STALE';}).length;
+      var el=document.getElementById('s-ung');if(el)el.textContent=unknown;
+    }).catch(function(){});
+  })();
 
   // sovereign town live feed
   function fmt(n){if(n>=1e9)return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';if(n>=1e6)return Math.round(n/1e6)+'M';if(n>=1e3)return Math.round(n/1e3)+'k';return String(n);}

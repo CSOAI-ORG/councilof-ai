@@ -50,3 +50,14 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     fallback: "email nicholas@csoai.org with your report_id",
   });
 };
+
+/**
+ * GET /api/lead — diagnostic eye. stored:true was returned while the namespace listed zero
+ * keys from outside; this shows what the FUNCTION's binding actually sees, which is the only
+ * view that settles whether writes are landing somewhere else.
+ */
+export const onRequestGet: PagesFunction<Env> = async (ctx) => {
+  if (!ctx.env.LEADS) return Response.json({ bound: false });
+  const l = await ctx.env.LEADS.list({ limit: 10 });
+  return Response.json({ bound: true, keys: l.keys.map(k => k.name), count: l.keys.length });
+};
