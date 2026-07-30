@@ -4,6 +4,8 @@ import { sovActions } from "../lib/sovAgent";
 import { detectLocale, REGIONS } from "../lib/locale";
 import { flyAndConvene, neutralize } from "../lib/globeDrive";
 import SovNav from "../components/SovNav";
+import { useLedger, type DecisionRecord } from "../hooks/useLedger";
+import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
 
 // Map the agent's region → the codes the embedded 3D globe understands (loads local).
 const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -30,9 +32,6 @@ function ssRegion(q: string) {
   if (/\buk\b|\bbritain\b|\blondon\b/.test(s)) return "the United Kingdom (UK AI regulation)";
   return "a global footprint (ISO 42001)";
 }
-async function ssSha256(s: string): Promise<string> {
-  try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join(""); } catch (e) { return ""; }
-}
 async function ssGovern(ind: string): Promise<any | null> {
   try { const r = await fetch(GW + "/govern?q=" + encodeURIComponent(ind)); if (r.ok) { const d = await r.json(); if (d && d.matched && d.frameworks && d.frameworks.length) return d; } } catch (e) {}
   return null;
@@ -54,9 +53,40 @@ function buildRun(scenario: string): Step[] {
     { t: "Convening the council - 33 sovereign agents, fault-aware consensus. Quorum forming...", phase: 2 },
     { t: "Agents deliberating - mapping controls, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
     { t: "Crosswalking once -> EU AI Act, NIST, ISO 42001 and TC260 satisfied from one evidence set.", phase: 3 },
-    { t: "Consensus reached. Verdict signed (Ed25519) and written to the Layer 0 ledger.", phase: 4 },
+    { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
   ];
 }
+
+// Map decision_record shape -> TimelineEvent. The "decided_on" field is the
+// canonical timestamp; we keep tag + verdict as the visual encoding. The KB
+// stores positions + reasoning — much higher information density than flat text.
+function convertToTimeline(records: DecisionRecord[]): TimelineEvent[] {
+  return records.map((r) => {
+    // Derive a weight from the verdict: REFUTED/CONFIRMED weight 1.0 (signed),
+    // OPEN 0.6 (pending), default 0.7.
+    const w =
+      r.verdict === "REFUTED" || r.verdict === "CONFIRMED" || r.verdict === "SETTLED"
+        ? 1.0
+        : r.verdict === "OPEN"
+        ? 0.6
+        : 0.7;
+    return {
+      id: r.id,
+      ts: r.decided_on,
+      tag: r.tag,
+      verdict: r.verdict,
+      claim: r.claim,
+      evidence: r.evidence,
+      sigil: r.sigil_link,
+      weight: w,
+      space: "J",
+    };
+  });
+}
+
+// Pulled live from the same D1-backed Worker as /live-ledger. Renders signed
+// decision_records in J-space replay mode — no inference, no fabrication. Honest
+// framing: "current as of the last fetch".
 
 export default function SovSpace() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -66,10 +96,14 @@ export default function SovSpace() {
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState(false);
   const [verdictText, setVerdictText] = useState("");
-  const [sig, setSig] = useState("");
   const [voiceOn, setVoiceOn] = useState(true);
   const [loc] = useState(() => detectLocale());
+  const [cSpaceEvents, setCSpaceEvents] = useState<TimelineEvent[]>([]);
   const globeRef = useRef<HTMLIFrameElement | null>(null);
+  const { data: ledger, loading: ledgerLoading, error: ledgerError, fetchedAt: ledgerFetchedAt } = useLedger();
+  const jrecords = (ledger?.records || []).slice(0, 3);
+  const jrecordsErr = ledgerError;
+  const jfetchedAt = ledgerFetchedAt ? new Date(ledgerFetchedAt).toISOString() : "";
   // The Sovereign flies the embedded globe to the scenario's jurisdiction (auto-pulses),
   // convenes the 33-agent council spiral there, and neutralizes any rogue-swarm threat.
   function flyToScenario(text: string) {
@@ -131,14 +165,26 @@ export default function SovSpace() {
 
   function speak(t: string) { if (!voiceOn) return; try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.04; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
 
-  function playSteps(steps: Step[], verdict?: string, sigHash?: string) {
+  function playSteps(steps: Step[], verdict?: string) {
     let i = 0;
     const play = () => {
       if (i >= steps.length) {
         phaseRef.current = 4;
         if (verdict) { setVerdictText(verdict); setLog((l) => l.concat("Verdict: " + verdict)); }
-        if (sigHash) setLog((l) => l.concat("Ledger hash (SHA-256): " + sigHash));
-        setRunning(false); setDone(true); return;
+        setRunning(false); setDone(true);
+        // Record the completion as a C-space event on the timeline.
+        const cEvent: TimelineEvent = {
+          id: "c-" + Date.now().toString(36),
+          ts: Date.now(),
+          tag: verdict ? "ACTION" : "OPEN",
+          verdict: verdict ? "COMPLETE" : "PENDING",
+          claim: verdict || "Run completed — verdict pending",
+          evidence: "C-space: council deliberation finished.",
+          weight: 0.7,
+          space: "C",
+        };
+        setCSpaceEvents((prev) => [cEvent, ...prev].slice(0, 50));
+        return;
       }
       const st = steps[i++]; phaseRef.current = st.phase; setLog((l) => l.concat(st.t)); speak(st.t);
       const id = setTimeout(play, 1050); timers.current.push(id);
@@ -157,7 +203,7 @@ export default function SovSpace() {
       { t: "Convening the council - 33 sovereign agents, fault-aware consensus. Quorum forming...", phase: 2 },
       { t: "Agents deliberating - risk tier, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
       { t: "Crosswalking once -> " + fwList + " satisfied from one evidence set." + (bridges.length ? " Legacy bridge: " + bridges.join(", ") + "." : ""), phase: 3 },
-      { t: "Consensus reached. Verdict sealed and written to the Layer 0 ledger.", phase: 4 },
+      { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
     ];
   }
 
@@ -166,7 +212,7 @@ export default function SovSpace() {
     if (override) setScenario(override);
     setGlobeRegion(ssGlobeCode(override ?? scenario)); // label
     flyToScenario(override ?? scenario); // fly + pulse + convene the council ON the globe
-    setLog(["Convening the council over your scenario..."]); setVerdictText(""); setSig(""); setDone(false); setRunning(true); phaseRef.current = 2; chargeSovereign(10);
+    setLog(["Convening the council over your scenario..."]); setVerdictText(""); setDone(false); setRunning(true); phaseRef.current = 2; chargeSovereign(10);
     const scen = ((override ?? scenario) || "").trim() || SAMPLE;
     const ind = ssIndustry(scen);
     const region = ssRegion(scen);
@@ -174,19 +220,15 @@ export default function SovSpace() {
       const [gov, verdict] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssVerdict(scen)]);
       const fwNames: string[] = gov && Array.isArray(gov.frameworks) ? gov.frameworks.map((f: any) => f.name) : [];
       const bridges: string[] = gov && Array.isArray(gov.bridges) ? gov.bridges : [];
-      const ts = new Date().toISOString();
-      const digest = await ssSha256(scen + "|" + fwNames.join(",") + "|" + (verdict || "") + "|" + ts);
-      const shortSig = digest ? digest.slice(0, 40) : "";
-      setSig(shortSig);
       setLog([]);
-      playSteps(buildLiveRun(scen, region, fwNames, bridges, ind), verdict || "Permitted with conditions - high-risk controls, human oversight, and transparency required.", shortSig);
+      playSteps(buildLiveRun(scen, region, fwNames, bridges, ind), verdict || "Permitted with conditions - high-risk controls, human oversight, and transparency required.");
       return;
     } catch (e) {
       setLog((l) => l.concat("Live gateway unavailable - running local simulation."));
     }
     playSteps(buildRun(scenario), "Compliant with conditions - signed and ledgered.");
   }
-  function reset() { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); setSig(""); }
+  function reset() { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); }
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -205,7 +247,7 @@ export default function SovSpace() {
       <section className="mx-auto grid max-w-6xl gap-5 px-6 pb-12 lg:grid-cols-[1.1fr_1fr]">
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
           <canvas ref={canvasRef} className="h-[420px] w-full block" />
-          <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "verdict signed - Layer 0" : "sov space - idle"}</div>
+          <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "council complete - verdict below" : "sov space - idle"}</div>
           <div className="absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] bg-emerald-500/20 text-emerald-200">LIVE - Sovereign gateway</div>
         </div>
         <div className="flex flex-col rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
@@ -217,12 +259,65 @@ export default function SovSpace() {
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm text-emerald-100 hover:bg-white/5">{voiceOn ? "Voice on" : "Voice off"}</button>
             <a href={"/globe" + (scenario ? "?ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Sovereign Globe →</a>
           </div>
+          {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026;
+              any front-end that lets a person interact with an AI must clearly state so. */}
+          <div role="status" aria-live="polite" className="mt-3 rounded-md border border-amber-400/35 bg-amber-400/10 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
+            You are interacting with an AI system.
+          </div>
           <div className="mt-3 flex-1 space-y-2 overflow-y-auto rounded-xl border border-emerald-500/10 bg-black/20 p-3 text-sm" style={{ minHeight: 180 }}>
             {log.length === 0 && <div className="text-emerald-300/40">The Sovereign will narrate here as your experiment runs.</div>}
             {log.map((m, i) => (<div key={i} className="flex gap-2"><span className="text-emerald-400">{String.fromCharCode(9673)}</span><span className="text-emerald-50/90">{m}</span></div>))}
-            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council verdict:</b> {verdictText}</div> : <div className="mb-2"><b>Verdict:</b> signed and ledgered.</div>}{sig ? <div className="font-mono text-[10px] text-emerald-300/70 break-all">Layer 0 ledger hash - SHA-256: {sig}</div> : null}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
+            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council verdict:</b> {verdictText}</div> : <div className="mb-2"><b>Verdict:</b> simulation complete.</div>}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
             <div ref={endRef} />
           </div>
+        </div>
+      </section>
+
+      {/* J-space replay panel — the moat made visible.
+          Pulls live decision_records from the D1-backed Worker and renders them
+          on an infinite-time log-scale. Each event is a position on the timeline;
+          the line-scale zooms out as time expands, so yesterday sits nearby
+          and last-decade events nest into fixed slots. Hover to inspect, click
+          to expand the reasoning. This is the visual forest — traverse laterally
+          (time) or via zoom (scale). C-space (council actions) layers above. */}
+      <section className="mx-auto max-w-6xl px-6 pb-8">
+        <div className="rounded-2xl border border-emerald-500/25 bg-[#05140d] p-5">
+          <div className="flex items-center justify-between border-b border-emerald-500/15 pb-3">
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">J-space · C-space · infinite timeline</div>
+              <div className="text-sm font-bold text-emerald-100">The Moat, Visible — every event recorded in time</div>
+            </div>
+            <div className="text-right">
+              <div className="font-mono text-[10px] text-emerald-300/60">
+                {jfetchedAt ? "current as of " + new Date(jfetchedAt).toUTCString().replace("GMT", "UTC") : "loading…"}
+              </div>
+              <a href="/live-ledger" className="text-[11px] font-semibold text-emerald-200 hover:underline">Open the full ledger →</a>
+            </div>
+          </div>
+          {jrecordsErr && (
+            <div className="mt-3 rounded border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-200">
+              Upstream unavailable ({jrecordsErr}). The moat is not visible right now — this is rendered honestly, not simulated.
+              The static 8-refutation story lives at <a href="/refutation-ledger" className="underline">/refutation-ledger</a>.
+            </div>
+          )}
+          {!jrecordsErr && jrecords.length === 0 && cSpaceEvents.length === 0 && (
+            <div className="mt-3 rounded border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
+              Fetching the J-space… if this persists, the upstream is unreachable. Not simulated.
+            </div>
+          )}
+          {(jrecords.length > 0 || cSpaceEvents.length > 0) && (
+            <div className="mt-4">
+              <JSpaceTimeline
+                events={[...convertToTimeline(jrecords), ...cSpaceEvents]}
+                onSelect={(ev) => {
+                  if (ev.space !== "C") setScenario((q) => q + (q ? " — " : "") + ev.claim);
+                }}
+              />
+            </div>
+          )}
+          <p className="mt-3 text-[11px] text-emerald-300/50">
+            Each event is a point on a log-scale line — the timeline zooms out as time expands, so the KB can hold an unbounded number of decision_records while the screen stays readable. Hover any event for context; click to feed it back into the scenario. Watch the <a href="/live-ledger" className="underline">live chain</a> refresh as the council deliberates; see the static story at <a href="/refutation-ledger" className="underline">/refutation-ledger</a>.
+          </p>
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-6 pb-8">
