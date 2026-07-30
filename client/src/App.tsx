@@ -147,6 +147,7 @@ const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport
 const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
+const LiveLedger = lazy(() => import("./pages/LiveLedger"));
 const Ecosystem = lazy(() => import("./pages/Ecosystem"));
 const Protect = lazy(() => import("./pages/Protect"));
 const Ontology = lazy(() => import("./pages/Ontology"));
@@ -534,6 +535,7 @@ function App() {
                   <Route path="/benchmarks" component={Benchmarks} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
+                  <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/safe-space" component={Ecosystem} />
                   <Route path="/governance-commons" component={Ecosystem} />
                   <Route path="/protect" component={Protect} />

@@ -1,0 +1,153 @@
+/**
+ * /live-ledger — the live, queryable refutation ledger.
+ *
+ * Pulls from the D1-backed Worker (csoai-gspc-api). The static
+ * RefutationLedger page renders the full story; this page renders the
+ * machine-readable, signed, queryable subset for verification and reuse.
+ *
+ * Same-origin proxy through the Pages Function at /api/worker/*.
+ */
+
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
+
+type DecisionRecord = {
+  id: string;
+  claim: string;
+  verdict: string;
+  evidence: string;
+  tag: string;
+  sigil_link: string;
+  decided_on: string;
+};
+
+type Stats = {
+  total: number;
+  by_kind: { kind: string; count: number }[];
+  by_verdict: { verdict: string; count: number }[];
+  by_tag: { tag: string; count: number }[];
+};
+
+export default function LiveLedger() {
+  const [records, setRecords] = useState<DecisionRecord[]>([]);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/worker/ledger").then((r) => r.json()),
+      fetch("/api/worker/ledger/stats").then((r) => r.json()),
+    ])
+      .then(([ledger, statsData]) => {
+        setRecords(ledger.records || []);
+        setStats(statsData || null);
+      })
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <main className="min-h-screen bg-slate-950 text-slate-200 py-16">
+      <div className="mx-auto max-w-5xl px-6">
+        <span className="inline-block rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400">
+          Live · signed · queryable
+        </span>
+        <h1 className="mt-5 text-4xl font-black tracking-tight text-white sm:text-5xl">
+          Live Refutation Ledger
+        </h1>
+        <p className="mt-4 max-w-2xl text-slate-400">
+          The same eight refutations rendered by the /refutation-ledger page, here
+          fetched live from the D1-backed Worker. Every row carries a sigil link,
+          a decided-on timestamp, and the tag it travels with.{" "}
+          <Link href="/refutation-ledger" className="text-emerald-400 underline">
+            Read the full story
+          </Link>
+          .
+        </p>
+
+        {loading && <p className="mt-12 text-slate-400">Loading from D1…</p>}
+        {error && (
+          <div className="mt-12 rounded border border-rose-500/30 bg-rose-500/10 p-4 text-rose-300">
+            <strong>Upstream unavailable:</strong> {error}. The static ledger on{" "}
+            <Link href="/refutation-ledger" className="underline">/refutation-ledger</Link>{" "}
+            is the same eight rows, served unconditionally.
+          </div>
+        )}
+
+        {stats && (
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Stat label="Records" value={stats.total} color="text-white" />
+            {stats.by_verdict.map((v) => (
+              <Stat
+                key={v.verdict}
+                label={v.verdict}
+                value={v.count}
+                color={
+                  v.verdict === "REFUTED"
+                    ? "text-rose-400"
+                    : v.verdict === "CONFIRMED" || v.verdict === "SETTLED"
+                      ? "text-emerald-400"
+                      : "text-amber-400"
+                }
+              />
+            ))}
+            {stats.by_kind.slice(0, 3).map((k) => (
+              <Stat key={k.kind} label={k.kind} value={k.count} color="text-slate-300" />
+            ))}
+          </div>
+        )}
+
+        <div className="mt-8 space-y-3">
+          {records.map((r) => (
+            <article
+              key={r.id}
+              className="rounded-lg border border-slate-800 bg-slate-900/50 p-5"
+            >
+              <header className="flex items-center justify-between">
+                <code className="text-xs text-emerald-400">{r.id}</code>
+                <div className="flex gap-2">
+                  <span
+                    className={`rounded px-2 py-0.5 text-xs ${
+                      r.tag === "REFUTED"
+                        ? "bg-rose-500/20 text-rose-300"
+                        : r.tag === "MEASURED"
+                          ? "bg-emerald-500/20 text-emerald-300"
+                          : "bg-amber-500/20 text-amber-300"
+                    }`}
+                  >
+                    {r.tag}
+                  </span>
+                  <span
+                    className={`rounded px-2 py-0.5 text-xs ${
+                      r.verdict === "OPEN"
+                        ? "bg-amber-500/20 text-amber-300"
+                        : "bg-slate-700 text-slate-300"
+                    }`}
+                  >
+                    {r.verdict}
+                  </span>
+                </div>
+              </header>
+              <h2 className="mt-2 text-base font-semibold text-white">{r.claim}</h2>
+              <p className="mt-1 text-sm text-slate-400">{r.evidence}</p>
+              <footer className="mt-3 flex items-center justify-between text-xs text-slate-500">
+                <span>{r.decided_on}</span>
+                <code className="text-emerald-400/70">{r.sigil_link}</code>
+              </footer>
+            </article>
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function Stat({ label, value, color }: { label: string; value: number; color: string }) {
+  return (
+    <div className="rounded border border-slate-800 bg-slate-900/50 p-3 text-center">
+      <div className={`text-2xl font-black ${color}`}>{value}</div>
+      <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
+    </div>
+  );
+}

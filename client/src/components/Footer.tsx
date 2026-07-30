@@ -251,13 +251,20 @@ export function Footer() {
         </div>
 
         {/* Refutation Ledger — prominent link */}
-        <div className="mt-6 text-center">
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/refutation-ledger"
             className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-600 transition hover:bg-rose-100"
           >
             <span className="h-2 w-2 rounded-full bg-rose-500" />
             8 published refutations · 4 killed our own bets
+          </Link>
+          <Link
+            href="/live-ledger"
+            className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100"
+          >
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            Live D1 ledger · signed · queryable
           </Link>
         </div>
 
