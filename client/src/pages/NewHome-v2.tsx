@@ -58,6 +58,7 @@ import {
 import { lazy, Suspense } from "react";
 import AnimatedParticles from "@/components/AnimatedParticles";
 import EUAIActCountdown from "@/components/EUAIActCountdown";
+import { SovereignConsole } from "@/components/SovereignConsole";
 // Below-the-fold sections — lazy-loaded to keep the initial landing bundle small (defers recharts + network viz off first paint).
 const EcosystemDiagram = lazy(() => import("@/components/EcosystemDiagram"));
 const CouncilVisualization = lazy(() => import("@/components/CouncilVisualization"));
@@ -289,14 +290,17 @@ export default function NewHomeV2() {
             </span>
           </motion.div>
 
-          {/* EU AI Act Countdown */}
+          {/* The console replaces the countdown here. A countdown measures the calendar;
+              the console dispatches to deterministic tools and shows what they return.
+              It is EXTERNAL to the instrument: no model in the verdict path, no egress,
+              nothing written anywhere. See the docblock in SovereignConsole.tsx. */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
             className="mb-10"
           >
-            <EUAIActCountdown />
+            <SovereignConsole />
           </motion.div>
 
           {/* Main headline */}

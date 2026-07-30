@@ -42,6 +42,15 @@ export interface Surface {
 }
 
 export const SURFACES: Surface[] = [
+  { route: "/", label: "Home + Sovereign Console", nature: "rule_based",
+    mechanism: "The console pattern-matches your question against frozen statute text and renders the matching provision. There is no inference call in the file, and nothing you type is transmitted or stored \u2014 no fetch, no analytics, no session capture. The page also carries an email form posting to /api/subscribe.",
+    evidence: ["client/src/components/SovereignConsole.tsx", "client/src/pages/NewHome-v2.tsx"] },
+  { route: "/instrument", label: "The GSPC instrument", nature: "rule_based",
+    mechanism: "One chat pane over four lenses. Dispatch is deterministic pattern matching over frozen statute; no model is consulted and nothing is sent anywhere. Deliberately not LMArena: pairwise human preference voting is crowd judgement, which the design rules exclude from a primary score.",
+    evidence: ["client/src/pages/Instrument.tsx"] },
+  { route: "/benchmarks", label: "Measured results", nature: "rule_based",
+    mechanism: "Static rendering of figures read from published artefacts in the govbench dataset. Nothing is computed at render time and nothing is typed in by hand \u2014 each row names the artefact it came from.",
+    evidence: ["client/src/pages/Benchmarks.tsx"] },
   { route: "/agent-council", label: "AgentCouncil", nature: "unclassified",
     mechanism: "", evidence: ["client/src/pages/AgentCouncil.tsx"] },
   { route: "/agent-registry", label: "AgentRegistry", nature: "unclassified",

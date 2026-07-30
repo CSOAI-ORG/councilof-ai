@@ -7,6 +7,7 @@ import { Link } from 'wouter';
 import { Github, Twitter, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { Button } from '@/components/ui/button';
+import { BuiltOnFooter } from "@/components/BuiltOnFooter";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -201,6 +202,8 @@ export function Footer() {
             </Link>
           </div>
         </div>
+
+        <BuiltOnFooter />
 
         {/* Independence Statement */}
         <div className="border-t border-gray-200 mt-8 pt-8">
