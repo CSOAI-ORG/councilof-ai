@@ -11,8 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DashboardLayout from "@/components/DashboardLayout";
 
+// Same-origin by default: /api/assess is a Pages Function on this deployment. The old
+// default, https://api.csoai.org, was a hostname with NO DNS record — every click on the
+// assess button failed from the day this page shipped. VITE_ASSESS_API still overrides.
 const API_BASE: string =
-  ((import.meta as any).env && (import.meta as any).env.VITE_ASSESS_API) || "https://api.csoai.org";
+  ((import.meta as any).env && (import.meta as any).env.VITE_ASSESS_API) || "";
 
 type Report = {
   report_id: string; tier: string; verdict: string; compliance_score: number;
