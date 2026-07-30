@@ -16,6 +16,11 @@ function osRoute(a: any): string | null { if (!a || !a.command) return null; if 
 type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean; pro?: boolean };
 
 const APPS: App[] = [
+  // The measurement wing — the GSPC instrument, its measured results, and the ledger that
+  // refuted us. These existed as routes but were absent from the OS: the AI-OS surface and the
+  // instrument surface were two unconnected products on one domain.
+  { name: "The GSPC Instrument", desc: "Describe an AI system; four deterministic lenses read it against 417 frozen statutory provisions and cite what binds. No model in the verdict, nothing leaves your browser.", href: "/instrument", glyph: "⚖", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
+  { name: "Measured Results", desc: "Every benchmark on one page — including the losses. 0 of 20 assets survived the provenance battery; the refutation ledger holds all 8 of our own killed theses.", href: "/benchmarks", glyph: "◫", tone: "from-emerald-500/25 to-amber-400/10 border-emerald-400/35" },
   { name: "Try the Council", desc: "30-second WOW — type a compliance question, watch the council debate it and seal a signed verdict. The front door.", href: "/try", glyph: "◆", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
   { name: "Live Demo & Tour", desc: "Watch the OS run itself — the Sovereign flies the globe, opens the tools and narrates it all, by voice and chat. 2-min demo or 6-min tour.", href: "/demo", glyph: "▶", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },
   { name: "Governance Graph", desc: "The governed Google — ask about any company, place or AI system and get jurisdiction, live framework stack and a reasoned read.", href: "/graph", glyph: "❖", tone: "from-emerald-500/30 to-teal-400/10 border-emerald-400/40" },

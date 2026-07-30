@@ -208,6 +208,13 @@ export default function WorldGlobe() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
+      {/* The globe is the map; the instrument is the tool. Linked both ways so the
+          AI-OS, the globe and the measurement wing read as one product. */}
+      <div className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 gap-2 rounded-full border border-emerald-400/40 bg-black/70 px-3 py-2 text-xs backdrop-blur">
+        <a href="/instrument" className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-200 hover:bg-emerald-500/30">Run the instrument</a>
+        <a href="/benchmarks" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">Measured results</a>
+        <a href="/os" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
+      </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
         <SovNav />
         <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the sovereign globe</p>
