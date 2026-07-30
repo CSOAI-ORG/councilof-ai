@@ -45,6 +45,11 @@ const navigation = [
     description: 'The agentic governance OS',
     submenu: [
       { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
+      // The measurement wing — top-level, because the refutation ledger is the moat: it is the
+      // only part of a benchmark a reader can use to calibrate trust in the rest of it.
+      { name: 'The GSPC Instrument', href: '/instrument', description: 'Four deterministic lenses over 417 frozen provisions — no model in the verdict' },
+      { name: 'The Refutation Ledger', href: '/refutation-ledger', description: '8 experiments that killed our own theses — published, with artefacts' },
+      { name: 'Measured Results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
       { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
       { name: "God's Eye cyber scan", href: '/scan', description: 'Scan your own cyber with open-source; Sovereign fixes it' },
       { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },

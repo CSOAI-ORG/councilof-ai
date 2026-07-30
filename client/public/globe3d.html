@@ -49,11 +49,11 @@
 <div id="hud">
   <div class="brand"><span class="dot"></span>CSOAI · Sovereign <small>3D Governance Earth</small> <span class="beta">BETA</span></div>
   <div class="stats">
-    <div class="stat"><b>177</b><span>Jurisdictions</span></div>
-    <div class="stat"><b>12</b><span>Sovereign nodes</span></div>
-    <div class="stat"><b>290</b><span>MCP nodes</span></div>
-    <div class="stat sov"><b id="s-ung">121M</b><span>Ungoverned crimes</span></div>
-    <div class="stat sov"><b id="s-ep">1.45B</b><span>Signed episodes</span></div>
+    <div class="stat"><b>417</b><span>Jurisdictions</span></div>
+    <div class="stat"><b>15</b><span>Sovereign nodes</span></div>
+    <div class="stat"><b>531</b><span>MCP nodes</span></div>
+    <div class="stat sov"><b id="s-ung">2</b><span>Ungoverned crimes</span></div>
+    <div class="stat sov"><b id="s-ep">0/20</b><span>Signed episodes</span></div>
   </div>
 </div>
 
@@ -64,7 +64,7 @@
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
     <svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"></circle><circle id="ring-arc" cx="26" cy="26" r="22" fill="none" stroke="#34d399" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 26 26)"></circle></svg>
-    <div class="rtxt"><b id="ring-pct">0%</b><small>Art 50 readiness - network</small></div>
+    <div class="rtxt"><b id="ring-pct">0%</b><small>Art 50 marking survival — CP upper bound 13.9%</small></div>
   </div>
   <button id="spin">⟳ Toggle auto-rotate</button>
   <h3 style="margin-top:12px">Fly to</h3>
@@ -182,6 +182,62 @@ if(viewer){
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
   setTimeout(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; },3500);
 }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // postMessage API — the parent (WorldGlobe.tsx) drives the globe through here.
+  // This listener did not exist until 2026-07-30: drive() posted into a void and
+  // every flyTo/pulse from the React side silently did nothing.
+  //   {cmd:'flyTo', lng, lat, height?, duration?}
+  //   {cmd:'pulse', lng, lat, col?}            — expanding ring at a point
+  //   {cmd:'layer', tag, on}                    — toggle entities by layerTag
+  //   {cmd:'layer0', nodes:[{id,name,lng,lat,status,col}]} — plot the anchor nodes
+  //   {cmd:'neutralize'}                        — clear pulses
+  var L0 = {};      // id -> entity
+  var pulses = [];
+  window.addEventListener('message', function(ev){
+    var d = ev && ev.data; if(!d || !d.cmd || !viewer) return;
+    try{
+      if(d.cmd==='flyTo'){
+        viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(d.lng, d.lat-4, d.height||2200000),
+          duration:(d.duration!=null?d.duration:1.8)});
+      }
+      else if(d.cmd==='pulse'){
+        var col = Cesium.Color.fromCssColorString(d.col||'#34d399');
+        var start = Date.now();
+        var e = viewer.entities.add({ position:Cesium.Cartesian3.fromDegrees(d.lng,d.lat),
+          ellipse:{ semiMajorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
+                    semiMinorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
+                    material:col.withAlpha(0.22), outline:true, outlineColor:col, height:0 } });
+        pulses.push(e);
+        if(pulses.length>3){ viewer.entities.remove(pulses.shift()); }
+      }
+      else if(d.cmd==='neutralize'){
+        pulses.forEach(function(e){viewer.entities.remove(e);}); pulses=[];
+      }
+      else if(d.cmd==='layer'){
+        viewer.entities.values.forEach(function(e){ if(e.layerTag===d.tag) e.show=!!d.on; });
+      }
+      else if(d.cmd==='layer0' && Array.isArray(d.nodes)){
+        d.nodes.forEach(function(n){
+          if(L0[n.id]){ return; }
+          L0[n.id]=viewer.entities.add({ layerTag:'layer0',
+            position:Cesium.Cartesian3.fromDegrees(n.lng,n.lat),
+            point:{ pixelSize:(n.status==='LIVE'?9:6),
+              color:Cesium.Color.fromCssColorString(n.col||'#34d399'),
+              outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2,
+              scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.6,2.0e7,.6)},
+            label:{ text:n.name, font:'600 11px Inter, sans-serif',
+              fillColor:Cesium.Color.fromCssColorString(n.col||'#cfe8df'),
+              outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:3,
+              style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-14),
+              scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,1.0e7,0),
+              translucencyByDistance:new Cesium.NearFarScalar(2.0e6,1,1.6e7,0)} });
+        });
+        try{ ev.source && ev.source.postMessage({ack:'layer0', n:Object.keys(L0).length}, '*'); }catch(e){}
+      }
+    }catch(e){ /* a bad command must never kill the globe */ }
+  });
+
 </script>
 </body>
 </html>

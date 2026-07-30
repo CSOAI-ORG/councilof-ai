@@ -4,10 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>CSOAI Sovereign 3D — Photorealistic Governance Earth (beta)</title>
-<script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';
-// Early buffer: capture drive commands the instant they arrive, even before Cesium loads.
-window.__sovBuf=[]; window.__sovReady=false;
-window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.data && e.data.cmd) window.__sovBuf.push(e.data); });</script>
+<script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';</script>
 <link href="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Cesium.js"></script>
 <style>
@@ -20,7 +17,6 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
     background:linear-gradient(180deg,rgba(3,6,12,.96),rgba(3,6,12,.1));border-bottom:1px solid var(--line);backdrop-filter:blur(7px)}
   .brand{display:flex;align-items:center;gap:9px;font-weight:600;white-space:nowrap}
   .dot{width:9px;height:9px;border-radius:50%;background:var(--em);box-shadow:0 0 12px var(--em)}
-  @keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
   .brand small{color:var(--mut);font:400 11px/1 var(--mono);letter-spacing:1.4px;text-transform:uppercase}
   .beta{font:600 9px/1 var(--mono);color:#03110b;background:var(--em2);padding:3px 6px;border-radius:5px;letter-spacing:1px}
   .stats{margin-left:auto;display:flex;gap:18px;font-family:var(--mono)}
@@ -53,79 +49,31 @@ window.addEventListener('message', function(e){ if(!window.__sovReady && e && e.
 <div id="hud">
   <div class="brand"><span class="dot"></span>CSOAI · Sovereign <small>3D Governance Earth</small> <span class="beta">BETA</span></div>
   <div class="stats">
-    <div class="stat"><b>177</b><span>Jurisdictions</span></div>
-    <div class="stat"><b>12</b><span>Sovereign nodes</span></div>
-    <div class="stat"><b id="s-tools">290</b><span>Governed tools</span></div>
-    <div class="stat sov"><b id="s-ung">121M</b><span>Ungoverned crimes</span></div>
-    <div class="stat sov"><b id="s-ep">1.45B</b><span>Signed episodes</span></div>
+    <div class="stat"><b>417</b><span>Jurisdictions</span></div>
+    <div class="stat"><b>15</b><span>Sovereign nodes</span></div>
+    <div class="stat"><b>531</b><span>MCP nodes</span></div>
+    <div class="stat sov"><b id="s-ung">2</b><span>Ungoverned crimes</span></div>
+    <div class="stat sov"><b id="s-ep">0/20</b><span>Signed episodes</span></div>
   </div>
 </div>
 
 <div id="rail" class="card">
-  <a href="/os" target="_top" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:6px;padding:9px 10px;border-radius:10px;background:linear-gradient(90deg,#059669,#0d9488);color:#fff;font:700 12px var(--sans);text-decoration:none;box-shadow:0 2px 12px rgba(16,185,129,.35)">⊞ AI OS · all tools</a>
-  <a href="/workbench" target="_top" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:10px;padding:8px 10px;border-radius:10px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);color:#a7f3d0;font:700 11px var(--sans);text-decoration:none">🧬 Governance workbench · SOV3</a>
   <h3>Data layers</h3>
   <div class="lyr" data-layer="nodes"><span class="sw on"><i></i></span><span class="nm">Sovereign nodes<small>12 civilizations</small></span></div>
-  <div class="lyr" data-layer="frameworks"><span class="sw on"><i></i></span><span class="nm">Frameworks<small>EU AI Act, NIST, ISO…</small></span></div>
-  <div class="lyr" data-layer="ontology"><span class="sw"><i></i></span><span class="nm">Ontology<small>objects + how they relate</small></span></div>
   <div class="lyr" data-layer="arcs"><span class="sw on"><i></i></span><span class="nm">Cross-region mesh<small>L0-D handoff arcs</small></span></div>
-  <div class="lyr" data-layer="gov"><span class="sw"><i></i></span><span class="nm">Governments<small>AI authorities</small></span></div>
-  <div class="lyr" data-layer="fortune"><span class="sw"><i></i></span><span class="nm">Fortune 500 / 100<small>major HQs</small></span></div>
-  <div class="lyr" data-layer="cyber"><span class="sw"><i></i></span><span class="nm">Cyber / CNI<small>defenders + threats</small></span></div>
-  <div class="lyr" data-layer="threat"><span class="sw"><i></i></span><span class="nm">Threat swarm<small>rogue agents/humanoids</small></span></div>
-  <div class="lyr" data-layer="humanoids"><span class="sw"><i></i></span><span class="nm">Humanoid fleet<small>live-tracked</small></span></div>
-  <div class="lyr" data-layer="robotics"><span class="sw"><i></i></span><span class="nm">Robotics R&D<small>humanoid hubs</small></span></div>
-  <div class="lyr" data-layer="intel"><span class="sw"><i></i></span><span class="nm">AI security / trending<small>intel + news hubs</small></span></div>
-  <div class="lyr" data-layer="compute"><span class="sw"><i></i></span><span class="nm">AI compute<small>the AI economy's substrate</small></span></div>
-  <div class="lyr" data-layer="network"><span class="sw"><i></i></span><span class="nm">Sovereign network<small>20 signed agents, one council</small></span></div>
-  <div class="lyr" data-layer="regulators"><span class="sw"><i></i></span><span class="nm">Regulators<small>regimes at their seats</small></span></div>
-  <div class="lyr" data-layer="coverage"><span class="sw"><i></i></span><span class="nm">Hive coverage<small>play &amp; CSOAI gap per account</small></span></div>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;padding:1px 6px 5px 30px;font-size:9px;color:var(--mut)">
-    <span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;vertical-align:middle"></i> align</span>
-    <span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#38bdf8;vertical-align:middle"></i> absorb</span>
-    <span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fbbf24;vertical-align:middle"></i> integrate</span>
-    <span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#fb7185;vertical-align:middle"></i> displace</span>
-    <span style="opacity:.7">· dot size = CSOAI gap</span>
-    <button onclick="window.__hiveFlyWorst&&window.__hiveFlyWorst()" style="margin-left:auto;cursor:pointer;background:rgba(251,113,133,.15);border:1px solid rgba(251,113,133,.4);color:#fecaca;border-radius:6px;padding:2px 7px;font-size:9px;font-weight:700">▶ worst gap</button>
-    <button onclick="window.__hiveFlyNext&&window.__hiveFlyNext()" style="cursor:pointer;background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.4);color:#a7f3d0;border-radius:6px;padding:2px 7px;font-size:9px;font-weight:700">next opportunity ▶</button>
-  </div>
-  <div class="lyr" data-layer="labs"><span class="sw"><i></i></span><span class="nm">AI labs & safety<small>frontier labs + safety institutes</small></span></div>
-  <div class="lyr" data-layer="auton"><span class="sw"><i></i></span><span class="nm">Autonomous systems<small>robotaxis · ports · drones · humanoids</small></span></div>
-  <div class="lyr" data-layer="mcps"><span class="sw"><i></i></span><span class="nm">MCP fleet<small>live governed tools</small></span></div>
-  <div class="lyr" data-layer="space"><span class="sw"><i></i></span><span class="nm">Space &amp; satellites<small>spaceports · GNSS · live ISS</small></span></div>
-  <div class="lyr" data-layer="energy"><span class="sw"><i></i></span><span class="nm">AI-critical energy<small>nuclear · hydro · grids</small></span></div>
-  <div class="lyr" data-layer="cables"><span class="sw"><i></i></span><span class="nm">Internet backbone<small>subsea cables · IXPs</small></span></div>
-  <div class="lyr" data-layer="industries"><span class="sw"><i></i></span><span class="nm">Industries → AI<small>rail · banks · health · mfg · telecom…</small></span></div>
-  <div class="lyr" data-layer="aircraft"><span class="sw"><i></i></span><span class="nm">Live aircraft<small>OpenSky ADS-B · live</small></span></div>
-  <div class="lyr" data-layer="sats"><span class="sw"><i></i></span><span class="nm">Satellites<small>orbital</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
     <svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"></circle><circle id="ring-arc" cx="26" cy="26" r="22" fill="none" stroke="#34d399" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 26 26)"></circle></svg>
-    <div class="rtxt"><b id="ring-pct">0%</b><small>Art 50 readiness - network</small></div>
+    <div class="rtxt"><b id="ring-pct">0%</b><small>Art 50 marking survival — CP upper bound 13.9%</small></div>
   </div>
   <button id="spin">⟳ Toggle auto-rotate</button>
   <h3 style="margin-top:12px">Fly to</h3>
   <div id="jumps"></div>
 </div>
 
-<div id="legend" style="flex-wrap:wrap;max-width:64vw">
-  <span><i style="background:#ef4444"></i>Frameworks / law</span>
-  <span><i style="background:#e7f6ef;box-shadow:inset 0 0 0 1px #0d9488"></i>Governments</span>
-  <span><i style="background:#38bdf8"></i>Fortune 500</span>
-  <span><i style="background:#f43f5e"></i>Cyber / CNI</span>
-  <span><i style="background:#a78bfa"></i>Robotics / ontology</span>
-  <span><i style="background:#fb923c"></i>AI-security</span>
-  <span><i style="background:#6ee7b7"></i>Humanoids / agents</span>
-  <span><i style="background:#fbbf24"></i>AI compute infrastructure</span>
-  <span><i style="background:#22d3ee"></i>Sovereign network</span>
-  <span><i style="background:#e879f9"></i>Regulators (regimes)</span>
-  <span><i style="background:#a78bfa"></i>AI labs & safety</span>
-  <span><i style="background:#2dd4bf"></i>Autonomous systems</span>
-  <span><i style="background:#67e8f9"></i>Space &amp; satellites</span>
-  <span><i style="background:#fde047"></i>AI-critical energy</span>
-  <span><i style="background:#5eead4"></i>Internet backbone</span>
-  <span><i style="background:#f8fafc"></i>Live aircraft</span>
-  <span><i style="background:#93c5fd"></i>Industries → AI</span>
+<div id="legend">
+  <span><i style="background:#e2574c"></i>Binding</span><span><i style="background:#f5b942"></i>Emerging</span>
+  <span><i style="background:#3b9ad8"></i>Voluntary</span><span><i style="background:#34d399"></i>Agent</span>
 </div>
 <a id="back" href="/globe.html">← 2.5D map view</a>
 
@@ -146,38 +94,12 @@ var NODES=[
 ];
 var tierC={binding:'#e2574c',emerging:'#f5b942',voluntary:'#3b9ad8'};
 
-// ---- Selectable data layers: frameworks, governments, Fortune 500, cyber ----
-var FW=[
- ['EU AI Act',4.35,50.85,'#ef4444'],['NIST AI RMF',-77.22,39.14,'#0ea5e9'],['ISO 42001',6.14,46.2,'#0ea5e9'],
- ['GDPR',4.36,50.85,'#ef4444'],['UK AI',-0.12,51.5,'#f59e0b'],['Korea AI Act',126.98,37.57,'#ef4444'],
- ['Singapore',103.8,1.35,'#f59e0b'],['CoE AI Treaty',7.75,48.57,'#a855f7'],['OECD/UNESCO',2.35,48.85,'#f59e0b'],
- ['Canada AIDA',-75.7,45.4,'#f59e0b'],['China PIPL',116.4,39.9,'#ef4444'],['Japan',139.7,35.7,'#f59e0b']
-];
-var GOV=[['USA',-77.04,38.9],['EU',4.35,50.85],['UK',-0.12,51.5],['China',116.4,39.9],['Canada',-75.7,45.4],['Australia',149.1,-35.3],['Japan',139.7,35.7],['Korea',126.98,37.57],['India',77.2,28.6],['Brazil',-47.9,-15.8],['UAE',54.4,24.5],['Singapore',103.8,1.35],['Germany',13.4,52.5],['France',2.35,48.85],['Saudi',46.7,24.7]];
-var FORTUNE=[['Walmart',-94.2,36.4],['Amazon',-122.3,47.6],['Apple',-122.0,37.3],['Microsoft',-122.1,47.6],['Alphabet',-122.08,37.4],['ExxonMobil',-96.9,32.9],['JPMorgan',-74.0,40.7],['Berkshire',-95.9,41.3],['UnitedHealth',-93.5,44.9],['Meta',-122.15,37.48],['Tesla',-97.7,30.3],['Nvidia',-121.95,37.35],['Toyota',137.15,35.08],['Volkswagen',10.8,52.4],['Samsung',127.0,37.28],['Aramco',50.1,26.3],['Shell',-0.1,51.5],['TSMC',120.97,24.8],['Tencent',114.06,22.54],['Reliance',72.87,19.07],['Nestle',6.84,46.46],['BHP',144.96,-37.8],['Petrobras',-43.2,-22.9],
-['OpenAI',-122.41,37.77],['Anthropic',-122.40,37.79],['IBM',-73.72,41.11],['Oracle',-97.74,30.27],['Salesforce',-122.40,37.79],['SAP',8.64,49.29],['Accenture',-6.26,53.34],['Palantir',-104.99,39.74],['Databricks',-122.40,37.78],['Snowflake',-122.39,37.78],['ServiceNow',-121.97,37.35],['Adobe',-121.89,37.33],['Cisco',-121.93,37.41],['Intel',-121.96,37.39],['AMD',-121.98,37.40],['Qualcomm',-117.16,32.90],['Broadcom',-122.14,37.42],['Dell',-97.68,30.51],['Sony',139.74,35.63],['Siemens',11.58,48.14],['Airbus',1.36,43.63],['Boeing',-77.09,38.88],['Lockheed',-77.10,38.98],['Goldman Sachs',-74.01,40.71],['Bank of America',-80.84,35.22],['Visa',-122.26,37.55],['Mastercard',-73.71,41.04],['HSBC',-0.02,51.50],['AstraZeneca',0.12,52.20],['Pfizer',-73.97,40.75],['Roche',7.60,47.56],['Novartis',7.59,47.57],['Alibaba',120.16,30.27],['Baidu',116.31,40.05],['SoftBank',139.74,35.66],['Infosys',77.59,12.97],['TCS',72.87,19.07],['Deloitte',-0.11,51.51],['Siemens Healthineers',11.02,49.60],['Nvidia-EU',-6.26,53.34]];
-var CYBER=[['CISA',-77.09,38.88],['ENISA',23.73,37.98],['NCSC-UK',-0.13,51.5],['BSI-DE',7.1,50.73],['ANSSI-FR',2.31,48.86],['China',116.4,39.9],['Russia',37.6,55.75],['Israel',34.78,32.08],['DPRK',125.75,39.03],['Iran',51.39,35.69],['Ukraine',30.52,50.45],['Estonia',24.75,59.44]];
-var ROBOTICS=[['Boston',-71.06,42.36],['Bay Area',-122.14,37.44],['Austin',-97.74,30.27],['Tokyo',139.69,35.68],['Seoul',126.98,37.57],['Shenzhen',114.06,22.54],['Zurich',8.54,47.37],['Shanghai',121.47,31.23],['Munich',11.58,48.14],['Waterloo',-80.52,43.46],['Oslo',10.75,59.91],['Pisa',10.4,43.72]];
-var INTEL=[['SF Bay',-122.27,37.8],['London',-0.12,51.5],['Tel Aviv',34.78,32.08],['Bengaluru',77.59,12.97],['Beijing',116.4,39.9],['Singapore',103.8,1.35],['Toronto',-79.38,43.65],['Paris',2.35,48.86],['Berlin',13.4,52.5],['Dubai',55.27,25.2],['Austin',-97.74,30.27],['Seattle',-122.33,47.6]];
-// Sovereign network — the signed agent-card domains, one council. [domain, lng, lat, role]. First entry is the crown/hub.
-var NETWORK=[['csoai.org',-0.12,51.50,'the standards crown'],['councilof.ai',-0.02,51.62,'BFT council'],['meok.ai',-0.24,51.42,'sovereign brain'],['proofof.ai',2.35,48.86,'deepfake & identity proof'],['safetyof.ai',4.90,52.37,'AI safety'],['accountabilityof.ai',8.68,50.11,'accountability'],['ethicalgovernanceof.ai',7.44,46.95,'ethical governance'],['dataprivacyof.ai',6.13,46.20,'data privacy'],['careshield.ai',-3.19,55.95,'care & safeguarding'],['diyhelp.ai',-1.26,51.75,'guided help'],['grabhire.ai',0.12,52.20,'hire marketplace'],['planthire.ai',-2.24,53.48,'plant hire'],['muckaway.ai',-1.90,52.48,'logistics'],['koikeeper.ai',-1.55,53.80,'koi care'],['fishkeeper.ai',-2.58,51.45,'aquatics'],['optimobile.ai',-4.25,55.86,'mobile optics'],['pokerhud.ai',-6.26,53.35,'decision HUD'],['cobolbridge.ai',18.06,59.33,'legacy bridge'],['wowmcp.ai',12.57,55.68,'MCP tooling'],['templeman-opticians.com',-0.75,51.90,'optical practice']];
-// AI compute infrastructure — the physical substrate of the AI economy. [name, lng, lat, kind]
-var COMPUTE=[['N. Virginia',-77.46,39.02,'hyperscale'],['Oregon',-121.18,45.63,'hyperscale'],['Bay Area',-121.96,37.35,'AI lab + cloud'],['Phoenix',-112.07,33.45,'fab + DC'],['Dublin',-6.26,53.35,'EU cloud'],['Frankfurt',8.68,50.11,'EU cloud'],['London',-0.13,51.51,'cloud + lab'],['Paris',2.35,48.86,'AI lab'],['Stockholm',18.06,59.33,'green compute'],['Tel Aviv',34.78,32.08,'AI R&D'],['Bengaluru',77.59,12.97,'cloud + AI'],['Mumbai',72.88,19.08,'cloud'],['Singapore',103.82,1.35,'APAC hub'],['Tokyo',139.69,35.68,'cloud + robotics'],['Seoul',126.98,37.57,'chip + AI'],['Beijing',116.4,39.9,'AI lab + cloud'],['Shanghai',121.47,31.23,'AI + fab'],['Sydney',151.21,-33.87,'cloud'],['Sao Paulo',-46.63,-23.55,'LatAm hub'],['Toronto',-79.38,43.65,'AI research']];
-// Regulator regimes at their authority seats — the Atlas on the globe. [name, lng, lat, kind]
-var REGS=[['EU AI Act',4.35,50.85,'ai'],['GDPR',4.36,50.84,'data'],['NIS2',23.73,37.98,'cyber'],['CRA',4.34,50.86,'cyber'],['NIST AI RMF',-77.22,39.14,'ai'],['Colorado AI Act',-104.99,39.74,'ai'],['ISO 42001',6.14,46.20,'ai'],['DORA',2.35,48.86,'cyber'],['UK AI',-0.12,51.50,'ai'],['China TC260',116.40,39.90,'ai'],['Canada AIDA',-75.70,45.42,'ai'],['Singapore MGF',103.82,1.35,'ai']];
-var REGC={ai:'#e879f9',cyber:'#f43f5e',data:'#38bdf8'};
-// AI labs + AI-safety institutes mapped to the real world. [name, lng, lat, kind: lab|safety]
-// Autonomous / AI-controlled systems in the real world. [name, lng, lat, kind]
-var AUTON=[['Waymo robotaxi · SF',-122.42,37.77,'robotaxi'],['Waymo · Phoenix',-112.07,33.45,'robotaxi'],['Robotaxi · Austin',-97.74,30.27,'robotaxi'],['Zoox · Las Vegas',-115.14,36.17,'robotaxi'],['Baidu Apollo · Wuhan',114.31,30.59,'robotaxi'],['Pony.ai · Beijing',116.40,39.90,'robotaxi'],['WeRide · Guangzhou',113.26,23.13,'robotaxi'],['Nuro · Bay Area',-122.14,37.42,'robotaxi'],['Auto port · Rotterdam',4.40,51.95,'port'],['Auto port · Tuas Singapore',103.65,1.29,'port'],['Auto port · Qingdao',120.30,36.08,'port'],['Yara Birkeland · Norway',9.65,59.14,'port'],['Zipline drones · Rwanda',29.74,-1.94,'drone'],['Prime Air · Texas',-96.31,30.60,'drone'],['Auto mining · Pilbara',118.0,-22.6,'mining'],['Figure/BMW humanoids',-81.93,34.95,'humanoid'],['Tesla Optimus · Fremont',-121.94,37.49,'humanoid'],['Agility · Salem OR',-123.04,44.94,'humanoid'],['Aurora auto-trucking · Dallas',-96.80,32.78,'robotaxi']];
-var LABS=[['OpenAI',-122.41,37.77,'lab'],['Anthropic',-122.40,37.79,'lab'],['Google DeepMind',-0.13,51.53,'lab'],['DeepMind (MTV)',-122.08,37.42,'lab'],['Meta FAIR',-73.99,40.74,'lab'],['Mistral AI',2.35,48.86,'lab'],['Cohere',-79.38,43.65,'lab'],['Allen AI (AI2)',-122.33,47.66,'lab'],['Mila',-73.61,45.53,'lab'],['Microsoft Research',-122.13,47.64,'lab'],['Nvidia Research',-121.95,37.37,'lab'],['Stability AI',-0.13,51.51,'lab'],['xAI',-122.42,37.76,'lab'],['Zhipu / Tsinghua',116.33,40.00,'lab'],['UK AI Safety Inst.',-0.12,51.50,'safety'],['US AI Safety Inst. (NIST)',-77.22,39.14,'safety'],['CAIS',-122.42,37.77,'safety'],['Future of Life Inst.',-71.11,42.37,'safety'],['Alan Turing Inst.',-0.13,51.53,'safety'],['CHAI Berkeley',-122.26,37.87,'safety'],['MIRI',-122.27,37.87,'safety'],['Partnership on AI',-122.40,37.79,'safety'],['OECD.AI',2.31,48.85,'safety'],['Ada Lovelace Inst.',-0.09,51.52,'safety']];
-
 try{ Cesium.Ion.defaultAccessToken=''; }catch(e){}
 var viewer;
 try{
   viewer=new Cesium.Viewer('c',{
     baseLayer:new Cesium.ImageryLayer(new Cesium.UrlTemplateImageryProvider({
-      url:'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-      maximumLevel:19, credit:'Imagery © Esri · Maxar · Earthstar Geographics · NASA'
+      url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', subdomains:['a','b','c','d'], maximumLevel:18
     })),
     baseLayerPicker:false, geocoder:false, homeButton:false, sceneModePicker:false,
     navigationHelpButton:false, animation:false, timeline:false, fullscreenButton:false,
@@ -187,73 +109,12 @@ try{
 
 if(viewer){
   var sc=viewer.scene;
-  sc.globe.enableLighting=false; // even illumination — whole Earth always visible (no black night side)
-  sc.globe.baseColor=Cesium.Color.fromCssColorString('#0a1622');
-  try{ viewer.imageryLayers.get(0).brightness=1.04; viewer.imageryLayers.get(0).gamma=1.05; viewer.imageryLayers.get(0).saturation=1.12; }catch(e){}
-  try{ sc.globe.showGroundAtmosphere=true; }catch(e){}
+  sc.globe.enableLighting=true;
+  sc.globe.baseColor=Cesium.Color.fromCssColorString('#05080e');
   sc.skyAtmosphere.show=true;
-  try{ sc.skyAtmosphere.atmosphereLightIntensity=12.0; }catch(e){}
+  try{ sc.skyAtmosphere.atmosphereLightIntensity=8.0; }catch(e){}
   sc.fog.enabled=true;
-  // --- Cinematic bloom glow so every node/arc pops ---
-  try{
-    var bloom=sc.postProcessStages.bloom; bloom.enabled=true;
-    bloom.uniforms.glowOnly=false; bloom.uniforms.contrast=8; bloom.uniforms.brightness=-0.4;
-    bloom.uniforms.delta=1.4; bloom.uniforms.sigma=2.2; bloom.uniforms.stepSize=1.0;
-  }catch(e){}
-  try{ sc.highDynamicRange=true; }catch(e){}
-  // --- Basemap picker (learned from DEFONEOS COP): God's Eye NASA satellite / Blue Marble / Night lights / Lite ---
-  function makeProv(key){
-    if(key==='bluemarble')return new Cesium.UrlTemplateImageryProvider({url:'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_NextGeneration/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg',maximumLevel:8,credit:'NASA GIBS · Blue Marble'});
-    if(key==='nightlights')return new Cesium.UrlTemplateImageryProvider({url:'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_Black_Marble/default/2016-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png',maximumLevel:8,credit:'NASA GIBS · Black Marble (city lights)'});
-    if(key==='dark')return new Cesium.UrlTemplateImageryProvider({url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',subdomains:['a','b','c','d'],maximumLevel:18});
-    return new Cesium.UrlTemplateImageryProvider({url:'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',maximumLevel:19,credit:'Esri · Maxar · Earthstar · NASA'});
-  }
-  function setBasemap(key){ try{ var L=viewer.imageryLayers; L.removeAll(); var lyr=L.addImageryProvider(makeProv(key)); lyr.brightness=(key==='dark')?1.0:1.05; lyr.gamma=1.05; lyr.saturation=(key==='nightlights')?1.0:1.12; window.__basemap=key; }catch(e){} }
-  try{
-    var bmWrap=document.createElement('div');
-    bmWrap.style.cssText='position:fixed;left:12px;bottom:12px;z-index:22;display:flex;flex-wrap:wrap;gap:6px;max-width:60vw;background:rgba(3,8,14,.82);border:1px solid rgba(125,211,252,.22);border-radius:12px;padding:6px 8px;backdrop-filter:blur(8px);font-family:system-ui,-apple-system,sans-serif';
-    var lbl=document.createElement('span'); lbl.textContent='Basemap'; lbl.style.cssText='align-self:center;color:#7dd3fc;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-right:2px'; bmWrap.appendChild(lbl);
-    [['satellite','🛰 NASA satellite'],['bluemarble','🌍 Blue Marble'],['nightlights','🌃 Night lights'],['dark','🪶 Lite']].forEach(function(b){
-      var el=document.createElement('button'); el.textContent=b[1];
-      el.style.cssText='cursor:pointer;border:1px solid rgba(125,211,252,.25);background:rgba(255,255,255,.05);color:#d7f5ff;border-radius:8px;padding:4px 9px;font-size:11px;font-weight:600';
-      el.onmouseenter=function(){el.style.background='rgba(52,211,153,.18)';}; el.onmouseleave=function(){el.style.background=(window.__basemap===b[0])?'rgba(52,211,153,.22)':'rgba(255,255,255,.05)';};
-      el.onclick=function(){ setBasemap(b[0]); [].forEach.call(bmWrap.querySelectorAll('button'),function(x){x.style.background='rgba(255,255,255,.05)';}); el.style.background='rgba(52,211,153,.22)'; };
-      bmWrap.appendChild(el);
-    });
-    document.body.appendChild(bmWrap);
-  }catch(e){}
-
-  // --- Immersive opening: start far in space, then sweep in ---
-  // Region-aware intro: fly to the VISITOR's region on load ("loads local").
-  function __globeRegion(){ try{
-    var q=new URLSearchParams(location.search).get('region');
-    var Q={EU:[9,50.5],UK:[-1.5,52.5],US:[-98,39.5],JP:[138,37],KR:[127.8,36.5],CN:[104,35],SG:[103.8,1.35],CA:[-96,56],IN:[79,22]};
-    if(q && Q[q.toUpperCase()]) return Q[q.toUpperCase()];
-    var tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
-    var M={'Europe/London':[-1.5,52.5],'Asia/Tokyo':[138,37],'Asia/Seoul':[127.8,36.5],'Asia/Shanghai':[104,35],'Asia/Hong_Kong':[104,35],'Asia/Singapore':[103.8,1.35],'Asia/Kolkata':[79,22],'Asia/Calcutta':[79,22]};
-    if(M[tz]) return M[tz];
-    if(tz.indexOf('Europe/')===0) return [9,50.5];
-    if(tz.indexOf('America/')===0) return [-98,39.5];
-    return [6,32];
-  }catch(e){ return [6,32]; } }
-  var __rc=__globeRegion();
-  viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(10,25,38000000)});
-  setTimeout(function(){ try{ viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(__rc[0],__rc[1],17000000), orientation:{heading:Cesium.Math.toRadians(-8),pitch:Cesium.Math.toRadians(-76)}, duration:4.2, easingFunction:Cesium.EasingFunction.QUADRATIC_IN_OUT}); }catch(e){} }, 250);
-
-  // --- Focus pulse: an expanding ring at a point so narration lands visually ---
-  function focusPulse(lng,lat,col){
-    try{
-      var t0=Date.now(); col=col||'#34d399';
-      var ent=viewer.entities.add({ position:Cesium.Cartesian3.fromDegrees(lng,lat,12000),
-        ellipse:{ semiMinorAxis:new Cesium.CallbackProperty(function(){return 40000+((Date.now()-t0)/1400)*900000;},false),
-          semiMajorAxis:new Cesium.CallbackProperty(function(){return 40000+((Date.now()-t0)/1400)*900000;},false),
-          height:12000, material:new Cesium.ColorMaterialProperty(new Cesium.CallbackProperty(function(){
-            var k=Math.max(0,1-(Date.now()-t0)/1400); return Cesium.Color.fromCssColorString(col).withAlpha(0.35*k);},false)) } });
-      setTimeout(function(){ try{viewer.entities.remove(ent);}catch(e){} },1500);
-    }catch(e){}
-  }
-  window.__focusPulse=focusPulse;
-  function clearViz(){ var rm=[]; viewer.entities.values.forEach(function(e){ if(e.layerTag==='viz') rm.push(e); }); rm.forEach(function(e){ try{viewer.entities.remove(e);}catch(x){} }); }
+  viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(20,28,26000000)});
 
   // ----- Sovereign nodes (points + labels) -----
   NODES.forEach(function(d){
@@ -287,267 +148,6 @@ if(viewer){
       point:{pixelSize:2.4, color:Cesium.Color.fromCssColorString('#a7f3d0').withAlpha(.8)}});
   }
 
-  // ----- Satellites (orbital ring at ~780km), hidden by default -----
-  for(var st=0; st<40; st++){
-    var slon=-180+st*9, slat=Math.sin(st*0.6)*58;
-    viewer.entities.add({ layerTag:'sats', show:false,
-      position:Cesium.Cartesian3.fromDegrees(slon, slat, 780000),
-      point:{pixelSize:4.5, color:Cesium.Color.fromCssColorString('#7dd3fc'), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(2e6,1.2,4e7,.4)} });
-  }
-  // ----- Power plants / critical infrastructure, hidden by default -----
-  [[-0.9,51.4],[2.9,49.8],[8.4,49.0],[139.9,35.5],[121.5,31.0],[-77.2,38.9],[-87.6,41.5],[-118.2,34.0],[77.6,13.0],[55.3,25.3],[151.2,-33.6],[-46.5,-23.6],[3.9,6.4],[-79.4,43.6],[-95.4,29.7],[37.6,55.7]].forEach(function(pp){
-    viewer.entities.add({ layerTag:'plants', show:false,
-      position:Cesium.Cartesian3.fromDegrees(pp[0],pp[1]),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#f59e0b'), outlineColor:Cesium.Color.fromCssColorString('#78350f'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
-  });
-  // ----- Humanoid + agent fleet (global ground swarm), hidden by default -----
-  for(var hm=0; hm<220; hm++){
-    viewer.entities.add({ layerTag:'humanoids', show:false,
-      position:Cesium.Cartesian3.fromDegrees(-170+Math.random()*340, -55+Math.random()*110, 20000),
-      point:{pixelSize:2.6, color:Cesium.Color.fromCssColorString('#6ee7b7').withAlpha(.85), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.2,3e7,.4)} });
-  }
-  // ----- Rogue threat cluster, hidden by default -----
-  for(var th=0; th<18; th++){
-    viewer.entities.add({ layerTag:'threat', show:false,
-      position:Cesium.Cartesian3.fromDegrees(-0.1+(Math.random()-0.5)*3, 51.5+(Math.random()-0.5)*2, 40000),
-      point:{pixelSize:5, color:Cesium.Color.fromCssColorString('#ef4444'), outlineColor:Cesium.Color.WHITE, outlineWidth:1} });
-  }
-  // ----- Real regulator dataset (cited, from ecosystem.json) — enriches 'regulators' -----
-  (function(){ try{ fetch('/ecosystem.json').then(function(r){return r.json();}).then(function(d){
-    (d && d.regulators || []).forEach(function(g){
-      try{ viewer.entities.add({ layerTag:'regulators', show:false, name:g.name,
-        description:'<h3>'+g.name+'</h3><p>'+(g.region||'')+' · '+(g.country||'')+'</p><p><b>Frameworks:</b> '+((g.frameworks||[]).join(', '))+'</p><p><b>Source:</b> '+(g.source||'')+'</p><p style="opacity:.7">CSOAI implements this authority\'s frameworks · play: align</p>',
-        position:Cesium.Cartesian3.fromDegrees(g.lng, g.lat, 15000),
-        point:{ pixelSize:7, color:Cesium.Color.fromCssColorString('#34d399'), outlineColor:Cesium.Color.WHITE, outlineWidth:1.5, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,4e7,.4) },
-        label:{ text:g.name, font:'600 12px system-ui', fillColor:Cesium.Color.fromCssColorString('#d1fae5'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#03110b').withAlpha(.72), pixelOffset:new Cesium.Cartesian2(0,-16), scale:0.85, distanceDisplayCondition:new Cesium.DistanceDisplayCondition(0, 9e6) } }); }catch(x){}
-    });
-  }).catch(function(){}); }catch(e){} })();
-
-  // ----- Hive coverage overlay (from hive-coverage.json, PUBLIC seed) — play + CSOAI gap -----
-  (function(){ try{ fetch('/hive-coverage.json').then(function(r){return r.json();}).then(function(d){
-    var COL={ align:'#34d399', absorb:'#38bdf8', integrate:'#fbbf24', displace:'#fb7185' };
-    var worst=null, worstEnt=null, entById={};
-    (d && d.coverage || []).forEach(function(a){
-      if(!a.hq || a.hq.length!==2) return;
-      if(a.play!=='align' && (!worst || a.gap>worst.gap)) worst=a;
-      var col=COL[a.play]||'#34d399';
-      var sz = 6 + Math.round((a.gap/(a.maxGap||21))*10); // small=aligned, large=big CSOAI gap
-      var gapLine = a.play==='align' ? '<p style="opacity:.7">Authority · CSOAI implements their regime · play: align</p>'
-        : '<p><b>Play:</b> '+a.play+' ('+a.confidence+')</p><p><b>CSOAI gap:</b> '+a.gap+'/'+(a.maxGap||21)+'</p>'+(a.topUsp?'<p><b>Lead with:</b> '+a.topUsp+'</p>':'');
-      try{ var __ce=viewer.entities.add({ layerTag:'coverage', show:false, name:a.name,
-        description:'<h3>'+a.name+'</h3><p>'+(a.type||'')+' · '+(a.region||'')+'</p>'+gapLine+'<p style="opacity:.6">org-level · public seed · displace only w/ known vendor</p>',
-        position:Cesium.Cartesian3.fromDegrees(a.hq[0], a.hq[1], 18000),
-        point:{ pixelSize:sz, color:Cesium.Color.fromCssColorString(col).withAlpha(.9), outlineColor:Cesium.Color.WHITE, outlineWidth:1.4, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.25,4e7,.4) },
-        label:{ text:a.play==='align'?'':a.name, font:'600 11px system-ui', fillColor:Cesium.Color.fromCssColorString('#fde68a'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#03110b').withAlpha(.72), pixelOffset:new Cesium.Cartesian2(0,-15), scale:0.82, distanceDisplayCondition:new Cesium.DistanceDisplayCondition(0, 7e6) } });
-        if(worst && a.id===worst.id) worstEnt=__ce; entById[a.id]=__ce; }catch(x){}
-    });
-    // cycle through opportunities by descending gap
-    var ranked=(d.coverage||[]).filter(function(a){return a.play!=='align'&&a.hq&&a.hq.length===2;}).sort(function(x,y){return y.gap-x.gap;}); var flyIdx=-1;
-    window.__hiveFlyNext=function(){ if(!ranked.length) return; flyIdx=(flyIdx+1)%ranked.length; var a=ranked[flyIdx]; try{
-      var chip=document.querySelector('.lyr[data-layer="coverage"] .sw'); if(chip) chip.classList.add('on');
-      viewer.entities.values.forEach(function(e){ if(e.layerTag==='coverage') e.show=true; });
-      if(typeof stopOrbit==='function'){try{stopOrbit();}catch(_){}} if(typeof spinning!=='undefined') spinning=false;
-      viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(a.hq[0],a.hq[1],1500000), orientation:{heading:0,pitch:Cesium.Math.toRadians(-70),roll:0}, duration:2.2 });
-      var e=entById[a.id]; if(e) setTimeout(function(){ try{viewer.selectedEntity=e;}catch(_){} },2300);
-    }catch(x){} };
-    // fly-to-worst-gap demo hook: turn on coverage, fly to the biggest-gap account, open its card
-    window.__hiveFlyWorst=function(){ if(!worst) return; try{
-      var chip=document.querySelector('.lyr[data-layer="coverage"] .sw'); if(chip && !chip.classList.contains('on')){ chip.classList.add('on'); viewer.entities.values.forEach(function(e){ if(e.layerTag==='coverage') e.show=true; }); }
-      viewer.entities.values.forEach(function(e){ if(e.layerTag==='coverage') e.show=true; });
-      if(typeof stopOrbit==='function'){ try{stopOrbit();}catch(_){} } if(typeof spinning!=='undefined') spinning=false;
-      viewer.camera.flyTo({ destination:Cesium.Cartesian3.fromDegrees(worst.hq[0], worst.hq[1], 1600000), orientation:{heading:0,pitch:Cesium.Math.toRadians(-70),roll:0}, duration:2.6 });
-      if(worstEnt) setTimeout(function(){ try{ viewer.selectedEntity=worstEnt; }catch(_){} }, 2700);
-    }catch(x){} };
-  }).catch(function(){}); }catch(e){} })();
-
-  // ----- Frameworks (colored by status), visible by default -----
-  FW.forEach(function(f){
-    viewer.entities.add({ layerTag:'frameworks',
-      position:Cesium.Cartesian3.fromDegrees(f[1],f[2]),
-      point:{pixelSize:7, color:Cesium.Color.fromCssColorString(f[3]), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
-      label:{text:f[0], font:'600 10px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#cfe8df'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2.5, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-13), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,8e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,1.2e7,0)} });
-  });
-  // ----- Governments (AI authorities / capitals), hidden by default -----
-  GOV.forEach(function(g){
-    viewer.entities.add({ layerTag:'gov', show:false, position:Cesium.Cartesian3.fromDegrees(g[1],g[2]),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#e7f6ef'), outlineColor:Cesium.Color.fromCssColorString('#0d9488'), outlineWidth:2, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.2,2e7,.4)} });
-  });
-  // ----- Fortune 500 / 100 HQs, hidden by default -----
-  FORTUNE.forEach(function(c){
-    viewer.entities.add({ layerTag:'fortune', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],10000),
-      point:{pixelSize:5, color:Cesium.Color.fromCssColorString('#38bdf8'), outlineColor:Cesium.Color.fromCssColorString('#0c4a6e'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.2,2e7,.4)},
-      label:{text:c[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#bae6fd'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)} });
-  });
-  // ----- Cyber / CNI hubs (defenders + threat origins), hidden by default -----
-  CYBER.forEach(function(c){
-    viewer.entities.add({ layerTag:'cyber', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],20000),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#f43f5e'), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
-    viewer.entities.add({ layerTag:'cyber', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],20000),
-      ellipse:{ semiMinorAxis:180000, semiMajorAxis:180000, height:20000, material:Cesium.Color.fromCssColorString('#f43f5e').withAlpha(0.12) } });
-  });
-
-  // ----- Robotics / humanoid R&D hubs, hidden by default -----
-  ROBOTICS.forEach(function(c){
-    viewer.entities.add({ layerTag:'robotics', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],10000),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#a78bfa'), outlineColor:Cesium.Color.fromCssColorString('#3b0764'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
-  });
-  // ----- AI security / intel / trending hubs, hidden by default -----
-  INTEL.forEach(function(c){
-    viewer.entities.add({ layerTag:'intel', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],15000),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString('#fb923c'), outlineColor:Cesium.Color.WHITE, outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)} });
-    viewer.entities.add({ layerTag:'intel', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],15000),
-      ellipse:{ semiMinorAxis:160000, semiMajorAxis:160000, height:15000, material:Cesium.Color.fromCssColorString('#fb923c').withAlpha(0.10) } });
-  });
-  // ----- AI compute infrastructure (the AI economy's substrate), hidden by default -----
-  COMPUTE.forEach(function(c){
-    viewer.entities.add({ layerTag:'compute', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],18000),
-      point:{pixelSize:7, color:Cesium.Color.fromCssColorString('#fbbf24'), outlineColor:Cesium.Color.fromCssColorString('#78350f'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.4,2e7,.45)},
-      label:{ text:c[0], font:'600 11px system-ui', fillColor:Cesium.Color.fromCssColorString('#fde68a'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#1c1207').withAlpha(.7), pixelOffset:new Cesium.Cartesian2(0,-16), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,1.2e7,0), disableDepthTestDistance:Number.POSITIVE_INFINITY },
-      description:'<b>'+c[0]+'</b><br>AI compute hub — '+c[3]+'<br><i>Governance relevance: where compute concentrates, AI capability and AI risk concentrate.</i>' });
-    viewer.entities.add({ layerTag:'compute', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],18000),
-      ellipse:{ semiMinorAxis:200000, semiMajorAxis:200000, height:18000, material:Cesium.Color.fromCssColorString('#fbbf24').withAlpha(0.12) } });
-  });
-  // ----- Sovereign network (signed agent-card domains, arced to the crown), hidden by default -----
-  var netHub=NETWORK[0];
-  NETWORK.forEach(function(a,i){
-    var isHub=(i===0);
-    viewer.entities.add({ layerTag:'network', show:false, position:Cesium.Cartesian3.fromDegrees(a[1],a[2],16000),
-      point:{pixelSize:isHub?10:6, color:Cesium.Color.fromCssColorString(isHub?'#fbbf24':'#22d3ee'), outlineColor:Cesium.Color.fromCssColorString('#042f2e'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.4,2e7,.4)},
-      label:{ text:a[0], font:(isHub?'700 12px':'600 10px')+' system-ui', fillColor:Cesium.Color.fromCssColorString(isHub?'#fde68a':'#a5f3fc'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#04201f').withAlpha(.7), pixelOffset:new Cesium.Cartesian2(0,-14), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,1.4e7,0), disableDepthTestDistance:Number.POSITIVE_INFINITY },
-      description:'<b>'+a[0]+'</b><br>'+a[3]+'<br><i>A signed agent in the Sovereign network — every action sealed to Layer 0.</i>' });
-    if(!isHub) viewer.entities.add({ layerTag:'network', show:false,
-      polyline:{ positions:Cesium.Cartesian3.fromDegreesArrayHeights([a[1],a[2],16000, netHub[1],netHub[2],16000]), width:1.4, material:new Cesium.PolylineGlowMaterialProperty({glowPower:.2, color:Cesium.Color.fromCssColorString('#22d3ee').withAlpha(.5)}) } });
-  });
-  // ----- Regulator regimes at their authority seats (the Atlas on the globe), hidden by default -----
-  REGS.forEach(function(g){
-    var col=REGC[g[3]]||'#e879f9';
-    viewer.entities.add({ layerTag:'regulators', show:false, position:Cesium.Cartesian3.fromDegrees(g[1],g[2],17000),
-      point:{pixelSize:7, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#3b0764'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.4,2e7,.45)},
-      label:{ text:g[0], font:'600 10px system-ui', fillColor:Cesium.Color.fromCssColorString('#f5d0fe'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#1a0b2e').withAlpha(.7), pixelOffset:new Cesium.Cartesian2(0,-14), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,1.3e7,0), disableDepthTestDistance:Number.POSITIVE_INFINITY },
-      description:'<b>'+g[0]+'</b><br>'+(g[3]==='cyber'?'Cybersecurity regime':g[3]==='data'?'Data-protection regime':'AI-governance regime')+' at its authority seat.<br><i>Open the Regulator Atlas for its top tools + next dates.</i>' });
-  });
-  // ----- AI labs + AI-safety institutes (the field, mapped), hidden by default -----
-  LABS.forEach(function(l){
-    var lab=l[3]==='lab'; var col=lab?'#a78bfa':'#fb7185';
-    viewer.entities.add({ layerTag:'labs', show:false, position:Cesium.Cartesian3.fromDegrees(l[1],l[2],14000),
-      point:{pixelSize:lab?6:7, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString(lab?'#2e1065':'#4c0519'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
-      label:{text:l[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString(lab?'#ddd6fe':'#fecdd3'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,7e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,1e7,0)},
-      description:'<b>'+l[0]+'</b><br>'+(lab?'Frontier AI lab':'AI-safety institute')+' — mapped into the governance world.' });
-  });
-  // ----- Autonomous / AI-controlled systems (robotaxis, auto-ports, drones, humanoids, mining), hidden by default -----
-  var AUC={robotaxi:'#2dd4bf',port:'#38bdf8',drone:'#a3e635',humanoid:'#fb923c',mining:'#fbbf24'};
-  AUTON.forEach(function(a){
-    var col=AUC[a[3]]||'#2dd4bf';
-    viewer.entities.add({ layerTag:'auton', show:false, position:Cesium.Cartesian3.fromDegrees(a[1],a[2],12000),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#042f2e'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
-      label:{text:a[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#ccfbf1'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
-      description:'<b>'+a[0]+'</b><br>Autonomous / AI-controlled system ('+a[3]+') — an agent acting in the physical world. This is what the Sovereign governs.' });
-  });
-
-  // ----- Space governance: satellites, constellations, GNSS & spaceports (dual-use AI + space), hidden by default -----
-  var SPACE=[['Cape Canaveral · spaceport',-80.60,28.49,'port'],['Kennedy KSC',-80.65,28.57,'port'],['Vandenberg',-120.61,34.74,'port'],['Baikonur Cosmodrome',63.34,45.96,'port'],['Kourou · ESA',-52.77,5.24,'port'],['Wenchang · China',110.95,19.61,'port'],['Jiuquan · China',100.29,40.96,'port'],['Sriharikota · ISRO',80.23,13.72,'port'],['Tanegashima · JAXA',130.97,30.40,'port'],['Starbase · Boca Chica',-97.16,25.99,'port'],['Rocket Lab · Mahia',177.86,-39.26,'port'],['Starlink NOC · Redmond',-122.12,47.67,'constellation'],['OneWeb · London',-0.13,51.51,'constellation'],['Kuiper · Redmond',-122.13,47.67,'constellation'],['Galileo GCC · Fucino',13.60,41.98,'gnss'],['GPS master · Schriever',-104.53,38.80,'gnss'],['BeiDou · Beijing',116.40,39.90,'gnss'],['GLONASS · Moscow',37.62,55.75,'gnss']];
-  var SPC={port:'#f5d0fe',constellation:'#67e8f9',gnss:'#fca5a5'};
-  SPACE.forEach(function(s){ var col=SPC[s[3]]||'#67e8f9';
-    viewer.entities.add({ layerTag:'space', show:false, position:Cesium.Cartesian3.fromDegrees(s[1],s[2],14000),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#1e1b4b'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
-      label:{text:s[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#f5f3ff'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
-      description:'<b>'+s[0]+'</b><br>Space governance ('+s[3]+') — orbital assets, GNSS & launch sites the Sovereign frameworks map (dual-use AI, space situational awareness).' });
-  });
-  // Live ISS position — real keyless space feed (wheretheiss.at)
-  (function(){ try{
-    var iss=viewer.entities.add({ layerTag:'space', show:false, position:Cesium.Cartesian3.fromDegrees(0,0,4.2e5),
-      point:{pixelSize:9, color:Cesium.Color.fromCssColorString('#fde047'), outlineColor:Cesium.Color.fromCssColorString('#7dd3fc'), outlineWidth:2},
-      label:{text:'ISS · live', font:'700 10px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#fef9c3'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-13)},
-      description:'International Space Station — live position. Space situational awareness under space governance.' });
-    function upd(){ fetch('https://api.wheretheiss.at/v1/satellites/25544',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){ if(d&&d.longitude!=null){ iss.position=Cesium.Cartesian3.fromDegrees(Number(d.longitude),Number(d.latitude),4.2e5); } }).catch(function(){}); }
-    upd(); setInterval(upd, 8000);
-  }catch(e){} })();
-
-  // ----- AI-critical energy & grid (the power AI runs on — resilience & sovereignty), hidden by default -----
-  var ENERGY=[['Palo Verde nuclear',-112.86,33.39,'nuclear'],['Vogtle nuclear',-81.76,33.14,'nuclear'],['Hinkley Point C',-3.13,51.21,'nuclear'],['Flamanville',-1.88,49.54,'nuclear'],['Olkiluoto',21.44,61.24,'nuclear'],['Taishan',112.97,21.72,'nuclear'],['Three Gorges Dam',111.00,30.82,'hydro'],['Itaipu Dam',-54.59,-25.41,'hydro'],['Grand Coulee',-118.98,47.96,'hydro'],['Hornsea wind · UK',1.79,53.88,'renewable'],['Hydro-Quebec',-73.57,45.50,'hydro'],['Iceland geothermal',-21.94,64.14,'renewable'],['ERCOT grid · Texas',-97.74,30.27,'grid'],['PJM grid · Virginia',-77.46,39.02,'grid'],['Nord Pool · Nordics',10.75,59.91,'grid']];
-  var ENC={nuclear:'#fde047',hydro:'#38bdf8',renewable:'#86efac',grid:'#fb923c'};
-  ENERGY.forEach(function(e){ var col=ENC[e[3]]||'#fb923c';
-    viewer.entities.add({ layerTag:'energy', show:false, position:Cesium.Cartesian3.fromDegrees(e[1],e[2],11000),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#422006'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
-      label:{text:e[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#fff7ed'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
-      description:'<b>'+e[0]+'</b><br>AI-critical energy ('+e[3]+') — the power AI compute depends on; a governance, resilience & sustainability concern.' });
-  });
-
-  // ----- Internet backbone: subsea cable landings & major IXPs (the AI economy substrate / CNI), hidden by default -----
-  var CABLES=[['Marseille landing',5.37,43.30,'landing'],['Lisbon landing',-9.14,38.72,'landing'],['Bude · UK landing',-4.55,50.83,'landing'],['Virginia Beach landing',-75.98,36.85,'landing'],['NYC landing',-74.01,40.71,'landing'],['Ashburn IXP · Equinix',-77.49,39.04,'ixp'],['Amsterdam AMS-IX',4.90,52.37,'ixp'],['Frankfurt DE-CIX',8.68,50.11,'ixp'],['London LINX',-0.02,51.51,'ixp'],['Singapore landing',103.85,1.29,'landing'],['Hong Kong landing',114.16,22.28,'landing'],['Tokyo landing',139.77,35.63,'landing'],['Mumbai landing',72.82,18.94,'landing'],['Fortaleza landing',-38.52,-3.72,'landing'],['Alexandria landing',29.92,31.20,'landing']];
-  var CAC={landing:'#5eead4',ixp:'#c4b5fd'};
-  CABLES.forEach(function(c){ var col=CAC[c[3]]||'#5eead4';
-    viewer.entities.add({ layerTag:'cables', show:false, position:Cesium.Cartesian3.fromDegrees(c[1],c[2],9000),
-      point:{pixelSize:5, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#042f2e'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
-      label:{text:c[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#ecfeff'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
-      description:'<b>'+c[0]+'</b><br>Internet backbone ('+c[3]+') — subsea cable landing / exchange the AI economy runs on; a CNI & data-sovereignty governance point.' });
-  });
-
-  // ----- Industries converting to AI — legacy sectors CSOAI governs through the transition, hidden by default -----
-  var INDUSTRIES=[['Deutsche Bahn · rail',13.37,52.52,'rail'],['SNCF · rail',2.32,48.84,'rail'],['JR East · rail',139.77,35.68,'rail'],['Network Rail · UK',-1.90,52.48,'rail'],['JPMorgan · banking',-74.01,40.71,'finance'],['HSBC · banking',-0.02,51.51,'finance'],['DBS · banking',103.85,1.28,'finance'],['ICBC · banking',116.46,39.91,'finance'],['Mayo Clinic · health',-92.47,44.02,'health'],['NHS · health',-0.12,51.50,'health'],['Siemens Healthineers',11.02,49.60,'health'],['Toyota · manufacturing',137.16,35.08,'mfg'],['Foxconn · manufacturing',120.97,24.80,'mfg'],['Siemens · manufacturing',11.58,48.14,'mfg'],['AT&T · telecom',-96.80,32.78,'telecom'],['Vodafone · telecom',-0.64,51.53,'telecom'],['NTT · telecom',139.74,35.68,'telecom'],['Allianz · insurance',11.58,48.14,'insurance'],["Lloyd's · insurance",-0.08,51.51,'insurance'],['Maersk · logistics',12.60,55.69,'logistics'],['DHL · logistics',6.78,51.03,'logistics'],['FedEx · logistics',-90.00,35.05,'logistics'],['John Deere · agri',-90.51,41.52,'agri'],['Bayer Crop · agri',6.78,51.03,'agri'],['Walmart · retail',-94.21,36.37,'retail'],['Alibaba · retail',120.16,30.27,'retail'],['Tesla · automotive',-97.62,30.22,'auto'],['VW · automotive',10.79,52.42,'auto'],['Gov digital · UK',-0.12,51.50,'public'],['US GSA · public',-77.02,38.89,'public']];
-  var INDC={rail:'#f59e0b',finance:'#34d399',health:'#f472b6',mfg:'#93c5fd',telecom:'#c084fc',insurance:'#fca5a5',logistics:'#5eead4',agri:'#a3e635',retail:'#fdba74',auto:'#38bdf8',public:'#e2e8f0'};
-  INDUSTRIES.forEach(function(x){ var col=INDC[x[3]]||'#93c5fd';
-    viewer.entities.add({ layerTag:'industries', show:false, position:Cesium.Cartesian3.fromDegrees(x[1],x[2],10000),
-      point:{pixelSize:6, color:Cesium.Color.fromCssColorString(col), outlineColor:Cesium.Color.fromCssColorString('#0b1220'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.3,2e7,.4)},
-      label:{text:x[0], font:'600 9px Inter, sans-serif', fillColor:Cesium.Color.fromCssColorString('#eef2ff'), outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2, style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-11), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,6e6,0), translucencyByDistance:new Cesium.NearFarScalar(1.5e6,1,9e6,0)},
-      description:'<b>'+x[0]+'</b><br>Legacy industry converting to AI ('+x[3]+') — CSOAI governs the transition: which frameworks apply (EU AI Act, sector rules), what evidence is owed, and where the risk sits.' });
-  });
-
-  // ----- Sovereign Hive loop badge: the continuous Scrape → Learn → Train → Simulate → Evolve cycle -----
-  (function(){ try{
-    var stages=['Scrape','Learn','Train','Simulate','Evolve']; var wrap=document.createElement('div');
-    wrap.style.cssText='position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:21;display:flex;gap:5px;align-items:center;background:rgba(3,8,14,.74);border:1px solid rgba(52,211,153,.28);border-radius:999px;padding:5px 12px;backdrop-filter:blur(8px);font-family:system-ui,-apple-system,sans-serif;font-size:11px;font-weight:600;box-shadow:0 2px 14px rgba(16,185,129,.18)';
-    var lead=document.createElement('span'); lead.textContent='SOVEREIGN HIVE'; lead.style.cssText='color:#7dd3fc;letter-spacing:1px;font-size:9px;margin-right:4px'; wrap.appendChild(lead);
-    var els=[]; stages.forEach(function(s,idx){ var e=document.createElement('span'); e.textContent=s; e.style.cssText='color:#64748b;transition:color .35s,text-shadow .35s'; wrap.appendChild(e); els.push(e); if(idx<stages.length-1){ var ar=document.createElement('span'); ar.textContent='→'; ar.style.cssText='color:#334155;font-size:9px'; wrap.appendChild(ar); } });
-    var k=0; setInterval(function(){ els.forEach(function(e,idx){ var on=idx===k; e.style.color=on?'#34d399':'#64748b'; e.style.textShadow=on?'0 0 9px rgba(52,211,153,.85)':'none'; }); k=(k+1)%els.length; }, 1500);
-    document.body.appendChild(wrap);
-  }catch(e){} })();
-
-  // ----- Live aircraft (OpenSky ADS-B, keyless) — autonomous-airspace governance; polls only when toggled on -----
-  (function(){
-    function acOn(){ var el=document.querySelector('.lyr[data-layer="aircraft"] .sw'); return !!(el && el.classList.contains('on')); }
-    function clearAc(){ var rm=[]; viewer.entities.values.forEach(function(e){ if(e.layerTag==='aircraft') rm.push(e); }); rm.forEach(function(e){ viewer.entities.remove(e); }); }
-    function poll(){
-      if(!acOn()){ clearAc(); return; }
-      // bounded box (Europe) keeps the keyless payload small + reliable
-      fetch('https://opensky-network.org/api/states/all?lamin=35&lomin=-11&lamax=60&lomax=30',{cache:'no-store'})
-        .then(function(r){ return r.ok?r.json():null; })
-        .then(function(d){ if(!d||!d.states||!acOn()) return; clearAc();
-          d.states.slice(0,120).forEach(function(s){ var lng=s[5],lat=s[6],alt=s[7]||9000,cs=(s[1]||'').trim()||s[0]; if(lng==null||lat==null) return;
-            viewer.entities.add({ layerTag:'aircraft', show:true, position:Cesium.Cartesian3.fromDegrees(lng,lat,Math.max(3000,alt)),
-              point:{pixelSize:4, color:Cesium.Color.fromCssColorString('#f8fafc'), outlineColor:Cesium.Color.fromCssColorString('#38bdf8'), outlineWidth:1, scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.2,2e7,.3)},
-              description:'<b>'+cs+'</b><br>Live civil aircraft ('+(s[2]||'')+') — OpenSky ADS-B. Autonomous-airspace & dual-use governance.' });
-          });
-        }).catch(function(){});
-    }
-    setInterval(poll, 30000); // refresh cadence; first pull happens the first tick after toggle-on
-    var chip=document.querySelector('.lyr[data-layer="aircraft"]'); if(chip){ chip.addEventListener('click', function(){ setTimeout(poll, 60); }); }
-  })();
-
-  // ----- Ontology layer: every governed object and how it RELATES (Palantir-style) -----
-  // Objects: governments, frameworks, companies, cyber. Links: governs / applies-to / defends.
-  (function(){
-    function d2(a,b){ var dx=a[0]-b[0],dy=a[1]-b[1]; return dx*dx+dy*dy; }
-    function nearest(from, list, k){ return list.map(function(x){return {x:x,d:d2(from,[x[1],x[2]])};}).sort(function(p,q){return p.d-q.d;}).slice(0,k).map(function(o){return o.x;}); }
-    function arc(a,b,color){
-      viewer.entities.add({ layerTag:'ontology', show:false,
-        polyline:{ positions:Cesium.Cartesian3.fromDegreesArrayHeights([a[0],a[1],120000,(a[0]+b[0])/2,(a[1]+b[1])/2,900000,b[0],b[1],120000]),
-          width:1.3, arcType:Cesium.ArcType.NONE,
-          material:new Cesium.PolylineGlowMaterialProperty({glowPower:.22, color:Cesium.Color.fromCssColorString(color).withAlpha(.6)}) } });
-    }
-    // government --governs--> nearest frameworks (emerald)
-    GOV.forEach(function(g){ nearest([g[1],g[2]], FW, 2).forEach(function(f){ arc([g[1],g[2]],[f[1],f[2]],'#34d399'); }); });
-    // framework --applies-to--> nearest companies (sky)
-    FW.forEach(function(f){ nearest([f[1],f[2]], FORTUNE, 2).forEach(function(c){ arc([f[1],f[2]],[c[1],c[2]],'#38bdf8'); }); });
-    // cyber --defends--> nearest company (rose)
-    CYBER.forEach(function(c){ nearest([c[1],c[2]], FORTUNE, 1).forEach(function(t){ arc([c[1],c[2]],[t[1],t[2]],'#f43f5e'); }); });
-    // object glints at every ontology node
-    FW.concat(GOV.map(function(g){return [g[0],g[1],g[2],'#e7f6ef'];})).forEach(function(o){
-      viewer.entities.add({ layerTag:'ontology', show:false, position:Cesium.Cartesian3.fromDegrees(o[1],o[2],120000),
-        point:{pixelSize:3, color:Cesium.Color.fromCssColorString('#a7f3d0').withAlpha(.9)} });
-    });
-  })();
-
   // layer toggles
   document.querySelectorAll('.lyr').forEach(function(el){
     el.onclick=function(){ var tag=el.dataset.layer, sw=el.querySelector('.sw'), on=!sw.classList.contains('on'); sw.classList.toggle('on',on);
@@ -579,113 +179,65 @@ if(viewer){
     if(typeof d.ungoverned_crimes==='number')document.getElementById('s-ung').textContent=fmt(d.ungoverned_crimes)+'+';
   }).catch(function(){});
 
-  // Live Sovereign brain — pull real Layer 0 health so the globe shows a live pulse + tool count.
-  fetch('https://os.meok.ai/api/health',{cache:'no-store'}).then(function(r){return r.json();}).then(function(h){
-    if(h && (h.ok || h.service)){
-      var br = document.querySelector('.brand small'); if(br) br.textContent = '3D Governance Earth · LIVE';
-      var dot = document.querySelector('.brand .dot'); if(dot){ dot.style.animation='pulseDot 1.4s infinite'; }
-    }
-  }).catch(function(){});
-  // real governed-tool count from the live catalog
-  fetch('https://os.meok.ai/api/tools',{cache:'no-store'}).then(function(r){return r.json();}).then(function(t){
-    var n = (t && (t.total || t.count)) || (Array.isArray(t) ? t.length : 0);
-    if(n && n > 50) document.getElementById('s-tools').textContent = n;
-    // Wire the REAL MCP fleet as a governed layer — scatter each tool near its cluster's anchor jurisdiction (deterministic, labelled).
-    var list = (t && (t.matches || t.mcps)) || (Array.isArray(t) ? t : []);
-    if(list && list.length){
-      list.forEach(function(m,i){ if(!m || !m.name) return; var b=NODES[i%NODES.length];
-        var lng=b.c[0]+(((i*37)%22)-11), lat=b.c[1]+(((i*19)%16)-8);
-        viewer.entities.add({ layerTag:'mcps', show:false, position:Cesium.Cartesian3.fromDegrees(lng,lat,9000),
-          point:{pixelSize:3.4, color:Cesium.Color.fromCssColorString('#7dd3fc'), scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.1,2e7,.35)},
-          description:'<b>'+m.name+'</b><br>'+(m.clusterLabel||m.cluster||'governed MCP')+(m.tools?(' · '+m.tools+' tools'):'')+(m.connect?('<br><code>'+m.connect+'</code>'):'')+'<br><i>Live governed MCP · Layer 0.</i>' }); });
-      var chip=document.querySelector('.lyr[data-layer="mcps"] .nm small'); if(chip) chip.textContent = n+' live governed MCPs';
-    }
-  }).catch(function(){});
-
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
   setTimeout(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; },3500);
-
-  // ----- Cinematic camera: tilted arrivals + gentle orbit around the location -----
-  var _orbit=null, _orbitH=0;
-  function stopOrbit(){ if(_orbit){clearInterval(_orbit);_orbit=null;} try{ viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY); }catch(e){} }
-  function orbitAround(lng,lat,range,pitchDeg){
-    stopOrbit(); var center=Cesium.Cartesian3.fromDegrees(lng,lat); _orbitH=Cesium.Math.toRadians(20);
-    _orbit=setInterval(function(){ _orbitH+=0.0022; try{ viewer.camera.lookAt(center, new Cesium.HeadingPitchRange(_orbitH, Cesium.Math.toRadians(pitchDeg||-32), range)); }catch(e){} }, 40);
-  }
-
-  // Drive API - the CSOAI demo/tour controls the camera + layers via postMessage.
-  function handleCmd(m){
-    try {
-      if (!m || typeof m !== 'object' || !viewer) return;
-      if (m.cmd === 'flyTo') {
-        spinning = false; stopOrbit();
-        var lng=Number(m.lng), lat=Number(m.lat), h=Number(m.height)||2600000, dur=Number(m.duration)||2.4;
-        var pitch = (m.pitch!=null) ? Number(m.pitch) : (h>6000000 ? -78 : h>1500000 ? -50 : -32);
-        var head = (m.heading!=null) ? Number(m.heading) : -18;
-        viewer.camera.flyTo({
-          destination: Cesium.Cartesian3.fromDegrees(lng, lat, h),
-          orientation: { heading: Cesium.Math.toRadians(head), pitch: Cesium.Math.toRadians(pitch), roll: 0 },
-          duration: dur,
-          complete: function(){ if (m.orbit === false) return; if (h < 4000000) orbitAround(lng, lat, Math.max(h*1.7, 140000), pitch); else { spinning = true; } }
-        });
-        if (h < 9000000 && window.__focusPulse) setTimeout(function(){ window.__focusPulse(lng, lat, m.col); }, Math.max(0, dur*1000 - 700));
-      }
-      else if (m.cmd === 'layer') { var n=0,fx=null; viewer.entities.values.forEach(function(ent){ if (ent.layerTag === m.tag){ ent.show = !!m.on; if(m.on&&!fx&&ent.position){var cc=ent.position.getValue(Cesium.JulianDate.now()); if(cc){var carto=Cesium.Cartographic.fromCartesian(cc); fx=[Cesium.Math.toDegrees(carto.longitude),Cesium.Math.toDegrees(carto.latitude)];}} n++; } }); if(m.on&&fx&&window.__focusPulse) window.__focusPulse(fx[0],fx[1],m.col); if(m.on){ stopOrbit(); spinning=true; } }
-      else if (m.cmd === 'lightup') { var tags=(m.tags)||['frameworks','regulators','gov','fortune','cyber','compute','network','intel','robotics','labs','auton','mcps','humanoids','ontology','arcs','space','energy','cables','industries']; viewer.entities.values.forEach(function(ent){ if(tags.indexOf(ent.layerTag)>=0) ent.show=true; }); spinning=false; stopOrbit(); viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(8,30,22000000), orientation:{heading:Cesium.Math.toRadians(-10),pitch:Cesium.Math.toRadians(-80),roll:0}, duration:2.6}); }
-      else if (m.cmd === 'bftSpiral') {
-        clearViz(); spinning=false; stopOrbit();
-        var clng=(m.lng!=null)?Number(m.lng):-0.12, clat=(m.lat!=null)?Number(m.lat):51.5;
-        var N=33, base=140000, step=64000, turns=3, rad=3.4, pts=[];
-        for(var k=0;k<N;k++){ var a=(k/N)*Math.PI*2*turns, h=base+k*step, r=rad*(1-k/(N*1.5)); var lng=clng+r*Math.cos(a), lat=clat+r*Math.sin(a); pts.push([lng,lat,h]);
-          viewer.entities.add({layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(lng,lat,h), point:{pixelSize:7, color:Cesium.Color.fromCssColorString('#34d399'), outlineColor:Cesium.Color.fromCssColorString('#065f46'), outlineWidth:1}}); }
-        var mid=base+(N*step)/2;
-        pts.forEach(function(p,idx){ if(idx%2===0) viewer.entities.add({layerTag:'viz', polyline:{positions:Cesium.Cartesian3.fromDegreesArrayHeights([p[0],p[1],p[2], clng,clat,mid]), width:1, material:new Cesium.PolylineGlowMaterialProperty({glowPower:.25, color:Cesium.Color.fromCssColorString('#10b981').withAlpha(.35)})}}); });
-        var spine=[]; pts.forEach(function(p){ spine.push(p[0],p[1],p[2]); });
-        viewer.entities.add({layerTag:'viz', polyline:{positions:Cesium.Cartesian3.fromDegreesArrayHeights(spine), width:2.5, material:new Cesium.PolylineGlowMaterialProperty({glowPower:.3, color:Cesium.Color.fromCssColorString('#6ee7b7').withAlpha(.75)})}});
-        viewer.entities.add({layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(clng,clat,base+N*step+150000), label:{text:'Byzantine Council · 33 agents · BFT quorum · care-floor 0.95', font:'700 13px Inter,sans-serif', fillColor:Cesium.Color.fromCssColorString('#a7f3d0'), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#05140d').withAlpha(.85), disableDepthTestDistance:Number.POSITIVE_INFINITY}});
-        viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(clng-6,clat-9,4400000), orientation:{heading:Cesium.Math.toRadians(12),pitch:Cesium.Math.toRadians(-26),roll:0}, duration:3.0});
-      }
-      else if (m.cmd === 'rainbowStack') {
-        clearViz(); spinning=false; stopOrbit();
-        var rlng=(m.lng!=null)?Number(m.lng):8, rlat=(m.lat!=null)?Number(m.lat):30;
-        var RB=[['#ef4444','Red · Attestation — Ed25519 sigils + x402 receipts'],['#f59e0b','Orange · Identity — W3C DID + Agent Cards'],['#eab308','Yellow · Transport — Noise + WireGuard'],['#22c55e','Green · Access — Cedar / OPA dual-policy'],['#3b82f6','Blue · Payment — x402 + AP2'],['#6366f1','Indigo · Memory — encrypted store + FTS'],['#a855f7','Violet · Governance — 13-framework engine']];
-        var per=46, rbase=150000, layerH=380000, rrad=2.7;
-        RB.forEach(function(c,li){ var lp=[];
-          for(var k=0;k<per;k++){ var a=(k/per)*Math.PI*2 + li*0.55, h=rbase+li*layerH+(k/per)*layerH*0.9; lp.push(rlng+rrad*Math.cos(a), rlat+rrad*Math.sin(a), h); }
-          viewer.entities.add({layerTag:'viz', polyline:{positions:Cesium.Cartesian3.fromDegreesArrayHeights(lp), width:5, material:new Cesium.PolylineGlowMaterialProperty({glowPower:.38, color:Cesium.Color.fromCssColorString(c[0]).withAlpha(.9)})}});
-          viewer.entities.add({layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(rlng+rrad+0.5,rlat,rbase+li*layerH+layerH*0.5), label:{text:c[1], font:'600 11px Inter,sans-serif', fillColor:Cesium.Color.fromCssColorString(c[0]), showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#05080e').withAlpha(.85), disableDepthTestDistance:Number.POSITIVE_INFINITY}}); });
-        viewer.entities.add({layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(rlng,rlat,rbase+7*layerH+200000), label:{text:'The Rainbow Stack · defense-in-depth on every agent', font:'700 13px Inter,sans-serif', fillColor:Cesium.Color.WHITE, showBackground:true, backgroundColor:Cesium.Color.fromCssColorString('#111827').withAlpha(.82), disableDepthTestDistance:Number.POSITIVE_INFINITY}});
-        viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(rlng-7,rlat-10,4800000), orientation:{heading:Cesium.Math.toRadians(14),pitch:Cesium.Math.toRadians(-22),roll:0}, duration:3.0});
-      }
-      else if (m.cmd === 'clearViz') { clearViz(); }
-      else if (m.cmd === 'spin') { spinning = !!m.on; if(m.on) stopOrbit(); }
-      else if (m.cmd === 'basemap') { if(typeof setBasemap==='function') setBasemap(m.key||'satellite'); }
-      else if (m.cmd === 'home') { stopOrbit(); spinning = (m.on !== false); viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(20,28,26000000), orientation:{heading:0,pitch:Cesium.Math.toRadians(-88),roll:0}, duration: Number(m.duration)||2.4 }); }
-      else if (m.cmd === 'neutralize') {
-        // Sovereign stops the rogue swarm ON the globe: red threat cluster → emerald governed.
-        spinning = false;
-        var gov = Cesium.Color.fromCssColorString('#34d399');
-        var govOut = Cesium.Color.fromCssColorString('#065f46');
-        viewer.entities.values.forEach(function(ent){ if (ent.layerTag === 'threat' && ent.point) { ent.point.color = gov; ent.point.outlineColor = govOut; ent.point.pixelSize = 3; ent.point.show = true; } });
-        // Governed ring flash over the threat origin (London demo coords).
-        var ring = viewer.entities.add({ layerTag:'threat', position: Cesium.Cartesian3.fromDegrees(-0.1, 51.5, 30000),
-          ellipse: { semiMinorAxis: 30000, semiMajorAxis: 30000, height: 30000, material: gov.withAlpha(0.18), outline: true, outlineColor: gov } });
-        var grow = 30000, iv = setInterval(function(){ grow += 45000; if (grow > 900000) { clearInterval(iv); return; } ring.ellipse.semiMinorAxis = grow; ring.ellipse.semiMajorAxis = grow; ring.ellipse.material = gov.withAlpha(Math.max(0, 0.18 * (1 - grow/900000))); }, 40);
-      }
-      else if (m.cmd === 'rearm') {
-        // reset threat cluster back to red (for replaying the scenario)
-        var red = Cesium.Color.fromCssColorString('#ef4444');
-        viewer.entities.values.forEach(function(ent){ if (ent.layerTag === 'threat' && ent.point) { ent.point.color = red; ent.point.outlineColor = Cesium.Color.WHITE; ent.point.pixelSize = 5; } });
-      }
-    } catch(e){}
-  }
-  // Live listener + flush any commands that arrived before Cesium finished loading.
-  window.addEventListener('message', function(ev){ handleCmd(ev.data); });
-  window.__sovReady = true;
-  try { (window.__sovBuf || []).forEach(handleCmd); window.__sovBuf = []; } catch(e){}
-  try { parent.postMessage({ sovGlobeReady: true }, '*'); } catch(e){}
 }
+
+  // ───────────────────────────────────────────────────────────────────────────
+  // postMessage API — the parent (WorldGlobe.tsx) drives the globe through here.
+  // This listener did not exist until 2026-07-30: drive() posted into a void and
+  // every flyTo/pulse from the React side silently did nothing.
+  //   {cmd:'flyTo', lng, lat, height?, duration?}
+  //   {cmd:'pulse', lng, lat, col?}            — expanding ring at a point
+  //   {cmd:'layer', tag, on}                    — toggle entities by layerTag
+  //   {cmd:'layer0', nodes:[{id,name,lng,lat,status,col}]} — plot the anchor nodes
+  //   {cmd:'neutralize'}                        — clear pulses
+  var L0 = {};      // id -> entity
+  var pulses = [];
+  window.addEventListener('message', function(ev){
+    var d = ev && ev.data; if(!d || !d.cmd || !viewer) return;
+    try{
+      if(d.cmd==='flyTo'){
+        viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(d.lng, d.lat-4, d.height||2200000),
+          duration:(d.duration!=null?d.duration:1.8)});
+      }
+      else if(d.cmd==='pulse'){
+        var col = Cesium.Color.fromCssColorString(d.col||'#34d399');
+        var start = Date.now();
+        var e = viewer.entities.add({ position:Cesium.Cartesian3.fromDegrees(d.lng,d.lat),
+          ellipse:{ semiMajorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
+                    semiMinorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
+                    material:col.withAlpha(0.22), outline:true, outlineColor:col, height:0 } });
+        pulses.push(e);
+        if(pulses.length>3){ viewer.entities.remove(pulses.shift()); }
+      }
+      else if(d.cmd==='neutralize'){
+        pulses.forEach(function(e){viewer.entities.remove(e);}); pulses=[];
+      }
+      else if(d.cmd==='layer'){
+        viewer.entities.values.forEach(function(e){ if(e.layerTag===d.tag) e.show=!!d.on; });
+      }
+      else if(d.cmd==='layer0' && Array.isArray(d.nodes)){
+        d.nodes.forEach(function(n){
+          if(L0[n.id]){ return; }
+          L0[n.id]=viewer.entities.add({ layerTag:'layer0',
+            position:Cesium.Cartesian3.fromDegrees(n.lng,n.lat),
+            point:{ pixelSize:(n.status==='LIVE'?9:6),
+              color:Cesium.Color.fromCssColorString(n.col||'#34d399'),
+              outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:2,
+              scaleByDistance:new Cesium.NearFarScalar(1.5e6,1.6,2.0e7,.6)},
+            label:{ text:n.name, font:'600 11px Inter, sans-serif',
+              fillColor:Cesium.Color.fromCssColorString(n.col||'#cfe8df'),
+              outlineColor:Cesium.Color.fromCssColorString('#05080e'), outlineWidth:3,
+              style:Cesium.LabelStyle.FILL_AND_OUTLINE, pixelOffset:new Cesium.Cartesian2(0,-14),
+              scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,1.0e7,0),
+              translucencyByDistance:new Cesium.NearFarScalar(2.0e6,1,1.6e7,0)} });
+        });
+        try{ ev.source && ev.source.postMessage({ack:'layer0', n:Object.keys(L0).length}, '*'); }catch(e){}
+      }
+    }catch(e){ /* a bad command must never kill the globe */ }
+  });
+
 </script>
-<script>window.SOVEREIGN_CONFIG={brand:'CSOAI',accent:'#34d399',endpoint:'https://os.meok.ai/api',sections:[{label:'The OS',href:'/os'},{label:'Governance Graph',href:'/graph'},{label:'Sov Space',href:'/sov-space'},{label:'Try the Council',href:'/try'},{label:'Plans',href:'/pricing'},{label:'Status',href:'/status'}]};</script><script src="https://os.meok.ai/sovereign-embed.js" defer></script>
 </body>
 </html>

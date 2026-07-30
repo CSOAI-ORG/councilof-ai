@@ -6,6 +6,7 @@ import { flyAndConvene, drive } from "../lib/globeDrive";
 import { REGIONS } from "../lib/locale";
 import { Link } from "wouter";
 import SovNav from "../components/SovNav";
+import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from "../data/layer0Nodes";
 
 // sovAgent region name → 3D globe REGIONS code + globe3d layer tag maps (module-level).
 const REGION3D: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -145,6 +146,50 @@ export default function WorldGlobe() {
   const [acted, setActed] = useState("");
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const globe3dRef = useRef<HTMLIFrameElement | null>(null);
+  // ── The Sovereign tour ─────────────────────────────────────────────────────
+  // Watch the Sovereign work the Layer-0 estate, one persona at a time. Every stop is a real
+  // node with the status it has earned (LIVE by proven fetch / UNKNOWN said honestly /
+  // CANDIDATE not yet earned) — the tour is the node registry made visible, not a promo reel.
+  const [persona, setPersona] = useState<Persona | null>(null);
+  const [stopIdx, setStopIdx] = useState(0);
+  const tourTimer = useRef<number | null>(null);
+  const nodesById = Object.fromEntries(LAYER0_NODES.map((n) => [n.id, n]));
+
+  const pushLayer0 = () => {
+    const win = globe3dRef.current?.contentWindow;
+    drive(win, { cmd: "layer0", nodes: LAYER0_NODES.map((n) => ({
+      id: n.id, name: n.name, lng: n.lng, lat: n.lat, status: n.status, col: STATUS_COLOR[n.status] })) });
+  };
+
+  const flyStop = (pKey: Persona, idx: number) => {
+    const stop = nodesById[PERSONA_TOURS[pKey].stops[idx]];
+    if (!stop) return;
+    const win = globe3dRef.current?.contentWindow;
+    drive(win, { cmd: "flyTo", lng: stop.lng, lat: stop.lat, height: 1600000, duration: 1.7 });
+    window.setTimeout(() => drive(win, { cmd: "pulse", lng: stop.lng, lat: stop.lat, col: STATUS_COLOR[stop.status] }), 1750);
+  };
+
+  const startTour = (pKey: Persona) => {
+    if (tourTimer.current) window.clearInterval(tourTimer.current);
+    setPersona(pKey); setStopIdx(0); setMode("3d");
+    pushLayer0();
+    flyStop(pKey, 0);
+    tourTimer.current = window.setInterval(() => {
+      setStopIdx((i) => {
+        const next = (i + 1) % PERSONA_TOURS[pKey].stops.length;
+        flyStop(pKey, next);
+        return next;
+      });
+    }, 7000);
+  };
+  const stopTour = () => {
+    if (tourTimer.current) window.clearInterval(tourTimer.current);
+    tourTimer.current = null; setPersona(null);
+    drive(globe3dRef.current?.contentWindow, { cmd: "neutralize" });
+  };
+  useEffect(() => () => { if (tourTimer.current) window.clearInterval(tourTimer.current); }, []);
+  // Nodes go onto the globe as soon as the iframe is with us — not only when a tour starts.
+  useEffect(() => { const t = window.setTimeout(pushLayer0, 2500); return () => window.clearTimeout(t); }, [mode]);
   const raf = useRef<number | null>(null);
   const tt = useRef<number[]>([]);
 
@@ -208,12 +253,39 @@ export default function WorldGlobe() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      {/* The globe is the map; the instrument is the tool. Linked both ways so the
-          AI-OS, the globe and the measurement wing read as one product. */}
-      <div className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 gap-2 rounded-full border border-emerald-400/40 bg-black/70 px-3 py-2 text-xs backdrop-blur">
-        <a href="/instrument" className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-200 hover:bg-emerald-500/30">Run the instrument</a>
-        <a href="/benchmarks" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">Measured results</a>
-        <a href="/os" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
+      {/* Watch the Sovereign — persona tours over the real Layer-0 estate. */}
+      <div className="fixed bottom-4 left-1/2 z-40 w-[min(680px,94vw)] -translate-x-1/2">
+        {persona && (() => { const stop = nodesById[PERSONA_TOURS[persona].stops[stopIdx]]; return stop ? (
+          <div className="mb-2 rounded-2xl border border-emerald-400/40 bg-black/80 p-4 text-left backdrop-blur">
+            <div className="flex items-center gap-2 text-[11px] uppercase tracking-widest text-emerald-300/70">
+              <span>{PERSONA_TOURS[persona].title}</span>
+              <span className="ml-auto rounded-full border px-2 py-0.5 font-bold"
+                style={{ color: STATUS_COLOR[stop.status], borderColor: STATUS_COLOR[stop.status] }}>
+                {stop.status}{stop.verified ? ` · ${stop.verified}` : ""}
+              </span>
+            </div>
+            <p className="mt-1 text-sm font-bold text-emerald-50">{stop.name} <span className="font-normal text-emerald-100/50">— {stop.org}</span></p>
+            <p className="mt-1 text-xs leading-relaxed text-emerald-100/80">{stop.does}</p>
+            <div className="mt-2 flex items-center gap-3 text-xs">
+              <a href={stop.href} className="text-emerald-300 underline decoration-dotted">See it on the site</a>
+              <span className="text-emerald-100/40">{stopIdx + 1}/{PERSONA_TOURS[persona].stops.length}</span>
+              <button onClick={() => { const n = (stopIdx + 1) % PERSONA_TOURS[persona].stops.length; setStopIdx(n); flyStop(persona, n); }} className="ml-auto rounded-full border border-white/20 px-2 py-0.5 text-emerald-100/70 hover:bg-white/10">next →</button>
+              <button onClick={stopTour} className="rounded-full border border-white/20 px-2 py-0.5 text-emerald-100/70 hover:bg-white/10">stop</button>
+            </div>
+          </div>
+        ) : null; })()}
+        <div className="flex flex-wrap items-center justify-center gap-2 rounded-full border border-emerald-400/40 bg-black/70 px-3 py-2 text-xs backdrop-blur">
+          <span className="hidden text-emerald-100/50 sm:inline">Watch the Sovereign:</span>
+          {(Object.keys(PERSONA_TOURS) as Persona[]).map((k) => (
+            <button key={k} onClick={() => (persona === k ? stopTour() : startTour(k))}
+              className={"rounded-full px-3 py-1 capitalize transition " + (persona === k ? "bg-emerald-500/30 text-emerald-100" : "text-emerald-100/70 hover:bg-white/10")}>
+              {persona === k ? "■ " : "▶ "}{k}
+            </button>
+          ))}
+          <span className="hidden text-emerald-100/40 md:inline">{COUNTS.live} LIVE · {COUNTS.unknown} UNKNOWN · {COUNTS.candidate} candidate</span>
+          <a href="/instrument" className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-200 hover:bg-emerald-500/30">Instrument</a>
+          <a href="/os" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
+        </div>
       </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
         <SovNav />
