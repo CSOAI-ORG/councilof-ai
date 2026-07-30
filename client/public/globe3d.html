@@ -49,11 +49,11 @@
 <div id="hud">
   <div class="brand"><span class="dot"></span>CSOAI · Sovereign <small>3D Governance Earth</small> <span class="beta">BETA</span></div>
   <div class="stats">
-    <div class="stat"><b>417</b><span>Jurisdictions</span></div>
-    <div class="stat"><b>15</b><span>Sovereign nodes</span></div>
-    <div class="stat"><b>531</b><span>MCP nodes</span></div>
-    <div class="stat sov"><b id="s-ung">2</b><span>Ungoverned crimes</span></div>
-    <div class="stat sov"><b id="s-ep">0/20</b><span>Signed episodes</span></div>
+    <div class="stat"><b>417</b><span>Frozen provisions</span></div>
+    <div class="stat"><b>15</b><span>Live anchor nodes</span></div>
+    <div class="stat"><b>531</b><span>MCPs catalogued</span></div>
+    <div class="stat sov"><b id="s-ung">2</b><span>Watchers UNKNOWN</span></div>
+    <div class="stat sov"><b id="s-ep">0/20</b><span>Marks survived (CP 13.9%)</span></div>
   </div>
 </div>
 
@@ -175,8 +175,6 @@ if(viewer){
   // sovereign town live feed
   function fmt(n){if(n>=1e9)return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';if(n>=1e6)return Math.round(n/1e6)+'M';if(n>=1e3)return Math.round(n/1e3)+'k';return String(n);}
   fetch('https://proofof-site.vercel.app/sovereign-town/status.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
-    if(typeof d.cum_episodes==='number')document.getElementById('s-ep').textContent=fmt(d.cum_episodes)+'+';
-    if(typeof d.ungoverned_crimes==='number')document.getElementById('s-ung').textContent=fmt(d.ungoverned_crimes)+'+';
   }).catch(function(){});
 
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
