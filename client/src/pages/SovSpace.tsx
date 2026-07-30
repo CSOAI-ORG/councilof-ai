@@ -21,10 +21,8 @@ function ssGlobeCode(text: string): string { const r = sovActions(text).find((a)
 type Step = { t: string; phase: number };
 const SAMPLE = "A hospital wants to deploy an AI triage model in the EU that ranks ER patients by urgency.";
 
-// SOV-SPACE GALAXY — the hive (water-pinned facts) and the live flywheel
-// planets, each tagged with its GSPC axis and current water→milk→honey phase.
-// This is what the 5D UE5 engine renders when the sovereign OS is in full
-// mode; here it is the same picture, drawn as concentric rings on a canvas.
+// HIVE — water-pinned facts (the corpus). Static; this is what holds the
+// rest up. Counts come from the production sweep 2026-07-30.
 const HIVE: HiveLayer[] = [
   { id: "eu-ai-act", name: "EU AI Act", count: 113, description: "frozen provisions across 113 articles" },
   { id: "gdpr", name: "GDPR", count: 99, description: "data-protection obligations" },
@@ -205,6 +203,7 @@ export default function SovSpace() {
   const [loc] = useState(() => detectLocale());
   const [cSpaceEvents, setCSpaceEvents] = useState<TimelineEvent[]>([]);
   const [kbMatches, setKbMatches] = useState<KbMatch[]>([]);
+  const [flywheels, setFlywheels] = useState<FlywheelPlanet[]>(FLYWHEELS);
   const [kbStats, setKbStats] = useState<KbStats | null>(null);
   const [kbOnline, setKbOnline] = useState<boolean | null>(null);
   const [ledgerOnline, setLedgerOnline] = useState<boolean | null>(null);
@@ -266,6 +265,28 @@ export default function SovSpace() {
     }, 350);
     return () => clearTimeout(t);
   }, [scenario]);
+
+  // Stamp "presence" onto the sov-time ledger — the user's local position on the
+  // dome. When the user picks a jurisdiction (via ssGlobeCode) or flies the
+  // globe, that location is appended to the ledger. The UE5 mirror renders the
+  // same ledger with the user's POV as the viewport.
+  function stampPresence(reason: string, extra: Record<string, unknown> = {}) {
+    const code = ssGlobeCode(scenario);
+    const prof = (code && REGIONS[code]) ? REGIONS[code] : REGIONS.GLOBAL;
+    const [lng, lat] = prof.globe;
+    fetch(LOCAL_GW + "/sov-time", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        kind: "presence",
+        space: "P", // position-space — the user/agent's local POV
+        reason,
+        region: code || "GLOBAL",
+        lng, lat,
+        ...extra,
+      }),
+    }).catch(() => { /* ledger append is best-effort */ });
+  }
   // The Sovereign flies the embedded globe to the scenario's jurisdiction (auto-pulses),
   // convenes the 33-agent council spiral there, and neutralizes any rogue-swarm threat.
   function flyToScenario(text: string) {
@@ -290,6 +311,25 @@ export default function SovSpace() {
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setScenario(d); const t = setTimeout(() => run(d), 700); return () => clearTimeout(t); } }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [log]);
   useEffect(() => () => { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} }, []);
+
+  // LIVE FLYWHEEL SNAPSHOT — fetch the build-time snapshot at /flywheel-snapshot.json
+  // and merge its real last-run timestamps into the galaxy. Falls back silently
+  // to the hardcoded FLYWHEELS list if the snapshot is unreachable.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/flywheel-snapshot.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((snap: { planets?: FlywheelPlanet[] } | null) => {
+        if (cancelled || !snap || !Array.isArray(snap.planets) || snap.planets.length === 0) return;
+        setFlywheels(snap.planets);
+      })
+      .catch(() => {
+        // best-effort — keep the static list
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const cv = canvasRef.current; if (!cv) return;
@@ -429,6 +469,10 @@ export default function SovSpace() {
     // parallel with the verdict so the citation badge appears as soon as the
     // verdict is rendered.
     const kbP = ssLookupKB(scen).then((m) => setKbMatches(m)).catch(() => {});
+    // Stamp the user's presence on the ledger — the dome-local position
+    // before the council runs. This is the "look-into" event: the user
+    // engaged Sov Space at a specific jurisdiction with a specific scenario.
+    stampPresence("scenario-run", { scenario: scen.slice(0, 140), region, ind });
     try {
       const [gov, verdict] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssVerdict(scen), kbP]);
       const fwNames: string[] = gov && Array.isArray(gov.frameworks) ? gov.frameworks.map((f: any) => f.name) : [];
@@ -487,6 +531,7 @@ export default function SovSpace() {
             <button onClick={reset} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm font-semibold text-emerald-100 hover:bg-white/5">Reset</button>
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm text-emerald-100 hover:bg-white/5">{voiceOn ? "Voice on" : "Voice off"}</button>
             <a href={"/globe" + (scenario ? "?ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Sovereign Globe →</a>
+            <button onClick={() => stampPresence("walk-around", { pov: "all", zoom: "all" })} className="rounded-xl border border-amber-400/40 px-3 py-2 text-sm font-semibold text-amber-100 hover:bg-white/5" title="Stamp your POV as 'all-of-data' — every event in the ledger, every zoom level, no filtering">EAT ALL</button>
           </div>
           {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026;
               any front-end that lets a person interact with an AI must clearly state so. */}
@@ -515,7 +560,7 @@ export default function SovSpace() {
               <div className="text-sm font-bold text-sky-100">Hive → C-space → J-space → flywheels → live data — the estate as a galaxy</div>
             </div>
             <div className="text-right font-mono text-[10px] text-sky-300/60">
-              zoom: ∞ · flywheels: {FLYWHEELS.length}
+              zoom: ∞ · flywheels: {flywheels.length}
             </div>
           </div>
           <div className="p-2">
@@ -523,7 +568,7 @@ export default function SovSpace() {
               hive={HIVE}
               cspace={cSpaceEvents.length}
               jspace={jrecords.length}
-              flywheels={FLYWHEELS}
+              flywheels={flywheels}
               height={520}
             />
           </div>
