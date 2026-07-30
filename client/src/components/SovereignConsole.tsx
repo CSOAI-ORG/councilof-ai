@@ -47,8 +47,16 @@ const LENSES: { key: LensKey; name: string; icon: typeof Scale; asks: string }[]
 const PROHIBITED = /\b(social scor\w*|subliminal|manipulat\w* technique|untargeted scrap\w*|predictive polic\w* solely)\b/i;
 const VULNERABILITY = /\b(gambling|addict\w*|relapse|vulnerab\w*|bereave\w*|debt|payday|minors?|children|elderly|dementia|disabilit\w*)\b/i;
 const EXPLOITATIVE = /\b(engagement|retention|maximis\w*|maximiz\w*|upsell|nudge|target\w*|persuad\w*)\b/i;
-const BIOMETRIC = /\b(biometric|facial recognition|face recognition|fingerprint|iris|voice ?print|gait|emotion recognition)\b/i;
+// "face matching" was missing: the console's own example chip returned NO CATEGORY MATCHED
+// for "Face matching across our camera network" — a false negative on our shipped demo input,
+// live on the homepage. The chip list below is asserted against dispatch() in dev builds so an
+// example that matches nothing can never ship silently again.
+const BIOMETRIC =
+  /\b(biometric\w*|facial recognition|face (?:recognition|match\w*|identification|verification|id)|fingerprint|iris|voice ?print|gait|emotion recognition|liveness)\b/i;
 const ANNEX_III: [string, RegExp][] = [
+  // Annex III point 1 IS biometrics — the table shipped without it, so a biometric description
+  // fell through to the notified-body warning only, with no high-risk classification at all.
+  ["biometric identification", /\b(biometric\w*|face (?:recognition|match\w*|identification|verification)|facial recognition|fingerprint|iris scan\w*|remote identification)\b/i],
   ["critical infrastructure", /\b(critical infrastructure|water|gas|electricity|traffic|utility)\b/i],
   ["education", /\b(education|exams?|students?|admissions?|proctor\w*|grading)\b/i],
   ["employment", /\b(employment|recruit\w*|hiring|cvs?|candidates?|applicants?|promotions?|workers?)\b/i],
@@ -101,6 +109,18 @@ function dispatch(q: string, lens: LensKey): Line[] {
 }
 
 const EXAMPLES = ["We screen CVs and rank job applicants", "Our chatbot generates marketing images", "Face matching across our camera network"];
+
+// Every example we put in front of a visitor must produce a categorised verdict under the
+// governance lens. "NO CATEGORY MATCHED" on our own demo input is a false negative shipping as
+// a feature — it happened, live, with the biometric chip. Dev builds throw here; the check costs
+// nothing in production because bundlers strip it with import.meta.env.DEV.
+if (import.meta.env.DEV) {
+  for (const e of EXAMPLES) {
+    const lines = dispatch(e, "governance");
+    if (lines.some((l) => l.tag === "NO CATEGORY MATCHED"))
+      throw new Error(`SovereignConsole: example chip matches no category: "${e}"`);
+  }
+}
 
 const TONE = {
   block: "border-rose-300 bg-rose-50 text-rose-900",

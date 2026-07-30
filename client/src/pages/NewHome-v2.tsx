@@ -264,32 +264,16 @@ export default function NewHomeV2() {
 
         {/* Hero content */}
         <div className="relative z-10 container mx-auto px-6 py-24 text-center max-w-6xl">
-          {/* Launch badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
+          {/* Kicker — arena.ai's lesson: the tool is the hero. One line of context,
+              then the working surface, then actions. The slogan moved below the console. */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-5 py-2.5 mb-4"
+            className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-emerald-300/80"
           >
-            <Sparkles className="h-4 w-4 text-emerald-400" />
-            <span className="text-emerald-300 text-sm font-medium">
-              Now Live — open, governed AI-safety infrastructure
-            </span>
-          </motion.div>
-
-          {/* Why We're Different badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/30 rounded-full px-5 py-2.5 mb-6"
-          >
-            <BadgeCheck className="h-4 w-4 text-amber-400" />
-            <span className="text-amber-300 text-sm font-medium">
-              100% Free Training | Only Pay When You Earn
-            </span>
-          </motion.div>
-
+            Describe an AI system. Get the provisions that bind — deterministically.
+          </motion.p>
           {/* The console replaces the countdown here. A countdown measures the calendar;
               the console dispatches to deterministic tools and shows what they return.
               It is EXTERNAL to the instrument: no model in the verdict path, no egress,
@@ -302,7 +286,20 @@ export default function NewHomeV2() {
           >
             <SovereignConsole />
           </motion.div>
-
+          {/* Tool actions — do something now, not "learn more". Every target is a
+              working surface, and every figure on them traces to a published artefact. */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="mb-12 flex flex-wrap items-center justify-center gap-3 text-sm"
+          >
+            <Link href="/instrument" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-emerald-200 hover:bg-emerald-500/20 transition">Open the instrument</Link>
+            <Link href="/benchmarks" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">Measured results</Link>
+            <Link href="/globe" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">The globe</Link>
+            <Link href="/refutation-ledger" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">What refuted us</Link>
+            <Link href="/verify" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">Verify a report</Link>
+          </motion.div>
           {/* Main headline */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -316,7 +313,30 @@ export default function NewHomeV2() {
               Response to AI
             </span>
           </motion.h1>
-
+          {/* Launch badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-5 py-2.5 mb-4"
+          >
+            <Sparkles className="h-4 w-4 text-emerald-400" />
+            <span className="text-emerald-300 text-sm font-medium">
+              Now Live — open, governed AI-safety infrastructure
+            </span>
+          </motion.div>
+          {/* Why We're Different badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/30 rounded-full px-5 py-2.5 mb-6"
+          >
+            <BadgeCheck className="h-4 w-4 text-amber-400" />
+            <span className="text-amber-300 text-sm font-medium">
+              100% Free Training | Only Pay When You Earn
+            </span>
+          </motion.div>
           {/* Sub-headline */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
