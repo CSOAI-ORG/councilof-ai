@@ -6,6 +6,7 @@ import { flyAndConvene, neutralize } from "../lib/globeDrive";
 import SovNav from "../components/SovNav";
 import { useLedger, type DecisionRecord } from "../hooks/useLedger";
 import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
+import SovSpaceGalaxy, { type FlywheelPlanet, type HiveLayer } from "../components/SovSpaceGalaxy";
 
 // Map the agent's region → the codes the embedded 3D globe understands (loads local).
 const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -20,7 +21,58 @@ function ssGlobeCode(text: string): string { const r = sovActions(text).find((a)
 type Step = { t: string; phase: number };
 const SAMPLE = "A hospital wants to deploy an AI triage model in the EU that ranks ER patients by urgency.";
 
+// SOV-SPACE GALAXY — the hive (water-pinned facts) and the live flywheel
+// planets, each tagged with its GSPC axis and current water→milk→honey phase.
+// This is what the 5D UE5 engine renders when the sovereign OS is in full
+// mode; here it is the same picture, drawn as concentric rings on a canvas.
+const HIVE: HiveLayer[] = [
+  { id: "eu-ai-act", name: "EU AI Act", count: 113, description: "frozen provisions across 113 articles" },
+  { id: "gdpr", name: "GDPR", count: 99, description: "data-protection obligations" },
+  { id: "cra", name: "Cyber Resilience Act", count: 71, description: "vulnerability handling, secure-by-default" },
+  { id: "dora", name: "DORA", count: 64, description: "digital operational resilience for financial services" },
+  { id: "nis2", name: "NIS2", count: 46, description: "essential-entity security duties" },
+  { id: "csrd", name: "CSRD", count: 11, description: "sustainability reporting scope" },
+  { id: "iso-42001", name: "ISO 42001", count: 8, description: "AI management system controls" },
+  { id: "nist-ai-rmf", name: "NIST AI RMF", count: 7, description: "govern / map / measure / manage" },
+  { id: "annexes", name: "Annexes", count: 13, description: "annex III high-risk + annex IV technical docs" },
+];
+
+const FLYWHEELS: FlywheelPlanet[] = [
+  { id: "find-besT", name: "find_besT", axis: "care", phase: "honey",
+    description: "21-subject Day-1 sweep, care_cost joint scoring",
+    metric: "composite=3.1564 (sov33-unified)", last_run_iso: "2026-07-30T11:17:00Z" },
+  { id: "n-eff", name: "n_eff_diversity", axis: "continuity", phase: "milk",
+    description: "pairwise ρ + Kish n_eff across sovereign roster",
+    metric: "n_eff=1.285 · gate failed (>2.0 required)", last_run_iso: "2026-07-30T11:25:00Z" },
+  { id: "provbench", name: "ProvBench", axis: "provenance", phase: "honey",
+    description: "0/20 C2PA markings survive binding-intact",
+    metric: "0 of 20 · rule-of-three 95% upper = 15.0%", last_run_iso: "2026-07-30T11:00:00Z" },
+  { id: "defbench", name: "DefBench", axis: "safety", phase: "honey",
+    description: "45-item care battery, 33 harmful / 12 benign",
+    metric: "1 of 4 axes resolved (with gate)", last_run_iso: "2026-07-30T09:35:00Z" },
+  { id: "govbench", name: "GovBench", axis: "governance", phase: "honey",
+    description: "193 samples, 26 dimensions, cluster-robust",
+    metric: "composed +6.63 [+1.05, +12.21]", last_run_iso: "2026-07-30T09:46:00Z" },
+  { id: "pqcbench", name: "PQCBench", axis: "continuity", phase: "water",
+    description: "25 criteria for PQC-ready signing chains",
+    metric: "1 of 25 criteria pass · ML-DSA-65 needed", last_run_iso: "2026-07-30T08:00:00Z" },
+  { id: "flywheel-daily", name: "flywheel-daily", axis: "care", phase: "honey",
+    description: "cron — daily drift, salted PRACTICE/HELD_OUT split",
+    metric: "selftest 9/9 · salt=csoai-flywheel-v1", last_run_iso: "2026-07-30T03:00:00Z" },
+  { id: "honey-pipe", name: "honey_pipeline", axis: "care", phase: "honey",
+    description: "KB harvest → honey cache → cite-on-serve",
+    metric: "83 verified entries · 87KB", last_run_iso: "2026-07-30T05:00:00Z" },
+  { id: "production-ready", name: "production_ready", axis: "care", phase: "honey",
+    description: "signed care_cost evidence pack for marketing",
+    metric: "Ed25519 sigil · care_score=0.7891", last_run_iso: "2026-07-30T12:00:00Z" },
+];
+
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+// Local sov-gateway (the coai-dashboard hub at :8080). When set, hit it for
+// the KB lookup and the ask-sovereign probe — the local gateway has the 83
+// verified KB entries with provenance and the OpenAI-compatible Ollama path.
+// Falls back to the deployed master when unset.
+const LOCAL_GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_LOCAL_GATEWAY) || "http://localhost:8080";
 const SS_INDUSTRIES = ["healthcare","health","hospital","clinical","triage","pharma","biotech","finance","fintech","banking","insurance","lending","credit","education","edtech","retail","ecommerce","legal","government","public sector","defense","energy","utilities","automotive","telecom","manufacturing","logistics","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing"];
 function ssIndustry(q: string) { const s = (q || "").toLowerCase(); return SS_INDUSTRIES.find((w) => new RegExp("\\b" + w + "\\b").test(s)) || null; }
 function ssRegion(q: string) {
@@ -42,6 +94,59 @@ async function ssVerdict(scenario: string): Promise<string> {
     if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) return String(d.response); }
   } catch (e) {}
   return "";
+}
+
+// KB lookup against the local sov-gateway /kb endpoint. Returns up to 3
+// verified entries with high delta. The KB is the "honey" — verified answers
+// that have been measured-climbing the keystone. Cited below the verdict.
+type KbMatch = { dimension: string; question: string; delta: number; sha256: string; source_clan?: string };
+async function ssLookupKB(query: string): Promise<KbMatch[]> {
+  try {
+    const params = new URLSearchParams({ limit: "3", min_delta: "15", verified_only: "true" });
+    const r = await fetch(LOCAL_GW + "/kb?" + params.toString());
+    if (!r.ok) return [];
+    const d = await r.json();
+    const entries: any[] = Array.isArray(d.entries) ? d.entries : [];
+    const q = query.toLowerCase();
+    // Lightweight keyword scoring — matches all-caps legislation tokens + industry words.
+    const tokens = q.split(/\W+/).filter(t => t.length > 3);
+    return entries
+      .map((e: any) => {
+        const text = ((e.question ?? "") + " " + (e.answer_preview ?? "")).toLowerCase();
+        const score = tokens.reduce((acc, t) => acc + (text.includes(t) ? 1 : 0), 0);
+        return { score, entry: e };
+      })
+      .filter((x: any) => x.score > 0)
+      .sort((a: any, b: any) => b.score - a.score)
+      .slice(0, 3)
+      .map((x: any) => ({
+        dimension: x.entry.dimension,
+        question: x.entry.question,
+        delta: x.entry.delta,
+        sha256: x.entry.sha256,
+        source_clan: x.entry.source_clan,
+      }));
+  } catch (e) {
+    return [];
+  }
+}
+
+// KB stats — pulls the by-dimension breakdown so we can show "12 compliance,
+// 4 sovereignty, 3 accountability" badges in the page header.
+type KbStats = { total_entries: number; verified: number; by_dimension: Record<string, number> };
+async function ssKBStats(): Promise<KbStats | null> {
+  try {
+    const r = await fetch(LOCAL_GW + "/kb/stats");
+    if (!r.ok) return null;
+    const d = await r.json();
+    return {
+      total_entries: d.total_entries ?? 0,
+      verified: d.verified ?? 0,
+      by_dimension: d.by_dimension ?? {},
+    };
+  } catch (e) {
+    return null;
+  }
 }
 
 function buildRun(scenario: string): Step[] {
@@ -99,11 +204,68 @@ export default function SovSpace() {
   const [voiceOn, setVoiceOn] = useState(true);
   const [loc] = useState(() => detectLocale());
   const [cSpaceEvents, setCSpaceEvents] = useState<TimelineEvent[]>([]);
+  const [kbMatches, setKbMatches] = useState<KbMatch[]>([]);
+  const [kbStats, setKbStats] = useState<KbStats | null>(null);
+  const [kbOnline, setKbOnline] = useState<boolean | null>(null);
+  const [ledgerOnline, setLedgerOnline] = useState<boolean | null>(null);
+  const [ledgerCount, setLedgerCount] = useState<number>(0);
   const globeRef = useRef<HTMLIFrameElement | null>(null);
   const { data: ledger, loading: ledgerLoading, error: ledgerError, fetchedAt: ledgerFetchedAt } = useLedger();
   const jrecords = (ledger?.records || []).slice(0, 3);
   const jrecordsErr = ledgerError;
   const jfetchedAt = ledgerFetchedAt ? new Date(ledgerFetchedAt).toISOString() : "";
+
+  // Fetch KB stats on mount — the "honey" indicator. If the local gateway is
+  // down, the badge shows "offline" rather than fake stats.
+  useEffect(() => {
+    let alive = true;
+    ssKBStats().then((s) => {
+      if (!alive) return;
+      setKbStats(s);
+      setKbOnline(s !== null);
+    });
+    return () => { alive = false; };
+  }, []);
+
+  // Poll the sov-time ledger — the VWM spacetime canvas. Returns last 100
+  // events in raw form (second zoom). When the ledger is reachable, the
+  // header shows "live: N events"; when unreachable, the badge shows "offline".
+  // The poll is intentionally slow (5s) — the timeline component is the
+  // primary inner visualization; this is the indicator.
+  useEffect(() => {
+    let alive = true;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    async function tick() {
+      try {
+        const r = await fetch(LOCAL_GW + "/sov-time");
+        if (!alive) return;
+        if (r.ok) {
+          const d = await r.json();
+          setLedgerCount(d.total ?? 0);
+          setLedgerOnline(true);
+        } else {
+          setLedgerOnline(false);
+        }
+      } catch {
+        if (alive) setLedgerOnline(false);
+      }
+      if (alive) timer = setTimeout(tick, 5000);
+    }
+    tick();
+    return () => { alive = false; if (timer) clearTimeout(timer); };
+  }, []);
+
+  // Fetch KB matches when the scenario textarea changes (debounced). This is
+  // the "live lookup" — every character updates the citation matches.
+  useEffect(() => {
+    const q = scenario.trim();
+    if (q.length < 12) { setKbMatches([]); return; }
+    const t = setTimeout(async () => {
+      const matches = await ssLookupKB(q);
+      setKbMatches(matches);
+    }, 350);
+    return () => clearTimeout(t);
+  }, [scenario]);
   // The Sovereign flies the embedded globe to the scenario's jurisdiction (auto-pulses),
   // convenes the 33-agent council spiral there, and neutralizes any rogue-swarm threat.
   function flyToScenario(text: string) {
@@ -167,26 +329,73 @@ export default function SovSpace() {
 
   function playSteps(steps: Step[], verdict?: string) {
     let i = 0;
+    const runStart = Date.now();
     const play = () => {
       if (i >= steps.length) {
         phaseRef.current = 4;
         if (verdict) { setVerdictText(verdict); setLog((l) => l.concat("Verdict: " + verdict)); }
         setRunning(false); setDone(true);
-        // Record the completion as a C-space event on the timeline.
+        // Record the verdict as a C-space event — the "honey" stage.
         const cEvent: TimelineEvent = {
-          id: "c-" + Date.now().toString(36),
+          id: "c-v-" + runStart.toString(36),
           ts: Date.now(),
-          tag: verdict ? "ACTION" : "OPEN",
-          verdict: verdict ? "COMPLETE" : "PENDING",
-          claim: verdict || "Run completed — verdict pending",
-          evidence: "C-space: council deliberation finished.",
-          weight: 0.7,
+          tag: "ACTION",
+          verdict: "COMPLETE",
+          claim: verdict ? verdict.slice(0, 140) : "Run completed — verdict pending",
+          evidence: "C-space: council verdict reached.",
+          weight: 0.95,
           space: "C",
         };
         setCSpaceEvents((prev) => [cEvent, ...prev].slice(0, 50));
+        // Persist to the sov-time ledger — the VWM spacetime canvas. The
+        // ledger is append-only with a 16-byte event_id hash; the timestamp
+        // is the canonical position on the log-scale timeline.
+        fetch(LOCAL_GW + "/sov-time", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            kind: "cspace-verdict",
+            space: "C",
+            claim: cEvent.claim,
+            tag: cEvent.tag,
+            verdict: cEvent.verdict,
+            weight: cEvent.weight,
+          }),
+        }).catch(() => { /* ledger append is best-effort */ });
         return;
       }
       const st = steps[i++]; phaseRef.current = st.phase; setLog((l) => l.concat(st.t)); speak(st.t);
+      // Each phase step is a C-space event on the timeline — the "hive layers":
+      // phase 1 = water (scenario ingestion), phase 2 = milk (deliberation),
+      // phase 3 = honey (crosswalk), phase 4 = verdict. Each gets a lower weight
+      // so the verdict reads larger; the lower lane resolver still renders them.
+      const phaseTag = st.phase === 1 ? "OPEN" : st.phase === 2 ? "ACTION" : st.phase === 3 ? "CONFIRMED" : "ACTION";
+      const phaseWeight = st.phase === 1 ? 0.4 : st.phase === 2 ? 0.55 : st.phase === 3 ? 0.7 : 0.9;
+      const stepEvent: TimelineEvent = {
+        id: "c-s-" + runStart.toString(36) + "-" + i,
+        ts: Date.now(),
+        tag: phaseTag,
+        verdict: st.phase === 4 ? "COMPLETE" : "PENDING",
+        claim: st.t.slice(0, 120),
+        evidence: "C-space: phase " + st.phase + " step.",
+        weight: phaseWeight,
+        space: "C",
+      };
+      setCSpaceEvents((prev) => [stepEvent, ...prev].slice(0, 50));
+      // Persist each step to the ledger too — the VWM canvas records every
+      // phase so the inner visualisation has the full deliberation arc.
+      fetch(LOCAL_GW + "/sov-time", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: "cspace-step",
+          space: "C",
+          phase: st.phase,
+          claim: stepEvent.claim,
+          tag: stepEvent.tag,
+          weight: stepEvent.weight,
+        }),
+      }).catch(() => { /* ledger append is best-effort */ });
       const id = setTimeout(play, 1050); timers.current.push(id);
     };
     play();
@@ -216,8 +425,12 @@ export default function SovSpace() {
     const scen = ((override ?? scenario) || "").trim() || SAMPLE;
     const ind = ssIndustry(scen);
     const region = ssRegion(scen);
+    // Re-fetch KB matches for the scenario being run. The KB lookup runs in
+    // parallel with the verdict so the citation badge appears as soon as the
+    // verdict is rendered.
+    const kbP = ssLookupKB(scen).then((m) => setKbMatches(m)).catch(() => {});
     try {
-      const [gov, verdict] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssVerdict(scen)]);
+      const [gov, verdict] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssVerdict(scen), kbP]);
       const fwNames: string[] = gov && Array.isArray(gov.frameworks) ? gov.frameworks.map((f: any) => f.name) : [];
       const bridges: string[] = gov && Array.isArray(gov.bridges) ? gov.bridges : [];
       setLog([]);
@@ -242,6 +455,22 @@ export default function SovSpace() {
           <span className="font-semibold text-emerald-200">{loc.greeting}</span>
           <span className="text-emerald-100/40">·</span>
           <span className="text-emerald-100/75">{loc.region.label}: {loc.region.frameworks.slice(0, 3).join(", ")}</span>
+          <span className="text-emerald-100/40">·</span>
+          <span className={
+            kbOnline === null ? "text-emerald-100/40"
+            : kbOnline ? "text-amber-200"
+            : "text-rose-300/80"
+          } title="Local sov-gateway KB — verified answers from the 7-D flywheel">
+            KB: {kbOnline ? (kbStats ? `${kbStats.verified} verified` : "online") : "offline"}
+          </span>
+          <span className="text-emerald-100/40">·</span>
+          <span className={
+            ledgerOnline === null ? "text-emerald-100/40"
+            : ledgerOnline ? "text-sky-200"
+            : "text-rose-300/80"
+          } title="VWM spacetime canvas — append-only event ledger">
+            VWM: {ledgerOnline ? `${ledgerCount} events` : "offline"}
+          </span>
         </div>
       </section>
       <section className="mx-auto grid max-w-6xl gap-5 px-6 pb-12 lg:grid-cols-[1.1fr_1fr]">
@@ -269,6 +498,42 @@ export default function SovSpace() {
             {log.map((m, i) => (<div key={i} className="flex gap-2"><span className="text-emerald-400">{String.fromCharCode(9673)}</span><span className="text-emerald-50/90">{m}</span></div>))}
             {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council verdict:</b> {verdictText}</div> : <div className="mb-2"><b>Verdict:</b> simulation complete.</div>}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
             <div ref={endRef} />
+          </div>
+        </div>
+      </section>
+
+      {/* SOV-SPACE GALAXY — 5D layered view.
+          Hive (water, pinned facts) → C-space (milk, deliberation) → J-space
+          (honey, signed) → flywheels orbiting as planets → live data halo.
+          Each flywheel is its own planet; its phase shows water→milk→honey.
+          Click a planet to inspect, hover for tooltip. */}
+      <section className="mx-auto max-w-6xl px-6 pb-8">
+        <div className="overflow-hidden rounded-2xl border border-sky-500/25 bg-[#05140d]">
+          <div className="flex items-center justify-between border-b border-sky-500/15 px-4 py-2">
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">SovSpace · 5D layered view</div>
+              <div className="text-sm font-bold text-sky-100">Hive → C-space → J-space → flywheels → live data — the estate as a galaxy</div>
+            </div>
+            <div className="text-right font-mono text-[10px] text-sky-300/60">
+              zoom: ∞ · flywheels: {FLYWHEELS.length}
+            </div>
+          </div>
+          <div className="p-2">
+            <SovSpaceGalaxy
+              hive={HIVE}
+              cspace={cSpaceEvents.length}
+              jspace={jrecords.length}
+              flywheels={FLYWHEELS}
+              height={520}
+            />
+          </div>
+          <div className="border-t border-sky-500/15 px-4 py-3 text-[11px] text-sky-300/70">
+            <p>
+              <strong className="text-sky-200">The metaphor:</strong> the sovereign estate is a galaxy. The HIVE is the central star — water, the pinned facts that ground everything. C-space orbits it — milk, the local deliberation the council does. J-space is the next shell — honey, the signed decisions in the D1 ledger. Each flywheel is its own planet, orbiting on its own radius; its <em>phase</em> shows where it sits in the water→milk→honey flow. The outer halo is the unbounded working memory — the infinite drawing.
+            </p>
+            <p className="mt-2">
+              So front-end and back-end sovereigns operate across all the data <em>living</em>, not frozen — the same way the flywheels keep running while the user looks at any layer. Click a planet, hover for its phase and last-run time, then jump to the J-space timeline below for the signed events it produced.
+            </p>
           </div>
         </div>
       </section>
