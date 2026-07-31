@@ -136,6 +136,34 @@ if [ "${1:-}" = "--dry" ]; then
   exit 0
 fi
 
+# ── pre-deploy smoke test ───────────────────────────────────────────────────
+# Same gate as deploy-prod.sh — start a local preview server, run the fast
+# Playwright smoke test, block deploy if any uncaught JS exceptions fire.
+if [ "${1:-}" != "--skip-test" ]; then
+  echo "Running pre-deploy smoke test against local build..."
+  npx vite preview --config client/vite.config.ts --port 4173 --strictPort &
+  PREVIEW_PID=$!
+  for i in $(seq 1 15); do
+    if curl -s --max-time 1 http://localhost:4173/ > /dev/null 2>&1; then
+      break
+    fi
+    sleep 1
+  done
+  BASE_URL=http://localhost:4173 npx playwright test e2e/tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line 2>&1 | tail -20
+  TEST_RC=${PIPESTATUS[0]}
+  kill $PREVIEW_PID 2>/dev/null
+  wait $PREVIEW_PID 2>/dev/null
+  if [ "$TEST_RC" -ne 0 ]; then
+    echo ""
+    echo "FAIL: pre-deploy smoke test found uncaught JS exceptions."
+    echo "  Fix the error above, rebuild, and re-run this script."
+    echo "  To skip this check: $0 --skip-test"
+    exit 6
+  fi
+  echo "Smoke test passed — no uncaught exceptions."
+  echo ""
+fi
+
 # The actual deploy — flag --branch=$BRANCH is the load-bearing piece.
 # Missing it = random short-id preview that nobody can find again.
 echo "Deploying to STAGING ($BRANCH branch, alias $ALIAS)..."
