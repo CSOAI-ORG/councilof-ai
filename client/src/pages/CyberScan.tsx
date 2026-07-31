@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 
-// /scan — God's Eye. A CISO or SMB can scan their own business with a stack of
+// /scan — cyber self-scan. A CISO or SMB can scan their own business with a stack of
 // reputable open-source security tools, then paste the findings and the
 // Sovereign triages, prioritises, maps to frameworks (NIS2/DORA/CRA/ISO 27001/
 // SOC 2), and drafts remediation — signed to Layer 0. Test your own cyber; the
@@ -64,7 +64,7 @@ export default function CyberScan() {
   const [findings, setFindings] = useState("");
   const [triage, setTriage] = useState("");
   const [busy, setBusy] = useState(false);
-  useEffect(() => { document.title = "God's Eye — scan your own cyber, open-source, Sovereign-guided | CSOAI"; }, []);
+  useEffect(() => { document.title = "Cyber self-scan — test your own systems, open-source, Sovereign-guided | CSOAI"; }, []);
 
   async function runTriage() {
     const text = findings.trim(); if (!text) return;
@@ -83,7 +83,7 @@ export default function CyberScan() {
       <section className="relative overflow-hidden border-b border-emerald-500/15">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(34,211,238,.16), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · God's Eye</p>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · cyber self-scan</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Scan your own business. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">The Sovereign fixes it.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">A CISO-grade stack of reputable open-source tools to test your own cyber — network, web, cloud, containers, code, supply chain. Run them, bring the findings, and the Sovereign triages, maps them to the regulations that bite, and guides the fix. Signed to Layer 0.</p>
         </div>
@@ -131,7 +131,7 @@ export default function CyberScan() {
         </div>
 
         <div className="mt-6 rounded-2xl border border-amber-400/25 bg-amber-400/5 p-4 text-center text-xs text-amber-100/70">
-          God's Eye guides <b className="text-amber-200">your own authorised testing</b> of systems you own or have permission to test. Always scan only what you're authorised to. CSOAI provides tooling guidance and analysis — not a penetration-testing service.
+          The Sovereign guides <b className="text-amber-200">your own authorised testing</b> of systems you own or have permission to test. Always scan only what you're authorised to. CSOAI provides tooling guidance and analysis — not a penetration-testing service.
         </div>
       </section>
     </div>

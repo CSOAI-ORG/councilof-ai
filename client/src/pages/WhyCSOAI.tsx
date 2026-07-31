@@ -11,7 +11,7 @@ const MATRIX: { cap: string; csoai: string; others: string }[] = [
   { cap: "How verdicts are reached", csoai: "33-agent fault-aware consensus council", others: "Single checklist / one model" },
   { cap: "Proof", csoai: "Ed25519-signed to Layer 0 — offline-verifiable", others: "PDF reports, trust-us attestations" },
   { cap: "Coverage", csoai: "AI + cyber + data, one evidence set, crosswalked", others: "Siloed per framework, re-work each time" },
-  { cap: "Cyber testing", csoai: "God's Eye — you scan with open-source, Sovereign fixes", others: "Upsell to a separate pen-test vendor" },
+  { cap: "Cyber testing", csoai: "Cyber self-scan — you test with open-source, the Sovereign helps fix", others: "Upsell to a separate pen-test vendor" },
   { cap: "Pricing", csoai: "Free open-source tier + fair PAYG + subscription", others: "Vanta ~$10k–50k+/yr · Credo AI ~$75k+/yr · OneTrust ~$30–80k/yr add-on" },
   { cap: "Who benefits", csoai: "SMBs, enterprises, governments, every person", others: "The governance vendor's shareholders" },
 ];
@@ -21,7 +21,7 @@ const USPS: { t: string; d: string }[] = [
   { t: "Free training + certification", d: "Learn the frameworks and earn a verifiable Sovereign credential for free. Competence shouldn't be paywalled." },
   { t: "The Council of AI", d: "Five to thirty-three specialised agents deliberate every verdict with fault-aware consensus voting — a council beats one model." },
   { t: "Layer 0 signing", d: "Every decision sealed with Ed25519 and written to a tamper-evident ledger — provable, not promised." },
-  { t: "God's Eye self-scan", d: "A stack of reputable open-source security tools so any CISO can test their own cyber — the Sovereign triages and fixes." },
+  { t: "Cyber self-scan", d: "A stack of reputable open-source security tools so any CISO can test their own cyber — the Sovereign triages and fixes." },
   { t: "The Care Floor", d: "A hard 0.95 care threshold below which the system won't act — safety is a floor, not a marketing line." },
   { t: "Comply once, crosswalk everywhere", d: "One evidence set mapped across EU AI Act, NIST, ISO 42001, NIS2, DORA, CRA and more." },
   { t: "Fair economics", d: "Value flows to the people doing the work — SMBs and enterprises — not to a middleman selling expensive certificates." },
@@ -99,7 +99,7 @@ export default function WhyCsoai() {
           <div className="text-sm font-bold text-emerald-100">See it, don't take our word for it.</div>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/regulators" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">The Regulator Atlas →</a>
-            <a href="/scan" className="rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20">God's Eye self-scan →</a>
+            <a href="/scan" className="rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20">Cyber self-scan →</a>
             <a href="/try" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Meet the Council →</a>
             <a href="/plans" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">See pricing →</a>
           </div>

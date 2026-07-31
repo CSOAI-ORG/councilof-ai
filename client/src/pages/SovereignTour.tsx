@@ -20,7 +20,7 @@ const STEPS: Step[] = [
 
 export default function SovereignTour() {
   const [i, setI] = useState(0);
-  useEffect(() => { document.title = "Your Sovereign \u2014 Guided Tour"; }, []);
+  useEffect(() => { document.title = "Your Sovereign — guided tour | CSOAI"; }, []);
   const s = STEPS[i];
   const last = i === STEPS.length - 1;
   const aurora = { background: "radial-gradient(900px 520px at 50% -10%, rgba(16,185,129,.20), transparent 60%), radial-gradient(700px 520px at 85% 115%, rgba(45,212,191,.16), transparent 60%)" };

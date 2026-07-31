@@ -18,7 +18,7 @@ export default function EmergencePage() {
     if (!passport) setPassport((p) => p || { canonical, fingerprint: "", signature: "" });
     setMinting(false);
   }
-  useEffect(() => { document.title = "Emergence - the living egg | CSOAI"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { hatchedRef.current = true; setHatched(true); } } } catch (e) {} }, []);
+  useEffect(() => { document.title = "Your Sovereign twin | CSOAI"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { hatchedRef.current = true; setHatched(true); } } } catch (e) {} }, []);
   function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); try { localStorage.setItem("sov_charge", String(n)); } catch (e) {} if (n >= 100 && !hatchedRef.current) { hatchedRef.current = true; setHatched(true); } }
   useEffect(() => {
     const c = cv.current; if (!c) return; const ctx = c.getContext("2d"); if (!ctx) return;
@@ -52,8 +52,8 @@ export default function EmergencePage() {
       <section className="relative">
         <canvas ref={cv} className="block h-[72vh] w-full" />
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-10 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - emergence</p>
-          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{hatched ? "Your Sovereign has emerged." : "The living egg."}</h1>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · your Sovereign twin</p>
+          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{hatched ? "Your Sovereign twin is ready." : "Your Sovereign twin."}</h1>
           <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{hatched ? "From the mirror of the world, your AI character is born - it learned you, and now it acts for you." : "A glowing digital mirror of Earth - day, night, every connector lit. As your Sovereign learns you, the egg charges... and hatches."}</p>
           <div className="pointer-events-auto mt-4 flex flex-wrap items-center justify-center gap-3 px-6">
             {!hatched && <button onClick={addCharge} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Charge the emergence ({charge}%)</button>}

@@ -425,8 +425,8 @@ function App() {
     return <WidgetRouter />;
   }
 
-  // Immersive full-bleed routes — the live demo/tour takes over the whole screen (no header/footer).
-  if (location === '/demo' || location === '/os-demo' || location === '/tour') {
+  // Immersive full-bleed routes — the live demo takes over the whole screen (no header/footer).
+  if (location === '/demo' || location === '/os-demo') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="dark">
@@ -607,7 +607,6 @@ function App() {
             <Route path="/sov3" component={Workbench} />
             <Route path="/demo" component={DemoOS} />
             <Route path="/os-demo" component={DemoOS} />
-            <Route path="/tour" component={DemoOS} />
           <Route path="/enter" component={OsEnter} />
           <Route path="/tour" component={SovereignTour} />
           <Route path="/academy" component={SovereignAcademy} />
@@ -629,7 +628,6 @@ function App() {
           <Route path="/dragonfly" component={Dragonfly} />
           <Route path="/meok-law" component={MeokLaw} />
           <Route path="/law" component={MeokLaw} />
-          <Route path="/hive" component={HiveModel} />
           <Route path="/hive-model" component={HiveModel} />
           <Route path="/services" component={Services} />
           <Route path="/how" component={HowItWorks} />
@@ -714,7 +712,6 @@ function App() {
           <Route path="/framework-temples" component={Temples} />
           <Route path="/relevance-map" component={RelevanceMap} />
           <Route path="/rediscovered" component={Lineage} />
-          <Route path="/demo" component={TryCouncil} />
           <Route path="/voice" component={SovereignMinds} />
           <Route path="/sov-towns" component={SovTowns} />
           <Route path="/crown-jewels" component={CrownJewels} />
@@ -835,9 +832,7 @@ function App() {
                   <Route path="/case-studies" component={CaseStudies} />
                   <Route path="/trust-center" component={TrustCenter} />
                   <Route path="/security" component={TrustCenter} />
-                  <Route path="/compare" component={ComparisonPage} />
                   <Route path="/comparison" component={ComparisonPage} />
-                  <Route path="/why-csoai" component={ComparisonPage} />
                   <Route path="/roi-calculator" component={ROICalculator} />
                   <Route path="/roi" component={ROICalculator} />
                   <Route path="/technology" component={Technology} />
@@ -853,7 +848,6 @@ function App() {
                   <Route path="/cra" component={Cra} />
                   <Route path="/nis2" component={Nis2} />
                   <Route path="/vulnerability-disclosure" component={VulnerabilityDisclosure} />
-                  <Route path="/security" component={VulnerabilityDisclosure} />
                   <Route path="/intel" component={Intel} />
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
@@ -873,7 +867,6 @@ function App() {
                   <Route path="/plans" component={PlansPage} />
                   <Route path="/sovereign-pricing" component={PlansPage} />
                   <Route path="/start" component={OnboardOS} />
-                  <Route path="/welcome" component={OnboardOS} />
                   <Route path="/onboard" component={OnboardOS} />
                   <Route path="/open-media" component={OpenMedia} />
                   <Route path="/commons" component={OpenMedia} />

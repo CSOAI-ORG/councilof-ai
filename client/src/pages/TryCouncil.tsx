@@ -124,6 +124,10 @@ export default function TryCouncil() {
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Five AI agents debate your compliance question across global frameworks — and return a risk verdict in seconds. Ask anything.</p>
 
           <div className="mt-7 rounded-2xl bg-white p-3 shadow-xl">
+            {/* Article 50(1) AI-interaction disclosure — EU AI Act Art 50(1) applies from 2 Aug 2026. */}
+            <div role="status" aria-live="polite" className="mb-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-1.5 text-[11px] font-semibold text-amber-900">
+              You are interacting with an AI system.
+            </div>
             <textarea value={q} onChange={(e) => setQ(e.target.value)} rows={2} placeholder="Describe your AI system… e.g. 'We use AI to screen job applicants'"
               className="w-full resize-none rounded-xl px-4 py-3 text-gray-900 outline-none placeholder:text-gray-400" />
             <div className="flex items-center justify-between gap-3 px-1 pb-1">
@@ -180,7 +184,7 @@ export default function TryCouncil() {
                 <p className="mt-1 text-sm text-emerald-800">The council agrees: <strong>{result.tier}</strong>. {result.tier === "High-risk" ? "Begin a conformity programme against the six EU AI Act duties (Art. 9-15) before the August 2026 deadline." : result.tier === "Prohibited" ? "Do not deploy — redesign the use case." : "Apply the transparency duties now and re-assess at every material change."}</p>
                 {liveState === "idle" && <button onClick={convene} className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800">Convene the live 5-agent council →</button>}
                 {liveState === "running" && <div className="mt-3 text-sm text-emerald-700">The five agents are deliberating live over the gateway…</div>}
-                {sig && <div className="mt-3 rounded-lg bg-white/70 p-2 font-mono text-[10px] text-emerald-800 break-all">Verdict sealed · Layer 0 ledger hash (SHA-256): {sig}</div>}
+                {sig && <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-2 text-[11px] text-amber-900">Client-side digest (above) is a local trail hash for traceability only — the verdict is not yet signed into the J-space chain. The signed historical record lives at <a href="/live-ledger" className="font-semibold underline">/live-ledger</a>.</div>}
                 {!sent ? (
                   <div className="mt-4 flex flex-wrap items-center gap-2">
                     <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="you@company.com"

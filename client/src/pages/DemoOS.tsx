@@ -65,7 +65,7 @@ const BOOT = ["Establishing governed link", "Loading Sovereign Layer 0", "Verify
 // Navigation surfaces for the OS drawer + bottom bar (end-user tool navigation).
 const NAV_GROUPS: { g: string; items: { n: string; src: string }[] }[] = [
   { g: "Govern", items: [{ n: "Governance Graph", src: "/graph" }, { n: "The Council", src: "/try" }, { n: "Sov Space", src: "/sov-space" }, { n: "Framework Hive", src: "/hive" }, { n: "Regulator Atlas", src: "/regulators" }] },
-  { g: "Protect & watch", items: [{ n: "Global Watchdog", src: "/watchdog-map" }, { n: "God's Eye cyber scan", src: "/scan" }, { n: "Personal Protection", src: "/protect" }] },
+  { g: "Protect & watch", items: [{ n: "Global Watchdog", src: "/watchdog-map" }, { n: "Cyber self-scan", src: "/scan" }, { n: "Personal Protection", src: "/protect" }] },
   { g: "Ecosystem", items: [{ n: "Sovereign Network", src: "/network" }, { n: "The Ontology", src: "/ontology" }, { n: "Signed System Card", src: "/system-card" }, { n: "Why CSOAI", src: "/why" }, { n: "Competitor battlecards", src: "/competitors" }] },
   { g: "Build & run", items: [{ n: "Tool Commons (370+)", src: "/tool-commons" }, { n: "OSCAL Studio", src: "/oscal" }, { n: "Command Center", src: "/command-center" }, { n: "Plans & pricing", src: "/plans" }, { n: "Full OS launcher", src: "/os" }] },
 ];
@@ -381,6 +381,10 @@ export default function DemoOS() {
       {!booting && gate && mode === null && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-[#03080e]/85 backdrop-blur px-6 text-center">
           <div className="flex h-14 w-14 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/10 text-2xl">🎙</div>
+          {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026. */}
+          <div role="status" aria-live="polite" className="mt-3 max-w-md rounded-md border border-amber-400/35 bg-amber-400/15 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
+            You are interacting with an AI system.
+          </div>
           <h2 className="mt-4 text-2xl font-black text-emerald-100">Grant your Sovereign a voice</h2>
           <p className="mt-2 max-w-md text-sm text-emerald-100/75">Allow the mic so you can just talk to me during the tour - interrupt any time and I'll listen. Nothing is recorded or sold; on-device, consent-first.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">

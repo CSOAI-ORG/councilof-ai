@@ -77,7 +77,7 @@ export default function Competitors() {
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/why" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Why CSOAI →</a>
             <a href="/regulators" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">The Regulator Atlas →</a>
-            <a href="/scan" className="rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20">God's Eye self-scan →</a>
+            <a href="/scan" className="rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20">Cyber self-scan →</a>
           </div>
         </div>
 

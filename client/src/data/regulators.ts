@@ -174,7 +174,7 @@ export const REGIMES: Regime[] = [
       { date: "ongoing", event: "ENISA guidance + sectoral thresholds refined" },
       { date: "ongoing", event: "Cross-border incident coordination via CSIRTs network" },
     ],
-    csoai: "Cyber risk register, incident-reporting clock, and supply-chain assessments — plus God's Eye self-scan so you can test controls, not just document them.",
+    csoai: "Cyber risk register, incident-reporting clock, and supply-chain assessments — plus cyber self-scan so you can test controls, not just document them.",
     hiveSlug: "nis2",
   },
   {
@@ -224,7 +224,7 @@ export const REGIMES: Regime[] = [
       { date: "ongoing", event: "Overlap handling with AI Act for AI-enabled products" },
       { date: "ongoing", event: "Open-source steward obligations clarified" },
     ],
-    csoai: "SBOM + secure-by-design checklist, CVD process, and conformity workflow — with God's Eye scanning your product surface for the evidence.",
+    csoai: "SBOM + secure-by-design checklist, CVD process, and conformity workflow — with cyber self-scan checking your product surface for the evidence.",
     hiveSlug: "cra",
   },
   {

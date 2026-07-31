@@ -141,7 +141,7 @@ export default function OsEnter() {
             <a href="/sovereign-town" className="group rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-teal-400/5 p-6 text-left transition hover:scale-[1.02]">
               <div className="text-3xl">{"\u25D1"}</div>
               <div className="mt-3 text-lg font-bold text-white">Right brain {"\u2014"} Explore</div>
-              <p className="mt-1 text-sm text-emerald-50/70">Sovereign Town, the living globe, frameworks, the Council. Discovery, vision, flow.</p>
+              <p className="mt-1 text-sm text-emerald-50/70">Sovereign Town, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>
             </a>
           </div>
           <a href="/os" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\u2192"}</a>

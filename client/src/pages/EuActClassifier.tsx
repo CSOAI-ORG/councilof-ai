@@ -68,7 +68,12 @@ export default function EuActClassifier() {
         <h1 className="mt-3 text-4xl font-black tracking-tight">Is your AI <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">high-risk?</span></h1>
         <p className="mt-3 text-emerald-100/75">Describe any AI system. The Sovereign classifies its EU AI Act risk tier, tells you why, and lists the obligations that follow — plus every other framework that applies.</p>
 
-        <div className="mt-6 flex gap-2">
+        {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026. */}
+        <div role="status" aria-live="polite" className="mt-6 rounded-md border border-amber-400/35 bg-amber-400/10 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
+          You are interacting with an AI system.
+        </div>
+
+        <div className="mt-3 flex gap-2">
           <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Describe your AI system…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-4 py-3 text-sm text-emerald-50 placeholder-emerald-300/25 focus:border-emerald-400 focus:outline-none" />
           <button onClick={() => run()} disabled={busy} className="rounded-xl bg-emerald-500 px-5 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">{busy ? "Classifying…" : "Classify ▶"}</button>
         </div>

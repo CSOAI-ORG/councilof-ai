@@ -93,7 +93,11 @@ function Detail({ f }: { f: HiveFramework }) {
       {/* Sovereign action bar */}
       <div className="mt-6 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-4">
         <div className="text-sm font-bold text-emerald-200">Your Sovereign — do it all here</div>
-        <div className="mt-3 flex gap-2">
+        {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026. */}
+        <div role="status" aria-live="polite" className="mt-2 rounded-md border border-amber-400/35 bg-amber-400/10 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
+          You are interacting with an AI system.
+        </div>
+        <div className="mt-2 flex gap-2">
           <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") ask(); }} placeholder={"Ask anything about " + f.name + "…"} className="flex-1 rounded-lg border border-emerald-400/30 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
           <button onClick={() => ask()} disabled={busy} className="rounded-lg bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{busy ? "…" : "Ask"}</button>
         </div>

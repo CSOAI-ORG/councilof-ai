@@ -101,7 +101,7 @@ export default function RegulatorAtlas() {
           <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/70">One evidence set, mapped across every regime above — signed to Layer 0, provable not promised. That's the difference between a governance program and a pile of PDFs.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/hive" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Open the Framework Hive →</a>
-            <a href="/scan" className="rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20">Scan your own cyber (God's Eye) →</a>
+            <a href="/scan" className="rounded-xl border border-cyan-400/40 bg-cyan-500/10 px-5 py-2.5 text-sm font-semibold text-cyan-100 hover:bg-cyan-500/20">Scan your own cyber →</a>
             <a href="/why" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Why CSOAI vs the rest →</a>
           </div>
         </div>

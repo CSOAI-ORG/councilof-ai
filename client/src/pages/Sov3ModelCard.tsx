@@ -26,7 +26,7 @@ function Section({ title, children }: { title: string; children: any }) {
 }
 
 export default function Sov3ModelCard() {
-  useEffect(() => { document.title = "SOV3 Model Card — architecture, status, honest limits | CSOAI"; }, []);
+  useEffect(() => { document.title = "Sovereign model card — architecture, status, honest limits | CSOAI"; }, []);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">

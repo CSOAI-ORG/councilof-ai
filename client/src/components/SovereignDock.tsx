@@ -31,7 +31,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
   { re: /humanoid|\bpoc\b|proof of concept|one os|rogue|swarm|bad actor/i, href: "/poc", label: "the ONE OS proof of concept" },
-  { re: /globe|earth|world map|3d/i, href: "/world-3d", label: "the living globe" },
+  { re: /globe|earth|world map|3d/i, href: "/world-3d", label: "the real-world globe" },
   { re: /sovereign network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Sovereign network" },
   { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },

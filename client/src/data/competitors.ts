@@ -81,7 +81,7 @@ export const BATTLECARDS: Battlecard[] = [
       "Requires internal governance maturity + training to realise value; complex for non-technical stakeholders.",
       "AI governance is a module bolted onto a privacy platform, not purpose-built; add-on pricing on top of an already-costly base.",
     ],
-    wedge: "CSOAI is purpose-built for AI + cyber governance, not a privacy-platform add-on — and it's usable without a consulting project. The Sovereign does the work (classify, assess, sign) instead of leaving 'after-implementation work' to the client, and the open-source core + free tier means no stacked add-on bills. God's Eye lets teams self-scan cyber too — one OS, not three modules.",
+    wedge: "CSOAI is purpose-built for AI + cyber governance, not a privacy-platform add-on — and it's usable without a consulting project. The Sovereign does the work (classify, assess, sign) instead of leaving 'after-implementation work' to the client, and the open-source core + free tier means no stacked add-on bills. Cyber self-scan lets teams test their own systems too — one OS, not three modules.",
     sources: [
       { label: "OneTrust real-time AI governance (SiliconANGLE, Mar 2026)", url: "https://siliconangle.com/2026/03/09/onetrust-expands-platform-real-time-ai-governance-agent-oversight-capabilities/" },
       { label: "OneTrust business breakdown + valuation (Contrary Research)", url: "https://research.contrary.com/company/onetrust" },
