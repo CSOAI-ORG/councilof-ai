@@ -66,7 +66,7 @@ export default function DemoTour() {
 
   if (!active || !s || !here) return null;
 
-  const last = step >= TOUR.length - 1;
+  const last = step >= STEPS.length - 1;
   return (
     <div className="fixed inset-x-0 bottom-0 z-[10000] flex justify-center px-4 pb-5 pointer-events-none">
       <div className="pointer-events-auto w-full max-w-xl rounded-2xl border border-emerald-400/40 bg-[#04120c]/95 p-4 text-emerald-50 shadow-[0_10px_50px_-10px_rgba(16,185,129,.6)] backdrop-blur-xl">
