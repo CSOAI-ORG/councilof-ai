@@ -7,10 +7,12 @@
  *   CANDIDATE  named in the N-sites plan, no fetch yet. A granted domain with no fetch is
  *              still CANDIDATE.
  *
- * The LIVE set below is the audited 15 from SOV_NODES_ALL_PROMOTED_2026-07-29 — the corrected
- * count (the headline once said 18; the probe records supported 15, and one node had been
- * written from memory with no probe behind it). Counts come from artifacts, never recall.
- * Watcher rows carry the digest timestamps from anchors/state/*.json.
+ * The registry below now holds 26 nodes (17 LIVE, 2 UNKNOWN, 7 CANDIDATE) — it grew
+ * past the original audited 15 from SOV_NODES_ALL_PROMOTED_2026-07-29 (the corrected
+ * count: the headline once said 18; the probe records supported 15, and one node had been
+ * written from memory with no probe behind it). Counts come from artifacts, never recall —
+ * /layer0 computes its summary from this file at render time; if any sentence anywhere
+ * disagrees with this file, the file wins.
  *
  * Coordinates are the operating institution's seat — where the authority sits, not where a CDN
  * edge answered.

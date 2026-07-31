@@ -153,6 +153,7 @@ const GSPCArena = lazy(() => import("./pages/GSPCArena"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
+const Layer0 = lazy(() => import("./pages/Layer0"));
 const Ecosystem = lazy(() => import("./pages/Ecosystem"));
 const Protect = lazy(() => import("./pages/Protect"));
 const Ontology = lazy(() => import("./pages/Ontology"));
@@ -546,6 +547,7 @@ function App() {
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
+                  <Route path="/layer0" component={Layer0} />
                   <Route path="/safe-space" component={Ecosystem} />
                   <Route path="/governance-commons" component={Ecosystem} />
                   <Route path="/protect" component={Protect} />
