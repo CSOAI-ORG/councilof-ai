@@ -33,46 +33,6 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 
-// Fallback framework data for display
-const defaultFrameworks = [
-  {
-    id: 1,
-    code: "EU_AI_ACT",
-    name: "EU AI Act",
-    fullName: "Regulation 2024/1689",
-    description: "European Union AI regulation",
-    score: 72,
-    status: "In Progress",
-    deadline: "August 2026",
-    requirements: { total: 113, completed: 81, inProgress: 20, notStarted: 12 },
-    gaps: ["Human oversight documentation", "Technical documentation", "Risk management system"],
-  },
-  {
-    id: 2,
-    code: "NIST_RMF",
-    name: "NIST AI RMF",
-    fullName: "AI 100-1",
-    description: "US National Institute of Standards and Technology AI Risk Management Framework",
-    score: 85,
-    status: "Compliant",
-    deadline: "Voluntary",
-    requirements: { total: 72, completed: 61, inProgress: 8, notStarted: 3 },
-    gaps: ["Continuous monitoring metrics", "Stakeholder engagement records"],
-  },
-  {
-    id: 3,
-    code: "TC260",
-    name: "TC260",
-    fullName: "AI Safety Framework 2.0",
-    description: "China's National Information Security Standardization Technical Committee",
-    score: 68,
-    status: "In Progress",
-    deadline: "Q2 2025",
-    requirements: { total: 56, completed: 38, inProgress: 12, notStarted: 6 },
-    gaps: ["Content traceability", "Algorithm registration", "Security assessment"],
-  },
-];
-
 export default function Compliance() {
   const [assessmentDialogOpen, setAssessmentDialogOpen] = useState(false);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
@@ -139,18 +99,18 @@ export default function Compliance() {
     },
   });
 
-  // Use API frameworks if available, otherwise fallback
-  const frameworks = apiFrameworks && apiFrameworks.length > 0 
-    ? apiFrameworks.map(fw => ({
-        ...fw,
-        fullName: fw.version || fw.name,
-        score: 75, // Would come from assessments
-        status: "In Progress",
-        deadline: "2026",
-        requirements: { total: 50, completed: 30, inProgress: 15, notStarted: 5 },
-        gaps: ["Documentation pending", "Review required"],
-      }))
-    : defaultFrameworks;
+  // Framework cards render real assessment state only — never example scores.
+  // Score, requirement progress and gaps appear once a real assessment has run;
+  // until then each framework shows an honest "not assessed" state.
+  const frameworks = (apiFrameworks ?? []).map(fw => ({
+    ...fw,
+    fullName: fw.version || fw.name,
+    score: null as number | null,
+    status: "Not assessed",
+    deadline: null as string | null,
+    requirements: null as { total: number; completed: number; inProgress: number; notStarted: number } | null,
+    gaps: [] as string[],
+  }));
 
   // Get assessments list for the dropdown
   const assessments = assessmentsData?.map(a => ({
@@ -261,6 +221,21 @@ export default function Compliance() {
         )}
 
         {/* Frameworks */}
+        {frameworks.length === 0 ? (
+          <Card className="bg-card border-border">
+            <CardContent className="p-8 text-center">
+              <p className="font-semibold">No framework assessments yet</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Run your first assessment and each framework&apos;s score, requirement progress
+                and gaps appear here — we don&apos;t show example scores as if they were yours.
+              </p>
+              <Button onClick={() => setAssessmentDialogOpen(true)} className="mt-4 gap-2">
+                <PlayCircle className="h-4 w-4" />
+                Run Assessment
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
         <div className="space-y-4">
           {frameworks.map((fw, idx) => (
             <motion.div
@@ -284,6 +259,12 @@ export default function Compliance() {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
+                      {fw.score === null ? (
+                        <Badge variant="outline" className="bg-secondary text-muted-foreground border-border">
+                          Not assessed yet
+                        </Badge>
+                      ) : (
+                      <>
                       <Badge
                         variant="outline"
                         className={
@@ -298,10 +279,19 @@ export default function Compliance() {
                         <p className="text-2xl font-semibold">{fw.score}%</p>
                         <p className="text-xs text-muted-foreground">Deadline: {fw.deadline}</p>
                       </div>
+                      </>
+                      )}
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  {fw.requirements === null ? (
+                    <p className="text-sm text-muted-foreground">
+                      Run an assessment to score this framework — requirement progress and gaps
+                      are computed from the assessment, never from example data.
+                    </p>
+                  ) : (
+                  <>
                   {/* Progress Bar */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
@@ -340,11 +330,14 @@ export default function Compliance() {
                       </div>
                     </div>
                   )}
+                  </>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
           ))}
         </div>
+        )}
       </div>
 
       {/* Run Assessment Dialog */}

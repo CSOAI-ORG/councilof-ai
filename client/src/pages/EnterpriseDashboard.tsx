@@ -30,6 +30,7 @@ export default function EnterpriseDashboard() {
   // Fetch enterprise data
   const { data: aiSystems } = trpc.aiSystems.list.useQuery();
   const { data: stats } = trpc.dashboard.getStats.useQuery();
+  const { data: pdcaStats } = trpc.pdca.getStats.useQuery();
 
   // Calculate compliance metrics
   const totalSystems = aiSystems?.length || 0;
@@ -37,9 +38,9 @@ export default function EnterpriseDashboard() {
   const highRiskSystems = aiSystems?.filter((s) => s.riskLevel === 'high' || (s.riskLevel as string) === 'unacceptable').length || 0;
   const complianceRate = totalSystems > 0 ? Math.round((compliantSystems / totalSystems) * 100) : 0;
 
-  // PDCA cycle metrics
-  const activeCycles = 3;
-  const completedCycles = 7;
+  // PDCA cycle metrics — real query only; null until measured (never invented).
+  const activeCycles = (pdcaStats as any)?.active ?? null;
+  const completedCycles = (pdcaStats as any)?.completed ?? null;
 
   // Prepare PDF export data
   const pdfExportData = useMemo((): RegulatoryReportData | null => {
@@ -73,15 +74,15 @@ export default function EnterpriseDashboard() {
       systems: systemsList,
       frameworkSummary,
       incidentsSummary: {
-        total: 8,
+        total: (stats as any)?.totalIncidents ?? 0,
         critical: highRiskSystems,
-        resolved: 6,
+        resolved: (stats as any)?.resolvedIncidents ?? 0,
       },
       pdcaCycles: {
-        active: activeCycles,
-        completed: completedCycles,
+        active: activeCycles ?? 0,
+        completed: completedCycles ?? 0,
       },
-      byzantineCouncilSessions: 15,
+      byzantineCouncilSessions: (stats as any)?.councilSessions ?? 0,
       recommendations: [
         'Continue monitoring compliance across all registered AI systems',
         'Schedule quarterly assessments for high-risk systems',
@@ -174,9 +175,9 @@ export default function EnterpriseDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-600">{activeCycles}</div>
+              <div className="text-3xl font-bold text-blue-600">{activeCycles ?? "—"}</div>
               <p className="text-sm text-gray-600 mt-1">
-                {completedCycles} completed
+                {completedCycles != null ? `${completedCycles} completed` : "no cycles measured yet"}
               </p>
             </CardContent>
           </Card>
@@ -248,28 +249,29 @@ export default function EnterpriseDashboard() {
           </Card>
         </div>
 
-        {/* Compliance Analytics Charts */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <ComplianceTrendChart
-            title="Compliance Score Trend"
-            description="Track compliance progress across frameworks over time"
-            height={320}
-          />
-          <FrameworkComparisonChart
-            title="Framework Comparison"
-            description="Compare compliance status across regulatory frameworks"
-            height={320}
-          />
-        </div>
-
-        {/* Incident Analytics */}
-        <div className="mb-8">
-          <IncidentTrendChart
-            title="Incident Tracking"
-            description="Monitor incident reports and resolution rates"
-            height={350}
-          />
-        </div>
+        {/* Compliance Analytics Charts — rendered only with real trend data.
+            The chart components carry mock DEFAULT_DATA for demo purposes;
+            shipping that to visitors would be stats theatre. */}
+        {(stats as any)?.trend?.length ? (
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <ComplianceTrendChart
+              title="Compliance Score Trend"
+              description="Track compliance progress across frameworks over time"
+              height={320}
+              data={(stats as any).trend}
+            />
+          </div>
+        ) : (
+          <Card className="mb-8">
+            <CardContent className="p-8 text-center">
+              <p className="font-semibold">No trend data yet</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Charts appear once your AI systems have real measurements behind them —
+                we don&apos;t plot example data as if it were yours.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recent Activity */}
         <Card>

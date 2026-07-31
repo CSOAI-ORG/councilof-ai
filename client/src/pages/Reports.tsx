@@ -14,53 +14,8 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { PDFExportButton, RegulatoryExportButton } from "@/components/PDFExportButton";
 import { RegulatoryReportData } from "@/lib/pdfExport";
 
-const reports = [
-  {
-    id: 1,
-    title: "Q4 2024 EU AI Act Compliance Report",
-    type: "Compliance",
-    framework: "EU AI Act",
-    generated: "Dec 20, 2024",
-    status: "Final",
-    pages: 45,
-  },
-  {
-    id: 2,
-    title: "NIST AI RMF Assessment - Customer Service Bot",
-    type: "Assessment",
-    framework: "NIST",
-    generated: "Dec 18, 2024",
-    status: "Final",
-    pages: 28,
-  },
-  {
-    id: 3,
-    title: "Risk Classification Report - Hiring Algorithm",
-    type: "Risk",
-    framework: "Multi-Framework",
-    generated: "Dec 15, 2024",
-    status: "Draft",
-    pages: 32,
-  },
-  {
-    id: 4,
-    title: "33-Agent Council Monthly Summary",
-    type: "Council",
-    framework: "Internal",
-    generated: "Dec 1, 2024",
-    status: "Final",
-    pages: 18,
-  },
-  {
-    id: 5,
-    title: "Watchdog Incident Analysis - November 2024",
-    type: "Incident",
-    framework: "Internal",
-    generated: "Nov 30, 2024",
-    status: "Final",
-    pages: 24,
-  },
-];
+// No fabricated report list — reports render here once generated for real.
+
 
 const getTypeBadge = (type: string) => {
   const colors: Record<string, string> = {
@@ -73,7 +28,8 @@ const getTypeBadge = (type: string) => {
   return colors[type] || "bg-gray-500/10 text-gray-500 border-gray-500/30";
 };
 
-// Sample data for generating regulatory report PDF
+// Example data for the SAMPLE regulatory report PDF — clearly labelled as a
+// sample in the UI. Never presented as the visitor's own report.
 const getSampleRegulatoryReportData = (): RegulatoryReportData => ({
   reportTitle: "Quarterly Compliance Status Report",
   reportPeriod: {
@@ -128,9 +84,11 @@ export default function Reports() {
               Generated compliance reports and documentation
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground mr-1">Example data:</span>
             <RegulatoryExportButton
               reportData={sampleReportData}
+              filename="sample-regulatory-report.pdf"
               variant="outline"
               className="gap-2"
             />
@@ -158,75 +116,16 @@ export default function Reports() {
           </Button>
         </div>
 
-        {/* Reports List */}
-        <div className="space-y-3">
-          {reports.map((report, idx) => (
-            <motion.div
-              key={report.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15, delay: idx * 0.03 }}
-            >
-              <Card className="bg-card border-border hover:bg-accent/30 transition-colors">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    {/* Icon */}
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-secondary">
-                      <FileText className="h-5 w-5 text-muted-foreground" />
-                    </div>
-
-                    {/* Main Info */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium truncate">{report.title}</h3>
-                      <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                        <span>{report.framework}</span>
-                        <span>•</span>
-                        <span>{report.pages} pages</span>
-                        <span>•</span>
-                        <span>{report.generated}</span>
-                      </div>
-                    </div>
-
-                    {/* Type Badge */}
-                    <Badge variant="outline" className={getTypeBadge(report.type)}>
-                      {report.type}
-                    </Badge>
-
-                    {/* Status */}
-                    <Badge
-                      variant="outline"
-                      className={
-                        report.status === "Final"
-                          ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
-                          : "bg-amber-500/10 text-amber-500 border-amber-500/30"
-                      }
-                    >
-                      {report.status}
-                    </Badge>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        disabled
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        {/* Reports List — honest empty state until real reports exist */}
+        <Card className="bg-card border-border">
+          <CardContent className="p-8 text-center">
+            <p className="font-semibold">No reports generated yet</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Reports you generate appear here. We don&apos;t list example reports as if
+              you made them.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );

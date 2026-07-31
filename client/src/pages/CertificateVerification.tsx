@@ -129,6 +129,16 @@ export default function CertificateVerification() {
           </p>
         </div>
 
+        {/* Honest capability notice */}
+        <div className="mb-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+          <strong>Lookup temporarily offline.</strong> Certificate lookup is down while the
+          verification service moves infrastructure. The signed chain is still publicly
+          recomputable —{" "}
+          <a href="/gspc-verify" className="font-medium text-emerald-700 hover:underline">
+            recompute it client-side →
+          </a>
+        </div>
+
         {/* Verification Method Selector */}
         <div className="flex justify-center gap-4 mb-8">
           <Button
@@ -159,7 +169,7 @@ export default function CertificateVerification() {
               <div className="flex gap-4">
                 <div className="flex-1">
                   <Input
-                    placeholder="Enter certificate ID (e.g., CSOAI-2024-001234)"
+                    placeholder="Enter certificate ID"
                     value={certificateId}
                     onChange={(e) => setCertificateId(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
@@ -403,7 +413,7 @@ export default function CertificateVerification() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-semibold text-gray-900 flex-shrink-0">•</span>
-                    <span>Format: CSOAI-YYYY-XXXXXX (e.g., CSOAI-2024-001234)</span>
+                    <span>Format: CSOAI-YYYY-XXXXXX</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-semibold text-gray-900 flex-shrink-0">•</span>

@@ -58,45 +58,18 @@ const PHASES = [
   },
 ];
 
-// Mock cycles data
-const mockCycles = [
-  {
-    id: 1,
-    name: "EU AI Act Compliance Review",
-    description: "Quarterly review of AI systems for EU AI Act compliance",
-    currentPhase: "do",
-    progress: 45,
-    status: "active",
-    createdAt: "2025-01-10",
-    aiSystem: "Customer Service AI",
-  },
-  {
-    id: 2,
-    name: "Risk Assessment Update",
-    description: "Update risk assessments for high-risk systems",
-    currentPhase: "check",
-    progress: 75,
-    status: "active",
-    createdAt: "2025-01-05",
-    aiSystem: "ML Pipeline",
-  },
-  {
-    id: 3,
-    name: "Documentation Improvement",
-    description: "Improve technical documentation standards",
-    currentPhase: "act",
-    progress: 90,
-    status: "active",
-    createdAt: "2024-12-20",
-    aiSystem: "All Systems",
-  },
-];
+// No fabricated cycles — the list renders real cycles only. Until cycle
+// persistence exists, the honest empty state below is what a visitor sees.
+const cycles: {
+  id: number; name: string; description: string; currentPhase: string;
+  progress: number; status: string; createdAt: string; aiSystem: string;
+}[] = [];
 
 export default function PDCACycles() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("active");
 
-  const filteredCycles = mockCycles.filter(cycle =>
+  const filteredCycles = cycles.filter(cycle =>
     cycle.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     cycle.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -238,9 +211,10 @@ export default function PDCACycles() {
           <Card>
             <CardContent className="p-12 text-center">
               <RefreshCw className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-semibold text-lg mb-2">No cycles found</h3>
+              <h3 className="font-semibold text-lg mb-2">No PDCA cycles yet</h3>
               <p className="text-muted-foreground mb-4">
-                Start a new PDCA cycle to begin continuous improvement
+                Cycles you start appear here with their real phase and progress —
+                we don&apos;t show example cycles as if they were yours.
               </p>
               <Button disabled>
                 <Plus className="mr-2 h-4 w-4" />

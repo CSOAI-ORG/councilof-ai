@@ -501,26 +501,30 @@ export default function RegulatorDashboard() {
 
           {/* Trends Tab */}
           <TabsContent value="trends" className="space-y-4">
-            {/* Interactive Charts */}
-            <div className="grid md:grid-cols-2 gap-4 mb-6">
-              <ComplianceTrendChart
-                title="Compliance Score Trends"
-                description="Historical compliance data across all registered organizations"
-                height={320}
-              />
-              <FrameworkComparisonChart
-                title="Framework Comparison"
-                description="Aggregated compliance scores by regulatory framework"
-                height={320}
-              />
-            </div>
-
-            {/* Incident Trends */}
-            <IncidentTrendChart
-              title="Incident Report Analytics"
-              description="Track AI safety incidents and resolution rates across all systems"
-              height={380}
-            />
+            {/* Interactive charts — rendered only with real trend data.
+                The chart components carry mock DEFAULT_DATA for demo purposes;
+                shipping that to visitors would be stats theatre. */}
+            {trends && trends.length > 0 ? (
+              <div className="grid md:grid-cols-2 gap-4 mb-6">
+                <ComplianceTrendChart
+                  title="Compliance Score Trends"
+                  description="Historical compliance data across all registered organizations"
+                  height={320}
+                  data={trends as any}
+                />
+              </div>
+            ) : (
+              <Card className="mb-6">
+                <CardContent className="p-8 text-center">
+                  <p className="font-semibold">No trend data yet</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Trend, framework-comparison and incident charts appear once registered
+                    systems have real measurements behind them — we don&apos;t plot example
+                    data as if it were real.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Legacy trend display */}
             <Card>

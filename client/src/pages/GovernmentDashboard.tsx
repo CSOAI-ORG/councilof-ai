@@ -286,25 +286,25 @@ const byzantineCouncilFeatures = [
     title: "Automated Compliance Monitoring",
     description: "33 independent AI agents continuously monitor all registered systems for compliance violations across all major frameworks.",
     icon: Eye,
-    stats: "24/7 monitoring of 1,247 systems",
+    stats: "Continuous monitoring once a registry is connected",
   },
   {
     title: "Consensus-Based Decisions",
     description: "fault-aware consensus voting ensures no single point of failure. Requires supermajority (22/33) for enforcement actions.",
     icon: Users,
-    stats: "99.97% decision accuracy",
+    stats: "Supermajority (22/33) required for enforcement",
   },
   {
     title: "Real-Time Alert System",
     description: "Instant notifications to relevant regulatory bodies when violations are detected, with full audit trail and evidence package.",
     icon: Bell,
-    stats: "< 30 second alert latency",
+    stats: "Real-time alert design target",
   },
   {
     title: "Cross-Border Coordination",
     description: "Automatic routing of cases to appropriate jurisdictions with built-in mutual recognition of assessments.",
     icon: Network,
-    stats: "47 regulatory partnerships",
+    stats: "Cross-border routing, designed for mutual recognition",
   },
 ];
 
@@ -350,7 +350,7 @@ const faqItems = [
   },
   {
     question: "How does cross-border cooperation work?",
-    answer: "Our platform implements mutual recognition agreements that allow compliance assessments conducted in one jurisdiction to be recognized in others. The Byzantine Council automatically routes cases to appropriate authorities based on system deployment geography, company headquarters, and affected populations. We maintain bilateral data sharing agreements with 47 regulatory bodies across 32 countries.",
+    answer: "Our platform is designed for mutual recognition — compliance assessments conducted in one jurisdiction routed so others can recognize them. The Byzantine Council routes cases to appropriate authorities based on system deployment geography, company headquarters, and affected populations. No bilateral data-sharing agreements are in force yet; this section describes the design, not an operating network.",
   },
   {
     question: "Can regulators initiate investigations?",
@@ -457,10 +457,12 @@ export default function GovernmentDashboard() {
   const [timeRange, setTimeRange] = useState<string>("7d");
   const [activeRegionalTab, setActiveRegionalTab] = useState<string>("europe");
 
-  const totalSystems = 1247;
-  const overallCompliance = 91.2;
-  const activeIncidentCount = 78;
-  const pendingActions = 12;
+  // No live national registry feeds this dashboard yet — headline figures are
+  // shown as "—" rather than invented (see the notice strip below the hero).
+  const totalSystems: number | null = null;
+  const overallCompliance: number | null = null;
+  const activeIncidentCount: number | null = null;
+  const pendingActions: number | null = null;
 
   const getColorClasses = (color: string) => {
     const colors: Record<string, { bg: string; text: string; border: string; light: string }> = {
@@ -504,7 +506,7 @@ export default function GovernmentDashboard() {
                   <Eye className="mr-2 h-5 w-5" />
                   Access Dashboard
                 </Button>
-                <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10">
                   <FileText className="mr-2 h-5 w-5" />
                   Request Access
                 </Button>
@@ -529,8 +531,8 @@ export default function GovernmentDashboard() {
                 className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
               >
                 <Globe2 className="h-8 w-8 text-emerald-300 mb-3" />
-                <div className="text-3xl font-bold mb-1">47</div>
-                <div className="text-emerald-200 text-sm">Regulatory Partners</div>
+                <div className="text-3xl font-bold mb-1">—</div>
+                <div className="text-emerald-200 text-sm">Regulatory Partners (none connected yet)</div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -549,11 +551,22 @@ export default function GovernmentDashboard() {
                 className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
               >
                 <Activity className="h-8 w-8 text-emerald-300 mb-3" />
-                <div className="text-3xl font-bold mb-1">1,247</div>
-                <div className="text-emerald-200 text-sm">Systems Monitored</div>
+                <div className="text-3xl font-bold mb-1">—</div>
+                <div className="text-emerald-200 text-sm">Systems Monitored (no registry connected)</div>
               </motion.div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Honest capability notice — this dashboard is a preview, not a live registry */}
+      <section className="bg-amber-50 border-b border-amber-200 py-3">
+        <div className="container max-w-7xl">
+          <p className="text-sm text-amber-800">
+            <strong>Preview.</strong> No live national AI registry feeds this dashboard yet.
+            Headline figures are withheld rather than invented; framework and regional panels
+            below show the layout with illustrative example data, clearly not measurements.
+          </p>
         </div>
       </section>
 
@@ -562,19 +575,19 @@ export default function GovernmentDashboard() {
         <div className="container max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-emerald-100">
-              <div className="text-4xl font-bold text-emerald-700">{totalSystems.toLocaleString()}</div>
+              <div className="text-4xl font-bold text-emerald-700">{totalSystems?.toLocaleString() ?? "—"}</div>
               <div className="text-sm text-emerald-600 font-medium">Monitored Systems</div>
             </div>
             <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-emerald-100">
-              <div className="text-4xl font-bold text-emerald-700">{overallCompliance}%</div>
+              <div className="text-4xl font-bold text-emerald-700">{overallCompliance != null ? `${overallCompliance}%` : "—"}</div>
               <div className="text-sm text-emerald-600 font-medium">Overall Compliance</div>
             </div>
             <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-emerald-100">
-              <div className="text-4xl font-bold text-amber-600">{activeIncidentCount}</div>
+              <div className="text-4xl font-bold text-amber-600">{activeIncidentCount ?? "—"}</div>
               <div className="text-sm text-amber-700 font-medium">Active Incidents</div>
             </div>
             <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-emerald-100">
-              <div className="text-4xl font-bold text-emerald-700">{pendingActions}</div>
+              <div className="text-4xl font-bold text-emerald-700">{pendingActions ?? "—"}</div>
               <div className="text-sm text-emerald-600 font-medium">Pending Actions</div>
             </div>
           </div>

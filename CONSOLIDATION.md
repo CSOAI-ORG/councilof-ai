@@ -15,6 +15,8 @@ is retired or redirected. Agents do NOT start new websites.
 | 3 | csoai-org-v2 | csoai-org (Workers/OpenNext) | **DONOR — harvest jewels** | ~125 dark routes. Jewels: Article 50 suite, evidence/provenance-finding pages, MCP catalogue, live-worker clients, real Ed25519 verify. Then retire |
 | 4 | csoai-static-deploy2 | retired (quarantined) | **DONE** | Already retired; flywheel.py remains canonical backend-only |
 | 5 | app.csoai.org (emerald OS) | separate repo | **REVIEW** | Owner decision needed — likely merges into master /os |
+| 5b | csoai-platform (~/clawd) | local only | **ARCHIVE** | Duplicate build of the same app; has its own dist/client + asset-mangling scripts (csoai-icon.svg.png etc.). One of its runs corrupted the master's dist asset (6-byte garbage, 2026-07-31 — restored). Do NOT run its build scripts |
+| 5c | csoai-dashboard-master (~/clawd) | local only | **ARCHIVE** | Another duplicate build (dist/public). Not the master despite the name — the master is THIS repo |
 | 6 | hub-tour (coai-dashboard) | internal | **KEEP — internal ops tooling** | Not a public surface; exempt |
 | 7 | csoai-v2-app.vercel.app | 402 dead | **RETIRED** | Vercel payment-blocked 2026-07-29; nothing to do |
 

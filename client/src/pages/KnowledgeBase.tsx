@@ -32,7 +32,9 @@ const SCENARIO_CATEGORIES = [
   { id: 'accountability', name: 'Accountability Gaps', icon: BarChart3, color: 'text-green-400', bgColor: 'bg-green-500/20' },
 ];
 
-// Sample scenarios from real-world AI incidents
+// Illustrative scenario archetypes drawn from well-known classes of AI
+// incident. Occurrence counts are deliberately NOT shown — we don't invent
+// incident statistics.
 const SCENARIOS = [
   {
     id: 1,
@@ -295,10 +297,6 @@ export default function KnowledgeBase() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4 text-xs text-muted-foreground">
                               <span className="flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                {scenario.occurrences} occurrences
-                              </span>
-                              <span className="flex items-center gap-1">
                                 <Lightbulb className="h-3 w-3" />
                                 {scenario.lessons.length} lessons
                               </span>
@@ -492,10 +490,7 @@ export default function KnowledgeBase() {
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between pt-4 border-t">
-                  <span className="text-sm text-muted-foreground">
-                    {selectedScenario.occurrences} documented occurrences
-                  </span>
+                <div className="flex items-center justify-end pt-4 border-t">
                   <Button onClick={() => setSelectedScenario(null)}>Close</Button>
                 </div>
               </CardContent>

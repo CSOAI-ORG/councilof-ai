@@ -49,13 +49,14 @@ export default function Courses() {
           <div className="max-w-3xl">
             <Badge className="mb-3 bg-white/20 text-white border-white/30">
               <Award className="w-4 h-4 mr-2" />
-              Professional Certification
+              Professional training
             </Badge>
             <h1 className="text-4xl font-bold mb-4">
               AI Safety & Compliance Training
             </h1>
             <p className="text-lg text-emerald-100 mb-6">
-              Master AI regulations worldwide. Get certified. Earn from home.
+              AI regulation and safety training, by region and framework.
+              Self-paced, with a certificate of completion for each course.
               <br />
               <strong>Flexible payment plans available</strong> - Pay monthly or save with one-time payment.
             </p>
@@ -70,7 +71,7 @@ export default function Courses() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-green-300" />
-                <span>Official Certificates</span>
+                <span>Certificates of completion</span>
               </div>
             </div>
           </div>
@@ -195,7 +196,11 @@ function CourseCard({ course }: { course: any }) {
 
   const handleEnroll = async () => {
     setEnrolling(true);
-    toast.success(`Enrollment interest recorded for "${course.title}". A team member will contact you shortly!`);
+    // Honest: enrollment is not wired to a backend yet — record nothing,
+    // promise nothing, charge nothing.
+    toast("Enrollment isn't open yet", {
+      description: `"${course.title}" opens when the training service launches. Nothing was recorded or charged.`,
+    });
     setTimeout(() => setEnrolling(false), 1500);
   };
 

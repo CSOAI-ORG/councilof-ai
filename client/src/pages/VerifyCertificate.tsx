@@ -59,7 +59,35 @@ export default function VerifyCertificate() {
     );
   }
 
-  if (error || !data?.valid) {
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="max-w-md w-full p-8 text-center">
+          <Shield className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold mb-2">Lookup temporarily offline</h1>
+          <p className="text-muted-foreground mb-2">
+            Certificate lookup is temporarily offline while the verification service moves
+            infrastructure. We can&apos;t confirm or deny this ID right now — and nothing
+            here means the certificate is invalid.
+          </p>
+          <p className="text-sm text-muted-foreground mb-6">
+            The signed chain is still publicly recomputable —{" "}
+            <Link href="/gspc-verify" className="text-emerald-600 hover:underline">
+              recompute it client-side →
+            </Link>
+          </p>
+          <Link href="/">
+            <Button variant="outline">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Go Home
+            </Button>
+          </Link>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!data?.valid) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="max-w-md w-full p-8 text-center">
