@@ -46,10 +46,14 @@ is retired or redirected. Agents do NOT start new websites.
   Fleet counts reconciled on-page (216 deployed vs 293 catalogued, `3f98e85`).
   MCPRegistry title bug fixed. Remaining: donor-3's MCP catalogue facets
   (mcp-infrastructure/distribution overlap) — fold into /mcp or retire.
-- **P4 — Copy polish sweep:** end-user wording pass over master routes
-  (mystical headings, backend jargon in primary text, placeholder phone
-  numbers, demo dates). Honesty register preserved: no "certified",
-  no "C2PA is broken", labels never ahead of capability.
+- **P4 — Copy polish sweep (SHIPPED 2026-07-31, commit `24ed370`):**
+  "God's Eye" → cyber self-scan (10 surfaces + 2 data files); "living egg" →
+  Your Sovereign twin; "living globe" → real-world 3D map; SOV3-led titles
+  humanised; placeholder phone/demo-date/Vercel-jargon errors fixed earlier
+  (`3f98e85`). 7 route shadow collisions deduplicated; /tour double-shadow
+  removed → SovereignTour live. Remaining: double-chrome on 25
+  DashboardLayout pages; salesy copy on /courses; data/mcpRegistry.json's
+  "Gods Eye Geospatial" (a package's proper name — leave).
 - **P5 — Backend reality:** three cert-verify pages run on an undeployed tRPC
   backend → either deploy the functions or mark surfaces honestly.
   RealWorldMap needs a maps key or retirement. Route shadow collisions fixed.
