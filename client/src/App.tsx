@@ -148,6 +148,11 @@ const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
+const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
+const GSPCArena = lazy(() => import("./pages/GSPCArena"));
+const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
+const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
+const Methodology = lazy(() => import("./pages/Methodology"));
 const Ecosystem = lazy(() => import("./pages/Ecosystem"));
 const Protect = lazy(() => import("./pages/Protect"));
 const Ontology = lazy(() => import("./pages/Ontology"));
@@ -536,6 +541,11 @@ function App() {
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
+                  <Route path="/gspc-gap-map" component={GSPCGapMap} />
+                  <Route path="/gspc-arena" component={GSPCArena} />
+                  <Route path="/gspc-anchors" component={GSPCAnchors} />
+                  <Route path="/gspc-verify" component={GSPCVerify} />
+                  <Route path="/methodology" component={Methodology} />
                   <Route path="/safe-space" component={Ecosystem} />
                   <Route path="/governance-commons" component={Ecosystem} />
                   <Route path="/protect" component={Protect} />

@@ -1,0 +1,130 @@
+import { useEffect } from "react";
+import { Link } from "wouter";
+import { VerifyButton } from "@/components/gspc/VerifyButton";
+import { CHAIN_STATUS } from "@/data/chain";
+
+/**
+ * /gspc-verify — recompute the chain yourself.
+ *
+ * The hash chain for any signed record set can be recomputed locally. If a
+ * record was edited after signing, the recomputed hash will not match the
+ * stored one, and that row is reported as BROKEN — visibly, with the row
+ * identified. Everything runs in the browser; no record leaves the machine.
+ */
+
+export default function GSPCVerify() {
+  useEffect(() => {
+    document.title = "Verify the chain — recompute it yourself, client-side | CSOAI";
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+      {/* HERO */}
+      <section className="border-b border-emerald-500/15">
+        <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
+            Chain verification · client-side · no server involved
+          </p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
+            Don&apos;t take our word for it.{" "}
+            <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
+              Recompute the chain.
+            </span>
+          </h1>
+          <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
+            If a record was edited after signing, the recomputed hash will not match the stored
+            one — and that row is reported as <strong className="text-red-300">BROKEN</strong>,
+            visibly, with the row identified. The button below proves it, including what happens
+            when a record is deliberately tampered with.
+          </p>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
+        {/* VERIFY */}
+        <section>
+          <h2 className="text-2xl font-bold text-emerald-50">Verify a chain</h2>
+          <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
+            <VerifyButton />
+          </div>
+        </section>
+
+        {/* PUBLISHED CHAIN STATUS */}
+        <section>
+          <h2 className="text-2xl font-bold text-emerald-50">Published chain status</h2>
+          <p className="mt-1 text-[13px] text-emerald-100/60">
+            The status of the production chain as published by the instrument. The button above
+            recomputes the public replay set independently — the two never have to take each
+            other&apos;s word.
+          </p>
+          <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
+            <div className="flex flex-wrap gap-8">
+              <div>
+                <span className="text-[12px] text-emerald-100/50">Status</span>
+                <div
+                  className={`text-lg font-bold ${CHAIN_STATUS.chain_valid ? "text-emerald-300" : "text-red-300"}`}
+                >
+                  {CHAIN_STATUS.chain_valid ? "VALID" : "BROKEN"}
+                </div>
+              </div>
+              <div>
+                <span className="text-[12px] text-emerald-100/50">Records</span>
+                <div className="font-mono text-lg text-emerald-50">{CHAIN_STATUS.chain_length}</div>
+              </div>
+              <div>
+                <span className="text-[12px] text-emerald-100/50">Hash algorithm</span>
+                <div className="font-mono text-lg text-emerald-50">{CHAIN_STATUS.hash_algorithm}</div>
+              </div>
+              <div>
+                <span className="text-[12px] text-emerald-100/50">Signature algorithm</span>
+                <div className="font-mono text-lg text-emerald-50">{CHAIN_STATUS.signature_algorithm}</div>
+              </div>
+            </div>
+            <p className="mt-4 text-[12px] text-emerald-100/50">{CHAIN_STATUS.note}</p>
+            <p className="mt-2 text-[12px] text-emerald-100/45">
+              Last record: <span className="font-mono">{CHAIN_STATUS.last_record.id}</span> —{" "}
+              {CHAIN_STATUS.last_record.claim}
+            </p>
+          </div>
+        </section>
+
+        {/* WHAT THIS DOES NOT DO */}
+        <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
+          <h2 className="text-2xl font-bold text-emerald-50">What this button does NOT do</h2>
+          <ul className="mt-4 space-y-3 text-[13px] text-emerald-100/80 leading-relaxed list-disc pl-5">
+            <li>
+              It does not authenticate <em>who</em> wrote a record. Today the chain is
+              sha256-linked; authorship authentication requires a signature. The hybrid
+              Ed25519 + ML-DSA-65 signer is built (see Master Playbook Part E1); the verify
+              button label will upgrade to include authorship in the{" "}
+              <strong className="text-emerald-50">same commit</strong> as that capability —
+              never ahead of it.
+            </li>
+            <li>
+              It does not contact a server. Verification is local; you bring the records and
+              the WebCrypto implementation in your browser.
+            </li>
+            <li>
+              It does not assert that a model is &quot;safe&quot;, &quot;compliant&quot;, or
+              &quot;authentic&quot;. Those words are not in the button&apos;s vocabulary, on
+              purpose.
+            </li>
+          </ul>
+        </section>
+
+        {/* LINKS */}
+        <div className="flex flex-wrap gap-4 pb-4 text-[13px]">
+          <Link href="/gspc-arena" className="text-emerald-300 hover:underline">
+            See the records in the arena →
+          </Link>
+          <Link href="/methodology" className="text-emerald-300 hover:underline">
+            Read the methodology →
+          </Link>
+          <Link href="/refutation-ledger" className="text-emerald-300 hover:underline">
+            Read the refutation ledger →
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
