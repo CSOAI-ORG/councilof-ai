@@ -62,9 +62,14 @@ is retired or redirected. Agents do NOT start new websites.
   removed → SovereignTour live. Remaining: double-chrome on 25
   DashboardLayout pages; salesy copy on /courses; data/mcpRegistry.json's
   "Gods Eye Geospatial" (a package's proper name — leave).
-- **P5 — Backend reality:** three cert-verify pages run on an undeployed tRPC
-  backend → either deploy the functions or mark surfaces honestly.
-  RealWorldMap needs a maps key or retirement. Route shadow collisions fixed.
+- **P4 tail — stats theatre purge (SHIPPED 2026-07-31, commit `4db7c47`):**
+  fabrications replaced by honest empty states across Compliance, Reports,
+  PDCACycles, EnterpriseDashboard, KnowledgeBase, GovernmentDashboard
+  (headline figures withheld + Preview strip), Dashboard (earlier `0df2529`).
+  /courses toned. Cert-verify pages honestly offline-marked, linked to
+  /gspc-verify. RealWorldMap error CTA → /globe. Duplicate repos
+  csoai-platform + csoai-dashboard-master registered ARCHIVE (asset-mangling
+  hazard). Remaining: RealWorldMap maps key (Nick), P2b rename (Nick).
 
 ## Rules for every future agent
 
