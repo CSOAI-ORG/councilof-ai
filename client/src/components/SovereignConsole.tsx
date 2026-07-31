@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { Scale, ShieldAlert, FileCheck, KeyRound, Send, Sparkles, ArrowRight } from "lucide-react";
+import AISystemNotice from "./AISystemNotice";
 
 /**
  * SovereignConsole — the AI-OS surface that replaces the countdown banner in the hero.
@@ -144,6 +145,10 @@ export function SovereignConsole() {
   };
 
   return (
+    <div>
+      {/* Article 50 posture, stated before the first interaction: this console is
+          deterministic rule-based, not an AI system — and we say so. */}
+      <AISystemNotice route="/" />
     <div className="rounded-2xl border-2 border-emerald-200 bg-white/95 shadow-lg backdrop-blur overflow-hidden">
       <div className="flex items-center justify-between gap-3 border-b border-emerald-100 bg-emerald-50/60 px-4 py-2.5">
         <span className="flex items-center gap-2 text-sm font-bold text-emerald-900">
@@ -207,6 +212,7 @@ export function SovereignConsole() {
           <input value={q} onChange={(e) => setQ(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); run(); } }}
             placeholder="Describe your AI system…"
+            aria-label="Describe your AI system for a deterministic provision check"
             className="flex-1 rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500" />
           <button onClick={() => run()} disabled={!q.trim()} aria-label="Run the instrument"
             className="rounded-xl bg-emerald-600 px-3.5 py-2 text-white transition hover:bg-emerald-700 disabled:opacity-40">
@@ -222,6 +228,7 @@ export function SovereignConsole() {
           <Link href="/provenance-finding" className="text-emerald-700 hover:underline">0 of 20 assets survived — the finding</Link>
         </div>
       </div>
+    </div>
     </div>
   );
 }

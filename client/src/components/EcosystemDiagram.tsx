@@ -289,7 +289,7 @@ const ecosystemNodes: EcosystemNode[] = [
     description: "Regulation, oversight",
     category: "stakeholder",
     icon: Landmark,
-    link: "/regulator-dashboard",
+    link: "/regulator",
     connections: ["byzantine"],
   },
   {

@@ -4,7 +4,7 @@
  */
 
 import { Link } from 'wouter';
-import { Github, Twitter, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
+import { Github, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { Button } from '@/components/ui/button';
 import { BuiltOnFooter } from "@/components/BuiltOnFooter";
@@ -79,8 +79,7 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/csoai' },
-    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/csoai' },
+    { name: 'GitHub', icon: Github, href: 'https://github.com/CSOAI-ORG' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
   ];

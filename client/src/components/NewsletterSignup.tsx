@@ -70,6 +70,7 @@ export default function NewsletterSignup() {
           <Input
             type="email"
             placeholder="Enter your email address"
+            aria-label="Email address for the AI safety newsletter"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="pl-10 h-12 bg-white border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"

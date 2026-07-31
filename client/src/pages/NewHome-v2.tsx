@@ -298,7 +298,7 @@ export default function NewHomeV2() {
             <Link href="/benchmarks" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">Measured results</Link>
             <Link href="/globe" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">The globe</Link>
             <Link href="/refutation-ledger" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">What refuted us</Link>
-            <Link href="/verify" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">Verify a report</Link>
+            <Link href="/verify-certificate" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">Verify a report</Link>
           </motion.div>
           {/* Main headline */}
           <motion.h1

@@ -204,7 +204,7 @@ export default function TrustCenter() {
       id: "compliance-list",
       title: "What compliance certifications do you have?",
       content:
-        "CSOAI maintains ISO 27001 (Information Security), ISO 42001 (AI Management System), SOC 2 Type II (Security, Availability, Confidentiality), and is fully GDPR compliant. We also comply with CCPA, HIPAA (for health data), and industry-specific regulations. Certification details and audit reports are available upon request under NDA.",
+        "ISO 27001 (Information Security), ISO 42001 (AI Management System) and SOC 2 Type II are on our certification roadmap — marked 'In Progress' above because they are genuinely in progress, not attained. We do not claim certifications we have not been awarded. Our GDPR posture is described in the Data Processing Agreement. As a measurement body, we hold ourselves to the same rule we score others by: a claim you cannot show the artifact for is not a claim you ship.",
       icon: <Award className="h-5 w-5" />,
     },
     {
@@ -246,7 +246,7 @@ export default function TrustCenter() {
       id: "uptime",
       title: "What is your uptime guarantee?",
       content:
-        "We maintain a 99.99% uptime SLA (52 minutes of acceptable downtime per year). Historical uptime for the past 12 months is 99.97%. We use multi-region deployment, automatic failover, and load balancing to ensure service availability. Service status and incident history are publicly visible at status.csoai.ai.",
+        "Our service-level target is 99.9% availability, measured from the public status page — the same page that reports outages when they happen. Live component status is publicly visible at csoai.org/status. We do not quote historical uptime percentages we cannot show the log for.",
       icon: <Activity className="h-5 w-5" />,
     },
   ];
