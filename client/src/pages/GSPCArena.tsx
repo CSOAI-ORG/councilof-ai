@@ -21,11 +21,18 @@ import { JSpacePanel } from "@/components/gspc/JSpacePanel";
  * No composite scores — just measured cells side by side.
  */
 
-function MeasuredBadge() {
-  return (
+function MeasuredBadge({ traceTo }: { traceTo?: string }) {
+  const badge = (
     <span className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold tracking-wide text-emerald-200">
       [MEASURED]
     </span>
+  );
+  // Every measured badge traces to its signed record — a reader never has to ask us (P5).
+  if (!traceTo) return badge;
+  return (
+    <Link href={`/live-ledger?record=${encodeURIComponent(traceTo)}`} title={`Trace to signed record ${traceTo}`}>
+      {badge}
+    </Link>
   );
 }
 
@@ -250,7 +257,7 @@ export default function GSPCArena() {
                       predicate: {match.predicate} · pointer: {match.pointer}
                     </span>
                     <span className="flex items-center gap-2">
-                      <MeasuredBadge />
+                      <MeasuredBadge traceTo={match.id} />
                       <span className="font-mono text-emerald-100/50">n={match.n}</span>
                       {match.n < 20 && <LowerBoundBadge />}
                     </span>

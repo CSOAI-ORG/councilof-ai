@@ -33,6 +33,15 @@ export default function LiveLedger() {
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Deep-link target from ?record=<id> (e.g. linked from arena measured badges).
+  const [wanted, setWanted] = useState<string | null>(null);
+  const [highlight, setHighlight] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("record");
+    if (id) setWanted(id);
+  }, []);
 
   useEffect(() => {
     Promise.all([
@@ -46,6 +55,22 @@ export default function LiveLedger() {
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (!wanted || loading || error) return;
+    if (records.some((r) => r.id === wanted)) {
+      setHighlight(wanted);
+      setNotFound(false);
+      // Wait a tick for the article to render before scrolling.
+      requestAnimationFrame(() => {
+        document
+          .getElementById(`rec-${wanted}`)
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    } else {
+      setNotFound(true);
+    }
+  }, [wanted, loading, error, records]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-200 py-16">
@@ -98,11 +123,28 @@ export default function LiveLedger() {
           </div>
         )}
 
+        {notFound && wanted && (
+          <div className="mt-8 rounded border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-300">
+            Record <code>{wanted}</code> is not in the signed, queryable subset
+            served by this Worker. The full ledger story, including records not
+            yet mirrored to D1, is on{" "}
+            <Link href="/refutation-ledger" className="underline">
+              /refutation-ledger
+            </Link>
+            .
+          </div>
+        )}
+
         <div className="mt-8 space-y-3">
           {records.map((r) => (
             <article
               key={r.id}
-              className="rounded-lg border border-slate-800 bg-slate-900/50 p-5"
+              id={`rec-${r.id}`}
+              className={`rounded-lg border bg-slate-900/50 p-5 ${
+                highlight === r.id
+                  ? "border-emerald-400 ring-2 ring-emerald-400/60"
+                  : "border-slate-800"
+              }`}
             >
               <header className="flex items-center justify-between">
                 <code className="text-xs text-emerald-400">{r.id}</code>
