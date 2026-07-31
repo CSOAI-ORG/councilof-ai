@@ -13,7 +13,6 @@ import { PersonaToggle, usePersona } from "@/components/PersonaToggle";
 
 const TOTAL_CELLS = 1312;
 const FIELD_EVIDENCED_CELLS = 11;
-const GSPC_MEASURED_CELLS = 3;
 const FIELD_BLIND_CELLS = TOTAL_CELLS - FIELD_EVIDENCED_CELLS;
 const BLIND_PERCENTAGE = ((FIELD_BLIND_CELLS / TOTAL_CELLS) * 100).toFixed(1);
 
@@ -75,6 +74,9 @@ const FIELD_EVIDENCED = [
     gspc_measured: false,
   },
 ];
+
+// Derived, never hand-typed: the counter must equal the table it summarizes (audit 2026-07-31).
+const GSPC_MEASURED_CELLS = FIELD_EVIDENCED.filter((c) => c.gspc_measured).length;
 
 export default function GSPCGapMap() {
   const [selectedAxis, setSelectedAxis] = useState<string | null>(null);
