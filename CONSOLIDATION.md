@@ -28,11 +28,16 @@ is retired or redirected. Agents do NOT start new websites.
   (`components/gspc/`), rethemed dark-emerald; GSPC trio bugs fixed
   (gold token real, anchors live-dated, shared `data/anchors.ts`); committed
   `a51dc65`. EU-CELLAR shows degraded — honest, matches watcher data.
-- **P2 — gspc.csoai.org cutover:** once Nick confirms, 308 gspc.csoai.org →
-  master's GSPC wing; retire donor-2's Pages project. ALSO: naming collision
-  cleanup — Pages project `csoai-org` (holds apex domains) vs OpenNext worker
-  `csoai-org` (csoai-org-v2). One wrong deploy there already caused the
-  2026-07-31 DEFONEOS apex regression (reversed same day).
+- **P1.2 — donor fully drained (SHIPPED 2026-07-31):** `/gspc-verify` (client-
+  side WebCrypto chain recompute + tamper demo) and `/methodology` live in
+  master. Donor's shallow-canonicalJSON signing bug fixed in the port.
+- **P2 — gspc.csoai.org cutover (DONE 2026-07-31):** Pages project `csoai-gspc`
+  now serves a redirects-only site — every donor route 308s to its master
+  equivalent (coai-dashboard `csoai-gspc-redirect/_redirects`, commit a9f3ad9c).
+  coai-dashboard/csoai-web is ARCHIVE. REMAINING: naming collision — Pages
+  project `csoai-org` (holds apex domains) vs OpenNext worker `csoai-org`
+  (csoai-org-v2). One wrong deploy there already caused the 2026-07-31
+  DEFONEOS apex regression (reversed same day). Dashboard surgery, Nick-gated.
 - **P3 — MCP + Layer 0 bench (STARTED):** fleet counts reconciled on-page
   (216 deployed per 14 Jun manifest vs 293 catalogued in registry — both
   stated with meanings, commit `3f98e85`). MCPRegistry title bug fixed.
