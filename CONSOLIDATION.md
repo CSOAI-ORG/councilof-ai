@@ -23,16 +23,21 @@ is retired or redirected. Agents do NOT start new websites.
 - **P0 — Register + recon (DONE 2026-07-31):** master mapped (~280 routes, 8
   shadow collisions, brand split-brain blue-token vs emerald, GSPC trio thin +
   broken). Donors inventoried.
-- **P1 — GSPC wing (IN FLIGHT):** port donor-2's globe + arena link layer +
-  live anchor nodes into master `/gspc-arena`; fix GSPC trio bugs
-  (`border-gold` undefined, demo-date, hardcoded statuses); shared
-  `data/anchors.ts`; retheme parchment→dark-emerald; copy polish.
-- **P2 — gspc.csoai.org cutover:** once P1 ships, point the custom domain at
-  `csoai-site` (or redirect), retire donor-2's Pages project. coai-dashboard
-  csoai-web becomes archive.
-- **P3 — MCP + Layer 0 bench:** reconcile MCP fleet numbers (271 vs 216 vs 202
-  — pick ONE measured count); merge donor-3's MCP catalogue + Layer 0 bench
-  content into `/mcp-fleet` + new `/layer0`; fix MCPRegistry title bug.
+- **P1 — GSPC wing (SHIPPED 2026-07-31, live on www.csoai.org/gspc-arena):**
+  donor-2's globe + arena link layer + live anchor nodes ported into master
+  (`components/gspc/`), rethemed dark-emerald; GSPC trio bugs fixed
+  (gold token real, anchors live-dated, shared `data/anchors.ts`); committed
+  `a51dc65`. EU-CELLAR shows degraded — honest, matches watcher data.
+- **P2 — gspc.csoai.org cutover:** once Nick confirms, 308 gspc.csoai.org →
+  master's GSPC wing; retire donor-2's Pages project. ALSO: naming collision
+  cleanup — Pages project `csoai-org` (holds apex domains) vs OpenNext worker
+  `csoai-org` (csoai-org-v2). One wrong deploy there already caused the
+  2026-07-31 DEFONEOS apex regression (reversed same day).
+- **P3 — MCP + Layer 0 bench (STARTED):** fleet counts reconciled on-page
+  (216 deployed per 14 Jun manifest vs 293 catalogued in registry — both
+  stated with meanings, commit `3f98e85`). MCPRegistry title bug fixed.
+  Remaining: donor-3 MCP catalogue + Layer 0 bench merge into `/mcp-fleet`
+  + new `/layer0`.
 - **P4 — Copy polish sweep:** end-user wording pass over master routes
   (mystical headings, backend jargon in primary text, placeholder phone
   numbers, demo dates). Honesty register preserved: no "certified",
