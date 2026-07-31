@@ -36,10 +36,14 @@ is retired or redirected. Agents do NOT start new websites.
 - **P2 — gspc.csoai.org cutover (DONE 2026-07-31):** Pages project `csoai-gspc`
   now serves a redirects-only site — every donor route 308s to its master
   equivalent (coai-dashboard `csoai-gspc-redirect/_redirects`, commit a9f3ad9c).
-  coai-dashboard/csoai-web is ARCHIVE. REMAINING: naming collision — Pages
-  project `csoai-org` (holds apex domains) vs OpenNext worker `csoai-org`
-  (csoai-org-v2). One wrong deploy there already caused the 2026-07-31
-  DEFONEOS apex regression (reversed same day). Dashboard surgery, Nick-gated.
+  coai-dashboard/csoai-web is ARCHIVE. DEPLOY TUG-OF-WAR: a sibling lane
+  redeployed the full donor site over the redirects ~15:30 2026-07-31
+  (re-cut at 17:45). Until deploy credentials are consolidated (P2b),
+  the redirect may need re-cutting. The durable fix is P2b, not repetition.
+  REMAINING: naming collision — Pages project `csoai-org` (holds apex
+  domains) vs OpenNext worker `csoai-org` (csoai-org-v2). One wrong deploy
+  there already caused the 2026-07-31 DEFONEOS apex regression (reversed
+  same day). Dashboard surgery, Nick-gated.
 - **P3 — MCP + Layer 0 bench (SHIPPED 2026-07-31, commit `fefb1d0`):**
   `/layer0` live — the bench (GovComp-Bench 1.000/32, frontier 0.489, 3 real
   primaries, refusal 0.0% FP, SOVBENCH 15/15, do-NOT-claim) + the audited
