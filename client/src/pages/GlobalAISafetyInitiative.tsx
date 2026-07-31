@@ -601,7 +601,7 @@ export default function GlobalAISafetyInitiative() {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                +44 (0) 20 XXXX XXXX
+                Via email — we reply within one working day
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />

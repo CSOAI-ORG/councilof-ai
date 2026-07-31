@@ -4,9 +4,11 @@ const API: string = ((import.meta as any).env && (import.meta as any).env.VITE_A
 
 // MCP Fleet — the real CSOAI/MEOK governance MCP fleet, sourced from the deployment
 // manifest (MCP_DEPLOYMENT_MANIFEST.json, generated 2026-06-14). 216 servers across
-// 10 hives. Aggregate figures are exact; a representative slice of servers is listed
-// (full fleet streams from /api/mcp once the gateway is on the VM). Each server carries
-// a Layer 0 conformance badge derived from manifest flags.
+// 10 hives DEPLOYED; the public registry (data/mcpRegistry.json) catalogues 293
+// including planned entries. Both counts are stated on the page with their meanings.
+// A representative slice of servers is listed (full fleet streams from /api/mcp once
+// the gateway is on the VM). Each server carries a Layer 0 conformance badge derived
+// from manifest flags.
 
 const TOTAL = 216, READY = 208, AUTH = 202;
 
@@ -87,7 +89,12 @@ export default function McpFleet() {
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">{TOTAL} governed MCP servers</h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">
             The CSOAI / MEOK Model Context Protocol fleet — every server wrapped by Layer 0 so each tool call is
-            identity‑checked, policy‑gated and Ed25519‑attestable. Sourced from the live deployment manifest.
+            identity‑checked, policy‑gated and Ed25519‑attestable.
+          </p>
+          <p className="mt-3 text-sm text-emerald-200/70 max-w-2xl">
+            {TOTAL} servers deployed across {HIVES.length} hives per the 14 June 2026 deployment manifest ·
+            293 catalogued in the public registry (which includes planned entries). Two counts, two meanings —
+            the registry says which is which.
           </p>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl">
             <Stat v={String(TOTAL)} l="MCP servers" />

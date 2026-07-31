@@ -24,7 +24,7 @@ const CATEGORIES = (registry.categories as { name: string; count: number }[]) ||
 const FRAMEWORKS = (registry.frameworkCounts as { name: string; count: number }[]) || [];
 
 export default function MCPRegistry() {
-  useEffect(() => { document.title = "MCP Fleet — {registry.total}+ AI Governance Tools | CSOAI"; }, []);
+  useEffect(() => { document.title = `MCP Fleet — ${registry.total}+ AI Governance Tools | CSOAI`; }, []);
   const searchString = useSearch();
   const params = new URLSearchParams(searchString);
   const [query, setQuery] = useState("");
