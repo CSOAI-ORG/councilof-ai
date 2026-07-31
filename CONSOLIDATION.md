@@ -44,8 +44,14 @@ is retired or redirected. Agents do NOT start new websites.
   node registry (26 nodes, counts computed from the file at render — its
   stale "audited 15" header corrected) + MCP L0-1/2/3 conformance strip.
   Fleet counts reconciled on-page (216 deployed vs 293 catalogued, `3f98e85`).
-  MCPRegistry title bug fixed. Remaining: donor-3's MCP catalogue facets
-  (mcp-infrastructure/distribution overlap) — fold into /mcp or retire.
+  MCPRegistry title bug fixed. Donor-3 MCP catalogue verdict: NO MERGE —
+  ARCHIVE. Its numbers are internally inconsistent ("271 published" vs "202
+  nodes" vs tier counts 279+35+… exceeding its own total) — fails the
+  honesty bar. Master's registry (293 servers, 9 categories, 8 frameworks,
+  consistent) is strictly superior; bench content already harvested into
+  /layer0; Article 50 suite + assess/checkout already exist in master.
+  csoai-org-v2 = ARCHIVE; its OpenNext worker serves only
+  csoai-org.workers.dev — harmless until P2b rename.
 - **P4 — Copy polish sweep (SHIPPED 2026-07-31, commit `24ed370`):**
   "God's Eye" → cyber self-scan (10 surfaces + 2 data files); "living egg" →
   Your Sovereign twin; "living globe" → real-world 3D map; SOV3-led titles

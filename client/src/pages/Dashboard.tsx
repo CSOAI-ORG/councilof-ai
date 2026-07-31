@@ -64,9 +64,11 @@ export default function Dashboard() {
   const metrics = [
     {
       title: "Compliance Score",
-      value: dashboardStats?.complianceScore ? `${dashboardStats.complianceScore}%` : "78%",
-      change: "+5% this week",
-      changeType: "positive",
+      // Honesty: no fabricated fallback. No real stats → an honest empty state,
+      // never an invented percentage with an invented trend.
+      value: dashboardStats?.complianceScore != null ? `${dashboardStats.complianceScore}%` : "—",
+      change: dashboardStats?.complianceScore != null ? "from your measured systems" : "no systems measured yet",
+      changeType: dashboardStats?.complianceScore != null ? "positive" : "neutral",
       icon: Shield,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
@@ -383,31 +385,48 @@ export default function Dashboard() {
           </Card>
         </motion.div>
 
-        {/* Compliance Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: 0.25 }}
-          >
-            <ComplianceTrendChart
-              title="Compliance Score Trend"
-              description="Track your compliance progress over the past 12 months"
-              height={300}
-            />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: 0.3 }}
-          >
-            <FrameworkComparisonChart
-              title="Framework Comparison"
-              description="Compare your compliance across regulatory frameworks"
-              height={300}
-            />
-          </motion.div>
-        </div>
+        {/* Compliance Charts — rendered only with real trend data.
+            The chart components carry mock DEFAULT_DATA for Storybook/demo;
+            shipping that to visitors would be stats theatre, so the empty
+            state is explicit when no measured trend exists. */}
+        {dashboardStats?.trend?.length ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.25 }}
+            >
+              <ComplianceTrendChart
+                title="Compliance Score Trend"
+                description="Track your compliance progress over the past 12 months"
+                height={300}
+                data={dashboardStats.trend}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.3 }}
+            >
+              <FrameworkComparisonChart
+                title="Framework Comparison"
+                description="Compare your compliance across regulatory frameworks"
+                height={300}
+              />
+            </motion.div>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
+            <p className="text-gray-900 font-semibold">No trend data yet</p>
+            <p className="mt-1 text-sm text-gray-500">
+              Charts appear once your AI systems have real measurements behind them —
+              we don&apos;t plot example data as if it were yours.
+            </p>
+            <a href="/ai-systems" className="mt-4 inline-block text-sm font-medium text-emerald-600 hover:text-emerald-700">
+              Register your first AI system →
+            </a>
+          </div>
+        )}
 
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
