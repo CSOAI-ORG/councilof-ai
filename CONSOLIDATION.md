@@ -38,11 +38,14 @@ is retired or redirected. Agents do NOT start new websites.
   project `csoai-org` (holds apex domains) vs OpenNext worker `csoai-org`
   (csoai-org-v2). One wrong deploy there already caused the 2026-07-31
   DEFONEOS apex regression (reversed same day). Dashboard surgery, Nick-gated.
-- **P3 — MCP + Layer 0 bench (STARTED):** fleet counts reconciled on-page
-  (216 deployed per 14 Jun manifest vs 293 catalogued in registry — both
-  stated with meanings, commit `3f98e85`). MCPRegistry title bug fixed.
-  Remaining: donor-3 MCP catalogue + Layer 0 bench merge into `/mcp-fleet`
-  + new `/layer0`.
+- **P3 — MCP + Layer 0 bench (SHIPPED 2026-07-31, commit `fefb1d0`):**
+  `/layer0` live — the bench (GovComp-Bench 1.000/32, frontier 0.489, 3 real
+  primaries, refusal 0.0% FP, SOVBENCH 15/15, do-NOT-claim) + the audited
+  node registry (26 nodes, counts computed from the file at render — its
+  stale "audited 15" header corrected) + MCP L0-1/2/3 conformance strip.
+  Fleet counts reconciled on-page (216 deployed vs 293 catalogued, `3f98e85`).
+  MCPRegistry title bug fixed. Remaining: donor-3's MCP catalogue facets
+  (mcp-infrastructure/distribution overlap) — fold into /mcp or retire.
 - **P4 — Copy polish sweep:** end-user wording pass over master routes
   (mystical headings, backend jargon in primary text, placeholder phone
   numbers, demo dates). Honesty register preserved: no "certified",
