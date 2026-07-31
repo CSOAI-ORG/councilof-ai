@@ -81,3 +81,36 @@ is retired or redirected. Agents do NOT start new websites.
 2. New data → `client/src/data/` single source; never a second anchors registry.
 3. Numbers on a page must trace to a measurement or be labelled aspirational.
 4. Before building anything, check this register. Update it when you merge.
+
+## DEEP RESEARCH — improvement backlog (2026-07-31, two-agent audit)
+
+### Shipped in the same sweep (commit `f31c189`)
+Legacy HTML shadows quarantined · dead status/trust links · footer socials ·
+soft-404 nav links · ISO/SOC2/uptime claims made honest · input aria-labels ·
+Art 50 notice wired into the home console.
+
+### OPEN — ranked by impact (evidence in session logs)
+1. **Art 50 self-conformance (due 2 Aug — TOMORROW at compile time):**
+   publish a signed self-conformance record (the site selling Art 50 tooling
+   must itself be demonstrably compliant); complete /article-50 explainer to
+   full-checklist depth (50(3), editorial exception, accessibility rules);
+   ship C2PA marking + free detection on our own outputs as the reference
+   implementation. Dec 2 grace period is a marketing weapon, not a hiding place.
+2. **Trust pack:** subprocessor list (named), DPA download, pen-test letter,
+   security questionnaire, real /status (uptime history + incident log).
+3. **Citable evidence:** ProvBench arXiv submission (script exists, never
+   ran) + Hugging Face dataset + DOI. Currently ZERO public findability
+   (HF search `csoai` = 0; arXiv = 0) — T-14 C2PA notice owed first.
+4. **SEO:** regenerate sitemap.xml from App.tsx (flagship routes missing;
+   stale lastmod); fix robots.txt self-contradiction (Cloudflare block vs
+   hand-allow of AI crawlers); per-route titles/meta (9 of 415 covered);
+   prerender top ~20 marketing routes; drop risky aggregateRating JSON-LD;
+   immutable cache headers on hashed assets; drop data-sectors preload (~1MB).
+5. **Conversion:** human demo path (calendar booking — table stakes vs all
+   four competitors); ONE named, attributable customer proof point (all case
+   studies are currently labelled illustrative composites); verify Stripe
+   checkout end-to-end (keys reportedly unflipped).
+6. **Category validation:** Gartner AI Governance Market Guide + G2 presence
+   (all four competitors have analyst coverage; CSOAI has none).
+7. **Real 404 status** for unknown routes (SPA returns 200 everywhere —
+   infinite soft-404 duplicates for crawlers).
