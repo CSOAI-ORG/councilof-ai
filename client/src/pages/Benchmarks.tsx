@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { SovCard } from "@/components/SovCard";
 import { Card } from "@/components/ui/card";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, AlertTriangle, ExternalLink, Database, Scale } from "lucide-react";
 
 /**
- * Benchmarks — the whole estate on one page. Four axes, one shared foundation.
+ * Benchmarks — the whole estate on one page. Six surfaces, one shared foundation.
  *
  * Every number here is read from a published artefact in the govbench dataset on HuggingFace.
  * Nothing on this page may be typed in by hand: that is exactly how a "+34.84" survived on two
@@ -98,6 +98,23 @@ const AXES: {
       "the signature and the chain cannot migrate link by link. Only our C2PA manifest passes " +
       "algorithm agility. NIST IR 8547 disallows EdDSA after 2035.",
   },
+  {
+    key: "mcp", name: "LAYER 0 — MCP CONFORMANCE", question: "Does the server honour its own declared schema?", state: "built",
+    headline: "3 predicates, signed manifests",
+    detail:
+      "Layer 0 is narrower than 'audit MCP servers': an MCP server cannot be AI-Act compliant " +
+      "(the Act binds the provider, not a folder of code), but three obligations survive and " +
+      "are mechanically checkable — SCHEMA_VALID (valid initialize handshake), TOOL_DECLARED " +
+      "(JSON-Schema-valid tool I/O, no any), ERROR_BOUNDED (spec-compliant errors, never a " +
+      "stack trace). Unreachable is UNMEASURED, never 0/0. First subjects: our own 408-server fleet.",
+    artefact: "results/mcpbench.json",
+    uncomfortable:
+      "The first run measured 3 servers and returned 9 of 9 UNMEASURED: two local services " +
+      "were not MCP-HTTP at all, and our own harness missed the Accept header the " +
+      "streamable-http transport requires — a known-good server returned a redirect until " +
+      "the header was added by hand. The harness bug is fixed in the next release; the fleet " +
+      "itself is stdio-transport and needs a shim before it can be scored at all.",
+  },
 ];
 
 const STATE_STYLE: Record<State, { label: string; cls: string }> = {
@@ -136,18 +153,19 @@ type FlywheelRun = {
 const FLYWHEEL_BOARD_URL = "/flywheel/board.json";
 
 export default function Benchmarks() {
-  useEffect(() => { document.title = "The four axes — an AI governance benchmark estate that publishes its own failures | CSOAI"; }, []);
+  useEffect(() => { document.title = "The benchmark estate — AI governance measurement that publishes its own failures | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950 py-20">
         <div className="container max-w-6xl">
           <Badge className="mb-4 bg-emerald-600 hover:bg-emerald-600">Open estate · Apache-2.0</Badge>
           <h1 className="text-4xl sm:text-6xl font-black tracking-tighter mb-6 text-gray-900 dark:text-white">
-            Five surfaces. One foundation.
+            Six surfaces. One foundation.
           </h1>
           <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mb-4">
             Does an AI system comply with statute, refuse what statute forbids, mark what it
-            produces, carry what the law still requires of a public release — and will the
+            produces, carry what the law still requires of a public release, honour the
+            schemas its tools declare — and will the
             evidence still verify after the signature under it is withdrawn?
           </p>
           <p className="text-base text-gray-600 dark:text-gray-400 max-w-3xl mb-8">
@@ -351,7 +369,85 @@ export default function Benchmarks() {
             </a>
           </div>
         </section>
+
+        <section className="container max-w-6xl py-16 space-y-6">
+          <Badge className="bg-emerald-600 hover:bg-emerald-600">Daily · anchored · mechanical</Badge>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white">
+            Tokens per correct verdict
+          </h2>
+          <p className="text-gray-700 dark:text-slate-300 max-w-3xl">
+            The production number nobody else publishes. Every token does triple duty:{" "}
+            <strong>benchmark</strong> (token efficiency on governance work),{" "}
+            <strong>evidence</strong> (daily accumulated compliance behaviour),{" "}
+            <strong>fuel</strong> (training pairs + KB rows, practice split only).
+            The flywheel never trains on what it scores — the held-out split is
+            enforced by a salted content hash and export_fuel() raises if a held-out
+            item ever reaches it. Without this, the flywheel eats itself — that's the
+            Leaderboard Illusion, and our own defbench already proved the local version.
+          </p>
+          <FlywheelBoard url={FLYWHEEL_BOARD_URL} />
+        </section>
       </div>
     </div>
+  );
+}
+
+function FlywheelBoard({ url }: { url: string }) {
+  const [runs, setRuns] = useState<FlywheelRun[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState<string | null>(null);
+  useEffect(() => {
+    fetch(url)
+      .then((r) => r.json())
+      .then((d) => setRuns(d.runs || []))
+      .catch((e) => setErr(e.message))
+      .finally(() => setLoading(false));
+  }, [url]);
+  if (loading) return <p className="text-gray-500">Loading flywheel results…</p>;
+  if (err) return <p className="text-rose-500">Flywheel board unavailable: {err}</p>;
+  if (runs.length === 0) {
+    return (
+      <p className="text-gray-500">
+        No flywheel runs published yet. The cron runs daily at 06:00 UTC — check back.
+      </p>
+    );
+  }
+  return (
+    <Card className="p-6 overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-left text-gray-500 border-b">
+            <th className="py-2 pr-4">model</th>
+            <th className="py-2 pr-4">practice acc</th>
+            <th className="py-2 pr-4">held-out acc</th>
+            <th className="py-2 pr-4">overfit gap</th>
+            <th className="py-2 pr-4">guard</th>
+            <th className="py-2 pr-4">exported</th>
+            <th className="py-2 pr-4">when</th>
+          </tr>
+        </thead>
+        <tbody>
+          {runs.map((r) => (
+            <tr key={r.run_id} className="border-b border-gray-100 dark:border-slate-800">
+              <td className="py-2 pr-4 font-mono">{r.model}</td>
+              <td className="py-2 pr-4 font-mono">
+                {r.practice.acc != null ? r.practice.acc.toFixed(3) : "—"} (n={r.practice.n})
+              </td>
+              <td className="py-2 pr-4 font-mono">
+                {r.held_out.acc != null ? r.held_out.acc.toFixed(3) : "—"} (n={r.held_out.n})
+              </td>
+              <td className={`py-2 pr-4 font-mono ${r.overfit_gap > 0.15 || r.overfit_gap < -0.15 ? "text-rose-500" : "text-emerald-600"}`}>
+                {r.overfit_gap > 0 ? "+" : ""}{r.overfit_gap.toFixed(3)}
+              </td>
+              <td className="py-2 pr-4 text-xs">{r.alarm}</td>
+              <td className="py-2 pr-4 text-xs">
+                {r.exported_pairs}p / {r.exported_kb_rows}kb
+              </td>
+              <td className="py-2 pr-4 text-xs text-gray-500">{r.ts}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </Card>
   );
 }
