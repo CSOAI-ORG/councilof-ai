@@ -19,11 +19,26 @@ const SYS =
   "You are the CSOAI Sovereign — the AI-governance and cybersecurity assistant inside the CSOAI Sovereign OS. " +
   "Answer strictly in that role: specific and practical, about AI governance, regulations (EU AI Act, NIST, ISO 42001, NIS2, DORA, GDPR), cybersecurity, or the user's system/scenario. " +
   "Statutory anchors you must never blur: Article 5 of the EU AI Act is the PROHIBITED-practices list (social scoring, manipulation, most real-time remote biometric ID in public); Annex III is the HIGH-RISK list (employment/CV screening, education, essential services, law enforcement, migration, justice) — they are different lists with different duties, and CV screening is Annex III high-risk, not prohibited. Article 50 is transparency/marketing-disclosure; Article 53 is GPAI documentation. " +
+  "Penalties are Article 99: prohibited-practice breaches up to EUR 35M or 7% of turnover; breaches of high-risk duties (like a missing Article 9 risk-management system) up to EUR 15M or 3% — always the higher of the two figures, and never invent other figures such as 30M or 6%. Key dates: Article 5 bans apply since 2 Feb 2025, GPAI duties since 2 Aug 2025, Annex III high-risk duties from 2 Aug 2026. Article 27 requires public bodies and essential-services deployers (e.g. hospitals) to run a fundamental-rights impact assessment before deploying high-risk AI. " +
+  "When you give figures, cite the article and the duty, not adjectives. If you are not sure of a specific threshold or date, say so and point to the duty that applies instead of inventing a number. " +
   "Do NOT role-play as a personal 'companion', do NOT describe yourself in poetic/emotional terms, do NOT mention other companies' products or personas, and do NOT refuse ordinary informational questions. " +
   "If a question is out of scope, briefly steer it back to AI governance. Keep it concise.";
 
 // Persona-bleed / refusal / care-model patterns we must never surface.
-const BAD = /(i['’]?m sorry[, ]|can['’]?t help with that|i cannot help|i can['’]?t assist|as an ai language model|remembering companion|walks beside you|companion who|gentle prose|quiet,? remembering|i['’]?m a .*companion|credo ai|i tend to focus|travell?er|fellow travell?er|on your journey|here (for|with) you|hold space|dear friend|my friend|kindred|wander)/i;
+const BAD = /(i['’]?m sorry[, ]|can['’]?t help with that|i cannot help|i can['’]?t assist|as an ai language model|remembering companion|walks beside you|companion who|gentle prose|quiet,? remembering|i['’]?m a .*companion|credo ai|i tend to focus|travell?er|fellow travell?er|on your journey|here (for|with) you|hold space|dear friend|my friend|kindred|wander|i['’]?m here to (help|support) you|let me know the (particular|specific) (scenario|regulation))/i;
+
+// Deterministic statutory guard (QA 2026-07-31): the brain intermittently
+// hallucinates GDPR-confused penalty figures (EUR 30M/6%, 20M/4%) when asked
+// about EU AI Act fines — even with corrective anchors in SYS. A wrong penalty
+// figure is worse than no answer, so when a response talks about AI-Act fines
+// AND cites a known-wrong figure, we replace it with the anchored truth.
+const PENALTY_CTX = /(fine|penalt|turnover|sanction)/i;
+const WRONG_FIG = /(30\s*(million|m\b)|6\s?%|20\s*(million|m\b)|4\s?%)/i;
+const PENALTY_TRUTH =
+  "Under Article 99 of the EU AI Act the ceilings are: prohibited-practice breaches (Article 5) up to EUR 35 million or 7% of global annual turnover, whichever is higher; breaches of high-risk duties — including a missing Article 9 risk-management system for an Annex III use like CV screening — up to EUR 15 million or 3%, whichever is higher; supplying misleading information to authorities up to EUR 7.5 million or 1.5%. The exact figure depends on the authority's assessment, but those are the statutory ceilings.";
+function isWrongPenalty(t: string): boolean {
+  return PENALTY_CTX.test(t) && WRONG_FIG.test(t) && !/(35\s*(million|m\b)|7\s?%|15\s*(million|m\b)|3\s?%)/.test(t);
+}
 
 export type AskResult = { ok: boolean; text: string };
 
@@ -38,7 +53,10 @@ export async function askSovereign(userText: string, opts?: { fallback?: string;
     if (r.ok) {
       const d = await r.json();
       const t = String((d && d.response) || "").trim();
-      if (t && d.model !== "idle" && !BAD.test(t) && t.length > 12) return { ok: true, text: t };
+      if (t && d.model !== "idle" && t.length > 12) {
+        if (isWrongPenalty(t)) return { ok: true, text: PENALTY_TRUTH };
+        if (!BAD.test(t)) return { ok: true, text: t };
+      }
     }
   } catch (e) {}
   return { ok: false, text: fallback };
