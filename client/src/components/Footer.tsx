@@ -8,6 +8,7 @@ import { Github, Twitter, Linkedin, Mail, Shield, ArrowRight } from 'lucide-reac
 import NewsletterSignup from './NewsletterSignup';
 import { Button } from '@/components/ui/button';
 import { BuiltOnFooter } from "@/components/BuiltOnFooter";
+import { AnchoredToPanel } from "@/components/AnchoredToPanel";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -126,11 +127,33 @@ export function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center space-x-3 mb-4 hover:opacity-80 transition-opacity">
-              <img
-                src="/csoai-icon.svg"
-                alt="CSOAI"
-                className="h-10 w-10"
-              />
+              {/* Inline shield — /csoai-icon.svg is not in public/, an <img> here 404s */}
+              <svg viewBox="0 0 100 100" className="h-10 w-10" aria-hidden="true">
+                <defs>
+                  <linearGradient id="footerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#10b981" />
+                    <stop offset="100%" stopColor="#047857" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M50 5 L90 20 L90 50 C90 75 50 95 50 95 C50 95 10 75 10 50 L10 20 Z"
+                  fill="url(#footerShieldGradient)"
+                />
+                <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
+                  <line x1="25" y1="30" x2="25" y2="70"/>
+                  <line x1="25" y1="40" x2="40" y2="40"/>
+                  <line x1="25" y1="55" x2="35" y2="55"/>
+                  <circle cx="25" cy="30" r="4" fill="#fff"/>
+                  <circle cx="40" cy="40" r="4" fill="#fff"/>
+                  <circle cx="35" cy="55" r="4" fill="#fff"/>
+                  <circle cx="25" cy="70" r="4" fill="#fff"/>
+                </g>
+                <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
+                  <path d="M55 35 Q70 30 72 45 Q82 45 78 58 Q85 65 70 72 Q65 80 55 72"/>
+                  <circle cx="62" cy="45" r="5" fill="#fff"/>
+                  <circle cx="72" cy="60" r="5" fill="#fff"/>
+                </g>
+              </svg>
               <span className="text-2xl font-bold">CSOAI</span>
             </Link>
             <p className="text-gray-600 text-sm mb-4">
@@ -205,38 +228,8 @@ export function Footer() {
 
         <BuiltOnFooter />
 
-        {/* Anchored To — live watcher timestamps */}
-        <div className="border-t border-gray-200 mt-8 pt-8">
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-3">
-            Anchored To
-          </h4>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-500">
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-              UK legislation.gov.uk · OGL v3.0
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-              EU AI Act · EUR-Lex CELLAR
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-              NIST IR 8547 · FIPS 204
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-              RFC 9964 (ML-DSA for COSE)
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-              C2PA Specification 2.4
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-              EU EUR-Lex CELLAR · last checked 2d ago
-            </span>
-          </div>
-        </div>
+        {/* Anchored To — live watcher timestamps pulled from D1 */}
+        <AnchoredToPanel />
 
         {/* What We Don't Claim */}
         <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">

@@ -38,6 +38,21 @@ const navigation = [
       { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
+  // The measurement wing — top-level because the refutation ledger is the moat: the only
+  // part of a benchmark a reader can use to calibrate trust in the rest of it. Promoting
+  // this from a submenu keeps the J-space chain discoverable to first-time visitors.
+  {
+    name: "Ledger",
+    href: "/refutation-ledger",
+    icon: BookOpen,
+    description: "The moat, visible",
+    submenu: [
+      { name: "The Refutation Ledger", href: "/refutation-ledger", description: "8 experiments that killed our own theses — published, with artefacts" },
+      { name: "Live Ledger (signed)", href: "/live-ledger", description: "Live D1 queryable decision_records — signed, with supersession trail" },
+      { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
+      { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
+    ],
+  },
   {
     name: 'Explore',
     href: '/os',
@@ -225,12 +240,13 @@ export function Header() {
                 </g>
               </svg>
             </div>
-            <span className="text-2xl font-bold text-emerald-700 tracking-tight">CSOAI</span>
+            <span className="text-xl 2xl:text-2xl font-bold text-emerald-700 tracking-tight whitespace-nowrap">CSOAI</span>
           </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center" ref={dropdownRef}>
-            <div className="flex items-center gap-2 xl:gap-3">
+          {/* Desktop Navigation — xl breakpoint: below 1280px the mega menu
+              cannot fit without mid-word wrapping, so the mobile menu takes over. */}
+          <div className="hidden xl:flex items-center" ref={dropdownRef}>
+            <div className="flex items-center gap-1 2xl:gap-3">
               {/* Home Link */}
               <a
                 href="/"
@@ -252,7 +268,7 @@ export function Header() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <button
-                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${
+                    className={`px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${
                       isActive(item.href) || activeDropdown === item.name
                         ? 'text-emerald-700 bg-emerald-50'
                         : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
@@ -322,7 +338,7 @@ export function Header() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden xl:flex items-center gap-2 2xl:gap-3">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
@@ -332,10 +348,10 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* CSOAI OS launcher */}
+            {/* CSOAI OS launcher — yields its space below 2xl so the nav never wraps */}
             <a
               href="/os"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
+              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
             >
               <span className="text-base leading-none">⊞</span> AI OS
             </a>
@@ -407,7 +423,7 @@ export function Header() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-2">
+          <div className="xl:hidden flex items-center gap-2">
             <button
               onClick={() => setSearchOpen(true)}
               className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
@@ -427,7 +443,7 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-100 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="xl:hidden py-4 border-t border-gray-100 max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="space-y-1">
               <a
                 href="/"
