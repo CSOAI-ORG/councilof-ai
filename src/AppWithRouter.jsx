@@ -24,6 +24,7 @@ import SoaiPdca from './pages/soai-pdca/SoaiPdca';
 import McpFleet from './pages/mcp/McpFleet';
 import Layer0 from './pages/layer0/Layer0';
 import Ledger from './pages/ledger/Ledger';
+import Mythology from './pages/mythology/Mythology';
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -56,6 +57,7 @@ const Navigation = () => {
           <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
           <Link to="/sovereign-town" onClick={() => setMobileMenuOpen(false)}>Sovereign Town</Link>
           <Link to="/ledger" onClick={() => setMobileMenuOpen(false)}>Ledger</Link>
+          <Link to="/mythology" onClick={() => setMobileMenuOpen(false)}>Mythology</Link>
           <a href="/#pricing" onClick={() => setMobileMenuOpen(false)}>Pricing</a>
           <Link to="/contact" className="btn primary btn-nav" onClick={() => setMobileMenuOpen(false)}>
             Get Started
@@ -159,6 +161,7 @@ const AppWithRouter = () => {
             <Route path="/legal/cookies" element={<Cookies />} />
             <Route path="/sovereign-town" element={<SovereignTown />} />
             <Route path="/ledger" element={<Ledger />} />
+            <Route path="/mythology" element={<Mythology />} />
           </Routes>
         </main>
 
