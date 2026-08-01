@@ -4,9 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * CSOAI Dashboard - Open WebUI Inspired Design System
- * Clean, minimal, chat-centric interface
- * Adapted from Open WebUI open-source project
+ * CSOAI Editorial Design System
+ * Warm white, single green accent, serif display, flat institutional
+ * Wave B visual pass — 2026-08-01
  */
 
 @theme inline {
@@ -64,6 +64,7 @@
   /* Font families */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-primary: "Archivo", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 
   /* GSPC gold accent (used by the GSPC measurement-instrument pages) */
   --color-gold: #f59e0b;
@@ -72,52 +73,51 @@
 :root {
   --radius: 0.75rem;
   
-  /* Light theme - CSOAI Professional Blue */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.15 0 0);
+  /* Light theme — CSOAI Editorial: warm white + single green accent */
+  --background: #fafaf7;
+  --foreground: #0c1a12;
   
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0 0);
+  --card: #ffffff;
+  --card-foreground: #0c1a12;
   
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
+  --popover: #ffffff;
+  --popover-foreground: #0c1a12;
   
-  /* CSOAI Blue (#0066CC) - Trust, professionalism, learning */
-  --primary: oklch(0.52 0.19 255);
-  --primary-foreground: oklch(1 0 0);
+  /* Single green accent (#10b981) — one-colour ownership per blueprint */
+  --primary: #10b981;
+  --primary-foreground: #ffffff;
   
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.15 0 0);
+  --secondary: #f5f5f0;
+  --secondary-foreground: #0c1a12;
   
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.45 0 0);
+  --muted: #f5f5f0;
+  --muted-foreground: #5a6b5e;
   
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.15 0 0);
+  --accent: #f5f5f0;
+  --accent-foreground: #0c1a12;
   
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(1 0 0);
   
-  --border: oklch(0.90 0 0);
-  --input: oklch(0.90 0 0);
-  --ring: oklch(0.15 0 0);
+  --border: #e8e8e3;
+  --input: #e8e8e3;
+  --ring: #10b981;
   
-  /* CSOAI Chart Colors */
-  --chart-1: oklch(0.52 0.19 255); /* CSOAI Blue */
-  --chart-2: oklch(0.65 0.15 160); /* Success Green */
-  --chart-3: oklch(0.70 0.15 50);  /* Warning Amber */
-  --chart-4: oklch(0.60 0.15 300); /* Info Cyan */
-  --chart-5: oklch(0.55 0.2 25);   /* Error Red */
+  /* CSOAI Chart Colors — green family, single accent */
+  --chart-1: #10b981;
+  --chart-2: #059669;
+  --chart-3: #047857;
+  --chart-4: #6ee7b7;
+  --chart-5: oklch(0.55 0.2 25);
   
-  --sidebar: oklch(0.98 0 0);
-  --sidebar-foreground: oklch(0.15 0 0);
-  /* CSOAI Blue for sidebar primary */
-  --sidebar-primary: oklch(0.52 0.19 255);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.95 0 0);
-  --sidebar-accent-foreground: oklch(0.15 0 0);
-  --sidebar-border: oklch(0.92 0 0);
-  --sidebar-ring: oklch(0.15 0 0);
+  --sidebar: #fafaf7;
+  --sidebar-foreground: #0c1a12;
+  --sidebar-primary: #10b981;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f0ea;
+  --sidebar-accent-foreground: #0c1a12;
+  --sidebar-border: #e8e8e3;
+  --sidebar-ring: #10b981;
 }
 
 /* Dark theme - CSOAI Professional */
@@ -131,9 +131,9 @@
   --popover: oklch(0.15 0 0);
   --popover-foreground: oklch(0.93 0 0);
   
-  /* CSOAI Blue for dark mode */
-  --primary: oklch(0.60 0.19 255);
-  --primary-foreground: oklch(1 0 0);
+  /* Lighter green for dark mode readability */
+  --primary: #34d399;
+  --primary-foreground: #0c1a12;
   
   --secondary: oklch(0.20 0 0);
   --secondary-foreground: oklch(0.93 0 0);
@@ -149,23 +149,22 @@
   
   --border: oklch(0.25 0 0);
   --input: oklch(0.20 0 0);
-  --ring: oklch(0.93 0 0);
+  --ring: #34d399;
   
-  --chart-1: oklch(0.70 0.15 250);
-  --chart-2: oklch(0.70 0.15 160);
-  --chart-3: oklch(0.75 0.15 50);
-  --chart-4: oklch(0.65 0.15 300);
+  --chart-1: #34d399;
+  --chart-2: #10b981;
+  --chart-3: #059669;
+  --chart-4: #6ee7b7;
   --chart-5: oklch(0.60 0.2 25);
   
   --sidebar: oklch(0.10 0 0);
   --sidebar-foreground: oklch(0.93 0 0);
-  /* CSOAI Blue for dark mode sidebar */
-  --sidebar-primary: oklch(0.60 0.19 255);
-  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-primary: #34d399;
+  --sidebar-primary-foreground: #0c1a12;
   --sidebar-accent: oklch(0.15 0 0);
   --sidebar-accent-foreground: oklch(0.93 0 0);
   --sidebar-border: oklch(0.20 0 0);
-  --sidebar-ring: oklch(0.93 0 0);
+  --sidebar-ring: #34d399;
 }
 
 @layer base {
@@ -190,6 +189,13 @@
   html {
     scroll-behavior: smooth;
     word-break: break-word;
+  }
+
+  /* WCAG AA focus states — generous, consistent, no browser default ring */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
@@ -245,9 +251,47 @@
     }
   }
 
-  /* Open WebUI style font classes */
+  /* Typography scale — editorial, generous, flat */
   .font-primary {
-    font-family: "Archivo", "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-family: 'Archivo', 'Vazirmatn', sans-serif;
+  }
+
+  .font-serif {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  }
+
+  .text-display {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .text-headline {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.15;
+    font-weight: 600;
+  }
+
+  .text-body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .text-caption {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  /* Reduced motion — respect user preference everywhere */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   /* Waterfall animation for suggestions - from Open WebUI */
