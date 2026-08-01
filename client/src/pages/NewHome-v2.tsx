@@ -1742,7 +1742,7 @@ export default function NewHomeV2() {
             ))}
           </motion.div>
 
-          <div className="text-center mt-12 flex justify-center gap-4">
+          <div className="text-center mt-12 flex flex-wrap justify-center gap-4 px-4">
             <Link href="/partners">
               <Button variant="outline" size="lg" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
                 Partners & Advisory
