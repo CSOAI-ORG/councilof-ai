@@ -166,6 +166,13 @@ export default function RegionalAnalytics() {
                 <div className="h-80 flex items-center justify-center">
                   <p className="text-muted-foreground">Loading data...</p>
                 </div>
+              ) : regionalChartData.length === 0 ? (
+                // Honest empty slot: the tRPC analytics backend is not reachable from
+                // this static deployment, and recharts throws (decimal.js-light on a
+                // NaN auto-domain) when handed empty data. Empty state, never a crash.
+                <div className="h-80 flex items-center justify-center px-6 text-center">
+                  <p className="text-muted-foreground">No live analytics — the metrics backend is unreachable from this deployment.</p>
+                </div>
               ) : (
                 <ResponsiveContainer width="100%" height={400}>
                   <BarChart data={regionalChartData}>
@@ -189,6 +196,11 @@ export default function RegionalAnalytics() {
               <CardDescription>Percentage of enrolled students who completed the course</CardDescription>
             </CardHeader>
             <CardContent>
+              {regionalChartData.length === 0 ? (
+                <div className="h-60 flex items-center justify-center px-6 text-center">
+                  <p className="text-muted-foreground">No live analytics — the metrics backend is unreachable from this deployment.</p>
+                </div>
+              ) : (
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={regionalChartData} layout="horizontal">
                   <CartesianGrid strokeDasharray="3 3" />
@@ -198,6 +210,7 @@ export default function RegionalAnalytics() {
                   <Bar dataKey="completionRate" fill="#8b5cf6" name="Completion Rate (%)" />
                 </BarChart>
               </ResponsiveContainer>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
