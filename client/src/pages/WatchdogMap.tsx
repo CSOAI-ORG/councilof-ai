@@ -169,7 +169,7 @@ export default function WatchdogMap() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-8 grid gap-6 lg:grid-cols-[1.4fr_1fr] items-start">
+      <section className="mx-auto max-w-6xl px-6 py-8 grid grid-cols-1 gap-6 lg:grid-cols-[1.4fr_1fr] items-start">
         {/* Heat-map */}
         <div className="min-w-0">
           <div className="mb-3 flex flex-wrap gap-1.5">

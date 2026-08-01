@@ -1060,7 +1060,7 @@ export default function GovernmentDashboard() {
                 <motion.div
                   key={initiative.name}
                   className="min-w-0"
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                 >
