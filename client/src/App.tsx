@@ -120,6 +120,7 @@ const UKAIBill = lazy(() => import("./pages/UKAIBill"));
 const GlobalAISafetyInitiative = lazy(() => import("./pages/GlobalAISafetyInitiative"));
 const GovBench = lazy(() => import("./pages/GovBench"));
 const DriftProduct = lazy(() => import("./pages/DriftProduct"));
+const SovTownLab = lazy(() => import("./pages/SovTownLab"));
 const GovernmentLinks = lazy(() => import("./pages/GovernmentLinks"));
 const GovernmentPortal = lazy(() => import("./pages/GovernmentPortal"));
 const HelpCenter = lazy(() => import("./pages/HelpCenter"));
@@ -538,6 +539,7 @@ function App() {
                   <Route path="/global-ai-safety-initiative" component={GlobalAISafetyInitiative} />
                   <Route path="/govbench" component={GovBench} />
                   <Route path="/drift-audit" component={DriftProduct} />
+                  <Route path="/sov-town-lab" component={SovTownLab} />
                   <Route path="/government-links" component={GovernmentLinks} />
                   <Route path="/government-portal" component={GovernmentPortal} />
                   <Route path="/help" component={HelpCenter} />
