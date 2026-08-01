@@ -39,13 +39,9 @@ export default function OsEnter() {
       .then((r) => r.json())
       .then((d) => { if (Array.isArray(d)) setDeltas(d.slice(-40).reverse()); })
       .catch(() => {});
-    fetch("https://ipapi.co/json/")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d && typeof d.latitude === "number") setLoc({ city: d.city || "Unknown", country: d.country_name || "", cc: d.country_code || "", lat: d.latitude, lon: d.longitude });
-        else setErr(true);
-      })
-      .catch(() => setErr(true));
+    // Ship gate (audit P1-2): no third-party IP geolocation on public surfaces.
+    // Open on a neutral global view; the visitor picks a region manually if they want one.
+    setLoc({ city: "Global", country: "", cc: "", lat: 20, lon: 0 });
     return () => clearTimeout(boot);
   }, []);
 

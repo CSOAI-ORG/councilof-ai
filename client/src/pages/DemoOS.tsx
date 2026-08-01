@@ -292,16 +292,12 @@ export default function DemoOS() {
 
   async function start(m: "demo" | "full") {
     setMode(m); modeRef.current = m; stepsRef.current = STEPS.filter((s) => (m === "full" ? true : !s.full)); setChat([]); setI(0); startRec();
-    try {
-      const rr = await fetch("https://ipapi.co/json/");
-      if (rr.ok) { const d = await rr.json(); if (d && d.latitude) {
-        setGeoCity(d.city || d.country_name || ""); setGeoLabel("Locating you…");
-        setTimeout(() => { setGeoLabel("Scanning ~10 miles around you"); post({ cmd: "flyTo", lng: d.longitude, lat: d.latitude, height: 30000, duration: 3 }); }, 700);
-        setTimeout(() => { setGeoLabel("Widening to ~30 miles"); post({ cmd: "flyTo", lng: d.longitude, lat: d.latitude, height: 90000, duration: 2.6 }); }, 4200);
-        setTimeout(() => { setGeoLabel("Ready for work"); post({ cmd: "home", duration: 2.6 }); }, 7400);
-        setTimeout(() => setGeoLabel(""), 10000);
-      } }
-    } catch (e) {}
+    // Ship gate (audit P1-2): public surfaces stay IP-geolocation-free — no
+    // third-party IP lookup, no visitor IP leaked. Camera opens on a neutral
+    // global view; region is user-selectable via the geo layer, never auto-resolved.
+    setGeoLabel("Global view — pick your region anytime");
+    setTimeout(() => { post({ cmd: "home", duration: 2.6 }); }, 1200);
+    setTimeout(() => setGeoLabel(""), 6000);
     runStep(0);
   }
 
