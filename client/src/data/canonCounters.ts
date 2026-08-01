@@ -72,6 +72,31 @@ export const CANON = {
     source: "GSPC-Crosswalk-2026-07-29.md (estate corpus)",
     measuredAt: "2026-07-29",
   },
+  // ── camelCase entries for direct CANON.x.value access (NewHome-v2 FAQ,
+  // TrustMarquee). Adding these fixed the 2026-08-01 P0: CANON.councilAgents
+  // was undefined → "reading 'value'" crashed / on the live site.
+  /** Council seats — a DESIGN figure. Copy that renders it must say DESIGNED
+   *  (the NewHome-v2 FAQ does) and point at /refutation-ledger for measured status. */
+  councilAgents: {
+    value: 33,
+    source: "BFT council design (AGENTS.md: 33-seat council, 12 Generals) — DESIGN, not a live count",
+    measuredAt: "2026-08-01",
+    note: "DESIGN figure — never render as measured. Measured status lives on /refutation-ledger.",
+  },
+  /** BFT quorum — 23/33 ≈ 70%, by design (DEFONEOS compartment: quorum 23/33). */
+  councilConsensus: {
+    value: 23,
+    source: "BFT quorum design (23/33 = 70%)",
+    measuredAt: "2026-08-01",
+    note: "DESIGN figure — same labelling rule as councilAgents.",
+  },
+  /** MCP servers live-deployable from the master registry — same measured count as MCP_SERVERS. */
+  mcpLiveDeployed: {
+    value: 293,
+    source: "client/src/data/mcpRegistry.json · servers.length",
+    measuredAt: "2026-08-01",
+    note: "Same artefact as MCP_SERVERS; the estate's 313 claim stays unverified until the registry shows it.",
+  },
 } as const satisfies Record<string, CanonCounter>;
 
 /** Lookup by page-facing key. Keeps NewHome-v2 honest: provisions→FROZEN_PROVISIONS,
