@@ -347,12 +347,12 @@ export const ComprehensiveDocs = () => (
         </ul>
       </div>
       <div className="doc-category">
-        <h4>🎓 Certification</h4>
+        <h4>🎓 Attestation</h4>
         <ul>
-          <li><a href="/certification/fundamentals">AI Safety Fundamentals</a></li>
-          <li><a href="/certification/advanced">Advanced Ensemble Learning</a></li>
-          <li><a href="/certification/compliance">Compliance Specialist</a></li>
-          <li><a href="/certification/enterprise">Enterprise Architect</a></li>
+          <li><a href="/training/fundamentals">AI Safety Fundamentals</a></li>
+          <li><a href="/training/advanced">Advanced Ensemble Learning</a></li>
+          <li><a href="/training/compliance">Compliance Specialist</a></li>
+          <li><a href="/training/enterprise">Enterprise Architect</a></li>
         </ul>
       </div>
     </div>
@@ -612,4 +612,3 @@ export default {
   CompetitiveDifferentiation,
   FirstMoverAdvantage
 };
-

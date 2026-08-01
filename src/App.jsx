@@ -56,7 +56,10 @@ function App() {
     { id: 6, name: "Transparency Advocate", platform: "transparencyof.ai", model: "GPT-4", specialty: "Explainability" },
     { id: 7, name: "Ethics Philosopher", platform: "ethicalgovernanceof.ai", model: "Claude", specialty: "Ethical Reasoning" },
     { id: 8, name: "Safety First", platform: "safetyof.ai", model: "Gemini", specialty: "Safety Prevention" },
-    { id: 9, name: "Accountability Enforcer", platform: "accountabilityof.ai", model: "GPT-4", specialty: "Responsibility" },
+    { id: 9, name: "Accountability Monitor", platform: "csoai.org", model: "GPT-4", specialty: "Responsibility" },
+    { id: 10, name: "Bias Detector", platform: "biasdetectionof.ai", model: "Gemini", specialty: "Fairness Analysis" },
+    { id: 11, name: "Privacy Protector", platform: "dataprivacyof.ai", model: "Claude", specialty: "Data Protection" },
+    { id: 12, name: "Safety Monitor", platform: "csoai.org", model: "Gemini", specialty: "Three Laws Compliance", veto: true }"Accountability Enforcer", platform: "accountabilityof.ai", model: "GPT-4", specialty: "Responsibility" },
     { id: 10, name: "Bias Detector", platform: "biasdetectionof.ai", model: "Gemini", specialty: "Fairness Analysis" },
     { id: 11, name: "Privacy Protector", platform: "dataprivacyof.ai", model: "Claude", specialty: "Data Protection" },
     { id: 12, name: "Jabulon's Law Enforcer", platform: "jabulon.ai", model: "Gemini", specialty: "Three Laws Compliance", veto: true }
@@ -67,11 +70,11 @@ function App() {
       <StarsBackground />
       {/* SEO Meta Tags */}
       <helmet>
-        <title>councilof.ai - Democratic AI Governance | Pre-Launch Waitlist</title>
-        <meta name="description" content="Join the waitlist for the world's first democratic AI governance platform. 12 specialized AIs voting on every decision. Patent pending technology. EU AI Act compliant." />
-        <meta name="keywords" content="AI governance, ensemble learning, democratic AI, EU AI Act, AI safety, AGI safety, ASI security, blockchain verification" />
-        <meta name="author" content="AI Safety Governance Limited" />
-        <link rel="canonical" href="https://councilof.ai" />
+        <title>CSOAI - Council Safety of AI | AI Safety Governance Platform</title>
+        <meta name="description" content="CSOAI is the Western equivalent to TC260 for comprehensive AI safety governance. Multi-framework compliance (EU AI Act, NIST RMF, TC260), 33-agent council monitoring, PDCA cycle management, and public incident tracking." />
+        <meta name="keywords" content="AI safety, AI governance, EU AI Act, NIST AI RMF, TC260, AI compliance, AI risk management, responsible AI, AI ethics, AI regulation, PDCA, AI auditing" />
+        <meta name="author" content="CSOAI - Council Safety of AI" />
+        <link rel="canonical" href="https://csoai.org" />
       </helmet>
 
       {/* HERO SECTION - HONEST PRE-LAUNCH VERSION */}
@@ -392,52 +395,48 @@ console.log(result.reasoning); // Explanation`}</code></pre>
         <div className="container">
           <div className="footer-grid">
             <div className="footer-col">
-              <h4>councilof.ai</h4>
-              <p>Democratic AI Governance Platform</p>
+              <h4>CSOAI</h4>
+              <p>Council Safety of AI</p>
               <p className="footer-company">AI Safety Governance Limited</p>
-              <p className="footer-tagline">Building the future of AI safety</p>
             </div>
 
             <div className="footer-col">
-              <h4>Product</h4>
+              <h4>Platform</h4>
               <ul>
                 <li><a href="/about">About</a></li>
                 <li><a href="/how-it-works">How It Works</a></li>
+                <li><a href="/layer0">Layer 0</a></li>
+                <li><a href="/free-risk-check">Free Check</a></li>
                 <li><a href="/use-cases">Use Cases</a></li>
-                <li><a href="/blog">Blog</a></li>
               </ul>
             </div>
 
             <div className="footer-col">
-              <h4>AI Safety Empire</h4>
+              <h4>Resources</h4>
               <ul>
-                <li><a href="https://proofof.ai" target="_blank" rel="noopener noreferrer">proofof.ai</a></li>
-                <li><a href="https://asisecurity.ai" target="_blank" rel="noopener noreferrer">asisecurity.ai</a></li>
-                <li><a href="https://agisafe.ai" target="_blank" rel="noopener noreferrer">agisafe.ai</a></li>
-                <li><a href="https://suicidestop.ai" target="_blank" rel="noopener noreferrer">suicidestop.ai</a></li>
-                <li><a href="https://transparencyof.ai" target="_blank" rel="noopener noreferrer">transparencyof.ai</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/opengridworks">Reg Map</a></li>
+                <li><a href="/atlas">Atlas</a></li>
               </ul>
             </div>
 
             <div className="footer-col">
               <h4>Legal</h4>
               <ul>
-                <li><a href="/terms">Terms of Service</a></li>
-                <li><a href="/privacy">Privacy Policy</a></li>
-                <li><a href="/cookies">Cookie Policy</a></li>
+                <li><a href="/legal/terms">Terms of Service</a></li>
+                <li><a href="/legal/privacy">Privacy Policy</a></li>
+                <li><a href="/legal/cookies">Cookie Policy</a></li>
               </ul>
             </div>
 
             <div className="footer-col">
               <h4>Contact</h4>
               <p>Email: <a href="mailto:contact@councilof.ai">contact@councilof.ai</a></p>
-              <p>Support: <a href="mailto:support@councilof.ai">support@councilof.ai</a></p>
             </div>
           </div>
 
           <div className="footer-bottom">
-            <p>&copy; 2024 AI Safety Governance Limited. All rights reserved.</p>
-            <p>Patent Pending | EU AI Act Compliant | Built for AGI/ASI Safety</p>
+            <p>&copy; 2026 AI Safety Governance Limited. All rights reserved.</p>
           </div>
         </div>
       </footer>

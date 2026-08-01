@@ -6,7 +6,7 @@ import React from 'react';
 
 const LAYERS = [
   { k: 'A', name: 'Identity', desc: 'Verifiable identity for every agent, model and operator.' },
-  { k: 'B', name: 'Certification', desc: 'Independent certification that a system meets its claims.' },
+  { k: 'B', name: 'Attestation', desc: 'Independent attestation that a system meets its claims.' },
   { k: 'C', name: 'Policy', desc: 'Machine-readable policy bound to each jurisdiction in force.' },
   { k: 'D', name: 'Cross-Region', desc: 'Handoff and recognition of trust across borders.' },
   { k: 'E', name: 'Finance', desc: 'Accountable value flows and incentives for safe behaviour.' },

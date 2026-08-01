@@ -8,8 +8,8 @@ const HowItWorks = () => {
     <div className="how-it-works-page">
       <section className="hiw-hero">
         <div className="container">
-          <h1 className="gradient-text">How councilof.ai Works</h1>
-          <p className="subtitle">Democratic AI Governance Through Ensemble Learning</p>
+          <h1 className="gradient-text">How CSOAI Works</h1>
+          <p className="subtitle">AI Governance, Cybersecurity & Safety</p>
         </div>
       </section>
 
@@ -221,7 +221,7 @@ const HowItWorks = () => {
 
               <div className="member-card">
                 <div className="member-number">9</div>
-                <h3>Accountability Enforcer</h3>
+                <h3>Accountability Monitor</h3>
                 <div className="member-platform">accountabilityof.ai</div>
                 <div className="member-model">GPT-4</div>
                 <p><strong>Specialty:</strong> Responsibility</p>
@@ -248,7 +248,7 @@ const HowItWorks = () => {
 
               <div className="member-card veto-card">
                 <div className="member-number">12</div>
-                <h3>Jabulon's Law Enforcer</h3>
+                <h3>Safety Monitor</h3>
                 <div className="member-platform">jabulon.ai</div>
                 <div className="member-model">Gemini</div>
                 <p><strong>Specialty:</strong> Three Laws Compliance</p>
@@ -262,7 +262,7 @@ const HowItWorks = () => {
                 <li><strong>Supermajority Required:</strong> 10 out of 12 AIs (83.3%) must agree for approval</li>
                 <li><strong>Weighted Voting:</strong> AIs with better track records get more influence</li>
                 <li><strong>Confidence Weighting:</strong> High-confidence votes count more</li>
-                <li><strong>Veto Power:</strong> Jabulon's Law Enforcer can veto decisions that violate safety principles</li>
+                <li><strong>Veto Power:</strong> Safety Monitor can veto decisions that violate safety principles</li>
                 <li><strong>Transparency:</strong> All votes are recorded and explainable</li>
               </ul>
             </div>
