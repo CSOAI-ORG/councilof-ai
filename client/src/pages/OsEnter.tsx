@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import AISystemNotice from "../components/AISystemNotice";
 
 // CSOAI World — the immersive sovereign load-up. Login locates your node in the
 // real world, then the CSOAI world greets you ALREADY KNOWING your jurisdiction:
@@ -58,6 +59,7 @@ export default function OsEnter() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#04070d] text-[#e7f6ef]">
+      <AISystemNotice route="/os-demo" />
       <div className="pointer-events-none absolute inset-0" style={aurora} />
 
       {phase === 0 && (

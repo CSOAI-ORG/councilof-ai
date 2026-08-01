@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import AISystemNotice from "../components/AISystemNotice";
 import { currentPersona } from "../lib/sovPersona";
 
 // DemoOS - the immersive AI-OS experience. A live Cesium globe (globe3d.html,
@@ -357,6 +358,7 @@ export default function DemoOS() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-[#03080e] text-emerald-50">
+      <AISystemNotice route="/demo" />
       <iframe ref={frame} src="/globe3d.html" title="globe" className="absolute inset-0 h-full w-full border-0" />
       <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(1200px 640px at 50% 120%, rgba(3,8,14,.72), transparent 60%)" }} />
 

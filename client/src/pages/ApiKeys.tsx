@@ -59,6 +59,8 @@ const tierColors: Record<string, string> = {
 };
 
 export default function ApiKeys() {
+  // P1-17: never render admin chrome unauthenticated — gate the whole page.
+  const { data: user, isLoading: authLoading } = trpc.auth.me.useQuery();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
   const [newKeyTier, setNewKeyTier] = useState<"free" | "pro" | "enterprise">("free");
@@ -131,6 +133,21 @@ export default function ApiKeys() {
       <DashboardLayout>
         <div className="flex items-center justify-center h-96">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!authLoading && !user) {
+    return (
+      <DashboardLayout>
+        <div className="p-6 flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4">
+          <Shield className="h-10 w-10 text-muted-foreground" />
+          <h1 className="text-2xl font-semibold">Sign in required</h1>
+          <p className="text-muted-foreground max-w-md">
+            API key management is available to signed-in accounts only.
+          </p>
+          <Button asChild><a href="/login">Sign in</a></Button>
         </div>
       </DashboardLayout>
     );
