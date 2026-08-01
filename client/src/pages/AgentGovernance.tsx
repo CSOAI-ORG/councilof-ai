@@ -44,7 +44,7 @@ export default function AgentGovernance() {
           <div className="text-sm font-black text-emerald-100">Why CSOAI is a generation ahead on agents</div>
           <ul className="mt-2 space-y-1.5 text-sm text-emerald-100/80">
             <li>▸ <b>Signed agent cards (A2A):</b> every agent identified, purpose-bound and Ed25519-signed — discoverable at <code className="text-emerald-300">/.well-known/agent-card.json</code>.</li>
-            <li>▸ <b>Byzantine council review:</b> no single model approves an agent action — a fault-tolerant 2/3 quorum does.</li>
+            <li>▸ <b>Byzantine council review:</b> designed so no single model approves an agent action — a fault-tolerant 2/3 quorum. Measured status (n_eff 1.21 of 3) is published on the <a href="/refutation-ledger" className="underline text-emerald-300">Refutation Ledger</a> — design, not yet a live claim.</li>
             <li>▸ <b>300+ governed MCP tools:</b> agents call tools through a governed layer, every call sealable to Layer 0.</li>
             <li>▸ <b>Verifiable, not asserted:</b> competitors document controls; CSOAI produces signed, reproducible proof.</li>
           </ul>

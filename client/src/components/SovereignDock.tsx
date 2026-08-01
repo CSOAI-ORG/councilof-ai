@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
+import AISystemNotice from "./AISystemNotice";
 import { chargeSovereign } from "../lib/sovCharge";
 import { askSovereign } from "../lib/sovAsk";
 import { fetchHealth } from "../lib/sovHealth";
