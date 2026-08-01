@@ -53,7 +53,7 @@ export default function DemoTour() {
           <span className="text-lg">{"◉"}</span>
           <div>
             <div className="text-sm font-bold text-emerald-100">New here? See what makes CSOAI different.</div>
-            <p className="mt-0.5 text-xs text-emerald-100/70">60-second live tour: the Sovereign OS, a 33-agent council, signed governance artifacts, and the globe. Not slides - the real thing.</p>
+            <p className="mt-0.5 text-xs text-emerald-100/70">60-second live tour: the Sovereign OS, the 33-seat council design, signed governance artifacts, and the globe. Not slides - the real thing.</p>
           </div>
         </div>
         <div className="mt-2 flex gap-2">

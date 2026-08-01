@@ -31,7 +31,7 @@ const personas: Persona[] = [
   },
   {
     headline: "Accountability by design",
-    body: "A 33-agent Council of AI drawn from different providers means no single company can game the outcome — accountability that's structural, not promised.",
+    body: "A 33-seat Council of AI drawn from different providers is designed so no single company can game the outcome — accountability that's structural, not promised.",
     role: "For policy & research",
     category: "government",
   },

@@ -162,15 +162,22 @@ export default function ByzantineConsensus() {
               Distributed AI Safety Governance
             </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              The 33-Agent{' '}
+              The 33-Seat{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600">
-                Byzantine Council
+                Council Design
               </span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              A fault-tolerant, vendor-independent AI safety governance system inspired by 
-              fault-aware consensus principles. Our council uses 12 different AI providers 
-              to ensure unbiased, impartial decisions on AI safety matters.
+            <p className="text-xl text-muted-foreground mb-4">
+              A fault-aware, vendor-independent AI safety governance architecture inspired by
+              distributed-consensus principles. The design seats members across 12 different AI providers
+              so no single vendor can steer an outcome.
+            </p>
+            <p className="text-sm text-muted-foreground/80 mb-8 max-w-2xl mx-auto border border-amber-300/40 bg-amber-50/60 dark:bg-amber-900/10 rounded-lg px-4 py-3">
+              Honest status: this page describes the target architecture. Today's measured
+              cross-checking is n_eff 1.21 of 3 nominal votes — published, signed, and
+              explained on the{' '}
+              <Link href="/refutation-ledger" className="underline font-semibold">Refutation Ledger</Link>.
+              We measure the gap instead of hiding it.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/agent-council">

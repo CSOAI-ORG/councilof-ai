@@ -29,7 +29,7 @@ const gaps = [
   {
     title: "No Human Oversight at Scale",
     problem: "Governments can't monitor millions of AI systems with limited staff",
-    solution: "Certified analysts + 33-agent Council of AI provides 24/7 oversight",
+    solution: "Certified analysts + the 33-seat Council design (measured status on the public ledger)",
     icon: Users,
   },
   {

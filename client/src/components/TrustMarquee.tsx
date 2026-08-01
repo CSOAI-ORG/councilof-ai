@@ -23,7 +23,7 @@ function LiveStats({ dark }: { dark?: boolean }) {
     return () => { live = false; };
   }, []);
   const chips = [
-    { v: s.agents ? String(s.agents) : "33", l: "agent Byzantine council" },
+    { v: s.agents ? String(s.agents) : "33", l: "seat council (design)" },
     { v: s.tools ? String(s.tools) : "378", l: "governed MCP tools" },
     { v: s.episodes ? fmt(s.episodes) + "+" : "Ed25519", l: s.episodes ? "memory episodes" : "Layer 0 signing" },
     { v: "0.95", l: "care-floor" },

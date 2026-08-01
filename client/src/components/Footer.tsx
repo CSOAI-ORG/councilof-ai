@@ -93,8 +93,8 @@ export function Footer() {
             <div className="flex items-center gap-3 text-white">
               <Shield className="h-8 w-8" />
               <div>
-                <h3 className="font-bold text-lg">Join the Byzantine Council</h3>
-                <p className="text-emerald-100 text-sm">Become part of our 33-agent fault-tolerant oversight system</p>
+                <h3 className="font-bold text-lg">The 33-seat Council</h3>
+                <p className="text-emerald-100 text-sm">Multi-provider oversight by design — measured status on the public Refutation Ledger</p>
               </div>
             </div>
             <Link href="/council">

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-// CouncilVote — a live visualization of the 33-agent fault-aware consensus
-// council reaching consensus. 33 nodes in a ring vote toward a 2/3 quorum; a
-// care-floor gauge holds at 0.95. Pure SVG + rAF, zero deps. Makes the abstract
-// "Council of AI" real and visual. Re-runs when `trigger` changes (e.g. a new query).
+// CouncilVote — a DESIGN SIMULATION of the 33-seat council's 2/3 quorum.
+// This is an illustration of the architecture, not a live vote: the measured
+// cross-checking value today is n_eff 1.21 of 3 (see /refutation-ledger).
+// 33 nodes in a ring vote toward a 2/3 quorum; a care-floor gauge holds at
+// 0.95. Pure SVG + rAF, zero deps. Re-runs when `trigger` changes.
 const N = 33;
 const QUORUM = Math.ceil((2 * N) / 3); // 22 — Byzantine 2/3
 const R = 120, CX = 150, CY = 150;
@@ -38,7 +39,7 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
   return (
     <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
       <div className="flex items-center justify-between">
-        <div className="text-sm font-black text-emerald-100">33-agent Council of AI</div>
+        <div className="text-sm font-black text-emerald-100">33-seat Council <span className="text-[10px] font-bold text-emerald-300/60">design simulation</span></div>
         <span className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (reached ? "bg-emerald-500/20 text-emerald-300" : "bg-white/5 text-emerald-300/60")}>{phase === "done" ? (reached ? "consensus reached" : "no quorum") : "voting…"}</span>
       </div>
       <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row">
@@ -72,13 +73,13 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
           </div>
           {phase === "done" && (
             <div className={"mt-2 rounded-lg border px-3 py-2 text-[12px] " + (reached ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-100" : "border-amber-400/30 bg-amber-500/10 text-amber-100")}>
-              {reached ? "▲ 2/3 Byzantine quorum reached — verdict sealable to Layer 0." : "No quorum — the council withholds a verdict. It can't be forced."}
+              {reached ? "▲ 2/3 quorum in this design simulation — in the target architecture the verdict seals to Layer 0." : "No quorum in this round — the council design withholds a verdict rather than forcing one."}
               {verdict && reached && <div className="mt-1 font-semibold text-emerald-200">{verdict}</div>}
             </div>
           )}
         </div>
       </div>
-      <p className="mt-2 text-[10px] text-emerald-300/40">No single agent decides — a fault-tolerant 2/3 quorum does, so the council can't be captured or bribed. Honest dissent is tolerated by design (Charter Art. 11).</p>
+      <p className="mt-2 text-[10px] text-emerald-300/40">Design simulation of the 33-seat architecture: no single agent decides — a 2/3 quorum does, so the council can't be captured. Honest dissent is tolerated by design (Charter Art. 11). Measured cross-checking today: n_eff 1.21 of 3 — see the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.</p>
     </div>
   );
 }
