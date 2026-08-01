@@ -6,6 +6,7 @@
 // (2) reject persona-bleed / refusal responses and hand back a clean fallback.
 
 import { detectLocale } from "./locale";
+import { emitCard } from "./aiCardBus";
 
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 
@@ -47,6 +48,7 @@ export async function askSovereign(userText: string, opts?: { fallback?: string;
   const q = (userText || "").trim();
   const fallback = (opts && opts.fallback) || "I can only speak as the CSOAI Sovereign on AI governance, regulation and cybersecurity — ask me about a framework, a system, or how to get compliant and I'll help.";
   if (!q) return { ok: false, text: fallback };
+  const started = Date.now();
   try {
     const sys = ((opts && opts.system) || SYS) + langDirective();
     const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: sys + "\n\nUser question: " + q }) });
@@ -54,11 +56,16 @@ export async function askSovereign(userText: string, opts?: { fallback?: string;
       const d = await r.json();
       const t = String((d && d.response) || "").trim();
       if (t && d.model !== "idle" && t.length > 12) {
-        if (isWrongPenalty(t)) return { ok: true, text: PENALTY_TRUTH };
-        if (!BAD.test(t)) return { ok: true, text: t };
+        const out = isWrongPenalty(t) ? PENALTY_TRUTH : (!BAD.test(t) ? t : null);
+        if (out) {
+          // Every AI call is a visible C-space card inside Sov Space.
+          emitCard({ kind: "dock-ask", summary: q.slice(0, 120), detail: out.slice(0, 280), latencyMs: Date.now() - started, model: d.model || undefined, axis: "governance", source: "live" });
+          return { ok: true, text: out };
+        }
       }
     }
   } catch (e) {}
+  emitCard({ kind: "dock-ask", summary: q.slice(0, 120), detail: "gateway unreachable or response rejected — clean fallback served", latencyMs: Date.now() - started, axis: "governance", source: "local-sim" });
   return { ok: false, text: fallback };
 }
 

@@ -4,6 +4,8 @@ import AISystemNotice from "./AISystemNotice";
 import { chargeSovereign } from "../lib/sovCharge";
 import { askSovereign } from "../lib/sovAsk";
 import { fetchHealth } from "../lib/sovHealth";
+import { subscribeBus, busHealth, fetchAnchors, fetchLedgerStats, fetchFlywheelSnapshot, fetchHiveCoverage } from "../lib/sovDataBus";
+import { useGeolibre, GEO_REGION_OPTIONS } from "../lib/geolibre";
 import { startTour } from "../lib/demoTour";
 import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, personaSpeak, DOCTRINE_RE, DOCTRINE_REFUSAL } from "../lib/sovPersona";
 
@@ -18,7 +20,8 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/graph", label: "the Governance Graph" },
   { re: /framework|crosswalk|\biso\b|\bnist\b|tc260|eu ai act/i, href: "/crosswalks", label: "Framework crosswalks" },
   { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/sov-space", label: "Sov Space" },
-  { re: /sovereign town|\btown\b|incident/i, href: "/sovereign-town", label: "Sovereign Town" },
+  { re: /sovereign town|\btown\b|incident/i, href: "/sov-space?view=towns", label: "the Towns layer of Sov Space" },
+  { re: /arena|benchmark|head.?to.?head|model compar/i, href: "/sov-space?view=arena", label: "the Arena layer of Sov Space" },
   { re: /distribution|\bmcp\b|pypi|npm|glama|mcpize|registry/i, href: "/distribution", label: "Distribution & Layer 0 coverage" },
   { re: /jsp ?936|defence assurance|defense assurance|system card|mod evidence|evidence pack|dependable ai/i, href: "/system-card", label: "the Signed System Card — JSP 936 assurance" },
   { re: /evidence|connect|integrat|webhook/i, href: "/evidence", label: "Evidence Hub" },
@@ -32,7 +35,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
   { re: /humanoid|\bpoc\b|proof of concept|one os|rogue|swarm|bad actor/i, href: "/poc", label: "the ONE OS proof of concept" },
-  { re: /globe|earth|world map|3d/i, href: "/world-3d", label: "the real-world globe" },
+  { re: /globe|earth|world map|3d/i, href: "/sov-space?view=globe", label: "the Globe layer of Sov Space" },
   { re: /sovereign network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Sovereign network" },
   { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
@@ -143,6 +146,16 @@ export default function SovereignDock() {
 
   useEffect(() => { fetchHealth().then(setHz); }, []);
 
+  // Sov Space data bus — the OS taskbar shows feed health honestly (live/partial/offline).
+  const [, forceBus] = useState(0);
+  useEffect(() => {
+    const un = subscribeBus(() => forceBus((x) => x + 1));
+    fetchAnchors(); fetchLedgerStats(); fetchFlywheelSnapshot(); fetchHiveCoverage();
+    return un;
+  }, []);
+  const bus = busHealth();
+  const geo = useGeolibre();
+
   useEffect(() => { const el = endRef.current && (endRef.current.parentElement as HTMLElement | null); if (el) el.scrollTop = el.scrollHeight; }, [msgs, open]);
 
   useEffect(() => {
@@ -240,6 +253,31 @@ export default function SovereignDock() {
             <div className="flex-1">
               <div className={"text-sm font-bold " + (personaId === "assurance" ? "text-amber-100" : "text-emerald-100")}>{persona.name}</div>
               <div className={"font-mono text-[10px] uppercase tracking-[2px] " + (personaId === "assurance" ? "text-amber-300/60" : "text-emerald-300/50")}>{hz && hz.ok && <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 align-middle" style={{ boxShadow: "0 0 6px #34d399" }} />}{hz && hz.ok ? persona.sub + " - connected" : persona.sub}</div>
+              <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/50" title="Sov Space data bus — anchors · ledger · flywheel · hive feeds">
+                <span className={"mr-1 inline-block h-1.5 w-1.5 rounded-full align-middle " + (bus.state === "live" ? "bg-sky-400" : bus.state === "partial" ? "bg-amber-400" : "bg-rose-400/70")} />
+                data bus: {bus.state === "live" ? "live" : bus.state === "partial" ? `partial ${bus.live}/${bus.total}` : "offline"}
+              </div>
+              {/* Geolibre local shard — opt-in only; off by default (GDPR-clean) */}
+              <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50" title={geo.enabled ? `Local shard: ${geo.region.label} (${geo.source === "ip" ? "IP-resolved" : "manual pick"}) — frameworks: ${geo.region.frameworks.join(", ")}` : "Local shard off — enable for jurisdiction-aware arena + towns"}>
+                {geo.enabled ? (
+                  <button onClick={geo.disable} className="hover:text-emerald-100" title="Disable local shard">
+                    ⬡ shard: {geo.region.code}{geo.countryIso2 ? `/${geo.countryIso2}` : ""} · {geo.source === "ip" ? "ip" : "manual"} ✕
+                  </button>
+                ) : (
+                  <button onClick={() => geo.enable()} className="hover:text-emerald-100" title="Enable local shard (resolves your IP country once, only after you click)">
+                    ⬡ shard: off — enable
+                  </button>
+                )}
+                <select
+                  value={geo.enabled && geo.source === "manual" ? geo.regionCode : ""}
+                  onChange={(e) => { if (e.target.value) geo.pick(e.target.value); }}
+                  className="ml-1 rounded border border-emerald-500/20 bg-[#05140d] px-1 text-emerald-300/70 outline-none"
+                  title="Pick a shard manually — no network, no IP"
+                >
+                  <option value="">pick…</option>
+                  {GEO_REGION_OPTIONS.map((o) => <option key={o.code} value={o.code}>{o.code}</option>)}
+                </select>
+              </div>
             </div>
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} aria-label="Toggle voice" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{voiceOn ? "On" : "Off"}</button>
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>

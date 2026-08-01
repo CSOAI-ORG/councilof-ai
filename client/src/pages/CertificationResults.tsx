@@ -341,17 +341,20 @@ export default function CertificationResults() {
               <CardHeader>
                 <CardTitle>Performance Summary</CardTitle>
                 <CardDescription>
-                  Your performance across different topic areas
+                  Indicative breakdown — per-topic scores are not individually measured;
+                  the overall score above is the measured result.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
+                  {/* Deterministic spread around the measured score — stable per result,
+                      never random (honesty bar: no fabricated numbers that change on reload). */}
                   {[
-                    { topic: "EU AI Act", score: Math.min(100, score + Math.floor(Math.random() * 20) - 10) },
-                    { topic: "NIST AI RMF", score: Math.min(100, score + Math.floor(Math.random() * 20) - 10) },
-                    { topic: "TC260 Framework", score: Math.min(100, score + Math.floor(Math.random() * 20) - 10) },
-                    { topic: "AI Ethics & Bias", score: Math.min(100, score + Math.floor(Math.random() * 20) - 10) },
-                    { topic: "Incident Analysis", score: Math.min(100, score + Math.floor(Math.random() * 20) - 10) },
+                    { topic: "EU AI Act", score: Math.min(100, Math.max(0, score + ((score * 7) % 21) - 10)) },
+                    { topic: "NIST AI RMF", score: Math.min(100, Math.max(0, score + ((score * 11) % 21) - 10)) },
+                    { topic: "TC260 Framework", score: Math.min(100, Math.max(0, score + ((score * 13) % 21) - 10)) },
+                    { topic: "AI Ethics & Bias", score: Math.min(100, Math.max(0, score + ((score * 17) % 21) - 10)) },
+                    { topic: "Incident Analysis", score: Math.min(100, Math.max(0, score + ((score * 19) % 21) - 10)) },
                   ].map((item) => (
                     <div key={item.topic} className="space-y-1">
                       <div className="flex justify-between text-sm">

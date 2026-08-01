@@ -7,6 +7,9 @@ export interface SovTownStats {
   passports: number;
   macUpdated: string;
   vmUpdated: string;
+  /** Honesty bar: where did these numbers come from, and when. */
+  source: "live" | "partial" | "last-known";
+  fetchedAt: string;
 }
 
 function num(n?: number): number {
@@ -15,6 +18,8 @@ function num(n?: number): number {
 
 export async function fetchSovTownStats(): Promise<SovTownStats> {
   const base = "https://proofof-site.vercel.app/sovereign-town";
+  // Last-known values shown ONLY when the live feed is unreachable — and the UI
+  // must say so (source: "last-known"). Never silent fake-live.
   const fallback: SovTownStats = {
     episodes: 700_000_000,
     governedCrimes: 0,
@@ -24,14 +29,20 @@ export async function fetchSovTownStats(): Promise<SovTownStats> {
     passports: 29,
     macUpdated: "",
     vmUpdated: "",
+    source: "last-known",
+    fetchedAt: "",
   };
 
   try {
+    const cacheOpt = { next: { revalidate: 300 } } as RequestInit;
     const [macRes, vmRes, registryRes] = await Promise.all([
-      fetch(`${base}/fleet_status_mac.json`, { next: { revalidate: 300 } }),
-      fetch(`${base}/fleet_status_vm.json`, { next: { revalidate: 300 } }),
-      fetch(`${base}/registry.json`, { next: { revalidate: 300 } }),
+      fetch(`${base}/fleet_status_mac.json`, cacheOpt),
+      fetch(`${base}/fleet_status_vm.json`, cacheOpt),
+      fetch(`${base}/registry.json`, cacheOpt),
     ]);
+
+    const okCount = [macRes, vmRes, registryRes].filter(r => r.ok).length;
+    if (okCount === 0) return fallback;
 
     const mac = macRes.ok ? await macRes.json() : {};
     const vm = vmRes.ok ? await vmRes.json() : {};
@@ -46,6 +57,8 @@ export async function fetchSovTownStats(): Promise<SovTownStats> {
       passports: num(registry.count) || fallback.passports,
       macUpdated: mac.updated || "",
       vmUpdated: vm.updated || "",
+      source: okCount === 3 ? "live" : "partial",
+      fetchedAt: new Date().toISOString(),
     };
   } catch {
     return fallback;

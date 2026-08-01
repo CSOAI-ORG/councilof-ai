@@ -91,8 +91,10 @@ export default function PocShowcase() {
         </div>
       </section>
 
-      {/* Live fleet */}
+      {/* Live fleet — DRAMATISATION. Counters animate for illustration; they are not telemetry.
+          The honesty bar: the visitor must know this at the point of viewing, not just in code comments. */}
       <section className="mx-auto max-w-6xl px-6 pt-8 grid gap-3 sm:grid-cols-4">
+        <div className="sm:col-span-4 -mb-1 text-center"><span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-300/90">dramatised PoC — illustrative feed, not live telemetry</span></div>
         {[["Humanoids online", fleet.humanoids.toLocaleString()], ["Agents governed", fleet.agents.toLocaleString()], ["Interventions today", String(fleet.interventions)], ["Governed crimes", "0"]].map((s) => (
           <div key={s[0]} className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4 text-center"><div className="font-mono text-2xl font-black text-emerald-300">{s[1]}</div><div className="text-[11px] uppercase tracking-wide text-emerald-300/50">{s[0]}</div></div>
         ))}

@@ -149,7 +149,6 @@ const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
 const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
-const GSPCArena = lazy(() => import("./pages/GSPCArena"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
@@ -213,7 +212,6 @@ const Integrations = lazy(() => import("./pages/Integrations"));
 const Crosswalks = lazy(() => import("./pages/Crosswalks"));
 const CharterArticle = lazy(() => import("./pages/CharterArticle"));
 const ContentPage = lazy(() => import("./pages/ContentPage"));
-const SovereignTown = lazy(() => import("./pages/SovereignTown"));
 const OscalStudio = lazy(() => import("./pages/OscalStudio"));
 const EvidenceHub = lazy(() => import("./pages/EvidenceHub"));
 const ModelRegistry = lazy(() => import("./pages/ModelRegistry"));
@@ -232,7 +230,6 @@ const GovernancePulse = lazy(() => import("./pages/GovernancePulse"));
 const LegacyBridge = lazy(() => import("./pages/LegacyBridge"));
 const SocialOS = lazy(() => import("./pages/SocialOS"));
 const CrownJewels = lazy(() => import("./pages/CrownJewels"));
-const SovTowns = lazy(() => import("./pages/SovTowns"));
 const SovereignMinds = lazy(() => import("./pages/SovereignMinds"));
 const TryCouncil = lazy(() => import("./pages/TryCouncil"));
 const Lineage = lazy(() => import("./pages/Lineage"));
@@ -246,7 +243,6 @@ const Services = lazy(() => import("./pages/Services"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const SectorsAtlas = lazy(() => import("./pages/SectorsAtlas"));
 const RegionsMap = lazy(() => import("./pages/RegionsMap"));
-const WorldGlobe = lazy(() => import("./pages/WorldGlobe"));
 const RegistryAll = lazy(() => import("./pages/RegistryAll"));
 const SocialConnect = lazy(() => import("./pages/SocialConnect"));
 const SovereignHub = lazy(() => import("./pages/SovereignHub"));
@@ -272,6 +268,7 @@ const VulnerabilityDisclosure = lazy(() => import("./pages/VulnerabilityDisclosu
 const Intel = lazy(() => import("./pages/Intel"));
 const AccountBrief = lazy(() => import("./pages/AccountBrief"));
 const Article50 = lazy(() => import("./pages/Article50"));
+const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
 const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
@@ -338,6 +335,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/provenance-finding": "Provenance Finding | CSOAI",
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
+  "/governance-layer": "Sovereign Governance Layer | CSOAI",
   "/article-50-kit": "Article 50 Kit | CSOAI",
   "/status": "System Status | CSOAI",
   "/contact": "Contact | CSOAI",
@@ -574,7 +572,8 @@ function App() {
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
-                  <Route path="/gspc-arena" component={GSPCArena} />
+                  {/* 2026-08-01 unification: the arena lives INSIDE Sov Space as a layer */}
+                  <Route path="/gspc-arena">{() => <Redirect to="/sov-space?view=arena" />}</Route>
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
@@ -649,7 +648,8 @@ function App() {
           <Route path="/legacy" component={LegacyBridge} />
           <Route path="/social" component={SocialOS} />
           <Route path="/jewels" component={CrownJewels} />
-          <Route path="/towns" component={SovTowns} />
+          {/* 2026-08-01 unification: the towns live INSIDE Sov Space as a layer */}
+          <Route path="/towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
           <Route path="/minds" component={SovereignMinds} />
           <Route path="/try" component={TryCouncil} />
           <Route path="/lineage" component={Lineage} />
@@ -665,7 +665,8 @@ function App() {
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/sectors" component={SectorsAtlas} />
           <Route path="/regions" component={RegionsMap} />
-          <Route path="/globe" component={WorldGlobe} />
+          {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
+          <Route path="/globe">{() => <Redirect to="/sov-space?view=globe" />}</Route>
           <Route path="/registry" component={RegistryAll} />
           <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
           <Route path="/checklist" component={EUActChecklist} />
@@ -719,7 +720,7 @@ function App() {
           <Route path="/all" component={RegistryAll} />
           <Route path="/bft" component={BftConfig} />
           <Route path="/consensus" component={BftConfig} />
-          <Route path="/world" component={WorldGlobe} />
+          <Route path="/world">{() => <Redirect to="/sov-space?view=globe" />}</Route>
           <Route path="/map-regions" component={RegionsMap} />
           <Route path="/compare" component={Compare} />
           <Route path="/vs" component={Compare} />
@@ -744,14 +745,14 @@ function App() {
           <Route path="/relevance-map" component={RelevanceMap} />
           <Route path="/rediscovered" component={Lineage} />
           <Route path="/voice" component={SovereignMinds} />
-          <Route path="/sov-towns" component={SovTowns} />
+          <Route path="/sov-towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
           <Route path="/crown-jewels" component={CrownJewels} />
           <Route path="/cobol" component={LegacyBridge} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
             <Route path="/evidence" component={EvidenceHub} />
             <Route path="/oscal" component={OscalStudio} />
-            <Route path="/sovereign-town" component={SovereignTown} />
+            <Route path="/sovereign-town">{() => <Redirect to="/sov-space?view=towns" />}</Route>
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
@@ -882,6 +883,7 @@ function App() {
                   <Route path="/intel" component={Intel} />
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
+                  <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
                   {/* Individual Charter Articles */}

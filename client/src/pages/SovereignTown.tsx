@@ -1,5 +1,44 @@
 import { useEffect, useState } from "react";
 import { fetchSovTownStats, formatCount, type SovTownStats } from "../data/sov-town-data";
+import { fetchOracleFleet, getFeed, subscribeBus, BUS, type OracleFleet } from "../lib/sovDataBus";
+
+// Oracle fleet strip — the free substrate's heartbeat, rendered honestly inside
+// the Towns layer: harvester, govbench, evac state, ollama, disk. OFFLINE is a
+// first-class state, never a fabricated fleet.
+function OracleFleetStrip() {
+  const [, force] = useState(0);
+  useEffect(() => {
+    const un = subscribeBus(() => force((x) => x + 1));
+    fetchOracleFleet();
+    const t = setInterval(fetchOracleFleet, 60_000);
+    return () => { un(); clearInterval(t); };
+  }, []);
+  const feed = getFeed<OracleFleet>(BUS.oracleFleet);
+  const f = feed.data;
+  return (
+    <div className="mx-auto max-w-5xl px-6 -mt-4 mb-6">
+      <div className="rounded-2xl border border-sky-500/25 bg-[#05140d] px-4 py-3">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">
+          <span className={"inline-block h-1.5 w-1.5 rounded-full " + (feed.source === "live" ? "bg-sky-400" : "bg-rose-400/70")} />
+          Oracle fleet · {feed.source}
+          {feed.fetchedAt && <span className="text-sky-300/45">· {new Date(feed.fetchedAt).toLocaleTimeString()}</span>}
+        </div>
+        {f ? (
+          <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-sky-100/75">
+            <span>host: {f.host}</span>
+            <span>evac: {f.feeds?.gcp_evac?.state}</span>
+            <span>ollama: {f.feeds?.ollama?.models_loaded ?? 0} model{(f.feeds?.ollama?.models_loaded ?? 0) === 1 ? "" : "s"}</span>
+            <span>disk free: {Math.round((f.disk_free_mb?.root ?? 0) / 1024)}G + {Math.round((f.disk_free_mb?.evac_bulk ?? 0) / 1024)}G bulk</span>
+            <span>cron: {f.cron_jobs}</span>
+            {f.feeds?.airbench_harvester?.last && <span className="text-sky-300/55">harvester: {f.feeds.airbench_harvester.last.slice(0, 60)}</span>}
+          </div>
+        ) : (
+          <div className="mt-1.5 text-[11px] text-sky-300/50">fleet unreachable — rendered as OFFLINE, not simulated</div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const FALLBACK: SovTownStats = {
   episodes: 1_458_000_000,
@@ -10,6 +49,8 @@ const FALLBACK: SovTownStats = {
   passports: 29,
   macUpdated: "",
   vmUpdated: "",
+  source: "last-known",
+  fetchedAt: "",
 };
 
 // Frameworks Sovereign Town measures conduct against — the "governed against"
@@ -91,6 +132,16 @@ export default function SovereignTown() {
             why governance architecture decides whether multi-agent AI systems thrive or collapse.
             Every figure below is summed from a hash-chained Ed25519 ledger.
           </p>
+          {/* Honesty bar: the feed state is part of the figure. */}
+          <p className="mt-3 text-xs">
+            {s.source === "live" ? (
+              <span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1 font-bold uppercase tracking-wider text-emerald-300">live feed · fetched {s.fetchedAt ? new Date(s.fetchedAt).toLocaleString() : "just now"}</span>
+            ) : s.source === "partial" ? (
+              <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 font-bold uppercase tracking-wider text-amber-300">partial feed — some sources offline</span>
+            ) : (
+              <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 font-bold uppercase tracking-wider text-amber-300">last-known figures — live feed offline</span>
+            )}
+          </p>
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-5">
             {stats.map((st) => (
               <div
@@ -132,6 +183,8 @@ export default function SovereignTown() {
           </div>
         </div>
       </section>
+
+      <OracleFleetStrip />
 
       {/* "Governed against" — the frameworks wall */}
       <section className="border-b border-gray-100 bg-gray-50">
