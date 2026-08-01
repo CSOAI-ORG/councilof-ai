@@ -18,6 +18,11 @@ import {
   Download,
   ExternalLink,
 } from 'lucide-react';
+import FaqBlock from '@/components/FaqBlock';
+import SpotInfographic from '@/components/SpotInfographic';
+import { LANE4 } from '@/data/lane4Content';
+
+const L4 = LANE4["accreditation"];
 
 export default function Accreditation() {
   const frameworks = [
@@ -396,6 +401,9 @@ export default function Accreditation() {
           </div>
         </div>
       </section>
+
+      <SpotInfographic title={L4.spotTitle} stats={L4.spotStats} source={L4.spotSource} />
+      <FaqBlock title={L4.faqTitle} intro={L4.faqIntro} items={L4.faq} />
     </div>
   );
 }

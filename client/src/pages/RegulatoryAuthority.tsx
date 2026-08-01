@@ -13,10 +13,10 @@ export default function RegulatoryAuthority() {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              CSOAI: The Global Authority for AI Safety Governance
+              CSOAI: A Measurement Body for AI Safety Governance
             </h1>
             <p className="text-xl text-gray-700 mb-8">
-              Recognized by regulators worldwide. Trusted by enterprises globally. Certified by international standards bodies.
+              A measurement body for AI governance: signed, provision-anchored measurement records — not accredited certification.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/regulatory/iso-17065">
@@ -51,16 +51,16 @@ export default function RegulatoryAuthority() {
               <Card className="p-8 border-2 border-emerald-200 hover:shadow-lg transition">
                 <div className="flex items-center gap-3 mb-4">
                   <Shield className="h-8 w-8 text-emerald-600" />
-                  <h3 className="text-2xl font-bold text-gray-900">Accreditation Authority</h3>
+                  <h3 className="text-2xl font-bold text-gray-900">Measurement Body</h3>
                 </div>
                 <ul className="space-y-3 text-gray-700 mb-6">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>ISO 17065 certified accreditation body</span>
+                    <span>ISO/IEC 17065 pathway — under evaluation, not held</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>Formal recognition of training and certification processes</span>
+                    <span>Signed attestation records for training and measurement processes</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
@@ -68,7 +68,7 @@ export default function RegulatoryAuthority() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>Enables global recognition of certifications</span>
+                    <span>Signed records that third parties can verify independently</span>
                   </li>
                 </ul>
                 <Link href="/regulatory/iso-17065">
@@ -87,11 +87,11 @@ export default function RegulatoryAuthority() {
                 <ul className="space-y-3 text-gray-700 mb-6">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>EU Notified Body status (Europe)</span>
+                    <span>○ EU Notified Body status — future option, not held</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>NIST recognition (United States)</span>
+                    <span>NIST AI RMF mapping (United States)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
@@ -152,7 +152,7 @@ export default function RegulatoryAuthority() {
               Global Regulatory Recognition
             </h2>
             <p className="text-xl text-gray-700 text-center mb-12">
-              CSOAI is recognized by the world's leading regulatory bodies
+              CSOAI's measurement records map to the world's leading regulatory frameworks
             </p>
 
             <div className="grid md:grid-cols-2 gap-8">
@@ -166,7 +166,7 @@ export default function RegulatoryAuthority() {
                   International standard for accreditation bodies certifying products, processes, and services.
                 </p>
                 <ul className="space-y-2 text-gray-700 text-sm mb-6">
-                  <li>✓ Formal recognition as accreditation body</li>
+                  <li>○ Accreditation-chain recognition — a future option, not claimed today</li>
                   <li>✓ International credibility</li>
                   <li>✓ Foundation for all other recognitions</li>
                   <li>✓ Timeline: 12 months (2025)</li>
@@ -256,7 +256,7 @@ export default function RegulatoryAuthority() {
               5-Year Roadmap to Global Standard
             </h2>
             <p className="text-xl text-gray-700 text-center mb-12">
-              From accreditation body to mandatory global infrastructure
+              From measurement body to trusted public infrastructure
             </p>
 
             <div className="space-y-8">
@@ -270,8 +270,8 @@ export default function RegulatoryAuthority() {
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Foundation</h3>
                   <ul className="space-y-2 text-gray-700">
-                    <li>✓ ISO 17065 certification achieved</li>
-                    <li>✓ Analyst network scaled to 1,500</li>
+                    <li>○ ISO/IEC 17065 — future option, not pursued today</li>
+                    <li>○ Analyst network — design target, not current</li>
                     <li>✓ Government Portal launched (beta)</li>
                     <li>✓ Revenue: $41M</li>
                   </ul>

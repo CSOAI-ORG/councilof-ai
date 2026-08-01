@@ -80,7 +80,7 @@ export default function GlobalRegulationTracker() {
       statusColor: "bg-green-500/10 border-green-500/30",
       enforcementDate: "August 1, 2024",
       implementationDate: "Phased to August 2027",
-      description: "World's first comprehensive AI regulation with risk-based framework",
+      description: "The first comprehensive AI regulation with a risk-based framework",
       requirements: [
         "Risk-based classification (unacceptable, high, limited, minimal)",
         "High-risk systems require conformity assessment and documentation",

@@ -3,7 +3,7 @@ import { chargeSovereign } from "../lib/sovCharge";
 import CouncilVote from "../components/CouncilVote";
 import AISystemNotice from "../components/AISystemNotice";
 
-// TryCouncil — the 30-second WOW. The world's first AI Governance Council, live.
+// TryCouncil — the 30-second WOW. The governed AI-council design, as an interactive demo.
 // Type a compliance question; five specialised agents (Oracle, Skeptic, Architect,
 // Ethicist, Strategist) deliberate with fault-aware consensus voting and return a
 // risk classification mapped to global frameworks. Runs entirely client-side as a
@@ -120,7 +120,7 @@ export default function TryCouncil() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-5xl mx-auto px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI · the world's first AI governance council</p>
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI · governed AI council — design demo</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">AI Governance That Thinks</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Five AI agents debate your compliance question across global frameworks — and return a risk verdict in seconds. Ask anything.</p>
 

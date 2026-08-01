@@ -146,7 +146,7 @@ export default function EUAIActCompliance() {
         <div className="mb-20 bg-emerald-50 p-12 rounded-lg border-2 border-emerald-200">
           <h2 className="text-3xl font-bold mb-6">What is the EU AI Act?</h2>
           <p className="text-gray-700 mb-4">
-            The European Union's Artificial Intelligence Act is the world's first comprehensive AI regulation. It takes a risk-based approach, imposing stricter requirements on higher-risk AI systems. The Act applies to any AI system that affects people in the EU, regardless of where the system is developed or deployed.
+            The European Union's Artificial Intelligence Act is the first comprehensive AI regulation. It takes a risk-based approach, imposing stricter requirements on higher-risk AI systems. The Act applies to any AI system that affects people in the EU, regardless of where the system is developed or deployed.
           </p>
           <p className="text-gray-700">
             The Act categorizes AI systems into four risk levels: Prohibited (banned entirely), High-Risk (extensive requirements), Limited Risk (transparency requirements), and Minimal Risk (no specific requirements). Most commercial AI systems fall into High-Risk or Limited Risk categories.

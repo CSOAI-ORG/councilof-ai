@@ -1,6 +1,6 @@
 /**
  * ISO/IEC 42001 Comprehensive Guide
- * The definitive resource for understanding the world's first certifiable AI Management System standard
+ * The definitive resource for understanding the first certifiable AI Management System standard
  */
 
 import { motion } from "framer-motion";
@@ -393,7 +393,7 @@ export default function ISO42001Guide() {
   const faqs = [
     {
       question: "What is ISO/IEC 42001 and when was it published?",
-      answer: "ISO/IEC 42001:2023 is the world's first international standard for AI Management Systems (AIMS). Published in December 2023, it specifies requirements for organizations to establish, implement, maintain, and continually improve an AI management system. It provides a framework for managing AI-related risks and opportunities within an organization's context."
+      answer: "ISO/IEC 42001:2023 is the first international standard for AI Management Systems (AIMS). Published in December 2023, it specifies requirements for organizations to establish, implement, maintain, and continually improve an AI management system. It provides a framework for managing AI-related risks and opportunities within an organization's context."
     },
     {
       question: "Is ISO 42001 certification mandatory?",
@@ -456,7 +456,7 @@ export default function ISO42001Guide() {
               <span className="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"> ISO/IEC 42001</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              The world's first certifiable international standard for AI Management Systems.
+              The first certifiable international standard for AI Management Systems.
               Establish, implement, and maintain a comprehensive framework for responsible AI
               governance with third-party certification.
             </p>

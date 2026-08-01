@@ -27,6 +27,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import FaqBlock from "@/components/FaqBlock";
+import SpotInfographic from "@/components/SpotInfographic";
+import { LANE4 } from "@/data/lane4Content";
+
+const L4 = LANE4["trust-center"];
 
 interface AccordionItem {
   id: string;
@@ -269,8 +274,8 @@ export default function TrustCenter() {
       description: "Maximum time to notify affected users of security incidents",
     },
     {
-      metric: "99.99% Uptime",
-      description: "Historical uptime SLA for platform availability",
+      metric: "Uptime",
+      description: "Not measured publicly — see /status for live availability of probed services",
     },
   ];
 
@@ -951,6 +956,9 @@ export default function TrustCenter() {
           </div>
         </div>
       </div>
+
+      <SpotInfographic title={L4.spotTitle} stats={L4.spotStats} source={L4.spotSource} />
+      <FaqBlock title={L4.faqTitle} intro={L4.faqIntro} items={L4.faq} />
 
       {/* Footer Note */}
       <div className="bg-slate-50 border-t-1 py-8">

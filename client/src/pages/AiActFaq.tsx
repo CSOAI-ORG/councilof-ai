@@ -4,7 +4,7 @@ import SovereignSpot from "../components/SovereignSpot";
 // AiActFaq - a broad EU AI Act FAQ with accordion UI + full FAQPage JSON-LD (10 Q&As).
 type QA = { q: string; a: string };
 const QAS: QA[] = [
-  { q: "What is the EU AI Act?", a: "The world's first comprehensive AI law. It regulates AI by risk - banning unacceptable uses, heavily regulating high-risk systems, requiring transparency for limited-risk AI, and leaving minimal-risk AI largely free." },
+  { q: "What is the EU AI Act?", a: "The first comprehensive AI law. It regulates AI by risk - banning unacceptable uses, heavily regulating high-risk systems, requiring transparency for limited-risk AI, and leaving minimal-risk AI largely free." },
   { q: "When does the EU AI Act apply?", a: "It entered into force on 1 August 2024 and applies in phases: prohibited practices from Feb 2025, GPAI rules from Aug 2025, transparency from 2 August 2026, and high-risk obligations through 2027." },
   { q: "Who has to comply?", a: "Providers and deployers of AI systems placed on or used in the EU market - including companies based outside the EU whose AI output is used in the Union." },
   { q: "What is a high-risk AI system?", a: "AI used in a sensitive Annex III area - biometrics, critical infrastructure, education, employment, essential services, law enforcement, migration, or justice - or as a safety component of a regulated product." },

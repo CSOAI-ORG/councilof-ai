@@ -36,7 +36,7 @@ export default function EI3() {
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "MEOK ONE EI3 — Emotional Intelligence Substrate",
-    "description": "The world's first measurable, formula-cited, audit-friendly AI emotional intelligence substrate. Powered by Maternal Covenant + 52-Article Charter + ASSTI benchmark.",
+    "description": "A measurable, formula-cited, audit-friendly AI emotional-intelligence substrate. Powered by Maternal Covenant + 52-Article Charter + ASSTI benchmark.",
     "datePublished": "2026-05-28",
     "publisher": { "@type": "Organization", "name": "CSOAI LTD" }
   };
@@ -54,7 +54,7 @@ export default function EI3() {
             MEOK ONE EI3
           </h1>
           <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl leading-relaxed">
-            The world's first <span className="font-semibold text-rose-700 dark:text-rose-400">measurable, formula-cited, audit-friendly</span> AI emotional intelligence substrate.
+            A <span className="font-semibold text-rose-700 dark:text-rose-400">measurable, formula-cited, audit-friendly</span> AI emotional-intelligence substrate.
             <br />
             Care is not a vibe. It is a vector you can verify.
           </p>

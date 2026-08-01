@@ -209,7 +209,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "Continuous Monitoring",
     definition:
-      "Ongoing, real-time assessment of AI system performance, behavior, and compliance. Enables early detection of drift, bias emergence, security threats, and regulatory violations through automated and manual analysis.",
+      "Ongoing, real-time assessment of AI system performance, behavior, and compliance. Enables early detection of drift, bias drift, security threats, and regulatory violations through automated and manual analysis.",
     category: "Technical",
     relatedTerms: [
       "Model Monitoring",
@@ -669,7 +669,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "Post-Market Monitoring",
     definition:
-      "Ongoing surveillance and evaluation of AI systems after deployment to detect performance issues, safety failures, bias emergence, security threats, and compliance violations. Required for high-risk systems under EU AI Act.",
+      "Ongoing surveillance and evaluation of AI systems after deployment to detect performance issues, safety failures, bias drift, security threats, and compliance violations. Required for high-risk systems under EU AI Act.",
     category: "Compliance",
     relatedTerms: [
       "Continuous Monitoring",

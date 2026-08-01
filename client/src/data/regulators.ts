@@ -30,7 +30,7 @@ export const REGIMES: Regime[] = [
   {
     slug: "eu-ai-act", name: "EU AI Act", region: "European Union", authority: "European Commission · AI Office · national authorities",
     kind: "ai", status: "phasing-in",
-    summary: "The world's first comprehensive, binding, risk-tiered AI law. Prohibited practices, high-risk obligations, transparency duties, and GPAI rules — phasing in through 2027.",
+    summary: "The first comprehensive, binding, risk-tiered AI law. Prohibited practices, high-risk obligations, transparency duties, and GPAI rules — phasing in through 2027.",
     topTools: [
       "Risk classification engine (prohibited / high-risk / limited / minimal)",
       "Conformity assessment + CE-marking workflow (Art. 43)",

@@ -29,7 +29,7 @@ export const HIVE: HiveFramework[] = [
   {
     slug: "eu-ai-act", name: "EU AI Act", authority: "European Commission / AI Office", seat: "Brussels, EU", lat: 50.85, lng: 4.35,
     status: "Binding", effective: "1 Aug 2024 (phased)", deadline: "2026-08-02", deadlineLabel: "GPAI + transparency obligations apply",
-    summary: "The world's first comprehensive, binding AI law. Risk-tiered (unacceptable / high / limited / minimal), with GPAI model rules and heavy transparency duties. Extraterritorial — applies to any provider putting AI on the EU market.",
+    summary: "The first comprehensive, binding AI law. Risk-tiered (unacceptable / high / limited / minimal), with GPAI model rules and heavy transparency duties. Extraterritorial — applies to any provider putting AI on the EU market.",
     whoMustComply: ["Providers & deployers of AI in the EU", "GPAI model providers globally", "Importers, distributors, product manufacturers"],
     keyObligations: [
       { t: "Risk classification", d: "Classify every system: prohibited, high-risk (Annex III), limited or minimal." },
@@ -165,7 +165,7 @@ export const HIVE: HiveFramework[] = [
   {
     slug: "council-of-europe-ai-convention", name: "Council of Europe AI Convention", authority: "Council of Europe", seat: "Strasbourg, EU", lat: 48.57, lng: 7.75,
     status: "Treaty", effective: "Opened for signature Sep 2024",
-    summary: "The world's first binding international AI treaty — human rights, democracy and rule of law. Signed by EU, UK, US, and others; becomes law domestically as Parties ratify.",
+    summary: "The first binding international AI treaty — human rights, democracy and rule of law. Signed by EU, UK, US, and others; becomes law domestically as Parties ratify.",
     whoMustComply: ["States that ratify (then their public & private actors via domestic law)"],
     keyObligations: [
       { t: "Human dignity & autonomy", d: "Protect fundamental rights across the AI lifecycle." },

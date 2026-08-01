@@ -15,7 +15,7 @@ export default function ActSummary() {
     const sc = document.createElement("script");
     sc.type = "application/ld+json";
     sc.text = JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
-      { "@type": "Question", "name": "What is the EU AI Act?", "acceptedAnswer": { "@type": "Answer", "text": "The EU AI Act is the world's first comprehensive AI law. It regulates AI by risk level - banning unacceptable uses, heavily regulating high-risk systems, requiring transparency for limited-risk AI, and leaving minimal-risk AI largely free." } },
+      { "@type": "Question", "name": "What is the EU AI Act?", "acceptedAnswer": { "@type": "Answer", "text": "The EU AI Act is the first comprehensive AI law. It regulates AI by risk level - banning unacceptable uses, heavily regulating high-risk systems, requiring transparency for limited-risk AI, and leaving minimal-risk AI largely free." } },
       { "@type": "Question", "name": "Who does the EU AI Act apply to?", "acceptedAnswer": { "@type": "Answer", "text": "It applies to providers and deployers of AI systems placed on or used in the EU market, including organisations based outside the EU." } },
       { "@type": "Question", "name": "What are the EU AI Act penalties?", "acceptedAnswer": { "@type": "Answer", "text": "Up to EUR 35 million or 7% of global annual turnover for prohibited practices, and up to EUR 15 million or 3% for other obligations." } },
     ] });
@@ -29,7 +29,7 @@ export default function ActSummary() {
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the 5-minute version</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The EU AI Act, explained</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The world's first comprehensive AI law, in plain English. It sorts AI into four risk tiers and regulates each differently. Here is the whole thing in five minutes.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The first comprehensive AI law, in plain English. It sorts AI into four risk tiers and regulates each differently. Here is the whole thing in five minutes.</p>
         </div>
       </section>
       <section className="max-w-5xl mx-auto px-6 py-12">

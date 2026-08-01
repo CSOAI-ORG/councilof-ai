@@ -1,7 +1,7 @@
 /**
  * CSOAI Platform - Client Entry Point
  *
- * Council of Safety of AI - The World's First AI Safety Infrastructure
+ * Council for the Safety of AI — measured AI safety infrastructure
  */
 
 import React from 'react';

@@ -125,7 +125,7 @@ export default function Careers() {
           >
             <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
             <p className="text-lg text-muted-foreground mb-8">
-              CSOAI is the world's first relationship-based AI safety infrastructure organization.
+              CSOAI builds relationship-based AI safety infrastructure: measurement instruments, signed attestation records, and role-based training.
               We're not a think tank or policy shop—we're building real operational systems for
               AI governance, training, and economic redistribution through the Prosperity Fund.
             </p>

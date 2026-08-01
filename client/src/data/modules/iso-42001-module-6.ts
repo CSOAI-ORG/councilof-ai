@@ -45,11 +45,11 @@ export const iso42001Module6Quiz: QuizQuestion[] = [
     options: [
       'Any consultant can certify an AIMS',
       'Choose the least expensive option available',
-      'Select a certification body accredited by a national accreditation body (like UKAS, ANSI, or equivalent) with credentials in ISO 42001',
+      'Select a certification body accredited by a national accreditation organisation (UKAS, ANAB, or equivalent) with credentials in ISO 42001',
       'Certification body selection is not important',
     ],
     correctAnswer: 2,
-    explanation: 'Organizations should select a certification body that is accredited by a recognized national accreditation body (such as UKAS in the UK or ANSI in the US) and has specific accreditation for ISO/IEC 42001.',
+    explanation: 'Organizations should select a certification body that is accredited by a recognized national accreditation organisation (such as UKAS in the UK or ANAB in the US) and has specific accreditation for ISO/IEC 42001.',
   },
   {
     id: 6,

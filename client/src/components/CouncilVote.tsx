@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-// CouncilVote — a DESIGN SIMULATION of the 33-seat council's 2/3 quorum.
+// CouncilVote — a DESIGN SIMULATION of the 33-seat council's supermajority quorum.
 // This is an illustration of the architecture, not a live vote: the measured
 // cross-checking value today is n_eff 1.21 of 3 (see /refutation-ledger).
-// 33 nodes in a ring vote toward a 2/3 quorum; a care-floor gauge holds at
+// 33 nodes in a ring vote toward a supermajority quorum; a care-floor gauge holds at
 // 0.95. Pure SVG + rAF, zero deps. Re-runs when `trigger` changes.
 const N = 33;
 const QUORUM = Math.ceil((2 * N) / 3); // 22 — Byzantine 2/3
@@ -73,13 +73,13 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
           </div>
           {phase === "done" && (
             <div className={"mt-2 rounded-lg border px-3 py-2 text-[12px] " + (reached ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-100" : "border-amber-400/30 bg-amber-500/10 text-amber-100")}>
-              {reached ? "▲ 2/3 quorum in this design simulation — in the target architecture the verdict seals to Layer 0." : "No quorum in this round — the council design withholds a verdict rather than forcing one."}
+              {reached ? "▲ Supermajority reached in this design simulation — in the target architecture the verdict seals to Layer 0." : "No quorum in this round — the council design withholds a verdict rather than forcing one."}
               {verdict && reached && <div className="mt-1 font-semibold text-emerald-200">{verdict}</div>}
             </div>
           )}
         </div>
       </div>
-      <p className="mt-2 text-[10px] text-emerald-300/40">Design simulation of the 33-seat architecture: no single agent decides — a 2/3 quorum does, so the council can't be captured. Honest dissent is tolerated by design (Charter Art. 11). Measured cross-checking today: n_eff 1.21 of 3 — see the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.</p>
+      <p className="mt-2 text-[10px] text-emerald-300/40">Design simulation of the 33-seat architecture: no single agent decides — a supermajority does, so the council can't be captured. Honest dissent is tolerated by design (Charter Art. 11). Measured cross-checking today: n_eff 1.21 of 3 — see the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.</p>
     </div>
   );
 }

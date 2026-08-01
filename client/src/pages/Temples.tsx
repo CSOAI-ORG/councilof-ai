@@ -11,7 +11,7 @@ type Temple = {
 };
 
 const TEMPLES: Temple[] = [
-  { id: "euaiact", name: "EU AI Act", seat: "Brussels · European Union", coords: "50.85°N, 4.35°E", lat: 50.85, lng: 4.35, glyph: "⚖", tagline: "Risk-tiered, the world's first horizontal AI law.",
+  { id: "euaiact", name: "EU AI Act", seat: "Brussels · European Union", coords: "50.85°N, 4.35°E", lat: 50.85, lng: 4.35, glyph: "⚖", tagline: "Risk-tiered, the first horizontal AI law.",
     pillars: [
       { k: "Prohibited", v: "Social scoring, real-time biometric ID, manipulation" },
       { k: "High-risk", v: "Annex III: health, finance, hiring, justice, infra" },

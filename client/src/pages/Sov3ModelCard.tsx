@@ -110,7 +110,7 @@ export default function Sov3ModelCard() {
           <ul className="space-y-1.5 text-[13px] text-emerald-100/85">
             <li className="flex gap-2"><span className="text-rose-400">✕</span>Not a from-scratch trained foundation model — every language capability is borrowed from an open base.</li>
             <li className="flex gap-2"><span className="text-rose-400">✕</span>Not benchmarked head-to-head against frontier models (GSM8K/MMLU) — that capability grade is still open, gated on a real GPU run.</li>
-            <li className="flex gap-2"><span className="text-rose-400">✕</span>Not AGI, not conscious in the literal sense — any language describing "emergence" or "consciousness" in internal material is a metaphor for the substrate's evolving-memory design, never a literal claim.</li>
+            <li className="flex gap-2"><span className="text-rose-400">✕</span>Not AGI, not conscious in the literal sense — any language about emergent behaviour or "consciousness" in internal material is a metaphor for the substrate's evolving-memory design, never a literal claim.</li>
             <li className="flex gap-2"><span className="text-rose-400">✕</span>Status-check endpoints that report component health (e.g. "model loaded: true") are current placeholders, not live hardware probes — treat any such flag as informational only until it is replaced with a real probe.</li>
           </ul>
         </Section>

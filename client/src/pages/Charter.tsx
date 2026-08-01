@@ -266,7 +266,7 @@ export default function Charter() {
               52 Articles - 13 Schedules - 6 Parts
             </p>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
-              The world's first relationship-based AI governance framework. Not just rules to follow—a
+              A relationship-based AI governance framework. Not just rules to follow—a
               partnership between humanity and AI built on care, safety, and shared prosperity.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

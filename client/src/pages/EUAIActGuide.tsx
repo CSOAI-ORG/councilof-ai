@@ -361,7 +361,7 @@ export default function EUAIActGuide() {
               <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> EU AI Act</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              The world's first comprehensive AI regulation. Understand the risk-based framework,
+              The first comprehensive AI regulation. Understand the risk-based framework,
               compliance requirements, key deadlines, and penalties. Everything you need to prepare
               your organization for full compliance.
             </p>

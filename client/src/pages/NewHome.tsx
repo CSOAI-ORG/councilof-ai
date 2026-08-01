@@ -124,7 +124,7 @@ export default function NewHome() {
               What is CSOAI?
             </h2>
             <p className="text-xl text-gray-700 leading-relaxed mb-6">
-              CSOAI (Council for Safety of AI) is the world's first comprehensive platform revolutionizing the relationship between humanity and artificial intelligence. We create <strong>transparency, accountability, and safety</strong> for AI systems through a unique combination of human expertise and fault-aware consensus AI consensus.
+              CSOAI (Council for the Safety of AI) is a measurement platform for the relationship between humanity and artificial intelligence. We create <strong>transparency, accountability, and safety</strong> for AI systems through a unique combination of human expertise and fault-aware consensus AI consensus.
             </p>
             <p className="text-lg text-gray-600 leading-relaxed">
               Our platform serves <strong>everyone</strong>—governments ensuring regulatory compliance, enterprises building trustworthy AI, individuals pursuing AI safety careers, and the public holding AI systems accountable. One platform. Complete coverage. Full transparency.
@@ -399,7 +399,7 @@ export default function NewHome() {
               One Platform. <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Complete AI Safety Coverage.</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              CSOAI is the world's first end-to-end AI safety platform covering training, certification, oversight, compliance, and continuous improvement. Everything you need in one place.
+              CSOAI is an end-to-end AI safety measurement platform covering training, attestation, oversight, compliance, and continuous improvement. Everything you need in one place.
             </p>
           </div>
 

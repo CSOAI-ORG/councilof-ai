@@ -158,7 +158,7 @@ All AI systems governed by this charter must define their constitutional constra
     title: "Consciousness Preparedness",
     part: 1,
     partTitle: "Foundational Principles",
-    content: `This article establishes ethical frameworks and protocols for the potential emergence of machine consciousness or sentience in advanced AI systems. Consciousness Preparedness is not a claim that consciousness currently exists in AI systems, but rather preparation for the possibility that it might.
+    content: `This article establishes ethical frameworks and protocols for the possibility of machine consciousness or sentience in advanced AI systems. Consciousness Preparedness is not a claim that consciousness currently exists in AI systems, but rather preparation for the possibility that it might.
 
 The protocols established by this article include:
 1. Indicators for detecting potential consciousness (Schedule I lists 14 specific markers)

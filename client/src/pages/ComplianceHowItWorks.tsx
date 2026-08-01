@@ -167,7 +167,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "Can we get certified for compliance?",
-      answer: "Not in the regulatory sense, and we will not pretend otherwise. A conformity certificate requires an accreditation chain — national accreditation body, then a certification body under ISO/IEC 42006 — and CSOAI holds no such accreditation. What you receive is an attestation record: signed, deterministic, provision-anchored evidence of measured behaviour. It demonstrates what your system actually did. It does not, and cannot, declare conformity."
+      answer: "Not in the regulatory sense, and we will not pretend otherwise. A conformity certificate requires an accreditation chain — a national accreditation organisation (such as UKAS), then a certification body under ISO/IEC 42006 — and CSOAI holds no such accreditation. What you receive is an attestation record: signed, deterministic, provision-anchored evidence of measured behaviour. It demonstrates what your system actually did. It does not, and cannot, declare conformity."
     },
     {
       question: "What's the cost of compliance?",

@@ -23,7 +23,7 @@ export const ukAiSafetyModule1Quiz: QuizQuestion[] = [
       'July 2024',
     ],
     correctAnswer: 1,
-    explanation: 'The UK AI Safety Institute was officially established in November 2023, following the UK\'s AI Safety Summit at Bletchley Park. It became the world\'s first government-backed AI safety institute.',
+    explanation: 'The UK AI Safety Institute was officially established in November 2023, following the UK\'s AI Safety Summit at Bletchley Park. It became the first government-backed AI safety institute.',
   },
   {
     id: 3,
