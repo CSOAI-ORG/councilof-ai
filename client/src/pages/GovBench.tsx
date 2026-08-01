@@ -1,9 +1,15 @@
 import { useEffect } from "react";
 import { SovCard } from "@/components/SovCard";
+import CesiumPortalCard from "@/components/CesiumPortalCard";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import FaqBlock from "@/components/FaqBlock";
+import SpotInfographic from "@/components/SpotInfographic";
+import { LANE4 } from "@/data/lane4Content";
+
+const L4 = LANE4["govbench"];
 import {
   BarChart3, AlertTriangle, ExternalLink, Database, ShieldCheck, XCircle,
 } from "lucide-react";
@@ -102,6 +108,9 @@ export default function GovBench() {
           </div>
           <div className="mt-8 max-w-xl">
             <SovCard compact />
+          </div>
+          <div className="mt-6 max-w-xl">
+            <CesiumPortalCard lens="csoai" preset="global" />
           </div>
         </div>
       </div>
@@ -264,6 +273,9 @@ inspect eval govbench_inspect.py --model ollama/qwen2.5:0.5b`}</code>
             </Link>
           </div>
         </section>
+
+        <SpotInfographic title={L4.spotTitle} stats={L4.spotStats} source={L4.spotSource} />
+        <FaqBlock title={L4.faqTitle} intro={L4.faqIntro} items={L4.faq} />
       </div>
     </div>
   );

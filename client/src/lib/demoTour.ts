@@ -82,7 +82,21 @@ export const TOUR: TourStep[] = [
 
 const A = "sov_tour_active", S = "sov_tour_step", SEEN = "sov_tour_seen";
 
-export function startTour() { try { localStorage.setItem(A, "1"); localStorage.setItem(S, "0"); localStorage.setItem(SEEN, "1"); } catch (e) {} }
+// Topic lenses — a surface (e.g. CesiumPortalCard) can start the tour at the
+// step its visitor actually cares about instead of always at the beginning.
+// Values are indexes into TOUR: 1=/os, 3=/try, 7=/watchdog-map.
+export const TOUR_TOPICS: Record<string, number> = {
+  os: 1,          // the Sovereign OS tool floor
+  measurement: 3, // the 33-agent Byzantine council rules on a real scenario
+  regulator: 7,   // public, cryptographic accountability
+};
+
+export function tourStartStep(topic?: string): number {
+  const i = topic ? TOUR_TOPICS[topic] : undefined;
+  return i != null && i >= 0 && i < TOUR.length ? i : 0;
+}
+
+export function startTour(topic?: string) { try { localStorage.setItem(A, "1"); localStorage.setItem(S, String(tourStartStep(topic))); localStorage.setItem(SEEN, "1"); } catch (e) {} }
 export function endTour() { try { localStorage.removeItem(A); localStorage.removeItem(S); } catch (e) {} }
 export function tourActive(): boolean { try { return localStorage.getItem(A) === "1"; } catch (e) { return false; } }
 export function tourStep(): number { try { return parseInt(localStorage.getItem(S) || "0", 10) || 0; } catch (e) { return 0; } }

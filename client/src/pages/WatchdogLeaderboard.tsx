@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 import { Link } from "wouter";
+import CesiumPortalCard from "@/components/CesiumPortalCard";
 import { motion } from "framer-motion";
 import {
   Trophy,
@@ -104,6 +105,11 @@ export default function WatchdogLeaderboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        {/* 3D portal — the regulator lens: public accountability, mapped live */}
+        <div className="mb-8">
+          <CesiumPortalCard lens="defoneos" preset="global" />
+        </div>
+
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
           <Card>

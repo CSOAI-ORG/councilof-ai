@@ -59,6 +59,7 @@ import { lazy, Suspense } from "react";
 import AnimatedParticles from "@/components/AnimatedParticles";
 import EUAIActCountdown from "@/components/EUAIActCountdown";
 import { SovereignConsole } from "@/components/SovereignConsole";
+import CesiumPortalCard from "@/components/CesiumPortalCard";
 // Below-the-fold sections — lazy-loaded to keep the initial landing bundle small (defers recharts + network viz off first paint).
 const EcosystemDiagram = lazy(() => import("@/components/EcosystemDiagram"));
 const CouncilVisualization = lazy(() => import("@/components/CouncilVisualization"));
@@ -475,6 +476,15 @@ export default function NewHomeV2() {
               <ChevronDown className="h-8 w-8" />
             </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ============================================ */}
+      {/* 3D PORTAL — the measurement lens (click-to-load globe, region opt-in only) */}
+      {/* ============================================ */}
+      <section className="bg-white px-6 py-14">
+        <div className="mx-auto max-w-4xl">
+          <CesiumPortalCard lens="csoai" preset="global" />
         </div>
       </section>
 

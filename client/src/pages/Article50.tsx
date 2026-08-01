@@ -1,5 +1,11 @@
 import { useEffect } from "react";
 import { COUNTS, AI_SYSTEM_COMPONENTS } from "@/lib/ai-surfaces";
+import CesiumPortalCard from "@/components/CesiumPortalCard";
+import FaqBlock from "@/components/FaqBlock";
+import SpotInfographic from "@/components/SpotInfographic";
+import { LANE4 } from "@/data/lane4Content";
+
+const L4 = LANE4["article-50"];
 
 // /article-50 — the EU AI Act transparency cliff. Verified dates (July 2026):
 // Article 50 transparency obligations apply from 2 Aug 2026; machine-readable
@@ -85,6 +91,11 @@ export default function Article50() {
           <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-4"><div className="text-3xl font-black text-emerald-200">{aug27}</div><div className="text-sm text-emerald-100/80">days → legacy GPAI full compliance (2 Aug 2027)</div></div>
         </div>
 
+        {/* 3D portal — the measurement lens over the region where Article 50 binds */}
+        <div className="mt-8">
+          <CesiumPortalCard lens="csoai" preset="eu" dark />
+        </div>
+
         {/* THE FULL CHECKLIST */}
         <h2 className="mt-12 text-2xl font-black tracking-tight">The full checklist — and what we do about each line</h2>
         <p className="mt-2 text-[13px] text-emerald-100/60">
@@ -164,6 +175,9 @@ export default function Article50() {
             ))}
           </div>
         </div>
+
+        <SpotInfographic title={L4.spotTitle} stats={L4.spotStats} source={L4.spotSource} />
+        <FaqBlock title={L4.faqTitle} intro={L4.faqIntro} items={L4.faq} />
         <p className="mt-6 text-[11px] text-emerald-300/70">Dates verified July 2026 (AI Omnibus provisional agreement, May 2026). Indicative guidance, not legal advice — verify against primary EU sources.</p>
       </div>
     </div>

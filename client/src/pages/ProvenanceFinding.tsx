@@ -1,5 +1,11 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import CesiumPortalCard from "@/components/CesiumPortalCard";
+import FaqBlock from "@/components/FaqBlock";
+import SpotInfographic from "@/components/SpotInfographic";
+import { LANE4 } from "@/data/lane4Content";
+
+const L4 = LANE4["provenance-finding"];
 
 /**
  * /provenance-finding — the measured ProvBench result, on the site people actually reach.
@@ -86,6 +92,11 @@ export default function ProvenanceFinding() {
             </p>
           </div>
         </div>
+      </section>
+
+      {/* 3D portal — where the marking duty binds, measured not marketed */}
+      <section className="mx-auto max-w-4xl px-6 pt-12">
+        <CesiumPortalCard lens="csoai" preset="eu" dark />
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-12 space-y-10">
@@ -215,6 +226,9 @@ export default function ProvenanceFinding() {
           recomputable from <code>results/provbench.json</code>.
         </p>
       </section>
+
+      <SpotInfographic title={L4.spotTitle} stats={L4.spotStats} source={L4.spotSource} />
+      <FaqBlock title={L4.faqTitle} intro={L4.faqIntro} items={L4.faq} />
     </div>
   );
 }
