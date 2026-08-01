@@ -5,11 +5,16 @@
  */
 
 import { Link } from "wouter";
-import { startTour } from "../lib/demoTour";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import ConsensusHero from "../components/ConsensusHero";
+import { CANON, canonValue } from "../data/canonCounters";
 import { motion } from "framer-motion";
+import FaqBlock from "@/components/FaqBlock";
+import SpotInfographic from "@/components/SpotInfographic";
+import { LANE4 } from "@/data/lane4Content";
+
+const L4 = LANE4["home"];
 import {
   Shield,
   CheckCircle,
@@ -32,7 +37,6 @@ import {
   Target,
   Zap,
   ChevronDown,
-  Play,
   BadgeCheck,
   TrendingUp,
   Network,
@@ -44,7 +48,6 @@ import {
   Star,
   Quote,
   HelpCircle,
-  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -57,7 +60,6 @@ import {
 } from "@/components/ui/accordion";
 import { lazy, Suspense } from "react";
 import AnimatedParticles from "@/components/AnimatedParticles";
-import EUAIActCountdown from "@/components/EUAIActCountdown";
 import { SovereignConsole } from "@/components/SovereignConsole";
 import CesiumPortalCard from "@/components/CesiumPortalCard";
 // Below-the-fold sections — lazy-loaded to keep the initial landing bundle small (defers recharts + network viz off first paint).
@@ -99,7 +101,7 @@ const frameworks = [
     name: "EU AI Act",
     year: "2024",
     region: "Europe",
-    description: "The world's first comprehensive AI law. Risk-based approach covering all AI systems in the EU market.",
+    description: "The first comprehensive AI law. Risk-based approach covering all AI systems in the EU market.",
     articles: "113 Articles",
     icon: Flag,
     color: "from-blue-500 to-blue-600",
@@ -217,7 +219,7 @@ const faqs = [
   },
   {
     question: "How does the Byzantine Council work?",
-    answer: "The Byzantine Council consists of 33 AI agents from multiple providers (including GPT-4, Claude, Gemini, and others). Any safety decision requires 23 of 33 agents (70%) to reach consensus - this is fault-aware consensus. No single AI provider can manipulate outcomes. Human analysts provide final oversight on all critical decisions.",
+    answer: `The Byzantine Council is designed as ${CANON.councilAgents.value} agents across multiple providers (GPT-4, Claude, Gemini, and others). Any safety decision requires ${CANON.councilConsensus.value}/${CANON.councilAgents.value} (70%) for consensus. The council is DESIGNED — measured status is on the Refutation Ledger. No single AI provider has majority control. Human analysts provide final oversight.`,
   },
   {
     question: "What frameworks does CSOAI cover?",
@@ -240,17 +242,8 @@ const faqs = [
 export default function NewHomeV2() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Job-creation banner — the breakthrough message (absorbed USP) */}
-      <div className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-4 gap-y-1 px-4 py-2 text-center text-sm">
-          <span className="font-bold">AI is taking jobs. CSOAI is creating them.</span>
-          <span className="hidden sm:inline text-white/90">Become a certified AI Safety Watchdog Analyst — get paid to protect humanity.</span>
-          <a href="/watchdog-signup" className="rounded-full bg-white/15 px-3 py-0.5 font-semibold hover:bg-white/25">Start training →</a>
-          <a href="/classifier" className="rounded-full bg-white/15 px-3 py-0.5 font-semibold hover:bg-white/25">Is your AI high-risk? →</a>
-        </div>
-      </div>
       {/* ============================================ */}
-      {/* SECTION 1: HERO */}
+      {/* SECTION 1: HERO — arena.ai-inspired: console is the product, not copy about it */}
       {/* ============================================ */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900">
         {/* Background depth — pure CSS, no external asset */}
@@ -287,21 +280,7 @@ export default function NewHomeV2() {
           >
             <SovereignConsole />
           </motion.div>
-          {/* Tool actions — do something now, not "learn more". Every target is a
-              working surface, and every figure on them traces to a published artefact. */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="mb-12 flex flex-wrap items-center justify-center gap-3 text-sm"
-          >
-            <Link href="/instrument" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-4 py-2 text-emerald-200 hover:bg-emerald-500/20 transition">Open the instrument</Link>
-            <Link href="/benchmarks" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">Measured results</Link>
-            <Link href="/globe" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">The globe</Link>
-            <Link href="/refutation-ledger" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">What refuted us</Link>
-            <Link href="/verify-certificate" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-white/80 hover:bg-white/10 transition">Verify a report</Link>
-          </motion.div>
-          {/* Main headline */}
+          {/* Main headline — clean, arena.ai-style */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -314,151 +293,52 @@ export default function NewHomeV2() {
               Response to AI
             </span>
           </motion.h1>
-          {/* Launch badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 rounded-full px-5 py-2.5 mb-4"
-          >
-            <Sparkles className="h-4 w-4 text-emerald-400" />
-            <span className="text-emerald-300 text-sm font-medium">
-              Now Live — open, governed AI-safety infrastructure
-            </span>
-          </motion.div>
-          {/* Why We're Different badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-400/30 rounded-full px-5 py-2.5 mb-6"
-          >
-            <BadgeCheck className="h-4 w-4 text-amber-400" />
-            <span className="text-amber-300 text-sm font-medium">
-              100% Free Training | Only Pay When You Earn
-            </span>
-          </motion.div>
+
           {/* Sub-headline */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-300 mb-6 max-w-4xl mx-auto leading-relaxed"
+            className="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed"
           >
-            From fragmentation to unity. Training, licensing, monitoring, and prosperity
+            Training, licensing, monitoring, and prosperity
             <span className="text-emerald-400 font-semibold"> — one platform</span> for
             humanity's AI safety future.
           </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto"
-          >
-            A relationship-based approach to AI safety — partnership, not control.
-            Partnership, not control. Prosperity, not fear.
-          </motion.p>
-
-          {/* Honest differentiator — what sets CSOAI apart from checklist-compliance tools */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.55 }}
-            className="mb-10 flex flex-wrap gap-2 justify-center items-center text-xs"
-          >
-            <span className="text-gray-500 mr-1">Not a compliance checklist —</span>
-            {["Agentic-native", "Ed25519-signed proof", "13-framework crosswalk", "One-command install", "Your data stays yours"].map((x) => (
-              <span key={x} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-3 py-1.5 font-semibold text-emerald-100/90">{x}</span>
-            ))}
-          </motion.div>
-
-                    <div className="mb-10 flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <Link href="/assess"><Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">Free AI Risk Check - signed in 2 min</Button></Link>
-            <Link href="/start"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">Start free - build your own AI</Button></Link>
-            <Link href="/sov-space"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">Try Sov Space</Button></Link>
-            <Link href="/demo"><Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-100 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">▶ Watch the live demo</Button></Link>
-          </div>
-
-          {/* Explore live — the AI economy + the ecosystem, one click */}
-          <div className="mb-10 flex flex-wrap gap-2 justify-center items-center text-xs">
-            <a href="/globe3d.html" className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 font-semibold text-amber-100 hover:bg-amber-400/20">🟡 The AI economy, live on the globe</a>
-            <Link href="/network" className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 font-semibold text-cyan-100 hover:bg-cyan-500/20">🩵 The Sovereign network — 20 signed agents</Link>
-            <Link href="/watchdog-map" className="rounded-full border border-emerald-400/30 px-3 py-1.5 font-semibold text-emerald-100 hover:bg-white/5">◎ The live Watchdog</Link>
-            <Link href="/graph" className="rounded-full border border-emerald-400/30 px-3 py-1.5 font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</Link>
-          </div>
-
-          {/* Choose Your Path - Role-based CTAs */}
+          {/* Two focused CTAs — arena.ai pattern: one primary, one secondary */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-            className="mb-16"
+            transition={{ duration: 0.7, delay: 0.5 }}
+            className="mb-8 flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
-            <p className="text-gray-500 text-sm mb-4">Choose your path:</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/training">
-                <Button
-                  size="lg"
-                  className="bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-6 text-base font-semibold rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 transition-all group"
-                >
-                  <GraduationCap className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-                  I Want to Become an Analyst
-                </Button>
-              </Link>
-              <Link href="/pricing">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-blue-400/50 text-blue-100 bg-transparent hover:bg-blue-500/10 hover:border-blue-400 px-6 py-6 text-base font-semibold rounded-xl transition-all"
-                >
-                  <Building className="mr-2 h-5 w-5" />
-                  I'm an Enterprise / Government
-                </Button>
-              </Link>
-              <Link href="/watchdog">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-purple-400/50 text-purple-100 bg-transparent hover:bg-purple-500/10 hover:border-purple-400 px-6 py-6 text-base font-semibold rounded-xl transition-all"
-                >
-                  <Eye className="mr-2 h-5 w-5" />
-                  I'm a Concerned Citizen
-                </Button>
-              </Link>
-            </div>
+            <Link href="/assess">
+              <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">
+                Free AI Risk Check — signed in 2 min
+              </Button>
+            </Link>
+            <Link href="/sov-space">
+              <Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">
+                Try Sov Space
+              </Button>
+            </Link>
           </motion.div>
 
-          {/* Stats row */}
+          {/* Scale indicators — arena.ai credibility pattern (sourced from canon) */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
+            className="flex flex-wrap justify-center gap-6 text-sm text-gray-400"
           >
-            {[
-              { value: "52", label: "Charter Articles", icon: FileText },
-              { value: "33", label: "AI Agents", icon: Shield },
-              { value: "7", label: "Frameworks", icon: Globe2 },
-              { value: "£100B+", label: "Prosperity Fund Goal", icon: DollarSign },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.9 + index * 0.1 }}
-                className="relative group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent rounded-2xl blur-xl group-hover:from-emerald-500/30 transition-all" />
-                <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-emerald-500/30 transition-all">
-                  <stat.icon className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-1">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-gray-500">{stat.label}</div>
-                </div>
-              </motion.div>
-            ))}
+            <span><span className="text-emerald-400 font-bold">{canonValue("totalProvisions")}</span> statutory provisions</span>
+            <span className="text-gray-600">·</span>
+            <span><span className="text-emerald-400 font-bold">{canonValue("frameworks")}</span> frameworks crosswalked</span>
+            <span className="text-gray-600">·</span>
+            <span><span className="text-emerald-400 font-bold">{canonValue("councilAgents")}</span> signed agents in the network</span>
+            <span className="text-gray-600">·</span>
+            <span><span className="text-emerald-400 font-bold">0</span> models in the verdict path</span>
           </motion.div>
 
           {/* Scroll indicator */}
@@ -496,6 +376,53 @@ export default function NewHomeV2() {
       {/* SECTION 1.25: ZERO AI SAFETY SOLUTIONS */}
       {/* ============================================ */}
       <Suspense fallback={<div className="min-h-[300px]" />}><ZeroSafetySection /></Suspense>
+
+      {/* ============================================ */}
+      {/* CHOOSE YOUR PATH — role-based CTAs (moved from hero) */}
+      {/* ============================================ */}
+      <section className="py-14 md:py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-5xl text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-600 mb-3">Choose your path</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-10">
+            What brings you to <span className="text-emerald-600">CSOAI</span>?
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-6">
+            <Link href="/training">
+              <Card className="h-full cursor-pointer hover:shadow-xl hover:border-emerald-300 transition-all group">
+                <CardContent className="p-8 text-center">
+                  <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <GraduationCap className="h-7 w-7 text-emerald-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Become an Analyst</h3>
+                  <p className="text-sm text-gray-600">Free training, certification, and a new career in AI safety</p>
+                </CardContent>
+              </Card>
+            </Link>
+            <Link href="/enterprise">
+              <Card className="h-full cursor-pointer hover:shadow-xl hover:border-emerald-300 transition-all group">
+                <CardContent className="p-8 text-center">
+                  <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Building2 className="h-7 w-7 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Enterprise / Government</h3>
+                  <p className="text-sm text-gray-600">Register AI systems, ensure compliance across 7 frameworks</p>
+                </CardContent>
+              </Card>
+            </Link>
+            <Link href="/public-watchdog">
+              <Card className="h-full cursor-pointer hover:shadow-xl hover:border-emerald-300 transition-all group">
+                <CardContent className="p-8 text-center">
+                  <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <Eye className="h-7 w-7 text-purple-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Concerned Citizen</h3>
+                  <p className="text-sm text-gray-600">Report incidents, track cases, hold companies accountable</p>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* ============================================ */}
       {/* SECTION 1.4: CONSENSUS-TO-PROOF (one-glance story) */}
@@ -1107,7 +1034,7 @@ export default function NewHomeV2() {
                     <p className="text-xl md:text-2xl text-gray-700 italic leading-relaxed">
                       AI should want to protect humans the way a mother wants to protect a child.
                     </p>
-                    <p className="text-sm text-gray-500 mt-2">— Geoffrey Hinton, 2023</p>
+                    <p className="text-sm text-gray-500 mt-2">— The Maternal Covenant principle</p>
                   </div>
                 </div>
 
@@ -1486,10 +1413,10 @@ export default function NewHomeV2() {
                 <CardContent className="p-6">
                   <div className="space-y-4">
                     {[
-                      { label: "EU AI Act Compliance", score: "94%" },
-                      { label: "NIST AI RMF Alignment", score: "89%" },
-                      { label: "ISO 42001 Readiness", score: "91%" },
-                      { label: "Overall Safety Score", score: "A+" },
+                      { label: "EU AI Act Compliance", score: "Run check" },
+                      { label: "NIST AI RMF Alignment", score: "Run check" },
+                      { label: "ISO 42001 Readiness", score: "Run check" },
+                      { label: "Overall Safety Score", score: "—" },
                     ].map((item, i) => (
                       <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <span className="font-medium text-gray-700">{item.label}</span>
@@ -1930,13 +1857,16 @@ export default function NewHomeV2() {
 
             <p className="text-emerald-200 mt-8 text-sm">
               Questions? Contact us at{" "}
-              <a href="mailto:hello@csoai.org" className="underline hover:text-white">
-                hello@csoai.org
+              <a href="mailto:contact@csoai.org" className="underline hover:text-white">
+                contact@csoai.org
               </a>
             </p>
           </motion.div>
         </div>
       </section>
+
+      <SpotInfographic title={L4.spotTitle} stats={L4.spotStats} source={L4.spotSource} />
+      <FaqBlock title={L4.faqTitle} intro={L4.faqIntro} items={L4.faq} />
     </div>
   );
 }
