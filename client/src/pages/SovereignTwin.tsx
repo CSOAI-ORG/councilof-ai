@@ -40,7 +40,7 @@ export default function SovereignTwin() {
     let t = 0;
     function frame() {
       t += 1; const w = c.width, h = c.height, cx = w / 2, cy = h / 2; const R = Math.min(w, h) * 0.32;
-      const chg = chargeRef.current / 100; const hd = hatchedRef.current; const col = hd ? "250,204,21" : "16,185,129";
+      const chg = chargeRef.current / 100; const hd = personaliseRef.current; const col = hd ? "250,204,21" : "16,185,129";
       ctx.clearRect(0, 0, w, h); ctx.fillStyle = "#03110b"; ctx.fillRect(0, 0, w, h);
       const aur = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, R * (1.5 + 0.3 * Math.sin(t * 0.03)));
       aur.addColorStop(0, "rgba(16,185,129," + (0.12 + 0.1 * chg) + ")"); aur.addColorStop(0.6, "rgba(" + col + "," + (0.08 + 0.28 * chg) + ")"); aur.addColorStop(1, "rgba(0,0,0,0)");
