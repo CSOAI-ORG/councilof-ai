@@ -60,7 +60,7 @@
 <div id="rail" class="card">
   <h3>Data layers</h3>
   <div class="lyr" data-layer="nodes"><span class="sw on"><i></i></span><span class="nm">Sovereign nodes<small>12 civilizations</small></span></div>
-  <div class="lyr" data-layer="arcs"><span class="sw on"><i></i></span><span class="nm">Cross-region mesh<small>L0-D handoff arcs</small></span></div>
+  <div class="lyr" data-layer="arcs"><span class="sw on"><i></i></span><span class="nm">Cross-region mesh<small>illustrative link arcs — all-pairs, not measured handoffs</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
     <svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="5"></circle><circle id="ring-arc" cx="26" cy="26" r="22" fill="none" stroke="#34d399" stroke-width="5" stroke-linecap="round" stroke-dasharray="138.2" stroke-dashoffset="138.2" transform="rotate(-90 26 26)"></circle></svg>
@@ -168,9 +168,11 @@ if(viewer){
   viewer.clock.onTick.addEventListener(spin);
   document.getElementById('spin').onclick=function(){ spinning=!spinning; };
 
-  // compliance ring → 73%
-  (function(){var arc=document.getElementById('ring-arc'),pct=document.getElementById('ring-pct'),C=138.2,target=73,v=0;
-    var iv=setInterval(function(){v+=2;if(v>=target){v=target;clearInterval(iv);}arc.setAttribute('stroke-dashoffset',(C*(1-v/100)).toFixed(1));pct.textContent=v+'%';},22);})();
+  // Art 50 marking survival — MEASURED canonical value, static. 0/20 assets survived
+  // (0/180 measured cells), one-sided 95% Clopper–Pearson upper 13.9% (asset-clustered).
+  // Register: no animated percentages on measured stats — a wandering number contradicts the canon.
+  (function(){var arc=document.getElementById('ring-arc'),pct=document.getElementById('ring-pct');
+    arc.setAttribute('stroke-dashoffset','138.2');pct.textContent='0/20';})();
 
   // sovereign town live feed
   function fmt(n){if(n>=1e9)return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';if(n>=1e6)return Math.round(n/1e6)+'M';if(n>=1e3)return Math.round(n/1e3)+'k';return String(n);}
