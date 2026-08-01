@@ -3,20 +3,24 @@ import { useEffect, useState } from "react";
 interface CityState {
   tick: number;
   city: string;
-  time: number;
-  width: number;
-  height: number;
-  city_tax: number;
-  city_time: number;
+  time?: number;
+  width?: number;
+  height?: number;
+  city_tax?: number;
+  tax_rate?: number;
+  budget?: number;
+  water_ok?: boolean;
+  crime_rate?: number;
+  city_time?: number;
   population: number;
   residential: number;
   commercial: number;
   industrial: number;
   powered: boolean;
-  govbench_score: number;
-  n_modules_trained: number;
-  certifications_active: number;
-  label: string;
+  govbench_score?: number;
+  n_modules_trained?: number;
+  certifications_active?: number;
+  label?: string;
 }
 
 export default function SovTownLab() {
@@ -28,6 +32,7 @@ export default function SovTownLab() {
     const fetchState = async () => {
       try {
         const res = await fetch("/api/sov-town/state.jsonl");
+        if (!res.ok) return; // 503 = no live state yet — the honest empty slot stays
         const text = await res.text();
         const lines = text.trim().split("\n").filter(Boolean);
         const parsed = lines.map((l) => JSON.parse(l) as CityState);
@@ -69,9 +74,9 @@ export default function SovTownLab() {
               <Stat label="Residential" value={latest.residential.toString()} />
               <Stat label="Commercial" value={latest.commercial.toString()} />
               <Stat label="Industrial" value={latest.industrial.toString()} />
-              <Stat label="City Tax" value={`${latest.city_tax}%`} />
+              <Stat label="City Tax" value={`${latest.city_tax ?? latest.tax_rate ?? "—"}%`} />
               <Stat label="Powered" value={latest.powered ? "Yes" : "No"} />
-              <Stat label="Grid" value={`${latest.width}x${latest.height}`} />
+              <Stat label="Grid" value={latest.width ? `${latest.width}x${latest.height}` : "—"} />
               <Stat label="Tick" value={latest.tick.toString()} />
             </div>
           ) : (
@@ -84,9 +89,9 @@ export default function SovTownLab() {
         <section className="rounded-xl border border-amber-500/20 bg-[#05140d] p-6">
           <h2 className="text-xl font-bold text-amber-300">SOV metrics overlay</h2>
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Stat label="GovBench Score" value={latest ? `${latest.govbench_score}%` : "—"} accent="amber" />
-            <Stat label="Modules Trained" value={latest ? latest.n_modules_trained.toString() : "—"} accent="amber" />
-            <Stat label="Active Certs" value={latest ? latest.certifications_active.toString() : "—"} accent="amber" />
+            <Stat label="GovBench Score" value={latest?.govbench_score != null ? `${latest.govbench_score}%` : "—"} accent="amber" />
+            <Stat label="Modules Trained" value={latest?.n_modules_trained != null ? latest.n_modules_trained.toString() : "—"} accent="amber" />
+            <Stat label="Active Certs" value={latest?.certifications_active != null ? latest.certifications_active.toString() : "—"} accent="amber" />
           </div>
           <p className="mt-4 text-[11px] text-emerald-100/40">
             Derived from the SOV compliance instrument, not the city sim. The city

@@ -15,10 +15,16 @@ interface Env {
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
-  const body = env.SOV_TOWN_STATE ? await env.SOV_TOWN_STATE.get('state.jsonl') : null;
+  if (!env.SOV_TOWN_STATE) {
+    return new Response(
+      JSON.stringify({ error: 'no live state', detail: 'KV binding SOV_TOWN_STATE is not visible to this function (deployment config)', label: 'DESIGN' }),
+      { status: 503, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } },
+    );
+  }
+  const body = await env.SOV_TOWN_STATE.get('state.jsonl');
   if (!body) {
     return new Response(
-      JSON.stringify({ error: 'no live state', detail: 'SOV Town KV is empty or unbound — the oracle tick has not synced yet', label: 'DESIGN' }),
+      JSON.stringify({ error: 'no live state', detail: 'KV bound but key state.jsonl is empty — the oracle tick has not synced yet', label: 'DESIGN' }),
       { status: 503, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } },
     );
   }
