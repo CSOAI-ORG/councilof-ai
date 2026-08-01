@@ -312,7 +312,7 @@ export default function Outreach() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <a
                         href={mailto}
                         data-testid="draft-mailto"

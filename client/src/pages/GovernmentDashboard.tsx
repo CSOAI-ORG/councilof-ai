@@ -1059,6 +1059,7 @@ export default function GovernmentDashboard() {
               return (
                 <motion.div
                   key={initiative.name}
+                  className="min-w-0"
                   initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -1069,7 +1070,7 @@ export default function GovernmentDashboard() {
                         <div className="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
                           <Icon className="h-7 w-7 text-emerald-600" />
                         </div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold text-lg">{initiative.name}</h3>
                             <Badge className="bg-emerald-100 text-emerald-700">

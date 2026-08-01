@@ -899,7 +899,7 @@ export default function PublicWatchdog() {
 
           <div className="grid lg:grid-cols-4 gap-8">
             {/* Sidebar - Filters & Stats */}
-            <div className="lg:col-span-1 space-y-6">
+            <div className="lg:col-span-1 space-y-6 min-w-0">
               {/* Search & Filters */}
               <Card className="border-green-200">
                 <CardHeader>
@@ -1008,7 +1008,7 @@ export default function PublicWatchdog() {
             </div>
 
             {/* Main Content - Incidents */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 min-w-0">
               <Tabs defaultValue="all" className="space-y-6">
                 <div className="flex items-center justify-between">
                   <TabsList className="bg-green-100">

@@ -171,7 +171,7 @@ export default function WatchdogMap() {
 
       <section className="mx-auto max-w-6xl px-6 py-8 grid gap-6 lg:grid-cols-[1.4fr_1fr] items-start">
         {/* Heat-map */}
-        <div>
+        <div className="min-w-0">
           <div className="mb-3 flex flex-wrap gap-1.5">
             <button onClick={() => setLayer("all")} className={"rounded-full border px-3 py-1 text-xs font-bold " + (layer === "all" ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-500/25 text-emerald-200/70 hover:bg-white/5")}>All layers</button>
             {CATS.map((c) => (<button key={c.id} onClick={() => setLayer(c.id)} className={"rounded-full border px-3 py-1 text-xs font-bold " + (layer === c.id ? "text-[#03110b]" : "border-emerald-500/25 text-emerald-200/70 hover:bg-white/5")} style={layer === c.id ? { background: c.color, borderColor: c.color } : {}}>{c.label}</button>))}

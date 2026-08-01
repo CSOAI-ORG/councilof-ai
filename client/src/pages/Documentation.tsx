@@ -53,7 +53,7 @@ export default function Documentation() {
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-6">
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Link href="/api-docs">
                 <Card className="h-full hover:shadow-lg transition cursor-pointer">
                   <CardHeader>
@@ -69,7 +69,7 @@ export default function Documentation() {
               </Link>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Link href="/security">
                 <Card className="h-full hover:shadow-lg transition cursor-pointer">
                   <CardHeader>
@@ -85,7 +85,7 @@ export default function Documentation() {
               </Link>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Link href="/status">
                 <Card className="h-full hover:shadow-lg transition cursor-pointer">
                   <CardHeader>
@@ -113,7 +113,7 @@ export default function Documentation() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-3">
@@ -148,7 +148,7 @@ export default function Documentation() {
               </Card>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-3">
@@ -193,7 +193,7 @@ export default function Documentation() {
           </motion.div>
 
           <div className="space-y-6">
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">33-agent Council of AI</CardTitle>
@@ -235,7 +235,7 @@ export default function Documentation() {
               </Card>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">SOAI-PDCA Framework</CardTitle>
@@ -286,7 +286,7 @@ export default function Documentation() {
               </Card>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Watchdog Incident Reporting</CardTitle>
@@ -340,7 +340,7 @@ export default function Documentation() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <CardTitle>REST API Integration</CardTitle>
@@ -376,7 +376,7 @@ const response = await fetch(
               </Card>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <CardTitle>SDK Integration</CardTitle>
@@ -421,7 +421,7 @@ print(f"System ID: {system.id}")`}</pre>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <CardTitle>Uptime SLA</CardTitle>
@@ -436,7 +436,7 @@ print(f"System ID: {system.id}")`}</pre>
               </Card>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <CardTitle>API Response Time</CardTitle>
@@ -451,7 +451,7 @@ print(f"System ID: {system.id}")`}</pre>
               </Card>
             </motion.div>
 
-            <motion.div {...fadeInUp}>
+            <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
                   <CardTitle>Support Response</CardTitle>
