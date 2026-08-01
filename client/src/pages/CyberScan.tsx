@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import AISystemNotice from "../components/AISystemNotice";
 
 // /scan — cyber self-scan. A CISO or SMB can scan their own business with a stack of
 // reputable open-source security tools, then paste the findings and the
@@ -111,6 +112,9 @@ export default function CyberScan() {
         {/* Live Sovereign triage */}
         <div className="mt-8 rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-cyan-500/10 to-transparent p-5">
           <div className="text-sm font-bold text-cyan-200">Bring your findings — the Sovereign triages them live</div>
+          <div className="mt-3">
+            <AISystemNotice route="/scan" />
+          </div>
           <p className="mt-1 text-[13px] text-emerald-100/70">Paste raw output from any tool above. The Sovereign ranks by real risk, gives concrete fixes, and maps each to the frameworks it affects. Your findings stay in your browser.</p>
           <textarea value={findings} onChange={(e) => setFindings(e.target.value)} rows={5} placeholder="Paste scanner output here — e.g. Nuclei / Trivy / Prowler / ZAP results…" className="mt-3 w-full resize-none rounded-xl border border-cyan-500/25 bg-black/30 p-3 font-mono text-[12px] text-emerald-50 placeholder-emerald-300/30 focus:border-cyan-400 focus:outline-none" />
           <button onClick={runTriage} disabled={busy} className="mt-2 rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-cyan-400 disabled:opacity-60">{busy ? "Triaging…" : "🛡 Triage & map to frameworks"}</button>

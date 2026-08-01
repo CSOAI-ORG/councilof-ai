@@ -1,0 +1,153 @@
+{
+  "generated_at": "2026-07-31T06:48:21.264065+00:00",
+  "n_planets": 8,
+  "n_citizens": 9,
+  "planets": [
+    {
+      "id": "find-besT",
+      "name": "find_besT",
+      "axis": "care",
+      "phase": "honey",
+      "description": "21-subject Day-1 sweep, care_cost joint scoring. Top: sov33-unified:latest",
+      "metric": "composite=3.1564",
+      "last_run_iso": "2026-07-30T10:17:46.905042+00:00"
+    },
+    {
+      "id": "n-eff",
+      "name": "n_eff_diversity",
+      "axis": "continuity",
+      "phase": "milk",
+      "description": "pairwise \u03c1 + Kish n_eff across sovereign roster",
+      "metric": "n_eff=1.285 \u00b7 gate failed (>2.0 required)",
+      "last_run_iso": "2026-07-30T11:25:17.806211+00:00"
+    },
+    {
+      "id": "provbench",
+      "name": "ProvBench",
+      "axis": "provenance",
+      "phase": "honey",
+      "description": "0/20 C2PA markings survive binding-intact",
+      "metric": "0 of 20 \u00b7 rule-of-three 95% upper = 15.0%",
+      "last_run_iso": "2026-07-30T07:44:45.618623+00:00"
+    },
+    {
+      "id": "defbench",
+      "name": "DefBench",
+      "axis": "safety",
+      "phase": "honey",
+      "description": "45 items, 31 harmful / 14 benign",
+      "metric": "1 of 4 axes resolved",
+      "last_run_iso": "2026-07-29T09:36:42.030435+00:00"
+    },
+    {
+      "id": "govbench",
+      "name": "GovBench",
+      "axis": "governance",
+      "phase": "honey",
+      "description": "193 samples, 26 dimensions, cluster-robust",
+      "metric": "composed +6.63 [+1.05, +12.21]",
+      "last_run_iso": "2026-07-30T19:06:29.436288+00:00"
+    },
+    {
+      "id": "pqcbench",
+      "name": "PQCBench",
+      "axis": "continuity",
+      "phase": "water",
+      "description": "25 criteria for PQC-ready signing chains",
+      "metric": "ML-DSA-65 migration needed \u00b7 NIST IR 8547 disallows EdDSA after 2035",
+      "last_run_iso": "2026-07-30T15:51:36.210773+00:00"
+    },
+    {
+      "id": "honey-pipe",
+      "name": "honey_pipeline",
+      "axis": "care",
+      "phase": "honey",
+      "description": "KB harvest \u2192 honey cache \u2192 cite-on-serve",
+      "metric": "8 verified entries",
+      "last_run_iso": "2026-07-31T06:47:10.418287+00:00"
+    },
+    {
+      "id": "production-ready",
+      "name": "production_ready",
+      "axis": "care",
+      "phase": "honey",
+      "description": "signed care_cost evidence pack for marketing",
+      "metric": "Ed25519 sigil \u00b7 signed",
+      "last_run_iso": "2026-07-30T13:46:40.071005+00:00"
+    }
+  ],
+  "citizens": [
+    {
+      "citizen_id": "user_33e53f6486fca5d3",
+      "model": "qwen2.5:0.5b",
+      "location": "local-ollama",
+      "tokens": 500,
+      "issued_at": "2026-07-30T15:19:43.887765+00:00",
+      "kind": "spawn"
+    },
+    {
+      "citizen_id": "user_41208a331879449d",
+      "model": "llama3.2:3b",
+      "location": "free-gpu",
+      "tokens": 80000,
+      "issued_at": "2026-07-30T15:19:51.280347+00:00",
+      "kind": "spawn"
+    },
+    {
+      "citizen_id": "user_38fd3d651b4e17b2",
+      "model": "qwen2.5:0.5b",
+      "location": "local-ollama",
+      "tokens": 200,
+      "issued_at": "2026-07-30T15:31:14.633215+00:00",
+      "kind": "spawn"
+    },
+    {
+      "citizen_id": "user_d379f7d714b3eb0d",
+      "model": "qwen2.5:0.5b",
+      "location": "local-ollama",
+      "tokens": 200,
+      "issued_at": "2026-07-30T15:47:45.090457+00:00",
+      "kind": "spawn"
+    },
+    {
+      "citizen_id": "user_fe7d3b145ecb51ef",
+      "model": "llama3.2:3b",
+      "location": "local-ollama",
+      "tokens": 5000,
+      "issued_at": "2026-07-30T15:47:45.317579+00:00",
+      "kind": "spawn"
+    },
+    {
+      "citizen_id": "user_0ea6e7427d4e643f",
+      "model": "llama3.2:3b",
+      "location": "free-gpu",
+      "tokens": 80000,
+      "issued_at": "2026-07-30T15:47:47.228185+00:00",
+      "kind": "spawn"
+    },
+    {
+      "citizen_id": "user_0faaf30c0c366146",
+      "model": "qwen2.5:0.5b",
+      "location": "local-ollama",
+      "tokens": 200,
+      "issued_at": "2026-07-30T15:51:33.799223+00:00",
+      "kind": "spawn"
+    },
+    {
+      "citizen_id": "user_9bc805316ec7c1f1",
+      "model": "llama3.2:3b",
+      "location": "local-ollama",
+      "tokens": 5000,
+      "issued_at": "2026-07-30T15:51:34.193616+00:00",
+      "kind": "spawn"
+    },
+    {
+      "citizen_id": "user_a8f35c95eff5dac5",
+      "model": "llama3.2:3b",
+      "location": "free-gpu",
+      "tokens": 80000,
+      "issued_at": "2026-07-30T15:51:36.382859+00:00",
+      "kind": "spawn"
+    }
+  ]
+}

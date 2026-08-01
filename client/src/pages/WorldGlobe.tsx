@@ -6,6 +6,7 @@ import { flyAndConvene, drive } from "../lib/globeDrive";
 import { REGIONS } from "../lib/locale";
 import { Link } from "wouter";
 import SovNav from "../components/SovNav";
+import AISystemNotice from "../components/AISystemNotice";
 import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from "../data/layer0Nodes";
 
 // sovAgent region name → 3D globe REGIONS code + globe3d layer tag maps (module-level).
@@ -411,9 +412,8 @@ export default function WorldGlobe() {
           )}
           <div className="mt-5 border-t border-white/10 pt-4">
             <label className="text-[11px] uppercase tracking-wide text-emerald-300/60">Ask the Sovereign about the world</label>
-            {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026. */}
-            <div role="status" aria-live="polite" className="mt-2 rounded-md border border-amber-400/35 bg-amber-400/10 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
-              You are interacting with an AI system.
+            <div className="mt-2">
+              <AISystemNotice route="/globe" />
             </div>
             <div className="mt-2 flex gap-2">
               <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="e.g. show the watchdog heat over London and stop any rogue swarm" className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-emerald-400 focus:outline-none" />

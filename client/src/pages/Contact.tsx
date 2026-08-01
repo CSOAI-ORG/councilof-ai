@@ -24,8 +24,13 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    // This form has no backend endpoint — it opens the visitor's email client with a
+    // prefilled message to contact@csoai.org instead of silently dropping the submission.
+    const subject = encodeURIComponent(formData.subject || 'Website inquiry');
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`
+    );
+    window.location.href = `mailto:contact@csoai.org?subject=${subject}&body=${body}`;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -170,6 +175,11 @@ export default function Contact() {
                   <Send className="h-4 w-4 mr-2" />
                   Send Message
                 </Button>
+                <p className="text-xs text-gray-500">
+                  This form opens your email client with the message prefilled, addressed to
+                  contact@csoai.org — there is no silent backend, and nothing you type here is
+                  stored by this site.
+                </p>
               </form>
             </motion.div>
 
@@ -181,6 +191,33 @@ export default function Contact() {
             >
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8 text-gray-900">Why Contact Us?</h2>
               <div className="space-y-6">
+                <Card className="p-6 border-2 border-green-600">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Book a Demo</h3>
+                  <p className="text-gray-600 mb-3">
+                    Enterprise and demo inquiries go straight to{' '}
+                    <a
+                      href="mailto:enterprise@csoai.org?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough"
+                      className="text-green-700 hover:text-green-600 font-semibold"
+                    >
+                      enterprise@csoai.org
+                    </a>{' '}
+                    — we reply within one working day.
+                  </p>
+                  <p className="text-gray-600 mb-4">
+                    The demo is 30 minutes and covers three things: the instrument (how CSOAI
+                    measures AI-governance compliance), the arena (how systems are compared and
+                    scored), and the provisions of interest to you — tell us your sector and we
+                    walk those first.
+                  </p>
+                  <a
+                    href="mailto:enterprise@csoai.org?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough"
+                  >
+                    <Button size="lg" className="w-full bg-green-600 hover:bg-green-700" data-testid="book-demo-button">
+                      <Mail className="h-4 w-4 mr-2" />
+                      Book a demo
+                    </Button>
+                  </a>
+                </Card>
                 <Card className="p-6">
                   <h3 className="text-lg font-bold text-gray-900 mb-2">Partnership Inquiries</h3>
                   <p className="text-gray-600">

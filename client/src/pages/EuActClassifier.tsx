@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { askSovereign } from "../lib/sovAsk";
+import AISystemNotice from "../components/AISystemNotice";
 
 // /classifier — an interactive EU AI Act risk-tier classifier, wired to the live
 // Sovereign brain. Describe an AI system → get its risk tier, why, the obligations
@@ -68,9 +69,9 @@ export default function EuActClassifier() {
         <h1 className="mt-3 text-4xl font-black tracking-tight">Is your AI <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">high-risk?</span></h1>
         <p className="mt-3 text-emerald-100/75">Describe any AI system. The Sovereign classifies its EU AI Act risk tier, tells you why, and lists the obligations that follow — plus every other framework that applies.</p>
 
-        {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026. */}
-        <div role="status" aria-live="polite" className="mt-6 rounded-md border border-amber-400/35 bg-amber-400/10 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
-          You are interacting with an AI system.
+        {/* Article 50(1) AI-interaction disclosure — registry-driven wording. */}
+        <div className="mt-6">
+          <AISystemNotice route="/classifier" />
         </div>
 
         <div className="mt-3 flex gap-2">

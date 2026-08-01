@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import CouncilVote from "../components/CouncilVote";
+import AISystemNotice from "../components/AISystemNotice";
 
 // TryCouncil — the 30-second WOW. The world's first AI Governance Council, live.
 // Type a compliance question; five specialised agents (Oracle, Skeptic, Architect,
@@ -124,14 +125,12 @@ export default function TryCouncil() {
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Five AI agents debate your compliance question across global frameworks — and return a risk verdict in seconds. Ask anything.</p>
 
           <div className="mt-7 rounded-2xl bg-white p-3 shadow-xl">
-            {/* Article 50(1) AI-interaction disclosure — EU AI Act Art 50(1) applies from 2 Aug 2026. */}
-            <div role="status" aria-live="polite" className="mb-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-1.5 text-[11px] font-semibold text-amber-900">
-              You are interacting with an AI system.
-            </div>
+            {/* Article 50(1) AI-interaction disclosure — registry-driven wording. */}
+            <AISystemNotice route="/try" />
             <textarea value={q} onChange={(e) => setQ(e.target.value)} rows={2} placeholder="Describe your AI system… e.g. 'We use AI to screen job applicants'"
               className="w-full resize-none rounded-xl px-4 py-3 text-gray-900 outline-none placeholder:text-gray-400" />
             <div className="flex items-center justify-between gap-3 px-1 pb-1">
-              <span className="text-xs text-gray-400">Runs locally · no data leaves your browser</span>
+              <span className="text-xs text-gray-400">Classification runs locally · convening the council sends your description to the Sovereign</span>
               <button onClick={() => ask(q)} className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Ask the Council →</button>
             </div>
           </div>

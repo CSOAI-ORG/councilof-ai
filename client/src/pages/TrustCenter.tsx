@@ -239,7 +239,7 @@ export default function TrustCenter() {
       id: "sub-processors",
       title: "Who are your sub-processors?",
       content:
-        "Our main sub-processors include: AWS (cloud infrastructure), Auth0 (authentication), Stripe (payments), SendGrid (email), Datadog (monitoring), and CrowdStrike (endpoint protection). A complete list with processing purposes is available at csoai.ai/sub-processors. We notify customers 30 days before adding any new processor.",
+        "The named register is published on this page — see the Subprocessors section above. It covers Cloudflare (hosting/edge), Stripe (payments), Vercel (legacy hosting, being retired), GitHub (code), Hugging Face (public dataset hosting), our first-party sovereign gateway os.meok.ai, and our email provider. We notify customers before adding any new processor.",
       icon: <Users className="h-5 w-5" />,
     },
     {
@@ -272,6 +272,98 @@ export default function TrustCenter() {
       metric: "99.99% Uptime",
       description: "Historical uptime SLA for platform availability",
     },
+  ];
+
+  // Subprocessor register. Vendors verified against this repository (wrangler.jsonc,
+  // vercel.json, package.json, BuiltOnFooter, GitHub org). Where a vendor could not
+  // be verified from the repo it is marked in a source comment only.
+  const subprocessors = [
+    {
+      vendor: "Cloudflare",
+      purpose: "Hosting, edge network, DNS and DDoS protection for csoai.org",
+      data: "Site traffic logs, IP addresses, cached page content",
+      location: "Global edge network (US/EU)",
+      safeguard: "Cloudflare DPA; SCCs / UK IDTA for international transfers",
+    },
+    {
+      vendor: "Stripe",
+      purpose: "Payment processing",
+      data: "Billing name, email and payment metadata — card numbers never touch our servers",
+      location: "United States / Ireland",
+      safeguard: "Stripe DPA; SCCs / UK IDTA",
+    },
+    {
+      vendor: "Vercel",
+      purpose: "Legacy hosting — being retired",
+      data: "Historical deployment and access logs only",
+      location: "United States",
+      safeguard: "Vercel DPA; SCCs / UK IDTA",
+    },
+    {
+      vendor: "GitHub",
+      purpose: "Source code hosting and CI",
+      data: "Code, issues and contributor metadata; no production personal data",
+      location: "United States",
+      safeguard: "GitHub DPA; SCCs / UK IDTA",
+    },
+    {
+      vendor: "Hugging Face",
+      purpose: "Hosting of public datasets and models",
+      data: "Public, non-personal datasets only",
+      location: "United States",
+      safeguard: "Public data only — no personal data is processed",
+    },
+    {
+      vendor: "os.meok.ai (first-party)",
+      purpose: "Sovereign inference and governance gateway",
+      data: "Governance and inference requests",
+      location: "Self-hosted, UK/EU",
+      safeguard: "First-party infrastructure — not a subprocessor; listed for transparency",
+    },
+    {
+      vendor: "Email provider",
+      purpose: "Support and transactional email",
+      data: "Contact details and correspondence",
+      location: "See DPA",
+      safeguard: "Confirmed in the Data Processing Agreement",
+    },
+  ];
+  // confirm before publication: verify the actual email provider (Google Workspace vs
+  // other) against billing/MX records before the email row above ships.
+
+  const securityPackPublic = [
+    {
+      title: "Vulnerability Disclosure Policy",
+      description: "How to report a security issue responsibly, and what you can expect back from us.",
+      href: "/vulnerability-disclosure",
+    },
+    {
+      title: "security.txt",
+      description: "Machine-readable security contact and policy pointers (RFC 9116).",
+      href: "/.well-known/security.txt",
+    },
+    {
+      title: "Data Processing Agreement",
+      description: "Our standard GDPR Article 28 DPA, including the subprocessor register.",
+      href: "/legal/dpa",
+    },
+    {
+      title: "Service Level Agreement",
+      description: "Availability targets and support response commitments, in plain terms.",
+      href: "/sla",
+    },
+    {
+      title: "Live Status Page",
+      description: "Real-time probe of the Sovereign gateway, plus our honest incident log.",
+      href: "/status",
+    },
+  ];
+
+  const securityPackNda = [
+    "Executed DPA with customer-specific annexes",
+    "Infrastructure architecture diagrams and data-flow maps",
+    "Incident response runbook (current revision)",
+    "Penetration-test summaries and audit letters — none are claimed today; when an assessment exists, its letter will be listed here",
   ];
 
   const toggleAccordion = (id: string) => {
@@ -503,22 +595,141 @@ export default function TrustCenter() {
                   <div className="text-xs text-gray-600">Manage your cookie preferences</div>
                 </div>
               </Button>
-              <Button variant="outline" className="justify-start gap-2 h-auto py-3">
-                <FileText className="h-5 w-5" />
-                <div className="text-left">
-                  <div className="font-semibold">DPA Template</div>
-                  <div className="text-xs text-gray-600">Standard Data Processing Agreement</div>
-                </div>
-              </Button>
-              <Button variant="outline" className="justify-start gap-2 h-auto py-3">
-                <Users className="h-5 w-5" />
-                <div className="text-left">
-                  <div className="font-semibold">Sub-processor List</div>
-                  <div className="text-xs text-gray-600">View all third-party processors</div>
-                </div>
-              </Button>
+              <a href="/legal/dpa">
+                <Button variant="outline" className="justify-start gap-2 h-auto py-3 w-full">
+                  <FileText className="h-5 w-5" />
+                  <div className="text-left">
+                    <div className="font-semibold">DPA Template</div>
+                    <div className="text-xs text-gray-600">Standard Data Processing Agreement</div>
+                  </div>
+                </Button>
+              </a>
+              <a href="#subprocessors">
+                <Button variant="outline" className="justify-start gap-2 h-auto py-3 w-full">
+                  <Users className="h-5 w-5" />
+                  <div className="text-left">
+                    <div className="font-semibold">Sub-processor List</div>
+                    <div className="text-xs text-gray-600">View all third-party processors</div>
+                  </div>
+                </Button>
+              </a>
             </div>
           </Card>
+        </div>
+      </div>
+
+      {/* Subprocessors */}
+      <div id="subprocessors" className="bg-gray-50 py-20">
+        <div className="container max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-slate-100 text-slate-600 border-slate-300">
+              Subprocessors
+            </Badge>
+            <h2 className="text-4xl font-bold mb-6">Who Processes Your Data</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Every third party that touches data on our behalf, named. If a vendor is not on
+              this list, it does not process your data. We notify customers before adding any
+              new processor.
+            </p>
+          </div>
+
+          <Card className="overflow-hidden border-2">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-slate-900 text-white text-left">
+                    <th className="px-6 py-4 font-semibold">Vendor</th>
+                    <th className="px-6 py-4 font-semibold">Purpose</th>
+                    <th className="px-6 py-4 font-semibold">Data categories</th>
+                    <th className="px-6 py-4 font-semibold">Location</th>
+                    <th className="px-6 py-4 font-semibold">Safeguard</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {subprocessors.map((sp, index) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 0 ? "bg-white" : "bg-slate-50"}
+                    >
+                      <td className="px-6 py-4 font-semibold text-gray-900 align-top whitespace-nowrap">
+                        {sp.vendor}
+                      </td>
+                      <td className="px-6 py-4 text-gray-600 align-top">{sp.purpose}</td>
+                      <td className="px-6 py-4 text-gray-600 align-top">{sp.data}</td>
+                      <td className="px-6 py-4 text-gray-600 align-top">{sp.location}</td>
+                      <td className="px-6 py-4 text-gray-600 align-top">{sp.safeguard}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          <p className="text-sm text-gray-500 mt-6 text-center">
+            Questions about a specific vendor, or need this register as part of an executed DPA?{" "}
+            <a href="mailto:legal@csoai.ai" className="text-blue-600 hover:text-blue-500 font-semibold">
+              legal@csoai.ai
+            </a>
+          </p>
+        </div>
+      </div>
+
+      {/* Security Pack */}
+      <div id="security-pack" className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-20">
+        <div className="container max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+              Security Pack
+            </Badge>
+            <h2 className="text-4xl font-bold mb-6">What&rsquo;s Public Today vs What&rsquo;s Shared Under NDA</h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Everything in the first column is a real artifact you can open right now. Everything
+              in the second column exists only where we say it does — and is shared under NDA on
+              request. We do not list pen-test letters or certificates we cannot show you.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="p-8 bg-white/5 border-2 border-emerald-500/20">
+              <h3 className="text-2xl font-bold text-emerald-300 mb-6">Public today</h3>
+              <div className="space-y-5">
+                {securityPackPublic.map((item, index) => (
+                  <a key={index} href={item.href} className="block group">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div className="font-semibold text-white group-hover:text-emerald-300 transition-colors">
+                          {item.title}
+                        </div>
+                        <div className="text-sm text-gray-400">{item.description}</div>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="p-8 bg-white/5 border-2 border-slate-600">
+              <h3 className="text-2xl font-bold text-slate-200 mb-6">Shared under NDA</h3>
+              <div className="space-y-5">
+                {securityPackNda.map((item, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <Lock className="h-5 w-5 text-slate-400 mt-0.5 flex-shrink-0" />
+                    <div className="text-sm text-gray-300">{item}</div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-gray-400 mt-8">
+                Request NDA materials via{" "}
+                <a
+                  href="mailto:security@csoai.ai"
+                  className="text-blue-400 hover:text-blue-300 font-semibold"
+                >
+                  security@csoai.ai
+                </a>
+              </p>
+            </Card>
+          </div>
         </div>
       </div>
 
@@ -746,7 +957,7 @@ export default function TrustCenter() {
         <div className="container max-w-4xl mx-auto">
           <div className="text-center text-sm text-gray-600">
             <p>
-              Last updated: February 2026. For the most current security and certification status,
+              Last updated: July 2026. For the most current security and certification status,
               please contact security@csoai.ai. Certifications marked &ldquo;In Progress&rdquo; are
               being pursued; where a certification is held, it is verified by an accredited third-party auditor.
             </p>

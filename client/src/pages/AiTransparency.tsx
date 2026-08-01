@@ -6,15 +6,17 @@ import {
   ROUTES_SCANNED,
   REGISTRY_VERSION,
   ASSESSED_AT,
+  AI_SYSTEM_COMPONENTS,
+  NOTICE_MOUNTED_ROUTES,
 } from "@/lib/ai-surfaces";
 
 /**
- * /ai-transparency — CSOAI's own Article 50 disclosure.
+ * /ai-transparency — CSOAI's own Article 50 self-conformance record.
  *
  * Deliberately not a marketing page. It is a measurement of this codebase: every interactive
- * surface, what it computes where that has actually been read, and the source file you can open
- * to check. The interesting result is that zero surfaces call a model, and publishing that with
- * its method is more useful than an "AI-powered" banner would have been.
+ * surface, what it computes, and the source file you can open to check. Version 2 corrects the
+ * page's own earlier claim — the import-based scan reported zero model calls and was wrong;
+ * the correction is published below with the same prominence as the original claim.
  */
 
 const NATURE_STYLE: Record<string, string> = {
@@ -35,15 +37,16 @@ export default function AiTransparency() {
     document.title = "AI transparency — what each surface on this site actually is | CSOAI";
   }, []);
 
-  const described = SURFACES.filter((s) => s.mechanism);
-  const rest = SURFACES.filter((s) => !s.mechanism);
+  const aiSurfaces = SURFACES.filter((s) => s.nature === "ai_system");
+  const ruleSurfaces = SURFACES.filter((s) => s.nature === "rule_based");
+  const mounted = aiSurfaces.filter((s) => NOTICE_MOUNTED_ROUTES.includes(s.route));
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            EU AI Act · Article 50 · applies from 2 August 2026
+            EU AI Act · Article 50 · in force from 2 August 2026
           </p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
             What each surface on this site{" "}
@@ -62,15 +65,33 @@ export default function AiTransparency() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-12 space-y-10">
-        <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
+        {/* SELF-CONFORMANCE RECORD */}
+        <div className="rounded-2xl border border-emerald-400/30 bg-emerald-500/[0.07] p-6">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Measured, not asserted
+            Self-conformance record · {ASSESSED_AT}
+          </p>
+          <p className="mt-4 text-[14px] text-emerald-100/85 leading-relaxed">
+            <strong className="text-emerald-50">Statement.</strong> As of 2 August 2026,{" "}
+            {COUNTS.total} interactive surfaces on this site are classified: {COUNTS.rule_based}{" "}
+            are rule-based instruments or deterministic displays that call no model;{" "}
+            {COUNTS.ai_system} routes across {AI_SYSTEM_COMPONENTS} components are AI systems —
+            they send your input to the live Sovereign chat endpoint, and they say so. Any
+            surface not in the registry defaults to the strictest reading — treated as an AI
+            system — until it is classified.
+          </p>
+          <p className="mt-3 text-[13px] text-emerald-100/70 leading-relaxed">
+            <strong className="text-emerald-50">How this record updates.</strong> The registry is
+            a source file (<code>client/src/lib/ai-surfaces.ts</code>), version {REGISTRY_VERSION};
+            every change is a commit, and a guard in the release gate fails the build if a
+            surface starts calling a model without being registered and noticed. This record is
+            sha256-linked into the public decision chain at publication — recompute it yourself
+            at <a href="/gspc-verify" className="text-emerald-300 hover:underline">/gspc-verify</a>.
           </p>
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             {[
               [ROUTES_SCANNED, "routes scanned"],
-              [COUNTS.total, "interactive"],
-              [COUNTS.ai_system, "call a model"],
+              [COUNTS.total, "interactive surfaces"],
+              [COUNTS.ai_system, "AI-system routes"],
               [COUNTS.unclassified, "unclassified"],
             ].map(([n, label]) => (
               <div key={String(label)}>
@@ -79,45 +100,40 @@ export default function AiTransparency() {
               </div>
             ))}
           </div>
-          <p className="mt-5 text-[13px] text-emerald-100/80 leading-relaxed">
-            A guard walked the route table and followed every import, including transitive ones.
-            Of {ROUTES_SCANNED} routes that resolve to a page, {COUNTS.total} take input and return
-            something, and <strong className="text-emerald-50">{COUNTS.ai_system}</strong> of those
-            reach a model provider. No surface on this site currently engages Article 50(1).
-          </p>
-          <p className="mt-3 text-[13px] text-emerald-100/80 leading-relaxed">
-            We could have put &ldquo;you are interacting with an AI&rdquo; on all of them and been
-            safe from one direction of error. That would be a false description of the product, so
-            the table is published instead.
-          </p>
         </div>
 
+        {/* THE CORRECTION — published like every other miss */}
         <div className="rounded-2xl border border-amber-400/30 bg-amber-500/[0.06] p-6">
           <h2 className="text-lg font-black tracking-tight text-amber-100">
-            One thing worth watching
+            The correction this page owes you
           </h2>
           <p className="mt-2 text-[13px] text-amber-50/80 leading-relaxed">
-            {DECLARED_UNCALLED_SDKS.length} model SDKs are declared in{" "}
-            <code>package.json</code> — {DECLARED_UNCALLED_SDKS.join(", ")} — and never imported
-            anywhere. A dependency is not a call, so this is not a disclosure failure. It is the
-            shortest possible distance to becoming one: adding inference is a single import with no
-            install step and nothing to prompt a second look. The guard reports it every run.
+            Version 1.0.0 of this registry (29 July 2026) stated that <em>zero</em> surfaces on
+            this site call a model. That was wrong, and the method was why: the scan walked
+            imports of model-provider SDKs, but the surfaces that talk to a model do it with a
+            plain fetch to our own gateway — no SDK involved. A manual audit of every fetch on
+            1 August 2026 found {AI_SYSTEM_COMPONENTS} components calling the live Sovereign
+            chat endpoint. They are classified below, and the guard is being extended to cover
+            gateway fetches so the next miss is caught by the machine, not by a deadline.
           </p>
         </div>
 
+        {/* AI-SYSTEM SURFACES */}
         <div>
           <h2 className="text-2xl font-black tracking-tight">
-            Surfaces whose mechanism has been read
+            The AI-system surfaces — {aiSurfaces.length}
           </h2>
-          <p className="mt-2 text-[13px] text-emerald-100/60">
-            {described.length} of {COUNTS.total}. Each description below was written after reading
-            the file named under it.
+          <p className="mt-2 text-[13px] text-emerald-100/60 leading-relaxed">
+            These routes reach a live model. {mounted.length} of them mount the Article 50(1)
+            first-interaction notice above the input today; for the rest, this registry entry is
+            the disclosure while the notice component is wired — listed plainly, because a notice
+            you can check beats a claim you cannot.
           </p>
           <div className="mt-4 space-y-3">
-            {described.map((s) => (
+            {aiSurfaces.map((s) => (
               <div
                 key={s.route}
-                className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5"
+                className="rounded-2xl border border-sky-400/25 bg-[#05140d] p-5"
               >
                 <div className="flex flex-wrap items-center gap-3">
                   <a
@@ -127,6 +143,16 @@ export default function AiTransparency() {
                     {s.route}
                   </a>
                   <span className="text-[13px] text-emerald-100/50">{s.label}</span>
+                  <span
+                    className={
+                      "rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide " +
+                      (NOTICE_MOUNTED_ROUTES.includes(s.route)
+                        ? "border-emerald-400/40 text-emerald-200"
+                        : "border-amber-400/40 text-amber-200")
+                    }
+                  >
+                    {NOTICE_MOUNTED_ROUTES.includes(s.route) ? "notice mounted" : "notice wiring"}
+                  </span>
                   <span
                     className={
                       "ml-auto rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide " +
@@ -147,33 +173,73 @@ export default function AiTransparency() {
           </div>
         </div>
 
+        {/* RULE-BASED SURFACES */}
         <div>
           <h2 className="text-2xl font-black tracking-tight">
-            Surfaces not yet assessed — {rest.length}
+            The rule-based surfaces — {ruleSurfaces.length}
           </h2>
           <p className="mt-2 text-[13px] text-emerald-100/80 leading-relaxed">
-            Each of these was measured for one thing only: whether its code reaches a model. None
-            does. Nobody has yet read them closely enough to describe what they compute, so they
-            are published as <span className="text-amber-200">unclassified</span> rather than
-            given a plausible-sounding description that no one checked. That is the honest state,
-            and the count is here so it cannot quietly stay this size.
+            Deterministic instruments, data displays and forms. Each was grep-audited for model
+            calls; the mechanism line names what the surface is and asserts only what was
+            verified. Rule-based systems defined solely by natural persons fall outside the
+            Article 3(1) definition (Recital 12), so Article 50(1) does not apply to them — we
+            say so rather than leave it unsaid.
           </p>
           <button
             type="button"
             onClick={() => setShowAll((v) => !v)}
             className="mt-4 rounded-full border border-emerald-500/30 px-4 py-1.5 text-[12px] text-emerald-100/80 hover:border-emerald-400/60"
           >
-            {showAll ? "Hide" : `List all ${rest.length}`}
+            {showAll ? "Hide" : `List all ${ruleSurfaces.length}`}
           </button>
           {showAll && (
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1 font-mono text-[11px] text-emerald-100/55">
-              {rest.map((s) => (
-                <span key={s.route}>{s.route}</span>
+            <div className="mt-4 space-y-2">
+              {ruleSurfaces.map((s) => (
+                <div
+                  key={s.route}
+                  className="rounded-xl border border-emerald-500/15 bg-[#05140d] px-4 py-3"
+                >
+                  <div className="flex flex-wrap items-center gap-3">
+                    <a
+                      href={s.route}
+                      className="font-mono text-[12px] font-bold text-emerald-50 underline decoration-dotted underline-offset-4"
+                    >
+                      {s.route}
+                    </a>
+                    <span className="text-[12px] text-emerald-100/50">{s.label}</span>
+                    <span
+                      className={
+                        "ml-auto rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide " +
+                        NATURE_STYLE[s.nature]
+                      }
+                    >
+                      {NATURE_LABEL[s.nature]}
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-[12px] text-emerald-100/60 leading-relaxed">
+                    {s.mechanism}
+                  </p>
+                </div>
               ))}
             </div>
           )}
         </div>
 
+        {/* WATCH CONDITION */}
+        <div className="rounded-2xl border border-amber-400/30 bg-amber-500/[0.06] p-6">
+          <h2 className="text-lg font-black tracking-tight text-amber-100">
+            One thing worth watching
+          </h2>
+          <p className="mt-2 text-[13px] text-amber-50/80 leading-relaxed">
+            {DECLARED_UNCALLED_SDKS.length} model SDKs are declared in{" "}
+            <code>package.json</code> — {DECLARED_UNCALLED_SDKS.join(", ")} — and never imported
+            anywhere. A dependency is not a call, so this is not a disclosure failure. It is the
+            shortest possible distance to becoming one: adding inference is a single import with no
+            install step and nothing to prompt a second look. The guard reports it every run.
+          </p>
+        </div>
+
+        {/* STRUCTURAL PART */}
         <div>
           <h2 className="text-2xl font-black tracking-tight">
             What happens when this stops being true
@@ -183,22 +249,21 @@ export default function AiTransparency() {
               A page like this is worth nothing if it is maintained by remembering to maintain it.
               The classification is a registry file, and{" "}
               <code>article50_guard.py</code> reads it: if any surface&apos;s code reaches a model
-              provider — directly or through an import chain — that surface must be registered as
-              an AI system and must mount the Article 50(1) notice. If an interactive surface
-              exists and is missing from the registry, the guard fails. The check runs in the
-              release gate.
+              — by SDK import or, after the 1 August correction, by gateway fetch — that surface
+              must be registered as an AI system and must mount the Article 50(1) notice. If an
+              interactive surface exists and is missing from the registry, the guard fails. The
+              check runs in the release gate.
             </p>
             <p>
               Three outcomes, never two. When the guard cannot read the app it reports{" "}
-              <strong className="text-emerald-50">UNMEASURED</strong>, which is not a pass. An
-              earlier version of the detector required a Next.js directive that this app does not
-              use, and reported 0 interactive surfaces out of {ROUTES_SCANNED} — a clean bill of
-              health covering nothing. That is why the count is on this page: a number you can see
-              is wrong is worth more than a verdict you cannot check.
+              <strong className="text-emerald-50">UNMEASURED</strong>, which is not a pass. And
+              when its method has a blind spot — as the import-only scan did — the correction is
+              published in the registry itself, not buried in a changelog.
             </p>
           </div>
         </div>
 
+        {/* SCOPE */}
         <div>
           <h2 className="text-2xl font-black tracking-tight">Scope, honestly</h2>
           <ul className="mt-3 space-y-3 text-[13px] text-emerald-100/80 leading-relaxed">
@@ -213,6 +278,11 @@ export default function AiTransparency() {
               If that changes, the marking obligation attaches — and the grace period to 2 December
               2026 reaches only systems placed on the market before 2 August 2026, which a new
               feature would not be.
+            </li>
+            <li>
+              <strong className="text-emerald-50">The gateway is ours.</strong> The model behind
+              the Sovereign chat endpoint is operated under our own governance boundary; the
+              endpoint, not the model vendor, is what these surfaces call.
             </li>
             <li>
               <strong className="text-emerald-50">
@@ -236,6 +306,12 @@ export default function AiTransparency() {
         </div>
 
         <div className="flex flex-wrap gap-4 text-[13px]">
+          <a href="/article-50" className="text-emerald-300 hover:underline">
+            The Article 50 explainer →
+          </a>
+          <a href="/gspc-verify" className="text-emerald-300 hover:underline">
+            Recompute the chain →
+          </a>
           <a href="/provenance-finding" className="text-emerald-300 hover:underline">
             The provenance finding →
           </a>

@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { fetchHealth, fetchToolCount, SovHealth } from "../lib/sovHealth";
 
-const CORE: { name: string; state: string }[] = [
-  { name: "Byzantine Council (BFT consensus)", state: "operational" },
-  { name: "Compliance engine (30 frameworks)", state: "operational" },
-  { name: "Layer 0 signing (Ed25519)", state: "operational" },
-  { name: "Governance Graph (live world data)", state: "operational" },
-  { name: "Sigil ledger + hash-chain", state: "monitoring" },
-  { name: "Framework crosswalk (comply once)", state: "expanding" },
-  { name: "Sovereign Charter", state: "expanding" },
+// Components listed on this page. Only entries with a probe are checked live from
+// the browser; everything else is labelled honestly as not probed from this page.
+const COMPONENTS: { name: string; probe: "gateway" | "tools" | null }[] = [
+  { name: "Sovereign gateway (os.meok.ai/api/health)", probe: "gateway" },
+  { name: "Governed tool fleet (os.meok.ai/api/tools)", probe: "tools" },
+  { name: "Byzantine Council (BFT consensus)", probe: null },
+  { name: "Compliance engine (30 frameworks)", probe: null },
+  { name: "Layer 0 signing (Ed25519)", probe: null },
+  { name: "Governance Graph (live world data)", probe: null },
+  { name: "Sigil ledger + hash-chain", probe: null },
 ];
-const DOT: Record<string, string> = { operational: "bg-emerald-400", monitoring: "bg-amber-400", expanding: "bg-sky-400" };
 
 const PROTO_LABEL: Record<string, string> = {
   "/api/sign": "Sign - Ed25519 attestation",
@@ -47,7 +48,7 @@ export default function StatusPage() {
   }, []);
 
   const connected = !!(live && live.ok);
-  const allOk = CORE.filter((c) => c.state === "operational").length;
+  const toolsOk = tools != null;
   const protos = (live && Array.isArray(live.tools)) ? live.tools : [];
   const brain = (live && live.brain) || {};
 
@@ -58,7 +59,7 @@ export default function StatusPage() {
         <div className="relative mx-auto max-w-4xl px-6 pt-16 pb-10 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - system status</p>
           <h1 className="mt-3 text-5xl sm:text-6xl font-black tracking-tight">We publish our <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">own status.</span></h1>
-          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">An AI-governance company should be the most transparent system you run. {allOk} core systems operational; the Sovereign brain checked live below.</p>
+          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">An AI-governance company should be the most transparent system you run. Below: what we probe live from your browser, what we don't, and every incident on record.</p>
         </div>
       </section>
 
@@ -102,9 +103,50 @@ export default function StatusPage() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-10 space-y-3">
-        <h2 className="mb-1 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Core systems</h2>
-        {CORE.map((c) => (<div key={c.name} className="flex items-center justify-between rounded-2xl border border-emerald-500/20 bg-[#05140d] px-5 py-4"><span className="text-sm font-semibold text-emerald-100">{c.name}</span><span className="flex items-center gap-2 text-xs font-mono uppercase tracking-wide text-emerald-200/70"><span className={"h-2.5 w-2.5 rounded-full " + (DOT[c.state] || "bg-gray-400")} />{c.state}</span></div>))}
-        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Sovereign brain that powers the CSOAI OS." : "The Sovereign brain is reached live from your browser."} Every verdict Ed25519-signed, Layer 0 ledgered.</p>
+        <h2 className="mb-1 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Components — what we probe live, and what we don't</h2>
+        {COMPONENTS.map((c) => {
+          const probed = c.probe != null;
+          const ok = c.probe === "gateway" ? connected : c.probe === "tools" ? toolsOk : false;
+          const label = !probed
+            ? "not probed from this page"
+            : !checked
+            ? "checking..."
+            : ok
+            ? "operational"
+            : "unreachable";
+          const dot = !probed ? "bg-gray-500" : !checked ? "bg-gray-500" : ok ? "bg-emerald-400" : "bg-amber-400";
+          return (
+            <div key={c.name} className="flex items-center justify-between rounded-2xl border border-emerald-500/20 bg-[#05140d] px-5 py-4">
+              <span className="text-sm font-semibold text-emerald-100">{c.name}</span>
+              <span className="flex items-center gap-2 text-xs font-mono uppercase tracking-wide text-emerald-200/70"><span className={"h-2.5 w-2.5 rounded-full " + dot} />{label}</span>
+            </div>
+          );
+        })}
+        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Sovereign brain that powers the CSOAI OS." : "The Sovereign brain is reached live from your browser."} Rows marked &ldquo;not probed from this page&rdquo; have no public health endpoint we can honestly check from here — we don't paint them green by default.</p>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-6 pb-14 space-y-4">
+        <h2 className="mb-1 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Incident history</h2>
+        <p className="text-sm text-emerald-100/70">
+          Apart from the entry below, no incidents are currently on record for this service. When one
+          occurs, it will be logged here with a timeline and resolution — we do not backfill a
+          history we did not keep.
+        </p>
+        <div className="rounded-2xl border border-amber-400/30 bg-amber-500/5 px-5 py-4 space-y-2">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="font-mono text-xs text-amber-300">2026-07-31</span>
+            <span className="text-sm font-bold text-emerald-50">Cross-wired deploy regression — resolved, 45 minutes</span>
+            <span className="ml-auto rounded-full bg-emerald-500/15 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300">resolved same day</span>
+          </div>
+          <p className="text-sm text-emerald-100/70">
+            A misdirected deployment briefly cross-wired this surface with the DEFONEOS deployment,
+            serving the wrong build to several pages. Detected through our EU AI Act page checks,
+            the deployment was reversed the same day — roughly 45 minutes end to end — and the deploy
+            target misconfiguration that caused it was fixed. No user data was affected. We publish
+            this because a status page that only ever says &ldquo;all operational&rdquo; is a
+            decoration, not a status page.
+          </p>
+        </div>
       </section>
     </div>
   );
