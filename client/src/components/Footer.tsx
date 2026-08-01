@@ -260,6 +260,21 @@ export function Footer() {
           </Link>
         </div>
 
+        {/* AI Transparency & Oversight Statement (Art 50 / Art 14) */}
+        <div className="border-t border-gray-200 mt-8 pt-8">
+          <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">
+            This site uses AI systems, including the Sovereign assistant. Every AI surface is disclosed at
+            first interaction under EU AI Act Article 50 and classified publicly on{" "}
+            <Link href="/ai-transparency" className="text-emerald-700 underline">/ai-transparency</Link>.
+          </p>
+          <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">
+            Human oversight applies to every governed action on this platform (Article 14): measurements are
+            machine-run, judgements are human-owned. Our public artefacts carry signed provenance
+            (Ed25519-signed records; C2PA conformance in progress — see{" "}
+            <Link href="/provenance-finding" className="text-emerald-700 underline">/provenance-finding</Link>).
+          </p>
+        </div>
+
         {/* Independence Statement */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">
