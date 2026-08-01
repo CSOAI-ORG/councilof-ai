@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import StatusCorpusWatch from "@/pages/StatusCorpusWatch";
 import { 
   CheckCircle2, 
   AlertTriangle, 
@@ -303,6 +304,11 @@ export default function Status() {
             </div>
           </div>
         </Card>
+
+        {/* Corpus-watcher heartbeat (Lane 8 / drift product) */}
+        <div data-lanelock="8" data-section="corpus-watch-status">
+          <StatusCorpusWatch />
+        </div>
       </div>
     </div>
   );
