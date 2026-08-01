@@ -31,7 +31,7 @@ const navigation = [
       { name: "Governance Graph", href: "/graph", description: "The governed Google" },
       { name: "Tool Commons", href: "/tool-commons", description: "370+ governed MCP tools" },
       { name: "Open Commons", href: "/commons", description: "Free Creative Commons media" },
-      { name: "Your Sovereign twin", href: "/emergence", description: "Your AI learns you as you use the OS" },
+      { name: "Your Sovereign twin", href: "/sovereign-twin", description: "Your AI learns you as you use the OS" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
       { name: "Start free", href: "/start", description: "Build your own AI" },
       { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },

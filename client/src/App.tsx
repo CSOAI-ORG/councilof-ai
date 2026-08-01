@@ -283,7 +283,7 @@ const NetworkPage = lazy(() => import("./pages/NetworkPage"));
 const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
 const CyberScan = lazy(() => import("./pages/CyberScan"));
 const Competitors = lazy(() => import("./pages/Competitors"));
-const EmergencePage = lazy(() => import("./pages/EmergencePage"));
+const SovereignTwin = lazy(() => import("./pages/SovereignTwin"));
 const ToolCommons = lazy(() => import("./pages/ToolCommons"));
 const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const StatusPage = lazy(() => import("./pages/StatusPage"));
@@ -913,9 +913,7 @@ function App() {
                   <Route path="/tools" component={ToolCommons} />
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
-                  <Route path="/emergence" component={EmergencePage} />
-                  <Route path="/egg" component={EmergencePage} />
-                  <Route path="/hatch" component={EmergencePage} />
+                  <Route path="/sovereign-twin" component={SovereignTwin} />
                   <Route component={NotFound} />
                   </Switch></Suspense>
                 </main>

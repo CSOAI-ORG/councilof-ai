@@ -10,7 +10,7 @@ const EMG_GW = "https://os.meok.ai/api";
  * about emergent behaviour or 'consciousness' in internal material is a
  * metaphor for the substrate's evolving-memory design, never a literal claim."
  */
-export default function EmergencePage() {
+export default function SovereignTwin() {
   const cv = useRef<HTMLCanvasElement | null>(null);
   const chargeRef = useRef(0); const personaliseRef = useRef(false);
   const [charge, setCharge] = useState(0); const [personalised, setPersonalised] = useState(false);

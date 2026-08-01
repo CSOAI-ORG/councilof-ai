@@ -6,7 +6,7 @@ import { detectLocale } from "../lib/locale";
 const OS_LOCALE = detectLocale();
 
 const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
-const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/pricing", plans: "/pricing", king: "/try", council: "/try", try: "/try", setup: "/start", onboard: "/start", graph: "/graph", knowledge: "/graph", space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", tools: "/tool-commons", commons: "/commons", status: "/status", os: "/os", emergence: "/emergence", egg: "/emergence", certification: "/certification", academy: "/academy", evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator", layer0: "/trust-center", distribution: "/distribution" };
+const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/pricing", plans: "/pricing", king: "/try", council: "/try", try: "/try", setup: "/start", onboard: "/start", graph: "/graph", knowledge: "/graph", space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", tools: "/tool-commons", commons: "/commons", status: "/status", os: "/os", twin: "/sovereign-twin", certification: "/certification", academy: "/academy", evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator", layer0: "/trust-center", distribution: "/distribution" };
 function osRoute(a: any): string | null { if (!a || !a.command) return null; if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url); if (a.command === "open_app" && a.args && a.args.id) return OS_APP_ROUTES[String(a.args.id).toLowerCase()] || null; if (a.command === "govern") return "/graph"; return null; }
 
 // CSOAI OS — the unified launcher. One surface where an end user opens every
@@ -32,7 +32,7 @@ const APPS: App[] = [
   { name: "Sov Space", desc: "Simulate a real-world governance experiment — the council deliberates live and seals a signed verdict with a ledger hash.", href: "/sov-space", glyph: "◈", tone: "from-emerald-500/25 to-sky-400/10 border-emerald-400/35" },
   { name: "Tool Commons", desc: "Search 370+ governed MCP tools — copy a pip install, wire it into your stack, Layer 0 covered.", href: "/tool-commons", glyph: "⊟", tone: "from-cyan-500/20 to-emerald-400/5 border-cyan-400/30" },
   { name: "Open Commons", desc: "Creative-Commons media search, keyless — build in the open.", href: "/commons", glyph: "◐", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
-  { name: "Your Sovereign twin", desc: "Your AI learns you as you use the OS and grows into your own AI character.", href: "/emergence", glyph: "◍", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30", pro: true },
+  { name: "Your Sovereign twin", desc: "Your AI learns you as you use the OS and grows into your own AI character.", href: "/sovereign-twin", glyph: "◍", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30", pro: true },
   { name: "System Status", desc: "The transparency board — every core system, live.", href: "/status", glyph: "◉", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
   { name: "Global AI Watchdog", desc: "The public watchdog for humans, agents, humanoids and systems — report a signal, watch the world heat-map by problem layer, live.", href: "/watchdog-map", glyph: "◎", tone: "from-rose-500/20 to-amber-400/5 border-rose-400/30" },
   { name: "ONE OS — agents & humanoids", desc: "The proof of concept: live-track every agent and humanoid, PDCA auto-simulation, and watch the Sovereign stop a rogue swarm before it ungoverns — signed.", href: "/poc", glyph: "⬢", tone: "from-emerald-500/25 to-rose-400/10 border-emerald-400/35", pro: true },
@@ -84,7 +84,7 @@ const CAT_MAP: Record<string, string> = {
   "/network": "Ecosystem", "/safe-space": "Ecosystem", "/jewels": "Ecosystem", "/towns": "Ecosystem", "/minds": "Ecosystem", "/social": "Ecosystem", "/lineage": "Ecosystem", "/why": "Ecosystem", "/sovereign-town": "Ecosystem", "/ontology": "Ecosystem",
   "/workbench": "Data & proof", "/evidence": "Data & proof", "/tools/index.html": "Data & proof", "/measured.html": "Data & proof", "/models": "Data & proof", "/oscal": "Data & proof", "/distribution": "Data & proof", "/mcp-fleet": "Data & proof", "/tool-commons": "Data & proof", "/commons": "Data & proof", "/webhooks": "Data & proof", "/hives": "Data & proof", "/trust-center": "Data & proof", "/legacy": "Data & proof",
   "/academy": "Learn & join", "/certification": "Learn & join", "/register": "Learn & join", "/pricing": "Learn & join",
-  "/demo": "Explore & views", "/emergence": "Explore & views", "/map": "Explore & views", "/temples": "Explore & views", "/status": "Explore & views", "/globe.html": "Explore & views", "/globe3d.html": "Explore & views", "/world-3d": "Explore & views",
+  "/demo": "Explore & views", "/sovereign-twin": "Explore & views", "/map": "Explore & views", "/temples": "Explore & views", "/status": "Explore & views", "/globe.html": "Explore & views", "/globe3d.html": "Explore & views", "/world-3d": "Explore & views",
 };
 const CATS = ["All", "Govern", "Cyber & protect", "Ecosystem", "Data & proof", "Learn & join", "Explore & views"];
 function catOf(href: string) { return CAT_MAP[href] || "Explore & views"; }

@@ -82,7 +82,7 @@ const APP_ROUTES: Record<string, string> = {
   space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", experiment: "/sov-space", sovspace: "/sov-space",
   tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
   status: "/status", system: "/status", os: "/os", home: "/os", grid: "/os",
-  emergence: "/emergence", egg: "/emergence",
+  twin: "/sovereign-twin",
   certification: "/certification", cert: "/certification", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
   layer0: "/trust-center", distribution: "/distribution", command: "/command-center",
