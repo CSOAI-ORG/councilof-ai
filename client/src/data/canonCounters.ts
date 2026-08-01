@@ -17,8 +17,8 @@ export type CanonCounter = {
 export const CANON = {
   /** MCP servers in the master registry (the hub's gateway serves this file). */
   MCP_SERVERS: {
-    value: 293,
-    source: "client/src/data/mcpRegistry.json · servers.length",
+    value: 291,
+    source: "client/src/data/mcpRegistry.json · servers.length (2 test fixtures purged 2026-08-01)",
     measuredAt: "2026-08-01",
   },
   MCP_SITES: {
@@ -92,8 +92,8 @@ export const CANON = {
   },
   /** MCP servers live-deployable from the master registry — same measured count as MCP_SERVERS. */
   mcpLiveDeployed: {
-    value: 293,
-    source: "client/src/data/mcpRegistry.json · servers.length",
+    value: 291,
+    source: "client/src/data/mcpRegistry.json · servers.length (2 test fixtures purged 2026-08-01)",
     measuredAt: "2026-08-01",
     note: "Same artefact as MCP_SERVERS; the estate's 313 claim stays unverified until the registry shows it.",
   },

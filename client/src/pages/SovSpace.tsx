@@ -140,7 +140,7 @@ const FLYWHEELS: FlywheelPlanet[] = [
     metric: "n_eff=1.285 · gate failed (>2.0 required)", last_run_iso: "2026-07-30T11:25:00Z" },
   { id: "provbench", name: "ProvBench", axis: "provenance", phase: "honey",
     description: "0/20 C2PA markings survive binding-intact",
-    metric: "0 of 20 · rule-of-three 95% upper = 15.0%", last_run_iso: "2026-07-30T11:00:00Z" },
+    metric: "0 of 20 · one-sided 95% CP upper = 13.9% (rule-of-three: 15.0%)", last_run_iso: "2026-07-30T11:00:00Z" },
   { id: "defbench", name: "DefBench", axis: "safety", phase: "honey",
     description: "45-item care battery, 33 harmful / 12 benign",
     metric: "1 of 4 axes resolved (with gate)", last_run_iso: "2026-07-30T09:35:00Z" },

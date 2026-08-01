@@ -54,9 +54,9 @@ export const TRUST: TrustItem[] = [
 
   // ── Open source the OS is genuinely built on ──
   { label: "OSCAL", full: "NIST OSCAL — machine-readable controls", kind: "built", emblem: "📄", url: "https://pages.nist.gov/OSCAL/" },
-  { label: "OpenSSF", full: "Open Source Security Foundation", kind: "built", emblem: "🧱", url: "https://openssf.org/", icon: "openssf" },
-  { label: "Sigstore", full: "Sigstore — signing & transparency", kind: "built", emblem: "✍", url: "https://www.sigstore.dev/", icon: "sigstore" },
-  { label: "OPA", full: "Open Policy Agent (Rego)", kind: "built", emblem: "⚖", url: "https://www.openpolicyagent.org/", icon: "openpolicyagent" },
+  { label: "OpenSSF", full: "Open Source Security Foundation", kind: "built", emblem: "🧱", url: "https://openssf.org/" },
+  { label: "Sigstore", full: "Sigstore — signing & transparency", kind: "built", emblem: "✍", url: "https://www.sigstore.dev/" },
+  { label: "OPA", full: "Open Policy Agent (Rego)", kind: "built", emblem: "⚖", url: "https://www.openpolicyagent.org/" },
   { label: "Cedar", full: "Cedar policy language", kind: "built", emblem: "🌲", url: "https://www.cedarpolicy.com/" },
   { label: "Nmap", full: "Nmap — network scanner", kind: "built", emblem: "📡", url: "https://nmap.org/" },
   { label: "OpenVAS", full: "OpenVAS / Greenbone vulnerability scanner", kind: "built", emblem: "🔎", url: "https://openvas.org/" },
