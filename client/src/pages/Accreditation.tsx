@@ -98,11 +98,12 @@ export default function Accreditation() {
               <div className="h-32 w-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Global AI Safety Accreditation Authority
+              AI Safety Training &amp; Attestation
             </h1>
             <p className="text-xl text-blue-100 mb-8">
-              CSOAI is the world's first independent accreditation body for AI Safety professionals,
-              recognized across 120+ countries and aligned with all major regulatory frameworks.
+              CSOAI is a measurement body, not an accreditation authority. Our training paths lead to
+              signed attestations aligned with the EU AI Act, NIST AI RMF, TC260 and ISO/IEC 42001 —
+              measured against live regulatory text, never a substitute for accredited certification.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/training">
@@ -155,7 +156,7 @@ export default function Accreditation() {
               <CardContent>
                 <p className="text-gray-600">
                   Aligned with EU AI Act, NIST AI RMF, China TC260, and ISO 42001.
-                  Recognized in 120+ countries worldwide.
+                  Signed attestation records — not an accredited certification.
                 </p>
               </CardContent>
             </Card>

@@ -110,12 +110,12 @@ export default function TrustCenter() {
     {
       title: "Cloud Infrastructure",
       description:
-        "Multi-region deployment across AWS and Azure with automatic failover and disaster recovery",
-      detail: "99.99% SLA | Redundant infrastructure | Real-time replication",
+        "Static-first deployment on Cloudflare's global edge network, with always-free Oracle nodes for measurement workloads",
+      detail: "Edge-cached worldwide | Signed artefacts | Fail-closed measurement",
     },
     {
       title: "DDoS Protection",
-      description: "Enterprise-grade DDoS mitigation with AWS Shield Advanced",
+      description: "DDoS mitigation via Cloudflare's network layer",
       detail: "Automatic traffic filtering | Layer 3-7 protection | 24/7 monitoring",
     },
     {
@@ -382,9 +382,9 @@ export default function TrustCenter() {
             Trust Built Into Every Layer
           </h1>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            CSOAI is built on security, transparency, and compliance. Our controls are independently assessed
-            and audited to ensure your data and AI systems are protected by the highest industry
-            standards.
+            CSOAI is built on security, transparency, and compliance. Our controls are described
+            honestly — what is attained is marked attained, what is in progress is marked in
+            progress, and we do not claim audits we have not undergone.
           </p>
           <p className="text-lg text-gray-400 leading-relaxed">
             From encryption to incident response, from ISO certifications to compliance frameworks—we

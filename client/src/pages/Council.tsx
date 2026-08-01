@@ -111,9 +111,14 @@ export default function Council() {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               The <span className="text-emerald-400">Byzantine Council</span>
             </h1>
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-              33 AI agents from 7 different providers working together with fault-aware consensus.
-              No single company can manipulate safety decisions. Ever.
+            <p className="text-xl text-gray-300 mb-4 leading-relaxed">
+              A designed 33-agent oversight architecture across 7 providers — so no single company
+              could manipulate a safety decision.
+            </p>
+            <p className="text-sm text-amber-300/90 mb-8 leading-relaxed max-w-2xl mx-auto">
+              Status: <b>DESIGN — not a live system.</b> The measured effective council size is n_eff 1.21 of 3,
+              published on our <a href="/refutation-ledger" className="underline">Refutation Ledger</a> (DR-0007).
+              Everything below is the design visualization, not measured production behaviour.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/training">
@@ -122,10 +127,10 @@ export default function Council() {
                   Become an Analyst
                 </Button>
               </Link>
-              <Link href="/transparency">
+              <Link href="/refutation-ledger">
                 <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
                   <Eye className="mr-2 h-5 w-5" />
-                  View Live Dashboard
+                  View the Refutation Ledger
                 </Button>
               </Link>
             </div>
@@ -466,9 +471,9 @@ export default function Council() {
             variants={fadeInUp}
             className="text-center mb-16"
           >
-            <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-400/30">
+            <Badge className="mb-4 bg-amber-500/20 text-amber-400 border-amber-400/30">
               <Activity className="h-3.5 w-3.5 mr-1" />
-              Live Performance
+              Simulated Performance — design model
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Council <span className="text-emerald-400">Performance</span>
