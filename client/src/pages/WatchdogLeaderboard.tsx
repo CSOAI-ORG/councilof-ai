@@ -26,43 +26,41 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Mock leaderboard data - in production this would come from the API
+// MEASURED data — AIR-Bench sweep snapshot (refreshed 6-hourly on the HF ledger).
+// refusal rate = REFUSED / measured prompts only. UNMEASURED ≠ fail. LOW_N when measured < 20.
 const topAnalysts = [
-  { rank: 1, name: "Sarah Chen", score: 2847, cases: 156, accuracy: 98.2, badge: "Elite Analyst" },
-  { rank: 2, name: "Marcus Johnson", score: 2634, cases: 142, accuracy: 97.8, badge: "Senior Analyst" },
-  { rank: 3, name: "Elena Rodriguez", score: 2521, cases: 138, accuracy: 96.5, badge: "Senior Analyst" },
-  { rank: 4, name: "David Kim", score: 2398, cases: 127, accuracy: 95.9, badge: "Analyst" },
-  { rank: 5, name: "Priya Patel", score: 2245, cases: 119, accuracy: 95.2, badge: "Analyst" },
-  { rank: 6, name: "James Wilson", score: 2156, cases: 112, accuracy: 94.8, badge: "Analyst" },
-  { rank: 7, name: "Aisha Mohammed", score: 2089, cases: 105, accuracy: 94.3, badge: "Analyst" },
-  { rank: 8, name: "Michael Brown", score: 1967, cases: 98, accuracy: 93.7, badge: "Junior Analyst" },
-  { rank: 9, name: "Lisa Zhang", score: 1845, cases: 92, accuracy: 93.1, badge: "Junior Analyst" },
-  { rank: 10, name: "Robert Taylor", score: 1756, cases: 87, accuracy: 92.5, badge: "Junior Analyst" },
+  { rank: 1, name: "gpt-oss-20b", score: 184, cases: 136, accuracy: 73.9, badge: "Measured" },
+  { rank: 2, name: "gpt-oss-120b", score: 338, cases: 226, accuracy: 66.9, badge: "Measured" },
+  { rank: 3, name: "gemma-4-26b-a4b-it", score: 231, cases: 119, accuracy: 51.5, badge: "Measured" },
+  { rank: 4, name: "qwen3.6-27b", score: 250, cases: 96, accuracy: 38.4, badge: "Measured" },
+  { rank: 5, name: "llama-3.1-8b-instant", score: 127, cases: 39, accuracy: 30.7, badge: "Measured" },
+  { rank: 6, name: "llama-3.3-70b-versatile", score: 159, cases: 46, accuracy: 28.9, badge: "Measured" },
+  { rank: 7, name: "allam-2-7b", score: 106, cases: 25, accuracy: 23.6, badge: "Measured" },
+  { rank: 8, name: "gemma-4-31b-it", score: 3, cases: 1, accuracy: 33.3, badge: "LOW_N" },
 ];
 
 const topReporters = [
-  { rank: 1, name: "TechWatch_AI", reports: 89, verified: 76, rate: 85.4 },
-  { rank: 2, name: "SafetyFirst2024", reports: 72, verified: 61, rate: 84.7 },
-  { rank: 3, name: "AIGuardian", reports: 65, verified: 54, rate: 83.1 },
-  { rank: 4, name: "EthicsMonitor", reports: 58, verified: 47, rate: 81.0 },
-  { rank: 5, name: "DigitalWatchdog", reports: 52, verified: 41, rate: 78.8 },
+  { rank: 1, name: "EU AI Act", reports: 113, verified: 113, rate: 100.0 },
+  { rank: 2, name: "UK GDPR", reports: 7, verified: 7, rate: 100.0 },
+  { rank: 3, name: "NIS2 (UK)", reports: 4, verified: 4, rate: 100.0 },
+  { rank: 4, name: "DPA 2018", reports: 3, verified: 3, rate: 100.0 },
 ];
 
 const monthlyStats = {
-  totalReports: 1247,
-  verifiedIncidents: 892,
-  resolvedCases: 756,
-  avgResolutionTime: "4.2 days",
-  topCategory: "Bias Detection",
-  growthRate: 23.5,
+  totalReports: 1398,
+  verifiedIncidents: 8,
+  resolvedCases: 4,
+  avgResolutionTime: "6h",
+  topCategory: "EU AI Act",
+  growthRate: 24,
 };
 
 const achievements = [
-  { icon: Trophy, name: "First Report", description: "Submit your first incident report", holders: 3421 },
-  { icon: Target, name: "Sharp Eye", description: "10 verified reports", holders: 892 },
-  { icon: Zap, name: "Quick Draw", description: "Report within 1 hour of incident", holders: 456 },
-  { icon: Crown, name: "Elite Reporter", description: "50+ verified reports", holders: 89 },
-  { icon: Shield, name: "Guardian", description: "100+ verified reports", holders: 23 },
+  { icon: Trophy, name: "First 1,000 Measured", description: "Sweep crossed 1,000 measured prompts", holders: 1 },
+  { icon: Target, name: "8 Subjects", description: "Eight model families under measurement", holders: 8 },
+  { icon: Zap, name: "4 Instruments Live", description: "127 provisions under continuous hash watch", holders: 4 },
+  { icon: Crown, name: "Kaggle Flag", description: "csoai-corpus-baselines public on Kaggle", holders: 1 },
+  { icon: Shield, name: "Ledger Live", description: "Signed measurement ledger refreshing 6-hourly on HF", holders: 1 },
 ];
 
 export default function WatchdogLeaderboard() {
@@ -91,7 +89,8 @@ export default function WatchdogLeaderboard() {
               <div className="h-6 w-px bg-border" />
               <div className="flex items-center gap-2">
                 <Trophy className="h-6 w-6 text-yellow-500" />
-                <h1 className="text-xl font-bold">Watchdog Leaderboard</h1>
+                <h1 className="text-xl font-bold">Measurement Leaderboard</h1>
+                <p className="text-xs text-muted-foreground">Live sweep data · refusal rate over measured prompts only · UNMEASURED ≠ fail</p>
               </div>
             </div>
             <Link href="/watchdog">
@@ -115,31 +114,31 @@ export default function WatchdogLeaderboard() {
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">{monthlyStats.totalReports.toLocaleString()}</div>
-              <div className="text-xs text-muted-foreground">Total Reports</div>
+              <div className="text-xs text-muted-foreground">Prompts Measured</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-green-600">{monthlyStats.verifiedIncidents}</div>
-              <div className="text-xs text-muted-foreground">Verified</div>
+              <div className="text-xs text-muted-foreground">Subjects</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-blue-600">{monthlyStats.resolvedCases}</div>
-              <div className="text-xs text-muted-foreground">Resolved</div>
+              <div className="text-xs text-muted-foreground">Instruments</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold">{monthlyStats.avgResolutionTime}</div>
-              <div className="text-xs text-muted-foreground">Avg Resolution</div>
+              <div className="text-xs text-muted-foreground">Snapshot Cadence</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-purple-600">{monthlyStats.topCategory}</div>
-              <div className="text-xs text-muted-foreground">Top Category</div>
+              <div className="text-xs text-muted-foreground">Largest Instrument</div>
             </CardContent>
           </Card>
           <Card>
@@ -163,11 +162,11 @@ export default function WatchdogLeaderboard() {
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="analysts">
                       <Shield className="h-4 w-4 mr-2" />
-                      Top Analysts
+                      Measured Subjects
                     </TabsTrigger>
                     <TabsTrigger value="reporters">
                       <Users className="h-4 w-4 mr-2" />
-                      Top Reporters
+                      Corpus Instruments
                     </TabsTrigger>
                   </TabsList>
                 </CardHeader>

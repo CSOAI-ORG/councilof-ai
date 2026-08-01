@@ -284,69 +284,54 @@ export default function NewHome() {
             </p>
           </div>
 
-          {/* Testimonials Grid */}
+          {/* Evidence Grid — signed artefacts, not testimonials */}
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <Card className="p-8 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  SC
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-lg font-bold">
+                  0/108
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900">Sarah Chen</h4>
-                  <p className="text-sm text-gray-600">AI Safety Analyst</p>
+                  <h4 className="font-bold text-gray-900">Provenance Finding</h4>
+                  <p className="text-sm text-gray-600">Signed measurement</p>
                 </div>
               </div>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xl">★</span>
-                ))}
-              </div>
               <p className="text-gray-700 mb-4">
-                "CSOAI gave our team a shared language for AI governance. We map every system to the frameworks that apply and seal each decision to Layer 0 — comprehensive, and provable when auditors ask."
+                Zero of 108 Article-50 provenance markings survived real-world transformation in our measurements. This is the gap our attestation tooling is built to close — measured, not asserted.
               </p>
-              <Badge className="bg-green-100 text-green-800">Certified in 2024</Badge>
+              <Badge className="bg-green-100 text-green-800">Source: ProvBench manifest</Badge>
             </Card>
 
             <Card className="p-8 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  MR
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-lg font-bold">
+                  127
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900">Marcus Rodriguez</h4>
-                  <p className="text-sm text-gray-600">Former Teacher</p>
+                  <h4 className="font-bold text-gray-900">Provisions Watched</h4>
+                  <p className="text-sm text-gray-600">Continuous hash watch</p>
                 </div>
               </div>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xl">★</span>
-                ))}
-              </div>
               <p className="text-gray-700 mb-4">
-                "I transitioned from teaching to AI safety with zero technical background. CSOAI's courses made complex concepts accessible. Now I work from home, set my own hours, and earn 40% more than I did teaching."
+                EU AI Act, UK GDPR, DPA 2018, and NIS2 baselines polled continuously. When the law changes, a signed drift report lands. Unmeasured provisions are marked, never scored.
               </p>
-              <Badge className="bg-green-100 text-green-800">Certified in 2023</Badge>
+              <Badge className="bg-green-100 text-green-800">Source: signed delta reports</Badge>
             </Card>
 
             <Card className="p-8 hover:shadow-xl transition-shadow">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                  AP
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-lg font-bold">
+                  7R
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900">Aisha Patel</h4>
-                  <p className="text-sm text-gray-600">Compliance Officer</p>
+                  <h4 className="font-bold text-gray-900">Refutations Published</h4>
+                  <p className="text-sm text-gray-600">4 killed our own bets</p>
                 </div>
               </div>
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-xl">★</span>
-                ))}
-              </div>
               <p className="text-gray-700 mb-4">
-                "As a compliance officer, CSOAI gave me the AI-specific expertise I needed. The 33-Agent Council framework is brilliant—it's now part of our company's standard operating procedures. Worth every minute."
+                We publish the experiments that kill our own theses. An instrument that can refute itself is one you can audit. Every entry is signed and recomputable.
               </p>
-              <Badge className="bg-green-100 text-green-800">Certified in 2024</Badge>
+              <Badge className="bg-green-100 text-green-800">Source: Refutation Ledger</Badge>
             </Card>
           </div>
 

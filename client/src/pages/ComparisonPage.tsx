@@ -368,31 +368,32 @@ const uniqueAdvantages = [
   },
 ];
 
-// Customer testimonials
+// Evidence cards — real artefacts, signed and verifiable. No testimonials until real customers
+// give us quotes in writing. [Register: numbers trace to signed artefacts]
 const testimonials = [
   {
-    name: "Sarah Chen",
-    role: "Chief AI Officer",
-    company: "TechCorp Global",
+    name: "0 of 108",
+    role: "Article-50 provenance markings",
+    company: "Source: ProvBench manifest (signed)",
     quote:
-      "CSOAI's multi-nation support saved us months of compliance work. One platform for all our regulatory needs.",
-    avatar: "SC",
+      "Zero of 108 provenance markings survived real-world transformation in our measurements. This is the gap proofof attestations are built to close.",
+    avatar: "0/108",
   },
   {
-    name: "Marcus Johnson",
-    role: "Compliance Director",
-    company: "FinanceSecure",
+    name: "127 provisions",
+    role: "Under continuous hash watch",
+    company: "Source: corpus-watch signed delta reports",
     quote:
-      "The free training tier let us upskill our entire team without breaking budget. The Byzantine Council gives us confidence our decisions are unbiased.",
-    avatar: "MJ",
+      "EU AI Act, UK GDPR, DPA 2018, and NIS2 baselines polled continuously. When the law changes, a signed drift report lands. Unmeasured provisions are marked, never scored.",
+    avatar: "127",
   },
   {
-    name: "Emma Rodriguez",
-    role: "AI Safety Analyst",
-    company: "Independent Researcher",
+    name: "7 refutations",
+    role: "Published — 4 killed our own bets",
+    company: "Source: Refutation Ledger",
     quote:
-      "The job marketplace connected me with organizations that need AI safety expertise. CSOAI is democratizing AI governance.",
-    avatar: "ER",
+      "We publish the experiments that kill our own theses. An instrument that can refute itself is one you can audit. Every entry is signed and recomputable.",
+    avatar: "7R",
   },
 ];
 
@@ -801,7 +802,7 @@ export default function ComparisonPage() {
         </div>
       </section>
 
-      {/* Customer Testimonials */}
+      {/* Evidence — signed artefacts, not testimonials */}
       <section className="py-16 bg-muted/50">
         <div className="container mx-auto px-4">
           <motion.div
@@ -810,9 +811,9 @@ export default function ComparisonPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="text-3xl font-bold mb-4">Why Customers Choose CSOAI</h2>
+            <h2 className="text-3xl font-bold mb-4">We Show, We Don't Tell</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Hear from organizations making the switch
+              Every number below traces to a signed, verifiable artefact
             </p>
           </motion.div>
 
