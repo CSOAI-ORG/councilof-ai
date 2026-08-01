@@ -90,27 +90,23 @@ soft-404 nav links · ISO/SOC2/uptime claims made honest · input aria-labels ·
 Art 50 notice wired into the home console.
 
 ### OPEN — ranked by impact (evidence in session logs)
-1. **Art 50 self-conformance (due 2 Aug — TOMORROW at compile time):**
-   publish a signed self-conformance record (the site selling Art 50 tooling
-   must itself be demonstrably compliant); complete /article-50 explainer to
-   full-checklist depth (50(3), editorial exception, accessibility rules);
-   ship C2PA marking + free detection on our own outputs as the reference
-   implementation. Dec 2 grace period is a marketing weapon, not a hiding place.
-2. **Trust pack:** subprocessor list (named), DPA download, pen-test letter,
-   security questionnaire, real /status (uptime history + incident log).
-3. **Citable evidence:** ProvBench arXiv submission (script exists, never
-   ran) + Hugging Face dataset + DOI. Currently ZERO public findability
-   (HF search `csoai` = 0; arXiv = 0) — T-14 C2PA notice owed first.
-4. **SEO:** regenerate sitemap.xml from App.tsx (flagship routes missing;
-   stale lastmod); fix robots.txt self-contradiction (Cloudflare block vs
-   hand-allow of AI crawlers); per-route titles/meta (9 of 415 covered);
-   prerender top ~20 marketing routes; drop risky aggregateRating JSON-LD;
-   immutable cache headers on hashed assets; drop data-sectors preload (~1MB).
-5. **Conversion:** human demo path (calendar booking — table stakes vs all
-   four competitors); ONE named, attributable customer proof point (all case
-   studies are currently labelled illustrative composites); verify Stripe
-   checkout end-to-end (keys reportedly unflipped).
-6. **Category validation:** Gartner AI Governance Market Guide + G2 presence
-   (all four competitors have analyst coverage; CSOAI has none).
-7. **Real 404 status** for unknown routes (SPA returns 200 everywhere —
-   infinite soft-404 duplicates for crawlers).
+1. **Art 50 self-conformance — SHIPPED 2026-08-01 (commit `964134f`).**
+   Registry v2.0.0: 138 routes classified (38 AI-system), published
+   CORRECTION ("0 surfaces reach a model" was false — 14 live-chat
+   components), notices mounted incl. global SovereignDock, /article-50
+   full-depth, /ai-transparency = public self-conformance record.
+   REMAINING: 31 route-level notice wirings (2 lines each, registry
+   discloses meanwhile); article50_guard.py gateway-fetch rule; C2PA
+   marking on our own outputs (Dec 2 deadline).
+2. **Trust pack — SHIPPED** (`964134f`): subprocessors, security pack,
+   honest /status with first incident entry, demo path. REMAINING: pen-test
+   letter + uptime history (need real artifacts).
+3. **Citable evidence:** ProvBench arXiv + Hugging Face + DOI — ZERO public
+   findability today. T-14 C2PA notice owed first. Nick/WebBridge-gated.
+4. **SEO — SHIPPED** (`964134f`): sitemap generator (343 URLs), robots.txt,
+   39 route titles, aggregateRating out, _headers, preload strip. REMAINING:
+   prerender top ~20 marketing routes; lazy-import sectors-content (955KB).
+5. **Conversion:** demo path SHIPPED (mailto). REMAINING: ONE named customer
+   proof point; Stripe checkout end-to-end verification (keys Nick-gated).
+6. **Category validation:** Gartner AI Governance Market Guide + G2 — none yet.
+7. **Real 404 status** for unknown routes (SPA returns 200 everywhere).
