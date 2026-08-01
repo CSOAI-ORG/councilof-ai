@@ -1,16 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 const EMG_GW = "https://os.meok.ai/api";
+/**
+ * DESIGN — not a live claim. This page shows what a personalized Sovereign Twin
+ * experience WOULD look like. The visualizer is an illustrative canvas; the
+ * "charge" meter is a UI affordance. The passport-mint flow hits a real signing
+ * endpoint, but the resulting "twin" is a signed personalisation record, not
+ * a claim about emergent AI behaviour. See Sov3ModelCard for the canonical
+ * disclaimer: "Not AGI, not conscious in the literal sense — any language
+ * about emergent behaviour or 'consciousness' in internal material is a
+ * metaphor for the substrate's evolving-memory design, never a literal claim."
+ */
 export default function EmergencePage() {
   const cv = useRef<HTMLCanvasElement | null>(null);
-  const chargeRef = useRef(0); const hatchedRef = useRef(false);
-  const [charge, setCharge] = useState(0); const [hatched, setHatched] = useState(false);
-  const [pName, setPName] = useState(""); const [pKind, setPKind] = useState("Digital sovereign twin");
+  const chargeRef = useRef(0); const personaliseRef = useRef(false);
+  const [charge, setCharge] = useState(0); const [personalised, setPersonalised] = useState(false);
+  const [pName, setPName] = useState(""); const [pKind, setPKind] = useState("Personal Sovereign Twin");
   const [passport, setPassport] = useState<null | { fingerprint?: string; signature?: string; publicKey?: string; canonical?: string }>(null);
   const [minting, setMinting] = useState(false);
   async function mintPassport() {
     const holder = (pName || "").trim(); if (!holder) return;
     setMinting(true); setPassport(null);
-    const canonical = "CSOAI Sovereign Passport · " + pKind + " · holder: " + holder + " · issued " + new Date().toISOString();
+    const canonical = "CSOAI Personalisation Record · " + pKind + " · holder: " + holder + " · issued " + new Date().toISOString();
     try {
       const r = await fetch(EMG_GW + "/sign", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: canonical }) });
       if (r.ok) { const d = await r.json(); setPassport({ fingerprint: d.fingerprint, signature: d.signature, publicKey: d.publicKey, canonical: d.canonical || canonical }); }
@@ -18,8 +28,8 @@ export default function EmergencePage() {
     if (!passport) setPassport((p) => p || { canonical, fingerprint: "", signature: "" });
     setMinting(false);
   }
-  useEffect(() => { document.title = "Your Sovereign twin | CSOAI"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { hatchedRef.current = true; setHatched(true); } } } catch (e) {} }, []);
-  function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); try { localStorage.setItem("sov_charge", String(n)); } catch (e) {} if (n >= 100 && !hatchedRef.current) { hatchedRef.current = true; setHatched(true); } }
+  useEffect(() => { document.title = "Your Sovereign Twin | CSOAI (DESIGN)"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { personaliseRef.current = true; setPersonalised(true); } } } catch (e) {} }, []);
+  function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); try { localStorage.setItem("sov_charge", String(n)); } catch (e) {} if (n >= 100 && !personaliseRef.current) { personaliseRef.current = true; setPersonalised(true); } }
   useEffect(() => {
     const c = cv.current; if (!c) return; const ctx = c.getContext("2d"); if (!ctx) return;
     let raf = 0; const DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -52,21 +62,21 @@ export default function EmergencePage() {
       <section className="relative">
         <canvas ref={cv} className="block h-[72vh] w-full" />
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-10 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · your Sovereign twin</p>
-          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{hatched ? "Your Sovereign twin is ready." : "Your Sovereign twin."}</h1>
-          <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{hatched ? "From the mirror of the world, your AI character is born - it learned you, and now it acts for you." : "A glowing digital mirror of Earth - day, night, every connector lit. As your Sovereign learns you, the egg charges... and hatches."}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · your Sovereign Twin (DESIGN)</p>
+          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{personalised ? "Your Sovereign Twin is personalised." : "Your Sovereign Twin."}</h1>
+          <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{personalised ? "Your personalisation record is signed. The Twin reflects your Sovereign's view of the world — it does not make behavioural claims." : "An illustrative mirror of Earth — day, night, every connector lit. Use the OS to personalise. No claims about emergent behaviour."}</p>
           <div className="pointer-events-auto mt-4 flex flex-wrap items-center justify-center gap-3 px-6">
-            {!hatched && <button onClick={addCharge} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Charge the emergence ({charge}%)</button>}
-            {hatched && <a href="/start" className="rounded-xl bg-amber-400 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-amber-300">Meet your Sovereign -&gt;</a>}
+            {!personalised && <button onClick={addCharge} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Personalise ({charge}%)</button>}
+            {personalised && <a href="/start" className="rounded-xl bg-amber-400 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-amber-300">Meet your Twin -&gt;</a>}
             <a href="/world-3d" className="rounded-xl border border-emerald-400/40 px-5 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Real-world globe -&gt;</a>
           </div>
         </div>
       </section>
       <section className="mx-auto max-w-3xl px-6 py-12 text-center">
-        <p className="text-sm text-emerald-100/70">The emergence mirror: the real world rendered as a sovereign digital twin. Over time it transforms from a shared planet into <b className="text-emerald-200">your</b> AI character - the hatch. The same egg pixel-streams from Unreal Engine 5 in the full OS.</p>
+        <p className="text-sm text-emerald-100/70">An illustrative personalisation surface — the world rendered as your Sovereign Twin. Actions across the OS fill your personalisation record. This page does not assert emergent or conscious behaviour in the Twin; the Twin is a signed personalisation record.</p>
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-black/20 p-5">
-          <div className="text-sm font-bold text-emerald-200">Your Sovereign learns you as you use the OS.</div>
-          <p className="mt-1 text-sm text-emerald-100/70">Every question in the <b className="text-emerald-200">Sovereign dock</b>, every <b className="text-emerald-200">Governance Graph</b> query, every <b className="text-emerald-200">Sov Space</b> experiment and <b className="text-emerald-200">Council</b> verdict charges the egg - it hatches into the character that has learned you.</p>
+          <div className="text-sm font-bold text-emerald-200">Your Twin personalises as you use the OS.</div>
+          <p className="mt-1 text-sm text-emerald-100/70">Every question in the <b className="text-emerald-200">Sovereign dock</b>, every <b className="text-emerald-200">Governance Graph</b> query, every <b className="text-emerald-200">Sov Space</b> experiment and <b className="text-emerald-200">Council</b> verdict updates your personalisation record.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/graph" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Ask the Governance Graph +6%</a>
             <a href="/sov-space" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Run a Sov Space experiment +10%</a>
@@ -77,7 +87,7 @@ export default function EmergencePage() {
         {/* Digital sovereign twin + signed ID passport (real Ed25519 signing) */}
         <div className="mt-6 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-5 text-left">
           <div className="text-sm font-bold text-emerald-200">Mint a digital ID passport</div>
-          <p className="mt-1 text-[13px] text-emerald-100/75">Your emerged twin — and every agent you deploy — carries a signed <b className="text-emerald-200">digital passport</b>: an Ed25519 identity anyone can verify (proofof.ai). Mint one for yourself, or issue <b className="text-emerald-200">passported agents</b> for your enterprise or government — each identified, accountable, and sealed to Layer 0.</p>
+          <p className="mt-1 text-[13px] text-emerald-100/75">Your signed twin — and every agent you deploy — carries a signed <b className="text-emerald-200">digital passport</b>: an Ed25519 identity anyone can verify (proofof.ai). Mint one for yourself, or issue <b className="text-emerald-200">passported agents</b> for your enterprise or government — each identified, accountable, and sealed to Layer 0.</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <input value={pName} onChange={(e) => setPName(e.target.value)} placeholder="Holder — you, an agent, or an org" className="flex-1 min-w-[200px] rounded-lg border border-emerald-500/25 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
             <select value={pKind} onChange={(e) => setPKind(e.target.value)} className="rounded-lg border border-emerald-500/25 bg-black/30 px-2 py-2 text-sm text-emerald-50">
