@@ -131,11 +131,11 @@ if [ "${1:-}" != "--skip-test" ]; then
     sleep 1
   done
   # Run the smoke test (chromium only — fast, ~15s)
-  BASE_URL=http://localhost:4173 npx playwright test e2e/tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line 2>&1 | tail -20
+  BASE_URL=http://localhost:4173 npx playwright test -c e2e/playwright.config.ts tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line 2>&1 | tail -20
   TEST_RC=${PIPESTATUS[0]}
   # Kill the preview server
-  kill $PREVIEW_PID 2>/dev/null
-  wait $PREVIEW_PID 2>/dev/null
+  kill $PREVIEW_PID 2>/dev/null || true
+  wait $PREVIEW_PID 2>/dev/null || true
   if [ "$TEST_RC" -ne 0 ]; then
     echo ""
     echo "FAIL: pre-deploy smoke test found uncaught JS exceptions."

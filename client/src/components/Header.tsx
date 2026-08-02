@@ -46,6 +46,7 @@ const navigation = [
       { name: "Live Ledger (signed)", href: "/live-ledger", description: "Live D1 queryable decision_records — signed, with supersession trail" },
       { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
       { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
+      { name: "AI Act Benchmark", href: "/ai-act-benchmark", description: "170/170 held-out scenarios against the EU benchmark — with CIs and caveats" },
     ],
   },
   {
