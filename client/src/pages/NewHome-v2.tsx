@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import ConsensusHero from "../components/ConsensusHero";
+import HeroSlides from "../components/HeroSlides";
 import { CANON, canonValue } from "../data/canonCounters";
 import { motion } from "framer-motion";
 import FaqBlock from "@/components/FaqBlock";
@@ -359,6 +360,9 @@ export default function NewHomeV2() {
         </div>
       </section>
 
+      {/* Cinematic slide band — instruments, council, refutations (canon numbers only) */}
+      <HeroSlides />
+
       {/* ============================================ */}
       {/* 3D PORTAL — the measurement lens (click-to-load globe, region opt-in only) */}
       {/* ============================================ */}
@@ -704,7 +708,7 @@ export default function NewHomeV2() {
                     },
                     {
                       title: "24/7 AI Monitoring",
-                      desc: "33 AI agents monitor systems continuously. Real enforcement, not paper.",
+                      desc: "33 measurement agents monitor systems continuously. Continuous measurement, not paper promises.",
                     },
                     {
                       title: "Prosperity Fund",
@@ -1309,7 +1313,7 @@ export default function NewHomeV2() {
                   { value: "33+", label: "Training Courses", icon: BookOpen },
                   { value: "FREE", label: "Cost", icon: DollarSign },
                   { value: "7", label: "Frameworks", icon: Globe2 },
-                  { value: "£45-150", label: "Per Hour Earnings", icon: TrendingUp },
+                  { value: "Signed", label: "Verifiable Records", icon: TrendingUp },
                 ].map((stat, i) => (
                   <div key={i} className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
                     <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
@@ -1359,13 +1363,13 @@ export default function NewHomeV2() {
                     },
                     {
                       step: "2",
-                      title: "Get Certified",
-                      desc: "Pass the certification exam (£49 one-time). Your credential is recognized globally.",
+                      title: "Get Attested",
+                      desc: "Pass the attestation exam (£49 one-time). Your record is signed and independently verifiable.",
                     },
                     {
                       step: "3",
-                      title: "Start Earning",
-                      desc: "Get your Analyst License (£199/year) and work remotely. Earn £45-150/hour.",
+                      title: "Join the Roster",
+                      desc: "Get your Analyst License (£199/year) and join the analyst roster. Rates are set by the market and published as measured aggregates once live.",
                     },
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-4">
@@ -1522,7 +1526,7 @@ export default function NewHomeV2() {
             ))}
           </motion.div>
 
-          {/* Testimonial */}
+          {/* Design principle — our own words, honestly attributed */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -1533,17 +1537,17 @@ export default function NewHomeV2() {
               <div className="max-w-3xl mx-auto text-center">
                 <Quote className="h-12 w-12 text-emerald-300 mx-auto mb-6" />
                 <p className="text-xl md:text-2xl text-gray-700 italic leading-relaxed mb-6">
-                  "CSOAI represents a fundamental shift in how we think about AI governance.
-                  Instead of adversarial control, they've designed a system based on partnership
-                  and mutual benefit. This is the approach that will actually work."
+                  "We built CSOAI on a simple principle: measure what is real, sign what
+                  we publish, and never claim what we cannot show. Governance that works
+                  is governance you can audit."
                 </p>
                 <div className="flex items-center justify-center gap-4">
                   <div className="w-12 h-12 bg-emerald-200 rounded-full flex items-center justify-center">
                     <Users className="h-6 w-6 text-emerald-700" />
                   </div>
                   <div className="text-left">
-                    <div className="font-semibold text-gray-900">AI Safety Community</div>
-                    <div className="text-sm text-gray-500">Early Supporters</div>
+                    <div className="font-semibold text-gray-900">CSOAI</div>
+                    <div className="text-sm text-gray-500">Design principle</div>
                   </div>
                 </div>
               </div>

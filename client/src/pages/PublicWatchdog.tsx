@@ -129,7 +129,10 @@ const STATUS_COLORS = {
   DISMISSED: "bg-gray-100 text-gray-500",
 };
 
-// Mock data (would come from API)
+// DEMONSTRATION DATA — illustrative only. These are not real incidents, real
+// companies, or real people. Shown only when the live API returns nothing, and
+// always accompanied by a visible "Demonstration data" banner on the page.
+// [Register purge 2026-08-02: fabricated names/companies genericised.]
 const mockIncidents = [
   {
     id: 1,
@@ -138,8 +141,8 @@ const mockIncidents = [
     category: "DISCRIMINATION_BIAS",
     severity: "HIGH",
     status: "INVESTIGATING",
-    aiSystemName: "TalentMatch AI",
-    companyName: "HireRight Corp",
+    aiSystemName: "Demo Hiring Model",
+    companyName: "Demo Vendor A",
     reporterName: "Anonymous",
     reporterType: "public",
     upvotes: 247,
@@ -154,9 +157,9 @@ const mockIncidents = [
     category: "DISCRIMINATION_BIAS",
     severity: "CRITICAL",
     status: "COUNCIL_VOTE",
-    aiSystemName: "CreditDecide Pro",
-    companyName: "QuickLoan Financial",
-    reporterName: "Financial Justice Coalition",
+    aiSystemName: "Demo Credit Model",
+    companyName: "Demo Vendor B",
+    reporterName: "Demo public report",
     reporterType: "public",
     upvotes: 892,
     downvotes: 34,
@@ -171,9 +174,9 @@ const mockIncidents = [
     category: "SAFETY_VIOLATIONS",
     severity: "CRITICAL",
     status: "RESOLVED",
-    aiSystemName: "DermaScan AI",
-    companyName: "MedVision Tech",
-    reporterName: "Dr. Sarah Chen",
+    aiSystemName: "Demo Diagnostics Model",
+    companyName: "Demo Vendor C",
+    reporterName: "Demo analyst report",
     reporterType: "analyst",
     upvotes: 1243,
     downvotes: 8,
@@ -190,9 +193,9 @@ const mockIncidents = [
     category: "SAFETY_VIOLATIONS",
     severity: "HIGH",
     status: "UNDER_REVIEW",
-    aiSystemName: "PharmAssist Bot",
-    companyName: "DrugMart Online",
-    reporterName: "Concerned Customer",
+    aiSystemName: "Demo Support Bot",
+    companyName: "Demo Vendor D",
+    reporterName: "Demo public report",
     reporterType: "public",
     upvotes: 156,
     downvotes: 5,
@@ -206,9 +209,9 @@ const mockIncidents = [
     category: "MISINFORMATION",
     severity: "HIGH",
     status: "INVESTIGATING",
-    aiSystemName: "FeedRank Algorithm",
-    companyName: "SocialPulse Inc",
-    reporterName: "Media Watch Organization",
+    aiSystemName: "Demo Ranking Model",
+    companyName: "Demo Vendor E",
+    reporterName: "Demo public report",
     reporterType: "public",
     upvotes: 2341,
     downvotes: 456,
@@ -222,9 +225,9 @@ const mockIncidents = [
     category: "PRIVACY_BREACHES",
     severity: "HIGH",
     status: "SUBMITTED",
-    aiSystemName: "ShopWatch AI",
-    companyName: "MegaMart Retail",
-    reporterName: "Privacy Rights Advocate",
+    aiSystemName: "Demo Vision Model",
+    companyName: "Demo Vendor F",
+    reporterName: "Demo public report",
     reporterType: "public",
     upvotes: 189,
     downvotes: 12,
@@ -270,12 +273,12 @@ const mockComplianceOverview = {
   criticalSystems: 24,
 };
 
-// AI System Leaderboard Mock Data
+// AI System Leaderboard — DEMONSTRATION DATA, illustrative only
 const mockAILeaderboard = [
   {
     rank: 1,
-    name: "SafeGuard AI Assistant",
-    company: "TrustTech Inc",
+    name: "Demo Assistant Model",
+    company: "Demo Vendor A",
     safetyScore: 98,
     complianceScore: 97,
     trustScore: 96,
@@ -284,8 +287,8 @@ const mockAILeaderboard = [
   },
   {
     rank: 2,
-    name: "EthicalMind LLM",
-    company: "Responsible AI Labs",
+    name: "Demo Language Model",
+    company: "Demo Vendor B",
     safetyScore: 96,
     complianceScore: 98,
     trustScore: 94,
@@ -294,8 +297,8 @@ const mockAILeaderboard = [
   },
   {
     rank: 3,
-    name: "TransparentBot",
-    company: "OpenAI Systems",
+    name: "Demo Chat Model",
+    company: "Demo Vendor C",
     safetyScore: 95,
     complianceScore: 94,
     trustScore: 95,
@@ -304,8 +307,8 @@ const mockAILeaderboard = [
   },
   {
     rank: 4,
-    name: "FairDecision Engine",
-    company: "EquityTech",
+    name: "Demo Decision Model",
+    company: "Demo Vendor D",
     safetyScore: 93,
     complianceScore: 95,
     trustScore: 91,
@@ -314,8 +317,8 @@ const mockAILeaderboard = [
   },
   {
     rank: 5,
-    name: "GuardianAI",
-    company: "SecureMinds Corp",
+    name: "Demo Guardian Model",
+    company: "Demo Vendor E",
     safetyScore: 91,
     complianceScore: 92,
     trustScore: 90,
@@ -324,34 +327,34 @@ const mockAILeaderboard = [
   },
 ];
 
-// Success Stories Mock Data
+// Success Stories — DEMONSTRATION DATA, illustrative only. Not real outcomes.
 const mockSuccessStories = [
   {
     id: 1,
     title: "Healthcare AI Bias Eliminated",
     summary: "Public reports led to complete overhaul of dermatology AI, now serving all skin tones equally",
-    impact: "500,000+ patients now receive accurate diagnoses",
+    impact: "Illustrative impact statement",
     category: "SAFETY_VIOLATIONS",
     date: "January 2026",
-    company: "MedVision Tech",
+    company: "Demo Vendor C",
   },
   {
     id: 2,
     title: "Discriminatory Hiring Algorithm Retired",
     summary: "Community advocacy resulted in removal of biased hiring system affecting thousands of job seekers",
-    impact: "Fair hiring restored for 50,000+ annual applicants",
+    impact: "Illustrative impact statement",
     category: "DISCRIMINATION_BIAS",
     date: "December 2025",
-    company: "TalentFirst Corp",
+    company: "Demo Vendor B",
   },
   {
     id: 3,
     title: "Privacy Violations Stopped",
     summary: "Whistleblower report exposed unauthorized data collection; company now compliant with privacy laws",
-    impact: "Personal data of 2M users now protected",
+    impact: "Illustrative impact statement",
     category: "PRIVACY_BREACHES",
     date: "November 2025",
-    company: "DataStream Inc",
+    company: "Demo Vendor E",
   },
 ];
 
@@ -412,7 +415,8 @@ export default function PublicWatchdog() {
   // tRPC queries and mutations
   const { data: incidentsData, isLoading, refetch } = trpc.watchdog.list.useQuery();
 
-  // Use API data if available, otherwise fall back to mock data for demo
+  // Use API data if available, otherwise fall back to clearly-labelled demo data
+  const usingDemoData = !(incidentsData as any[]);
   const incidents: any[] = (incidentsData as any[]) || mockIncidents;
 
   const submitMutation = trpc.watchdog.submitReport.useMutation({
@@ -695,6 +699,18 @@ export default function PublicWatchdog() {
               </Button>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Honest capability notice — preview, not a live registry */}
+      <section className="bg-amber-50 border-b border-amber-200 py-3">
+        <div className="container max-w-7xl">
+          <p className="text-sm text-amber-800">
+            <strong>Preview.</strong> The public watchdog is not connected to a live incident
+            registry yet. All figures, leaderboard entries, incidents, and success stories on
+            this page are illustrative examples showing the interface — they are not
+            measurements, not real companies, and not real outcomes.
+          </p>
         </div>
       </section>
 
@@ -1009,6 +1025,20 @@ export default function PublicWatchdog() {
 
             {/* Main Content - Incidents */}
             <div className="lg:col-span-3 min-w-0">
+              {usingDemoData && (
+                <div className="mb-6 rounded-lg border-2 border-amber-300 bg-amber-50 p-4 flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-semibold text-amber-900">Demonstration data</div>
+                    <p className="text-sm text-amber-800">
+                      The incidents below are illustrative examples showing how the watchdog
+                      dashboard works. They are not real reports, real companies, or real
+                      people. Live incident data will appear here once the reporting API is
+                      connected.
+                    </p>
+                  </div>
+                </div>
+              )}
               <Tabs defaultValue="all" className="space-y-6">
                 <div className="flex items-center justify-between">
                   <TabsList className="bg-green-100">

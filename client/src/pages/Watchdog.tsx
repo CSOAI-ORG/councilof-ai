@@ -72,63 +72,9 @@ export default function Watchdog() {
     );
   }
 
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      location: "San Francisco, CA",
-      role: "Senior AI Safety Analyst",
-      avatar: "SC",
-      rating: 5,
-      monthlyEarnings: "$8,200",
-      hoursPerWeek: 25,
-      quote: "I was laid off from my marketing job when AI took over content creation. CSOAI gave me a new career path in 3 months. Now I earn more than I did before, work from home, and actually feel like I'm making a difference protecting people from AI risks.",
-      casesReviewed: 147,
-      joinedDate: "March 2024"
-    },
-    {
-      name: "Marcus Johnson",
-      location: "Austin, TX",
-      role: "AI Safety Analyst",
-      avatar: "MJ",
-      rating: 5,
-      monthlyEarnings: "$5,600",
-      hoursPerWeek: 20,
-      quote: "I'm a former teacher who saw AI replacing educational roles. CSOAI training didn't require coding—just critical thinking. I work part-time while teaching, and the extra income has been life-changing. Plus, I'm helping ensure AI in education is safe for students.",
-      casesReviewed: 89,
-      joinedDate: "May 2024"
-    },
-    {
-      name: "Priya Patel",
-      location: "London, UK",
-      role: "Lead AI Safety Analyst",
-      avatar: "PP",
-      rating: 5,
-      monthlyEarnings: "$12,400",
-      hoursPerWeek: 35,
-      quote: "After 15 years in compliance, I was worried about job security. CSOAI let me pivot to AI safety—a growing field instead of a shrinking one. The 33-Agent Council system is fascinating to work with, and enterprises pay premium rates for experienced analysts.",
-      casesReviewed: 203,
-      joinedDate: "January 2024"
-    },
-    {
-      name: "David Kim",
-      location: "Toronto, Canada",
-      role: "AI Safety Analyst",
-      avatar: "DK",
-      rating: 5,
-      monthlyEarnings: "$4,800",
-      hoursPerWeek: 15,
-      quote: "I'm a college student working part-time. CSOAI certification took me 2 weeks, and now I earn $45/hour reviewing AI systems. It's way better than retail or food service, and I'm building a career in a field that's exploding. Already got 3 job offers from companies.",
-      casesReviewed: 56,
-      joinedDate: "July 2024"
-    }
-  ];
-
-  const stats = [
-    { label: "Active Analysts", value: "2,847", icon: Users },
-    { label: "Average Hourly Rate", value: "$67", icon: DollarSign },
-    { label: "Cases Reviewed", value: "18,392", icon: Shield },
-    { label: "Job Openings", value: "1,203", icon: Briefcase }
-  ];
+  // [Register purge 2026-08-02] Fabricated testimonials and invented platform
+  // statistics removed. CSOAI is pre-launch: no analyst counts, earnings, or
+  // quotes are published until they trace to signed, auditable artefacts.
 
   return (
     <div className="min-h-screen bg-white">
@@ -166,92 +112,20 @@ export default function Watchdog() {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="container py-16 max-w-6xl">
-        <div className="grid md:grid-cols-4 gap-6">
-          {stats.map((stat, idx) => {
-            const Icon = stat.icon;
-            return (
-              <Card key={idx} className="p-6 text-center border-2 border-gray-100">
-                <Icon className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
-                <div className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Real Analyst Testimonials */}
+      {/* Measured, not marketed — honest pre-launch panel */}
       <div className="bg-gray-50 py-20">
-        <div className="container max-w-6xl">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Real Stories</Badge>
-            <h2 className="text-4xl font-bold mb-4">Meet Our Certified Analysts</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Hear from real people who transformed their careers with CSOAI certification. 
-              These aren't actors—they're working analysts earning real income.
-            </p>
-          </div>
-
-          <div className="space-y-8">
-            {testimonials.map((testimonial, idx) => (
-              <Card key={idx} className="p-8 border-2 border-emerald-100">
-                <div className="flex flex-col md:flex-row gap-8">
-                  {/* Avatar & Stats */}
-                  <div className="flex-shrink-0">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white text-3xl font-bold mb-4 mx-auto md:mx-0">
-                      {testimonial.avatar}
-                    </div>
-                    <div className="text-center md:text-left">
-                      <div className="font-bold text-lg">{testimonial.name}</div>
-                      <div className="text-sm text-gray-600 mb-2">{testimonial.role}</div>
-                      <div className="flex items-center gap-1 justify-center md:justify-start mb-3">
-                        {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <MapPin className="h-4 w-4" />
-                          {testimonial.location}
-                        </div>
-                        <div className="flex items-center gap-2 text-emerald-600 font-semibold">
-                          <DollarSign className="h-4 w-4" />
-                          {testimonial.monthlyEarnings}/mo
-                        </div>
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Clock className="h-4 w-4" />
-                          {testimonial.hoursPerWeek}hrs/week
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Testimonial Content */}
-                  <div className="flex-1">
-                    <blockquote className="text-lg text-gray-700 leading-relaxed mb-6 italic">
-                      "{testimonial.quote}"
-                    </blockquote>
-                    <div className="flex flex-wrap gap-4 text-sm">
-                      <Badge variant="outline" className="flex items-center gap-1">
-                        <Shield className="h-3 w-3" />
-                        {testimonial.casesReviewed} cases reviewed
-                      </Badge>
-                      <Badge variant="outline" className="flex items-center gap-1">
-                        <Award className="h-3 w-3" />
-                        Certified Analyst
-                      </Badge>
-                      <Badge variant="outline" className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        Joined {testimonial.joinedDate}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+        <div className="container max-w-4xl text-center">
+          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Pre-launch</Badge>
+          <h2 className="text-4xl font-bold mb-4">Measured, not marketed</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+            CSOAI is pre-launch, so you won't find invented analyst counts, earnings figures,
+            or testimonials here. When real analysts complete real reviews, their aggregate,
+            anonymised measurements will appear on this page — signed, auditable, and
+            recomputable from the underlying artefacts.
+          </p>
+          <p className="text-sm text-gray-500">
+            Unmeasured is never presented as measured. That is the standard we hold ourselves to.
+          </p>
         </div>
       </div>
 

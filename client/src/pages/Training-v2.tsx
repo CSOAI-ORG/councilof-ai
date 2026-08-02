@@ -329,32 +329,9 @@ const competitorComparison = [
   }
 ];
 
-const testimonials = [
-  {
-    name: "Sarah Chen",
-    role: "Former Software Engineer",
-    location: "London, UK",
-    quote: "I transitioned from software development to AI safety in just 3 weeks. The free training was comprehensive and the certification opened doors immediately. Now earning £95/hour part-time.",
-    earnings: "£95/hour",
-    image: null
-  },
-  {
-    name: "Michael Okonkwo",
-    role: "Compliance Professional",
-    location: "Manchester, UK",
-    quote: "The EU AI Act training prepared me perfectly for my role. My employer valued the certification and I received a promotion within 2 months of completing the program.",
-    earnings: "Promoted",
-    image: null
-  },
-  {
-    name: "Ana Rodriguez",
-    role: "Recent Graduate",
-    location: "Edinburgh, UK",
-    quote: "As a recent graduate, the free training gave me skills employers actually want. I started my first AI safety role 6 weeks after certification. Best career decision ever.",
-    earnings: "£68/hour",
-    image: null
-  }
-];
+// [Register purge 2026-08-02] Fabricated "success story" testimonials removed.
+// No graduate quotes or earnings claims are published until they come from real,
+// consenting people in writing.
 
 function FAQAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -733,49 +710,18 @@ export default function TrainingV2() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Success Stories
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Real people who transformed their careers with CSOAI certification
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="p-8 bg-white border-0 shadow-lg hover:shadow-xl transition-shadow">
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-
-                <p className="text-gray-600 leading-relaxed mb-6 italic">
-                  "{testimonial.quote}"
-                </p>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                    <Users className="h-6 w-6 text-green-600" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-500">{testimonial.role}</div>
-                    <div className="text-sm text-gray-400">{testimonial.location}</div>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-4 border-t">
-                  <div className="text-sm text-gray-500">Now earning</div>
-                  <div className="text-lg font-bold text-green-600">{testimonial.earnings}</div>
-                </div>
-              </Card>
-            ))}
-          </div>
+      {/* Measured, not marketed — honest pre-launch strip */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6 max-w-3xl text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Measured, not marketed
+          </h2>
+          <p className="text-lg text-gray-600">
+            CSOAI training is pre-launch, so there are no graduate quotes or earnings
+            claims on this page. When real learners complete real courses, their
+            outcomes will be published here — with consent, in writing, and
+            traceable to signed records.
+          </p>
         </div>
       </section>
 
