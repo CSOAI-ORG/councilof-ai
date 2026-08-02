@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# deploy-prod.sh — guards the master-site deploy to PRODUCTION (csoai-site → www.csoai.org).
+# deploy-prod.sh — guards the master-site deploy to PRODUCTION (csoai-org → www.csoai.org).
 #
 # Why this exists (2026-07-31 incident):
 #   `npx wrangler pages deploy dist/client --project-name csoai-site` WITHOUT --branch=main
@@ -7,6 +7,12 @@
 #   www.csoai.org to the PRODUCTION environment. Deploying to preview leaves the live
 #   site untouched — a deploy "succeeds" but nothing reaches the user, exactly the kind
 #   of silent failure that erodes trust in the deploy log.
+#
+# 2026-08-01 correction: the custom domains csoai.org + www.csoai.org are attached to
+#   Pages project **csoai-org**, NOT csoai-site (verified via `wrangler pages project
+#   list` — csoai-site has no custom domain). Deploying to csoai-site updated
+#   csoai-site.pages.dev but left www.csoai.org serving a stale bundle. PROJECT is now
+#   csoai-org. csoai-site remains the staging/preview project.
 #
 # Usage:
 #   bash scripts/deploy-prod.sh            # build + deploy to production
@@ -17,7 +23,7 @@
 # Always run from the councilof-ai repo root. Exits non-zero on any failure.
 set -euo pipefail
 
-PROJECT="csoai-site"
+PROJECT="csoai-org"
 BRANCH="main"
 DOMAIN="www.csoai.org"
 
