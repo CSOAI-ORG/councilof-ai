@@ -31,12 +31,12 @@ import { Card } from "@/components/ui/card";
 // FAQ Data
 const faqItems = [
   {
-    question: "What's the difference between certification and license?",
-    answer: "Certification proves your knowledge and skills - it's a one-time exam you pass to demonstrate competency. The Analyst License is an annual subscription (£199/year or £19.99/month) required to do paid work through CEASAI. Think of certification as your qualification, and the license as your permission to practice professionally. You need both to earn money as an analyst."
+    question: "What's the difference between an attestation and a subscription?",
+    answer: "The attestation is a signed record of measured performance on a proctored assessment. The Analyst subscription is an annual or monthly plan that unlocks paid engagement workflows through CEASAI. The attestation is your measured record; the subscription activates marketplace participation. Paid analyst workflows require both."
   },
   {
-    question: "Can I get certified without the license?",
-    answer: "Yes! You can complete all certifications without purchasing a license. Many people get certified first to build their credentials, then activate their license when ready to start paid work. Your certification remains valid regardless of license status."
+    question: "Can I get assessed without the subscription?",
+    answer: "Yes. You can complete every assessment without purchasing a subscription. Many people build their measured track record first, then activate a subscription when ready for paid engagement workflows. Your signed attestation remains verifiable regardless of subscription status."
   },
   {
     question: "How long does certification take?",
@@ -44,11 +44,11 @@ const faqItems = [
   },
   {
     question: "What if I fail the exam?",
-    answer: "You can retake any certification exam after a 24-hour waiting period. There's no limit to retake attempts, and you only pay the exam fee again if you fail. We recommend reviewing the training materials and focusing on areas where you struggled before retaking."
+    answer: "You can retake any assessment after a 24-hour waiting period. There's no limit to retake attempts. We recommend reviewing the training materials and focusing on areas where you struggled before retaking."
   },
   {
     question: "Do certifications expire?",
-    answer: "Certifications are valid for 1 year from the date of passing. To maintain your certification, you need an active Analyst License which includes automatic recertification. Without an active license, you'll need to retake the exam to recertify."
+    answer: "Attestations are valid for 1 year from the date of the measured assessment. To keep your record current, an active Analyst subscription includes automatic re-attestation scheduling. Without an active subscription, you'll retake the assessment to refresh your record."
   },
   {
     question: "Can I skip levels?",
@@ -61,7 +61,7 @@ const certificationTiers = [
   {
     level: 1,
     title: "AI Safety Analyst",
-    examFee: "£49",
+    examFee: "—",
     icon: BookOpen,
     color: "green",
     requirements: [
@@ -79,13 +79,13 @@ const certificationTiers = [
       "Public registry listing",
       "Access to entry-level reviews"
     ],
-    earnings: "£45-75/hour",
+    earnings: "—",
     description: "Entry-level certification for aspiring AI Safety Analysts. Perfect starting point for your career."
   },
   {
     level: 2,
     title: "Senior AI Safety Analyst",
-    examFee: "£99",
+    examFee: "—",
     icon: Briefcase,
     color: "blue",
     requirements: [
@@ -104,13 +104,13 @@ const certificationTiers = [
       "Priority job access",
       "Complex case assignments"
     ],
-    earnings: "£60-100/hour",
+    earnings: "—",
     description: "For experienced analysts ready to take on senior responsibilities and mentor others."
   },
   {
     level: 3,
     title: "AI Safety Specialist",
-    examFee: "£149",
+    examFee: "—",
     icon: GraduationCap,
     color: "purple",
     requirements: [
@@ -129,13 +129,13 @@ const certificationTiers = [
       "Custom training development",
       "Speaking opportunities"
     ],
-    earnings: "£100-150/hour",
+    earnings: "—",
     description: "Expert-level certification for those leading teams and consulting with enterprises."
   },
   {
     level: 4,
     title: "AI Safety Expert",
-    examFee: "£199",
+    examFee: "—",
     icon: Crown,
     color: "amber",
     requirements: [
@@ -155,7 +155,7 @@ const certificationTiers = [
       "Revenue sharing on courses",
       "Shape CEASAI standards"
     ],
-    earnings: "£150+/hour + royalties",
+    earnings: "—",
     description: "The highest certification level. Shape the future of AI safety as an industry leader."
   }
 ];
@@ -326,7 +326,7 @@ export default function CertificationV2() {
           <div className="text-center">
             <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 rounded-full px-4 py-2 mb-6">
               <Award className="h-4 w-4 text-green-400" />
-              <span className="text-green-400 text-sm font-medium">Industry-Recognized Certification</span>
+              <span className="text-green-400 text-sm font-medium">Signed, Verifiable Measurement Records</span>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
@@ -334,8 +334,8 @@ export default function CertificationV2() {
             </h1>
 
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Four clear certification levels from entry to expert. Earn industry-recognized credentials,
-              join the global AI safety community, and unlock high-paying remote opportunities.
+              Four measured assessment levels from entry to expert. Earn signed, verifiable records
+              of measured performance and join the global AI safety measurement community.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -382,8 +382,8 @@ export default function CertificationV2() {
               Clear Certification Pathway
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Progress through four levels from entry analyst to industry expert. Each level builds on the previous,
-              unlocking higher earnings and greater responsibilities.
+              Progress through four levels from entry analyst to expert. Each level builds on the previous,
+              extending your measured track record and assessment scope.
             </p>
           </div>
 
@@ -432,44 +432,40 @@ export default function CertificationV2() {
         </div>
       </section>
 
-      {/* Analyst License Section */}
+      {/* Analyst Subscription Section */}
       <section className="py-20 bg-gradient-to-br from-green-600 to-emerald-700 text-white">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6">
               <CreditCard className="h-4 w-4" />
-              <span className="text-sm font-medium">Required for Paid Work</span>
+              <span className="text-sm font-medium">For Paid Engagement Workflows</span>
             </div>
             <h2 className="text-4xl font-bold mb-6">
-              Analyst License
+              Analyst Subscription
             </h2>
             <p className="text-xl text-green-50 max-w-3xl mx-auto">
-              Your certification proves your skills. The Analyst License gives you permission to earn.
+              Your attestation records measured performance. The Analyst subscription unlocks paid engagement workflows.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {/* Annual License */}
+            {/* Annual Plan */}
             <Card className="p-8 bg-white text-gray-900 border-4 border-green-400 relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-1 rounded-full text-sm font-bold">
                 BEST VALUE
               </div>
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold mb-2">Annual License</h3>
+                <h3 className="text-2xl font-bold mb-2">Annual Plan</h3>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-5xl font-bold text-green-600">£199</span>
+                  <span className="text-5xl font-bold text-green-600">—</span>
                   <span className="text-gray-500">/year</span>
                 </div>
-                <p className="text-sm text-gray-500 mt-2">Save £40 vs monthly</p>
+                <p className="text-sm text-gray-500 mt-2">One payment, twelve months</p>
               </div>
               <ul className="space-y-3 mb-6">
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Full access to paid job assignments</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Professional liability insurance included</span>
+                  <span>Full access to paid engagement workflows</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
@@ -477,7 +473,7 @@ export default function CertificationV2() {
                 </li>
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Automatic recertification included</span>
+                  <span>Automatic re-attestation scheduling</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
@@ -485,16 +481,16 @@ export default function CertificationV2() {
                 </li>
               </ul>
               <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg">
-                Get Annual License
+                Get Annual Plan
               </Button>
             </Card>
 
-            {/* Monthly License */}
+            {/* Monthly Plan */}
             <Card className="p-8 bg-white/95 text-gray-900">
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold mb-2">Monthly License</h3>
+                <h3 className="text-2xl font-bold mb-2">Monthly Plan</h3>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-5xl font-bold text-gray-700">£19.99</span>
+                  <span className="text-5xl font-bold text-gray-700">—</span>
                   <span className="text-gray-500">/month</span>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">Flexible, cancel anytime</p>
@@ -502,11 +498,7 @@ export default function CertificationV2() {
               <ul className="space-y-3 mb-6">
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Full access to paid job assignments</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Professional liability insurance included</span>
+                  <span>Full access to paid engagement workflows</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
@@ -514,7 +506,7 @@ export default function CertificationV2() {
                 </li>
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Automatic recertification included</span>
+                  <span>Automatic re-attestation scheduling</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
@@ -522,7 +514,7 @@ export default function CertificationV2() {
                 </li>
               </ul>
               <Button variant="outline" className="w-full border-2 border-gray-300 py-6 text-lg">
-                Get Monthly License
+                Get Monthly Plan
               </Button>
             </Card>
           </div>
@@ -534,12 +526,12 @@ export default function CertificationV2() {
                 <Shield className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2">License is Separate from Certification</h3>
+                <h3 className="text-xl font-bold mb-2">Subscription is Separate from Attestation</h3>
                 <p className="text-green-50 leading-relaxed">
-                  Certification exams are one-time fees that prove your knowledge. The Analyst License is an
-                  ongoing subscription required to access paid work through CEASAI. You can get certified without
-                  a license, but you need both to earn money as an analyst. This ensures all working analysts
-                  maintain current credentials and have proper insurance coverage.
+                  Assessments produce a signed record of measured performance. The Analyst subscription is an
+                  ongoing plan that unlocks paid engagement workflows through CEASAI. You can hold an attestation
+                  without a subscription; paid workflows require both. This keeps every working analyst's
+                  measured record current and publicly verifiable.
                 </p>
               </div>
             </div>
@@ -564,9 +556,9 @@ export default function CertificationV2() {
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                 <TrendingUp className="h-6 w-6 text-green-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">High Earning Potential</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Measured Career Signal</h3>
               <p className="text-gray-600">
-                Start at £45/hour and progress to £150+/hour as you advance through certification levels.
+                Signed records show exactly what was measured, at what level, and when — evidence anyone can verify.
               </p>
             </Card>
 
@@ -574,9 +566,9 @@ export default function CertificationV2() {
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                 <Shield className="h-6 w-6 text-green-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Industry Recognition</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Verifiable by Design</h3>
               <p className="text-gray-600">
-                CEASAI certification is recognized globally by enterprises and governments for AI compliance.
+                Every record is signed and publicly verifiable — no trust required, check it yourself.
               </p>
             </Card>
 
@@ -586,7 +578,7 @@ export default function CertificationV2() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Global Community</h3>
               <p className="text-gray-600">
-                Join thousands of analysts worldwide working together to ensure AI safety and compliance.
+                Join a growing global network of analysts working on AI safety measurement.
               </p>
             </Card>
 
@@ -635,7 +627,7 @@ export default function CertificationV2() {
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-600">
-              Everything you need to know about CEASAI certification and licensing
+              Everything you need to know about CEASAI attestation and subscriptions
             </p>
           </div>
 
@@ -653,10 +645,10 @@ export default function CertificationV2() {
       <section className="py-20 bg-slate-900 text-white">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <h2 className="text-4xl font-bold mb-6">
-            Ready to Start Your Certification Journey?
+            Ready to Start Your Attestation Journey?
           </h2>
           <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-            Begin with free training, earn your Level 1 certification, and unlock a rewarding career in AI safety.
+            Begin with free training, complete your Level 1 measured assessment, and build a verifiable track record in AI safety.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/training">
@@ -667,7 +659,7 @@ export default function CertificationV2() {
             </Link>
             <Link href="/certification">
               <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold">
-                Take Level 1 Exam (£49)
+                Take Level 1 Assessment
               </Button>
             </Link>
           </div>
