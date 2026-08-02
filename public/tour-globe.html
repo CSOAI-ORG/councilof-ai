@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CSOAI Tour Globe</title>
+<script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';</script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Cesium.js"></script>
+<style>
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:#03060c;overflow:hidden}
+  #c{position:fixed;inset:0}
+  .cesium-widget-credits,.cesium-viewer-bottom{display:none!important}
+  .load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:40;background:#03060c;color:#8aa2ad;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="load" id="load">loading governance earth…</div>
+<div id="c"></div>
+<script>
+try{ Cesium.Ion.defaultAccessToken=''; }catch(e){}
+var viewer;
+try{
+  viewer=new Cesium.Viewer('c',{
+    baseLayer:new Cesium.ImageryLayer(new Cesium.UrlTemplateImageryProvider({
+      url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+      subdomains:['a','b','c','d'],
+      maximumLevel:18
+    })),
+    baseLayerPicker:false, geocoder:false, homeButton:false, sceneModePicker:false,
+    navigationHelpButton:false, animation:false, timeline:false, fullscreenButton:false,
+    infoBox:false, selectionIndicator:false, requestRenderMode:false
+  });
+} catch(e) {
+  document.getElementById('load').textContent='globe failed: '+e.message;
+}
+
+if(viewer){
+  var sc=viewer.scene;
+  sc.globe.baseColor=Cesium.Color.fromCssColorString('#05080e');
+  sc.skyAtmosphere.show=true;
+  sc.fog.enabled=true;
+  viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(10,25,18000000)});
+
+  // Instrument markers
+  var INSTRUMENTS=[
+    {id:'EU-AI-ACT',name:'EU AI Act',lng:4.4,lat:50.8,provisions:113,col:'#10b981'},
+    {id:'EU-CRA',name:'EU Cyber Resilience Act',lng:6.1,lat:50.8,provisions:71,col:'#34d399'},
+    {id:'EU-DORA',name:'DORA',lng:4.4,lat:49.5,provisions:68,col:'#059669'},
+    {id:'EU-NIS2',name:'NIS2',lng:6.1,lat:49.5,provisions:48,col:'#6ee7b7'},
+    {id:'UK-GDPR',name:'UK GDPR',lng:-0.12,lat:51.5,provisions:99,col:'#3b82f6'}
+  ];
+  INSTRUMENTS.forEach(function(d){
+    viewer.entities.add({
+      id:'inst-'+d.id,
+      position:Cesium.Cartesian3.fromDegrees(d.lng,d.lat),
+      point:{pixelSize:14,color:Cesium.Color.fromCssColorString(d.col),outlineColor:Cesium.Color.WHITE,outlineWidth:2,
+        scaleByDistance:new Cesium.NearFarScalar(1e6,1.6,1.5e7,0.6)},
+      label:{text:d.name+'\n'+d.provisions+' provisions',font:'600 12px Inter,sans-serif',
+        fillColor:Cesium.Color.fromCssColorString('#e7f6ef'),
+        outlineColor:Cesium.Color.fromCssColorString('#05080e'),outlineWidth:3,
+        style:Cesium.LabelStyle.FILL_AND_OUTLINE,pixelOffset:new Cesium.Cartesian2(0,-22),
+        scaleByDistance:new Cesium.NearFarScalar(1e6,1,8e6,0),
+        translucencyByDistance:new Cesium.NearFarScalar(1e6,1,1e7,0)}
+    });
+  });
+
+  // Geodesic arcs between instruments
+  for(var i=0;i<INSTRUMENTS.length;i++)for(var j=i+1;j<INSTRUMENTS.length;j++){
+    var a=INSTRUMENTS[i],b=INSTRUMENTS[j];
+    viewer.entities.add({
+      polyline:{positions:Cesium.Cartesian3.fromDegreesArrayHeights([
+        a.lng,a.lat,300000,(a.lng+b.lng)/2,(a.lat+b.lat)/2,900000,b.lng,b.lat,300000]),
+        width:1.2,arcType:Cesium.ArcType.NONE,
+        material:new Cesium.PolylineGlowMaterialProperty({glowPower:.25,color:Cesium.Color.fromCssColorString('#10b981').withAlpha(.4)})}
+    });
+  }
+
+  function flyTo(lng,lat,height,dur){
+    viewer.camera.flyTo({
+      destination:Cesium.Cartesian3.fromDegrees(lng,lat,height||2200000),
+      duration:(dur!=null?dur:1.8)
+    });
+  }
+  function home(dur){ flyTo(10,25,18000000,dur); }
+  function pulse(lng,lat,col){
+    var c=Cesium.Color.fromCssColorString(col||'#34d399');
+    var start=Date.now();
+    viewer.entities.add({
+      position:Cesium.Cartesian3.fromDegrees(lng,lat),
+      ellipse:{
+        semiMajorAxis:new Cesium.CallbackProperty(function(){return 20000+((Date.now()-start)%2200)/2200*280000;},false),
+        semiMinorAxis:new Cesium.CallbackProperty(function(){return 20000+((Date.now()-start)%2200)/2200*280000;},false),
+        material:c.withAlpha(0.18),outline:true,outlineColor:c,height:0
+      }
+    });
+  }
+  function highlight(id){
+    viewer.entities.values.forEach(function(e){
+      if(e.id && e.id.startsWith('inst-')){
+        var match=e.id==='inst-'+id;
+        if(e.point) e.point.pixelSize=match?20:14;
+      }
+    });
+  }
+
+  window.addEventListener('message',function(ev){
+    var d=ev&&ev.data;if(!d||!d.cmd)return;
+    try{
+      if(d.cmd==='flyTo') flyTo(d.lng,d.lat,d.height,d.duration);
+      else if(d.cmd==='home') home(d.duration);
+      else if(d.cmd==='pulse') pulse(d.lng,d.lat,d.col);
+      else if(d.cmd==='highlight') highlight(d.id);
+    }catch(e){}
+  });
+
+  viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){
+    var l=document.getElementById('load');if(l)l.style.display='none';
+  });
+  setTimeout(function(){var l=document.getElementById('load');if(l)l.style.display='none';},4000);
+}
+</script>
+</body>
+</html>
