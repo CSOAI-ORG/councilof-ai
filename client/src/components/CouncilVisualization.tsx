@@ -142,7 +142,12 @@ export default function CouncilVisualization({
     return "hsl(48, 96%, 53%)"; // yellow for escalate
   };
 
-  const consensus = voteCounts.approve >= 22 ? "approved" : voteCounts.reject >= 22 ? "rejected" : null;
+  const consensus = voteCounts.approve >= 23 ? "approved" : voteCounts.reject >= 23 ? "rejected" : null;
+
+  // The animation is a client-side design visualization whenever no real live
+  // council session backs it (the council router is not live — see DR-0007 on
+  // /refutation-ledger). Say so on the canvas itself, not just on the page.
+  const simulating = autoAnimate && !(useLiveData && sessionData);
 
   if (isLoading && useLiveData) {
     return (
@@ -157,6 +162,13 @@ export default function CouncilVisualization({
 
   return (
     <div className="relative w-full h-full min-h-[500px] flex items-center justify-center">
+      {/* Honesty badge: the animated votes are simulated design output */}
+      {simulating && (
+        <div className="absolute top-4 left-4 z-10 max-w-[240px] rounded-lg border border-amber-400/50 bg-amber-500/15 backdrop-blur-sm px-3 py-2">
+          <p className="text-[10px] font-bold uppercase tracking-wide text-amber-300">Simulated — not a live council</p>
+          <p className="text-[10px] text-amber-200/80 mt-0.5">Design visualization. Measured status: <a href="/refutation-ledger" className="underline">DR-0007</a></p>
+        </div>
+      )}
       {/* SVG Container for agents */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
         {/* Connection lines */}

@@ -10,9 +10,9 @@ is retired or redirected. Agents do NOT start new websites.
 
 | # | Surface | Host today | Verdict | Notes |
 |---|---|---|---|---|
-| 1 | **councilof-ai** (this repo) | www.csoai.org (CF Pages `csoai-site`) | **MASTER** | ~280 routes, white/green, Vite SPA |
+| 1 | **councilof-ai** (this repo) | www.csoai.org (CF Pages **`csoai-org`** — domains attached there since ~2026-07-31; `csoai-site` = staging/preview only) | **MASTER** | ~280 routes, white/green, Vite SPA. 2026-08-01: deploy-prod.sh retargeted to `csoai-org` after stale-bundle incident |
 | 2 | coai-dashboard/csoai-web | gspc.csoai.org (CF Pages `csoai-gspc`) | **DONOR — port & retire** | The GOOD GSPC build: interactive globe, arena link layer, live anchor nodes, honest data discipline. Port into master, then redirect gspc.csoai.org here |
-| 3 | csoai-org-v2 | csoai-org (Workers/OpenNext) | **DONOR — harvest jewels** | ~125 dark routes. Jewels: Article 50 suite, evidence/provenance-finding pages, MCP catalogue, live-worker clients, real Ed25519 verify. Then retire |
+| 3 | csoai-org-v2 | csoai-org (Workers/OpenNext) | **DONOR — harvest jewels** | ~125 dark routes. Jewels: Article 50 suite, evidence/provenance-finding pages, MCP catalogue, live-worker clients, real Ed25519 verify. Then retire. ⚠️ 2026-08-01: its Worker still holds DASHBOARD-level routes on www.csoai.org (`/refutation-ledger`, `/gspc-arena`, likely more) shadowing the master — split-brain. Fix: remove zone Worker Routes (dashboard/API token = Nick gate), then retire |
 | 4 | csoai-static-deploy2 | retired (quarantined) | **DONE** | Already retired; flywheel.py remains canonical backend-only |
 | 5 | app.csoai.org (emerald OS) | separate repo | **REVIEW** | Owner decision needed — likely merges into master /os |
 | 5b | csoai-platform (~/clawd) | local only | **ARCHIVE** | Duplicate build of the same app; has its own dist/client + asset-mangling scripts (csoai-icon.svg.png etc.). One of its runs corrupted the master's dist asset (6-byte garbage, 2026-07-31 — restored). Do NOT run its build scripts |
@@ -95,18 +95,33 @@ Art 50 notice wired into the home console.
    CORRECTION ("0 surfaces reach a model" was false — 14 live-chat
    components), notices mounted incl. global SovereignDock, /article-50
    full-depth, /ai-transparency = public self-conformance record.
-   REMAINING: 31 route-level notice wirings (2 lines each, registry
-   discloses meanwhile); article50_guard.py gateway-fetch rule; C2PA
-   marking on our own outputs (Dec 2 deadline).
+   REMAINING: 31 route-level notice wirings — DONE 2026-08-02 (13 pages wired);
+   R4 closure — DONE 2026-08-02 (30 rule_based + 3 NEW ai_system finds:
+   /why-csoai, /old-home, /hive list). **GUARD: COMPLIANT — 170 registered,
+   42 ai_system, all rules pass** — closed ON the Art 50 enforcement day.
+   STILL OPEN: article50_guard.py gateway-fetch rule; C2PA marking on our
+   own outputs (Dec 2 deadline); ROUTES_SCANNED/AI_SYSTEM_COMPONENTS static
+   literals in ai-surfaces.ts lag the computed counts (170/42).
 2. **Trust pack — SHIPPED** (`964134f`): subprocessors, security pack,
    honest /status with first incident entry, demo path. REMAINING: pen-test
    letter + uptime history (need real artifacts).
 3. **Citable evidence:** ProvBench arXiv + Hugging Face + DOI — ZERO public
    findability today. T-14 C2PA notice owed first. Nick/WebBridge-gated.
 4. **SEO — SHIPPED** (`964134f`): sitemap generator (343 URLs), robots.txt,
-   39 route titles, aggregateRating out, _headers, preload strip. REMAINING:
-   prerender top ~20 marketing routes; lazy-import sectors-content (955KB).
+   39 route titles, aggregateRating out, _headers, preload strip. PRERENDER
+   DONE 2026-08-02: `scripts/prerender.mjs` (48 GEO/AEO routes, playwright)
+   run 48/48 OK and wired into `deploy:prod` (build:client → prerender →
+   deploy-prod.sh) — it existed but was never run or wired. Needs chromium
+   on the deploy machine (`npx playwright install chromium`, done here).
+   REMAINING: lazy-import sectors-content (955KB).
 5. **Conversion:** demo path SHIPPED (mailto). REMAINING: ONE named customer
    proof point; Stripe checkout end-to-end verification (keys Nick-gated).
 6. **Category validation:** Gartner AI Governance Market Guide + G2 — none yet.
-7. **Real 404 status** for unknown routes (SPA returns 200 everywhere).
+7. **Real 404 status** for unknown routes (SPA returns 200 everywhere) —
+   ANALYSED 2026-08-02: cause = `wrangler.jsonc` assets `not_found_handling:
+   single-page-application`. Viable fix = small Worker with a route manifest
+   (414 static routes + 10 dynamic families; slugs enumerable from data files
+   EXCEPT `/verify/:certificateNumber`, which needs a pass-through pattern
+   rule). Build-time shell prerender of all routes is the alternative but
+   breaks on /verify/*. Either way this is a serving-architecture change —
+   deploy-gated (Nick), implement behind `deploy:prod:dry` first.

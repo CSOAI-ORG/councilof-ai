@@ -1,0 +1,37 @@
+{
+  "route": "/regulator",
+  "navStatus": 200,
+  "navError": "",
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+  ],
+  "failedRequests": [
+    {
+      "url": "http://localhost:4173/api/worker/anchors",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/worker/ledger/stats",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/worker/anchors",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/trpc/regulator.getComplianceDashboard,regulator.getAllSystems,regulator.getComplianceTrends?batch=1&input=%7B%221%22%3A%7B%22riskLevel%22%3A%22all%22%2C%22status%22%3A%22all%",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/trpc/regulator.getComplianceDashboard,regulator.getAllSystems,regulator.getComplianceTrends?batch=1&input=%7B%221%22%3A%7B%22riskLevel%22%3A%22all%22%2C%22status%22%3A%22all%",
+      "status": 500
+    }
+  ],
+  "screenshot": "shots/_regulator.png",
+  "sweptAt": "2026-08-01T09:17:39.060Z"
+}

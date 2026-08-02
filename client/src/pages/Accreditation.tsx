@@ -1,6 +1,6 @@
 /**
  * CSOAI Accreditation Page
- * Explains CSOAI's role as the global regulatory authority for AI Safety
+ * Explains CSOAI's role as a training provider measuring against published standards
  */
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -30,28 +30,28 @@ export default function Accreditation() {
       name: 'EU AI Act',
       region: 'European Union',
       articles: '113 Articles',
-      status: 'Fully Compliant',
+      status: 'Crosswalked',
       icon: '🇪🇺',
     },
     {
       name: 'NIST AI RMF',
       region: 'United States',
       articles: '72 Guidelines',
-      status: 'Fully Compliant',
+      status: 'Crosswalked',
       icon: '🇺🇸',
     },
     {
       name: 'TC260 (GB/T 42459-2023)',
       region: 'China',
       articles: '56 Standards',
-      status: 'Fully Compliant',
+      status: 'Crosswalked',
       icon: '🇨🇳',
     },
     {
       name: 'ISO/IEC 42001',
       region: 'International',
       articles: 'AI Management',
-      status: 'Aligned',
+      status: 'Crosswalked',
       icon: '🌍',
     },
   ];
@@ -110,6 +110,12 @@ export default function Accreditation() {
               signed attestations aligned with the EU AI Act, NIST AI RMF, TC260 and ISO/IEC 42001 —
               measured against live regulatory text, never a substitute for accredited certification.
             </p>
+            <p className="text-sm text-blue-200/90 mb-8 max-w-2xl mx-auto border border-blue-400/40 rounded-lg px-4 py-3">
+              In the words of our own site-wide footer: &ldquo;We hold no accreditation, we are not a
+              notified body, and we issue no certificates of conformity — as of April 2026 zero
+              notified bodies had been designated and no harmonised standard yet grants presumption
+              of conformity.&rdquo;
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/training">
                 <Button size="lg" variant="secondary" className="bg-white text-blue-900 hover:bg-gray-100">
@@ -131,11 +137,11 @@ export default function Accreditation() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Why CSOAI is the Global Standard
+              Why Teams Train With CSOAI
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Unlike vendor-specific certifications, CSOAI maintains complete independence from all AI companies,
-              ensuring unbiased, globally-recognized credentials.
+              CSOAI is a training provider measuring against published standards — independent of
+              every AI vendor, and honest about what a signed attestation is and is not.
             </p>
           </div>
 
@@ -156,11 +162,11 @@ export default function Accreditation() {
             <Card className="border-2 border-green-100">
               <CardHeader>
                 <Globe className="h-12 w-12 text-green-600 mb-4" />
-                <CardTitle>Globally Recognized</CardTitle>
+                <CardTitle>Framework-Aligned</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Aligned with EU AI Act, NIST AI RMF, China TC260, and ISO 42001.
+                  Measured against EU AI Act, NIST AI RMF, China TC260, and ISO 42001.
                   Signed attestation records — not an accredited certification.
                 </p>
               </CardContent>
@@ -169,12 +175,13 @@ export default function Accreditation() {
             <Card className="border-2 border-purple-100">
               <CardHeader>
                 <Users className="h-12 w-12 text-purple-600 mb-4" />
-                <CardTitle>Industry Trusted</CardTitle>
+                <CardTitle>Honestly Scoped</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Certified analysts working with Fortune 500 companies,
-                  governments, and startups globally.
+                  We hold no accreditation, we are not a notified body, and we issue no
+                  certificates of conformity. Attestations record what was measured —
+                  nothing more.
                 </p>
               </CardContent>
             </Card>
@@ -183,26 +190,26 @@ export default function Accreditation() {
           {/* Accreditation Badges */}
           <div className="bg-white rounded-lg shadow-lg p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              Official CSOAI Accreditation Marks
+              CSOAI Attestation Marks
             </h3>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
                 <div className="h-40 w-40 mx-auto mb-4 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full" />
-                <h4 className="font-semibold text-gray-900 mb-2">Official Seal</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">Attestation Mark</h4>
                 <p className="text-sm text-gray-600">
-                  Primary accreditation mark for all certified professionals
+                  Signed record of measured training outcomes for each attested analyst
                 </p>
               </div>
               <div className="text-center">
                 <div className="h-40 w-40 mx-auto mb-4 bg-gradient-to-br from-red-400 to-red-600 rounded-lg" />
-                <h4 className="font-semibold text-gray-900 mb-2">TC260 Compliant</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">TC260 Crosswalked</h4>
                 <p className="text-sm text-gray-600">
-                  China AI Systems Standard GB/T 42459-2023
+                  Training content mapped to China AI Systems Standard GB/T 42459-2023
                 </p>
               </div>
               <div className="text-center">
                 <div className="h-40 w-40 mx-auto mb-4 bg-gradient-to-br from-green-400 to-green-600 rounded-lg" />
-                <h4 className="font-semibold text-gray-900 mb-2">PDCA Certified</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">SOAI-PDCA Trained</h4>
                 <p className="text-sm text-gray-600 mb-4">
                   SOAI-PDCA Continuous Improvement Framework
                 </p>
@@ -222,7 +229,7 @@ export default function Accreditation() {
                   Powered by the SOAI-PDCA Continuous Improvement Framework
                 </h3>
                 <p className="text-gray-700 mb-6">
-                  Our accreditation system is built on the industry-standard SOAI-PDCA methodology,
+                  Our training system is built on the SOAI-PDCA methodology,
                   combining AI-powered safety oversight with the proven Plan-Do-Check-Act cycle
                   for continuous improvement and regulatory compliance.
                 </p>
@@ -246,8 +253,8 @@ export default function Accreditation() {
               Comprehensive Framework Coverage
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              CSOAI certification covers all major global AI regulatory frameworks,
-              ensuring your credentials are recognized worldwide.
+              CSOAI training is measured against all major global AI regulatory frameworks —
+              the coverage below is what the curriculum crosswalks, not a compliance verdict.
             </p>
           </div>
 
@@ -333,7 +340,7 @@ export default function Accreditation() {
             <div className="text-center mb-12">
               <Building2 className="h-16 w-16 mx-auto mb-6" />
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Enterprise Accreditation Program
+                Enterprise Training Program
               </h2>
               <p className="text-xl text-blue-100">
                 Put your whole team through CSOAI training and hold a signed assessment you can show
@@ -345,10 +352,10 @@ export default function Accreditation() {
               <Card className="bg-white/10 border-white/20 text-white">
                 <CardContent className="p-6">
                   <FileCheck className="h-10 w-10 mb-4" />
-                  <h3 className="font-bold text-lg mb-2">Organizational Certification</h3>
+                  <h3 className="font-bold text-lg mb-2">Organizational Measurement</h3>
                   <p className="text-blue-100 text-sm">
-                    Certify your entire AI governance framework and demonstrate compliance
-                    with global standards.
+                    Measure your AI governance practices against published standards and hold a
+                    signed record of the results — you conclude, we measure.
                   </p>
                 </CardContent>
               </Card>

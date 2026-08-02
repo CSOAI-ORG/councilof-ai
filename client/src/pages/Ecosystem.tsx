@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import HeroSlides from "../components/HeroSlides";
 
 // One safe space for all AI governance — shine a light on the open-source frameworks,
 // standards bodies and responsible-AI work CSOAI crosswalks into one signed floor.
@@ -78,6 +79,8 @@ export default function Ecosystem() {
           </div>
         </div>
       </section>
+
+      <HeroSlides />
       <section className="mx-auto max-w-6xl px-6 py-10 space-y-10">
         {GROUPS.map((g) => (
           <div key={g.title}>

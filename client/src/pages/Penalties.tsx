@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import SovereignSpot from "../components/SovereignSpot";
+import AISystemNotice from "../components/AISystemNotice";
 // Penalties - interactive EU AI Act penalty estimator. Pick a violation tier and your
 // global turnover; see the max exposure (greater of fixed cap or % of turnover).
 // FAQPage JSON-LD for answer engines. Zero external deps.
@@ -38,6 +39,7 @@ export default function Penalties() {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - penalty estimator</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">What does an EU AI Act breach actually cost?</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Fines are the greater of a fixed cap or a slice of your global turnover. Pick the violation tier and your revenue to see the exposure.</p>
+          <div className="mt-6 max-w-2xl"><AISystemNotice route="/fines" /></div>
         </div>
       </section>
       <section className="max-w-5xl mx-auto px-6 py-12 grid gap-8 lg:grid-cols-[1fr_320px] items-start">

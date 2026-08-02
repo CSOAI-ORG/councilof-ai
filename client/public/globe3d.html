@@ -212,11 +212,6 @@ if(viewer){
     }).catch(function(){});
   })();
 
-  // sovereign town live feed
-  function fmt(n){if(n>=1e9)return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';if(n>=1e6)return Math.round(n/1e6)+'M';if(n>=1e3)return Math.round(n/1e3)+'k';return String(n);}
-  fetch('https://proofof-site.vercel.app/sovereign-town/status.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
-  }).catch(function(){});
-
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
   setTimeout(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; },3500);
 }
@@ -226,11 +221,19 @@ if(viewer){
   // globe through here. This listener did not exist until 2026-07-30: drive()
   // posted into a void and every flyTo/pulse from the React side silently did
   // nothing.
-  //   {cmd:'flyTo', lng, lat, height?, duration?}
+  //   {cmd:'flyTo', lng, lat, height?, duration?, col?} — also auto-pulses
   //   {cmd:'pulse', lng, lat, col?}            — expanding ring at a point
   //   {cmd:'layer', tag, on}                    — toggle entities by layerTag
   //   {cmd:'layer0', nodes:[{id,name,lng,lat,status,col}]} — plot the anchor nodes
   //   {cmd:'neutralize'}                        — clear pulses
+  //   {cmd:'home', duration?}                   — back to the whole-earth view
+  //   {cmd:'bftSpiral', lng?, lat?}             — convene the 33-seat council
+  //                                             spiral at a point (default:
+  //                                             current camera target)
+  //   {cmd:'rainbowStack', lng?, lat?}          — seven-layer defence-in-depth
+  //                                             rings at a point
+  //   {cmd:'lightup'}                           — pulse every sovereign node
+  //   {cmd:'clearViz'}                          — clear spiral/stack/pulses
   //   {cmd:'stamps', stamps:[{id,kind,region,lng,lat,claim,ts,scenario?,tag?,weight?,space?}]}
   //                                           — plot the sov-time stamps as
   //                                             clickable glyphs. Each stamp
@@ -242,28 +245,101 @@ if(viewer){
   //                                             from via postMessage {cmd:'stampClick',id}.
   //   {cmd:'stampsClear'}                       — remove all stamp glyphs
   //   {cmd:'stampClick', id, payload}          — outgoing: a stamp was clicked
+  // Commands posted before Cesium is ready are buffered on window.__sovBuf
+  // and flushed once the viewer exists (see the flush at the bottom).
   var L0 = {};      // id -> entity
   var pulses = [];
+  var VIZ = [];     // spiral / rainbow entities, cleared by clearViz
   var STAMPS = {};  // stamp id -> entity
   var STAMPS_META = {};  // stamp id -> full payload (for click handler)
-  window.addEventListener('message', function(ev){
-    var d = ev && ev.data; if(!d || !d.cmd || !viewer) return;
+
+  function addPulse(lng, lat, colCss){
+    var col = Cesium.Color.fromCssColorString(colCss||'#34d399');
+    var start = Date.now();
+    var e = viewer.entities.add({ layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(lng,lat),
+      ellipse:{ semiMajorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
+                semiMinorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
+                material:col.withAlpha(0.22), outline:true, outlineColor:col, height:0 } });
+    pulses.push(e);
+    if(pulses.length>6){ viewer.entities.remove(pulses.shift()); }
+  }
+
+  function cameraTarget(){
+    try{
+      var c = viewer.camera.positionCartographic;
+      return { lng: Cesium.Math.toDegrees(c.longitude), lat: Cesium.Math.toDegrees(c.latitude) };
+    }catch(e){ return { lng: 10, lat: 25 }; }
+  }
+
+  function bftSpiral(lng, lat){
+    // 33 seats of the Byzantine council, golden-angle spiral, alternating
+    // emerald (voters) / amber (generals). One ring binds the quorum.
+    clearViz();
+    for(var i=0;i<33;i++){
+      var a = i * 2.399963;               // golden angle (rad)
+      var r = 0.4 + i * 0.16;             // degrees, widening
+      var gen = (i % 11 === 0);           // 12 generals stand out
+      VIZ.push(viewer.entities.add({ layerTag:'viz',
+        position: Cesium.Cartesian3.fromDegrees(lng + Math.cos(a)*r, lat + Math.sin(a)*r*0.75, 150000),
+        point: { pixelSize: gen ? 9 : 5.5,
+          color: Cesium.Color.fromCssColorString(gen ? '#fbbf24' : '#34d399'),
+          outlineColor: Cesium.Color.fromCssColorString('#05080e'), outlineWidth: 1.5,
+          scaleByDistance: new Cesium.NearFarScalar(1.5e6, 1.5, 2.0e7, 0.5) } }));
+    }
+    var ringCol = Cesium.Color.fromCssColorString('#10b981');
+    VIZ.push(viewer.entities.add({ layerTag:'viz', position: Cesium.Cartesian3.fromDegrees(lng, lat),
+      ellipse: { semiMajorAxis: 6.2*111000*0.75, semiMinorAxis: 6.2*111000*0.75,
+        material: ringCol.withAlpha(0.05), outline: true, outlineColor: ringCol.withAlpha(0.5), height: 120000 } }));
+  }
+
+  var RAINBOW = ['#ef4444','#f59e0b','#eab308','#22c55e','#3b82f6','#6366f1','#8b5cf6'];
+  function rainbowStack(lng, lat){
+    // Seven concentric raised rings — defence-in-depth: attestation, identity,
+    // transport, access, payment, memory, governance.
+    clearViz();
+    for(var i=0;i<7;i++){
+      var col = Cesium.Color.fromCssColorString(RAINBOW[i]);
+      VIZ.push(viewer.entities.add({ layerTag:'viz', position: Cesium.Cartesian3.fromDegrees(lng, lat),
+        ellipse: { semiMajorAxis: (i+1)*140000, semiMinorAxis: (i+1)*140000,
+          material: col.withAlpha(0.12), outline: true, outlineColor: col, height: 80000 + i*60000 } }));
+    }
+  }
+
+  function clearViz(){
+    VIZ.forEach(function(e){ viewer.entities.remove(e); }); VIZ = [];
+  }
+
+  function handleCmd(d, source){
+    if(!d || !d.cmd || !viewer) return;
     try{
       if(d.cmd==='flyTo'){
         viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(d.lng, d.lat-4, d.height||2200000),
           duration:(d.duration!=null?d.duration:1.8)});
+        addPulse(d.lng, d.lat, d.col);   // narration lands where the Sovereign speaks
       }
       else if(d.cmd==='pulse'){
-        var col = Cesium.Color.fromCssColorString(d.col||'#34d399');
-        var start = Date.now();
-        var e = viewer.entities.add({ position:Cesium.Cartesian3.fromDegrees(d.lng,d.lat),
-          ellipse:{ semiMajorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
-                    semiMinorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
-                    material:col.withAlpha(0.22), outline:true, outlineColor:col, height:0 } });
-        pulses.push(e);
-        if(pulses.length>3){ viewer.entities.remove(pulses.shift()); }
+        addPulse(d.lng, d.lat, d.col);
       }
       else if(d.cmd==='neutralize'){
+        pulses.forEach(function(e){viewer.entities.remove(e);}); pulses=[];
+      }
+      else if(d.cmd==='home'){
+        viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(20, 28, 26000000),
+          duration:(d.duration!=null?d.duration:2.2)});
+      }
+      else if(d.cmd==='bftSpiral'){
+        var t = (d.lng!=null && d.lat!=null) ? {lng:d.lng, lat:d.lat} : cameraTarget();
+        bftSpiral(t.lng, t.lat);
+      }
+      else if(d.cmd==='rainbowStack'){
+        var t2 = (d.lng!=null && d.lat!=null) ? {lng:d.lng, lat:d.lat} : cameraTarget();
+        rainbowStack(t2.lng, t2.lat);
+      }
+      else if(d.cmd==='lightup'){
+        NODES.forEach(function(n){ addPulse(n.c[0], n.c[1], tierC[n.tier]||'#34d399'); });
+      }
+      else if(d.cmd==='clearViz'){
+        clearViz();
         pulses.forEach(function(e){viewer.entities.remove(e);}); pulses=[];
       }
       else if(d.cmd==='layer'){
@@ -285,7 +361,7 @@ if(viewer){
               scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,1.0e7,0),
               translucencyByDistance:new Cesium.NearFarScalar(2.0e6,1,1.6e7,0)} });
         });
-        try{ ev.source && ev.source.postMessage({ack:'layer0', n:Object.keys(L0).length}, '*'); }catch(e){}
+        try{ source && source.postMessage({ack:'layer0', n:Object.keys(L0).length}, '*'); }catch(e){}
       }
       else if(d.cmd==='stamps' && Array.isArray(d.stamps)){
         // Each stamp is a position on the dome. The kind field chooses the
@@ -353,8 +429,22 @@ if(viewer){
         });
       }
     }catch(e){ /* a bad command must never kill the globe */ }
-  });
+  }
 
+  // Buffered listener: commands posted before Cesium is ready queue on
+  // window.__sovBuf (globeDrive.ts's contract), flushed once the viewer is up.
+  window.addEventListener('message', function(ev){
+    var d = ev && ev.data;
+    if(!d || !d.cmd) return;
+    if(!viewer){ (window.__sovBuf = window.__sovBuf || []).push({ d: d, source: ev.source }); return; }
+    handleCmd(d, ev.source);
+  });
+  if(viewer && Array.isArray(window.__sovBuf)){
+    window.__sovBuf.forEach(function(m){ handleCmd(m.d, m.source); });
+    window.__sovBuf = [];
+  }
+
+  if(viewer){
   // Click handler on stamps — surfaces the underlying payload to the parent.
   // Cesium uses ScreenSpaceEventHandler for screen-space picks. LEFT_CLICK
   // on an entity with layerTag 'stamps' posts the payload back.
@@ -381,6 +471,7 @@ if(viewer){
       }
     }
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+  }
 
 </script>
 </body>

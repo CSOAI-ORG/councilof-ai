@@ -3,6 +3,7 @@ import { chargeSovereign } from "../lib/sovCharge";
 import TrustMarquee from "../components/TrustMarquee";
 import ToolRunner from "../components/ToolRunner";
 import { detectLocale } from "../lib/locale";
+import AISystemNotice from "../components/AISystemNotice";
 const OS_LOCALE = detectLocale();
 
 const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
@@ -176,6 +177,10 @@ export default function OsLauncher() {
           <span><b className="text-amber-300">{fmt(ung)}+</b> <span className="text-emerald-100/50">ungoverned</span></span>
         </div>
       </header>
+
+      <div className="mx-auto max-w-6xl px-6 pt-6">
+        <AISystemNotice route="/os" />
+      </div>
 
       {/* hero */}
       <section className="mx-auto max-w-6xl px-6 pt-12 pb-6">

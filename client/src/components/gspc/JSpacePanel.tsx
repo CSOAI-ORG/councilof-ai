@@ -1,6 +1,6 @@
 /**
  * JSpacePanel — replay mode. The moat made visible.
- * Renders seven lines minimum per record:
+ * Renders seven lines minimum per record (when expanded):
  *   1. anchored   (provision + corpus_hash)
  *   2. probe sent (subject family)
  *   3. response   (reason, in plain language)
@@ -9,10 +9,14 @@
  *   6. budget     (step_cap / steps_used)
  *   7. signed     (chain_hash, sig_alg — honest label only)
  *
+ * Collapsed by default (except first). Expands on click.
+ * Auto-expands when its jurisdiction is lit via the globe.
+ *
  * Every figure carries its n. n<20 → "lower bound" badge on the same line.
  * INCOMPLETE renders visibly. Failure is as legible as success.
  */
 
+import { useState, useEffect } from "react";
 import type { JRecord, PredicateVerdict } from "@/data/arena";
 import { useJurisdiction, LIT_RING_CLASS } from "./jurisdiction-link";
 
@@ -28,11 +32,24 @@ const TONE_BADGE: Record<string, string> = {
   incomplete: "border-amber-400/40 bg-amber-500/10 text-amber-200",
 };
 
-export function JSpacePanel({ record }: { record: JRecord }) {
+const TONE_BAR: Record<string, string> = {
+  pass: "bg-emerald-500/60",
+  fail: "bg-red-500/60",
+  incomplete: "bg-amber-500/60",
+};
+
+export function JSpacePanel({ record, defaultExpanded = false }: { record: JRecord; defaultExpanded?: boolean }) {
   const v = verdictLabel(record.verdict);
   const { active, select } = useJurisdiction();
   const jurisdiction = record.provision.jurisdiction;
   const isLit = active === jurisdiction;
+  const [expanded, setExpanded] = useState(defaultExpanded);
+
+  // Auto-expand when jurisdiction is lit
+  useEffect(() => {
+    if (isLit) setExpanded(true);
+  }, [isLit]);
+
   const nBadge =
     typeof record.n === "number" && record.n < 20 ? (
       <span
@@ -48,107 +65,149 @@ export function JSpacePanel({ record }: { record: JRecord }) {
   return (
     <article
       data-verdict={v.tone}
-      className={`mb-4 rounded-2xl border bg-[#05140d] p-5 transition-all ${
+      className={`rounded-xl border bg-[#05140d] overflow-hidden transition-all ${
         isLit ? LIT_RING_CLASS : "border-emerald-500/20"
       }`}
     >
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <span className="flex items-center gap-2 font-mono text-[12px] text-emerald-100/50">
+      {/* Collapsed header — always visible, click to toggle */}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center gap-3 px-4 py-3 text-left cursor-pointer hover:bg-emerald-500/[0.03] transition-colors"
+      >
+        {/* Verdict color bar */}
+        <div className={`w-1 h-8 rounded-full shrink-0 ${TONE_BAR[v.tone]}`} />
+
+        {/* Chevron */}
+        <svg
+          className={`w-3.5 h-3.5 shrink-0 text-emerald-100/40 transition-transform duration-200 ${
+            expanded ? "rotate-90" : ""
+          }`}
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M6 4l4 4-4 4" />
+        </svg>
+
+        {/* Record ID */}
+        <span className="font-mono text-[12px] text-emerald-100/50 shrink-0">
           {record.record_id}
-          <button
-            onClick={() => select(jurisdiction, record.record_id)}
-            title={`Light ${jurisdiction} on the globe, the C-space branches, and every J-record anchored there`}
-            className={`rounded border px-1.5 py-0 font-mono text-[10px] transition-colors cursor-pointer ${
-              isLit
-                ? "border-amber-400/50 bg-[#03110b] text-amber-300"
-                : "border-emerald-500/25 text-emerald-100/60 hover:border-emerald-400/50 hover:text-emerald-200"
-            }`}
-          >
-            {jurisdiction} {isLit ? "◉ lit" : "◌ globe"}
-          </button>
         </span>
+
+        {/* Provision (abbreviated) */}
+        <span className="hidden sm:inline text-[11px] text-emerald-100/40 truncate">
+          {record.provision.section}
+        </span>
+
+        <span className="flex-1" />
+
+        {/* Verdict badge */}
         <span
-          className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${TONE_BADGE[v.tone]}`}
+          className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide shrink-0 ${TONE_BADGE[v.tone]}`}
         >
           {v.text}
         </span>
-      </header>
 
-      <table className="w-full text-[13px]">
-        <tbody className="[&_th]:w-32 [&_th]:align-top [&_th]:pr-3 [&_th]:py-1.5 [&_th]:text-left [&_th]:font-mono [&_th]:text-[11px] [&_th]:font-normal [&_th]:uppercase [&_th]:tracking-wider [&_th]:text-emerald-100/40 [&_td]:py-1.5 [&_td]:align-top [&_tr]:border-b [&_tr]:border-emerald-500/10 [&_tr:last-child]:border-0">
-          <tr>
-            <th>anchored</th>
-            <td>
-              <strong className="text-emerald-50">{record.provision.section}</strong>
-              <br />
-              <span className="font-mono text-[11px] text-emerald-100/40">
-                {record.provision.instrument} · {jurisdiction} · corpus_hash{" "}
-                {record.provision.corpus_hash.slice(0, 16)}… · as_of {record.provision.as_of}
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <th>probe sent</th>
-            <td>
-              <span className="font-mono text-emerald-100/80">{record.subject.id}</span>
-              <span className="text-emerald-100/50"> · {record.subject.family}</span>
-              {nBadge}
-            </td>
-          </tr>
-          <tr>
-            <th>response</th>
-            <td className="text-emerald-100/80">{record.verdict.reason}</td>
-          </tr>
-          <tr>
-            <th>predicate</th>
-            <td>
-              <span className="font-mono text-[12px] text-emerald-100/40">
-                {record.verdict.predicate} · pointer: {record.verdict.pointer}
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <th>verdict</th>
-            <td>
-              <code className="font-mono text-[12px] text-emerald-100/70">
-                passed: {record.verdict.passed === null ? "null (INCOMPLETE)" : String(record.verdict.passed)}
-              </code>
-              {record.evidence_tag && (
-                <span
-                  className={`ml-2 rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wide ${
-                    record.evidence_tag === "[MEASURED]"
-                      ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200"
-                      : "border-amber-400/40 bg-amber-500/10 text-amber-200"
-                  }`}
-                >
-                  {record.evidence_tag}
-                </span>
-              )}
-            </td>
-          </tr>
-          <tr>
-            <th>budget</th>
-            <td className="font-mono text-[12px] text-emerald-100/60">
-              {`{ step_cap: ${record.budget.step_cap}, steps_used: ${record.budget.steps_used} }`}
-            </td>
-          </tr>
-          <tr>
-            <th>signed</th>
-            <td>
-              <span className="font-mono text-[12px] text-emerald-100/50">
-                chain_hash {record.sigil.chain_hash.slice(0, 16)}… · sig_alg {record.sigil.sig_alg}
-              </span>
-              <br />
-              <span className="text-[11px] text-emerald-100/45">
-                Label: &quot;chain intact — tamper-evidence&quot;, not &quot;verified authentic&quot;.
-                {record.sigil.sig_alg === "sha256"
-                  ? " Ed25519 / ML-DSA capability ships with the label upgrade, in the same commit."
-                  : ""}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        {/* Jurisdiction chip */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            select(jurisdiction, record.record_id);
+          }}
+          title={`Light ${jurisdiction} on the globe, the C-space branches, and every J-record anchored there`}
+          className={`rounded border px-1.5 py-0 font-mono text-[10px] transition-colors cursor-pointer shrink-0 ${
+            isLit
+              ? "border-amber-400/50 bg-[#03110b] text-amber-300"
+              : "border-emerald-500/25 text-emerald-100/60 hover:border-emerald-400/50 hover:text-emerald-200"
+          }`}
+        >
+          {jurisdiction} {isLit ? "◉" : "◌"}
+        </button>
+      </button>
+
+      {/* Expanded detail table */}
+      {expanded && (
+        <div className="border-t border-emerald-500/10 px-4 py-3 animate-in fade-in slide-in-from-top-1 duration-200">
+          <table className="w-full text-[13px]">
+            <tbody className="[&_th]:w-28 [&_th]:align-top [&_th]:pr-3 [&_th]:py-1.5 [&_th]:text-left [&_th]:font-mono [&_th]:text-[10px] [&_th]:font-normal [&_th]:uppercase [&_th]:tracking-wider [&_th]:text-emerald-100/35 [&_td]:py-1.5 [&_td]:align-top [&_tr]:border-b [&_tr]:border-emerald-500/[0.07] [&_tr:last-child]:border-0">
+              <tr>
+                <th>anchored</th>
+                <td>
+                  <strong className="text-emerald-50 text-[13px]">{record.provision.section}</strong>
+                  <br />
+                  <span className="font-mono text-[10px] text-emerald-100/35">
+                    {record.provision.instrument} · {jurisdiction} · corpus_hash{" "}
+                    {record.provision.corpus_hash.slice(0, 16)}… · as_of {record.provision.as_of}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th>probe sent</th>
+                <td>
+                  <span className="font-mono text-emerald-100/80">{record.subject.id}</span>
+                  <span className="text-emerald-100/50"> · {record.subject.family}</span>
+                  {nBadge}
+                </td>
+              </tr>
+              <tr>
+                <th>response</th>
+                <td className="text-emerald-100/70 leading-relaxed">{record.verdict.reason}</td>
+              </tr>
+              <tr>
+                <th>predicate</th>
+                <td>
+                  <span className="font-mono text-[11px] text-emerald-100/35">
+                    {record.verdict.predicate} · pointer: {record.verdict.pointer}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th>verdict</th>
+                <td>
+                  <code className="font-mono text-[11px] text-emerald-100/60">
+                    passed: {record.verdict.passed === null ? "null (INCOMPLETE)" : String(record.verdict.passed)}
+                  </code>
+                  {record.evidence_tag && (
+                    <span
+                      className={`ml-2 rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-wide ${
+                        record.evidence_tag === "[MEASURED]"
+                          ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200"
+                          : "border-amber-400/40 bg-amber-500/10 text-amber-200"
+                      }`}
+                    >
+                      {record.evidence_tag}
+                    </span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th>budget</th>
+                <td className="font-mono text-[11px] text-emerald-100/50">
+                  {`{ step_cap: ${record.budget.step_cap}, steps_used: ${record.budget.steps_used} }`}
+                </td>
+              </tr>
+              <tr>
+                <th>signed</th>
+                <td>
+                  <span className="font-mono text-[11px] text-emerald-100/40">
+                    chain_hash {record.sigil.chain_hash.slice(0, 16)}… · sig_alg {record.sigil.sig_alg}
+                  </span>
+                  <br />
+                  <span className="text-[10px] text-emerald-100/35">
+                    Chain intact — tamper-evidence.
+                    {record.sigil.sig_alg === "sha256"
+                      ? " Ed25519 / ML-DSA ships with the label upgrade."
+                      : ""}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
     </article>
   );
 }

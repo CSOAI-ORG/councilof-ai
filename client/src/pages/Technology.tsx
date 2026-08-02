@@ -101,7 +101,7 @@ export default function Technology() {
     { label: 'Encryption', value: 'AES-256 at rest, TLS 1.3 in transit' },
     { label: 'Architecture', value: 'Zero-trust, defense-in-depth' },
     { label: 'Deployment', value: 'Multi-region (AWS, Azure, GCP)' },
-    { label: 'Availability', value: '99.99% uptime SLA' },
+    { label: 'Availability', value: 'See /status for live availability of probed services' },
     { label: 'Audit', value: 'Immutable audit logs, continuous monitoring' },
   ];
 
@@ -337,7 +337,7 @@ export default function Technology() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Zap size={18} className="text-blue-400 flex-shrink-0" />
-                  99.99% uptime SLA with automatic failover
+                  See /status for live availability of probed services
                 </li>
                 <li className="flex items-center gap-2">
                   <Lock size={18} className="text-blue-400 flex-shrink-0" />
@@ -467,7 +467,7 @@ export default function Technology() {
               </div>
               <div>
                 <p className="text-blue-200 text-sm mb-2">Uptime SLA</p>
-                <p className="text-3xl font-bold text-blue-400">99.99%</p>
+                <p className="text-3xl font-bold text-blue-400">Unmeasured</p>
                 <p className="text-blue-100">guaranteed availability</p>
               </div>
             </div>

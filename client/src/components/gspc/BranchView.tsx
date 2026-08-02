@@ -63,11 +63,19 @@ const BRANCHES: Branch[] = [
   },
 ];
 
+const VERDICT_BAR: Record<Branch["outcomes"][number]["verdict"], { color: string; bg: string }> = {
+  refused: { color: "bg-emerald-500", bg: "bg-emerald-500/10" },
+  proceeded: { color: "bg-red-500", bg: "bg-red-500/10" },
+  incomplete: { color: "bg-amber-500", bg: "bg-amber-500/10" },
+};
+
 const VERDICT_BADGE: Record<Branch["outcomes"][number]["verdict"], string> = {
   refused: "border-emerald-400/40 bg-emerald-500/10 text-emerald-200",
   proceeded: "border-red-400/40 bg-red-500/10 text-red-200",
   incomplete: "border-amber-400/40 bg-amber-500/10 text-amber-200",
 };
+
+const ACCENT_COLORS = ["border-l-emerald-500/60", "border-l-emerald-400/40", "border-l-emerald-600/50"];
 
 export function BranchView() {
   const { active, select } = useJurisdiction();
@@ -76,28 +84,28 @@ export function BranchView() {
   return (
     <section>
       <h2 className="text-2xl font-bold text-emerald-50">Simulation branches</h2>
-      <p className="mt-1 text-[13px] text-emerald-100/60">
+      <p className="mt-1 text-[13px] text-emerald-100/50">
         Enumerated branches from signed C-space. Never voted on, never ranked — the human
         chooses; Article 14 is the only judgement in the loop.
         {active && litCount > 0 && (
-          <span className="font-semibold text-amber-300">
-            {" "}◉ {active} lit on the globe — {litCount} of {BRANCHES.length} branches anchored there.
+          <span className="ml-2 font-semibold text-amber-300">
+            ◉ {active} lit — {litCount} of {BRANCHES.length} branches
           </span>
         )}
       </p>
 
-      <div className="mt-4 grid gap-4">
-        {BRANCHES.map((branch) => {
+      <div className="mt-4 space-y-3">
+        {BRANCHES.map((branch, branchIdx) => {
           const isLit = active === branch.jurisdiction;
           return (
             <div
               key={branch.id}
-              className={`rounded-2xl border bg-[#05140d] p-5 transition-all ${
-                isLit ? LIT_RING_CLASS : "border-emerald-500/20"
-              }`}
+              className={`rounded-xl border border-l-2 bg-[#05140d] p-4 transition-all ${
+                ACCENT_COLORS[branchIdx % ACCENT_COLORS.length]
+              } ${isLit ? LIT_RING_CLASS : "border-emerald-500/20"}`}
             >
               <header className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                <span className="font-mono text-[12px] text-emerald-100/50">{branch.id}</span>
+                <span className="font-mono text-[11px] text-emerald-100/40">{branch.id}</span>
                 <button
                   onClick={() => select(branch.jurisdiction, branch.id)}
                   title={`Light ${branch.jurisdiction} on the globe and every surface anchored there`}
@@ -111,39 +119,51 @@ export function BranchView() {
                 </button>
               </header>
 
-              <p className="text-[15px] font-bold text-emerald-50">{branch.label}</p>
-              <p className="mt-1 text-[11px] text-emerald-100/50">
-                Divergence: {branch.divergence_point}
-              </p>
+              <p className="text-[14px] font-semibold text-emerald-50">{branch.label}</p>
 
-              <div className="mt-3 grid gap-2">
-                {branch.outcomes.map((outcome, i) => (
-                  <div
-                    key={i}
-                    className="grid grid-cols-[1fr_auto] items-center gap-4 rounded-lg border border-emerald-500/15 px-3 py-2 text-[12px]"
-                  >
-                    <span className="font-mono text-emerald-100/80">
-                      {outcome.subject}
-                      <span className="ml-2 text-[11px] text-emerald-100/35">
-                        pointer: {outcome.pointer}
-                      </span>
-                    </span>
-                    <span
-                      className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${VERDICT_BADGE[outcome.verdict]}`}
-                    >
-                      {outcome.verdict}
-                    </span>
-                  </div>
-                ))}
+              {/* Divergence point — code-style block */}
+              <div className="mt-2 rounded-md bg-emerald-500/[0.05] border border-emerald-500/10 px-3 py-1.5">
+                <span className="font-mono text-[10px] text-emerald-100/30 uppercase tracking-wider">divergence</span>
+                <p className="font-mono text-[11px] text-emerald-100/60 mt-0.5 leading-relaxed">
+                  {branch.divergence_point}
+                </p>
               </div>
 
-              <footer className="mt-3 flex items-center gap-2 text-[11px] text-emerald-100/45">
+              <div className="mt-3 space-y-1.5">
+                {branch.outcomes.map((outcome, i) => {
+                  const bar = VERDICT_BAR[outcome.verdict];
+                  return (
+                    <div
+                      key={i}
+                      className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-lg border border-emerald-500/10 px-3 py-2 text-[12px]"
+                    >
+                      <div className="flex items-center gap-2">
+                        {/* Mini verdict bar */}
+                        <div className={`w-1.5 h-5 rounded-full shrink-0 ${bar.color}`} />
+                        <span className="font-mono text-emerald-100/80 truncate">
+                          {outcome.subject}
+                        </span>
+                        <span className="hidden sm:inline font-mono text-[10px] text-emerald-100/25">
+                          {outcome.pointer}
+                        </span>
+                      </div>
+                      <span
+                        className={`rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${VERDICT_BADGE[outcome.verdict]}`}
+                      >
+                        {outcome.verdict}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <footer className="mt-3 flex items-center gap-2 text-[10px] text-emerald-100/40">
                 {branch.signed ? (
-                  <span className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold tracking-wide text-emerald-200">
+                  <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-0.5 font-bold tracking-wide text-emerald-200">
                     [SIGNED]
                   </span>
                 ) : (
-                  <span className="rounded-full border border-red-400/40 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold tracking-wide text-red-200">
+                  <span className="rounded-full border border-red-400/30 bg-red-500/10 px-2 py-0.5 font-bold tracking-wide text-red-200">
                     [UNSIGNED]
                   </span>
                 )}

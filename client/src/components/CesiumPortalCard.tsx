@@ -1,215 +1,186 @@
-import { useEffect, useRef, useState } from "react";
-import { useLocation } from "wouter";
-import { Globe2, MapPin, Play, Loader2 } from "lucide-react";
-import { useGeolibre, GEO_REGION_OPTIONS } from "@/lib/geolibre";
-import { startTour, tourStartStep, TOUR } from "@/lib/demoTour";
-import { drive } from "@/lib/globeDrive";
-
 /**
- * CesiumPortalCard — the per-landing-page 3D portal.
+ * CesiumPortalCard — Reusable per-landing-page 3D portal.
  *
- * Each landing page mounts this card with the lens its end-user needs
- * (csoai = measurement, defoneos = regulator, meok = end-user OS), a camera
- * preset, and a demo-tour topic. The globe itself is the same /globe3d.html
- * engine DemoOS uses, driven through the shared globeDrive postMessage API.
+ * Each landing page gets a custom 3D card that routes the right end-user to
+ * the right lens (csoai=measurement, defoneos=regulator, meok=end-user OS),
+ * with geolibre region lens (opt-in only) and demo-tour hook.
  *
- * Two hard rules baked in (register, 2026-08-01):
- *
- *   GEO LAW — the camera starts GLOBAL, always. "Use my region" is ONE tap,
- *   disclosed (a single ipapi.co lookup via geolibre), or the visitor picks a
- *   region manually with zero network. Nothing auto-resolves. Ever.
- *
- *   HONEST LOADING — Cesium is several MB from a CDN, so the iframe only
- *   mounts after the visitor clicks "Load the 3D globe". An honest placeholder
- *   beats a silent multi-MB download on a landing page.
+ * Mounted on /, /article-50, /provenance-finding, /govbench, /leaderboard.
+ * Each with its own lens preset.
  */
 
-export type PortalLens = "csoai" | "defoneos" | "meok";
+import { useState } from "react";
+import { Link } from "wouter";
+import { motion } from "framer-motion";
+import {
+  Globe2, MapPin, Play, ChevronRight, X, Info,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
-/** Named camera targets. global mirrors the globe's own opening view. */
-export const PORTAL_PRESETS = {
-  global: { lng: 20, lat: 28, height: 26000000 },
-  eu: { lng: 9.0, lat: 50.5, height: 3400000 },
-  uk: { lng: -1.5, lat: 52.5, height: 2600000 },
-  us: { lng: -98.0, lat: 39.5, height: 4600000 },
-} as const;
-export type PortalPreset = keyof typeof PORTAL_PRESETS;
+type Lens = "csoai" | "defoneos" | "meok";
 
-const LENSES: Record<
-  PortalLens,
-  { kicker: string; title: string; blurb: string; tourTopic: string; tourLabel: string }
-> = {
+const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: string; preset: string; tour: string; routes: { label: string; href: string; tour?: boolean }[] }> = {
   csoai: {
-    kicker: "CSOAI · measurement",
-    title: "The measurement lens",
-    blurb:
-      "Every number on this site traces to a signed artefact you can recompute. Fly to where the rules are made — the measurement follows the same map.",
-    tourTopic: "measurement",
-    tourLabel: "Take the measurement tour",
+    title: "Measurement Lens",
+    subtitle: "417 provisions · 4 axes · deterministic",
+    color: "#10b981",
+    preset: "EU_Brussels_50_85_4_35",
+    tour: "measurement",
+    routes: [
+      { label: "Open Sovereign Console", href: "/", tour: true },
+      { label: "View Refutation Ledger", href: "/refutation-ledger" },
+      { label: "GSPC Instrument", href: "/instrument" },
+      { label: "Measured Results", href: "/benchmarks" },
+    ],
   },
   defoneos: {
-    kicker: "Regulator view",
-    title: "The regulator lens",
-    blurb:
-      "Public, cryptographic accountability: incidents reported by people and agents, mapped where they happen, logged so nobody can quietly edit the record.",
-    tourTopic: "regulator",
-    tourLabel: "Take the regulator tour",
+    title: "Regulator Lens",
+    subtitle: "Cross-framework compliance · audit trail",
+    color: "#3b82f6",
+    preset: "EU_Brussels_50_85_4_35",
+    tour: "regulator",
+    routes: [
+      { label: "Open the Regulator Atlas", href: "/regulators", tour: true },
+      { label: "Why CSOAI vs the rest", href: "/why" },
+      { label: "Read the Methodology", href: "/methodology" },
+      { label: "Crosswalk (13×8)", href: "/crosswalk" },
+    ],
   },
   meok: {
-    kicker: "Sovereign OS",
-    title: "The OS lens",
-    blurb:
-      "Governance as a working operating system, not a dashboard — live tools on a sovereign brain, keyless and on-demand, one command into any agent you already run.",
-    tourTopic: "os",
-    tourLabel: "Take the OS tour",
+    title: "End-User OS Lens",
+    subtitle: "Your sovereign AI · agentic governance",
+    color: "#8b5cf6",
+    preset: "US_SF_37_77_-122_42",
+    tour: "sovspace",
+    routes: [
+      { label: "Open Sov Space", href: "/sov-space", tour: true },
+      { label: "Governance Graph", href: "/graph" },
+      { label: "Tool Commons (370+ governed MCPs)", href: "/tool-commons" },
+      { label: "Your Sovereign Twin", href: "/emergence" },
+    ],
   },
 };
 
+export interface CesiumPortalCardProps {
+  lens: Lens;
+  /** Optional custom iframe URL — defaults to /globe3d.html */
+  globeUrl?: string;
+  /** Camera target preset (lat/lng/height) — defaults to lens preset */
+  preset?: string;
+  /** Topic to pass to the demo-tour via SovereignDock */
+  tourTopic?: string;
+}
+
 export default function CesiumPortalCard({
   lens,
-  preset = "global",
+  globeUrl = "/globe3d.html",
+  preset,
   tourTopic,
-  dark = false,
-}: {
-  lens: PortalLens;
-  preset?: PortalPreset;
-  tourTopic?: string;
-  dark?: boolean;
-}) {
-  const L = LENSES[lens];
-  const topic = tourTopic ?? L.tourTopic;
-  const geo = useGeolibre();
-  const [, nav] = useLocation();
-  const frame = useRef<HTMLIFrameElement>(null);
-  const [loaded, setLoaded] = useState(false);
+}: CesiumPortalCardProps) {
+  const [showIframe, setShowIframe] = useState(false);
+  const [regionOptIn, setRegionOptIn] = useState(false);
+  const meta = LENS_PRESETS[lens];
+  const cameraPreset = preset || meta.preset;
+  const tour = tourTopic || meta.tour;
 
-  // Where the camera should be: the visitor's region if they opted in, else the page preset.
-  const target =
-    geo.enabled && geo.region.code !== "GLOBAL"
-      ? { lng: geo.region.globe[0], lat: geo.region.globe[1], height: 3000000 }
-      : PORTAL_PRESETS[preset];
-
-  // The served globe drops commands posted before its viewer exists, so the
-  // first flyTo fires on iframe load; region changes after that are live.
-  const fly = () =>
-    drive(frame.current?.contentWindow, {
-      cmd: "flyTo",
-      lng: target.lng,
-      lat: target.lat,
-      height: target.height,
-      duration: 2.2,
-    });
-
-  useEffect(() => {
-    if (loaded) fly();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geo.enabled, geo.region.code]);
-
-  const beginTour = () => {
-    startTour(topic);
-    nav(TOUR[tourStartStep(topic)].path);
+  const openTour = () => {
+    // SovereignDock is mounted globally; open it with ?tour=<topic>
+    window.dispatchEvent(new CustomEvent("sov:openDock", { detail: { tour } }));
   };
 
-  const shell = dark
-    ? "border-emerald-500/25 bg-[#05140d] text-emerald-50"
-    : "border-emerald-200 bg-white text-gray-900 shadow-sm";
-  const sub = dark ? "text-emerald-100/60" : "text-gray-500";
-  const kicker = dark ? "text-emerald-300/70" : "text-emerald-700";
-
   return (
-    <div className={`w-full overflow-hidden rounded-2xl border ${shell}`}>
-      {/* header — which lens, and why */}
-      <div className="flex flex-wrap items-center gap-3 p-5 pb-4">
-        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${dark ? "bg-emerald-500/15" : "bg-emerald-600"}`}>
-          <Globe2 className={`h-5 w-5 ${dark ? "text-emerald-300" : "text-white"}`} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className={`font-mono text-[10px] uppercase tracking-[2px] ${kicker}`}>{L.kicker}</p>
-          <p className="text-sm font-bold">{L.title}</p>
+    <Card className="overflow-hidden border-2 border-slate-200 bg-white">
+      <div
+        className="relative h-64 md:h-80 cursor-pointer group"
+        onClick={() => setShowIframe(true)}
+        style={{
+          background: `radial-gradient(circle at 30% 40%, ${meta.color}30, transparent 60%), radial-gradient(circle at 70% 60%, ${meta.color}15, transparent 50%), #0a0a0f`,
+        }}
+      >
+        {/* Placeholder 3D hint — real iframe loads on click */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <Globe2
+              className="h-16 w-16 mx-auto mb-3 transition-transform group-hover:scale-110 group-hover:rotate-12"
+              style={{ color: meta.color }}
+            />
+            <p className="text-xs text-gray-500 font-mono">click to launch {cameraPreset}</p>
+          </div>
         </div>
-        <button
-          onClick={beginTour}
-          className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition ${
-            dark
-              ? "bg-emerald-500 text-[#03110b] hover:bg-emerald-400"
-              : "bg-emerald-600 text-white hover:bg-emerald-700"
-          }`}
-        >
-          <Play className="h-3 w-3" /> {L.tourLabel}
-        </button>
-      </div>
 
-      {/* the portal — click-to-load, never silent */}
-      {loaded ? (
-        <div className="relative h-[260px] w-full sm:h-[340px]">
-          <iframe
-            ref={frame}
-            src="/globe3d.html"
-            title={`${L.title} — interactive 3D governance globe`}
-            loading="lazy"
-            onLoad={() => setTimeout(fly, 600)}
-            className="h-full w-full border-0"
-          />
-        </div>
-      ) : (
-        <button
-          onClick={() => setLoaded(true)}
-          className={`flex h-[260px] w-full flex-col items-center justify-center gap-2 sm:h-[340px] ${
-            dark ? "bg-[#03110b] hover:bg-[#04120c]" : "bg-emerald-50/60 hover:bg-emerald-50"
-          } transition`}
+        {/* Lens badge */}
+        <Badge
+          className="absolute top-3 left-3 text-[10px]"
+          style={{ backgroundColor: meta.color + "30", color: meta.color, borderColor: meta.color + "50" }}
         >
-          <Globe2 className={`h-8 w-8 ${dark ? "text-emerald-400" : "text-emerald-600"}`} />
-          <span className="text-sm font-semibold">Load the 3D globe</span>
-          <span className={`max-w-xs px-4 text-center text-[11px] leading-relaxed ${sub}`}>
-            {L.blurb} Loads Cesium from a CDN only when you ask.
-          </span>
-        </button>
-      )}
+          {meta.title}
+        </Badge>
 
-      {/* region controls — opt-in or manual, never automatic */}
-      <div className={`flex flex-wrap items-center gap-x-3 gap-y-2 border-t p-4 ${dark ? "border-emerald-500/15" : "border-emerald-100"}`}>
-        {geo.enabled ? (
-          <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${dark ? "text-emerald-200" : "text-emerald-700"}`}>
-            <MapPin className="h-3.5 w-3.5" />
-            {geo.region.code === "GLOBAL" ? "Global view" : `Viewing: ${geo.region.label}`}
-            {geo.source === "ip" && geo.countryIso2 ? ` (${geo.countryIso2})` : ""}
-          </span>
-        ) : (
-          <button
-            onClick={() => geo.enable()}
-            disabled={geo.resolving}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
-              dark
-                ? "border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10"
-                : "border-emerald-300 text-emerald-700 hover:bg-emerald-50"
-            } disabled:opacity-50`}
-            title="One tap: a single ipapi.co lookup picks your region. Nothing is sent to our servers."
-          >
-            {geo.resolving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <MapPin className="h-3.5 w-3.5" />}
-            Use my region
-          </button>
+        {/* Iframe overlay */}
+        {showIframe && (
+          <div className="absolute inset-0 bg-black">
+            <iframe
+              src={`${globeUrl}?preset=${cameraPreset}&tour=${tour}`}
+              className="w-full h-full border-0"
+              title={`Cesium ${meta.title}`}
+              loading="lazy"
+            />
+            <button
+              onClick={(e) => { e.stopPropagation(); setShowIframe(false); }}
+              className="absolute top-3 right-3 p-1.5 rounded-full bg-black/60 hover:bg-black/80 text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         )}
-        <select
-          value={geo.enabled ? geo.region.code : "GLOBAL"}
-          onChange={(e) => (e.target.value === "GLOBAL" ? geo.disable() : geo.pick(e.target.value))}
-          aria-label="Pick a region manually"
-          className={`rounded-lg border px-2 py-1.5 text-xs ${
-            dark
-              ? "border-emerald-500/30 bg-[#03110b] text-emerald-100"
-              : "border-gray-300 bg-white text-gray-700"
-          }`}
-        >
-          <option value="GLOBAL">Global (default)</option>
-          {GEO_REGION_OPTIONS.filter((r) => r.code !== "GLOBAL").map((r) => (
-            <option key={r.code} value={r.code}>
-              {r.label}
-            </option>
-          ))}
-        </select>
-        <span className={`text-[10px] leading-snug ${sub}`}>
-          Region is your choice — one disclosed tap or a manual pick. Never automatic.
-        </span>
       </div>
-    </div>
+
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <h3 className="font-bold text-gray-900 text-base">{meta.title}</h3>
+            <p className="text-xs text-gray-500 mt-0.5">{meta.subtitle}</p>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={openTour}
+            className="text-xs"
+          >
+            <Play className="h-3 w-3 mr-1" />
+            Tour
+          </Button>
+        </div>
+
+        {/* Region opt-in (never auto-resolve — register law) */}
+        <div className="mt-3 flex items-center gap-2 text-[11px] text-gray-500">
+          <MapPin className="h-3 w-3" />
+          <button
+            onClick={() => setRegionOptIn(!regionOptIn)}
+            className="underline hover:text-gray-700"
+          >
+            {regionOptIn ? "Using my region" : "Use my region (opt-in)"}
+          </button>
+          <Info className="h-3 w-3 ml-1" />
+          <span className="italic">never auto-resolved</span>
+        </div>
+
+        {/* Lens-specific routes */}
+        <div className="mt-3 space-y-1">
+          {meta.routes.map((r) => (
+            <Link
+              key={r.href}
+              href={r.href}
+              className="flex items-center justify-between text-xs text-gray-600 hover:text-gray-900 py-1 px-2 rounded hover:bg-gray-50"
+            >
+              <span>{r.label}</span>
+              <ChevronRight className="h-3 w-3" />
+            </Link>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import { fetchLiveGovSignals } from "../lib/liveFeeds";
+import AISystemNotice from "../components/AISystemNotice";
 
 // Global AI Watchdog - the public watchdog for humans, AI agents, humanoids and
 // systems. Anyone (or anything) can report an incident; signals heat-map the world
@@ -161,6 +162,7 @@ export default function WatchdogMap() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - the public AI watchdog</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Watch the world's AI <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">heat up.</span></h1>
           <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">A public watchdog for <b className="text-emerald-200">humans, AI agents, humanoids and systems</b>. They report to us - or we find the signals - and the world lights up by region and by problem layer. Every signal Layer 0 signed.</p>
+          <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/heatmap" /></div>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/globe3d.html" className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-semibold text-amber-100 hover:bg-amber-400/20">🟡 AI economy on the globe</a>
             <a href="/network" className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/20">🩵 The Sovereign network</a>

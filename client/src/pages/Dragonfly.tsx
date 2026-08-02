@@ -43,7 +43,8 @@ export default function Dragonfly() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the architecture</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Dragonfly - 4-Wing Model</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The dragonfly has four wings; so does CSOAI. Four independent subsystems - Governance, Intelligence, Safety, Cybersecurity - that must all agree for any major decision. council cross-checking applied to AI.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The dragonfly has four wings; so does CSOAI — by design. Four independent subsystems - Governance, Intelligence, Safety, Cybersecurity - are designed so all must agree for any major decision. Council cross-checking applied to AI.</p>
+          <p className="mt-3 max-w-2xl text-sm text-amber-200/90">Design model — not yet a live system. Measured status is published on the <a href="/refutation-ledger" className="underline">Refutation Ledger</a> (DR-0007).</p>
           <p className="mt-3 max-w-2xl text-emerald-100/75 text-sm">360-degree vision, reacts in milliseconds, 300 million years of survival. The metaphor is the architecture.</p>
         </div>
       </section>
@@ -64,7 +65,7 @@ export default function Dragonfly() {
               );
             })}
             <rect x={246} y={310} width={8} height={70} rx={4} fill="#0f766e" opacity={0.7} />
-            <text x={250} y={405} textAnchor="middle" fill="#64748b" fontSize={12} fontWeight={700}>all four must agree -&gt; BFT consensus</text>
+            <text x={250} y={405} textAnchor="middle" fill="#64748b" fontSize={12} fontWeight={700}>designed: all four must agree -&gt; BFT consensus</text>
           </svg>
         </div>
         <div className="rounded-2xl border border-gray-200 overflow-hidden">
@@ -90,8 +91,8 @@ export default function Dragonfly() {
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-14">
-        <h2 className="text-xl font-bold text-gray-900">The Council of AI - five agents, Byzantine consensus</h2>
-        <p className="mt-1 text-sm text-gray-500">Five independent legs is the design target; measured effective independence is published on /benchmarks rather than assumed</p>
+        <h2 className="text-xl font-bold text-gray-900">The Council of AI - five agents, Byzantine consensus <span className="ml-2 align-middle rounded-full border border-amber-400/50 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700">Designed — not yet live</span></h2>
+        <p className="mt-1 text-sm text-gray-500">Five independent legs is the design target; measured effective independence is published on /benchmarks and the Refutation Ledger (DR-0007) rather than assumed</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {COUNCIL.map((m) => (
             <div key={m.name} className="rounded-2xl border border-gray-200 p-4 text-center">
@@ -112,7 +113,7 @@ export default function Dragonfly() {
           ))}
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Watch the Council deliberate -&gt;</a>
+          <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See the council design demo -&gt;</a>
           <a href="/hive" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">How the hive decides -&gt;</a>
           <a href="/lineage" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Why it's 4,000 years old -&gt;</a>
         </div>

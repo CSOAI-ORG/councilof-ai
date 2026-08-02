@@ -175,10 +175,12 @@ export default function Council() {
                         <Lock className="h-6 w-6 text-emerald-600" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-gray-900 mb-2">23/33 Consensus Required</h4>
+                        <h4 className="font-bold text-gray-900 mb-2">Designed quorum: 23/33</h4>
                         <p className="text-gray-600">
-                          Every safety decision requires 70% agreement (23 of 33 agents).
-                          This threshold ensures fault-aware consensus.
+                          The designed threshold is 70% agreement (23 of 33 agents). This quorum is a
+                          design target — its measured status is published on the{" "}
+                          <a href="/refutation-ledger" className="text-emerald-700 underline">Refutation Ledger</a>{" "}
+                          (DR-0007).
                         </p>
                       </div>
                     </div>
@@ -201,10 +203,10 @@ export default function Council() {
                         <Zap className="h-6 w-6 text-emerald-600" />
                       </div>
                       <div>
-                        <h4 className="font-bold text-gray-900 mb-2">Fail-Safe Operation</h4>
+                        <h4 className="font-bold text-gray-900 mb-2">Fail-Safe Operation (designed)</h4>
                         <p className="text-gray-600">
-                          Even if up to 10 agents fail or are compromised, the remaining
-                          23 can still reach valid consensus and continue operations.
+                          By design, even if up to 10 agents fail or are compromised, the remaining
+                          23 could still reach valid consensus. Not yet a measured property.
                         </p>
                       </div>
                     </div>
@@ -238,15 +240,15 @@ export default function Council() {
             variants={fadeInUp}
             className="text-center mb-16"
           >
-            <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-400/30">
-              Multi-Provider Architecture
+            <Badge className="mb-4 bg-amber-500/20 text-amber-300 border-amber-400/30">
+              Designed distribution — not provisioned providers
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               33 Agents, <span className="text-emerald-400">7 Providers</span>
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-              Our agent distribution ensures no single AI company can dominate decisions.
-              Each provider contributes unique perspectives and capabilities.
+              The designed agent distribution ensures no single AI company could dominate decisions.
+              This roster is the design — providers are not yet provisioned behind it.
             </p>
           </motion.div>
 
@@ -533,7 +535,7 @@ export default function Council() {
               <Link href="/transparency">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                   <BarChart3 className="mr-2 h-4 w-4" />
-                  View Dashboard
+                  View the Transparency Registry
                 </Button>
               </Link>
             </div>

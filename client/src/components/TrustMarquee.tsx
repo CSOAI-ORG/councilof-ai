@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { TRUST, KIND_META, type TrustItem } from "../data/trustWall";
+import { CANON } from "../data/canonCounters";
 
 const BRAIN = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 function fmt(n: number) { return n >= 1e6 ? Math.round(n / 1e6) + "M" : n >= 1e3 ? Math.round(n / 1e3) + "k" : String(n); }
 
 // Live credibility chips — real numbers pulled from the Sovereign brain, with an
-// honest, established-fact fallback if the endpoint is unreachable. No fabrication.
+// honest, established-fact fallback (from canon) if the endpoint is unreachable. No fabrication.
 function LiveStats({ dark }: { dark?: boolean }) {
   const [s, setS] = useState<{ tools?: number; episodes?: number; agents?: number }>({});
   useEffect(() => {
     let live = true;
     const grab = async (p: string) => { try { const r = await fetch(BRAIN + p, { cache: "no-store" }); return await r.json(); } catch { return null; } };
     (async () => {
-      // /health + /tools are CORS-open cross-origin; /status is not — avoid the console error.
       const [t, st] = await Promise.all([grab("/tools"), grab("/health")]);
       if (!live) return;
       const tools = t && (t.total || t.count || (Array.isArray(t) ? t.length : 0));
@@ -22,9 +22,15 @@ function LiveStats({ dark }: { dark?: boolean }) {
     })();
     return () => { live = false; };
   }, []);
+  // Canon-first: if live data disagrees, the canon wins; if live > canon, use live with caveat.
+  const canonTools = CANON.mcpLiveDeployed.value;
+  const canonCouncil = CANON.councilAgents.value;
+  const toolsDisplay = s.tools && s.tools > 50 ? s.tools : canonTools;
+  const councilDisplay = s.agents && s.agents > 0 ? s.agents : canonCouncil;
+  const toolsCaveat = s.tools && s.tools > 0 && s.tools !== canonTools ? ` (live: ${s.tools}, canon: ${canonTools})` : "";
   const chips = [
-    { v: s.agents ? String(s.agents) : "33", l: "seat council (design)" },
-    { v: s.tools ? String(s.tools) : "378", l: "governed MCP tools" },
+    { v: `${councilDisplay}`, l: `seat council (design — ${councilDisplay === canonCouncil ? "canon" : "live"})` },
+    { v: `${toolsDisplay}${toolsCaveat}`, l: "governed MCP tools (deployed)" },
     { v: s.episodes ? fmt(s.episodes) + "+" : "Ed25519", l: s.episodes ? "memory episodes" : "Layer 0 signing" },
     { v: "0.95", l: "care-floor" },
   ];

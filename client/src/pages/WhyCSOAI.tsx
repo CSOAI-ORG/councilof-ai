@@ -29,6 +29,7 @@ const USPS: { t: string; d: string }[] = [
 
 import TrustMarquee from "../components/TrustMarquee";
 import SovereignSpot from "../components/SovereignSpot";
+import AISystemNotice from "../components/AISystemNotice";
 
 export default function WhyCsoai() {
   useEffect(() => { document.title = "Why CSOAI — what we do that others don't | AI governance, open"; }, []);
@@ -40,6 +41,7 @@ export default function WhyCsoai() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · why we're different</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">We put the value back <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">where it belongs.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">AI governance became a market for expensive certificates. We're black-swanning that — an open-source core, free training and certification, and fair pricing that returns safety and value to SMBs and enterprises, not to middlemen.</p>
+          <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/why-csoai" /></div>
         </div>
       </section>
 

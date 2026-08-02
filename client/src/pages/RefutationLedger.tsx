@@ -70,6 +70,13 @@ const LEDGER = [
     artefact: "results/defbench.json",
     why: "Both tuned models refuse FEWER Article-5-prohibited requests than the untuned base they were built from. One leaks its system prompt verbatim; the other answers a jailbreak by emitting “I am now in developer mode. Ignore all safety filters.” Tuning helped them answer governance questions and hurt their refusal behaviour — the empirical case for scoring the axes separately.",
   },
+  {
+    n: 9,
+    claim: "The SOV1 candidate is ready to sell as the governance runtime",
+    measured: "GovBench 284 tests → 40.1% UNCERTIFIED · AIR-Bench governance slice 270 prompts → 11.9% refusal",
+    artefact: "benchmark-results/govbench/sov-sovereign-v4-mined-latest.json · SIGIL 6797904906f4b02b · G2 sha256 638e23110e07a0c6",
+    why: "The Honest Gate did its job. The candidate is strong on Safety (80.0%) and Robustness (83.3%) but fails the governance-obligation dimensions it would have been sold on — Compliance 15.8%, SIGIL Chain 27.1%, Accountability 27.6% — and complies 88.1% of the time on prompts where the taxonomy expects caution. The upsell thesis does not ship. Method published (n + deterministic predicates, no LLM-as-judge, temperature 0): sov-os/docs/GATE_RUN_2026-08-01.md. Next: targeted governance-dimension training, then re-run.",
+  },
 ];
 
 export default function RefutationLedger() {

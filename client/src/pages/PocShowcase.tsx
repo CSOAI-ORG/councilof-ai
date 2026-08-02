@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import AISystemNotice from "../components/AISystemNotice";
 
 // PocShowcase - ONE OS for AI governance across agents AND humanoids. Shows the
 // Sovereign live-tracking a global fleet, sensing environments (WiFi/LoRa/BLE),
@@ -88,6 +89,7 @@ export default function PocShowcase() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - proof of concept</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">One OS for <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">agents & humanoids.</span></h1>
           <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">The Sovereign tracks every agent and humanoid, live and global. It maps environments by <b className="text-emerald-200">WiFi sensing, LoRa and Bluetooth mesh</b> - consent-first, no cameras - runs <b className="text-emerald-200">PDCA auto-simulation</b> for every decision, and if it sees one about to <b className="text-emerald-200">ungovern</b>, it stops it before it happens.</p>
+          <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/humanoids-poc" /></div>
         </div>
       </section>
 

@@ -4,6 +4,7 @@ import { HIVE, getHive, HIVE_STATUS_COLOR, type HiveFramework } from "../data/hi
 import { chargeSovereign } from "../lib/sovCharge";
 
 import { askSovereign } from "../lib/sovAsk";
+import AISystemNotice from "../components/AISystemNotice";
 const GW = "https://os.meok.ai/api";
 async function askSov(q: string): Promise<string> {
   // Route through the CSOAI-Sovereign guard (role-framed + companion-bleed rejected).
@@ -178,6 +179,7 @@ export default function FrameworkHive() {
       <Hero />
       <section className="mx-auto max-w-6xl px-6 py-8">
         <div className="mx-auto mb-6 max-w-md">
+          <AISystemNotice route="/hive/:slug" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search frameworks, sectors, threats…" className="w-full rounded-xl border border-emerald-500/25 bg-[#05140d] px-4 py-2.5 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list.map((f) => <Card key={f.slug} f={f} />)}</div>

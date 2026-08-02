@@ -44,7 +44,8 @@ export default function BftConfig() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - configurable consensus</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Choose your BFT setup</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Five agents, twelve-around-one, or a thirty-three-node swarm - you decide how much fault-aware consensus your governance runs on. The math updates live. The topology is open-patent at openpatent.ai.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Five agents, twelve-around-one, or a thirty-three-node swarm — explore how much fault-aware consensus your governance could run on. The math updates live; the topology is open-patent at openpatent.ai.</p>
+          <p className="mt-3 max-w-2xl text-sm text-amber-200/90">A design-space explorer: the Byzantine math below is real, but the council it configures is <b>designed, not yet live</b> — measured status on the <a href="/refutation-ledger" className="underline">Refutation Ledger</a> (DR-0007).</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-12 grid gap-8 lg:grid-cols-[320px_1fr] items-start">
@@ -98,7 +99,7 @@ export default function BftConfig() {
             Open-patent: the consensus topology is published at <span className="font-semibold">openpatent.ai</span> - free to fork, impossible to fence. Governance infrastructure should be a commons, not a moat.
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Run this setup in the Council -&gt;</a>
+            <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Explore this setup in the council design demo -&gt;</a>
             <a href="/hive" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">How consensus works -&gt;</a>
             <a href="/dragonfly" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The 4-Wing model -&gt;</a>
           </div>

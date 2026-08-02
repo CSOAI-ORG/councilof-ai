@@ -1,4 +1,5 @@
 import { useState } from "react";
+import HeroSlides from "../components/HeroSlides";
 
 type Tier = { name: string; price: string; sub: string; tag?: string; cta: string; href: string; feats: string[]; highlight?: boolean; accent?: "amber" };
 
@@ -44,6 +45,8 @@ export default function PlansPage() {
           <button onClick={() => setCur("USD")} className={(cur === "USD" ? "bg-emerald-500 text-[#03110b] " : "text-emerald-200 ") + "rounded-full px-3 py-1 font-bold"}>$ USD</button>
         </div>
       </section>
+
+      <HeroSlides />
       <section className="mx-auto max-w-6xl px-6 pb-10">
         <div className="grid gap-5 lg:grid-cols-5 sm:grid-cols-2">
           {tiers.map((t) => (

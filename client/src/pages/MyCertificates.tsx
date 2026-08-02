@@ -36,6 +36,9 @@ export default function MyCertificates() {
   const [, navigate] = useLocation();
   const [selectedWatchdogCert, setSelectedWatchdogCert] = useState<any>(null);
 
+  // P2-16: never render an authenticated shell to anonymous visitors — gate the page.
+  const { data: authUser, isLoading: authLoading } = trpc.auth.me.useQuery();
+
   // Fetch Watchdog Analyst certificates
   const { data: watchdogCertificates, isLoading: watchdogLoading } = 
     trpc.certification.getMyCertificates.useQuery();
@@ -98,11 +101,26 @@ export default function MyCertificates() {
   const hasAnyCertificates = (watchdogCertificates && watchdogCertificates.length > 0) ||
                             (courseCertList.length > 0);
 
-  if (isLoading) {
+  if (isLoading || authLoading) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-96">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!authUser) {
+    return (
+      <DashboardLayout>
+        <div className="p-6 flex flex-col items-center justify-center min-h-[50vh] text-center space-y-4">
+          <Award className="h-10 w-10 text-muted-foreground" />
+          <h1 className="text-2xl font-semibold">Sign in required</h1>
+          <p className="text-muted-foreground max-w-md">
+            Your certificates are available to signed-in accounts only.
+          </p>
+          <Button asChild><a href="/login">Sign in</a></Button>
         </div>
       </DashboardLayout>
     );

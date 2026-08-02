@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { askSovereign } from "../lib/sovAsk";
 import ToolRunner from "../components/ToolRunner";
+import AISystemNotice from "../components/AISystemNotice";
 
 // /workbench — the CSOAI AI OS as a GOVERNANCE WORKBENCH, powered by SOV3.
 // The Claude-Science pattern, applied to AI governance: a coordinating Sovereign
@@ -49,7 +50,7 @@ export default function Workbench() {
     setBusy(true);
     const res = await askSovereign(question, { system: "You are SOV3, the CSOAI Sovereign coordinating a governance workbench. Skill in use: " + skill.name + " (" + skill.hint + "). Produce a concise, concrete, auditable governance artifact — cite the relevant frameworks/obligations. AI governance & cybersecurity only; never a companion.", fallback: "The live Sovereign is unreachable — the workbench still sealed your request; retry for the reasoned artifact." });
     const s = await seal(res.text);
-    const art: Artifact = { id: Date.now(), skill: skill.name, q: question, a: res.text, sealKind: s.kind, fp: s.fp, sig: s.sig, at: new Date().toISOString().slice(0, 19).replace("T", " "), council: "33-agent Council of AI · quorum reached · care-floor 0.95" };
+    const art: Artifact = { id: Date.now(), skill: skill.name, q: question, a: res.text, sealKind: s.kind, fp: s.fp, sig: s.sig, at: new Date().toISOString().slice(0, 19).replace("T", " "), council: "Council review: designed layer (Charter Art. 11) — not yet live; see DR-0007" };
     setArts((x) => [art, ...x]); setBusy(false); setQ("");
   }
 
@@ -57,8 +58,9 @@ export default function Workbench() {
     <div className="min-h-screen bg-[#03080e] text-emerald-50">
       <div className="mx-auto max-w-6xl px-5 py-10">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · governance workbench · powered by SOV3</p>
-        <h1 className="mt-3 text-3xl sm:text-4xl font-black tracking-tight">Every output — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">signed, reproducible, council-reviewed.</span></h1>
-        <p className="mt-3 max-w-3xl text-emerald-100/75 text-[15px]">The AI-workbench pattern, applied to AI governance. A coordinating Sovereign agent runs your skills; every result is produced as an auditable artifact — sealed to Layer 0, reviewed by the 33-agent Council of AI, and reproducible from its own provenance. {tools ? <span className="text-emerald-300">{tools} governed skills live.</span> : null}</p>
+        <h1 className="mt-3 text-3xl sm:text-4xl font-black tracking-tight">Every output — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">signed, reproducible, designed for council review.</span></h1>
+        <p className="mt-3 max-w-3xl text-emerald-100/75 text-[15px]">The AI-workbench pattern, applied to AI governance. A coordinating Sovereign agent runs your skills; every result is produced as an auditable artifact — sealed to Layer 0 and reproducible from its own provenance. Council review is a designed layer (Charter Art. 11), not a live pipeline — measured status on the <a href="/refutation-ledger" className="underline text-emerald-300">Refutation Ledger</a> (DR-0007). {tools ? <span className="text-emerald-300">{tools} governed skills live.</span> : null}</p>
+        <div className="mt-5 max-w-3xl"><AISystemNotice route="/sov3" /></div>
 
         <div className="mt-7 grid gap-5 lg:grid-cols-[260px_1fr]">
           {/* Skill palette */}
@@ -87,7 +89,7 @@ export default function Workbench() {
                 <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder={skill.hint + "…"} className="flex-1 rounded-lg border border-emerald-500/25 bg-black/30 px-3 py-2.5 text-sm text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
                 <button onClick={run} disabled={busy} className="rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">{busy ? "Sealing…" : "Run + seal"}</button>
               </div>
-              <div className="mt-2 text-[11px] text-emerald-300/45">Governed answer · reviewed by the council · sealed to Layer 0 · reproducible</div>
+              <div className="mt-2 text-[11px] text-emerald-300/45">Governed answer · sealed to Layer 0 · reproducible · council review: designed, not yet live (DR-0007)</div>
             </div>
 
             {arts.length === 0 ? (
@@ -120,7 +122,7 @@ export default function Workbench() {
           <ToolRunner />
         </div>
 
-        <p className="mt-8 text-[11px] text-emerald-300/40">Honest note: Ed25519 seals require the live Sovereign brain; when unreachable, artifacts carry a real in-browser SHA-256 content hash instead of a signature — never a fake seal. Council line reflects the BFT quorum model (Charter Art. 11).</p>
+        <p className="mt-8 text-[11px] text-emerald-300/40">Honest note: Ed25519 seals require the live Sovereign brain; when unreachable, artifacts carry a real in-browser SHA-256 content hash instead of a signature — never a fake seal. Council review is a designed layer (Charter Art. 11) — measured status on the Refutation Ledger (DR-0007).</p>
       </div>
     </div>
   );

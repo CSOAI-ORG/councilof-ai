@@ -54,7 +54,7 @@
     <div class="stat"><b id="s-nodes">6</b><span>Anchor nodes · 5 live</span></div>
     <div class="stat"><b>291</b><span>MCP servers catalogued</span></div>
     <div class="stat sov"><b id="s-ung">—</b><span>Watchers · status probe</span></div>
-    <div class="stat sov"><b id="s-ep">0/20</b><span>Marks survived (CP 13.9%)</span></div>
+    <div class="stat sov"><b>0/20</b><span>Marks survived (CP 13.9%)</span></div>
   </div>
 </div>
 
@@ -175,44 +175,171 @@ if(viewer){
   (function(){var arc=document.getElementById('ring-arc'),pct=document.getElementById('ring-pct');
     arc.setAttribute('stroke-dashoffset','138.2');pct.textContent='0/20';})();
 
-  // sovereign town live feed
-  function fmt(n){if(n>=1e9)return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';if(n>=1e6)return Math.round(n/1e6)+'M';if(n>=1e3)return Math.round(n/1e3)+'k';return String(n);}
-  fetch('https://proofof-site.vercel.app/sovereign-town/status.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
-  }).catch(function(){});
+  // Fetch live anchor nodes from Workers API (D1-backed)
+  (function(){
+    var API='https://csoai-gspc-api.nicholastempleman.workers.dev';
+    // Node coordinates for the 15 anchor sources
+    var COORDS={
+      'UK legislation.gov.uk':{lng:-0.12,lat:51.5},
+      'EU EUR-Lex CELLAR':{lng:4.4,lat:50.8},
+      'C2PA Specification 2.4':{lng:-122.4,lat:37.8},
+      'NIST IR 8547 / FIPS 204':{lng:-77,lat:38.9},
+      'RFC 9964 (ML-DSA for COSE)':{lng:-122.4,lat:37.8},
+      'Crosswalk registry':{lng:0,lat:20},
+      'US GovInfo USLM':{lng:-77,lat:38.9},
+      'Canada Justice XML':{lng:-75.7,lat:45.4},
+      'Japan e-Gov Law API':{lng:139.7,lat:35.7},
+      'China NPC':{lng:116.4,lat:39.9},
+      'MITRE ATT&CK':{lng:-77,lat:38.9},
+      'UK ATRS':{lng:-0.12,lat:51.5},
+      'Sigstore / cosign':{lng:-122.4,lat:37.8},
+      'OpenSSF Scorecard':{lng:-122.4,lat:37.8},
+      'NVD / CVE':{lng:-77,lat:38.9}
+    };
+    var STATUS_COL={'LIVE':'#34d399','STALE':'#f59e0b','UNKNOWN':'#f59e0b','UNREACHABLE':'#ef4444','CITED':'#64748b','AUTHORED':'#64748b'};
+    fetch(API+'/api/anchors',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      if(!d||!d.watchers)return;
+      var nodes=d.watchers.map(function(w){
+        var c=COORDS[w.source]||{lng:0,lat:0};
+        return{id:w.source,name:w.source,lng:c.lng,lat:c.lat,status:w.status,col:STATUS_COL[w.status]||'#64748b'};
+      });
+      // Send to globe via postMessage (self-hosted, same window)
+      window.postMessage({cmd:'layer0',nodes:nodes},'*');
+      // Update HUD stats
+      var live=d.watchers.filter(function(w){return w.status==='LIVE';}).length;
+      var unknown=d.watchers.filter(function(w){return w.status!=='LIVE'&&w.status!=='STALE';}).length;
+      var el=document.getElementById('s-ung');if(el)el.textContent=unknown;
+    }).catch(function(){});
+  })();
 
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
   setTimeout(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; },3500);
 }
 
   // ───────────────────────────────────────────────────────────────────────────
-  // postMessage API — the parent (WorldGlobe.tsx) drives the globe through here.
-  // This listener did not exist until 2026-07-30: drive() posted into a void and
-  // every flyTo/pulse from the React side silently did nothing.
-  //   {cmd:'flyTo', lng, lat, height?, duration?}
+  // postMessage API — the parent (SovSpace.tsx / WorldGlobe.tsx) drives the
+  // globe through here. This listener did not exist until 2026-07-30: drive()
+  // posted into a void and every flyTo/pulse from the React side silently did
+  // nothing.
+  //   {cmd:'flyTo', lng, lat, height?, duration?, col?} — also auto-pulses
   //   {cmd:'pulse', lng, lat, col?}            — expanding ring at a point
   //   {cmd:'layer', tag, on}                    — toggle entities by layerTag
   //   {cmd:'layer0', nodes:[{id,name,lng,lat,status,col}]} — plot the anchor nodes
   //   {cmd:'neutralize'}                        — clear pulses
+  //   {cmd:'home', duration?}                   — back to the whole-earth view
+  //   {cmd:'bftSpiral', lng?, lat?}             — convene the 33-seat council
+  //                                             spiral at a point (default:
+  //                                             current camera target)
+  //   {cmd:'rainbowStack', lng?, lat?}          — seven-layer defence-in-depth
+  //                                             rings at a point
+  //   {cmd:'lightup'}                           — pulse every sovereign node
+  //   {cmd:'clearViz'}                          — clear spiral/stack/pulses
+  //   {cmd:'stamps', stamps:[{id,kind,region,lng,lat,claim,ts,scenario?,tag?,weight?,space?}]}
+  //                                           — plot the sov-time stamps as
+  //                                             clickable glyphs. Each stamp
+  //                                             represents a position on the
+  //                                             dome — presence, cspace-step,
+  //                                             cspace-verdict. Clicking it
+  //                                             surfaces the underlying
+  //                                             position + scenario it came
+  //                                             from via postMessage {cmd:'stampClick',id}.
+  //   {cmd:'stampsClear'}                       — remove all stamp glyphs
+  //   {cmd:'stampClick', id, payload}          — outgoing: a stamp was clicked
+  // Commands posted before Cesium is ready are buffered on window.__sovBuf
+  // and flushed once the viewer exists (see the flush at the bottom).
   var L0 = {};      // id -> entity
   var pulses = [];
-  window.addEventListener('message', function(ev){
-    var d = ev && ev.data; if(!d || !d.cmd || !viewer) return;
+  var VIZ = [];     // spiral / rainbow entities, cleared by clearViz
+  var STAMPS = {};  // stamp id -> entity
+  var STAMPS_META = {};  // stamp id -> full payload (for click handler)
+
+  function addPulse(lng, lat, colCss){
+    var col = Cesium.Color.fromCssColorString(colCss||'#34d399');
+    var start = Date.now();
+    var e = viewer.entities.add({ layerTag:'viz', position:Cesium.Cartesian3.fromDegrees(lng,lat),
+      ellipse:{ semiMajorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
+                semiMinorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
+                material:col.withAlpha(0.22), outline:true, outlineColor:col, height:0 } });
+    pulses.push(e);
+    if(pulses.length>6){ viewer.entities.remove(pulses.shift()); }
+  }
+
+  function cameraTarget(){
+    try{
+      var c = viewer.camera.positionCartographic;
+      return { lng: Cesium.Math.toDegrees(c.longitude), lat: Cesium.Math.toDegrees(c.latitude) };
+    }catch(e){ return { lng: 10, lat: 25 }; }
+  }
+
+  function bftSpiral(lng, lat){
+    // 33 seats of the Byzantine council, golden-angle spiral, alternating
+    // emerald (voters) / amber (generals). One ring binds the quorum.
+    clearViz();
+    for(var i=0;i<33;i++){
+      var a = i * 2.399963;               // golden angle (rad)
+      var r = 0.4 + i * 0.16;             // degrees, widening
+      var gen = (i % 11 === 0);           // 12 generals stand out
+      VIZ.push(viewer.entities.add({ layerTag:'viz',
+        position: Cesium.Cartesian3.fromDegrees(lng + Math.cos(a)*r, lat + Math.sin(a)*r*0.75, 150000),
+        point: { pixelSize: gen ? 9 : 5.5,
+          color: Cesium.Color.fromCssColorString(gen ? '#fbbf24' : '#34d399'),
+          outlineColor: Cesium.Color.fromCssColorString('#05080e'), outlineWidth: 1.5,
+          scaleByDistance: new Cesium.NearFarScalar(1.5e6, 1.5, 2.0e7, 0.5) } }));
+    }
+    var ringCol = Cesium.Color.fromCssColorString('#10b981');
+    VIZ.push(viewer.entities.add({ layerTag:'viz', position: Cesium.Cartesian3.fromDegrees(lng, lat),
+      ellipse: { semiMajorAxis: 6.2*111000*0.75, semiMinorAxis: 6.2*111000*0.75,
+        material: ringCol.withAlpha(0.05), outline: true, outlineColor: ringCol.withAlpha(0.5), height: 120000 } }));
+  }
+
+  var RAINBOW = ['#ef4444','#f59e0b','#eab308','#22c55e','#3b82f6','#6366f1','#8b5cf6'];
+  function rainbowStack(lng, lat){
+    // Seven concentric raised rings — defence-in-depth: attestation, identity,
+    // transport, access, payment, memory, governance.
+    clearViz();
+    for(var i=0;i<7;i++){
+      var col = Cesium.Color.fromCssColorString(RAINBOW[i]);
+      VIZ.push(viewer.entities.add({ layerTag:'viz', position: Cesium.Cartesian3.fromDegrees(lng, lat),
+        ellipse: { semiMajorAxis: (i+1)*140000, semiMinorAxis: (i+1)*140000,
+          material: col.withAlpha(0.12), outline: true, outlineColor: col, height: 80000 + i*60000 } }));
+    }
+  }
+
+  function clearViz(){
+    VIZ.forEach(function(e){ viewer.entities.remove(e); }); VIZ = [];
+  }
+
+  function handleCmd(d, source){
+    if(!d || !d.cmd || !viewer) return;
     try{
       if(d.cmd==='flyTo'){
         viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(d.lng, d.lat-4, d.height||2200000),
           duration:(d.duration!=null?d.duration:1.8)});
+        addPulse(d.lng, d.lat, d.col);   // narration lands where the Sovereign speaks
       }
       else if(d.cmd==='pulse'){
-        var col = Cesium.Color.fromCssColorString(d.col||'#34d399');
-        var start = Date.now();
-        var e = viewer.entities.add({ position:Cesium.Cartesian3.fromDegrees(d.lng,d.lat),
-          ellipse:{ semiMajorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
-                    semiMinorAxis:new Cesium.CallbackProperty(function(){return 30000+((Date.now()-start)%2200)/2200*380000;},false),
-                    material:col.withAlpha(0.22), outline:true, outlineColor:col, height:0 } });
-        pulses.push(e);
-        if(pulses.length>3){ viewer.entities.remove(pulses.shift()); }
+        addPulse(d.lng, d.lat, d.col);
       }
       else if(d.cmd==='neutralize'){
+        pulses.forEach(function(e){viewer.entities.remove(e);}); pulses=[];
+      }
+      else if(d.cmd==='home'){
+        viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(20, 28, 26000000),
+          duration:(d.duration!=null?d.duration:2.2)});
+      }
+      else if(d.cmd==='bftSpiral'){
+        var t = (d.lng!=null && d.lat!=null) ? {lng:d.lng, lat:d.lat} : cameraTarget();
+        bftSpiral(t.lng, t.lat);
+      }
+      else if(d.cmd==='rainbowStack'){
+        var t2 = (d.lng!=null && d.lat!=null) ? {lng:d.lng, lat:d.lat} : cameraTarget();
+        rainbowStack(t2.lng, t2.lat);
+      }
+      else if(d.cmd==='lightup'){
+        NODES.forEach(function(n){ addPulse(n.c[0], n.c[1], tierC[n.tier]||'#34d399'); });
+      }
+      else if(d.cmd==='clearViz'){
+        clearViz();
         pulses.forEach(function(e){viewer.entities.remove(e);}); pulses=[];
       }
       else if(d.cmd==='layer'){
@@ -234,10 +361,117 @@ if(viewer){
               scaleByDistance:new Cesium.NearFarScalar(1.5e6,1,1.0e7,0),
               translucencyByDistance:new Cesium.NearFarScalar(2.0e6,1,1.6e7,0)} });
         });
-        try{ ev.source && ev.source.postMessage({ack:'layer0', n:Object.keys(L0).length}, '*'); }catch(e){}
+        try{ source && source.postMessage({ack:'layer0', n:Object.keys(L0).length}, '*'); }catch(e){}
+      }
+      else if(d.cmd==='stamps' && Array.isArray(d.stamps)){
+        // Each stamp is a position on the dome. The kind field chooses the
+        // visual encoding: presence = amber sky, cspace-step = emerald,
+        // cspace-verdict = bright emerald with white ring. Click surfaces the
+        // underlying payload so the parent can render the scenario it came
+        // from.
+        var KIND_COL = {
+          presence: '#fbbf24',
+          'cspace-step': '#34d399',
+          'cspace-verdict': '#10b981',
+          'cspace': '#34d399',
+        };
+        var KIND_SIZE = {
+          presence: 7,
+          'cspace-step': 5,
+          'cspace-verdict': 9,
+          'cspace': 6,
+        };
+        d.stamps.forEach(function(s){
+          if(!s || s.lng==null || s.lat==null) return;
+          // Idempotent: same id replaces, doesn't duplicate.
+          if(STAMPS[s.id]){ viewer.entities.remove(STAMPS[s.id]); }
+          var col = KIND_COL[s.kind] || '#34d399';
+          var sz = KIND_SIZE[s.kind] || 5;
+          STAMPS_META[s.id] = s;
+          var ent = viewer.entities.add({
+            layerTag: 'stamps',
+            position: Cesium.Cartesian3.fromDegrees(s.lng, s.lat, 50000),
+            point: {
+              pixelSize: sz,
+              color: Cesium.Color.fromCssColorString(col),
+              outlineColor: Cesium.Color.fromCssColorString('#05080e'),
+              outlineWidth: 1.5,
+              scaleByDistance: new Cesium.NearFarScalar(1.5e6, 1.4, 2.0e7, 0.4),
+            },
+            label: {
+              text: s.claim ? (s.claim.length > 32 ? s.claim.slice(0, 30) + '…' : s.claim) : (s.kind || 'stamp'),
+              font: '500 10px Inter, sans-serif',
+              fillColor: Cesium.Color.fromCssColorString(col),
+              outlineColor: Cesium.Color.fromCssColorString('#05080e'),
+              outlineWidth: 2,
+              style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+              pixelOffset: new Cesium.Cartesian2(0, -12),
+              scaleByDistance: new Cesium.NearFarScalar(1.5e6, 1.0, 1.0e7, 0),
+              translucencyByDistance: new Cesium.NearFarScalar(2.0e6, 1, 1.6e7, 0),
+              showBackground: true,
+              backgroundColor: Cesium.Color.fromCssColorString('#0a1015').withAlpha(0.78),
+              backgroundPadding: new Cesium.Cartesian2(5, 3),
+            },
+          });
+          STAMPS[s.id] = ent;
+        });
+      }
+      else if(d.cmd==='stampsClear'){
+        Object.values(STAMPS).forEach(function(e){ viewer.entities.remove(e); });
+        STAMPS = {};
+        STAMPS_META = {};
+      }
+      else if(d.cmd==='stampFlyTo' && d.id && STAMPS_META[d.id]){
+        var m = STAMPS_META[d.id];
+        viewer.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(m.lng, m.lat - 4, 1500000),
+          duration: 1.4,
+        });
       }
     }catch(e){ /* a bad command must never kill the globe */ }
+  }
+
+  // Buffered listener: commands posted before Cesium is ready queue on
+  // window.__sovBuf (globeDrive.ts's contract), flushed once the viewer is up.
+  window.addEventListener('message', function(ev){
+    var d = ev && ev.data;
+    if(!d || !d.cmd) return;
+    if(!viewer){ (window.__sovBuf = window.__sovBuf || []).push({ d: d, source: ev.source }); return; }
+    handleCmd(d, ev.source);
   });
+  if(viewer && Array.isArray(window.__sovBuf)){
+    window.__sovBuf.forEach(function(m){ handleCmd(m.d, m.source); });
+    window.__sovBuf = [];
+  }
+
+  if(viewer){
+  // Click handler on stamps — surfaces the underlying payload to the parent.
+  // Cesium uses ScreenSpaceEventHandler for screen-space picks. LEFT_CLICK
+  // on an entity with layerTag 'stamps' posts the payload back.
+  var stampClickHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+  stampClickHandler.setInputAction(function(click){
+    var picked = viewer.scene.pick(click.position);
+    if(picked && picked.id && picked.id.layerTag === 'stamps'){
+      // Find the stamp id by entity reference.
+      var id = null;
+      for(var k in STAMPS){
+        if(STAMPS[k] === picked.id){ id = k; break; }
+      }
+      if(id && STAMPS_META[id]){
+        // Fly on click + post the payload to the parent.
+        try{
+          viewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(STAMPS_META[id].lng, STAMPS_META[id].lat - 4, 1500000),
+            duration: 1.4,
+          });
+        }catch(e){}
+        try{
+          window.parent.postMessage({cmd:'stampClick', id: id, payload: STAMPS_META[id]}, '*');
+        }catch(e){}
+      }
+    }
+  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+  }
 
 </script>
 </body>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
+import AISystemNotice from "../components/AISystemNotice";
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 const FW = [{ name: "EU AI Act", href: "/eu-ai-act-checklist" }, { name: "NIST AI RMF", href: "/nist-vs-eu-ai-act" }, { name: "ISO 42001", href: "/iso-42001-vs-eu-ai-act" }, { name: "GDPR", href: "/eu-ai-act-vs-gdpr" }];
 const EXAMPLES = ["a hospital in Texas", "a fintech in Singapore", "an HR recruiting tool", "Germany"];
@@ -38,6 +39,7 @@ export default function GovGraph() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Governance Graph</p>
           <h1 className="mt-3 text-5xl sm:text-6xl font-black tracking-tight">The governed <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Google.</span></h1>
           <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">A search box tells you what something <i>is</i>. This tells you what the <b className="text-emerald-200">law requires</b> - jurisdiction, frameworks, and a path to a signed verdict. Live world data meets governance.</p>
+          <div className="mt-6 mx-auto max-w-xl text-left"><AISystemNotice route="/governance-graph" /></div>
           <div className="mt-7 flex gap-2">
             <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Ask about any company, place, or AI system..." className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
             <button onClick={() => run()} className="rounded-xl bg-emerald-500 px-6 py-4 text-base font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Map it"}</button>

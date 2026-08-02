@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import SovereignSpot from "../components/SovereignSpot";
+import AISystemNotice from "../components/AISystemNotice";
 // Iso42001VsEuAct - side-by-side ISO/IEC 42001 vs EU AI Act comparison + FAQPage JSON-LD.
 // High-intent answer-engine page. Zero external deps.
 type Row = { dim: string; iso: string; eu: string };
@@ -36,6 +37,7 @@ export default function Iso42001VsEuAct() {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - framework comparison</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">ISO 42001 vs the EU AI Act</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">A certifiable management standard, or binding law? You likely need both - and one evidence base can serve them together.</p>
+          <div className="mt-6 max-w-2xl"><AISystemNotice route="/iso-42001-vs-eu-ai-act" /></div>
         </div>
       </section>
       <section className="max-w-5xl mx-auto px-6 py-12">

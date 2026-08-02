@@ -91,7 +91,8 @@ export default function TrustCenter() {
     },
     {
       title: "Data Residency",
-      description: "Choose storage location: EU (Frankfurt), US (us-east-1), or APAC (Singapore)",
+      description:
+        "Site served from Cloudflare's global edge network; the measurement backend is first-party, self-hosted UK/EU. Per-region residency selection is designed, not yet offered",
       icon: <MapPin className="h-6 w-6" />,
     },
     {
@@ -125,24 +126,24 @@ export default function TrustCenter() {
     },
     {
       title: "Web Application Firewall",
-      description: "AWS WAF deployed on all public endpoints to block malicious requests",
-      detail: "Custom rules | IP reputation lists | Rate limiting",
+      description: "Network-layer filtering via Cloudflare on all public endpoints",
+      detail: "Managed rules | Rate limiting | DDoS mitigation",
     },
     {
       title: "Penetration Testing",
-      description: "Regular security assessments by third-party security firms",
-      detail: "Quarterly assessments | Red team exercises | Vulnerability remediation",
+      description: "No third-party penetration test has been performed yet. When one exists, its letter will be published in the Security Pack below",
+      detail: "Planned, not performed | Letter will be published | No fake claims",
     },
     {
       title: "Bug Bounty Program",
       description:
-        "Open bug bounty program with competitive rewards for responsible disclosure",
-      detail: "Hosted on HackerOne | Up to $50,000 rewards | 90-day disclosure policy",
+        "No paid bug-bounty programme exists today. We run a published vulnerability disclosure policy instead",
+      detail: "Responsible disclosure | security.txt (RFC 9116) | Coordinated timelines",
     },
     {
       title: "Incident Response",
-      description: "24/7 security operations center with incident response protocols",
-      detail: "15-minute detection | 1-hour containment | Root cause analysis",
+      description: "Incident response follows the published protocol below and the honest incident log on /status. There is no staffed 24/7 security operations center today",
+      detail: "Published protocol | Public incident log | Root cause analysis",
     },
   ];
 
@@ -202,7 +203,7 @@ export default function TrustCenter() {
       id: "encryption",
       title: "What encryption standards do you use?",
       content:
-        "We use AES-256 for data at rest and TLS 1.3 for data in transit. All encryption keys are managed through AWS KMS with regular rotation. We also support customer-managed keys (CMK) for enterprise clients who require additional key management control.",
+        "We use AES-256 for data at rest and TLS 1.3 for data in transit, with keys managed on first-party infrastructure. Customer-managed keys (CMK) are a roadmap item, not a shipped feature — we do not claim key-management controls that are not deployed.",
       icon: <Lock className="h-5 w-5" />,
     },
     {
@@ -216,21 +217,21 @@ export default function TrustCenter() {
       id: "data-location",
       title: "Where is my data stored?",
       content:
-        "You can choose your data residency location during account setup: EU (Frankfurt), US (us-east-1), or APAC (Singapore). Data is always encrypted and never replicated across regions without explicit permission. We maintain separate infrastructure per region to ensure compliance with local data protection laws.",
+        "The public site is served from Cloudflare's global edge network, and the measurement backend (os.meok.ai) is first-party infrastructure in the UK/EU. Per-region residency selection (EU/US/APAC) is designed but not yet offered — when it ships, this answer will name the regions and the safeguards.",
       icon: <MapPin className="h-5 w-5" />,
     },
     {
       id: "incident-response",
       title: "What is your incident response process?",
       content:
-        "We maintain 24/7 security monitoring with automated threat detection. In case of a security incident: (1) Detection and containment within 15 minutes, (2) Notification to affected users within 24 hours, (3) Root cause analysis within 72 hours, (4) Public incident report within 30 days. We also maintain cyber insurance coverage.",
+        "There is no staffed 24/7 security operations center today. Public probes on /status surface failures as they happen. In case of a confirmed security incident: (1) affected users are notified within 24 hours, (2) root cause analysis is completed within 72 hours, (3) a public incident report is published on /status. Response-time figures elsewhere on this page are design targets, not measurements.",
       icon: <AlertTriangle className="h-5 w-5" />,
     },
     {
       id: "penetration-testing",
       title: "How often do you conduct security assessments?",
       content:
-        "We conduct quarterly external penetration testing by certified third-party security firms. Additionally, we perform monthly internal security audits and continuous vulnerability scanning. Red team exercises are conducted bi-annually. All findings are tracked in our vulnerability management system with SLA-based remediation timelines.",
+        "No external penetration test has been conducted yet — we say so rather than imply one. Continuous vulnerability scanning runs on the dependency tree, and when a third-party assessment exists, its letter will be published on this page and listed in the Security Pack.",
       icon: <Shield className="h-5 w-5" />,
     },
     {
@@ -258,16 +259,16 @@ export default function TrustCenter() {
 
   const incidentResponseDetails = [
     {
-      metric: "24/7 Monitoring",
-      description: "Continuous security monitoring with AI-powered threat detection",
+      metric: "Monitoring — designed",
+      description: "Automated health probes run against the public status page; no staffed 24/7 operations center exists today",
     },
     {
-      metric: "15-Minute Detection",
-      description: "Average time to detect and confirm security incidents",
+      metric: "Detection — target 15 min",
+      description: "Design target for detecting a probe failure — not yet a measured figure",
     },
     {
-      metric: "1-Hour Containment",
-      description: "Target time to contain and isolate affected systems",
+      metric: "Containment — target 1 hour",
+      description: "Design target to contain and isolate affected systems — not yet a measured figure",
     },
     {
       metric: "24-Hour Notification",
@@ -403,10 +404,11 @@ export default function TrustCenter() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Certifications</Badge>
-            <h2 className="text-4xl font-bold mb-6">Industry-Leading Certifications</h2>
+            <h2 className="text-4xl font-bold mb-6">Certification Status, Marked Honestly</h2>
             <p className="text-xl text-gray-600">
-              CSOAI maintains the highest level of security and compliance certifications, verified by
-              independent auditors.
+              Frameworks below are marked &ldquo;In Progress&rdquo; because they are genuinely in
+              progress. Nothing on this page is claimed as attained until an assessor&rsquo;s letter
+              exists — and when one does, it will be published here.
             </p>
           </div>
 
@@ -444,8 +446,8 @@ export default function TrustCenter() {
             </Badge>
             <h2 className="text-4xl font-bold mb-6">Enterprise-Grade Data Protection</h2>
             <p className="text-xl text-gray-600">
-              Your data is protected with military-grade encryption and compliance with global data
-              protection regulations.
+              Your data is protected with industry-standard encryption (AES-256 at rest, TLS 1.3 in
+              transit) and compliance with global data protection regulations.
             </p>
           </div>
 
@@ -463,26 +465,18 @@ export default function TrustCenter() {
             ))}
           </div>
 
-          {/* Data Residency Details */}
+          {/* Data Residency — honest status */}
           <Card className="mt-12 p-8 bg-white border-2 border-emerald-100">
             <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
               <MapPin className="h-6 w-6 text-emerald-600" />
-              Data Residency Options
+              Data Residency — Current Status
             </h3>
-            <div className="grid md:grid-cols-3 gap-6 mt-6">
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-bold text-blue-900 mb-2">EU Region</h4>
-                <p className="text-sm text-blue-700">Frankfurt, Germany - GDPR optimized</p>
-              </div>
-              <div className="p-4 bg-amber-50 rounded-lg">
-                <h4 className="font-bold text-amber-900 mb-2">US Region</h4>
-                <p className="text-sm text-amber-700">us-east-1, Virginia - Lowest latency for Americas</p>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg">
-                <h4 className="font-bold text-purple-900 mb-2">APAC Region</h4>
-                <p className="text-sm text-purple-700">Singapore - Optimized for Asia-Pacific</p>
-              </div>
-            </div>
+            <p className="text-gray-600 mt-2">
+              The public site is served from Cloudflare&rsquo;s global edge network; the measurement
+              backend (os.meok.ai) runs on first-party infrastructure in the UK/EU. A per-region
+              residency choice (EU / US / APAC) is designed but <strong>not yet offered</strong> —
+              this card will name regions and safeguards on the day it ships, not before.
+            </p>
           </Card>
         </div>
       </div>
@@ -745,10 +739,10 @@ export default function TrustCenter() {
             <Badge className="mb-4 bg-blue-500/20 text-blue-300 border-blue-500/30">
               Operations
             </Badge>
-            <h2 className="text-4xl font-bold mb-6">24/7 Monitoring & Incident Response</h2>
+            <h2 className="text-4xl font-bold mb-6">Monitoring & Incident Response</h2>
             <p className="text-xl text-gray-300">
-              Our security operations center provides round-the-clock monitoring and rapid response to
-              any security events.
+              The figures below are design targets, marked as such. Live component status and the
+              honest incident log are public at csoai.org/status.
             </p>
           </div>
 
@@ -791,7 +785,7 @@ export default function TrustCenter() {
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-300 mb-2">1</div>
                 <h4 className="font-semibold mb-2">Detection</h4>
-                <p className="text-sm text-gray-300">Automated threat detection within 15 minutes</p>
+                <p className="text-sm text-gray-300">Automated probes surface failures on /status</p>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-300 mb-2">2</div>

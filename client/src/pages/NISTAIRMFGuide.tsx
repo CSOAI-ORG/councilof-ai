@@ -5,6 +5,7 @@
 
 import { motion } from "framer-motion";
 import SovereignSpot from "@/components/SovereignSpot";
+import AISystemNotice from "@/components/AISystemNotice";
 import {
   Shield, CheckCircle2, Target, BarChart3, Cog, FileText,
   BookOpen, ArrowRight, ExternalLink, Layers, Network, Eye,
@@ -481,6 +482,7 @@ export default function NISTAIRMFGuide() {
               A voluntary, comprehensive approach to managing AI risks throughout the AI lifecycle.
               Learn the four core functions, seven trustworthy characteristics, and practical implementation.
             </p>
+            <div className="text-left"><AISystemNotice route="/frameworks/nist" /></div>
             <div className="flex flex-wrap gap-4 justify-center pt-4">
               <Link href="/courses">
                 <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">

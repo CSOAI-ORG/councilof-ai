@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, Redirect } from "wouter";
 import { useEffect, lazy, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { SectionLoader } from "./components/PageLoader";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
@@ -46,6 +47,7 @@ const Settings = lazy(() => import("./pages/Settings"));
 const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
 // Training removed - using Training-v2 instead
 const TrainingV2 = lazy(() => import("./pages/Training-v2"));
+const TrainingHub = lazy(() => import("./pages/TrainingHub"));
 const Courses = lazy(() => import("./pages/Courses"));
 const MyCourses = lazy(() => import("./pages/MyCourses"));
 const CoursePlayer = lazy(() => import("./pages/CoursePlayer"));
@@ -431,7 +433,7 @@ function WidgetRouter() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <WidgetLayout>
-            <Suspense fallback={<div style={{ minHeight: "60vh" }} />}><Switch>
+            <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
               <Route path="/widget" component={WidgetCourses} />
               <Route path="/widget/course/:courseId" component={WidgetCoursePlayer} />
               <Route>
@@ -491,7 +493,7 @@ function App() {
                   aria-label="Main content"
                   tabIndex={-1}
                 >
-                  <Suspense fallback={<div style={{ minHeight: "60vh" }} />}><Switch>
+                  <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
                   {/* Main routes */}
                   <Route path="/" component={NewHomeV2} />
                   <Route path="/login" component={Login} />
@@ -785,6 +787,8 @@ function App() {
                   <Route path="/settings/billing" component={Billing} />
                   <Route path="/settings/notifications" component={NotificationSettings} />
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
+                  <Route path="/training-hub" component={TrainingHub} />
+                  <Route path="/drift-product" component={DriftProduct} />
                   <Route path="/training" component={TrainingV2} />
                   <Route path="/courses" component={Courses} />
                   <Route path="/my-courses" component={MyCourses} />

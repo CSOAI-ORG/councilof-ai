@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
 import DashboardLayout from "@/components/DashboardLayout";
+import AISystemNotice from "@/components/AISystemNotice";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 
@@ -141,6 +142,9 @@ export default function Home() {
   return (
     <DashboardLayout>
       <div className="flex flex-col h-full">
+        <div className="px-4 pt-4 max-w-3xl mx-auto w-full">
+          <AISystemNotice route="/old-home" />
+        </div>
         {/* Messages Area or Welcome Screen */}
         <div className="flex-1 overflow-y-auto">
           {hasMessages ? (

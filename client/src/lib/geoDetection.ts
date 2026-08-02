@@ -31,23 +31,10 @@ const COUNTRY_TO_LANGUAGE: Record<string, string> = {
 };
 
 export async function detectUserRegion(): Promise<{ country: string; language: string }> {
-  try {
-    // Try to get country from IP geolocation API
-    const response = await fetch('https://ipapi.co/json/');
-    const data = await response.json();
-    const countryCode = data.country_code as string;
-    
-    if (countryCode && COUNTRY_TO_LANGUAGE[countryCode]) {
-      return {
-        country: countryCode,
-        language: COUNTRY_TO_LANGUAGE[countryCode],
-      };
-    }
-  } catch (error) {
-    console.warn('Failed to detect region from IP:', error);
-  }
-
-  // Fallback to browser locale detection
+  // Ship gate (audit P1-2): public surfaces stay IP-geolocation-free. The old
+  // ipapi.co call leaked every visitor's IP to a third party on first load.
+  // Region/language now comes from the browser locale (client-side only) or a
+  // manual pick via lib/geolibre.ts — never a third-party IP lookup.
   return detectBrowserLocale();
 }
 

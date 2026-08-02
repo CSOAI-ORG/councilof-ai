@@ -61,7 +61,7 @@ const STEPS: Step[] = [
   { say: "Own your AI. Own your data. Start free, scale when you need. That's your OS - and I'm always right here. Ask me anything, any time.", wins: [{ title: "Plans", src: "/pricing", slot: "tr" }], home: true },
 ];
 
-const BOOT = ["Establishing governed link", "Loading Sovereign Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "33-agent Council of AI online", "Care-floor engaged"];
+const BOOT = ["Establishing governed link", "Loading Sovereign Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "Loading council design (not yet live — DR-0007)", "Care-floor engaged"];
 
 // Navigation surfaces for the OS drawer + bottom bar (end-user tool navigation).
 const NAV_GROUPS: { g: string; items: { n: string; src: string }[] }[] = [

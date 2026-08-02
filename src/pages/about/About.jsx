@@ -6,8 +6,8 @@ const About = () => {
     <div className="about-page">
       <section className="about-hero">
         <div className="container">
-          <h1 className="gradient-text">About councilof.ai</h1>
-          <p className="subtitle">The World's First Democratic AI Governance Platform</p>
+          <h1 className="gradient-text">About CSOAI</h1>
+          <p className="subtitle">Council Safety of AI — AI Governance, Cybersecurity & Safety</p>
         </div>
       </section>
 
@@ -29,7 +29,7 @@ const About = () => {
 
       <section className="company-section">
         <div className="container">
-          <h2>AI Safety Governments Limited</h2>
+          <h2>AI Safety Governance Limited</h2>
           <p>
             Registered in the United Kingdom, AI Safety Governments Limited operates the world's first comprehensive 
             AI safety ecosystem. We're building the infrastructure for trustworthy AI through:
@@ -146,10 +146,10 @@ const About = () => {
           <h2>The AI Safety Empire</h2>
           <p className="section-subtitle">11 interconnected platforms, one unified mission</p>
           <div className="ecosystem-platforms">
-            <a href="https://councilof.ai" className="platform-link">
+            <a href="https://csoai.org" className="platform-link">
               <div className="platform-icon">🏛️</div>
-              <div className="platform-name">councilof.ai</div>
-              <div className="platform-desc">Democratic Governance</div>
+              <div className="platform-name">csoai.org</div>
+              <div className="platform-desc">AI Governance & Safety</div>
             </a>
             <a href="https://proofof.ai" className="platform-link">
               <div className="platform-icon">🔍</div>

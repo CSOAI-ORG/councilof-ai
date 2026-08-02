@@ -51,44 +51,70 @@ export function ArenaGlobe() {
   return (
     <section>
       <h2 className="text-2xl font-bold text-emerald-50">Jurisdiction globe</h2>
-      <p className="mt-1 text-[13px] text-emerald-100/60">
+      <p className="mt-1 text-[13px] text-emerald-100/50">
         Click a match below — or a jurisdiction on the globe — to light it everywhere:
         globe, signed C-space branches, and J-space records are one connected surface.
-        Polygons, not pins. No IP geolocation. Keyless basemap.
       </p>
+
+      {/* Currently lit indicator */}
+      {active && (
+        <div className="mt-3 flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/[0.06] px-3 py-2">
+          <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+          <span className="font-mono text-[11px] text-amber-300">
+            {active} lit
+          </span>
+          {source && (
+            <span className="text-[11px] text-amber-300/60">
+              via {source}
+            </span>
+          )}
+          <span className="flex-1" />
+          <button
+            onClick={clear}
+            className="font-mono text-[10px] text-amber-300/50 hover:text-amber-200 transition-colors cursor-pointer"
+          >
+            clear
+          </button>
+        </div>
+      )}
 
       <div className="mt-4">
         <Globe highlight={active} onSelect={handleGlobeSelect} showStats />
       </div>
 
-      {/* Quick-match selector */}
-      <div className="mt-3 flex flex-wrap gap-2">
-        {ARENA_MATCHES.map((m) => (
+      {/* Quick-match selector — horizontal scrollable chip strip */}
+      <div className="mt-3 flex gap-2 overflow-x-auto pb-1 scrollbar-hidden">
+        {ARENA_MATCHES.map((m) => {
+          const isSelected = selectedMatch === m.id;
+          return (
+            <button
+              key={m.id}
+              onClick={() => handleMatchClick(m.id)}
+              className={`whitespace-nowrap rounded-full border px-3 py-1.5 font-mono text-[11px] transition-all cursor-pointer shrink-0 ${
+                isSelected
+                  ? "border-amber-400/60 bg-amber-500/15 text-amber-200 shadow-sm shadow-amber-500/10"
+                  : "border-emerald-500/20 text-emerald-100/60 hover:border-emerald-400/40 hover:text-emerald-200 hover:bg-emerald-500/5"
+              }`}
+            >
+              {m.id}: {m.subject_a.id} vs {m.subject_b.id}
+            </button>
+          );
+        })}
+        {!active && !selectedMatch && (
           <button
-            key={m.id}
-            onClick={() => handleMatchClick(m.id)}
-            className={`rounded border px-2 py-1 font-mono text-[11px] transition-colors cursor-pointer ${
-              selectedMatch === m.id
-                ? "border-amber-400/50 bg-[#03110b] text-amber-300"
-                : "border-emerald-500/25 text-emerald-100/70 hover:border-emerald-400/50 hover:text-emerald-200"
-            }`}
+            onClick={clear}
+            className="whitespace-nowrap rounded-full border border-emerald-500/15 px-3 py-1.5 font-mono text-[11px] text-emerald-100/30 transition-colors cursor-pointer shrink-0 hover:border-emerald-400/30 hover:text-emerald-100/50"
           >
-            {m.id}: {m.subject_a.id} vs {m.subject_b.id}
+            Clear
           </button>
-        ))}
-        <button
-          onClick={clear}
-          className="rounded border border-emerald-500/25 px-2 py-1 font-mono text-[11px] text-emerald-100/45 transition-colors cursor-pointer hover:border-emerald-400/40 hover:text-emerald-100/70"
-        >
-          Clear
-        </button>
+        )}
       </div>
 
-      <p className="mt-2 text-[11px] text-emerald-100/45">
-        {active
-          ? `${active} is lit${source ? ` (via ${source})` : ""} — matching C-space branches and J-space records carry the amber ring below.`
-          : "The globe, the branches, and the J-space replay are connected — light one, light them all."}
-      </p>
+      {!active && (
+        <p className="mt-2 text-[11px] text-emerald-100/35 font-mono">
+          Polygons, not pins. No IP geolocation. Keyless basemap.
+        </p>
+      )}
     </section>
   );
 }

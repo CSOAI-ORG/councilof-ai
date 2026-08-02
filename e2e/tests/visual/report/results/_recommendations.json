@@ -1,0 +1,42 @@
+{
+  "route": "/recommendations",
+  "navStatus": 200,
+  "navError": "",
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+  ],
+  "failedRequests": [
+    {
+      "url": "http://localhost:4173/api/worker/ledger/stats",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/worker/anchors",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/worker/anchors",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/trpc/recommendations.getRecommendations,recommendations.getCategories,recommendations.getDismissedIds,recommendations.getStats,recommendations.getInteractionHistory,recommend",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/trpc/recommendations.getRecommendations,recommendations.getCategories,recommendations.getDismissedIds,recommendations.getStats?batch=1&input=%7B%220%22%3A%7B%22limit%22%3A20%",
+      "status": 500
+    },
+    {
+      "url": "http://localhost:4173/api/trpc/recommendations.getInteractionHistory,recommendations.getAnalytics?batch=1&input=%7B%220%22%3A%7B%22limit%22%3A20%7D%2C%221%22%3A%7B%22periodType%22%3A%22monthly%22%2C%2",
+      "status": 500
+    }
+  ],
+  "screenshot": "shots/_recommendations.png",
+  "sweptAt": "2026-08-01T09:17:10.511Z"
+}
