@@ -18,7 +18,7 @@ export function Footer() {
       title: 'Platform',
       links: [
         { name: 'Training Courses', href: '/training' },
-        { name: 'Certification', href: '/certification' },
+        { name: 'Attestation', href: '/certification' },
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
         { name: 'API Documentation', href: '/api-docs' },
@@ -29,7 +29,7 @@ export function Footer() {
       links: [
         { name: 'Global AI Regulation Tracker', href: '/global-ai-regulation' },
         { name: 'Framework Crosswalk (13×8)', href: '/crosswalk' },
-        { name: 'Article 50 — transparency', href: '/article-50' },
+        { name: 'Article 50 — transparency', href: '/ai-transparency' },
         { name: 'Agent Governance', href: '/agent-governance' },
         { name: 'DORA (financial services)', href: '/dora' },
         { name: 'EU AI Act', href: '/frameworks/eu-ai-act' },
@@ -156,7 +156,7 @@ export function Footer() {
               <span className="text-2xl font-bold">CSOAI</span>
             </Link>
             <p className="text-gray-600 text-sm mb-4">
-              Building the future of AI safety through independent training, certification, and transparent oversight.
+              Building the future of AI safety through independent training, signed attestation, and transparent measurement.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (

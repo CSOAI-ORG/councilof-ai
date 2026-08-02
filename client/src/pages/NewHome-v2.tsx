@@ -211,12 +211,12 @@ const faqs = [
     answer: "CSOAI (Civil Society Oversight of AI) is an independent, relationship-based AI safety infrastructure organization. We provide operational infrastructure for AI governance, combining licensing, training, monitoring, and economic redistribution into one unified platform. Unlike think tanks, we offer market-driven enforcement and real operational systems.",
   },
   {
-    question: "How do I get certified as an AI Safety Analyst?",
-    answer: "Getting certified is a 3-step process: First, complete our free comprehensive training covering EU AI Act, NIST AI RMF, ISO 42001, and other frameworks. Second, pass the certification examination to prove your competency. Third, apply for positions in our job marketplace. The entire process can be completed online at your own pace.",
+    question: "How do I get attested as an AI Safety Analyst?",
+    answer: "Getting attested is a 3-step process: First, complete our free comprehensive training covering EU AI Act, NIST AI RMF, ISO 42001, and other frameworks. Second, pass the attestation examination to prove your competency. Third, apply for positions in our job marketplace. The entire process can be completed online at your own pace.",
   },
   {
     question: "Is training really free?",
-    answer: "Yes, ALL 33 courses are 100% free - including Foundation courses, Regional Compliance courses (EU AI Act, NIST, UK, Canada, Australia), and all Industry Specialization courses. The only costs are the certification exam (£49 one-time) and the Analyst License (£199/year or £19.99/month) which is only required if you want to work as a paid analyst.",
+    answer: "Yes, ALL 33 courses are 100% free - including Foundation courses, Regional Compliance courses (EU AI Act, NIST, UK, Canada, Australia), and all Industry Specialization courses. The only costs are the attestation exam (£49 one-time) and the Analyst License (£199/year or £19.99/month) which is only required if you want to work as a paid analyst.",
   },
   {
     question: "How does the Byzantine Council work?",
@@ -232,7 +232,7 @@ const faqs = [
   },
   {
     question: "Can I earn money as an AI Safety Analyst?",
-    answer: "Yes — it's a real, paid role. Rates on the marketplace currently range roughly £45–150/hour depending on experience, specialisation, and demand, and the work is remote with hours you set. Earnings vary and are not guaranteed — they depend on how much you work and the demand for your specialisation. Our job marketplace connects you directly with enterprises needing compliance monitoring.",
+    answer: "Yes — it's a real, paid role. The work is remote with hours you set. Rates will be set by the marketplace once live and published as measured aggregates — we don't quote invented figures. Earnings will vary and are not guaranteed; they depend on how much you work and the demand for your specialisation. Our job marketplace connects you directly with enterprises needing compliance monitoring.",
   },
   {
     question: "How do enterprises register AI systems?",
@@ -257,97 +257,106 @@ export default function NewHomeV2() {
         {/* Animated particles */}
         <AnimatedParticles />
 
-        {/* Hero content */}
-        <div className="relative z-10 container mx-auto px-6 py-24 text-center max-w-6xl">
-          {/* Kicker — arena.ai's lesson: the tool is the hero. One line of context,
-              then the working surface, then actions. The slogan moved below the console. */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-emerald-300/80"
-          >
-            Describe an AI system. Get the provisions that bind — deterministically.
-          </motion.p>
-          {/* The console replaces the countdown here. A countdown measures the calendar;
-              the console dispatches to deterministic tools and shows what they return.
-              It is EXTERNAL to the instrument: no model in the verdict path, no egress,
-              nothing written anywhere. See the docblock in SovereignConsole.tsx. */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="mb-10"
-          >
-            <SovereignConsole />
-          </motion.div>
-          {/* Main headline — clean, arena.ai-style */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 leading-tight tracking-tight"
-          >
-            Unifying the World's
-            <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">
-              Response to AI
-            </span>
-          </motion.h1>
+        {/* Hero content — two-column on lg: the claim leads on the left, the working
+            instrument proves it on the right. Mobile stacks claim → CTAs → console. */}
+        <div className="relative z-10 container mx-auto px-6 py-12 lg:py-24 max-w-7xl">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
+            {/* Left — the claim */}
+            <div className="text-center lg:text-left">
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="mb-4 text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-emerald-300/80"
+              >
+                Describe an AI system. Get the provisions that bind — deterministically.
+              </motion.p>
 
-          {/* Sub-headline */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed"
-          >
-            Training, licensing, monitoring, and prosperity
-            <span className="text-emerald-400 font-semibold"> — one platform</span> for
-            humanity's AI safety future.
-          </motion.p>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="text-4xl md:text-6xl xl:text-7xl font-bold text-white mb-5 leading-[1.05] tracking-tight"
+              >
+                Measured,
+                <br />
+                <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">
+                  not modelled.
+                </span>
+              </motion.h1>
 
-          {/* Two focused CTAs — arena.ai pattern: one primary, one secondary */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="mb-8 flex flex-col sm:flex-row gap-4 justify-center items-center"
-          >
-            <Link href="/assess">
-              <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">
-                Free AI Risk Check — signed in 2 min
-              </Button>
-            </Link>
-            <Link href="/sov-space">
-              <Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">
-                Try Sov Space
-              </Button>
-            </Link>
-          </motion.div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.25 }}
+                className="text-base md:text-xl text-gray-300 mb-7 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+              >
+                {canonValue("totalProvisions")} frozen statutory provisions. Four lenses.
+                Zero models in the verdict path — every verdict{" "}
+                <span className="text-emerald-400 font-semibold">cited and signed</span>,
+                every failure{" "}
+                <Link href="/refutation-ledger" className="text-emerald-400 font-semibold underline decoration-dotted hover:text-emerald-300">
+                  published
+                </Link>
+                .
+              </motion.p>
 
-          {/* Scale indicators — arena.ai credibility pattern (sourced from canon) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-6 text-sm text-gray-400"
-          >
-            <span><span className="text-emerald-400 font-bold">{canonValue("totalProvisions")}</span> statutory provisions</span>
-            <span className="text-gray-600">·</span>
-            <span><span className="text-emerald-400 font-bold">{canonValue("frameworks")}</span> frameworks crosswalked</span>
-            <span className="text-gray-600">·</span>
-            <span><span className="text-emerald-400 font-bold">{canonValue("councilAgents")}</span> signed agents in the network</span>
-            <span className="text-gray-600">·</span>
-            <span><span className="text-emerald-400 font-bold">0</span> models in the verdict path</span>
-          </motion.div>
+              {/* Two focused CTAs — arena.ai pattern: one primary, one secondary */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.4 }}
+                className="mb-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
+              >
+                <Link href="/assess">
+                  <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">
+                    Free AI Risk Check — signed in 2 min
+                  </Button>
+                </Link>
+                <Link href="/sov-space">
+                  <Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">
+                    Try Sov Space
+                  </Button>
+                </Link>
+              </motion.div>
+
+              {/* Scale indicators — arena.ai credibility pattern (sourced from canon) */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7, delay: 0.55 }}
+                className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 text-sm text-gray-400"
+              >
+                <span><span className="text-emerald-400 font-bold">{canonValue("totalProvisions")}</span> statutory provisions</span>
+                <span className="text-gray-600">·</span>
+                <span><span className="text-emerald-400 font-bold">{canonValue("frameworks")}</span> frameworks crosswalked</span>
+                <span className="text-gray-600">·</span>
+                <span><span className="text-emerald-400 font-bold">{canonValue("councilAgents")}</span> signed agents</span>
+                <span className="text-gray-600">·</span>
+                <span><span className="text-emerald-400 font-bold">0</span> models in the verdict path</span>
+              </motion.div>
+            </div>
+
+            {/* Right — the proof. The console replaces the countdown here. A countdown
+                measures the calendar; the console dispatches to deterministic tools and
+                shows what they return. It is EXTERNAL to the instrument: no model in the
+                verdict path, no egress, nothing written anywhere. The Art 50 notice rides
+                inside it — see the docblock in SovereignConsole.tsx. */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <SovereignConsole />
+            </motion.div>
+          </div>
 
           {/* Scroll indicator */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            className="absolute bottom-6 left-1/2 -translate-x-1/2"
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
@@ -398,7 +407,7 @@ export default function NewHomeV2() {
                     <GraduationCap className="h-7 w-7 text-emerald-600" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 mb-2">Become an Analyst</h3>
-                  <p className="text-sm text-gray-600">Free training, certification, and a new career in AI safety</p>
+                  <p className="text-sm text-gray-600">Free training, attestation, and a new career in AI safety</p>
                 </CardContent>
               </Card>
             </Link>
@@ -901,9 +910,9 @@ export default function NewHomeV2() {
                 <CardContent className="space-y-3">
                   {[
                     "ALL 33 courses completely FREE",
-                    "Industry-recognized certification (£49 exam)",
+                    "Signed, verifiable attestation (£49 exam)",
                     "Analyst License: £199/year",
-                    "Marketplace rates ~£45–150/hour (varies)",
+                    "Marketplace rates published once measured",
                     "Join a growing profession",
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-2 text-gray-600 text-sm">
@@ -1160,7 +1169,7 @@ export default function NewHomeV2() {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">Human Oversight</h4>
-                    <p className="text-gray-500">Certified AI Safety Analysts review critical decisions. AI monitors AI, humans oversee all.</p>
+                    <p className="text-gray-500">Attested AI Safety Analysts review critical decisions. AI monitors AI, humans oversee all.</p>
                   </div>
                 </div>
               </div>
@@ -1305,7 +1314,7 @@ export default function NewHomeV2() {
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 AI Safety Analyst is projected to be a top-10 profession by 2045.
-                Get ahead now with completely free training - certification exam £49, Analyst License £199/year.
+                Get ahead now with completely free training - attestation exam £49, Analyst License £199/year.
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -1337,7 +1346,7 @@ export default function NewHomeV2() {
                 <Link href="/certification">
                   <Button size="lg" variant="outline">
                     <BadgeCheck className="mr-2 h-5 w-5" />
-                    Get Certified
+                    Get Attested
                   </Button>
                 </Link>
               </div>
@@ -1409,7 +1418,7 @@ export default function NewHomeV2() {
                       <Shield className="h-7 w-7 text-emerald-400" />
                     </div>
                     <div>
-                      <CardTitle className="text-2xl">CSOAI Certification</CardTitle>
+                      <CardTitle className="text-2xl">CSOAI Attestation</CardTitle>
                       <CardDescription className="text-gray-500">AI System Compliance Badge</CardDescription>
                     </div>
                   </div>
@@ -1796,7 +1805,7 @@ export default function NewHomeV2() {
               {[
                 {
                   title: "Start Training",
-                  desc: "Free courses, certification, career",
+                  desc: "Free courses, attestation, career",
                   icon: GraduationCap,
                   link: "/training",
                   primary: true,

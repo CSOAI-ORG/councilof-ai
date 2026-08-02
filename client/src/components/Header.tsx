@@ -5,7 +5,7 @@
 
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Shield, GraduationCap, Award, Eye, Building2, Landmark, FileText, Globe2, HelpCircle, BookMarked, ClipboardCheck, Factory, Handshake, ShieldCheck, BarChart2 } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Shield, GraduationCap, Award, Eye, Building2, Landmark, FileText, Globe2, HelpCircle, BookMarked, ClipboardCheck, Factory, Handshake, ShieldCheck, BarChart2, AlertTriangle } from 'lucide-react';
 import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -29,18 +29,13 @@ const navigation = [
     submenu: [
       { name: "Sov Space", href: "/sov-space", description: "Simulate and govern in real time" },
       { name: "Governance Graph", href: "/graph", description: "The governed Google" },
-      { name: "Tool Commons", href: "/tool-commons", description: "370+ governed MCP tools" },
-      { name: "Open Commons", href: "/commons", description: "Free Creative Commons media" },
-      { name: "Your Sovereign twin", href: "/sovereign-twin", description: "Your AI learns you as you use the OS" },
+      { name: "Your Sovereign Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
       { name: "Start free", href: "/start", description: "Build your own AI" },
       { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },
       { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
-  // The measurement wing — top-level because the refutation ledger is the moat: the only
-  // part of a benchmark a reader can use to calibrate trust in the rest of it. Promoting
-  // this from a submenu keeps the J-space chain discoverable to first-time visitors.
   {
     name: "Ledger",
     href: "/refutation-ledger",
@@ -60,30 +55,14 @@ const navigation = [
     description: 'The agentic governance OS',
     submenu: [
       { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
-      // The measurement wing — top-level, because the refutation ledger is the moat: it is the
-      // only part of a benchmark a reader can use to calibrate trust in the rest of it.
-      { name: 'The GSPC Instrument', href: '/instrument', description: 'Four deterministic lenses over 417 frozen provisions — no model in the verdict' },
-      { name: 'The Refutation Ledger', href: '/refutation-ledger', description: '8 experiments that killed our own theses — published, with artefacts' },
-      { name: 'Measured Results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
       { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
       { name: 'Cyber self-scan', href: '/scan', description: 'Scan your own systems with open-source tools; the Sovereign helps fix them' },
       { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },
-      { name: 'Competitor battlecards', href: '/competitors', description: 'Cited intel on Vanta, Credo AI, OneTrust + our wedge' },
-      { name: 'The Sovereign Network', href: '/network', description: '20 signed agents, one council' },
-      { name: 'The Hive', href: '/hive', description: 'Every framework, collected — click any one' },
       { name: 'The Sovereign Globe', href: '/globe', description: 'AI governance, layered on the world' },
-      { name: 'Framework Temples', href: '/temples', description: 'Each regulation at its real-world seat' },
-      { name: 'Relevance Map', href: '/map', description: 'What governs what — bridges, frameworks, gaps' },
-      { name: 'Industry Playbooks', href: '/playbooks', description: 'For your sector: frameworks, bridges, steps' },
-      { name: 'Sector Atlas', href: '/sectors', description: 'All CASA sectors mapped to frameworks + risk tier' },
       { name: 'AI governance: the guide', href: '/ai-governance', description: 'The complete map — start here' },
       { name: 'Global regulation tracker', href: '/global-ai-regulation', description: 'Every AI regime worldwide, current' },
       { name: 'Framework crosswalk', href: '/crosswalk', description: '13 frameworks × 8 controls — comply once' },
-      { name: 'Agent governance', href: '/agent-governance', description: 'Govern AI agents — the agentic era' },
-      { name: 'Article 50 countdown', href: '/article-50', description: 'The 2 Aug / 2 Dec transparency cliff' },
-      { name: 'Cyber: DORA · NIS2 · CRA', href: '/cra', description: 'The EU cybersecurity stack, crosswalked' },
       { name: 'Free AI assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps in minutes' },
-      { name: 'Rediscovered, Not Invented', href: '/lineage', description: 'The 4,000-year governance architecture' },
       { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
       { name: 'Open the full launcher', href: '/os', description: 'Every app on one grid' },
     ]
@@ -92,17 +71,14 @@ const navigation = [
     name: 'Learn',
     href: '/courses',
     icon: GraduationCap,
-    description: 'Training & certification',
+    description: 'Training & attestation',
     submenu: [
+      { name: 'Training Hub', href: '/training-hub', description: 'Gamified training on live regulations — free for everyone' },
+      { name: 'Drift Audit', href: '/drift-product', description: '£5–15k drift audit — live regulatory corpus change reports' },
       { name: 'All Courses', href: '/courses', description: 'Browse our complete course catalog' },
-      { name: 'My Learning', href: '/my-courses', description: 'Your enrolled courses and progress' },
-      { name: 'EU AI Act', href: '/courses?framework=eu', description: 'European AI regulation training' },
-      { name: 'NIST AI RMF', href: '/courses?framework=nist', description: 'US AI risk management framework' },
-      { name: 'ISO 42001', href: '/courses?framework=iso', description: 'International AI management system' },
-      { name: 'Certification Overview', href: '/certification', description: 'Certification paths and requirements' },
-      { name: 'Take Exam', href: '/certification/exam', description: 'Start your certification exam' },
-      { name: 'My Certificates', href: '/certificates', description: 'View your earned certificates' },
-      { name: 'Verify Certificate', href: '/verify-certificate', description: 'Verify any CSOAI certificate' },
+      { name: 'Attestation Overview', href: '/certification', description: 'Attestation paths and requirements' },
+      { name: 'Take Exam', href: '/certification/exam', description: 'Start your attestation exam' },
+      { name: 'Verify Record', href: '/verify-certificate', description: 'Verify any CSOAI attestation record' },
     ]
   },
   {
@@ -114,15 +90,7 @@ const navigation = [
       { name: 'Enterprise Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
       { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
       { name: 'Government Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
-      { name: 'Global Regulation Tracker', href: '/global-regulations', description: 'AI regulations across 40+ nations' },
       { name: '33-Agent Council', href: '/agent-council', description: 'Byzantine consensus system' },
-      { name: 'Command Center', href: '/command-center', description: 'Your whole governance program on one screen' },
-      { name: 'AI Policy Generator', href: '/policy-generator', description: 'Generate a board-ready AI policy' },
-      { name: 'Risk Heatmap', href: '/risk-heatmap', description: 'Likelihood × impact risk matrix' },
-      { name: 'OSCAL Studio', href: '/oscal', description: 'Import/export NIST OSCAL, FedRAMP 20x ready' },
-      { name: 'Evidence Hub', href: '/evidence', description: 'Continuous compliance evidence' },
-      { name: 'Model Registry', href: '/models', description: 'Model cards and fairness audits' },
-      { name: 'Sovereign Town', href: '/sovereign-town', description: 'The signed record of AI governance' },
       { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
       { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
     ]
@@ -135,7 +103,6 @@ const navigation = [
     submenu: [
       { name: 'Public Watchdog', href: '/public-watchdog', description: 'Crowdsourced AI incident monitoring' },
       { name: 'Report Incident', href: '/watchdog', description: 'Submit AI safety incident' },
-      { name: 'Analyst Jobs', href: '/jobs', description: 'Browse analyst opportunities' },
       { name: 'Leaderboard', href: '/leaderboard', description: 'Top performing analysts' },
     ]
   },
@@ -146,14 +113,7 @@ const navigation = [
     description: 'Charter, knowledge & trust',
     submenu: [
       { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
-      { name: 'The Maternal Covenant', href: '/charter#maternal', description: 'Care-based AI safety paradigm' },
-      { name: 'Prosperity Fund', href: '/prosperity', description: 'AI wealth redistribution & UBI' },
-      { name: 'Founding Members', href: '/founding-members', description: 'Join the first 100 members' },
       { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
-      { name: 'AI Glossary', href: '/glossary', description: '60+ governance terms defined' },
-      { name: 'Framework Crosswalks', href: '/crosswalks', description: 'Compare EU AI Act, NIST, ISO 42001, TC260' },
-      { name: 'Readiness Assessment', href: '/readiness-assessment', description: 'Evaluate your AI governance maturity' },
-      { name: 'Partners & Advisory', href: '/partners', description: 'Expert advisory services' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
       { name: 'Technology', href: '/technology', description: 'Our architecture & Byzantine Council' },
       { name: 'Blog', href: '/blog', description: 'Latest news & insights' },

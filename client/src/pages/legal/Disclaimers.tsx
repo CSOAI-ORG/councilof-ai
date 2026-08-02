@@ -244,7 +244,10 @@ export default function Disclaimers() {
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    CSOAI references typical earnings for AI Safety Analysts (e.g., $45-150/hour). Users should understand:
+                    CSOAI is pre-launch and publishes no earnings figures for AI Safety Analysts.
+                    Any historical marketing references to typical hourly rates were illustrative
+                    and have been removed. When the analyst marketplace is live, rate data will be
+                    published as measured, anonymised aggregates. Users should understand:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
@@ -252,8 +255,9 @@ export default function Disclaimers() {
                       market demand, location, and other factors outside CSOAI's control.
                     </li>
                     <li>
-                      <strong>Figures are illustrative only.</strong> Quoted hourly rates represent typical
-                      market rates, not promises of specific income.
+                      <strong>No rates are currently published.</strong> CSOAI does not quote hourly
+                      rates. Any third-party figures you may encounter are not from CSOAI and
+                      should not be relied upon.
                     </li>
                     <li>
                       <strong>Results vary significantly.</strong> Some analysts may earn more or less than

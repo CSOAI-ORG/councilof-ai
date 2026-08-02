@@ -159,11 +159,11 @@ export default function About() {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>10,000+ trained professionals ready to hire</span>
+                  <span>Free training pipeline building the analyst workforce</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>New career path for displaced workers ($45-150/hr)</span>
+                  <span>New career path for displaced workers (free training, signed attestation)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
@@ -214,7 +214,7 @@ export default function About() {
               </div>
               <h3 className="text-xl font-bold mb-3">Earn</h3>
               <p className="text-gray-600">
-                Start earning $45-150/hour reviewing AI systems. Work remotely, set your own hours, make an impact.
+                Review AI systems for real clients at market-set rates. Work remotely, set your own hours, make an impact.
               </p>
             </Card>
           </div>
@@ -415,9 +415,9 @@ export default function About() {
                 <span className="text-2xl">🟢</span>
               </div>
               <div className="text-4xl font-bold text-rose-600 mb-2">
-                99.99%
+                Unmeasured
               </div>
-              <p className="text-gray-600 font-semibold">Platform Uptime</p>
+              <p className="text-gray-600 font-semibold">Platform Uptime — see /status for probed services</p>
             </Card>
 
             <Card className="p-8 text-center bg-gradient-to-br from-teal-50 to-white border-teal-200">

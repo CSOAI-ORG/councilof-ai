@@ -236,33 +236,19 @@ const mockIncidents = [
   },
 ];
 
+// Headline figures withheld ("—") until a live incident registry feeds this
+// page — never invented. Structure retained so the bar renders.
 const mockStats = {
-  totalIncidents: 1847,
-  openIncidents: 234,
-  resolvedIncidents: 1589,
-  avgResolutionTime: 8.3,
-  incidentsByCategory: {
-    DISCRIMINATION_BIAS: 423,
-    SAFETY_VIOLATIONS: 312,
-    MISINFORMATION: 287,
-    PRIVACY_BREACHES: 245,
-    TRANSPARENCY_FAILURES: 198,
-    UNAUTHORIZED_USE: 156,
-    MANIPULATION: 98,
-    SECURITY_BREACH: 67,
-    ACCOUNTABILITY_GAP: 45,
-    OTHER: 16,
-  },
-  incidentsBySeverity: {
-    LOW: 312,
-    MEDIUM: 678,
-    HIGH: 589,
-    CRITICAL: 268,
-  },
+  totalIncidents: null,
+  openIncidents: null,
+  resolvedIncidents: null,
+  avgResolutionTime: null,
+  incidentsByCategory: {},
+  incidentsBySeverity: {},
   recentTrends: {
-    thisWeek: 47,
-    lastWeek: 38,
-    change: 23.7,
+    thisWeek: null,
+    lastWeek: null,
+    change: null,
   },
 };
 
@@ -273,58 +259,14 @@ const mockComplianceOverview = {
   criticalSystems: 24,
 };
 
-// AI System Leaderboard — DEMONSTRATION DATA, illustrative only
+// AI System Leaderboard — DEMONSTRATION layout. Scores withheld ("—") until
+// real measured systems populate the board; entries are illustrative only.
 const mockAILeaderboard = [
-  {
-    rank: 1,
-    name: "Demo Assistant Model",
-    company: "Demo Vendor A",
-    safetyScore: 98,
-    complianceScore: 97,
-    trustScore: 96,
-    incidents: 2,
-    trend: "up",
-  },
-  {
-    rank: 2,
-    name: "Demo Language Model",
-    company: "Demo Vendor B",
-    safetyScore: 96,
-    complianceScore: 98,
-    trustScore: 94,
-    incidents: 3,
-    trend: "up",
-  },
-  {
-    rank: 3,
-    name: "Demo Chat Model",
-    company: "Demo Vendor C",
-    safetyScore: 95,
-    complianceScore: 94,
-    trustScore: 95,
-    incidents: 5,
-    trend: "stable",
-  },
-  {
-    rank: 4,
-    name: "Demo Decision Model",
-    company: "Demo Vendor D",
-    safetyScore: 93,
-    complianceScore: 95,
-    trustScore: 91,
-    incidents: 8,
-    trend: "up",
-  },
-  {
-    rank: 5,
-    name: "Demo Guardian Model",
-    company: "Demo Vendor E",
-    safetyScore: 91,
-    complianceScore: 92,
-    trustScore: 90,
-    incidents: 12,
-    trend: "down",
-  },
+  { rank: 1, name: "Demo Assistant Model", company: "Demo Vendor A", safetyScore: null, complianceScore: null, trustScore: null, incidents: null, trend: "up" },
+  { rank: 2, name: "Demo Language Model", company: "Demo Vendor B", safetyScore: null, complianceScore: null, trustScore: null, incidents: null, trend: "up" },
+  { rank: 3, name: "Demo Chat Model", company: "Demo Vendor C", safetyScore: null, complianceScore: null, trustScore: null, incidents: null, trend: "stable" },
+  { rank: 4, name: "Demo Decision Model", company: "Demo Vendor D", safetyScore: null, complianceScore: null, trustScore: null, incidents: null, trend: "up" },
+  { rank: 5, name: "Demo Guardian Model", company: "Demo Vendor E", safetyScore: null, complianceScore: null, trustScore: null, incidents: null, trend: "down" },
 ];
 
 // Success Stories — DEMONSTRATION DATA, illustrative only. Not real outcomes.
@@ -714,29 +656,29 @@ export default function PublicWatchdog() {
         </div>
       </section>
 
-      {/* Live Stats Bar */}
+      {/* Stats Bar — withheld until a live registry feeds this page */}
       <section className="bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-200 py-6">
         <div className="container max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-700">{mockStats.totalIncidents.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-green-700">{mockStats.totalIncidents?.toLocaleString() ?? "—"}</div>
               <div className="text-sm text-green-600">Total Reports</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-amber-600">{mockStats.openIncidents}</div>
+              <div className="text-3xl font-bold text-amber-600">{mockStats.openIncidents ?? "—"}</div>
               <div className="text-sm text-gray-600">Open Cases</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600">{mockStats.resolvedIncidents.toLocaleString()}</div>
+              <div className="text-3xl font-bold text-green-600">{mockStats.resolvedIncidents?.toLocaleString() ?? "—"}</div>
               <div className="text-sm text-gray-600">Resolved</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">{mockStats.avgResolutionTime}</div>
+              <div className="text-3xl font-bold text-purple-600">{mockStats.avgResolutionTime ?? "—"}</div>
               <div className="text-sm text-gray-600">Avg Days to Resolve</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1">
-                <span className="text-3xl font-bold text-green-600">{mockStats.recentTrends.thisWeek}</span>
+                <span className="text-3xl font-bold text-green-600">{mockStats.recentTrends.thisWeek ?? "—"}</span>
                 <TrendingUp className="h-5 w-5 text-green-600" />
               </div>
               <div className="text-sm text-gray-600">This Week</div>
@@ -1329,25 +1271,25 @@ export default function PublicWatchdog() {
                         </td>
                         <td className="p-4 text-center">
                           <div className="inline-flex items-center gap-2">
-                            <Progress value={system.safetyScore} className="w-16 h-2" />
-                            <span className="font-semibold text-green-700">{system.safetyScore}</span>
+                            <Progress value={system.safetyScore ?? 0} className="w-16 h-2" />
+                            <span className="font-semibold text-green-700">{system.safetyScore ?? "—"}</span>
                           </div>
                         </td>
                         <td className="p-4 text-center">
                           <div className="inline-flex items-center gap-2">
-                            <Progress value={system.complianceScore} className="w-16 h-2" />
-                            <span className="font-semibold text-blue-700">{system.complianceScore}</span>
+                            <Progress value={system.complianceScore ?? 0} className="w-16 h-2" />
+                            <span className="font-semibold text-blue-700">{system.complianceScore ?? "—"}</span>
                           </div>
                         </td>
                         <td className="p-4 text-center">
                           <div className="inline-flex items-center gap-2">
-                            <Progress value={system.trustScore} className="w-16 h-2" />
-                            <span className="font-semibold text-purple-700">{system.trustScore}</span>
+                            <Progress value={system.trustScore ?? 0} className="w-16 h-2" />
+                            <span className="font-semibold text-purple-700">{system.trustScore ?? "—"}</span>
                           </div>
                         </td>
                         <td className="p-4 text-center">
-                          <Badge variant="outline" className={system.incidents < 5 ? 'border-green-300 text-green-700' : system.incidents < 10 ? 'border-amber-300 text-amber-700' : 'border-red-300 text-red-700'}>
-                            {system.incidents}
+                          <Badge variant="outline" className="border-gray-300 text-gray-600">
+                            {system.incidents ?? "—"}
                           </Badge>
                         </td>
                         <td className="p-4 text-center">
@@ -1627,23 +1569,18 @@ export default function PublicWatchdog() {
         </div>
       </section>
 
-      {/* Footer Stats */}
+      {/* Footer Stats — withheld until live; no invented community numbers */}
       <section className="py-8 bg-green-900 text-white">
         <div className="container max-w-6xl">
           <div className="flex flex-wrap items-center justify-center gap-8 text-center">
             <div>
-              <div className="text-2xl font-bold">{mockStats.totalIncidents.toLocaleString()}+</div>
+              <div className="text-2xl font-bold">{mockStats.totalIncidents?.toLocaleString() ?? "—"}</div>
               <div className="text-sm text-green-300">Incidents Reported</div>
             </div>
             <div className="w-px h-10 bg-green-700 hidden md:block" />
             <div>
-              <div className="text-2xl font-bold">{mockStats.resolvedIncidents.toLocaleString()}+</div>
+              <div className="text-2xl font-bold">{mockStats.resolvedIncidents?.toLocaleString() ?? "—"}</div>
               <div className="text-sm text-green-300">Cases Resolved</div>
-            </div>
-            <div className="w-px h-10 bg-green-700 hidden md:block" />
-            <div>
-              <div className="text-2xl font-bold">50,000+</div>
-              <div className="text-sm text-green-300">Community Members</div>
             </div>
             <div className="w-px h-10 bg-green-700 hidden md:block" />
             <div>

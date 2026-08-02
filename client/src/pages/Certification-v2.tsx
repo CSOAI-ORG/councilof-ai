@@ -362,8 +362,8 @@ export default function CertificationV2() {
                 <div className="text-gray-300 text-sm">Training Courses</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold mb-1">£45-150+</div>
-                <div className="text-gray-300 text-sm">Per Hour Earnings</div>
+                <div className="text-3xl font-bold mb-1">Signed</div>
+                <div className="text-gray-300 text-sm">Verifiable Records</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                 <div className="text-3xl font-bold mb-1">100%</div>

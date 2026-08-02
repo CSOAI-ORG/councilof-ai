@@ -168,12 +168,12 @@ const FAQ = [
     answer: 'Enterprise pricing is specifically for companies that want to register and manage their AI systems on our platform. This is NOT for training - that\'s free for everyone. Enterprise customers use our platform to demonstrate compliance with regulations like the EU AI Act, track their AI inventory, and get Byzantine Council safety reviews.'
   },
   {
-    question: 'How much can I earn as a certified analyst?',
-    answer: 'Certified analysts with an active license typically earn between 45-150 per hour depending on their expertise, location, and the complexity of the audit. Top analysts working on high-risk AI systems can earn even more. The license pays for itself after just a few hours of work.'
+    question: 'How much can I earn as an attested analyst?',
+    answer: 'We do not quote earnings figures — CSOAI is pre-launch and rates will be set by the market once the analyst network is live. What we commit to: training is free, attestation is £49 one-time, and the Analyst License is £199/year. Once real analysts complete real paid reviews, the measured rate distribution will be published openly.'
   },
   {
     question: 'What is the Byzantine Council?',
-    answer: 'The Byzantine Council is our unique 33-agent AI safety review system. When organizations submit their AI systems for review, the Council evaluates them from multiple stakeholder perspectives - from regulators and ethicists to end-users and vulnerable populations. This provides the most comprehensive AI safety assessment available anywhere.'
+    answer: 'The Byzantine Council is our designed 33-agent AI safety review system. As of 2026-08-01, the council is in DESIGN status — measured cross-checking (n_eff 1.21 of 3) is published on the /refutation-ledger. We do not sell council outputs as live capability; honest current status is on the ledger.'
   },
   {
     question: 'What is the Prosperity Fund?',
@@ -216,7 +216,7 @@ const COMPETITOR_COMPARISON = [
   },
   {
     feature: 'AI Safety Review',
-    csoai: 'Byzantine Council - 33 agent analysis',
+    csoai: 'GSPC instrument — 4 lenses over 417 provisions, deterministic',
     competitors: 'Basic checklists only'
   },
   {
@@ -297,7 +297,7 @@ export default function Pricing() {
             <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6">
               <Briefcase className="h-10 w-10 text-emerald-400 mx-auto mb-3" />
               <h3 className="text-lg font-semibold text-white mb-2">Start Earning</h3>
-              <p className="text-slate-400 text-sm">License to work, earn 45-150/hour</p>
+              <p className="text-slate-400 text-sm">License to work as a paid analyst</p>
             </div>
           </div>
         </div>
@@ -513,7 +513,7 @@ export default function Pricing() {
                   </div>
                   <div className="flex items-center gap-3 text-slate-300">
                     <Check className="h-5 w-5 text-emerald-400 flex-shrink-0" />
-                    <span>Earn 45-150/hour on audits</span>
+                    <span>Paid audit work at market-set rates</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-300">
                     <Check className="h-5 w-5 text-emerald-400 flex-shrink-0" />

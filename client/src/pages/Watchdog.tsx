@@ -89,11 +89,11 @@ export default function Watchdog() {
               Become an AI Safety Analyst
             </h1>
             <p className="text-2xl text-gray-300 leading-relaxed mb-4 max-w-4xl mx-auto">
-              Earn $45-150/hour monitoring AI systems for compliance. Work remotely, set your own hours, 
-              and protect humanity from AI risks—while building a future-proof career.
+              Train to monitor AI systems against the frameworks that matter. Work remotely,
+              set your own hours, and build measured, signed proof of your skill.
             </p>
             <p className="text-xl text-emerald-300 font-semibold mb-10">
-              Projected to be a top 10 job by 2045. Get certified now.
+              Free training. Signed attestation. Get attested now.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/training">
@@ -104,7 +104,7 @@ export default function Watchdog() {
               </Link>
               <Link href="/certification">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8">
-                  View Certification
+                  View Attestation
                 </Button>
               </Link>
             </div>
@@ -158,10 +158,10 @@ export default function Watchdog() {
             <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-3xl font-bold text-emerald-600 mx-auto mb-6">
               2
             </div>
-            <h3 className="text-2xl font-bold mb-4">Pass Certification</h3>
+            <h3 className="text-2xl font-bold mb-4">Pass Attestation</h3>
             <p className="text-gray-600 leading-relaxed mb-4">
-              50-question exam, 90 minutes, 70% to pass. Unlimited retakes. Get your official CSOAI 
-              Watchdog Analyst certificate recognized worldwide.
+              50-question exam, 90 minutes, 70% to pass. Unlimited retakes. Your CSOAI
+              Watchdog Analyst attestation is signed and independently verifiable.
             </p>
             <Link href="/certification">
               <Button variant="outline" className="w-full">View Exam Details</Button>
@@ -174,8 +174,9 @@ export default function Watchdog() {
             </div>
             <h3 className="text-2xl font-bold mb-4">Start Earning</h3>
             <p className="text-gray-600 leading-relaxed mb-4">
-              Browse 1,200+ job openings. Apply to companies. Start reviewing AI systems. 
-              Get paid $45-150/hour. Work remotely. Set your own schedule.
+              Join the analyst roster at launch. Review AI systems for real clients.
+              Work remotely. Set your own schedule. Rates are market-set and published
+              as measured aggregates.
             </p>
             <Link href="/jobs">
               <Button variant="outline" className="w-full">Browse Jobs</Button>
@@ -234,106 +235,20 @@ export default function Watchdog() {
         </div>
       </div>
 
-      {/* Earnings Breakdown */}
-      <div className="container py-20 max-w-6xl">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Transparent Earnings</Badge>
-          <h2 className="text-4xl font-bold mb-4">How Much Can You Really Earn?</h2>
-          <p className="text-xl text-gray-600">
-            Actual rates from our analyst network. Your earnings depend on experience and case complexity.
+      {/* Rates — honest pre-launch panel, no invented rate cards */}
+      <div className="container py-20 max-w-4xl">
+        <div className="text-center">
+          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Transparent by design</Badge>
+          <h2 className="text-4xl font-bold mb-4">What will analysts earn?</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+            We don't know yet — and we won't pretend to. Rates will be set by the market
+            once the analyst network is live, and the real distribution will be published
+            here as measured, anonymised aggregates. Until then, no invented rate cards.
           </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          <Card className="p-8 border-2 border-gray-200">
-            <Badge className="mb-4 bg-gray-100 text-gray-700">Entry Level</Badge>
-            <div className="text-5xl font-bold text-gray-900 mb-2">$45</div>
-            <div className="text-gray-600 mb-6">per hour</div>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>Newly certified analysts</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>Low-risk AI systems</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>Chatbots, content filters</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>~2 hours per case</span>
-              </li>
-            </ul>
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-600 mb-1">Example Monthly Income</div>
-              <div className="text-2xl font-bold text-gray-900">$3,600</div>
-              <div className="text-xs text-gray-500">20 hours/week × 4 weeks</div>
-            </div>
-          </Card>
-
-          <Card className="p-8 border-4 border-emerald-500 relative">
-            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 text-white">
-              Most Common
-            </Badge>
-            <Badge className="mb-4 bg-emerald-50 text-emerald-700">Experienced</Badge>
-            <div className="text-5xl font-bold text-emerald-600 mb-2">$75</div>
-            <div className="text-gray-600 mb-6">per hour</div>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>6+ months experience</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>Medium-risk AI systems</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>Recommendation engines, analytics</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <span>~3 hours per case</span>
-              </li>
-            </ul>
-            <div className="mt-6 p-4 bg-emerald-50 rounded-lg">
-              <div className="text-sm text-gray-600 mb-1">Example Monthly Income</div>
-              <div className="text-2xl font-bold text-emerald-600">$7,500</div>
-              <div className="text-xs text-gray-500">25 hours/week × 4 weeks</div>
-            </div>
-          </Card>
-
-          <Card className="p-8 border-2 border-purple-200 bg-purple-50/30">
-            <Badge className="mb-4 bg-purple-100 text-purple-700">Expert</Badge>
-            <div className="text-5xl font-bold text-purple-600 mb-2">$150</div>
-            <div className="text-gray-600 mb-6">per hour</div>
-            <ul className="space-y-3 text-sm text-gray-600">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                <span>1+ year experience</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                <span>High-risk AI systems</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                <span>Credit scoring, hiring, medical</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                <span>~5 hours per case</span>
-              </li>
-            </ul>
-            <div className="mt-6 p-4 bg-purple-100 rounded-lg">
-              <div className="text-sm text-gray-600 mb-1">Example Monthly Income</div>
-              <div className="text-2xl font-bold text-purple-600">$18,000</div>
-              <div className="text-xs text-gray-500">30 hours/week × 4 weeks</div>
-            </div>
-          </Card>
+          <p className="text-sm text-gray-500">
+            What we can tell you now: training is free, attestation is £49, and the
+            Analyst License is £199/year.
+          </p>
         </div>
       </div>
 
@@ -366,8 +281,8 @@ export default function Watchdog() {
           <Heart className="h-16 w-16 text-emerald-600 mx-auto mb-6" />
           <h2 className="text-4xl font-bold mb-6">Ready to Start Your New Career?</h2>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Join 2,847 certified analysts earning an average of $67/hour. Training is free. 
-            Certification takes 2 weeks. Your first paycheck could be 30 days away.
+            Training is free. Attestation is £49. The analyst network opens at launch —
+            and every figure on this page will be measured, signed, and real.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/training">
@@ -383,7 +298,7 @@ export default function Watchdog() {
             </Link>
           </div>
           <p className="text-sm text-gray-500 mt-6">
-            No credit card required • No coding experience needed • Start earning in weeks
+            No credit card required • No coding experience needed • Free to start
           </p>
         </Card>
       </div>

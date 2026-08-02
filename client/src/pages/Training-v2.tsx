@@ -28,15 +28,15 @@ interface FAQItem {
 const faqItems: FAQItem[] = [
   {
     question: "Why is training free?",
-    answer: "We believe AI safety education should be accessible to everyone. The world needs more AI safety professionals, and cost shouldn't be a barrier. We sustain our operations through certification fees and enterprise licensing, not by charging for education. This ensures anyone with the motivation can learn these critical skills."
+    answer: "We believe AI safety education should be accessible to everyone. The world needs more AI safety professionals, and cost shouldn't be a barrier. We sustain our operations through attestation fees and enterprise licensing, not by charging for education. This ensures anyone with the motivation can learn these critical skills."
   },
   {
     question: "What does the £49 exam fee cover?",
-    answer: "The £49 certification exam fee covers exam administration and proctoring, official CSOAI certificate generation, LinkedIn badge and digital credentials, lifetime verification through our public registry, and ongoing certificate validation. This is a one-time fee per certification level."
+    answer: "The £49 attestation exam fee covers exam administration and proctoring, signed attestation record generation, LinkedIn badge and digital credentials, lifetime verification through our public registry, and ongoing record validation. This is a one-time fee per attestation level."
   },
   {
     question: "Is the £199 license required?",
-    answer: "The Analyst License (£199/year or £19.99/month) is only required if you want to work as a paid analyst through the CSOAI platform and earn £45-150/hour. If you're learning for personal development or to enhance your current job skills, you don't need it. The license gives you access to paid case reviews, the analyst job board, and client matching."
+    answer: "The Analyst License (£199/year or £19.99/month) is only required if you want to work as a paid analyst through the CSOAI platform. If you're learning for personal development or to enhance your current job skills, you don't need it. The license gives you access to paid case reviews, the analyst job board, and client matching."
   },
   {
     question: "Can I pay monthly for the license?",
@@ -47,12 +47,12 @@ const faqItems: FAQItem[] = [
     answer: "Most learners complete the foundation courses in 15-25 hours spread over 2-4 weeks. With 33 courses available, you can specialise in specific areas or complete the entire curriculum. The training is entirely self-paced, so you can go faster or slower depending on your schedule."
   },
   {
-    question: "What certification do I get?",
-    answer: "Upon passing the certification exam (£49), you receive the CSOAI Certified AI Safety Analyst credential. This includes a verifiable digital certificate, a unique certification ID, LinkedIn badge, and listing in our public registry. You can also earn specialised certifications for each framework."
+    question: "What attestation do I get?",
+    answer: "Upon passing the attestation exam (£49), you receive the CSOAI Attested AI Safety Analyst credential. This includes a signed, verifiable digital record, a unique attestation ID, LinkedIn badge, and listing in our public registry. You can also earn specialised attestations for each framework."
   },
   {
     question: "Are certificates recognised by employers?",
-    answer: "Yes. Our certifications are recognised by enterprises worldwide seeking AI safety compliance expertise. CSOAI works directly with organisations implementing AI governance, and certified analysts are preferred for contract work. Our curriculum aligns with actual regulatory requirements from EU, US, and international standards bodies."
+    answer: "Every attestation record is signed and independently verifiable in our public registry — any employer can check it in seconds. Our curriculum aligns with actual regulatory requirements from EU, US, and international standards bodies. We are pre-launch, so we make no recognition claims we cannot yet evidence; the record speaks for itself."
   },
   {
     question: "What if I fail an exam?",
@@ -246,8 +246,8 @@ const certificationSteps = [
   },
   {
     step: 2,
-    title: "Pass Certification Exam",
-    description: "Demonstrate your expertise with our comprehensive certification exam. Get your official credential.",
+    title: "Pass Attestation Exam",
+    description: "Demonstrate your expertise with our comprehensive attestation exam. Get your signed, verifiable record.",
     icon: GraduationCap,
     price: "£49",
     priceNote: "One-time fee"
@@ -265,8 +265,8 @@ const certificationSteps = [
     title: "Start Earning",
     description: "Review AI systems for enterprises worldwide. Set your own schedule, work remotely.",
     icon: PoundSterling,
-    price: "£45-150/hour",
-    priceNote: "Your earning potential"
+    price: "Market-set",
+    priceNote: "Real rates published once measured"
   }
 ];
 
@@ -279,7 +279,7 @@ const competitorComparison = [
     competitorsNote: "£500-2,000"
   },
   {
-    feature: "Official Certification",
+    feature: "Signed Attestation",
     csoai: true,
     csoaiNote: "£49 exam fee",
     competitors: true,
@@ -309,7 +309,7 @@ const competitorComparison = [
   {
     feature: "Paid Work Opportunities",
     csoai: true,
-    csoaiNote: "£45-150/hour",
+    csoaiNote: "Analyst marketplace at launch",
     competitors: false,
     competitorsNote: "Not available"
   },
@@ -468,12 +468,12 @@ export default function TrainingV2() {
 
             <p className="text-xl md:text-2xl text-green-50 mb-6 max-w-4xl mx-auto leading-relaxed">
               Master AI safety frameworks - EU AI Act, NIST AI RMF, ISO 42001, and more.
-              Get certified and start earning <span className="text-yellow-300 font-semibold">£45-150/hour</span>.
+              Get attested and build signed, verifiable proof of your skill.
             </p>
 
             <p className="text-lg text-green-100 mb-10 max-w-2xl mx-auto">
               <strong className="text-white">Only pay when you start earning.</strong> Training is free.
-              Certification is £49. License to earn is £199/year.
+              Attestation is £49. License to earn is £199/year.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -485,7 +485,7 @@ export default function TrainingV2() {
               </Link>
               <Link href="/certification">
                 <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-10 py-7 text-lg font-semibold">
-                  View Certifications
+                  View Attestation
                 </Button>
               </Link>
             </div>
@@ -504,8 +504,8 @@ export default function TrainingV2() {
                 <div className="text-green-100 text-sm">Training Cost</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-5">
-                <div className="text-3xl font-bold mb-1">£150/hr</div>
-                <div className="text-green-100 text-sm">Earning Potential</div>
+                <div className="text-3xl font-bold mb-1">Signed</div>
+                <div className="text-green-100 text-sm">Verifiable Records</div>
               </div>
             </div>
           </div>
@@ -517,7 +517,7 @@ export default function TrainingV2() {
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Your Path to Earning £45-150/hour
+              Your Path as an Analyst
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Simple, transparent pricing. Free training, pay only when you're ready to earn.
@@ -753,7 +753,7 @@ export default function TrainingV2() {
             Ready to Become an AI Safety Analyst?
           </h2>
           <p className="text-xl text-green-50 mb-6 max-w-2xl mx-auto">
-            Join thousands of certified analysts protecting humanity from AI risks.
+            Join the first cohort of attested analysts protecting humanity from AI risks.
             Start learning today - no credit card required.
           </p>
 
@@ -765,7 +765,7 @@ export default function TrainingV2() {
               </div>
               <div>
                 <div className="text-2xl font-bold">£49</div>
-                <div className="text-sm text-green-100">Certification</div>
+                <div className="text-sm text-green-100">Attestation</div>
               </div>
               <div>
                 <div className="text-2xl font-bold">£199/yr</div>

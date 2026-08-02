@@ -131,52 +131,54 @@ const complianceFrameworks = [
   },
 ];
 
+// Regional panels: no live national registry feeds exist yet, so figures are
+// withheld ("—") rather than invented. Structure stays so panels render.
 const regionalData = [
   {
     id: "europe",
     name: "Europe",
-    totalSystems: 456,
-    compliantSystems: 429,
-    complianceRate: 94.1,
-    activeIncidents: 23,
-    pendingInvestigations: 8,
-    enforcementActions: 3,
+    totalSystems: null,
+    compliantSystems: null,
+    complianceRate: null,
+    activeIncidents: null,
+    pendingInvestigations: null,
+    enforcementActions: null,
     primaryFramework: "EU AI Act",
     countries: ["Germany", "France", "Netherlands", "Italy", "Spain"],
   },
   {
     id: "north-america",
     name: "North America",
-    totalSystems: 487,
-    compliantSystems: 447,
-    complianceRate: 91.8,
-    activeIncidents: 36,
-    pendingInvestigations: 12,
-    enforcementActions: 5,
+    totalSystems: null,
+    compliantSystems: null,
+    complianceRate: null,
+    activeIncidents: null,
+    pendingInvestigations: null,
+    enforcementActions: null,
     primaryFramework: "NIST AI RMF",
     countries: ["United States", "Canada", "Mexico"],
   },
   {
     id: "asia-pacific",
     name: "Asia-Pacific",
-    totalSystems: 234,
-    compliantSystems: 198,
-    complianceRate: 84.6,
-    activeIncidents: 19,
-    pendingInvestigations: 7,
-    enforcementActions: 2,
+    totalSystems: null,
+    compliantSystems: null,
+    complianceRate: null,
+    activeIncidents: null,
+    pendingInvestigations: null,
+    enforcementActions: null,
     primaryFramework: "TC260 / ISO 42001",
     countries: ["China", "Japan", "South Korea", "Australia", "Singapore"],
   },
   {
     id: "global",
     name: "Global Overview",
-    totalSystems: 1247,
-    compliantSystems: 1138,
-    complianceRate: 91.2,
-    activeIncidents: 78,
-    pendingInvestigations: 27,
-    enforcementActions: 10,
+    totalSystems: null,
+    compliantSystems: null,
+    complianceRate: null,
+    activeIncidents: null,
+    pendingInvestigations: null,
+    enforcementActions: null,
     primaryFramework: "Multi-Framework",
     countries: ["All Jurisdictions"],
   },
@@ -766,22 +768,22 @@ export default function GovernmentDashboard() {
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                       <div className="text-center p-6 bg-emerald-50 rounded-xl">
                         <Database className="h-8 w-8 text-emerald-600 mx-auto mb-2" />
-                        <div className="text-3xl font-bold text-emerald-700">{region.totalSystems}</div>
+                        <div className="text-3xl font-bold text-emerald-700">{region.totalSystems ?? "—"}</div>
                         <div className="text-sm text-emerald-600">Total Systems</div>
                       </div>
                       <div className="text-center p-6 bg-green-50 rounded-xl">
                         <CheckCircle2 className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                        <div className="text-3xl font-bold text-green-700">{region.complianceRate}%</div>
+                        <div className="text-3xl font-bold text-green-700">{region.complianceRate != null ? `${region.complianceRate}%` : "—"}</div>
                         <div className="text-sm text-green-600">Compliance Rate</div>
                       </div>
                       <div className="text-center p-6 bg-amber-50 rounded-xl">
                         <AlertTriangle className="h-8 w-8 text-amber-600 mx-auto mb-2" />
-                        <div className="text-3xl font-bold text-amber-700">{region.activeIncidents}</div>
+                        <div className="text-3xl font-bold text-amber-700">{region.activeIncidents ?? "—"}</div>
                         <div className="text-sm text-amber-600">Active Incidents</div>
                       </div>
                       <div className="text-center p-6 bg-red-50 rounded-xl">
                         <Gavel className="h-8 w-8 text-red-600 mx-auto mb-2" />
-                        <div className="text-3xl font-bold text-red-700">{region.enforcementActions}</div>
+                        <div className="text-3xl font-bold text-red-700">{region.enforcementActions ?? "—"}</div>
                         <div className="text-sm text-red-600">Enforcement Actions</div>
                       </div>
                     </div>
@@ -809,7 +811,9 @@ export default function GovernmentDashboard() {
                           {region.primaryFramework}
                         </Badge>
                         <p className="text-sm text-gray-500 mt-2">
-                          {region.pendingInvestigations} pending investigations in this region
+                          {region.pendingInvestigations != null
+                            ? `${region.pendingInvestigations} pending investigations in this region`
+                            : "No live registry feed — figures withheld, not invented"}
                         </p>
                       </div>
                     </div>
