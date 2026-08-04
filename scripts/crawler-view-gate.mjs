@@ -87,7 +87,7 @@ async function get(path) {
   return { status: res.status, html, text: visibleText(html), key: canonical(html) };
 }
 
-function evaluate(pages, absent) {
+function evaluate(pages, absent, sec = null) {
   const failures = [];
 
   // 1. DISTINCTNESS
@@ -131,7 +131,39 @@ function evaluate(pages, absent) {
     }
   }
 
-  // 4. HONEST 404
+  // 4. security.txt VALIDITY — RFC 9116 §2.5.5 requires Expires < 1 year from publication,
+  // and RFC 3339 requires an uppercase 'Z'. Ours sat at 16.9 months with a lowercase 'z'
+  // until 2026-08-04. An expired or malformed security.txt is worse than none: it advertises
+  // a disclosure channel that a strict parser will reject, on a domain selling conformance.
+  // Checked here because this gate already runs daily against PRODUCTION — fixing the source
+  // file does not prove the deployed one changed.
+  if (sec !== null) {
+    if (sec.status !== 200) {
+      failures.push(`/.well-known/security.txt: HTTP ${sec.status}`);
+    } else {
+      const m = /^Expires:\s*(\S+)/im.exec(sec.html);
+      if (!m) {
+        failures.push("/.well-known/security.txt: no Expires field (RFC 9116 requires one)");
+      } else {
+        const raw = m[1];
+        const months = (Date.parse(raw.replace(/z$/, "Z")) - Date.now()) / 2.628e9;
+        if (!(months > 0)) {
+          failures.push(`security.txt Expires ${raw} is unparseable or in the past`);
+        } else if (months > 12) {
+          failures.push(
+            `security.txt Expires ${raw} is ${months.toFixed(1)} months out — RFC 9116 §2.5.5 ` +
+            `requires less than 12.`);
+        }
+        if (/z$/.test(raw)) {
+          failures.push(
+            `security.txt Expires ends in lowercase 'z'; RFC 3339 specifies uppercase 'Z' — ` +
+            `strict parsers may reject the field.`);
+        }
+      }
+    }
+  }
+
+  // 5. HONEST 404
   if (absent.status === 200) {
     failures.push(
       `${ABSENT_URL} returned HTTP 200. A catch-all that answers 200 for every path tells ` +
@@ -150,13 +182,17 @@ async function selftest() {
     ["distinctness", [["/a", mk(rich)], ["/b", mk(rich)]], mk("", 404), /IDENTICAL DOCUMENT/],
     ["substance",    [["/a", mk(shell)]],                  mk("", 404), /crawler-visible text/],
     ["honest 404",   [["/a", mk(rich)]],                   mk(rich, 200), /returned HTTP 200/],
+    ["security.txt expiry",
+                     [["/a", mk(rich + '<link rel="canonical" href="https://x.test/a"/>')]],
+                     mk("", 404), /requires less than 12/,
+                     {status: 200, html: "Contact: mailto:x@y\nExpires: 2030-01-01T00:00:00Z\n"}],
     ["canonical",    [["/pricing", mk(rich + '<link rel="canonical" href="https://csoai.org"/>')]],
                      mk("", 404), /canonical points at/],
   ];
   let ok = true;
   console.log("SELFTEST — each rule must fire on a seeded violation:");
-  for (const [name, pages, absent, want] of cases) {
-    const fs = evaluate(pages, absent);
+  for (const [name, pages, absent, want, sec] of cases) {
+    const fs = evaluate(pages, absent, sec ?? null);
     const fired = fs.some((f) => want.test(f));
     ok &&= fired;
     console.log(`  ${fired ? "OK  " : "FAIL"} ${name}`);
@@ -191,7 +227,8 @@ async function main() {
   const absent = await get(ABSENT_URL).catch(() => ({ status: 0, html: "", text: "", key: "" }));
   console.log(`  ${String(absent.status).padEnd(4)} ${String(absent.text.length).padStart(6)} chars  ${ABSENT_URL} (should be 404)\n`);
 
-  const failures = evaluate(pages, absent);
+  const sec = await get("/.well-known/security.txt").catch(() => null);
+  const failures = evaluate(pages, absent, sec);
   if (failures.length) {
     console.log("CRAWLER-VIEW GATE: FAIL");
     for (const f of failures) console.log(" - " + f);
