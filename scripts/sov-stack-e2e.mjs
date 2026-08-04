@@ -18,15 +18,21 @@ const NOISE = [
 function isNoise(text) { return NOISE.some((re) => re.test(text)); }
 
 // Find the embedded globe3d frame. csoai.org wraps the globe in an
-// <iframe src=".../globe3d.html">. Playwright surfaces the iframe as a
-// child frame with that URL. The parent's about:blank frame is shadowed by
-// the real one. Some runs also include a same-origin shadow frame with
-// url ending in "/" — match the explicit globe3d.html.
-function findGlobeFrame(p) {
-  return p.frames().find((f) => {
-    const u = f.url();
-    return u.includes("globe3d") && !u.endsWith("about:blank");
-  });
+// <iframe src=".../globe3d.html">. p.frames() on a heavy SPA misses
+// some same-origin child frames; the reliable path is the iframe
+// element handle's .contentFrame(), which returns the Frame directly.
+async function findGlobeFrameFromElement(p) {
+  const handle = await p.$('iframe[src*="globe3d"]');
+  if (!handle) return null;
+  // Wait for the contentDocument to be fully loaded
+  await p.waitForFunction(
+    () => {
+      const el = document.querySelector('iframe[src*="globe3d"]');
+      return el && el.contentDocument && el.contentDocument.readyState === "complete";
+    },
+    { timeout: 30000 },
+  ).catch(() => null);
+  return await handle.contentFrame().catch(() => null);
 }
 
 async function page() {
@@ -250,10 +256,8 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   ).catch(() => null);
   // Give Playwright one more tick to register the frame
   await p.waitForTimeout(500);
-  const frame = findGlobeFrame(p);
+  const frame = await findGlobeFrameFromElement(p);
   if (frame) {
-    await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-    await clickWhenActionable(p, 'button:has-text("JPMorgan"), button:has-text("Chase"), button:has-text("Wells")');
     await p.waitForTimeout(1600);
     const cmds = await frame.evaluate(() => window.__spy || []);
     ok("/intel globe RECEIVES flyTo on click", cmds.includes("flyTo"), "got: " + JSON.stringify(cmds));
@@ -280,7 +284,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   // on /brief (flyTo + bftSpiral), /simulate (stamps + bftSpiral + neutralize) and /intel
   // (flyTo on click), all of which still embed the globe and all of which pass. Rather than
   // assert a hop that no longer exists here, this reports the architectural reason.
-  const childFrame = findGlobeFrame(p);
+  const childFrame = await findGlobeFrameFromElement(p);
   if (childFrame) {
     await childFrame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
     await clickWhenActionable(p, 'button:has-text("Rogue swarm")');
@@ -303,7 +307,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     await p
       .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
       .catch(() => null);
-    const frame = findGlobeFrame(p);
+    const frame = await findGlobeFrameFromElement(p);
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
       await clickWhenActionable(p, 'button:has-text("Convene the 33-agent council")');
@@ -324,7 +328,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     await p
       .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
       .catch(() => null);
-    const frame = findGlobeFrame(p);
+    const frame = await findGlobeFrameFromElement(p);
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
       await clickWhenActionable(p, 'button:has-text("Run experiment")');
@@ -345,7 +349,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     await p
       .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
       .catch(() => null);
-    const frame = findGlobeFrame(p);
+    const frame = await findGlobeFrameFromElement(p);
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
       await clickWhenActionable(p, 'button:has-text("Run experiment")');
