@@ -11,11 +11,14 @@
   // non-function paths — which is exactly the behaviour the Claims-E2E test asserts.
   "name": "csoai",
   "compatibility_date": "2026-07-29",
-  "pages_build_output_dir": "./dist/client",
-  "assets": {
-    "directory": "./dist/client",
-    "not_found_handling": "single-page-application"
-  }
+  "pages_build_output_dir": "./dist/client"
+  // SPA fallback for CLIENT routes is handled by the `/* /index.html 200` catch-all in
+  // public/_redirects (static + prerendered files take precedence, so /api/* hits Functions
+  // and prerendered routes serve their own HTML; only truly-unknown paths boot the SPA).
+  // The earlier `assets{ not_found_handling }` block was Workers-Static-Assets syntax and
+  // `wrangler pages deploy` rejects it ("Pages projects does not support 'assets'") — which is
+  // why no deploy had shipped since the migration and the prerender never reached production.
+  //
   // functions/ is auto-discovered by Cloudflare Pages — no extra config needed. Each
   // functions/api/<name>.ts exporting onRequestGet/onRequestPost becomes /api/<name>.
 }

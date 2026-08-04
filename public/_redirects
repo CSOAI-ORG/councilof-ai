@@ -6,3 +6,7 @@
 /sovereign-town /sov-space?view=towns   308
 /towns          /sov-space?view=towns   308
 /globe          /globe3d.html           308
+
+# SPA fallback — MUST be last. Static files (incl. prerendered route HTML) and Pages Functions
+# (/api/*) both take precedence, so this only catches truly-unknown client routes and boots the app.
+/*              /index.html             200
