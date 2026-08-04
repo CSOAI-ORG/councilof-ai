@@ -218,6 +218,8 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   const { p, errs } = await page();
   await go(p, BASE + "/intel");
   await waitForHydration(p);
+  // The globe iframe may attach after hydration; wait up to 15s before searching
+  await p.waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 }).catch(() => null);
   const frame = p.frames().find((f) => f.url().includes("globe3d"));
   if (frame) {
     await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
