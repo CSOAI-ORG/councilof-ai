@@ -77,10 +77,30 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     return Response.json({ error: "body must be JSON" }, { status: 400 });
   }
 
-  const text = ["system", "purpose", "domain", "description"]
+  // Accept the obvious aliases too. A caller who posts {"scenario": "..."} was previously
+  // parsed as EMPTY text, matched no Annex III category, and was told
+  // "No prohibited practice or Annex III category matched" — i.e. a governance API answering
+  // "looks fine" to a question it never actually read. That is the worst failure this product
+  // can have, so the field list is generous and the empty case is refused outright below.
+  const text = ["system", "purpose", "domain", "description", "scenario", "text", "use_case"]
     .map((k) => String(body[k] ?? ""))
     .join(" ")
     .slice(0, 4000);
+
+  // UNMEASURED is the safe default. No describable input means no assessment — never
+  // LIMITED_OR_MINIMAL, which a reader would take as "assessed, and it is fine".
+  if (text.trim().length < 8) {
+    return Response.json(
+      {
+        tier: "UNMEASURED",
+        error: "no assessable description supplied",
+        detail:
+          "Provide the system description in one of: system, purpose, domain, description, " +
+          "scenario, text, use_case. An empty description is not a low-risk finding.",
+      },
+      { status: 400 },
+    );
+  }
 
   // ── classify ────────────────────────────────────────────────────────────────
   const prohibited = PROHIBITED.filter(([, rx]) => rx.test(text)).map(([n]) => n);
