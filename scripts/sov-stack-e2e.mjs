@@ -234,8 +234,22 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   const { p, errs } = await page();
   await go(p, BASE + "/intel");
   await waitForHydration(p);
-  // The globe iframe may attach after hydration; wait up to 30s before searching
+  // The globe iframe attaches late; wait for it AND wait for its content frame
+  // to appear in p.frames() (not just for the DOM element). The iframe element
+  // appears before the content frame is registered, so an explicit wait on
+  // p.waitForFunction checking frames() length+url closes the race.
   await p.waitForSelector('iframe[src*="globe3d"]', { timeout: 30000 }).catch(() => null);
+  // Wait for the iframe's content frame to actually load
+  await p.waitForFunction(
+    () => {
+      const iframes = Array.from(document.querySelectorAll("iframe"));
+      const globe = iframes.find((el) => (el.src || "").includes("globe3d"));
+      return globe && globe.contentDocument && globe.contentDocument.readyState === "complete";
+    },
+    { timeout: 30000 },
+  ).catch(() => null);
+  // Give Playwright one more tick to register the frame
+  await p.waitForTimeout(500);
   const frame = findGlobeFrame(p);
   if (frame) {
     await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
@@ -244,7 +258,6 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     const cmds = await frame.evaluate(() => window.__spy || []);
     ok("/intel globe RECEIVES flyTo on click", cmds.includes("flyTo"), "got: " + JSON.stringify(cmds));
   } else {
-    // Diagnose: what frames ARE present, and what iframes are in the DOM?
     const allFrames = p.frames().map(f => f.url());
     const iframes = await p.$$eval("iframe", els => els.map(e => e.src));
     ok("/intel globe RECEIVES flyTo on click", false,
