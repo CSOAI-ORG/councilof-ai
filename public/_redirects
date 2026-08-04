@@ -1,0 +1,8 @@
+# Cloudflare Pages redirects for legacy / consolidation routes.
+# Format per Cloudflare docs: one rule per line, "SOURCE DESTINATION CODE".
+# Static assets take precedence over SPA — confirmed live /globe3d.html is shipped.
+
+/gspc-arena     /sov-space?view=arena   308
+/sovereign-town /sov-space?view=towns   308
+/towns          /sov-space?view=towns   308
+/globe          /globe3d.html           308
