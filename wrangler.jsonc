@@ -1,17 +1,21 @@
 {
-  // The live CSOAI site on Cloudflare. Vercel (project csoai-v2-app) returns HTTP 402
-  // DEPLOYMENT_DISABLED on csoai.org, www.csoai.org and csoai-v2-app.vercel.app, so a push to
-  // master no longer reaches anybody. This serves the same Vite build for free.
+  // The live CSOAI site on Cloudflare. FIXED 2026-08-04: the previous config was "static assets
+  // only — no Worker script", so EVERY /api/* route fell through to the SPA and returned HTML
+  // instead of JSON (the P0 the independent briefing flagged, confirmed live: /api/tools?q=governance
+  // and /api/og both returned 200 text/html). Cloudflare Pages Functions in functions/api/*.ts are
+  // now the deploy target, so /api/tools, /api/mcp, /api/assess, /api/og etc. execute server-side.
   //
-  // Static assets only — no Worker script. client/ is a pure SPA; api-server/ was never wired
-  // to a deploy target, so nothing here regresses by leaving it out.
-  //
-  // not_found_handling = single-page-application because wouter does client-side routing:
-  // without it, /provenance-finding 404s on a cold load instead of booting the app.
+  // not_found_handling stays single-page-application for CLIENT routes (wouter does client-side
+  // routing; /provenance-finding must boot the app on cold load). But because functions/ now
+  // exists, Cloudflare matches /api/* to a Function FIRST and only falls back to the SPA for
+  // non-function paths — which is exactly the behaviour the Claims-E2E test asserts.
   "name": "csoai",
   "compatibility_date": "2026-07-29",
+  "pages_build_output_dir": "./dist/client",
   "assets": {
     "directory": "./dist/client",
     "not_found_handling": "single-page-application"
   }
+  // functions/ is auto-discovered by Cloudflare Pages — no extra config needed. Each
+  // functions/api/<name>.ts exporting onRequestGet/onRequestPost becomes /api/<name>.
 }
