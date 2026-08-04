@@ -65,6 +65,33 @@ async function waitForHydration(p, minChars = 800, timeoutMs = 15000) {
     .catch(() => null);
 }
 
+// Click an action button once it is visible AND enabled. The SPA's overlay
+// buttons can be present in the DOM but covered by a transient hydration
+// layer for 1-3s; the default 30s click wait is the wrong tool — the button
+// is not "not found", it is "not actionable yet". Wait for the actionable
+// state, then click with a generous timeout.
+async function clickWhenActionable(p, selector, timeoutMs = 30000) {
+  const handle = await p.waitForSelector(selector, { state: "visible", timeout: timeoutMs });
+  if (!handle) return null;
+  // Wait for the element to be enabled (not disabled, no aria-busy, no loading overlay)
+  await p
+    .waitForFunction(
+      (sel) => {
+        const el = document.querySelector(sel);
+        if (!el) return false;
+        if (el.disabled || el.getAttribute("aria-disabled") === "true") return false;
+        if (el.getAttribute("aria-busy") === "true") return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0;
+      },
+      selector,
+      { timeout: 5000 },
+    )
+    .catch(() => null);
+  await handle.click({ timeout: 5000 }).catch(() => null);
+  return handle;
+}
+
 // 1) /globe — 3D globe, mode toggle, agentic ask, threat
 {
   const { p, errs } = await page();
@@ -194,8 +221,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   const frame = p.frames().find((f) => f.url().includes("globe3d"));
   if (frame) {
     await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-    const acct = await p.$('button:has-text("JPMorgan"), button:has-text("Chase"), button:has-text("Wells")');
-    if (acct) await acct.click();
+    await clickWhenActionable(p, 'button:has-text("JPMorgan"), button:has-text("Chase"), button:has-text("Wells")');
     await p.waitForTimeout(1600);
     const cmds = await frame.evaluate(() => window.__spy || []);
     ok("/intel globe RECEIVES flyTo on click", cmds.includes("flyTo"), "got: " + JSON.stringify(cmds));
@@ -220,8 +246,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   const childFrame = p.frames().find((f) => f !== p.mainFrame() && f.url().includes("globe3d"));
   if (childFrame) {
     await childFrame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-    const threatBtn = await p.$('button:has-text("Rogue swarm")');
-    if (threatBtn) await threatBtn.click();
+    await clickWhenActionable(p, 'button:has-text("Rogue swarm")');
     await p.waitForTimeout(3200);
     const cmds = await childFrame.evaluate(() => window.__spy || []);
     ok("/globe threat drives globe", cmds.includes("flyTo") || cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
@@ -244,8 +269,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     const frame = p.frames().find((f) => f.url().includes("globe3d"));
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-      const btn = await p.$('button:has-text("Convene the 33-agent council")');
-      if (btn) await btn.click();
+      await clickWhenActionable(p, 'button:has-text("Convene the 33-agent council")');
       await p.waitForTimeout(3800);
       const cmds = await frame.evaluate(() => window.__spy || []);
       ok("/brief convene drives council", cmds.includes("flyTo") && cmds.includes("bftSpiral"), "got: " + JSON.stringify(cmds));
@@ -266,8 +290,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     const frame = p.frames().find((f) => f.url().includes("globe3d"));
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-      const run = await p.$('button:has-text("Run experiment")');
-      if (run) await run.click();
+      await clickWhenActionable(p, 'button:has-text("Run experiment")');
       await p.waitForTimeout(4400);
       const cmds = await frame.evaluate(() => window.__spy || []);
       ok("/simulate run drives council", cmds.includes("flyTo") && cmds.includes("bftSpiral"), "got: " + JSON.stringify(cmds));
@@ -288,8 +311,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     const frame = p.frames().find((f) => f.url().includes("globe3d"));
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
-      const run = await p.$('button:has-text("Run experiment")');
-      if (run) await run.click();
+      await clickWhenActionable(p, 'button:has-text("Run experiment")');
       await p.waitForTimeout(7600); // neutralize is scheduled ~6.6s after run
       const cmds = await frame.evaluate(() => window.__spy || []);
       ok("/simulate threat drives neutralize", cmds.includes("neutralize"), "got: " + JSON.stringify(cmds));
