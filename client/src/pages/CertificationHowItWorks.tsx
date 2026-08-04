@@ -329,7 +329,7 @@ export default function CertificationHowItWorks() {
             <Button
               size="lg"
               className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold"
-              onClick={() => window.location.href = "/dashboard/certification"}
+              onClick={() => window.location.href = "/certification"}
             >
               View Certification
             </Button>
@@ -337,7 +337,7 @@ export default function CertificationHowItWorks() {
               size="lg"
               variant="outline"
               className="border-white text-white hover:bg-emerald-700 font-bold"
-              onClick={() => window.location.href = "/dashboard/training"}
+              onClick={() => window.location.href = "/training"}
             >
               Start Training
             </Button>

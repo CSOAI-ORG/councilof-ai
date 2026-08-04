@@ -30,7 +30,7 @@ const checklistItems = [
     title: "AI system inventory and risk classification",
     description:
       "Map every AI system in your organization and classify each under the EU AI Act's four-tier risk framework: prohibited, high-risk, limited risk, or minimal risk.",
-    link: "/dashboard/compliance",
+    link: "/compliance",
   },
   {
     title: "Conformity assessment procedures",

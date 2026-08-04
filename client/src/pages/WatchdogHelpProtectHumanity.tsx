@@ -334,7 +334,7 @@ export default function WatchdogHelpProtectHumanity() {
             <Button
               size="lg"
               className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold"
-              onClick={() => window.location.href = "/dashboard/training"}
+              onClick={() => window.location.href = "/training"}
             >
               Start Free Training
             </Button>

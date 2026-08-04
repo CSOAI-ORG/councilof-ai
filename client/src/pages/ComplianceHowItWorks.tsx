@@ -380,7 +380,7 @@ export default function ComplianceHowItWorks() {
             <Button
               size="lg"
               className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold"
-              onClick={() => window.location.href = "/dashboard/compliance"}
+              onClick={() => window.location.href = "/compliance"}
             >
               Start Compliance Assessment
             </Button>

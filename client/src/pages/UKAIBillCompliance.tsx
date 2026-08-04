@@ -52,7 +52,7 @@ export default function UKAIBillCompliance() {
 
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Ready for UK AI Bill Compliance?</h2>
-          <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold" onClick={() => window.location.href = "/dashboard/compliance"}>
+          <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold" onClick={() => window.location.href = "/compliance"}>
             Start Assessment
           </Button>
         </div>

@@ -80,7 +80,7 @@ export default function NISTAIRMFCompliance() {
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Achieve NIST AI RMF Compliance?</h2>
           <p className="text-lg mb-8 text-emerald-100">Start your compliance journey with CSOAI's Byzantine Council oversight</p>
-          <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold" onClick={() => window.location.href = "/dashboard/compliance"}>
+          <Button size="lg" className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold" onClick={() => window.location.href = "/compliance"}>
             Start Assessment
           </Button>
         </div>
