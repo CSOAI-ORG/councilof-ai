@@ -49,7 +49,7 @@ export default function Certificate({
         certificateId: certificateNumber,
         courseName: testName,
         score: score,
-        byzantineVerified: true,
+        signatureVerified: true,
         verificationUrl: `https://councilof.ai/verify/${certificateNumber}`,
       });
 
