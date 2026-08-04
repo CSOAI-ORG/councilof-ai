@@ -7,7 +7,7 @@ name: Sov Stack E2E (agentic globe/sim/hive)
 
 on:
   push:
-    branches: [master]
+    branches: [master, main, counter-canon-enforcement]
   schedule:
     - cron: "30 6 * * *" # daily 06:30 UTC (after claims-e2e)
   workflow_dispatch:
@@ -26,10 +26,10 @@ jobs:
           npm init -y >/dev/null 2>&1 || true
           npm i -D playwright@1.61.1 >/dev/null 2>&1
           npx playwright install --with-deps chromium
-      - name: Wait for Vercel deploy (push only)
+      - name: Wait for Cloudflare Pages deploy (push only)
         if: github.event_name == 'push'
         run: sleep 100
       - name: Run Sov-stack E2E against live site
         env:
-          E2E_BASE: https://csoai.org
+          E2E_BASE: https://csoai-site.pages.dev
         run: node scripts/sov-stack-e2e.mjs

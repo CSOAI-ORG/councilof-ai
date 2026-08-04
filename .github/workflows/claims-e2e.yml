@@ -6,7 +6,7 @@ name: Claims E2E (live truth check)
 
 on:
   push:
-    branches: [master]
+    branches: [master, main, counter-canon-enforcement]
   schedule:
     - cron: "0 6 * * *" # daily 06:00 UTC
   workflow_dispatch:
@@ -27,8 +27,10 @@ jobs:
           npm init -y >/dev/null 2>&1 || true
           npm i -D playwright@1.61.1 >/dev/null 2>&1
           npx playwright install --with-deps chromium
-      - name: Wait for Vercel deploy (push only)
+      - name: Wait for Cloudflare Pages deploy (push only)
         if: github.event_name == 'push'
         run: sleep 90
       - name: Run claims verification against live site + brain
+        env:
+          SITE: https://csoai-site.pages.dev
         run: node scripts/claims-e2e.mjs
