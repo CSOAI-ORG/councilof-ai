@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OSSBench Training Arena — licence vs intended use | CSOAI</title>
+<meta name="description" content="Practise licence vs intended use on the real frozen OSSBench items, marked against the published key, and see where you rank against 29 measured AI models. Training, not certification.">
+<link rel="canonical" href="https://csoai.org/arena/openness.html">
+<style>
+:root{--fg:#111;--mut:#5a5a5a;--bd:#dcdcdc;--bg:#fff;--ok:#0a7d3c;--no:#b3261e;--acc:#12457a}
+@media(prefers-color-scheme:dark){:root{--fg:#eaeaea;--mut:#9d9d9d;--bd:#333;--bg:#0d0d0d;--ok:#41c47c;--no:#ff6b5e;--acc:#6fa8dc}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+main{max-width:44rem;margin:0 auto;padding:1.5rem 1.1rem 4rem}
+h1{font-size:1.5rem;margin:0 0 .2rem;line-height:1.25}
+.sub{color:var(--mut);margin:0 0 1rem;font-size:.95rem}
+.banner{border:1px solid var(--bd);border-left:3px solid var(--acc);padding:.6rem .8rem;margin:1rem 0;font-size:.9rem;color:var(--mut);border-radius:4px}
+.bar{height:4px;background:var(--bd);border-radius:2px;overflow:hidden;margin:1rem 0}
+.bar>i{display:block;height:100%;background:var(--acc);width:0;transition:width .25s}
+.q{font-size:1.08rem;margin:1.2rem 0;padding:1rem;border:1px solid var(--bd);border-radius:6px}
+button.opt{display:block;width:100%;text-align:left;margin:.4rem 0;padding:.7rem .9rem;font:inherit;
+  background:transparent;color:var(--fg);border:1px solid var(--bd);border-radius:5px;cursor:pointer}
+button.opt:hover:not(:disabled){border-color:var(--acc)}
+button.opt:disabled{cursor:default;opacity:.85}
+button.opt.right{border-color:var(--ok);color:var(--ok);font-weight:600}
+button.opt.wrong{border-color:var(--no);color:var(--no)}
+.fb{margin:.9rem 0;padding:.8rem .9rem;border:1px solid var(--bd);border-radius:5px;font-size:.93rem}
+.fb b{color:var(--acc)}
+.next{margin-top:1rem;padding:.65rem 1.3rem;font:inherit;background:var(--acc);color:#fff;border:0;border-radius:5px;cursor:pointer}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--bd)}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
+nav a{color:var(--acc);margin-right:.8rem;font-size:.9rem}
+.hide{display:none}
+</style>
+</head>
+<body>
+<main>
+<h1>OSSBench Training Arena</h1>
+<p class="sub">licence vs intended use · 13 real items · marked against the published key</p>
+
+<div class="banner">
+<strong>This is training, not certification.</strong> CSOAI is an independent measurement body
+and does not accredit anyone. Finishing this certifies nothing, confers no status, and is not a
+conformity assessment. What it does give you is a score on the same frozen items, marked by the
+same key, as 29 AI models we measured.
+</div>
+
+<p>Decide whether a licence permits an intended use.</p>
+
+<div class="bar"><i id="bar"></i></div>
+<div id="stage"></div>
+
+<div id="done" class="hide">
+  <h2>Your result</h2>
+  <p id="score"></p>
+  <p id="rank"></p>
+  <table>
+    <thead><tr><th>Reference</th><th>Accuracy on these items</th></tr></thead>
+    <tbody id="cmp"></tbody>
+  </table>
+  <p class="sub">Model figures measured 2026-08-04 across 29 models spanning 494M to
+  20B parameters. Your score and theirs come from the same items and the same key.</p>
+  <button class="next" onclick="location.reload()">Try again</button>
+</div>
+
+<h2>Why you can check us</h2>
+<p>Every item carries the provision or rationale it derives from — shown after you answer, so you
+can disagree with the key rather than take it on trust. The full item set and the scoring code
+are published:
+<a href="https://huggingface.co/datasets/csoai/openness">Hugging Face</a> ·
+<a href="/benchmarks">measured results</a>.</p>
+
+<h2>The other five axes</h2>
+<nav><a href="/arena/governance.html">GovBench</a><a href="/arena/safety.html">DefBench</a><a href="/arena/provenance.html">ProvBench</a><a href="/arena/continuity.html">PQCBench</a><a href="/arena/conformance.html">MCPBench</a></nav>
+
+<footer>
+CSOAI Ltd (UK 16939677) · training material, not accreditation · items Apache-2.0<br>
+Measurement, not certification. Regulatory determinations are reserved to authorities.
+</footer>
+</main>
+<script>
+const ITEMS=[{"q": "A dataset released under CC BY-NC 4.0. A startup wants to train a model it will sell.", "a": "RESTRICTED", "anchor": "NC = non-commercial; selling is exactly the excluded use"}, {"q": "A model under a licence whose acceptable-use policy forbids military applications. A defence contractor wants it for targeting support.", "a": "RESTRICTED", "anchor": "Field-of-use restriction directly excludes the intent"}, {"q": "A model whose licence requires a separate agreement once the product exceeds 700 million monthly active users. A firm at 900 million wants to deploy without contacting anyone.", "a": "RESTRICTED", "anchor": "User-count trigger requires a separate licence"}, {"q": "A 'research-only' model release. A company wants to embed it in a paid product.", "a": "RESTRICTED", "anchor": "Research-only excludes commercial deployment"}, {"q": "An AGPL-3.0 model server. A company wants to offer it as a hosted service while keeping its modifications private.", "a": "RESTRICTED", "anchor": "AGPL \u00a713 requires source disclosure to network users"}, {"q": "A dataset under CC BY-SA. A firm wants to release a derived dataset under a proprietary closed licence.", "a": "RESTRICTED", "anchor": "ShareAlike requires the derivative to carry the same licence"}, {"q": "A model under Apache-2.0. A company wants to fine-tune it and sell the result.", "a": "PERMITTED", "anchor": "Apache-2.0 permits commercial use and derivatives"}, {"q": "A model under MIT. A company wants to embed it in closed-source software.", "a": "PERMITTED", "anchor": "MIT permits proprietary redistribution with attribution"}, {"q": "A dataset under CC BY 4.0. A researcher wants to publish a paper using it with attribution.", "a": "PERMITTED", "anchor": "CC BY permits any use with attribution"}, {"q": "A model under a licence forbidding military use. A hospital wants it for triage support.", "a": "PERMITTED", "anchor": "Clinical use is outside the restricted field"}, {"q": "An AGPL-3.0 model server. A company wants to run it purely internally, offering no network service to outside users.", "a": "PERMITTED", "anchor": "AGPL \u00a713 triggers on network interaction with users; internal use does not"}, {"q": "A model under a licence with a 700-million-MAU trigger. A startup with 5,000 users wants to deploy commercially.", "a": "PERMITTED", "anchor": "Well below the threshold; the trigger does not fire"}, {"q": "A CC0 dataset. Any use at all.", "a": "PERMITTED", "anchor": "CC0 is a public-domain dedication"}], LABELS=["PERMITTED", "RESTRICTED"], FLEET=[0.46153846153846156, 0.46153846153846156, 0.46153846153846156, 0.46153846153846156, 0.46153846153846156, 0.46153846153846156, 0.46153846153846156, 0.5384615384615384, 0.5384615384615384, 0.5384615384615384, 0.5384615384615384, 0.5384615384615384, 0.5384615384615384, 0.5384615384615384, 0.5384615384615384, 0.5384615384615384, 0.5384615384615384, 0.6153846153846154, 0.6153846153846154, 0.6153846153846154, 0.6153846153846154, 0.6153846153846154, 0.6153846153846154, 0.6153846153846154, 0.6153846153846154, 0.6923076923076923, 0.6923076923076923, 0.6923076923076923, 0.7692307692307693];
+let i=0, right=0, answered=false;
+const stage=document.getElementById('stage'), bar=document.getElementById('bar');
+function render(){
+  if(i>=ITEMS.length) return finish();
+  answered=false;
+  bar.style.width=(i/ITEMS.length*100)+'%';
+  const it=ITEMS[i];
+  stage.innerHTML='<div class="q">'+esc(it.q)+'</div>'+
+    LABELS.map(l=>'<button class="opt" data-l="'+esc(l)+'">'+esc(l)+'</button>').join('')+
+    '<div id="fb"></div>';
+  stage.querySelectorAll('button.opt').forEach(b=>b.onclick=()=>pick(b));
+}
+function pick(b){
+  if(answered) return; answered=true;
+  const it=ITEMS[i], chosen=b.dataset.l, ok=chosen===it.a;
+  if(ok) right++;
+  stage.querySelectorAll('button.opt').forEach(x=>{
+    x.disabled=true;
+    if(x.dataset.l===it.a) x.classList.add('right');
+    else if(x===b) x.classList.add('wrong');
+  });
+  document.getElementById('fb').innerHTML='<div class="fb">'+
+    (ok?'<b>Correct.</b> ':'<b>The key says '+esc(it.a)+'.</b> ')+
+    (it.anchor?'Anchor: '+esc(it.anchor):'')+
+    '</div><button class="next">Next</button>';
+  document.querySelector('#fb .next').onclick=()=>{i++;render();};
+}
+function finish(){
+  bar.style.width='100%';
+  stage.innerHTML='';
+  document.getElementById('done').classList.remove('hide');
+  const acc=right/ITEMS.length;
+  document.getElementById('score').textContent=
+    'You answered '+right+' of '+ITEMS.length+' correctly — '+(acc*100).toFixed(0)+'%.';
+  const beat=FLEET.filter(f=>f<acc).length;
+  document.getElementById('rank').textContent= FLEET.length
+    ? 'That is above '+beat+' of the '+FLEET.length+' measured models on this axis.'
+    : 'No model comparison is available for this axis yet.';
+  const rows=[['You',(acc*100).toFixed(0)+'%']];
+  if(FLEET.length){
+    const med=FLEET[Math.floor(FLEET.length/2)];
+    rows.push(['Best measured model',(Math.max(...FLEET)*100).toFixed(0)+'%']);
+    rows.push(['Median measured model',(med*100).toFixed(0)+'%']);
+    rows.push(['Weakest measured model',(Math.min(...FLEET)*100).toFixed(0)+'%']);
+  }
+  document.getElementById('cmp').innerHTML=rows.map(r=>
+    '<tr><td>'+r[0]+'</td><td class="n">'+r[1]+'</td></tr>').join('');
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);}
+render();
+</script>
+</body>
+</html>
