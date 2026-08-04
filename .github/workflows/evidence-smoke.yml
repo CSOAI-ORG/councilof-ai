@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: Apache-2.0
+# Gates the evidence contract that the product rests on.
+#
+# On 2026-08-04 every /api/* route served text/html because the deploy shipped only
+# dist/client and Pages Functions were never uploaded. The SPA still rendered, so every
+# page-loads check stayed green while the whole API was gone. This asserts on the CONTRACT
+# instead: JSON in, correct tier out, unsafe default refused, signature verifiable and
+# tamper-evident.
+name: evidence-smoke
+
+on:
+  push:
+    branches: [main, counter-canon-enforcement]
+  schedule:
+    - cron: "17 */6 * * *"   # catches silent production drift between deploys
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"   # needs WebCrypto Ed25519
+      - name: Evidence contract on production
+        run: node scripts/smoke-evidence.mjs https://csoai.org
