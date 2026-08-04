@@ -17,6 +17,18 @@ const NOISE = [
 ];
 function isNoise(text) { return NOISE.some((re) => re.test(text)); }
 
+// Find the embedded globe3d frame. csoai.org wraps the globe in an
+// <iframe src=".../globe3d.html">. Playwright surfaces the iframe as a
+// child frame with that URL. The parent's about:blank frame is shadowed by
+// the real one. Some runs also include a same-origin shadow frame with
+// url ending in "/" — match the explicit globe3d.html.
+function findGlobeFrame(p) {
+  return p.frames().find((f) => {
+    const u = f.url();
+    return u.includes("globe3d") && !u.endsWith("about:blank");
+  });
+}
+
 async function page() {
   const p = await b.newPage();
   const errs = [];
@@ -224,7 +236,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   await waitForHydration(p);
   // The globe iframe may attach after hydration; wait up to 30s before searching
   await p.waitForSelector('iframe[src*="globe3d"]', { timeout: 30000 }).catch(() => null);
-  const frame = p.frames().find((f) => f.url().includes("globe3d"));
+  const frame = findGlobeFrame(p);
   if (frame) {
     await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
     await clickWhenActionable(p, 'button:has-text("JPMorgan"), button:has-text("Chase"), button:has-text("Wells")');
@@ -255,7 +267,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   // on /brief (flyTo + bftSpiral), /simulate (stamps + bftSpiral + neutralize) and /intel
   // (flyTo on click), all of which still embed the globe and all of which pass. Rather than
   // assert a hop that no longer exists here, this reports the architectural reason.
-  const childFrame = p.frames().find((f) => f !== p.mainFrame() && f.url().includes("globe3d"));
+  const childFrame = findGlobeFrame(p);
   if (childFrame) {
     await childFrame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
     await clickWhenActionable(p, 'button:has-text("Rogue swarm")');
@@ -278,7 +290,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     await p
       .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
       .catch(() => null);
-    const frame = p.frames().find((f) => f.url().includes("globe3d"));
+    const frame = findGlobeFrame(p);
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
       await clickWhenActionable(p, 'button:has-text("Convene the 33-agent council")');
@@ -299,7 +311,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     await p
       .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
       .catch(() => null);
-    const frame = p.frames().find((f) => f.url().includes("globe3d"));
+    const frame = findGlobeFrame(p);
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
       await clickWhenActionable(p, 'button:has-text("Run experiment")');
@@ -320,7 +332,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     await p
       .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
       .catch(() => null);
-    const frame = p.frames().find((f) => f.url().includes("globe3d"));
+    const frame = findGlobeFrame(p);
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
       await clickWhenActionable(p, 'button:has-text("Run experiment")');
