@@ -1,0 +1,20 @@
+name: crawler-view-gate
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * *"   # daily — deploys can regress this without a code change
+jobs:
+  crawler-view:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # Prove the gate can fail before trusting it to pass.
+      - name: Gate selftest
+        run: node scripts/crawler-view-gate.mjs --selftest
+      - name: Crawler view of the live site
+        run: node scripts/crawler-view-gate.mjs --host https://csoai.org
