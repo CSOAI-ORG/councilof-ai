@@ -1,4 +1,45 @@
-# DNS email-authentication records — ready to paste (2026-08-04)
+# DNS email records — ready to paste (2026-08-04, CORRECTED)
+
+> **CORRECTION.** An earlier version gave `v=spf1 -all` null-sender records for meok.ai on
+> the assumption it was a non-sending domain. Wrong: meok.ai is the published `security.txt`
+> Contact (`security@meok.ai`) and the founder's address (`nicholas@meok.ai`).
+
+## THE ACTUAL EMAIL FAULT — meok.ai cannot RECEIVE mail
+
+    domain          MX records
+    csoai.org       mx1.privateemail.com, mx2.privateemail.com   OK
+    meok.ai         NONE   <-- inbound mail fails
+    proofof.ai      NONE
+    councilof.ai    NONE
+
+With no MX, RFC 5321 falls back to the A record — 104.21.66.220, which is Cloudflare and
+does not run SMTP. Mail to nicholas@meok.ai or security@meok.ai never arrives.
+
+`security@meok.ai` is the vulnerability-disclosure contact in security.txt on THREE domains.
+A researcher reporting a flaw has never been able to reach it.
+
+### Fix A — make meok.ai receive (uses the mailbox already paid for)
+
+    MX   @   10   mx1.privateemail.com
+    MX   @   10   mx2.privateemail.com
+    TXT  @        v=spf1 include:spf.privateemail.com ~all
+
+Then add meok.ai as a domain in the PrivateEmail control panel.
+
+### Fix B — instant and free
+
+Change the security.txt Contact on all three sites to an address on **csoai.org**, which has
+working MX today.
+
+### Outbound note
+
+csoai.org sends via **Resend** (`include:spf.resend.com`) and receives via **PrivateEmail**.
+If meok.ai ever sends, its SPF must include Resend or the mail is rejected — Google and
+Yahoo hard-reject unauthenticated bulk mail since ~Nov 2025.
+
+---
+
+# Original null-sender guidance (correct only for genuinely non-sending domains)
 
 MEASURED TODAY with `dig`:
 
