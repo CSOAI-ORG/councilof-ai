@@ -245,10 +245,10 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
     ok("/intel globe RECEIVES flyTo on click", cmds.includes("flyTo"), "got: " + JSON.stringify(cmds));
   } else {
     // Diagnose: what frames ARE present, and what iframes are in the DOM?
-    const allFrames = p.frames().map(f => f.url()).filter(u => u !== "about:blank");
+    const allFrames = p.frames().map(f => f.url());
     const iframes = await p.$$eval("iframe", els => els.map(e => e.src));
     ok("/intel globe RECEIVES flyTo on click", false,
-       `no globe frame | frames=${allFrames.length} iframes=${JSON.stringify(iframes).slice(0, 100)}`);
+       `no globe frame | frames=${JSON.stringify(allFrames)} iframes=${JSON.stringify(iframes).slice(0, 200)}`);
   }
   ok("/intel spy console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
   await p.close();
