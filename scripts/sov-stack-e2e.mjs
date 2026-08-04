@@ -87,8 +87,11 @@ async function go(p, url) {
       }
     } else {
       console.log("~ /globe ask no-crash — SKIPPED: no ask input on this /globe build");
+      // Only a real interaction earns a pass. The unconditional ok(true) that used to sit
+      // here asserted nothing and counted toward the green total — a fake pass is worse than
+      // a skip, because it makes the number look like evidence when it is not.
+      ok("/globe ask no-crash", true);
     }
-    ok("/globe ask no-crash", true);
   } catch (e) {
     ok("/globe ask no-crash", false, "input fill failed: " + String(e.message).slice(0, 80));
   }
