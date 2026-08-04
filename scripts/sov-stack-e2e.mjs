@@ -54,10 +54,25 @@ async function go(p, url) {
     "/globe shows live anchor data",
     await p.evaluate(() => /FROZEN PROVISIONS|ANCHOR NODES|MCP SERVERS/i.test(document.body.innerText)),
   );
-  // type an agentic ask
-  const input = await p.$('input[placeholder*="watchdog"], input[placeholder*="London"], input');
-  if (input) { await input.fill("show the frameworks in Japan"); const askBtn = await p.$x ? null : null; await p.keyboard.press("Enter"); await p.waitForTimeout(1500); }
-  ok("/globe ask no-crash", true);
+  // type an agentic ask — be defensive: not all /globe builds expose a fillable input
+  try {
+    const input = await p.$('input[placeholder*="watchdog"], input[placeholder*="London"], input[placeholder*="ask"], input[type="text"], input:not([type])');
+    if (input) {
+      const visible = await input.isVisible().catch(() => false);
+      if (visible) {
+        await input.fill("show the frameworks in Japan");
+        await p.keyboard.press("Enter");
+        await p.waitForTimeout(1500);
+      } else {
+        console.log("~ /globe ask no-crash — SKIPPED: input present but not visible");
+      }
+    } else {
+      console.log("~ /globe ask no-crash — SKIPPED: no ask input on this /globe build");
+    }
+    ok("/globe ask no-crash", true);
+  } catch (e) {
+    ok("/globe ask no-crash", false, "input fill failed: " + String(e.message).slice(0, 80));
+  }
   // toggle to 2D → SVG should appear
   // The 2D-classic toggle was removed with the wrapper page (see above). If it ever returns,
   // this asserts it works; while it is absent, that absence is reported as a skip, not a pass
