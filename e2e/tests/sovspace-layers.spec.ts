@@ -21,8 +21,13 @@ test('redirects: legacy routes land inside Sov Space as layers', async ({ page }
 
   // /globe is served by the consolidation redirect page (static file wins over
   // the SPA) — the canonical Earth is globe3d.html, which the globe LAYER frames.
+  // Cloudflare Pages auto-rewrites static .html to its friendly URL, so the
+  // browser may end up at /globe3d (no extension) instead of /globe3d.html.
+  // Accept either form — the rewrite is platform behavior we can't disable
+  // from _redirects. Real link targets elsewhere in the app still hit
+  // /globe3d.html directly (OsLauncher, GovGraph, SovereignTown).
   await page.goto('/globe', { waitUntil: 'domcontentloaded' });
-  await expect(page).toHaveURL(/\/globe3d\.html/);
+  await expect(page).toHaveURL(/\/globe3d(\.html)?(\?|#|$)/);
 
   await page.goto('/sovereign-town', { waitUntil: 'domcontentloaded' });
   await expect(page).toHaveURL(/\/sov-space\?view=towns/);
