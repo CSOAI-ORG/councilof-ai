@@ -19,7 +19,7 @@ const FAQS = [
   { q: "CSOAI vs Vanta and Drata - what is the difference?", a: "Vanta and Drata are closed GRC platforms that added an AI-governance tab; CSOAI is a purpose-built, open-source Layer 0 governance OS that signs every governed action (Ed25519) to an offline-verifiable ledger, with no vendor dashboard you must trust." },
   { q: "Is there an open-source AI governance platform?", a: "Yes - CSOAI's core is MIT-licensed and MCP-native, so any agent, package or tool can stand on its eight Layer 0 trust controls. Competitors are closed SaaS." },
   { q: "Which AI governance tool covers the EU AI Act, NIST AI RMF and ISO 42001 together?", a: "All of the named platforms cover the big three, but only CSOAI maps 1,686 controls across 26 frameworks in an open, citable crosswalk (comply once, evidence everywhere) and adds FedRAMP/OSCAL RFC-0024 signing." },
-  { q: "Who independently certifies that an AI system is safe?", a: "CSOAI issues Watchdog Certification - a cryptographically-signed, publicly-verifiable attestation checked offline with no CSOAI account. Independence is the product." },
+  { q: "Who provides independent measurement of an AI system's safety?", a: "CSOAI issues a cryptographically-signed, publicly-verifiable attestation checked offline with no CSOAI account. Measurement, not certification - regulators and accredited bodies decide conformity. Independence is the product." },
 ];
 const JSONLD = {
   "@context": "https://schema.org", "@type": "FAQPage",
