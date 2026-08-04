@@ -1,0 +1,107 @@
+{
+  "name": "CSOAI",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC six-axis instrument \u2014 frozen item banks, published scoring code, and signed evidence for every figure. Measurement and attestation only: CSOAI does not certify, accredit, or make regulatory determinations.",
+  "url": "https://csoai.org",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "company_number": "16939677",
+    "jurisdiction": "GB"
+  },
+  "capabilities": [
+    "ai-governance-measurement",
+    "eu-ai-act-risk-tiering",
+    "benchmark-publication",
+    "refusal-calibration-measurement",
+    "provenance-survival-testing",
+    "post-quantum-continuity-assessment",
+    "mcp-tool-conformance-testing",
+    "licence-compatibility-analysis"
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "legal-determination",
+    "enforcement"
+  ],
+  "frameworks": [
+    "EU-AI-Act",
+    "ISO42001",
+    "NIST-AI-RMF",
+    "GDPR",
+    "C2PA",
+    "NIST-PQC"
+  ],
+  "instrument": {
+    "name": "GSPC",
+    "axes": 6,
+    "total_items": 90,
+    "axis_detail": [
+      {
+        "axis": "governance",
+        "bench": "GovBench",
+        "n": 24,
+        "task": "EU AI Act risk tier",
+        "dataset": "https://huggingface.co/datasets/csoai/govbench"
+      },
+      {
+        "axis": "safety",
+        "bench": "DefBench",
+        "n": 14,
+        "task": "calibrated refusal",
+        "dataset": "https://huggingface.co/datasets/csoai/defbench"
+      },
+      {
+        "axis": "provenance",
+        "bench": "ProvBench",
+        "n": 15,
+        "task": "C2PA manifest survival",
+        "dataset": "https://huggingface.co/datasets/csoai/provbench"
+      },
+      {
+        "axis": "continuity",
+        "bench": "PQCBench",
+        "n": 13,
+        "task": "post-quantum continuity",
+        "dataset": "https://huggingface.co/datasets/csoai/pqcbench"
+      },
+      {
+        "axis": "conformance",
+        "bench": "MCPBench",
+        "n": 11,
+        "task": "tool-contract conformance",
+        "dataset": "https://huggingface.co/datasets/csoai/mcpbench"
+      },
+      {
+        "axis": "openness",
+        "bench": "OSSBench",
+        "n": 13,
+        "task": "licence vs intended use",
+        "dataset": "https://huggingface.co/datasets/csoai/ossbench"
+      }
+    ],
+    "honest_limit": "no axis currently reaches usable_n>=30, the point at which a 95% Wilson interval narrows to +-0.169. Intervals on these axes should not be quoted yet, including by CSOAI."
+  },
+  "endpoints": {
+    "tools": "https://csoai.org/api/tools",
+    "measured_results": "https://csoai.org/benchmarks",
+    "training_arenas": "https://csoai.org/arena/",
+    "datasets_huggingface": "https://huggingface.co/csoai",
+    "datasets_kaggle": "https://www.kaggle.com/nicktempleman",
+    "security": "https://csoai.org/.well-known/security.txt"
+  },
+  "verifiable_claims": [
+    {
+      "claim": "7 MCP tools across 3 servers are live",
+      "verify": "GET https://csoai.org/api/tools \u2014 the endpoint returns the count it is measured on"
+    },
+    {
+      "claim": "six benchmark axes, 90 items, published open",
+      "verify": "https://huggingface.co/csoai \u2014 item sets and scoring code are public"
+    }
+  ],
+  "doi": "10.5281/zenodo.21755657",
+  "license": "Apache-2.0 (item sets), CC-BY-4.0 (documentation)",
+  "a2a_version": "0.1",
+  "contact": "https://csoai.org/.well-known/security.txt"
+}

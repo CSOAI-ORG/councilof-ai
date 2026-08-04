@@ -40,3 +40,18 @@ CSOAI Ltd (UK). MIT-licensed core. EU AI Act Article 50 transparent.
 - /training-board.html — living training + attestation board (staging, DESIGN-labelled): role-based training measured against the live regulatory corpus; XP, seasons, CASA tier readiness; signed living attestation records that go STALE when corpus-watch detects drift.
 - /regulator-console.html — regulator oversight console (staging, DESIGN-labelled): provision watch (127 provisions, 4 instruments, daily re-hash), market sweep predicate scores, attestation registry, model care-floor standings. Oversight evidence, not certification.
 - training_engine + regulator_console are open measurement instruments; every figure traces to a dated, signed artefact.
+
+## Machine-readable and crawler-readable (VERIFIED to serve real content)
+These render without JavaScript and are the ones an AI system should read first. Most other
+routes on this site are client-rendered and return an empty shell to a crawler.
+- Measured benchmark results (every figure carries an evidence file): https://csoai.org/benchmarks
+- Training arenas, six axes, real items + published key: https://csoai.org/arena/
+- Live MCP tool catalogue as JSON: https://csoai.org/api/tools
+- A2A agent card: https://csoai.org/.well-known/agent.json
+- MCP discovery: https://csoai.org/.well-known/mcp.json
+- Item sets and scoring code, open: https://huggingface.co/csoai and https://www.kaggle.com/nicktempleman
+
+## What CSOAI does not do
+Measurement and attestation only. CSOAI does not certify, accredit, or issue conformity
+assessments, and no page here should be read as a regulatory determination. No GSPC axis
+currently reaches usable_n>=30, so intervals on these axes are not quoted — including by us.

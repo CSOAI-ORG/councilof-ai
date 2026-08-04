@@ -1,0 +1,25 @@
+{
+  "schema_version": "2026-07-28",
+  "name": "csoai",
+  "description": "CSOAI measurement tools exposed over MCP.",
+  "servers": [
+    {
+      "name": "csoai-assess",
+      "url": "https://csoai.org/api/assess"
+    },
+    {
+      "name": "csoai-article50",
+      "url": "https://csoai.org/api/article50"
+    },
+    {
+      "name": "csoai-corpus-watch",
+      "url": "https://csoai.org/api/corpus-watch"
+    }
+  ],
+  "catalogue": "https://csoai.org/api/tools",
+  "measured": {
+    "total_tools": 7,
+    "server_count": 3,
+    "note": "this count is MEASURED from the live catalogue, not asserted. Figures of 313, 531 and 1050+ appear on some legacy surfaces and are not supported by any evidence file; 173 MCP implementations exist on disk, 3 are reachable."
+  }
+}
