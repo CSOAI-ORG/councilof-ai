@@ -20,7 +20,21 @@ async function rpc(method, params) {
 async function apiTruth() {
   // Catalog count is expected to GROW as new governed MCPs are registered (e.g. csoai-governance-mcp
   // took it 377→378 on 2026-07-07) — check it's a sane, growing number, not frozen at one exact value.
-  try { const d = await (await fetch(BRAIN + "/tools?q=governance")).json(); (typeof d.total === "number" && d.total >= 377) ? pass('CLAIM "377+ tools"', `/api/tools total=${d.total} (baseline 377, grows as catalog is registered)`) : fail('CLAIM "377+ tools"', `actual=${d.total} — below baseline, investigate`); } catch (e) { fail("377+ tools", e.message); }
+  // The 377 baseline was never reproducible from this estate. It counted MCP SERVER repos and
+  // printed them as TOOLS — the unit flip our own Refutation Ledger already records ("no 9-tool
+  // manifest exists; claims-only, with a tools<->servers unit flip in the same page"). The
+  // endpoint it pointed at now serves the SPA, so the assertion was failing on a missing route
+  // rather than on a real count. Asserting a number we cannot reproduce is the failure this
+  // organisation exists to catch, so the check is now on the CONTRACT: real JSON, a derived
+  // total, and tools counted as tools.
+  try {
+    const d = await (await fetch(SITE + "/api/tools?q=governance")).json();
+    const okShape = typeof d.total === "number" && Array.isArray(d.tools) && typeof d.server_count === "number";
+    const derived = okShape && d.total === d.tools.length;
+    (okShape && derived && d.total > 0)
+      ? pass('CLAIM "MCP tool catalogue"', `/api/tools total=${d.total} tools across ${d.server_count} servers (derived, not asserted)`)
+      : fail('CLAIM "MCP tool catalogue"', `shape=${okShape} derived=${derived} total=${d.total}`);
+  } catch (e) { fail("MCP tool catalogue", e.message); }
   try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `${n} execute server-side`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
   try { const d = await rpc("tools/call", { name: "meok_govern", arguments: { industry: "a bank" } }); const t = d.result?.content?.map((c) => c.text).join(" ") || ""; /EU AI Act|DORA|GDPR/.test(t) ? pass("meok_govern executes", t.slice(0, 55)) : fail("meok_govern", "no framework output"); } catch (e) { fail("meok_govern", e.message); }
   try { const r = await fetch(BRAIN + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "claims-test" }) }); const d = await r.json(); (d.signature && d.publicKey) ? pass('CLAIM "Ed25519 signing"', `real sig len=${String(d.signature).length}, alg=${d.alg || "?"}`) : fail("Ed25519 signing", "no signature — the signed claim would be FALSE"); } catch (e) { fail("Ed25519 signing", e.message); }

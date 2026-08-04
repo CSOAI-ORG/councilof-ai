@@ -167,9 +167,9 @@ export default function RegulatoryAuthority() {
                 </p>
                 <ul className="space-y-2 text-gray-700 text-sm mb-6">
                   <li>○ Accreditation-chain recognition — a future option, not claimed today</li>
-                  <li>✓ International credibility</li>
-                  <li>✓ Foundation for all other recognitions</li>
-                  <li>✓ Timeline: 12 months (2025)</li>
+                  <li>▹ International credibility</li>
+                  <li>▹ Foundation for all other recognitions</li>
+                  <li>▹ Timeline: 12 months (2025)</li>
                 </ul>
                 <Link href="/regulatory/iso-17065">
                   <Button className="w-full bg-blue-600 hover:bg-blue-700">
@@ -188,10 +188,10 @@ export default function RegulatoryAuthority() {
                   Official EU authority for AI system compliance assessment under EU AI Act.
                 </p>
                 <ul className="space-y-2 text-gray-700 text-sm mb-6">
-                  <li>✓ Mandatory for high-risk AI in Europe</li>
-                  <li>✓ Legally binding compliance certificates</li>
-                  <li>✓ €30M fines for non-compliance</li>
-                  <li>✓ Timeline: 24 months (2026-2027)</li>
+                  <li>▹ Mandatory for high-risk AI in Europe</li>
+                  <li>▹ Legally binding compliance certificates</li>
+                  <li>▹ €30M fines for non-compliance</li>
+                  <li>▹ Timeline: 24 months (2026-2027)</li>
                 </ul>
                 <Link href="/regulatory/eu-notified-body">
                   <Button className="w-full bg-yellow-600 hover:bg-yellow-700">
@@ -210,10 +210,10 @@ export default function RegulatoryAuthority() {
                   US government recognition of alignment with AI Risk Management Framework.
                 </p>
                 <ul className="space-y-2 text-gray-700 text-sm mb-6">
-                  <li>✓ US government agency credibility</li>
-                  <li>✓ Procurement compliance support</li>
-                  <li>✓ Voluntary but increasingly required</li>
-                  <li>✓ Timeline: 12 months (2026)</li>
+                  <li>▹ US government agency credibility</li>
+                  <li>▹ Procurement compliance support</li>
+                  <li>▹ Voluntary but increasingly required</li>
+                  <li>▹ Timeline: 12 months (2026)</li>
                 </ul>
                 <Link href="/regulatory/nist-recognition">
                   <Button className="w-full bg-red-600 hover:bg-red-700">
@@ -232,10 +232,10 @@ export default function RegulatoryAuthority() {
                   China's AI safety standards for systems deployed in or serving Chinese users.
                 </p>
                 <ul className="space-y-2 text-gray-700 text-sm mb-6">
-                  <li>✓ Mandatory for China market</li>
-                  <li>✓ Algorithm transparency requirements</li>
-                  <li>✓ Data security and content safety</li>
-                  <li>✓ Timeline: 12 months (2027)</li>
+                  <li>▹ Mandatory for China market</li>
+                  <li>▹ Algorithm transparency requirements</li>
+                  <li>▹ Data security and content safety</li>
+                  <li>▹ Timeline: 12 months (2027)</li>
                 </ul>
                 <Link href="/regulatory/tc260-alignment">
                   <Button className="w-full bg-orange-600 hover:bg-orange-700">
@@ -272,8 +272,8 @@ export default function RegulatoryAuthority() {
                   <ul className="space-y-2 text-gray-700">
                     <li>○ ISO/IEC 17065 — future option, not pursued today</li>
                     <li>○ Analyst network — design target, not current</li>
-                    <li>✓ Government Portal launched (beta)</li>
-                    <li>✓ Revenue: $41M</li>
+                    <li>▹ Government Portal launched (beta)</li>
+                    <li>▹ Revenue: $41M</li>
                   </ul>
                 </div>
               </div>
@@ -286,13 +286,13 @@ export default function RegulatoryAuthority() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Expansion</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Expansion <span className="text-sm font-normal text-gray-500">— target, not achieved</span></h3>
                   <ul className="space-y-2 text-gray-700">
-                    <li>✓ EU legal entity established</li>
-                    <li>✓ Enterprise APIs launched</li>
-                    <li>✓ Analyst network scaled to 5,000</li>
-                    <li>✓ NIST recognition achieved</li>
-                    <li>✓ Revenue: $150M</li>
+                    <li>▹ EU legal entity established</li>
+                    <li>▹ Enterprise APIs launched</li>
+                    <li>▹ Analyst network scaled to 5,000</li>
+                    <li>▹ NIST recognition achieved</li>
+                    <li>▹ Revenue: $150M</li>
                   </ul>
                 </div>
               </div>
@@ -305,13 +305,13 @@ export default function RegulatoryAuthority() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Authority</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Authority <span className="text-sm font-normal text-gray-500">— target, not achieved</span></h3>
                   <ul className="space-y-2 text-gray-700">
-                    <li>✓ EU Notified Body status approved</li>
-                    <li>✓ Analyst network scaled to 10,000</li>
-                    <li>✓ TC260 recognition achieved</li>
-                    <li>✓ Mandatory compliance begins in EU</li>
-                    <li>✓ Revenue: $400M</li>
+                    <li>▹ EU Notified Body status approved</li>
+                    <li>▹ Analyst network scaled to 10,000</li>
+                    <li>▹ TC260 recognition achieved</li>
+                    <li>▹ Mandatory compliance begins in EU</li>
+                    <li>▹ Revenue: $400M</li>
                   </ul>
                 </div>
               </div>
@@ -326,10 +326,10 @@ export default function RegulatoryAuthority() {
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">Dominance & Global Standard</h3>
                   <ul className="space-y-2 text-gray-700">
-                    <li>✓ 60-80% market penetration</li>
-                    <li>✓ 20,000+ analysts worldwide</li>
-                    <li>✓ CSOAI is de facto global standard</li>
-                    <li>✓ Revenue: $800M-$1.34B</li>
+                    <li>▹ 60-80% market penetration</li>
+                    <li>▹ 20,000+ analysts worldwide</li>
+                    <li>▹ CSOAI is de facto global standard</li>
+                    <li>▹ Revenue: $800M-$1.34B</li>
                   </ul>
                 </div>
               </div>
@@ -344,7 +344,7 @@ export default function RegulatoryAuthority() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl font-bold mb-4">Ready to Lead AI Safety Governance?</h2>
             <p className="text-lg text-emerald-100 mb-8">
-              Join CSOAI as we build the global standard for AI safety. Whether you're an enterprise, regulator, or analyst, there's a role for you.
+              Join CSOAI as we build independent measurement for AI governance. Whether you're an enterprise, regulator, or analyst, there's a role for you.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/enterprise">

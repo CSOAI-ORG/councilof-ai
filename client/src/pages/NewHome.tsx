@@ -757,14 +757,13 @@ export default function NewHome() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-green-100 text-green-800 text-sm px-4 py-2">
-              The Western TC260
+              Independent measurement body
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Proven in China. Adapted for the West.
+              Measured governance, published with its limits
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              China's TC260 has successfully governed AI safety for years. 
-              CSOAI brings the same proven framework to Western markets.
+              We crosswalk to the EU AI Act, NIST AI RMF, ISO/IEC 42001 and TC260 — mapping to a framework is not equivalence to its standards body. We measure and sign; regulators and accredited bodies decide.
             </p>
           </div>
 

@@ -177,7 +177,12 @@ if(viewer){
 
   // Fetch live anchor nodes from Workers API (D1-backed)
   (function(){
-    var API='https://csoai-gspc-api.nicholastempleman.workers.dev';
+    // Same-origin. The Worker's CORS allow-list is https://csoai.org only, so this iframe
+    // threw net::ERR_FAILED on every other host — preview deployments, pages.dev, and CI —
+    // which is why the Sov-Stack console-clean checks failed while the page looked fine.
+    // /api/worker/* proxies to the same Worker server-side, so there is no cross-origin
+    // request to allow-list and the globe works from every host we deploy to.
+    var API='/api/worker';
     // Node coordinates for the 15 anchor sources
     var COORDS={
       'UK legislation.gov.uk':{lng:-0.12,lat:51.5},
@@ -197,7 +202,7 @@ if(viewer){
       'NVD / CVE':{lng:-77,lat:38.9}
     };
     var STATUS_COL={'LIVE':'#34d399','STALE':'#f59e0b','UNKNOWN':'#f59e0b','UNREACHABLE':'#ef4444','CITED':'#64748b','AUTHORED':'#64748b'};
-    fetch(API+'/api/anchors',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+    fetch(API+'/anchors',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
       if(!d||!d.watchers)return;
       var nodes=d.watchers.map(function(w){
         var c=COORDS[w.source]||{lng:0,lat:0};
