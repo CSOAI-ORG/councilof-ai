@@ -4,7 +4,7 @@ const API: string = ((import.meta as any).env && (import.meta as any).env.VITE_A
 
 // MCP Fleet — the real CSOAI/MEOK governance MCP fleet, sourced from the deployment
 // manifest (MCP_DEPLOYMENT_MANIFEST.json, generated 2026-06-14). 216 servers across
-// 10 hives DEPLOYED; the public registry (data/mcpRegistry.json) catalogues 293
+// 10 hives DEPLOYED; the public registry (data/mcpRegistry.json) catalogues 291
 // including planned entries. Both counts are stated on the page with their meanings.
 // A representative slice of servers is listed (full fleet streams from /api/mcp once
 // the gateway is on the VM). Each server carries a Layer 0 conformance badge derived

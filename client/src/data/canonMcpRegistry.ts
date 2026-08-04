@@ -3278,4 +3278,4 @@ export const CANON_REGISTRY: CanonEntry[] = [
   }
 ];
 
-export const CANON_COUNTS = {"site": 14, "server": 293, "pack": 5} as const;
+export const CANON_COUNTS = {"site": 14, "server": 291, "pack": 5} as const;

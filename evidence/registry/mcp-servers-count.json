@@ -1,0 +1,21 @@
+{
+  "metric": "governed_mcp_servers",
+  "value": 291,
+  "status": "VERIFIED",
+  "derivation": "Count of entries in the rendered MCP registry evidence file.",
+  "source_file": "client/src/data/mcpRegistry.json",
+  "source_declared_total": 291,
+  "source_servers_array_length": 291,
+  "self_consistent": true,
+  "source_generated_at": "2026-06-02",
+  "resolves_drift": {
+    "observed_conflicting_values": [233, 291, 293, 341, 378],
+    "rejected": {
+      "293": "canonMcpRegistry.ts CANON_COUNTS declared 293 but is not self-consistent and is not the file rendered on /mcp; corrected to 291.",
+      "378": "ToolCommons hardcoded fallback '378 governed MCP tools' — no evidence file yields 378; per G3 it cannot ship. Replaced with the backed 291-servers figure.",
+      "341,233": "No evidence file on disk yields these; per G3 they do not exist."
+    }
+  },
+  "last_verified": "2026-08-04",
+  "owner": "SOV Harness Custodian"
+}

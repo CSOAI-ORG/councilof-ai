@@ -191,7 +191,7 @@ export default function EI3() {
             <Card className="p-5 border-amber-200 dark:border-amber-900">
               <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300 mb-3">HOW</Badge>
               <h3 className="font-bold text-lg mb-2">safetyof.ai</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Runtime. 293 MCPs. Care-gated agents, Council of AI, watermarking, attestation, prompt-injection firewall.</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">Runtime. 291 MCPs. Care-gated agents, Council of AI, watermarking, attestation, prompt-injection firewall.</p>
               <a href="https://safetyof.ai" target="_blank" rel="noopener" className="text-sm text-amber-700 dark:text-amber-400 inline-flex items-center gap-1 hover:underline">
                 Visit <ExternalLink className="w-3 h-3" />
               </a>

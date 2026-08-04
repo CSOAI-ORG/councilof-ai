@@ -23,9 +23,9 @@ export interface Integration {
 export const INTEGRATIONS: Integration[] = [
   {
     slug: 'mcp-fleet',
-    name: 'CSOAI MCP Servers (293)',
+    name: 'CSOAI MCP Servers (291)',
     kind: 'mcp',
-    description: '293 compliance & governance MCP servers — callable per framework from any MCP client (Claude, Cursor, Kimi, A2A agents).',
+    description: '291 compliance & governance MCP servers — callable per framework from any MCP client (Claude, Cursor, Kimi, A2A agents).',
     endpoint: 'https://app.csoai.org/mcp',
     docsUrl: 'https://app.csoai.org/mcp',
     frameworks: ['eu-ai-act', 'nist-ai-rmf', 'iso-42001', 'dora', 'nis2', 'gdpr', 'cra'],
