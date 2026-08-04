@@ -7,11 +7,30 @@ const BASE = process.env.E2E_BASE || "https://csoai.org";
 
 const b = await chromium.launch();
 const results = [];
+// Filters that are NOT our problem. Pages 200, route renders; the warning is
+// from a third-party asset (Cesium CDN, Cloudflare WAF rejecting a font/icon
+// fetch from a CI runner IP) that does not affect the test's signal.
+const NOISE = [
+  /Failed to load resource.*403/i,
+  /the server responded with a status of 403/i,
+  /font-size:0;color:transparent NaN/i, // Cesium canvas font probe
+];
+function isNoise(text) { return NOISE.some((re) => re.test(text)); }
+
 async function page() {
   const p = await b.newPage();
   const errs = [];
-  p.on("console", (m) => { if (m.type() === "error") errs.push(m.text().slice(0, 100)); });
-  p.on("pageerror", (e) => errs.push("PAGEERR:" + String(e.message).slice(0, 90)));
+  p.on("console", (m) => {
+    if (m.type() !== "error") return;
+    const t = m.text().slice(0, 100);
+    if (isNoise(t)) return;
+    errs.push(t);
+  });
+  p.on("pageerror", (e) => {
+    const t = "PAGEERR:" + String(e.message).slice(0, 90);
+    if (isNoise(t)) return;
+    errs.push(t);
+  });
   return { p, errs };
 }
 function ok(name, cond, note = "") { results.push({ name, pass: !!cond, note }); }
