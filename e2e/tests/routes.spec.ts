@@ -59,27 +59,39 @@ test.describe('Homepage', () => {
   });
 
   test('hero section renders', async ({ page }) => {
-    await expect(page.locator('text=Unifying the World')).toBeVisible();
-    await expect(page.locator('text=Response to AI')).toBeVisible();
+    // Post-2026-08-01 cleanup (TUI-3 polish): the hero was reduced from 12+ elements
+    // to 5 (SovereignConsole + headline + sub-headline + 2 CTAs + scale indicators).
+    // The previous "Unifying the World / Response to AI" copy was deliberately
+    // removed. Assert the current headline "Measured, not modelled." and the
+    // sub-headline kicker instead. The kicker text appears twice (in the hero
+    // and in the repeat copy) so we use .first() to disambiguate.
+    await expect(page.locator('h1').first()).toContainText(/Measured/);
+    await expect(page.locator('h1').first()).toContainText(/modelled/);
+    await expect(page.locator('text=Describe an AI system').first()).toBeVisible();
   });
 
   test('EU AI Act countdown shows next milestone (not all zeros)', async ({ page }) => {
-    // After fix: should show "High-Risk AI Obligations Begin" with actual countdown
-    const countdownSection = page.locator('text=High-Risk AI Obligations Begin');
-    // If all milestones have passed, check for the "fully enforced" message instead
-    const fullyEnforced = page.locator('text=EU AI Act Fully Enforced');
-    const hasCountdown = await countdownSection.isVisible().catch(() => false);
-    const hasEnforced = await fullyEnforced.isVisible().catch(() => false);
-    expect(hasCountdown || hasEnforced).toBeTruthy();
+    // The pre-2026-08-01 hero carried a "High-Risk AI Obligations Begin" countdown
+    // chip alongside a "fully enforced" fallback message. Both were removed in the
+    // hero cleanup (TUI-3). The SovereignConsole component now surfaces live
+    // regulatory state instead — assert that current surface is present.
+    await expect(page.getByText(/Sovereign/i).first()).toBeVisible();
   });
 
   test('CTA banners render', async ({ page }) => {
-    await expect(page.locator('text=Now Live')).toBeVisible();
-    await expect(page.locator('text=100% Free Training')).toBeVisible();
+    // The previous "Now Live" / "100% Free Training" banners were removed in the
+    // 2026-08-01 hero cleanup (TUI-3). Assert the two focused CTAs that replaced them.
+    await expect(page.locator('text=Free AI Risk Check')).toBeVisible();
+    await expect(page.locator('text=Try Sov Space')).toBeVisible();
   });
 
   test('navigation bar has all sections', async ({ page }) => {
-    const navItems = ['Charter', 'Training', 'Certification', 'SOAI-PDCA', 'Watchdog', 'Enterprise', 'Government'];
+    // The pre-2026-08-01 nav had ~70 sub-items including Charter, Training,
+    // Certification, SOAI-PDCA, Enterprise, Government. The cleanup trimmed
+    // it to ~45 items with a cleaner top-level (per project memory:
+    // 2026-08-01 hero cleanup). Current top-level nav items: Home, Sovereign OS,
+    // Ledger, Explore, Learn, Solutions, Watchdog, Company.
+    const navItems = ['Home', 'Sovereign OS', 'Ledger', 'Explore', 'Learn', 'Solutions', 'Watchdog', 'Company'];
     for (const item of navItems) {
       await expect(page.locator(`nav >> text=${item}`).first()).toBeVisible();
     }
@@ -89,8 +101,9 @@ test.describe('Homepage', () => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(1000);
     await expect(page.locator('footer')).toBeVisible();
-    await expect(page.locator('footer >> text=Privacy Policy')).toBeVisible();
-    await expect(page.locator('footer >> text=Terms of Service')).toBeVisible();
+    // header + footer both render these; we only assert the footer copy once
+    await expect(page.locator('footer >> text=Privacy Policy').first()).toBeVisible();
+    await expect(page.locator('footer >> text=Terms of Service').first()).toBeVisible();
   });
 
   test('no console errors on homepage', async ({ page }) => {
@@ -169,7 +182,9 @@ test.describe('Training & Courses', () => {
 test.describe('Authentication', () => {
   test('login page renders form', async ({ page }) => {
     await page.goto('/login', { waitUntil: 'networkidle' });
-    await expect(page.locator('text=Sign In')).toBeVisible();
+    // login page has 4 "Sign In" elements (nav button, paragraph, heading,
+    // submit); narrow to the submit button to avoid strict-mode duplication.
+    await expect(page.getByRole('button', { name: 'Sign In', exact: true })).toBeVisible();
     await expect(page.locator('input[type="email"], input[placeholder*="email" i]')).toBeVisible();
     await expect(page.locator('input[type="password"]')).toBeVisible();
   });
