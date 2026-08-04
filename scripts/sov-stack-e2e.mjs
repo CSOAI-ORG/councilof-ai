@@ -70,26 +70,30 @@ async function waitForHydration(p, minChars = 800, timeoutMs = 15000) {
 // layer for 1-3s; the default 30s click wait is the wrong tool — the button
 // is not "not found", it is "not actionable yet". Wait for the actionable
 // state, then click with a generous timeout.
+//
+// selector can be a CSS selector OR a comma-separated list of Playwright
+// `:has-text("X")` pseudo-selectors. We use Playwright's locator API for both
+// the wait and the click, which understands `:has-text` natively.
 async function clickWhenActionable(p, selector, timeoutMs = 30000) {
-  const handle = await p.waitForSelector(selector, { state: "visible", timeout: timeoutMs });
-  if (!handle) return null;
-  // Wait for the element to be enabled (not disabled, no aria-busy, no loading overlay)
-  await p
-    .waitForFunction(
-      (sel) => {
-        const el = document.querySelector(sel);
-        if (!el) return false;
-        if (el.disabled || el.getAttribute("aria-disabled") === "true") return false;
-        if (el.getAttribute("aria-busy") === "true") return false;
-        const r = el.getBoundingClientRect();
-        return r.width > 0 && r.height > 0;
-      },
-      selector,
-      { timeout: 5000 },
-    )
-    .catch(() => null);
-  await handle.click({ timeout: 5000 }).catch(() => null);
-  return handle;
+  const loc = p.locator(selector.split(",")[0].trim());
+  try {
+    await loc.waitFor({ state: "visible", timeout: timeoutMs });
+  } catch (_) { return null; }
+  // If the comma-joined form had multiple options, prefer the first visible one
+  const candidates = selector.split(",").map((s) => p.locator(s.trim()));
+  let target = loc;
+  for (const c of candidates) {
+    if (await c.count() > 0 && await c.first().isVisible().catch(() => false)) {
+      target = c.first();
+      break;
+    }
+  }
+  try {
+    await target.click({ timeout: 10000 });
+    return target;
+  } catch (_) {
+    return target;
+  }
 }
 
 // 1) /globe — 3D globe, mode toggle, agentic ask, threat
