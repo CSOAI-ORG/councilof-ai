@@ -31,6 +31,18 @@ const j = async (path, init) => {
   const r = await fetch(ORIGIN + path, init);
   const ct = r.headers.get("content-type") ?? "";
   const body = ct.includes("json") ? await r.json() : await r.text();
+  // When a route serves HTML, the interesting question is WHICH origin answered. On
+  // 2026-08-04 GitHub runners consistently received the SPA from csoai.org while every
+  // vantage point we controlled (IPv4, IPv6, apex and www) received JSON at the same moment.
+  // Without these headers that split is unexplainable from a log, so print them on failure.
+  if (!ct.includes("json")) {
+    const h = ["cf-ray", "server", "cf-cache-status", "x-vercel-id", "age", "location"]
+      .map((k) => [k, r.headers.get(k)])
+      .filter(([, v]) => v)
+      .map(([k, v]) => `${k}=${v}`)
+      .join(" ");
+    console.log(`        origin-hint ${path}: status=${r.status} ${h}`);
+  }
   return { status: r.status, ct, body };
 };
 
