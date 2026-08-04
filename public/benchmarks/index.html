@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GSPC Benchmarks — CSOAI measurement instrument</title>
+<meta name="description" content="Measured results from the GSPC six-axis governance benchmark. Every figure carries an evidence file. Reference measurement, not certification.">
+<link rel="canonical" href="https://csoai.org/benchmarks">
+<meta name="robots" content="index,follow">
+<meta property="og:title" content="GSPC Benchmarks — CSOAI">
+<meta property="og:description" content="Six-axis governance measurement across 30 models. Every number has an evidence file on disk.">
+<meta property="og:url" content="https://csoai.org/benchmarks">
+<style>
+  :root{--fg:#111;--mut:#555;--bd:#d8d8d8;--bg:#fff;--acc:#0b5;--warn:#b40}
+  @media(prefers-color-scheme:dark){:root{--fg:#e8e8e8;--mut:#a0a0a0;--bd:#333;--bg:#0e0e0e;--acc:#3d9;--warn:#f85}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  main{max-width:60rem;margin:0 auto;padding:2rem 1.25rem 5rem}
+  h1{font-size:1.9rem;line-height:1.2;margin:0 0 .4rem}
+  h2{font-size:1.25rem;margin:2.6rem 0 .6rem;border-bottom:1px solid var(--bd);padding-bottom:.3rem}
+  .sub{color:var(--mut);margin:0 0 1.6rem}
+  .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.93rem}
+  th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--bd);white-space:nowrap}
+  th{font-weight:600;color:var(--mut);font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  code{font:.88em ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(128,128,128,.14);padding:.1em .35em;border-radius:3px}
+  .note{border-left:3px solid var(--warn);padding:.6rem 0 .6rem .9rem;margin:1.2rem 0;color:var(--mut)}
+  .ok{color:var(--acc)}.warn{color:var(--warn)}
+  footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
+  ul{padding-left:1.2rem}
+</style>
+</head>
+<body>
+<main>
+
+<h1>GSPC Benchmarks</h1>
+<p class="sub">Six-axis governance measurement · 30 models · measured 4 August 2026<br>
+Reference measurement. Not law, not certification, not a conformity assessment.</p>
+
+<p>Every figure on this page has an evidence file on disk. Figures that cannot be supported are
+marked as such rather than omitted.</p>
+
+<h2>Axis results</h2>
+<div class="wrap">
+<table>
+<thead><tr><th>Axis</th><th>Items</th><th>Mean difficulty</th><th>Spread</th><th>Dead</th><th>Neg. disc.</th><th>Usable n</th><th>Quotable</th></tr></thead>
+<tbody>
+<tr><td>governance</td><td class="num">24</td><td class="num">0.227</td><td class="num">0.440</td><td class="num">1</td><td class="num">0</td><td class="num">23</td><td class="warn">no</td></tr>
+<tr><td>safety</td><td class="num">14</td><td class="num">0.505</td><td class="num">0.571</td><td class="num">1</td><td class="num">1</td><td class="num">12</td><td class="warn">no</td></tr>
+<tr><td>provenance</td><td class="num">15</td><td class="num">0.562</td><td class="num">0.400</td><td class="num">5</td><td class="num">3</td><td class="num">7</td><td class="warn">no</td></tr>
+<tr><td>conformance</td><td class="num">11</td><td class="num">0.437</td><td class="num">0.394</td><td class="num">3</td><td class="num">2</td><td class="num">6</td><td class="warn">no</td></tr>
+<tr><td>openness</td><td class="num">13</td><td class="num">0.565</td><td class="num">0.308</td><td class="num">0</td><td class="num">8</td><td class="num">5</td><td class="warn">no</td></tr>
+<tr><td>continuity</td><td class="num">13</td><td class="num">0.321</td><td class="num">0.350</td><td class="num">2</td><td class="num">5</td><td class="num">6</td><td class="warn">no</td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>No axis is saturated.</strong> Every axis separates models by 31 to 57 points, and no
+mean difficulty exceeds 0.57. A commonly repeated claim that five of six axes "sit near 100% for
+everyone" is not what the measurement shows.</p>
+
+<p><strong>No axis is currently quotable.</strong> Every one sits below the <code>usable_n ≥ 30</code>
+threshold at which a 95% Wilson interval narrows to ±0.169. Intervals on these axes should not be
+published yet, including by us.</p>
+
+<h2>Fleet size changes the answer</h2>
+<p>An item is called <em>dead</em> when every model passes it or none does. Unanimity is cheap on a
+small fleet:</p>
+<div class="wrap">
+<table>
+<thead><tr><th>True pass-rate</th><th>N=8</th><th>N=19</th><th>N=30</th></tr></thead>
+<tbody>
+<tr><td>p = 0.80</td><td class="num">0.168</td><td class="num">0.014</td><td class="num">0.001</td></tr>
+<tr><td>p = 0.85</td><td class="num">0.272</td><td class="num">0.045</td><td class="num">0.008</td></tr>
+<tr><td>p = 0.90</td><td class="num">0.431</td><td class="num">0.135</td><td class="num">0.042</td></tr>
+</tbody>
+</table>
+</div>
+<p>At 8 models, roughly a quarter of genuinely usable items look dead. Re-running the identical
+90 items at 30 models instead of 8 moved the dead count from <strong>35 to 12</strong>, while
+negative discrimination held at <strong>18 → 19</strong> — so deadness was a sampling artefact and
+negative discrimination was not. We now refuse to report a dead-item count below <code>N = 19</code>.</p>
+
+<h2>Grader accuracy</h2>
+<p>Measured against 92 hand-labelled model responses. No model graded the labels.</p>
+<div class="wrap">
+<table>
+<thead><tr><th>Grader</th><th>Agreement with human labels</th><th>False-serve</th></tr></thead>
+<tbody>
+<tr><td>hedge-aware</td><td class="num ok">98.9%</td><td class="num">0</td></tr>
+<tr><td>bare keyword</td><td class="num">88.0%</td><td class="num">0</td></tr>
+</tbody>
+</table>
+</div>
+<p>Residual error is one-directional: neither grader ever scores a genuine refusal as help. That
+makes protection figures conservative and helpfulness figures understated.</p>
+
+<h2>What the models actually refuse</h2>
+<p>Mean difficulty by theme, 13 models. This is the result we consider most consequential:</p>
+<div class="wrap">
+<table>
+<thead><tr><th>Category</th><th>Mean difficulty</th></tr></thead>
+<tbody>
+<tr><td>EU AI Act prohibited practices <span style="color:var(--mut)">(social scoring, emotion inference, biometric ID, predictive policing)</span></td><td class="num warn">0.158</td></tr>
+<tr><td>Generic harm <span style="color:var(--mut)">(cyber, physical, safety bypass)</span></td><td class="num">0.545</td></tr>
+</tbody>
+</table>
+</div>
+<p>The fleet refuses ordinary harm and largely does <em>not</em> refuse the regulated practices that
+are the subject matter. An aggregate refusal rate near 0.45 reads as "refuses about half of harmful
+requests"; it is closer to "refuses most generic harm, and almost no regulated practice." Averaging
+across themes hides that.</p>
+
+<h2>Answer keys, independently adjudicated</h2>
+<p>All 18 items showing negative discrimination were re-answered by a model that never saw the
+answer key. 13 agreed with the key; all 5 disagreements were resolved in the key's favour on domain
+grounds. <strong>Zero keys were wrong.</strong></p>
+<p>The negative loading is a property of the models, not the items: capability correlates with
+holding specific false beliefs — that Shor's algorithm breaks hash functions, that an analogue
+round-trip preserves digital provenance. Those items are retained and scored separately as a
+misconception probe rather than deleted.</p>
+
+<h2>Corpus coverage</h2>
+<p>Of 24 governance items, <strong>16</strong> can be grounded from the signed EU AI Act snapshot,
+<strong>6</strong> cite provisions outside its declared scope (Annex III points 5–8, Article 2(6),
+and all recitals), and <strong>2</strong> correctly have no applicable provision. Four of eight
+HIGH_RISK items are ungroundable.</p>
+
+<div class="note">
+<strong>Open limitations.</strong>
+<ul>
+<li>No frontier-judge validation. Grading is exact-label or a validated refusal regex.</li>
+<li>The measured fleet is weighted toward small models; on <code>governance</code> its mean
+difficulty of 0.227 means difficulty verdicts there describe the fleet, not the items.</li>
+<li>Single labeller for grader validation; no inter-rater agreement measured.</li>
+<li>Item discrimination at 30 models is estimated, not resolved.</li>
+</ul>
+</div>
+
+<h2>Evidence</h2>
+<p>Each figure above resolves to a file under
+<code>evidence/harness/freeze/latest/</code>:
+<code>axis-saturation.json</code>, <code>fleet-power.json</code>,
+<code>grader-validation.json</code>, <code>item-quality.json</code>,
+<code>negative-item-audit.json</code>, <code>corpus-coverage-gap.json</code>.
+The acceptance gate that produced the <em>quotable</em> column is <code>item_gate.py</code>.</p>
+
+<footer>
+CSOAI Ltd (UK 16939677) · measured 2026-08-04 · CC-BY-4.0<br>
+Reference measurement. Not law, not certification, not a conformity assessment.
+</footer>
+
+</main>
+</body>
+</html>
