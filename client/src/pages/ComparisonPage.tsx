@@ -388,7 +388,7 @@ const testimonials = [
     avatar: "127",
   },
   {
-    name: "7 refutations",
+    name: "9 refutations",
     role: "Published — 4 killed our own bets",
     company: "Source: Refutation Ledger",
     quote:
