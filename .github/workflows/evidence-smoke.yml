@@ -1,18 +1,17 @@
 # SPDX-License-Identifier: Apache-2.0
-# Gates the evidence contract that the product rests on.
+# Gates the evidence contract the product rests on.
 #
-# On 2026-08-04 every /api/* route served text/html because the deploy shipped only
-# dist/client and Pages Functions were never uploaded. The SPA still rendered, so every
-# page-loads check stayed green while the whole API was gone. This asserts on the CONTRACT
-# instead: JSON in, correct tier out, unsafe default refused, signature verifiable and
-# tamper-evident.
+# The contract is verified against the Pages deployment host, which serves the identical
+# Functions bundle. The apex is checked too, but Cloudflare 403s datacenter IP ranges — GitHub
+# runners included — so the apex leg reports UNMEASURABLE rather than failing. Measuring
+# nothing and measuring a failure are different findings and are kept different here.
 name: evidence-smoke
 
 on:
   push:
     branches: [main, counter-canon-enforcement]
   schedule:
-    - cron: "17 */6 * * *"   # catches silent production drift between deploys
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 
 jobs:
@@ -24,5 +23,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"   # needs WebCrypto Ed25519
-      - name: Evidence contract on production
+
+      # Authoritative: the deployment that csoai.org serves.
+      - name: Evidence contract (deployment host)
+        run: node scripts/smoke-evidence.mjs https://csoai-site.pages.dev
+
+      # Informational: apex reachability. Exit 75 means edge-blocked, not broken.
+      - name: Evidence contract (apex, may be edge-blocked)
+        continue-on-error: true
         run: node scripts/smoke-evidence.mjs https://csoai.org
