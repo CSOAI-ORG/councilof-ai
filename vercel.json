@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build:client && (npx --yes playwright install chromium && npm run prerender || echo '::warning::PRERENDER SKIPPED — crawler-view-gate will fail')",
+  "buildCommand": "npm run build:client",
   "outputDirectory": "dist/client",
   "installCommand": "npm install --ignore-scripts",
   "framework": "vite",
