@@ -12,10 +12,14 @@
  * But it left nothing testing what a CRAWLER sees. GPTBot, ClaudeBot and PerplexityBot do
  * not run JavaScript. Measured the same day, with no JS:
  *
- *     /                             200   11273 bytes   4777 chars of text
- *     /pricing.html                 200   11273 bytes   4777 chars   <- same document
- *     /certification.html           200   11273 bytes   4777 chars   <- same document
- *     /this-page-does-not-exist...  200   11273 bytes   4777 chars   <- same document, no 404
+ *     /                             200   11273 bytes   60 chars of visible text
+ *     /pricing.html                 200   11273 bytes   60 chars   <- same document
+ *     /certification.html           200   11273 bytes   60 chars   <- same document
+ *     /this-page-does-not-exist...  200   11273 bytes   60 chars   <- same document, no 404
+ *
+ * (An earlier pass of mine reported 4777 chars for the homepage and concluded it rendered
+ *  server-side. That was wrong: the strip did not remove <script> bodies, so it counted
+ *  bundle source as prose. With scripts stripped it is 60 chars — the shell, on every route.)
  *
  * The only byte that differs between routes is the Cloudflare challenge nonce. sitemap.xml
  * advertises 350 URLs and llms.txt advertises named routes (/start, /sov-space, /graph,
@@ -28,7 +32,8 @@
  * WHAT THIS GATE ASSERTS (no JS, plain fetch, crawler UA)
  *   1. DISTINCTNESS  — advertised routes must not all serve one identical document.
  *   2. SUBSTANCE     — each route must carry enough non-boilerplate text to answer with.
- *   3. HONEST 404    — a URL that does not exist must NOT return 200.
+ *   3. CANONICAL     — the SERVED html must self-canonical; a JS-set canonical is not one.
+ *   4. HONEST 404    — a URL that does not exist must NOT return 200.
  *
  * DESIGN NOTE, learned the hard way elsewhere in this estate: a gate that cannot fail is
  * indistinguishable from no gate. `--selftest` seeds each violation class and asserts the
@@ -46,8 +51,12 @@ const HOST = (() => {
 const UA = "Mozilla/5.0 (compatible; GPTBot/1.0; +https://openai.com/gptbot)";
 
 // Routes the site itself advertises via llms.txt / sitemap / nav.
-const ROUTES = ["/", "/pricing.html", "/certification.html", "/about.html", "/verify.html",
-                "/article-50-kit.html", "/security.html", "/charter.html"];
+// The REAL routes, taken from scripts/prerender.mjs — not the legacy .html paths the
+// 2026-08-04 audit tested. Both behave identically today (62 chars, one document), but
+// testing the paths the app actually declares is the difference between measuring the
+// product and measuring a stale URL list.
+const ROUTES = ["/", "/pricing", "/certification", "/crosswalks", "/compare",
+                "/article-50", "/about", "/eu-ai-act"];
 
 const ABSENT_URL = "/this-route-should-not-exist-crawler-gate-probe";
 const MIN_TEXT_CHARS = 900;   // below this a page cannot answer a question about itself
@@ -106,7 +115,23 @@ function evaluate(pages, absent) {
     }
   }
 
-  // 3. HONEST 404
+  // 3. CRAWLER-VISIBLE CANONICAL — client/index.html carries a per-route self-canonical
+  // script (line ~186), but it is JavaScript: a crawler never runs it, so every route keeps
+  // canonical="https://csoai.org". councilof.ai does the same and thereby tells search
+  // engines it is not the original of its own pages. A canonical that only resolves after
+  // hydration is not a canonical.
+  for (const [route, p] of pages) {
+    if (route === "/") continue;
+    const m = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(p.html);
+    if (m && !m[1].replace(/\/$/, "").endsWith(route.replace(/\/$/, ""))) {
+      failures.push(
+        `${route}: canonical points at ${m[1]} in the SERVED html. The per-route canonical is ` +
+        `set by JavaScript, which crawlers do not run — so this route declares itself a ` +
+        `duplicate of the root. Emit the correct canonical at build time.`);
+    }
+  }
+
+  // 4. HONEST 404
   if (absent.status === 200) {
     failures.push(
       `${ABSENT_URL} returned HTTP 200. A catch-all that answers 200 for every path tells ` +
@@ -125,6 +150,8 @@ async function selftest() {
     ["distinctness", [["/a", mk(rich)], ["/b", mk(rich)]], mk("", 404), /IDENTICAL DOCUMENT/],
     ["substance",    [["/a", mk(shell)]],                  mk("", 404), /crawler-visible text/],
     ["honest 404",   [["/a", mk(rich)]],                   mk(rich, 200), /returned HTTP 200/],
+    ["canonical",    [["/pricing", mk(rich + '<link rel="canonical" href="https://csoai.org"/>')]],
+                     mk("", 404), /canonical points at/],
   ];
   let ok = true;
   console.log("SELFTEST — each rule must fire on a seeded violation:");
@@ -135,7 +162,10 @@ async function selftest() {
     console.log(`  ${fired ? "OK  " : "FAIL"} ${name}`);
   }
   // and must NOT fire on a clean sample
-  const clean = evaluate([["/a", mk(rich)], ["/b", mk(rich + "<p>distinct</p>")]], mk("", 404));
+  const clean = evaluate(
+    [["/a", mk(rich + '<link rel="canonical" href="https://x.test/a"/>')],
+     ["/b", mk(rich + '<p>distinct</p><link rel="canonical" href="https://x.test/b"/>')]],
+    mk("", 404));
   const quiet = clean.length === 0;
   ok &&= quiet;
   console.log(`  ${quiet ? "OK  " : "FAIL"} clean sample stays silent`);

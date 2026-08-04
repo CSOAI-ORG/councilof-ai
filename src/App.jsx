@@ -71,8 +71,17 @@ function App() {
       {/* SEO Meta Tags */}
       <helmet>
         <title>CSOAI - Council Safety of AI | AI Safety Governance Platform</title>
-        <meta name="description" content="CSOAI is the Western equivalent to TC260 for comprehensive AI safety governance. Multi-framework compliance (EU AI Act, NIST RMF, TC260), 33-agent council monitoring, PDCA cycle management, and public incident tracking." />
-        <meta name="keywords" content="AI safety, AI governance, EU AI Act, NIST AI RMF, TC260, AI compliance, AI risk management, responsible AI, AI ethics, AI regulation, PDCA, AI auditing" />
+        {/* 2026-08-04 — removed "the Western equivalent to TC260" and "33-agent council".
+            TC260 is the National Technical Committee 260 on Cybersecurity of the
+            Standardization Administration of China, operating under the Cyberspace
+            Administration of China and chaired by a CAC Vice Minister. A UK private company
+            is in no sense its equivalent; the comparison is indefensible on inspection and
+            invites exactly the scrutiny this estate cannot survive. "33-agent council" has
+            no public artefact behind it, and this house style bans the Byzantine-consensus
+            framing outright. Replaced with the same honest register the interior pages and
+            csoai.org already use: measurement, not certification. */}
+        <meta name="description" content="CSOAI is an independent AI-governance measurement body (CSOAI LTD, UK 16939677). Multi-framework measurement (EU AI Act, NIST AI RMF, ISO 42001) with signed, publicly verifiable attestations. Measurement, not certification." />
+        <meta name="keywords" content="AI governance measurement, EU AI Act, NIST AI RMF, ISO 42001, AI attestation, signed evidence, AI compliance measurement, responsible AI, AI auditing" />
         <meta name="author" content="CSOAI - Council Safety of AI" />
         <link rel="canonical" href="https://csoai.org" />
       </helmet>
