@@ -282,9 +282,15 @@ All licenses require periodic renewal and continuing education. Schedule E provi
     partTitle: "Governance Structure",
     content: `Technical specifications for the 33-node fault-aware consensus consensus system that implements distributed AI governance.
 
-Architecture:
-- 33 independent AI agents, each trained on diverse datasets to minimize correlated failures
-- Agents use Practical fault-aware consensus (PBFT) consensus algorithm
+Architecture (DESIGN — see the measured position below):
+- 33 agents, intended to be trained on diverse datasets to reduce correlated failures
+- Agents are designed to run a practical fault-aware consensus algorithm
+
+MEASURED POSITION (2026-07-29): independence has not been demonstrated. Effective
+independence across the nominal legs measured n_eff = 1.21 of 3, meaning the legs fail
+together far more than the design assumes. Until that is raised, this Article describes an
+intended architecture, not a live property, and no fault-tolerance guarantee should be
+inferred from it.
 - Each agent maintains complete copy of governance ledger
 - Communication encrypted with quantum-resistant cryptography
 - Agents are geographically distributed across 15+ countries
@@ -934,7 +940,7 @@ Retention Requirements:
 4. Make documentation available for regulatory audits
 
 Archive Requirements (Schedule M):
-1. All critical documentation archived in TERRANOVA system
+1. All critical documentation archived in the CSOAI governance archive
 2. Digital preservation to prevent deterioration
 3. Accessible to future researchers and auditors
 4. Protected against deletion or modification
@@ -2703,7 +2709,7 @@ Archival Principles:
 5. Support learning from past decisions
 6. Honor contributions of past leaders and organizations
 
-TERRANOVA Archive System:
+CSOAI Governance Archive System:
 1. Distributed digital archive preventing single point of failure
 2. Multiple geographic locations protecting against regional disasters
 3. Multiple backup copies (minimum 7 copies in different locations)

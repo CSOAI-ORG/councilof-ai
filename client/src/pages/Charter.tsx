@@ -207,7 +207,7 @@ const faqItems = [
   },
   {
     question: "How is the Charter enforced?",
-    answer: "Enforcement operates through four mechanisms: (1) Byzantine Council—a 33-agent AI system using 12 different AI providers that monitors licensed systems 24/7 for safety violations; (2) Public Watchdog—a transparency platform where safety incidents are publicly disclosed; (3) Certified Analysts—trained human professionals who review AI systems and validate Byzantine Council decisions; (4) License Revocation—organizations that violate Charter terms lose their license and CSOAI certification, which is publicly disclosed. The combination of AI monitoring, human oversight, and public transparency creates accountability at every level."
+    answer: "Enforcement operates through four mechanisms: (1) the designed Council—a 33-agent AI system using 12 different AI providers intended to monitors licensed systems 24/7 for safety violations; (2) Public Watchdog—a transparency platform where safety incidents are publicly disclosed; (3) Certified Analysts—trained human professionals who review AI systems and validate Byzantine Council decisions; (4) License Revocation—organizations that violate Charter terms lose their license and CSOAI certification, which is publicly disclosed. The combination of AI monitoring, human oversight, and public transparency creates accountability at every level."
   },
   {
     question: "Can the Charter be amended?",

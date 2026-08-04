@@ -976,7 +976,7 @@ export default function ComparisonPage() {
               },
               {
                 q: "Is the Byzantine Council approach proven?",
-                a: "Yes, Byzantine consensus mechanisms are well-established in distributed systems. Our 33-agent council ensures decisions are secure and unbiased.",
+                a: "Yes, Byzantine consensus mechanisms are well-established in distributed systems. Our 33-agent council is designed to make decisions reviewable; live fault-tolerance is unproven (measured n_eff 1.21 of 3).",
               },
               {
                 q: "What happens to our data if we leave?",

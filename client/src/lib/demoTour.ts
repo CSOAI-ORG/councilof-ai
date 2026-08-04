@@ -30,7 +30,7 @@ export const TOUR: TourStep[] = [
     path: "/try",
     title: "A 33-agent Byzantine council rules",
     usp: "Fault-tolerant consensus, not one model's opinion",
-    say: "Describe an AI system and a Byzantine fault-tolerant council deliberates - 33 agents, a care-floor of 0.95 - then seals a signed verdict. Not one AI guessing: a council that can't be captured by any single node. Watch: screening job applicants with AI.",
+    say: "Describe an AI system and a designed 33-agent council reviews it against a 0.95 care-floor - then a signed verdict is sealed (council is a design; live independence measured n_eff 1.21 of 3). Not one AI guessing: a council that can't be captured by any single node. Watch: screening job applicants with AI.",
     demo: "We use AI to screen job applicants",
     tip: "Ask a compliance question - the Council rules on it.",
   },

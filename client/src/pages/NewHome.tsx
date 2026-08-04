@@ -661,7 +661,7 @@ export default function NewHome() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-lg mb-2">Byzantine Consensus</h4>
-                    <p className="text-gray-400">Requires 23/33 agents to agree (70% supermajority). Prevents single-provider bias or manipulation.</p>
+                    <p className="text-gray-400">Designed to require 23/33 agents to agree (70% supermajority). Not yet demonstrated live. Intended to prevent single-provider bias or manipulation.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
