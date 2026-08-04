@@ -1,7 +1,21 @@
-# Security headers migrated from vercel.json (2026-08-04, Vercel -> Cloudflare Pages).
-# Cloudflare Pages reads public/_headers at build; applies to every response.
+# Cloudflare Pages _headers
+# Security headers migrated from vercel.json (2026-08-04, Vercel -> Cloudflare Pages) merged
+# with the pre-existing cache rules (do NOT drop the cache rules — legacy-shadow incident).
+
+# Security headers on every response (from vercel.json).
 /*
   X-Frame-Options: SAMEORIGIN
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+
+# Fingerprinted build chunks: cache forever, immutable.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML shell: always revalidate (no blanket s-maxage — legacy-shadow incident).
+/*.html
+  Cache-Control: no-cache, must-revalidate
+
+/
+  Cache-Control: no-cache, must-revalidate
