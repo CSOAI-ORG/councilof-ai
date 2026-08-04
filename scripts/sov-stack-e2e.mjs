@@ -51,6 +51,20 @@ async function go(p, url) {
   }
 }
 
+// SPA hydration wait: csoai.org is a client-rendered SPA. The route HTML
+// (11262 bytes shell) loads immediately, but route content paints after
+// the JS bundle hydrates. Wait for body text to grow past the shell.
+// Without this, every content check races the bundle and fails.
+async function waitForHydration(p, minChars = 800, timeoutMs = 15000) {
+  await p
+    .waitForFunction(
+      (n) => document.body && (document.body.innerText || "").length >= n,
+      minChars,
+      { timeout: timeoutMs },
+    )
+    .catch(() => null);
+}
+
 // 1) /globe — 3D globe, mode toggle, agentic ask, threat
 {
   const { p, errs } = await page();
@@ -73,6 +87,8 @@ async function go(p, url) {
     "/globe shows live anchor data",
     await p.evaluate(() => /FROZEN PROVISIONS|ANCHOR NODES|MCP SERVERS/i.test(document.body.innerText)),
   );
+  // SPA hydration wait: route content paints after the bundle hydrates
+  await waitForHydration(p);
   // type an agentic ask — be defensive: not all /globe builds expose a fillable input
   try {
     const input = await p.$('input[placeholder*="watchdog"], input[placeholder*="London"], input[placeholder*="ask"], input[type="text"], input:not([type])');
@@ -115,6 +131,7 @@ async function go(p, url) {
 {
   const { p, errs } = await page();
   await go(p, BASE + "/intel");
+  await waitForHydration(p);
   // Was a fixed 1500ms sleep racing a lazily-mounted iframe — it passed or failed depending
   // on network timing, which makes a red run uninformative. Wait for the ELEMENT, not the
   // clock: same assertion, no race. (Fixing the flake, not loosening the check — the iframe
@@ -135,7 +152,7 @@ async function go(p, url) {
 {
   const { p, errs } = await page();
   await go(p, BASE + "/simulate?q=a%20hiring%20AI%20in%20Germany");
-  await p.waitForTimeout(1500);
+  await waitForHydration(p);
   ok("/simulate globe", await p.$('iframe[src*="globe3d"]') != null);
   ok("/simulate greeting", await p.evaluate(() => /Governing AI|governance/i.test(document.body.innerText)));
   ok("/simulate q-prefill", await p.evaluate(() => (document.querySelector("textarea") || {}).value?.includes("Germany")));
@@ -148,7 +165,7 @@ async function go(p, url) {
 {
   const { p, errs } = await page();
   await go(p, BASE + "/brief?id=jpmorgan");
-  await p.waitForTimeout(1500);
+  await waitForHydration(p);
   ok("/brief globe", await p.$('iframe[src*="globe3d"]') != null);
   ok("/brief HQ caption", await p.evaluate(() => /flown to .*HQ/i.test(document.body.innerText)));
   ok("/brief convene btn", await p.evaluate(() => /Convene the 33-agent council/i.test(document.body.innerText)));
@@ -161,7 +178,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   const { p, errs } = await page();
   try {
     await go(p, BASE + path);
-    await p.waitForTimeout(700);
+    await waitForHydration(p);
     ok(path + " content", await p.evaluate((n) => document.body.innerText.includes(n) || document.title.includes(n), needle));
     ok(path + " schema", await p.evaluate(() => document.querySelectorAll('script[type="application/ld+json"]').length > 0));
     ok(path + " console-clean", errs.length === 0, errs.slice(0, 2).join(" | "));
@@ -173,7 +190,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
 {
   const { p, errs } = await page();
   await go(p, BASE + "/intel");
-  await p.waitForTimeout(2800);
+  await waitForHydration(p);
   const frame = p.frames().find((f) => f.url().includes("globe3d"));
   if (frame) {
     await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
@@ -191,7 +208,7 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
 {
   const { p, errs } = await page();
   await go(p, BASE + "/globe");
-  await p.waitForTimeout(2800);
+  await waitForHydration(p);
   // This spied on postMessage from a PARENT page into the globe iframe. /globe is now the
   // globe itself at top level, so there is no parent to post and no cross-frame hop to
   // observe — the mechanism cannot fire by construction, which is why it returned [].
@@ -219,7 +236,11 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   const { p } = await page();
   try {
     await go(p, BASE + "/brief?id=jpmorgan");
-    await p.waitForTimeout(2600);
+    await waitForHydration(p);
+    // Globe iframe may attach after the bundle hydrates; wait up to 15s
+    await p
+      .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
+      .catch(() => null);
     const frame = p.frames().find((f) => f.url().includes("globe3d"));
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
@@ -238,7 +259,10 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   const { p } = await page();
   try {
     await go(p, BASE + "/simulate?q=a%20hiring%20AI%20in%20Germany");
-    await p.waitForTimeout(2600);
+    await waitForHydration(p);
+    await p
+      .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
+      .catch(() => null);
     const frame = p.frames().find((f) => f.url().includes("globe3d"));
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
@@ -257,7 +281,10 @@ for (const [path, needle] of [["/defence-ai-act", "Article 2(3)"], ["/energy-ai-
   const { p } = await page();
   try {
     await go(p, BASE + "/simulate?q=a%20rogue%20swarm%20of%20agents%20in%20London");
-    await p.waitForTimeout(2600);
+    await waitForHydration(p);
+    await p
+      .waitForSelector('iframe[src*="globe3d"]', { timeout: 15000 })
+      .catch(() => null);
     const frame = p.frames().find((f) => f.url().includes("globe3d"));
     if (frame) {
       await frame.evaluate(() => { window.__spy = []; window.addEventListener("message", (e) => { if (e && e.data && e.data.cmd) window.__spy.push(e.data.cmd); }); });
