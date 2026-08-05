@@ -298,6 +298,64 @@ document.getElementById('enter').onclick=()=>{
   setTimeout(()=>openAxis('gov'),2600);
 };
 </script>
+<button id="modeToggle" title="Switch AXES / CLOCK">◷ CLOCK</button>
+<style>
+#modeToggle{position:fixed;top:74px;left:50%;transform:translateX(-50%);z-index:12;padding:9px 18px;border:1px solid var(--line2);
+  border-radius:12px;cursor:pointer;font-family:var(--mono);font-size:12px;font-weight:700;background:rgba(6,26,20,.9);
+  color:var(--gold);backdrop-filter:blur(9px);letter-spacing:1px}
+#modeToggle:hover{border-color:var(--gold)}
+</style>
+<script>
+// ---- CLOCK layer: dated regulatory obligations on the same globe ----
+const CLOCK=[
+ {d:"2026-09-11",lng:4.37,lat:50.84,ins:"Cyber Resilience Act Art 14",req:"Report exploited vulns/incidents: 24h/72h/14d.",sell:"24/72h reporting drills; SBOM telemetry.",tier:"adjacent",c:"#5bd0f5"},
+ {d:"2026-12-02",lng:4.37,lat:50.84,ins:"EU AI Act Art 50(2) (Omnibus)",req:"Machine-readable marking of synthetic audio/image/video/text. 4-month transitional expires.",sell:"Marking-robustness testing — ProvBench measures exactly this.",tier:"primary",c:"#34f5b0"},
+ {d:"2026-12-02",lng:5.0,lat:51.3,ins:"EU AI Act Art 5 (NCII/CSAM)",req:"Prohibition on AI generating NCII/CSAM — safeguards must be reasonable, proportionate, effective vs foreseeable misuse. All sectors, top penalty tier.",sell:"A red-team MEASUREMENT standard, unowned. 119 days.",tier:"primary",c:"#ff6b6b"},
+ {d:"2027-01-01",lng:-104.99,lat:39.74,ins:"Colorado SB 26-189 (ADMT)",req:"Developer/deployer disclosures, adverse-decision notices, 3yr retention.",sell:"Adverse-decision explainability testing.",tier:"secondary",c:"#f5c451"},
+ {d:"2027-01-01",lng:-121.49,lat:38.58,ins:"California SB 942 / AB 853",req:"Convey + retain provenance metadata on hosted AI content.",sell:"Provenance-metadata retention audit.",tier:"secondary",c:"#f5c451"},
+ {d:"2027-02-02",lng:3.9,lat:50.5,ins:"Code of Practice — detector interoperability",req:"Watermark detection must be interoperable (effective/reliable/robust). ≈190 signatories.",sell:"No agreed way to measure. Publish the interop benchmark → define the market.",tier:"primary",c:"#34f5b0"},
+ {d:"2027-08-02",lng:4.37,lat:50.84,ins:"EU AI Act Art 57(1)",req:"≥1 operational national regulatory sandbox (deferred by Omnibus).",sell:"Be the testing provider inside the sandboxes.",tier:"channel",c:"#7bf9cf"},
+ {d:"2027-12-02",lng:4.6,lat:50.6,ins:"EU AI Act — full high-risk regime",req:"Art 9-17,43: risk mgmt, data gov, docs, logging, oversight, Art 15 accuracy/robustness/cyber. No harmonised standard yet cited.",sell:"The volume event. Art 15 is irreducibly a testing obligation — evidence, not certificates.",tier:"primary",c:"#34f5b0"},
+ {d:"2028-08-02",lng:4.2,lat:51.0,ins:"EU AI Act — product-embedded high-risk",req:"Full regime for AI in medical devices, machinery, vehicles, toys, RED.",sell:"Integrated MDR/Machinery/RED + AI Act testing.",tier:"primary",c:"#34f5b0"},
+ {d:"2030-08-02",lng:4.37,lat:50.84,ins:"EU AI Act Art 111(2)",req:"PUBLIC AUTHORITIES full compliance — no grandfathering.",sell:"The date that makes public-sector procurement unavoidable.",tier:"strategic",c:"#b78bff"},
+];
+let clockEnts=[], CLOCKMODE=false;
+function daysTo(d){return Math.ceil((new Date(d+"T00:00:00Z")-new Date("2026-08-05T00:00:00Z"))/864e5);}
+function buildClock(){
+  if(clockEnts.length||!window.viewer&&typeof viewer==='undefined')return;
+  CLOCK.forEach(o=>{
+    const c=Cesium.Color.fromCssColorString(o.c), sz={primary:13,strategic:12,channel:10,secondary:9,adjacent:8}[o.tier]||9;
+    const e=viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(o.lng,o.lat),show:false,
+      point:{pixelSize:sz,color:c.withAlpha(.9),outlineColor:Cesium.Color.WHITE.withAlpha(.7),outlineWidth:1.4},
+      label:{text:`${o.d.slice(0,7)} · ${daysTo(o.d)}d`,font:'600 11px sans-serif',fillColor:c,pixelOffset:new Cesium.Cartesian2(0,-16),
+        showBackground:true,backgroundColor:Cesium.Color.fromCssColorString('#04140f').withAlpha(.8),scaleByDistance:new Cesium.NearFarScalar(1e6,1,3e7,0)}});
+    e._obl=o; clockEnts.push(e);
+  });
+  // click handler
+  const h=new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+  h.setInputAction(ev=>{const p=viewer.scene.pick(ev.position); if(p&&p.id&&p.id._obl)openObl(p.id._obl);},Cesium.ScreenSpaceEventType.LEFT_CLICK);
+}
+function openObl(o){
+  document.getElementById('p-ind').textContent='regulatory clock · '+o.tier;
+  document.getElementById('p-name').textContent=o.ins;
+  document.getElementById('p-dom').textContent=o.d+' · '+daysTo(o.d)+' days out';
+  document.getElementById('p-body').innerHTML=`<p class="what"><b>Binds & requires:</b><br>${o.req}</p>
+    <div class="sec-h">What we sell against it</div><p class="what">${o.sell}</p>
+    <div class="stat"><span class="chip">seat pinned</span><span class="chip live">${daysTo(o.d)} days</span></div>`;
+  document.getElementById('panel').classList.add('open');
+  try{viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(o.lng,o.lat,4e6),duration:1.2});}catch(e){}
+  eat(1);
+}
+document.getElementById('modeToggle').onclick=()=>{
+  CLOCKMODE=!CLOCKMODE; buildClock();
+  const t=document.getElementById('modeToggle'); t.textContent=CLOCKMODE?'◉ AXES':'◷ CLOCK';
+  clockEnts.forEach(e=>e.show=CLOCKMODE);
+  Object.values(typeof ents!=='undefined'?ents:{}).forEach(e=>{try{e.show=!CLOCKMODE;}catch(x){}});
+  try{viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(6,45,CLOCKMODE?9e6:2.4e7),duration:1.6});}catch(e){}
+  document.querySelector('.rail .label').textContent=CLOCKMODE?'19 dated obligations to 2030':'the six industries';
+};
+</script>
+
 </body>
 </html>
 
