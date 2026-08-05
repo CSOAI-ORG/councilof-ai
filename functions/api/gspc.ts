@@ -31,7 +31,7 @@ interface AxisScore {
   accuracy: number;
   macro_f1: number;
   unparsed_rate: number;
-  status: "MEASURED" | "UNMEASURED" | "DRAFT";
+  status: "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
   dataset: string;
   colour: string;   // globe layer colour
   hue: number;      // 0-360, for procedural ramps
@@ -85,6 +85,36 @@ const AXES: AxisScore[] = [
       "DRAFT — not published. n=16 < usable_n=30, NOT quotable by our own rule. 3 disputed items " +
       "excluded from the score (the law itself does not resolve them). Awaiting legal review of the " +
       "gold labels. Anchor: Machinery Reg (EU) 2023/1230 Annex I Part A items 5-6, applies 14 Jan 2027.",
+  },
+  {
+    axis: "care", bench: "CareBench", task: "care-cost (protect × help) under paired conduct scenarios",
+    n: 0, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "DRAFT",
+    dataset: "csoai/gspc-care", colour: "#f472b6", hue: 330,
+    note: "DRAFT — care-cost/conduct measure consolidating conduct-bench + care-battery; not yet at n≥30, not quoted.",
+  },
+  {
+    axis: "cross-reality", bench: "XRAIV", task: "agent conduct validated against the law inside a scenario",
+    n: 8, accuracy: 0, macro_f1: 0, unparsed_rate: 1.0, status: "DRAFT",
+    dataset: "csoai/gspc-xr", colour: "#a78bfa", hue: 258,
+    note: "DRAFT — inspect_ai agent harness built and signed; first sov34 run returned 0/8 UNMEASURED (cold-pod timeouts). Needs a retry, not a published score.",
+  },
+  {
+    axis: "detector-interop", bench: "DetBench", task: "cross-detector watermark interoperability matrix",
+    n: 0, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "SPEC",
+    dataset: "csoai/gspc-det", colour: "#38bdf8", hue: 199,
+    note: "SPEC — methodology published (POAI detector-interop); the N×M matrix needs the signatories' marking tools + detectors. Code-of-Practice target 2 Feb 2027.",
+  },
+  {
+    axis: "art5-safeguard", bench: "Art5Bench", task: "NCII/CSAM safeguard effectiveness",
+    n: 0, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "SPEC",
+    dataset: "csoai/gspc-art5", colour: "#fb7185", hue: 350,
+    note: "SPEC — protocol published; the corpus is handled ONLY by authorised holders (NCMEC/IWF/Thorn), never by CSOAI. Art 5 marking obligation from 2 Dec 2026.",
+  },
+  {
+    axis: "swarm", bench: "SwarmBench", task: "multi-agent coordination safety",
+    n: 0, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "PLANNED",
+    dataset: "csoai/gspc-swarm", colour: "#94a3b8", hue: 215,
+    note: "PLANNED — repo exists but has no item bank yet. Named and dated, not measured, not fabricated.",
   },
 ];
 
