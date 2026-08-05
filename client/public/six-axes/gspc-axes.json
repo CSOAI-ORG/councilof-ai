@@ -1,0 +1,150 @@
+{
+  "schema": "csoai.gspc-axes/0.1",
+  "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
+  "note": "The six axes of the GSPC measurement instrument. Every count below was read from the live Hugging Face datasets on 2026-08-04, not asserted. status=MEASURED where a frozen split with labels exists; UNMEASURED axes would be listed with n=0 and said so.",
+  "doi": "10.5281/zenodo.21755657",
+  "axes": [
+    {
+      "axis": "governance",
+      "bench": "GovBench",
+      "task": "EU AI Act risk tier",
+      "dataset": "csoai/gspc-govbench",
+      "url": "https://huggingface.co/datasets/csoai/gspc-govbench",
+      "n": 24,
+      "labels": [
+        "HIGH_RISK",
+        "LIMITED_RISK",
+        "MINIMAL_RISK",
+        "PROHIBITED"
+      ],
+      "label_counts": {
+        "PROHIBITED": 7,
+        "HIGH_RISK": 8,
+        "LIMITED_RISK": 3,
+        "MINIMAL_RISK": 6
+      },
+      "status": "MEASURED",
+      "metric": "macro-F1",
+      "harness": {
+        "lm_eval": "govbench_governance",
+        "inspect": "govbench.py"
+      }
+    },
+    {
+      "axis": "safety",
+      "bench": "DefBench",
+      "task": "calibrated refusal",
+      "dataset": "csoai/gspc-defbench",
+      "url": "https://huggingface.co/datasets/csoai/gspc-defbench",
+      "n": 14,
+      "labels": [
+        "COMPLY",
+        "REFUSE"
+      ],
+      "label_counts": {
+        "REFUSE": 7,
+        "COMPLY": 7
+      },
+      "status": "MEASURED",
+      "metric": "macro-F1 (binary)",
+      "harness": {
+        "lm_eval": "defbench_safety",
+        "inspect": "defbench.py"
+      }
+    },
+    {
+      "axis": "provenance",
+      "bench": "ProvBench",
+      "task": "Article 50 marking survival",
+      "dataset": "csoai/gspc-provbench",
+      "url": "https://huggingface.co/datasets/csoai/gspc-provbench",
+      "n": 15,
+      "labels": [
+        "DESTROYED",
+        "SURVIVES"
+      ],
+      "label_counts": {
+        "DESTROYED": 8,
+        "SURVIVES": 7
+      },
+      "status": "MEASURED",
+      "metric": "macro-F1 (binary)",
+      "harness": {
+        "lm_eval": "provbench_provenance",
+        "inspect": "provbench.py"
+      }
+    },
+    {
+      "axis": "continuity",
+      "bench": "PQCBench",
+      "task": "post-quantum signing agility",
+      "dataset": "csoai/gspc-pqcbench",
+      "url": "https://huggingface.co/datasets/csoai/gspc-pqcbench",
+      "n": 13,
+      "labels": [
+        "NOT_APPLICABLE",
+        "QUANTUM_SAFE",
+        "QUANTUM_VULNERABLE"
+      ],
+      "label_counts": {
+        "QUANTUM_VULNERABLE": 5,
+        "QUANTUM_SAFE": 4,
+        "NOT_APPLICABLE": 4
+      },
+      "status": "MEASURED",
+      "metric": "macro-F1",
+      "harness": {
+        "lm_eval": "pqcbench_continuity",
+        "inspect": "pqcbench.py"
+      }
+    },
+    {
+      "axis": "conformance",
+      "bench": "MCPBench",
+      "task": "MCP tool conformance",
+      "dataset": "csoai/gspc-mcpbench",
+      "url": "https://huggingface.co/datasets/csoai/gspc-mcpbench",
+      "n": 11,
+      "labels": [
+        "CONFORMS",
+        "VIOLATES"
+      ],
+      "label_counts": {
+        "VIOLATES": 6,
+        "CONFORMS": 5
+      },
+      "status": "MEASURED",
+      "metric": "macro-F1 (binary)",
+      "harness": {
+        "lm_eval": "mcpbench_conformance",
+        "inspect": "mcpbench.py"
+      }
+    },
+    {
+      "axis": "openness",
+      "bench": "OSSBench",
+      "task": "licence vs intended use",
+      "dataset": "csoai/gspc-ossbench",
+      "url": "https://huggingface.co/datasets/csoai/gspc-ossbench",
+      "n": 13,
+      "labels": [
+        "PERMITTED",
+        "RESTRICTED"
+      ],
+      "label_counts": {
+        "RESTRICTED": 6,
+        "PERMITTED": 7
+      },
+      "status": "MEASURED",
+      "metric": "macro-F1 (binary)",
+      "harness": {
+        "lm_eval": "ossbench_openness",
+        "inspect": "ossbench.py"
+      }
+    }
+  ],
+  "totals": {
+    "axes": 6,
+    "items": 90
+  }
+}

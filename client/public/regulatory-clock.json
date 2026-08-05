@@ -1,0 +1,349 @@
+{
+ "schema": "csoai.regulatory-clock/0.1",
+ "generated": "2026-08-05",
+ "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
+ "note": "Every dated AI-governance obligation between 2026-08-05 and 2028-12-31, geocoded to the seat of the instrument. confidence: A = primary text, B = multiple independent expert sources, C = single/weak source, verify before relying. Nothing here is legal advice. Where a date is disputed the dispute is recorded rather than resolved silently.",
+ "resolved_disputes": [
+  {
+   "question": "EU AI Act Art 50(2) machine-readable marking for systems placed on the market before 2 Aug 2026 — 2 Dec 2026 or 2 Feb 2027?",
+   "answer": "2 December 2026.",
+   "why": "The Digital Omnibus (Reg. (EU) 2026/1744) inserted a FOUR-MONTH transitional period into Art 111(4). The recital says so explicitly. 2 February 2027 is a different obligation entirely — watermark-detection INTEROPERABILITY under the Code of Practice, not statutory marking. Conflating them is the common error.",
+   "action": "Our own /article-50 answer page says 2 Feb 2027 for marking. It is wrong and must be corrected."
+  },
+  {
+   "question": "Colorado AI Act (SB 24-205) effective date?",
+   "answer": "It no longer exists. Repealed and replaced by SB 26-189, signed 14 May 2026, effective 1 January 2027.",
+   "why": "Several public trackers still show 30 June 2026. They are stale."
+  }
+ ],
+ "events": [
+  {
+   "date": "2026-08-06",
+   "jur": "UK",
+   "lng": -0.12,
+   "lat": 51.5,
+   "confidence": "C",
+   "instrument": "G-Cloud 15",
+   "provision": "framework award",
+   "binds": "cloud suppliers to UK public sector",
+   "requires": "Award date; buyer access from mid-August. G-Cloud 14 expires 28 Oct 2026.",
+   "sell": "Get AI assurance listed as a service before buyers arrive.",
+   "tier": "channel"
+  },
+  {
+   "date": "2026-09-01",
+   "jur": "CoE",
+   "lng": 7.75,
+   "lat": 48.58,
+   "confidence": "B",
+   "instrument": "CoE Framework Convention on AI (CETS 225)",
+   "provision": "Art 30(4)",
+   "binds": "the EU as a Party",
+   "requires": "Enters into force for the EU following ratification on 15 May 2026.",
+   "sell": "Conformity-with-treaty gap analysis for public bodies.",
+   "tier": "context"
+  },
+  {
+   "date": "2026-09-11",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "Cyber Resilience Act (Reg. 2024/2847)",
+   "provision": "Art 14",
+   "binds": "manufacturers of products with digital elements",
+   "requires": "Report actively exploited vulnerabilities and severe incidents via the Single Reporting Platform: 24h early warning, 72h notification, 14 days final (vulns) / 1 month (incidents).",
+   "sell": "24/72-hour reporting-readiness drills; SBOM and vulnerability telemetry measurement.",
+   "tier": "adjacent"
+  },
+  {
+   "date": "2026-09-12",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "B",
+   "instrument": "Data Act (Reg. 2023/2854)",
+   "provision": "design obligations",
+   "binds": "manufacturers of newly placed connected products",
+   "requires": "Data-access-by-design; cloud interoperability standards.",
+   "sell": "Data-accessibility conformance testing.",
+   "tier": "adjacent"
+  },
+  {
+   "date": "2026-12-02",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "EU AI Act as amended by Reg. 2026/1744",
+   "provision": "Art 111(4) → Art 50(2)",
+   "binds": "providers of generative AI placed on the market before 2 Aug 2026",
+   "requires": "Machine-readable marking of synthetic audio, image, video and text. The four-month transitional expires.",
+   "sell": "Marking-robustness testing and provenance audit. ProvBench already measures exactly this — survival of Article 50 markings under real-world transforms.",
+   "tier": "primary"
+  },
+  {
+   "date": "2026-12-02",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "EU AI Act as amended",
+   "provision": "Art 5(1)(ba),(bb); Art 5(1a),(1b)",
+   "binds": "providers AND deployers, all sectors, not only high-risk",
+   "requires": "New prohibitions on AI generating or manipulating non-consensual intimate imagery and CSAM — including where such output is 'reasonably foreseeable and reproducible in the absence of reasonable, proportionate and effective safeguards'.",
+   "sell": "The statutory test is whether safeguards are reasonable, proportionate and effective against foreseeable and reproducible misuse. That is a red-team MEASUREMENT standard, it binds every generative provider, it sits in the highest penalty tier, and no incumbent owns it. Four months.",
+   "tier": "primary"
+  },
+  {
+   "date": "2026-12-09",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "B",
+   "instrument": "Product Liability Directive (EU) 2024/2853",
+   "provision": "Art 22 transposition",
+   "binds": "manufacturers and providers of software and AI",
+   "requires": "Software and AI are 'products'. Defectiveness presumptions apply where complexity makes proof excessively difficult. Applies to products placed on the market after this date.",
+   "sell": "Pre-market defectiveness evidence packs — technical files that survive litigation disclosure. Note the AI Liability Directive was withdrawn, so the PLD now carries that weight.",
+   "tier": "adjacent"
+  },
+  {
+   "date": "2027-01-01",
+   "jur": "US-CO",
+   "lng": -104.99,
+   "lat": 39.74,
+   "confidence": "B",
+   "instrument": "Colorado SB 26-189 (ADMT Act)",
+   "provision": "whole act",
+   "binds": "developers and deployers of covered automated decision-making technology",
+   "requires": "Repeals and replaces the Colorado AI Act. Developer disclosures on intended and harmful uses, training-data categories and limitations; deployer consumer notice and adverse-decision notices; three-year record retention.",
+   "sell": "Adverse-decision explainability testing; developer-disclosure attestation.",
+   "tier": "secondary"
+  },
+  {
+   "date": "2027-01-01",
+   "jur": "US-CA",
+   "lng": -121.49,
+   "lat": 38.58,
+   "confidence": "B",
+   "instrument": "California SB 942 as amended by AB 853",
+   "provision": "AI Transparency Act",
+   "binds": "generative AI hosting platforms",
+   "requires": "Convey and retain provenance metadata on hosted AI content.",
+   "sell": "Provenance-metadata retention audit across the CDN and platform chain.",
+   "tier": "secondary"
+  },
+  {
+   "date": "2027-01-20",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "Machinery Regulation (EU) 2023/1230",
+   "provision": "Art 54 date of application; Annex I Part A",
+   "binds": "manufacturers of machinery and safety components placed on the EU market — including humanoid and mobile robots",
+   "requires": "Repeals Directive 2006/42/EC. Annex I Part A adds two categories to the mandatory third-party conformity-assessment list: safety components with fully or partially self-evolving behaviour using machine learning, and machinery with embedded AI systems ensuring safety functions. Self-certification is no longer available for those.",
+   "sell": "This is the first regulation that actually bites on humanoids, and the measurement layer under it is empty: ISO/CD 25785-1 (safety for dynamically stable legged robots) is still a Committee Draft and unpublished; NIST only PROPOSED a baseline humanoid benchmark on 29 May 2026 and it is explicitly voluntary and not regulation-linked. Meanwhile the most rigorous public humanoid testing on earth is a boxing league. A notified body needs evidence and there is no agreed way to produce it. Publish the self-evolving-safety-function measurement before Q1 2027.",
+   "tier": "primary"
+  },
+  {
+   "date": "2027-01-22",
+   "jur": "KR",
+   "lng": 126.98,
+   "lat": 37.57,
+   "confidence": "C",
+   "instrument": "Korea AI Framework (Basic) Act",
+   "provision": "MSIT administrative grace",
+   "binds": "domestic and qualifying foreign AI businesses",
+   "requires": "One-year grace period on administrative fines ends. The Act itself has been in force since 22 Jan 2026: generative AI labelling, high-impact AI explainability and human oversight, and a fundamental-rights impact assessment BEFORE deployment.",
+   "sell": "A binding pre-deployment impact assessment with a fine grace period expiring inside the window. Second-best commercial target after the EU.",
+   "tier": "secondary"
+  },
+  {
+   "date": "2027-02-02",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "B",
+   "instrument": "Code of Practice on Transparency of AI-generated Content",
+   "provision": "Provider Commitment 2",
+   "binds": "the ~190 Code signatories, including Anthropic, Google, Meta, Microsoft, OpenAI, Mistral",
+   "requires": "Watermark detection mechanisms must be INTEROPERABLE, meeting quality criteria of effectiveness, reliability, robustness and interoperability.",
+   "sell": "The Code itself states that no single marking technique currently meets all Art 50 requirements and that common evaluation standards have yet to emerge. A binding date, ~190 obligated parties, and NO agreed way to measure compliance. Publish the detector-interoperability benchmark before Q4 2026 and you define the market.",
+   "tier": "primary"
+  },
+  {
+   "date": "2027-08-02",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "B",
+   "instrument": "EU AI Act",
+   "provision": "Art 111(3)",
+   "binds": "providers of GPAI models placed on the market before 2 Aug 2025",
+   "requires": "Legacy GPAI models brought into compliance.",
+   "sell": "Model evaluation and systemic-risk assessment for legacy frontier models.",
+   "tier": "secondary"
+  },
+  {
+   "date": "2027-08-02",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "EU AI Act as amended",
+   "provision": "Art 57(1)",
+   "binds": "Member States",
+   "requires": "At least one operational national regulatory sandbox. Deferred from 2 Aug 2026 by the Omnibus.",
+   "sell": "Be the testing provider inside the sandboxes; publish the sandbox evaluation methodology first.",
+   "tier": "channel"
+  },
+  {
+   "date": "2027-12-02",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "EU AI Act as amended",
+   "provision": "Chapter III Sections 1–3; Art 6(2) + Annex III",
+   "binds": "providers of stand-alone high-risk AI — employment, education, credit, essential services, law enforcement, migration, justice, biometrics",
+   "requires": "Full high-risk regime: risk management (Art 9), data governance (Art 10), technical documentation (Art 11), logging (Art 12), transparency (Art 13), human oversight (Art 14), accuracy/robustness/cybersecurity (Art 15), QMS (Art 17), conformity assessment (Art 43). Deferred from 2 Aug 2026. Systems placed before this date are grandfathered unless substantially modified.",
+   "sell": "The volume event. Art 15 is irreducibly a testing obligation. Harmonised standards are targeted for Q4 2026 but NONE is yet cited in the OJ — until citation there is no presumption of conformity, so providers need evidence rather than certificates. That is the ideal market condition for a measurement body and it may persist into 2027. Also: 'substantial modification' is the grandfathering trigger and there is no agreed methodology for it.",
+   "tier": "primary"
+  },
+  {
+   "date": "2027-12-11",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "C",
+   "instrument": "Cyber Resilience Act",
+   "provision": "Art 71",
+   "binds": "manufacturers, importers, distributors",
+   "requires": "Full CRA application — essential cybersecurity requirements, CE marking, conformity assessment.",
+   "sell": "Combined CRA and AI Act Art 15 cyber testing — one test campaign, two regimes.",
+   "tier": "adjacent"
+  },
+  {
+   "date": "2028-01-01",
+   "jur": "US-CA",
+   "lng": -121.49,
+   "lat": 38.58,
+   "confidence": "B",
+   "instrument": "California AB 853",
+   "provision": "AI Transparency Act",
+   "binds": "capture device manufacturers — cameras, phones",
+   "requires": "Latent disclosures and provenance in captured content.",
+   "sell": "Hardware-level provenance conformance testing.",
+   "tier": "secondary"
+  },
+  {
+   "date": "2028-01-28",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "EU AI Act as amended",
+   "provision": "Art 43(3)",
+   "binds": "bodies already notified under Annex I Section A legislation",
+   "requires": "Must APPLY for AI Act notified-body designation.",
+   "sell": "If CSOAI ever intends to operate as, or partner with, a notified body, this is the hard gate. Working backwards, the ISO/IEC 42006 accreditation route needs to start in 2026.",
+   "tier": "strategic"
+  },
+  {
+   "date": "2028-08-02",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "EU AI Act as amended",
+   "provision": "Chapter III; Art 6(1) + Annex I",
+   "binds": "providers of high-risk AI embedded in regulated products — machinery, medical devices, vehicles, lifts, toys, radio equipment",
+   "requires": "Full high-risk regime for product-embedded AI.",
+   "sell": "Integrated testing across MDR / Machinery / RED plus the AI Act; safety-component classification opinions.",
+   "tier": "primary"
+  },
+  {
+   "date": "2030-08-02",
+   "jur": "EU",
+   "lng": 4.37,
+   "lat": 50.84,
+   "confidence": "A",
+   "instrument": "EU AI Act",
+   "provision": "Art 111(2)",
+   "binds": "PUBLIC AUTHORITIES operating high-risk AI placed before the applicability dates",
+   "requires": "Full compliance. No grandfathering for the public sector.",
+   "sell": "The one date that makes public-sector procurement unavoidable. Unchanged by the Omnibus.",
+   "tier": "strategic"
+  }
+ ],
+ "already_live": [
+  {
+   "date": "2025-02-02",
+   "instrument": "EU AI Act",
+   "provision": "Art 5 prohibitions, Art 4 literacy"
+  },
+  {
+   "date": "2025-08-02",
+   "instrument": "EU AI Act",
+   "provision": "GPAI obligations Arts 51–56; penalties regime"
+  },
+  {
+   "date": "2026-01-01",
+   "instrument": "California SB 53, AB 2013; Texas TRAIGA; Illinois HB 3773",
+   "provision": "various"
+  },
+  {
+   "date": "2026-01-22",
+   "instrument": "Korea AI Framework Act",
+   "provision": "in force"
+  },
+  {
+   "date": "2026-05-19",
+   "instrument": "US TAKE IT DOWN Act",
+   "provision": "48-hour NCII removal — parallels the EU 2 Dec 2026 prohibition; sell one safeguard evaluation against both"
+  },
+  {
+   "date": "2026-07-01",
+   "instrument": "China TC260",
+   "provision": "Ethics-Safety Guidelines 1.0; GB/T standards"
+  },
+  {
+   "date": "2026-07-15",
+   "instrument": "China",
+   "provision": "Interim Measures for Anthropomorphic AI Interaction Services"
+  },
+  {
+   "date": "2026-07-27",
+   "instrument": "Digital Omnibus (Reg. 2026/1744)",
+   "provision": "in force — softened Art 4 to 'support' literacy; narrowed Art 3(14) safety component"
+  },
+  {
+   "date": "2026-08-02",
+   "instrument": "EU AI Act",
+   "provision": "Art 50 transparency; AI Office enforcement powers over GPAI"
+  }
+ ],
+ "no_dated_obligation": {
+  "UK": "No AI Act. No standalone AI bill in the King's Speech, 13 May 2026. AISI testing remains voluntary. Sell against procurement (RM6200 open to 23 Feb 2029) and the Online Safety Act, not against an AI statute.",
+  "Canada": "AIDA is dead — died on prorogation, will not be reintroduced. The June 2026 National AI Strategy signals a multi-bill approach with no timeline. Do not resource Canada.",
+  "Japan": "AI Promotion Act is a coordination law with no binding private-sector obligations and no penalties. Sell against JAISI evaluation guides voluntarily, not against law.",
+  "NIST": "No dated obligation exists. AI RMF revision in progress with no published date; AI 600-1 unchanged since Jul 2024. Do not put a NIST date in a client roadmap.",
+  "ISO/IEC 42006": "No formal IAF transition deadline appears to exist. If a business case assumes one, that assumption is unsupported."
+ },
+ "strategic_read": "The Omnibus softened Art 4 literacy and narrowed Art 6 safety-component scope. Regulatory drift across the EU, US federal and Canada is away from prescriptive obligation and toward transparency plus evidence. That is good for measurement and bad for training and certification. Weight the portfolio accordingly.",
+ "precedents": [
+  {
+   "instrument": "Reg. (EU) 2019/947 Art 15 — UAS geographical zones",
+   "why_it_matters": "The precedent that makes a geographic legal layer statutory rather than decorative. Art 15(3) requires Member States to publish UAS geographical zones — INCLUDING THEIR PERIOD OF VALIDITY — in a 'common unique digital format'. Delegated Reg. 2019/945 then mandates a geo-awareness FUNCTION in the aircraft itself. So in one legal domain, EU law is already required to be geographic, dated and machine-readable, and the machine is required to read it. EUROCAE ED-269 / ED-318 / ED-328 are the technical specs.",
+   "read": "Nobody has generalised this beyond airspace. SOV Space is that generalisation: obligations as dated geographic layers an agent can be tested against."
+  }
+ ],
+ "field_scan_2026_08_05": {
+  "closest_published_work": "arXiv:2604.24562 (27 Apr 2026) — derived scenario requirements from 310 provisions of Chinese traffic law, built >1,500 km of law-augmented roadway networks in OSM + SUMO across nine robotaxi regions. Traffic law only, no effective-date dimension, field data unreleased.",
+  "gap": "No publicly discoverable product or paper binds a running agent simulation to real, dated, geographically-scoped legal obligations that change as the agent moves. The legal layer exists in fragments (drone geo-zones, AV traffic law, Regology/Norm Ai jurisdiction databases) and the agent-simulation layer is mature (AgentSociety, MATSim, Concordia). Nobody has joined them.",
+  "caveat": "This is a negative result from public-web search on 5 Aug 2026. A stealth startup or an internal regulator tool would not surface. The honest claim is 'no publicly discoverable product', not 'nobody in the world'.",
+  "regulator_side_supply": "EU AI Act Art 57 sandboxes were due 2 Aug 2026, deferred to 2 Aug 2027 by the Omnibus. Per the European Parliament briefing of 1 Apr 2026: 1 operational (Spain AESIA), 5 implementing, 4 declared intent, 16 with no communicated plans. Every well-funded player (Norm Ai, $1.2bn valuation Jul 2026; Regology) points at the regulated FIRM, not the regulator."
+ }
+}

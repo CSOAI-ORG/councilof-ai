@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SOV Space — the instrument on the world | CSOAI</title>
+<meta name="description" content="Six measured governance axes, anchored to the instruments that create them, on an open-source real-world globe. Measurement, not certification.">
+<link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#03110b; --panel:#071c14; --line:#164034; --text:#ecfdf5; --dim:#8FB3A5;
+  --gold:#C9A84C; --green:#34d399; --red:#D0564B;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);
+  font:15px/1.5 ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;overflow:hidden}
+#map{position:absolute;inset:0}
+.maplibregl-ctrl-attrib{background:rgba(3,17,11,.8)!important;color:var(--dim)!important;font-size:10px}
+.maplibregl-ctrl-attrib a{color:var(--dim)!important}
+
+/* ---- chrome ---- */
+header{position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;
+  justify-content:space-between;gap:12px;padding:12px 16px;
+  background:linear-gradient(180deg,rgba(3,17,11,.92),rgba(3,17,11,0));pointer-events:none}
+header>*{pointer-events:auto}
+.brand{font-weight:800;letter-spacing:2px;font-size:13px;color:var(--green)}
+.brand small{display:block;font-weight:400;letter-spacing:0;color:var(--dim);font-size:11px}
+.status{font-size:11px;color:var(--dim);text-align:right;line-height:1.45}
+.status b{color:var(--green)}
+.status .bad{color:var(--red)}
+
+/* ---- axis rail ---- */
+#rail{position:absolute;left:0;top:64px;bottom:0;width:270px;z-index:10;
+  background:linear-gradient(90deg,rgba(3,17,11,.94),rgba(3,17,11,.72));
+  border-right:1px solid var(--line);overflow-y:auto;padding:12px}
+#rail h2{font-size:10px;letter-spacing:1.6px;color:var(--dim);margin:4px 0 10px;font-weight:600}
+.axis{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;
+  border-radius:10px;padding:9px 10px;margin-bottom:4px;cursor:pointer;color:inherit;font:inherit}
+.axis:hover,.axis:focus-visible{border-color:var(--line);background:rgba(255,255,255,.03);outline:none}
+.axis[aria-pressed=true]{border-color:var(--green);background:rgba(52,211,153,.09)}
+.axis .top{display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.axis .nm{flex:1;font-weight:600;text-transform:capitalize}
+.axis .f1{font-variant-numeric:tabular-nums;color:var(--dim);font-size:13px}
+.axis .sub{margin-top:3px;font-size:11px;color:var(--dim);display:flex;gap:8px}
+.bar{height:3px;border-radius:2px;background:#0d2b20;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%}
+.note{font-size:10.5px;color:#5a7a6d;line-height:1.45;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+
+/* ---- detail ---- */
+#detail{position:absolute;right:0;top:64px;bottom:0;width:340px;z-index:10;
+  background:linear-gradient(270deg,rgba(3,17,11,.96),rgba(3,17,11,.82));
+  border-left:1px solid var(--line);overflow-y:auto;padding:16px;
+  transform:translateX(100%);transition:transform .25s ease}
+#detail.open{transform:none}
+#detail h3{font-size:17px;margin-bottom:2px}
+#detail .prov{font-size:11px;color:var(--gold);letter-spacing:.6px;margin-bottom:12px}
+#detail p{font-size:13.5px;color:var(--dim);margin-bottom:12px}
+.kv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px}
+.kv span:last-child{font-variant-numeric:tabular-nums}
+.warnbox{margin-top:12px;border-left:3px solid var(--gold);padding:8px 10px;background:rgba(201,168,76,.07);
+  font-size:12px;color:var(--dim)}
+.acts{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.acts a{font-size:12px;text-decoration:none;color:#03110b;background:var(--green);
+  padding:7px 12px;border-radius:8px;font-weight:700}
+.acts a.ghost{background:none;color:var(--dim);border:1px solid var(--line);font-weight:400}
+#close{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--dim);
+  font-size:20px;cursor:pointer;line-height:1}
+
+@media(max-width:820px){
+  #rail{width:100%;top:auto;bottom:0;height:44%;border-right:none;border-top:1px solid var(--line)}
+  #detail{width:100%;top:auto;bottom:0;height:70%;border-left:none;border-top:1px solid var(--line);
+    transform:translateY(100%)}
+  #detail.open{transform:none}
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.mlabel{font:600 11.5px/1.2 ui-sans-serif,system-ui,sans-serif;color:#ecfdf5;white-space:nowrap;
+  cursor:pointer;text-shadow:0 0 3px #03110b,0 0 6px #03110b;letter-spacing:.2px;
+  font-variant-numeric:tabular-nums;text-transform:capitalize}
+.mlabel.fired{opacity:.38;text-transform:none}
+.mlabel.ev{text-transform:none;font-weight:500}
+</style>
+</head>
+<body>
+<div id="map" role="application" aria-label="Interactive globe of measured governance axes"></div>
+
+<header>
+  <div class="brand">SOV SPACE<small>the instrument, on the world</small></div>
+  <div class="status" id="status">connecting…</div>
+</header>
+
+<nav id="rail" aria-label="Measurement axes">
+  <h2>SIX AXES · MEASURED</h2>
+  <div id="axes"></div>
+  <p class="note">Disc size is how much we know — the item count minus the answers we could not read.
+     Colour is the measured score. A weak measurement looks weak on purpose.</p>
+  <p class="note">Measurement, not certification. Nothing here is an attestation or legal advice.</p>
+</nav>
+
+<aside id="detail" aria-live="polite">
+  <button id="close" aria-label="Close panel">×</button>
+  <div id="detailBody"></div>
+</aside>
+
+<p class="sr" id="a11y" aria-live="polite"></p>
+
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+<script>
+/* SOV Space — MapLibre GL globe. Open source, no API key, no paid tiles.
+ *
+ * Tiles: OpenFreeMap (OSM-derived, free, self-hostable). Chosen deliberately —
+ * "no paid tiles, no foreign server" is a claim the estate already makes, so the
+ * basemap has to be one that can be self-hosted without a licence change.
+ *
+ * Each axis is anchored to the INSTRUMENT that creates it, not to a decorative
+ * point. Provenance sits where C2PA is specified; continuity where NIST published
+ * the post-quantum standards. That is what makes the globe mean something rather
+ * than just spin.
+ */
+
+// Fallback = yesterday's measured run. Used only if /api/gspc is unreachable, and
+// the UI says so rather than pretending the numbers came from the wire.
+const FALLBACK = {
+  source: "local fallback",
+  measured_on: { date: "2026-08-04", model: "sov34:latest" },
+  axes: [
+    { axis:"governance",  bench:"GovBench", n:24, macro_f1:0.386, accuracy:0.458, unparsed_rate:0.042,
+      colour:"#34d399", lng:4.37,   lat:50.84, seat:"Brussels", instrument:"EU AI Act (Reg. 2024/1689)",
+      task:"EU AI Act risk-tier classification" },
+    { axis:"safety",      bench:"DefBench", n:14, macro_f1:0.653, accuracy:0.643, unparsed_rate:0.071,
+      colour:"#f87171", lng:-0.12,  lat:51.50, seat:"London", instrument:"UK AI Safety Institute",
+      task:"calibrated refusal on paired requests" },
+    { axis:"provenance",  bench:"ProvBench", n:15, macro_f1:0.273, accuracy:0.200, unparsed_rate:0.733,
+      colour:"#60a5fa", lng:-122.42,lat:37.77, seat:"San Francisco", instrument:"C2PA Specification 2.4",
+      task:"Article 50 marking survival under transforms" },
+    { axis:"continuity",  bench:"PQCBench", n:13, macro_f1:0.217, accuracy:0.231, unparsed_rate:0.308,
+      colour:"#c084fc", lng:-77.27, lat:39.14, seat:"Gaithersburg", instrument:"NIST FIPS 204 / ML-DSA",
+      task:"post-quantum signing agility" },
+    { axis:"conformance", bench:"MCPBench", n:11, macro_f1:0.667, accuracy:0.636, unparsed_rate:0.091,
+      colour:"#fbbf24", lng:-122.33,lat:47.61, seat:"Seattle", instrument:"Model Context Protocol 2026-07-28",
+      task:"tool declaration versus observed behaviour" },
+    { axis:"openness",    bench:"OSSBench", n:13, macro_f1:0.500, accuracy:0.538, unparsed_rate:0.154,
+      colour:"#2dd4bf", lng:-122.68,lat:45.52, seat:"Portland", instrument:"OSI licence set",
+      task:"licence versus intended use" }
+  ]
+};
+
+const SEATS = Object.fromEntries(FALLBACK.axes.map(a => [a.axis, a]));
+const $ = id => document.getElementById(id);
+let DATA = null, active = new Set(), markers = [];
+
+// how much we actually know: items, minus the answers we could not read
+const confidence = a => Math.max(0.12, Math.min(1, a.n / 30) * (1 - (a.unparsed_rate || 0)));
+
+const map = new maplibregl.Map({
+  container: "map",
+  style: "https://tiles.openfreemap.org/styles/liberty",
+  center: [-58, 38], zoom: 1.7,
+  attributionControl: { compact: true }
+});
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");
+
+map.on("style.load", () => {
+  // MapLibre v5 has NO `projection` option on the Map constructor — passing one is
+  // silently ignored, which is why this rendered as a flat Mercator map for two days
+  // while every label on it said "globe". It has to be set on the style.
+  map.setProjection({ type: "globe" });
+  map.setSky({ "sky-color":"#03110b", "horizon-color":"#0b3d2c",
+               "fog-color":"#03110b", "fog-ground-blend":0.6, "sky-horizon-blend":0.7 });
+});
+
+/* MapLibre occludes CIRCLE layers behind the globe but NOT DOM markers — its only
+ * marker occlusion is for 3D terrain. Without this, San Francisco's label floats over
+ * the North Pole while its disc is correctly hidden, which is worse than either. So
+ * hide any marker more than a right angle of arc from the point facing the camera. */
+function facing(lng, lat) {
+  const c = map.getCenter(), R = Math.PI / 180;
+  const cos = Math.sin(c.lat * R) * Math.sin(lat * R) +
+              Math.cos(c.lat * R) * Math.cos(lat * R) * Math.cos((lng - c.lng) * R);
+  // The visible cap narrows as the camera drops toward the surface. A fixed 84° let
+  // Colorado's label sit on the horizon at zoom 2.6 and paint over the header.
+  const cap = Math.max(38, Math.min(84, 92 - map.getZoom() * 7));
+  return cos > Math.cos(cap * R);
+}
+function cullMarkers() {
+  const all = markers.concat(window.__clockMarkers || []);
+  const w = map.getCanvas().clientWidth, h = map.getCanvas().clientHeight;
+  all.forEach(mk => {
+    const ll = mk.getLngLat(), el = mk.getElement();
+    if (el.dataset.vis === "off") return;               // hidden by mode/declutter
+    const pt = map.project(ll);
+    const onScreen = pt.x > -20 && pt.x < w + 20 && pt.y > 58 && pt.y < h - 8;
+    el.style.visibility = (facing(ll.lng, ll.lat) && onScreen) ? "" : "hidden";
+  });
+}
+
+/* Six axes span 126 degrees of longitude — Portland to Brussels. No single view of a
+ * globe holds them all, so the default view is chosen to hold ALL SIX (centred mid-
+ * Atlantic at low zoom) rather than to look impressive over Europe. An idle spin then
+ * brings the far side round; any interaction stops it for good. */
+let spinT = null, spinning = false;
+function spinStep() {
+  if (!spinning) return;
+  const c = map.getCenter();
+  map.jumpTo({ center: [c.lng + 0.055, c.lat] });
+  requestAnimationFrame(spinStep);
+}
+function idleSpin() {
+  clearTimeout(spinT);
+  spinning = false;
+  spinT = setTimeout(() => { spinning = true; spinStep(); }, 6000);
+}
+function stopSpin() { spinning = false; clearTimeout(spinT); }
+["mousedown", "touchstart", "wheel", "keydown"].forEach(ev =>
+  document.addEventListener(ev, stopSpin, { passive: true }));
+
+function statusLine(ok, src, note) {
+  $("status").innerHTML = ok
+    ? `<b>${DATA.axes.length} axes · ${DATA.axes.reduce((s,a)=>s+a.n,0)} measured items</b><br>${src}`
+    : `<span class="bad">live data unavailable</span><br>${note}`;
+}
+
+async function boot() {
+  try {
+    const r = await fetch("/api/gspc", { cache: "no-store" });
+    const ct = r.headers.get("content-type") || "";
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    if (!ct.includes("json")) throw new Error("got " + ct.split(";")[0] + ", not JSON");
+    const j = await r.json();
+    DATA = { ...j, axes: j.axes.map(a => ({ ...SEATS[a.axis], ...a })) };
+    statusLine(true, `live · measured ${DATA.measured_on?.date || "—"}`);
+  } catch (e) {
+    // FAIL VISIBLY. A silently-substituted number is the one thing this estate cannot ship.
+    DATA = FALLBACK;
+    if (window.__EMBEDDED__) {
+      // The single-file build has no server to ask. Say which snapshot it is, and when.
+      DATA = FALLBACK;
+      $("status").innerHTML =
+        `<b>6 axes · 90 measured items</b><br>embedded snapshot · sov34 measured 4 Aug 2026`;
+    } else {
+      statusLine(false, "", `showing the 4 Aug local snapshot — ${e.message}`);
+    }
+  }
+  // draw() adds sources; that requires a loaded style. boot() can win the race when
+  // /api/gspc fails fast, so wait rather than throw.
+  if (map.isStyleLoaded()) draw(); else map.once("load", draw);
+  rail();
+  window.__gspcReady = true;
+}
+
+function draw() {
+  const fc = { type:"FeatureCollection", features: DATA.axes.map(a => ({
+    type:"Feature",
+    properties:{ axis:a.axis, colour:a.colour, conf:confidence(a), f1:a.macro_f1, n:a.n },
+    geometry:{ type:"Point", coordinates:[a.lng, a.lat] }
+  })) };
+
+  if (map.getSource("axes")) { map.getSource("axes").setData(fc); return; }
+
+  map.addSource("axes", { type:"geojson", data:fc });
+
+  // halo: radius = confidence. weak measurement, small mark.
+  map.addLayer({ id:"axis-halo", type:"circle", source:"axes", paint:{
+    "circle-radius":["interpolate",["linear"],["zoom"],
+      1,["+",6,["*",34,["get","conf"]]], 5,["+",14,["*",70,["get","conf"]]]],
+    "circle-color":["get","colour"],
+    "circle-opacity":["+",0.06,["*",0.20,["get","conf"]]],
+    "circle-stroke-color":["get","colour"],
+    "circle-stroke-width":1.2,
+    "circle-stroke-opacity":["+",0.25,["*",0.6,["get","conf"]]]
+  }});
+  map.addLayer({ id:"axis-core", type:"circle", source:"axes", paint:{
+    "circle-radius":4.5, "circle-color":["get","colour"], "circle-opacity":0.95
+  }});
+  // Labels are DOM markers, not symbol layers. A symbol layer needs a glyph server,
+  // which would put a third-party font dependency into a page whose claim is that it
+  // can be self-hosted with no foreign server. Markers need nothing.
+  DATA.axes.forEach(a => {
+    const el = document.createElement("div");
+    el.className = "mlabel";
+    el.innerHTML = `<b style="color:${a.colour}">${a.axis}</b> ${a.macro_f1.toFixed(3)}`;
+    el.onclick = () => open(a.axis);
+    // Brussels and London are 4.5 degrees apart; stacked labels below each point
+    // overlap at every world zoom. Push them apart by hand — there are only six.
+    const LBL = { governance:["left",[10,-2]], safety:["right",[-10,4]],
+                  conformance:["bottom",[0,-10]], openness:["top",[0,10]],
+                  provenance:["right",[-10,0]], continuity:["top",[0,10]] };
+    const [anchor, offset] = LBL[a.axis] || ["top", [0, 10]];
+    markers.push(new maplibregl.Marker({ element: el, anchor, offset })
+      .setLngLat([a.lng, a.lat]).addTo(map));
+  });
+  map.on("move", cullMarkers);
+  map.on("zoom", cullMarkers);
+  cullMarkers();
+  idleSpin();
+
+  map.on("click","axis-halo", e => open(e.features[0].properties.axis));
+  map.on("click","axis-core", e => open(e.features[0].properties.axis));
+  ["axis-halo","axis-core"].forEach(l => {
+    map.on("mouseenter", l, () => map.getCanvas().style.cursor = "pointer");
+    map.on("mouseleave", l, () => map.getCanvas().style.cursor = "");
+  });
+}
+
+function rail() {
+  $("axes").innerHTML = "";
+  DATA.axes.forEach(a => {
+    const c = confidence(a);
+    const b = document.createElement("button");
+    b.className = "axis"; b.type = "button";
+    b.setAttribute("aria-pressed","false");
+    b.dataset.axis = a.axis;
+    b.innerHTML =
+      `<span class="top"><span class="dot" style="background:${a.colour};opacity:${(0.35+0.65*c).toFixed(2)}"></span>
+       <span class="nm">${a.axis}</span><span class="f1">${a.macro_f1.toFixed(3)}</span></span>
+       <span class="sub"><span>${a.bench}</span><span>n=${a.n}</span>
+       <span${a.unparsed_rate>0.2?' style="color:#C9A84C"':''}>${Math.round(a.unparsed_rate*100)}% unread</span></span>
+       <span class="bar"><i style="width:${(a.macro_f1*100).toFixed(0)}%;background:${a.colour}"></i></span>`;
+    b.onclick = () => open(a.axis);
+    $("axes").appendChild(b);
+  });
+}
+
+function open(axis) {
+  const a = DATA.axes.find(x => x.axis === axis); if (!a) return;
+  active = new Set([axis]);
+  document.querySelectorAll(".axis").forEach(el =>
+    el.setAttribute("aria-pressed", String(el.dataset.axis === axis)));
+
+  map.flyTo({ center:[a.lng, a.lat], zoom:3.4, duration:1600, essential:true });
+
+  const weak = a.unparsed_rate > 0.2 || a.n < 20;
+  $("detailBody").innerHTML = `
+    <h3>${a.bench} — ${a.axis}</h3>
+    <div class="prov">${a.instrument} · ${a.seat}</div>
+    <p>${a.task}</p>
+    <div class="kv"><span>macro-F1</span><span>${a.macro_f1.toFixed(3)}</span></div>
+    <div class="kv"><span>accuracy</span><span>${a.accuracy.toFixed(3)}</span></div>
+    <div class="kv"><span>items (n)</span><span>${a.n}</span></div>
+    <div class="kv"><span>unreadable answers</span><span>${(a.unparsed_rate*100).toFixed(1)}%</span></div>
+    ${weak ? `<div class="warnbox"><b>Not quotable.</b> n is below 30, so a 95% Wilson interval
+       stays wider than ±0.169. ${a.unparsed_rate>0.2?`And ${Math.round(a.unparsed_rate*100)}% of
+       answers could not be read at all — reported as unmeasured, not scored as wrong.`:""}
+       Do not publish an interval on this axis yet, including us.</div>` : ""}
+    <div class="acts">
+      <a href="/benchmarks">Full method</a>
+      <a class="ghost" href="https://huggingface.co/datasets/csoai/${a.bench.toLowerCase()}-kaggle-items">Dataset</a>
+      <a class="ghost" href="https://doi.org/10.5281/zenodo.21755657">DOI</a>
+    </div>`;
+  $("detail").classList.add("open");
+  $("a11y").textContent = `${a.axis}: macro-F1 ${a.macro_f1.toFixed(3)}, n ${a.n}, ${Math.round(a.unparsed_rate*100)} percent unreadable.`;
+}
+
+$("close").onclick = () => {
+  $("detail").classList.remove("open");
+  document.querySelectorAll(".axis").forEach(el => el.setAttribute("aria-pressed","false"));
+  map.flyTo({ center:[-58,38], zoom:1.7, duration:1400 });
+};
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("close").click(); });
+
+// parent-frame control, matching the convention globe3d.html already uses
+window.addEventListener("message", ev => {
+  const d = ev.data || {};
+  if (d.cmd === "axis" && d.axis) open(d.axis);
+  if (d.cmd === "home") $("close").click();
+});
+
+boot();
+</script>
+</body>
+</html>
