@@ -10,7 +10,7 @@
     "dev:server": "NODE_ENV=development tsx watch server/index.ts",
     "dev:client": "vite --config client/vite.config.ts",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "node scripts/refutation-count-lint.mjs && node scripts/counter-lint.mjs && node scripts/generate-sitemap.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\"",
+    "build:client": "node scripts/refutation-count-lint.mjs && node scripts/counter-lint.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\"",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "lint:counters": "node scripts/counter-lint.mjs",
     "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/server",
@@ -42,7 +42,8 @@
     "ts-ratchet": "node scripts/ts-ratchet.mjs",
     "smoke:evidence": "node scripts/smoke-evidence.mjs",
     "lint:refutations": "node scripts/refutation-count-lint.mjs",
-    "deploy": "bash scripts/deploy-verified.sh"
+    "deploy": "bash scripts/deploy-verified.sh",
+    "redirects": "node scripts/generate-redirects.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
