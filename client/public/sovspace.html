@@ -150,6 +150,14 @@ header>*{pointer-events:auto}
   <p class="note">The same six axes apply per regulated sector, each with its own governing instrument.
      Per-sector scores appear when an item bank exists — none is invented here.</p>
 
+  <h2 class="surf">SECURITY · ASISECURITY HIVE</h2>
+  <div class="surf-nav" id="secNav">
+    <a href="#" id="secLoad"><span class="g">🛡</span> Load security posture <small id="secState">tap</small></a>
+  </div>
+  <p class="note">The security hive is its own product (asisecurity.ai); CSOAI measures it. A run whose
+     grader is not yet validated shows as in-progress with <b>no score</b> — the first red-team board
+     was retracted for publishing ahead of its grader.</p>
+
   <h2 class="surf">SURFACES · CONNECTED</h2>
   <div class="surf-nav">
     <a href="/gspc-quests.html"><span class="g">🎯</span> GSPC Quests <small>answer the items</small></a>
@@ -428,7 +436,7 @@ function open(axis) {
     <div class="acts">
       <a href="/benchmarks">Full method</a>
       <a class="ghost" href="https://huggingface.co/datasets/csoai/${a.bench.toLowerCase()}-kaggle-items">Dataset</a>
-      <a class="ghost" href="https://doi.org/10.5281/zenodo.21755657">DOI</a>
+      <a class="ghost" href="https://doi.org/10.5281/zenodo.21755656">DOI</a>
     </div>`;
   $("detail").classList.add("open");
   $("a11y").textContent = `${a.axis}: macro-F1 ${a.macro_f1.toFixed(3)}, n ${a.n}, ${Math.round(a.unparsed_rate*100)} percent unreadable.`;
@@ -553,6 +561,60 @@ $("chatForm").onsubmit = async e => {
     addLine("sov", `On the governance axis this reads as <b>${v.replace(/_/g,' ')}</b>: ${gloss}`,
       `offline deterministic grader · verdict is the AI Act's, not CSOAI's · /api/chat unreachable`);
   }
+};
+
+/* ==== SECURITY HIVE — bridged from asisecurity.ai via /api/security ====
+ * Renders posture, never a score the grader has not earned. A surface whose run is IN_PROGRESS
+ * shows as in-progress with no number: the first red-team board was retracted because it published
+ * ahead of its grader, and this panel is built so that cannot happen again. */
+const SEC_CHIP = { MEASURED:["#34d399","measured"], IN_PROGRESS:["#C9A84C","in progress · no score"],
+                   SPEC:["#60a5fa","spec"], UNVALIDATED:["#D0564B","unvalidated"] };
+$("secLoad").onclick = async e => {
+  e.preventDefault();
+  $("secState").textContent = "loading…";
+  let data;
+  try {
+    const r = await fetch("/api/security", { cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    data = await r.json();
+  } catch (err) {
+    // Fail visibly. A security panel that quietly shows nothing is worse than one that says it failed.
+    $("secState").textContent = "unavailable";
+    $("detailBody").innerHTML = `<h3>Security posture unavailable</h3>
+      <div class="prov">asisecurity hive · /api/security</div>
+      <p>${String(err.message)}. This endpoint serves on the deployed site; locally it is absent.</p>
+      <div class="warnbox">Nothing is shown rather than a cached or assumed posture. A security
+        surface that guesses is not a security surface.</div>`;
+    $("detail").classList.add("open");
+    return;
+  }
+  $("secState").textContent = `${data.totals.measured}/${data.totals.surfaces} measured`;
+  const rows = data.surfaces.map(s => {
+    const [col, chip] = SEC_CHIP[s.status] || ["#8FB3A5", s.status];
+    const score = typeof s.score === "number"
+      ? `<span style="font-variant-numeric:tabular-nums">${s.score.toFixed(2)}</span>`
+      : `<span style="color:${col};font-size:11px">no score</span>`;
+    return `<div style="border-top:1px solid var(--line);padding:10px 0">
+      <div style="display:flex;gap:8px;align-items:baseline">
+        <b style="flex:1">${s.name}</b>${score}
+      </div>
+      <div style="font-size:10.5px;letter-spacing:.5px;color:${col};margin:3px 0 5px">
+        ${chip}${s.n ? " · n=" + s.n : ""}</div>
+      <div style="font-size:12.5px;color:var(--dim)">${s.what}</div>
+      <div style="font-size:11.5px;color:#5a7a6d;margin-top:5px">${s.detail}</div>
+    </div>`;
+  }).join("");
+  $("detailBody").innerHTML = `
+    <h3>Security posture</h3>
+    <div class="prov">${data.hive}</div>
+    <p>${data.note}</p>
+    ${rows}
+    <div class="warnbox"><b>${data.totals.scores_published} of ${data.totals.surfaces} surfaces
+      publish a score.</b> The rest are measured-but-not-quotable, spec-only, or awaiting grader
+      validation. ${data.limitations[1]}</div>
+    <div class="acts"><a href="https://asisecurity.ai">The security hive</a>
+      <a class="ghost" href="/api/security">Raw JSON</a></div>`;
+  $("detail").classList.add("open");
 };
 
 boot();

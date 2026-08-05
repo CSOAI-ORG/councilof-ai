@@ -136,7 +136,7 @@ export const onRequestGet: PagesFunction = async (context) => {
   const body = {
     schema: "csoai.gspc-axes/0.2",
     issuer: "CSOAI Ltd (GB, Companies House 16939677)",
-    doi: "10.5281/zenodo.21755657",
+    doi: "10.5281/zenodo.21755656",
     measured_on: MEASURED_ON,
     note:
       "Measurement, not certification. Every score is a measured run on a published, " +
