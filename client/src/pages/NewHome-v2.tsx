@@ -227,10 +227,6 @@ const faqs = [
     answer: "We cover 7 major global frameworks: EU AI Act (Europe), NIST AI RMF (USA), ISO 42001 (International), TC260 (China), UK AI Safety Institute guidelines (UK), Singapore Model AI Governance (APAC), and the new South Korea AI Framework Act (2026). Our platform synthesizes all of these into one operational system.",
   },
   {
-    question: "How does the Prosperity Fund work?",
-    answer: "The Prosperity Fund is funded by AI company contributions (1-20% of revenues, scaled by risk level) - NOT by analyst fees. This funds Universal Basic Income for workers displaced by AI. When AI-caused unemployment reaches 20%, the first UBI tier activates. At 40%, the second tier activates, and at 70%, full UBI is provided. The goal is £100B+ to protect humanity's economic future.",
-  },
-  {
     question: "Can I earn money as an AI Safety Analyst?",
     answer: "Yes — it's a real, paid role. The work is remote with hours you set. Rates will be set by the marketplace once live and published as measured aggregates — we don't quote invented figures. Earnings will vary and are not guaranteed; they depend on how much you work and the demand for your specialisation. Our job marketplace connects you directly with enterprises needing compliance monitoring.",
   },
@@ -720,7 +716,7 @@ export default function NewHomeV2() {
                       desc: "33 measurement agents monitor systems continuously. Continuous measurement, not paper promises.",
                     },
                     {
-                      title: "Prosperity Fund",
+                      title: "Signed evidence",
                       desc: "AI revenues fund UBI for displaced workers. Everyone benefits from AI.",
                     },
                   ].map((item, i) => (
@@ -814,7 +810,7 @@ export default function NewHomeV2() {
                     "Track case progress publicly",
                     "Verify AI system compliance",
                     "Hold companies accountable",
-                    "Access Prosperity Fund benefits",
+                    "Recompute any published figure yourself",
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-2 text-gray-600 text-sm">
                       <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
@@ -1131,15 +1127,19 @@ export default function NewHomeV2() {
               viewport={{ once: true }}
               variants={fadeInUp}
             >
-              <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-400/30 text-sm px-4 py-1">
-                Real-Time Monitoring
+              <Badge className="mb-4 bg-amber-500/20 text-amber-300 border-amber-400/30 text-sm px-4 py-1">
+                Designed — not yet measured
               </Badge>
               <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
                 The <span className="text-emerald-400">Byzantine Council</span>
               </h2>
               <p className="text-xl text-gray-500 mb-8 leading-relaxed">
-                33 AI agents from multiple providers working together with fault-aware consensus.
-                No single company can manipulate safety decisions.
+                A multi-provider council so no single vendor can move a safety decision alone.
+                <strong className="text-amber-300"> This is the design, and we label it as such.</strong>{" "}
+                An earlier version of this page claimed 33 agents at a 23/33 quorum as a live
+                figure. It was never measured at that size, so we withdrew it rather than leave it
+                standing. What <em>is</em> measured — 29 models across six axes — is on the
+                measurement section above, and the retraction is in our public ledger.
               </p>
 
               <div className="space-y-6 mb-8">
@@ -1197,102 +1197,142 @@ export default function NewHomeV2() {
           </div>
         </div>
       </section>
-
       {/* ============================================ */}
-      {/* SECTION 8: PROSPERITY FUND */}
+      {/* SECTION 8: THE MEASUREMENT — every number here has an evidence file */}
       {/* ============================================ */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-amber-50 to-white">
+      <section className="py-16 md:py-24 bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-6 max-w-6xl">
           <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="text-center mb-16"
+            initial="hidden" whileInView="visible" viewport={{ once: true }}
+            variants={fadeInUp} className="text-center mb-14"
           >
-            <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200 text-sm px-4 py-1">
-              Economic Justice
+            <Badge className="mb-4 bg-slate-900 text-white border-slate-900 text-sm px-4 py-1">
+              Measured, not asserted
             </Badge>
             <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
-              The <span className="text-amber-600">Prosperity Fund</span>
+              We publish the number that<br className="hidden md:block" />
+              <span className="text-slate-500"> makes our own model look bad.</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              AI creates unprecedented wealth. The Prosperity Fund ensures everyone benefits.
+              Anyone can publish a benchmark they win. The test of a measurement body is what it
+              does with a result it does not like. Here is ours, on the same page as the one we
+              are proud of.
             </p>
           </motion.div>
 
-          {/* Fund goal */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={scaleIn}
-            className="mb-12"
-          >
-            <Card className="border-2 border-amber-200 bg-gradient-to-br from-amber-100 to-amber-50 text-center p-8">
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <CircleDollarSign className="h-12 w-12 text-amber-600" />
-                <span className="text-6xl md:text-7xl font-black text-amber-700">£100B+</span>
-              </div>
-              <p className="text-xl text-amber-800 font-medium">Prosperity Fund Goal</p>
-              <p className="text-amber-600 mt-2">Funded by AI company contributions (1-20% of revenues) - NOT by analyst fees</p>
+          {/* The two halves of the same trade */}
+          <div className="grid md:grid-cols-2 gap-6 mb-14">
+            <Card className="border-2 border-emerald-200 bg-emerald-50/60 p-8">
+              <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700 mb-3">
+                What our model does well
+              </p>
+              <div className="text-5xl font-black text-emerald-700 mb-2">19 / 19</div>
+              <p className="text-emerald-900 font-medium mb-4">
+                EU AI Act prohibited practices refused
+              </p>
+              <p className="text-sm text-emerald-800/80">
+                sov34, a 1.5-billion-parameter model. Its size-matched base refuses 3 of 19. A
+                model <strong>thirteen times larger</strong> refuses 8 of 18. Social scoring,
+                emotion inference, biometric identification, predictive policing — all of it,
+                every time.
+              </p>
             </Card>
-          </motion.div>
 
-          {/* UBI Triggers */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid md:grid-cols-3 gap-6 mb-12"
-          >
-            {[
-              {
-                threshold: "20%",
-                label: "Tier 1 UBI",
-                desc: "When AI-caused unemployment reaches 20%, first tier of Universal Basic Income activates.",
-                color: "from-green-500 to-emerald-500",
-              },
-              {
-                threshold: "40%",
-                label: "Tier 2 UBI",
-                desc: "When displacement reaches 40%, enhanced benefits activate to support affected workers.",
-                color: "from-amber-500 to-orange-500",
-              },
-              {
-                threshold: "70%",
-                label: "Full UBI",
-                desc: "At 70% displacement, full Universal Basic Income ensures everyone's economic security.",
-                color: "from-rose-500 to-red-500",
-              },
-            ].map((tier, index) => (
-              <motion.div key={index} variants={fadeInUp}>
-                <Card className="h-full border hover:shadow-lg transition-all">
-                  <CardHeader>
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${tier.color} flex items-center justify-center mx-auto mb-4`}>
-                      <span className="text-2xl font-black text-white">{tier.threshold}</span>
-                    </div>
-                    <CardTitle className="text-center">{tier.label}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 text-center text-sm">{tier.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <div className="text-center">
-            <Link href="/prosperity-fund">
-              <Button size="lg" className="bg-amber-600 hover:bg-amber-700 text-white">
-                Learn About the Prosperity Fund
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <Card className="border-2 border-rose-200 bg-rose-50/60 p-8">
+              <p className="text-sm font-semibold uppercase tracking-wide text-rose-700 mb-3">
+                What it cost — published here, by us
+              </p>
+              <div className="text-5xl font-black text-rose-700 mb-2">−27.9 pts</div>
+              <p className="text-rose-900 font-medium mb-4">
+                general reasoning, against the model we trained it from
+              </p>
+              <p className="text-sm text-rose-800/80">
+                ARC-Easy, a public benchmark we did not write: 0.574 against the base model's
+                0.853. The intervals separate cleanly, so this is a real loss and not noise.
+                Narrow training bought that refusal rate and this is the bill.
+              </p>
+            </Card>
           </div>
+
+          {/* The instrument */}
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true }}
+            variants={fadeInUp} className="mb-14"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">The instrument behind it</h3>
+            <p className="text-gray-600 mb-6">
+              Six axes, 90 frozen items, open on Hugging Face and Kaggle with the scoring code —
+              so you can recompute any figure we publish, or disagree with any answer key.
+            </p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse min-w-[34rem]">
+                <thead>
+                  <tr className="border-b border-gray-300 text-left text-gray-500 uppercase text-xs tracking-wide">
+                    <th className="py-2 pr-4">Axis</th>
+                    <th className="py-2 pr-4">What it decides</th>
+                    <th className="py-2 pr-4 text-right">Items</th>
+                    <th className="py-2 text-right">Usable n</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-800">
+                  {[
+                    ["Governance", "EU AI Act risk tier", 24, 23],
+                    ["Safety", "calibrated refusal", 14, 13],
+                    ["Provenance", "C2PA manifest survival", 15, 7],
+                    ["Continuity", "post-quantum migration", 13, 6],
+                    ["Conformance", "tool-contract conformance", 11, 5],
+                    ["Openness", "licence vs intended use", 13, 7],
+                  ].map(([a, t, n, u]) => (
+                    <tr key={a as string} className="border-b border-gray-100">
+                      <td className="py-2 pr-4 font-medium">{a}</td>
+                      <td className="py-2 pr-4 text-gray-600">{t}</td>
+                      <td className="py-2 pr-4 text-right tabular-nums">{n}</td>
+                      <td className="py-2 text-right tabular-nums">{u}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-sm text-gray-500 mt-4 border-l-2 border-gray-300 pl-4">
+              <strong className="text-gray-700">Usable n is the honest column.</strong> It counts
+              only items that actually separate one model from another — dead items and items that
+              score backwards are excluded. Not one axis yet reaches the 30 needed for a 95%
+              interval to narrow to ±0.17, <strong className="text-gray-700">so we quote no
+              intervals on them, including our own</strong>. You will not find that column on
+              anyone else's benchmark.
+            </p>
+          </motion.div>
+
+          {/* Try it */}
+          <motion.div
+            initial="hidden" whileInView="visible" viewport={{ once: true }}
+            variants={fadeInUp}
+            className="rounded-xl border-2 border-slate-900 bg-slate-900 text-white p-8 md:p-10"
+          >
+            <h3 className="text-2xl md:text-3xl font-bold mb-3">
+              Score yourself against the models.
+            </h3>
+            <p className="text-slate-300 mb-6 max-w-2xl">
+              Six training arenas serve the same frozen items, marked by the same published key,
+              and place you against the 29 AI models we measured on them. You see the statutory
+              provision behind every answer, so you can argue with the key instead of trusting it.
+              It is training — we are a measurement body and we accredit nobody.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a href="/arena/" className="inline-flex items-center rounded-lg bg-white px-5 py-3 font-semibold text-slate-900 hover:bg-slate-100">
+                Open the arenas <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+              <a href="/benchmarks" className="inline-flex items-center rounded-lg border border-slate-600 px-5 py-3 font-semibold text-white hover:bg-slate-800">
+                See every measured figure
+              </a>
+              <a href="https://huggingface.co/csoai" className="inline-flex items-center rounded-lg border border-slate-600 px-5 py-3 font-semibold text-white hover:bg-slate-800">
+                Take the datasets
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
+
 
       {/* ============================================ */}
       {/* SECTION 9: TRAINING & CERTIFICATION */}
