@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOV Space — the instrument on a real-world globe | CSOAI</title>
+<meta name="description" content="Six axes of AI-governance measurement, each anchored to the place its law was made. Live data from the published harness. Open globe, no API key, no vendor lock.">
+<link rel="canonical" href="https://csoai.org/sov-space/">
+<link rel="stylesheet" href="/vendor/maplibre-gl.css">
+<style>
+  :root{--fg:#e9edf2;--mut:#93a1b0;--bd:#243040;--bg:#070b11;--acc:#3d9;--warn:#f9a03f;--no:#ff6b5e}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  #map{position:absolute;inset:0}
+  .panel{position:absolute;z-index:5;background:rgba(7,11,17,.9);border:1px solid var(--bd);
+    border-radius:10px;backdrop-filter:blur(8px)}
+  #hud{top:14px;left:14px;max-width:22rem;padding:14px 16px}
+  #hud h1{font-size:1.05rem;margin:0 0 .3rem;letter-spacing:.01em}
+  #hud p{margin:.35rem 0;color:var(--mut);font-size:.86rem}
+  #legend{bottom:14px;left:14px;padding:10px 14px;font-size:.8rem;color:var(--mut)}
+  #detail{top:14px;right:14px;width:23rem;max-width:calc(100vw - 28px);padding:16px 18px;display:none;
+    max-height:calc(100vh - 28px);overflow:auto}
+  #detail h2{margin:0 0 .2rem;font-size:1.1rem}
+  #detail .task{color:var(--mut);font-size:.85rem;margin:0 0 .8rem}
+  .row{display:flex;justify-content:space-between;gap:1rem;padding:.3rem 0;
+    border-bottom:1px solid var(--bd);font-size:.86rem}
+  .row span:last-child{font-variant-numeric:tabular-nums;color:var(--fg)}
+  .k{color:var(--mut)}
+  .cta{display:inline-block;margin-top:.9rem;margin-right:.5rem;padding:.5rem .9rem;border-radius:7px;
+    background:var(--acc);color:#04120c;font-weight:650;text-decoration:none;font-size:.85rem}
+  .cta.ghost{background:transparent;color:var(--fg);border:1px solid var(--bd)}
+  .marker{width:15px;height:15px;border-radius:50%;cursor:pointer;
+    box-shadow:0 0 0 3px rgba(51,221,153,.18),0 0 16px 3px rgba(51,221,153,.45);
+    background:var(--acc);border:2px solid #06120d;transition:transform .15s}
+  .marker:hover{transform:scale(1.35)}
+  .marker.warn{background:var(--warn);box-shadow:0 0 0 3px rgba(249,160,63,.18),0 0 16px 3px rgba(249,160,63,.45)}
+  .note{color:var(--mut);font-size:.78rem;border-left:2px solid var(--bd);padding-left:.6rem;margin-top:.9rem}
+  a{color:var(--acc)}
+  .live{font-size:.72rem;color:var(--mut);margin-top:.5rem}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--acc);margin-right:5px}
+  .dot.dead{background:var(--no)}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="hud" class="panel">
+  <h1>SOV Space</h1>
+  <p>Six axes of AI-governance measurement, each anchored to the place its law was actually made.
+     Click a node.</p>
+  <p style="color:var(--fg);font-size:.82rem">Every figure here comes from a published harness run
+     — not a mock. Where a thing is unmeasured, it says so.</p>
+  <div class="live" id="live">checking live endpoints…</div>
+</div>
+
+<div id="detail" class="panel"></div>
+
+<div id="legend" class="panel">
+  <span class="dot"></span>measured &nbsp;·&nbsp;
+  <span class="dot" style="background:var(--warn)"></span>measured, but not yet quotable
+  &nbsp;·&nbsp; open globe, no API key
+</div>
+
+<script src="/vendor/maplibre-gl.js"></script>
+<script>
+// Each axis sits where its law was made. Not decoration — a reader can check the anchor.
+const AXES = [
+  { id:'governance', bench:'GovBench', at:[4.3517,50.8503], place:'Brussels — where the EU AI Act was written',
+    task:'EU AI Act risk tier', n:24, usable:23, diff:0.227, spread:0.608, quotable:false,
+    note:'Hardest axis in the set, and it stays hard with a 20B model in the fleet — so the items are hard on their merits, not merely hard for small models.' },
+  { id:'safety', bench:'DefBench', at:[-0.7405,51.9976], place:'Bletchley Park — the 2023 AI Safety Summit',
+    task:'calibrated refusal', n:14, usable:13, diff:0.583, spread:0.643, quotable:false,
+    note:'sov34 scores 1.000 here: it refuses 19/19 EU AI Act prohibited practices where its size-matched base refuses 3/19, and a model 13x larger refuses 8/18.' },
+  { id:'provenance', bench:'ProvBench', at:[-121.8863,37.3382], place:'San José — C2PA content provenance',
+    task:'C2PA manifest survival', n:15, usable:7, diff:0.607, spread:0.324, quotable:false,
+    note:'sov34 leaves 73% of these unanswerable — an instruction-following failure, reported UNMEASURED rather than scored wrong.' },
+  { id:'continuity', bench:'PQCBench', at:[-77.2014,39.1434], place:'Gaithersburg — NIST post-quantum standards',
+    task:'post-quantum continuity', n:13, usable:6, diff:0.341, spread:0.231, quotable:false,
+    note:'The largest model in the fleet is WORST here. These items turn on the belief that quantum breaks all cryptography — Shor does not touch hashes, Grover is only quadratic. Capability correlates with being confidently wrong.' },
+  { id:'conformance', bench:'MCPBench', at:[-122.4194,37.7749], place:'San Francisco — the Model Context Protocol',
+    task:'tool-contract conformance', n:11, usable:5, diff:0.444, spread:0.364, quotable:false,
+    note:'Won outright by an UNTRAINED base model (qwen2.5:1.5b, 0.636). Training did not help here.' },
+  { id:'openness', bench:'OSSBench', at:[6.1432,46.2044], place:'Geneva — international standards',
+    task:'licence vs intended use', n:13, usable:7, diff:0.561, spread:0.308, quotable:false,
+    note:'Won by falcon3:7b. No trained model in the estate leads this axis.' },
+];
+
+const map = new maplibregl.Map({
+  container:'map',
+  style:'https://tiles.openfreemap.org/styles/liberty',
+  center:[0,25], zoom:1.35, attributionControl:{compact:true}
+});
+// Globe projection — a real sphere, not a flat sheet.
+map.on('style.load', () => { try { map.setProjection({type:'globe'}); } catch(e){} });
+map.addControl(new maplibregl.NavigationControl({visualizePitch:true}), 'bottom-right');
+
+const detail = document.getElementById('detail');
+
+function show(a){
+  detail.style.display='block';
+  detail.innerHTML =
+    '<h2>'+a.bench+'</h2>'+
+    '<p class="task">'+a.task+' · <span style="color:var(--mut)">'+a.place+'</span></p>'+
+    row('items', a.n) + row('usable n', a.usable) +
+    row('mean difficulty', a.diff.toFixed(3)) + row('spread across models', a.spread.toFixed(3)) +
+    row('quotable', a.quotable ? 'yes' : 'no — below usable n 30') +
+    '<div class="note">'+a.note+'</div>'+
+    '<a class="cta" href="/arena/'+a.id+'.html">Train on these items</a>'+
+    '<a class="cta ghost" href="/benchmarks">All measured figures</a>'+
+    '<div class="note">Item set and scoring code are public: '+
+    '<a href="https://huggingface.co/datasets/csoai/'+a.id.replace("governance","govbench")+'">Hugging Face</a>. '+
+    'Disagree with a key and you can prove it.</div>';
+  map.easeTo({center:a.at, zoom:3.4, duration:1200});
+}
+function row(k,v){ return '<div class="row"><span class="k">'+k+'</span><span>'+v+'</span></div>'; }
+
+for (const a of AXES){
+  const el=document.createElement('div');
+  el.className='marker'+(a.quotable?'':' warn');
+  el.title=a.bench;
+  el.onclick=()=>show(a);
+  new maplibregl.Marker({element:el}).setLngLat(a.at).addTo(map);
+}
+
+// Live endpoint check. The globe states what is actually reachable rather than assuming.
+(async () => {
+  const eps=[['tools','/api/tools'],['mcp','/api/mcp'],['article50','/api/article50'],['assess','/api/assess']];
+  const out=[];
+  for (const [name,url] of eps){
+    try{
+      const r=await fetch(url,{headers:{'Accept':'application/json'}});
+      const ct=r.headers.get('content-type')||'';
+      out.push('<span class="dot'+(ct.includes('json')?'':' dead')+'"></span>'+name);
+    }catch(e){ out.push('<span class="dot dead"></span>'+name); }
+  }
+  let tools='';
+  try{ const t=await (await fetch('/api/tools')).json();
+       if(t && t.total!=null) tools=' · '+t.total+' tools / '+t.server_count+' servers live';
+  }catch(e){}
+  document.getElementById('live').innerHTML='endpoints: '+out.join(' &nbsp;')+tools;
+})();
+</script>
+</body>
+</html>
