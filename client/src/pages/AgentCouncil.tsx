@@ -160,9 +160,8 @@ export default function AgentCouncil() {
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-4 py-4">
-                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-sm">
-                  <strong>⚡ Real LLM Voting:</strong> This will trigger all 33 agents (OpenAI, Anthropic, Google) 
-                  to vote on your proposal using fault-aware consensus consensus.
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3 text-sm">
+                  <strong>Designed system — not live.</strong> The 33-agent council was measured and retracted as a live verdict system (n_eff 1.21 of 3: correlated agents voting is one model with extra steps). Live voting is disabled on this deployment. See <a href="/council" className="underline">/council</a> for the honest status and the refutation ledger.
                 </div>
                 
                 <div className="space-y-2">
@@ -187,14 +186,11 @@ export default function AgentCouncil() {
                 <Button
                   onClick={handleTriggerVote}
                   className="w-full gap-2"
-                  disabled={triggerVotingMutation.isPending}
+                  disabled={true}
+                  title="Council voting is disabled: designed system, retracted as live — see /council"
                 >
-                  {triggerVotingMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Play className="h-4 w-4" />
-                  )}
-                  {triggerVotingMutation.isPending ? "Council is Voting..." : "Start Council Voting"}
+                  <Play className="h-4 w-4" />
+                  Council voting disabled (designed, not live)
                 </Button>
               </div>
             </DialogContent>

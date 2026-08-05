@@ -157,6 +157,7 @@ const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
+const ProvBench = lazy(() => import("./pages/ProvBench"));
 const Layer0 = lazy(() => import("./pages/Layer0"));
 const Ecosystem = lazy(() => import("./pages/Ecosystem"));
 const Protect = lazy(() => import("./pages/Protect"));
@@ -334,6 +335,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
+  "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
   "/refutation-ledger": "Refutation Ledger | CSOAI",
   "/live-ledger": "Live Ledger | CSOAI",
   "/instrument": "The Instrument | CSOAI",
@@ -586,6 +588,7 @@ function App() {
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/ai-act-benchmark" component={AiActBenchmark} />
+                  <Route path="/provbench" component={ProvBench} />
                   <Route path="/layer0" component={Layer0} />
                   <Route path="/safe-space" component={Ecosystem} />
                   <Route path="/governance-commons" component={Ecosystem} />

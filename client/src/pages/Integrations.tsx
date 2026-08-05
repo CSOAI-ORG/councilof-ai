@@ -1,6 +1,6 @@
 /**
  * Integrations Page
- * Showcases CSOAI integrations with the Terranova Group ecosystem and enterprise platforms
+ * Showcases CSOAI integrations with the partner ecosystem and enterprise platforms
  */
 
 import { useState } from 'react';
@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'wouter';
 
-// Terranova Group Ecosystem Data
+// Partner Ecosystem Data
 const ecosystemPlatforms = [
   {
     name: 'councilof.ai',
@@ -250,12 +250,12 @@ export default function Integrations() {
         </div>
       </section>
 
-      {/* Terranova Group Ecosystem */}
+      {/* CSOAI Partner Ecosystem */}
       <section className="py-20 bg-gradient-to-b from-white to-slate-50">
         <div className="container max-w-7xl">
           <div className="text-center mb-16">
             <Badge className="bg-blue-100 text-blue-700 mb-4 px-4 py-2">Ecosystem</Badge>
-            <h2 className="text-4xl font-bold mb-4 text-slate-900">The Terranova Group Ecosystem</h2>
+            <h2 className="text-4xl font-bold mb-4 text-slate-900">The CSOAI Partner Ecosystem</h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               11 interconnected platforms forming a comprehensive AI governance and safety ecosystem
             </p>
@@ -473,7 +473,7 @@ export default function Integrations() {
             </Card>
             <Card className="p-8 text-center border border-slate-200">
               <div className="text-4xl font-bold text-emerald-600 mb-2">11</div>
-              <p className="text-slate-600 font-medium">Terranova Ecosystem Platforms</p>
+              <p className="text-slate-600 font-medium">CSOAI Partner Ecosystem</p>
             </Card>
             <Card className="p-8 text-center border border-slate-200">
               <div className="text-4xl font-bold text-purple-600 mb-2">5</div>

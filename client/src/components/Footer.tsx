@@ -86,18 +86,20 @@ export function Footer() {
 
   return (
     <footer className="bg-white border-t border-gray-200">
-      {/* Byzantine Council CTA Bar */}
+      {/* Measured-finding CTA bar. Replaced the 33-seat Council block on
+          2026-08-05: it carried a retracted fault-tolerance claim onto 43 of 45
+          pages. What replaces it is the strongest MEASURED result we have. */}
       <div className="bg-gradient-to-r from-emerald-600 to-emerald-700">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3 text-white">
               <Shield className="h-8 w-8" />
               <div>
-                <h3 className="font-bold text-lg">The 33-seat Council</h3>
-                <p className="text-emerald-100 text-sm">Multi-provider oversight by design — measured status on the public Refutation Ledger</p>
+                <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
+                <p className="text-emerald-100 text-sm">Measured across 30 models, 4 Aug 2026: EU AI Act prohibited practices 0.158 mean difficulty, generic harm 0.545. Harness published — recompute it.</p>
               </div>
             </div>
-            <Link href="/council">
+            <Link href="/benchmarks">
               <Button className="bg-white text-emerald-700 hover:bg-emerald-50 font-semibold px-6">
                 Learn More
                 <ArrowRight className="h-4 w-4 ml-2" />

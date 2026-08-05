@@ -264,8 +264,7 @@ export default function AgentCouncilFeature() {
               See the Council in Action
             </h2>
             <p className="text-xl text-muted-foreground">
-              Watch the 33-Agent Council analyze real AI systems in real-time.
-              Complete transparency, complete accountability.
+              The 33-Agent Council is a designed governance pattern — measured, then retracted as a live verdict system (n_eff 1.21 of 3). Read the honest status and the refutation ledger.
             </p>
             <div className="flex gap-4 justify-center">
               <Link href="/watchdog">

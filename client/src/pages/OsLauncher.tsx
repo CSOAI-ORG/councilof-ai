@@ -133,7 +133,7 @@ export default function OsLauncher() {
 
   useEffect(() => {
     document.title = "CSOAI OS — the AI governance operating system";
-    fetch("https://proofof-site.vercel.app/sovereign-town/status.json", { cache: "no-store" })
+    fetch("https://proofof.ai/sovereign-town/status.json", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
         if (typeof d.cum_episodes === "number") setEp(d.cum_episodes);

@@ -121,7 +121,7 @@ const ecosystemNodes: EcosystemNode[] = [
   },
   {
     id: "byzantine",
-    label: "Byzantine Council",
+    label: "Measurement Council",
     shortLabel: "Council",
     description: "33 AI Agents - Real-time monitoring",
     category: "core",
@@ -252,7 +252,7 @@ const ecosystemNodes: EcosystemNode[] = [
   },
   {
     id: "prosperity",
-    label: "Prosperity Fund",
+    label: "Refutation Ledger",
     shortLabel: "Prosperity",
     description: "UBI Distribution",
     category: "operational",

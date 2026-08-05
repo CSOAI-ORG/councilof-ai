@@ -47,6 +47,7 @@ const navigation = [
       { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
       { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
       { name: "AI Act Benchmark", href: "/ai-act-benchmark", description: "170/170 held-out scenarios against the EU benchmark — with CIs and caveats" },
+      { name: "ProvBench", href: "/provbench", description: "Does C2PA provenance survive real-world transforms? 20 assets × 11 transforms" },
     ],
   },
   {
@@ -91,7 +92,7 @@ const navigation = [
       { name: 'Enterprise Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
       { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
       { name: 'Government Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
-      { name: '33-Agent Council', href: '/agent-council', description: 'Byzantine consensus system' },
+      { name: 'Measurement Council', href: '/agent-council', description: 'Multi-provider scoring, published harness' },
       { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
       { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
     ]
@@ -116,7 +117,7 @@ const navigation = [
       { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
       { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
-      { name: 'Technology', href: '/technology', description: 'Our architecture & Byzantine Council' },
+      { name: 'Technology', href: '/technology', description: 'Our architecture & measurement stack' },
       { name: 'Blog', href: '/blog', description: 'Latest news & insights' },
     ]
   },

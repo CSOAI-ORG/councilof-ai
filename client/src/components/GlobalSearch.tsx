@@ -99,7 +99,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'charter', title: 'Partnership Charter', description: '52 Articles defining AI safety governance framework', category: 'pages', href: '/charter', icon: FileText, keywords: ['articles', 'governance', 'constitution'], highlight: true },
   { id: 'maternal-covenant', title: 'The Maternal Covenant', description: 'Care-based AI safety paradigm - Article 1', category: 'pages', href: '/maternal-covenant', icon: Heart, keywords: ['hinton', 'care', 'mother', 'protection'] },
   { id: 'prosperity', title: 'Prosperity Fund', description: 'AI wealth redistribution & Universal Basic Income', category: 'pages', href: '/prosperity', icon: DollarSign, keywords: ['ubi', 'wealth', 'income', 'redistribution'] },
-  { id: 'byzantine', title: 'Byzantine Council', description: '33-agent AI-to-AI monitoring system', category: 'pages', href: '/byzantine', icon: Shield, keywords: ['council', 'agents', 'monitoring', '33'] },
+  { id: 'byzantine', title: 'Measurement Council', description: 'Multi-provider AI-to-AI cross-checking — designed; measured n_eff 1.21 of 3', category: 'pages', href: '/byzantine', icon: Shield, keywords: ['council', 'agents', 'monitoring', '33'] },
   { id: 'founding-members', title: 'Founding Members', description: 'Join the first 100 founding members', category: 'pages', href: '/founding-members', icon: Users, keywords: ['members', 'founders', 'join'] },
 
   // Training & Certification
@@ -115,7 +115,7 @@ const SEARCH_INDEX: SearchResult[] = [
   // SOAI-PDCA Framework
   { id: 'soai-pdca', title: 'SOAI-PDCA Framework', description: 'Plan-Do-Check-Act methodology for AI safety', category: 'pages', href: '/soai-pdca', icon: Scale, keywords: ['methodology', 'pdca', 'framework'] },
   { id: 'pdca-simulator', title: 'PDCA Simulator', description: 'Interactive PDCA walkthrough and simulation', category: 'pages', href: '/pdca-simulator', icon: Play, keywords: ['interactive', 'demo', 'practice'] },
-  { id: 'agent-council', title: '33-Agent Council', description: 'Byzantine consensus AI monitoring system', category: 'pages', href: '/agent-council', icon: Brain, keywords: ['agents', 'consensus', 'monitoring'] },
+  { id: 'agent-council', title: 'Measurement Council', description: 'Multi-provider scoring — architecture designed, cross-checking measured at n_eff 1.21 of 3', category: 'pages', href: '/agent-council', icon: Brain, keywords: ['agents', 'consensus', 'monitoring'] },
   { id: 'pdca-cycles', title: 'PDCA Cycles', description: 'Manage your PDCA improvement cycles', category: 'pages', href: '/pdca', icon: Scale, keywords: ['cycles', 'improvement', 'management'] },
 
   // Watchdog & Jobs
@@ -160,7 +160,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'notifications', title: 'Notification Settings', description: 'Configure notification preferences', category: 'pages', href: '/settings/notifications', icon: Settings, keywords: ['alerts', 'email', 'notifications'] },
 
   // Feature Pages
-  { id: 'feature-council', title: '33-Agent Council Feature', description: 'Learn about the Byzantine consensus system', category: 'pages', href: '/features/33-agent-council', icon: Shield, keywords: ['feature', 'council', 'byzantine'] },
+  { id: 'feature-council', title: 'Measurement Council', description: 'Multi-provider oversight by design — see the Refutation Ledger for what is measured', category: 'pages', href: '/features/33-agent-council', icon: Shield, keywords: ['feature', 'council', 'byzantine'] },
   { id: 'feature-pdca', title: 'PDCA Framework Feature', description: 'Explore the SOAI-PDCA methodology', category: 'pages', href: '/features/pdca-framework', icon: Scale, keywords: ['feature', 'pdca', 'methodology'] },
   { id: 'feature-training', title: 'Training & Certification Feature', description: 'Discover our training programs', category: 'pages', href: '/features/training-certification', icon: GraduationCap, keywords: ['feature', 'training', 'certification'] },
   { id: 'feature-watchdog', title: 'Watchdog Jobs Feature', description: 'Learn about analyst opportunities', category: 'pages', href: '/features/watchdog-jobs', icon: Briefcase, keywords: ['feature', 'jobs', 'watchdog'] },
@@ -183,7 +183,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'art-3', title: 'Article 3: Byzantine Council Oversight', description: '33-agent AI-to-AI monitoring architecture', category: 'charter', href: '/charter#part-i', icon: Users, keywords: ['byzantine', 'council', 'oversight', '33 agents'] },
   { id: 'art-4', title: 'Article 4: Value Uncertainty Principles', description: 'Handling moral and ethical uncertainty in AI', category: 'charter', href: '/charter#part-i', icon: Scale, keywords: ['value', 'uncertainty', 'ethics', 'moral'] },
   { id: 'art-5', title: 'Article 5: Constitutional AI Principles', description: 'Core values embedded in AI systems', category: 'charter', href: '/charter#part-i', icon: FileText, keywords: ['constitutional', 'principles', 'values'] },
-  { id: 'art-6', title: 'Article 6: Consciousness Preparedness', description: 'Protocols for potential AI consciousness', category: 'charter', href: '/charter#part-i', icon: Brain, keywords: ['consciousness', 'sentience', 'awareness'] },
+  { id: 'art-6', title: 'Charter Article 6', description: 'Forward-looking charter provision — not a measured capability', category: 'charter', href: '/charter#part-i', icon: Brain, keywords: ['consciousness', 'sentience', 'awareness'] },
   { id: 'art-7', title: 'Article 7: Cooperative AI Framework', description: 'Multi-agent coordination principles', category: 'charter', href: '/charter#part-i', icon: Users, keywords: ['cooperative', 'multi-agent', 'coordination'] },
   { id: 'art-8', title: 'Article 8: The Prosperity Covenant', description: 'Economic redistribution and UBI framework', category: 'charter', href: '/charter#part-i', icon: DollarSign, keywords: ['prosperity', 'ubi', 'redistribution'], highlight: true },
 
@@ -303,7 +303,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'new-compare', title: 'Why Choose CSOAI', description: 'Compare CSOAI against traditional GRC tools, AI-specific platforms, and consulting firms', category: 'faq', href: '/compare', icon: BarChart3, keywords: ['compare', 'comparison', 'versus', 'vs', 'alternative', 'why', 'choose', 'better', 'difference'] },
   { id: 'new-roi', title: 'ROI Calculator', description: 'Calculate your return on investment for AI governance implementation', category: 'faq', href: '/roi-calculator', icon: BarChart3, keywords: ['roi', 'calculator', 'return', 'investment', 'cost', 'savings', 'money', 'budget', 'estimate'] },
   { id: 'new-technology', title: 'Technology & Architecture', description: 'How the 33-agent Council of AI and CSOAI platform architecture works', category: 'faq', href: '/technology', icon: Shield, keywords: ['technology', 'architecture', 'byzantine', 'council', 'agents', 'infrastructure', 'platform', 'technical', 'how it works'] },
-  { id: 'new-integrations', title: 'Integrations & Ecosystem', description: '50+ enterprise integrations and the Terranova Group 11-platform ecosystem', category: 'faq', href: '/integrations', icon: Shield, keywords: ['integrations', 'ecosystem', 'api', 'connect', 'terranova', 'platforms', 'aws', 'azure', 'slack', 'sdk'] },
+  { id: 'new-integrations', title: 'Integrations & Ecosystem', description: '50+ enterprise integrations and the open-source governance ecosystem', category: 'faq', href: '/integrations', icon: Shield, keywords: ['integrations', 'ecosystem', 'api', 'connect', 'platforms', 'aws', 'azure', 'slack', 'sdk'] },
 ];
 
 // Quick Actions

@@ -29,7 +29,7 @@ const gaps = [
   {
     title: "No Human Oversight at Scale",
     problem: "Governments can't monitor millions of AI systems with limited staff",
-    solution: "Certified analysts + the 33-seat Council design (measured status on the public ledger)",
+    solution: "Trained analysts working from measured results — every figure recomputable from the published harness",
     icon: Users,
   },
   {
@@ -41,7 +41,7 @@ const gaps = [
   {
     title: "No Economic Safety Net",
     problem: "AI displaces workers but no mechanism shares AI's economic gains",
-    solution: "Prosperity Fund provides UBI when AI-caused unemployment rises",
+    solution: "Measured evidence that a deployment was assessed before it displaced anyone — the record a tribunal can read",
     icon: Landmark,
   },
 ];

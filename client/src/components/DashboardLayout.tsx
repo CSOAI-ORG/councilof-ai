@@ -57,7 +57,7 @@ const navItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutGrid },
   { path: "/ai-systems", label: "AI Systems", icon: Shield },
   { path: "/compliance", label: "Compliance", icon: FileCheck },
-  { path: "/agent-council", label: "33-Agent Council", icon: Users },
+  { path: "/agent-council", label: "Measurement Council", icon: Users },
   { path: "/watchdog", label: "The Watchdog", icon: Eye },
   { path: "/reports", label: "Reports", icon: FileText },
   { path: "/training", label: "Training", icon: GraduationCap },

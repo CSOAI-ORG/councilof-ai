@@ -1,6 +1,7 @@
 /**
  * CSOAI vs Competitors Comparison Table
- * Shows why CSOAI is the only platform solving all problems
+ * Shows where CSOAI differs. Claims must be checkable line by line — a row we
+ * cannot evidence comes out rather than being softened.
  */
 
 import { motion } from "framer-motion";
@@ -15,7 +16,7 @@ const features = [
   { name: "Integrated Ecosystem", csoai: true, competitors: false },
   { name: "Multi-Framework Support (7+)", csoai: true, competitors: false },
   { name: "Free Training", csoai: true, competitors: false },
-  { name: "Prosperity Fund / UBI", csoai: true, competitors: false },
+  { name: "Published harness — anyone can recompute the score", csoai: true, competitors: false },
 ];
 
 export default function ComparisonTable() {
