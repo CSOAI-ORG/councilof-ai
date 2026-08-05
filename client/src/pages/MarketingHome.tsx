@@ -585,7 +585,7 @@ export default function MarketingHome() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to get started?</h2>
             <p className="text-xl text-muted-foreground mb-8">
-              {/* Was "Join 1,000+ companies building safer AI with CSOAI." — we have no such
+              {/* Was "Open methodology. Independently verifiable." — we have no such
                   customers, and inventing a trust signal is the exact failure a governance body
                   exists to catch. Replaced with what is actually true and checkable. */}
               Every claim on this site is measured and published — including the ones we retracted.

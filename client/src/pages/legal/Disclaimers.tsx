@@ -221,7 +221,7 @@ export default function Disclaimers() {
                     </li>
                     <li>
                       <strong>No claims against CSOAI insurance.</strong> Third parties cannot make claims
-                      against CSOAI's insurance policy for issues arising from certified organizations' AI systems.
+                      against CSOAI's insurance policy for issues arising from attested organizations' AI systems.
                     </li>
                   </ul>
                 </div>
@@ -305,7 +305,7 @@ export default function Disclaimers() {
                   </li>
                   <li>
                     We are not liable for regulatory penalties, fines, or enforcement actions taken
-                    against certified organizations.
+                    against attested organizations.
                   </li>
                 </ul>
               </CardContent>
