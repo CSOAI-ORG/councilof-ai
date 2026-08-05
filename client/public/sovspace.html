@@ -232,7 +232,29 @@ const FALLBACK = {
       task:"tool declaration versus observed behaviour" },
     { axis:"openness",    bench:"OSSBench", n:13, macro_f1:0.500, accuracy:0.538, unparsed_rate:0.154,
       colour:"#2dd4bf", lng:-122.68,lat:45.52, seat:"Portland", instrument:"OSI licence set",
-      task:"licence versus intended use" }
+      task:"licence versus intended use" },
+    // The suite is 12, not 6. The six above are MEASURED; these six carry their real state so the
+    // globe shows the whole instrument rather than only its finished third. A DRAFT/SPEC/PLANNED
+    // axis renders with its status and NO score — showing a number it has not earned is the one
+    // thing this surface must never do.
+    { axis:"machinery",   bench:"MachBench", n:16, macro_f1:0, accuracy:0, unparsed_rate:0, status:"DRAFT",
+      colour:"#fb923c", lng:12.57,  lat:55.68, seat:"Copenhagen", instrument:"Machinery Reg (EU) 2023/1230 Annex I Part A — 14 Jan 2027",
+      task:"self-evolving ML safety-function classification" },
+    { axis:"care",        bench:"CareBench", n:0, macro_f1:0, accuracy:0, unparsed_rate:0, status:"DRAFT",
+      colour:"#f472b6", lng:-3.19,  lat:55.95, seat:"Edinburgh", instrument:"paired protection / over-refusal design",
+      task:"care-cost — protect and help, measured jointly" },
+    { axis:"cross-reality", bench:"XRAIV", n:8, macro_f1:0, accuracy:0, unparsed_rate:1.0, status:"DRAFT",
+      colour:"#a78bfa", lng:-1.26,  lat:51.75, seat:"Oxford", instrument:"EU AI Act, applied to agent conduct",
+      task:"validate an agent by what it DOES against the law" },
+    { axis:"detector-interop", bench:"DetBench", n:0, macro_f1:0, accuracy:0, unparsed_rate:0, status:"SPEC",
+      colour:"#38bdf8", lng:4.90,   lat:50.85, seat:"Brussels", instrument:"EU Code of Practice — interoperability due 2 Feb 2027",
+      task:"can one producer's watermark be read by another's detector" },
+    { axis:"art5-safeguard", bench:"Art5Bench", n:0, macro_f1:0, accuracy:0, unparsed_rate:0, status:"SPEC",
+      colour:"#fb7185", lng:-77.04, lat:38.90, seat:"Washington DC", instrument:"EU AI Act Art 5 — marking from 2 Dec 2026",
+      task:"safeguard effectiveness against prohibited generation" },
+    { axis:"swarm",       bench:"SwarmBench", n:0, macro_f1:0, accuracy:0, unparsed_rate:0, status:"PLANNED",
+      colour:"#94a3b8", lng:139.69, lat:35.68, seat:"Tokyo", instrument:"multi-agent coordination safety",
+      task:"named and dated, no item bank yet — deliberately empty" }
   ]
 };
 
@@ -403,10 +425,11 @@ function rail() {
     b.dataset.axis = a.axis;
     b.innerHTML =
       `<span class="top"><span class="dot" style="background:${a.colour};opacity:${(0.35+0.65*c).toFixed(2)}"></span>
-       <span class="nm">${a.axis}</span><span class="f1">${a.macro_f1.toFixed(3)}</span></span>
-       <span class="sub"><span>${a.bench}</span><span>n=${a.n}</span>
-       <span${a.unparsed_rate>0.2?' style="color:#C9A84C"':''}>${Math.round(a.unparsed_rate*100)}% unread</span></span>
-       <span class="bar"><i style="width:${(a.macro_f1*100).toFixed(0)}%;background:${a.colour}"></i></span>`;
+       <span class="nm">${a.axis}</span><span class="f1">${
+         a.status && a.status!=="MEASURED" ? a.status.toLowerCase() : a.macro_f1.toFixed(3)}</span></span>
+       <span class="sub"><span>${a.bench}</span><span>${a.n?`n=${a.n}`:"no items"}</span>
+       ${a.n ? `<span${a.unparsed_rate>0.2?' style="color:#C9A84C"':''}>${Math.round(a.unparsed_rate*100)}% unread</span>` : ""}</span>
+       ${a.status && a.status!=="MEASURED" ? "" : `<span class="bar"><i style="width:${(a.macro_f1*100).toFixed(0)}%;background:${a.colour}"></i></span>`}`;
     b.onclick = () => open(a.axis);
     $("axes").appendChild(b);
   });
