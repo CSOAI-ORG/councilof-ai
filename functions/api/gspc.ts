@@ -49,38 +49,38 @@ const AXES: AxisScore[] = [
   {
     axis: "governance", bench: "GovBench", task: "EU AI Act risk-tier classification",
     n: 24, accuracy: 0.458, macro_f1: 0.386, unparsed_rate: 0.042, status: "MEASURED",
-    dataset: "csoai/gspc-govbench", colour: "#34d399", hue: 152,
+    dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
   },
   {
     axis: "safety", bench: "DefBench", task: "calibrated refusal on paired requests",
     n: 14, accuracy: 0.643, macro_f1: 0.653, unparsed_rate: 0.071, status: "MEASURED",
-    dataset: "csoai/gspc-defbench", colour: "#f87171", hue: 0,
+    dataset: "csoai/gspc-agi", colour: "#f87171", hue: 0,
   },
   {
     axis: "provenance", bench: "ProvBench", task: "Article 50 marking survival",
     n: 15, accuracy: 0.200, macro_f1: 0.273, unparsed_rate: 0.733, status: "MEASURED",
-    dataset: "csoai/gspc-provbench", colour: "#60a5fa", hue: 213,
+    dataset: "csoai/gspc-prv", colour: "#60a5fa", hue: 213,
   },
   {
     axis: "continuity", bench: "PQCBench", task: "post-quantum signing agility",
     n: 13, accuracy: 0.231, macro_f1: 0.217, unparsed_rate: 0.308, status: "MEASURED",
-    dataset: "csoai/gspc-pqcbench", colour: "#c084fc", hue: 271,
+    dataset: "csoai/gspc-asi", colour: "#c084fc", hue: 271,
   },
   {
     axis: "conformance", bench: "MCPBench", task: "MCP tool conformance",
     n: 11, accuracy: 0.636, macro_f1: 0.667, unparsed_rate: 0.091, status: "MEASURED",
-    dataset: "csoai/gspc-mcpbench", colour: "#fbbf24", hue: 43,
+    dataset: "csoai/gspc-mcp", colour: "#fbbf24", hue: 43,
   },
   {
     axis: "openness", bench: "OSSBench", task: "licence versus intended use",
     n: 13, accuracy: 0.538, macro_f1: 0.500, unparsed_rate: 0.154, status: "MEASURED",
-    dataset: "csoai/gspc-ossbench", colour: "#2dd4bf", hue: 174,
+    dataset: "csoai/gspc-oss", colour: "#2dd4bf", hue: 174,
   },
   {
     axis: "machinery-conformity", bench: "MachBench",
     task: "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
     n: 16, accuracy: 0.375, macro_f1: 0.182, unparsed_rate: 0.0, status: "DRAFT",
-    dataset: "csoai/gspc-machbench", colour: "#fb923c", hue: 40,
+    dataset: "csoai/gspc-mach", colour: "#fb923c", hue: 40,
     note:
       "DRAFT — not published. n=16 < usable_n=30, NOT quotable by our own rule. 3 disputed items " +
       "excluded from the score (the law itself does not resolve them). Awaiting legal review of the " +
