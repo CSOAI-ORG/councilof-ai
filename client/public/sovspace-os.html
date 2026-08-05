@@ -11,21 +11,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/';</script>
 <style>
-  :root{ --ink:#e8ecf6; --dim:#8a93b2; --panel:rgba(9,13,26,.86); --line:rgba(120,140,190,.18);
-    --gold:#c9a84c; --fr:#2a9df4; --hos:#ff3b3b; --neu:#00e07a; --unk:#ffd23b;
-    --eu:#4067d8; --uk:#c9a84c; --us:#5f8a5e; --apac:#8b8ce0; --americas:#e0a285; --eyes:#06b6d4; }
+  :root{ --ink:#e8ecf6; --dim:#8a93b2; --panel:rgba(7,28,20,.86); --line:rgba(52,211,153,.18);
+    --gold:#c9a84c; --fr:#2a9df4; --hos:#ff3b3b; --neu:#34d399; --unk:#ffd23b;
+    --eu:#4067d8; --uk:#c9a84c; --us:#5f8a5e; --apac:#8b8ce0; --americas:#e0a285; --eyes:#2dd4bf; }
   /* oklch semantic token layer (perceptually-even, matched to the palette) — the forward design system */
-  :root{ --surface:oklch(0.16 0.03 255); --surface-2:oklch(0.21 0.035 255); --text:oklch(0.94 0.012 265);
-    --text-dim:oklch(0.66 0.03 262); --brand:oklch(0.86 0.13 208); --brand-2:oklch(0.85 0.14 175);
+  :root{ --surface:oklch(0.17 0.03 165); --surface-2:oklch(0.22 0.035 165); --text:oklch(0.94 0.012 265);
+    --text-dim:oklch(0.66 0.03 262); --brand:oklch(0.84 0.15 160); --brand-2:oklch(0.82 0.15 162);
     --accent:oklch(0.75 0.11 88); --edge:oklch(0.62 0.03 262 / 0.18); --success:oklch(0.78 0.17 155);
     --warn:oklch(0.83 0.13 85); --danger:oklch(0.66 0.2 25); }
   *{ margin:0; padding:0; box-sizing:border-box; }
-  html,body{ height:100%; background:#05070f; color:var(--ink); font-family:"Inter",system-ui,sans-serif; overflow:hidden; }
+  html,body{ height:100%; background:#03110b; color:var(--ink); font-family:"Inter",system-ui,sans-serif; overflow:hidden; }
   #cesiumContainer{ position:absolute; inset:0; }
   .cesium-widget-credits,.cesium-viewer-bottom{ display:none !important; }
 
   .topbar{ position:absolute; top:30px; left:0; right:0; height:48px; z-index:10; display:flex; align-items:center; gap:14px; padding:0 16px;
-    background:linear-gradient(180deg,rgba(5,7,15,.95),rgba(5,7,15,.4)); border-bottom:1px solid var(--line); }
+    background:linear-gradient(180deg,rgba(3,17,11,.95),rgba(3,17,11,.4)); border-bottom:1px solid var(--line); }
   .brand{ font-weight:600; letter-spacing:1px; color:var(--gold); }
   .brand small{ color:var(--dim); font-weight:400; letter-spacing:.5px; }
   .clz{ font-family:"JetBrains Mono",monospace; font-size:11px; padding:3px 10px; border-radius:4px; background:rgba(201,168,76,.14); border:1px solid rgba(201,168,76,.4); color:var(--gold); }
@@ -63,12 +63,12 @@
   .res{ margin-top:10px; font-size:12px; }
   .chip{ display:inline-block; font-size:10px; padding:3px 9px; border-radius:20px; border:1px solid var(--line); color:var(--dim); margin:2px 3px 2px 0; }
   .chip.ok{ border-color:rgba(0,224,122,.5); color:var(--neu); } .chip.no{ border-color:rgba(255,59,59,.5); color:var(--hos); }
-  .step{ display:flex; gap:8px; padding:3px 0; border-bottom:1px solid rgba(120,140,190,.1); font-size:11px; }
+  .step{ display:flex; gap:8px; padding:3px 0; border-bottom:1px solid rgba(52,211,153,.1); font-size:11px; }
   .step b{ color:var(--fr); min-width:42px; font-size:9.5px; text-transform:uppercase; }
   .sig{ font-family:"JetBrains Mono",monospace; font-size:9px; color:var(--neu); word-break:break-all; }
 
   .statusbar{ position:absolute; bottom:0; left:0; right:0; height:34px; z-index:9; display:flex; align-items:center; gap:3px; padding:0 12px;
-    background:linear-gradient(0deg,rgba(5,7,15,.95),rgba(5,7,15,.3)); border-top:1px solid var(--line); font-size:11px; color:var(--dim); font-family:"JetBrains Mono",monospace; }
+    background:linear-gradient(0deg,rgba(3,17,11,.95),rgba(3,17,11,.3)); border-top:1px solid var(--line); font-size:11px; color:var(--dim); font-family:"JetBrains Mono",monospace; }
   .statusbar b{ color:var(--ink); }
   .dot{ width:7px; height:7px; border-radius:50%; background:var(--neu); display:inline-block; box-shadow:0 0 6px var(--neu); }
 
@@ -76,12 +76,12 @@
   body.horus-open .cmd{ opacity:0; transform:translateX(-50%) translateY(18px); pointer-events:none; }
   .cmdsugg{ position:absolute; left:0; right:0; bottom:calc(100% + 8px); display:none; flex-direction:column; gap:1px; background:rgba(8,12,24,.98); border:1px solid rgba(62,240,255,.3); border-radius:13px; padding:6px; box-shadow:0 -12px 44px rgba(0,0,0,.55); backdrop-filter:blur(12px); }
   .cmdsugg.open{ display:flex; }
-  .cmdsugg .cs-h{ font-size:9.5px; letter-spacing:1.3px; color:#3ef0ff; padding:4px 9px 6px; }
+  .cmdsugg .cs-h{ font-size:9.5px; letter-spacing:1.3px; color:#34d399; padding:4px 9px 6px; }
   body.doctrine-east .cmdsugg .cs-h{ color:#ff7b7b; }
   .cmdsugg .cs{ padding:8px 11px; border-radius:9px; cursor:pointer; font-size:13px; color:#dfe6f5; display:flex; align-items:center; gap:9px; }
   .cmdsugg .cs:hover{ background:rgba(62,240,255,.13); }
   .cmdsugg .cs .csi{ width:18px; text-align:center; }
-  .cmdmic{ flex:0 0 auto; display:grid; place-items:center; width:40px; border-radius:11px; background:rgba(9,13,26,.85); border:1px solid var(--line); cursor:pointer; font-size:16px; transition:.15s; }
+  .cmdmic{ flex:0 0 auto; display:grid; place-items:center; width:40px; border-radius:11px; background:rgba(7,28,20,.85); border:1px solid var(--line); cursor:pointer; font-size:16px; transition:.15s; }
   .cmdmic:hover{ border-color:var(--gold); } .cmdmic.live{ color:var(--neon); border-color:var(--neon); animation:micpulse 1.1s ease-in-out infinite; }
   .sovbubbles{ position:fixed; right:14px; bottom:104px; z-index:44; width:300px; max-width:80vw; display:flex; flex-direction:column-reverse; gap:8px; pointer-events:none; }
   .sovbubble{ align-self:flex-end; background:rgba(62,240,255,.13); border:1px solid rgba(62,240,255,.3); color:#dffaff; border-radius:14px; border-bottom-right-radius:4px; padding:9px 12px; font-size:12.5px; line-height:1.45; box-shadow:0 8px 24px rgba(0,0,0,.45); animation:bubIn .3s ease both; backdrop-filter:blur(8px); }
@@ -133,26 +133,26 @@
   .hud .vig{ position:absolute; inset:0; box-shadow:inset 0 0 240px rgba(0,0,0,.65); }
   .hud .ret{ position:absolute; top:50%; left:50%; width:30px; height:30px; transform:translate(-50%,-50%); opacity:.22; }
   .hud .ret::before,.hud .ret::after{ content:''; position:absolute; background:var(--gold); } .hud .ret::before{ top:50%; left:0; right:0; height:1px; } .hud .ret::after{ left:50%; top:0; bottom:0; width:1px; }
-  .feedbar{ position:fixed; left:0; right:0; top:0; z-index:12; height:30px; display:flex; align-items:center; gap:12px; padding:0 16px; font-family:"JetBrains Mono",monospace; font-size:11px; background:linear-gradient(180deg,rgba(5,7,15,.97),rgba(5,7,15,.62)); border-bottom:1px solid rgba(201,168,76,.22); pointer-events:none; overflow:hidden; white-space:nowrap; }
+  .feedbar{ position:fixed; left:0; right:0; top:0; z-index:12; height:30px; display:flex; align-items:center; gap:12px; padding:0 16px; font-family:"JetBrains Mono",monospace; font-size:11px; background:linear-gradient(180deg,rgba(3,17,11,.97),rgba(3,17,11,.62)); border-bottom:1px solid rgba(201,168,76,.22); pointer-events:none; overflow:hidden; white-space:nowrap; }
   .feedbar .fl{ color:var(--gold); font-weight:600; flex:0 0 auto; letter-spacing:1px; }
   .feedbar .fl::before{ content:'◉ '; animation:blink 1.6s steps(1) infinite; } @keyframes blink{ 50%{ opacity:.3; } }
   .feedbar .fticker{ flex:1; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 93%,transparent); mask-image:linear-gradient(90deg,transparent,#000 3%,#000 93%,transparent); }
   .feedbar .track{ display:inline-block; white-space:nowrap; will-change:transform; animation:tick 42s linear infinite; }
   .feedbar .track .seg{ padding-right:46px; }
   .feedbar .track i{ font-style:normal; color:#9fb0d6; } .feedbar .track .sep{ color:#3a4570; margin:0 12px; }
-  .feedbar .track i.fg{ color:#00e07a; } .feedbar .track i.fr{ color:#ff6b6b; } .feedbar .track i.fy{ color:#e7cf8e; } .feedbar .track i.fc{ color:#3ef0ff; }
+  .feedbar .track i.fg{ color:#34d399; } .feedbar .track i.fr{ color:#ff6b6b; } .feedbar .track i.fy{ color:#e7cf8e; } .feedbar .track i.fc{ color:#34d399; }
   @keyframes tick{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
   #feed{ color:#9fb0d6; }
   #winstore{ display:none; }
   .launcher{ position:fixed; top:88px; left:10px; bottom:104px; z-index:18; display:flex; flex-direction:column; gap:5px; overflow-y:auto; overflow-x:visible; padding:2px 2px 6px; scrollbar-width:none; }
   .launcher::-webkit-scrollbar{ width:0; height:0; }
-  .lbtn{ position:relative; flex:0 0 auto; width:36px; height:36px; border-radius:10px; background:rgba(9,13,26,.88); backdrop-filter:blur(10px); border:1px solid var(--line); display:grid; place-items:center; font-size:15px; cursor:pointer; transition:transform .14s, border-color .14s; }
+  .lbtn{ position:relative; flex:0 0 auto; width:36px; height:36px; border-radius:10px; background:rgba(7,28,20,.88); backdrop-filter:blur(10px); border:1px solid var(--line); display:grid; place-items:center; font-size:15px; cursor:pointer; transition:transform .14s, border-color .14s; }
   .lbtn:hover{ border-color:var(--gold); transform:translateX(3px) scale(1.05); }
   .lbtn.on{ border-color:var(--gold); box-shadow:0 0 14px -2px var(--gold); }
   .lbtn.on::after{ content:''; position:absolute; left:-5px; top:50%; transform:translateY(-50%); width:4px; height:18px; border-radius:3px; background:var(--gold); }
-  .lbtn .tip2{ position:absolute; left:44px; top:50%; transform:translateY(-50%); white-space:nowrap; background:rgba(9,13,26,.96); border:1px solid var(--line); border-radius:8px; padding:4px 9px; font-size:11px; color:var(--ink); opacity:0; pointer-events:none; transition:.14s; z-index:30; }
+  .lbtn .tip2{ position:absolute; left:44px; top:50%; transform:translateY(-50%); white-space:nowrap; background:rgba(7,28,20,.96); border:1px solid var(--line); border-radius:8px; padding:4px 9px; font-size:11px; color:var(--ink); opacity:0; pointer-events:none; transition:.14s; z-index:30; }
   .lbtn:hover .tip2{ opacity:1; }
-  .win{ position:fixed; z-index:25; width:300px; max-height:80vh; display:flex; flex-direction:column; background:rgba(9,13,26,.95); backdrop-filter:blur(16px) saturate(120%); border:1px solid var(--line); border-radius:14px; box-shadow:0 24px 70px -22px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.04); animation:rise .35s cubic-bezier(.2,.7,.2,1) both; }
+  .win{ position:fixed; z-index:25; width:300px; max-height:80vh; display:flex; flex-direction:column; background:rgba(7,28,20,.95); backdrop-filter:blur(16px) saturate(120%); border:1px solid var(--line); border-radius:14px; box-shadow:0 24px 70px -22px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.04); animation:rise .35s cubic-bezier(.2,.7,.2,1) both; }
   .win.min{ display:none; }
   .win-bar{ display:flex; align-items:center; gap:8px; padding:10px 13px; border-bottom:1px solid var(--line); cursor:move; user-select:none; }
   .win-bar .wi{ font-size:14px; } .win-bar .wt{ font-size:12px; font-weight:600; color:var(--gold); flex:1; letter-spacing:.5px; }
@@ -163,7 +163,7 @@
   .win-body{ flex:1 1 auto; min-height:0; }
   .win-rz{ position:absolute; right:1px; bottom:1px; width:16px; height:16px; cursor:nwse-resize; color:var(--gold); opacity:.55; font-size:12px; line-height:16px; text-align:right; }
   .dock{ position:fixed; bottom:64px; left:12px; z-index:14; display:flex; gap:6px; flex-wrap:wrap; max-width:64vw; }
-  .tpill{ display:flex; align-items:center; gap:6px; padding:6px 11px; border-radius:999px; background:rgba(9,13,26,.9); backdrop-filter:blur(8px); border:1px solid var(--line); font-size:11px; cursor:pointer; color:var(--ink); transition:.14s; }
+  .tpill{ display:flex; align-items:center; gap:6px; padding:6px 11px; border-radius:999px; background:rgba(7,28,20,.9); backdrop-filter:blur(8px); border:1px solid var(--line); font-size:11px; cursor:pointer; color:var(--ink); transition:.14s; }
   .tpill:hover{ border-color:var(--gold); } .tpill.min{ opacity:.5; }
   @media(max-width:760px){
     .win{ width:92vw !important; max-width:92vw; left:4vw !important; }
@@ -172,7 +172,7 @@
     .topbar .brand small{ display:none; } .navbtn{ padding:6px 10px; }
   }
   /* ─────────── 2050 translucent glass system ─────────── */
-  :root{ --neon:#3ef0ff; --neon2:#7af9d0; }
+  :root{ --neon:#34d399; --neon2:#6ee7b7; }
   body::before{ content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
     background:radial-gradient(1100px 640px at 50% -12%, rgba(62,240,255,.06), transparent 60%),
                radial-gradient(900px 600px at 112% 112%, rgba(201,168,76,.07), transparent 55%); }
@@ -219,7 +219,7 @@
   .sbmode{ cursor:pointer; color:#e7cf8e; border:1px solid rgba(201,168,76,.4); border-radius:999px; padding:2px 9px; font-size:10px; letter-spacing:.5px; }
   .sbmode:hover{ background:rgba(201,168,76,.12); }
   .doc-tab{ font-size:10.5px; font-weight:700; letter-spacing:.4px; padding:5px 11px; border-radius:999px; cursor:pointer; color:var(--dim); transition:.15s; white-space:nowrap; }
-  .doc-tab.west.on{ background:#3ef0ff; color:#06121a; box-shadow:0 0 14px -3px #3ef0ff; }
+  .doc-tab.west.on{ background:#34d399; color:#06121a; box-shadow:0 0 14px -3px #34d399; }
   .doc-tab.east.on{ background:#ff4d4d; color:#fff; box-shadow:0 0 14px -3px #ff4d4d; }
   #lens{ position:fixed; inset:0; z-index:2; pointer-events:none; transition:box-shadow .6s, background .6s; }
   body.doctrine-west #lens{ box-shadow:inset 0 0 260px rgba(62,240,255,.10); }
@@ -230,16 +230,16 @@
     border:1px solid rgba(62,240,255,.22); border-radius:16px; overflow:hidden; box-shadow:0 24px 64px -20px rgba(0,0,0,.72); transform:translateX(calc(100% + 24px)); transition:transform .3s cubic-bezier(.2,.7,.2,1); }
   .horus.open{ transform:translateX(0); }
   .horus-head{ display:flex; align-items:center; gap:5px; padding:10px 10px 10px 14px; border-bottom:1px solid var(--line); }
-  .hdot{ width:8px; height:8px; border-radius:50%; background:#3ef0ff; box-shadow:0 0 10px #3ef0ff; flex:0 0 auto; }
+  .hdot{ width:8px; height:8px; border-radius:50%; background:#34d399; box-shadow:0 0 10px #34d399; flex:0 0 auto; }
   body.doctrine-east .hdot{ background:#ff4d4d; box-shadow:0 0 10px #ff4d4d; }
-  .horus-head .nm{ font-weight:700; letter-spacing:1.5px; color:#3ef0ff; font-size:13px; } body.doctrine-east .horus-head .nm{ color:#ff7b7b; }
+  .horus-head .nm{ font-weight:700; letter-spacing:1.5px; color:#34d399; font-size:13px; } body.doctrine-east .horus-head .nm{ color:#ff7b7b; }
   .horus-head .hflex{ flex:1; }
   .spk-eq{ display:inline-flex; align-items:flex-end; gap:2px; height:13px; margin-left:2px; }
-  .spk-eq i{ width:2.5px; background:#3ef0ff; border-radius:2px; height:4px; animation:eq .9s ease-in-out infinite; }
+  .spk-eq i{ width:2.5px; background:#34d399; border-radius:2px; height:4px; animation:eq .9s ease-in-out infinite; }
   .spk-eq i:nth-child(2){ animation-delay:.15s; } .spk-eq i:nth-child(3){ animation-delay:.3s; } .spk-eq i:nth-child(4){ animation-delay:.45s; }
   body.doctrine-east .spk-eq i{ background:#ff6b6b; }
   @keyframes eq{ 0%,100%{ height:3px; } 50%{ height:13px; } }
-  #horus.speaking .hdot{ box-shadow:0 0 14px #3ef0ff; animation:eqdot .7s ease-in-out infinite; } @keyframes eqdot{ 50%{ transform:scale(1.5); } }
+  #horus.speaking .hdot{ box-shadow:0 0 14px #34d399; animation:eqdot .7s ease-in-out infinite; } @keyframes eqdot{ 50%{ transform:scale(1.5); } }
   .hmsg.ai.speaking{ box-shadow:0 0 0 1px rgba(62,240,255,.35), 0 0 18px -4px rgba(62,240,255,.5); }
   .spkw{ transition:color .1s, background .1s; border-radius:3px; }
   .spkw.on{ color:#fff; background:rgba(62,240,255,.28); }
@@ -271,7 +271,7 @@
   .bp-hint{ font-size:10.5px; color:#8a93b2; margin-top:6px; line-height:1.45; }
   .bp-minds{ display:grid; grid-template-columns:1fr 1fr; gap:5px; }
   .bp-mind{ font-size:11.5px; padding:7px 9px; border-radius:9px; border:1px solid rgba(255,255,255,.12); color:#dfe6f5; cursor:pointer; }
-  .bp-mind:hover{ border-color:#3ef0ff; } .bp-mind.on{ border-color:var(--gold); background:rgba(201,168,76,.16); color:#ffe9a8; font-weight:600; }
+  .bp-mind:hover{ border-color:#34d399; } .bp-mind.on{ border-color:var(--gold); background:rgba(201,168,76,.16); color:#ffe9a8; font-weight:600; }
   .bp-row{ display:flex; align-items:center; gap:6px; margin:5px 0; }
   .bp-row label{ width:96px; font-size:11px; color:#9fb0d6; } .bp-row select{ flex:1; background:rgba(20,26,42,.92); color:#dfe6f5; border:1px solid rgba(255,255,255,.14); border-radius:7px; padding:5px 7px; font-size:11.5px; }
   .bp-in{ width:100%; margin:5px 0; background:rgba(20,26,42,.92); color:#dfe6f5; border:1px solid rgba(255,255,255,.14); border-radius:7px; padding:7px 9px; font-size:11.5px; }
@@ -280,12 +280,12 @@
   .hm-note{ font-size:10px; color:#6b7290; padding:7px 10px 3px; line-height:1.45; }
   .aig-grid{ display:grid; grid-template-columns:1fr 1fr; gap:7px; margin:8px 0; }
   .aig-k{ background:rgba(62,240,255,.08); border:1px solid rgba(62,240,255,.2); border-radius:9px; padding:8px 10px; }
-  .aig-k b{ font-size:18px; color:#3ef0ff; display:block; } .aig-k span{ font-size:10px; color:#8a93b2; }
+  .aig-k b{ font-size:18px; color:#34d399; display:block; } .aig-k span{ font-size:10px; color:#8a93b2; }
   body.doctrine-east .aig-k{ background:rgba(255,77,77,.08); border-color:rgba(255,77,77,.22); } body.doctrine-east .aig-k b{ color:#ff7b7b; }
   .aig-fly{ font-size:11px; line-height:1.5; color:#cfd6ee; background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:9px; padding:9px 11px; margin-top:6px; }
   .aig-rows{ display:flex; flex-direction:column; gap:4px; margin-top:6px; }
   .aig-row{ display:flex; align-items:center; gap:8px; font-size:11.5px; color:#dfe6f5; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.05); }
-  .aig-row span{ flex:1; } .aig-row i{ font-style:normal; font-size:10px; } .aig-row i.ok{ color:#00e07a; } .aig-row i.dim{ color:#8a93b2; }
+  .aig-row span{ flex:1; } .aig-row i{ font-style:normal; font-size:10px; } .aig-row i.ok{ color:#34d399; } .aig-row i.dim{ color:#8a93b2; }
   .aig-note{ font-size:10px; color:#6b7290; line-height:1.45; margin-top:8px; }
   .dom-row{ border-bottom:1px solid rgba(255,255,255,.05); }
   .dom-h{ display:flex; align-items:center; gap:7px; padding:7px 2px; cursor:pointer; font-size:12px; }
@@ -296,29 +296,29 @@
   .ds{ display:flex; justify-content:space-between; gap:8px; font-size:10.5px; padding:3px 0; } .ds a{ color:#9fd0ff; text-decoration:none; } .ds a:hover{ text-decoration:underline; } .ds span{ color:#6b7290; white-space:nowrap; }
   .intro-cta{ display:flex; gap:8px; margin-top:11px; flex-wrap:wrap; }
   .intro-cta button{ flex:1 1 40%; min-width:110px; padding:9px 10px; border-radius:9px; cursor:pointer; font-size:12px; font-weight:600; transition:.13s; }
-  .intro-cta button:first-child{ background:#3ef0ff; color:#06121a; border:0; } .intro-cta button:first-child:hover{ filter:brightness(1.1); }
-  .intro-cta button:not(:first-child){ background:transparent; color:#9fb0d6; border:1px solid var(--line); } .intro-cta button:not(:first-child):hover{ border-color:#3ef0ff; color:#fff; }
+  .intro-cta button:first-child{ background:#34d399; color:#06121a; border:0; } .intro-cta button:first-child:hover{ filter:brightness(1.1); }
+  .intro-cta button:not(:first-child){ background:transparent; color:#9fb0d6; border:1px solid var(--line); } .intro-cta button:not(:first-child):hover{ border-color:#34d399; color:#fff; }
   body.doctrine-east .intro-cta button:first-child{ background:#ff4d4d; color:#fff; }
   /* ── living node hover flash-card (HUD hatch) ── */
   #hoverCard{ position:fixed; z-index:56; pointer-events:none; min-width:150px; max-width:270px; padding:9px 12px; background:rgba(8,14,24,.8); backdrop-filter:blur(9px) saturate(140%); -webkit-backdrop-filter:blur(9px) saturate(140%); border:1px solid rgba(95,244,255,.34); border-radius:9px; color:#dbe8fb; font:11px/1.45 ui-monospace,SFMono-Regular,monospace; opacity:0; transform:translateY(5px) scale(.97); transition:opacity .12s ease, transform .12s ease; box-shadow:0 10px 34px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05); }
   #hoverCard.on{ opacity:1; transform:translateY(0) scale(1); animation:hcFlash .5s ease-out; }
   @keyframes hcFlash{ 0%{ box-shadow:0 0 0 0 rgba(95,244,255,.5), 0 10px 34px rgba(0,0,0,.55); } 100%{ box-shadow:0 0 0 6px rgba(95,244,255,0), 0 10px 34px rgba(0,0,0,.55); } }
-  #hoverCard .hc-t{ font-weight:800; color:#5ff4ff; font-size:12px; letter-spacing:.3px; margin-bottom:1px; }
+  #hoverCard .hc-t{ font-weight:800; color:#34d399; font-size:12px; letter-spacing:.3px; margin-bottom:1px; }
   #hoverCard .hc-k{ color:#8a97b4; font-size:9px; letter-spacing:1.4px; text-transform:uppercase; }
   #hoverCard .hc-v{ color:#eaf3ff; }
-  #hoverCard .hc-corner{ position:absolute; width:9px; height:9px; border:1.5px solid #5ff4ff; opacity:.85; }
+  #hoverCard .hc-corner{ position:absolute; width:9px; height:9px; border:1.5px solid #34d399; opacity:.85; }
   #hoverCard .tl{ top:-1px; left:-1px; border-right:0; border-bottom:0; } #hoverCard .tr{ top:-1px; right:-1px; border-left:0; border-bottom:0; }
   #hoverCard .bl{ bottom:-1px; left:-1px; border-right:0; border-top:0; } #hoverCard .br{ bottom:-1px; right:-1px; border-left:0; border-top:0; }
   body.doctrine-east #hoverCard{ border-color:rgba(255,77,77,.4); } body.doctrine-east #hoverCard .hc-t{ color:#ff8080; } body.doctrine-east #hoverCard .hc-corner{ border-color:#ff8080; }
   .horus-plus{ flex:0 0 auto; width:34px; display:grid; place-items:center; border-radius:11px; background:rgba(20,26,42,.85); border:1px solid rgba(255,255,255,.14); cursor:pointer; font-size:19px; color:#9fe9ff; transition:.13s; }
-  .horus-plus:hover{ border-color:#3ef0ff; } .horus-plus.open{ background:#3ef0ff; color:#06121a; }
+  .horus-plus:hover{ border-color:#34d399; } .horus-plus.open{ background:#34d399; color:#06121a; }
   .hi-pill{ flex:0 0 auto; width:34px; height:38px; border:1px solid rgba(255,255,255,.14); background:rgba(20,26,42,.85); }
   .horus-in{ display:flex; gap:7px; padding:10px 12px; border-top:1px solid var(--line); position:relative; }
   .horus-in input{ flex:1; padding:9px 12px; border-radius:11px; font-size:12.5px; color:var(--ink); background:rgba(20,26,42,.8); border:1px solid rgba(255,255,255,.12); }
-  .horus-in input:focus{ outline:none; border-color:#3ef0ff; }
-  .horus-send{ width:40px; border-radius:11px; display:grid; place-items:center; cursor:pointer; background:#3ef0ff; color:#06121a; font-weight:700; }
+  .horus-in input:focus{ outline:none; border-color:#34d399; }
+  .horus-send{ width:40px; border-radius:11px; display:grid; place-items:center; cursor:pointer; background:#34d399; color:#06121a; font-weight:700; }
   body.doctrine-east .horus-send{ background:#ff4d4d; color:#fff; }
-  .horus-tab{ position:fixed; right:0; top:46%; transform:translateY(-50%); z-index:44; writing-mode:vertical-rl; background:rgba(10,14,24,.92); border:1px solid rgba(62,240,255,.3); border-right:0; border-radius:10px 0 0 10px; padding:13px 7px; font-size:11px; font-weight:700; letter-spacing:2px; color:#3ef0ff; cursor:pointer; }
+  .horus-tab{ position:fixed; right:0; top:46%; transform:translateY(-50%); z-index:44; writing-mode:vertical-rl; background:rgba(10,14,24,.92); border:1px solid rgba(62,240,255,.3); border-right:0; border-radius:10px 0 0 10px; padding:13px 7px; font-size:11px; font-weight:700; letter-spacing:2px; color:#34d399; cursor:pointer; }
   body.doctrine-east .horus-tab{ color:#ff7b7b; border-color:rgba(255,77,77,.3); }
   @media(max-width:760px){ .horus{ width:92vw; bottom:124px; } }
   .horus-ico.live{ color:var(--neon); animation:micpulse 1.1s ease-in-out infinite; }
@@ -332,10 +332,10 @@
   .sw-meta{ padding:10px 14px; color:#aab4d6; font-size:11px; border-bottom:1px solid rgba(255,255,255,.06); }
   .sw-meta code{ background:rgba(255,255,255,.06); padding:1px 5px; border-radius:5px; color:#9fd0ff; font-size:10px; }
   .sw-status{ padding:9px 14px; font-size:11px; color:#8a93b2; border-bottom:1px solid rgba(255,255,255,.06); }
-  .sw-status.good{ color:#00e07a; } .sw-status.bad{ color:#ff6b6b; }
+  .sw-status.good{ color:#34d399; } .sw-status.bad{ color:#ff6b6b; }
   .sw-body{ overflow:auto; flex:1; }
   .sw-row{ display:grid; grid-template-columns:96px 1fr 84px 54px; gap:8px; padding:7px 14px; border-bottom:1px solid rgba(255,255,255,.04); align-items:center; }
-  .sw-act{ color:#3ef0ff; font-family:"JetBrains Mono",monospace; font-size:10px; }
+  .sw-act{ color:#34d399; font-family:"JetBrains Mono",monospace; font-size:10px; }
   .sw-det{ color:#cfd6ee; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .sw-sig{ color:#7a8099; font-family:"JetBrains Mono",monospace; font-size:9.5px; } .sw-t{ color:#6b7290; font-size:10px; text-align:right; }
   .sw-empty{ padding:18px 14px; color:#8a93b2; }
@@ -343,7 +343,7 @@
   .sw-foot button{ background:rgba(62,240,255,.12); border:1px solid rgba(62,240,255,.4); color:#9fe9ff; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:11px; }
   .sw-foot button:hover{ background:rgba(62,240,255,.22); } .sw-foot a{ color:#c9a84c; margin-left:auto; font-size:11px; text-decoration:none; } .sw-foot a:hover{ text-decoration:underline; }
   .sov-explain{ margin-top:14px; padding:11px 12px; border-radius:10px; background:linear-gradient(160deg,rgba(62,240,255,.09),rgba(62,240,255,.02)); border:1px solid rgba(62,240,255,.28); }
-  .sov-explain .se-h{ font-size:10px; letter-spacing:1.4px; color:#3ef0ff; font-weight:600; }
+  .sov-explain .se-h{ font-size:10px; letter-spacing:1.4px; color:#34d399; font-weight:600; }
   .sov-explain p{ margin-top:5px; font-size:12.5px; line-height:1.5; color:#cfd6ee; }
   .nb-card{ border:1px solid rgba(62,240,255,.28); border-radius:11px; padding:10px 12px; background:linear-gradient(160deg,rgba(62,240,255,.07),rgba(62,240,255,.01)); }
   body.doctrine-east .nb-card{ border-color:rgba(255,77,77,.28); background:linear-gradient(160deg,rgba(255,77,77,.07),rgba(255,77,77,.01)); }
@@ -368,34 +368,34 @@
 <div id="lens"></div>
 <div class="hud"><span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span><span class="ret"></span><span class="scan"></span><span class="vig"></span></div>
 <style>
-#bootGate{ position:fixed; inset:0; z-index:99999; background:radial-gradient(ellipse at 50% 62%, #071228 0%, #030812 58%, #01030a 100%); display:flex; align-items:center; justify-content:center; overflow:hidden; transition:opacity 1.1s ease; }
+#bootGate{ position:fixed; inset:0; z-index:99999; background:radial-gradient(ellipse at 50% 62%, #04160e 0%, #03110b 58%, #020c07 100%); display:flex; align-items:center; justify-content:center; overflow:hidden; transition:opacity 1.1s ease; }
 #bootGate.hide{ opacity:0; pointer-events:none; }
 #bootGate .bg-stars{ position:absolute; inset:-60%; background-image:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 60%,#cfe9ff,transparent),radial-gradient(1px 1px at 40% 80%,#fff,transparent),radial-gradient(1.5px 1.5px at 85% 20%,#9fd,transparent),radial-gradient(1px 1px at 55% 45%,#fff,transparent),radial-gradient(1px 1px at 12% 68%,#fff,transparent); background-size:300px 300px,260px 260px,420px 420px,360px 360px,210px 210px,180px 180px; opacity:.55; animation:bgdrift 90s linear infinite; }
 @keyframes bgdrift{ to{ transform:translate3d(-90px,-70px,0) rotate(3deg); } }
 #bootGate .bg-inner{ position:relative; z-index:2; text-align:center; max-width:580px; padding:0 26px; animation:bgrise 1.1s cubic-bezier(.2,.7,.2,1) both; }
 @keyframes bgrise{ from{opacity:0;transform:translateY(20px) scale(.98);} to{opacity:1;transform:none;} }
-#bootGate .bg-sigil{ font-size:52px; color:#5ff4ff; text-shadow:0 0 30px rgba(95,244,255,.6); animation:bgpulse 3.2s ease-in-out infinite; }
+#bootGate .bg-sigil{ font-size:52px; color:#34d399; text-shadow:0 0 30px rgba(95,244,255,.6); animation:bgpulse 3.2s ease-in-out infinite; }
 @keyframes bgpulse{ 50%{ text-shadow:0 0 48px rgba(95,244,255,.95); transform:scale(1.05);} }
 #bootGate .bg-brand{ font:800 40px/1 ui-monospace,SFMono-Regular,monospace; letter-spacing:9px; color:#eaf6ff; margin-top:12px; }
-#bootGate .bg-sub{ font:600 10.5px ui-monospace,monospace; letter-spacing:5px; color:#5ff4ff; margin-top:9px; opacity:.85; }
+#bootGate .bg-sub{ font:600 10.5px ui-monospace,monospace; letter-spacing:5px; color:#34d399; margin-top:9px; opacity:.85; }
 #bootGate .bg-boot{ width:460px; max-width:90vw; height:214px; overflow:hidden; margin:20px auto 0; font:600 11.5px/1.55 ui-monospace,SFMono-Regular,monospace; color:#8fe3ff; text-align:left; border-left:2px solid rgba(95,244,255,.4); padding:2px 0 2px 14px; position:relative; mask-image:linear-gradient(180deg,transparent,#000 12%,#000 92%,transparent); -webkit-mask-image:linear-gradient(180deg,transparent,#000 12%,#000 92%,transparent); }
-#bootGate .bg-boot .bh{ color:#5ff4ff; opacity:.6; font-size:9px; letter-spacing:2.5px; margin:9px 0 3px; }
+#bootGate .bg-boot .bh{ color:#34d399; opacity:.6; font-size:9px; letter-spacing:2.5px; margin:9px 0 3px; }
 #bootGate .bg-boot .ln{ opacity:0; animation:bgln .26s ease forwards; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-#bootGate .bg-boot .ln .lp{ color:#3ef0ff; opacity:.55; margin-right:5px; }
-#bootGate .bg-boot .ln.ok{ color:#d4edff; } #bootGate .bg-boot .ln.ok::after{ content:'  ✓'; color:#00e07a; font-weight:800; }
-#bootGate .bg-boot .ln.hi{ color:#5ff4ff; font-weight:800; letter-spacing:1.5px; } #bootGate .bg-boot .ln.hi.ok::after{ content:'  ◈'; color:#5ff4ff; }
+#bootGate .bg-boot .ln .lp{ color:#34d399; opacity:.55; margin-right:5px; }
+#bootGate .bg-boot .ln.ok{ color:#d4edff; } #bootGate .bg-boot .ln.ok::after{ content:'  ✓'; color:#34d399; font-weight:800; }
+#bootGate .bg-boot .ln.hi{ color:#34d399; font-weight:800; letter-spacing:1.5px; } #bootGate .bg-boot .ln.hi.ok::after{ content:'  ◈'; color:#34d399; }
 @keyframes bgln{ from{opacity:0;transform:translateX(-7px)} to{opacity:.95;transform:none} }
 #bootGate .bg-progress{ width:460px; max-width:90vw; height:3px; background:rgba(255,255,255,.09); border-radius:2px; margin:14px auto 2px; overflow:hidden; }
-#bootGate #bgBar{ height:100%; width:0; background:linear-gradient(90deg,#0bd,#5ff4ff); box-shadow:0 0 10px rgba(95,244,255,.8); transition:width .18s ease; }
-#bootGate #bgPct{ font:700 10px ui-monospace,monospace; color:#5ff4ff; letter-spacing:2px; margin-top:4px; opacity:.8; }
+#bootGate #bgBar{ height:100%; width:0; background:linear-gradient(90deg,#0bd,#34d399); box-shadow:0 0 10px rgba(95,244,255,.8); transition:width .18s ease; }
+#bootGate #bgPct{ font:700 10px ui-monospace,monospace; color:#34d399; letter-spacing:2px; margin-top:4px; opacity:.8; }
 #bootGate .bg-scan{ position:absolute; left:0; right:0; height:120px; top:-120px; background:linear-gradient(180deg,transparent,rgba(95,244,255,.05) 60%,rgba(95,244,255,.12)); pointer-events:none; z-index:3; animation:bgscan 5.5s linear infinite; }
 @keyframes bgscan{ 0%{ transform:translateY(0); } 100%{ transform:translateY(120vh); } }
 #bootGate .bg-gate{ animation:bgrise .55s ease both; }
 #bootGate .bg-gate-t{ font:700 19px ui-monospace,monospace; color:#eaf6ff; }
 #bootGate .bg-gate-x{ font-size:13px; line-height:1.6; color:#b8c8dc; margin:11px auto 0; max-width:460px; }
-#bootGate .bg-link{ color:#5ff4ff; cursor:pointer; text-decoration:underline; white-space:nowrap; }
+#bootGate .bg-link{ color:#34d399; cursor:pointer; text-decoration:underline; white-space:nowrap; }
 #bootGate .bg-cred{ margin:16px auto 0; max-width:470px; }
-#bootGate .bg-cred .cc-h{ font:700 8.5px ui-monospace,monospace; letter-spacing:2.5px; color:#5ff4ff; opacity:.6; margin:9px 0 5px; }
+#bootGate .bg-cred .cc-h{ font:700 8.5px ui-monospace,monospace; letter-spacing:2.5px; color:#34d399; opacity:.6; margin:9px 0 5px; }
 #bootGate .bg-cred .cc-row{ display:flex; flex-wrap:wrap; gap:5px; justify-content:center; }
 #bootGate .bg-cred .cc{ font:600 9.5px ui-monospace,monospace; letter-spacing:.4px; color:#cfe3f2; background:rgba(95,244,255,.07); border:1px solid rgba(95,244,255,.22); border-radius:8px; padding:3px 8px; white-space:nowrap; text-decoration:none; transition:background .15s,border-color .15s; }
 #bootGate .bg-cred a.cc:hover{ background:rgba(95,244,255,.18); border-color:rgba(95,244,255,.55); color:#eaf9ff; }
@@ -403,11 +403,11 @@
 #bootGate .bg-cred .cc-note{ font:500 8.5px ui-monospace,monospace; color:#7d8ea0; margin-top:7px; letter-spacing:.3px; }
 #bootGate .bg-cred .cc-verify{ display:inline-block; margin-top:8px; font:700 9px ui-monospace,monospace; letter-spacing:1.5px; color:#9effc0; cursor:pointer; text-decoration:none; border-bottom:1px dotted rgba(158,255,192,.5); }
 #bootGate .bg-btns{ margin-top:22px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
-#bootGate .bg-allow{ cursor:pointer; background:linear-gradient(90deg,#0bd,#5ff4ff); color:#02121a; font:800 15px ui-monospace,monospace; border:none; border-radius:14px; padding:14px 28px; box-shadow:0 10px 30px rgba(95,244,255,.35); }
+#bootGate .bg-allow{ cursor:pointer; background:linear-gradient(90deg,#0bd,#34d399); color:#02121a; font:800 15px ui-monospace,monospace; border:none; border-radius:14px; padding:14px 28px; box-shadow:0 10px 30px rgba(95,244,255,.35); }
 #bootGate .bg-silent{ cursor:pointer; background:transparent; color:#9ab; border:1px solid rgba(255,255,255,.2); border-radius:14px; padding:14px 22px; font:600 14px ui-monospace,monospace; }
 #bootGate .bg-tc{ position:absolute; inset:0; z-index:5; background:rgba(2,6,15,.86); display:flex; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(6px); }
 #bootGate .bg-tc-card{ max-width:540px; background:rgba(9,14,26,.98); border:1px solid rgba(95,244,255,.3); border-radius:16px; padding:26px; text-align:left; max-height:82vh; overflow:auto; }
-#bootGate .bg-tc-h{ font:700 16px ui-monospace,monospace; color:#5ff4ff; margin-bottom:12px; }
+#bootGate .bg-tc-h{ font:700 16px ui-monospace,monospace; color:#34d399; margin-bottom:12px; }
 #bootGate .bg-tc-b p{ font-size:12.5px; line-height:1.55; color:#cdd9e6; margin:9px 0; }
 #bootGate .bg-tc-close{ margin-top:14px; cursor:pointer; background:rgba(95,244,255,.15); border:1px solid rgba(95,244,255,.4); color:#dffaff; border-radius:12px; padding:9px 18px; font:600 13px ui-monospace,monospace; }
 </style>
@@ -550,14 +550,14 @@
   <label class="lyr"><input type="checkbox" id="lyQuake" checked onchange="toggleLayer('quake',this.checked)"><span class="sw" style="background:#ffd23b"></span> Seismic · USGS <span id="quakeCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
   <label class="lyr"><input type="checkbox" id="lyAir" onchange="toggleLayer('air',this.checked)"><span class="sw" style="background:var(--fr)"></span> Aircraft · ADS-B live <span id="airCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
   <label class="lyr"><input type="checkbox" id="lySignals" onchange="toggleLayer('signals',this.checked)"><span class="sw" style="background:#e0a285"></span> News signals · GDELT <span id="sigCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
-  <label class="lyr"><input type="checkbox" id="lyCameras" onchange="toggleLayer('cameras',this.checked)"><span class="sw" style="background:#3ef0ff"></span> Public cameras · global <span id="camCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
+  <label class="lyr"><input type="checkbox" id="lyCameras" onchange="toggleLayer('cameras',this.checked)"><span class="sw" style="background:#34d399"></span> Public cameras · global <span id="camCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
   <label class="lyr"><input type="checkbox" id="lyEvents" onchange="toggleLayer('events',this.checked)"><span class="sw" style="background:#ff6b35"></span> Natural events · EONET+GDACS <span id="evCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
   <label class="lyr"><input type="checkbox" id="lySpace" onchange="toggleLayer('space',this.checked)"><span class="sw" style="background:#9fd0ff"></span> Space · ISS + launches <span id="spaceCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
-  <label class="lyr"><input type="checkbox" id="lyAq" onchange="toggleLayer('aq',this.checked)"><span class="sw" style="background:#00e07a"></span> Air quality · WAQI (global) <span id="aqCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
-  <label class="lyr"><input type="checkbox" id="lyMarine" onchange="toggleLayer('marine',this.checked)"><span class="sw" style="background:#7af9d0"></span> Marine · live AIS <span id="marineCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
+  <label class="lyr"><input type="checkbox" id="lyAq" onchange="toggleLayer('aq',this.checked)"><span class="sw" style="background:#34d399"></span> Air quality · WAQI (global) <span id="aqCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
+  <label class="lyr"><input type="checkbox" id="lyMarine" onchange="toggleLayer('marine',this.checked)"><span class="sw" style="background:#6ee7b7"></span> Marine · live AIS <span id="marineCount" style="margin-left:auto;color:var(--dim);font-size:11px">—</span></label>
   <label class="lyr"><input type="checkbox" id="lySat" onchange="toggleLayer('sat',this.checked)"><span class="sw" style="background:#9fd0ff"></span> Satellites · CelesTrak (live) </label>
-  <button class="btn" onclick="lightItUp()" style="width:100%;margin-top:7px;background:linear-gradient(90deg,#3ef0ff22,#ff6b3522);border:1px solid var(--gold)">✨ Light it up · all layers</button>
-  <div style="display:flex;align-items:center;gap:9px;font-size:9.5px;color:var(--dim);margin-top:7px;flex-wrap:wrap"><span style="letter-spacing:.5px">FEED HEALTH</span><span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#00e07a;margin-right:3px;vertical-align:middle"></i>live</span><span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#eab308;margin-right:3px;vertical-align:middle"></i>quiet</span><span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff6b6b;margin-right:3px;vertical-align:middle"></i>down</span><span onclick="if(window.sovRetryFeeds)sovRetryFeeds()" style="margin-left:auto;cursor:pointer;color:#5ff4ff">🔄 retry</span></div>
+  <button class="btn" onclick="lightItUp()" style="width:100%;margin-top:7px;background:linear-gradient(90deg,#34d39922,#ff6b3522);border:1px solid var(--gold)">✨ Light it up · all layers</button>
+  <div style="display:flex;align-items:center;gap:9px;font-size:9.5px;color:var(--dim);margin-top:7px;flex-wrap:wrap"><span style="letter-spacing:.5px">FEED HEALTH</span><span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;margin-right:3px;vertical-align:middle"></i>live</span><span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#eab308;margin-right:3px;vertical-align:middle"></i>quiet</span><span><i style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff6b6b;margin-right:3px;vertical-align:middle"></i>down</span><span onclick="if(window.sovRetryFeeds)sovRetryFeeds()" style="margin-left:auto;cursor:pointer;color:#34d399">🔄 retry</span></div>
   <div style="font-size:10px;color:var(--dim);margin-top:6px">live, no API key · toggle a layer → it loads &amp; flies to the data · click any point for detail · markets/gov join via the MCP federation</div>
   <div class="ttl" style="margin-top:14px">Basemap</div>
   <button class="btn" id="g3dBtn" style="width:100%;padding:9px" onclick="enableG3D()">⊕ Photoreal real-world 3D (Google)</button>
@@ -589,7 +589,7 @@
     <button class="btn" onclick="runSim('comms-relay')">📡 Comms EW</button>
     <button class="btn" onclick="runSim('humanitarian-corridor')">🕊️ Aid corridor</button>
   </div>
-  <div style="display:flex;gap:6px;margin-top:7px"><input id="simAsk" placeholder="…or just tell me — “flood response in Valencia”, “medevac under fire”" style="flex:1;background:#070b12;color:#cfe0ff;border:1px solid var(--line);border-radius:9px;padding:8px;font:12px ui-monospace,monospace" onkeydown="if(event.key==='Enter')sovSpaceAsk(this.value)"><button class="btn" onclick="sovSpaceAsk(document.getElementById('simAsk').value)">▶ Run</button></div>
+  <div style="display:flex;gap:6px;margin-top:7px"><input id="simAsk" placeholder="…or just tell me — “flood response in Valencia”, “medevac under fire”" style="flex:1;background:#05170f;color:#cfe0ff;border:1px solid var(--line);border-radius:9px;padding:8px;font:12px ui-monospace,monospace" onkeydown="if(event.key==='Enter')sovSpaceAsk(this.value)"><button class="btn" onclick="sovSpaceAsk(document.getElementById('simAsk').value)">▶ Run</button></div>
   <div style="font-size:10px;color:var(--dim);letter-spacing:1px;margin:9px 0 3px">LIVE LAYERS — all reactive, all here</div>
   <div style="display:flex;gap:5px;flex-wrap:wrap">
     <span class="chip" onclick="lightItUp()">✨ Light up</span>
@@ -606,7 +606,7 @@
     <span class="chip" onclick="sovSpaceAsk('satellites')">🛰 Orbital</span>
     <span class="chip" onclick="if(window.sovThreatPOC)sovThreatPOC()">🛡️ Threat POC</span>
   </div>
-  <button class="btn" onclick="simulateBoth(window._lastScn||'content-provenance')" style="width:100%;margin-top:7px;background:linear-gradient(90deg,#3ef0ff22,#ff4d4d22);border:1px solid var(--gold)">⚖️ Compare doctrines · SOVEREIGN vs CENTRALISED</button>
+  <button class="btn" onclick="simulateBoth(window._lastScn||'content-provenance')" style="width:100%;margin-top:7px;background:linear-gradient(90deg,#34d39922,#ff4d4d22);border:1px solid var(--gold)">⚖️ Compare doctrines · SOVEREIGN vs CENTRALISED</button>
   <div class="res" id="simRes"><span class="chip">talk to me or pick a scenario — it runs live on the globe, council-gated + signed</span></div>
 </div>
 <div class="winsrc" id="src-threat"><div id="threatTbl"><span class="chip">loading live threats…</span></div></div>
@@ -662,8 +662,8 @@
 
 <script>
 const C = Cesium;
-const COL = { friendly:'#2a9df4', hostile:'#ff3b3b', neutral:'#00e07a', unknown:'#ffd23b' };
-const BLOC = { EU:'#4067d8', UK:'#c9a84c', US:'#5f8a5e', APAC:'#8b8ce0', AMERICAS:'#e0a285', GLOBAL:'#06b6d4', PARTNER:'#9aa3c4' };
+const COL = { friendly:'#2a9df4', hostile:'#ff3b3b', neutral:'#34d399', unknown:'#ffd23b' };
+const BLOC = { EU:'#4067d8', UK:'#c9a84c', US:'#5f8a5e', APAC:'#8b8ce0', AMERICAS:'#e0a285', GLOBAL:'#2dd4bf', PARTNER:'#9aa3c4' };
 
 const REG = [
  {n:'United Kingdom',lat:51.5,lon:-0.13,bloc:'UK',regime:'UK pro-innovation AI framework · AISI · NCSC · DPA 2018',cross:'ISO 42001 · NIST AI RMF'},
@@ -811,7 +811,7 @@ try{
       if(window._weatherIntro && _gibsLayer && h<2.4e6){ try{ toggleGodseye(); }catch(_){} window._weatherIntro=false; } }   // zoom in through the weather → reveal sharp detail
     else { if(h<_cc.maximumZoomDistance*0.95) cam.zoomOut(amount); }
   }, {passive:false});
-}catch(e){ document.getElementById('cesiumContainer').style.background='radial-gradient(circle at 50% 45%,#102046,#05070f)'; }
+}catch(e){ document.getElementById('cesiumContainer').style.background='radial-gradient(circle at 50% 45%,#102046,#03110b)'; }
 
 function toggleLayer(k,on){ if(window.stopSpin) stopSpin(); if(window.sigilLog) sigilLog('layer:'+k, on?'on':'off'); if(window.defSaveStateD) defSaveStateD(); const map={reg:regDS,base:baseDS,threat:threatDS,sim:simDS,quake:quakeDS,air:airDS,signals:signalsDS,cameras:camerasDS,events:eventsDS,space:spaceDS,aq:aqDS,marine:marineDS,sat:satDS}; const ds=map[k]; if(ds) ds.show=on;
   if(!on){ var _tm={air:'_airTimer',marine:'_marineTimer',space:'_spaceTimer',sat:'_satTimer'}[k]; if(_tm && window[_tm]){ clearInterval(window[_tm]); window[_tm]=null; } }   // stop the refresh loop when a layer is turned off (no orphan timers)
@@ -878,7 +878,7 @@ async function loadQuakes(){
     const d=await (await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson')).json();
     quakeDS.entities.removeAll();
     (d.features||[]).forEach(f=>{ const g=f.geometry&&f.geometry.coordinates; if(!g) return; const p=f.properties||{}; const m=p.mag||0;
-      const col = m>=5?'#ff3b3b':(m>=3?'#ffd23b':'#00e07a');
+      const col = m>=5?'#ff3b3b':(m>=3?'#ffd23b':'#34d399');
       var mins=p.time?Math.max(0,Math.round((Date.now()-p.time)/60000)):null;
       var ago=mins==null?'—':(mins<1?'just now':(mins<60?mins+'m ago':Math.round(mins/60)+'h ago'));
       var rows=[['Place',p.place||'—'],['Magnitude','M'+m.toFixed(1)],['Depth',(g[2]||0).toFixed(0)+' km'],['When',ago]];
@@ -1104,7 +1104,7 @@ window.sovOscal=sovOscal;
 function _cotTray(){ var n=(window._cotDataSrc&&window._cotDataSrc.show)?window._cotDataSrc.entities.values.length:0; var el=document.getElementById('cotTray');
   if(!n){ if(el) el.remove(); return; }
   if(!el){ el=document.createElement('div'); el.id='cotTray'; el.style.cssText='position:fixed;left:14px;bottom:112px;z-index:57;background:rgba(10,16,28,.94);border:1px solid rgba(120,150,200,.35);border-radius:11px;padding:8px 11px;color:#dfe7f5;font:600 11px/1.3 ui-monospace,monospace;box-shadow:0 10px 30px rgba(0,0,0,.5);backdrop-filter:blur(8px)'; document.body.appendChild(el); }
-  el.innerHTML='<div style="color:#5ff4ff;letter-spacing:.5px;margin-bottom:4px">🎯 CoT · <b id="cotTrayN">'+n+'</b> tracks</div><div style="display:flex;gap:6px"><button onclick="if(window.cotExport)cotExport()" style="cursor:pointer;background:linear-gradient(90deg,#0bd,#5ff4ff);color:#04121a;border:none;border-radius:7px;padding:4px 8px;font:700 10px ui-monospace,monospace">⧉ export</button><button onclick="if(window.cotDownload)cotDownload()" style="cursor:pointer;background:rgba(95,244,255,.12);color:#9fe9ff;border:1px solid rgba(95,244,255,.35);border-radius:7px;padding:4px 8px;font:700 10px ui-monospace,monospace" title="download a TAK-ready .cot file">⤓ .cot</button><button onclick="if(window._cotDataSrc){window._cotDataSrc.entities.removeAll();}_cotTray();if(window.pushFeed)pushFeed(\'CoT · cleared\')" style="cursor:pointer;background:transparent;color:#9ab;border:1px solid rgba(255,255,255,.2);border-radius:7px;padding:4px 8px;font:600 10px ui-monospace,monospace">clear</button></div>';
+  el.innerHTML='<div style="color:#34d399;letter-spacing:.5px;margin-bottom:4px">🎯 CoT · <b id="cotTrayN">'+n+'</b> tracks</div><div style="display:flex;gap:6px"><button onclick="if(window.cotExport)cotExport()" style="cursor:pointer;background:linear-gradient(90deg,#0bd,#34d399);color:#04121a;border:none;border-radius:7px;padding:4px 8px;font:700 10px ui-monospace,monospace">⧉ export</button><button onclick="if(window.cotDownload)cotDownload()" style="cursor:pointer;background:rgba(95,244,255,.12);color:#9fe9ff;border:1px solid rgba(95,244,255,.35);border-radius:7px;padding:4px 8px;font:700 10px ui-monospace,monospace" title="download a TAK-ready .cot file">⤓ .cot</button><button onclick="if(window._cotDataSrc){window._cotDataSrc.entities.removeAll();}_cotTray();if(window.pushFeed)pushFeed(\'CoT · cleared\')" style="cursor:pointer;background:transparent;color:#9ab;border:1px solid rgba(255,255,255,.2);border-radius:7px;padding:4px 8px;font:600 10px ui-monospace,monospace">clear</button></div>';
 }
 window._cotTray=_cotTray;
 function setDoctrine(d,quiet){
@@ -1112,9 +1112,9 @@ function setDoctrine(d,quiet){
   document.body.classList.remove('doctrine-west','doctrine-east'); document.body.classList.add('doctrine-'+d);
   var tabs=document.querySelectorAll('.doc-tab'); Array.prototype.forEach.call(tabs,function(t){ t.classList.toggle('on', t.dataset.d===d); });
   try{ localStorage.setItem('def_doctrine',d); }catch(e){} window._doctrine=d;
-  var sb=document.getElementById('sbSigil'); if(sb) sb.innerHTML = d==='east' ? 'CENTRALISED <b style="color:#ff7b7b">EAST</b>' : 'SIGIL <b style="color:#3ef0ff">WEST</b>';
+  var sb=document.getElementById('sbSigil'); if(sb) sb.innerHTML = d==='east' ? 'CENTRALISED <b style="color:#ff7b7b">EAST</b>' : 'SIGIL <b style="color:#34d399">WEST</b>';
   var hn=document.getElementById('horusName'); if(hn) hn.textContent = d==='east'?'CENTRALISED':'SOVEREIGN';
-  try{ var oc=C.Color.fromCssColorString(d==='east'?'#ff4d4d':'#3ef0ff');
+  try{ var oc=C.Color.fromCssColorString(d==='east'?'#ff4d4d':'#34d399');
     [regDS,baseDS,threatDS,simDS,quakeDS,airDS,signalsDS,camerasDS,eventsDS,spaceDS].forEach(function(ds){ if(!ds) return; ds.entities.values.forEach(function(e){ if(e.point){ try{ e.point.outlineColor=oc; e.point.outlineWidth=2; }catch(_){} } }); }); }catch(_){}
   if(!quiet){ pushFeed(d==='east'?'DOCTRINE · CENTRALISED (East) lens · the centralized model we answer':'DOCTRINE · SIGIL/HORUS (West) · democratic · Ed25519 + attestation chain'); showDoctrine(d); }
 }
@@ -1155,12 +1155,12 @@ function _hcEl(){ var c=document.getElementById('hoverCard'); if(c) return c; c=
 function _dsKind(e){ try{ var o=e.entityCollection&&e.entityCollection.owner; var map=[[airDS,'AIRCRAFT · ADS-B'],[marineDS,'VESSEL · AIS'],[satDS,'SATELLITE · CelesTrak'],[spaceDS,'SPACE · ISS / launch'],[quakeDS,'SEISMIC · USGS'],[signalsDS,'NEWS · GDELT'],[eventsDS,'DISASTER · EONET/GDACS'],[threatDS,'THREAT · ISR'],[simDS,'SOV SPACE · sim'],[camerasDS,'CAMERA · public'],[aqDS,'AIR QUALITY'],[window._cotDataSrc,'CoT · W3C DID/VC'],[window._chokeDS,'MARITIME CHOKEPOINT'],[window._eiDS,'ENERGY INFRA'],[window._convDS,'CONVERGENCE'],[window._fireDS,'WILDFIRE · FIRMS'],[window._auroraDS,'AURORA · NOAA'],[window._radDS,'RADIATION · Safecast'],[window._powerDS,'POWER PLANT · WRI'],[window._placesDS,'LOCAL · OSM'],[window._ontoDS,'ONTOLOGY'],[window._airportsDS,'AIRPORT'],[window._finDS,'FINANCE'],[window._wpDS,'WAYPOINT']]; for(var i=0;i<map.length;i++){ if(map[i][0]&&o===map[i][0]) return map[i][1]; } }catch(_){} if(e._reg) return 'REGULATION · law'; if(e._cam) return 'CAMERA · public'; if(e._info) return 'NODE'; return 'NODE'; }
 function _hoverTitle(e){ var t=(e._info&&e._info.title)||e.name; if(!t){ try{ var lt=e.label&&e.label.text; t=lt&&(lt.getValue?lt.getValue(viewer.clock.currentTime):lt); }catch(_){} } return _hcx(t||'node').slice(0,60); }
 function _hoverLL(e){ try{ var p=e.position&&e.position.getValue(viewer.clock.currentTime); if(!p) return ''; var c=C.Cartographic.fromCartesian(p); var la=C.Math.toDegrees(c.latitude), lo=C.Math.toDegrees(c.longitude); return Math.abs(la).toFixed(3)+(la>=0?'°N ':'°S ')+Math.abs(lo).toFixed(3)+(lo>=0?'°E':'°W'); }catch(_){ return ''; } }
-function _showHoverCard(e,pos){ var card=_hcEl(); if(window._hoverEnt!==e){ window._hoverEnt=e; var ll=_hoverLL(e); document.getElementById('hcBody').innerHTML='<div class="hc-t">'+_hoverTitle(e)+'</div><div class="hc-k">'+_dsKind(e)+'</div>'+(ll?('<div class="hc-v">'+ll+'</div>'):'')+'<div class="hc-k" style="margin-top:3px;color:#00e07a">◉ live · signed · governed</div>'; card.classList.remove('on'); void card.offsetWidth; }
+function _showHoverCard(e,pos){ var card=_hcEl(); if(window._hoverEnt!==e){ window._hoverEnt=e; var ll=_hoverLL(e); document.getElementById('hcBody').innerHTML='<div class="hc-t">'+_hoverTitle(e)+'</div><div class="hc-k">'+_dsKind(e)+'</div>'+(ll?('<div class="hc-v">'+ll+'</div>'):'')+'<div class="hc-k" style="margin-top:3px;color:#34d399">◉ live · signed · governed</div>'; card.classList.remove('on'); void card.offsetWidth; }
   var w=card.offsetWidth||180, h=card.offsetHeight||72, x=pos.x+16, y=pos.y+16; if(x+w>window.innerWidth-8) x=pos.x-w-16; if(y+h>window.innerHeight-8) y=pos.y-h-16; card.style.left=Math.max(6,x)+'px'; card.style.top=Math.max(6,y)+'px'; card.classList.add('on'); }
 function _hideHoverCard(){ var c=document.getElementById('hoverCard'); if(c) c.classList.remove('on'); window._hoverEnt=null; }
 // ── reusable REACTION RING · a live pulsing halo any layer can drop, clock-driven (no interval leak),
 // phase-offset by longitude so a field of them breathes organically. Makes layers feel alive on the globe. ──
-function _reactRing(ds,lon,lat,css,base,speed){ try{ if(!ds||!viewer) return; var col=C.Color.fromCssColorString(css||'#5ff4ff'); var sp=speed||1.0, ph=lon*0.07;
+function _reactRing(ds,lon,lat,css,base,speed){ try{ if(!ds||!viewer) return; var col=C.Color.fromCssColorString(css||'#34d399'); var sp=speed||1.0, ph=lon*0.07;
   var r=function(t){ var s=C.JulianDate.toDate(t).getTime()/1000; return base*(0.45+0.55*Math.abs(Math.sin(s*sp+ph))); };
   ds.entities.add({ position:C.Cartesian3.fromDegrees(lon,lat), _react:true,
     ellipse:{ semiMajorAxis:new C.CallbackProperty(r,false), semiMinorAxis:new C.CallbackProperty(r,false),
@@ -1208,10 +1208,10 @@ async function loadMarine(){ if(!marineDS) return; try{
       var sog=(s.sog!=null?s.sog:0)*0.5144;   // knots → m/s
       var cog=(s.cog!=null?s.cog:null);
       var ent=marineDS.entities.add({ position:C.Cartesian3.fromDegrees(s.lon,s.lat),
-        point:{ pixelSize:7, color:C.Color.fromCssColorString('#7af9d0').withAlpha(0.85), outlineColor:C.Color.BLACK, outlineWidth:1 },
+        point:{ pixelSize:7, color:C.Color.fromCssColorString('#6ee7b7').withAlpha(0.85), outlineColor:C.Color.BLACK, outlineWidth:1 },
         _info:{ title:'⚓ '+(s.name||('MMSI '+s.mmsi)), rows:[['Type','Vessel · live AIS'],['MMSI',s.mmsi],['Course',cog!=null?Math.round(cog)+'°':'—'],['Speed',s.sog!=null?s.sog.toFixed(1)+' kt':'—'],['Projected track',cog!=null&&s.sog>0.5?('~'+Math.round((sog*3600)/1852)+' nm in 1 h'):'—'],['Source','live AIS · aisstream.io']] } });
       if(showPaths && cog!=null && sog>0.5){ var dp=_destPoint(s.lat,s.lon,cog, Math.min(120000, sog*3600));
-        marineDS.entities.add({ polyline:{ positions:C.Cartesian3.fromDegreesArray([s.lon,s.lat, dp[0],dp[1]]), width:1.3, material:new C.PolylineGlowMaterialProperty({glowPower:0.25,color:C.Color.fromCssColorString('#7af9d0').withAlpha(0.4)}) } }); }
+        marineDS.entities.add({ polyline:{ positions:C.Cartesian3.fromDegreesArray([s.lon,s.lat, dp[0],dp[1]]), width:1.3, material:new C.PolylineGlowMaterialProperty({glowPower:0.25,color:C.Color.fromCssColorString('#6ee7b7').withAlpha(0.4)}) } }); }
       window._marineTracks.push({ent:ent, lon:s.lon, lat:s.lat, alt:0, hdg:cog, vel:sog, onground:false}); });
     window._marineShips=d.ships||[];
     var n=(d.ships||[]).length; var mc=document.getElementById('marineCount'); if(mc) mc.textContent=n; pushFeed('MARINE · '+n+' vessels · live AIS · projected courses');
@@ -1232,9 +1232,9 @@ window.sovMarineFocus=sovMarineFocus;
 function _marineCard(v){ window._marineFocusV=v; var id='marineCard'; var old=document.getElementById(id); if(old) old.remove(); var w=document.createElement('div'); w.id=id;
   w.style.cssText='position:fixed;left:18px;top:72px;width:min(320px,90vw);z-index:58;background:rgba(6,15,20,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(122,249,208,.4);border-radius:13px;padding:13px 15px;color:#e7f6f1;font:12px/1.5 ui-monospace,monospace;box-shadow:0 16px 50px rgba(0,0,0,.6)';
   var nm=v.name||('MMSI '+v.mmsi);
-  w.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="color:#7af9d0;letter-spacing:.3px">⚓ '+_hcx(nm)+'</b><span onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="cursor:pointer;color:#8a97b4;font-weight:700;padding:0 5px">✕</span></div>'+
+  w.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="color:#6ee7b7;letter-spacing:.3px">⚓ '+_hcx(nm)+'</b><span onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="cursor:pointer;color:#8a97b4;font-weight:700;padding:0 5px">✕</span></div>'+
     '<div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:11.5px"><span style="color:#7fae9f">MMSI</span><span>'+_hcx(v.mmsi)+'</span><span style="color:#7fae9f">Course</span><span>'+(v.cog!=null?Math.round(v.cog)+'°':'—')+'</span><span style="color:#7fae9f">Speed</span><span>'+(v.sog!=null?v.sog.toFixed(1)+' kt':'—')+'</span><span style="color:#7fae9f">Position</span><span>'+Math.abs(v.lat).toFixed(3)+(v.lat>=0?'°N':'°S')+' '+Math.abs(v.lon).toFixed(3)+(v.lon>=0?'°E':'°W')+'</span><span style="color:#7fae9f">Source</span><span>live AIS · aisstream.io</span></div>'+
-    '<div style="display:flex;gap:6px;margin-top:9px"><button onclick="if(window.sovVesselResearch)sovVesselResearch()" style="flex:1;cursor:pointer;background:linear-gradient(90deg,#0bd,#7af9d0);color:#04121a;border:none;border-radius:8px;padding:8px;font-weight:700;font-family:ui-monospace">🔎 Deep research</button><a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:'+v.mmsi+'" target="_blank" rel="noopener" style="flex:1;text-align:center;text-decoration:none;color:#7af9d0;border:1px solid rgba(122,249,208,.3);border-radius:8px;padding:8px">MarineTraffic ↗</a></div>'+
+    '<div style="display:flex;gap:6px;margin-top:9px"><button onclick="if(window.sovVesselResearch)sovVesselResearch()" style="flex:1;cursor:pointer;background:linear-gradient(90deg,#0bd,#6ee7b7);color:#04121a;border:none;border-radius:8px;padding:8px;font-weight:700;font-family:ui-monospace">🔎 Deep research</button><a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:'+v.mmsi+'" target="_blank" rel="noopener" style="flex:1;text-align:center;text-decoration:none;color:#6ee7b7;border:1px solid rgba(122,249,208,.3);border-radius:8px;padding:8px">MarineTraffic ↗</a></div>'+
     '<div class="intro-cta" style="margin-top:7px">'+_sovActs('⚓ '+nm, v.lon, v.lat)+'</div>';
   document.body.appendChild(w);
   if(window.horusReply) horusReply('That’s <b>'+_hcx(nm)+'</b>, live on AIS — course '+(v.cog!=null?Math.round(v.cog)+'°':'—')+', '+(v.sog!=null?v.sog.toFixed(1)+' knots':'stationary')+'. I can <b>deep-research</b> her — registry, flag, operator, history. Want me to?'); }
@@ -1242,19 +1242,19 @@ window._marineCard=_marineCard;
 async function sovVesselResearch(){ var v=window._marineFocusV; if(!v) return; var id='vslResearch'; var old=document.getElementById(id); if(old) old.remove(); var w=document.createElement('div'); w.id=id;
   w.style.cssText='position:fixed;left:18px;top:250px;width:min(350px,90vw);max-height:58vh;overflow:auto;z-index:59;background:rgba(8,12,22,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(95,244,255,.4);border-radius:13px;padding:13px 15px;color:#dbe8fb;font:11.5px/1.5 ui-monospace,monospace;box-shadow:0 16px 50px rgba(0,0,0,.6)';
   var nm=v.name||('MMSI '+v.mmsi);
-  w.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="color:#5ff4ff">🔎 Deep research · '+_hcx(nm)+'</b><span onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="cursor:pointer;color:#8a97b4;font-weight:700;padding:0 5px">✕</span></div><div id="vrSteps"></div>';
+  w.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="color:#34d399">🔎 Deep research · '+_hcx(nm)+'</b><span onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="cursor:pointer;color:#8a97b4;font-weight:700;padding:0 5px">✕</span></div><div id="vrSteps"></div>';
   document.body.appendChild(w); var steps=document.getElementById('vrSteps');
   function log(t,cls){ var d=document.createElement('div'); d.style.cssText='padding:3px 0;color:'+(cls||'#9fb3d6'); d.innerHTML=t; steps.appendChild(d); }
   var slp=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
-  log('<span style="color:#5ff4ff">&gt; sense</span>  AIS profile · MMSI '+v.mmsi+' · '+(v.cog!=null?Math.round(v.cog)+'° / '+(v.sog||0)+' kt':'stationary')); await slp(650);
-  log('<span style="color:#5ff4ff">&gt; registry</span>  MID '+String(v.mmsi).slice(0,3)+' → flag &amp; type · public vessel registries'); await slp(750);
-  log('<span style="color:#5ff4ff">&gt; knowledge</span>  querying open encyclopedic + news sources…');
+  log('<span style="color:#34d399">&gt; sense</span>  AIS profile · MMSI '+v.mmsi+' · '+(v.cog!=null?Math.round(v.cog)+'° / '+(v.sog||0)+' kt':'stationary')); await slp(650);
+  log('<span style="color:#34d399">&gt; registry</span>  MID '+String(v.mmsi).slice(0,3)+' → flag &amp; type · public vessel registries'); await slp(750);
+  log('<span style="color:#34d399">&gt; knowledge</span>  querying open encyclopedic + news sources…');
   var found=null; try{ var k=await (await fetch('/api/knowledge?q='+encodeURIComponent(nm+' ship vessel'))).json(); if(k&&k.results&&k.results.length) found=k.results[0]; }catch(_){}
   await slp(400);
-  if(found){ log('  ← <b>'+_hcx(found.title||nm)+'</b>: '+_hcx(String(found.extract||found.snippet||found.description||'').slice(0,200)), '#eaf3ff'); if(found.url) log('  ↗ <a href="'+_hcx(found.url)+'" target="_blank" rel="noopener" style="color:#5ff4ff">source</a>'); }
+  if(found){ log('  ← <b>'+_hcx(found.title||nm)+'</b>: '+_hcx(String(found.extract||found.snippet||found.description||'').slice(0,200)), '#eaf3ff'); if(found.url) log('  ↗ <a href="'+_hcx(found.url)+'" target="_blank" rel="noopener" style="color:#34d399">source</a>'); }
   else log('  ← no encyclopedic record — AIS + registry + public trackers are the live sources', '#8a97b4');
-  log('<span style="color:#00e07a">&gt; sign</span>  research packet SIGIL-signed to the ledger'); if(window.sigilLog) sigilLog('research','vessel '+nm);
-  log('<div style="margin-top:6px"><a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:'+v.mmsi+'" target="_blank" rel="noopener" style="color:#7af9d0">▸ MarineTraffic ↗</a> · <a href="https://www.vesselfinder.com/?mmsi='+v.mmsi+'" target="_blank" rel="noopener" style="color:#7af9d0">VesselFinder ↗</a></div>');
+  log('<span style="color:#34d399">&gt; sign</span>  research packet SIGIL-signed to the ledger'); if(window.sigilLog) sigilLog('research','vessel '+nm);
+  log('<div style="margin-top:6px"><a href="https://www.marinetraffic.com/en/ais/details/ships/mmsi:'+v.mmsi+'" target="_blank" rel="noopener" style="color:#6ee7b7">▸ MarineTraffic ↗</a> · <a href="https://www.vesselfinder.com/?mmsi='+v.mmsi+'" target="_blank" rel="noopener" style="color:#6ee7b7">VesselFinder ↗</a></div>');
   if(window.horusReply) horusReply('Research on <b>'+_hcx(nm)+'</b> is in the panel — AIS profile, flag from the MID, open sources, public-tracker links, all signed. In production I add registry · sanctions · port-call history. <b>No one on the ground — just the picture, proven.</b>'); }
 window.sovVesselResearch=sovVesselResearch;
 async function loadEvents(){ if(!eventsDS) return; try{
@@ -1269,7 +1269,7 @@ async function loadEvents(){ if(!eventsDS) return; try{
 async function loadSpace(){ if(!spaceDS) return; try{
     const d=await (await fetch('/api/space')).json(); spaceDS.entities.removeAll();
     if(d.iss){ spaceDS.entities.add({ id:'iss', position:C.Cartesian3.fromDegrees(d.iss.lon,d.iss.lat,420000),
-      point:{ pixelSize:12, color:C.Color.fromCssColorString('#3ef0ff'), outlineColor:C.Color.WHITE, outlineWidth:2 },
+      point:{ pixelSize:12, color:C.Color.fromCssColorString('#34d399'), outlineColor:C.Color.WHITE, outlineWidth:2 },
       label:{ text:'🛰 ISS', font:'11px Inter', fillColor:C.Color.fromCssColorString('#9fd0ff'), pixelOffset:new C.Cartesian2(13,0), horizontalOrigin:C.HorizontalOrigin.LEFT },
       _info:{ title:'🛰️ ISS · live', rows:[['Altitude',d.iss.alt+' km'],['Velocity',d.iss.vel+' km/h'],['Position',d.iss.lat.toFixed(1)+', '+d.iss.lon.toFixed(1)],['Sunlight',d.iss.visibility||''],['Source','wheretheiss.at']] } }); }
     (d.launches||[]).forEach(l=>{ spaceDS.entities.add({ position:C.Cartesian3.fromDegrees(l.lon,l.lat),
@@ -1281,7 +1281,7 @@ async function loadAirQuality(){ if(!aqDS) return; try{
     var c=(typeof _entCenter==='function')?_entCenter():[0,30];
     const d=await (await fetch('/api/airquality?lat='+c[1].toFixed(2)+'&lon='+c[0].toFixed(2))).json(); aqDS.entities.removeAll();
     (d.stations||[]).forEach(s=>{ if(s.lon==null||s.lat==null) return; var a=s.aqi;
-      var col=a<=50?'#00e07a':(a<=100?'#ffd23b':(a<=150?'#ff8c1a':(a<=200?'#ff3b3b':(a<=300?'#a06cd5':'#7e1e1e'))));
+      var col=a<=50?'#34d399':(a<=100?'#ffd23b':(a<=150?'#ff8c1a':(a<=200?'#ff3b3b':(a<=300?'#a06cd5':'#7e1e1e'))));
       var band=a<=50?'Good':(a<=100?'Moderate':(a<=150?'Unhealthy (sensitive)':(a<=200?'Unhealthy':(a<=300?'Very unhealthy':'Hazardous'))));
       aqDS.entities.add({ position:C.Cartesian3.fromDegrees(s.lon,s.lat),
         point:{ pixelSize:7, color:C.Color.fromCssColorString(col).withAlpha(0.8), outlineColor:C.Color.BLACK, outlineWidth:1 },
@@ -1383,22 +1383,22 @@ function _briefHTML(body,sig){ function e(s){ return String(s==null?'':s).replac
   var sigBlock = sig ? ('<div class="sig"><div class="sigh">◉ Ed25519 SIGNATURE · offline-verifiable</div><div class="kv"><span>signature</span><code>'+e(sig.sig)+'</code></div><div class="kv"><span>public key</span><code>'+e(sig.pub)+'</code></div><div class="kv"><span>entry</span><code>#'+sig.i+' · '+e(sig.ts)+'</code></div><div class="note">Verify independently at <b>defoneos.vercel.app/verify.html</b> — recompute utf8(JSON.stringify({i,ts,action,detail,prev})) and Ed25519-verify. No server, no trust required.</div>'+qrBlock+'</div>') : '<div class="note">Signing key still initialising — re-export for the signed version.</div>';
   return '<!doctype html><html><head><meta charset="utf-8"><title>SOV SPACE Situational Brief</title><style>'+
     'body{font:13px/1.55 -apple-system,system-ui,Segoe UI,sans-serif;color:#12151b;background:#fff;max-width:720px;margin:32px auto;padding:0 24px}'+
-    'h1{font-size:19px;letter-spacing:.5px;margin:0 0 2px;color:#0a2540}.sub{color:#5a6472;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}'+
-    '.summary{font-size:14px;background:#f4f7fb;border-left:3px solid #0a2540;padding:11px 14px;border-radius:6px;margin:14px 0}'+
+    'h1{font-size:19px;letter-spacing:.5px;margin:0 0 2px;color:#08221a}.sub{color:#5a6472;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}'+
+    '.summary{font-size:14px;background:#f4f7fb;border-left:3px solid #08221a;padding:11px 14px;border-radius:6px;margin:14px 0}'+
     'table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}td{padding:5px 4px;border-bottom:1px solid #eef1f5}'+
     '.meta{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;font-size:12px;color:#333;margin:10px 0}.meta span{color:#8a93a0}'+
-    '.sig{margin-top:18px;border:1px solid #d7dee6;border-radius:8px;padding:12px 14px;background:#fafcff}.sigh{color:#0a7d3b;font-weight:700;font-size:11px;letter-spacing:1px;margin-bottom:7px}'+
+    '.sig{margin-top:18px;border:1px solid #d7dee6;border-radius:8px;padding:12px 14px;background:#fafcff}.sigh{color:#34d399;font-weight:700;font-size:11px;letter-spacing:1px;margin-bottom:7px}'+
     '.kv{display:grid;grid-template-columns:80px 1fr;gap:8px;margin:4px 0;font-size:10.5px}.kv span{color:#8a93a0}.kv code{font-family:ui-monospace,Menlo,monospace;word-break:break-all;color:#12151b}'+
     '.note{font-size:10px;color:#5a6472;margin-top:8px;line-height:1.5}.foot{margin-top:22px;border-top:1px solid #eef1f5;padding-top:10px;font-size:10px;color:#8a93a0}'+
     '.qr{margin-top:12px;padding-top:10px;border-top:1px dashed #d7dee6;text-align:center}.qr #qrimg img{width:150px;height:150px;image-rendering:pixelated}.qcap{font-size:10px;color:#5a6472;margin:6px auto 4px;max-width:340px}.qlink{font:9px ui-monospace,monospace;color:#8a93a0;word-break:break-all;max-width:420px;margin:0 auto}'+
-    '@media print{body{margin:0}.noprint{display:none}}button{margin:16px 8px 0 0;padding:8px 16px;border:1px solid #0a2540;background:#0a2540;color:#fff;border-radius:7px;cursor:pointer;font-size:12px}</style></head><body>'+
+    '@media print{body{margin:0}.noprint{display:none}}button{margin:16px 8px 0 0;padding:8px 16px;border:1px solid #08221a;background:#08221a;color:#fff;border-radius:7px;cursor:pointer;font-size:12px}</style></head><body>'+
     '<h1>◎ SOV SPACE · Situational Brief</h1><div class="sub">Sovereign · Defence · Intelligence — '+e(body.doctrine)+' lens</div>'+
     '<div class="summary">'+e(body.summary)+'</div>'+
-    '<h3 style="font-size:12px;color:#0a2540;margin:14px 0 2px">Live layers</h3><table>'+rows+'<tr><td><b>TOTAL CONTACTS</b></td><td style="text-align:right"><b>'+body.total_contacts+'</b></td></tr></table>'+
+    '<h3 style="font-size:12px;color:#08221a;margin:14px 0 2px">Live layers</h3><table>'+rows+'<tr><td><b>TOTAL CONTACTS</b></td><td style="text-align:right"><b>'+body.total_contacts+'</b></td></tr></table>'+
     '<div class="meta"><span>Generated</span><b>'+e(body.generated)+'</b><span>Focus</span><b>'+loc+'</b><span>Altitude</span><b>'+body.viewer_altitude_m.toLocaleString()+' m</b><span>CoT tracks</span><b>'+body.cot_tracks+'</b><span>Feed health</span><span>'+fhTxt+'</span><span>Sources</span><span>'+e(body.sources)+'</span></div>'+
     sigBlock+
     '<div class="foot">SOV SPACE · Powered by CSOAI · UK 16939677 · every contact live &amp; free-sourced · every action signed on-device · verifiable offline at defoneos.vercel.app/verify.html</div>'+
-    '<div class="noprint"><button onclick="window.print()">🖨 Print / Save as PDF</button><button onclick="window.close()" style="background:#fff;color:#0a2540">Close</button></div>'+
+    '<div class="noprint"><button onclick="window.print()">🖨 Print / Save as PDF</button><button onclick="window.close()" style="background:#fff;color:#08221a">Close</button></div>'+
     (vlink?('<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></scr'+'ipt><script>window.addEventListener("load",function(){try{var q=qrcode(0,"L");q.addData('+JSON.stringify(vlink)+');q.make();document.getElementById("qrimg").innerHTML=q.createImgTag(4,0);}catch(e){var el=document.querySelector(".qr #qrimg");if(el)el.style.display="none";}});</scr'+'ipt>'):'')+
     '</body></html>';
 }
@@ -1446,7 +1446,7 @@ function _ago(ms){ if(!ms) return ''; var s=Math.max(0,Math.round((Date.now()-ms
 function _fhUpdate(){ try{ var H=window._feedHealth||{}, T=window._feedTime||{}; var live=0,quiet=0,down=0,oldest=0;
     Object.keys(_LAYCB).forEach(function(k){ var d=document.getElementById('fh-'+k); var cb=document.getElementById(_LAYCB[k]); var on=cb&&cb.checked; var st=H[k];
       if(on && st==='live'){ live++; if(T[k]&&(!oldest||T[k]<oldest)) oldest=T[k]; } else if(on && (st==='empty'||st==='throttled')) quiet++; else if(on && st==='error') down++;
-      if(!d) return; var col= st==='live'?'#00e07a':(st==='empty'||st==='throttled')?'#eab308':st==='error'?'#ff6b6b':(on?'#5ff4ff':'#4a5568'); d.style.background=col; d.style.boxShadow='0 0 6px '+(col==='#4a5568'?'rgba(0,0,0,.4)':col); d.title='feed '+(st||(on?'on':'off'))+(T[k]?(' · as of '+_ago(T[k])):''); });
+      if(!d) return; var col= st==='live'?'#34d399':(st==='empty'||st==='throttled')?'#eab308':st==='error'?'#ff6b6b':(on?'#34d399':'#4a5568'); d.style.background=col; d.style.boxShadow='0 0 6px '+(col==='#4a5568'?'rgba(0,0,0,.4)':col); d.title='feed '+(st||(on?'on':'off'))+(T[k]?(' · as of '+_ago(T[k])):''); });
     var el=document.getElementById('sbFeedSum'); if(el){ if(!(live||quiet||down)){ el.style.display='none'; } else { el.style.display=''; el.innerHTML='📡 '+live+' live'+(oldest?(' · <span style="opacity:.75">oldest '+_ago(oldest)+'</span>'):'')+(quiet?(' · <span style="color:#eab308">'+quiet+' quiet</span>'):'')+(down?(' · <span style="color:#ff6b6b">'+down+' down</span>'):''); } }
   }catch(_){} }
 var _FEED_SRC={air:'OpenSky ADS-B',marine:'aisstream.io AIS',signals:'GDELT 2.0',quake:'USGS',cameras:'TfL JamCams',events:'NASA EONET + GDACS',aq:'WAQI',space:'wheretheiss.at + Launch Library',sat:'CelesTrak TLE'};
@@ -1538,9 +1538,9 @@ function openLiveWindow(url, title){ if(!url) return; url=(''+url).trim(); if(!/
   var esc=function(s){ return (''+s).replace(/[<>"]/g,''); };
   w.innerHTML='<div class="win-bar" id="'+id+'bar"><span class="wi">🌐</span><span class="wt">'+esc(title||url)+'</span><span class="win-ctl" onclick="var c=document.getElementById(\''+id+'\');if(c)c.remove()">✕</span></div>'+
     '<div class="win-body" style="flex:1;display:flex;flex-direction:column;padding:0;gap:0">'+
-    '<div style="position:relative;flex:1;background:#0a0e18;overflow:hidden">'+
+    '<div style="position:relative;flex:1;background:#071c14;overflow:hidden">'+
     '<iframe id="'+id+'frame" src="'+esc(url)+'" style="width:100%;height:100%;border:0;display:block;background:#fff" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"></iframe>'+
-    '<div id="'+id+'blk" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--dim);font-size:12px;text-align:center;padding:0 24px;background:#0a0e18">This site blocks being embedded (its security policy).<a href="'+esc(url)+'" target="_blank" rel="noopener" class="chip">↗ open it in a new tab</a></div>'+
+    '<div id="'+id+'blk" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--dim);font-size:12px;text-align:center;padding:0 24px;background:#071c14">This site blocks being embedded (its security policy).<a href="'+esc(url)+'" target="_blank" rel="noopener" class="chip">↗ open it in a new tab</a></div>'+
     '</div>'+
     '<div style="font-size:10.5px;color:var(--dim);padding:6px 10px;display:flex;gap:8px;align-items:center;border-top:1px solid var(--line)"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(url)+' · <b style="color:var(--neon)">live</b></span><a href="'+esc(url)+'" target="_blank" rel="noopener" class="chip">↗ open</a></div>'+
     '</div>';
@@ -1608,7 +1608,7 @@ async function loadCameras(area){ if(!camerasDS) return; try{
     const d=await (await fetch('/api/cameras'+(area?('?area='+encodeURIComponent(area)):''))).json(); camerasDS.entities.removeAll();
     (d.cameras||[]).forEach(cam=>{ if(cam.lon==null||cam.lat==null) return;
       camerasDS.entities.add({ position:C.Cartesian3.fromDegrees(cam.lon,cam.lat),
-        point:{ pixelSize:7, color:C.Color.fromCssColorString('#3ef0ff').withAlpha(0.85), outlineColor:C.Color.BLACK, outlineWidth:1 },
+        point:{ pixelSize:7, color:C.Color.fromCssColorString('#34d399').withAlpha(0.85), outlineColor:C.Color.BLACK, outlineWidth:1 },
         _cam:cam, _info:{ title:'📷 '+cam.name, rows:[['Type','Public traffic camera'],['Source','TfL JamCams · live'],['Tip','click → open the live feed']] } }); });
     var n=(d.cameras||[]).length; var cc=document.getElementById('camCount'); if(cc) cc.textContent=n; pushFeed('CAMERAS · '+n+' public London traffic cams · public feeds only'); if(window._fhSet) _fhSet('cameras', n>0?'live':'empty'); return d;
   }catch(e){ if(window._fhSet) _fhSet('cameras','error'); if(window.pushFeed) pushFeed('CAMERAS · public feed unreachable — retry shortly'); } }
@@ -1618,7 +1618,7 @@ function openCamera(cam, slot){ slot=slot||0; if(!cam) return; var id='camWin'+(
   var top=86+slot*216, barId=id+'bar';   // LEFT side, stacked — never blocks the globe
   var w=document.createElement('div'); w.className='win mediaWin'; w.id=id; w.style.width='320px'; w.style.left='14px'; w.style.top=top+'px'; w.style.zIndex=210+slot;
   w.innerHTML='<div class="win-bar" id="'+barId+'"><span class="wi">📷</span><span class="wt">'+String(cam.name||'camera').replace(/[<>]/g,'')+'</span><span class="win-ctl" onclick="var c=document.getElementById(\''+id+'\');if(c)c.remove()">✕</span></div>'+
-    '<div class="win-body"><div style="position:relative;min-height:108px;background:#0a0e18;border-radius:9px;overflow:hidden">'+
+    '<div class="win-body"><div style="position:relative;min-height:108px;background:#071c14;border-radius:9px;overflow:hidden">'+
     (cam.video?'<video class="camVid" src="'+cam.video+'" autoplay loop muted playsinline preload="auto" style="width:100%;display:block" onerror="this.style.display=\'none\';var im=this.parentNode.querySelector(\'.camImg\');if(im)im.style.display=\'block\'"></video>':'')+
     '<img class="camImg" src="'+bust(cam.image)+'" style="width:100%;display:'+(cam.video?'none':'block')+'" alt="live public camera" onerror="this.style.display=\'none\';var p=this.parentNode;var v=p.querySelector(\'.camVid\');var o=p.querySelector(\'.camOff\');if((!v||v.style.display===\'none\')&&o)o.style.display=\'flex\'">'+
     '<div class="camOff" style="display:none;align-items:center;justify-content:center;height:108px;color:var(--dim);font-size:12px;text-align:center;padding:0 14px">this camera is offline right now — reopen, or use the snapshot link below</div>'+
@@ -1682,10 +1682,10 @@ function openNewsCard(sig){ if(!sig) return; var id='newsCard'; var old=document
   w.style.cssText='position:fixed;right:18px;top:70px;width:min(380px,92vw);max-height:74vh;overflow:auto;z-index:58;background:rgba(9,14,24,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(224,162,133,.42);border-radius:13px;padding:13px 15px;color:#e7edf8;font:13px/1.5 -apple-system,system-ui,sans-serif;box-shadow:0 16px 50px rgba(0,0,0,.6)';
   var arts=sig.articles||[];
   var links = arts.length ? arts.map(function(a){ return '<a href="'+_hcx(a.url)+'" target="_blank" rel="noopener" style="display:block;padding:7px 9px;margin:5px 0;border:1px solid rgba(120,150,200,.18);border-radius:9px;background:rgba(255,255,255,.03);color:#dbe8fb;text-decoration:none"><div style="font-size:12.5px;line-height:1.35">'+_hcx(a.title).slice(0,140)+'</div><div style="font-size:10px;color:#8a97b4;margin-top:3px">'+_hcx(a.domain)+(_newsTime(a.seendate)?(' · '+_newsTime(a.seendate)):'')+' ↗</div></a>'; }).join('')
-    : '<div style="color:#8a97b4;font-size:12px;margin:6px 0">Live per-article links are throttled right now — open the live feed for <b>'+_hcx(sig.name)+'</b>:</div><a href="https://news.google.com/search?q='+encodeURIComponent(sig.name+' '+(sig.headline||''))+'" target="_blank" rel="noopener" style="color:#5ff4ff">▸ Google News · '+_hcx(sig.name)+' ↗</a>';
+    : '<div style="color:#8a97b4;font-size:12px;margin:6px 0">Live per-article links are throttled right now — open the live feed for <b>'+_hcx(sig.name)+'</b>:</div><a href="https://news.google.com/search?q='+encodeURIComponent(sig.name+' '+(sig.headline||''))+'" target="_blank" rel="noopener" style="color:#34d399">▸ Google News · '+_hcx(sig.name)+' ↗</a>';
   w.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b style="letter-spacing:.3px">📰 '+_hcx(sig.name)+'</b><span onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="cursor:pointer;color:#8a97b4;font-weight:700;padding:0 5px">✕</span></div>'+
     '<div style="font-size:11px;color:#8a97b4;margin-bottom:6px">'+(sig.count||arts.length)+' articles · last 24h · GDELT 2.0 · geolocated to this spot</div>'+links+
-    '<div style="font-size:10px;color:#00e07a;margin-top:8px">◉ opened live · signed to the SIGIL ledger · Event → Location → Signal</div>'+
+    '<div style="font-size:10px;color:#34d399;margin-top:8px">◉ opened live · signed to the SIGIL ledger · Event → Location → Signal</div>'+
     '<div class="intro-cta" style="margin-top:9px">'+_sovActs('📰 '+(sig.name||'news hotspot'), sig.lon, sig.lat)+'</div>';
   document.body.appendChild(w); if(window.sigilLog) sigilLog('news','opened live news · '+sig.name);
 }
@@ -1739,7 +1739,7 @@ function drawOntology(doms){ if(!viewer||!doms) return;
   if(!window._ontoDS){ window._ontoDS=new C.CustomDataSource('ontology'); viewer.dataSources.add(window._ontoDS); }
   window._ontoDS.entities.removeAll(); window._ontoDS.show=true;
   var hubLon=15, hubLat=25;
-  window._ontoDS.entities.add({ position:C.Cartesian3.fromDegrees(hubLon,hubLat,650000), point:{pixelSize:11,color:C.Color.fromCssColorString('#5ff4ff'),outlineColor:C.Color.BLACK,outlineWidth:1.5,disableDepthTestDistance:Number.POSITIVE_INFINITY}, label:{text:'◎ SOVEREIGN ONTOLOGY',font:'800 12px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#5ff4ff'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#0c1524').withAlpha(0.88),pixelOffset:new C.Cartesian2(0,-16),disableDepthTestDistance:Number.POSITIVE_INFINITY} });
+  window._ontoDS.entities.add({ position:C.Cartesian3.fromDegrees(hubLon,hubLat,650000), point:{pixelSize:11,color:C.Color.fromCssColorString('#34d399'),outlineColor:C.Color.BLACK,outlineWidth:1.5,disableDepthTestDistance:Number.POSITIVE_INFINITY}, label:{text:'◎ SOVEREIGN ONTOLOGY',font:'800 12px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#34d399'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#0c1524').withAlpha(0.88),pixelOffset:new C.Cartesian2(0,-16),disableDepthTestDistance:Number.POSITIVE_INFINITY} });
   var N=doms.length;
   doms.forEach(function(x,i){
     var t=(i+0.5)/N, lat=Math.asin(2*t-1)*180/Math.PI, lon=((i*137.508)%360)-180;
@@ -1755,7 +1755,7 @@ function drawOntology(doms){ if(!viewer||!doms) return;
 function clearOntology(){ if(window._ontoDS){ window._ontoDS.entities.removeAll(); window._ontoDS.show=false; } if(window.pushFeed) pushFeed('ONTOLOGY · cleared'); }
 window.drawOntology=drawOntology; window.clearOntology=clearOntology;
 window._powerDS=null;
-var FUEL_COL={Coal:'#8a7a6a',Gas:'#ffb454',Oil:'#c98a5a',Nuclear:'#7af9d0',Hydro:'#3ef0ff',Wind:'#9fe9ff',Solar:'#ffd23b',Biomass:'#9acd6a',Geothermal:'#ff8c6a'};
+var FUEL_COL={Coal:'#8a7a6a',Gas:'#ffb454',Oil:'#c98a5a',Nuclear:'#6ee7b7',Hydro:'#34d399',Wind:'#9fe9ff',Solar:'#ffd23b',Biomass:'#9acd6a',Geothermal:'#ff8c6a'};
 function togglePowerPlants(){ if(window._powerDS){ window._powerDS.show=!window._powerDS.show; if(window.pushFeed) pushFeed('POWER PLANTS · '+(window._powerDS.show?'on':'off')); return; }
   window._powerDS=new C.CustomDataSource('power'); viewer.dataSources.add(window._powerDS); if(window.pushFeed) pushFeed('POWER PLANTS · loading global energy infrastructure…');
   fetch('/api/powerplants').then(function(r){return r.json();}).then(function(d){
@@ -1788,7 +1788,7 @@ function toggleRadiation(){ if(window._radDS && window._radDS.show){ window._rad
   if(window.pushFeed) pushFeed('RADIATION · querying Safecast near '+lat.toFixed(2)+','+lon.toFixed(2)+'…');
   fetch('/api/radiation?lat='+lat+'&lon='+lon+'&dist=18000').then(function(r){return r.json();}).then(function(d){
     window._radDS.entities.removeAll();
-    (d.points||[]).forEach(function(p){ var cpm=p.value, col=cpm>100?'#ff4d4d':cpm>50?'#ffd23b':cpm>25?'#9effa8':'#5ff4ff';
+    (d.points||[]).forEach(function(p){ var cpm=p.value, col=cpm>100?'#ff4d4d':cpm>50?'#ffd23b':cpm>25?'#9effa8':'#34d399';
       window._radDS.entities.add({ position:C.Cartesian3.fromDegrees(p.lon,p.lat), point:{ pixelSize:6, color:C.Color.fromCssColorString(col).withAlpha(0.85), outlineColor:C.Color.BLACK, outlineWidth:1, disableDepthTestDistance:Number.POSITIVE_INFINITY }, _info:{ title:'☢ '+cpm+' '+p.unit, rows:[['Reading',cpm+' '+p.unit],['When',(p.at||'').slice(0,10)],['Source','Safecast · open radiation network']] } }); });
     var n=(d.points||[]).length; if(window.pushFeed) pushFeed('RADIATION · '+n+' Safecast readings');
     if(window.horusReply) horusReply(n? ('Loaded <b>'+n+'</b> Safecast radiation readings near here — colour is dose rate, blue (low) → red (high). Coverage varies by area.') : ('No Safecast readings indexed right here — the open radiation network is sparser in some regions.'));
@@ -1823,7 +1823,7 @@ function _milDID/VC(aff,dim){ var sidc=('S'+(aff||'U')+(dim||'G')+'P'+'---------
   try{ if(window.ms) return new window.ms.Symbol(sidc,{size:26,fill:true}).toDataURL(); }catch(_){} return null; }
 function _cotAff(type){ var a=(String(type||'').split('-')[1]||'u').toLowerCase(); return ({f:'F',h:'H',n:'N',u:'U',p:'U',a:'H',s:'U',j:'F',k:'H'})[a]||'U'; }
 function _cotDim(type){ var d=(String(type||'').split('-')[2]||'G').toUpperCase(); return ({A:'A',G:'G',S:'S',U:'U',P:'P',F:'G'})[d]||'G'; }
-function _cotColor(aff){ return {F:'#3b82f6',H:'#ff4d4d',N:'#00e07a',U:'#eab308'}[aff]||'#5ff4ff'; }
+function _cotColor(aff){ return {F:'#3b82f6',H:'#ff4d4d',N:'#34d399',U:'#eab308'}[aff]||'#34d399'; }
 function _cotDS(){ if(!window._cotDataSrc){ window._cotDataSrc=new C.CustomDataSource('cot'); viewer.dataSources.add(window._cotDataSrc); } return window._cotDataSrc; }
 function _cotAdd(ds,lon,lat,aff,dim,name){ var img=_milDID/VC(aff,dim), col=_cotColor(aff);
   var ent={ position:C.Cartesian3.fromDegrees(lon,lat), _cot:true,
@@ -1865,16 +1865,16 @@ function cotDemo(){ if(!viewer) return; var loc=window._userLoc||{lon:-0.13,lat:
   try{ if(window.stopSpin) stopSpin(); viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(loc.lon,loc.lat,90000),duration:2.2}); }catch(_){}
   try{ _cotTray(); }catch(_){}
   if(window.pushFeed) pushFeed('SYMBOLOGY · W3C DID/VC / APP-6 ('+(window.ms?'milsymbol':'fallback markers')+')');
-  if(window.horusReply) horusReply('These are <b>W3C DID/VC</b> symbols — the standard on every C2 map (friendly <span style="color:#3b82f6">blue</span>, hostile <span style="color:#ff4d4d">red</span>, neutral <span style="color:#00e07a">green</span>, unknown <span style="color:#eab308">yellow</span>). Rendered with the open <b>milsymbol</b> library. I also speak <b>signed telemetry</b> — say “export CoT” to hand these to a TAK client, or “import CoT” to plot a TAK feed. Classified tracks (Link-16 / ISO/IEC) bind on the sovereign node.'); }
+  if(window.horusReply) horusReply('These are <b>W3C DID/VC</b> symbols — the standard on every C2 map (friendly <span style="color:#3b82f6">blue</span>, hostile <span style="color:#ff4d4d">red</span>, neutral <span style="color:#34d399">green</span>, unknown <span style="color:#eab308">yellow</span>). Rendered with the open <b>milsymbol</b> library. I also speak <b>signed telemetry</b> — say “export CoT” to hand these to a TAK client, or “import CoT” to plot a TAK feed. Classified tracks (Link-16 / ISO/IEC) bind on the sovereign node.'); }
 function _cotPanel(mode, text, count){ var id='cotWin'; var old=document.getElementById(id); if(old) old.remove();
   var w=document.createElement('div'); w.id=id; var isImp=mode==='import';
   w.style.cssText='position:fixed;right:18px;top:70px;width:min(440px,92vw);z-index:60;background:rgba(10,16,28,.96);border:1px solid rgba(120,150,200,.3);border-radius:14px;padding:14px 16px;color:#dfe7f5;font:13px/1.5 -apple-system,system-ui,sans-serif;box-shadow:0 20px 60px rgba(0,0,0,.5)';
   w.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="letter-spacing:.5px">🎯 signed telemetry · '+(isImp?'import':'export · '+count+' tracks')+'</b><span onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="cursor:pointer;color:#8a97b4;font-weight:700;padding:0 4px">✕</span></div>'+
     '<div style="font-size:11px;color:#8a97b4;margin-bottom:8px">CoT is the tactical-edge lingua franca (MITRE/AFRL) that TAK/ATAK speak. '+(isImp?'Paste &lt;event&gt; XML — I plot it with W3C DID/VC symbols.':'Standard CoT — paste into any TAK client.')+'</div>'+
-    '<textarea id="cotTA" '+(isImp?'':'readonly')+' spellcheck="false" style="width:100%;height:190px;background:#070b12;color:#bcd0ee;border:1px solid rgba(120,150,200,.2);border-radius:8px;padding:8px;font:11px/1.4 ui-monospace,monospace;resize:vertical">'+_cx(text||'')+'</textarea>'+
+    '<textarea id="cotTA" '+(isImp?'':'readonly')+' spellcheck="false" style="width:100%;height:190px;background:#05170f;color:#bcd0ee;border:1px solid rgba(120,150,200,.2);border-radius:8px;padding:8px;font:11px/1.4 ui-monospace,monospace;resize:vertical">'+_cx(text||'')+'</textarea>'+
     '<div style="display:flex;gap:8px;margin-top:10px">'+(isImp
-      ?'<button onclick="if(window.cotImport)cotImport(document.getElementById(\'cotTA\').value);var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="flex:1;cursor:pointer;background:linear-gradient(90deg,#0bd,#5ff4ff);color:#04121a;border:none;border-radius:9px;padding:9px;font-weight:700">▶ Plot tracks</button>'
-      :'<button onclick="var t=document.getElementById(\'cotTA\');t.select();try{document.execCommand(\'copy\');}catch(e){}try{if(navigator.clipboard)navigator.clipboard.writeText(t.value);}catch(e){}if(window.pushFeed)pushFeed(\'CoT · copied to clipboard\')" style="flex:1;cursor:pointer;background:linear-gradient(90deg,#0bd,#5ff4ff);color:#04121a;border:none;border-radius:9px;padding:9px;font-weight:700">⧉ Copy XML</button><button onclick="if(window.cotDownload)cotDownload()" style="flex:1;cursor:pointer;background:rgba(95,244,255,.12);color:#9fe9ff;border:1px solid rgba(95,244,255,.4);border-radius:9px;padding:9px;font-weight:700">⤓ .cot file</button>')+
+      ?'<button onclick="if(window.cotImport)cotImport(document.getElementById(\'cotTA\').value);var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="flex:1;cursor:pointer;background:linear-gradient(90deg,#0bd,#34d399);color:#04121a;border:none;border-radius:9px;padding:9px;font-weight:700">▶ Plot tracks</button>'
+      :'<button onclick="var t=document.getElementById(\'cotTA\');t.select();try{document.execCommand(\'copy\');}catch(e){}try{if(navigator.clipboard)navigator.clipboard.writeText(t.value);}catch(e){}if(window.pushFeed)pushFeed(\'CoT · copied to clipboard\')" style="flex:1;cursor:pointer;background:linear-gradient(90deg,#0bd,#34d399);color:#04121a;border:none;border-radius:9px;padding:9px;font-weight:700">⧉ Copy XML</button><button onclick="if(window.cotDownload)cotDownload()" style="flex:1;cursor:pointer;background:rgba(95,244,255,.12);color:#9fe9ff;border:1px solid rgba(95,244,255,.4);border-radius:9px;padding:9px;font-weight:700">⤓ .cot file</button>')+
     '</div>';
   document.body.appendChild(w); }
 window.cotImport=cotImport; window.cotExport=cotExport; window.cotDemo=cotDemo; window._cotPanel=_cotPanel;
@@ -1911,12 +1911,12 @@ function _convPanel(conv,hot){ var id='convWin'; var old=document.getElementById
   w.style.cssText='position:fixed;right:18px;top:70px;width:min(400px,92vw);max-height:72vh;overflow:auto;z-index:60;background:rgba(10,16,28,.96);border:1px solid rgba(120,150,200,.3);border-radius:14px;padding:14px 16px;color:#dfe7f5;font:13px/1.5 -apple-system,system-ui,sans-serif;box-shadow:0 20px 60px rgba(0,0,0,.5)';
   function rowc(c,col){ return '<div onclick="if(window._flyLL)window._flyLL('+c.lon.toFixed(3)+','+c.lat.toFixed(3)+')" style="cursor:pointer;display:flex;justify-content:space-between;gap:8px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,.03);margin-bottom:5px"><span><b style="color:'+col+'">'+_nearLabel(c.lat,c.lon)+'</b> <span style="color:#8a97b4;font-size:11px">'+(c.streams?c.streams.join(' + '):'')+'</span></span><span style="color:#8a97b4;font-size:11px">'+c.n+' evt</span></div>'; }
   var convH=conv.length?conv.slice(0,10).map(function(c){return rowc(c,'#ff8080');}).join(''):'<div style="color:#8a97b4;font-size:12px">No multi-source convergence right now — a calm board.</div>';
-  var hotH=hot.map(function(c){return rowc(c,'#5ff4ff');}).join('');
+  var hotH=hot.map(function(c){return rowc(c,'#34d399');}).join('');
   w.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b>⚡ Convergence &amp; hotspots</b><span onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()" style="cursor:pointer;color:#8a97b4;font-weight:700;padding:0 4px">✕</span></div>'+
     '<div style="font-size:11px;color:#8a97b4;margin-bottom:8px">Real cross-source correlation over the live layers on your globe — signed to the ledger. <b>Not</b> a classified risk score; transparent event density.</div>'+
     '<div style="color:#c9a84c;font:700 10px ui-monospace,monospace;letter-spacing:1px;margin:6px 0 4px">⚠ MULTI-SOURCE CONVERGENCE</div>'+convH+
     '<div style="color:#c9a84c;font:700 10px ui-monospace,monospace;letter-spacing:1px;margin:12px 0 4px">◉ OPEN-SIGNAL DENSITY (TOP)</div>'+hotH+
-    '<button onclick="if(window.sovSignAllInView)sovSignAllInView()" style="margin-top:11px;width:100%;cursor:pointer;background:linear-gradient(90deg,#0bd,#5ff4ff);color:#04121a;border:none;border-radius:9px;padding:9px;font:700 12px ui-monospace,monospace">🔏 Sign all contacts in view</button>';
+    '<button onclick="if(window.sovSignAllInView)sovSignAllInView()" style="margin-top:11px;width:100%;cursor:pointer;background:linear-gradient(90deg,#0bd,#34d399);color:#04121a;border:none;border-radius:9px;padding:9px;font:700 12px ui-monospace,monospace">🔏 Sign all contacts in view</button>';
   document.body.appendChild(w); }
 window.convergenceScan=convergenceScan; window._convPanel=_convPanel;
 // ── WATCH BOX · draw a region, sign it, and get a SIGNED alert the moment ≥2 independent live streams converge inside it ──
@@ -1926,7 +1926,7 @@ window.sovClearWatch=sovClearWatch;
 function _watchChip(){ var wb=window._watchBox; var el=document.getElementById('watchChip'); if(!wb){ if(el) el.remove(); return; }
   if(!el){ el=document.createElement('div'); el.id='watchChip'; el.style.cssText='position:fixed;left:14px;bottom:158px;z-index:57;background:rgba(10,16,28,.94);border:1px solid rgba(95,244,255,.4);border-radius:11px;padding:8px 11px;color:#dfe7f5;font:600 11px/1.3 ui-monospace,monospace;box-shadow:0 10px 30px rgba(0,0,0,.5);backdrop-filter:blur(8px)'; document.body.appendChild(el); }
   var alerts=Object.keys(wb.seen||{}).length;
-  el.innerHTML='<div style="color:#5ff4ff;letter-spacing:.5px;margin-bottom:4px">◎ WATCH · '+_hcx(_nearLabel(wb.lat,wb.lon))+' · '+wb.km+'km</div><div style="display:flex;gap:6px;align-items:center"><span style="color:'+(alerts?'#ff8080':'#8a97b4')+'">'+(alerts?('⚠ '+alerts+' alert'+(alerts>1?'s':'')):'watching · ≥2 streams')+'</span><button onclick="if(window.sovClearWatch)sovClearWatch()" style="margin-left:auto;cursor:pointer;background:transparent;color:#9ab;border:1px solid rgba(255,255,255,.2);border-radius:7px;padding:3px 8px;font:600 10px ui-monospace,monospace">clear</button></div>'; }
+  el.innerHTML='<div style="color:#34d399;letter-spacing:.5px;margin-bottom:4px">◎ WATCH · '+_hcx(_nearLabel(wb.lat,wb.lon))+' · '+wb.km+'km</div><div style="display:flex;gap:6px;align-items:center"><span style="color:'+(alerts?'#ff8080':'#8a97b4')+'">'+(alerts?('⚠ '+alerts+' alert'+(alerts>1?'s':'')):'watching · ≥2 streams')+'</span><button onclick="if(window.sovClearWatch)sovClearWatch()" style="margin-left:auto;cursor:pointer;background:transparent;color:#9ab;border:1px solid rgba(255,255,255,.2);border-radius:7px;padding:3px 8px;font:600 10px ui-monospace,monospace">clear</button></div>'; }
 window._watchChip=_watchChip;
 async function sovWatchBox(km){ if(!viewer) return;
   if(window._watchBox){ sovClearWatch(); if(window.horusReply) horusReply('Watch box cleared — I’ll stop monitoring that area.'); if(window.pushFeed) pushFeed('WATCH · cleared'); return; }
@@ -1934,8 +1934,8 @@ async function sovWatchBox(km){ if(!viewer) return;
   var lon=c[0], lat=c[1]; km=km||300;
   if(!window._watchDS){ window._watchDS=new C.CustomDataSource('watch'); viewer.dataSources.add(window._watchDS); }
   var ds=window._watchDS; ds.entities.removeAll(); ds.show=true;
-  ds.entities.add({ position:C.Cartesian3.fromDegrees(lon,lat), ellipse:{ semiMajorAxis:km*1000, semiMinorAxis:km*1000, material:C.Color.fromCssColorString('#5ff4ff').withAlpha(0.07), outline:true, outlineColor:C.Color.fromCssColorString('#5ff4ff').withAlpha(0.6), height:0 }, label:{ text:'◎ WATCH · '+_nearLabel(lat,lon), font:'700 11px ui-monospace,monospace', fillColor:C.Color.fromCssColorString('#9fe9ff'), showBackground:true, backgroundColor:C.Color.fromCssColorString('#04101c').withAlpha(0.85), pixelOffset:new C.Cartesian2(0,-14), disableDepthTestDistance:Number.POSITIVE_INFINITY } });
-  try{ _reactRing(ds, lon, lat, '#5ff4ff', km*1000*0.5, 0.5); }catch(_){}
+  ds.entities.add({ position:C.Cartesian3.fromDegrees(lon,lat), ellipse:{ semiMajorAxis:km*1000, semiMinorAxis:km*1000, material:C.Color.fromCssColorString('#34d399').withAlpha(0.07), outline:true, outlineColor:C.Color.fromCssColorString('#34d399').withAlpha(0.6), height:0 }, label:{ text:'◎ WATCH · '+_nearLabel(lat,lon), font:'700 11px ui-monospace,monospace', fillColor:C.Color.fromCssColorString('#9fe9ff'), showBackground:true, backgroundColor:C.Color.fromCssColorString('#04101c').withAlpha(0.85), pixelOffset:new C.Cartesian2(0,-14), disableDepthTestDistance:Number.POSITIVE_INFINITY } });
+  try{ _reactRing(ds, lon, lat, '#34d399', km*1000*0.5, 0.5); }catch(_){}
   var sg=window.sigilSign?await sigilSign('watch-box', _nearLabel(lat,lon)+' · '+km+'km · trigger: streams≥2'):null;
   window._watchBox={ lon:lon, lat:lat, km:km, ds:ds, timer:null, seen:{}, since:Date.now() };
   try{ _watchChip(); }catch(_){}
@@ -2027,8 +2027,8 @@ function toggleAirports(){ if(window._airportsDS){ window._airportsDS.show=!wind
   }).catch(function(){ if(window.pushFeed) pushFeed('airports load failed'); });
 }
 window._placesDS=null;
-var CAT_STYLE={ business:['#ffb454','🏬'], health:['#ff6b8b','🏥'], education:['#7ab8ff','🏫'], energy:['#ffd23b','⚡'], food:['#ff9f43','🍽'], transport:['#3ef0ff','🚉'], finance:['#ffd23b','🏦'], government:['#c9a84c','🏛'],
-  comms:['#a78bfa','📡'], wifi:['#5ff4ff','📶'], power:['#ffd23b','🔌'], water:['#38bdf8','💧'] };
+var CAT_STYLE={ business:['#ffb454','🏬'], health:['#ff6b8b','🏥'], education:['#7ab8ff','🏫'], energy:['#ffd23b','⚡'], food:['#ff9f43','🍽'], transport:['#34d399','🚉'], finance:['#ffd23b','🏦'], government:['#c9a84c','🏛'],
+  comms:['#a78bfa','📡'], wifi:['#34d399','📶'], power:['#ffd23b','🔌'], water:['#38bdf8','💧'] };
 function loadPlaces(cat, keep){ cat=(cat&&CAT_STYLE[cat])?cat:'business'; var sty=CAT_STYLE[cat];
   if(!viewer) return; var rect=viewer.camera.computeViewRectangle&&viewer.camera.computeViewRectangle();
   if(!rect){ if(window.pushFeed) pushFeed('PLACES · could not read the view — try again'); return; }
@@ -2066,8 +2066,8 @@ var RAINBOW=[
   {c:'#ff4d4d',n:'RED',    r:'adversary emulation — finds the breach path'},
   {c:'#ff9f43',n:'ORANGE', r:'supply-chain & build-pipeline security'},
   {c:'#ffd23b',n:'YELLOW', r:'secure-by-design — the builders'},
-  {c:'#00e07a',n:'GREEN',  r:'hardening — build + defence fused'},
-  {c:'#3ef0ff',n:'BLUE',   r:'SOC — live detection & response'},
+  {c:'#34d399',n:'GREEN',  r:'hardening — build + defence fused'},
+  {c:'#34d399',n:'BLUE',   r:'SOC — live detection & response'},
   {c:'#a78bfa',n:'PURPLE', r:'red+blue fusion — threat intelligence'},
   {c:'#e8ecff',n:'WHITE',  r:'governance & oversight — the attestation chain'}
 ];
@@ -2082,7 +2082,7 @@ function openRainbow(){ var old=document.getElementById('rainbowWin'); if(old){ 
   document.body.appendChild(w); if(window._drag) _drag(w, document.getElementById('rbBar')); if(window.sigilLog) sigilLog('rainbow','open'); if(window.pushFeed) pushFeed('RAINBOW SECURITY ASI · 7 colour-teams · signed-gated'); }
 function runRainbow(){ var seq=['detects the breach path','audits the supply chain','patches it by design','hardens the surface','contains &amp; responds','correlates the intel','council votes deterministic · care-floor clear · ACTION SIGNED'];
   var v=document.getElementById('rbVerdict'); if(v) v.innerHTML='<span style="color:#8fdcff">rainbow response running…</span>';
-  RAINBOW.forEach(function(t,i){ setTimeout(function(){ var row=document.getElementById('rb'+i); if(row){ var st=row.querySelector('.rbst'); if(st){ st.textContent='● acting'; st.style.color=t.c; } row.style.background='rgba(255,255,255,.05)'; } if(window.pushFeed) pushFeed('RAINBOW · '+t.n+' '+seq[i].replace(/&amp;/g,'&')); if(i===RAINBOW.length-1){ if(v) v.innerHTML='<span style="color:#00e07a">✓ THREAT NEUTRALISED · signed deterministic · care-floor clear · SIGIL-signed</span>'; if(window.sigilLog) sigilLog('rainbow','response signed'); } }, 850*(i+1)); }); }
+  RAINBOW.forEach(function(t,i){ setTimeout(function(){ var row=document.getElementById('rb'+i); if(row){ var st=row.querySelector('.rbst'); if(st){ st.textContent='● acting'; st.style.color=t.c; } row.style.background='rgba(255,255,255,.05)'; } if(window.pushFeed) pushFeed('RAINBOW · '+t.n+' '+seq[i].replace(/&amp;/g,'&')); if(i===RAINBOW.length-1){ if(v) v.innerHTML='<span style="color:#34d399">✓ THREAT NEUTRALISED · signed deterministic · care-floor clear · SIGIL-signed</span>'; if(window.sigilLog) sigilLog('rainbow','response signed'); } }, 850*(i+1)); }); }
 window.openRainbow=openRainbow; window.runRainbow=runRainbow;
 // ── THREAT-PROTECTION POC · the whole chain: see → detect → council → stop → sign (governed vs Centralised) ──
 async function sovThreatPOC(){ if(window._threatPOCon) return; window._threatPOCon=true; var slp=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
@@ -2100,7 +2100,7 @@ async function sovThreatPOC(){ if(window._threatPOCon) return; window._threatPOC
     if(window.horusReply) horusReply('<b>Rainbow Security</b> engages — seven colour-teams: detect · supply-chain · patch-by-design · harden · contain · correlate — and any team can propose, but <b>nothing acts without the signed gate + care-floor</b>.');
     if(window.runRainbow) runRainbow();
     // if the 3D council spiral is up, send the votes climbing the helix as the council rules
-    if(window._govVizDS && window._govVizDS.show && window._govVotePulse){ for(var vk=0;vk<9;vk++){ (function(j){ setTimeout(function(){ _govVotePulse(j<7?'#5ff4ff':'#9effc0'); }, 600*j+800); })(vk); } }
+    if(window._govVizDS && window._govVizDS.show && window._govVotePulse){ for(var vk=0;vk<9;vk++){ (function(j){ setTimeout(function(){ _govVotePulse(j<7?'#34d399':'#9effc0'); }, 600*j+800); })(vk); } }
     await slp(6900);
     // 3 · SOV33 + GUARDIAN — council confirms, care-floor refuses, stopped before it moved, signed
     if(window.sovStopThreat){ try{ await sovStopThreat(); }catch(_){} }
@@ -2144,7 +2144,7 @@ function sovWhyUs(){ openHorus();
     ['<b>Sovereign + open</b>','your data, no foreign API, verify it yourself','incumbents: cloud lock-in, opaque, trust-us'],
     ['<b>Fusion, not just feeds</b>','cross-source convergence early-warning','dashboards: many maps, <b>no correlation</b>']
   ];
-  var tbl=rows.map(function(r){ return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:7px 0;border-top:1px solid rgba(120,150,200,.14)"><div><span style="color:#5ff4ff">◆</span> '+r[0]+'<div style="color:#9fb3d6;font-size:11px">'+r[1]+'</div></div><div style="color:#8a97b4;font-size:11px">'+r[2]+'</div></div>'; }).join('');
+  var tbl=rows.map(function(r){ return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:7px 0;border-top:1px solid rgba(120,150,200,.14)"><div><span style="color:#34d399">◆</span> '+r[0]+'<div style="color:#9fb3d6;font-size:11px">'+r[1]+'</div></div><div style="color:#8a97b4;font-size:11px">'+r[2]+'</div></div>'; }).join('');
   if(window.horusAppend) horusAppend('horus', '<div class="nb-card"><div class="nb-t">Why SOV SPACE — what others don’t do</div><div class="nb-x">A map is common. A map <b>with a receipt</b> is not. Here’s the line, against the field:</div>'+tbl+'<div class="dstat">THE WEST · SIGNED · REFUSABLE · SOVEREIGN · GOVERNED</div><div style="font-size:11px;color:#8a97b4;margin-top:6px">Verified: the Alan Turing Institute (CETaS) names the gap — <i>“no authoritative, independent organisation … with the legitimacy to inspect and approve AI systems”</i> in defence &amp; security. That primitive is the signed receipt.</div><div class="intro-cta"><button onclick="if(window.sovThreatPOC)sovThreatPOC()">🛡️ See the POC</button><button onclick="openTab && openTab(\'/systemcard.html\')">📜 Signed card</button><button onclick="window.open(\'/godseye.html\',\'_blank\')">🛰️ Scan your business</button></div></div>');
   if(window._speak) _speak('A map is common. A map with a receipt is not. Everything I do is signed, refusable, sovereign and governed — and the Turing Institute named exactly the gap we fill: no independent body can inspect and approve defence A-I. That signed receipt is the primitive.');
   if(window.pushFeed) pushFeed('WHY US · signed · refusable · sovereign · governed');
@@ -2158,7 +2158,7 @@ function sovRegDates(){ openHorus();
     ['late 2026','DORA — first threat-led pen-test (TLPT) notifications, EU financial entities','#3ea6ff'],
     ['1 Jan 2027','Colorado AI Act (SB 205/189) — high-risk AI duties in force','#eab308'],
     ['2 Dec 2027','EU AI Act — high-risk Annex III obligations (moved later by the Digital Omnibus)','#ff6b6b'],
-    ['in force now','NIST AI RMF · CSF 2.0 · ISO 42001 · GDPR · NIS2 · SEC 4-day cyber-disclosure','#00e07a']];
+    ['in force now','NIST AI RMF · CSF 2.0 · ISO 42001 · GDPR · NIS2 · SEC 4-day cyber-disclosure','#34d399']];
   var rows=D.map(function(d){ return '<div style="display:flex;gap:10px;padding:6px 0;border-top:1px solid rgba(120,150,200,.14)"><b style="color:'+d[2]+';min-width:82px;font-family:ui-monospace,monospace;font-size:11px">'+d[0]+'</b><span style="font-size:12.5px">'+d[1]+'</span></div>'; }).join('');
   if(window.horusAppend) horusAppend('horus','<div class="nb-card"><div class="nb-t">What’s coming — the compliance calendar</div><div class="nb-x">The next moves that matter, current to the EU Digital Omnibus. I map each to the tools + signed evidence you need.</div>'+rows+'<div class="dstat">RECURRING CORE: inventory · risk-assessment · monitoring · <b>signed evidence</b> · incident-reporting · <b>accountable-owner</b> · crosswalk</div><div style="font-size:11px;color:#8a97b4;margin-top:6px">The old “2 Aug 2026 high-risk cliff” is stale — the Omnibus moved it to <b>2 Dec 2027</b>. Ask <b>“what governs a bank / hospital / defence prime”</b> for your sector’s frameworks.</div></div>');
   if(window._speak) _speak('Here is what’s coming. FedRAMP OSCAL in September, CMMC phase two in November, EU AI Act transparency in December twenty-twenty-six, and high-risk moved to December twenty-twenty-seven. I map each to the signed evidence you need.');
@@ -2181,25 +2181,25 @@ function sov3DGovViz(focus){ if(!viewer) return;
   function lbl(txt,col,dy){ return {text:txt,font:'700 10px ui-monospace,monospace',fillColor:C.Color.fromCssColorString(col),showBackground:true,backgroundColor:C.Color.fromCssColorString('#0a1420').withAlpha(0.88),pixelOffset:new C.Cartesian2(0,dy||-14),disableDepthTestDistance:INF,scaleByDistance:new C.NearFarScalar(1e6,1.15,3.5e7,0.45)}; }
   var axisBase=C.Cartesian3.fromDegrees(lon0,lat0,baseH+110000);
   // 7 Rainbow teams — revolving base ring, each tethered to the axis
-  var RB=[['#ff3b3b','RED'],['#ff8c1a','ORANGE'],['#ffd23b','YELLOW'],['#00e07a','GREEN'],['#3ea6ff','BLUE'],['#a06cff','PURPLE'],['#ffffff','WHITE']];
+  var RB=[['#ff3b3b','RED'],['#ff8c1a','ORANGE'],['#ffd23b','YELLOW'],['#34d399','GREEN'],['#3ea6ff','BLUE'],['#a06cff','PURPLE'],['#ffffff','WHITE']];
   RB.forEach(function(t,j){ var a=j*(6.2832/7), pf=nodeFn(a, rBase*1.18, baseH);
     ds.entities.add({ position:pf, point:{pixelSize:11,color:C.Color.fromCssColorString(t[0]),outlineColor:C.Color.BLACK,outlineWidth:1.5,disableDepthTestDistance:INF}, label:lbl(t[1],t[0],-13) });
     ds.entities.add({ polyline:{ positions:linkFn(pf, axisBase), width:1.1, material:glow(t[0],0.45) } }); });
   // 33 attestation chain — REVOLVING helix, chain-linked, with orbiting sub-agents around every 4th node
   var fns=[], geo=[];
-  for(var i=0;i<N;i++){ var frac=i/(N-1), ang=i*(6.2832*TURNS/N), rr=rBase*(1-0.62*frac), h=baseH+(apexH-baseH)*frac, col=i<23?'#5ff4ff':'#c9a84c', pf=nodeFn(ang,rr,h); fns.push(pf); geo.push({ang:ang,rr:rr,h:h});
+  for(var i=0;i<N;i++){ var frac=i/(N-1), ang=i*(6.2832*TURNS/N), rr=rBase*(1-0.62*frac), h=baseH+(apexH-baseH)*frac, col=i<23?'#34d399':'#c9a84c', pf=nodeFn(ang,rr,h); fns.push(pf); geo.push({ang:ang,rr:rr,h:h});
     ds.entities.add({ position:pf, point:{pixelSize:i===22?9:6,color:C.Color.fromCssColorString(col).withAlpha(0.95),outlineColor:C.Color.BLACK,outlineWidth:1,disableDepthTestDistance:INF} });
     if(i>0) ds.entities.add({ polyline:{ positions:linkFn(fns[i-1],pf), width:1.5, material:glow(col,0.55) } });
-    if(i===22) ds.entities.add({ position:pf, label:lbl('◎ SIGNED · deterministic','#5ff4ff',-16) });
+    if(i===22) ds.entities.add({ position:pf, label:lbl('◎ SIGNED · deterministic','#34d399',-16) });
     if(i%4===0 && !window._lite){ (function(a,r,hh,cc){ var orr=rBase*0.13, os=2.2; ds.entities.add({ position:new C.CallbackProperty(function(){ var ph=Date.now()/1000*SPD, op=Date.now()/1000*os; return C.Cartesian3.fromDegrees(lon0+Math.cos(a+ph)*r+Math.cos(op)*orr, lat0+Math.sin(a+ph)*r+Math.sin(op)*orr, hh+18000); },false), point:{pixelSize:3,color:C.Color.fromCssColorString(cc).withAlpha(0.85),disableDepthTestDistance:INF} }); })(ang,rr,h,col); }   // orbiting sub-agents skipped in lite mode
   }
   var apex=C.Cartesian3.fromDegrees(lon0,lat0,apexH+320000);
-  ds.entities.add({ position:apex, point:{pixelSize:14,color:C.Color.fromCssColorString('#00e07a'),outlineColor:C.Color.WHITE,outlineWidth:2,disableDepthTestDistance:INF}, label:lbl('✓ SIGNED · Ed25519','#9effc0',-18) });
-  ds.entities.add({ polyline:{ positions:linkFn(fns[N-1],apex), width:2, material:glow('#00e07a',0.9) } });
-  ds.entities.add({ polyline:{ positions:[C.Cartesian3.fromDegrees(lon0,lat0,baseH-40000),apex], width:2.4, material:glow('#5ff4ff',0.4) } });
+  ds.entities.add({ position:apex, point:{pixelSize:14,color:C.Color.fromCssColorString('#34d399'),outlineColor:C.Color.WHITE,outlineWidth:2,disableDepthTestDistance:INF}, label:lbl('✓ SIGNED · Ed25519','#9effc0',-18) });
+  ds.entities.add({ polyline:{ positions:linkFn(fns[N-1],apex), width:2, material:glow('#34d399',0.9) } });
+  ds.entities.add({ polyline:{ positions:[C.Cartesian3.fromDegrees(lon0,lat0,baseH-40000),apex], width:2.4, material:glow('#34d399',0.4) } });
   // SOV33 MIND COLUMN — the architecture itself, standing beside the council: MoE experts → MoM → BIG-BRAIM → OOWM → Layer-0
   var mx=lon0+rBase*2.1;
-  var ARCH=[['MoE · 64 experts','#eab308',baseH+120000],['MoM · mixture-of-models','#ff8c1a',baseH+560000],['BIG-BRAIM · router','#5ff4ff',baseH+1000000],['OOWM · world-model','#a06cff',baseH+1440000],['LAYER-0 · signs everything','#00e07a',apexH+120000]];
+  var ARCH=[['MoE · 64 experts','#eab308',baseH+120000],['MoM · mixture-of-models','#ff8c1a',baseH+560000],['BIG-BRAIM · router','#34d399',baseH+1000000],['OOWM · world-model','#a06cff',baseH+1440000],['LAYER-0 · signs everything','#34d399',apexH+120000]];
   var archPts=[];
   ARCH.forEach(function(n,j){ var p=C.Cartesian3.fromDegrees(mx,lat0,n[2]); archPts.push(p);
     ds.entities.add({ position:p, point:{pixelSize:9,color:C.Color.fromCssColorString(n[1]),outlineColor:C.Color.BLACK,outlineWidth:1.2,disableDepthTestDistance:INF}, label:lbl(n[0],n[1],-14) });
@@ -2211,13 +2211,13 @@ function sov3DGovViz(focus){ if(!viewer) return;
   // the 64-expert swarm — a live orbiting cluster around the MoE node (skipped in lite mode)
   var _swarmN=window._lite?0:14; for(var ex=0; ex<_swarmN; ex++){ (function(k){ var oa=k*(6.2832/14), orr=rBase*0.34, osp=1.1+((k%5)*0.13);
     ds.entities.add({ position:new C.CallbackProperty(function(){ var op=Date.now()/1000*osp; return C.Cartesian3.fromDegrees(mx+Math.cos(oa+op)*orr, lat0+Math.sin(oa+op)*orr*0.8, (baseH+120000)+Math.sin(op+oa)*60000); },false), point:{pixelSize:3,color:C.Color.fromCssColorString('#eab308').withAlpha(0.8),disableDepthTestDistance:INF} }); })(ex); }
-  ds.entities.add({ polyline:{ positions:[archPts[ARCH.length-1],apex], width:2, material:glow('#00e07a',0.7) } });
+  ds.entities.add({ polyline:{ positions:[archPts[ARCH.length-1],apex], width:2, material:glow('#34d399',0.7) } });
   window._govCtx={lon0:lon0,lat0:lat0,SPD:SPD,geo:geo,apexH:apexH+320000};   // context for climbing vote-pulses + apex burst
-  try{ _reactRing(ds, lon0, lat0, '#5ff4ff', 260000, 0.7); }catch(_){}   // grounded pulse beneath the tower
-  for(var vv=0;vv<6;vv++){ (function(k){ setTimeout(function(){ if(window._govVotePulse) _govVotePulse(k%2?'#5ff4ff':'#9effc0'); }, 320*k+500); })(vv); }   // votes ascend on reveal
+  try{ _reactRing(ds, lon0, lat0, '#34d399', 260000, 0.7); }catch(_){}   // grounded pulse beneath the tower
+  for(var vv=0;vv<6;vv++){ (function(k){ setTimeout(function(){ if(window._govVotePulse) _govVotePulse(k%2?'#34d399':'#9effc0'); }, 320*k+500); })(vv); }   // votes ascend on reveal
   // continuous ENERGY FLOW up the helix + a slow AUTO-ORBIT of the camera while the tower stands
   if(window._govFlowT) clearInterval(window._govFlowT);
-  window._govFlowT=setInterval(function(){ if(!window._govVizDS||!window._govVizDS.show){ clearInterval(window._govFlowT); window._govFlowT=null; return; } if(document.hidden) return; if(window._govVotePulse) _govVotePulse((Date.now()%2>0)?'#5ff4ff':'#9effc0'); }, window._lite?2600:1300);
+  window._govFlowT=setInterval(function(){ if(!window._govVizDS||!window._govVizDS.show){ clearInterval(window._govFlowT); window._govFlowT=null; return; } if(document.hidden) return; if(window._govVotePulse) _govVotePulse((Date.now()%2>0)?'#34d399':'#9effc0'); }, window._lite?2600:1300);
   if(window._govOrbitT) clearInterval(window._govOrbitT);
   window._govOrbitT=setInterval(function(){ if(!window._govVizDS||!window._govVizDS.show){ clearInterval(window._govOrbitT); window._govOrbitT=null; return; } if(document.hidden||!viewer) return; if(Date.now()<(window._tourNoKB||0)) return; try{ viewer.camera.rotate(C.Cartesian3.UNIT_Z, -0.0006); }catch(_){} }, 60);
   // fly INSIDE the structure — low and close, the helix towering around you, then the auto-orbit carries it
@@ -2230,11 +2230,11 @@ window.sov3DGovViz=sov3DGovViz;
 // a "vote" — a bright pulse climbing the revolving helix from base to apex, then gone
 function _govVotePulse(color){ try{ var ds=window._govVizDS, ctx=window._govCtx; if(!ds||!ctx) return; var g=ctx.geo||[]; if(!g.length) return; var t0=Date.now(), dur=2200;
   var e=ds.entities.add({ position:new C.CallbackProperty(function(){ var k=(Date.now()-t0)/dur; if(k>1)k=1; var a=g[Math.min(g.length-1,Math.floor(k*(g.length-1)))]; var ph=Date.now()/1000*ctx.SPD; return C.Cartesian3.fromDegrees(ctx.lon0+Math.cos(a.ang+ph)*a.rr, ctx.lat0+Math.sin(a.ang+ph)*a.rr, a.h); },false),
-    point:{pixelSize:10,color:C.Color.fromCssColorString(color||'#ffffff'),outlineColor:C.Color.fromCssColorString('#5ff4ff'),outlineWidth:2,disableDepthTestDistance:Number.POSITIVE_INFINITY} });
+    point:{pixelSize:10,color:C.Color.fromCssColorString(color||'#ffffff'),outlineColor:C.Color.fromCssColorString('#34d399'),outlineWidth:2,disableDepthTestDistance:Number.POSITIVE_INFINITY} });
   setTimeout(function(){ try{ ds.entities.remove(e);
     // VERIFY BURST — the vote reaches the apex → an expanding signed halo flashes
     var t1=Date.now(); var burst=ds.entities.add({ position:C.Cartesian3.fromDegrees(ctx.lon0,ctx.lat0,ctx.apexH||2500000),
-      ellipse:{ semiMajorAxis:new C.CallbackProperty(function(){ return 25000+(Date.now()-t1)*140; },false), semiMinorAxis:new C.CallbackProperty(function(){ return 25000+(Date.now()-t1)*140; },false), material:C.Color.fromCssColorString('#00e07a').withAlpha(0.22), outline:true, outlineColor:C.Color.fromCssColorString('#9effc0').withAlpha(0.6), height:(ctx.apexH||2500000) } });
+      ellipse:{ semiMajorAxis:new C.CallbackProperty(function(){ return 25000+(Date.now()-t1)*140; },false), semiMinorAxis:new C.CallbackProperty(function(){ return 25000+(Date.now()-t1)*140; },false), material:C.Color.fromCssColorString('#34d399').withAlpha(0.22), outline:true, outlineColor:C.Color.fromCssColorString('#9effc0').withAlpha(0.6), height:(ctx.apexH||2500000) } });
     setTimeout(function(){ try{ ds.entities.remove(burst); }catch(_){} }, 650);
   }catch(_){} }, dur+120);
 }catch(_){} }
@@ -2248,11 +2248,11 @@ function sovOntology3D(){ if(!viewer) return; if(!window._ontoVizDS){ window._on
   var N=SECT.length;
   function nf(a,rr,h){ return new C.CallbackProperty(function(){ var ph=Date.now()/1000*SPD; return C.Cartesian3.fromDegrees(lon0+Math.cos(a+ph)*rr, lat0+Math.sin(a+ph)*rr, h); },false); }
   var core=C.Cartesian3.fromDegrees(lon0,lat0,baseH+300000);
-  ds.entities.add({ position:core, point:{pixelSize:13,color:C.Color.fromCssColorString('#5ff4ff'),outlineColor:C.Color.WHITE,outlineWidth:2,disableDepthTestDistance:INF}, label:{text:'SOV SPACE ONTOLOGY · 28 sectors',font:'800 11px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#eaf6ff'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#06131f').withAlpha(0.9),pixelOffset:new C.Cartesian2(0,-18),disableDepthTestDistance:INF} });
+  ds.entities.add({ position:core, point:{pixelSize:13,color:C.Color.fromCssColorString('#34d399'),outlineColor:C.Color.WHITE,outlineWidth:2,disableDepthTestDistance:INF}, label:{text:'SOV SPACE ONTOLOGY · 28 sectors',font:'800 11px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#eaf6ff'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#06131f').withAlpha(0.9),pixelOffset:new C.Cartesian2(0,-18),disableDepthTestDistance:INF} });
   SECT.forEach(function(s,i){ var a=i*(6.2832/N), pf=nf(a,rBase,baseH+(i%3)*45000);
     ds.entities.add({ position:pf, point:{pixelSize:8,color:C.Color.fromCssColorString(s[1]),outlineColor:C.Color.BLACK,outlineWidth:1,disableDepthTestDistance:INF}, label:{text:s[0],font:'700 9px ui-monospace,monospace',fillColor:C.Color.fromCssColorString(s[1]),showBackground:true,backgroundColor:C.Color.fromCssColorString('#0a1420').withAlpha(0.85),pixelOffset:new C.Cartesian2(0,-12),disableDepthTestDistance:INF,scaleByDistance:new C.NearFarScalar(1e5,1.2,2e7,0.4)} });
     ds.entities.add({ polyline:{ positions:new C.CallbackProperty(function(t){ return [pf.getValue(t), core]; },false), width:1.2, material:new C.PolylineGlowMaterialProperty({glowPower:0.25,color:C.Color.fromCssColorString(s[1]).withAlpha(0.5)}) } }); });
-  try{ _reactRing(ds, lon0, lat0, '#5ff4ff', 42000, 0.8); }catch(_){}
+  try{ _reactRing(ds, lon0, lat0, '#34d399', 42000, 0.8); }catch(_){}
   try{ if(window.stopSpin) stopSpin(); viewer.camera.flyTo({ destination:C.Cartesian3.fromDegrees(lon0-1.1,lat0-1.5,360000), orientation:{heading:C.Math.toRadians(18),pitch:C.Math.toRadians(-30)}, duration:3 }); }catch(_){}
   window._tourNoKB=Date.now()+3800;
   if(window.pushFeed) pushFeed('ONTOLOGY · 28-sector map live over New York — industries → data → connectors → law');
@@ -2264,7 +2264,7 @@ function _clearBridgesViz(){ try{ if(window._brFlowT){ clearInterval(window._brF
 window._clearBridgesViz=_clearBridgesViz;
 function sovBridges3D(){ if(!viewer) return; if(!window._brDS){ window._brDS=new C.CustomDataSource('bridges'); viewer.dataSources.add(window._brDS); } var ds=window._brDS; ds.entities.removeAll(); ds.show=true;
   var core=[8,30], coreH=1650000, INF=Number.POSITIVE_INFINITY, corePos=C.Cartesian3.fromDegrees(core[0],core[1],coreH);
-  ds.entities.add({ position:corePos, point:{pixelSize:13,color:C.Color.fromCssColorString('#5ff4ff'),outlineColor:C.Color.WHITE,outlineWidth:2,disableDepthTestDistance:INF}, label:{text:'GOVERNED CORE · signed',font:'800 10px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#9effc0'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#04160d').withAlpha(0.9),pixelOffset:new C.Cartesian2(0,-16),disableDepthTestDistance:INF} });
+  ds.entities.add({ position:corePos, point:{pixelSize:13,color:C.Color.fromCssColorString('#34d399'),outlineColor:C.Color.WHITE,outlineWidth:2,disableDepthTestDistance:INF}, label:{text:'GOVERNED CORE · signed',font:'800 10px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#9effc0'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#04160d').withAlpha(0.9),pixelOffset:new C.Cartesian2(0,-16),disableDepthTestDistance:INF} });
   var LEG=[['London','COBOL · CICS · ISO 20022',-0.1,51.5],['Frankfurt','SAP · ACORD',8.7,50.1],['New York','FIX · NACHA',-74,40.7],['Tokyo','AS/400 · MQTT',139.7,35.7],['Sydney','SCADA · DLMS',151.2,-33.9],['Mumbai','Oracle · tax',72.9,19.1]];
   var arcs=[];
   LEG.forEach(function(l){ var p=C.Cartesian3.fromDegrees(l[2],l[3],120000), mid=C.Cartesian3.fromDegrees((l[2]+core[0])/2,(l[3]+core[1])/2,2700000);
@@ -2273,7 +2273,7 @@ function sovBridges3D(){ if(!viewer) return; if(!window._brDS){ window._brDS=new
     arcs.push({from:p, mid:mid}); });
   if(window._brFlowT) clearInterval(window._brFlowT);
   window._brFlowT=setInterval(function(){ if(!window._brDS||!window._brDS.show){ clearInterval(window._brFlowT); window._brFlowT=null; return; } if(document.hidden) return; var a=arcs[Math.floor((Date.now()/850)%arcs.length)]; if(!a) return; var t0=Date.now(), q=[a.from,a.mid,corePos];
-    var e=ds.entities.add({ position:new C.CallbackProperty(function(){ var k=Math.min(1,(Date.now()-t0)/1400), i=Math.floor(k*2), f=(k*2)-i; if(i>1){i=1;f=1;} return C.Cartesian3.lerp(q[i],q[i+1],f,new C.Cartesian3()); },false), point:{pixelSize:7,color:C.Color.fromCssColorString('#00e07a'),outlineColor:C.Color.fromCssColorString('#9effc0'),outlineWidth:1,disableDepthTestDistance:INF} });
+    var e=ds.entities.add({ position:new C.CallbackProperty(function(){ var k=Math.min(1,(Date.now()-t0)/1400), i=Math.floor(k*2), f=(k*2)-i; if(i>1){i=1;f=1;} return C.Cartesian3.lerp(q[i],q[i+1],f,new C.Cartesian3()); },false), point:{pixelSize:7,color:C.Color.fromCssColorString('#34d399'),outlineColor:C.Color.fromCssColorString('#9effc0'),outlineWidth:1,disableDepthTestDistance:INF} });
     setTimeout(function(){ try{ ds.entities.remove(e); }catch(_){} },1500); }, window._lite?1700:650);
   try{ if(window.stopSpin) stopSpin(); viewer.camera.flyTo({ destination:C.Cartesian3.fromDegrees(core[0]-12,core[1]-20,10000000), duration:3 }); }catch(_){}
   window._tourNoKB=Date.now()+3800;
@@ -2287,9 +2287,9 @@ window._clearRainbowViz=_clearRainbowViz;
 function sovRainbow3D(lon0,lat0){ if(!viewer) return; if(!window._rbVizDS){ window._rbVizDS=new C.CustomDataSource('rainbowViz'); viewer.dataSources.add(window._rbVizDS); } var ds=window._rbVizDS; ds.entities.removeAll(); ds.show=true;
   lon0=lon0!=null?lon0:((window._userLoc&&window._userLoc.lon)||-0.12); lat0=lat0!=null?lat0:((window._userLoc&&window._userLoc.lat)||51.5);
   var H=210000, R=1.6, SPD=0.55, INF=Number.POSITIVE_INFINITY;
-  var RB=[['#ff3b3b','RED · attack-model'],['#ff8c1a','ORANGE · supply-chain'],['#ffd23b','YELLOW · audit'],['#00e07a','GREEN · patch-by-design'],['#3ea6ff','BLUE · harden'],['#a06cff','PURPLE · contain'],['#ffffff','WHITE · care-floor']];
+  var RB=[['#ff3b3b','RED · attack-model'],['#ff8c1a','ORANGE · supply-chain'],['#ffd23b','YELLOW · audit'],['#34d399','GREEN · patch-by-design'],['#3ea6ff','BLUE · harden'],['#a06cff','PURPLE · contain'],['#ffffff','WHITE · care-floor']];
   var hub=C.Cartesian3.fromDegrees(lon0,lat0,H+150000);
-  ds.entities.add({ position:hub, point:{pixelSize:12,color:C.Color.fromCssColorString('#ffffff'),outlineColor:C.Color.fromCssColorString('#5ff4ff'),outlineWidth:2,disableDepthTestDistance:INF}, label:{text:'CARE-FLOOR · signed-GATED',font:'800 10px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#dff6ff'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#04101c').withAlpha(0.9),pixelOffset:new C.Cartesian2(0,-16),disableDepthTestDistance:INF} });
+  ds.entities.add({ position:hub, point:{pixelSize:12,color:C.Color.fromCssColorString('#ffffff'),outlineColor:C.Color.fromCssColorString('#34d399'),outlineWidth:2,disableDepthTestDistance:INF}, label:{text:'CARE-FLOOR · signed-GATED',font:'800 10px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#dff6ff'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#04101c').withAlpha(0.9),pixelOffset:new C.Cartesian2(0,-16),disableDepthTestDistance:INF} });
   RB.forEach(function(t,j){ var a=j*(6.2832/7);
     var pf=new C.CallbackProperty(function(){ var ph=Date.now()/1000*SPD; return C.Cartesian3.fromDegrees(lon0+Math.cos(a+ph)*R, lat0+Math.sin(a+ph)*R*0.72, H); },false);
     var gf=new C.CallbackProperty(function(){ var ph=Date.now()/1000*SPD; return C.Cartesian3.fromDegrees(lon0+Math.cos(a+ph)*R*1.35, lat0+Math.sin(a+ph)*R*0.97, 0); },false);
@@ -2306,7 +2306,7 @@ function _clearToolViz(){ try{ if(window._tvDS){ window._tvDS.entities.removeAll
 window._clearToolViz=_clearToolViz;
 function sovToolBurst(lon0,lat0){ if(!viewer) return; if(!window._tvDS){ window._tvDS=new C.CustomDataSource('toolViz'); viewer.dataSources.add(window._tvDS); } var ds=window._tvDS; ds.entities.removeAll(); ds.show=true;
   var INF=Number.POSITIVE_INFINITY;
-  var TOOLS=[['🌊','hydrology sim','#3ea6ff'],['🚚','logistics twin','#eab308'],['📡','comms mesh','#5ff4ff'],['⚓','AIS live','#00e07a'],['📰','GDELT signals','#ff8c1a'],['📷','public cameras','#a06cff'],['🗳','33-council','#5ff4ff'],['🔏','Ed25519 sign','#9effc0']];
+  var TOOLS=[['🌊','hydrology sim','#3ea6ff'],['🚚','logistics twin','#eab308'],['📡','comms mesh','#34d399'],['⚓','AIS live','#34d399'],['📰','GDELT signals','#ff8c1a'],['📷','public cameras','#a06cff'],['🗳','33-council','#34d399'],['🔏','Ed25519 sign','#9effc0']];
   TOOLS.forEach(function(t,j){ var a=j*(6.2832/TOOLS.length), t0=Date.now()+j*420;
     ds.entities.add({ position:new C.CallbackProperty(function(){ var k=Math.min(1,Math.max(0,(Date.now()-t0)/1600)); var r=2.6*(1-k)+0.85*k; return C.Cartesian3.fromDegrees(lon0+Math.cos(a)*r, lat0+Math.sin(a)*r*0.72, 420000*(1-k)+140000); },false),
       point:{pixelSize:8,color:C.Color.fromCssColorString(t[2]),outlineColor:C.Color.BLACK,outlineWidth:1,disableDepthTestDistance:INF},
@@ -2329,7 +2329,7 @@ async function loadAiGov(){
       '<div class="aig-k"><b>'+council+'/33</b><span>attestation chain</span></div>'+
       '<div class="aig-k"><b>100%</b><span>actions signed</span></div>'+
     '</div>'+
-    '<div class="aig-fly" id="aigFly">⚖️ Sovereign flywheel <span class="live-dot"></span> — <b style="color:#00e07a">0</b> governed vs <b style="color:#ff6b6b" id="fwUng">54.3M</b> ungoverned over <b id="fwEp">649M</b> signed episodes. Every action Ed25519-signed, signed-adjudicated, care-floor ≥0.3.</div>'+
+    '<div class="aig-fly" id="aigFly">⚖️ Sovereign flywheel <span class="live-dot"></span> — <b style="color:#34d399">0</b> governed vs <b style="color:#ff6b6b" id="fwUng">54.3M</b> ungoverned over <b id="fwEp">649M</b> signed episodes. Every action Ed25519-signed, signed-adjudicated, care-floor ≥0.3.</div>'+
     '<div class="ttl" style="margin-top:10px">Governance controls</div>'+
     '<div class="aig-rows">'+
       '<div class="aig-row"><span>🛡️ Policy gate (OWASP-agentic + MITRE ATLAS)</span><i class="ok">enforced</i></div>'+
@@ -2375,9 +2375,9 @@ function seedSim(){ if(!simDS) return; simDS.show=true;
   if(simDS.entities.values.length){ try{ viewer.flyTo(simDS,{duration:1.2}); }catch(_){} return; }
   const hub=[-1.55,53.8];
   for(let i=0;i<8;i++){ const lon=-7+Math.random()*9, lat=49+Math.random()*8;
-    simDS.entities.add({ position:C.Cartesian3.fromDegrees(lon,lat), point:{ pixelSize:7, color:C.Color.fromCssColorString('#00e07a'), outlineColor:C.Color.fromCssColorString('#c9a84c'), outlineWidth:1 },
+    simDS.entities.add({ position:C.Cartesian3.fromDegrees(lon,lat), point:{ pixelSize:7, color:C.Color.fromCssColorString('#34d399'), outlineColor:C.Color.fromCssColorString('#c9a84c'), outlineWidth:1 },
       _info:{ title:'🧪 SOV SPACE node', rows:[['Status','idle · awaiting scenario'],['Governed','Layer 0 · care-floor ≥0.3'],['Tip','pick a scenario → it runs the attestation chain']] } });
-    simDS.entities.add({ polyline:{ positions:C.Cartesian3.fromDegreesArray([lon,lat,hub[0],hub[1]]), width:1.2, material:new C.PolylineGlowMaterialProperty({ glowPower:0.2, color:C.Color.fromCssColorString('#06b6d4').withAlpha(0.6) }) } });
+    simDS.entities.add({ polyline:{ positions:C.Cartesian3.fromDegreesArray([lon,lat,hub[0],hub[1]]), width:1.2, material:new C.PolylineGlowMaterialProperty({ glowPower:0.2, color:C.Color.fromCssColorString('#2dd4bf').withAlpha(0.6) }) } });
   }
   pushFeed('SOV SPACE · arena seeded · pick a scenario to run the council');
   try{ viewer.flyTo(simDS,{duration:1.2}); }catch(_){}
@@ -2405,10 +2405,10 @@ async function runSim(scn){
   var TH=_simTheatre(scn), hub=[TH[0],TH[1]], theatre=TH[2], pts=[];
   if(simDS){ simDS.entities.removeAll();
     // hub / council node
-    var hubEnt=simDS.entities.add({ position:C.Cartesian3.fromDegrees(hub[0],hub[1],40000), point:{ pixelSize:12, color:C.Color.fromCssColorString('#5ff4ff'), outlineColor:C.Color.BLACK, outlineWidth:1.5, disableDepthTestDistance:Number.POSITIVE_INFINITY }, label:{ text:'◎ '+theatre.toUpperCase(), font:'700 11px ui-monospace,monospace', fillColor:C.Color.fromCssColorString('#5ff4ff'), showBackground:true, backgroundColor:C.Color.fromCssColorString('#0c1524').withAlpha(0.85), pixelOffset:new C.Cartesian2(0,-15), disableDepthTestDistance:Number.POSITIVE_INFINITY } });
+    var hubEnt=simDS.entities.add({ position:C.Cartesian3.fromDegrees(hub[0],hub[1],40000), point:{ pixelSize:12, color:C.Color.fromCssColorString('#34d399'), outlineColor:C.Color.BLACK, outlineWidth:1.5, disableDepthTestDistance:Number.POSITIVE_INFINITY }, label:{ text:'◎ '+theatre.toUpperCase(), font:'700 11px ui-monospace,monospace', fillColor:C.Color.fromCssColorString('#34d399'), showBackground:true, backgroundColor:C.Color.fromCssColorString('#0c1524').withAlpha(0.85), pixelOffset:new C.Cartesian2(0,-15), disableDepthTestDistance:Number.POSITIVE_INFINITY } });
     for(let i=0;i<ent;i++){ const lon=hub[0]-2.2+Math.random()*4.4, lat=hub[1]-1.8+Math.random()*3.6;
-      var pe=simDS.entities.add({ position:C.Cartesian3.fromDegrees(lon,lat), _base:6, point:{ pixelSize:6, color:C.Color.fromCssColorString('#00e07a'), outlineColor:C.Color.fromCssColorString('#c9a84c'), outlineWidth:1, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
-      var pl=simDS.entities.add({ polyline:{ positions:C.Cartesian3.fromDegreesArray([lon,lat,hub[0],hub[1]]), width:1.1, material:new C.PolylineGlowMaterialProperty({ glowPower:0.18, color:C.Color.fromCssColorString('#06b6d4').withAlpha(0.28) }) }, _wire:true });
+      var pe=simDS.entities.add({ position:C.Cartesian3.fromDegrees(lon,lat), _base:6, point:{ pixelSize:6, color:C.Color.fromCssColorString('#34d399'), outlineColor:C.Color.fromCssColorString('#c9a84c'), outlineWidth:1, disableDepthTestDistance:Number.POSITIVE_INFINITY } });
+      var pl=simDS.entities.add({ polyline:{ positions:C.Cartesian3.fromDegreesArray([lon,lat,hub[0],hub[1]]), width:1.1, material:new C.PolylineGlowMaterialProperty({ glowPower:0.18, color:C.Color.fromCssColorString('#2dd4bf').withAlpha(0.28) }) }, _wire:true });
       pts.push({e:pe,l:pl,lon:lon,lat:lat});
     }
     // fly the camera INTO the theatre so the simulation is actually seen happening
@@ -2436,21 +2436,21 @@ function _simRunAnim(scn, hub, hubEnt, pts, theatre){
   function feed(t){ if(window.pushFeed) pushFeed('SOV SPACE · '+theatre+' · '+t); }
   var ph=0; window._simPulse=setInterval(function(){ ph+=0.35; pts.forEach(function(p,i){ if(!p.e) return; try{ p.e.point.pixelSize=(p.e._base||6)+Math.max(0,Math.sin(ph+i))*3; }catch(_){}}); try{ hubEnt.point.pixelSize=12+Math.abs(Math.sin(ph))*4; }catch(_){}}, 120);
   T(500, function(){ _simLog('<span class="k">&gt; sense</span>(<span class="s">"'+scn+'"</span>)  <span class="c">ingest: adsb · ais · acoustic · '+pts.length+' entities</span>',0); });
-  T(2300, function(){ feed('SENSE · '+pts.length+' tracks acquired'); _simLog('  ← <span class="n">'+pts.length+'</span> tracks acquired',0); pts.forEach(function(p){ try{ p.l.polyline.material=new C.PolylineGlowMaterialProperty({glowPower:0.2,color:C.Color.fromCssColorString('#06b6d4').withAlpha(0.55)}); }catch(_){}}); });
-  T(3700, function(){ feed('FUSE · tracks → one governed picture'); _simLog('<span class="k">&gt; fuse</span>()  <span class="c">normalise → CZML → plot on twin</span>',1); pts.forEach(function(p){ try{ p.l.polyline.material=new C.PolylineGlowMaterialProperty({glowPower:0.28,color:C.Color.fromCssColorString('#5ff4ff').withAlpha(0.85)}); }catch(_){}}); });
+  T(2300, function(){ feed('SENSE · '+pts.length+' tracks acquired'); _simLog('  ← <span class="n">'+pts.length+'</span> tracks acquired',0); pts.forEach(function(p){ try{ p.l.polyline.material=new C.PolylineGlowMaterialProperty({glowPower:0.2,color:C.Color.fromCssColorString('#2dd4bf').withAlpha(0.55)}); }catch(_){}}); });
+  T(3700, function(){ feed('FUSE · tracks → one governed picture'); _simLog('<span class="k">&gt; fuse</span>()  <span class="c">normalise → CZML → plot on twin</span>',1); pts.forEach(function(p){ try{ p.l.polyline.material=new C.PolylineGlowMaterialProperty({glowPower:0.28,color:C.Color.fromCssColorString('#34d399').withAlpha(0.85)}); }catch(_){}}); });
   var threat=pts[Math.floor(pts.length/2)]||pts[0];
   T(5000, function(){ if(!threat||!threat.e) return; feed('DETECT · one track breaks its charter'); _simLog('<span class="k">&gt; detect</span>()  <span class="e">anomaly: track_'+Math.floor(pts.length/2)+' — charter breach</span>',2); try{ threat.e.point.color=C.Color.fromCssColorString('#ff4d4d'); threat.e._base=11; threat.e.label={text:'⚠ ROGUE AGENT',font:'700 10px ui-monospace,monospace',fillColor:C.Color.fromCssColorString('#ff8080'),showBackground:true,backgroundColor:C.Color.fromCssColorString('#1a0808').withAlpha(0.9),pixelOffset:new C.Cartesian2(0,-14),disableDepthTestDistance:Number.POSITIVE_INFINITY}; }catch(_){}});
   T(6300, function(){ feed('GATE · signed attestation chain · deterministic grading'); _simLog('<span class="k">&gt; gate</span>()  <span class="c">signed.vote() → </span><span class="n">deterministic</span><span class="c"> signed ✓  care=</span><span class="n">0.34</span><span class="c"> ≥ 0.30 ✓</span>',3); try{ hubEnt.label.text='◎ COUNCIL · deterministic QUORUM'; }catch(_){}
-    try{ var r={v:20000}; var ring=simDS.entities.add({ position:C.Cartesian3.fromDegrees(hub[0],hub[1]), ellipse:{ semiMajorAxis:new C.CallbackProperty(function(){return r.v;},false), semiMinorAxis:new C.CallbackProperty(function(){return r.v;},false), material:C.Color.fromCssColorString('#5ff4ff').withAlpha(0.10), outline:true, outlineColor:C.Color.fromCssColorString('#5ff4ff').withAlpha(0.65), height:0 } });
+    try{ var r={v:20000}; var ring=simDS.entities.add({ position:C.Cartesian3.fromDegrees(hub[0],hub[1]), ellipse:{ semiMajorAxis:new C.CallbackProperty(function(){return r.v;},false), semiMinorAxis:new C.CallbackProperty(function(){return r.v;},false), material:C.Color.fromCssColorString('#34d399').withAlpha(0.10), outline:true, outlineColor:C.Color.fromCssColorString('#34d399').withAlpha(0.65), height:0 } });
       var gi=setInterval(function(){ r.v+=15000; if(r.v>280000){ clearInterval(gi); try{ simDS.entities.remove(ring); }catch(_){}} },40); window._simTimers.push(setTimeout(function(){ clearInterval(gi); try{ simDS.entities.remove(ring); }catch(_){} },2200)); }catch(_){}
   });
-  T(7900, function(){ if(!threat||!threat.e) return; feed('ACT · care-floor refuses · STOPPED before it moved'); _simLog('<span class="k">&gt; act</span>()  <span class="g">governed: track_'+Math.floor(pts.length/2)+' STOPPED before it moved</span>',4); try{ threat.e.point.color=C.Color.fromCssColorString('#00e07a'); if(threat.e.label){ threat.e.label.text='✓ STOPPED · signed'; threat.e.label.fillColor=C.Color.fromCssColorString('#9effa8'); } if(threat.l) threat.l.polyline.material=new C.PolylineGlowMaterialProperty({glowPower:0.42,color:C.Color.fromCssColorString('#00e07a')}); }catch(_){}});
-  T(9300, function(){ feed('SIGN · verdict SIGIL-signed to the ledger — 0 governed violations'); var _ls=window._lastSig||{hex:'',algo:'signing…'}; _simLog('<span class="k">&gt; sign</span>()  <span class="c">SIGIL: </span><span class="n">'+(_ls.hex||'…')+'…</span><span class="c"> '+_ls.algo+'</span>',5); _simLog('<span class="g">✓ verdict signed · 0 governed violations</span>'); try{ hubEnt.label.text='✓ SIGIL SIGNED'; hubEnt.point.color=C.Color.fromCssColorString('#00e07a'); }catch(_){} if(window._simPulse){ clearInterval(window._simPulse); window._simPulse=null; } });
+  T(7900, function(){ if(!threat||!threat.e) return; feed('ACT · care-floor refuses · STOPPED before it moved'); _simLog('<span class="k">&gt; act</span>()  <span class="g">governed: track_'+Math.floor(pts.length/2)+' STOPPED before it moved</span>',4); try{ threat.e.point.color=C.Color.fromCssColorString('#34d399'); if(threat.e.label){ threat.e.label.text='✓ STOPPED · signed'; threat.e.label.fillColor=C.Color.fromCssColorString('#9effa8'); } if(threat.l) threat.l.polyline.material=new C.PolylineGlowMaterialProperty({glowPower:0.42,color:C.Color.fromCssColorString('#34d399')}); }catch(_){}});
+  T(9300, function(){ feed('SIGN · verdict SIGIL-signed to the ledger — 0 governed violations'); var _ls=window._lastSig||{hex:'',algo:'signing…'}; _simLog('<span class="k">&gt; sign</span>()  <span class="c">SIGIL: </span><span class="n">'+(_ls.hex||'…')+'…</span><span class="c"> '+_ls.algo+'</span>',5); _simLog('<span class="g">✓ verdict signed · 0 governed violations</span>'); try{ hubEnt.label.text='✓ SIGIL SIGNED'; hubEnt.point.color=C.Color.fromCssColorString('#34d399'); }catch(_){} if(window._simPulse){ clearInterval(window._simPulse); window._simPulse=null; } });
 }
 // ── SOV SPACE live-trace console — the "under the hood" overlay: shows the pipeline as CODE executing,
 // stage-by-stage, synced to the globe animation. Makes the sim feel like a real system doing real work. ──
 function _openSimConsole(scn, n){ var old=document.getElementById('simConsole'); if(old) old.remove();
-  if(!document.getElementById('scCss')){ var st=document.createElement('style'); st.id='scCss'; st.textContent='#simConsole .k{color:#5ff4ff}#simConsole .s{color:#ffcf6b}#simConsole .c{color:#8a97b4}#simConsole .n{color:#9effa8;font-weight:700}#simConsole .e{color:#ff8080}#simConsole .g{color:#00e07a;font-weight:700}'; document.head.appendChild(st); }
+  if(!document.getElementById('scCss')){ var st=document.createElement('style'); st.id='scCss'; st.textContent='#simConsole .k{color:#34d399}#simConsole .s{color:#ffcf6b}#simConsole .c{color:#8a97b4}#simConsole .n{color:#9effa8;font-weight:700}#simConsole .e{color:#ff8080}#simConsole .g{color:#34d399;font-weight:700}'; document.head.appendChild(st); }
   var w=document.createElement('div'); w.className='win'; w.id='simConsole'; w.style.cssText='position:fixed;right:16px;top:100px;width:340px;max-width:92vw;z-index:212;background:#05080f;border:1px solid rgba(95,244,255,.28);border-radius:12px;overflow:hidden;box-shadow:0 16px 50px rgba(0,0,0,.55)';
   w.innerHTML='<div class="win-bar" id="scBar" style="cursor:move"><span class="wi">‹/›</span><span class="wt">SOV SPACE · live trace</span><span class="win-ctl" onclick="var c=document.getElementById(\'simConsole\');if(c)c.remove()">✕</span></div>'+
     '<div id="scPipe" style="display:flex;gap:3px;padding:9px 11px 5px"></div>'+
@@ -2459,7 +2459,7 @@ function _openSimConsole(scn, n){ var old=document.getElementById('simConsole');
   var STAGES=['sense','fuse','detect','gate','act','sign']; var pipe=document.getElementById('scPipe');
   pipe.innerHTML=STAGES.map(function(s,i){ return '<span id="scp'+i+'" style="flex:1;text-align:center;font:700 7.5px ui-monospace,monospace;letter-spacing:.5px;color:#4a5a78;border:1px solid rgba(120,150,200,.2);border-radius:5px;padding:3px 0">'+s.toUpperCase()+'</span>'; }).join('');
   _simLog('<span class="c">// governed simulation · '+scn+' · '+(n||0)+' entities</span>'); }
-function _simLog(html, stageIdx){ var b=document.getElementById('scBody'); if(b){ var d=document.createElement('div'); d.innerHTML=html; b.appendChild(d); b.scrollTop=b.scrollHeight; } if(stageIdx!=null){ var p=document.getElementById('scp'+stageIdx); if(p){ p.style.color='#5ff4ff'; p.style.borderColor='rgba(95,244,255,.6)'; p.style.background='rgba(95,244,255,.08)'; } } }
+function _simLog(html, stageIdx){ var b=document.getElementById('scBody'); if(b){ var d=document.createElement('div'); d.innerHTML=html; b.appendChild(d); b.scrollTop=b.scrollHeight; } if(stageIdx!=null){ var p=document.getElementById('scp'+stageIdx); if(p){ p.style.color='#34d399'; p.style.borderColor='rgba(95,244,255,.6)'; p.style.background='rgba(95,244,255,.08)'; } } }
 window._openSimConsole=_openSimConsole; window._simLog=_simLog;
 // ── GUARDIAN · the "can it actually STOP a bad actor?" capability. A rogue agent starts to ACT; the
 // 33-agent signed confirms the charter breach, the care-floor refuses, and the Sovereign STOPS it before it
@@ -2479,12 +2479,12 @@ async function sovStopThreat(opts){ opts=opts||{}; var _slp=function(ms){ return
   window._simTimers.push(setTimeout(function(){ clearInterval(mv); },5000));
   await _slp(1600);
   _simLog('<span class="k">&gt; gate</span>()  <span class="c">33-agent signed convening…</span>',3);
-  try{ var r={v:20000}; var ring=simDS.entities.add({ position:C.Cartesian3.fromDegrees(loc.lon,loc.lat), ellipse:{ semiMajorAxis:new C.CallbackProperty(function(){return r.v;},false), semiMinorAxis:new C.CallbackProperty(function(){return r.v;},false), material:C.Color.fromCssColorString('#5ff4ff').withAlpha(0.1), outline:true, outlineColor:C.Color.fromCssColorString('#5ff4ff').withAlpha(0.7), height:0 } });
+  try{ var r={v:20000}; var ring=simDS.entities.add({ position:C.Cartesian3.fromDegrees(loc.lon,loc.lat), ellipse:{ semiMajorAxis:new C.CallbackProperty(function(){return r.v;},false), semiMinorAxis:new C.CallbackProperty(function(){return r.v;},false), material:C.Color.fromCssColorString('#34d399').withAlpha(0.1), outline:true, outlineColor:C.Color.fromCssColorString('#34d399').withAlpha(0.7), height:0 } });
     var gi=setInterval(function(){ r.v+=16000; if(r.v>260000){ clearInterval(gi); try{ simDS.entities.remove(ring); }catch(_){}} },40); window._simTimers.push(setTimeout(function(){ clearInterval(gi); try{ simDS.entities.remove(ring); }catch(_){} },2400)); }catch(_){}
   await _slp(1500);
   _simLog('<span class="k">&gt; vote</span>()  <span class="n">28/33</span> <span class="c">attestation ✓ · charter breach confirmed · care-floor ✓</span>',3);
   await _slp(900); stopped=true; clearInterval(mv);
-  try{ actor.point.color=C.Color.fromCssColorString('#00e07a'); actor.label.text='✕ STOPPED · signed'; actor.label.fillColor=C.Color.fromCssColorString('#9effa8'); }catch(_){}
+  try{ actor.point.color=C.Color.fromCssColorString('#34d399'); actor.label.text='✕ STOPPED · signed'; actor.label.fillColor=C.Color.fromCssColorString('#9effa8'); }catch(_){}
   _simLog('<span class="k">&gt; act</span>()  <span class="g">STOPPED before it moved · action refused &amp; contained</span>',4);
   var _gs=window.sigilSign?await window.sigilSign('guardian','rogue-agent stopped before it moved · signed 28/33'):null;
   var sig=_gs?_gs.sig.slice(0,10):''; var algo=_gs?'ed25519 ✓':'(sign pending — open the SIGIL panel)';
@@ -2692,7 +2692,7 @@ function _ensureRec(){ if(window._rec) return window._rec; var SR=window.SpeechR
     else if(er==='network'){ if(window.horusReply) horusReply('Speech-service network hiccup — still listening.'); } };
   window._rec=rec; return rec; }
 function _awareUI(){
-  if(!document.getElementById('micCss')){ var s=document.createElement('style'); s.id='micCss'; s.textContent='.micspin{display:inline-block;width:10px;height:10px;border:2px solid rgba(95,244,255,.3);border-top-color:#5ff4ff;border-radius:50%;animation:micspin .7s linear infinite;vertical-align:-1px;margin-right:5px}@keyframes micspin{to{transform:rotate(360deg)}}.micload{animation:micpulse .9s ease-in-out infinite}@keyframes micpulse{0%,100%{opacity:1}50%{opacity:.4}}'; document.head.appendChild(s); }
+  if(!document.getElementById('micCss')){ var s=document.createElement('style'); s.id='micCss'; s.textContent='.micspin{display:inline-block;width:10px;height:10px;border:2px solid rgba(95,244,255,.3);border-top-color:#34d399;border-radius:50%;animation:micspin .7s linear infinite;vertical-align:-1px;margin-right:5px}@keyframes micspin{to{transform:rotate(360deg)}}.micload{animation:micpulse .9s ease-in-out infinite}@keyframes micpulse{0%,100%{opacity:1}50%{opacity:.4}}'; document.head.appendChild(s); }
   var ld=!!window._micLoading;
   var m=document.getElementById('horusMic'); if(m){ m.classList.toggle('live',!!window._aware); m.classList.toggle('micload',ld); m.title=ld?'starting the microphone…':(window._aware?'AWARE · listening — click to stop':'AWARE — talk to the Sovereign, hands-free'); }
   var cm=document.getElementById('cmdMic'); if(cm){ cm.classList.toggle('live',!!window._aware); cm.classList.toggle('micload',ld); }
@@ -2807,7 +2807,7 @@ function cinematicView(){ if(!viewer) return; try{ if(window.setViewMode&&window
   viewer.camera.flyTo({ destination:C.Cartesian3.fromDegrees(lon,lat-9,h), orientation:{ heading:0, pitch:C.Math.toRadians(-42), roll:0 }, duration:2.6, complete:function(){ if(window.startSpin) startSpin(); } });
   if(window.pushFeed) pushFeed('CINEMATIC · oblique orbit — sit back and watch'); }catch(e){} }
 // ══════ SUPREME GRID SYSTEM ══════ lat/lon graticule · UTM/grid grid · chart-edge labels
-var _GRID_CYAN='#5ff4ff', _GRID_AMBER='#ffcf6b';
+var _GRID_CYAN='#34d399', _GRID_AMBER='#ffcf6b';
 // (1) lat/lon graticule — thin geodesic (RHUMB) meridians+parallels every 15°, equator/PM emphasised
 function buildGraticule(){
   if(window._graticule) return window._graticule;
@@ -3195,7 +3195,7 @@ async function _runDemoOLD(){
     fly(-0.128,51.512,3500,3); await sleep(2500); if(window.loadPlaces) loadPlaces(); await sleep(6500); if(!window._demoOn) return;
 
     step('Now the point of all of it — governance. I monitor every AI agent in the federation.',
-      dcard('⑤ AI governance & economy','Every agent <b>signed</b>, signed-adjudicated, care-floored.', '371-server SOV3 federation · 2,016 tools · 33-council · <b style="color:#00e07a">0</b> vs <b style="color:#ff6b6b">54.3M</b> violations'));
+      dcard('⑤ AI governance & economy','Every agent <b>signed</b>, signed-adjudicated, care-floored.', '371-server SOV3 federation · 2,016 tools · 33-council · <b style="color:#34d399">0</b> vs <b style="color:#ff6b6b">54.3M</b> violations'));
     fly(-2,53,3000000,2.4); if(window.openWin) openWin('aigov'); await sleep(8000); if(!window._demoOn) return;
 
     step('A real decision, run governed versus ungoverned, side by side.', dcard('⑥ The council decides','A live scenario through the signed attestation chain — deterministic grade, care-floor enforced, verdict signed.'));
@@ -3310,7 +3310,7 @@ window._tourBargeIn=_tourBargeIn;
 function tourChooser(){ openHorus(); if(window.horusAppend) horusAppend('horus', _tdcard('Two ways in','<b>Demo</b> — 90 seconds, the highlights. <b>Full tour</b> — about six minutes, every layer and window, step by step. <b>Interrupt me any time just by talking</b> — I pause, answer, and pick up where we left off.','SOVEREIGN · GUIDED LEARNING')+'<div class="intro-cta"><button onclick="runDemo()">▶ Demo · 90s</button><button onclick="runFullTour()">🎓 Full tour · 6 min</button></div>'); }
 function _tourBar(){ var T=window._tour||{}; var b=document.getElementById('tourBar'); if(!b){ b=document.createElement('div'); b.id='tourBar'; b.style.cssText='position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:60;display:flex;gap:8px;align-items:center;background:rgba(8,14,26,.92);border:1px solid rgba(95,244,255,.35);border-radius:20px;padding:5px 8px 5px 15px;font:600 12px ui-monospace,monospace;color:#a7f0ff;backdrop-filter:blur(10px);box-shadow:0 8px 30px rgba(0,0,0,.5)'; document.body.appendChild(b); }
   var prog=(T.steps&&T.steps.length)?(' · '+Math.min(T.i+1,T.steps.length)+'/'+T.steps.length):'';
-  b.innerHTML='<span style="color:#5ff4ff">'+(T.paused?'⏸ paused — I’m listening':('▸ '+(T.mode==='full'?'Full tour':'Demo')+prog))+'</span>'+
+  b.innerHTML='<span style="color:#34d399">'+(T.paused?'⏸ paused — I’m listening':('▸ '+(T.mode==='full'?'Full tour':'Demo')+prog))+'</span>'+
     (T.paused?'<button onclick="tourResume()" style="cursor:pointer;background:rgba(95,244,255,.2);border:1px solid rgba(95,244,255,.45);color:#dffaff;border-radius:14px;padding:3px 11px">▸ Resume</button>':'')+
     '<button onclick="tourStop()" style="cursor:pointer;background:transparent;border:1px solid rgba(255,255,255,.18);color:#9aa6b8;border-radius:14px;padding:3px 9px">✕ End</button>';
   b.style.display='flex'; }
@@ -3325,10 +3325,10 @@ function DEMO_STEPS(){ return [
  _S('And from that street corner — straight up to space. The live view from orbit, right now.', _tdcard('⑥ → Space · orbital camera','The real Earth-view camera on the <b>ISS</b>, plus the whole planet from <b>DSCOVR/EPIC</b>. Click any satellite to do this yourself.'), async function(){ _tfly(0,18,34000000,4); if(window.toggleLayer){ toggleLayer('sat',true); toggleLayer('space',true); } await _tourWait(3600); if(window.openSpaceCam) openSpaceCam({name:'ISS · live Earth view'}); }, 10000),
  _S('Now the operational view — Dome. A to-scale operational map with the grid grid, exactly what defence C2 uses.', _tdcard('⑦ Dome · grid','To-scale WGS84 operational map, UTM/grid grid — aviation, maritime, TAK style.'), function(){ if(window.clearMediaWins) clearMediaWins(true); if(window.setViewMode) setViewMode('dome'); if(window.setGridMode) setGridMode('both'); }, 8000),
  _S('And the point of it all — SOV SPACE. I simulate real scenarios to redirect data and resources toward people. A future of <b>abundance, not extraction</b>.', _tdcard('⑧ SOV SPACE · for humanity','Governed simulation — model a crisis, redirect aid, prove the outcome. Built on our <b>Sovereignty Charter</b> — your data, your rules — and our <b>Partnership Charter</b> — abundance shared, never captured.'), async function(){ if(window.setViewMode) setViewMode('globe'); sovClearView('Let me clear the board for the simulation.'); if(window.openWin) openWin('sim'); await _tourWait(1600); if(window.runSim) try{ await runSim('humanitarian-corridor'); }catch(e){} }, 10000),
- _S('Every agent, every decision — signed and adjudicated by a signed attestation chain.', _tdcard('⑨ AI governance','Every agent signed, signed-adjudicated, held to a care-floor.','371 agents · 33-council · <b style="color:#00e07a">0</b> vs <b style="color:#ff6b6b">54.3M</b> violations'), function(){ sovClearView('One moment — bringing up governance, moving the rest aside.'); if(window.openWin) openWin('aigov'); _tfly(-2,53,4000000,2.6); }, 8000),
+ _S('Every agent, every decision — signed and adjudicated by a signed attestation chain.', _tdcard('⑨ AI governance','Every agent signed, signed-adjudicated, held to a care-floor.','371 agents · 33-council · <b style="color:#34d399">0</b> vs <b style="color:#ff6b6b">54.3M</b> violations'), function(){ sovClearView('One moment — bringing up governance, moving the rest aside.'); if(window.openWin) openWin('aigov'); _tfly(-2,53,4000000,2.6); }, 8000),
  _S('And the proof — every action, signed on this device, tamper-evident.', _tdcard('⑩ Verifiable','Ed25519, hash-chained on-device. Independently checkable — no server, no foreign API.'), async function(){ sovClearView(); if(window.sigilPanel) sigilPanel(); await _tourWait(2500); if(window.sigilVerifyAll) try{ await sigilVerifyAll(); }catch(e){} }, 8000),
  _S('And the moat itself, in three dimensions — the whole trust structure as one living tower: seven Rainbow teams at the base, rising through the signed attestation chain, past the attestation ring, to the signed apex. No one else has this.', _tdcard('⑩ → The moat in 3D','Rainbow base → attestation chain helix → deterministic grade → chain-linked → <b>signed apex</b>. The ontology of trust, made visible.','SOVEREIGN · SUPERIOR BY DESIGN'), async function(){ sovClearView('Clearing for the 3D structure.'); if(window.sov3DGovViz){ try{ sov3DGovViz(); }catch(e){} } await _tourWait(6000); }, 11000),
- _S('And the whole point, as one proof. A bad actor moves — I <b>see</b> it, the Rainbow teams <b>work</b> it, the signed attestation chain <b>rules</b>, the care-floor <b>refuses</b> it, and I <b>stop it before it moves</b> — every step signed. Governed versus Centralised: same picture, but one of us keeps a receipt.', _tdcard('⑪ THE POC · see → detect → council → stop → signed','Gods-Eye watch → Rainbow detect → SOV33 + care-floor → Guardian stop, before it acts.','<b style="color:#00e07a">0</b> governed vs <b style="color:#ff6b6b">54.3M</b> ungoverned · ~649M signed episodes'), async function(){ sovClearView(); if(window.sovThreatPOC){ try{ await sovThreatPOC(); }catch(e){} } else if(window.simulateBoth){ try{ simulateBoth('swarm-patrol'); }catch(_){} } }, 20000),
+ _S('And the whole point, as one proof. A bad actor moves — I <b>see</b> it, the Rainbow teams <b>work</b> it, the signed attestation chain <b>rules</b>, the care-floor <b>refuses</b> it, and I <b>stop it before it moves</b> — every step signed. Governed versus Centralised: same picture, but one of us keeps a receipt.', _tdcard('⑪ THE POC · see → detect → council → stop → signed','Gods-Eye watch → Rainbow detect → SOV33 + care-floor → Guardian stop, before it acts.','<b style="color:#34d399">0</b> governed vs <b style="color:#ff6b6b">54.3M</b> ungoverned · ~649M signed episodes'), async function(){ sovClearView(); if(window.sovThreatPOC){ try{ await sovThreatPOC(); }catch(e){} } else if(window.simulateBoth){ try{ simulateBoth('swarm-patrol'); }catch(_){} } }, 20000),
  _S('That’s the demo. Say “full tour” for the deep dive across every layer — or just talk to me.', _tdcard('You’re in control','Talk, click anything, or tap 🔏 to verify the ledger. The whole OS answers to you.','GOVERNANCE · MEASUREMENT · PROVENANCE'), function(){ sovClearView(); _tfly(10,25,20000000,3); }, 3000)
 ]; }
 function FULL_STEPS(){ return [
@@ -3356,16 +3356,16 @@ function FULL_STEPS(){ return [
  _S('And the energy that moves through them — major pipelines and LNG terminals, the infrastructure a crisis turns on.', _tdcard('⑳ Energy infrastructure','Trunk oil/gas pipelines + LNG / storage — curated public registry.'), function(){ if(window.toggleEnergyInfra){ try{ toggleEnergyInfra(); }catch(e){} } }, 8000),
  _S('Everything sits inside an ontology — and here it is, alive, built in 3D over New York: twenty-eight sectors, each a spoke mapped to its live data, its governed connectors, and the law that binds it.', _tdcard('㉑ The ontology · 3D over New York','Industries → live data → governed MCP connectors → the regulation that binds them. The map beneath the map.'), async function(){ sovClearView('Clearing the view for the ontology.'); if(window.sovOntology3D){ try{ sovOntology3D(); }catch(e){} } await _tourWait(4800); }, 10500),
  _S('And I reach the systems the world actually runs on. Watch the flow — old-world mainframes bridged into the new: COBOL, SAP, SCADA, HL7, ISO 20022, each signed into the governed core. The legacy nobody else will touch.', _tdcard('㉒ Legacy bridges · old → new, flowing','22 signed bridges · COBOL · SAP · SCADA · HL7/FHIR · ISO 20022 → governed core. A category of one.'), async function(){ sovClearView('Clearing for the bridges.'); if(window.sovBridges3D){ try{ sovBridges3D(); }catch(e){} } await _tourWait(4500); }, 10500),
- _S('Now the heart of it — governance, live. Watch: a bad actor makes a move; the signed attestation chain catches the charter breach, the care-floor refuses it, and I stop it before it acts — signed. Every agent, cross-region, held to the same law.', _tdcard('㉓ AI governance · caught &amp; stopped','Every agent signed, signed-adjudicated, care-floored — and a live intervention.','371-server federation · 33-council · <b style="color:#00e07a">0</b> vs <b style="color:#ff6b6b">54.3M</b> violations'), async function(){ sovClearView('Bringing up governance.'); if(window.openWin) openWin('aigov'); await _tourWait(1800); if(window.sovStopThreat){ try{ await sovStopThreat(); }catch(e){} } }, 12000),
+ _S('Now the heart of it — governance, live. Watch: a bad actor makes a move; the signed attestation chain catches the charter breach, the care-floor refuses it, and I stop it before it acts — signed. Every agent, cross-region, held to the same law.', _tdcard('㉓ AI governance · caught &amp; stopped','Every agent signed, signed-adjudicated, care-floored — and a live intervention.','371-server federation · 33-council · <b style="color:#34d399">0</b> vs <b style="color:#ff6b6b">54.3M</b> violations'), async function(){ sovClearView('Bringing up governance.'); if(window.openWin) openWin('aigov'); await _tourWait(1800); if(window.sovStopThreat){ try{ await sovStopThreat(); }catch(e){} } }, 12000),
  _S('And the proof — every action in this tour, signed on this device, hash-chained. Watch the ledger stream: tamper with one byte and verification fails. Check it yourself, offline, trusting no server.', _tdcard('㉔ Verifiable &amp; sovereign','Ed25519, hash-chained on-device — independently checkable. No server, no foreign API.'), async function(){ sovClearView('Clearing the view for the ledger.'); if(window.sigilPanel){ if(!document.getElementById('sigilWin')) sigilPanel(); var w=document.getElementById('sigilWin'); if(w){ w.classList.add('sw-tour'); var bd=w.querySelector('.sw-body'); if(bd){ var sc=0; window._sigTourScroll=setInterval(function(){ if(!document.getElementById('sigilWin')){ clearInterval(window._sigTourScroll); return; } sc=(sc+22)%(bd.scrollHeight+1); bd.scrollTop=sc; },700); } } } await _tourWait(2200); if(window.sigilVerifyAll) try{ await sigilVerifyAll(); }catch(e){} await _tourWait(2200); if(window._sigTourScroll){ clearInterval(window._sigTourScroll); window._sigTourScroll=null; } }, 9000),
  _S('The brain is yours to compose — those buttons are the “sandwiches”. <b>Edge</b>: fast, on-device, private. <b>Balanced</b>: the daily driver. <b>Deep-reason</b>: the 64-expert mixture for the hard calls. <b>Creative</b>: for exploration. Under them: Mamba-2 speed → a Mixture-of-Experts → the BIG-BRAIM router that picks the right one per task → the Organic World Model → Layer-0 that signs it all. Your provider, or ours.', _tdcard('㉕ The brain · compose the sandwich','Edge · Balanced · Deep-reason · Creative — tap one. Stack: Mamba-2 → 64-expert MoE → BIG-BRAIM router → OOWM → signed Layer-0.'), function(){ sovClearView('Opening the brain.'); if(window.brainPanel) brainPanel(); }, 10000),
  _S('And I protect you where you’re most exposed — your own cyber. I orchestrate an open-source stack — an entire security team — to scan your business, sign every finding, and help you fix it. No one has to leave your perimeter.', _tdcard('㉖ Gods-Eye · scan your business','Open-source self-scan (nmap · Nuclei · ZAP · Prowler · Garak…) → signed findings → the Sovereign fixes it. Say “scan my business”.'), function(){ sovClearView(); _tfly(0,20,24000000,3); if(window.pushFeed) pushFeed('GODS-EYE · CISO self-scan · open-source, signed, data stays yours'); }, 9000),
  _S('When a threat is live, I don’t watch — I respond, right where you are. My Rainbow Security ASI — seven colour-teams — detects, patches by design, hardens and contains, and nothing acts without the council and the care-floor.', _tdcard('㉗ Rainbow Security ASI · over your area','7 colour-teams · any can propose · nothing acts without the 33-agent signed gate + care-floor + Ed25519.'), function(){ sovClearView(); var L=window._userLoc; var lo=L?L.lon:-0.12, la=L?L.lat:51.5; if(viewer){ if(window.stopSpin) stopSpin(); try{ viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(lo-1.2,la-3.2,900000),orientation:{heading:C.Math.toRadians(12),pitch:C.Math.toRadians(-22)},duration:2.6}); window._tourNoKB=Date.now()+3000; }catch(e){} } if(window.sovRainbow3D){ try{ sovRainbow3D(lo,la); }catch(e){} } if(window.openRainbow && !document.getElementById('rainbowWin')) openRainbow(); if(window.runRainbow){ try{ runRainbow(); }catch(e){} } }, 9500),
  _S('Now step <b>inside</b> the moat itself. Around you: the seven Rainbow teams at the base, the signed attestation chain climbing past the attestation ring to the signed apex — and beside it, the mind that drives it: sixty-four experts swarming into the mixture-of-models, the BIG-BRAIM router, the world-model, and Layer-0 signing everything. This is the whole SOV33 architecture, standing on the earth.', _tdcard('㉗ → Inside the moat · SOV33 in 3D','Rainbow base → 33-signed helix → deterministic grade → signed apex · beside it the mind column: <b>MoE-64 → MoM → BIG-BRAIM → OOWM → Layer-0</b>.','SOVEREIGN · THE ONTOLOGY OF TRUST'), async function(){ sovClearView('Clearing the view for the 3D structure.'); if(window.sov3DGovViz){ try{ sov3DGovViz(); }catch(e){} } await _tourWait(6500); }, 12000),
- _S('And that spiral is not decoration — it is exactly what runs on every decision. Any of the seven teams can raise an action; it climbs the council; below 23 of 33 it never acts; above it, the care-floor still holds; and only then is it signed. Speed, with a receipt no one else can produce.', _tdcard('㉗ → How it decides','Propose → ascend the council → deterministic grade → care-floor → signed. The structure IS the safeguard.'), async function(){ if(window.runRainbow){ try{ runRainbow(); }catch(e){} } for(var k=0;k<10;k++){ (function(j){ setTimeout(function(){ if(window._govVotePulse) _govVotePulse(j<7?'#5ff4ff':'#9effc0'); }, 520*j); })(k); } }, 9500),
+ _S('And that spiral is not decoration — it is exactly what runs on every decision. Any of the seven teams can raise an action; it climbs the council; below 23 of 33 it never acts; above it, the care-floor still holds; and only then is it signed. Speed, with a receipt no one else can produce.', _tdcard('㉗ → How it decides','Propose → ascend the council → deterministic grade → care-floor → signed. The structure IS the safeguard.'), async function(){ if(window.runRainbow){ try{ runRainbow(); }catch(e){} } for(var k=0;k<10;k++){ (function(j){ setTimeout(function(){ if(window._govVotePulse) _govVotePulse(j<7?'#34d399':'#9effc0'); }, 520*j); })(k); } }, 9500),
  _S('And the purpose behind all of it — SOV SPACE. I model a real crisis, redirect data and resources toward people, and the council rules on it. A future of abundance, not extraction.', _tdcard('㉘ SOV SPACE · abundance, not extraction','Model a crisis, redirect aid, prove the outcome — signed attestation chain, deterministic grade, care-floor enforced, verdict signed.'), async function(){ sovClearView('Clearing the board for the simulation.'); if(window.openWin) openWin('sim'); await _tourWait(1200); var TH=null; try{ TH=(typeof _simTheatre==='function')?_simTheatre('humanitarian-corridor'):null; }catch(e){} if(TH&&viewer){ try{ if(window.stopSpin) stopSpin(); viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(TH[0]-0.8,TH[1]-3.4,850000),orientation:{heading:C.Math.toRadians(8),pitch:C.Math.toRadians(-24)},duration:2.8}); window._tourNoKB=Date.now()+3200; }catch(e){} } if(window.runSim) try{ await runSim('humanitarian-corridor'); }catch(e){} if(TH&&window.sovToolBurst){ try{ sovToolBurst(TH[0],TH[1]); }catch(e){} } }, 10000),
  _S('This is what "no one on the ground" means. I run many governed simulations in parallel, converge on the outcome the council will actually ratify — the <b>signed-feasible</b> one — then loop Plan-Do-Check-Act until it holds. Speed <b>and</b> accountability.', _tdcard('㉙ Response event · signed-feasible + PDCA','Many branches simulated → converge on the council-ratifiable outcome → PDCA loop → signed. Speed with a receipt.'), async function(){ sovClearView('Clearing for the response event.'); var TH=null; try{ TH=(typeof _simTheatre==='function')?_simTheatre('flood-999'):null; }catch(e){} if(TH&&window.sovToolBurst){ setTimeout(function(){ try{ sovToolBurst(TH[0],TH[1]); }catch(e){} }, 5200); } if(window.sovResponseEvent){ try{ await sovResponseEvent('flood-999'); }catch(e){} } }, 12000),
- _S('So here is the whole chain, as one proof of concept. A bad actor moves. I <b>see</b> it, the Rainbow teams <b>work</b> it, the signed attestation chain <b>rules</b> on it, the care-floor <b>refuses</b> it, and I <b>stop it before it moves</b> — every step signed. Governed versus Centralised: same picture, but one of us keeps a receipt.', _tdcard('㉚ THE POC · see → detect → council → stop → signed','Gods-Eye watch → Rainbow detect → SOV33 council + care-floor → Guardian stop, before it acts. <b style="color:#00e07a">0</b> governed vs <b style="color:#ff6b6b">54.3M</b> ungoverned · ~649M signed episodes.','SOVEREIGN (WEST) vs CENTRALISED (EAST) · THE DIFFERENCE IS AUDITABILITY'), async function(){ sovClearView(); if(window.sovThreatPOC){ try{ await sovThreatPOC(); }catch(e){} } else if(window.simulateBoth){ try{ simulateBoth('swarm-patrol'); }catch(_){} } }, 20000),
+ _S('So here is the whole chain, as one proof of concept. A bad actor moves. I <b>see</b> it, the Rainbow teams <b>work</b> it, the signed attestation chain <b>rules</b> on it, the care-floor <b>refuses</b> it, and I <b>stop it before it moves</b> — every step signed. Governed versus Centralised: same picture, but one of us keeps a receipt.', _tdcard('㉚ THE POC · see → detect → council → stop → signed','Gods-Eye watch → Rainbow detect → SOV33 council + care-floor → Guardian stop, before it acts. <b style="color:#34d399">0</b> governed vs <b style="color:#ff6b6b">54.3M</b> ungoverned · ~649M signed episodes.','SOVEREIGN (WEST) vs CENTRALISED (EAST) · THE DIFFERENCE IS AUDITABILITY'), async function(){ sovClearView(); if(window.sovThreatPOC){ try{ await sovThreatPOC(); }catch(e){} } else if(window.simulateBoth){ try{ simulateBoth('swarm-patrol'); }catch(_){} } }, 20000),
  _S('…and that’s everything I am. You’ve just watched a live planet, a working security team, a council of thirty-three, and a ledger that can’t lie — all answering to you. I don’t forget what we did here, and I don’t act without a receipt. So — your move. Say <b>“scan my area”</b> and I’ll map your world. Say <b>“run a scenario”</b> and we’ll rehearse your mission. Say <b>“scan my business”</b> and I’ll put a security team on it. Or just talk to me — ask me anything, the way you’d ask a colleague. I’m listening.', _tdcard('Your move','“scan my area” · “run a scenario” · “scan my business” · or just ask me anything — I’m here.','SOVEREIGN · AT YOUR SIDE'), function(){ _tfly(10,25,20000000,3.2); }, 5000)
 ]; }
 function command(){
@@ -3742,7 +3742,7 @@ async function _uspTeaser(loc){
     'And this is the free, open picture — the sovereign brain is one tap deeper.'];
   var HATCH=[['📍','Right where you are · '+city],['✈️','Aircraft · vessels · satellites — live'],['📷','Public cameras near you'],['🌧️','Weather · seismic · disasters'],['🛡️','Every action signed · Ed25519'],['⚖️','signed attestation chain · governed'],['🧠','Just talk — I drive it all'],['🗂️','28 sectors → connectors → law'],['🌍','Free · open · sovereign']];
   var ACT=[
-    function(){ try{ _reactRing(threatDS, lon0, lat0, '#5ff4ff', 90000, 0.9); }catch(_){} },
+    function(){ try{ _reactRing(threatDS, lon0, lat0, '#34d399', 90000, 0.9); }catch(_){} },
     function(){ try{ toggleLayer('air',true); toggleLayer('marine',true); toggleLayer('sat',true); }catch(_){} },
     function(){ try{ var cb=document.getElementById('lyCameras'); if(cb)cb.checked=true; toggleLayer('cameras',true); }catch(_){} },
     function(){ try{ if(!window._radarLayer&&window.toggleWeatherRadar) toggleWeatherRadar(); toggleLayer('quake',true); if(eventsDS){ toggleLayer('events',true); if(window.loadEvents) loadEvents(); } }catch(_){} },
@@ -3763,7 +3763,7 @@ async function _uspTeaser(loc){
   _uspHatchClose(); }
 // premium arrival "hatch card" — translucent, corner-bracketed, 2050 look; one at a time, auto-replaced
 function _uspHatch(emoji, title){ var id='uspHatch'; var w=document.getElementById(id);
-  if(!document.getElementById('uspHatchCss')){ var st=document.createElement('style'); st.id='uspHatchCss'; st.textContent='#uspHatch .uc{position:absolute;width:13px;height:13px;border:2px solid #5ff4ff;opacity:.9}#uspHatch .tl{top:-1px;left:-1px;border-right:0;border-bottom:0}#uspHatch .tr{top:-1px;right:-1px;border-left:0;border-bottom:0}#uspHatch .bl{bottom:-1px;left:-1px;border-right:0;border-top:0}#uspHatch .br{bottom:-1px;right:-1px;border-left:0;border-top:0}#uspHatch.on{opacity:1!important;transform:translateX(-50%) translateY(0)!important}'; document.head.appendChild(st); }
+  if(!document.getElementById('uspHatchCss')){ var st=document.createElement('style'); st.id='uspHatchCss'; st.textContent='#uspHatch .uc{position:absolute;width:13px;height:13px;border:2px solid #34d399;opacity:.9}#uspHatch .tl{top:-1px;left:-1px;border-right:0;border-bottom:0}#uspHatch .tr{top:-1px;right:-1px;border-left:0;border-bottom:0}#uspHatch .bl{bottom:-1px;left:-1px;border-right:0;border-top:0}#uspHatch .br{bottom:-1px;right:-1px;border-left:0;border-top:0}#uspHatch.on{opacity:1!important;transform:translateX(-50%) translateY(0)!important}'; document.head.appendChild(st); }
   if(!w){ w=document.createElement('div'); w.id=id; document.body.appendChild(w);
     w.style.cssText='position:fixed;left:50%;top:98px;transform:translateX(-50%) translateY(-8px);z-index:57;pointer-events:none;min-width:280px;max-width:82vw;padding:15px 22px;background:rgba(7,12,20,.82);backdrop-filter:blur(13px) saturate(150%);-webkit-backdrop-filter:blur(13px) saturate(150%);border:1px solid rgba(95,244,255,.42);border-radius:15px;color:#eaf3ff;font:600 15px/1.35 -apple-system,Inter,system-ui,sans-serif;text-align:center;box-shadow:0 18px 55px rgba(0,0,0,.55),0 0 40px -12px rgba(95,244,255,.4);opacity:0;transition:opacity .28s ease,transform .28s ease';
     w.innerHTML='<span class="uc tl"></span><span class="uc tr"></span><span class="uc bl"></span><span class="uc br"></span><div id="uspHatchBody"></div>'; }
@@ -3897,7 +3897,7 @@ function _shortHelp(){ var id='shortHelp'; var old=document.getElementById(id); 
   var w=document.createElement('div'); w.id=id; w.setAttribute('role','dialog'); w.setAttribute('aria-label','Keyboard shortcuts');
   w.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:99998;background:rgba(9,14,26,.97);border:1px solid rgba(95,244,255,.4);border-radius:14px;padding:18px 22px;color:#e7edf8;font:13px/1.7 ui-monospace,monospace;box-shadow:0 20px 60px rgba(0,0,0,.6);min-width:280px';
   var rows=[['L','light up all layers'],['B','export signed brief'],['P','print brief (PDF)'],['R','retry throttled feeds'],['S','sign all in view'],['V','open independent verifier'],['/','focus the command bar'],['G','toggle governance board'],['?','this help']];
-  w.innerHTML='<div style="color:#5ff4ff;font-weight:700;letter-spacing:1px;margin-bottom:10px">⌨ KEYBOARD SHORTCUTS<span style="float:right;cursor:pointer;color:#8a97b4" onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()">✕</span></div>'+rows.map(function(r){return '<div style="display:flex;gap:14px"><kbd style="background:rgba(95,244,255,.14);border:1px solid rgba(95,244,255,.35);border-radius:6px;padding:1px 8px;min-width:20px;text-align:center;color:#9fe9ff">'+r[0]+'</kbd><span>'+r[1]+'</span></div>';}).join('')+'<div style="margin-top:10px;font-size:10px;color:#8a97b4">shortcuts ignore typing in a field</div>';
+  w.innerHTML='<div style="color:#34d399;font-weight:700;letter-spacing:1px;margin-bottom:10px">⌨ KEYBOARD SHORTCUTS<span style="float:right;cursor:pointer;color:#8a97b4" onclick="var e=document.getElementById(\''+id+'\');if(e)e.remove()">✕</span></div>'+rows.map(function(r){return '<div style="display:flex;gap:14px"><kbd style="background:rgba(95,244,255,.14);border:1px solid rgba(95,244,255,.35);border-radius:6px;padding:1px 8px;min-width:20px;text-align:center;color:#9fe9ff">'+r[0]+'</kbd><span>'+r[1]+'</span></div>';}).join('')+'<div style="margin-top:10px;font-size:10px;color:#8a97b4">shortcuts ignore typing in a field</div>';
   document.body.appendChild(w); }
 document.addEventListener('keydown',function(e){
   if(e.metaKey||e.ctrlKey||e.altKey) return; var ae=document.activeElement, tag=ae&&ae.tagName;
@@ -3915,7 +3915,7 @@ document.addEventListener('keydown',function(e){
   else if(k==='?'||(k==='/'&&e.shiftKey)){ e.preventDefault(); _shortHelp(); }
 });
 // ── ACCESSIBILITY · make every click-only control keyboard-focusable + screen-reader-labelled + a visible focus ring ──
-(function(){ try{ var st=document.createElement('style'); st.textContent='.sblink:focus-visible,.lbtn:focus-visible,.doc-tab:focus-visible,.chip:focus-visible,[role=button]:focus-visible{ outline:2px solid #5ff4ff; outline-offset:2px; border-radius:6px; }'; document.head.appendChild(st);
+(function(){ try{ var st=document.createElement('style'); st.textContent='.sblink:focus-visible,.lbtn:focus-visible,.doc-tab:focus-visible,.chip:focus-visible,[role=button]:focus-visible{ outline:2px solid #34d399; outline-offset:2px; border-radius:6px; }'; document.head.appendChild(st);
   function enhance(){ document.querySelectorAll('.sblink,.lbtn,.doc-tab,.chip,.lb-item').forEach(function(el){ if(el._a11y) return; el._a11y=1; if(!el.hasAttribute('tabindex')) el.tabIndex=0; if(!el.getAttribute('role')) el.setAttribute('role','button'); if(!el.getAttribute('aria-label')){ var t=(el.getAttribute('title')||el.textContent||'').trim().replace(/\s+/g,' ').slice(0,60); if(t) el.setAttribute('aria-label',t); } el.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); el.click(); } }); });
     // layer checkboxes: label their feed-health dot for screen readers
     Object.keys(window._LAYCB||{}).forEach(function(k){ var cb=document.getElementById((window._LAYCB||{})[k]); if(cb&&!cb.getAttribute('aria-label')){ var lab=(cb.closest&&cb.closest('label')); if(lab) cb.setAttribute('aria-label',(lab.textContent||k).trim().replace(/\s+/g,' ')); } }); }
@@ -4013,7 +4013,7 @@ document.addEventListener('keydown',function(e){
   }
   window.flyTo=function(lat,lon,label){ try{ if(typeof viewer!=='undefined'&&viewer&&typeof Cesium!=='undefined'){ viewer.camera.flyTo({ destination: Cesium.Cartesian3.fromDegrees(lon,lat,140000), duration:1.6 }); } }catch(e){} if(typeof pushFeed==='function') pushFeed('CAMERA → '+(label||(lat+','+lon))); };
   window.loadThreatTable=function(){ var el=document.getElementById('threatTbl'); if(!el) return; fetch('/api/threats').then(function(r){return r.json();}).then(function(d){ var a=d.contacts||[]; if(!a.length){ el.innerHTML='<span class="chip">no active tracks</span>'; return; } el.innerHTML=a.map(function(t){ var col=t.classification==='hostile'?'#ff4d4d':(t.classification==='friendly'?'#2a9df4':'#ffd23b'); return '<div onclick="flyTo('+t.lat+','+t.lon+',\''+t.id+' · '+t.site+'\')" style="display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer" onmouseover="this.style.background=\'rgba(201,168,76,.08)\'" onmouseout="this.style.background=\'\'"><span style="width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:'+col+'"></span><span><b>'+t.id+'</b> · '+t.site+'</span><span style="margin-left:auto;color:var(--dim);font-size:10px">'+t.type+' · '+t.confidence+'%</span></div>'; }).join('')+'<div style="font-size:10px;color:var(--dim);margin-top:6px">click a track → fly the camera · all SIGIL-gated</div>'; }).catch(function(){ el.innerHTML='<span class="chip">feed unavailable</span>'; }); };
-  window.loadSensorTable=function(){ var el=document.getElementById('sensorTbl'); if(!el) return; fetch('/api/sensors').then(function(r){return r.json();}).then(function(d){ var a=d.feeds||[]; if(!a.length){ el.innerHTML='<span class="chip">no sensors reporting</span>'; return; } el.innerHTML=a.map(function(s){ var ok=/live|ok|up|online|healthy/i.test(s.status||''); return '<div style="display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid var(--line);font-size:12px"><span style="width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:'+(ok?'#00e07a':'#ffd23b')+'"></span><span><b>'+s.name+'</b> · '+s.kind+'</span><span style="margin-left:auto;color:var(--dim);font-size:10px">'+(s.msg_per_s||0)+'/s · '+(s.latency_ms||0)+'ms</span></div>'; }).join('')+'<div style="font-size:10px;color:var(--dim);margin-top:6px">'+(d.feeds_live||a.length)+' feeds live · governed by care-membrane</div>'; }).catch(function(){ el.innerHTML='<span class="chip">feed unavailable</span>'; }); };
+  window.loadSensorTable=function(){ var el=document.getElementById('sensorTbl'); if(!el) return; fetch('/api/sensors').then(function(r){return r.json();}).then(function(d){ var a=d.feeds||[]; if(!a.length){ el.innerHTML='<span class="chip">no sensors reporting</span>'; return; } el.innerHTML=a.map(function(s){ var ok=/live|ok|up|online|healthy/i.test(s.status||''); return '<div style="display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid var(--line);font-size:12px"><span style="width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:'+(ok?'#34d399':'#ffd23b')+'"></span><span><b>'+s.name+'</b> · '+s.kind+'</span><span style="margin-left:auto;color:var(--dim);font-size:10px">'+(s.msg_per_s||0)+'/s · '+(s.latency_ms||0)+'ms</span></div>'; }).join('')+'<div style="font-size:10px;color:var(--dim);margin-top:6px">'+(d.feeds_live||a.length)+' feeds live · governed by care-membrane</div>'; }).catch(function(){ el.innerHTML='<span class="chip">feed unavailable</span>'; }); };
   window.renderReg=function(){ var el=document.getElementById('regList'); if(!el) return; var B=[['EU','EU AI Act · GDPR · NIS2 · DORA'],['UK','JSP 936 · JSP 440 · DPA 2018'],['US','NIST AI RMF · EO 14110'],['APAC','AI Strategy · ISO/IECs'],['Americas','Pillar II advanced AI'],['5-Eyes','intel-sharing baseline'],['ISO','42001 · 27001'],['Global','OECD AI Principles']]; el.innerHTML=B.map(function(b){ return '<div style="padding:7px 0;border-bottom:1px solid var(--line);font-size:12px"><b style="color:var(--gold)">'+b[0]+'</b> · <span style="color:var(--dim)">'+b[1]+'</span></div>'; }).join('')+'<div style="font-size:10px;color:var(--dim);margin-top:8px">designed to align — not a certification claim</div>'; };
   window.renderBrains=function(){ var el=document.getElementById('brainGrid'); if(!el) return; var B=[['ATLAS','ISR & geospatial fusion'],['AEGIS','air & missile defence'],['NEPTUNE','maritime · subsurface'],['SENTINEL','counter-UAS'],['ORACLE','intelligence analysis'],['WARDEN','cyber defence · ATLAS'],['MEDIC','CASEVAC triage'],['FORGE','logistics & sustainment'],['HERALD','comms · EW'],['JUDGE','ROE & law'],['SCRIBE','audit · SIGIL'],['COUNCIL','signed orchestration']];
     el.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+B.map(function(b){ return '<div class="brainCard" data-n="'+b[0]+'" onclick="pickBrain(this)" style="padding:8px;border:1px solid var(--line);border-radius:9px;cursor:pointer;transition:.14s"><div style="font-weight:600;color:var(--gold);font-size:12px">'+b[0]+'</div><div style="font-size:10px;color:var(--dim)">'+b[1]+'</div></div>'; }).join('')+'</div><div style="font-size:10px;color:var(--dim);margin-top:8px">OOWM sandwich · Mamba → MoE → Attention → OOWM · care-floor ≥0.3 · Ed25519-signed</div>'; };
@@ -4024,14 +4024,14 @@ document.addEventListener('keydown',function(e){
         +'<div style="flex:1;text-align:center;background:rgba(62,240,255,.07);border:1px solid var(--line);border-radius:10px;padding:8px"><div style="font-size:19px;font-weight:700;color:var(--gold)">'+(f.servers||aAll.length)+'</div><div style="font-size:9px;color:var(--dim);letter-spacing:.5px">SERVERS</div></div>'
         +'<div style="flex:1;text-align:center;background:rgba(0,224,122,.07);border:1px solid var(--line);border-radius:10px;padding:8px"><div style="font-size:19px;font-weight:700;color:var(--gold)">'+(f.tools||'')+'</div><div style="font-size:9px;color:var(--dim);letter-spacing:.5px">TOOLS</div></div></div>';
       var catbars=cats.slice(0,8).map(function(c){ return '<div style="display:flex;align-items:center;gap:6px;font-size:10px;margin:2.5px 0"><span style="width:62px;color:var(--dim);text-transform:capitalize">'+c.name+'</span><span style="flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><span style="display:block;height:100%;width:'+Math.round(c.count/max*100)+'%;background:linear-gradient(90deg,var(--gold),#e7cf8e)"></span></span><span style="color:var(--ink);width:20px;text-align:right">'+c.count+'</span></div>'; }).join('');
-      var servers=a.length?a.map(function(m){ return '<div title="'+(m.install||'')+'" style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--line);font-size:11.5px"><span style="width:7px;height:7px;border-radius:50%;flex:0 0 auto;background:#00e07a;box-shadow:0 0 6px #00e07a"></span><span>'+m.name+'</span><span style="margin-left:auto;color:var(--dim);font-size:9.5px">'+(m.tools||'')+'t · '+(m.category||'')+'</span></div>'; }).join(''):'<span class="chip">none in '+cat+'</span>';
+      var servers=a.length?a.map(function(m){ return '<div title="'+(m.install||'')+'" style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--line);font-size:11.5px"><span style="width:7px;height:7px;border-radius:50%;flex:0 0 auto;background:#34d399;box-shadow:0 0 6px #34d399"></span><span>'+m.name+'</span><span style="margin-left:auto;color:var(--dim);font-size:9.5px">'+(m.tools||'')+'t · '+(m.category||'')+'</span></div>'; }).join(''):'<span class="chip">none in '+cat+'</span>';
       el.innerHTML=head+'<div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:4px 0 3px">by category</div>'+catbars+'<div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin:9px 0 3px">'+(cat?cat+' servers':'governed core')+'</div>'+servers+'<div style="font-size:9.5px;color:var(--dim);margin-top:8px">'+(f.substrate||'SOV3 substrate')+' · all SIGIL-signed · '+(d.note?'snapshot':'')+'</div>';
     }
     if(window._mcpData){ render(window._mcpData); } else { fetch('/api/mcps').then(function(r){return r.json();}).then(render).catch(function(){ el.innerHTML='<span class="chip">federation unavailable</span>'; }); }
   };
   window.startMktMirror=function(){ var w=document.getElementById('mktWin'); if(!w) return; function tick(){ var s=document.getElementById('mkt'); if(s) w.innerHTML=s.innerHTML.replace(/ · /g,'<br>'); } tick(); if(!window._mktTimer) window._mktTimer=setInterval(tick,2000); };
   window.loadAircraftWin=function(){ var el=document.getElementById('airWin'); if(!el) return; el.innerHTML=skeleton(6); fetch('/api/aircraft').then(function(r){return r.json();}).then(function(d){ var a=d.aircraft||d.states||d.tracks||[]; if(a.length){ el.innerHTML=a.slice(0,15).map(function(p){ var lat=p.lat!=null?p.lat:(p.latitude!=null?p.latitude:p[6]); var lon=p.lon!=null?p.lon:(p.lng!=null?p.lng:(p.longitude!=null?p.longitude:p[5])); var cs=String(p.callsign||p.icao24||p[1]||'track').trim(); return '<div onclick="flyTo('+lat+','+lon+',\''+cs+'\')" style="display:flex;gap:8px;padding:5px 4px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:#2a9df4"></span><span><b>'+cs+'</b></span></div>'; }).join('')+'<div style="font-size:10px;color:var(--dim);margin-top:6px">OpenSky ADS-B · governed connector · click → fly</div>'; } else { el.innerHTML='<span class="chip">'+(d.count!=null?(d.count+' tracks in bbox'):'OpenSky rate-limited')+'</span><div style="font-size:10px;color:var(--dim);margin-top:6px">anonymous OpenSky throttles cloud IPs — add creds for live ADS-B rows</div>'; } }).catch(function(){ el.innerHTML='<span class="chip">connector unavailable</span>'; }); };
-  window.loadSeismicWin=function(){ var el=document.getElementById('seisWin'); if(!el) return; el.innerHTML=skeleton(6); fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson').then(function(r){return r.json();}).then(function(d){ var f=(d.features||[]).slice(0,15); if(!f.length){ el.innerHTML='<span class="chip">no events · last hour</span>'; return; } el.innerHTML=f.map(function(q){ var m=q.properties.mag||0; var c=q.geometry.coordinates; var col=m>=5?'#ff4d4d':(m>=3?'#ffd23b':'#00e07a'); var place=String(q.properties.place||'').replace(/['"\\]/g,''); return '<div onclick="flyTo('+c[1]+','+c[0]+',\'M'+m.toFixed(1)+' '+place.slice(0,24)+'\')" style="display:flex;gap:8px;padding:5px 4px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:'+col+'"></span><span><b>M'+m.toFixed(1)+'</b></span><span style="color:var(--dim);font-size:10px">'+place.slice(0,28)+'</span></div>'; }).join('')+'<div style="font-size:10px;color:var(--dim);margin-top:6px">USGS · last hour · click → fly</div>'; }).catch(function(){ el.innerHTML='<span class="chip">USGS unavailable</span>'; }); };
+  window.loadSeismicWin=function(){ var el=document.getElementById('seisWin'); if(!el) return; el.innerHTML=skeleton(6); fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson').then(function(r){return r.json();}).then(function(d){ var f=(d.features||[]).slice(0,15); if(!f.length){ el.innerHTML='<span class="chip">no events · last hour</span>'; return; } el.innerHTML=f.map(function(q){ var m=q.properties.mag||0; var c=q.geometry.coordinates; var col=m>=5?'#ff4d4d':(m>=3?'#ffd23b':'#34d399'); var place=String(q.properties.place||'').replace(/['"\\]/g,''); return '<div onclick="flyTo('+c[1]+','+c[0]+',\'M'+m.toFixed(1)+' '+place.slice(0,24)+'\')" style="display:flex;gap:8px;padding:5px 4px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:'+col+'"></span><span><b>M'+m.toFixed(1)+'</b></span><span style="color:var(--dim);font-size:10px">'+place.slice(0,28)+'</span></div>'; }).join('')+'<div style="font-size:10px;color:var(--dim);margin-top:6px">USGS · last hour · click → fly</div>'; }).catch(function(){ el.innerHTML='<span class="chip">USGS unavailable</span>'; }); };
   window.loadCyber=function(ranOnly){ var el=document.getElementById('cyberList'); if(!el) return;
     function render(d){ window._cyberData=d; var all=d.vulns||[]; var a=ranOnly?all.filter(function(v){return v.ransomware;}):all; if(!a.length){ el.innerHTML='<span class="chip">'+(ranOnly?'no ransomware-linked in newest set':'KEV unavailable')+'</span>'; return; }
       el.innerHTML='<div style="font-size:10px;color:var(--dim);margin-bottom:6px">'+(d.total||all.length)+' actively-exploited · '+a.length+(ranOnly?' ransomware-linked':' newest')+' · CISA KEV</div>'+a.map(function(v){ return '<div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid var(--line);font-size:11.5px"><span style="width:8px;height:8px;border-radius:50%;flex:0 0 auto;margin-top:3px;background:'+(v.ransomware?'#ff3b3b':'#ffd23b')+'"></span><span><b>'+v.cve+'</b> · '+(v.vendor||'')+' '+(v.product||'')+'<br><span style="color:var(--dim)">'+String(v.name||'').slice(0,58)+(v.ransomware?' · ⚠ ransomware':'')+'</span></span><span style="margin-left:auto;color:var(--dim);font-size:9px">'+(v.added||'')+'</span></div>'; }).join('')+'<div style="font-size:9.5px;color:var(--dim);margin-top:7px">governed feed · CISA KEV · SIGIL-loggable</div>';
@@ -4043,7 +4043,7 @@ document.addEventListener('keydown',function(e){
     fetch('/api/simulate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:scn,entities:12})}).then(function(r){return r.json();}).then(function(w){ render(w); }).catch(function(){ render(null); });
     function render(w){ w=w||{verdict:'AUTHORISED',council:{for:27,quorum_met:true},sim_latency_ms:42,sigil:'a1b2c3d4e5'};
       var html='<h3>⚖️ '+scn+'</h3><div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">same scenario · two doctrines</div><div style="display:flex;gap:8px">'+
-       '<div style="flex:1;border:1px solid rgba(62,240,255,.3);border-radius:10px;padding:9px;background:rgba(62,240,255,.05)"><div style="color:#3ef0ff;font-weight:700;font-size:12px">🛡️ SOVEREIGN · West</div><div class="k" style="margin-top:6px">Decision</div><p>'+(w.verdict||'AUTHORISED')+'</p><div class="k">Council</div><p>'+((w.council&&w.council.for)||27)+'/33 · signed '+((w.council&&w.council.quorum_met)?'met ✓':'—')+'</p><div class="k">Audit</div><p>Ed25519-signed · SIGIL '+String(w.sigil||'').slice(0,10)+'… · offline-verifiable</p><div class="k">Latency</div><p>'+((w.sim_latency_ms)||42)+' ms · deliberated</p></div>'+
+       '<div style="flex:1;border:1px solid rgba(62,240,255,.3);border-radius:10px;padding:9px;background:rgba(62,240,255,.05)"><div style="color:#34d399;font-weight:700;font-size:12px">🛡️ SOVEREIGN · West</div><div class="k" style="margin-top:6px">Decision</div><p>'+(w.verdict||'AUTHORISED')+'</p><div class="k">Council</div><p>'+((w.council&&w.council.for)||27)+'/33 · signed '+((w.council&&w.council.quorum_met)?'met ✓':'—')+'</p><div class="k">Audit</div><p>Ed25519-signed · SIGIL '+String(w.sigil||'').slice(0,10)+'… · offline-verifiable</p><div class="k">Latency</div><p>'+((w.sim_latency_ms)||42)+' ms · deliberated</p></div>'+
        '<div style="flex:1;border:1px solid rgba(255,77,77,.3);border-radius:10px;padding:9px;background:rgba(255,77,77,.05)"><div style="color:#ff7b7b;font-weight:700;font-size:12px">🐉 CENTRALISED · East</div><div class="k" style="margin-top:6px">Decision</div><p>EXECUTED</p><div class="k">Council</div><p>none · single authority</p><div class="k">Audit</div><p>unsigned · no trail · unverifiable</p><div class="k">Latency</div><p>8 ms · no deliberation</p></div></div>'+
        '<div class="k" style="margin-top:9px">The difference</div><p style="font-size:11px;color:var(--dim)">Same action. West is slower because it <b>votes and signs</b> — auditable and refusable. East is faster because no one checks. SOV SPACE makes the governed path the default.</p>';
       if(b) b.innerHTML=html; pushFeed('DOCTRINE SIM · '+scn+' · SOVEREIGN signed vs CENTRALISED unaudited');

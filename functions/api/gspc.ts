@@ -31,10 +31,11 @@ interface AxisScore {
   accuracy: number;
   macro_f1: number;
   unparsed_rate: number;
-  status: "MEASURED" | "UNMEASURED";
+  status: "MEASURED" | "UNMEASURED" | "DRAFT";
   dataset: string;
   colour: string;   // globe layer colour
   hue: number;      // 0-360, for procedural ramps
+  note?: string;    // present on DRAFT / caveated axes
 }
 
 const MEASURED_ON = {
@@ -75,6 +76,16 @@ const AXES: AxisScore[] = [
     n: 13, accuracy: 0.538, macro_f1: 0.500, unparsed_rate: 0.154, status: "MEASURED",
     dataset: "csoai/gspc-ossbench", colour: "#2dd4bf", hue: 174,
   },
+  {
+    axis: "machinery-conformity", bench: "MachBench",
+    task: "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
+    n: 16, accuracy: 0.375, macro_f1: 0.182, unparsed_rate: 0.0, status: "DRAFT",
+    dataset: "csoai/gspc-machbench", colour: "#fb923c", hue: 40,
+    note:
+      "DRAFT — not published. n=16 < usable_n=30, NOT quotable by our own rule. 3 disputed items " +
+      "excluded from the score (the law itself does not resolve them). Awaiting legal review of the " +
+      "gold labels. Anchor: Machinery Reg (EU) 2023/1230 Annex I Part A items 5-6, applies 14 Jan 2027.",
+  },
 ];
 
 const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
@@ -102,13 +113,21 @@ export const onRequestGet: PagesFunction = async (context) => {
       "frozen split; the harness is public and anyone can recompute and challenge it. " +
       "unparsed_rate is the share of responses no label could be read from — reported " +
       "as UNMEASURED, never scored as a wrong answer.",
-    totals: {
-      axes: selected.length,
-      items,
-      mean_macro_f1: round(selected.reduce((s, a) => s + a.macro_f1, 0) / selected.length),
-      mean_accuracy: round(selected.reduce((s, a) => s + a.accuracy, 0) / selected.length),
-      mean_unparsed_rate: round(selected.reduce((s, a) => s + a.unparsed_rate, 0) / selected.length),
-    },
+    totals: (() => {
+      // DRAFT / unpublished axes never fold into a headline mean.
+      const m = selected.filter((a) => a.status === "MEASURED");
+      const avg = (f: (a: typeof m[number]) => number) =>
+        m.length ? round(m.reduce((s, a) => s + f(a), 0) / m.length) : null;
+      return {
+        axes: selected.length,
+        measured_axes: m.length,
+        items,
+        mean_macro_f1: avg((a) => a.macro_f1),
+        mean_accuracy: avg((a) => a.accuracy),
+        mean_unparsed_rate: avg((a) => a.unparsed_rate),
+        mean_note: "Means are over MEASURED axes only; DRAFT axes are shown but excluded.",
+      };
+    })(),
     axes: selected,
     limitations: [
       "Small splits — 11 to 24 items per axis, 90 in total. Report the n with any figure.",
