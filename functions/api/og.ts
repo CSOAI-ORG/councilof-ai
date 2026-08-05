@@ -12,7 +12,7 @@ export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const rawTitle = (url.searchParams.get("title") || "CSOAI").slice(0, 90);
   const rawDesc = (url.searchParams.get("desc") ||
-    "AI governance, cybersecurity & safety — signed to Layer 0").slice(0, 140);
+    "AI governance, cybersecurity & safety — measurement harnesses, signed to Layer 0").slice(0, 140);
   // escape for HTML-string template (workers-og parses HTML, so untrusted params must be escaped)
   const esc = (s: string) =>
     s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -33,7 +33,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       </div>
       <div style="display:flex;align-items:center;gap:14px;color:#34d399;font-size:22px;font-weight:700;">
         <span>Ed25519 · Layer 0</span><span style="color:#065f46;">|</span>
-        <span>designed 33-agent council</span><span style="color:#065f46;">|</span><span>csoai.org</span>
+        <span>measurement harnesses</span><span style="color:#065f46;">|</span><span>csoai.org</span>
       </div>
     </div>`;
 

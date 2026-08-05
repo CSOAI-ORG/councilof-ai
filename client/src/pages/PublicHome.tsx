@@ -72,7 +72,7 @@ export default function PublicHome() {
             
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               The first open-source AI safety governance platform for the West. 
-              Multi-framework compliance, 33-agent fault-aware consensus voting, 
+              Multi-framework compliance, deterministic measurement harnesses, 
               and public accountability through The Watchdog program.
             </p>
 
@@ -188,7 +188,7 @@ export default function PublicHome() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Check</h3>
                 <p className="text-sm text-muted-foreground">
-                  Watchdog monitoring, 33-agent council voting, public incident reports
+                  Watchdog monitoring, deterministic measurement runs, public incident reports
                 </p>
               </CardContent>
             </Card>

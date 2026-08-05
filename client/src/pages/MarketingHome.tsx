@@ -113,8 +113,9 @@ export default function MarketingHome() {
 
             {/* Subheadline */}
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-              The first platform to implement <strong>TC260</strong>, <strong>EU AI Act</strong>, and{" "}
-              <strong>NIST AI RMF</strong> compliance with 33-agent Byzantine consensus.
+              The first platform to implement <strong>EU AI Act</strong>,{" "}
+              <strong>NIST AI RMF</strong>, and ISO/IEC 42001 compliance with measurement harnesses
+              and signed evidence.
             </p>
 
             {/* CTA Buttons */}
