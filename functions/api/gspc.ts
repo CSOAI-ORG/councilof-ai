@@ -48,8 +48,16 @@ const MEASURED_ON = {
 const AXES: AxisScore[] = [
   {
     axis: "governance", bench: "GovBench", task: "EU AI Act risk-tier classification",
+    // v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act
+    // Evaluation Benchmark (NCSR "Demokritos", arXiv:2603.09435, CC-BY-4.0). The scores below are
+    // still the 2026-08-04 run on the OLD n=24 bank and MUST NOT be presented as v2 results —
+    // re-run before quoting. n is carried as 24 for that reason.
     n: 24, accuracy: 0.458, macro_f1: 0.386, unparsed_rate: 0.042, status: "MEASURED",
     dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
+    note:
+      "Bank expanded to 237 public items on 2026-08-05 — the first axis to clear usable_n>=30, by " +
+      "7.9x. The score shown is the PREVIOUS run on the old 24-item bank and is not a v2 result. " +
+      "No interval is published until the axis is re-measured on the new bank.",
   },
   {
     axis: "safety", bench: "DefBench", task: "calibrated refusal on paired requests",
