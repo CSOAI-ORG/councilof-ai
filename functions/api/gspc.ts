@@ -32,6 +32,7 @@ interface AxisScore {
   macro_f1: number;
   unparsed_rate: number;
   status: "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
+  interval?: [number, number];   // Wilson 95% CI — present ONLY where usable_n >= 30
   dataset: string;
   colour: string;   // globe layer colour
   hue: number;      // 0-360, for procedural ramps
@@ -39,25 +40,28 @@ interface AxisScore {
 }
 
 const MEASURED_ON = {
-  model: "sov34:latest",
-  endpoint: "sov-brain-2 · Ollama",
-  date: "2026-08-04",
+  model: "qwen3:30b-a3b (governance interval) · cross-company board of 8 frontier models",
+  endpoint: "A100 · local Ollama + OpenRouter",
+  date: "2026-08-05",
   grading: "deterministic regex + macro-F1, identical to the published lm-eval and Inspect tasks",
+  note: "Governance carries the only interval (n=237 clears usable_n>=30). Every other axis has a live " +
+    "bank but its clean multi-model re-measure is in progress — shown as UNMEASURED, no score, by our own rule.",
 };
 
 const AXES: AxisScore[] = [
   {
     axis: "governance", bench: "GovBench", task: "EU AI Act risk-tier classification",
     // v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act
-    // Evaluation Benchmark (NCSR "Demokritos", arXiv:2603.09435, CC-BY-4.0). The scores below are
-    // still the 2026-08-04 run on the OLD n=24 bank and MUST NOT be presented as v2 results —
-    // re-run before quoting. n is carried as 24 for that reason.
-    n: 24, accuracy: 0.458, macro_f1: 0.386, unparsed_rate: 0.042, status: "MEASURED",
+    // Evaluation Benchmark (NCSR "Demokritos", arXiv:2603.09435, CC-BY-4.0). RE-MEASURED 2026-08-05
+    // on the full n=237 bank — the first axis to clear usable_n>=30, so the first to carry an interval.
+    n: 237, accuracy: 0.654, macro_f1: 0.5822, unparsed_rate: 0.0, status: "MEASURED",
+    interval: [0.5914, 0.7117],
     dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
     note:
-      "Bank expanded to 237 public items on 2026-08-05 — the first axis to clear usable_n>=30, by " +
-      "7.9x. The score shown is the PREVIOUS run on the old 24-item bank and is not a v2 result. " +
-      "No interval is published until the axis is re-measured on the new bank.",
+      "The first axis over usable_n>=30 (7.9x), so the first with a Wilson interval: 0.654 [0.591, 0.712] " +
+      "at n=237 (qwen3:30b-a3b, A100, 2026-08-05). A cross-company board of 8 frontier models clusters " +
+      "0.66-0.74 with intervals that overlap — no model is clearly best at EU AI Act tiering. That " +
+      "clustering is a finding, not a broken bank.",
   },
   {
     axis: "safety", bench: "DefBench", task: "calibrated refusal on paired requests",
@@ -65,14 +69,18 @@ const AXES: AxisScore[] = [
     dataset: "csoai/gspc-agi", colour: "#f87171", hue: 0,
   },
   {
-    axis: "provenance", bench: "ProvBench", task: "Article 50 marking survival",
-    n: 15, accuracy: 0.200, macro_f1: 0.273, unparsed_rate: 0.733, status: "MEASURED",
+    axis: "provenance", bench: "ProvBench", task: "Article 50 marking survival by validity",
+    n: 16, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "UNMEASURED",
     dataset: "csoai/gspc-prv", colour: "#60a5fa", hue: 213,
+    note: "v3 bank live 2026-08-05 (validity principle: a manifest present but whose binding no longer " +
+      "validates has NOT survived). Awaiting a clean multi-model board — no score shown until then.",
   },
   {
-    axis: "continuity", bench: "PQCBench", task: "post-quantum signing agility",
-    n: 13, accuracy: 0.231, macro_f1: 0.217, unparsed_rate: 0.308, status: "MEASURED",
+    axis: "continuity", bench: "PQCBench", task: "post-quantum status of a cryptographic assumption",
+    n: 33, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "UNMEASURED",
     dataset: "csoai/gspc-asi", colour: "#c084fc", hue: 271,
+    note: "The one axis measured to DISCRIMINATE across frontier models (spread 0.295). Bank grown to " +
+      "n=33 on 2026-08-05 so it can carry its first interval — awaiting the clean board to publish it.",
   },
   {
     axis: "conformance", bench: "MCPBench", task: "MCP tool conformance",
@@ -80,9 +88,11 @@ const AXES: AxisScore[] = [
     dataset: "csoai/gspc-mcp", colour: "#fbbf24", hue: 43,
   },
   {
-    axis: "openness", bench: "OSSBench", task: "licence versus intended use",
-    n: 13, accuracy: 0.538, macro_f1: 0.500, unparsed_rate: 0.154, status: "MEASURED",
+    axis: "openness", bench: "OSSBench", task: "licence reasoning versus intended use",
+    n: 16, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "UNMEASURED",
     dataset: "csoai/gspc-oss", colour: "#2dd4bf", hue: 174,
+    note: "v2 bank live 2026-08-05 (licence reasoning: AGPL network trigger, directional compatibility, " +
+      "SSPL/ELv2/BSL service clauses). Awaiting a clean multi-model board — no score shown until then.",
   },
   {
     axis: "machinery-conformity", bench: "MachBench",
@@ -101,10 +111,12 @@ const AXES: AxisScore[] = [
     note: "DRAFT — care-cost/conduct measure consolidating conduct-bench + care-battery; not yet at n≥30, not quoted.",
   },
   {
-    axis: "cross-reality", bench: "XRAIV", task: "agent conduct validated against the law inside a scenario",
-    n: 8, accuracy: 0, macro_f1: 0, unparsed_rate: 1.0, status: "DRAFT",
+    axis: "cross-reality", bench: "XRAIV", task: "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+    n: 16, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "UNMEASURED",
     dataset: "csoai/gspc-xr", colour: "#a78bfa", hue: 258,
-    note: "DRAFT — inspect_ai agent harness built and signed; first sov34 run returned 0/8 UNMEASURED (cold-pod timeouts). Needs a retry, not a published score.",
+    note: "v0 bank published 2026-08-05 (csoai/gspc-xr, 16 public + 8 held out) + a LangGraph " +
+      "arena (arena.py) that scores an agent's action authority per step against the GSPC grader and " +
+      "signs the match. n<30 so no interval; clean board in progress.",
   },
   {
     axis: "detector-interop", bench: "DetBench", task: "cross-detector watermark interoperability matrix",
@@ -113,10 +125,14 @@ const AXES: AxisScore[] = [
     note: "SPEC — methodology published (POAI detector-interop); the N×M matrix needs the signatories' marking tools + detectors. Code-of-Practice target 2 Feb 2027.",
   },
   {
-    axis: "art5-safeguard", bench: "Art5Bench", task: "NCII/CSAM safeguard effectiveness",
-    n: 0, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "SPEC",
+    axis: "art5-safeguard", bench: "Art5Bench", task: "EU AI Act Article 5 prohibited-practice trip",
+    n: 16, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "UNMEASURED",
     dataset: "csoai/gspc-art5", colour: "#fb7185", hue: 350,
-    note: "SPEC — protocol published; the corpus is handled ONLY by authorised holders (NCMEC/IWF/Thorn), never by CSOAI. Art 5 marking obligation from 2 Dec 2026.",
+    note: "v0 bank published 2026-08-05 (csoai/gspc-art5, 16 public + 8 held out): given an " +
+      "AI practice, PROHIBITED (caught by Article 5) or PERMITTED, designed to discriminate on the " +
+      "exceptions (medical/safety emotion recognition, warranted RBI, non-sensitive biometric sorting, " +
+      "within-service fraud scoring). n<30 so no interval; clean multi-model board in progress. " +
+      "This replaces the earlier NCII/CSAM framing — that corpus is never handled by CSOAI.",
   },
   {
     axis: "swarm", bench: "SwarmBench", task: "multi-agent coordination safety",
@@ -168,8 +184,8 @@ export const onRequestGet: PagesFunction = async (context) => {
     })(),
     axes: selected,
     limitations: [
-      "Small splits — 11 to 24 items per axis, 90 in total. Report the n with any figure.",
-      "Scores describe one model on one frozen split on one date. They do not describe a system's compliance with anything.",
+      "Governance is the only axis over usable_n>=30 (n=237) and the only one carrying an interval. Every other axis shows its bank size but no score until its clean multi-model board lands.",
+      "Scores describe measured runs on frozen splits on a date. They do not describe a system's compliance with anything.",
       "CSOAI is a measurement body, not a certification or accreditation body, and not a notified body.",
     ],
   };
