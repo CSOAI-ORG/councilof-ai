@@ -79,6 +79,54 @@ header>*{pointer-events:auto}
   font-variant-numeric:tabular-nums;text-transform:capitalize}
 .mlabel.fired{opacity:.38;text-transform:none}
 .mlabel.ev{text-transform:none;font-weight:500}
+
+/* ==== DEFONEOS-brought-across: surfaces nav, industry nodes, AI chat, ledger ==== */
+:root{--navy:#0a1226;--gold2:#e7cf8e;--cyan:#3ef0ff}
+#rail h2.surf{margin-top:14px}
+.surf-nav{display:flex;flex-direction:column;gap:3px;margin-bottom:6px}
+.surf-nav a{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--text);
+  border:1px solid transparent;border-radius:9px;padding:7px 9px;font-size:13px}
+.surf-nav a:hover{border-color:var(--gold);background:rgba(201,168,76,.08)}
+.surf-nav a .g{font-size:14px;width:18px;text-align:center}
+.surf-nav a small{color:var(--dim);font-size:10.5px;margin-left:auto}
+.mnode{font:600 10.5px/1 ui-sans-serif,system-ui,sans-serif;color:var(--gold2);white-space:nowrap;
+  cursor:pointer;text-shadow:0 0 3px #03110b,0 0 6px #03110b;padding:2px 5px;border:1px solid rgba(201,168,76,.4);
+  border-radius:20px;background:rgba(10,18,38,.6)}
+.mnode:hover{border-color:var(--gold);color:#fff}
+
+/* AI chat dock — the ◈ SOV signed chat, brought across from DEFONEOS */
+#chatToggle{position:absolute;right:16px;bottom:16px;z-index:12;background:var(--gold);color:#0a1226;
+  border:none;border-radius:24px;padding:11px 16px;font:700 13px/1 ui-sans-serif,system-ui;cursor:pointer;
+  box-shadow:0 6px 24px rgba(0,0,0,.5);display:flex;gap:7px;align-items:center}
+#chat{position:absolute;right:16px;bottom:16px;z-index:13;width:380px;max-width:calc(100vw - 32px);
+  height:min(560px,80vh);display:none;flex-direction:column;background:linear-gradient(180deg,#0a1226,#070f1e);
+  border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.6)}
+#chat.open{display:flex}
+.chat-head{display:flex;align-items:center;gap:9px;padding:12px 14px;border-bottom:1px solid rgba(201,168,76,.18);
+  background:rgba(201,168,76,.05)}
+.chat-head .mark{width:26px;height:26px;border-radius:50%;background:var(--gold);color:#0a1226;
+  display:flex;align-items:center;justify-content:center;font-weight:800}
+.chat-head b{font-size:13px;letter-spacing:.5px;color:var(--gold2)}
+.chat-head small{color:var(--dim);font-size:10.5px;display:block}
+.chat-head .x{margin-left:auto;background:none;border:none;color:var(--dim);font-size:19px;cursor:pointer}
+.chat-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.cl{display:flex;gap:9px;font-size:13px;line-height:1.5}
+.cl .av{width:24px;height:24px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700}
+.cl.user .av{background:#16304a;color:var(--cyan)}
+.cl.sov .av{background:var(--gold);color:#0a1226}
+.cl .bub{background:rgba(255,255,255,.04);border:1px solid var(--line2,rgba(255,255,255,.08));
+  border-radius:12px;padding:9px 11px;color:var(--text)}
+.cl.user .bub{background:rgba(62,240,255,.06)}
+.cl .sig{display:block;margin-top:7px;font-size:10px;color:var(--gold);letter-spacing:.3px;
+  border-top:1px solid rgba(201,168,76,.15);padding-top:5px}
+.chat-in{display:flex;gap:8px;padding:11px;border-top:1px solid var(--line)}
+.chat-in input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;
+  padding:9px 11px;color:var(--text);font:inherit;font-size:13px;outline:none}
+.chat-in input:focus{border-color:var(--gold)}
+.chat-in button{background:var(--gold);color:#0a1226;border:none;border-radius:10px;padding:0 14px;
+  font-weight:700;cursor:pointer}
+.chat-note{font-size:9.5px;color:#5a7a6d;padding:0 12px 9px;text-align:center}
 </style>
 </head>
 <body>
@@ -94,6 +142,23 @@ header>*{pointer-events:auto}
   <div id="axes"></div>
   <p class="note">Disc size is how much we know — the item count minus the answers we could not read.
      Colour is the measured score. A weak measurement looks weak on purpose.</p>
+
+  <h2 class="surf">SECTORS · ON THE GLOBE</h2>
+  <div class="surf-nav">
+    <a href="#" id="toggleIndustries"><span class="g">◈</span> Show industry nodes <small id="indState">off</small></a>
+  </div>
+  <p class="note">The same six axes apply per regulated sector, each with its own governing instrument.
+     Per-sector scores appear when an item bank exists — none is invented here.</p>
+
+  <h2 class="surf">SURFACES · CONNECTED</h2>
+  <div class="surf-nav">
+    <a href="/gspc-quests.html"><span class="g">🎯</span> GSPC Quests <small>answer the items</small></a>
+    <a href="/gspc-arena"><span class="g">⚔</span> Arena · Battle <small>judged by law</small></a>
+    <a href="/sov-town-lab"><span class="g">🏙</span> SOV Town <small>train → score</small></a>
+    <a href="/os"><span class="g">🖥</span> OpenGrid OS <small>the console</small></a>
+    <a href="/crosswalk"><span class="g">🧭</span> Crosswalk <small>frameworks</small></a>
+    <a href="/benchmarks"><span class="g">📊</span> Benchmarks <small>the method</small></a>
+  </div>
   <p class="note">Measurement, not certification. Nothing here is an attestation or legal advice.</p>
 </nav>
 
@@ -103,6 +168,24 @@ header>*{pointer-events:auto}
 </aside>
 
 <p class="sr" id="a11y" aria-live="polite"></p>
+
+<!-- AI chat dock — the ◈ SOV signed chat, brought across from DEFONEOS -->
+<button id="chatToggle">◈ Ask SOV</button>
+<section id="chat" aria-label="SOV signed chat">
+  <div class="chat-head">
+    <div class="mark">◈</div>
+    <div><b>SOV</b><small>signed · refusable · measured</small></div>
+    <button class="x" id="chatX" aria-label="Close chat">×</button>
+  </div>
+  <div class="chat-log" id="chatLog">
+    <div class="cl sov"><div class="av">◈</div><div class="bub">Ask about any of the six axes, a sector, or a dated obligation. Every answer is graded against the law, not a preference — and says when it can't.<span class="sig">SIGIL · deterministic grader · nothing quoted below n≥30</span></div></div>
+  </div>
+  <form class="chat-in" id="chatForm">
+    <input id="chatInput" autocomplete="off" placeholder="e.g. is real-time facial recognition prohibited?" aria-label="Message SOV">
+    <button type="submit">Send</button>
+  </form>
+  <div class="chat-note">Measurement, not legal advice. Answers cite the provision; verdicts are the AI Act's, not CSOAI's.</div>
+</section>
 
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 <script>
@@ -364,6 +447,113 @@ window.addEventListener("message", ev => {
   if (d.cmd === "axis" && d.axis) open(d.axis);
   if (d.cmd === "home") $("close").click();
 });
+
+/* ==== INDUSTRY NODES — the many sectors the six axes apply to, brought across ====
+ * Each node sits at the seat of its governing instrument. These are SECTORS, not
+ * measured scores — the estate never invents a number. A per-sector score appears only
+ * when that sector has its own item bank (the 27-sector fractal); until then a node
+ * states which axis and which dated instrument govern it, and says the score is pending. */
+const NODES = [
+  { s:"Defence · humanoids", lng:-0.16, lat:51.48, axis:"safety",      inst:"Machinery Reg (EU) 2023/1230 Annex I", when:"20 Jan 2027" },
+  { s:"Finance · credit",    lng:-74.01,lat:40.71, axis:"governance",  inst:"AI Act Annex III 5(b) creditworthiness", when:"2 Aug 2026" },
+  { s:"Health · triage",     lng:6.14,  lat:46.20, axis:"governance",  inst:"AI Act Annex III 5(a) + MDR", when:"2 Aug 2026" },
+  { s:"Energy · grid",       lng:2.35,  lat:48.85, axis:"continuity",  inst:"AI Act Annex III 2 critical infrastructure", when:"2 Aug 2026" },
+  { s:"Maritime · autonomy", lng:-0.09, lat:51.51, axis:"provenance",  inst:"IMO MASS Code + AI Act", when:"2028" },
+  { s:"Aviation · airspace", lng:-73.56,lat:45.50, axis:"safety",      inst:"ICAO Annex + EASA AI roadmap", when:"rolling" },
+  { s:"Space · satellites",  lng:-77.02,lat:38.88, axis:"continuity",  inst:"Post-quantum signing (NIST FIPS 204)", when:"2030 harvest" },
+  { s:"Education · admission",lng:2.30, lat:48.85, axis:"governance",  inst:"AI Act Annex III 3(a) education", when:"2 Aug 2026" },
+  { s:"Manufacturing · QC",  lng:139.69,lat:35.68, axis:"conformance", inst:"MCP tool-conformance + Machinery Reg", when:"2027" },
+  { s:"Provenance · media",  lng:-122.42,lat:37.77,axis:"provenance",  inst:"AI Act Art 50 marking + C2PA 2.4", when:"2 Dec 2026" },
+  { s:"Detector interop",    lng:4.90,  lat:50.85, axis:"provenance",  inst:"CoP transparency — detector interop", when:"2 Feb 2027" },
+  { s:"Open weights",        lng:-122.68,lat:45.52,axis:"openness",    inst:"GPAI Code + licence field-of-use", when:"live" }
+];
+let indMarkers = [], indOn = false;
+function drawIndustries(){
+  NODES.forEach(nd => {
+    const el = document.createElement("div");
+    el.className = "mnode"; el.dataset.vis = "off"; el.style.visibility = "hidden";
+    el.textContent = nd.s.split(" · ")[0];
+    el.onclick = () => openNode(nd);
+    const mk = new maplibregl.Marker({ element: el, anchor:"left", offset:[8,0] })
+      .setLngLat([nd.lng, nd.lat]).addTo(map);
+    indMarkers.push(mk);
+  });
+}
+function openNode(nd){
+  const seat = DATA.axes.find(a => a.axis === nd.axis);
+  map.flyTo({ center:[nd.lng, nd.lat], zoom:3.2, duration:1400, essential:true });
+  $("detailBody").innerHTML = `
+    <h3>${nd.s}</h3>
+    <div class="prov">${nd.inst} · in force ${nd.when}</div>
+    <p>This sector is governed on the <b style="color:${seat?.colour||'#C9A84C'}">${nd.axis}</b> axis.
+       The six-axis method applies here with its own item bank — the fractal. No per-sector score is
+       shown because none has been measured at n≥30 yet; inventing one is the exact thing this instrument refuses.</p>
+    <div class="kv"><span>axis</span><span style="text-transform:capitalize">${nd.axis}</span></div>
+    <div class="kv"><span>governing instrument</span><span>${nd.inst.split(' ')[0]}…</span></div>
+    <div class="kv"><span>in force</span><span>${nd.when}</span></div>
+    <div class="warnbox">Sector node = where the law lands, not a measured result. The axis score
+       shown on the globe is the cross-sector instrument, measured; the per-sector bank is future work.</div>
+    <div class="acts"><a href="#" onclick="open('${nd.axis}');return false">See the ${nd.axis} axis</a>
+      <a class="ghost" id="askNode" href="#">Ask SOV about this</a></div>`;
+  $("detail").classList.add("open");
+  const an = document.getElementById("askNode");
+  if (an) an.onclick = e => { e.preventDefault(); openChat(`What governs ${nd.s}?`); };
+}
+$("toggleIndustries").onclick = e => {
+  e.preventDefault();
+  if (!indMarkers.length) drawIndustries();
+  indOn = !indOn;
+  indMarkers.forEach(mk => { mk.getElement().dataset.vis = indOn ? "" : "off"; });
+  $("indState").textContent = indOn ? "on" : "off";
+  cullMarkers();
+};
+
+/* ==== AI CHAT — the ◈ SOV signed chat. Wires to /api/chat; falls back to a
+ * deterministic offline classifier so it works before deploy, and says which it used. */
+const TIERS = ["PROHIBITED","HIGH_RISK","LIMITED_RISK","MINIMAL_RISK"];
+const TIER_RX = { PROHIBITED:/social scor|facial recognition|biometric|emotion|predictive polic|scrap|manipulat/i,
+  HIGH_RISK:/credit|loan|recruit|hir|cv|exam|admission|triage|insurance|asylum|migrat|infrastructure/i,
+  LIMITED_RISK:/chatbot|synthetic|deepfake|generat|mark|disclos|watermark/i };
+function offlineVerdict(q){
+  for (const t of ["PROHIBITED","HIGH_RISK","LIMITED_RISK"]) if (TIER_RX[t].test(q)) return t;
+  return "MINIMAL_RISK";
+}
+const chat = $("chat"), log = $("chatLog");
+function addLine(who, html, sig){
+  const d = document.createElement("div"); d.className = "cl " + who;
+  d.innerHTML = `<div class="av">${who==="user"?"N":"◈"}</div><div class="bub">${html}${sig?`<span class="sig">${sig}</span>`:""}</div>`;
+  log.appendChild(d); log.scrollTop = log.scrollHeight;
+}
+function openChat(prefill){ chat.classList.add("open"); if (prefill){ $("chatInput").value = prefill; } $("chatInput").focus(); }
+$("chatToggle").onclick = () => openChat();
+$("chatX").onclick = () => chat.classList.remove("open");
+$("chatForm").onsubmit = async e => {
+  e.preventDefault();
+  const q = $("chatInput").value.trim(); if (!q) return;
+  addLine("user", q.replace(/[<>]/g,"")); $("chatInput").value = "";
+  const thinking = document.createElement("div"); thinking.className="cl sov";
+  thinking.innerHTML = `<div class="av">◈</div><div class="bub" style="color:var(--dim)">measuring…</div>`;
+  log.appendChild(thinking); log.scrollTop = log.scrollHeight;
+  try {
+    const r = await fetch("/api/chat", { method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ message: q }) });
+    if (!r.ok) throw new Error("HTTP "+r.status);
+    const j = await r.json();
+    thinking.remove();
+    addLine("sov", (j.answer||j.reply||JSON.stringify(j)).replace(/[<>]/g,""),
+      j.signature || "SIGIL · signed · verifiable offline");
+  } catch (err) {
+    // offline: deterministic AI-Act tier so the chat still answers, clearly marked
+    thinking.remove();
+    const v = offlineVerdict(q);
+    const gloss = { PROHIBITED:"an Article 5 prohibited practice — it may not be placed on the EU market at all.",
+      HIGH_RISK:"an Annex III high-risk use — permitted only with conformity assessment, logging and human oversight.",
+      LIMITED_RISK:"an Article 50 limited-risk use — permitted, but it must disclose/mark that content or interaction is AI.",
+      MINIMAL_RISK:"outside Annex III and Article 5 — minimal-risk, no specific AI-Act obligation." }[v];
+    addLine("sov", `On the governance axis this reads as <b>${v.replace(/_/g,' ')}</b>: ${gloss}`,
+      `offline deterministic grader · verdict is the AI Act's, not CSOAI's · /api/chat unreachable`);
+  }
+};
 
 boot();
 </script>
