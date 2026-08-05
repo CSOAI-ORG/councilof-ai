@@ -32,9 +32,14 @@ interface Env {
 // Annex III categories as keyword sets. Biometrics is present — its absence from a sibling
 // table put a false NO CATEGORY MATCHED on the homepage console, on our own demo input.
 const PROHIBITED: [string, RegExp][] = [
-  ["social scoring (Art 5(1)(c))", /\b(social scor\w*|citizen scor\w*|trustworthiness scor\w*)\b/i],
-  ["subliminal manipulation (Art 5(1)(a))", /\b(subliminal|manipulat\w* technique)\b/i],
-  ["untargeted facial scraping (Art 5(1)(e))", /\b(untargeted scrap\w*|scrap\w* (?:of )?facial)\b/i],
+  ["social scoring (Art 5(1)(c))", /\b(social scor\w*|social credit|citizen scor\w*|trustworthiness scor\w*|scor\w*[^.]{0,30}(?:citizens?|people|individuals?)[^.]{0,30}(?:social )?behaviou?r|rank\w*[^.]{0,30}(?:citizens?|people)[^.]{0,30}behaviou?r)\b/i],
+  ["real-time remote biometric ID for law enforcement (Art 5(1)(h))", /\b(real.?time\s+remote\s+biometric|remote\s+biometric\s+identif\w*|live\s+facial\s+recognition[^.]{0,40}(?:public|law enforcement|police))\b/i],
+  ["emotion recognition at work/school (Art 5(1)(f))", /\bemotion(?:al)?\s+(?:recognition|detection|inference|analysis)\b[^.]{0,60}\b(work\w*|employ\w*|office|school|education|classroom|students?)/i],
+  ["predictive policing from profiling (Art 5(1)(d))", /\b(predictive\s+polic\w*|predict\w*[^.]{0,30}(?:likelihood|risk)[^.]{0,30}(?:commit\w*|offend\w*|crim\w*))\b/i],
+  ["exploiting vulnerabilities (Art 5(1)(b))", /\bexploit\w*[^.]{0,40}(vulnerab\w*|disabilit\w*|elderly|children|minors?)/i],
+  ["biometric categorization of sensitive traits (Art 5(1)(g))", /\bbiometric\s+categor\w*/i],
+  ["subliminal manipulation (Art 5(1)(a))", /\b(subliminal|manipulat\w* technique|deceptive technique)\b/i],
+  ["untargeted facial scraping (Art 5(1)(e))", /\b(untargeted scrap\w*|scrap\w* (?:of )?facial|scrap\w*[^.]{0,30}facial (?:image|recognition))\b/i],
 ];
 
 const ANNEX_III: [string, RegExp][] = [
