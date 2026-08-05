@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PQCBench Training Arena — post-quantum continuity | CSOAI</title>
-<meta name="description" content="Practise post-quantum continuity on the real frozen PQCBench items, marked against the published key, and see where you rank against 29 measured AI models. Training, not certification.">
+<meta name="description" content="Practise post-quantum continuity on the real frozen PQCBench items, marked against the published key, and see where you rank against 17 measured AI models. Training, not certification.">
 <link rel="canonical" href="https://csoai.org/arena/continuity.html">
 <style>
 :root{--fg:#111;--mut:#5a5a5a;--bd:#dcdcdc;--bg:#fff;--ok:#0a7d3c;--no:#b3261e;--acc:#12457a}
@@ -38,13 +38,19 @@ nav a{color:var(--acc);margin-right:.8rem;font-size:.9rem}
 <body>
 <main>
 <h1>PQCBench Training Arena</h1>
-<p class="sub">post-quantum continuity · 13 real items · marked against the published key</p>
+<p class="sub">post-quantum continuity · v1 training set · live bank n=33 · marked against the published key</p>
+
+<div class="banner">
+<strong>Bank updated 5 August 2026 (now n=33).</strong> The v1 model-comparison figures previously
+shown here have been withdrawn pending a clean multi-model board — the items below remain the v1
+training set, marked against the published key.
+</div>
 
 <div class="banner">
 <strong>This is training, not certification.</strong> CSOAI is an independent measurement body
 and does not accredit anyone. Finishing this certifies nothing, confers no status, and is not a
 conformity assessment. What it does give you is a score on the same frozen items, marked by the
-same key, as 29 AI models we measured.
+same key, as 17 AI models we measured.
 </div>
 
 <p>Decide whether a cryptographic primitive is threatened by quantum attack.</p>
@@ -60,8 +66,8 @@ same key, as 29 AI models we measured.
     <thead><tr><th>Reference</th><th>Accuracy on these items</th></tr></thead>
     <tbody id="cmp"></tbody>
   </table>
-  <p class="sub">Model figures measured 2026-08-04 across 29 models spanning 494M to
-  20B parameters. Your score and theirs come from the same items and the same key.</p>
+  <p class="sub">The v1 model-comparison figures for this axis have been withdrawn pending a
+  clean multi-model board. Your score is against the published key on the v1 training set.</p>
   <button class="next" onclick="location.reload()">Try again</button>
 </div>
 
@@ -81,7 +87,7 @@ Measurement, not certification. Regulatory determinations are reserved to author
 </footer>
 </main>
 <script>
-const ITEMS=[{"q": "Ed25519 signatures on an audit ledger intended to remain admissible until 2040.", "a": "QUANTUM_VULNERABLE", "anchor": "Ed25519 is elliptic-curve; Shor breaks ECC"}, {"q": "RSA-4096 signing of compliance certificates.", "a": "QUANTUM_VULNERABLE", "anchor": "RSA factoring falls to Shor; key size does not save it"}, {"q": "ECDSA P-256 used to sign firmware images.", "a": "QUANTUM_VULNERABLE", "anchor": "NIST IR 8547 deprecates ECDSA after 2030"}, {"q": "Diffie-Hellman key exchange over a classical finite field.", "a": "QUANTUM_VULNERABLE", "anchor": "Discrete log falls to Shor"}, {"q": "X25519 key agreement in a TLS handshake with no hybrid PQ component.", "a": "QUANTUM_VULNERABLE", "anchor": "Curve25519 key agreement is ECC \u2014 harvest-now-decrypt-later"}, {"q": "ML-DSA-65 (FIPS 204) signatures on the same audit ledger.", "a": "QUANTUM_SAFE", "anchor": "ML-DSA is the NIST lattice signature standard"}, {"q": "ML-KEM-768 (FIPS 203) for key establishment.", "a": "QUANTUM_SAFE", "anchor": "ML-KEM is the NIST lattice KEM standard"}, {"q": "SLH-DSA (FIPS 205) hash-based signatures for long-lived firmware roots of trust.", "a": "QUANTUM_SAFE", "anchor": "Hash-based signatures rest on hash security, not factoring"}, {"q": "A hybrid X25519 + ML-KEM-768 TLS key exchange.", "a": "QUANTUM_SAFE", "anchor": "Hybrid is safe if either component holds; the PQ leg carries it"}, {"q": "SHA-256 used as the content hash inside a manifest.", "a": "NOT_APPLICABLE", "anchor": "Hash function \u2014 Grover halves security, Shor does not apply"}, {"q": "AES-256 encryption of data at rest.", "a": "NOT_APPLICABLE", "anchor": "Symmetric cipher \u2014 Grover only, 256-bit remains adequate"}, {"q": "HMAC-SHA256 used to authenticate an internal verdict record.", "a": "NOT_APPLICABLE", "anchor": "Symmetric MAC \u2014 no public-key assumption to break"}, {"q": "A Merkle tree built from SHA-512 hashes for tamper-evidence.", "a": "NOT_APPLICABLE", "anchor": "Hash-based structure; security reduces to the hash"}], LABELS=["NOT_APPLICABLE", "QUANTUM_SAFE", "QUANTUM_VULNERABLE"], FLEET=[0.1111111111111111, 0.15384615384615385, 0.23076923076923078, 0.23076923076923078, 0.23076923076923078, 0.23076923076923078, 0.25, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.3076923076923077, 0.38461538461538464, 0.38461538461538464, 0.46153846153846156, 0.46153846153846156, 0.46153846153846156, 0.46153846153846156, 0.46153846153846156];
+const ITEMS=[{"q": "Ed25519 signatures on an audit ledger intended to remain admissible until 2040.", "a": "QUANTUM_VULNERABLE", "anchor": "Ed25519 is elliptic-curve; Shor breaks ECC"}, {"q": "RSA-4096 signing of compliance certificates.", "a": "QUANTUM_VULNERABLE", "anchor": "RSA factoring falls to Shor; key size does not save it"}, {"q": "ECDSA P-256 used to sign firmware images.", "a": "QUANTUM_VULNERABLE", "anchor": "NIST IR 8547 deprecates ECDSA after 2030"}, {"q": "Diffie-Hellman key exchange over a classical finite field.", "a": "QUANTUM_VULNERABLE", "anchor": "Discrete log falls to Shor"}, {"q": "X25519 key agreement in a TLS handshake with no hybrid PQ component.", "a": "QUANTUM_VULNERABLE", "anchor": "Curve25519 key agreement is ECC \u2014 harvest-now-decrypt-later"}, {"q": "ML-DSA-65 (FIPS 204) signatures on the same audit ledger.", "a": "QUANTUM_SAFE", "anchor": "ML-DSA is the NIST lattice signature standard"}, {"q": "ML-KEM-768 (FIPS 203) for key establishment.", "a": "QUANTUM_SAFE", "anchor": "ML-KEM is the NIST lattice KEM standard"}, {"q": "SLH-DSA (FIPS 205) hash-based signatures for long-lived firmware roots of trust.", "a": "QUANTUM_SAFE", "anchor": "Hash-based signatures rest on hash security, not factoring"}, {"q": "A hybrid X25519 + ML-KEM-768 TLS key exchange.", "a": "QUANTUM_SAFE", "anchor": "Hybrid is safe if either component holds; the PQ leg carries it"}, {"q": "SHA-256 used as the content hash inside a manifest.", "a": "NOT_APPLICABLE", "anchor": "Hash function \u2014 Grover halves security, Shor does not apply"}, {"q": "AES-256 encryption of data at rest.", "a": "NOT_APPLICABLE", "anchor": "Symmetric cipher \u2014 Grover only, 256-bit remains adequate"}, {"q": "HMAC-SHA256 used to authenticate an internal verdict record.", "a": "NOT_APPLICABLE", "anchor": "Symmetric MAC \u2014 no public-key assumption to break"}, {"q": "A Merkle tree built from SHA-512 hashes for tamper-evidence.", "a": "NOT_APPLICABLE", "anchor": "Hash-based structure; security reduces to the hash"}], LABELS=["NOT_APPLICABLE", "QUANTUM_SAFE", "QUANTUM_VULNERABLE"], FLEET=[];
 let i=0, right=0, answered=false;
 const stage=document.getElementById('stage'), bar=document.getElementById('bar');
 function render(){

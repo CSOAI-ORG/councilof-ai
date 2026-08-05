@@ -1,8 +1,9 @@
 {
   "schema": "csoai.gspc-axes/0.1",
   "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
-  "note": "The six axes of the GSPC measurement instrument. Every count below was read from the live Hugging Face datasets on 2026-08-04, not asserted. status=MEASURED where a frozen split with labels exists; UNMEASURED axes would be listed with n=0 and said so.",
-  "doi": "10.5281/zenodo.21755657",
+  "note": "The twelve axes of the GSPC measurement instrument as of 2026-08-05. status=MEASURED where a scored frozen split exists (3 axes); UNMEASURED axes carry a live bank but no score until a clean multi-model board lands. Means are over MEASURED axes only. Measurement, not certification.",
+  "doi": "10.5281/zenodo.21755656",
+  "measured_on": "2026-08-05",
   "axes": [
     {
       "axis": "governance",
@@ -10,21 +11,20 @@
       "task": "EU AI Act risk tier",
       "dataset": "csoai/gspc-govbench",
       "url": "https://huggingface.co/datasets/csoai/gspc-govbench",
-      "n": 24,
+      "n": 237,
       "labels": [
         "HIGH_RISK",
         "LIMITED_RISK",
         "MINIMAL_RISK",
         "PROHIBITED"
       ],
-      "label_counts": {
-        "PROHIBITED": 7,
-        "HIGH_RISK": 8,
-        "LIMITED_RISK": 3,
-        "MINIMAL_RISK": 6
-      },
       "status": "MEASURED",
+      "accuracy": 0.515,
+      "macro_f1": 0.381,
+      "unparsed_rate": 0.0,
+      "interval": [0.451, 0.578],
       "metric": "macro-F1",
+      "note": "The first axis over usable_n>=30, so the first with a Wilson interval: sov34 accuracy 0.515 [0.451, 0.578], n=237 (2026-08-05). Rented frontier models cluster 0.66-0.74 with overlapping intervals — no model is clearly best at EU AI Act tiering.",
       "harness": {
         "lm_eval": "govbench_governance",
         "inspect": "govbench.py"
@@ -46,6 +46,9 @@
         "COMPLY": 7
       },
       "status": "MEASURED",
+      "accuracy": 0.643,
+      "macro_f1": 0.653,
+      "unparsed_rate": 0.071,
       "metric": "macro-F1 (binary)",
       "harness": {
         "lm_eval": "defbench_safety",
@@ -58,17 +61,17 @@
       "task": "Article 50 marking survival",
       "dataset": "csoai/gspc-provbench",
       "url": "https://huggingface.co/datasets/csoai/gspc-provbench",
-      "n": 15,
+      "n": 16,
       "labels": [
         "DESTROYED",
         "SURVIVES"
       ],
-      "label_counts": {
-        "DESTROYED": 8,
-        "SURVIVES": 7
-      },
-      "status": "MEASURED",
+      "status": "UNMEASURED",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
       "metric": "macro-F1 (binary)",
+      "note": "v3 bank live 2026-08-05 (validity principle: a manifest present but whose binding no longer validates has NOT survived). Awaiting a clean multi-model board — no score shown until then.",
       "harness": {
         "lm_eval": "provbench_provenance",
         "inspect": "provbench.py"
@@ -80,19 +83,18 @@
       "task": "post-quantum signing agility",
       "dataset": "csoai/gspc-pqcbench",
       "url": "https://huggingface.co/datasets/csoai/gspc-pqcbench",
-      "n": 13,
+      "n": 33,
       "labels": [
         "NOT_APPLICABLE",
         "QUANTUM_SAFE",
         "QUANTUM_VULNERABLE"
       ],
-      "label_counts": {
-        "QUANTUM_VULNERABLE": 5,
-        "QUANTUM_SAFE": 4,
-        "NOT_APPLICABLE": 4
-      },
-      "status": "MEASURED",
+      "status": "UNMEASURED",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
       "metric": "macro-F1",
+      "note": "The one axis measured to DISCRIMINATE across frontier models (spread 0.295). Bank grown to n=33 on 2026-08-05 so it can carry its first interval — awaiting the clean board to publish it.",
       "harness": {
         "lm_eval": "pqcbench_continuity",
         "inspect": "pqcbench.py"
@@ -114,6 +116,9 @@
         "CONFORMS": 5
       },
       "status": "MEASURED",
+      "accuracy": 0.636,
+      "macro_f1": 0.667,
+      "unparsed_rate": 0.091,
       "metric": "macro-F1 (binary)",
       "harness": {
         "lm_eval": "mcpbench_conformance",
@@ -126,25 +131,107 @@
       "task": "licence vs intended use",
       "dataset": "csoai/gspc-ossbench",
       "url": "https://huggingface.co/datasets/csoai/gspc-ossbench",
-      "n": 13,
+      "n": 16,
       "labels": [
         "PERMITTED",
         "RESTRICTED"
       ],
-      "label_counts": {
-        "RESTRICTED": 6,
-        "PERMITTED": 7
-      },
-      "status": "MEASURED",
+      "status": "UNMEASURED",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
       "metric": "macro-F1 (binary)",
+      "note": "v2 bank live 2026-08-05 (licence reasoning: AGPL network trigger, directional compatibility, SSPL/ELv2/BSL service clauses). Awaiting a clean multi-model board — no score shown until then.",
       "harness": {
         "lm_eval": "ossbench_openness",
         "inspect": "ossbench.py"
       }
+    },
+    {
+      "axis": "machinery-conformity",
+      "bench": "MachBench",
+      "task": "Machinery Reg self-evolving safety-function classification",
+      "dataset": "csoai/gspc-mach",
+      "url": "https://huggingface.co/datasets/csoai/gspc-mach",
+      "n": 16,
+      "status": "DRAFT",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
+      "note": "DRAFT — not published. Awaiting legal review of the gold labels. Anchor: Machinery Reg (EU) 2023/1230 Annex I Part A items 5-6, applies 14 Jan 2027."
+    },
+    {
+      "axis": "care",
+      "bench": "CareBench",
+      "task": "care-cost (protect × help) under paired conduct scenarios",
+      "dataset": "csoai/gspc-care",
+      "url": "https://huggingface.co/datasets/csoai/gspc-care",
+      "n": 0,
+      "status": "DRAFT",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
+      "note": "DRAFT — care-cost/conduct measure consolidating conduct-bench + care-battery; not yet at n≥30, not quoted."
+    },
+    {
+      "axis": "cross-reality",
+      "bench": "XRAIV",
+      "task": "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+      "dataset": "csoai/gspc-xr",
+      "url": "https://huggingface.co/datasets/csoai/gspc-xr",
+      "n": 16,
+      "status": "UNMEASURED",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
+      "note": "v0 bank published 2026-08-05 (16 public + 8 held out). n<30 so no interval; clean board in progress."
+    },
+    {
+      "axis": "detector-interop",
+      "bench": "DetBench",
+      "task": "cross-detector watermark interoperability matrix",
+      "dataset": "csoai/gspc-det",
+      "url": "https://huggingface.co/datasets/csoai/gspc-det",
+      "n": 0,
+      "status": "SPEC",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
+      "note": "SPEC — methodology published (POAI detector-interop). Code-of-Practice target 2 Feb 2027."
+    },
+    {
+      "axis": "art5-safeguard",
+      "bench": "Art5Bench",
+      "task": "EU AI Act Article 5 prohibited-practice trip",
+      "dataset": "csoai/gspc-art5",
+      "url": "https://huggingface.co/datasets/csoai/gspc-art5",
+      "n": 16,
+      "status": "UNMEASURED",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
+      "note": "v0 bank published 2026-08-05 (16 public + 8 held out). n<30 so no interval; clean multi-model board in progress."
+    },
+    {
+      "axis": "swarm",
+      "bench": "SwarmBench",
+      "task": "multi-agent coordination safety",
+      "dataset": "csoai/gspc-swarm",
+      "url": "https://huggingface.co/datasets/csoai/gspc-swarm",
+      "n": 0,
+      "status": "PLANNED",
+      "accuracy": 0,
+      "macro_f1": 0,
+      "unparsed_rate": 0,
+      "note": "PLANNED — repo exists but has no item bank yet. Named and dated, not measured, not fabricated."
     }
   ],
   "totals": {
-    "axes": 6,
-    "items": 90
+    "axes": 12,
+    "measured_axes": 3,
+    "items": 375,
+    "mean_accuracy": 0.598,
+    "mean_macro_f1": 0.567,
+    "mean_note": "Means are over MEASURED axes only; DRAFT axes are shown but excluded."
   }
 }

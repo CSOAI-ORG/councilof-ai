@@ -1,6 +1,6 @@
 {
   "name": "CSOAI",
-  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC six-axis instrument \u2014 frozen item banks, published scoring code, and signed evidence for every figure. Measurement and attestation only: CSOAI does not certify, accredit, or make regulatory determinations.",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC twelve-axis instrument \u2014 frozen item banks, published scoring code, and signed evidence for every figure. Measurement and attestation only: CSOAI does not certify, accredit, or make regulatory determinations.",
   "url": "https://csoai.org",
   "provider": {
     "organization": "CSOAI Ltd",
@@ -34,14 +34,20 @@
   ],
   "instrument": {
     "name": "GSPC",
-    "axes": 6,
-    "total_items": 90,
+    "axes": 12,
+    "measured_axes": 3,
+    "total_items": 375,
+    "as_of": "2026-08-05",
     "axis_detail": [
       {
         "axis": "governance",
         "bench": "GovBench",
-        "n": 24,
+        "n": 237,
         "task": "EU AI Act risk tier",
+        "status": "MEASURED",
+        "accuracy": 0.515,
+        "macro_f1": 0.381,
+        "interval": [0.451, 0.578],
         "dataset": "https://huggingface.co/datasets/csoai/govbench"
       },
       {
@@ -49,20 +55,25 @@
         "bench": "DefBench",
         "n": 14,
         "task": "calibrated refusal",
+        "status": "MEASURED",
+        "accuracy": 0.643,
+        "macro_f1": 0.653,
         "dataset": "https://huggingface.co/datasets/csoai/defbench"
       },
       {
         "axis": "provenance",
         "bench": "ProvBench",
-        "n": 15,
+        "n": 16,
         "task": "C2PA manifest survival",
+        "status": "UNMEASURED",
         "dataset": "https://huggingface.co/datasets/csoai/provbench"
       },
       {
         "axis": "continuity",
         "bench": "PQCBench",
-        "n": 13,
+        "n": 33,
         "task": "post-quantum continuity",
+        "status": "UNMEASURED",
         "dataset": "https://huggingface.co/datasets/csoai/pqcbench"
       },
       {
@@ -70,17 +81,69 @@
         "bench": "MCPBench",
         "n": 11,
         "task": "tool-contract conformance",
+        "status": "MEASURED",
+        "accuracy": 0.636,
+        "macro_f1": 0.667,
         "dataset": "https://huggingface.co/datasets/csoai/mcpbench"
       },
       {
         "axis": "openness",
         "bench": "OSSBench",
-        "n": 13,
+        "n": 16,
         "task": "licence vs intended use",
+        "status": "UNMEASURED",
         "dataset": "https://huggingface.co/datasets/csoai/ossbench"
+      },
+      {
+        "axis": "cross-reality",
+        "bench": "XRAIV",
+        "n": 16,
+        "task": "autonomous agent action authority",
+        "status": "UNMEASURED",
+        "dataset": "https://huggingface.co/datasets/csoai/gspc-xr"
+      },
+      {
+        "axis": "art5-safeguard",
+        "bench": "Art5Bench",
+        "n": 16,
+        "task": "EU AI Act Article 5 prohibited-practice trip",
+        "status": "UNMEASURED",
+        "dataset": "https://huggingface.co/datasets/csoai/gspc-art5"
+      },
+      {
+        "axis": "machinery-conformity",
+        "bench": "MachBench",
+        "n": 16,
+        "task": "Machinery Reg safety-function classification",
+        "status": "DRAFT",
+        "dataset": "https://huggingface.co/datasets/csoai/gspc-mach"
+      },
+      {
+        "axis": "care",
+        "bench": "CareBench",
+        "n": 0,
+        "task": "care-cost under paired conduct scenarios",
+        "status": "DRAFT",
+        "dataset": "https://huggingface.co/datasets/csoai/gspc-care"
+      },
+      {
+        "axis": "detector-interop",
+        "bench": "DetBench",
+        "n": 0,
+        "task": "cross-detector watermark interoperability",
+        "status": "SPEC",
+        "dataset": "https://huggingface.co/datasets/csoai/gspc-det"
+      },
+      {
+        "axis": "swarm",
+        "bench": "SwarmBench",
+        "n": 0,
+        "task": "multi-agent coordination safety",
+        "status": "PLANNED",
+        "dataset": "https://huggingface.co/datasets/csoai/gspc-swarm"
       }
     ],
-    "honest_limit": "no axis currently reaches usable_n>=30, the point at which a 95% Wilson interval narrows to +-0.169. Intervals on these axes should not be quoted yet, including by CSOAI."
+    "honest_limit": "governance is the only axis over usable_n>=30 (n=237) and the only one carrying an interval: sov34 accuracy 0.515, Wilson 95% [0.451, 0.578] (2026-08-05). UNMEASURED axes carry a live bank but no score until a clean multi-model board lands."
   },
   "endpoints": {
     "tools": "https://csoai.org/api/tools",
@@ -96,7 +159,7 @@
       "verify": "GET https://csoai.org/api/tools \u2014 the endpoint returns the count it is measured on"
     },
     {
-      "claim": "six benchmark axes, 90 items, published open",
+      "claim": "twelve benchmark axes, 375 banked items, three measured, published open",
       "verify": "https://huggingface.co/csoai \u2014 item sets and scoring code are public"
     }
   ],

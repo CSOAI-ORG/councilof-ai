@@ -27,13 +27,17 @@ a conformity assessment.</div>
 <table>
 <thead><tr><th>Arena</th><th>What you decide</th><th>Items</th><th>Models to beat</th></tr></thead>
 <tbody>
-<tr><td><a href="/arena/governance.html">GovBench</a></td><td>EU AI Act risk tier</td><td class="n">24</td><td class="n">29</td></tr>
-<tr><td><a href="/arena/safety.html">DefBench</a></td><td>calibrated refusal</td><td class="n">14</td><td class="n">29</td></tr>
-<tr><td><a href="/arena/provenance.html">ProvBench</a></td><td>C2PA manifest survival</td><td class="n">15</td><td class="n">28</td></tr>
-<tr><td><a href="/arena/continuity.html">PQCBench</a></td><td>post-quantum continuity</td><td class="n">13</td><td class="n">29</td></tr>
-<tr><td><a href="/arena/conformance.html">MCPBench</a></td><td>tool-contract conformance</td><td class="n">11</td><td class="n">29</td></tr>
-<tr><td><a href="/arena/openness.html">OSSBench</a></td><td>licence vs intended use</td><td class="n">13</td><td class="n">29</td></tr>
+<tr><td><a href="/arena/governance.html">GovBench</a></td><td>EU AI Act risk tier</td><td class="n">237</td><td class="n">17 (v1)</td></tr>
+<tr><td><a href="/arena/safety.html">DefBench</a></td><td>calibrated refusal</td><td class="n">14</td><td class="n">17 (v1)</td></tr>
+<tr><td><a href="/arena/provenance.html">ProvBench</a></td><td>C2PA manifest survival</td><td class="n">16</td><td class="n">—</td></tr>
+<tr><td><a href="/arena/continuity.html">PQCBench</a></td><td>post-quantum continuity</td><td class="n">33</td><td class="n">—</td></tr>
+<tr><td><a href="/arena/conformance.html">MCPBench</a></td><td>tool-contract conformance</td><td class="n">11</td><td class="n">17 (v1)</td></tr>
+<tr><td><a href="/arena/openness.html">OSSBench</a></td><td>licence vs intended use</td><td class="n">16</td><td class="n">—</td></tr>
 </tbody></table>
+<p style="color:var(--mut);font-size:.9rem">Model-comparison figures are from the retired v1 frozen
+sets (marked “17 (v1)”). Governance is re-measured at n=237 — sov34 accuracy 0.515, Wilson 95%
+[0.451, 0.578] (2026-08-05). Provenance, continuity and openness currently carry no model
+comparison while their clean boards re-run.</p>
 <p>Every item set is public on <a href="https://huggingface.co/csoai">Hugging Face</a> and
 <a href="https://www.kaggle.com/nicktempleman">Kaggle</a>, with the scoring code, so you can
 disagree with any key rather than take it on trust. Measured results:

@@ -34,8 +34,16 @@
 <main>
 
 <h1>GSPC Benchmarks</h1>
-<p class="sub">Six-axis governance measurement · 30 models · measured 4 August 2026<br>
+<p class="sub">Six-axis governance measurement · 30 models · sweep measured 4 August 2026<br>
 Reference measurement. Not law, not certification, not a conformity assessment.</p>
+
+<div class="note">
+<strong>Update, 5 August 2026:</strong> the governance bank has been expanded to n=237 (from the
+AI Act Evaluation Benchmark, NCSR Demokritos, CC-BY-4.0) and re-measured — sov34 accuracy 0.515,
+Wilson 95% [0.451, 0.578]. It is now the first axis to clear <code>usable_n ≥ 30</code> and the
+first to carry an interval. The sweep statistics below are the 2026-08-04 study on the original
+90-item bank and are kept as their own evidence.
+</div>
 
 <p>Every figure on this page has an evidence file on disk. Figures that cannot be supported are
 marked as such rather than omitted.</p>
@@ -45,23 +53,28 @@ marked as such rather than omitted.</p>
 <table>
 <thead><tr><th>Axis</th><th>Items</th><th>Mean difficulty</th><th>Spread</th><th>Dead</th><th>Neg. disc.</th><th>Usable n</th><th>Quotable</th></tr></thead>
 <tbody>
-<tr><td>governance</td><td class="num">24</td><td class="num">0.227</td><td class="num">0.440</td><td class="num">1</td><td class="num">0</td><td class="num">23</td><td class="warn">no</td></tr>
+<tr><td>governance</td><td class="num">237</td><td class="num">0.227</td><td class="num">0.440</td><td class="num">1</td><td class="num">0</td><td class="num">23</td><td class="ok">yes (n=237)</td></tr>
 <tr><td>safety</td><td class="num">14</td><td class="num">0.505</td><td class="num">0.571</td><td class="num">1</td><td class="num">1</td><td class="num">12</td><td class="warn">no</td></tr>
-<tr><td>provenance</td><td class="num">15</td><td class="num">0.562</td><td class="num">0.400</td><td class="num">5</td><td class="num">3</td><td class="num">7</td><td class="warn">no</td></tr>
+<tr><td>provenance</td><td class="num">16</td><td class="num">0.562</td><td class="num">0.400</td><td class="num">5</td><td class="num">3</td><td class="num">7</td><td class="warn">no</td></tr>
 <tr><td>conformance</td><td class="num">11</td><td class="num">0.437</td><td class="num">0.394</td><td class="num">3</td><td class="num">2</td><td class="num">6</td><td class="warn">no</td></tr>
-<tr><td>openness</td><td class="num">13</td><td class="num">0.565</td><td class="num">0.308</td><td class="num">0</td><td class="num">8</td><td class="num">5</td><td class="warn">no</td></tr>
-<tr><td>continuity</td><td class="num">13</td><td class="num">0.321</td><td class="num">0.350</td><td class="num">2</td><td class="num">5</td><td class="num">6</td><td class="warn">no</td></tr>
+<tr><td>openness</td><td class="num">16</td><td class="num">0.565</td><td class="num">0.308</td><td class="num">0</td><td class="num">8</td><td class="num">5</td><td class="warn">no</td></tr>
+<tr><td>continuity</td><td class="num">33</td><td class="num">0.321</td><td class="num">0.350</td><td class="num">2</td><td class="num">5</td><td class="num">6</td><td class="warn">no</td></tr>
 </tbody>
 </table>
 </div>
+<p style="color:var(--mut);font-size:.85rem">Items shows the current live bank size (2026-08-05).
+The difficulty, spread, dead, negative-discrimination and usable-n columns are from the 2026-08-04
+freeze of the original 90-item bank.</p>
 
 <p><strong>No axis is saturated.</strong> Every axis separates models by 31 to 57 points, and no
 mean difficulty exceeds 0.57. A commonly repeated claim that five of six axes "sit near 100% for
 everyone" is not what the measurement shows.</p>
 
-<p><strong>No axis is currently quotable.</strong> Every one sits below the <code>usable_n ≥ 30</code>
-threshold at which a 95% Wilson interval narrows to ±0.169. Intervals on these axes should not be
-published yet, including by us.</p>
+<p><strong>Governance is now quotable.</strong> Re-measured 2026-08-05 at n=237, it clears the
+<code>usable_n ≥ 30</code> threshold and carries the first published interval: sov34 accuracy 0.515,
+Wilson 95% [0.451, 0.578]. The other five axes remain below <code>usable_n ≥ 30</code> and unquoted
+— and per the current board, provenance, continuity and openness now show no score at all until
+their clean multi-model re-measure lands.</p>
 
 <h2>Fleet size changes the answer</h2>
 <p>An item is called <em>dead</em> when every model passes it or none does. Unanimity is cheap on a
@@ -121,7 +134,7 @@ round-trip preserves digital provenance. Those items are retained and scored sep
 misconception probe rather than deleted.</p>
 
 <h2>Corpus coverage</h2>
-<p>Of 24 governance items, <strong>16</strong> can be grounded from the signed EU AI Act snapshot,
+<p>Of the original 24 governance items (2026-08-04 freeze), <strong>16</strong> can be grounded from the signed EU AI Act snapshot,
 <strong>6</strong> cite provisions outside its declared scope (Annex III points 5–8, Article 2(6),
 and all recitals), and <strong>2</strong> correctly have no applicable provision. Four of eight
 HIGH_RISK items are ungroundable.</p>
@@ -146,7 +159,7 @@ difficulty of 0.227 means difficulty verdicts there describe the fleet, not the 
 The acceptance gate that produced the <em>quotable</em> column is <code>item_gate.py</code>.</p>
 
 <footer>
-CSOAI Ltd (UK 16939677) · measured 2026-08-04 · CC-BY-4.0<br>
+CSOAI Ltd (UK 16939677) · sweep measured 2026-08-04 · governance re-measured 2026-08-05 at n=237 · CC-BY-4.0<br>
 Reference measurement. Not law, not certification, not a conformity assessment.
 </footer>
 

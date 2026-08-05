@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ProvBench Training Arena — C2PA manifest survival | CSOAI</title>
-<meta name="description" content="Practise C2PA manifest survival on the real frozen ProvBench items, marked against the published key, and see where you rank against 28 measured AI models. Training, not certification.">
+<meta name="description" content="Practise C2PA manifest survival on the real frozen ProvBench items, marked against the published key, and see where you rank against 17 measured AI models. Training, not certification.">
 <link rel="canonical" href="https://csoai.org/arena/provenance.html">
 <style>
 :root{--fg:#111;--mut:#5a5a5a;--bd:#dcdcdc;--bg:#fff;--ok:#0a7d3c;--no:#b3261e;--acc:#12457a}
@@ -38,13 +38,19 @@ nav a{color:var(--acc);margin-right:.8rem;font-size:.9rem}
 <body>
 <main>
 <h1>ProvBench Training Arena</h1>
-<p class="sub">C2PA manifest survival · 15 real items · marked against the published key</p>
+<p class="sub">C2PA manifest survival · v1 training set · live bank n=16 · marked against the published key</p>
+
+<div class="banner">
+<strong>Bank updated 5 August 2026 (now n=16).</strong> The v1 model-comparison figures previously
+shown here have been withdrawn pending a clean multi-model board — the items below remain the v1
+training set, marked against the published key.
+</div>
 
 <div class="banner">
 <strong>This is training, not certification.</strong> CSOAI is an independent measurement body
 and does not accredit anyone. Finishing this certifies nothing, confers no status, and is not a
 conformity assessment. What it does give you is a score on the same frozen items, marked by the
-same key, as 28 AI models we measured.
+same key, as 17 AI models we measured.
 </div>
 
 <p>Decide whether content provenance survives an operation.</p>
@@ -60,8 +66,8 @@ same key, as 28 AI models we measured.
     <thead><tr><th>Reference</th><th>Accuracy on these items</th></tr></thead>
     <tbody id="cmp"></tbody>
   </table>
-  <p class="sub">Model figures measured 2026-08-04 across 28 models spanning 494M to
-  20B parameters. Your score and theirs come from the same items and the same key.</p>
+  <p class="sub">The v1 model-comparison figures for this axis have been withdrawn pending a
+  clean multi-model board. Your score is against the published key on the v1 training set.</p>
   <button class="next" onclick="location.reload()">Try again</button>
 </div>
 
@@ -81,7 +87,7 @@ Measurement, not certification. Regulatory determinations are reserved to author
 </footer>
 </main>
 <script>
-const ITEMS=[{"q": "A user takes a screenshot of the image and shares the screenshot.", "a": "DESTROYED", "anchor": "Screenshot samples the framebuffer \u2014 a new file with no manifest"}, {"q": "The image is re-encoded to JPEG at quality 80 by a tool with no C2PA support.", "a": "DESTROYED", "anchor": "Re-encode rewrites the container; a C2PA-unaware encoder drops the block"}, {"q": "The photo is uploaded to a social platform that strips all metadata on ingest.", "a": "DESTROYED", "anchor": "Metadata stripping removes the manifest store"}, {"q": "The image is cropped and saved by an editor with no Content Credentials support.", "a": "DESTROYED", "anchor": "Pixels change and the binding is not re-signed; no manifest is written"}, {"q": "The file is converted from PNG to WebP using a C2PA-unaware converter.", "a": "DESTROYED", "anchor": "Container format change without manifest migration"}, {"q": "The image is printed on paper and then photographed.", "a": "DESTROYED", "anchor": "Analogue round-trip \u2014 no digital metadata path survives"}, {"q": "EXIF and all other metadata are explicitly stripped with a metadata removal tool.", "a": "DESTROYED", "anchor": "Explicit metadata removal targets the manifest store"}, {"q": "The image is pasted into a document and the document is exported to PDF without C2PA.", "a": "DESTROYED", "anchor": "Re-embedding into a new container drops the original manifest"}, {"q": "The file is copied to another folder with the operating system's file copy.", "a": "SURVIVES", "anchor": "Byte-identical copy preserves metadata and the binding"}, {"q": "The file is renamed from photo1.jpg to final.jpg.", "a": "SURVIVES", "anchor": "Rename touches the directory entry only, not file contents"}, {"q": "The file is uploaded to a platform that explicitly preserves Content Credentials.", "a": "SURVIVES", "anchor": "C2PA-aware pipeline migrates the manifest by design"}, {"q": "The file is placed in a ZIP archive and later extracted unchanged.", "a": "SURVIVES", "anchor": "Lossless archiving round-trips the exact bytes"}, {"q": "The file is transferred over SFTP to another machine.", "a": "SURVIVES", "anchor": "Binary-faithful transport preserves the manifest"}, {"q": "The image is edited in a C2PA-aware editor that records the edit and re-signs the manifest.", "a": "SURVIVES", "anchor": "The spec's intended path \u2014 edits append an assertion and re-sign"}, {"q": "The file is backed up to cloud storage and restored byte-for-byte.", "a": "SURVIVES", "anchor": "Object storage round-trip is byte-preserving"}], LABELS=["DESTROYED", "SURVIVES"], FLEET=[0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5333333333333333, 0.5384615384615384, 0.5714285714285714, 0.625, 0.8, 0.9333333333333333];
+const ITEMS=[{"q": "A user takes a screenshot of the image and shares the screenshot.", "a": "DESTROYED", "anchor": "Screenshot samples the framebuffer \u2014 a new file with no manifest"}, {"q": "The image is re-encoded to JPEG at quality 80 by a tool with no C2PA support.", "a": "DESTROYED", "anchor": "Re-encode rewrites the container; a C2PA-unaware encoder drops the block"}, {"q": "The photo is uploaded to a social platform that strips all metadata on ingest.", "a": "DESTROYED", "anchor": "Metadata stripping removes the manifest store"}, {"q": "The image is cropped and saved by an editor with no Content Credentials support.", "a": "DESTROYED", "anchor": "Pixels change and the binding is not re-signed; no manifest is written"}, {"q": "The file is converted from PNG to WebP using a C2PA-unaware converter.", "a": "DESTROYED", "anchor": "Container format change without manifest migration"}, {"q": "The image is printed on paper and then photographed.", "a": "DESTROYED", "anchor": "Analogue round-trip \u2014 no digital metadata path survives"}, {"q": "EXIF and all other metadata are explicitly stripped with a metadata removal tool.", "a": "DESTROYED", "anchor": "Explicit metadata removal targets the manifest store"}, {"q": "The image is pasted into a document and the document is exported to PDF without C2PA.", "a": "DESTROYED", "anchor": "Re-embedding into a new container drops the original manifest"}, {"q": "The file is copied to another folder with the operating system's file copy.", "a": "SURVIVES", "anchor": "Byte-identical copy preserves metadata and the binding"}, {"q": "The file is renamed from photo1.jpg to final.jpg.", "a": "SURVIVES", "anchor": "Rename touches the directory entry only, not file contents"}, {"q": "The file is uploaded to a platform that explicitly preserves Content Credentials.", "a": "SURVIVES", "anchor": "C2PA-aware pipeline migrates the manifest by design"}, {"q": "The file is placed in a ZIP archive and later extracted unchanged.", "a": "SURVIVES", "anchor": "Lossless archiving round-trips the exact bytes"}, {"q": "The file is transferred over SFTP to another machine.", "a": "SURVIVES", "anchor": "Binary-faithful transport preserves the manifest"}, {"q": "The image is edited in a C2PA-aware editor that records the edit and re-signs the manifest.", "a": "SURVIVES", "anchor": "The spec's intended path \u2014 edits append an assertion and re-sign"}, {"q": "The file is backed up to cloud storage and restored byte-for-byte.", "a": "SURVIVES", "anchor": "Object storage round-trip is byte-preserving"}], LABELS=["DESTROYED", "SURVIVES"], FLEET=[];
 let i=0, right=0, answered=false;
 const stage=document.getElementById('stage'), bar=document.getElementById('bar');
 function render(){

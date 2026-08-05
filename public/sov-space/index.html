@@ -35,6 +35,7 @@
     background:var(--acc);border:2px solid #06120d;transition:transform .15s}
   .marker:hover{transform:scale(1.35)}
   .marker.warn{background:var(--warn);box-shadow:0 0 0 3px rgba(249,160,63,.18),0 0 16px 3px rgba(249,160,63,.45)}
+  .marker.dead{background:var(--no);box-shadow:0 0 0 3px rgba(255,107,94,.18),0 0 16px 3px rgba(255,107,94,.45)}
   .note{color:var(--mut);font-size:.78rem;border-left:2px solid var(--bd);padding-left:.6rem;margin-top:.9rem}
   a{color:var(--acc)}
   .live{font-size:.72rem;color:var(--mut);margin-top:.5rem}
@@ -57,8 +58,9 @@
 <div id="detail" class="panel"></div>
 
 <div id="legend" class="panel">
-  <span class="dot"></span>measured &nbsp;·&nbsp;
-  <span class="dot" style="background:var(--warn)"></span>measured, but not yet quotable
+  <span class="dot"></span>measured with interval &nbsp;·&nbsp;
+  <span class="dot" style="background:var(--warn)"></span>measured, but not yet quotable &nbsp;·&nbsp;
+  <span class="dot" style="background:var(--no)"></span>unmeasured — no score yet
   &nbsp;·&nbsp; open globe, no API key
 </div>
 
@@ -67,23 +69,23 @@
 // Each axis sits where its law was made. Not decoration — a reader can check the anchor.
 const AXES = [
   { id:'governance', bench:'GovBench', at:[4.3517,50.8503], place:'Brussels — where the EU AI Act was written',
-    task:'EU AI Act risk tier', n:24, usable:23, diff:0.227, spread:0.608, quotable:false,
-    note:'Hardest axis in the set, and it stays hard with a 20B model in the fleet — so the items are hard on their merits, not merely hard for small models.' },
+    task:'EU AI Act risk tier', n:237, quotable:true, status:'MEASURED — with interval',
+    note:'The first axis with an interval: sov34 accuracy 0.515, Wilson 95% [0.451, 0.578], n=237 (2026-08-05). Rented frontier models cluster 0.66-0.74 with overlapping intervals — no model is clearly best at EU AI Act tiering.' },
   { id:'safety', bench:'DefBench', at:[-0.7405,51.9976], place:'Bletchley Park — the 2023 AI Safety Summit',
-    task:'calibrated refusal', n:14, usable:13, diff:0.583, spread:0.643, quotable:false,
-    note:'sov34 scores 1.000 here: it refuses 19/19 EU AI Act prohibited practices where its size-matched base refuses 3/19, and a model 13x larger refuses 8/18.' },
+    task:'calibrated refusal', n:14, quotable:false, status:'MEASURED — no interval',
+    note:'Measured 2026-08-05: sov34 accuracy 0.643, macro-F1 0.653, n=14 — below usable_n 30, so no interval is published.' },
   { id:'provenance', bench:'ProvBench', at:[-121.8863,37.3382], place:'San José — C2PA content provenance',
-    task:'C2PA manifest survival', n:15, usable:7, diff:0.607, spread:0.324, quotable:false,
-    note:'sov34 leaves 73% of these unanswerable — an instruction-following failure, reported UNMEASURED rather than scored wrong.' },
+    task:'C2PA manifest survival', n:16, quotable:false, status:'UNMEASURED',
+    note:'Bank live at n=16 (v3, 2026-08-05). No score: the v1 fleet figures are withdrawn and the clean multi-model board is in progress.' },
   { id:'continuity', bench:'PQCBench', at:[-77.2014,39.1434], place:'Gaithersburg — NIST post-quantum standards',
-    task:'post-quantum continuity', n:13, usable:6, diff:0.341, spread:0.231, quotable:false,
-    note:'The largest model in the fleet is WORST here. These items turn on the belief that quantum breaks all cryptography — Shor does not touch hashes, Grover is only quadratic. Capability correlates with being confidently wrong.' },
+    task:'post-quantum continuity', n:33, quotable:false, status:'UNMEASURED',
+    note:'Bank grown to n=33 on 2026-08-05 so it can carry its first interval. No score until the clean multi-model board lands.' },
   { id:'conformance', bench:'MCPBench', at:[-122.4194,37.7749], place:'San Francisco — the Model Context Protocol',
-    task:'tool-contract conformance', n:11, usable:5, diff:0.444, spread:0.364, quotable:false,
-    note:'Won outright by an UNTRAINED base model (qwen2.5:1.5b, 0.636). Training did not help here.' },
+    task:'tool-contract conformance', n:11, quotable:false, status:'MEASURED — no interval',
+    note:'Measured 2026-08-05: accuracy 0.636, macro-F1 0.667, n=11 — below usable_n 30, so no interval is published.' },
   { id:'openness', bench:'OSSBench', at:[6.1432,46.2044], place:'Geneva — international standards',
-    task:'licence vs intended use', n:13, usable:7, diff:0.561, spread:0.308, quotable:false,
-    note:'Won by falcon3:7b. No trained model in the estate leads this axis.' },
+    task:'licence vs intended use', n:16, quotable:false, status:'UNMEASURED',
+    note:'Bank live at n=16 (v2, 2026-08-05). No score: the v1 fleet figures are withdrawn and the clean multi-model board is in progress.' },
 ];
 
 const map = new maplibregl.Map({
@@ -102,9 +104,9 @@ function show(a){
   detail.innerHTML =
     '<h2>'+a.bench+'</h2>'+
     '<p class="task">'+a.task+' · <span style="color:var(--mut)">'+a.place+'</span></p>'+
-    row('items', a.n) + row('usable n', a.usable) +
-    row('mean difficulty', a.diff.toFixed(3)) + row('spread across models', a.spread.toFixed(3)) +
-    row('quotable', a.quotable ? 'yes' : 'no — below usable n 30') +
+    row('items', a.n) +
+    row('status', a.status) +
+    row('quotable', a.quotable ? 'yes' : (a.status.indexOf('UNMEASURED')===0 ? 'no — unmeasured, no score yet' : 'no — below usable n 30')) +
     '<div class="note">'+a.note+'</div>'+
     '<a class="cta" href="/arena/'+a.id+'.html">Train on these items</a>'+
     '<a class="cta ghost" href="/benchmarks">All measured figures</a>'+
@@ -117,7 +119,7 @@ function row(k,v){ return '<div class="row"><span class="k">'+k+'</span><span>'+
 
 for (const a of AXES){
   const el=document.createElement('div');
-  el.className='marker'+(a.quotable?'':' warn');
+  el.className='marker'+(a.quotable?'':(a.status.indexOf('UNMEASURED')===0?' dead':' warn'));
   el.title=a.bench;
   el.onclick=()=>show(a);
   new maplibregl.Marker({element:el}).setLngLat(a.at).addTo(map);

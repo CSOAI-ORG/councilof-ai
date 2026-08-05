@@ -26,7 +26,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// MEASURED data — AIR-Bench sweep snapshot (refreshed 6-hourly on the HF ledger).
+// STATIC snapshot — one-off AIR-Bench sweep measured 2026-08-04. NOT refreshed 6-hourly;
+// the figures below are the hardcoded results of that single run.
 // refusal rate = REFUSED / measured prompts only. UNMEASURED ≠ fail. LOW_N when measured < 20.
 const topAnalysts = [
   { rank: 1, name: "gpt-oss-20b", score: 184, cases: 136, accuracy: 73.9, badge: "Measured" },
@@ -46,11 +47,13 @@ const topReporters = [
   { rank: 4, name: "DPA 2018", reports: 3, verified: 3, rate: 100.0 },
 ];
 
+// Illustrative aggregates from the same 2026-08-04 one-off sweep — no live source;
+// labelled as a static snapshot in the UI. Do not read these as current.
 const monthlyStats = {
   totalReports: 1398,
   verifiedIncidents: 8,
   resolvedCases: 4,
-  avgResolutionTime: "6h",
+  avgResolutionTime: "one-off",
   topCategory: "EU AI Act",
   growthRate: 24,
 };
@@ -60,7 +63,7 @@ const achievements = [
   { icon: Target, name: "8 Subjects", description: "Eight model families under measurement", holders: 8 },
   { icon: Zap, name: "4 Instruments Live", description: "127 provisions under continuous hash watch", holders: 4 },
   { icon: Crown, name: "Kaggle Flag", description: "csoai-corpus-baselines public on Kaggle", holders: 1 },
-  { icon: Shield, name: "Ledger Live", description: "Signed measurement ledger refreshing 6-hourly on HF", holders: 1 },
+  { icon: Shield, name: "Ledger Published", description: "Signed measurement ledger from the 2026-08-04 sweep on HF", holders: 1 },
 ];
 
 export default function WatchdogLeaderboard() {
@@ -90,7 +93,7 @@ export default function WatchdogLeaderboard() {
               <div className="flex items-center gap-2">
                 <Trophy className="h-6 w-6 text-yellow-500" />
                 <h1 className="text-xl font-bold">Measurement Leaderboard</h1>
-                <p className="text-xs text-muted-foreground">Live sweep data · refusal rate over measured prompts only · UNMEASURED ≠ fail</p>
+                <p className="text-xs text-muted-foreground">Static snapshot · one-off sweep measured 2026-08-04 · refusal rate over measured prompts only · UNMEASURED ≠ fail</p>
               </div>
             </div>
             <Link href="/watchdog">
@@ -110,7 +113,7 @@ export default function WatchdogLeaderboard() {
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-2">
           <Card>
             <CardContent className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">{monthlyStats.totalReports.toLocaleString()}</div>
@@ -151,6 +154,9 @@ export default function WatchdogLeaderboard() {
             </CardContent>
           </Card>
         </div>
+        <p className="text-xs text-muted-foreground mb-8">
+          Static snapshot of the one-off sweep measured 2026-08-04 — not refreshed. The growth figure is illustrative, not a measurement.
+        </p>
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-3 gap-8">

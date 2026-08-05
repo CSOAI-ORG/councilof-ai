@@ -52,18 +52,21 @@
 </head>
 <body>
 <div class="wrap">
+  <div style="border:1px solid var(--line);border-left:3px solid var(--bad);background:rgba(248,113,113,.08);padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:12.5px;color:var(--mut)">
+    <strong style="color:var(--bad)">DESIGN LAB — staging surface.</strong> The figures on this page are illustrative UI placeholders, not measurements. They are not from the GSPC harness, are not live, and must not be quoted. Measured figures live at <a href="/benchmarks" style="color:var(--sovereign)">/benchmarks</a> and <a href="/api/gspc" style="color:var(--sovereign)">/api/gspc</a>.
+  </div>
   <header>
     <div>
       <h1>CSOAI Real-Time Compliance Dashboard</h1>
-      <div style="color:var(--mut);font-size:12px;margin-top:4px;">EU AI Act Article 50 + sovereign universe live state</div>
+      <div style="color:var(--mut);font-size:12px;margin-top:4px;">EU AI Act Article 50 + sovereign universe illustrative state</div>
     </div>
     <div style="display:flex;align-items:center;gap:24px;">
       <div class="eu-clock">
         <div>EU AI ACT COUNTDOWN</div>
         <strong id="eu-ai-act-clock">--:--:--:--</strong>
-        <div style="font-size:10px;">2 Aug 2026 · live window</div>
+        <div style="font-size:10px;">2 Aug 2026 · enforcement window</div>
       </div>
-      <div class="live-tag"><span class="live-dot"></span>LIVE</div>
+      <div class="live-tag"><span class="live-dot"></span>DESIGN LAB</div>
     </div>
   </header>
 
@@ -72,7 +75,7 @@
     <div class="stat"><div class="stat-h">Frameworks</div><div class="stat-v">142</div><div class="stat-b">universal coverage</div></div>
     <div class="stat"><div class="stat-h">Cross-walks</div><div class="stat-v">5,043</div><div class="stat-b">+8 candidates</div></div>
     <div class="stat"><div class="stat-h">SOV accuracy</div><div class="stat-v">92%</div><div class="stat-b">hybrid retrieval</div></div>
-    <div class="stat"><div class="stat-h">Article 50 passports</div><div class="stat-v" id="stat-a50">0</div><div class="stat-b">live counter</div></div>
+    <div class="stat"><div class="stat-h">Article 50 passports</div><div class="stat-v" id="stat-a50">0</div><div class="stat-b">placeholder counter</div></div>
     <div class="stat"><div class="stat-h">SOV queries</div><div class="stat-v" id="stat-sov-q">0</div><div class="stat-b">last 24h</div></div>
     <div class="stat"><div class="stat-h">Vendor signals</div><div class="stat-v">35</div><div class="stat-b">10 vendors scanned</div></div>
     <div class="stat"><div class="stat-h">WCAG AA</div><div class="stat-v">100%</div><div class="stat-b">86 deployed pages</div></div>
@@ -87,7 +90,7 @@
       </table>
     </div>
     <div class="panel">
-      <h2>Live SIGIL ticker</h2>
+      <h2>SIGIL ticker (illustrative)</h2>
       <div class="ticker" id="ticker"></div>
     </div>
   </div>
@@ -129,12 +132,12 @@ const AI_ACT = [
   {vertical:'Sovereign Cloud', readiness: 90, tier: 'high'}
 ];
 const SOV_EXAMPLES = [
-  '04:01:15Z | 7523c5e04740 | SOV-TRAINED. 14,431 examples, 92% accuracy',
+  '04:01:15Z | 7523c5e04740 | SOV-TRAINED. no live accuracy feed — see /benchmarks',
   '03:55:42Z | e31a087fca15 | VENDOR-RESEARCH. 10 vendors, 35 signals',
   '03:51:08Z | 66db3398b19c | CROSSWALK-GRAPH. 8 candidate cross-walks',
   '03:48:23Z | 65823387bd58 | DEEP-RESEARCH-WAVE-2. 744 papers',
   '03:45:01Z | 53839ce88353 | RESEARCH-INGEST. 87 patterns',
-  '03:40:17Z | aa3ba73965ff | SOV-2.0-HYBRID. 92% accuracy',
+  '03:40:17Z | aa3ba73965ff | SOV-2.0-HYBRID. no live accuracy feed — see /benchmarks',
   '03:35:55Z | ae51a2d36486 | CHARTER-HEALTH. 67.1/100 avg',
   '03:30:12Z | 69ee8aba3cd8 | DOC-INDEX. 746 files, 326 recent'
 ];

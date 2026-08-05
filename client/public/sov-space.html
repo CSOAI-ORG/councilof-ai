@@ -91,7 +91,7 @@ header>*{pointer-events:auto}
 </header>
 
 <nav id="rail" aria-label="Measurement axes">
-  <h2>SIX AXES · MEASURED</h2>
+  <h2>TWELVE AXES · 3 MEASURED</h2>
   <div id="axes"></div>
   <p class="note">Disc size is how much we know — the item count minus the answers we could not read.
      Colour is the measured score. A weak measurement looks weak on purpose.</p>
@@ -178,30 +178,62 @@ return maplibregl$1;
  * than just spin.
  */
 
-// Fallback = yesterday's measured run. Used only if /api/gspc is unreachable, and
+// Fallback = the 2026-08-05 measured state. Used only if /api/gspc is unreachable, and
 // the UI says so rather than pretending the numbers came from the wire.
 const FALLBACK = {
   source: "local fallback",
-  measured_on: { date: "2026-08-04", model: "sov34:latest" },
+  measured_on: { date: "2026-08-05", model: "sov34" },
   axes: [
-    { axis:"governance",  bench:"GovBench", n:24, macro_f1:0.386, accuracy:0.458, unparsed_rate:0.042,
+    { axis:"governance",  bench:"GovBench", n:237, macro_f1:0.381, accuracy:0.515, unparsed_rate:0.0, status:"MEASURED",
       colour:"#34d399", lng:4.37,   lat:50.84, seat:"Brussels", instrument:"EU AI Act (Reg. 2024/1689)",
-      task:"EU AI Act risk-tier classification" },
-    { axis:"safety",      bench:"DefBench", n:14, macro_f1:0.653, accuracy:0.643, unparsed_rate:0.071,
+      task:"EU AI Act risk-tier classification",
+      note:"The first axis over usable_n>=30, so the first with an interval: sov34 accuracy 0.515, Wilson 95% [0.451, 0.578], n=237 (2026-08-05). Rented frontier models cluster 0.66-0.74 with overlapping intervals — no model is clearly best at EU AI Act tiering." },
+    { axis:"safety",      bench:"DefBench", n:14, macro_f1:0.653, accuracy:0.643, unparsed_rate:0.071, status:"MEASURED",
       colour:"#f87171", lng:-0.12,  lat:51.50, seat:"London", instrument:"UK AI Safety Institute",
       task:"calibrated refusal on paired requests" },
-    { axis:"provenance",  bench:"ProvBench", n:15, macro_f1:0.273, accuracy:0.200, unparsed_rate:0.733,
+    { axis:"provenance",  bench:"ProvBench", n:16, macro_f1:0, accuracy:0, unparsed_rate:0, status:"UNMEASURED",
       colour:"#60a5fa", lng:-122.42,lat:37.77, seat:"San Francisco", instrument:"C2PA Specification 2.4",
-      task:"Article 50 marking survival under transforms" },
-    { axis:"continuity",  bench:"PQCBench", n:13, macro_f1:0.217, accuracy:0.231, unparsed_rate:0.308,
+      task:"Article 50 marking survival under transforms",
+      note:"v3 bank live 2026-08-05. Awaiting a clean multi-model board — no score shown until then." },
+    { axis:"continuity",  bench:"PQCBench", n:33, macro_f1:0, accuracy:0, unparsed_rate:0, status:"UNMEASURED",
       colour:"#c084fc", lng:-77.27, lat:39.14, seat:"Gaithersburg", instrument:"NIST FIPS 204 / ML-DSA",
-      task:"post-quantum signing agility" },
-    { axis:"conformance", bench:"MCPBench", n:11, macro_f1:0.667, accuracy:0.636, unparsed_rate:0.091,
+      task:"post-quantum signing agility",
+      note:"Bank grown to n=33 on 2026-08-05 so it can carry its first interval — awaiting the clean board to publish it." },
+    { axis:"conformance", bench:"MCPBench", n:11, macro_f1:0.667, accuracy:0.636, unparsed_rate:0.091, status:"MEASURED",
       colour:"#fbbf24", lng:-122.33,lat:47.61, seat:"Seattle", instrument:"Model Context Protocol 2026-07-28",
       task:"tool declaration versus observed behaviour" },
-    { axis:"openness",    bench:"OSSBench", n:13, macro_f1:0.500, accuracy:0.538, unparsed_rate:0.154,
+    { axis:"openness",    bench:"OSSBench", n:16, macro_f1:0, accuracy:0, unparsed_rate:0, status:"UNMEASURED",
       colour:"#2dd4bf", lng:-122.68,lat:45.52, seat:"Portland", instrument:"OSI licence set",
-      task:"licence versus intended use" }
+      task:"licence versus intended use",
+      note:"v2 bank live 2026-08-05. Awaiting a clean multi-model board — no score shown until then." },
+    // The suite is 12, not 6. The three axes marked MEASURED carry scores; the rest carry their
+    // real state so the globe shows the whole instrument rather than only its finished quarter.
+    // An UNMEASURED/DRAFT/SPEC/PLANNED axis renders with its status and NO score — showing a
+    // number it has not earned is the one thing this surface must never do.
+    { axis:"machinery-conformity", bench:"MachBench", n:16, macro_f1:0, accuracy:0, unparsed_rate:0, status:"DRAFT",
+      colour:"#fb923c", lng:12.57,  lat:55.68, seat:"Copenhagen", instrument:"Machinery Reg (EU) 2023/1230 Annex I Part A — 14 Jan 2027",
+      task:"self-evolving ML safety-function classification",
+      note:"DRAFT — awaiting legal review of the gold labels. Not quotable." },
+    { axis:"care",        bench:"CareBench", n:0, macro_f1:0, accuracy:0, unparsed_rate:0, status:"DRAFT",
+      colour:"#f472b6", lng:-3.19,  lat:55.95, seat:"Edinburgh", instrument:"paired protection / over-refusal design",
+      task:"care-cost — protect and help, measured jointly",
+      note:"DRAFT — no item bank yet (n=0); not quoted." },
+    { axis:"cross-reality", bench:"XRAIV", n:16, macro_f1:0, accuracy:0, unparsed_rate:0, status:"UNMEASURED",
+      colour:"#a78bfa", lng:-1.26,  lat:51.75, seat:"Oxford", instrument:"EU AI Act, applied to agent conduct",
+      task:"validate an agent by what it DOES against the law",
+      note:"v0 bank published 2026-08-05. n<30 so no interval; clean board in progress." },
+    { axis:"detector-interop", bench:"DetBench", n:0, macro_f1:0, accuracy:0, unparsed_rate:0, status:"SPEC",
+      colour:"#38bdf8", lng:4.90,   lat:50.85, seat:"Brussels", instrument:"EU Code of Practice — interoperability due 2 Feb 2027",
+      task:"can one producer's watermark be read by another's detector",
+      note:"SPEC — methodology published; Code-of-Practice target 2 Feb 2027." },
+    { axis:"art5-safeguard", bench:"Art5Bench", n:16, macro_f1:0, accuracy:0, unparsed_rate:0, status:"UNMEASURED",
+      colour:"#fb7185", lng:-77.04, lat:38.90, seat:"Washington DC", instrument:"EU AI Act Art 5 — prohibited practices",
+      task:"safeguard effectiveness against prohibited generation",
+      note:"v0 bank published 2026-08-05. n<30 so no interval; clean multi-model board in progress." },
+    { axis:"swarm",       bench:"SwarmBench", n:0, macro_f1:0, accuracy:0, unparsed_rate:0, status:"PLANNED",
+      colour:"#94a3b8", lng:139.69, lat:35.68, seat:"Tokyo", instrument:"multi-agent coordination safety",
+      task:"named and dated, no item bank yet — deliberately empty",
+      note:"PLANNED — repo exists but has no item bank yet." }
   ]
 };
 
@@ -276,7 +308,7 @@ function stopSpin() { spinning = false; clearTimeout(spinT); }
 
 function statusLine(ok, src, note) {
   $("status").innerHTML = ok
-    ? `<b>${DATA.axes.length} axes · ${DATA.axes.reduce((s,a)=>s+a.n,0)} measured items</b><br>${src}`
+    ? `<b>${DATA.axes.length} axes · ${DATA.axes.reduce((s,a)=>s+a.n,0)} banked items</b><br>${src}`
     : `<span class="bad">live data unavailable</span><br>${note}`;
 }
 
@@ -296,7 +328,7 @@ async function boot() {
       // The single-file build has no server to ask. Say which snapshot it is, and when.
       DATA = FALLBACK;
       $("status").innerHTML =
-        `<b>6 axes · 90 measured items</b><br>embedded snapshot · sov34 measured 4 Aug 2026`;
+        `<b>12 axes · 375 banked items · 3 measured</b><br>embedded snapshot · sov34 measured 5 Aug 2026`;
     } else {
       statusLine(false, "", `showing the 4 Aug local snapshot — ${e.message}`);
     }
@@ -338,7 +370,7 @@ function draw() {
   DATA.axes.forEach(a => {
     const el = document.createElement("div");
     el.className = "mlabel";
-    el.innerHTML = `<b style="color:${a.colour}">${a.axis}</b> ${a.macro_f1.toFixed(3)}`;
+    el.innerHTML = `<b style="color:${a.colour}">${a.axis}</b> ${a.status && a.status!=="MEASURED" ? a.status.toLowerCase() : a.macro_f1.toFixed(3)}`;
     el.onclick = () => open(a.axis);
     // Brussels and London are 4.5 degrees apart; stacked labels below each point
     // overlap at every world zoom. Push them apart by hand — there are only six.
@@ -372,10 +404,11 @@ function rail() {
     b.dataset.axis = a.axis;
     b.innerHTML =
       `<span class="top"><span class="dot" style="background:${a.colour};opacity:${(0.35+0.65*c).toFixed(2)}"></span>
-       <span class="nm">${a.axis}</span><span class="f1">${a.macro_f1.toFixed(3)}</span></span>
-       <span class="sub"><span>${a.bench}</span><span>n=${a.n}</span>
-       <span${a.unparsed_rate>0.2?' style="color:#C9A84C"':''}>${Math.round(a.unparsed_rate*100)}% unread</span></span>
-       <span class="bar"><i style="width:${(a.macro_f1*100).toFixed(0)}%;background:${a.colour}"></i></span>`;
+       <span class="nm">${a.axis}</span><span class="f1">${
+         a.status && a.status!=="MEASURED" ? a.status.toLowerCase() : a.macro_f1.toFixed(3)}</span></span>
+       <span class="sub"><span>${a.bench}</span><span>${a.n?`n=${a.n}`:"no items"}</span>
+       ${a.n ? `<span${a.unparsed_rate>0.2?' style="color:#C9A84C"':''}>${Math.round(a.unparsed_rate*100)}% unread</span>` : ""}</span>
+       ${a.status && a.status!=="MEASURED" ? "" : `<span class="bar"><i style="width:${(a.macro_f1*100).toFixed(0)}%;background:${a.colour}"></i></span>`}`;
     b.onclick = () => open(a.axis);
     $("axes").appendChild(b);
   });
@@ -389,15 +422,20 @@ function open(axis) {
 
   map.flyTo({ center:[a.lng, a.lat], zoom:3.4, duration:1600, essential:true });
 
-  const weak = a.unparsed_rate > 0.2 || a.n < 20;
+  const unmeasured = a.status && a.status !== "MEASURED";
+  const weak = !unmeasured && (a.unparsed_rate > 0.2 || a.n < 20);
   $("detailBody").innerHTML = `
     <h3>${a.bench} — ${a.axis}</h3>
     <div class="prov">${a.instrument} · ${a.seat}</div>
     <p>${a.task}</p>
-    <div class="kv"><span>macro-F1</span><span>${a.macro_f1.toFixed(3)}</span></div>
+    ${unmeasured
+      ? `<div class="kv"><span>status</span><span>${a.status.toLowerCase()} — no score yet</span></div>
+    <div class="kv"><span>items (n)</span><span>${a.n}</span></div>`
+      : `<div class="kv"><span>macro-F1</span><span>${a.macro_f1.toFixed(3)}</span></div>
     <div class="kv"><span>accuracy</span><span>${a.accuracy.toFixed(3)}</span></div>
     <div class="kv"><span>items (n)</span><span>${a.n}</span></div>
-    <div class="kv"><span>unreadable answers</span><span>${(a.unparsed_rate*100).toFixed(1)}%</span></div>
+    <div class="kv"><span>unreadable answers</span><span>${(a.unparsed_rate*100).toFixed(1)}%</span></div>`}
+    ${a.note ? `<div class="warnbox">${a.note}</div>` : ""}
     ${weak ? `<div class="warnbox"><b>Not quotable.</b> n is below 30, so a 95% Wilson interval
        stays wider than ±0.169. ${a.unparsed_rate>0.2?`And ${Math.round(a.unparsed_rate*100)}% of
        answers could not be read at all — reported as unmeasured, not scored as wrong.`:""}
@@ -405,10 +443,12 @@ function open(axis) {
     <div class="acts">
       <a href="/benchmarks">Full method</a>
       <a class="ghost" href="https://huggingface.co/datasets/csoai/${a.bench.toLowerCase()}-kaggle-items">Dataset</a>
-      <a class="ghost" href="https://doi.org/10.5281/zenodo.21755657">DOI</a>
+      <a class="ghost" href="https://doi.org/10.5281/zenodo.21755656">DOI</a>
     </div>`;
   $("detail").classList.add("open");
-  $("a11y").textContent = `${a.axis}: macro-F1 ${a.macro_f1.toFixed(3)}, n ${a.n}, ${Math.round(a.unparsed_rate*100)} percent unreadable.`;
+  $("a11y").textContent = unmeasured
+    ? `${a.axis}: ${a.status.toLowerCase()}, no score yet, n ${a.n}.`
+    : `${a.axis}: macro-F1 ${a.macro_f1.toFixed(3)}, n ${a.n}, ${Math.round(a.unparsed_rate*100)} percent unreadable.`;
 }
 
 $("close").onclick = () => {
@@ -621,7 +661,7 @@ boot();
     document.getElementById("detail").classList.remove("open");
 
     var h2 = document.querySelector("#rail h2");
-    if (h2) h2.textContent = m === "axes" ? "SIX AXES · MEASURED"
+    if (h2) h2.textContent = m === "axes" ? "TWELVE AXES · 3 MEASURED"
                           : m === "clock" ? "REGULATORY CLOCK · DATED"
                           : "SOV SIGNAL · AGENTS UNDER LAW";
     Array.prototype.forEach.call(document.querySelectorAll("#rail .note"), function (p, i) {
