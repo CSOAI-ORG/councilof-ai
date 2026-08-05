@@ -447,7 +447,7 @@ export default function NewHomeV2() {
             Many frameworks. One <span className="text-emerald-400">signed</span> proof.
           </h2>
           <p className="mt-3 max-w-2xl mx-auto text-gray-300">
-            Governance rules from every jurisdiction reach a fault-aware consensus council consensus — and out comes one
+            Governance rules from every jurisdiction reach a fault-aware council consensus — and out comes one
             Ed25519-signed record anyone can verify offline, without trusting a vendor dashboard.
           </p>
           <ConsensusHero className="mt-8 w-full max-w-4xl mx-auto rounded-2xl" />
