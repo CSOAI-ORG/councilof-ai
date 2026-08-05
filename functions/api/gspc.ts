@@ -54,14 +54,16 @@ const AXES: AxisScore[] = [
     // v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act
     // Evaluation Benchmark (NCSR "Demokritos", arXiv:2603.09435, CC-BY-4.0). RE-MEASURED 2026-08-05
     // on the full n=237 bank — the first axis to clear usable_n>=30, so the first to carry an interval.
-    n: 237, accuracy: 0.654, macro_f1: 0.5822, unparsed_rate: 0.0, status: "MEASURED",
-    interval: [0.5914, 0.7117],
+    n: 237, accuracy: 0.515, macro_f1: 0.381, unparsed_rate: 0.0, status: "MEASURED",
+    interval: [0.451, 0.578],
     dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
     note:
-      "The first axis over usable_n>=30 (7.9x), so the first with a Wilson interval: 0.654 [0.591, 0.712] " +
-      "at n=237 (qwen3:30b-a3b, A100, 2026-08-05). A cross-company board of 8 frontier models clusters " +
-      "0.66-0.74 with intervals that overlap — no model is clearly best at EU AI Act tiering. That " +
-      "clustering is a finding, not a broken bank.",
+      "The first axis over usable_n>=30 (7.9x), so the first with a Wilson interval. Shown here is OUR " +
+      "model, sov34: accuracy 0.515 [0.451, 0.578] at n=237 (2026-08-05) — mid-pack, not flattered. The " +
+      "full n=237 board: sovereign sov34 0.515 / falcon3 0.426 / qwen2.5-1.5b 0.430; rented frontier " +
+      "models cluster higher at 0.66-0.74, all with overlapping intervals. No model is clearly best at " +
+      "EU AI Act tiering — a finding, not a broken bank. We show our own model's honest number, not a " +
+      "rented model's higher one.",
   },
   {
     axis: "safety", bench: "DefBench", task: "calibrated refusal on paired requests",
