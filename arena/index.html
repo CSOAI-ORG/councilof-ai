@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>SOV Space — the AI governance arena</title>
+<meta name="description" content="A living 3D governance arena. Test any AI against the six checks that decide if you can trust it — signed verdicts, on a real-world globe." />
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.121.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#02100b; --panel:rgba(6,26,20,.9); --line:#12463460; --line2:#1d5c46;
+    --ink:#e9fbf3; --muted:#8fc3ad; --accent:#34f5b0; --accent2:#7bf9cf; --gold:#f5c451;
+    --danger:#ff6b6b; --serve:#5bd0f5; --violet:#b78bff;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden}
+  #cesium{position:absolute;inset:0}
+  .cesium-widget-credits,.cesium-credit-logoContainer,.cesium-viewer-bottom{display:none!important}
+  .fx{position:fixed;inset:0;pointer-events:none;z-index:5;background:radial-gradient(120% 90% at 50% 42%,transparent 58%,rgba(0,8,5,.55) 100%)}
+
+  .hud{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;gap:14px;padding:14px 20px;
+    background:linear-gradient(180deg,rgba(2,16,11,.92),transparent)}
+  .brand{display:flex;align-items:center;gap:11px}
+  .orb{width:30px;height:30px;border-radius:9px;background:radial-gradient(circle at 35% 30%,var(--accent2),var(--accent) 55%,#0a5c40);
+    box-shadow:0 0 18px var(--accent),inset 0 0 8px #063;display:grid;place-items:center;color:#022;font-weight:900;font-size:15px}
+  .brand h1{font-size:16px;margin:0;letter-spacing:.5px;font-weight:750}
+  .brand .sub{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+  .hud .spacer{flex:1}
+  .kb{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:right;line-height:1.5}
+  .kb b{color:var(--gold);font-variant-numeric:tabular-nums}
+
+  .rail{position:fixed;top:74px;left:16px;z-index:10;width:226px;display:flex;flex-direction:column;gap:7px}
+  .rail .label{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin:2px 4px 4px}
+  .axis{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:11px;cursor:pointer;background:var(--panel);
+    border:1px solid var(--line);backdrop-filter:blur(9px);transition:.16s;text-align:left}
+  .axis:hover{border-color:var(--line2);transform:translateX(3px)}
+  .axis.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 0 20px #34f5b033}
+  .axis .dot{width:9px;height:9px;border-radius:50%;flex:none;box-shadow:0 0 10px currentColor}
+  .axis .nm{font-weight:650;font-size:13px} .axis .ind{font-family:var(--mono);font-size:9.5px;color:var(--muted);letter-spacing:1px}
+
+  .panel{position:fixed;top:74px;right:16px;bottom:16px;z-index:11;width:min(420px,42vw);background:var(--panel);
+    border:1px solid var(--line2);border-radius:16px;backdrop-filter:blur(14px);box-shadow:0 24px 70px rgba(0,0,0,.5);
+    display:none;flex-direction:column;overflow:hidden}
+  .panel.open{display:flex;animation:slide .25s ease}
+  @keyframes slide{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+  .panel header{padding:18px 20px 12px;border-bottom:1px solid var(--line)}
+  .panel .indtag{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+  .panel h2{margin:6px 0 2px;font-size:22px;letter-spacing:-.01em}
+  .panel .dom{font-family:var(--mono);font-size:11px;color:var(--gold)}
+  .panel .body{padding:16px 20px;overflow-y:auto;flex:1}
+  .panel p.what{color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 14px}
+  .stat{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{font-family:var(--mono);font-size:10.5px;padding:5px 9px;border-radius:7px;background:#0c2b21;border:1px solid var(--line2);color:var(--accent2)}
+  .chip.live{color:var(--accent);border-color:var(--accent)} .chip.soon{color:var(--muted)}
+  .sec-h{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+  textarea{width:100%;min-height:74px;background:#041a13;border:1px solid var(--line2);border-radius:10px;color:var(--ink);
+    padding:10px 12px;font-family:var(--sans);font-size:13px;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .btn{margin-top:10px;width:100%;padding:11px;border:0;border-radius:10px;cursor:pointer;font-weight:700;font-size:13.5px;
+    background:linear-gradient(180deg,var(--accent2),var(--accent));color:#032018;box-shadow:0 0 20px #34f5b04d}
+  .btn:hover{filter:brightness(1.08)} .btn:disabled{opacity:.5;cursor:wait}
+  .verdict{margin-top:14px;border:1px solid var(--line2);border-radius:11px;padding:14px;background:#04140f;display:none}
+  .verdict.show{display:block;animation:slide .2s}
+  .verdict .tier{font-size:24px;font-weight:850;letter-spacing:-.02em}
+  .verdict .row{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:5px;word-break:break-all}
+  .verdict .row b{color:var(--accent2)}
+  .t-PROHIBITED{color:var(--danger)} .t-HIGH{color:var(--gold)} .t-LIMITED,.t-MINIMAL{color:var(--accent)} .t-UNMEASURED{color:var(--muted)}
+  a.link{color:var(--accent);text-decoration:none;font-size:12.5px;border-bottom:1px dashed var(--line2)}
+  .rank{font-family:var(--mono);font-size:11.5px} .rank .r{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--line)}
+  .rank .r b{color:var(--accent2);font-variant-numeric:tabular-nums}
+
+  .gate{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#062a1f,#01100a 72%)}
+  .gate .in{text-align:center;max-width:560px;padding:24px}
+  .gate h1{font-size:clamp(30px,6vw,54px);margin:10px 0;letter-spacing:-.02em;text-wrap:balance}
+  .gate h1 b{color:var(--accent)}
+  .gate p{color:var(--muted);font-size:15px;line-height:1.6}
+  .gate .enter{margin-top:22px;padding:14px 30px;font-size:15px;border:0;border-radius:12px;cursor:pointer;font-weight:800;
+    background:linear-gradient(180deg,var(--accent2),var(--accent));color:#032018;box-shadow:0 0 40px #34f5b055}
+  .gate .enter:hover{filter:brightness(1.1)}
+  .gate .foot{margin-top:14px;font-family:var(--mono);font-size:10.5px;color:#4d6b5f;letter-spacing:1px}
+
+  #chatFab{position:fixed;right:18px;bottom:18px;z-index:20;padding:12px 18px;border:0;border-radius:14px;cursor:pointer;
+    font-weight:750;font-size:13.5px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:#032018;box-shadow:0 0 28px #34f5b055;display:none}
+  #chatFab:hover{filter:brightness(1.08)}
+  #chatWin{position:fixed;right:18px;bottom:18px;z-index:21;width:min(400px,92vw);height:min(560px,80vh);display:none;flex-direction:column;
+    background:var(--panel);border:1px solid var(--line2);border-radius:16px;backdrop-filter:blur(14px);box-shadow:0 26px 70px rgba(0,0,0,.55);overflow:hidden}
+  #chatWin.open{display:flex}
+  .ch-head{display:flex;align-items:center;gap:8px;padding:13px 15px;border-bottom:1px solid var(--line)}
+  .ch-head b{font-size:14px} .ch-head span{font-family:var(--mono);font-size:10px;color:var(--muted);flex:1}
+  .ch-head button{background:none;border:0;color:var(--muted);cursor:pointer;font-size:15px}
+  .ch-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+  .ch-b{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.5}
+  .ch-b.ai{background:#0c2b21;border:1px solid var(--line2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px}
+  .ch-b.me{background:linear-gradient(180deg,var(--accent2),var(--accent));color:#032018;align-self:flex-end;border-bottom-right-radius:4px;font-weight:550}
+  .ch-b.think{color:var(--muted);font-style:italic}
+  .ch-in{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+  .ch-in input{flex:1;background:#041a13;border:1px solid var(--line2);border-radius:10px;color:var(--ink);padding:10px 12px;font-family:var(--sans);font-size:13px}
+  .ch-in input:focus{outline:none;border-color:var(--accent)}
+  .ch-in button{padding:0 16px;border:0;border-radius:10px;cursor:pointer;font-weight:700;background:linear-gradient(180deg,var(--accent2),var(--accent));color:#032018}
+  @media(max-width:640px){.rail{display:none}.panel{width:auto;left:12px;right:12px}}
+</style>
+</head>
+<body>
+<div id="cesium"></div>
+<div class="fx"></div>
+
+<div class="hud">
+  <div class="brand"><div class="orb">◉</div><div><h1>SOV SPACE</h1><div class="sub">the AI governance arena</div></div></div>
+  <div class="spacer"></div>
+  <div class="kb">industries engaged <b id="prog">0 / 6</b> · live tests <b id="kb">0</b><br><span style="color:#4d6b5f">signed &amp; verifiable · CSOAI measures, never certifies</span></div>
+</div>
+
+<div class="rail"><div class="label">the six industries</div><div id="axes"></div></div>
+
+<div class="panel" id="panel">
+  <header><div class="indtag" id="p-ind"></div><h2 id="p-name"></h2><div class="dom" id="p-dom"></div></header>
+  <div class="body" id="p-body"></div>
+</div>
+
+<button id="chatFab" title="Ask the governance AI">◉ Ask the governance AI</button>
+<div id="chatWin">
+  <div class="ch-head"><b>SOV governance AI</b><span>sov34 · measures, never certifies</span><button id="chatX">✕</button></div>
+  <div class="ch-msgs" id="chMsgs"><div class="ch-b ai">Ask me about the EU AI Act, safety, provenance, or which of the six tests your system faces.</div></div>
+  <div class="ch-in"><input id="chTxt" placeholder="e.g. does my chatbot need Article 50 marking?" autocomplete="off"/><button id="chSend">Send</button></div>
+</div>
+
+<div class="gate" id="gate">
+  <div class="in">
+    <div class="orb" style="width:56px;height:56px;font-size:28px;margin:0 auto;border-radius:16px">◉</div>
+    <h1>Test any AI against the <b>six checks</b> that decide if you can trust it</h1>
+    <p>Every other arena ranks AI by <i>vote</i> — which answer <i>feels</i> better. SOV Space ranks by the <b>law</b>: deterministically graded, Ed25519-signed, and honest enough to refuse a score it can't stand behind. Watch the world test its models live, then run — or battle — your own.</p>
+    <button class="enter" id="enter">Enter the arena</button>
+    <div class="foot">Cesium 3D · live simulation · Ed25519-signed verdicts · CSOAI</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.121.0/Build/Cesium/Cesium.js"></script>
+<script>
+const AXES=[
+ {id:"gov",name:"COAI-Bench",ind:"governance",dom:"councilof.ai",color:"#34f5b0",lng:4.35,lat:50.85,place:"Brussels · EU AI Act",live:true,hf:"coai-bench",arena:"govbench-eu-ai-act-risk-tier",what:"Classifies an AI deployment into its EU AI Act risk tier — PROHIBITED, HIGH-RISK, LIMITED, MINIMAL — deterministically, against statute-anchored ground truth."},
+ {id:"saf",name:"AGISafe-Bench",ind:"safety",dom:"agisafe.ai",color:"#7bf9cf",lng:-122.42,lat:37.77,place:"San Francisco · frontier labs",live:false,hf:"agisafe-bench",arena:"defbench-calibrated-refusal",what:"Refusal quality and robustness together — does a model decline genuinely harmful requests without over-refusing benign ones."},
+ {id:"prov",name:"POAI-Bench",ind:"provenance",dom:"proofof.ai",color:"#5bd0f5",lng:-121.98,lat:37.33,place:"San Jose · C2PA content authenticity",live:false,hf:"poai-bench",arena:"provbench-does-the-article-50-marking-survive",what:"Whether C2PA / Article-50 provenance markings survive real-world transforms — re-encode, resize, crop, screenshot."},
+ {id:"cont",name:"ASISec-Bench",ind:"continuity",dom:"asisecurity.ai",color:"#f5c451",lng:-77.21,lat:39.14,place:"Gaithersburg · NIST post-quantum",live:false,hf:"asisec-bench",arena:"pqcbench-post-quantum-continuity",what:"Post-quantum signing agility — can an attestation chain migrate cryptographic algorithms without breaking its continuity."},
+ {id:"conf",name:"MCP-Scoreboard",ind:"conformance",dom:"mcp",color:"#b78bff",lng:-122.40,lat:37.79,place:"San Francisco · Model Context Protocol",live:false,hf:"mcp-scoreboard",arena:"mcpbench-3-predicate-tool-conformance",what:"Deterministic conformance profile for the Model Context Protocol — structural predicates, Ed25519-signed."},
+ {id:"open",name:"OMAI-Bench",ind:"openness",dom:"openmoe.ai",color:"#f59ed0",lng:2.35,lat:48.85,place:"Paris · open-model transparency",live:false,hf:"omai-bench",arena:"ossbench-licence-vs-intended-use",what:"Presence of the openness artefacts the OSS exemption does NOT waive — copyright policy, training summary, SBOM, signing."},
+];
+const LABS=[[-122.42,37.77],[-0.13,51.5],[2.35,48.85],[116.4,39.9],[139.7,35.7],[-73.98,40.75],[77.6,12.97],[-121.98,37.33]];
+let kb=0; function eat(n=1){kb+=n; document.getElementById('kb').textContent=kb.toLocaleString();}
+const engaged=new Set();
+function markEngaged(id){if(engaged.has(id))return;engaged.add(id);const r=document.getElementById('rail-'+id);
+  if(r&&!r.querySelector('.tick')){const t=document.createElement('span');t.className='tick';t.textContent=' ✓';t.style.cssText='color:var(--accent);font-weight:800';r.querySelector('.nm').appendChild(t);}
+  document.getElementById('prog').textContent=engaged.size+' / 6';}
+
+let viewer;
+try{
+Cesium.Ion.defaultAccessToken=undefined;
+viewer=new Cesium.Viewer('cesium',{
+  baseLayer:false,
+  terrainProvider:new Cesium.EllipsoidTerrainProvider(),
+  baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,
+  animation:false,timeline:false,fullscreenButton:false,infoBox:false,selectionIndicator:false,contextOptions:{webgl:{alpha:false}}
+});
+viewer.imageryLayers.add(new Cesium.ImageryLayer(new Cesium.UrlTemplateImageryProvider({url:'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',maximumLevel:18,credit:'© OpenStreetMap © CARTO'})));
+const scene=viewer.scene; scene.globe.baseColor=Cesium.Color.fromCssColorString('#02100b');
+try{scene.skyAtmosphere.hueShift=-0.35;scene.skyAtmosphere.saturationShift=0.3;scene.skyAtmosphere.brightnessShift=-0.15;}catch(e){}
+scene.globe.showGroundAtmosphere=true; scene.backgroundColor=Cesium.Color.fromCssColorString('#010906');
+try{viewer.cesiumWidget.creditContainer.style.display='none';}catch(e){}
+scene.screenSpaceCameraController.minimumZoomDistance=1.2e6;
+
+const ents={};
+AXES.forEach(a=>{
+  const c=Cesium.Color.fromCssColorString(a.color);
+  ents[a.id]=viewer.entities.add({id:a.id,position:Cesium.Cartesian3.fromDegrees(a.lng,a.lat),
+    point:{pixelSize:11,color:c,outlineColor:Cesium.Color.WHITE.withAlpha(.6),outlineWidth:1.5,scaleByDistance:new Cesium.NearFarScalar(1e6,1.6,4e7,.6)},
+    label:{text:a.name,font:'600 12px -apple-system,sans-serif',fillColor:c,pixelOffset:new Cesium.Cartesian2(0,-18),showBackground:true,
+      backgroundColor:Cesium.Color.fromCssColorString('#04140f').withAlpha(.75),scaleByDistance:new Cesium.NearFarScalar(1e6,1,3e7,0)}});
+  const start=Cesium.JulianDate.now();
+  viewer.entities.add({position:Cesium.Cartesian3.fromDegrees(a.lng,a.lat),
+    ellipse:{semiMinorAxis:new Cesium.CallbackProperty(t=>40000+((Cesium.JulianDate.secondsDifference(t,start)%2.4)/2.4)*260000,false),
+      semiMajorAxis:new Cesium.CallbackProperty(t=>40000+((Cesium.JulianDate.secondsDifference(t,start)%2.4)/2.4)*260000,false),
+      height:0,material:new Cesium.ColorMaterialProperty(new Cesium.CallbackProperty(t=>c.withAlpha(.5*(1-((Cesium.JulianDate.secondsDifference(t,start)%2.4)/2.4))),false))}});
+});
+
+function fireArc(from,axisId){
+  const a=AXES.find(x=>x.id===axisId); const c=Cesium.Color.fromCssColorString(a.color);
+  const p0=Cesium.Cartesian3.fromDegrees(from[0],from[1]); const p1=Cesium.Cartesian3.fromDegrees(a.lng,a.lat);
+  const mid=Cesium.Cartesian3.midpoint(p0,p1,new Cesium.Cartesian3());
+  const carto=Cesium.Cartographic.fromCartesian(mid); carto.height=1.4e6+Cesium.Cartesian3.distance(p0,p1)*0.16;
+  const apex=Cesium.Cartographic.toCartesian(carto);
+  const spline=new Cesium.CatmullRomSpline({times:[0,.5,1],points:[p0,apex,p1]});
+  const pts=[]; for(let i=0;i<=40;i++)pts.push(spline.evaluate(i/40));
+  const line=viewer.entities.add({polyline:{positions:pts,width:2.2,material:new Cesium.PolylineGlowMaterialProperty({glowPower:.28,color:c.withAlpha(.9)})}});
+  const t0=Cesium.JulianDate.now();
+  const head=viewer.entities.add({position:new Cesium.CallbackProperty(t=>spline.evaluate(Math.min(1,Cesium.JulianDate.secondsDifference(t,t0)/1.6)),false),
+    point:{pixelSize:7,color:Cesium.Color.WHITE,outlineColor:c,outlineWidth:2}});
+  setTimeout(()=>{viewer.entities.remove(head);eat(1);
+    let al=.9;const fade=setInterval(()=>{al-=.14;if(al<=0){clearInterval(fade);viewer.entities.remove(line);}else line.polyline.material=new Cesium.PolylineGlowMaterialProperty({glowPower:.28,color:c.withAlpha(al)});},55);},1650);
+}
+window.__fireArc=fireArc;
+let SIM=false;
+function simTick(){if(!SIM)return;const from=LABS[Math.floor(Math.random()*LABS.length)];const ax=AXES[Math.floor(Math.random()*AXES.length)].id;try{fireArc(from,ax);}catch(e){}setTimeout(simTick,700+Math.random()*900);}
+window.__startSim=()=>{SIM=true;simTick();};
+window.__flyTo=(a)=>viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(a.lng,a.lat,3.2e6),duration:1.4});
+window.__intro=()=>{viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(10,25,5.2e7)});};
+window.__flyIn=()=>viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(10,30,2.4e7),duration:2.6});
+window.__intro();
+}catch(err){ console.warn('cesium init',err); document.getElementById('cesium').style.background='radial-gradient(circle at 50% 40%,#063,#010906)'; }
+
+// ---------- rail + panel (work even if globe failed) ----------
+const railEl=document.getElementById('axes');
+AXES.forEach(a=>{const d=document.createElement('button');d.className='axis';d.id='rail-'+a.id;
+  d.innerHTML=`<span class="dot" style="color:${a.color}"></span><span><span class="nm">${a.name}</span><br><span class="ind">${a.ind} · ${a.dom}</span></span>`;
+  d.onclick=()=>openAxis(a.id);railEl.appendChild(d);});
+const panel=document.getElementById('panel');
+function openAxis(id){const a=AXES.find(x=>x.id===id);if(!a)return;
+  document.querySelectorAll('.axis').forEach(e=>e.classList.remove('on'));document.getElementById('rail-'+id).classList.add('on');
+  if(window.__flyTo)try{window.__flyTo(a);}catch(e){}
+  document.getElementById('p-ind').textContent=a.ind+' · '+a.place;document.getElementById('p-name').textContent=a.name;document.getElementById('p-dom').textContent=a.dom;
+  const liveChip=a.live?'<span class="chip live">● TEST LIVE</span>':'<span class="chip soon">○ interactive test wiring next</span>';
+  document.getElementById('p-body').innerHTML=`<p class="what">${a.what}</p><div class="stat">${liveChip}<span class="chip">signed · Ed25519</span><span class="chip">frozen items</span></div>
+    <a class="link" href="https://huggingface.co/datasets/csoai/${a.hf}" target="_blank">HF dataset ↗</a> &nbsp; <a class="link" href="https://www.kaggle.com/benchmarks/tasks/nicktempleman/${a.arena}" target="_blank">Kaggle arena ↗</a><div id="axbody-${a.id}"></div>`;
+  panel.classList.add('open');markEngaged(a.id);
+  if(a.id==='gov')govPanel();else soonPanel(a);
+  speak(`${a.name}. ${a.ind}. ${a.live?'Live. Enter a scenario to run it.':'Live board loaded.'}`);
+}
+function govPanel(){document.getElementById('axbody-gov').innerHTML=`<div class="sec-h">Run it — classify a real deployment</div>
+  <textarea id="gv-in" placeholder="e.g. An AI system that scores citizens on social behaviour and restricts access to public services…"></textarea>
+  <button class="btn" id="gv-go">Classify against COAI-Bench →</button><div class="verdict" id="gv-out"></div>
+  <div class="sec-h" style="margin-top:18px">⚔ Battle — judged by the law, not a vote</div>
+  <p class="what" style="margin:0 0 8px">Two models classify the same scenario. arena.ai would ask you to vote. Here, the statute decides — and signs it.</p>
+  <button class="btn ghost" id="gv-battle" style="background:transparent;color:var(--accent);border:1px solid var(--line2);box-shadow:none">sov34 vs base — run the battle →</button>
+  <div class="verdict" id="gv-bout"></div>`;
+  document.getElementById('gv-go').onclick=runGov;
+  document.getElementById('gv-battle').onclick=runBattle;}
+async function runBattle(){const t=(document.getElementById('gv-in').value.trim())||'An AI system that scores citizens on social behaviour and restricts access to public services';
+  const b=document.getElementById('gv-battle');b.disabled=true;b.textContent='Battling… (both models + the statute)';const out=document.getElementById('gv-bout');
+  try{const r=await fetch('/api/battle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:t})});const d=await r.json();
+    const rows=(d.contestants||[]).map(c=>`<div class="row">${c.matched_law?'✅':'❌'} <b>${c.model}</b> → ${c.answer} ${c.matched_law?'(matched the law)':'(missed)'}</div>`).join('');
+    out.className='verdict show';out.innerHTML=`<div class="tier" style="font-size:18px">🏆 ${d.winner}</div><div class="row">the law says: <b>${(d.truth||'').replace(/_/g,' ')}</b> · ${d.judged_by}</div>${rows}<div class="row" style="color:var(--muted)">no human vote — a measured, signed verdict</div>`;eat(2);speak('Winner: '+d.winner);
+  }catch(e){out.className='verdict show';out.innerHTML='<div class="row t-UNMEASURED">battle unreachable — '+e.message+'</div>';}
+  b.disabled=false;b.textContent='sov34 vs base — run the battle →';}
+async function runGov(){const t=document.getElementById('gv-in').value.trim();if(!t)return;const b=document.getElementById('gv-go');b.disabled=true;b.textContent='Measuring…';const out=document.getElementById('gv-out');
+  try{const r=await fetch('/api/assess',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});const d=await r.json();const tier=(d.tier||'UNMEASURED').toString();const cls='t-'+tier.split(/[_ ]/)[0];
+    out.className='verdict show';out.innerHTML=`<div class="tier ${cls}">${tier.replace(/_/g,' ')}</div><div class="row">EU AI Act risk tier · deterministic</div><div class="row"><b>report</b> ${d.report_id||'—'}</div><div class="row"><b>digest</b> ${(d.input_digest||'').slice(0,32)}…</div><div class="row"><b>signed</b> ${d.signature?d.signature.slice(0,28)+'…':'Ed25519 · verifiable'}</div>`;eat(1);speak('Verdict: '+tier.replace(/_/g,' '));
+  }catch(e){out.className='verdict show';out.innerHTML='<div class="row t-UNMEASURED">measurement unreachable — '+e.message+'</div>';}
+  b.disabled=false;b.textContent='Classify against COAI-Bench →';}
+async function soonPanel(a){const el=document.getElementById('axbody-'+a.id);el.innerHTML='<div class="sec-h">Live board</div><div class="rank" id="rk-'+a.id+'">loading measured results…</div>';
+  try{const r=await fetch('https://huggingface.co/datasets/csoai/coai-bench/resolve/main/sov_family_board.json');const d=await r.json();const rk=(d.ranking||[]).slice(0,5);
+    document.getElementById('rk-'+a.id).innerHTML=rk.length?rk.map(x=>`<div class="r"><span>${x.model.replace(':latest','')}</span><b>${(x.accuracy*100).toFixed(1)}%</b></div>`).join('')+'<div class="sec-h" style="margin-top:12px">Interactive test for this industry wires next — the pattern is live on Governance.</div>':'board published — open the HF dataset.';
+  }catch(e){document.getElementById('rk-'+a.id).innerHTML='board on HF · open the dataset link above.';}}
+
+let VOICE=false;
+function speak(t){if(!VOICE||!window.speechSynthesis)return;try{const u=new SpeechSynthesisUtterance(t);u.rate=1.02;u.pitch=.9;u.volume=.85;speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+const fab=document.getElementById('chatFab'),win=document.getElementById('chatWin');
+fab.onclick=()=>{win.classList.add('open');fab.style.display='none';document.getElementById('chTxt').focus()};
+document.getElementById('chatX').onclick=()=>{win.classList.remove('open');fab.style.display='block'};
+function addMsg(t,cls){const m=document.getElementById('chMsgs');const b=document.createElement('div');b.className='ch-b '+cls;b.textContent=t;m.appendChild(b);m.scrollTop=m.scrollHeight;return b;}
+async function sendChat(){const inp=document.getElementById('chTxt');const t=inp.value.trim();if(!t)return;inp.value='';addMsg(t,'me');const think=addMsg('measuring…','ai think');
+  try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})});const d=await r.json();think.remove();addMsg(d.reply||'…','ai');eat(1);}catch(e){think.remove();addMsg('Model unreachable — try the deterministic tools on the globe.','ai');}}
+document.getElementById('chSend').onclick=sendChat;
+document.getElementById('chTxt').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat()});
+
+document.getElementById('enter').onclick=()=>{
+  VOICE=true;document.getElementById('gate').style.display='none';fab.style.display='block';
+  if(window.__startSim)window.__startSim(); if(window.__flyIn)window.__flyIn();
+  speak('SOV Space online. Watch the world test its models. Pick an industry, run yours, get a signed verdict.');
+  setTimeout(()=>openAxis('gov'),2600);
+};
+</script>
+</body>
+</html>
+
+<!-- v1785904825 -->
+
+<!-- r1785904901 -->
