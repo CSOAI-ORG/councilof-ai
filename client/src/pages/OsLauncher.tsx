@@ -74,7 +74,7 @@ const APPS: App[] = [
   { name: "Webhooks", desc: "Real-time, HMAC-signed integration mesh.", href: "/webhooks", glyph: "⌁", tone: "from-cyan-500/20 to-cyan-400/5 border-cyan-400/30" },
   { name: "Sovereign Academy", desc: "Learn governance as a guided journey \u2014 Foundations to certification.", href: "/academy", glyph: "\u2738", tone: "from-violet-500/20 to-violet-400/5 border-violet-400/30" },
   { name: "Join the Grid", desc: "Register your sovereign node \u2014 humanoid, enterprise or government.", href: "/register", glyph: "\u2B21", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
-  { name: "Get Certified", desc: "Earn a Watchdog Certificate — provable proof your AI is governed.", href: "/certification", glyph: "✦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
+  { name: "Get Measured", desc: "Earn a signed attestation record — provision-anchored evidence of what your AI did. Not a conformity claim.", href: "/certification", glyph: "✦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Pricing & Plans", desc: "From a free risk check to enterprise governance.", href: "/pricing", glyph: "◆", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
 ];
 

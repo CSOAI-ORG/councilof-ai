@@ -23,9 +23,16 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DIST = resolve(__dirname, '../dist/client');
 const PORT = 4319;
+// Public origin the prerendered HTML must reference. Never localhost.
+const PUBLIC_ORIGIN = process.env.PUBLIC_ORIGIN || 'https://www.csoai.org';
 
 // GEO-critical, citable routes. Order doesn't matter.
 const ROUTES = [
+  // NOTE ON /benchmarks — do NOT add it here. It is a hand-written static page in
+  // public/ (9.9 KB, its own inline CSS), not an SPA route, and prerendering it would
+  // overwrite the static file with a React render. Its problem is the trailing-slash
+  // routing below, plus the fact that it still carries ZERO JSON-LD — the best page in
+  // the estate arrives at a crawler as prose it has to trust.
   '/', '/crosswalk', '/crosswalks', '/compare', '/vs/vanta', '/vs/drata', '/vs/credo-ai', '/vs/onetrust', '/certification', '/pricing',
   '/trust-center', '/global-ai-regulation', '/readiness-assessment', '/framework-catalog',
   '/article-50', '/about',
@@ -46,6 +53,7 @@ const ROUTES = [
   '/sov3-model-card', '/sov3-system-card', '/sov3-whitepaper', '/research-transparency',
   // Measured-results cluster (citable)
   '/ai-act-benchmark',
+  '/provbench',
 ];
 
 const MIME = {
@@ -91,25 +99,68 @@ async function main() {
   }
   const page = await browser.newPage();
   let ok = 0, fail = 0;
+  const written = [], failed = [];
   for (const route of ROUTES) {
     try {
       await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle', timeout: 20000 });
       await page.waitForTimeout(600); // let per-route useEffects inject title/meta/JSON-LD
-      const html = '<!doctype html>\n' + await page.evaluate(() => document.documentElement.outerHTML);
-      const out = route === '/' ? join(DIST, 'index.html') : join(DIST, route, 'index.html');
-      await mkdir(dirname(out), { recursive: true });
-      await writeFile(out, html);
+      let html = '<!doctype html>\n' + await page.evaluate(() => document.documentElement.outerHTML);
+
+      // The app writes canonical/og:url from window.location.origin, which during
+      // prerender is http://localhost:4319 — and that origin was being baked into every
+      // deployed page. Found live 2026-08-05 on every prerendered route.
+      html = html.split(`http://localhost:${PORT}`).join(PUBLIC_ORIGIN);
+      const canonical = PUBLIC_ORIGIN + (route === '/' ? '/' : route);
+      html = html.replace(/<link\s+rel=["']canonical["'][^>]*>/i,
+        `<link rel="canonical" href="${canonical}" />`);
+      html = html.replace(/(<meta\s+property=["']og:url["']\s+content=)["'][^"']*["']/i,
+        `$1"${canonical}"`);
+
+      // WRITE BOTH SHAPES. Cloudflare Pages resolved /pricing but not /compare, and the
+      // difference between them was invisible in the repo: /compare/index.html existed
+      // and was correct, while a request for /compare with NO trailing slash fell through
+      // to the SPA fallback and served the homepage. Eight citable routes shipped that
+      // way — /benchmarks, /crosswalk, /article-50, /about, /certification, /cra,
+      // /ai-act-summary, /compare — all returning HTTP 200 with the wrong page, which is
+      // why nothing caught it. Emitting route.html as well as route/index.html makes the
+      // no-slash form resolve to a real file instead of the fallback.
+      const outs = route === '/'
+        ? [join(DIST, 'index.html')]
+        : [join(DIST, route, 'index.html'), join(DIST, `${route.replace(/^\//, '')}.html`)];
+      for (const out of outs) {
+        await mkdir(dirname(out), { recursive: true });
+        await writeFile(out, html);
+      }
+      written.push(route);
       const bytes = Buffer.byteLength(html);
       console.log(`  ✓ ${route.padEnd(26)} → ${(bytes / 1024).toFixed(0)}kb`);
       ok++;
     } catch (e) {
       console.log(`  ✗ ${route.padEnd(26)} — ${String(e.message || e).slice(0, 80)}`);
+      failed.push(route);
       fail++;
     }
   }
   await browser.close();
   srv.close();
+  // Belt and braces: normalise the no-slash form at the edge too, so the fix does not
+  // depend on one platform's asset-resolution order staying the same.
+  const redirects = written.filter((r) => r !== '/')
+    .map((r) => `${r} ${r}/ 301`).join('\n');
+  await writeFile(join(DIST, '_redirects'), redirects + '\n');
+  console.log(`  ✓ _redirects              → ${written.length - 1} trailing-slash rules`);
+
   console.log(`\nPrerendered ${ok}/${ROUTES.length} routes (${fail} failed).`);
+
+  // THE GATE WAS `if (ok === 0)`. Forty-four of forty-five routes could fail and the
+  // build stayed green — which is how eight citable pages went out serving the homepage.
+  // Any failure is now a build failure; a prerender that silently half-works is worse
+  // than one that does not run, because the output looks fine and returns 200.
+  if (fail > 0) {
+    console.error(`\n✗ ${fail} route(s) failed to prerender: ${failed.join(', ')}`);
+    console.error('  Refusing to ship a partial prerender — those routes would serve the SPA shell.');
+    process.exit(1);
+  }
   if (ok === 0) process.exit(1);
 }
 

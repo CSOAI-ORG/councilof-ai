@@ -422,12 +422,13 @@ export default function EUAIActUrgency() {
                   <FileText className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                  UK-Registered Certification Body
+                  UK-Registered Measurement Body
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
                   CSOAI operates under CEASAI Limited, UK Companies House
-                  16939677. Internationally recognized legal entity with
-                  audit-ready credentials.
+                  16939677 — an independent legal entity that measures and attests
+                  system behaviour against dated law. It is not an accredited
+                  certification body and does not declare conformity.
                 </p>
               </CardContent>
             </Card>

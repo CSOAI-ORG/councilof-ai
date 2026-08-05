@@ -96,8 +96,10 @@ export default function TermsOfService() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  Council Safety of Artificial Intelligence (CSOAI) is an independent, not-for-profit certification body
-                  dedicated to AI safety governance.
+                  Council Safety of Artificial Intelligence (CSOAI) is an independent, not-for-profit AI measurement body
+                  dedicated to AI safety governance. It measures and attests what systems do against dated law; it does
+                  not, and cannot, declare conformity — a conformity certificate requires an accreditation chain CSOAI
+                  does not hold.
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   {[
