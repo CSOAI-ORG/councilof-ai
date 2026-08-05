@@ -1,0 +1,37 @@
+---
+description: CSOAI review non-negotiables — the defects this estate actually shipped. Flag any of these in review.
+globs: ["**/*.py", "**/*.ts", "**/*.js"]
+alwaysApply: true
+---
+
+# CSOAI review rules — flag these, they are real recurring defects
+
+The estate's one rule: **a component must be structurally unable to report success on a path it did not
+complete.** Not "log the error" — *unable*. In review, flag any of the following as a bug, not a nit:
+
+1. **Two outcomes where there must be three.** Any grader/scorer that maps an unparsed / empty / failed
+   result to `0` or "wrong" instead of **UNMEASURED**. Unparsed must leave the denominator, never score
+   as incorrect. (This shipped four times in one day.)
+
+2. **A guard that can pass on an empty scan.** A contamination / validation check that reads zero rows
+   and returns "clean" is a false pass. An empty scan must be **fatal**, not silent.
+
+3. **An interval below the gate.** Any confidence interval / ranking published below `usable_n >= 30`,
+   including ours. Small-n must withhold the interval explicitly.
+
+4. **A claim without its test.** A capability asserted in a name, comment, or string with no code that
+   enforces it. If a function is called `verify_*` / `refuse_*` / `check_*`, the body must actually do it.
+
+5. **Sign AND significance.** A "beats"/"improves" verdict that checks only whether a CI excludes zero,
+   not whether the delta is **positive in sign**. (An earlier verdict printed "beats" for a −9.16 delta.)
+
+6. **Contamination by row instead of by theme.** Held-out splits must be theme-level: if any item in a
+   statutory theme is in training, the whole theme leaves the clean split.
+
+7. **Secrets in code or logs.** No tokens/keys inline; secrets come via keystone. Flag any printed secret.
+
+8. **Silent truncation / caps.** Any top-N, sampling, or no-retry bound that is not logged. Silent
+   truncation reads as "covered everything" when it didn't.
+
+When unsure whether something is a defect: if the code could report success on a path it didn't
+complete, it is one.
