@@ -182,7 +182,7 @@ export default function About() {
             <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Our Mission</Badge>
             <h2 className="text-4xl font-bold mb-6">Protecting Humanity While Creating Careers</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              We're not just another certification body. We're building the infrastructure for a new profession:
+              We are not a certification body and never will be — we measure, sign and publish evidence, and accredited bodies decide. What we are building is the infrastructure for a new profession:
               <span className="font-semibold text-emerald-600"> AI Safety Analyst</span>—projected to become one of the top 10 jobs by 2045.
             </p>
           </div>
@@ -204,7 +204,7 @@ export default function About() {
               </div>
               <h3 className="text-xl font-bold mb-3">Certify</h3>
               <p className="text-gray-600">
-                Rigorous certification exam with 70% passing threshold. Recognized by enterprises and governments worldwide.
+                Rigorous assessment with a 70% passing threshold. It records what you demonstrated — it is training, not accreditation, and confers no regulatory status.
               </p>
             </Card>
 
@@ -246,7 +246,7 @@ export default function About() {
                 <MapPin className="h-6 w-6 text-emerald-600" />
                 <h3 className="text-2xl font-bold text-emerald-900">Europe</h3>
               </div>
-              <p className="text-gray-700">EU AI Act compliant training and certification serving enterprises across all EU member states.</p>
+              <p className="text-gray-700">EU AI Act training and measurement serving enterprises across all EU member states. Measurement, not certification.</p>
             </Card>
 
             <Card className="p-8 bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
@@ -285,9 +285,9 @@ export default function About() {
                   <div className="w-1 h-20 bg-emerald-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
-                  <h3 className="text-2xl font-bold mb-4">🤖 33-Agent Council: Democratic AI Oversight</h3>
+                  <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-600">— designed, not yet measured</span></h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
-                    Unlike single-vendor AI systems that can be biased, our 33-Agent Council uses Byzantine consensus
+                    Oversight spread across providers so no single vendor decides alone. The 33-seat figure is an architecture, not a measurement — cross-checking measured today is n_eff 1.21 of 3, published in our Refutation Ledger. Historically this page described Byzantine consensus
                     across 12 different AI providers (OpenAI, Anthropic, Google, DeepSeek, and more). No single company
                     controls the outcome. It's democracy for AI safety decisions.
                   </p>
@@ -351,7 +351,7 @@ export default function About() {
                   <h3 className="text-2xl font-bold mb-4">💼 Job Creation: Not Just Compliance</h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
                     Every other AI safety organization focuses on regulation. We focus on <strong>people</strong>.
-                    We're training 10,000+ analysts in the next 2 years. These aren't just certifications—they're careers.
+                    We're training 10,000+ analysts in the next 2 years. Not certificates — careers.
                     Real jobs. Real income. Real impact.
                   </p>
                   <p className="text-sm text-gray-500">
@@ -617,9 +617,7 @@ export default function About() {
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
               <h3 className="text-xl font-bold mb-3">How is CSOAI different from other AI safety organizations?</h3>
               <p className="text-gray-600 leading-relaxed">
-                Most AI safety organizations focus on research or advocacy. CSOAI is the only platform that combines
-                training, certification, job creation, and operational oversight. We're not just talking about AI safety—we're
-                building the workforce regulators and companies draw on to apply it.
+                Most AI safety organisations focus on research or advocacy. We publish a measurement instrument instead: six axes, 90 frozen items, open on Hugging Face and Kaggle with the scoring code, so anyone can recompute what we claim or dispute an answer key. We also publish the results that go against us — our own model gives up 27.9 points of general reasoning to reach its refusal rate, and that number is on our homepage.
               </p>
             </Card>
           </div>
