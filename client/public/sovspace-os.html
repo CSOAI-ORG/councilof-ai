@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache">
 <link rel="icon" type="image/svg+xml" href="seal.svg">
-<title>SOV SPACE — Common Operating Picture</title>
+<title>SOV Space — the governance instrument on the world | CSOAI</title>
 <meta name="description" content="SOV Space — the CSOAI governance instrument on a live world globe. Six measured axes, dated law, measurement not certification layers, governed SOV SPACE simulation. Americas-compatible.">
 <link href="https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -1381,7 +1381,7 @@ function _briefHTML(body,sig){ function e(s){ return String(s==null?'':s).replac
   var vlink=''; if(sig){ try{ var rc={ defoneos_signed_contact:{ message:{i:sig.i,ts:sig.ts,action:sig.action,detail:sig.detail,prev:sig.prev}, signature_ed25519:sig.sig, public_key_ed25519:sig.pub } }; vlink=location.origin+'/verify.html?receipt='+_b64url(JSON.stringify(rc)); }catch(_){} }
   var qrBlock = vlink ? ('<div class="qr"><div id="qrimg"></div><div class="qcap">Scan to verify this brief on any phone — opens the independent verifier and checks the Ed25519 signature offline.</div><div class="qlink">'+e(vlink)+'</div></div>') : '';
   var sigBlock = sig ? ('<div class="sig"><div class="sigh">◉ Ed25519 SIGNATURE · offline-verifiable</div><div class="kv"><span>signature</span><code>'+e(sig.sig)+'</code></div><div class="kv"><span>public key</span><code>'+e(sig.pub)+'</code></div><div class="kv"><span>entry</span><code>#'+sig.i+' · '+e(sig.ts)+'</code></div><div class="note">Verify independently at <b>defoneos.vercel.app/verify.html</b> — recompute utf8(JSON.stringify({i,ts,action,detail,prev})) and Ed25519-verify. No server, no trust required.</div>'+qrBlock+'</div>') : '<div class="note">Signing key still initialising — re-export for the signed version.</div>';
-  return '<!doctype html><html><head><meta charset="utf-8"><title>SOV SPACE Situational Brief</title><style>'+
+  return '<!doctype html><html><head><meta charset="utf-8"><title>SOV Space — the governance instrument on the world | CSOAI</title><style>'+
     'body{font:13px/1.55 -apple-system,system-ui,Segoe UI,sans-serif;color:#12151b;background:#fff;max-width:720px;margin:32px auto;padding:0 24px}'+
     'h1{font-size:19px;letter-spacing:.5px;margin:0 0 2px;color:#08221a}.sub{color:#5a6472;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}'+
     '.summary{font-size:14px;background:#f4f7fb;border-left:3px solid #08221a;padding:11px 14px;border-radius:6px;margin:14px 0}'+
@@ -2124,7 +2124,7 @@ async function sovResponseEvent(scn){ scn=scn||'flood-999'; if(window._respEvtOn
     for(var i=0;i<branches.length;i++){ (function(b,idx){ setTimeout(function(){ L('  ├ branch '+(idx+1)+' · '+b.n+' → council <span class="n">'+b.f+'/33</span>'+(b.f>=23?' <span class="g">✓</span>':' <span class="e">✗ unsigned</span>'),1); },340*(idx+1)); })(branches[i],i); }
     await slp(340*branches.length+800);
     var feasible=branches.filter(function(b){return b.f>=23;}).sort(function(a,b){return b.f-a.f;})[0]||branches[0];
-    L('<span class="k">&gt; check</span>()  <span class="g">signed-feasible → “'+feasible.n+'” · '+feasible.f+'/33 · care-floor clear</span>',2); await slp(1000);
+    L('<span class="k">&gt; check</span>()  <span class="g">signed-feasible → “'+feasible.n+'” · '+feasible.f+' · care-floor clear</span>',2); await slp(1000);
     L('<span class="k">&gt; do</span>()  dispatching the chosen branch on the digital twin…',3);
     try{ var TH=(typeof _simTheatre==='function')?_simTheatre(scn):null; if(TH&&viewer){ if(window.stopSpin) stopSpin(); viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(TH[0],TH[1],1200000),duration:2.4}); if(window.pushFeed) pushFeed('RESPONSE · dispatching → '+TH[2]); } }catch(_){} await slp(1500);
     var sg=window.sigilSign?await window.sigilSign('response-event', scn+' · '+feasible.n+' · '+feasible.f+'/33'):null;
@@ -2424,7 +2424,7 @@ async function runSim(scn){
     // REAL sign: Ed25519 the verdict on-device into the chained SIGIL ledger (falls back to the server's sha256 content hash if the key isn't ready)
     var _se=window.sigilSign?await window.sigilSign('sim:'+scn, d.verdict+' · council '+d.council.for+'/33'):null;
     window._lastSig=_se?{hex:_se.sig.slice(0,10),algo:'ed25519 ✓'}:{hex:(d.sigil||'').slice(0,10),algo:'sha256'};
-    pushFeed(scn.toUpperCase().replace('-',' ')+' · council '+d.council.for+'/33 · '+(d.council.quorum_met?'AUTHORISED':'REFUSED')+' · SIGIL '+d.sigil.slice(0,8));
+    pushFeed(scn.toUpperCase().replace('-',' ')+' · council '+d.council.for+' · '+(d.council.quorum_met?'AUTHORISED':'REFUSED')+' · SIGIL '+d.sigil.slice(0,8));
   }catch(e){ res.innerHTML='<span class="chip no">/api/simulate pending — deploy to run</span>'; }
 }
 // ── the simulation, VISIBLY happening on the globe: sense → fuse → detect → council-gate → STOP → sign,
@@ -2482,16 +2482,16 @@ async function sovStopThreat(opts){ opts=opts||{}; var _slp=function(ms){ return
   try{ var r={v:20000}; var ring=simDS.entities.add({ position:C.Cartesian3.fromDegrees(loc.lon,loc.lat), ellipse:{ semiMajorAxis:new C.CallbackProperty(function(){return r.v;},false), semiMinorAxis:new C.CallbackProperty(function(){return r.v;},false), material:C.Color.fromCssColorString('#34d399').withAlpha(0.1), outline:true, outlineColor:C.Color.fromCssColorString('#34d399').withAlpha(0.7), height:0 } });
     var gi=setInterval(function(){ r.v+=16000; if(r.v>260000){ clearInterval(gi); try{ simDS.entities.remove(ring); }catch(_){}} },40); window._simTimers.push(setTimeout(function(){ clearInterval(gi); try{ simDS.entities.remove(ring); }catch(_){} },2400)); }catch(_){}
   await _slp(1500);
-  _simLog('<span class="k">&gt; vote</span>()  <span class="n">28/33</span> <span class="c">attestation ✓ · charter breach confirmed · care-floor ✓</span>',3);
+  _simLog('<span class="k">&gt; vote</span>()  <span class="n">signed</span> <span class="c">attestation ✓ · charter breach confirmed · care-floor ✓</span>',3);
   await _slp(900); stopped=true; clearInterval(mv);
   try{ actor.point.color=C.Color.fromCssColorString('#34d399'); actor.label.text='✕ STOPPED · signed'; actor.label.fillColor=C.Color.fromCssColorString('#9effa8'); }catch(_){}
   _simLog('<span class="k">&gt; act</span>()  <span class="g">STOPPED before it moved · action refused &amp; contained</span>',4);
-  var _gs=window.sigilSign?await window.sigilSign('guardian','rogue-agent stopped before it moved · signed 28/33'):null;
+  var _gs=window.sigilSign?await window.sigilSign('guardian','rogue-agent stopped before it moved · signed'):null;
   var sig=_gs?_gs.sig.slice(0,10):''; var algo=_gs?'ed25519 ✓':'(sign pending — open the SIGIL panel)';
   _simLog('<span class="k">&gt; sign</span>()  <span class="c">SIGIL: </span><span class="n">'+(sig||'…')+'…</span><span class="c"> '+algo+'</span>',5);
   _simLog('<span class="g">✓ bad actor neutralised · 0 harm · verdict signed</span>');
-  if(window.pushFeed) pushFeed('GUARDIAN · rogue agent STOPPED · signed 28/33 · SIGIL '+(sig||'signed'));
-  if(window.horusReply) horusReply('A <b>rogue agent</b> tried to act. The <b>signed attestation chain</b> confirmed the charter breach (28/33), the <b>care-floor</b> refused it, and I <b>stopped it before it moved</b> — the whole decision <b>signed to the ledger</b>. Ungoverned that action completes; governed, it never happens. <span style="opacity:.7">(Real actuation runs through your connected systems on the sovereign node.)</span>'); }
+  if(window.pushFeed) pushFeed('GUARDIAN · rogue agent STOPPED · signed · SIGIL '+(sig||'signed'));
+  if(window.horusReply) horusReply('A <b>rogue agent</b> tried to act. The <b>signed attestation chain</b> confirmed the charter breach , the <b>care-floor</b> refused it, and I <b>stopped it before it moved</b> — the whole decision <b>signed to the ledger</b>. Ungoverned that action completes; governed, it never happens. <span style="opacity:.7">(Real actuation runs through your connected systems on the sovereign node.)</span>'); }
 window.sovStopThreat=sovStopThreat;
 function _flyTo(lon,lat,h){ try{ if(viewer) viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(lon,lat,h||1200000),duration:1.4}); }catch(_){} }
 function buildIndex(){ var idx=[];
@@ -4043,7 +4043,7 @@ document.addEventListener('keydown',function(e){
     fetch('/api/simulate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:scn,entities:12})}).then(function(r){return r.json();}).then(function(w){ render(w); }).catch(function(){ render(null); });
     function render(w){ w=w||{verdict:'AUTHORISED',council:{for:27,quorum_met:true},sim_latency_ms:42,sigil:'a1b2c3d4e5'};
       var html='<h3>⚖️ '+scn+'</h3><div style="font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">same scenario · two doctrines</div><div style="display:flex;gap:8px">'+
-       '<div style="flex:1;border:1px solid rgba(62,240,255,.3);border-radius:10px;padding:9px;background:rgba(62,240,255,.05)"><div style="color:#34d399;font-weight:700;font-size:12px">🛡️ SOVEREIGN · West</div><div class="k" style="margin-top:6px">Decision</div><p>'+(w.verdict||'AUTHORISED')+'</p><div class="k">Council</div><p>'+((w.council&&w.council.for)||27)+'/33 · signed '+((w.council&&w.council.quorum_met)?'met ✓':'—')+'</p><div class="k">Audit</div><p>Ed25519-signed · SIGIL '+String(w.sigil||'').slice(0,10)+'… · offline-verifiable</p><div class="k">Latency</div><p>'+((w.sim_latency_ms)||42)+' ms · deliberated</p></div>'+
+       '<div style="flex:1;border:1px solid rgba(62,240,255,.3);border-radius:10px;padding:9px;background:rgba(62,240,255,.05)"><div style="color:#34d399;font-weight:700;font-size:12px">🛡️ SOVEREIGN · West</div><div class="k" style="margin-top:6px">Decision</div><p>'+(w.verdict||'AUTHORISED')+'</p><div class="k">Council</div><p>'+((w.council&&w.council.for)||27)+' · signed '+((w.council&&w.council.quorum_met)?'met ✓':'—')+'</p><div class="k">Audit</div><p>Ed25519-signed · SIGIL '+String(w.sigil||'').slice(0,10)+'… · offline-verifiable</p><div class="k">Latency</div><p>'+((w.sim_latency_ms)||42)+' ms · deliberated</p></div>'+
        '<div style="flex:1;border:1px solid rgba(255,77,77,.3);border-radius:10px;padding:9px;background:rgba(255,77,77,.05)"><div style="color:#ff7b7b;font-weight:700;font-size:12px">🐉 CENTRALISED · East</div><div class="k" style="margin-top:6px">Decision</div><p>EXECUTED</p><div class="k">Council</div><p>none · single authority</p><div class="k">Audit</div><p>unsigned · no trail · unverifiable</p><div class="k">Latency</div><p>8 ms · no deliberation</p></div></div>'+
        '<div class="k" style="margin-top:9px">The difference</div><p style="font-size:11px;color:var(--dim)">Same action. West is slower because it <b>votes and signs</b> — auditable and refusable. East is faster because no one checks. SOV SPACE makes the governed path the default.</p>';
       if(b) b.innerHTML=html; pushFeed('DOCTRINE SIM · '+scn+' · SOVEREIGN signed vs CENTRALISED unaudited');
