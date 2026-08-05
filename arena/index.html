@@ -201,7 +201,36 @@ function fireArc(from,axisId){
 window.__fireArc=fireArc;
 let SIM=false;
 function simTick(){if(!SIM)return;const from=LABS[Math.floor(Math.random()*LABS.length)];const ax=AXES[Math.floor(Math.random()*AXES.length)].id;try{fireArc(from,ax);}catch(e){}setTimeout(simTick,700+Math.random()*900);}
-window.__startSim=()=>{SIM=true;simTick();};
+// ---- roaming AI agents that connect live regional regulations ----
+const REGIONS=[
+ {n:"EU",lng:9,lat:50,reg:"EU AI Act (2024/1689) — risk tiers, Art 5 prohibitions, Art 50 marking"},
+ {n:"UK",lng:-1.5,lat:52.5,reg:"UK — pro-innovation framework · DSIT/AISI · no omnibus Act yet"},
+ {n:"US",lng:-98,lat:39,reg:"US — state AI laws (CO, CA) · NIST AI RMF · federal EOs"},
+ {n:"China",lng:104,lat:35,reg:"China — deep-synthesis & generative-AI measures"},
+ {n:"Canada",lng:-106,lat:56,reg:"Canada — AIDA (proposed) · OSFI model-risk guidance"},
+ {n:"Brazil",lng:-51,lat:-10,reg:"Brazil — PL 2338 AI bill (risk-based)"},
+ {n:"India",lng:79,lat:22,reg:"India — advisory-led · DPDP Act for data"},
+ {n:"Japan",lng:138,lat:37,reg:"Japan — soft-law AI guidelines (METI)"},
+];
+const ticker=document.createElement('div');
+ticker.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:12;max-width:660px;background:rgba(6,26,20,.92);border:1px solid #1d5c46;border-radius:12px;padding:9px 16px;backdrop-filter:blur(10px);font-family:var(--mono);font-size:12px;color:#8fc3ad;text-align:center;display:none';
+document.body.appendChild(ticker);
+function showReg(r){ticker.innerHTML=`<b style="color:#34f5b0">◈ ${r.n}</b> &nbsp;${r.reg}`;ticker.style.display='block';}
+let AG=false;
+function roamAgent(){ if(!AG||!window.viewer&&!viewer)return;
+  const a=REGIONS[Math.floor(Math.random()*REGIONS.length)]; let b=a; while(b===a) b=REGIONS[Math.floor(Math.random()*REGIONS.length)];
+  const p0=Cesium.Cartesian3.fromDegrees(a.lng,a.lat), p1=Cesium.Cartesian3.fromDegrees(b.lng,b.lat);
+  const mid=Cesium.Cartesian3.midpoint(p0,p1,new Cesium.Cartesian3());
+  const cc=Cesium.Cartographic.fromCartesian(mid); cc.height=2.0e6; const apex=Cesium.Cartographic.toCartesian(cc);
+  const sp=new Cesium.CatmullRomSpline({times:[0,.5,1],points:[p0,apex,p1]});
+  const t0=Cesium.JulianDate.now(); const DUR=4.5;
+  const agent=viewer.entities.add({position:new Cesium.CallbackProperty(t=>sp.evaluate(Math.min(1,Cesium.JulianDate.secondsDifference(t,t0)/DUR)),false),
+    point:{pixelSize:9,color:Cesium.Color.fromCssColorString('#7bf9cf'),outlineColor:Cesium.Color.WHITE,outlineWidth:1.5},
+    label:{text:'⬡ agent',font:'600 10px sans-serif',fillColor:Cesium.Color.fromCssColorString('#7bf9cf'),pixelOffset:new Cesium.Cartesian2(0,-14),showBackground:true,backgroundColor:Cesium.Color.fromCssColorString('#04140f').withAlpha(.7)}});
+  showReg(a); setTimeout(()=>showReg(b),DUR*500); setTimeout(()=>{viewer.entities.remove(agent);eat(1);},DUR*1000);
+}
+function agentTick(){ if(!AG)return; try{roamAgent();}catch(e){} setTimeout(agentTick,3000+Math.random()*2500); }
+window.__startSim=()=>{SIM=true;simTick();AG=true;agentTick();};
 window.__flyTo=(a)=>viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(a.lng,a.lat,3.2e6),duration:1.4});
 window.__intro=()=>{viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(10,25,5.2e7)});};
 window.__flyIn=()=>viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(10,30,2.4e7),duration:2.6});
