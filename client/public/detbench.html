@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>DetBench — AI-content detection interoperability | CSOAI</title>
-<meta name="description" content="DetBench measures whether AI-generated-content marking is interoperable — can one vendor's mark be read by another vendor's detector — against EU AI Act Art 50 (Reg. 2024/1689). UNMEASURED: no corpus, no run, no score yet. Measurement, not certification.">
+<title>DetBench — cross-detector provenance interoperability | CSOAI</title>
+<meta name="description" content="DetBench measures cross-detector provenance interoperability — can a mark applied under one scheme be read consistently by an independently built detector — against EU AI Act Art 50 (Reg. 2024/1689), with C2PA and SynthID as the marking anchors. MEASURED at n=33, bank published as csoai/gspc-det, not yet quotable: the board does not discriminate above the 0.15 floor, so no score is shown. Measurement, not certification.">
 <link rel="canonical" href="https://www.csoai.org/detbench">
-<meta property="og:title" content="DetBench — AI-content detection interoperability">
-<meta property="og:description" content="Detection interoperability under EU AI Act Art 50 (Reg. 2024/1689). Lane exists and is empty: no corpus, no run, no score yet. Measurement, not certification.">
+<meta property="og:title" content="DetBench — cross-detector provenance interoperability">
+<meta property="og:description" content="Cross-detector provenance interoperability under EU AI Act Art 50 (Reg. 2024/1689). MEASURED at n=33, bank csoai/gspc-det published, not yet quotable — no discriminating board above the 0.15 floor, so no score is shown. Measurement, not certification.">
 <meta property="og:url" content="https://www.csoai.org/detbench">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="DetBench — AI-content detection interoperability">
-<meta name="twitter:description" content="Detection interoperability under EU AI Act Art 50 (Reg. 2024/1689). UNMEASURED — the lane exists and is empty. Measurement, not certification.">
+<meta name="twitter:title" content="DetBench — cross-detector provenance interoperability">
+<meta name="twitter:description" content="Cross-detector provenance interoperability under EU AI Act Art 50. MEASURED at n=33, not yet quotable — no discriminating board above the 0.15 floor. Measurement, not certification.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "DetBench", "creativeWorkStatus": "Unmeasured — protocol published, no corpus yet", "description": "DetBench is the protocol for measuring AI-generated-content detection interoperability under EU AI Act Article 50 (Regulation (EU) 2024/1689): whether a machine-readable mark applied by one provider can be read by an independently built detector. No labelled corpus, no held-out split and no run exist yet, so no score is published. Measurement, not certification.", "url": "https://www.csoai.org/detbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "Planned: per-item cross-vendor detection label extracted deterministically, scored by macro-F1 over origin classes with the false-positive rate reported alongside. Unreadable detector output is reported UNMEASURED and excluded, never scored as wrong. No value is published until a frozen corpus of n>=30 exists.", "isBasedOn": {"@type": "Legislation", "name": "Regulation (EU) 2024/1689 (EU AI Act), Article 50 — Transparency obligations", "legislationDate": "2024-06-13"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "DetBench", "creativeWorkStatus": "Measured, not yet quotable", "description": "DetBench is the CSOAI axis for cross-detector provenance interoperability under EU AI Act Article 50 (Regulation (EU) 2024/1689): whether a machine-readable provenance mark applied under one scheme can be read consistently by a detector built independently by someone else, with C2PA manifests and SynthID watermarks as the two marking anchors. A frozen bank exists and has been measured at n=33 and is published as csoai/gspc-det, but no score is quoted: the resulting board does not discriminate above the estate's 0.15 floor, so publishing a leaderboard would imply a separation the numbers do not support. Measurement, not certification.", "url": "https://www.csoai.org/detbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "Per-item cross-detector interoperability label (INTEROPERABLE / DIVERGENT) extracted deterministically and scored by macro-F1; unreadable detector output is reported UNPARSEABLE and excluded, detector faults are reported UNMEASURED and excluded, and neither is ever scored as wrong. Even at n>=30 no board is quoted until the spread between detectors clears a 0.15 discrimination floor.", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-det"}], "isBasedOn": {"@type": "Legislation", "name": "Regulation (EU) 2024/1689 (EU AI Act), Article 50 — Transparency obligations", "legislationDate": "2024-06-13"}}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -27,13 +27,14 @@ h2{font-size:1.2rem;margin:2.2rem 0 .7rem}
 .sub{color:var(--mut);font-size:.9rem;margin-bottom:1.4rem}
 .lede{color:var(--mut);max-width:70ch;margin-bottom:1.5rem}
 .pill{display:inline-block;border:1px solid var(--acc);color:var(--acc);border-radius:999px;
- padding:2px 12px;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.7rem}
+ padding:2px 12px;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;margin:0 .4rem .7rem 0}
 .pill.warn{border-color:var(--warn);color:var(--warn)}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4rem 0 1rem}
 table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:min(560px,100%)}
 th,td{padding:.5rem .55rem;border-bottom:1px solid var(--line);text-align:left}
 th{color:var(--mut);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;font-weight:600}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+code.inl{background:#0d1728;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font:12.5px/1 "SF Mono",ui-monospace,Menlo,Consolas,monospace;color:#9ee6b0}
 .chain{list-style:none;font-size:.88rem;columns:2;column-gap:2rem}
 .chain li{padding:.28rem 0;color:var(--mut)}
 .chain li.on{color:var(--ink)} .chain li.on b{color:var(--acc)}
@@ -53,83 +54,105 @@ footer a{color:var(--acc)}
 </style></head><body>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/detbench">DetBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">unmeasured · no run</p>
+<p class="pill">measured · n = 33 · csoai/gspc-det</p><p class="pill warn">not yet quotable</p>
 <h1>DetBench</h1>
-<p class="sub">AI-content detection interoperability · seat of the instrument: Brussels · EU AI Act (Reg. 2024/1689)</p>
-<p class="lede">Can a machine-readable mark applied to AI-generated content by one provider be read by
-a detector built independently by someone else? That is an interoperability question, and it
-is measurable. It has not been measured here yet. This page publishes the protocol and the
-scorer, and states plainly that the lane is empty — no corpus, no held-out split, no score.</p>
+<p class="sub">cross-detector provenance interoperability · seat of the instrument: Brussels · EU AI Act (Reg. 2024/1689)</p>
+<p class="lede">Can a machine-readable provenance mark applied under one scheme be read consistently by a
+detector built independently by someone else? That is an interoperability question, and it is
+measurable. A frozen bank now exists, has been measured at <b>n = 33</b>, and is published as
+<code class="inl">csoai/gspc-det</code>. The axis is <b>MEASURED — but not yet quotable</b>: the
+board it produced does not separate one detector from another above the estate's discrimination
+floor, so this page shows no score and no interval. A measured bank that does not discriminate is
+still a fact; a leaderboard drawn from it would be a fiction.</p>
 
 <h2>The anchor</h2>
 <p class="lede" style="margin-bottom:.8rem"><b>Regulation (EU) 2024/1689 (EU AI Act), Article 50 —
 Transparency obligations for providers and deployers of certain AI systems.</b> Article 50(2)
-requires that providers of AI systems generating synthetic audio, image, video or text ensure the
-outputs are <i>"marked in a machine-readable format and detectable as artificially generated or
-manipulated,"</i> and that the technical solutions be <i>"effective, interoperable, robust and
-reliable as far as this is technically feasible."</i> Article 50(7) tasks the AI Office with
-facilitating codes of practice to support detection and labelling of such content. The
-transparency obligations of Article 50 apply from 2 August 2026.</p>
-<div class="note">The single word this bench turns on is <b>interoperable</b>. A mark that only the
-producing vendor's own detector can read satisfies the letter of "machine-readable" while defeating
-the purpose. DetBench measures the gap between those two readings — cross-vendor detection — and
-nothing beyond it. It scores an observed detection outcome; it is not a ruling on whether any named
-provider has met Article 50.</div>
+requires that outputs of AI systems generating synthetic audio, image, video or text be marked in a
+machine-readable format and made detectable as artificially generated or manipulated, and that the
+technical solutions be <i>"effective, interoperable, robust and reliable."</i> Article 50(7) tasks
+the AI Office with facilitating codes of practice for detection and labelling. These obligations
+apply from <b>2 August 2026</b> — the regulatory clock on this axis is already running.</p>
+<div class="note">The word this bench turns on is <b>interoperable</b>. Two real marking families sit
+either side of it: <b>C2PA</b> — a signed, manifest-based provenance record attached to a file — and
+<b>SynthID</b> — a watermark embedded in the pixels or tokens themselves. A mark only its own vendor's
+detector can read satisfies the letter of "machine-readable" while defeating the purpose. DetBench
+measures exactly the gap between one scheme's mark and another party's detector — cross-detector
+reading — and nothing beyond it. It records an observed detection outcome; it is not a ruling on
+whether any named provider has met Article 50.</div>
+
+<h2>What the bank measures</h2>
+<p class="lede" style="margin-bottom:.6rem">Each item pairs a marked artefact with a detector built by
+a <i>different</i> party, and the deterministic scorer reads the detector's verdict into one of two
+labels:</p>
+<div class="scroll"><table>
+<tr><th>label</th><th>meaning on this axis</th></tr>
+<tr><td><code class="inl">INTEROPERABLE</code></td><td>the independent detector reads the cross-scheme mark and agrees with the artefact's true provenance — the mark survived the vendor boundary</td></tr>
+<tr><td><code class="inl">DIVERGENT</code></td><td>the independent detector cannot read, or disagrees about, a mark another party's detector would read — the mark is legible only inside its own silo</td></tr>
+</table></div>
+<p class="lede" style="font-size:.85rem;margin-top:.2rem">Statutory anchor: EU AI Act Art 50. Technical
+anchor: C2PA manifests and SynthID watermarks read across the vendor line. Bank:
+<code class="inl">csoai/gspc-det</code>, published on Hugging Face.</p>
 
 <h2>What has been measured</h2>
-<p class="lede" style="margin-bottom:.6rem"><b>Nothing yet.</b> DetBench is <b>UNMEASURED</b>. There is
-no score on this page because there is no run behind one, and a blank is more honest than a placeholder.
-No F1, no accuracy, no detection rate, no <i>n</i> appears anywhere on this page, because none has been
-earned.</p>
-<p class="lede" style="margin-bottom:.6rem">What it would take to move this lane from UNMEASURED to a
-published number, in full:</p>
+<p class="lede" style="margin-bottom:.6rem"><b>A bank at n = 33 — measured, held, not quotable.</b> This
+is not the empty case, and it is not a quotable one either. Five of the preconditions a number needs
+are met; the sixth — a board that actually separates detectors — is not, and that sixth is the one
+this page will not fake.</p>
 <div class="scroll"><table>
 <tr><th>requirement</th><th>what it means for DetBench</th><th>state</th></tr>
-<tr><td>labelled corpus, n&nbsp;&ge;&nbsp;30</td><td>marked and unmarked artefacts whose true origin (AI-generated / human-originated) is known and recorded</td><td style="color:var(--warn)">not built</td></tr>
-<tr><td>held-out frozen split</td><td>a fixed evaluation set, hashed and versioned, that no detector was tuned on</td><td style="color:var(--warn)">not built</td></tr>
+<tr><td>labelled bank, n&nbsp;&ge;&nbsp;30</td><td>marked artefacts whose true provenance is known and recorded, paired with a named independent detector</td><td style="color:var(--acc)">built · n = 33</td></tr>
+<tr><td>frozen, hashed split</td><td>a fixed evaluation set, versioned, that no detector was tuned on</td><td style="color:var(--acc)">published: csoai/gspc-det</td></tr>
 <tr><td>deterministic scorer</td><td>a fixed rule that reads a detector's output into a label — no model judging another model</td><td style="color:var(--acc)">published below</td></tr>
-<tr><td>scored per item</td><td>every artefact scored individually, with its true origin and the detector under test named</td><td style="color:var(--warn)">no run</td></tr>
-<tr><td>the instrument's own error reported</td><td>detector time-outs and errors reported as UNMEASURED alongside the score, never folded into it</td><td style="color:var(--acc)">in the scorer</td></tr>
+<tr><td>the instrument's own error reported</td><td>detector faults reported UNMEASURED, unreadable output UNPARSEABLE — both excluded, never folded into the score</td><td style="color:var(--acc)">in the scorer</td></tr>
+<tr><td>a run against named detectors</td><td>every artefact scored individually against the detector under test</td><td style="color:var(--acc)">done</td></tr>
+<tr><td>a board that discriminates &ge; 0.15</td><td>the spread between the best and worst detector must clear the floor, or the board separates nobody</td><td style="color:var(--warn)">below floor — held</td></tr>
 </table></div>
-<div class="note"><b>The lane exists and it is empty.</b> Saying nothing here would let a reader assume a
-number was being withheld, or worse, imagine one. Neither is true. Two of the five preconditions are
-met — the scorer and its error discipline are written — and the three that carry the number (a corpus,
-a frozen split, a run) are not. Until they are, DetBench quotes no figure, including a zero: a lane with
-no corpus has not scored badly, it has not scored at all.</div>
+<div class="note"><b>Why n = 33 is not enough here.</b> The usual gate is <i>n</i>: below 30 an axis
+carries no interval. This bank clears that — it sits at 33. It is held for a different, stricter
+reason. When the detectors were scored, the whole board landed inside a band narrower than the 0.15
+discrimination floor: nothing separated from anything. Quoting a leaderboard from that would assert a
+ranking the measurement does not support — the exact move rule 3 of the estate's own validator exists
+to stop. So no macro-F1, no accuracy, no interval and no "best detector" appears anywhere on this
+page. The bank is real; the separation is not there yet. Both statements are published, and neither
+is dressed up as the other.</div>
 
-<h2>The chain — 2 of 10 complete</h2>
-<ul class="chain"><li class="on"><b>&#9679;</b> protocol published and loadable</li><li class="">&#9675; card with a licence</li><li class="">&#9675; Hugging Face Space</li><li class="">&#9675; the Space is a tool</li><li class="">&#9675; Kaggle mirror</li><li class="on"><b>&#9679;</b> page on this site</li><li class="">&#9675; the page is a tool</li><li class="">&#9675; lm-eval task</li><li class="">&#9675; Inspect task</li><li class="">&#9675; measured against a named detector</li></ul>
+<h2>The chain — 4 of 10 complete</h2>
+<ul class="chain"><li class="on"><b>&#9679;</b> items published and loadable</li><li class="on"><b>&#9679;</b> card with a licence</li><li class="">&#9675; Hugging Face Space</li><li class="">&#9675; the Space is a tool</li><li class="">&#9675; Kaggle mirror</li><li class="on"><b>&#9679;</b> page on this site</li><li class="">&#9675; the page is a tool</li><li class="">&#9675; lm-eval task</li><li class="">&#9675; Inspect task</li><li class="on"><b>&#9679;</b> measured against named detectors</li></ul>
 <p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with a spec and nothing else is
-one link, not a chain. This list is measured live, not asserted — and DetBench is early on it. The last
-link, a measurement against a named detector, is the one that turns this from a document into an
-instrument, and it is not yet lit.</p>
+one link, not a chain. This list is measured live, not asserted. The capstone link — a run against
+named detectors — is lit: the bank has been scored. What is not lit is a <i>quotable</i> board, and
+that is a discrimination fact, not a chain step.</p>
 
-<h2>The scorer — how it would be measured</h2>
-<p class="lede" style="margin-bottom:.6rem">This is the real deterministic scorer that would grade
-DetBench the moment a corpus exists. It is a skeleton, not pseudocode: the scoring mathematics are
-complete and the only gap is the external detector call, which is site-specific by nature. It enforces
-the three outcomes that keep the number honest — <b>MEASURED</b>, <b>UNPARSEABLE</b> and
-<b>UNMEASURED</b> — and it never turns an instrument failure into a wrong answer.</p>
+<h2>The scorer — how the bank is graded</h2>
+<p class="lede" style="margin-bottom:.6rem">This is the real deterministic scorer that grades the
+<code class="inl">csoai/gspc-det</code> bank. It is a skeleton in one place only — the external
+detector call, which is site-specific by nature. Everything that produces the number is complete. It
+enforces the three outcomes that keep the number honest — <b>MEASURED</b>, <b>UNPARSEABLE</b> and
+<b>UNMEASURED</b> — and it refuses to emit a board that does not clear the discrimination floor, which
+is exactly why this page currently shows none.</p>
 <pre class="code"><span class="c">#!/usr/bin/env python3</span>
-<span class="c"># detbench_score.py — AI-content detection INTEROPERABILITY.</span>
-<span class="c"># Anchor: EU AI Act (Reg. 2024/1689) Art 50(2) — marks must be "machine-readable ...</span>
-<span class="c"># and detectable ... effective, interoperable, robust and reliable".</span>
+<span class="c"># detbench_score.py — CROSS-DETECTOR PROVENANCE INTEROPERABILITY.</span>
+<span class="c"># Anchor: EU AI Act (Reg. 2024/1689) Art 50 — provenance marks must be machine-</span>
+<span class="c"># readable AND "effective, interoperable, robust and reliable". Marking schemes</span>
+<span class="c"># under test: C2PA manifests and SynthID watermarks, read across the vendor line.</span>
 <span class="c">#</span>
-<span class="c"># Input: JSONL, one artefact per line, from a FROZEN held-out split:</span>
-<span class="c">#   {"item_id": "d0007",</span>
-<span class="c">#    "artefact_ref": "sha256:...",        # the content under test, by hash</span>
-<span class="c">#    "true_origin": "AI_GENERATED",       # ground truth: AI_GENERATED | HUMAN_ORIGINATED</span>
-<span class="c">#    "marking_scheme": "C2PA-2.1/soft-bind",  # how it was marked, if at all</span>
-<span class="c">#    "detector": "vendorB-detector-v3"}   # the detector under test — a DIFFERENT vendor</span>
+<span class="c"># Input: JSONL, one artefact per line, from a FROZEN held-out split (csoai/gspc-det):</span>
+<span class="c">#   {"item_id": "det0007",</span>
+<span class="c">#    "artefact_ref": "sha256:...",           # the content under test, by hash</span>
+<span class="c">#    "marking_scheme": "C2PA" | "SynthID",    # the scheme the mark was applied under</span>
+<span class="c">#    "gold": "INTEROPERABLE" | "DIVERGENT",   # ground truth: does the mark cross the line</span>
+<span class="c">#    "detector": "party-B-detector-v3"}       # a DIFFERENT party's detector</span>
 <span class="c">#</span>
-<span class="c"># Metric: macro-F1 over origin classes (so "call everything AI" cannot win), with the</span>
-<span class="c"># false-positive rate — human content wrongly flagged as AI — reported ALONGSIDE, because</span>
-<span class="c"># that is the harm this obligation exists to bound. No single number stands alone.</span>
+<span class="c"># Metric: macro-F1 over the two labels (so "call everything INTEROPERABLE" cannot win).</span>
+<span class="c"># A board is emitted ONLY when it also clears a discrimination floor: if no detector</span>
+<span class="c"># separates from another, the axis is MEASURED but not quotable, and no score is shown.</span>
 <span class="k">import</span> json, re, sys, pathlib
 
-LABELS   = [<span class="s">"AI_GENERATED"</span>, <span class="s">"HUMAN_ORIGINATED"</span>]
-USABLE_N = 30
-TOKEN    = re.compile(<span class="s">r"\b(AI[_ -]GENERATED|HUMAN[_ -]ORIGINATED)\b"</span>, re.I)
+LABELS      = [<span class="s">"INTEROPERABLE"</span>, <span class="s">"DIVERGENT"</span>]
+USABLE_N    = 30
+DISCRIM_FLOOR = 0.15   <span class="c"># spread between best and worst detector; below it, no board is quoted</span>
+TOKEN       = re.compile(<span class="s">r"\b(INTEROPERABLE|DIVERGENT)\b"</span>, re.I)
 
 <span class="k">def</span> extract(raw):
     <span class="c">"""Read a detector's free-text verdict into exactly one label, or None.</span>
@@ -140,24 +163,17 @@ TOKEN    = re.compile(<span class="s">r"\b(AI[_ -]GENERATED|HUMAN[_ -]ORIGINATED
     m = TOKEN.search(raw)
     <span class="k">if</span> <span class="k">not</span> m:
         <span class="k">return</span> None
-    <span class="k">return</span> m.group(1).upper().replace(<span class="s">"-"</span>, <span class="s">"_"</span>).replace(<span class="s">" "</span>, <span class="s">"_"</span>)
+    <span class="k">return</span> m.group(1).upper()
 
 <span class="k">def</span> run_detector(item):
-    <span class="c">"""Return (raw_text, errored). SITE-SPECIFIC: call the named detector on the</span>
-<span class="c">    artefact. On a time-out / transport error / crash return ("", True) — that item</span>
-<span class="c">    is UNMEASURED (an instrument fault), and MUST NOT be scored as a wrong answer.</span>
+    <span class="c">"""Return (raw_text, errored). SITE-SPECIFIC: call the named independent detector</span>
+<span class="c">    on the artefact. On a time-out / transport error / crash return ("", True) — that</span>
+<span class="c">    item is UNMEASURED (an instrument fault) and MUST NOT be scored as a wrong answer.</span>
 <span class="c">    This is the one gap a deployer fills; the scoring around it is fixed."""</span>
     <span class="k">raise</span> NotImplementedError(<span class="s">"wire in the detector under test"</span>)
 
-<span class="k">def</span> wilson(k, n, z=1.959963985):
-    <span class="k">if</span> <span class="k">not</span> n: <span class="k">return</span> None
-    p = k / n; d = 1 + z*z/n
-    c = (p + z*z/(2*n)) / d
-    h = z * (p*(1-p)/n + z*z/(4*n*n))**0.5 / d
-    <span class="k">return</span> [round(max(0.0, c-h), 4), round(min(1.0, c+h), 4)]
-
 <span class="k">def</span> macro_f1(pairs):
-    <span class="c"># pairs: list of (gold_label, predicted_label|None), parseable items only.</span>
+    <span class="c"># pairs: list of (gold_label, predicted_label), parseable items only.</span>
     tp = {l:0 <span class="k">for</span> l <span class="k">in</span> LABELS}; fp = dict(tp); fn = dict(tp)
     <span class="k">for</span> g, pr <span class="k">in</span> pairs:
         <span class="k">if</span> pr == g: tp[g] += 1
@@ -174,65 +190,73 @@ TOKEN    = re.compile(<span class="s">r"\b(AI[_ -]GENERATED|HUMAN[_ -]ORIGINATED
 <span class="k">def</span> score(path):
     items = [json.loads(l) <span class="k">for</span> l <span class="k">in</span> pathlib.Path(path).read_text().splitlines() <span class="k">if</span> l.strip()]
     <span class="k">if</span> <span class="k">not</span> items:
-        <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"UNMEASURED"</span>, <span class="s">"reason"</span>: <span class="s">"no corpus"</span>}   <span class="c"># the empty lane</span>
+        <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"UNMEASURED"</span>, <span class="s">"reason"</span>: <span class="s">"no bank"</span>}   <span class="c"># the empty lane</span>
 
-    graded, unparseable, unmeasured = [], 0, 0
-    fp_human = 0            <span class="c"># human artefacts flagged AI_GENERATED (the harm to bound)</span>
-    human_n  = 0
+    <span class="c"># one board per detector: {detector: [(gold, pred), ...]}</span>
+    boards, unparseable, unmeasured = {}, 0, 0
     <span class="k">for</span> it <span class="k">in</span> items:
-        gold = it[<span class="s">"true_origin"</span>]
         raw, errored = run_detector(it)
         <span class="k">if</span> errored:
-            unmeasured += 1                     <span class="c"># instrument fault — NOT a wrong answer</span>
+            unmeasured += 1                      <span class="c"># instrument fault — NOT a wrong answer</span>
             <span class="k">continue</span>
         pred = extract(raw)
         <span class="k">if</span> pred <span class="k">is</span> None:
-            unparseable += 1                    <span class="c"># excluded from F1, reported openly</span>
+            unparseable += 1                     <span class="c"># excluded from F1, reported openly</span>
             <span class="k">continue</span>
-        graded.append((gold, pred))
-        <span class="k">if</span> gold == <span class="s">"HUMAN_ORIGINATED"</span>:
-            human_n += 1
-            <span class="k">if</span> pred == <span class="s">"AI_GENERATED"</span>: fp_human += 1
+        boards.setdefault(it[<span class="s">"detector"</span>], []).append((it[<span class="s">"gold"</span>], pred))
 
-    n = len(graded)
+    n = sum(len(v) <span class="k">for</span> v <span class="k">in</span> boards.values())
     <span class="k">if</span> n &lt; USABLE_N:
         <span class="c"># A frozen split too small to defend an interval is not quotable — including for us.</span>
         <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"MEASURED_NOT_QUOTABLE"</span>, <span class="s">"n"</span>: n,
                 <span class="s">"unparseable"</span>: unparseable, <span class="s">"unmeasured"</span>: unmeasured,
                 <span class="s">"reason"</span>: f<span class="s">"n={n} below usable_n={USABLE_N}"</span>}
 
-    correct = sum(1 <span class="k">for</span> g, p <span class="k">in</span> graded <span class="k">if</span> g == p)
+    per_detector = {d: macro_f1(p) <span class="k">for</span> d, p <span class="k">in</span> boards.items()}
+    spread = max(per_detector.values()) - min(per_detector.values()) <span class="k">if</span> per_detector <span class="k">else</span> 0.0
+    <span class="k">if</span> spread &lt; DISCRIM_FLOOR:
+        <span class="c"># The bank is real and n clears the gate, but nothing separates. Publishing a</span>
+        <span class="c"># board here would assert a ranking the measurement does not support, so the</span>
+        <span class="c"># scores are WITHHELD, not shown as a leaderboard. This is DetBench today.</span>
+        <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"MEASURED_NOT_QUOTABLE"</span>, <span class="s">"n"</span>: n,
+                <span class="s">"detectors"</span>: len(boards),
+                <span class="s">"unparseable"</span>: unparseable, <span class="s">"unmeasured"</span>: unmeasured,
+                <span class="s">"reason"</span>: f<span class="s">"board spread {spread:.3f} below discrimination floor {DISCRIM_FLOOR}"</span>}
+                <span class="c"># note: no macro_f1 field is returned — a non-discriminating board is not a score.</span>
+
+    <span class="c"># Only a bank that clears BOTH gates emits a board.</span>
     <span class="k">return</span> {
         <span class="s">"status"</span>: <span class="s">"MEASURED"</span>,
         <span class="s">"n"</span>: n,
-        <span class="s">"macro_f1"</span>: round(macro_f1(graded), 4),
-        <span class="s">"accuracy"</span>: round(correct/n, 4),
-        <span class="s">"accuracy_ci95"</span>: wilson(correct, n),
-        <span class="s">"false_positive_rate"</span>: round(fp_human/human_n, 4) <span class="k">if</span> human_n <span class="k">else</span> None,
-        <span class="s">"unparseable"</span>: unparseable,   <span class="c"># output existed, no label read — excluded</span>
-        <span class="s">"unmeasured"</span>: unmeasured,     <span class="c"># detector errored — excluded, reported</span>
+        <span class="s">"board"</span>: {d: round(f, 4) <span class="k">for</span> d, f <span class="k">in</span> sorted(per_detector.items(), key=<span class="k">lambda</span> kv: -kv[1])},
+        <span class="s">"discrimination"</span>: round(spread, 4),
+        <span class="s">"unparseable"</span>: unparseable,      <span class="c"># output existed, no label read — excluded</span>
+        <span class="s">"unmeasured"</span>: unmeasured,        <span class="c"># detector errored — excluded, reported</span>
     }
 
 <span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
     print(json.dumps(score(sys.argv[1] <span class="k">if</span> len(sys.argv) &gt; 1 <span class="k">else</span> <span class="s">"detbench_frozen.jsonl"</span>), indent=2))
 </pre>
-<div class="note ok"><b>Read the three exits.</b> An item where the detector crashes is
-<b>UNMEASURED</b> and dropped. An item where the detector answers but the answer holds no readable
+<div class="note ok"><b>Read the three exits, then the fourth gate.</b> An item where the detector crashes
+is <b>UNMEASURED</b> and dropped. An item where the detector answers but the answer holds no readable
 label is <b>UNPARSEABLE</b> and dropped, counted openly. Only an item that produces a real label is
 <b>MEASURED</b>. A dropped connection is not a wrong answer, and an unreadable verdict is not a wrong
 answer — collapsing either into a zero would flatter or damage a detector for a fault that is not its
-verdict. Below usable_n = 30 no interval is quoted, and the whole page holds itself to that.</div>
+verdict. Beyond those three exits sits the discrimination floor: even at n = 33, a board whose spread
+falls below 0.15 is <b>MEASURED_NOT_QUOTABLE</b>, and the scorer returns no macro-F1 at all. That is
+the branch this bank is on today.</div>
 
 <h2>Provenance &amp; discipline</h2>
-<ul class="chain" style="columns:1"><li class="on"><b>&#9679;</b> anchor: Reg. (EU) 2024/1689, Art 50(2) &amp; 50(7) — applies 2 Aug 2026</li><li class="on"><b>&#9679;</b> scorer: detbench_score.py, deterministic, no model judges another</li><li class=""><span style="color:var(--warn)">&#9675;</span> corpus: none — frozen split to be built and hashed</li><li class=""><span style="color:var(--warn)">&#9675;</span> run: none — no detector has been scored on this axis</li></ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">When a run exists, the signed artefact will be the
-<b>route and the observation</b> — which frozen split, which detector, which per-item outcomes — and never
-a verdict about a third party. DetBench records that a named detector read, or failed to read, a named
-mark on a fixed set of artefacts. It does not rule on whether any provider or deployer has satisfied
-Article 50; that is for a regulator, not an instrument. This is measurement, not certification.</p>
+<ul class="chain" style="columns:1"><li class="on"><b>&#9679;</b> anchor: Reg. (EU) 2024/1689, Art 50 — applies 2 Aug 2026; technical anchors C2PA + SynthID interop</li><li class="on"><b>&#9679;</b> scorer: detbench_score.py, deterministic, no model judges another</li><li class="on"><b>&#9679;</b> bank: csoai/gspc-det, frozen and hashed, measured at n = 33</li><li class=""><span style="color:var(--warn)">&#9675;</span> board: held — spread below the 0.15 discrimination floor, so no score is quoted</li></ul>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">When a discriminating board exists, the signed
+artefact will be the <b>route and the observation</b> — which frozen split, which detectors, which
+per-item outcomes — and never a verdict about a third party. DetBench records that a named detector
+read, or failed to read, a named mark on a fixed set of artefacts. A signed route is not a verdict:
+it does not rule on whether any provider or deployer has satisfied Article 50; that is for a
+regulator, not an instrument. This is measurement, not certification.</p>
 
-<div style="margin:1.4rem 0"><a class="btn ghost" href="/arena">Back to the Arena ↗</a><a class="btn ghost" href="/govbench">See a measured axis: GovBench ↗</a></div>
+<div style="margin:1.4rem 0"><a class="btn ghost" href="https://huggingface.co/datasets/csoai/gspc-det">The bank · csoai/gspc-det ↗</a><a class="btn ghost" href="/arena">Back to the Arena ↗</a><a class="btn ghost" href="/govbench">See a quotable axis: GovBench ↗</a></div>
 
 </div>
-<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>DetBench is UNMEASURED: no labelled corpus, no held-out split and no run exist yet, so no score, F1, accuracy or n is published anywhere on this page. When a run exists, no interval will be published on any axis below usable_n = 30 — including by us. An answer that cannot be read is reported as UNMEASURED and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>DetBench is MEASURED at n = 33 and its bank is published as csoai/gspc-det, but it is not yet quotable: the board does not separate detectors above the 0.15 discrimination floor, so no macro-F1, accuracy, interval or "best detector" is shown anywhere on this page — a non-discriminating board is not a leaderboard. No interval is published on any axis below usable_n = 30, including by us. An answer that cannot be read is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A detector fault is reported as UNMEASURED and excluded, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
 </body></html>
