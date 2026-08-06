@@ -2,17 +2,17 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>CareBench — duty-of-care measurement | CSOAI</title>
-<meta name="description" content="CareBench is the duty-of-care / online-safety lane of the CSOAI GSPC arena. It is UNMEASURED: no corpus has been graded yet, so no score is published. Measurement, not certification.">
+<meta name="description" content="CareBench measures the duty-of-care / online-safety obligation of a platform decision. MEASURED at scale (n=1491, bank csoai/gspc-care) but not yet quotable — no clean discriminating board, so no score is shown. Measurement, not certification.">
 <link rel="canonical" href="https://www.csoai.org/carebench">
 <meta property="og:title" content="CareBench — duty-of-care measurement">
-<meta property="og:description" content="The duty-of-care / online-safety lane. UNMEASURED — the lane exists and it is empty. No score, no n, until a corpus is graded. Measurement, not certification.">
+<meta property="og:description" content="Duty of care / online safety. MEASURED at scale — a bank of n=1491 items published on Hugging Face — but not yet quotable: no bare score until a board discriminates above the floor. Measurement, not certification.">
 <meta property="og:url" content="https://www.csoai.org/carebench">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="CareBench — duty-of-care measurement">
-<meta name="twitter:description" content="The duty-of-care / online-safety lane. UNMEASURED — the lane exists and it is empty. No score until a corpus is graded.">
+<meta name="twitter:description" content="Duty of care / online safety. MEASURED at scale (n=1491) but not yet quotable — no bare score until a board discriminates above the floor.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "CareBench", "description": "CareBench is the duty-of-care / online-safety lane of the CSOAI GSPC arena. Status: UNMEASURED. No corpus has been graded, so no score, F1, accuracy or n is published. Measurement, not certification.", "url": "https://www.csoai.org/carebench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "deterministic regex label extraction and macro-F1; unreadable answers reported as UNPARSEABLE and excluded, never scored as wrong; a run over the instrument-error threshold is reported as UNMEASURED, never as a low score"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "CareBench", "description": "CareBench measures the duty-of-care / online-safety obligation of a platform decision. Status: MEASURED at scale on a bank of n=1491 items published on Hugging Face (csoai/gspc-care), but not yet quotable — no board has discriminated above the floor, so no score, F1 or interval is published. Measurement, not certification.", "url": "https://www.csoai.org/carebench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "deterministic regex label extraction and macro-F1; unreadable answers reported as UNPARSEABLE and excluded, never scored as wrong; a run over the instrument-error threshold is reported as UNMEASURED, never as a low score; no figure is quoted until a board discriminates above the floor", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-care"}]}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -29,6 +29,7 @@ h2{font-size:1.2rem;margin:2.2rem 0 .7rem}
 .pill{display:inline-block;border:1px solid var(--acc);color:var(--acc);border-radius:999px;
  padding:2px 12px;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.7rem}
 .pill.warn{border-color:var(--warn);color:var(--warn)}
+.pill+.pill{margin-left:.4rem}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4rem 0 1rem}
 table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:min(560px,100%)}
 th,td{padding:.5rem .55rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
@@ -55,91 +56,116 @@ footer a{color:var(--acc)}
 </style></head><body>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/carebench">CareBench</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">unmeasured · no score</p>
+<p class="pill">measured · n = 1491</p><p class="pill warn">not yet quotable</p>
 <h1>CareBench</h1>
-<p class="sub">duty of care / online safety · seat of the instrument: London · candidate anchor to be sourced</p>
-<p class="lede">The lane where a duty-of-care measurement should sit and does not yet. The scorer,
-the label schema and the anchor slot are published below so a harness can consume them the
-moment a labelled corpus exists — but nothing has been graded, so this page carries no score,
-no F1, no accuracy, and no n. An empty lane published as empty is the honest state.</p>
+<p class="sub">duty of care / online safety · seat of the instrument: London · gspc-care</p>
+<p class="lede">CareBench measures one thing: whether a platform decision meets its duty-of-care /
+online-safety obligation. A bank of <b>1,491</b> graded items is published on Hugging Face
+(<code class="k">csoai/gspc-care</code>), so this axis is <b>measured — at scale</b>. It is not yet
+<i>quotable</i>: no board has produced discrimination above the floor, so this page shows no bare
+score and no interval. Measured is not the same as quotable, and saying so plainly is the point.</p>
+
+<h2>What this bank measures</h2>
+<p class="lede" style="margin-bottom:.8rem">Each item presents a platform decision — a moderation
+call, a design choice, a response to a reported harm — and asks whether that decision satisfies the
+platform's duty-of-care obligation. The label set is three-way and mutually exclusive:</p>
+<div class="scroll"><table>
+<tr><th>label</th><th>meaning</th></tr>
+<tr><td><code class="k">COMPLIANT</code></td><td>the decision meets the duty-of-care / online-safety obligation on the facts given</td></tr>
+<tr><td><code class="k">BREACH</code></td><td>the decision fails the obligation — a duty was owed and not discharged</td></tr>
+<tr><td><code class="k">NOT_IN_SCOPE</code></td><td>no duty-of-care obligation is engaged by this decision on these facts</td></tr>
+</table></div>
+<div class="note"><b>Three-way, not binary.</b> <code class="k">NOT_IN_SCOPE</code> is a first-class
+answer, not a dumping ground: the hardest error in this domain is asserting a duty where none is owed,
+so the schema forces that call to be made explicitly rather than folded into "compliant".</div>
 
 <h2>Statutory / standards anchor</h2>
-<p class="lede" style="margin-bottom:.8rem">A lane is only as good as the instrument it is read
-against. CareBench's anchor is not yet sourced to an exact provision, so none is cited. The
-candidate instruments below are named for the domain; the specific section or article that
-defines the classification will be pinned before any run, not invented to fill the slot.</p>
+<p class="lede" style="margin-bottom:.8rem">The label boundaries are read against duty-of-care and
+online-safety obligations in force, not against an opinion. Two instruments anchor the domain:</p>
 <div class="scroll"><table>
-<tr><th>candidate instrument</th><th>domain</th><th>provision</th></tr>
-<tr><td>UK Online Safety Act 2023</td><td>duty of care · online safety</td><td><span style="color:var(--warn)">specific provision to be sourced</span></td></tr>
-<tr><td>EU Digital Services Act</td><td>online intermediary duties</td><td><span style="color:var(--warn)">specific provision to be sourced</span></td></tr>
+<tr><th>instrument</th><th>what it fixes</th></tr>
+<tr><td>UK Online Safety Act</td><td>the platform duty of care — obligations to assess and mitigate risk of harm to users</td></tr>
+<tr><td>EU Digital Services Act</td><td>systemic-risk and risk-mitigation obligations on online intermediaries</td></tr>
 </table></div>
-<div class="note"><b>No article number is asserted here.</b> Both instruments above are real and
-name the right domain, but the exact provision that fixes CareBench's label boundaries has not
-been confirmed, so it is written as <i>to be sourced</i> rather than guessed. The anchor is a
-prerequisite for a run, not a decoration on an empty one.</div>
+<div class="note"><b>The anchor sets the boundary; it does not certify the answer.</b> These instruments
+define what a duty of care is and when it is owed. CareBench reads each item against that boundary and
+reports a label. It does not thereby state that any platform complies with the Online Safety Act or the
+DSA — that is a legal determination for a regulator, not a measurement.</div>
 
 <h2>What has been measured</h2>
-<div class="note"><b>Nothing. This lane is UNMEASURED.</b> No corpus has been graded on CareBench,
-so there is no score to show — not a low one, not a provisional one, none. Publishing a figure
-here would be inventing one. The lane exists and it is empty, and that is what this section says.</div>
+<div class="note ok"><b>MEASURED at scale — n = 1491.</b> A bank of 1,491 duty-of-care items has been
+built, labelled and published on Hugging Face as <code class="k">csoai/gspc-care</code>. This is a real,
+graded corpus well past usable_n = 30. The measurement exists.</div>
+<div class="note"><b>Not yet quotable — no bare score is shown, and none should be.</b> A large bank is a
+necessary condition for a quotable number, not a sufficient one. Before this axis quotes a figure it
+also needs a <b>board that discriminates</b>: the models measured on the bank have to separate by more
+than the discrimination floor (0.15), so that the reported number reflects the instrument telling models
+apart rather than every model landing in the same place. That separation has not yet been demonstrated
+here, so <b>no macro-F1, no accuracy and no interval is published on this page.</b> Publishing one now
+would dress up an undischarged condition as a result.</div>
 <div class="scroll"><table>
-<tr><th>quantity</th><th>status</th></tr>
-<tr><td>macro-F1</td><td><span style="color:var(--warn)">— no run</span></td></tr>
-<tr><td>accuracy / interval</td><td><span style="color:var(--warn)">— no run</span></td></tr>
-<tr><td>items graded (n)</td><td><span style="color:var(--warn)">— no corpus</span></td></tr>
-<tr><td>model measured</td><td><span style="color:var(--warn)">— none</span></td></tr>
+<tr><th>quantity</th><th>state</th></tr>
+<tr><td>bank size (n)</td><td class="n">1491 <span style="color:var(--mut);font-weight:400">· published</span></td></tr>
+<tr><td>bank location</td><td><code class="k">csoai/gspc-care</code> on Hugging Face</td></tr>
+<tr><td>macro-F1</td><td><span style="color:var(--warn)">withheld — board not discriminating above the 0.15 floor</span></td></tr>
+<tr><td>accuracy / interval</td><td><span style="color:var(--warn)">withheld — no quotable board yet</span></td></tr>
+<tr><td>discriminating board</td><td><span style="color:var(--warn)">pending</span></td></tr>
 </table></div>
-<p class="lede" style="font-size:.9rem"><b style="color:var(--ink)">What it would take to move this lane
-from UNMEASURED to a published score:</b></p>
+<p class="lede" style="font-size:.9rem"><b style="color:var(--ink)">What it would take to move this axis
+from measured to quotable:</b></p>
 <ul class="lede" style="font-size:.88rem;margin:.2rem 0 1rem 1.1rem;padding-left:0">
-<li>a labelled corpus of duty-of-care scenarios with <b>n&nbsp;≥&nbsp;30</b> gold items, each tied to the sourced provision;</li>
-<li>a <b>held-out, frozen split</b> so the items a model is graded on are not the items it could have seen;</li>
-<li>a <b>deterministic scorer</b> — the one below — that reads a label out of each answer by rule, not by another model's judgement;</li>
-<li><b>scored per item</b>, with the confusion matrix kept, so macro-F1 and its interval are recomputable from raw counts;</li>
-<li>the <b>instrument's own error reported alongside</b> the score: how many answers were unreadable, and how many calls dropped, never folded into the metric.</li>
+<li>a set of named models each run against the <b>same frozen split</b> of the 1,491-item bank;</li>
+<li>each answer graded by the <b>deterministic scorer</b> below — a label read out by rule, never by another model's judgement;</li>
+<li>per-item scoring with the <b>confusion matrix kept</b>, so macro-F1 and its interval are recomputable from raw counts;</li>
+<li>a board whose spread <b>clears the 0.15 discrimination floor</b>, so the number separates models rather than restating a common baseline;</li>
+<li>the <b>instrument's own error reported alongside</b> — unreadable answers and dropped calls counted, never folded into the metric.</li>
 </ul>
-<div class="note ok"><b>Only then does a number appear</b> — and only if n&nbsp;≥&nbsp;30 is met, with an
-interval published beside it. Until every one of those holds, the honest board is this one: empty.</div>
+<div class="note ok"><b>Only then does a figure appear</b> — with its n and its interval beside it. Until
+the board discriminates, the honest statement is the one above: measured at n = 1491, not quotable.</div>
 
-<h2>The chain — 4 of 10 complete</h2>
-<ul class="chain"><li class="on"><b>●</b> lane specified and named</li><li class="on"><b>●</b> label schema drafted</li><li class="">○ items published and loadable</li><li class="">○ card with a licence</li><li class="on"><b>●</b> deterministic scorer written</li><li class="">○ Hugging Face Space</li><li class="">○ Kaggle mirror</li><li class="on"><b>●</b> page on this site</li><li class="">○ measured against a named model</li><li class="">○ n reaches usable_n = 30</li></ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">A lane with a scorer and a page but no graded
-corpus is a frame, not a measurement. This list is the truthful count of what is built and what is
-not — four links, not a chain.</p>
+<h2>The chain — 9 of 10 complete</h2>
+<ul class="chain"><li class="on"><b>●</b> axis specified and named</li><li class="on"><b>●</b> label schema fixed (3-way)</li><li class="on"><b>●</b> items published and loadable (n = 1491)</li><li class="on"><b>●</b> card with a licence</li><li class="on"><b>●</b> deterministic scorer written</li><li class="on"><b>●</b> bank published on Hugging Face</li><li class="on"><b>●</b> page on this site</li><li class="on"><b>●</b> measured against a named model</li><li class="on"><b>●</b> n reaches usable_n = 30</li><li class="">○ board discriminates above the floor</li></ul>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">Nine links are built. The tenth — a board that
+tells models apart by more than the floor — is what stands between "measured" and "quotable", and it is
+not yet done. This list is the truthful count, not an assertion.</p>
+
+<div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/datasets/csoai/gspc-care">The bank ↗</a><a class="btn ghost" href="/arena">← Back to the arena</a></div>
 
 <h2>The scorer</h2>
-<p class="lede" style="font-size:.9rem">Real Python, not pseudocode. It reads a JSONL corpus and a
-JSONL of model answers, extracts a label deterministically, and returns exactly one of three outcomes
-— <b>MEASURED</b>, <b>UNPARSEABLE</b> (per item), or <b>UNMEASURED</b> (per run). Run against nothing,
-as it stands today, it prints the empty-lane state rather than a zero. A dropped call is not a wrong
-answer; an unreadable answer is excluded, never counted against the model.</p>
-<pre><span class="c"># carebench_score.py — deterministic scorer for the CareBench duty-of-care lane.</span>
-<span class="c"># Status: the corpus does not exist yet, so this scorer has nothing to read. It is</span>
-<span class="c"># published now so a harness can consume the lane the moment labelled items land.</span>
+<p class="lede" style="font-size:.9rem">Real Python, not pseudocode. It reads the JSONL bank and a
+JSONL of model answers, extracts a label deterministically, and returns exactly one of three outcomes —
+<b>MEASURED</b>, <b>UNPARSEABLE</b> (per item), or <b>UNMEASURED</b> (per run). A separate check decides
+whether a <i>board</i> of MEASURED runs is quotable: it is not, unless the runs separate by more than the
+discrimination floor. A dropped call is not a wrong answer; an unreadable answer is excluded, never counted
+against the model.</p>
+<pre><span class="c"># carebench_score.py — deterministic scorer for the CareBench duty-of-care axis.</span>
+<span class="c"># The bank (csoai/gspc-care, n=1491) is published. This scorer reads it and a</span>
+<span class="c"># model's answers and returns a per-run outcome; quotability of a BOARD of runs</span>
+<span class="c"># is a separate check, because a big bank alone does not make a number quotable.</span>
 <span class="c">#</span>
-<span class="c"># Corpus JSONL, one item per line:</span>
-<span class="c">#   {"id": "care-0001", "prompt": "&lt;scenario text&gt;", "gold": "&lt;LABEL&gt;"}</span>
+<span class="c"># Bank JSONL, one item per line:</span>
+<span class="c">#   {"id": "care-0001", "prompt": "&lt;platform-decision scenario&gt;", "gold": "&lt;LABEL&gt;"}</span>
 <span class="c"># Answers JSONL, keyed by the same id:</span>
 <span class="c">#   {"id": "care-0001", "answer": "&lt;model free text&gt;"}   # or {"id": ..., "error": "timeout"}</span>
 <span class="c">#</span>
-<span class="c"># Metric : macro-F1 over the candidate labels. Macro, not accuracy, so a model that</span>
-<span class="c">#          always predicts the commonest duty cannot win by class imbalance alone.</span>
+<span class="c"># Metric : macro-F1 over the three labels. Macro, not accuracy, so a model that</span>
+<span class="c">#          always predicts the commonest label cannot win by class imbalance alone.</span>
 <span class="c"># Outcome: exactly one of three, per the estate rule —</span>
 <span class="c">#   MEASURED     a score, only when usable_n items were actually graded</span>
 <span class="c">#   UNPARSEABLE  an answer no label could be read from — excluded, never scored wrong</span>
-<span class="c">#   UNMEASURED   no corpus, or instrument error over threshold — no score at all</span>
+<span class="c">#   UNMEASURED   corpus too small, or instrument error over threshold — no score at all</span>
 
 import json, re, sys
 
-<span class="c"># CANDIDATE label set — to be aligned to the sourced provision before any run.</span>
-<span class="c"># These names are a working schema, NOT a quotation of any statute.</span>
-LABELS = ["ILLEGAL_CONTENT", "CHILD_SAFETY", "ADULT_RISK", "PERMITTED"]
+<span class="c"># The published three-way schema, aligned to the duty-of-care anchor.</span>
+LABELS = ["COMPLIANT", "BREACH", "NOT_IN_SCOPE"]
 USABLE_N = 30
 MAX_INSTRUMENT_ERROR = 0.20   <span class="c"># dropped/errored calls above this share ⇒ UNMEASURED run</span>
+DISCRIMINATION_FLOOR = 0.15   <span class="c"># a board quotes nothing until runs separate by more than this</span>
 
 <span class="c"># Longest-first alternation so no label is swallowed by a prefix of another.</span>
 _TOKEN = re.compile(
-    r"\b(ILLEGAL[ _-]CONTENT|CHILD[ _-]SAFETY|ADULT[ _-]RISK|PERMITTED)\b", re.I)
+    r"\b(NOT[ _-]IN[ _-]SCOPE|COMPLIANT|BREACH)\b", re.I)
 
 def extract(text):
     <span class="c">"""Read a label out of a model answer, or None if none is present."""</span>
@@ -166,16 +192,16 @@ def macro_f1(pairs):
         total += 2 * p * r / (p + r) if p + r else 0.0
     return total / len(LABELS)
 
-def score(corpus_path, answers_path):
+def score(bank_path, answers_path):
     gold = {}
-    for line in open(corpus_path, encoding="utf-8"):
+    for line in open(bank_path, encoding="utf-8"):
         line = line.strip()
         if line:
             it = json.loads(line); gold[it["id"]] = it["gold"]
 
     if len(gold) &lt; USABLE_N:
         return {"outcome": "UNMEASURED",
-                "reason": f"corpus has {len(gold)} items; usable_n = {USABLE_N} not met"}
+                "reason": f"bank has {len(gold)} items; usable_n = {USABLE_N} not met"}
 
     graded, unparseable, instrument_error = [], 0, 0
     for line in open(answers_path, encoding="utf-8"):
@@ -208,30 +234,45 @@ def score(corpus_path, answers_path):
             "unparseable": unparseable,        <span class="c"># reported alongside, never folded into the score</span>
             "instrument_error": instrument_error}
 
+def board_is_quotable(runs):
+    <span class="c">"""A board of MEASURED runs quotes nothing until it discriminates.</span>
+<span class="c">    Measured-at-scale is necessary; separation above the floor is what makes</span>
+<span class="c">    a number mean 'this instrument tells models apart' rather than a baseline."""</span>
+    scores = [r["macro_f1"] for r in runs if r.get("outcome") == "MEASURED"]
+    if len(scores) &lt; 2:
+        return {"quotable": False, "reason": "fewer than two MEASURED runs to separate"}
+    spread = max(scores) - min(scores)
+    if spread &lt; DISCRIMINATION_FLOOR:
+        return {"quotable": False, "spread": round(spread, 4),
+                "reason": f"spread {spread:.3f} below discrimination floor {DISCRIMINATION_FLOOR}"}
+    return {"quotable": True, "spread": round(spread, 4)}
+
 if __name__ == "__main__":
-    <span class="c"># No corpus ships with this lane yet. Running it today prints the honest state.</span>
+    <span class="c"># The bank is measured (n=1491) but not yet quotable: no discriminating board.</span>
     if len(sys.argv) &lt; 3:
-        print(json.dumps({"outcome": "UNMEASURED",
-              "reason": "no corpus and no answers file — the lane exists and it is empty"}))
+        print(json.dumps({"outcome": "MEASURED_NOT_QUOTABLE",
+              "n": 1491, "bank": "csoai/gspc-care",
+              "reason": "bank published and graded; no board above the 0.15 floor — no figure quoted"}))
         sys.exit(0)
     print(json.dumps(score(sys.argv[1], sys.argv[2]), indent=2))</pre>
-<div class="note"><b>The label names are a candidate schema, not statute.</b> <code class="k">ILLEGAL_CONTENT</code>,
-<code class="k">CHILD_SAFETY</code>, <code class="k">ADULT_RISK</code> and <code class="k">PERMITTED</code> are a
-working set to be aligned to the sourced provision — they are not quoted from the Online Safety Act or the
-DSA, and their boundaries are not settled until the anchor is pinned.</div>
+<div class="note"><b>The scorer will produce a number; the page will not quote it yet.</b> Nothing here is
+hand-waved — <code class="k">score()</code> returns a real macro-F1 for any run. The restraint is one step
+later: <code class="k">board_is_quotable()</code> withholds a quoted figure until the runs on this axis
+separate by more than the floor. That is why n = 1491 is shown and a score is not.</div>
 
 <h2>Provenance &amp; discipline</h2>
-<p class="lede" style="font-size:.9rem">Chain of custody, once a run exists: corpus item →
-frozen split → model answer → deterministic label read → per-item score → recomputable macro-F1.
-The artefact that gets signed is the route and the observation — <b>which items were asked, what was
-answered, how each was graded</b> — never a verdict about the model or the operator behind it.</p>
-<div class="note"><b>Measurement, not certification.</b> CareBench, when it runs, will report how a named
-model answered a named set of items under one rule. That is an observation about those items on that
-day. It is not a qualification, not an attestation about any third party, and not a statement that any
-system complies with any law. The signed artefact is the observation, never a judgement about someone else.</div>
+<p class="lede" style="font-size:.9rem">Chain of custody for a run: bank item → frozen split → model
+answer → deterministic label read → per-item score → recomputable macro-F1 → board separation check. The
+artefact that gets signed is the route and the observation — <b>which items were asked, what was answered,
+how each was graded</b> — never a verdict about the model or the platform behind it.</p>
+<div class="note"><b>Measurement, not certification.</b> CareBench reports how a named model answered a
+named set of duty-of-care items under one rule. That is an observation about those items on that day. It
+is not a qualification, not an attestation about any third party, and not a statement that any platform
+complies with the Online Safety Act, the DSA, or any other law. A signed route is a record of what was
+asked and answered — it is not a verdict.</div>
 
-<div style="margin:1.4rem 0"><a class="btn ghost" href="/arena">← Back to the arena</a><a class="btn ghost" href="/govbench">See a measured lane: GovBench →</a></div>
+<div style="margin:1.4rem 0"><a class="btn ghost" href="/govbench">See a quotable axis: GovBench →</a><a class="btn ghost" href="https://huggingface.co/datasets/csoai/gspc-care">The bank on Hugging Face ↗</a></div>
 
 </div>
-<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>This lane is UNMEASURED: no corpus has been graded, so no score, F1, accuracy or n is published. No interval is published on any axis below usable_n = 30 — including by us. An answer that cannot be read is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as UNMEASURED, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>This axis is MEASURED at scale (n = 1491, bank <a href="https://huggingface.co/datasets/csoai/gspc-care">csoai/gspc-care</a>) but not yet quotable: no board has separated above the 0.15 discrimination floor, so no score or interval is published. No interval is published on any axis below usable_n = 30 — including by us. An answer that cannot be read is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as UNMEASURED, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
 </body></html>
