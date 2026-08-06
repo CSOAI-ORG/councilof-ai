@@ -1,6 +1,6 @@
 /*
  * CSOAI 33-Agent Council Page
- * Visualize the fault-aware consensus voting system
+ * Visualize the designed multi-agent review system
  * Connected to real backend API
  */
 

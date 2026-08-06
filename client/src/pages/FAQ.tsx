@@ -67,7 +67,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "What is the 33-Agent Council?",
     answer:
-      "The 33-Agent Council is CSOAI's unique fault-aware consensus consensus mechanism. It uses 33 specialized AI agents representing different governance perspectives (ethics, compliance, technical safety, etc.) to make decisions about AI system classifications, risk assessments, and compliance recommendations. This distributed approach ensures no single point of failure and balanced decision-making.",
+      "The 33-Agent Council is CSOAI's unique designed multi-agent review mechanism. It uses 33 specialized AI agents representing different governance perspectives (ethics, compliance, technical safety, etc.) to make decisions about AI system classifications, risk assessments, and compliance recommendations. This distributed approach ensures no single point of failure and balanced decision-making.",
     tags: ["technology", "council"],
   },
   {
@@ -408,7 +408,7 @@ const faqData: FAQItem[] = [
     category: "TECHNICAL",
     question: "How does the 33-Agent Byzantine consensus work?",
     answer:
-      "The 33-Agent Council uses fault-aware consensus (BFT) consensus where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). If up to 10 agents malfunction or provide incorrect information, the council can still reach correct consensus with mathematical certainty. Decisions require approval from at least 23 agents (67%), ensuring robust, reliable governance outcomes.",
+      "The 33-Agent Council uses designed multi-agent review (BFT-style) consensus where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). If up to 10 agents malfunction or provide incorrect information, the council can still reach correct consensus with mathematical certainty. Decisions require approval from at least 23 agents (67%), ensuring robust, reliable governance outcomes.",
     tags: ["technical", "council"],
   },
   {

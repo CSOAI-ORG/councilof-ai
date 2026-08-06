@@ -295,7 +295,7 @@ const byzantineCouncilFeatures = [
   },
   {
     title: "Consensus-Based Decisions",
-    description: "fault-aware consensus voting ensures no single point of failure. Requires supermajority (22/33) for enforcement actions.",
+    description: "designed multi-agent review ensures no single point of failure. Requires supermajority (22/33) for enforcement actions.",
     icon: Users,
     stats: "Supermajority (22/33) required for enforcement",
   },

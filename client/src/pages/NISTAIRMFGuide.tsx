@@ -344,7 +344,7 @@ export default function NISTAIRMFGuide() {
     },
     {
       title: "33-Agent Council",
-      description: "Byzantine consensus voting provides decentralized oversight aligned with AI RMF accountability principles.",
+      description: "A designed multi-agent oversight layer aligned with AI RMF accountability principles; its measured status is published on the public Refutation Ledger.",
       link: "/features/agent-council"
     },
     {

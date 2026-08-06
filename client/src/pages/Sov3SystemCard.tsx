@@ -97,7 +97,7 @@ export default function Sov3SystemCard() {
           </p>
         </Section>
 
-        <Section title="fault-aware consensus / multi-model voting">
+        <Section title="designed multi-agent review / multi-model voting">
           <p className="text-[13px] text-emerald-100/85 leading-relaxed">
             When SOV3 runs as an ensemble (the SOV3³ configuration), the safety-relevant finding is: <b
             className="text-emerald-200">lineage diversity dominates topology shape.</b> Every diverse-lineage

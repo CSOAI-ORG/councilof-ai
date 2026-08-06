@@ -54,7 +54,7 @@ export default function Technology() {
       description: '33-agent Council of AI processes in parallel',
       details: [
         'Distributed processing across multiple nodes',
-        'fault-aware consensus consensus algorithm',
+        'designed multi-agent review algorithm',
         '22/33 threshold for compliance decisions',
         'Sub-100ms response time for standard audits',
         'Horizontal scaling for variable loads'
@@ -114,7 +114,7 @@ export default function Technology() {
             The Technology Behind <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Trustworthy AI Governance</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-            Built on fault-aware consensus consensus architecture, CSOAI's 33-agent council delivers bulletproof compliance verification across any AI system.
+            Built on designed multi-agent review architecture, CSOAI's 33-agent council delivers bulletproof compliance verification across any AI system.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing">

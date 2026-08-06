@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 /**
  * 33-Agent Council Detail Page
- * Comprehensive explanation of the Byzantine consensus voting system
+ * Comprehensive explanation of the designed multi-agent review system
  */
 
 import { Shield, Users, Vote, CheckCircle2, AlertTriangle, Lock, Zap } from 'lucide-react';

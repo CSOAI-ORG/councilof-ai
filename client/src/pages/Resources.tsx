@@ -32,7 +32,7 @@ export default function Resources() {
     },
     {
       title: "33-Agent Council Technical Specification",
-      description: "Detailed documentation of the Byzantine consensus voting mechanism and agent architecture.",
+      description: "Detailed documentation of the designed multi-agent review mechanism and agent architecture.",
       type: "PDF",
       pages: 35,
       updated: "2025-01-22",

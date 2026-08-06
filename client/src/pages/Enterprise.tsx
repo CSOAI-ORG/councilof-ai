@@ -45,7 +45,7 @@ const faqData = [
   },
   {
     question: "How does automated assessment work?",
-    answer: "Our 33-agent Council of AI uses 12 different AI providers to independently assess your AI systems. Each agent evaluates your system against the selected frameworks, and consensus is reached through fault-aware consensus voting. This ensures unbiased, accurate assessments without single-vendor conflicts of interest."
+    answer: "Our designed 33-agent Council of AI draws on 12 different AI providers to independently evaluate your AI systems against the selected frameworks — no single-vendor conflict of interest. It is a designed council; its measured performance is published openly on our public Refutation Ledger."
   },
   {
     question: "Is my data secure?",

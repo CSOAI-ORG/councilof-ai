@@ -46,7 +46,7 @@ const COMPS: Record<string, Comp> = {
       { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
     ],
     faqs: [
-      { q: "Is CSOAI an alternative to Credo AI?", a: "Yes - both are AI-governance-native. CSOAI differentiates with a fault-aware consensus Council for multi-agent decision consensus, Ed25519-signed verdicts, and an open-patent model." },
+      { q: "Is CSOAI an alternative to Credo AI?", a: "Yes - both are AI-governance-native. CSOAI differentiates with a designed multi-agent Council (measured status on our public Refutation Ledger), Ed25519-signed verdicts, and an open-patent model." },
       { q: "What makes CSOAI different from other AI-governance tools?", a: "The Council of AI: instead of a single model deciding, a configurable multi-agent council reaches consensus and signs every verdict - and the topology is published open-patent at openpatent.ai." },
     ],
   },

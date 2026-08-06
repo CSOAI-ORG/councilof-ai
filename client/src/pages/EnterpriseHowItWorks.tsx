@@ -156,7 +156,7 @@ export default function EnterpriseHowItWorks() {
     },
     {
       question: "How does the Byzantine Council review work?",
-      answer: "You submit your AI system details, training data samples, and decision logs. The Council's 33 agents independently analyze your system using 12 different AI providers. Results are compiled using Byzantine consensus voting."
+      answer: "You submit your AI system details, training data samples, and decision logs. The Council's 33 agents independently analyze your system using 12 different AI providers. It is a designed council; its measured performance is published openly on our public Refutation Ledger."
     },
     {
       question: "What compliance frameworks can we customize?",

@@ -204,7 +204,7 @@ export default function ByzantineConsensus() {
             <h2 className="text-3xl font-bold mb-6 text-center">What is Byzantine Consensus?</h2>
             <div className="prose prose-lg dark:prose-invert mx-auto">
               <p>
-                fault-aware consensus (BFT) is a property of distributed systems that allows them to 
+                designed multi-agent review (BFT-style) is a property of distributed systems that allows them to 
                 reach consensus even when some participants are faulty or malicious. Named after the 
                 "Byzantine Generals Problem," this approach ensures that a system can continue to operate 
                 correctly as long as fewer than one-third of the participants are compromised.

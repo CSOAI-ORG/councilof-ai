@@ -1149,7 +1149,7 @@ export default function NewHomeV2() {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">23/33 Consensus Required</h4>
-                    <p className="text-gray-500">70% agreement for any safety decision. fault-aware consensus ensures reliability even if agents fail or are compromised.</p>
+                    <p className="text-gray-500">70% agreement for any safety decision. designed multi-agent review ensures reliability even if agents fail or are compromised.</p>
                   </div>
                 </div>
 

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 // and a single CTA. Built for journalists, partners, and demo sharing.
 const FACTS = [
   { k: "What it is", v: "An agentic AI-governance operating system - the Council of AI decides, the OS proves it." },
-  { k: "The Council", v: "Five independent AI agents reach fault-aware consensus consensus on every major decision." },
+  { k: "The Council", v: "Five independent AI agents reach designed multi-agent review on every major decision." },
   { k: "Coverage", v: "13+ frameworks (EU AI Act, NIST AI RMF, ISO 42001, and more) across 47 industries." },
   { k: "The lineage", v: "Governance rediscovered from 4,000 years of human history - Athens to Bitcoin to AI." },
   { k: "The proof", v: "Every verdict is Ed25519-signed, replayable, and permanently logged." },
@@ -44,7 +44,7 @@ export default function Pressroom() {
           ))}
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Boilerplate</h2>
-        <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">CSOAI (Council for the Safety of AI) builds the operating system for AI governance. Its fault-aware consensus Council of five independent agents reaches consensus across 13+ regulatory frameworks and 47 industries, proving every decision with cryptographic signatures. Rediscovered from 4,000 years of governance and built for the agentic era, CSOAI turns compliance from a checklist into a living system.</p>
+        <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">CSOAI (Council for the Safety of AI) builds the operating system for AI governance. Its designed multi-agent review Council of five independent agents reaches consensus across 13+ regulatory frameworks and 47 industries, proving every decision with cryptographic signatures. Rediscovered from 4,000 years of governance and built for the agentic era, CSOAI turns compliance from a checklist into a living system.</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See the Council live -&gt;</a>
           <a href="/lineage" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The story -&gt;</a>

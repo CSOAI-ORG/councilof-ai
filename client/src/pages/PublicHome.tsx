@@ -72,7 +72,7 @@ export default function PublicHome() {
             
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               The first open-source AI safety governance platform for the West. 
-              Multi-framework compliance, 33-agent fault-aware consensus voting, 
+              Multi-framework compliance, a designed 33-agent Council of AI, 
               and public accountability through The Watchdog program.
             </p>
 
@@ -226,7 +226,7 @@ export default function PublicHome() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">33-Agent Council</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  fault-aware consensus voting with 11 Guardian, 11 Arbiter, and 11 Scribe agents. 
+                  designed multi-agent review with 11 Guardian, 11 Arbiter, and 11 Scribe agents. 
                   Requires 22/33 consensus for decisions.
                 </p>
                 <Link href="/agent-council" className="text-sm text-primary flex items-center gap-1 hover:underline">

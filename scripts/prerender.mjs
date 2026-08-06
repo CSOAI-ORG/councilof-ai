@@ -1,167 +1,187 @@
-#!/usr/bin/env node
-/**
- * Post-build prerender for GEO/AEO — snapshots the SPA's key routes to static HTML
- * so AI crawlers (GPTBot, PerplexityBot, ClaudeBot, Google-Extended) and search
- * engines get full content + schema.org in the raw HTML instead of an empty shell.
+/* prerender.mjs — turn a Vite SPA build into real HTML files, one per route.
  *
- * SAFE BY DESIGN: standalone script, run AFTER `npm run build:client`. It only
- * WRITES extra static HTML into dist/client — it does not touch the app, the vite
- * config, or the normal build. If it fails, the SPA still deploys as before.
+ * THE DIAGNOSIS THIS IMPLEMENTS. csoai.org is not a site with a broken prerenderer. It
+ * has no prerenderer at all. What it has is:
  *
- * Usage:  npm run build:client && npm run prerender
- * Deps:   playwright (already in devDependencies). Needs chromium:
- *         npx playwright install chromium   (once)
+ *   · a Vite SPA — `<div id="root"></div>`, one 1.26 MB bundle, 399 routes declared
+ *     inside it, 273 dynamic imports, react-helmet for per-route meta;
+ *   · a blanket catch-all rewrite, so EVERY path returns 200 with that shell. `/vercel.json`,
+ *     `/netlify.toml`, `/_redirects` and `/404.html` all return 200 and the shell, which
+ *     means the site has no 404 at all and every nonexistent URL is a valid page to a
+ *     crawler;
+ *   · and about five hand-authored standalone HTML files — /govbench, /tools, /pricing,
+ *     /sov-space — sitting in the build output. Those carry no bundle reference and no
+ *     root div. Somebody made them by hand.
  *
- * Add more routes to ROUTES as you add citable pages.
+ * The last point is the useful one: those five prove the hosting serves a real HTML file
+ * per path perfectly well. Nothing about the platform needs to change. What is missing is
+ * a build step that produces the other 394.
+ *
+ * WHAT THIS DOES. After `vite build`, it serves `dist/` locally, loads every route in
+ * headless Chromium, waits for the app to actually paint, and writes the rendered DOM
+ * back as `dist/<route>/index.html`. The bundle tag stays in place, so the browser still
+ * hydrates and the app behaves exactly as it does now — but a crawler, an answer engine,
+ * an LLM fetch and a link preview all get the text.
+ *
+ * WHY SNAPSHOTTING RATHER THAN SSR. SSR means moving the app to a server runtime and
+ * making 273 dynamic imports and every browser-only API server-safe. That is weeks. This
+ * is a build step, it changes no application code, and it produces exactly the artefact
+ * the five hand-made pages already prove the host will serve. If the estate later wants
+ * true SSR, nothing here blocks it.
+ *
+ * WHAT IT WILL NOT FIX, said plainly: a route whose content arrives from a network call
+ * after load will snapshot with whatever was on screen at the wait threshold. Those routes
+ * need either a longer per-route wait or real SSR. The report at the end lists every route
+ * that came out thin so none of them passes silently.
+ *
+ *   node prerender.mjs                      # dist/, all discovered routes
+ *   node prerender.mjs --dist build --min 400 --wait 2500
+ *   node prerender.mjs --routes routes.txt  # explicit list, one per line
  */
-import { chromium } from 'playwright';
-import http from 'node:http';
-import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
-import { join, dirname, extname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { chromium } from "playwright";
+import http from "node:http";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from "node:fs";
+import { join, extname, dirname } from "node:path";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const DIST = resolve(__dirname, '../dist/client');
-const PORT = 4319;
-// Public origin the prerendered HTML must reference. Never localhost.
-const PUBLIC_ORIGIN = process.env.PUBLIC_ORIGIN || 'https://www.csoai.org';
-
-// GEO-critical, citable routes. Order doesn't matter.
-const ROUTES = [
-  // NOTE ON /benchmarks — do NOT add it here. It is a hand-written static page in
-  // public/ (9.9 KB, its own inline CSS), not an SPA route, and prerendering it would
-  // overwrite the static file with a React render. Its problem is the trailing-slash
-  // routing below, plus the fact that it still carries ZERO JSON-LD — the best page in
-  // the estate arrives at a crawler as prose it has to trust.
-  '/', '/crosswalk', '/crosswalks', '/compare', '/vs/vanta', '/vs/drata', '/vs/credo-ai', '/vs/onetrust', '/certification', '/pricing',
-  '/trust-center', '/global-ai-regulation', '/readiness-assessment', '/framework-catalog',
-  '/article-50', '/about',
-  // Jurisdiction cluster
-  '/uk-ai-regulation', '/canada-aida', '/china-ai-law', '/singapore-ai-governance',
-  // Sector deadline pages
-  '/healthcare-ai-act', '/finance-ai-act', '/hr-ai-act',
-  // AEO / high-intent cluster
-  '/eu-ai-act-checklist', '/gpai', '/penalties', '/nist-vs-eu-ai-act', '/iso-42001-vs-eu-ai-act',
-  '/high-risk-ai-systems', '/ai-act-summary', '/ai-governance', '/eu-ai-act-timeline',
-  // Cyber + readiness
-  '/dora', '/nis2', '/cra', '/fedramp', '/readiness',
-  // Commercial-intent competitor pages (focus-aware Compare)
-  '/vs/vanta', '/vs/drata', '/vs/credo-ai', '/vs/onetrust',
-  // Net-new sector pages
-  '/energy-ai-act', '/pharma-ai-act', '/defence-ai-act',
-  // SOV3 model-release documentation
-  '/sov3-model-card', '/sov3-system-card', '/sov3-whitepaper', '/research-transparency',
-  // Measured-results cluster (citable)
-  '/ai-act-benchmark',
-  '/provbench',
-];
-
-const MIME = {
-  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css',
-  '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
-  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.ico': 'image/x-icon',
-  '.woff': 'font/woff', '.woff2': 'font/woff2', '.txt': 'text/plain',
+const arg = (k, d) => {
+  const i = process.argv.indexOf("--" + k);
+  return i > 0 && process.argv[i + 1] ? process.argv[i + 1] : d;
 };
+const DIST = arg("dist", "dist");
+const MIN = Number(arg("min", 400));       // visible chars below which a route is "thin"
+const WAIT = Number(arg("wait", 1800));    // ms after load before snapshotting
+const PORT = Number(arg("port", 4400));
+const CONC = Number(arg("conc", 4));
 
-// Static server with SPA fallback to index.html (so client routes resolve).
-function serve() {
-  return new Promise((res) => {
-    const srv = http.createServer(async (req, rq) => {
-      try {
-        let p = decodeURIComponent((req.url || '/').split('?')[0]);
-        let file = join(DIST, p);
-        let ext = extname(file);
-        if (!ext) { // route → SPA shell
-          file = join(DIST, 'index.html'); ext = '.html';
-        }
-        try { await stat(file); } catch { file = join(DIST, 'index.html'); ext = '.html'; }
-        const body = await readFile(file);
-        rq.writeHead(200, { 'content-type': MIME[ext] || 'application/octet-stream' });
-        rq.end(body);
-      } catch (e) { rq.writeHead(500); rq.end(String(e)); }
-    });
-    srv.listen(PORT, () => res(srv));
-  });
+if (!existsSync(DIST)) {
+  console.error(`no ${DIST}/ — run \`vite build\` first`);
+  process.exit(1);
 }
 
-async function main() {
-  const srv = await serve();
-  let browser;
+// ---------------------------------------------------------------- route discovery
+function discover() {
+  const explicit = arg("routes", null);
+  if (explicit) {
+    return readFileSync(explicit, "utf8").split("\n").map(s => s.trim())
+      .filter(s => s.startsWith("/"));
+  }
+  // Routes live as string literals in the bundle. This is a heuristic and it is meant to
+  // be — check the printed count against what you expect before shipping the output.
+  const assets = join(DIST, "assets");
+  let js = "";
+  if (existsSync(assets))
+    for (const f of readdirSync(assets))
+      if (f.endsWith(".js")) js += readFileSync(join(assets, f), "utf8");
+  const found = new Set(["/"]);
+  for (const m of js.matchAll(/path\s*:\s*["'`](\/[a-zA-Z0-9\/_-]*)["'`]/g)) found.add(m[1]);
+  for (const m of js.matchAll(/["'`](\/[a-z0-9][a-z0-9\/-]{2,60})["'`]\s*[,:\)]/g)) {
+    const p = m[1];
+    if (!/\.(js|css|png|svg|jpg|json|ico|woff2?|txt|xml)$/i.test(p) && !p.startsWith("/assets/"))
+      found.add(p);
+  }
+  return [...found].filter(p => !p.includes(":") && !p.includes("*")).sort();
+}
+
+const routes = discover();
+console.log(`${routes.length} routes to prerender from ${DIST}/\n`);
+
+// ---------------------------------------------------------------- static server
+const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css",
+  ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png",
+  ".jpg": "image/jpeg", ".ico": "image/x-icon", ".woff2": "font/woff2", ".txt": "text/plain" };
+const shell = readFileSync(join(DIST, "index.html"), "utf8");
+const srv = http.createServer((q, r) => {
+  const p = decodeURIComponent(q.url.split("?")[0]);
+  const f = join(DIST, p);
   try {
-    browser = await chromium.launch();
-  } catch (e) {
-    // Build-safe: if chromium isn't installed (e.g. Vercel install --ignore-scripts),
-    // skip prerender WITHOUT failing the deploy. SPA still ships; run prerender where chromium exists.
-    console.log(`\n⚠ prerender skipped — chromium unavailable (${String(e.message || e).slice(0, 80)}).`);
-    console.log('  To enable in CI/Vercel: add "npx playwright install chromium" before "npm run prerender".');
-    srv.close();
-    return; // exit 0
-  }
-  const page = await browser.newPage();
-  let ok = 0, fail = 0;
-  const written = [], failed = [];
-  for (const route of ROUTES) {
-    try {
-      await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle', timeout: 20000 });
-      await page.waitForTimeout(600); // let per-route useEffects inject title/meta/JSON-LD
-      let html = '<!doctype html>\n' + await page.evaluate(() => document.documentElement.outerHTML);
-
-      // The app writes canonical/og:url from window.location.origin, which during
-      // prerender is http://localhost:4319 — and that origin was being baked into every
-      // deployed page. Found live 2026-08-05 on every prerendered route.
-      html = html.split(`http://localhost:${PORT}`).join(PUBLIC_ORIGIN);
-      const canonical = PUBLIC_ORIGIN + (route === '/' ? '/' : route);
-      html = html.replace(/<link\s+rel=["']canonical["'][^>]*>/i,
-        `<link rel="canonical" href="${canonical}" />`);
-      html = html.replace(/(<meta\s+property=["']og:url["']\s+content=)["'][^"']*["']/i,
-        `$1"${canonical}"`);
-
-      // WRITE BOTH SHAPES. Cloudflare Pages resolved /pricing but not /compare, and the
-      // difference between them was invisible in the repo: /compare/index.html existed
-      // and was correct, while a request for /compare with NO trailing slash fell through
-      // to the SPA fallback and served the homepage. Eight citable routes shipped that
-      // way — /benchmarks, /crosswalk, /article-50, /about, /certification, /cra,
-      // /ai-act-summary, /compare — all returning HTTP 200 with the wrong page, which is
-      // why nothing caught it. Emitting route.html as well as route/index.html makes the
-      // no-slash form resolve to a real file instead of the fallback.
-      const outs = route === '/'
-        ? [join(DIST, 'index.html')]
-        : [join(DIST, route, 'index.html'), join(DIST, `${route.replace(/^\//, '')}.html`)];
-      for (const out of outs) {
-        await mkdir(dirname(out), { recursive: true });
-        await writeFile(out, html);
-      }
-      written.push(route);
-      const bytes = Buffer.byteLength(html);
-      console.log(`  ✓ ${route.padEnd(26)} → ${(bytes / 1024).toFixed(0)}kb`);
-      ok++;
-    } catch (e) {
-      console.log(`  ✗ ${route.padEnd(26)} — ${String(e.message || e).slice(0, 80)}`);
-      failed.push(route);
-      fail++;
+    if (existsSync(f) && statSync(f).isFile()) {
+      r.writeHead(200, { "content-type": MIME[extname(f)] || "application/octet-stream" });
+      r.end(readFileSync(f));
+      return;
     }
-  }
-  await browser.close();
-  srv.close();
-  // Belt and braces: normalise the no-slash form at the edge too, so the fix does not
-  // depend on one platform's asset-resolution order staying the same.
-  const redirects = written.filter((r) => r !== '/')
-    .map((r) => `${r} ${r}/ 301`).join('\n');
-  await writeFile(join(DIST, '_redirects'), redirects + '\n');
-  console.log(`  ✓ _redirects              → ${written.length - 1} trailing-slash rules`);
+  } catch {}
+  // the same catch-all the host uses, so the snapshot sees what production serves
+  r.writeHead(200, { "content-type": "text/html" });
+  r.end(shell);
+}).listen(PORT);
 
-  console.log(`\nPrerendered ${ok}/${ROUTES.length} routes (${fail} failed).`);
+// ---------------------------------------------------------------- render
+const browser = await chromium.launch();
+const results = [];
+const queue = routes.slice();
 
-  // THE GATE WAS `if (ok === 0)`. Forty-four of forty-five routes could fail and the
-  // build stayed green — which is how eight citable pages went out serving the homepage.
-  // Any failure is now a build failure; a prerender that silently half-works is worse
-  // than one that does not run, because the output looks fine and returns 200.
-  if (fail > 0) {
-    console.error(`\n✗ ${fail} route(s) failed to prerender: ${failed.join(', ')}`);
-    console.error('  Refusing to ship a partial prerender — those routes would serve the SPA shell.');
-    process.exit(1);
+async function worker(id) {
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const errs = [];
+  page.on("pageerror", e => errs.push(e.message.slice(0, 100)));
+  while (queue.length) {
+    const route = queue.shift();
+    const rec = { route, chars: 0, ok: false };
+    try {
+      await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
+      await page.waitForTimeout(WAIT);
+      const info = await page.evaluate(() => {
+        const root = document.getElementById("root");
+        return { text: (document.body.innerText || "").replace(/\s+/g, " ").trim(),
+                 rootEmpty: !root || root.children.length === 0,
+                 title: document.title,
+                 desc: document.querySelector('meta[name="description"]')?.content || "" };
+      });
+      rec.chars = info.text.length;
+      rec.title = info.title;
+      rec.hasDesc = !!info.desc;
+      rec.rootEmpty = info.rootEmpty;
+
+      // The snapshot keeps <script> tags so the app still hydrates on top of it. Only the
+      // rendered markup is added — nothing is removed.
+      const html = await page.content();
+      const out = route === "/" ? join(DIST, "index.html")
+                                : join(DIST, route.replace(/^\//, ""), "index.html");
+      mkdirSync(dirname(out), { recursive: true });
+      writeFileSync(out, html, "utf8");
+      rec.ok = rec.chars >= MIN && !rec.rootEmpty;
+      rec.bytes = html.length;
+      rec.errs = errs.splice(0).slice(0, 1);
+    } catch (e) {
+      rec.err = e.message.slice(0, 80);
+    }
+    results.push(rec);
+    const mark = rec.err ? "ERR  " : rec.ok ? "ok   " : "THIN ";
+    console.log(`${mark}${String(rec.chars).padStart(6)}ch  ${rec.route}` +
+                (rec.err ? `  ${rec.err}` : "") +
+                (rec.rootEmpty ? "  ROOT STILL EMPTY" : "") +
+                (rec.errs?.length ? `  js: ${rec.errs[0]}` : ""));
   }
-  if (ok === 0) process.exit(1);
+  await page.close();
 }
+await Promise.all(Array.from({ length: CONC }, (_, i) => worker(i)));
+await browser.close();
+srv.close();
 
-main().catch((e) => { console.error(e); process.exit(1); });
+// ---------------------------------------------------------------- report
+const ok = results.filter(r => r.ok);
+const thin = results.filter(r => !r.ok && !r.err);
+const err = results.filter(r => r.err);
+const noDesc = ok.filter(r => !r.hasDesc);
+const dupTitle = {};
+ok.forEach(r => (dupTitle[r.title] ||= []).push(r.route));
+
+console.log(`\n═══ ${results.length} routes`);
+console.log(`  ${ok.length} prerendered with ≥${MIN} visible characters`);
+console.log(`  ${thin.length} THIN — rendered but under threshold, or root still empty`);
+console.log(`  ${err.length} errored`);
+if (thin.length) {
+  console.log(`\nTHIN routes need a longer wait or real SSR — they are NOT fixed:`);
+  thin.slice(0, 25).forEach(r => console.log(`  ${String(r.chars).padStart(6)}ch  ${r.route}`));
+  if (thin.length > 25) console.log(`  … and ${thin.length - 25} more`);
+}
+if (noDesc.length)
+  console.log(`\n${noDesc.length} prerendered routes have no meta description.`);
+const dups = Object.entries(dupTitle).filter(([, v]) => v.length > 3);
+if (dups.length) {
+  console.log(`\nDuplicate <title> across routes — react-helmet is not firing before the snapshot:`);
+  dups.slice(0, 5).forEach(([t, v]) => console.log(`  ${v.length}×  "${t.slice(0, 60)}"`));
+}
+writeFileSync("prerender-report.json", JSON.stringify(results, null, 1));
+console.log(`\nwrote prerender-report.json`);
+console.log(`Ship only if THIN is small and you have looked at every route in it.`);

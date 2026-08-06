@@ -4,7 +4,7 @@ import { useEffect } from "react";
 // Credo GAIA, and ServiceNow AI Control Tower. A council of agents beats one agent.
 const POINTS = [
   { t: "One agent is a single point of capture", d: "A lone governance agent can be wrong, biased, or compromised - and nobody checks it." },
-  { t: "A council can't be captured", d: "Five independent agents must reach fault-aware consensus consensus; one bad actor cannot decide." },
+  { t: "A council can't be captured", d: "Five independent agents must reach designed multi-agent review; one bad actor cannot decide." },
   { t: "Every verdict is provable", d: "Outcomes are Ed25519-signed and replayable - not a black-box recommendation." },
   { t: "Open and cross-vendor", d: "MCP-native and sovereign - it governs agents wherever they run, not just inside one suite." },
 ];

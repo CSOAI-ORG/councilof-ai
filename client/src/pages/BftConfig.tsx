@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 type Preset = { n: number; name: string; blurb: string };
 const PRESETS: Preset[] = [
-  { n: 5, name: "Council (f=1)", blurb: "The minimum for fault-aware consensus - the default 5-agent Council." },
+  { n: 5, name: "Council (f=1)", blurb: "The minimum for designed multi-agent review - the default 5-agent Council." },
   { n: 13, name: "Queen + 12", blurb: "One Sovereign queen surrounded by twelve - higher assurance for regulated workloads." },
   { n: 33, name: "Sovereign Swarm (33)", blurb: "Maximum decentralization - survives ten compromised agents." },
 ];
@@ -44,7 +44,7 @@ export default function BftConfig() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - configurable consensus</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Choose your BFT setup</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Five agents, twelve-around-one, or a thirty-three-node swarm — explore how much fault-aware consensus your governance could run on. The math updates live; the topology is open-patent at openpatent.ai.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Five agents, twelve-around-one, or a thirty-three-node swarm — explore how much designed multi-agent review your governance could run on. The math updates live; the topology is open-patent at openpatent.ai.</p>
           <p className="mt-3 max-w-2xl text-sm text-amber-200/90">A design-space explorer: the Byzantine math below is real, but the council it configures is <b>designed, not yet live</b> — measured status on the <a href="/refutation-ledger" className="underline">Refutation Ledger</a> (DR-0007).</p>
         </div>
       </section>

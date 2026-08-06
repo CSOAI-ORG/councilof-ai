@@ -93,7 +93,7 @@ Safety verification shall be proportionate to risk level and reviewed by certifi
     title: "Byzantine Council",
     part: 1,
     partTitle: "Foundational Principles",
-    content: `Establishment of the 33-agent fault-aware consensus (BFT) consensus monitoring system. This council consists of 33 independent AI agents, each trained to evaluate whether other AI systems are operating safely within their defined parameters.
+    content: `Establishment of the designed 33-agent Council of AI (measured status on the public Refutation Ledger). This council consists of 33 independent AI agents, each trained to evaluate whether other AI systems are operating safely within their defined parameters.
 
 The Byzantine Council requires 22 out of 33 agents to agree (66.67% supermajority) before any governance decision is executed or any AI system receives approval for high-risk deployment. This architecture is resistant to up to 10 simultaneous agent failures, corruptions, or biases.
 
@@ -280,11 +280,11 @@ All licenses require periodic renewal and continuing education. Schedule E provi
     title: "Byzantine Council Specifications",
     part: 2,
     partTitle: "Governance Structure",
-    content: `Technical specifications for the 33-node fault-aware consensus consensus system that implements distributed AI governance.
+    content: `Technical specifications for the designed 33-node multi-agent review system that implements distributed AI governance.
 
 Architecture (DESIGN — see the measured position below):
 - 33 agents, intended to be trained on diverse datasets to reduce correlated failures
-- Agents are designed to run a practical fault-aware consensus algorithm
+- Agents are designed to run a practical designed multi-agent review algorithm
 
 MEASURED POSITION (2026-07-29): independence has not been demonstrated. Effective
 independence across the nominal legs measured n_eff = 1.21 of 3, meaning the legs fail

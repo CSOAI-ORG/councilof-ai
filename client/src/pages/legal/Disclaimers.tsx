@@ -167,7 +167,7 @@ export default function Disclaimers() {
                       inaccuracies.
                     </li>
                     <li>
-                      <strong>fault-aware consensus has limits.</strong> Our 22/33 consensus threshold
+                      <strong>designed multi-agent review has limits.</strong> Our 22/33 consensus threshold
                       reduces but does not eliminate the possibility of incorrect conclusions.
                     </li>
                     <li>

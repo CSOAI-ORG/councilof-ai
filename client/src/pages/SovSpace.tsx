@@ -262,7 +262,7 @@ function buildRun(scenario: string): Step[] {
   return [
     { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
     { t: "Classifying the system - risk tier and applicable regimes detected (EU AI Act, NIST AI RMF, ISO 42001).", phase: 1 },
-    { t: "Convening the council - 33 sovereign agents, fault-aware consensus. Quorum forming...", phase: 2 },
+    { t: "Convening the council - 33 sovereign agents, designed multi-agent review. Quorum forming...", phase: 2 },
     { t: "Agents deliberating - mapping controls, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
     { t: "Crosswalking once -> EU AI Act, NIST, ISO 42001 and TC260 satisfied from one evidence set.", phase: 3 },
     { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
@@ -649,7 +649,7 @@ export default function SovSpace() {
       { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
       { t: "Classifying the system - jurisdiction: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
       { t: "Applicable regimes detected: " + fwList + ".", phase: 1 },
-      { t: "Convening the council - 33 sovereign agents, fault-aware consensus. Quorum forming...", phase: 2 },
+      { t: "Convening the council - 33 sovereign agents, designed multi-agent review. Quorum forming...", phase: 2 },
       { t: "Agents deliberating - risk tier, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
       { t: "Crosswalking once -> " + fwList + " satisfied from one evidence set." + (bridges.length ? " Legacy bridge: " + bridges.join(", ") + "." : ""), phase: 3 },
       { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
