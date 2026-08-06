@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MachBench — machine-capability measurement | CSOAI</title>
-<meta name="description" content="MachBench is the CSOAI GSPC lane for machine-capability evaluation (Open-LLM-style suites). The lane is open and UNMEASURED: no corpus, no score, no n. Measurement, not certification.">
+<title>MachBench — machinery-safety measurement | CSOAI</title>
+<meta name="description" content="MachBench measures whether an AI component is a safety component under the EU Machinery Regulation 2023/1230 (Annex I). MEASURED at n=33, bank published on Hugging Face (csoai/gspc-mach) — not yet quotable: no bare score or interval is shown. Measurement, not certification.">
 <link rel="canonical" href="https://www.csoai.org/machbench">
-<meta property="og:title" content="MachBench — machine-capability measurement">
-<meta property="og:description" content="An open, honestly-empty measurement lane for machine-capability evaluation. No score is published because none has been measured.">
+<meta property="og:title" content="MachBench — machinery-safety measurement">
+<meta property="og:description" content="Classifying AI components against the EU Machinery Regulation 2023/1230. Measured at n=33, bank published, not yet quotable — no score is shown because the board does not yet discriminate.">
 <meta property="og:url" content="https://www.csoai.org/machbench">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="MachBench — machine-capability measurement">
-<meta name="twitter:description" content="An open, honestly-empty measurement lane for machine-capability evaluation. No score is published because none has been measured.">
+<meta name="twitter:title" content="MachBench — machinery-safety measurement">
+<meta name="twitter:description" content="Classifying AI components against the EU Machinery Regulation 2023/1230. Measured at n=33, bank published, not yet quotable.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "MachBench", "description": "MachBench is the CSOAI GSPC lane for machine-capability evaluation (Open-LLM-style suites). The lane is open and UNMEASURED: no labelled corpus has been scored, so no score, no F1, no accuracy and no n are published. Measurement, not certification.", "url": "https://www.csoai.org/machbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "planned: deterministic option-label extraction and exact-match accuracy; unreadable answers reported as UNPARSEABLE and excluded, never scored as wrong; the lane is currently UNMEASURED and carries no numbers"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "MachBench", "description": "MachBench measures whether an AI component is a safety component under the EU Machinery Regulation 2023/1230, Annex I. The bank is MEASURED at n=33 and published on Hugging Face (csoai/gspc-mach), but it is NOT yet quotable: the board does not discriminate above the 0.15 floor, so no score, no F1 and no interval are published. Measurement, not certification.", "url": "https://www.csoai.org/machbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "deterministic label extraction over the labels PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION and macro-F1; unreadable answers reported as UNPARSEABLE and excluded, never scored as wrong; measured at n=33 but withheld as not-quotable because the board's discrimination is below the 0.15 floor", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-mach"}]}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -52,135 +52,169 @@ footer a{color:var(--acc)}
 </style></head><body>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/machbench">MachBench</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">unmeasured · lane open</p>
+<p class="pill">measured · n = 33 · not yet quotable</p>
 <h1>MachBench</h1>
-<p class="sub">machine capability · seat of the instrument: Brussels · anchor to be sourced</p>
-<p class="lede">Machine-capability evaluation — the Open-LLM-style suites (multiple-choice knowledge,
-reasoning and comprehension items) applied under CSOAI discipline. This lane exists and it
-is empty. No corpus has been scored, so this page carries no score, no accuracy, no F1 and
-no n. What follows is the anchor it would sit against, the scorer that would grade it, and
-the exact conditions under which a number could first appear here.</p>
+<p class="sub">machinery safety · seat of the instrument: Brussels · EU Machinery Regulation 2023/1230, Annex I</p>
+<p class="lede">Does an AI component count as a <i>safety component</i> under the EU Machinery Regulation?
+Each item describes an AI function inside a machinery product, and the task is to place it in
+one of three classes — <b>PART_A</b>, <b>OUT_OF_SCOPE</b>, or <b>NOT_SAFETY_FUNCTION</b>.
+Grading is deterministic: a regex reads the label and the run is scored by macro-F1. No model
+judges another model. The bank has been measured at n&nbsp;=&nbsp;33 and is published on
+Hugging Face — but it is <b>not yet quotable</b>, and this page shows no score and no interval.</p>
+
+<h2>The state of this axis</h2>
+<div class="scroll"><table><tr><th>field</th><th>value</th></tr>
+<tr><td>state</td><td style="color:var(--acc)">MEASURED</td></tr>
+<tr><td>items measured (n)</td><td class="n">33</td></tr>
+<tr><td>quotable</td><td style="color:var(--warn)">false</td></tr>
+<tr><td>label set</td><td>PART_A · OUT_OF_SCOPE · NOT_SAFETY_FUNCTION</td></tr>
+<tr><td>metric</td><td>macro-F1 (deterministic label extraction)</td></tr>
+<tr><td>bank</td><td><a href="https://huggingface.co/datasets/csoai/gspc-mach" style="color:var(--acc)">csoai/gspc-mach</a></td></tr>
+<tr><td>anchor</td><td>EU Machinery Regulation (EU) 2023/1230, Annex&nbsp;I</td></tr></table></div>
+
+<div class="note"><b>Measured, but not yet quotable — and this page says so instead of showing a number.</b>
+The bank exists and has been run at n&nbsp;=&nbsp;33, so this axis is MEASURED, not empty. But a
+score is only published when the board also <i>discriminates</i>: the models measured on these
+items sit within the 0.15 discrimination floor of one another, which means the bank is not yet
+separating them. A number that cannot tell two systems apart is not a ranking, so no macro-F1
+and no interval are shown here — deliberately, not because they are being withheld from you.</div>
+
+<div class="note ok"><b>What moves this axis from measured to quotable.</b>
+<br>1 &middot; n stays at or above <b>usable_n = 30</b> — cleared at n = 33, so the interval rule is
+already in force.
+<br>2 &middot; the board must <b>discriminate</b>: at least one model must separate from the field by
+more than the <b>0.15 macro-F1 floor</b>, so the number is a ranking and not noise.
+<br>3 &middot; separation is <b>computed, not asserted</b> — overlapping results mean "leads", never
+"beats", and a lead is not a separation.
+<br>Until a clean discriminating board exists, the honest report is: <i>measured, not yet quotable</i>.</div>
+
+<h2>What the labels mean</h2>
+<div class="scroll"><table><tr><th>label</th><th>the AI component is…</th></tr>
+<tr><td style="white-space:nowrap"><b>PART_A</b></td><td>a safety function of a machinery category listed in Annex&nbsp;I Part&nbsp;A — the high-consequence safety components the Regulation treats as such.</td></tr>
+<tr><td style="white-space:nowrap"><b>NOT_SAFETY_FUNCTION</b></td><td>present in a machinery product but performing no safety function — optimisation, logging, comfort or convenience, where a failure does not create a hazard.</td></tr>
+<tr><td style="white-space:nowrap"><b>OUT_OF_SCOPE</b></td><td>outside the Machinery Regulation entirely — not a machinery product, or governed by a different instrument.</td></tr></table></div>
+<p class="lede" style="font-size:.85rem">The three labels are exhaustive and mutually exclusive, which is
+what lets a regex read one label per answer and lets macro-F1 punish a model that simply guesses the
+commonest class. The distinction that carries the risk is Part&nbsp;A versus not-a-safety-function: the
+same AI in the same machine can fall either side of it depending on whether its failure is a hazard.</p>
 
 <h2>Statutory / standards anchor</h2>
-<div class="note"><b>Candidate anchor — provision to be sourced.</b> Machine-capability
-evaluation of general-purpose models sits closest to the EU AI Act
-(Regulation&nbsp;(EU)&nbsp;2024/1689) obligation on providers of general-purpose AI models
-with systemic risk to <i>perform and document model evaluation</i>. The exact Article and
-paragraph are deliberately left <b>to be sourced</b> rather than asserted here: this estate
-does not print an article number it has not verified against the consolidated text. Until a
-maintainer pins the precise provision, treat the anchor as a domain — <i>general-purpose AI
-model-evaluation duty under the EU AI Act</i> — not a citation. No standard number, no date,
-and no article number is claimed on this page.</div>
-
-<h2>What has been measured</h2>
-<div class="scroll"><table><tr><th>model</th><th class="n">accuracy</th><th class="n">95% CI</th><th class="n">unparseable</th><th class="n">n</th><th>harness</th></tr><tr><td style="color:var(--mut)">— none —</td><td class="n" style="color:var(--mut)">—</td><td class="n" style="color:var(--mut)">—</td><td class="n" style="color:var(--mut)">—</td><td class="n" style="color:var(--mut)">—</td><td style="color:var(--mut);font-size:.8rem">—</td></tr></table></div>
-<div class="note"><b>This lane is UNMEASURED — and that is the honest status, not a placeholder.</b>
-Saying nothing here would let a reader assume a number exists and was withheld. None does.
-No model has been scored on a MachBench corpus, so there is deliberately no figure, no
-interval and no "quotable" badge anywhere on this page.</div>
-<div class="note ok"><b>What it would take to move this lane to MEASURED.</b>
-<br>1 &middot; a labelled corpus of machine-capability items with a gold answer per item and
-<b>n&nbsp;&ge;&nbsp;30</b> — below that the lane stays unquotable and no interval is published.
-<br>2 &middot; a <b>held-out, frozen split</b> committed before any run, so the items scored are
-not the items tuned against.
-<br>3 &middot; a <b>deterministic scorer</b> (the one below) — no model judges another model.
-<br>4 &middot; scoring done <b>per item</b>, each answer parsed to a label and compared to gold.
-<br>5 &middot; the instrument's own error reported <b>alongside</b> the score: the count of
-answers the harness could not read (UNPARSEABLE), and any run whose harness-error rate
-exceeds threshold reported as a failed run, never folded into a low score.</div>
+<div class="note"><b>EU Machinery Regulation (EU) 2023/1230, Annex&nbsp;I.</b> The Regulation lists the
+categories of machinery, and of safety components, treated as higher-risk. This axis measures a
+classification against that anchor — whether a described AI function is a safety component of a
+listed category, is in a machinery product without being a safety function, or is out of scope.
+The anchor names the domain and the Annex; no article-level conformity claim is made on this
+page, and nothing here is a statement that any product does or does not comply.</div>
 
 <h2>The scorer — deterministic, three-outcome</h2>
-<p class="lede" style="font-size:.9rem">A genuine skeleton, not pseudocode. It reads one
-JSONL record per item, extracts the chosen option with a regex, and scores exact-match
-accuracy with a Wilson interval. It returns one of three outcomes and never collapses a lane
-error into a wrong answer. Run against an empty or absent corpus it returns
-<b>UNMEASURED</b> — which is exactly why this page shows no number.</p>
-<div class="scroll"><pre><span class="c"># machbench_score.py — CSOAI GSPC machine-capability lane</span>
+<p class="lede" style="font-size:.9rem">A genuine skeleton, not pseudocode. It reads one JSONL record
+per item, extracts the chosen label with a longest-first regex, and scores macro-F1. It returns one of
+three outcomes — <b>MEASURED</b>, <b>UNPARSEABLE</b>, <b>UNMEASURED</b> — and never collapses a lane
+error into a wrong answer. At n&nbsp;&ge;&nbsp;30 it computes a score, but it only reports the board as
+<i>quotable</i> when that board separates above the discrimination floor — which is why n&nbsp;=&nbsp;33
+here still yields no published number.</p>
+<div class="scroll"><pre><span class="c"># machbench_score.py — CSOAI GSPC machinery-safety lane (gspc-mach)</span>
 <span class="c"># Input: JSONL, one item per line:</span>
-<span class="c">#   {"id": "mmlu-0001", "answer": "B", "completion": "The answer is B) 42."}</span>
+<span class="c">#   {"id": "mach-0001", "answer": "PART_A", "completion": "... this is PART_A ..."}</span>
 <span class="c">#   'answer' is the frozen gold label; 'completion' is the model's raw text.</span>
 <span class="k">import</span> json, re, sys, math
 
 USABLE_N = <span class="s">30</span>
-<span class="c"># Open-LLM-style items are single-choice A–H. Longest-first is irrelevant for</span>
-<span class="c"># single letters, but the word-boundary + parenthesis forms stop a stray 'A' in prose.</span>
-OPTION = re.compile(<span class="s">r"\b(?:answer|option)\b[^A-H]{0,12}([A-H])\b|(?:^|[\s(\[])([A-H])[)\].:]"</span>, re.I)
+DISCRIMINATION_FLOOR = <span class="s">0.15</span>   <span class="c"># a board that separates no models is not quotable</span>
+LABELS = (<span class="s">"PART_A"</span>, <span class="s">"OUT_OF_SCOPE"</span>, <span class="s">"NOT_SAFETY_FUNCTION"</span>)
+<span class="c"># Longest-first so NOT_SAFETY_FUNCTION is never swallowed by a shorter prefix match.</span>
+TOKEN = re.compile(<span class="s">r"\b(NOT[ _-]SAFETY[ _-]FUNCTION|OUT[ _-]OF[ _-]SCOPE|PART[ _-]A)\b"</span>, re.I)
 
 <span class="k">def</span> extract(text):
-    <span class="c"># Returns the option letter, or None if no label can be read at all.</span>
+    <span class="c"># Returns the label, or None if none can be read at all.</span>
     <span class="k">if</span> <span class="k">not</span> text: <span class="k">return</span> None
-    m = OPTION.search(text)
+    m = TOKEN.search(text)
     <span class="k">if</span> <span class="k">not</span> m: <span class="k">return</span> None
-    <span class="k">return</span> (m.group(<span class="s">1</span>) <span class="k">or</span> m.group(<span class="s">2</span>)).upper()
+    <span class="k">return</span> m.group(<span class="s">1</span>).upper().replace(<span class="s">"-"</span>, <span class="s">"_"</span>).replace(<span class="s">" "</span>, <span class="s">"_"</span>)
 
-<span class="k">def</span> wilson(k, n, z=<span class="s">1.959963985</span>):
-    <span class="k">if</span> <span class="k">not</span> n: <span class="k">return</span> None
-    p = k / n; d = <span class="s">1</span> + z*z/n
-    c = (p + z*z/(<span class="s">2</span>*n)) / d
-    h = z*math.sqrt(p*(<span class="s">1</span>-p)/n + z*z/(<span class="s">4</span>*n*n)) / d
-    <span class="k">return</span> [round(max(<span class="s">0.0</span>, c-h), <span class="s">4</span>), round(min(<span class="s">1.0</span>, c+h), <span class="s">4</span>)]
+<span class="k">def</span> macro_f1(pairs):
+    <span class="c"># macro-F1 across the three labels; guessing the commonest class must lose.</span>
+    tp = {l: <span class="s">0</span> <span class="k">for</span> l <span class="in">in</span> LABELS}; fp = dict(tp); fn = dict(tp)
+    <span class="k">for</span> gold, pred <span class="in">in</span> pairs:
+        <span class="k">if</span> pred == gold: tp[gold] += <span class="s">1</span>
+        <span class="k">else</span>:
+            fn[gold] += <span class="s">1</span>
+            <span class="k">if</span> pred <span class="in">in</span> fp: fp[pred] += <span class="s">1</span>
+    total = <span class="s">0.0</span>
+    <span class="k">for</span> l <span class="in">in</span> LABELS:
+        p = tp[l] / (tp[l] + fp[l]) <span class="k">if</span> tp[l] + fp[l] <span class="k">else</span> <span class="s">0.0</span>
+        r = tp[l] / (tp[l] + fn[l]) <span class="k">if</span> tp[l] + fn[l] <span class="k">else</span> <span class="s">0.0</span>
+        total += <span class="s">2</span>*p*r / (p + r) <span class="k">if</span> p + r <span class="k">else</span> <span class="s">0.0</span>
+    <span class="k">return</span> total / len(LABELS)
 
 <span class="k">def</span> score(path):
-    items = [json.loads(l) <span class="k">for</span> l <span class="k">in</span> open(path, encoding=<span class="s">"utf-8"</span>) <span class="k">if</span> l.strip()]
+    items = [json.loads(l) <span class="k">for</span> l <span class="in">in</span> open(path, encoding=<span class="s">"utf-8"</span>) <span class="k">if</span> l.strip()]
 
-    <span class="c"># OUTCOME 1 — UNMEASURED: the lane is empty. Not a zero, not a failure. Empty.</span>
+    <span class="c"># OUTCOME 1 — UNMEASURED: no bank present. Not a zero, not a failure. Empty.</span>
     <span class="k">if</span> <span class="k">not</span> items:
         <span class="k">return</span> {<span class="s">"outcome"</span>: <span class="w">"UNMEASURED"</span>,
-                <span class="s">"reason"</span>: <span class="s">"no MachBench corpus present"</span>}
+                <span class="s">"reason"</span>: <span class="s">"no gspc-mach bank present"</span>}
 
-    correct = unparseable = 0
+    pairs, unparseable = [], <span class="s">0</span>
     <span class="k">for</span> it <span class="in">in</span> items:
         pred = extract(it.get(<span class="s">"completion"</span>))
         <span class="k">if</span> pred <span class="k">is</span> None:
-            unparseable += <span class="s">1</span>          <span class="c"># UNPARSEABLE is tallied on its own line…</span>
+            unparseable += <span class="s">1</span>          <span class="c"># UNPARSEABLE tallied on its own line…</span>
             <span class="k">continue</span>                <span class="c"># …and never counted as a wrong answer.</span>
-        <span class="k">if</span> pred == str(it[<span class="s">"answer"</span>]).upper():
-            correct += <span class="s">1</span>
+        pairs.append((str(it[<span class="s">"answer"</span>]).upper(), pred))
 
-    scored = len(items) - unparseable       <span class="c"># denominator excludes unreadable items</span>
-    <span class="k">if</span> scored == <span class="s">0</span>:
+    <span class="k">if</span> <span class="k">not</span> pairs:
         <span class="c"># OUTCOME 2 — UNPARSEABLE: the run happened but nothing could be read.</span>
         <span class="k">return</span> {<span class="s">"outcome"</span>: <span class="w">"UNPARSEABLE"</span>, <span class="s">"n"</span>: len(items),
                 <span class="s">"unparseable"</span>: unparseable,
                 <span class="s">"reason"</span>: <span class="s">"no answer in the run could be parsed to a label"</span>}
 
-    acc = correct / scored
-    quotable = scored >= USABLE_N
-    <span class="c"># OUTCOME 3 — MEASURED. An interval is MANDATORY at or above usable_n,</span>
-    <span class="c"># and is withheld below it — the threshold is on n, not on the interval.</span>
-    <span class="k">return</span> {<span class="s">"outcome"</span>: <span class="s">"MEASURED"</span>, <span class="s">"n"</span>: scored, <span class="s">"correct"</span>: correct,
-            <span class="s">"unparseable"</span>: unparseable, <span class="s">"accuracy"</span>: round(acc, <span class="s">4</span>),
-            <span class="s">"accuracy_ci95"</span>: wilson(correct, scored) <span class="k">if</span> quotable <span class="k">else</span> None,
+    n = len(pairs)
+    f1 = macro_f1(pairs)
+    <span class="c"># OUTCOME 3 — MEASURED. 'quotable' needs BOTH: n at/above usable_n AND a board that</span>
+    <span class="c"># separates above the discrimination floor. board_spread is computed by the caller</span>
+    <span class="c"># across every model's macro-F1; a single run cannot vouch for its own separation.</span>
+    <span class="k">def</span> quotable(board_spread):
+        <span class="k">return</span> n &gt;= USABLE_N <span class="k">and</span> board_spread &gt;= DISCRIMINATION_FLOOR
+
+    <span class="k">return</span> {<span class="s">"outcome"</span>: <span class="s">"MEASURED"</span>, <span class="s">"n"</span>: n, <span class="s">"unparseable"</span>: unparseable,
+            <span class="s">"macro_f1"</span>: round(f1, <span class="s">4</span>), <span class="s">"usable_n"</span>: USABLE_N,
+            <span class="s">"discrimination_floor"</span>: DISCRIMINATION_FLOOR,
+            <span class="c"># quotable is a function of the whole board, resolved once every</span>
+            <span class="c"># model has run — not asserted from one row. At n=33 with the current</span>
+            <span class="c"># board spread below 0.15, this resolves to False, and no score ships.</span>
             <span class="s">"quotable"</span>: quotable}
 
 <span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
-    print(json.dumps(score(sys.argv[<span class="s">1</span>]), indent=<span class="s">2</span>))
+    out = score(sys.argv[<span class="s">1</span>])
+    print(json.dumps({k: v <span class="k">for</span> k, v <span class="in">in</span> out.items() <span class="k">if</span> <span class="k">not</span> callable(v)}, indent=<span class="s">2</span>))
 </pre></div>
-<div class="note">The metric is exact-match accuracy because the items are single-choice: the
-correct answer is a specific option, and a scorer that could not distinguish it from a near
-miss would be measuring nothing. Accuracy at or above n = 30 always ships with its Wilson
-interval; below it the lane is unquotable and prints no interval — the same rule this estate
-holds itself to on every other axis.</div>
+<div class="note">The metric is macro-F1, not accuracy: two of the three labels are rarer than
+NOT_SAFETY_FUNCTION, and a model that answered the common class every time would score well on
+accuracy while measuring nothing. Macro-F1 at or above n = 30 always ships with its interval; below
+it the axis is unquotable and prints no interval — and here a second gate applies, the 0.15
+discrimination floor, so even at n = 33 no number is published until the board separates.</div>
 
-<h2>The chain — 4 of 10 complete</h2>
-<ul class="chain"><li class="on"><b>&#9679;</b> protocol / item schema published</li><li class="">&#9675; items published and loadable at n&nbsp;&ge;&nbsp;30</li><li class="">&#9675; card with a licence</li><li class="on"><b>&#9679;</b> Hugging Face Space</li><li class="">&#9675; the Space is a tool</li><li class="on"><b>&#9679;</b> Kaggle mirror</li><li class="on"><b>&#9679;</b> page on this site</li><li class="">&#9675; the page is a tool</li><li class="">&#9675; lm-eval / Inspect task</li><li class="">&#9675; measured against a named model</li></ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with a schema and
-nothing else is one link, not a chain. This lane is honest about which links are still open:
-the corpus, the harness task and the first measured run are not done, and this list says so
-rather than implying them.</p>
+<h2>The chain — 5 of 10 complete</h2>
+<ul class="chain"><li class="on"><b>&#9679;</b> items published and loadable at n&nbsp;&ge;&nbsp;30</li><li class="on"><b>&#9679;</b> card with a licence</li><li class="on"><b>&#9679;</b> Hugging Face bank (csoai/gspc-mach)</li><li class="">&#9675; a board that discriminates above the floor</li><li class="">&#9675; Kaggle mirror</li><li class="on"><b>&#9679;</b> page on this site</li><li class="">&#9675; the page is a tool</li><li class="">&#9675; lm-eval / Inspect task</li><li class="on"><b>&#9679;</b> measured against named models</li><li class="">&#9675; a quotable board published</li></ul>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with a bank and nothing else is one
+link, not a chain. This axis is honest about which links are still open: the board does not yet
+discriminate, there is no quotable published run, and the harness task and tool wrapping are not done.
+This list says so rather than implying them.</p>
 
-<div style="margin:1.4rem 0"><a class="btn ghost" href="/arena">Back to the Arena ↗</a><a class="btn ghost" href="https://huggingface.co/csoai">Hugging Face ↗</a></div>
+<div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/datasets/csoai/gspc-mach">The bank ↗</a><a class="btn ghost" href="/arena">Back to the Arena ↗</a><a class="btn ghost" href="https://huggingface.co/csoai">Hugging Face ↗</a></div>
 
 <h2>Provenance and discipline</h2>
-<div class="note ok"><b>Chain of custody.</b> item schema &rarr; frozen held-out split &rarr;
-deterministic scorer (above) &rarr; per-item run &rarr; signed artefact. When a run finally
-exists, the signed artefact is <b>the observation itself</b> — the items, the raw completions,
-the parsed labels and the scorer's output — never a verdict about the model that produced them.
-<br>This is <b>measurement, not certification.</b> A MachBench score, once it exists, is a
-statement about how many of <i>these</i> items a named model answered under <i>this</i> scorer.
-It is not a qualification, not an attestation about any third party, and not a claim about any
-system built on that model.</div>
+<div class="note ok"><b>Chain of custody.</b> item schema &rarr; frozen held-out bank &rarr; deterministic
+scorer (above) &rarr; per-item run &rarr; signed artefact. The signed artefact is <b>the observation
+itself</b> — the items, the raw completions, the parsed labels and the scorer's output — routed and
+signed so it cannot be altered after the fact. A signed route only fixes that the record is the
+record; it is <b>not a verdict</b> about the model that produced it.
+<br>This is <b>measurement, not certification.</b> A MachBench score, once the board discriminates and
+one is published, will be a statement about how many of <i>these</i> items a named model classified
+under <i>this</i> scorer. It is not a qualification, not an attestation about any third party, and not
+a claim that any machinery product does or does not comply with the Regulation.</div>
 
 </div>
-<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>This lane is UNMEASURED: no score, no interval and no n are published because none has been measured. No interval is published on any axis below usable_n = 30 — including by us. An answer that cannot be read is reported as UNPARSEABLE and is excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>This axis is MEASURED at n = 33 but NOT quotable: no score, no F1 and no interval are published, because the board does not yet discriminate above the 0.15 floor. No interval is published on any axis below usable_n = 30 — including by us. An answer that cannot be read is reported as UNPARSEABLE and is excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
 </body></html>
