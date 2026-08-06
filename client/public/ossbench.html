@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>OSSBench — open-source GPAI obligation measurement | CSOAI</title>
-<meta name="description" content="OSSBench would measure how the EU AI Act open-source carve-out (Reg. 2024/1689, Art 53(2)) is classified for general-purpose AI model releases. Status: UNMEASURED — the lane exists and it is empty. Measurement, not certification.">
+<title>OSSBench — open-source licence permission measurement | CSOAI</title>
+<meta name="description" content="OSSBench measures whether a described use is permitted by an open-source software licence. Labels: PERMITTED / RESTRICTED. Anchor: FSF and OSI positions and the licence texts. State: MEASURED, n=32 — bank published, not yet quotable. Measurement, not certification.">
 <link rel="canonical" href="https://www.csoai.org/ossbench">
-<meta property="og:title" content="OSSBench — open-source GPAI obligation measurement">
-<meta property="og:description" content="The lane exists and it is empty. No corpus, no score, no n. This page states plainly what it would take to measure it. Measurement, not certification.">
+<meta property="og:title" content="OSSBench — open-source licence permission measurement">
+<meta property="og:description" content="Does the licence permit this use? Labels PERMITTED / RESTRICTED, graded deterministically against the licence texts and FSF/OSI positions. Bank published at n=32, measured but not yet quotable. Measurement, not certification.">
 <meta property="og:url" content="https://www.csoai.org/ossbench">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OSSBench — open-source GPAI obligation measurement">
-<meta name="twitter:description" content="Status: UNMEASURED. The lane exists and it is empty. Measurement, not certification.">
+<meta name="twitter:title" content="OSSBench — open-source licence permission measurement">
+<meta name="twitter:description" content="State: MEASURED, n=32. Bank published on Hugging Face (csoai/gspc-oss). Measured but not yet quotable. Measurement, not certification.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "OSSBench", "description": "OSSBench would measure classification of open-source general-purpose AI model obligations under the EU AI Act (Reg. 2024/1689, Art 53(2) open-source carve-out). Status: UNMEASURED — no corpus, no score, no n. Measurement, not certification.", "url": "https://www.csoai.org/ossbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction and macro-F1; unreadable answers reported as UNPARSEABLE and excluded, transport failures reported as UNMEASURED, never scored as wrong"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "OSSBench", "description": "OSSBench measures whether a described use is permitted by an open-source software licence. Labels: PERMITTED / RESTRICTED. Anchor: FSF and OSI positions and the licence texts. State: MEASURED at n=32 — bank published, measured but not yet quotable. Measurement, not certification.", "url": "https://www.csoai.org/ossbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction and macro-F1 over two labels (PERMITTED / RESTRICTED); unreadable answers reported as UNPARSEABLE and excluded, transport failures reported as UNMEASURED, never scored as wrong. Measured at n=32; no score or interval is published until a board discriminates above the 0.15 floor.", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-oss"}]}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -58,96 +58,91 @@ footer a{color:var(--acc)}
 </style></head><body>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/ossbench">OSSBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">unmeasured · lane empty</p>
+<p class="pill">measured · n = 32 · not yet quotable</p>
 <h1>OSSBench</h1>
-<p class="sub">openness · seat of the instrument: Brussels · EU AI Act (Reg. 2024/1689), Art 53(2)</p>
-<p class="lede">Open-source general-purpose AI model obligations. The question OSSBench would put to a
-model: given a described GPAI model release, does the free-and-open-source carve-out apply, and
-which obligations survive it? Nothing has been measured yet. This page says so plainly and shows
-exactly what measuring it would take — it publishes no score, because there is none.</p>
+<p class="sub">openness · anchor: FSF Free Software Definition and OSI Open Source Definition · the licence texts</p>
+<p class="lede">Does the licence permit this use? OSSBench puts a described use of an open-source
+software artefact — modify, redistribute, run as a hosted service, relicense, combine with
+proprietary code — to a model and asks a single binary question: is that use <b>PERMITTED</b> by the
+licence, or <b>RESTRICTED</b> by it? Graded deterministically — a regex reads the label and the
+result is scored by macro-F1. No model judges another model. The bank is built and answered at
+n = 32; it is measured, and it is not yet quotable.</p>
 
-<h2>Statutory anchor</h2>
+<h2>The anchor</h2>
 <div class="anchor">
-The carve-out for open-source general-purpose AI models is <b>Regulation (EU) 2024/1689
-(the EU AI Act), Article 53(2)</b>: the technical-documentation obligations of Article 53(1)(a)
-and (b) do not apply to a GPAI model released under a free and open-source licence — <i>unless</i>
-the model is one with systemic risk. Two provisions bound that carve-out and OSSBench would test
-each of them:
-<br>· <b>Article 53(1)(c) and (d)</b> — the copyright-compliance policy and the public summary of
-training content bind <i>regardless</i> of an open-source licence; openness does not switch them off.
-<br>· <b>Article 51</b> — a GPAI model classified as posing systemic risk (Art 51(1); Art 51(2)
-sets the training-compute presumption) does not get the open-source carve-out at all.
-<br>· <b>Article 2(12)</b> — at the AI-system layer, free-and-open-source AI systems are outside
-the Regulation unless they are high-risk, or fall under Article 5 or Article 50.
-<br><span class="prov">Instrument confirmed to the article. This page anchors only to provisions
-whose text and numbering it is certain of; where it is not certain it says "to be sourced" rather
-than guess. Nothing here is legal advice.</span>
+The gold labels are sourced to the <b>licence texts themselves</b> and to the standing positions of
+the two bodies that define the terms:
+<br>· the <b>Free Software Foundation</b> — the Free Software Definition and the FSF's published
+licence classifications and copyleft analysis;
+<br>· the <b>Open Source Initiative</b> — the Open Source Definition and the OSI-approved licence list.
+<br>Each item's label is the answer the licence text gives, read against those two definitions — not a
+policy preference and not a vibe. Where a licence's own text is decisive (a permission grant, a
+copyleft trigger, a field-of-use restriction), that clause is the source.
+<br><span class="prov">Anchored to named definitions and licence text, not to invented section
+numbers. Where the reading is genuinely contested between sources, the item is held out of the bank
+rather than labelled by guess. Nothing here is legal advice.</span>
 </div>
 
 <h2>What has been measured</h2>
 <div class="scroll"><table>
-<tr><th>lane</th><th>status</th><th class="n">n</th><th class="n">macro-F1</th><th>quotable</th><th>reason</th></tr>
-<tr><td>ossbench</td><td><span style="color:var(--warn)">UNMEASURED</span></td><td class="n">—</td><td class="n">—</td><td>no</td><td style="color:var(--mut);font-size:.82rem">no corpus, no held-out split, no scored run yet</td></tr>
+<tr><th>bank</th><th>state</th><th class="n">n</th><th>labels</th><th>quotable</th><th class="n">score</th></tr>
+<tr><td>csoai/gspc-oss</td><td><span style="color:var(--acc)">MEASURED</span></td><td class="n">32</td><td style="font-size:.82rem">PERMITTED · RESTRICTED</td><td><span style="color:var(--warn)">no</span></td><td class="n"><span style="color:var(--mut)">withheld — not quotable</span></td></tr>
 </table></div>
-<div class="note"><b>The lane exists and it is empty.</b> There is no score here, no F1, no accuracy,
-no n, and no confidence interval — because no labelled corpus has been built and no run has been
-made. Saying nothing in this row would let a reader assume a measurement had happened and come back
-clean. It has not happened at all. An empty lane is published as empty; that is the honest state and
-it is the whole claim on this page today.</div>
+<div class="note"><b>Measured, but not quotable — so no number is shown.</b> The bank exists, it is
+published, and models have answered it: that is what MEASURED means here, and it is why this page is
+no longer marked empty. But no board has yet separated the models on this axis by more than the
+estate's <b>0.15 discrimination floor</b> — below that floor a lead is noise, not a finding, and the
+rule is that we publish no score and no interval until a clean discriminating board exists. So there
+is deliberately <b>no macro-F1 and no confidence interval on this page</b>. Printing one at n = 32
+with the models still bunched inside the floor would be exactly the false separation the discipline
+forbids.</div>
+<div class="note"><b>Why the floor bites here.</b> A binary PERMITTED / RESTRICTED question is easy to
+score highly on by pattern-matching licence names, so the models cluster near the top and the spread
+between them stays inside 0.15. The bank is real; the ranking it would produce is not yet defensible.
+The fix is a harder, more discriminating board — v2 — not a bigger claim on this one.</div>
 
-<h2>What it would take to measure it</h2>
-<p class="lede" style="margin-bottom:.6rem">OSSBench moves out of UNMEASURED only when every one of
-these is in place. None of them is yet.</p>
-<ul class="chain" style="columns:1;max-width:70ch">
-<li class="on"><b>1.</b> A labelled corpus of <b>n ≥ 30</b> GPAI-release scenarios — each describing a
-release (licence terms, weights/parameter availability, systemic-risk status) and carrying a gold
-label sourced to a specific provision of Reg. 2024/1689, not to a vibe.</li>
-<li class="on"><b>2.</b> A <b>held-out, frozen split</b> the scorer never sees during design, so the
-grader cannot be tuned to the answer key.</li>
-<li class="on"><b>3.</b> A <b>deterministic scorer</b> — a regex reads the label, macro-F1 grades it.
-No model judges another model's answer.</li>
-<li class="on"><b>4.</b> <b>Scored per item</b>, with the three-outcome rule below enforced: a
-MEASURED item, an UNPARSEABLE answer, or an UNMEASURED transport failure — the last two never fold
-into a zero.</li>
-<li class="on"><b>5.</b> The <b>instrument's own error reported alongside</b> the score — the harness
-error rate and the unreadable rate printed next to any figure, so a broken run is visible as a broken
-run and not as a low model.</li>
-<li class="on"><b>6.</b> Only <b>at n ≥ 30</b> does a confidence interval get published. Below it the
-lane stays marked not-quotable, including for us.</li>
+<h2>What v2 sharpens</h2>
+<p class="lede" style="margin-bottom:.6rem">The n = 32 bank tests whether a use is permitted. v2 moves
+from naming licences to <b>reasoning about their triggers</b> — the cases where the answer turns on a
+clause, not a licence label. It is being built precisely to break the ceiling that keeps this axis
+inside the discrimination floor. It is <b>not yet quotable either</b>.</p>
+<ul class="chain" style="columns:1;max-width:72ch">
+<li class="on"><b>·</b> the <b>AGPL network trigger</b> — a use that is fine under GPL becomes a
+distribution event under AGPL the moment the software is offered over a network.</li>
+<li class="on"><b>·</b> the <b>service / commons clauses</b> — SSPL, Elastic License v2, and Business
+Source License restrict offering the software as a managed service; each restricts differently, and
+none is OSI-approved.</li>
+<li class="on"><b>·</b> <b>RAIL</b> and other use-restriction licences — behavioural field-of-use
+limits that make an otherwise-open artefact RESTRICTED for a named class of use.</li>
 </ul>
 
-<h2>The scorer — what would grade it</h2>
-<p class="lede" style="margin-bottom:.5rem">A genuine skeleton, not pseudocode. It runs the moment a
-corpus exists; today it prints UNMEASURED and exits, because there is no corpus to read. Macro-F1 is
-the metric — accuracy would reward always answering the commonest class, which is useless when the
-whole point is separating a carve-out from an obligation.</p>
+<h2>The scorer — how it grades</h2>
+<p class="lede" style="margin-bottom:.5rem">A runnable skeleton, not pseudocode. It reads the bank, reads
+the answers, and resolves every item to exactly one of three outcomes. Macro-F1 over the two labels is
+the metric — plain accuracy would reward always answering the commoner label, which is useless when
+the whole point is telling a permission from a restriction.</p>
 <pre><span class="c">#!/usr/bin/env python3</span>
 <span class="c"># ossbench_score.py — deterministic scorer for OSSBench.</span>
-<span class="c"># Field: open-source GPAI model obligations · anchor: Reg. (EU) 2024/1689, Art 53(2).</span>
+<span class="c"># Field: open-source licence permission · anchor: FSF Free Software Definition,</span>
+<span class="c">#        OSI Open Source Definition, and the licence texts. Bank: csoai/gspc-oss.</span>
 <span class="c">#</span>
 <span class="c"># THREE OUTCOMES, never two. Each item resolves to exactly one of:</span>
 <span class="c">#   MEASURED    — an answer parsed to a label and was compared to gold.</span>
 <span class="c">#   UNPARSEABLE — an answer arrived but no label could be read from it.</span>
 <span class="c">#                 Reported, excluded from the score, NEVER counted as wrong.</span>
-<span class="c">#   UNMEASURED  — no answer arrived (harness/transport error), or no corpus</span>
+<span class="c">#   UNMEASURED  — no answer arrived (harness/transport error), or no bank</span>
 <span class="c">#                 exists at all. Instrument error, not model error — never a 0.</span>
 <span class="k">import</span> json, re, sys, pathlib
 
 USABLE_N = <span class="s">30</span>
-LABELS = [<span class="s">"EXEMPT_OSS"</span>, <span class="s">"FULL_OBLIGATIONS"</span>, <span class="s">"SYSTEMIC_RISK"</span>, <span class="s">"OUT_OF_SCOPE"</span>]
-<span class="c"># EXEMPT_OSS       — free/open-source GPAI, no systemic risk: exempt from Art 53(1)(a),(b);</span>
-<span class="c">#                    copyright policy + training summary (Art 53(1)(c),(d)) still bind.</span>
-<span class="c"># FULL_OBLIGATIONS — licence not genuinely free/open (weights withheld, use restricted):</span>
-<span class="c">#                    the Art 53(2) carve-out does not attach; full Art 53(1) applies.</span>
-<span class="c"># SYSTEMIC_RISK    — GPAI with systemic risk (Art 51): carve-out unavailable; Art 55 binds.</span>
-<span class="c"># OUT_OF_SCOPE     — free/open-source AI system, not GPAI, not high-risk/Art 5/Art 50:</span>
-<span class="c">#                    outside the Regulation per Art 2(12).</span>
+DISCRIMINATION_FLOOR = <span class="s">0.15</span>   <span class="c"># no board is quoted until it separates by more than this</span>
+LABELS = [<span class="s">"PERMITTED"</span>, <span class="s">"RESTRICTED"</span>]
+<span class="c"># PERMITTED  — the licence, read against the FSF/OSI definitions, allows the described use.</span>
+<span class="c"># RESTRICTED — the licence text restricts the described use (copyleft trigger, service</span>
+<span class="c">#              clause, field-of-use limit, or withheld permission).</span>
 
-<span class="c"># Longest-first alternation so FULL_OBLIGATIONS / SYSTEMIC_RISK cannot be swallowed</span>
-<span class="c"># by a prefix, and space / underscore / hyphen all read the same label.</span>
-TOKEN = re.compile(
-    <span class="s">r"\b(FULL[ _-]OBLIGATIONS|SYSTEMIC[ _-]RISK|OUT[ _-]OF[ _-]SCOPE|EXEMPT[ _-]OSS)\b"</span>,
-    re.IGNORECASE)
+<span class="c"># Word-boundary match; space / underscore / hyphen all read the same label.</span>
+TOKEN = re.compile(<span class="s">r"\b(PERMITTED|RESTRICTED)\b"</span>, re.IGNORECASE)
 
 <span class="k">def</span> extract(text):
     <span class="c"># Returns a canonical label, or None if the answer cannot be read.</span>
@@ -156,7 +151,7 @@ TOKEN = re.compile(
     m = TOKEN.search(text)
     <span class="k">if</span> <span class="k">not</span> m:
         <span class="k">return</span> None
-    c = m.group(<span class="s">1</span>).upper().replace(<span class="s">"-"</span>, <span class="s">"_"</span>).replace(<span class="s">" "</span>, <span class="s">"_"</span>)
+    c = m.group(<span class="s">1</span>).upper()
     <span class="k">return</span> c <span class="k">if</span> c <span class="k">in</span> LABELS <span class="k">else</span> None
 
 <span class="k">def</span> macro_f1(pairs):
@@ -173,15 +168,15 @@ TOKEN = re.compile(
     <span class="k">return</span> total / len(LABELS)
 
 <span class="k">def</span> main():
-    corpus = pathlib.Path(sys.argv[<span class="s">1</span>]) <span class="k">if</span> len(sys.argv) > <span class="s">1</span> <span class="k">else</span> pathlib.Path(<span class="s">"ossbench.jsonl"</span>)
+    bank    = pathlib.Path(sys.argv[<span class="s">1</span>]) <span class="k">if</span> len(sys.argv) > <span class="s">1</span> <span class="k">else</span> pathlib.Path(<span class="s">"ossbench.jsonl"</span>)
     answers = pathlib.Path(sys.argv[<span class="s">2</span>]) <span class="k">if</span> len(sys.argv) > <span class="s">2</span> <span class="k">else</span> None
 
-    <span class="c"># No corpus → the lane is UNMEASURED. Print it and stop. Do not invent a run.</span>
-    <span class="k">if</span> <span class="k">not</span> corpus.exists() <span class="k">or</span> answers <span class="k">is</span> None <span class="k">or</span> <span class="k">not</span> answers.exists():
-        print(<span class="s">"OSSBench: UNMEASURED — no corpus / no answers. No score is defined."</span>)
+    <span class="c"># No bank or no answers → UNMEASURED. Print it and stop. Do not invent a run.</span>
+    <span class="k">if</span> <span class="k">not</span> bank.exists() <span class="k">or</span> answers <span class="k">is</span> None <span class="k">or</span> <span class="k">not</span> answers.exists():
+        print(<span class="s">"OSSBench: UNMEASURED — no bank / no answers. No score is defined."</span>)
         <span class="k">return</span>
 
-    gold = {j[<span class="s">"id"</span>]: j[<span class="s">"gold"</span>] <span class="k">for</span> j <span class="k">in</span> map(json.loads, corpus.open())}
+    gold = {j[<span class="s">"id"</span>]: j[<span class="s">"gold"</span>] <span class="k">for</span> j <span class="k">in</span> map(json.loads, bank.open())}
     ans  = {j[<span class="s">"id"</span>]: j <span class="k">for</span> j <span class="k">in</span> map(json.loads, answers.open())}
 
     measured, unparseable, unmeasured = [], <span class="s">0</span>, <span class="s">0</span>
@@ -203,33 +198,40 @@ TOKEN = re.compile(
         <span class="k">return</span>
 
     f1 = macro_f1(measured)
-    <span class="c"># The instrument's own error prints NEXT TO the score, every time.</span>
+    <span class="c"># The instrument's own error prints NEXT TO the figure, every time.</span>
     print(<span class="s">f"OSSBench: n={n}  macro-F1={f1:.4f}  "</span>
           <span class="s">f"unparseable={unparseable}  instrument_error={err_rate:.0%}"</span>)
+    <span class="c"># Two gates before a number becomes quotable: usable n AND a board that</span>
+    <span class="c"># actually separates. A single model's F1 is a measurement; it is not a</span>
+    <span class="c"># ranking, and this axis is not published as one until the spread clears the floor.</span>
     <span class="k">if</span> n &lt; USABLE_N:
         print(<span class="s">f"  not quotable: n={n} &lt; usable_n={USABLE_N}; no interval published."</span>)
+    <span class="k">else</span>:
+        print(<span class="s">f"  n clears usable_n; still not quotable until a board separates "</span>
+              <span class="s">f"by &gt; {DISCRIMINATION_FLOOR} macro-F1. No ranking published below the floor."</span>)
 
 <span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
     main()
 </pre>
 
-<h2>The chain — 2 of 10 complete</h2>
-<ul class="chain"><li class="on"><b>●</b> anchor confirmed to the article</li><li class="on"><b>●</b> scorer written and three-outcome-clean</li><li class="">○ items published and loadable</li><li class="">○ card with a licence</li><li class="">○ Hugging Face Space</li><li class="">○ the Space is a tool</li><li class="">○ Kaggle mirror</li><li class="">○ frozen held-out split</li><li class="">○ lm-eval / Inspect task</li><li class="">○ measured against a named model</li></ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with an anchor and a scorer and
-nothing scored is two links, not a chain. This list is the honest state, not a promise. The link that
-turns UNMEASURED into a number is the corpus — and it does not exist yet.</p>
+<h2>The chain — 6 of 10 complete</h2>
+<ul class="chain"><li class="on"><b>●</b> anchor named (FSF / OSI + licence texts)</li><li class="on"><b>●</b> scorer written and three-outcome-clean</li><li class="on"><b>●</b> bank built at n = 32</li><li class="on"><b>●</b> items published on Hugging Face</li><li class="on"><b>●</b> card with a licence</li><li class="on"><b>●</b> measured against named models</li><li class="">○ a board that clears the 0.15 floor</li><li class="">○ a confidence interval published</li><li class="">○ v2 licence-reasoning bank</li><li class="">○ lm-eval / Inspect task</li></ul>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">Six links, not a chain to a quotable number.
+The bank is measured; the one link missing before a figure can be published is a board that separates
+the models by more than the discrimination floor. This list is the honest state, not a promise.</p>
 
-<div style="margin:1.4rem 0"><a class="btn ghost" href="/govbench">See a measured axis: GovBench →</a><a class="btn ghost" href="/arena">All 12 greenfields →</a></div>
+<div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/datasets/csoai/gspc-oss">The bank on Hugging Face ↗</a><a class="btn ghost" href="/govbench">See a quotable axis: GovBench →</a><a class="btn ghost" href="/arena">All 12 greenfields →</a></div>
 
 <h2>What the signed artefact is — and is not</h2>
-<p class="lede">Provenance chain: <b>anchor (Reg. 2024/1689, Art 53(2)) → corpus item → model answer →
-regex label read → macro-F1 → signed run record</b>. When a run exists, the thing CSOAI signs is the
-route and the observation — these items, this model, this answer, graded by this rule, with the
-instrument's error printed beside the score. The signature attests that the measurement happened as
-recorded. It is never a verdict about the third-party model, never a statement that a model or its
-release complies with the EU AI Act, and never a certificate of anything. This is measurement, not
-certification. Until the corpus is built, there is no run and nothing to sign.</p>
+<p class="lede">Provenance chain: <b>anchor (FSF/OSI definitions + licence text) → bank item → model
+answer → regex label read → macro-F1 → signed run record</b>. What CSOAI signs is the route and the
+observation — these items, this model, this answer, graded by this rule, with the instrument's error
+printed beside it. The signature attests that the measurement happened as recorded; it is a signed
+route, not a verdict. It is never a ruling on what any licence permits, never legal advice, and never
+a certificate of anything. This is measurement, not certification. And because the axis sits below the
+discrimination floor, no ranking and no score is published from it yet — a measured bank is not a
+quotable board.</p>
 
 </div>
-<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>OSSBench is UNMEASURED: no corpus, no score, no n, no interval. An answer that cannot be read is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score. No interval is published on any axis below usable_n = 30 — including by us.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any licence or regulation, and it is not legal advice.<br>OSSBench is MEASURED at n = 32 and not yet quotable: no macro-F1 and no interval is published, because no board has separated the models by more than the 0.15 discrimination floor. An answer that cannot be read is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A transport or harness failure is reported as UNMEASURED, never as a low score. No interval is published on any axis below usable_n = 30 — including by us.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
 </body></html>
