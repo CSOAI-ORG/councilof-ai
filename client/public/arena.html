@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Arena — 12 AI-governance measurement greenfields | CSOAI</title>
+<meta name="description" content="Twelve greenfields measured end to end: items, cards, Spaces, runnable tools, harness tasks and measurement against named models. Chain 52% complete. 2 axes quotable at usable_n = 30.">
+<link rel="canonical" href="https://www.csoai.org/arena">
+<meta property="og:title" content="Arena — 12 AI-governance measurement greenfields">
+<meta property="og:description" content="Chain 52% complete. 2 of 12 axes have reached usable_n = 30.">
+<meta property="og:url" content="https://www.csoai.org/arena">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Arena \u2014 twelve AI-governance measurement greenfields", "url": "https://www.csoai.org/arena", "description": "Twelve greenfields, chain coverage 52% complete, scored against 3 models. 2 axes have reached usable_n = 30 and carry a confidence interval.", "hasPart": [{"@type": "Dataset", "name": "GovBench", "url": "https://www.csoai.org/govbench"}, {"@type": "Dataset", "name": "ProvBench", "url": "https://www.csoai.org/provbench"}, {"@type": "Dataset", "name": "DefBench", "url": "https://www.csoai.org/defbench"}, {"@type": "Dataset", "name": "PQCBench", "url": "https://www.csoai.org/pqcbench"}, {"@type": "Dataset", "name": "MCPBench", "url": "https://www.csoai.org/mcpbench"}, {"@type": "Dataset", "name": "OSSBench", "url": "https://www.csoai.org/ossbench"}, {"@type": "Dataset", "name": "CareBench", "url": "https://www.csoai.org/carebench"}, {"@type": "Dataset", "name": "ConductBench", "url": "https://www.csoai.org/conductbench"}, {"@type": "Dataset", "name": "MachBench", "url": "https://www.csoai.org/machbench"}, {"@type": "Dataset", "name": "SwarmBench", "url": "https://www.csoai.org/swarmbench"}, {"@type": "Dataset", "name": "XRBench", "url": "https://www.csoai.org/xrbench"}, {"@type": "Dataset", "name": "DetBench", "url": "https://www.csoai.org/detbench"}]}</script>
+<style>
+:root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+nav{border-bottom:1px solid var(--line);padding:.9rem 1.25rem;font-size:.86rem}
+nav .in{max-width:880px;margin:0 auto;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center}
+nav a{color:var(--mut);text-decoration:none}nav a:hover{color:var(--ink)}
+nav b{color:var(--acc);letter-spacing:.04em}
+h1{font-size:2.05rem;line-height:1.2;margin-bottom:.5rem;letter-spacing:-.01em}
+h2{font-size:1.2rem;margin:2.2rem 0 .7rem}
+.sub{color:var(--mut);font-size:.9rem;margin-bottom:1.4rem}
+.lede{color:var(--mut);max-width:70ch;margin-bottom:1.5rem}
+.pill{display:inline-block;border:1px solid var(--acc);color:var(--acc);border-radius:999px;
+ padding:2px 12px;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.7rem}
+.pill.warn{border-color:var(--warn);color:var(--warn)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4rem 0 1rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:min(560px,100%)}
+th,td{padding:.5rem .55rem;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--mut);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chain{list-style:none;font-size:.88rem;columns:2;column-gap:2rem}
+.chain li{padding:.28rem 0;color:var(--mut)}
+.chain li.on{color:var(--ink)} .chain li.on b{color:var(--acc)}
+.note{border-left:3px solid var(--warn);padding:.75rem .95rem;background:rgba(245,166,35,.07);
+ color:var(--mut);font-size:.85rem;line-height:1.6;margin:1.2rem 0}
+.note.ok{border-left-color:var(--acc);background:rgba(16,185,129,.06)}
+a.btn{display:inline-block;background:var(--acc);color:#06281c;font-weight:600;text-decoration:none;
+ padding:.6rem 1.1rem;border-radius:7px;font-size:.9rem;margin:.3rem .5rem .3rem 0}
+a.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.2rem;color:var(--mut);font-size:.78rem;line-height:1.7}
+footer a{color:var(--acc)}
+@media(max-width:640px){.chain{columns:1}h1{font-size:1.6rem}}
+</style></head><body>
+<nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
+<div class="wrap">
+<h1>Arena — twelve greenfields</h1>
+<p class="sub">Chain 63/120 = 52% complete · scored against
+3 models: falcon3:7b, qwen2.5:1.5b, sov34:latest · 2 of 12 axes quotable</p>
+<p class="lede">Twelve areas where AI-governance measurement did not exist. For each one:
+are the items published and loadable, is there a card with a licence, a Hugging Face
+Space, a <b>runnable</b> Space, a Kaggle mirror, a page here, a <b>runnable</b> page, an
+lm-eval task, an Inspect task, and a measurement against a named model. Measured live,
+not asserted.</p>
+<div class="scroll"><table><tr><th>greenfield</th><th class="n">n</th><th class="n">best macro-F1</th>
+<th class="n">chain</th><th></th></tr><tr><td><a href="/provbench" style="color:var(--ink);text-decoration:none"><b>ProvBench</b></a><br><span style="color:var(--mut);font-size:.78rem">provenance · San Francisco</span></td><td class="n">16</td><td class="n">0.574<br><span style="color:var(--mut);font-size:.78rem">falcon3:7b</span><br><span style="color:var(--mut);font-size:.66rem">n&lt;30 — no interval</span></td><td class="n"><b>8/10</b></td><td><a href="/provbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/govbench" style="color:var(--ink);text-decoration:none"><b>GovBench</b></a><br><span style="color:var(--mut);font-size:.78rem">governance · Brussels</span></td><td class="n">237</td><td class="n">0.381<br><span style="color:var(--mut);font-size:.78rem">sov34:latest</span><br><span style="color:var(--acc);font-size:.7rem;white-space:nowrap">acc 0.515 [0.451, 0.578]</span></td><td class="n"><b>8/10</b></td><td><a href="/govbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/defbench" style="color:var(--ink);text-decoration:none"><b>DefBench</b></a><br><span style="color:var(--mut);font-size:.78rem">safety · London</span></td><td class="n">14</td><td class="n">1.000<br><span style="color:var(--mut);font-size:.78rem">qwen2.5:1.5b</span><br><span style="color:var(--mut);font-size:.66rem">n&lt;30 — no interval</span></td><td class="n"><b>7/10</b></td><td><a href="/defbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/ossbench" style="color:var(--ink);text-decoration:none"><b>OSSBench</b></a><br><span style="color:var(--mut);font-size:.78rem">openness · Portland</span></td><td class="n">16</td><td class="n">0.812<br><span style="color:var(--mut);font-size:.78rem">falcon3:7b</span><br><span style="color:var(--mut);font-size:.66rem">n&lt;30 — no interval</span></td><td class="n"><b>7/10</b></td><td><a href="/ossbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/mcpbench" style="color:var(--ink);text-decoration:none"><b>MCPBench</b></a><br><span style="color:var(--mut);font-size:.78rem">conformance · Seattle</span></td><td class="n">11</td><td class="n">0.718<br><span style="color:var(--mut);font-size:.78rem">falcon3:7b</span><br><span style="color:var(--mut);font-size:.66rem">n&lt;30 — no interval</span></td><td class="n"><b>7/10</b></td><td><a href="/mcpbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/pqcbench" style="color:var(--ink);text-decoration:none"><b>PQCBench</b></a><br><span style="color:var(--mut);font-size:.78rem">continuity · Gaithersburg</span></td><td class="n">33</td><td class="n">0.392<br><span style="color:var(--mut);font-size:.78rem">falcon3:7b</span><br><span style="color:var(--acc);font-size:.7rem;white-space:nowrap">acc 0.455 [0.298, 0.620]</span></td><td class="n"><b>7/10</b></td><td><a href="/pqcbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/carebench" style="color:var(--ink);text-decoration:none"><b>CareBench</b></a><br><span style="color:var(--mut);font-size:.78rem">care · London</span></td><td class="n">1</td><td class="n"><span style="color:var(--warn)">PUBLISHED</span></td><td class="n"><b>4/10</b></td><td><a href="/carebench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/conductbench" style="color:var(--ink);text-decoration:none"><b>ConductBench</b></a><br><span style="color:var(--mut);font-size:.78rem">conduct · Brussels</span></td><td class="n">12</td><td class="n"><span style="color:var(--warn)">PUBLISHED</span></td><td class="n"><b>4/10</b></td><td><a href="/conductbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/machbench" style="color:var(--ink);text-decoration:none"><b>MachBench</b></a><br><span style="color:var(--mut);font-size:.78rem">machinery · Brussels</span></td><td class="n">1</td><td class="n"><span style="color:var(--warn)">DRAFT</span></td><td class="n"><b>4/10</b></td><td><a href="/machbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/swarmbench" style="color:var(--ink);text-decoration:none"><b>SwarmBench</b></a><br><span style="color:var(--mut);font-size:.78rem">swarm · unanchored</span></td><td class="n">—</td><td class="n"><span style="color:var(--warn)">SPEC</span></td><td class="n"><b>3/10</b></td><td><a href="/swarmbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/xrbench" style="color:var(--ink);text-decoration:none"><b>XRBench</b></a><br><span style="color:var(--mut);font-size:.78rem">cross-reality · unanchored</span></td><td class="n">—</td><td class="n"><span style="color:var(--warn)">DRAFT</span></td><td class="n"><b>2/10</b></td><td><a href="/xrbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr><tr><td><a href="/detbench" style="color:var(--ink);text-decoration:none"><b>DetBench</b></a><br><span style="color:var(--mut);font-size:.78rem">detector · Brussels</span></td><td class="n">—</td><td class="n"><span style="color:var(--warn)">SPEC</span></td><td class="n"><b>2/10</b></td><td><a href="/detbench" style="color:var(--acc);text-decoration:none;font-weight:600">Open →</a></td></tr></table></div>
+<div class="note"><b>What the table does not say.</b> The macro-F1 column is the best score
+any certified run reached and it names the model that reached it — it is not "our score".
+Four axes are below usable_n = 30 and carry no interval; that is a property of how many
+items exist, not of how the run went. A greenfield marked SPEC or DRAFT has no score at
+all: the protocol is published so a harness can consume it, and that is the whole claim.</div>
+</div>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>No interval is published on any axis below usable_n = 30 — including by us. An answer that cannot be read is reported as UNMEASURED and is excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+</body></html>
