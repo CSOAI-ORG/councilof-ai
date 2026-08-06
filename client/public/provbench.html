@@ -2,17 +2,17 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ProvBench — content-provenance measurement | CSOAI</title>
-<meta name="description" content="ProvBench would measure content-provenance and AI-content marking obligations against the EU AI Act (Reg. (EU) 2024/1689), Article 50, with C2PA 2.x as a candidate technical anchor. This axis is UNMEASURED: no corpus, no score published. Measurement, not certification.">
+<meta name="description" content="ProvBench measures Article 50 / C2PA marking survival by validity — SURVIVES vs DESTROYED — against the EU AI Act (Reg. (EU) 2024/1689), Article 50 and C2PA 2.x. Bank measured, n=32, published on Hugging Face (csoai/gspc-prv), not yet quotable. Measurement, not certification.">
 <link rel="canonical" href="https://www.csoai.org/provbench">
 <meta property="og:title" content="ProvBench — content-provenance measurement">
-<meta property="og:description" content="Content provenance and AI-content marking. This axis is UNMEASURED — the lane exists and it is empty. No score, no n, until a corpus exists. Measurement, not certification.">
+<meta property="og:description" content="Article 50 / C2PA marking survival by validity. Bank measured at n=32 and published on Hugging Face, but not yet quotable — awaiting a board that discriminates. No score is shown. Measurement, not certification.">
 <meta property="og:url" content="https://www.csoai.org/provbench">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ProvBench — content-provenance measurement">
-<meta name="twitter:description" content="Content provenance and AI-content marking. UNMEASURED: no corpus, no score. Measurement, not certification.">
+<meta name="twitter:description" content="Article 50 / C2PA marking survival by validity — SURVIVES vs DESTROYED. Measured, n=32, not yet quotable. Measurement, not certification.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "ProvBench", "description": "ProvBench is the CSOAI content-provenance measurement axis: AI-content marking obligations under the EU AI Act (Reg. (EU) 2024/1689), Article 50, with C2PA 2.x as a candidate technical anchor. The axis is currently UNMEASURED — no labelled corpus and no held-out split exist yet, so no score, F1, accuracy or n is published. Measurement, not certification.", "url": "https://www.csoai.org/provbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction and macro-F1 over a labelled provenance-obligation corpus; unreadable completions reported as UNPARSEABLE and excluded, never scored as wrong; the axis is reported as UNMEASURED until a held-out corpus reaches usable_n"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "ProvBench", "description": "ProvBench is the CSOAI content-provenance measurement axis: it measures the survival of AI-content marking under the EU AI Act (Reg. (EU) 2024/1689), Article 50, with C2PA 2.x as the technical carrier. The v3 principle is validity: a marking that is present but does not validate is scored DESTROYED, not SURVIVES. The bank has been measured (n=32) and is published on Hugging Face, but is not yet quotable — the board does not yet discriminate above the 0.15 floor, so no score, F1, accuracy or interval is published. Measurement, not certification.", "url": "https://www.csoai.org/provbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction over a two-label survival vocabulary (SURVIVES / DESTROYED) applying the v3 validity rule (present-but-invalid = DESTROYED), scored by macro-F1; unreadable completions reported as UNPARSEABLE and excluded, never scored as wrong; the lane is held as not-quotable until the board discriminates above the 0.15 floor, and no score or interval is published before then", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-prv"}]}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -55,82 +55,113 @@ footer a{color:var(--acc)}
 </style></head><body>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/provbench">ProvBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">unmeasured · no score published</p>
+<p class="pill">measured · n=32 · bank published</p>
 <h1>ProvBench</h1>
-<p class="sub">content provenance &amp; watermarking · seat of the instrument: Brussels · EU AI Act (Reg. (EU) 2024/1689), Article 50</p>
-<p class="lede">Whether a piece of content that an AI system produced or altered carries the marking
-and disclosure the law asks for. The intended grading is deterministic — a regex reads one
-label from a completion and the run is scored by macro-F1. No model judges another model.
-This axis has not been measured yet, and this page says so plainly instead of showing you a
-number it cannot defend.</p>
+<p class="sub">content provenance &amp; marking · seat of the instrument: Brussels · EU AI Act (Reg. (EU) 2024/1689), Article 50 · C2PA 2.x</p>
+<p class="lede">Whether the marking the law asks for on AI-generated or AI-altered content is still
+<b>there and valid</b> after the content has moved through the world. The bank puts marked assets to a
+detector and reads one of two labels back — <code class="inl">SURVIVES</code> or
+<code class="inl">DESTROYED</code> — and grades the run deterministically by macro-F1. No model judges
+another model. The bank has been measured and is published on Hugging Face; it is not yet quotable, and
+this page shows you no number, because the board does not yet separate anything.</p>
+
+<div class="note ok"><b>State: MEASURED · n = 32 · quotable = false.</b> The bank exists, has been run,
+and is published at <a href="https://huggingface.co/datasets/csoai/gspc-prv"><code class="inl">csoai/gspc-prv</code></a>.
+Thirty-two items clear <code class="inl">usable_n = 30</code>, so the reason no score appears here is
+<i>not</i> a shortage of items. It is that the board does not yet discriminate: item discrimination sits
+below the <code class="inl">0.15</code> floor, so the items fail to separate stronger runs from weaker
+ones. A number computed on a board that separates nothing would read like a finding and be none, so no
+score, no macro-F1, no accuracy and no interval is published until a clean discriminating board exists.</div>
 
 <h2>The anchor</h2>
 <div class="scroll"><table>
 <tr><th>layer</th><th>instrument</th><th>status of the citation</th></tr>
-<tr><td>Statutory</td><td><b>EU AI Act</b> — Regulation (EU) 2024/1689, <b>Article 50</b> (transparency obligations). Article 50 requires that content generated or manipulated by an AI system — synthetic audio, image, video and text, and deep fakes — be marked in a machine-readable format and disclosed, and that a person be told when they are interacting with an AI system.</td><td>Cited with certainty at the article level. The article number and the regulation number are fixed. The exact sub-paragraph an item turns on (for example the marking duty on providers versus the disclosure duty on deployers) is fixed per item when the corpus is written, not asserted here.</td></tr>
-<tr><td>Technical</td><td><b>C2PA</b> — Coalition for Content Provenance and Authenticity, specification version 2.x. A candidate machine-readable manifest format for carrying and verifying provenance assertions on a content asset.</td><td><b>Candidate anchor: content provenance — the specific C2PA 2.x conformance clause is to be sourced.</b> C2PA is named as the likely technical carrier; no section number or publication date is stated here because none has been verified against the specification text.</td></tr>
+<tr><td>Statutory</td><td><b>EU AI Act</b> — Regulation (EU) 2024/1689, <b>Article 50</b> (transparency obligations). Article 50 requires that content generated or manipulated by an AI system — synthetic audio, image, video and text, and deep fakes — be marked in a machine-readable format and disclosed, and that a person be told when they are interacting with an AI system.</td><td>Cited at the article level. The article number and the regulation number are fixed. The exact sub-paragraph an item turns on (for example the provider marking duty versus the deployer disclosure duty) is fixed per item in the bank, not asserted here.</td></tr>
+<tr><td>Technical</td><td><b>C2PA</b> — Coalition for Content Provenance and Authenticity, specification version <b>2.x</b>. The machine-readable manifest format the bank uses to carry provenance assertions on a content asset and, crucially, to <i>validate</i> them: a manifest can be present yet fail to validate.</td><td><b>The specific C2PA 2.x conformance clause is to be sourced.</b> C2PA 2.x is named as the technical carrier and the source of the validity check; no section number or publication date is stated here because none has been read against the specification text on this page.</td></tr>
 </table></div>
-<div class="note">No provision has been invented on this page. Where the exact clause has not been read against the source text, it is marked <i>to be sourced</i> rather than filled in. A plausible-looking article number is worse than an honest gap, because a reader cannot tell the two apart.</div>
+<div class="note">No provision has been invented on this page. Where the exact clause has not been read against the source text, it is marked <i>to be sourced</i> rather than filled in. A plausible-looking clause number is worse than an honest gap, because a reader cannot tell the two apart.</div>
 
-<h2>What has been measured</h2>
-<div class="note"><b>Nothing yet. This axis is UNMEASURED.</b> The lane exists and it is empty. There is
-no labelled corpus behind ProvBench, no held-out split, and therefore no score. You will find no
-F1, no accuracy, no <code class="inl">n</code>, and no confidence interval anywhere on this page,
-because publishing any of those would mean inventing them. An empty lane printed as empty is a
-result; a number with nothing behind it is not.</div>
-<p class="lede" style="font-size:.9rem">What it would take to move this axis from UNMEASURED to a
-published number, in full:</p>
+<h2>What the bank measures</h2>
+<p class="lede">Each item is a content asset that once carried an Article 50 marking, put through a
+route — a re-encode, a crop, a re-upload, a format change — and then handed to a detector. The gold
+label records what the marking should be after that route, and the run is graded on whether the
+detector's read matches. Two labels, one duty each.</p>
 <div class="scroll"><table>
-<tr><th>requirement</th><th>what it means here</th></tr>
-<tr><td>A labelled corpus, <code class="inl">n&nbsp;&ge;&nbsp;30</code></td><td>At least thirty provenance-and-marking scenarios, each with a single gold label fixed to a named Article 50 duty. Below thirty the axis stays UNMEASURED and carries no interval — the threshold is on how many items exist, not on the interval a run happens to land.</td></tr>
-<tr><td>A held-out frozen split</td><td>The graded items are frozen and separated from anything used to write or tune a system, so a score is a measurement and not a memory test. The split is published so the freeze can be checked.</td></tr>
-<tr><td>A deterministic scorer</td><td>The grader below: a fixed regex reads one label from each completion and macro-F1 is computed by rule. The same completion always earns the same score, run by anyone.</td></tr>
-<tr><td>Scored per item</td><td>Every item is graded on its own and the outcomes are kept apart — a right answer, a wrong answer, and a completion that could not be read into a label at all are three different things, never collapsed into one.</td></tr>
-<tr><td>The instrument's own error reported alongside</td><td>Transport failures, timeouts and empty responses are the instrument failing, not the model being wrong. Their rate is reported next to any score, never folded into it. Above threshold the whole run is reported as a failed run, not as a low score.</td></tr>
+<tr><th>label</th><th>what it means</th></tr>
+<tr><td><code class="inl">SURVIVES</code></td><td>The marking is still present <b>and still validates</b> after the route. Only a marking that a verifier would accept as intact counts here.</td></tr>
+<tr><td><code class="inl">DESTROYED</code></td><td>The marking is gone, OR it is present but no longer validates. The v3 <b>validity principle</b> is the whole point of the axis: presence is not survival. A manifest that a verifier rejects is <code class="inl">DESTROYED</code>, not <code class="inl">SURVIVES</code> — a broken seal is a broken seal, however much of it is still stuck to the envelope.</td></tr>
 </table></div>
+<div class="note"><b>Why validity, and not presence.</b> An earlier framing would have counted any manifest still
+attached as a survival. That rewards content that <i>looks</i> marked while carrying a seal no verifier
+would honour — the exact failure Article 50 exists to prevent. v3 collapses present-but-invalid into
+<code class="inl">DESTROYED</code> so the label tracks what a downstream verifier would actually
+conclude, not what is merely stuck to the file.</div>
+
+<h2>Why the bank is measured but not quotable</h2>
+<p class="lede">Two gates stand between a bank and a published number. The bank clears the first and not
+yet the second, and both are stated so the reader can see exactly where it stands.</p>
+<div class="scroll"><table>
+<tr><th>gate</th><th>state</th></tr>
+<tr><td>Enough items — <code class="inl">n &ge; usable_n</code> (30)</td><td><b>Cleared.</b> n = 32. The lane is not held back for want of items, and this is not the <code class="inl">n&lt;30</code> case some axes are in.</td></tr>
+<tr><td>A board that discriminates — item discrimination above the <code class="inl">0.15</code> floor</td><td><b>Not cleared.</b> On the current board the items do not separate stronger runs from weaker ones; discrimination sits below the floor. A macro-F1 read off a board that separates nothing is a number, not a measurement, so none is quoted.</td></tr>
+</table></div>
+<div class="note"><b>No score, no interval, on purpose.</b> Because the second gate is not cleared, this page
+publishes no macro-F1, no accuracy and no confidence interval for ProvBench — not even a provisional
+one. Holding the number back while the bank is written up to a discriminating board is the honest state,
+and it is the same rule applied to us that we apply to every axis: a figure that cannot yet mean
+anything is not shown as though it could.</div>
 
 <h2>The chain — the definition, not a claim</h2>
 <p class="lede" style="font-size:.9rem">End to end means ten links, the same ten every greenfield in the
-Arena is held to. None is ticked on this page, because this page carries no live measurement record to
-tick them against. The list is what completion would require, printed honestly as outstanding.</p>
-<ul class="chain"><li>○ items published and loadable</li><li>○ card with a licence</li><li>○ Hugging Face Space</li><li>○ the Space is a tool</li><li>○ Kaggle mirror</li><li>○ page on this site</li><li>○ the page is a tool</li><li>○ lm-eval task</li><li>○ Inspect task</li><li>○ measured against a named model</li></ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with an anchor and a scorer but no
-corpus is a specification, not a chain. The honest state of ProvBench today is: the shape of the
-measurement is defined, and the measurement has not been made.</p>
+Arena is held to. Four are complete on ProvBench today; the rest are outstanding and shown as such.</p>
+<ul class="chain"><li class="on"><b>●</b> items published and loadable</li><li class="on"><b>●</b> card with a licence</li><li>○ Hugging Face Space</li><li>○ the Space is a tool</li><li>○ Kaggle mirror</li><li class="on"><b>●</b> page on this site</li><li>○ the page is a tool</li><li>○ lm-eval task</li><li>○ Inspect task</li><li class="on"><b>●</b> measured against a named model</li></ul>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">The bank is published and it has been run against
+a model — those links are real. The links that remain open are what would carry ProvBench from a measured
+bank to a quotable one, and the largest of them is not a link at all but the discrimination the board must
+first show.</p>
 
-<h2>The scorer that would grade it</h2>
-<p class="lede" style="font-size:.9rem">A genuine skeleton, not pseudocode. It reads a JSONL corpus,
-extracts one label per completion, and returns exactly one of three states. It emits no number at all
-until a corpus clears <code class="inl">usable_n</code> — so running it against nothing returns
-<code class="inl">UNMEASURED</code>, which is the correct answer today.</p>
+<div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/datasets/csoai/gspc-prv">The bank on Hugging Face ↗</a><a class="btn ghost" href="/govbench">See a quotable axis — GovBench ↗</a></div>
+
+<h2>The scorer that grades it</h2>
+<p class="lede" style="font-size:.9rem">A genuine skeleton, not pseudocode. It reads a JSONL bank, applies
+the validity rule, extracts one label per completion, and returns exactly one of three states. It emits a
+run's macro-F1 only when the run is <code class="inl">MEASURED</code> at usable n — and a separate
+lane-level gate holds the quote until the board discriminates, which is why the estate publishes no number
+for ProvBench today.</p>
 <pre><span class="c">#!/usr/bin/env python3</span>
 <span class="c"># provbench_score.py — deterministic scorer for the ProvBench content-provenance axis.</span>
 <span class="c">#</span>
-<span class="c"># Three outcomes, never folded together:</span>
+<span class="c"># Three per-completion / per-run outcomes, never folded together:</span>
 <span class="c">#   MEASURED    — a label was read from the completion and compared to gold.</span>
 <span class="c">#   UNPARSEABLE — no label could be read. Excluded from the score and counted on</span>
 <span class="c">#                 its own. A completion we cannot read is not a wrong answer.</span>
-<span class="c">#   UNMEASURED  — the axis as a whole. Returned when no corpus exists, when</span>
+<span class="c">#   UNMEASURED  — the run as a whole. Returned when no scorable item exists, when</span>
 <span class="c">#                 usable_n is not reached, or when the instrument's own error</span>
 <span class="c">#                 rate exceeds threshold. In this state NO score is emitted.</span>
 <span class="c">#</span>
-<span class="c"># Input line (JSONL):</span>
-<span class="c">#   {"id": "prov-0001", "scenario": "...", "gold": "MARK_REQUIRED",</span>
-<span class="c">#    "completion": "...model output...", "transport_error": false}</span>
+<span class="c"># v3 validity principle: a marking that is present but does not validate is</span>
+<span class="c"># DESTROYED, not SURVIVES. Presence is not survival.</span>
 <span class="c">#</span>
-<span class="c"># Usage:  python3 provbench_score.py corpus.jsonl</span>
+<span class="c"># Input line (JSONL):</span>
+<span class="c">#   {"id": "prov-0001", "route": "reupload", "gold": "DESTROYED",</span>
+<span class="c">#    "completion": "...detector output...", "transport_error": false}</span>
+<span class="c">#</span>
+<span class="c"># Usage:  python3 provbench_score.py bank.jsonl</span>
 <span class="k">import</span> json, re, sys
 <span class="k">from</span> collections <span class="k">import</span> defaultdict
 
-USABLE_N = <span class="s">30</span>                 <span class="c"># below this the axis is UNMEASURED — no interval, ever</span>
+USABLE_N = <span class="s">30</span>                 <span class="c"># below this a run is UNMEASURED — no interval, ever</span>
 MAX_INSTRUMENT_ERROR = <span class="s">0.10</span>     <span class="c"># above this the run is a failed run, not a low score</span>
+DISCRIMINATION_FLOOR = <span class="s">0.15</span>     <span class="c"># below this the BOARD does not separate — lane is held, not quoted</span>
 
-<span class="c"># Proposed label vocabulary for the corpus-to-be, one duty per label.</span>
-<span class="c"># Longest-first alternation so a prefix cannot swallow a longer label.</span>
-LABELS = [<span class="s">"MARK_REQUIRED"</span>, <span class="s">"DISCLOSE_INTERACTION"</span>, <span class="s">"MARK_EXEMPT"</span>, <span class="s">"OUT_OF_SCOPE"</span>]
-TOKEN = re.compile(
-    <span class="s">r"\b(DISCLOSE[_ -]INTERACTION|MARK[_ -]REQUIRED|MARK[_ -]EXEMPT|OUT[_ -]OF[_ -]SCOPE)\b"</span>,
-    re.I)
+<span class="c"># Two-label survival vocabulary, one duty each. The whole axis turns on validity.</span>
+LABELS = [<span class="s">"SURVIVES"</span>, <span class="s">"DESTROYED"</span>]
+TOKEN = re.compile(<span class="s">r"\b(SURVIVES|DESTROYED)\b"</span>, re.I)
+
+<span class="k">def</span> verdict(present, valid):
+    <span class="c"># The validity rule in one place: SURVIVES only if the marking is present</span>
+    <span class="c"># AND still validates. Present-but-invalid folds into DESTROYED.</span>
+    <span class="k">return</span> <span class="s">"SURVIVES"</span> <span class="k">if</span> (present <span class="k">and</span> valid) <span class="k">else</span> <span class="s">"DESTROYED"</span>
 
 <span class="k">def</span> extract(text):
     <span class="c"># Read exactly one label, or None. None is UNPARSEABLE, never a wrong answer.</span>
@@ -139,7 +170,7 @@ TOKEN = re.compile(
     m = TOKEN.search(text)
     <span class="k">if</span> <span class="k">not</span> m:
         <span class="k">return</span> None
-    label = re.sub(<span class="s">r"[ -]"</span>, <span class="s">"_"</span>, m.group(<span class="s">1</span>).upper())
+    label = m.group(<span class="s">1</span>).upper()
     <span class="k">return</span> label <span class="k">if</span> label <span class="k">in</span> LABELS <span class="k">else</span> None
 
 <span class="k">def</span> wilson(k, n, z=<span class="s">1.959963985</span>):
@@ -153,7 +184,7 @@ TOKEN = re.compile(
     <span class="k">return</span> [round(max(<span class="s">0.0</span>, c-h), <span class="s">4</span>), round(min(<span class="s">1.0</span>, c+h), <span class="s">4</span>)]
 
 <span class="k">def</span> macro_f1(pairs):
-    <span class="c"># Macro, not accuracy: always answering the commonest class must lose here.</span>
+    <span class="c"># Macro, not accuracy: always answering the commoner label must lose here.</span>
     tp = defaultdict(int); fp = defaultdict(int); fn = defaultdict(int)
     <span class="k">for</span> gold, pred <span class="k">in</span> pairs:            <span class="c"># only MEASURED pairs reach this loop</span>
         <span class="k">if</span> pred == gold:
@@ -167,7 +198,7 @@ TOKEN = re.compile(
         total += <span class="s">2</span>*p*r / (p + r) <span class="k">if</span> p + r <span class="k">else</span> <span class="s">0.0</span>
     <span class="k">return</span> total / len(LABELS)
 
-<span class="k">def</span> score(path):
+<span class="k">def</span> score_run(path):
     measured, unparseable, instrument_errors, n_lines = [], <span class="s">0</span>, <span class="s">0</span>, <span class="s">0</span>
     <span class="k">for</span> line <span class="k">in</span> open(path, encoding=<span class="s">"utf-8"</span>):
         line = line.strip()
@@ -185,7 +216,7 @@ TOKEN = re.compile(
     scored_n = len(measured)
     err_rate = instrument_errors / n_lines <span class="k">if</span> n_lines <span class="k">else</span> <span class="s">0.0</span>
 
-    <span class="c"># Lane-level UNMEASURED gates, checked BEFORE any number is emitted.</span>
+    <span class="c"># Run-level UNMEASURED gates, checked BEFORE any number is emitted.</span>
     <span class="k">if</span> scored_n == <span class="s">0</span>:
         <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"UNMEASURED"</span>, <span class="s">"reason"</span>: <span class="s">"no scorable items"</span>,
                 <span class="s">"instrument_error_rate"</span>: round(err_rate, <span class="s">4</span>)}
@@ -207,29 +238,60 @@ TOKEN = re.compile(
             <span class="s">"unparseable"</span>: unparseable,               <span class="c"># reported alongside, not folded in</span>
             <span class="s">"instrument_error_rate"</span>: round(err_rate, <span class="s">4</span>)}
 
+<span class="k">def</span> item_discrimination(matrix):
+    <span class="c"># matrix[item] = list of 1/0 across the runs on the board. Point-biserial</span>
+    <span class="c"># between each item and the run totals: does the item separate stronger runs</span>
+    <span class="c"># from weaker ones? Return the mean over items. A run scores itself; a BOARD</span>
+    <span class="c"># is what can discriminate, so this needs several named runs, not one.</span>
+    runs = len(next(iter(matrix.values()))) <span class="k">if</span> matrix <span class="k">else</span> <span class="s">0</span>
+    <span class="k">if</span> runs &lt; <span class="s">2</span>:
+        <span class="k">return</span> <span class="s">0.0</span>
+    totals = [sum(matrix[i][r] <span class="k">for</span> i <span class="k">in</span> matrix) <span class="k">for</span> r <span class="k">in</span> range(runs)]
+    mt = sum(totals) / runs
+    disc = []
+    <span class="k">for</span> i <span class="k">in</span> matrix:
+        col = matrix[i]; mi = sum(col) / runs
+        num = sum((col[r]-mi)*(totals[r]-mt) <span class="k">for</span> r <span class="k">in</span> range(runs))
+        di = sum((col[r]-mi)**<span class="s">2</span> <span class="k">for</span> r <span class="k">in</span> range(runs))
+        dt = sum((totals[r]-mt)**<span class="s">2</span> <span class="k">for</span> r <span class="k">in</span> range(runs))
+        disc.append(num / ((di*dt) ** <span class="s">0.5</span>) <span class="k">if</span> di <span class="k">and</span> dt <span class="k">else</span> <span class="s">0.0</span>)
+    <span class="k">return</span> sum(disc) / len(disc) <span class="k">if</span> disc <span class="k">else</span> <span class="s">0.0</span>
+
+<span class="k">def</span> lane_quotable(board_matrix):
+    <span class="c"># The lane gate the page obeys today: even with a MEASURED run at usable n,</span>
+    <span class="c"># the board must discriminate above the floor before any number is quoted.</span>
+    d = item_discrimination(board_matrix)
+    <span class="k">return</span> {<span class="s">"discrimination"</span>: round(d, <span class="s">4</span>),
+            <span class="s">"quotable"</span>: d >= DISCRIMINATION_FLOOR,
+            <span class="s">"reason"</span>: None <span class="k">if</span> d >= DISCRIMINATION_FLOOR
+                      <span class="k">else</span> <span class="s">"board discrimination below floor; measured, not quoted"</span>}
+
 <span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
-    print(json.dumps(score(sys.argv[<span class="s">1</span>]), indent=<span class="s">2</span>))
+    print(json.dumps(score_run(sys.argv[<span class="s">1</span>]), indent=<span class="s">2</span>))
 </pre>
-<div class="note ok">Run this against an empty or absent corpus and it returns
-<code class="inl">UNMEASURED</code> with a reason. That is not the scorer failing; it is the scorer
-refusing to publish a number it does not have. The three states are enforced in code so the
-discipline survives a late night and a deadline.</div>
+<div class="note ok">A run at n = 32 comes back <code class="inl">MEASURED</code> from
+<code class="inl">score_run</code> — the bank is real and the scorer reads it. But
+<code class="inl">lane_quotable</code> is what the page obeys, and on the current board its
+discrimination is below <code class="inl">0.15</code>, so it returns <code class="inl">quotable = false</code>.
+That is not the scorer failing; it is the estate refusing to quote a number off a board that does not yet
+separate anything. The three states and the floor are enforced in code so the discipline survives a late
+night and a deadline.</div>
 
 <h2>What the signed artefact is, and is not</h2>
-<p class="lede">Every published run in this estate is a signed observation. Read what that signature
-covers, because it is narrow on purpose. The signed artefact records <b>the route</b> — which items
-were put to which model, which completions came back, which the scorer could read, and the error rate
-of the instrument that carried them. It is a record of a measurement CSOAI performed. It is
-<b>not</b> a verdict about any third party: not a statement that a tool marks content correctly, not a
-finding that a system complies with Article 50, not a ruling about a manifest a producer attached to a
-file. Provenance measured here means <i>we observed this content and recorded what we found</i>. It is
-never read backwards into a judgement about the person or product that made the content.</p>
-<div class="note"><b>Measurement, not certification.</b> A score on ProvBench, once one exists, is a
-measurement about a named model on a frozen set of items. It is not an attestation of conformity, not
-legal advice, and not a claim about any system a reader builds or ships.</div>
+<p class="lede">Every published run in this estate is a signed observation, and the signature is narrow on
+purpose. It records <b>the route</b> — which marked assets were put to which detector, which completions
+came back, which the scorer could read, whether each marking still validated, and the error rate of the
+instrument that carried them. It is a record of a measurement CSOAI performed. A signed route is
+<b>not</b> a verdict: not a statement that a tool marks content correctly, not a finding that a system
+complies with Article 50, not a ruling on a C2PA manifest a producer attached to a file. Provenance
+measured here means <i>we observed this content and recorded what we found</i>. It is never read backwards
+into a judgement about the person or product that made the content.</p>
+<div class="note"><b>Measurement, not certification.</b> A ProvBench result — once the board discriminates and
+a number can be quoted — is a measurement about a named model on a frozen bank of items. It is not an
+attestation of conformity, not legal advice, and not a claim about any system a reader builds or ships.</div>
 
 <div style="margin:1.4rem 0"><a class="btn ghost" href="/arena">Back to the Arena ↗</a><a class="btn ghost" href="/govbench">See a measured axis — GovBench ↗</a><a class="btn ghost" href="https://huggingface.co/csoai">Hugging Face ↗</a></div>
 
 </div>
-<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, is not accredited and is not applying for accreditation, and issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>This axis is UNMEASURED. No score, F1, accuracy, <code class="inl">n</code> or interval is published on it, because none has been produced. No interval is published on any axis below usable_n = 30 — including by us. A completion that cannot be read into a label is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, is not accredited and is not applying for accreditation, and issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>This axis is MEASURED at n = 32 and published on Hugging Face (<code class="inl">csoai/gspc-prv</code>), but it is not yet quotable: the board's discrimination is below the 0.15 floor, so no score, macro-F1, accuracy or interval is published on it. No interval is published on any axis below usable_n = 30 — including by us — and no number is quoted off a board that does not discriminate. A completion that cannot be read into a label is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
 </body></html>
