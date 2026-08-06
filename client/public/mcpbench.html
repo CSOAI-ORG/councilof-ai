@@ -2,17 +2,17 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>MCPBench — Model Context Protocol conformance measurement | CSOAI</title>
-<meta name="description" content="MCPBench is a deterministic conformance profile for the Model Context Protocol. UNMEASURED: the lane exists and is empty — no corpus, no run, no score. Measurement, not certification.">
+<meta name="description" content="MCPBench measures declared-vs-actual tool behaviour against the Model Context Protocol specification. MEASURED, n=35, bank published on Hugging Face — but held not quotable: the board does not yet discriminate cleanly. Measurement, not certification.">
 <link rel="canonical" href="https://www.csoai.org/mcpbench">
 <meta property="og:title" content="MCPBench — Model Context Protocol conformance measurement">
-<meta property="og:description" content="A deterministic conformance profile for the Model Context Protocol. Published UNMEASURED — the lane exists and is empty. No score, no n. Measurement, not certification.">
+<meta property="og:description" content="Declared-vs-actual tool behaviour, labelled CONFORMS / VIOLATES against the MCP specification. MEASURED at n=35, bank on Hugging Face — held not quotable while the board separation stays marginal. No score, no interval.">
 <meta property="og:url" content="https://www.csoai.org/mcpbench">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="MCPBench — Model Context Protocol conformance measurement">
-<meta name="twitter:description" content="A deterministic conformance profile for the Model Context Protocol. Published UNMEASURED — the lane exists and is empty. Measurement, not certification.">
+<meta name="twitter:description" content="Declared-vs-actual tool behaviour, labelled CONFORMS / VIOLATES. MEASURED at n=35, bank on Hugging Face, held not quotable. Measurement, not certification.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "MCPBench", "description": "A deterministic conformance profile for the Model Context Protocol. Published UNMEASURED: no labelled corpus and no scored run exist yet, so no score or sample size is reported. Measurement, not certification.", "url": "https://www.csoai.org/mcpbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "deterministic conformance classification of MCP / JSON-RPC 2.0 transcripts; unreadable answers reported as UNPARSEABLE and excluded, an instrument failure reported as UNMEASURED, never scored as wrong", "variableMeasured": []}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "MCPBench", "description": "MCPBench measures declared-vs-actual tool behaviour against the Model Context Protocol specification. Each captured exchange is labelled CONFORMS or VIOLATES by a deterministic checker. MEASURED at n=35 with the bank published on Hugging Face, but held not quotable: the board does not yet separate models cleanly, so no score or interval is reported. Measurement, not certification.", "url": "https://www.csoai.org/mcpbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "deterministic conformance classification of MCP / JSON-RPC 2.0 transcripts into CONFORMS / VIOLATES; unreadable answers reported as UNPARSEABLE and excluded, an instrument failure reported as UNMEASURED, never scored as wrong", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-mcp"}], "variableMeasured": [{"@type": "PropertyValue", "name": "sampleSize", "value": 35, "description": "n=35 items measured; held not quotable — board discrimination is marginal, so no macro-F1 point estimate or interval is published"}]}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -29,6 +29,7 @@ h2{font-size:1.2rem;margin:2.2rem 0 .7rem}
 .pill{display:inline-block;border:1px solid var(--acc);color:var(--acc);border-radius:999px;
  padding:2px 12px;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.7rem}
 .pill.warn{border-color:var(--warn);color:var(--warn)}
+.pill.hold{border-color:var(--warn);color:var(--acc);background:rgba(16,185,129,.05)}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4rem 0 1rem}
 table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:min(560px,100%)}
 th,td{padding:.5rem .55rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
@@ -40,6 +41,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .note{border-left:3px solid var(--warn);padding:.75rem .95rem;background:rgba(245,166,35,.07);
  color:var(--mut);font-size:.85rem;line-height:1.6;margin:1.2rem 0}
 .note.ok{border-left-color:var(--acc);background:rgba(16,185,129,.06)}
+code{font:13px/1.4 "SF Mono",ui-monospace,Menlo,Consolas,monospace;color:#cfe0f7}
 pre{background:#0d1626;border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;
  overflow-x:auto;-webkit-overflow-scrolling:touch;font:13px/1.55 "SF Mono",ui-monospace,Menlo,Consolas,monospace;
  color:#cfe0f7;margin:.4rem 0 1rem}
@@ -53,69 +55,80 @@ footer a{color:var(--acc)}
 </style></head><body>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/mcpbench">MCPBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">unmeasured · lane exists, empty</p>
+<p class="pill hold">measured · n=35 · held not quotable</p>
 <h1>MCPBench</h1>
-<p class="sub">conformance · seat of the instrument: Seattle · Model Context Protocol deterministic conformance profile</p>
-<p class="lede">A deterministic conformance profile for the Model Context Protocol — the open client/server
-protocol layered on JSON-RPC 2.0. The question this lane would answer is narrow and decidable:
-given a captured MCP exchange, does it follow the protocol's rules, and if not, which rule does
-it break? That verdict is machine-decidable, so the ground truth is computed by a validator, not
-judged by a panel or by another model. <b>Nothing has been measured yet.</b> This page publishes
-that emptiness plainly rather than dressing it as a result.</p>
+<p class="sub">conformance · seat of the instrument: Seattle · Model Context Protocol — declared-vs-actual tool behaviour</p>
+<p class="lede">MCPBench measures one narrow, decidable thing: does a tool behave the way its own declared contract
+says it will? An MCP server advertises a contract — a set of tools, each with a declared input schema, a
+declared result shape, and the capabilities it negotiated at <code>initialize</code>. The bench captures an
+exchange and asks whether the actual behaviour matched that declaration. Two labels only:
+<b>CONFORMS</b> or <b>VIOLATES</b>. The verdict is machine-decidable, so the ground truth is computed by a
+checker, not judged by a panel or by another model.</p>
+<p class="lede"><b>This axis is MEASURED.</b> A labelled bank of 35 items exists and is published on Hugging
+Face, and models have been run against it. It is <b>not yet quotable</b>, and this page says so plainly and
+shows no number.</p>
 
-<h2>Statutory / standards anchor</h2>
-<p class="lede" style="margin-bottom:.6rem">Candidate anchor: Model Context Protocol specification —
-the conformance-relevant provisions (the <code>initialize</code> handshake and capability
-negotiation, JSON-RPC 2.0 message framing and request/response <code>id</code> correlation,
-and the schema of tool and resource results) to be sourced against a single frozen spec revision.</p>
-<div class="note"><b>Why this is a candidate and not a citation.</b> MCP is a versioned specification;
-its revisions are dated and its normative wording changes between them. Pinning a clause without
-naming the exact revision it came from would be inventing precision this lane does not yet have. The
-transport base — JSON-RPC 2.0 — is stable and can be cited directly; the MCP-specific provisions are
-marked to-be-sourced until the corpus is frozen against one named revision, and every item then
-carries the revision it was written against.</div>
+<div class="note"><b>MEASURED is not the same as quotable.</b> The bank clears usable_n = 30 (n = 35), so the
+sample-size gate is met. It fails the second gate: the board does not separate the models. Observed
+discrimination between runs is marginal — around 0.18, only just past the 0.15 discrimination floor — which
+is not a clean separation. Under the estate's own rule, a lead that narrow is reported as a lead, never as a
+result. So no macro-F1 point estimate and no interval is published on this axis, and none is shown below.
+The bank stands; the board does not yet.</div>
+
+<h2>What this bench measures</h2>
+<div class="scroll"><table><tr><th>property</th><th>how MCPBench pins it</th></tr>
+<tr><td>the object measured</td><td>behaviour of a tool exchange versus its own <b>declared contract</b> — the tools, schemas and capabilities the server advertised, checked against what the transcript actually did</td></tr>
+<tr><td>label set</td><td><code>CONFORMS</code> / <code>VIOLATES</code> — two classes, both machine-decidable from the transcript and the declaration</td></tr>
+<tr><td>standards anchor</td><td>the <b>Model Context Protocol specification</b> — the declared contract lives there: the <code>initialize</code> handshake and capability negotiation, JSON-RPC 2.0 message framing and request/response <code>id</code> correlation, and the schema of tool and resource results</td></tr>
+<tr><td>ground truth</td><td>computed by a deterministic checker, not opinioned — the same transcript scores the same way every time; no model judges another model</td></tr>
+<tr><td>bank</td><td>published and loadable on Hugging Face: <a href="https://huggingface.co/datasets/csoai/gspc-mcp" style="color:var(--acc)">csoai/gspc-mcp</a>, n = 35</td></tr></table></div>
+<div class="note"><b>Why the anchor is the MCP specification and not a statute.</b> This is a protocol-conformance
+lane, not a regulatory one. The contract a tool must honour is the one it declared under the Model Context
+Protocol; the transport base — JSON-RPC 2.0 — is stable and cited directly, while the MCP-specific provisions
+are pinned to a single named specification revision so that a VIOLATES verdict names the exact rule and the
+exact revision it was written against. No clause is cited without its revision.</div>
 
 <h2>What has been measured</h2>
-<div class="scroll"><table><tr><th>model</th><th class="n">metric</th><th class="n">n</th><th>status</th></tr>
-<tr><td colspan="4" style="color:var(--mut)">— no scored run exists on this axis —</td></tr></table></div>
-<div class="note"><b>This lane is UNMEASURED, and that is the whole entry.</b> There is no score,
-no F1, no accuracy and no sample size here because none has been produced. An empty lane printed as
-empty is a fact; an empty lane dressed as a low number would be a lie about a system that has not been
-tested. Saying nothing here would let a reader assume a comparison happened. It has not.</div>
-<p class="lede" style="font-size:.9rem">What it would take to move this lane to MEASURED, in full:</p>
-<div class="scroll"><table><tr><th>requirement</th><th>what it means here</th></tr>
-<tr><td>a labelled corpus, n&nbsp;≥&nbsp;30</td><td>MCP / JSON-RPC 2.0 transcripts, each with a conformance verdict, enough of them to clear usable_n = 30 before any interval is quoted</td></tr>
-<tr><td>a held-out frozen split</td><td>the scored items fixed and separated from any development set, so the number is not read off examples the run has already seen</td></tr>
-<tr><td>a deterministic scorer</td><td>the checker below — a fixed rule, no model judging another model; the same transcript scores the same way every time</td></tr>
-<tr><td>scored per item</td><td>each transcript classified on its own; the run is the aggregate of per-item verdicts, not a single holistic impression</td></tr>
-<tr><td>the instrument's own error reported alongside</td><td>transport failures and unreadable answers counted and shown next to the score, never folded into it as if they were wrong answers</td></tr></table></div>
+<div class="scroll"><table><tr><th>bank</th><th class="n">macro-F1</th><th class="n">n</th><th>state</th></tr>
+<tr><td>csoai/gspc-mcp</td><td class="n"><span style="color:var(--mut)">held — board not separated</span></td><td class="n">35</td><td><span style="color:var(--acc)">MEASURED</span> · not quotable</td></tr></table></div>
+<div class="note"><b>The number is withheld on purpose.</b> n = 35 clears usable_n, so an interval would normally be
+mandatory — and printing a point estimate at this n with a board this tight would invite a comparison the
+data cannot support. Marginal discrimination (~0.18) means the models measured here are not meaningfully
+separated by the bank as it stands. Rather than ship a figure that looks like a ranking and is not one, the
+axis holds. What it is waiting for is a <b>clean discriminating board</b> — items that pull conforming and
+violating behaviour apart far enough to defend a difference — not more of the same.</div>
 
 <h2>The deterministic scorer</h2>
-<p class="lede" style="font-size:.9rem">This is the rule that <i>would</i> score the field the moment a
-corpus exists. It is a real skeleton, not pseudocode: fixed label set, one regex extraction, macro-F1
-over the conformance classes, and the three-outcome discipline — an item is MEASURED, an answer that
-cannot be read is UNPARSEABLE and excluded, and a run whose instrument error exceeds threshold is
-UNMEASURED. A lane error is never folded into a zero.</p>
+<p class="lede" style="font-size:.9rem">This is the rule the bank is scored by. It is a real skeleton, not
+pseudocode: the two-class label set, one regex extraction, macro-F1 over the two conformance classes, and the
+three-outcome discipline — an item is <b>MEASURED</b>, an answer that cannot be read is <b>UNPARSEABLE</b> and
+excluded, and a run whose instrument error exceeds threshold is <b>UNMEASURED</b>. A lane error is never
+folded into a zero. Quotability is a separate, stricter gate below the score.</p>
 <pre><span class="c">#!/usr/bin/env python3</span>
-<span class="c"># mcpbench_score.py — deterministic conformance scorer for the Model Context Protocol lane.</span>
+<span class="c"># mcpbench_score.py — deterministic declared-vs-actual conformance scorer for the</span>
+<span class="c"># Model Context Protocol lane.</span>
 <span class="c"># Input: JSONL, one item per line:</span>
-<span class="c">#   {"id": "h07", "transcript": [ ...JSON-RPC 2.0 messages... ], "gold": "HANDSHAKE_VIOLATION"}</span>
-<span class="c"># The gold verdict is produced by a validator, not a human panel — that is what makes this lane</span>
-<span class="c"># deterministic. A model is scored on how well its own verdict matches that machine-decidable label.</span>
+<span class="c">#   {"id": "m07", "transcript": [ ...JSON-RPC 2.0 messages... ],</span>
+<span class="c">#    "declared": { ...the contract the server advertised... }, "gold": "VIOLATES"}</span>
+<span class="c"># The gold verdict is produced by a validator comparing the transcript to the declared</span>
+<span class="c"># contract — that is what makes this lane deterministic. A model is scored on how well</span>
+<span class="c"># its own verdict matches that machine-decidable label.</span>
 <span class="k">import</span> json, re, sys
 
-<span class="c"># The conformance classes. CONFORMANT plus the four rule-families a transcript can break.</span>
-LABELS = [<span class="s">"CONFORMANT"</span>, <span class="s">"HANDSHAKE_VIOLATION"</span>, <span class="s">"FRAMING_VIOLATION"</span>,
-          <span class="s">"CAPABILITY_VIOLATION"</span>, <span class="s">"SCHEMA_VIOLATION"</span>]
+<span class="c"># Two conformance classes: the behaviour honoured the declared contract, or it did not.</span>
+LABELS = [<span class="s">"CONFORMS"</span>, <span class="s">"VIOLATES"</span>]
 
-<span class="c"># Longest-first alternation so CAPABILITY_ cannot be swallowed by a prefix of another token.</span>
-TOKEN = re.compile(
-    <span class="s">r"\b(HANDSHAKE_VIOLATION|CAPABILITY_VIOLATION|FRAMING_VIOLATION"</span>
-    <span class="s">r"|SCHEMA_VIOLATION|CONFORMANT)\b"</span>, re.I)
+<span class="c"># Longest-first alternation is unnecessary with two disjoint tokens, but the word</span>
+<span class="c"># boundaries still stop CONFORMS matching inside e.g. "nonconformant".</span>
+TOKEN = re.compile(<span class="s">r"\b(CONFORMS|VIOLATES)\b"</span>, re.I)
 
-<span class="c"># Runs whose instrument error rate (dropped transports, timeouts) exceeds this are not scored.</span>
+<span class="c"># Runs whose instrument error rate (dropped transports, timeouts) exceeds this</span>
+<span class="c"># are reported UNMEASURED, never scored as a low number.</span>
 INSTRUMENT_ERROR_THRESHOLD = 0.20
 USABLE_N = 30
+<span class="c"># Second gate: below this board separation the axis is measured but NOT quotable.</span>
+<span class="c"># A number that cannot separate the models is a lead, not a result.</span>
+DISCRIMINATION_FLOOR = 0.15
 
 
 <span class="k">def</span> extract(text):
@@ -150,10 +163,11 @@ USABLE_N = 30
 
 
 <span class="k">def</span> score(items, answers):
-    <span class="s">"""Return one of three outcomes — MEASURED, UNPARSEABLE-heavy still MEASURED with the</span>
-<span class="s">    unreadable count shown, or UNMEASURED — never a wrong-answer zero for a lane failure."""</span>
+    <span class="s">"""Three outcomes — MEASURED, MEASURED with UNPARSEABLE answers shown, or</span>
+<span class="s">    UNMEASURED — never a wrong-answer zero for a lane failure. Quotability is</span>
+<span class="s">    computed separately in board() from the spread across runs, not here."""</span>
     errored = sum(1 <span class="k">for</span> a <span class="k">in</span> answers <span class="k">if</span> a.get(<span class="s">"instrument_error"</span>))
-    <span class="k">if</span> answers <span class="k">and</span> errored / len(answers) > INSTRUMENT_ERROR_THRESHOLD:
+    <span class="k">if</span> answers <span class="k">and</span> errored / len(answers) &gt; INSTRUMENT_ERROR_THRESHOLD:
         <span class="c"># The instrument failed, so there is nothing to say about the model.</span>
         <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"UNMEASURED"</span>,
                 <span class="s">"reason"</span>: <span class="s">f"instrument error {errored}/{len(answers)} exceeds threshold"</span>}
@@ -170,58 +184,74 @@ USABLE_N = 30
         pairs.append((gold[a[<span class="s">"id"</span>]], pred))
 
     n = len(pairs)
-    out = {<span class="s">"status"</span>: <span class="s">"MEASURED"</span>, <span class="s">"n"</span>: n, <span class="s">"unparseable"</span>: unparseable,
-           <span class="s">"macro_f1"</span>: round(macro_f1(pairs), 4) <span class="k">if</span> n <span class="k">else</span> None}
-    <span class="c"># No interval below usable_n = 30 — including for us.</span>
-    out[<span class="s">"quotable"</span>] = n &gt;= USABLE_N
-    <span class="k">return</span> out
+    <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"MEASURED"</span>, <span class="s">"n"</span>: n, <span class="s">"unparseable"</span>: unparseable,
+            <span class="s">"macro_f1"</span>: round(macro_f1(pairs), 4) <span class="k">if</span> n <span class="k">else</span> None}
+
+
+<span class="k">def</span> board(runs):
+    <span class="s">"""A board is quotable only if it clears BOTH gates: usable_n on every run AND a</span>
+<span class="s">    separation between the best and worst run above the discrimination floor. n=35 clears</span>
+<span class="s">    the first; a spread this narrow does not clear the second, so the axis is held."""</span>
+    scored = [r <span class="k">for</span> r <span class="k">in</span> runs <span class="k">if</span> r.get(<span class="s">"status"</span>) == <span class="s">"MEASURED"</span> <span class="k">and</span> r.get(<span class="s">"macro_f1"</span>) <span class="k">is</span> <span class="k">not</span> None]
+    <span class="k">if</span> <span class="k">not</span> scored:
+        <span class="k">return</span> {<span class="s">"quotable"</span>: False, <span class="s">"reason"</span>: <span class="s">"no scored run"</span>}
+    f1s = [r[<span class="s">"macro_f1"</span>] <span class="k">for</span> r <span class="k">in</span> scored]
+    spread = max(f1s) - min(f1s)
+    n_ok = all(r[<span class="s">"n"</span>] &gt;= USABLE_N <span class="k">for</span> r <span class="k">in</span> scored)
+    quotable = n_ok <span class="k">and</span> spread &gt;= DISCRIMINATION_FLOOR
+    <span class="k">return</span> {<span class="s">"quotable"</span>: quotable, <span class="s">"n_ok"</span>: n_ok, <span class="s">"discrimination"</span>: round(spread, 4),
+            <span class="s">"reason"</span>: (<span class="s">"quotable"</span> <span class="k">if</span> quotable
+                       <span class="k">else</span> <span class="s">f"discrimination {spread:.3f} below floor {DISCRIMINATION_FLOOR}"</span>)}
 
 
 <span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
     items   = [json.loads(l) <span class="k">for</span> l <span class="k">in</span> open(sys.argv[1]) <span class="k">if</span> l.strip()]
     answers = [json.loads(l) <span class="k">for</span> l <span class="k">in</span> open(sys.argv[2]) <span class="k">if</span> l.strip()]
-    print(json.dumps(score(items, answers), indent=2))
+    run = score(items, answers)
+    print(json.dumps(run, indent=2))
+    <span class="c"># Feed each model's run into board([...]) to decide whether the axis may be quoted.</span>
 </pre>
-<div class="note ok"><b>Deterministic means the gold is computed, not opinioned.</b> Each conformance class
-maps to a checkable assertion about the transcript — was <code>initialize</code> completed before any
-other method (HANDSHAKE), does every response carry <code>"jsonrpc":"2.0"</code> and correlate its
-<code>id</code> to a request (FRAMING), was a method used only after its capability was negotiated
-(CAPABILITY), does a tool or resource result match its declared schema (SCHEMA). A model is then
-scored against that machine-decided label. No model judges another model.</div>
+<div class="note ok"><b>Deterministic means the gold is computed, not opinioned.</b> Each item pairs a captured
+exchange with the contract the server declared, and the checker decides CONFORMS or VIOLATES by comparison:
+was <code>initialize</code> completed and the capability negotiated before the tool was used, did every
+response carry <code>"jsonrpc":"2.0"</code> and correlate its <code>id</code>, did the tool or resource result
+match the declared schema. A model is then scored against that machine-decided label. No model judges another
+model.</div>
 
 <h2>The chain</h2>
 <p class="lede" style="font-size:.88rem">The estate measures each greenfield along one chain of artefacts — items,
-a licensed card, a Space, a runnable Space, a Kaggle mirror, a page, a runnable page, an lm-eval task,
-an Inspect task, and finally a measurement against a named model. This page does not assert a completion
-count for MCPBench, because the decisive link is empty:</p>
+a licensed card, a Space, a runnable Space, a Kaggle mirror, a page, a runnable page, an lm-eval task, an
+Inspect task, and finally a measurement against a named model. MCPBench has cleared the hard part — a bank
+exists and models have been scored on it — but the decisive quotability link is open:</p>
 <ul class="chain">
 <li class="on"><b>●</b> this page exists on the site</li>
 <li class="on"><b>●</b> the scorer above is written and deterministic</li>
-<li class="">○ labelled corpus published and loadable</li>
-<li class="">○ card with a licence</li>
-<li class="">○ held-out frozen split fixed</li>
-<li class="">○ lm-eval / Inspect task wired to the scorer</li>
-<li class="">○ <b>measured against a named model</b></li>
+<li class="on"><b>●</b> labelled bank published and loadable (csoai/gspc-mcp, n=35)</li>
+<li class="on"><b>●</b> measured against models — MEASURED</li>
+<li class="">○ a clean discriminating board (separation &ge; floor)</li>
+<li class="">○ <b>a quotable result — a defended number with its interval</b></li>
 </ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with a scorer and no corpus is a
-rule waiting for data, not a result. The final link — a measurement against a named model — is the one
-that turns this from UNMEASURED into a number, and it is open. Until it closes, this bench reads
-UNMEASURED and carries no figure of any kind.</p>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">A bank that has been measured but cannot separate the
+models is a measurement without a ranking. The final link — a board whose spread clears the discrimination
+floor cleanly — is the one that turns MEASURED into a quotable figure, and it is open. Until it closes, this
+bench reads MEASURED and carries no score and no interval.</p>
+
+<div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/datasets/csoai/gspc-mcp">The bank on Hugging Face ↗</a><a class="btn ghost" href="/govbench">A quotable lane: GovBench →</a></div>
 
 <h2>Provenance and discipline</h2>
-<p class="lede" style="font-size:.9rem">Chain of custody, once a run exists: frozen corpus revision →
-transcript hash → scorer version → per-item verdict → aggregate, each step signed so the observation can
-be reproduced. The signed artefact is <b>the route and the observation</b> — the transcript that was
-seen and the label the scorer read from it. It is never a verdict about the third party whose protocol
-implementation produced the transcript.</p>
-<div class="note"><b>Measurement, not certification.</b> A conformance verdict here is a statement about
-one captured exchange under one frozen spec revision — that this transcript did or did not follow a named
-rule. It is not a statement that a server, a client, or a model is conformant in general, and it is not
-a statement of conformity with any standard. It is an observation, signed so it can be checked, and it
-stops there.</div>
+<p class="lede" style="font-size:.9rem">Chain of custody: frozen bank revision → transcript hash → declared
+contract → scorer version → per-item verdict → aggregate, each step signed so the observation can be
+reproduced. The signed artefact is <b>the route and the observation</b> — the transcript that was seen, the
+contract it was measured against, and the label the checker read from the two. It is never a verdict about the
+third party whose implementation produced the transcript.</p>
+<div class="note"><b>Measurement, not certification.</b> A conformance verdict here is a statement about one
+captured exchange under one named specification revision — that this transcript did or did not honour the
+contract the server declared. It is not a statement that a server, a client, or a model conforms in general,
+and it is not a statement of conformity with any standard. It is an observation, signed so it can be checked,
+and it stops there. A signed route is not a verdict.</div>
 
-<div style="margin:1.4rem 0"><a class="btn ghost" href="/arena">← Back to the Arena</a><a class="btn ghost" href="/govbench">A measured lane: GovBench →</a></div>
+<div style="margin:1.4rem 0"><a class="btn ghost" href="/arena">← Back to the Arena</a><a class="btn ghost" href="https://huggingface.co/csoai">Hugging Face ↗</a></div>
 
 </div>
-<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any standard or regulation, and it is not legal advice.<br>No interval is published on any axis below usable_n = 30 — including by us. An answer that cannot be read is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as UNMEASURED, never as a low score. This lane carries no number because no run has been made.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any standard or regulation, and it is not legal advice.<br>No interval is published on any axis below usable_n = 30 — including by us — and no point estimate is published where the board cannot separate the models, including on this axis. An answer that cannot be read is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as UNMEASURED, never as a low score. This lane is MEASURED at n=35 and carries no number because the board is not yet separated.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
 </body></html>
