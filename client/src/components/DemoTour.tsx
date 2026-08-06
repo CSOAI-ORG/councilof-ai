@@ -48,17 +48,17 @@ export default function DemoTour() {
   // Proactive invite pill (idle, first visit)
   if (!active && invite && !seen) {
     return (
-      <div className="fixed bottom-44 right-4 sm:bottom-40 z-[9997] pointer-events-auto max-w-[calc(100vw-2rem)] sm:max-w-[280px] rounded-2xl border border-emerald-400/40 bg-[#04120c]/95 p-3 text-emerald-50 shadow-[0_10px_40px_-8px_rgba(16,185,129,.6)] backdrop-blur-xl">
+      <div className="fixed bottom-44 right-4 sm:bottom-40 z-[9997] pointer-events-auto max-w-[calc(100vw-2rem)] sm:max-w-[280px] rounded-2xl border border-emerald-400/40 bg-white/97 p-3 text-slate-700 shadow-[0_10px_40px_-8px_rgba(16,185,129,.35)] backdrop-blur-xl">
         <div className="flex items-start gap-2">
           <span className="text-lg">{"◉"}</span>
           <div>
-            <div className="text-sm font-bold text-emerald-100">New here? See what makes CSOAI different.</div>
+            <div className="text-sm font-bold text-slate-900">New here? See what makes CSOAI different.</div>
             <p className="mt-0.5 text-xs text-emerald-100/70">60-second live tour: the Sovereign OS, measured results you can recompute, signed governance artifacts, and the globe. Not slides - the real thing.</p>
           </div>
         </div>
         <div className="mt-2 flex gap-2">
           <button onClick={begin} className="flex-1 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Show me ▶</button>
-          <button onClick={dismissInvite} className="rounded-lg px-2 py-1.5 text-xs text-emerald-300/60 hover:bg-white/5">Not now</button>
+          <button onClick={dismissInvite} className="rounded-lg px-2 py-1.5 text-xs text-slate-500 hover:bg-slate-100">Not now</button>
         </div>
       </div>
     );
@@ -69,7 +69,7 @@ export default function DemoTour() {
   const last = step >= STEPS.length - 1;
   return (
     <div className="fixed inset-x-0 bottom-0 z-[10000] flex justify-center px-4 pb-5 pointer-events-none">
-      <div className="pointer-events-auto w-full max-w-xl rounded-2xl border border-emerald-400/40 bg-[#04120c]/95 p-4 text-emerald-50 shadow-[0_10px_50px_-10px_rgba(16,185,129,.6)] backdrop-blur-xl">
+      <div className="pointer-events-auto w-full max-w-xl rounded-2xl border border-emerald-400/40 bg-white/97 p-4 text-slate-700 shadow-[0_10px_50px_-10px_rgba(16,185,129,.35)] backdrop-blur-xl">
         <div className="flex items-start gap-3">
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-lg">{"◉"}</div>
           <div className="min-w-0 flex-1">

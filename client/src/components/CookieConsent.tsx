@@ -35,27 +35,27 @@ export default function CookieConsent() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-500/20 bg-[#03110b]/98 backdrop-blur px-4 py-4 pr-40 text-emerald-50 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-500/25 bg-white/98 backdrop-blur px-4 py-4 pr-40 text-slate-700 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
     >
       <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[13px] text-emerald-100/85 leading-relaxed">
+        <p className="text-[13px] text-slate-600 leading-relaxed">
           We use essential cookies to run this site, and — only with your consent — anonymous,
           no-third-party-cookie analytics to see which pages help. No personal data is sold or
           shared. See our{" "}
-          <a href="/cookie-policy" className="underline text-emerald-300 hover:text-emerald-200">Cookie Policy</a>
+          <a href="/cookie-policy" className="underline text-emerald-700 hover:text-emerald-600">Cookie Policy</a>
           {" "}and{" "}
-          <a href="/privacy" className="underline text-emerald-300 hover:text-emerald-200">Privacy Policy</a>.
+          <a href="/privacy" className="underline text-emerald-700 hover:text-emerald-600">Privacy Policy</a>.
         </p>
         <div className="flex shrink-0 gap-2">
           <button
             onClick={() => choose("declined")}
-            className="rounded-full border border-emerald-400/30 px-4 py-1.5 text-xs font-bold text-emerald-100/80 hover:bg-white/5"
+            className="rounded-full border border-emerald-500/40 px-4 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-50"
           >
             Essential only
           </button>
           <button
             onClick={() => choose("accepted")}
-            className="rounded-full border border-emerald-400/40 bg-emerald-500/15 px-4 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/25"
+            className="rounded-full border border-emerald-600 bg-emerald-600 px-4 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
           >
             Accept
           </button>
