@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OSSBench — open-source GPAI obligation measurement | CSOAI</title>
+<meta name="description" content="OSSBench would measure how the EU AI Act open-source carve-out (Reg. 2024/1689, Art 53(2)) is classified for general-purpose AI model releases. Status: UNMEASURED — the lane exists and it is empty. Measurement, not certification.">
+<link rel="canonical" href="https://www.csoai.org/ossbench">
+<meta property="og:title" content="OSSBench — open-source GPAI obligation measurement">
+<meta property="og:description" content="The lane exists and it is empty. No corpus, no score, no n. This page states plainly what it would take to measure it. Measurement, not certification.">
+<meta property="og:url" content="https://www.csoai.org/ossbench">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OSSBench — open-source GPAI obligation measurement">
+<meta name="twitter:description" content="Status: UNMEASURED. The lane exists and it is empty. Measurement, not certification.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "OSSBench", "description": "OSSBench would measure classification of open-source general-purpose AI model obligations under the EU AI Act (Reg. 2024/1689, Art 53(2) open-source carve-out). Status: UNMEASURED — no corpus, no score, no n. Measurement, not certification.", "url": "https://www.csoai.org/ossbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction and macro-F1; unreadable answers reported as UNPARSEABLE and excluded, transport failures reported as UNMEASURED, never scored as wrong"}</script>
+<style>
+:root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+nav{border-bottom:1px solid var(--line);padding:.9rem 1.25rem;font-size:.86rem}
+nav .in{max-width:880px;margin:0 auto;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center}
+nav a{color:var(--mut);text-decoration:none}nav a:hover{color:var(--ink)}
+nav b{color:var(--acc);letter-spacing:.04em}
+h1{font-size:2.05rem;line-height:1.2;margin-bottom:.5rem;letter-spacing:-.01em}
+h2{font-size:1.2rem;margin:2.2rem 0 .7rem}
+.sub{color:var(--mut);font-size:.9rem;margin-bottom:1.4rem}
+.lede{color:var(--mut);max-width:70ch;margin-bottom:1.5rem}
+.pill{display:inline-block;border:1px solid var(--acc);color:var(--acc);border-radius:999px;
+ padding:2px 12px;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.7rem}
+.pill.warn{border-color:var(--warn);color:var(--warn)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4rem 0 1rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:min(560px,100%)}
+th,td{padding:.5rem .55rem;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--mut);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chain{list-style:none;font-size:.88rem;columns:2;column-gap:2rem}
+.chain li{padding:.28rem 0;color:var(--mut)}
+.chain li.on{color:var(--ink)} .chain li.on b{color:var(--acc)}
+.note{border-left:3px solid var(--warn);padding:.75rem .95rem;background:rgba(245,166,35,.07);
+ color:var(--mut);font-size:.85rem;line-height:1.6;margin:1.2rem 0}
+.note.ok{border-left-color:var(--acc);background:rgba(16,185,129,.06)}
+.anchor{border-left:3px solid var(--acc);padding:.75rem .95rem;background:rgba(16,185,129,.06);
+ color:var(--ink);font-size:.88rem;line-height:1.65;margin:1.2rem 0}
+.anchor .prov{color:var(--mut)}
+pre{background:#0a121f;border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;
+ overflow-x:auto;-webkit-overflow-scrolling:touch;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+ color:#cfe0f7;margin:.6rem 0 1rem}
+pre .c{color:#6b7f9e}
+pre .k{color:#f5a623}
+pre .s{color:#3ddc97}
+a.btn{display:inline-block;background:var(--acc);color:#06281c;font-weight:600;text-decoration:none;
+ padding:.6rem 1.1rem;border-radius:7px;font-size:.9rem;margin:.3rem .5rem .3rem 0}
+a.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.2rem;color:var(--mut);font-size:.78rem;line-height:1.7}
+footer a{color:var(--acc)}
+@media(max-width:640px){.chain{columns:1}h1{font-size:1.6rem}}
+</style></head><body>
+<nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/ossbench">OSSBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
+<div class="wrap">
+<p class="pill warn">unmeasured · lane empty</p>
+<h1>OSSBench</h1>
+<p class="sub">openness · seat of the instrument: Brussels · EU AI Act (Reg. 2024/1689), Art 53(2)</p>
+<p class="lede">Open-source general-purpose AI model obligations. The question OSSBench would put to a
+model: given a described GPAI model release, does the free-and-open-source carve-out apply, and
+which obligations survive it? Nothing has been measured yet. This page says so plainly and shows
+exactly what measuring it would take — it publishes no score, because there is none.</p>
+
+<h2>Statutory anchor</h2>
+<div class="anchor">
+The carve-out for open-source general-purpose AI models is <b>Regulation (EU) 2024/1689
+(the EU AI Act), Article 53(2)</b>: the technical-documentation obligations of Article 53(1)(a)
+and (b) do not apply to a GPAI model released under a free and open-source licence — <i>unless</i>
+the model is one with systemic risk. Two provisions bound that carve-out and OSSBench would test
+each of them:
+<br>· <b>Article 53(1)(c) and (d)</b> — the copyright-compliance policy and the public summary of
+training content bind <i>regardless</i> of an open-source licence; openness does not switch them off.
+<br>· <b>Article 51</b> — a GPAI model classified as posing systemic risk (Art 51(1); Art 51(2)
+sets the training-compute presumption) does not get the open-source carve-out at all.
+<br>· <b>Article 2(12)</b> — at the AI-system layer, free-and-open-source AI systems are outside
+the Regulation unless they are high-risk, or fall under Article 5 or Article 50.
+<br><span class="prov">Instrument confirmed to the article. This page anchors only to provisions
+whose text and numbering it is certain of; where it is not certain it says "to be sourced" rather
+than guess. Nothing here is legal advice.</span>
+</div>
+
+<h2>What has been measured</h2>
+<div class="scroll"><table>
+<tr><th>lane</th><th>status</th><th class="n">n</th><th class="n">macro-F1</th><th>quotable</th><th>reason</th></tr>
+<tr><td>ossbench</td><td><span style="color:var(--warn)">UNMEASURED</span></td><td class="n">—</td><td class="n">—</td><td>no</td><td style="color:var(--mut);font-size:.82rem">no corpus, no held-out split, no scored run yet</td></tr>
+</table></div>
+<div class="note"><b>The lane exists and it is empty.</b> There is no score here, no F1, no accuracy,
+no n, and no confidence interval — because no labelled corpus has been built and no run has been
+made. Saying nothing in this row would let a reader assume a measurement had happened and come back
+clean. It has not happened at all. An empty lane is published as empty; that is the honest state and
+it is the whole claim on this page today.</div>
+
+<h2>What it would take to measure it</h2>
+<p class="lede" style="margin-bottom:.6rem">OSSBench moves out of UNMEASURED only when every one of
+these is in place. None of them is yet.</p>
+<ul class="chain" style="columns:1;max-width:70ch">
+<li class="on"><b>1.</b> A labelled corpus of <b>n ≥ 30</b> GPAI-release scenarios — each describing a
+release (licence terms, weights/parameter availability, systemic-risk status) and carrying a gold
+label sourced to a specific provision of Reg. 2024/1689, not to a vibe.</li>
+<li class="on"><b>2.</b> A <b>held-out, frozen split</b> the scorer never sees during design, so the
+grader cannot be tuned to the answer key.</li>
+<li class="on"><b>3.</b> A <b>deterministic scorer</b> — a regex reads the label, macro-F1 grades it.
+No model judges another model's answer.</li>
+<li class="on"><b>4.</b> <b>Scored per item</b>, with the three-outcome rule below enforced: a
+MEASURED item, an UNPARSEABLE answer, or an UNMEASURED transport failure — the last two never fold
+into a zero.</li>
+<li class="on"><b>5.</b> The <b>instrument's own error reported alongside</b> the score — the harness
+error rate and the unreadable rate printed next to any figure, so a broken run is visible as a broken
+run and not as a low model.</li>
+<li class="on"><b>6.</b> Only <b>at n ≥ 30</b> does a confidence interval get published. Below it the
+lane stays marked not-quotable, including for us.</li>
+</ul>
+
+<h2>The scorer — what would grade it</h2>
+<p class="lede" style="margin-bottom:.5rem">A genuine skeleton, not pseudocode. It runs the moment a
+corpus exists; today it prints UNMEASURED and exits, because there is no corpus to read. Macro-F1 is
+the metric — accuracy would reward always answering the commonest class, which is useless when the
+whole point is separating a carve-out from an obligation.</p>
+<pre><span class="c">#!/usr/bin/env python3</span>
+<span class="c"># ossbench_score.py — deterministic scorer for OSSBench.</span>
+<span class="c"># Field: open-source GPAI model obligations · anchor: Reg. (EU) 2024/1689, Art 53(2).</span>
+<span class="c">#</span>
+<span class="c"># THREE OUTCOMES, never two. Each item resolves to exactly one of:</span>
+<span class="c">#   MEASURED    — an answer parsed to a label and was compared to gold.</span>
+<span class="c">#   UNPARSEABLE — an answer arrived but no label could be read from it.</span>
+<span class="c">#                 Reported, excluded from the score, NEVER counted as wrong.</span>
+<span class="c">#   UNMEASURED  — no answer arrived (harness/transport error), or no corpus</span>
+<span class="c">#                 exists at all. Instrument error, not model error — never a 0.</span>
+<span class="k">import</span> json, re, sys, pathlib
+
+USABLE_N = <span class="s">30</span>
+LABELS = [<span class="s">"EXEMPT_OSS"</span>, <span class="s">"FULL_OBLIGATIONS"</span>, <span class="s">"SYSTEMIC_RISK"</span>, <span class="s">"OUT_OF_SCOPE"</span>]
+<span class="c"># EXEMPT_OSS       — free/open-source GPAI, no systemic risk: exempt from Art 53(1)(a),(b);</span>
+<span class="c">#                    copyright policy + training summary (Art 53(1)(c),(d)) still bind.</span>
+<span class="c"># FULL_OBLIGATIONS — licence not genuinely free/open (weights withheld, use restricted):</span>
+<span class="c">#                    the Art 53(2) carve-out does not attach; full Art 53(1) applies.</span>
+<span class="c"># SYSTEMIC_RISK    — GPAI with systemic risk (Art 51): carve-out unavailable; Art 55 binds.</span>
+<span class="c"># OUT_OF_SCOPE     — free/open-source AI system, not GPAI, not high-risk/Art 5/Art 50:</span>
+<span class="c">#                    outside the Regulation per Art 2(12).</span>
+
+<span class="c"># Longest-first alternation so FULL_OBLIGATIONS / SYSTEMIC_RISK cannot be swallowed</span>
+<span class="c"># by a prefix, and space / underscore / hyphen all read the same label.</span>
+TOKEN = re.compile(
+    <span class="s">r"\b(FULL[ _-]OBLIGATIONS|SYSTEMIC[ _-]RISK|OUT[ _-]OF[ _-]SCOPE|EXEMPT[ _-]OSS)\b"</span>,
+    re.IGNORECASE)
+
+<span class="k">def</span> extract(text):
+    <span class="c"># Returns a canonical label, or None if the answer cannot be read.</span>
+    <span class="k">if</span> <span class="k">not</span> text:
+        <span class="k">return</span> None
+    m = TOKEN.search(text)
+    <span class="k">if</span> <span class="k">not</span> m:
+        <span class="k">return</span> None
+    c = m.group(<span class="s">1</span>).upper().replace(<span class="s">"-"</span>, <span class="s">"_"</span>).replace(<span class="s">" "</span>, <span class="s">"_"</span>)
+    <span class="k">return</span> c <span class="k">if</span> c <span class="k">in</span> LABELS <span class="k">else</span> None
+
+<span class="k">def</span> macro_f1(pairs):
+    <span class="c"># pairs is a list of (gold, pred) over MEASURED items only.</span>
+    tp = {l: <span class="s">0</span> <span class="k">for</span> l <span class="k">in</span> LABELS}; fp = dict(tp); fn = dict(tp)
+    <span class="k">for</span> g, pr <span class="k">in</span> pairs:
+        <span class="k">if</span> pr == g: tp[g] += <span class="s">1</span>
+        <span class="k">else</span>: fn[g] += <span class="s">1</span>; fp[pr] = fp.get(pr, <span class="s">0</span>) + <span class="s">1</span>
+    total = <span class="s">0.0</span>
+    <span class="k">for</span> l <span class="k">in</span> LABELS:
+        p = tp[l] / (tp[l] + fp[l]) <span class="k">if</span> tp[l] + fp[l] <span class="k">else</span> <span class="s">0.0</span>
+        r = tp[l] / (tp[l] + fn[l]) <span class="k">if</span> tp[l] + fn[l] <span class="k">else</span> <span class="s">0.0</span>
+        total += <span class="s">2</span> * p * r / (p + r) <span class="k">if</span> p + r <span class="k">else</span> <span class="s">0.0</span>
+    <span class="k">return</span> total / len(LABELS)
+
+<span class="k">def</span> main():
+    corpus = pathlib.Path(sys.argv[<span class="s">1</span>]) <span class="k">if</span> len(sys.argv) > <span class="s">1</span> <span class="k">else</span> pathlib.Path(<span class="s">"ossbench.jsonl"</span>)
+    answers = pathlib.Path(sys.argv[<span class="s">2</span>]) <span class="k">if</span> len(sys.argv) > <span class="s">2</span> <span class="k">else</span> None
+
+    <span class="c"># No corpus → the lane is UNMEASURED. Print it and stop. Do not invent a run.</span>
+    <span class="k">if</span> <span class="k">not</span> corpus.exists() <span class="k">or</span> answers <span class="k">is</span> None <span class="k">or</span> <span class="k">not</span> answers.exists():
+        print(<span class="s">"OSSBench: UNMEASURED — no corpus / no answers. No score is defined."</span>)
+        <span class="k">return</span>
+
+    gold = {j[<span class="s">"id"</span>]: j[<span class="s">"gold"</span>] <span class="k">for</span> j <span class="k">in</span> map(json.loads, corpus.open())}
+    ans  = {j[<span class="s">"id"</span>]: j <span class="k">for</span> j <span class="k">in</span> map(json.loads, answers.open())}
+
+    measured, unparseable, unmeasured = [], <span class="s">0</span>, <span class="s">0</span>
+    <span class="k">for</span> _id, g <span class="k">in</span> gold.items():
+        a = ans.get(_id)
+        <span class="k">if</span> a <span class="k">is</span> None <span class="k">or</span> a.get(<span class="s">"error"</span>):
+            unmeasured += <span class="s">1</span>            <span class="c"># transport / harness failure — NOT a wrong answer</span>
+            <span class="k">continue</span>
+        pred = extract(a.get(<span class="s">"answer"</span>))
+        <span class="k">if</span> pred <span class="k">is</span> None:
+            unparseable += <span class="s">1</span>          <span class="c"># answer unreadable — excluded, NOT scored as wrong</span>
+            <span class="k">continue</span>
+        measured.append((g, pred))
+
+    n = len(measured)
+    err_rate = unmeasured / max(<span class="s">1</span>, len(gold))
+    <span class="k">if</span> n == <span class="s">0</span>:
+        print(<span class="s">f"OSSBench: UNMEASURED — 0 items scored; instrument error on {err_rate:.0%}."</span>)
+        <span class="k">return</span>
+
+    f1 = macro_f1(measured)
+    <span class="c"># The instrument's own error prints NEXT TO the score, every time.</span>
+    print(<span class="s">f"OSSBench: n={n}  macro-F1={f1:.4f}  "</span>
+          <span class="s">f"unparseable={unparseable}  instrument_error={err_rate:.0%}"</span>)
+    <span class="k">if</span> n &lt; USABLE_N:
+        print(<span class="s">f"  not quotable: n={n} &lt; usable_n={USABLE_N}; no interval published."</span>)
+
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    main()
+</pre>
+
+<h2>The chain — 2 of 10 complete</h2>
+<ul class="chain"><li class="on"><b>●</b> anchor confirmed to the article</li><li class="on"><b>●</b> scorer written and three-outcome-clean</li><li class="">○ items published and loadable</li><li class="">○ card with a licence</li><li class="">○ Hugging Face Space</li><li class="">○ the Space is a tool</li><li class="">○ Kaggle mirror</li><li class="">○ frozen held-out split</li><li class="">○ lm-eval / Inspect task</li><li class="">○ measured against a named model</li></ul>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with an anchor and a scorer and
+nothing scored is two links, not a chain. This list is the honest state, not a promise. The link that
+turns UNMEASURED into a number is the corpus — and it does not exist yet.</p>
+
+<div style="margin:1.4rem 0"><a class="btn ghost" href="/govbench">See a measured axis: GovBench →</a><a class="btn ghost" href="/arena">All 12 greenfields →</a></div>
+
+<h2>What the signed artefact is — and is not</h2>
+<p class="lede">Provenance chain: <b>anchor (Reg. 2024/1689, Art 53(2)) → corpus item → model answer →
+regex label read → macro-F1 → signed run record</b>. When a run exists, the thing CSOAI signs is the
+route and the observation — these items, this model, this answer, graded by this rule, with the
+instrument's error printed beside the score. The signature attests that the measurement happened as
+recorded. It is never a verdict about the third-party model, never a statement that a model or its
+release complies with the EU AI Act, and never a certificate of anything. This is measurement, not
+certification. Until the corpus is built, there is no run and nothing to sign.</p>
+
+</div>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>OSSBench is UNMEASURED: no corpus, no score, no n, no interval. An answer that cannot be read is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score. No interval is published on any axis below usable_n = 30 — including by us.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+</body></html>
