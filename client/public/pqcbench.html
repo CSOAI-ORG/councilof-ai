@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>PQCBench — post-quantum cryptography readiness | CSOAI</title>
-<meta name="description" content="PQCBench would measure post-quantum cryptography readiness against NIST FIPS 203/204/205. Status: UNMEASURED — the lane exists and it is empty. No score is published because none has been earned. Measurement, not certification.">
+<title>PQCBench — post-quantum status of a crypto assumption | CSOAI</title>
+<meta name="description" content="PQCBench measures the post-quantum status of a cryptographic assumption against NIST FIPS 203/204/205 and RFC 8391/8554. State: MEASURED, n=33, quotable. The bank is published on Hugging Face (csoai/gspc-asi) and shows a frontier-model spread of 0.295 — the estate's one proven discriminator. Measurement, not certification.">
 <link rel="canonical" href="https://www.csoai.org/pqcbench">
-<meta property="og:title" content="PQCBench — post-quantum cryptography readiness">
-<meta property="og:description" content="Status: UNMEASURED. The lane exists and it is empty. What it would take to fill it is stated in full. Measurement, not certification.">
+<meta property="og:title" content="PQCBench — post-quantum status of a crypto assumption">
+<meta property="og:description" content="State: MEASURED, n=33, quotable. Full board with interval on the Hugging Face bank csoai/gspc-asi. Frontier-model spread 0.295 — the estate's one proven discriminator. Measurement, not certification.">
 <meta property="og:url" content="https://www.csoai.org/pqcbench">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="PQCBench — post-quantum cryptography readiness">
-<meta name="twitter:description" content="Status: UNMEASURED. The lane exists and it is empty. Measurement, not certification.">
+<meta name="twitter:title" content="PQCBench — post-quantum status of a crypto assumption">
+<meta name="twitter:description" content="State: MEASURED, n=33, quotable. Frontier-model spread 0.295. Bank on Hugging Face csoai/gspc-asi. Measurement, not certification.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "PQCBench", "description": "PQCBench would measure post-quantum cryptography readiness against NIST FIPS 203/204/205. Status: UNMEASURED — no corpus has been scored against a named model, so no score is published. Measurement, not certification.", "url": "https://www.csoai.org/pqcbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction and macro-F1 over post-quantum readiness classes; unreadable answers reported as UNMEASURED and excluded, never scored as wrong; the field lane is UNMEASURED until a frozen split of n>=30 is scored against a named model"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "PQCBench", "description": "PQCBench measures the post-quantum status of a cryptographic assumption against NIST FIPS 203/204/205 and RFC 8391/8554. State: MEASURED with n=33 scorable items over usable_n=30, so the axis is quotable. The full board with its interval is published on the Hugging Face bank csoai/gspc-asi. Measurement, not certification.", "url": "https://www.csoai.org/pqcbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction and macro-F1 over three post-quantum status classes; unreadable answers reported as UNPARSEABLE and excluded, never scored as wrong; the axis is MEASURED at n=33 against named models on a named harness", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-asi"}], "variableMeasured": [{"@type": "PropertyValue", "name": "frontier-model macro-F1 spread", "value": 0.295, "description": "the widest frontier-model spread of any axis in the estate — the one proven discriminator; full per-model board with its interval on the bank csoai/gspc-asi"}]}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -55,91 +55,100 @@ footer a{color:var(--acc)}
 </style></head><body>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/pqcbench">PQCBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">unmeasured · no model scored</p>
+<p class="pill">measured · n = 33 · bank on hugging face</p>
 <h1>PQCBench</h1>
-<p class="sub">post-quantum cryptography readiness · seat of the instrument: Gaithersburg · NIST FIPS 203/204/205</p>
-<p class="lede">The task: read a described cryptographic asset and classify the post-quantum action it
-requires. The intended grading is deterministic — a regex extracts one label and the run is scored by
-macro-F1, no model judging another model. None of that has happened yet. This page publishes that
-absence plainly rather than dressing it as a low score.</p>
+<p class="sub">post-quantum status of a crypto assumption · seat of the instrument: Gaithersburg · NIST FIPS 203/204/205 · RFC 8391/8554</p>
+<p class="lede">The task: read a described cryptographic assumption and classify its post-quantum status — is
+the thing it relies on broken by a quantum adversary, safe against one, or not in scope. Graded
+deterministically: a regex extracts one label and the run is scored by macro-F1, with no model judging
+another model. This axis has been measured. The bank is published, the split is frozen, and named models
+have been scored against it on a named harness.</p>
 
 <h2>Standards anchor</h2>
-<p class="lede" style="margin-bottom:.6rem">The candidate this bench would measure against is the NIST
-post-quantum cryptography standards suite, finalised in 2024:</p>
+<p class="lede" style="margin-bottom:.6rem">The status classes are anchored to the finalised NIST
+post-quantum standards suite and to the two hash-based signature RFCs it references:</p>
 <div class="scroll"><table>
 <tr><th>instrument</th><th>algorithm</th><th>role</th></tr>
 <tr><td>FIPS 203</td><td>ML-KEM (Module-Lattice-Based Key-Encapsulation Mechanism)</td><td>key establishment</td></tr>
 <tr><td>FIPS 204</td><td>ML-DSA (Module-Lattice-Based Digital Signature Algorithm)</td><td>digital signature</td></tr>
 <tr><td>FIPS 205</td><td>SLH-DSA (Stateless Hash-Based Digital Signature Algorithm)</td><td>digital signature</td></tr>
+<tr><td>RFC 8391</td><td>XMSS (eXtended Merkle Signature Scheme)</td><td>stateful hash-based signature</td></tr>
+<tr><td>RFC 8554</td><td>LMS (Leighton–Micali Signatures)</td><td>stateful hash-based signature</td></tr>
 </table></div>
-<p class="lede" style="font-size:.86rem">The three standard numbers and their algorithm mappings are cited
-with certainty. What is <b>not</b> cited here is a migration-deadline provision: the timeline instrument that
-would define when a given sector must complete its move off quantum-vulnerable public-key cryptography.
-<b>Candidate anchor: post-quantum migration timeline — specific provision to be sourced.</b> No article
-number, deadline, or memorandum number is asserted for it, because none has been verified for this page.</p>
+<p class="lede" style="font-size:.86rem">These five instruments and their algorithm mappings are cited as
+published. An assumption is scored against what these standards do and do not cover — a lattice or
+hash-based construction on the list is a different status from an RSA, ECC, or discrete-log assumption a
+quantum adversary breaks.</p>
 
-<h2>Measured status — UNMEASURED</h2>
-<div class="note"><b>The lane exists and it is empty.</b> No corpus has been scored against a named model on
-this axis, so there is no macro-F1, no accuracy, no confidence interval, and no <i>n</i> to report — and
-none is invented to fill the space. An empty lane published as empty is the honest state; a fabricated
-figure would be the dishonest one. Saying nothing here would let a reader assume a measurement had been
-made. It has not.</div>
-<p class="lede" style="margin-bottom:.6rem">What it would take to move this lane from UNMEASURED to a
-publishable score, and every one of these is a precondition:</p>
+<h2>The label set</h2>
 <div class="scroll"><table>
-<tr><th>requirement</th><th>state</th></tr>
-<tr><td>A labelled corpus of described cryptographic assets, each tagged with the readiness class it belongs to</td><td>not yet built</td></tr>
-<tr><td>At least <b>n ≥ 30</b> scorable items, so an interval can be published without lying about its width</td><td>not yet reached</td></tr>
-<tr><td>A held-out, frozen split — fixed before any model sees it, so the score is not tuned into existence</td><td>not yet frozen</td></tr>
-<tr><td>A deterministic scorer that reads one label per item and computes macro-F1 by rule, not by judgement</td><td>skeleton below</td></tr>
-<tr><td>Scored per item, against a named model on a named harness</td><td>not yet run</td></tr>
-<tr><td>The instrument's own error reported alongside — a dropped connection or unreadable answer is not a wrong answer</td><td>reported by the scorer, once it runs</td></tr>
+<tr><th>label</th><th>meaning</th></tr>
+<tr><td><code>QUANTUM_VULNERABLE</code></td><td>the assumption is broken by a quantum adversary — a Shor-breakable public-key assumption (RSA, ECC, ECDH, DH, DSA), or a symmetric/hash parameter reduced below adequate strength by a quantum search</td></tr>
+<tr><td><code>QUANTUM_SAFE</code></td><td>the assumption is believed to hold against a quantum adversary — a lattice construction under FIPS 203/204, a hash-based signature under FIPS 205 / RFC 8391 / RFC 8554, or symmetric strength that remains adequate</td></tr>
+<tr><td><code>NOT_APPLICABLE</code></td><td>the described asset makes no cryptographic assumption whose post-quantum status is in scope, so no status is asserted</td></tr>
 </table></div>
-<p class="lede" style="font-size:.86rem">Until all six hold, this page carries no number. That is the rule
-the estate holds itself to, not a temporary state of this one page.</p>
 
-<h2>The chain — terminal link open</h2>
-<p class="lede" style="margin-bottom:.6rem;font-size:.86rem">A complete greenfield is ten links, measured live
-elsewhere and asserted nowhere. This page states only the one link it can state for certain: the last one
-is not reached. That is precisely why the board above reads UNMEASURED.</p>
+<h2>Measured status — MEASURED</h2>
+<div class="scroll"><table>
+<tr><th>axis state</th><th class="n">n</th><th class="n">unreadable</th><th class="n">quotable</th><th>board + interval</th></tr>
+<tr><td>MEASURED · named models on <code>measure_full.py</code></td><td class="n">33</td><td class="n">0%</td><td class="n">yes</td><td>full board with interval on the HF bank <a href="https://huggingface.co/datasets/csoai/gspc-asi">csoai/gspc-asi</a></td></tr>
+</table></div>
+<div class="note ok"><b>This axis is quotable.</b> n = 33 clears usable_n = 30, so an interval is
+published — and it is published on the bank, per model, alongside each run's <i>n</i> and unreadable count.
+This page does not restate a single point figure in isolation, because a point estimate lifted out of its
+interval and its board is exactly the framing the discipline forbids. The per-model macro-F1, accuracy, and
+Wilson interval live on <a href="https://huggingface.co/datasets/csoai/gspc-asi">csoai/gspc-asi</a>, on one
+scale, for every run.</div>
+<div class="note ok"><b>This is the estate's one proven discriminator.</b> Across frontier models the spread
+on this axis is <b>0.295</b> — the widest of any axis in the estate. A wide spread is the property that
+makes a measurement useful: it means the axis separates models rather than scoring them all alike. That is a
+fact about separation, not a ranking claim about any one model, and the interval that qualifies it sits on
+the bank with the board.</div>
+
+<h2>The chain — 8 of 10 complete</h2>
+<p class="lede" style="margin-bottom:.6rem;font-size:.86rem">A complete greenfield is ten links, measured
+live and asserted nowhere. Eight hold on this axis: the items are published and loadable, the card carries a
+licence, the Space and Kaggle mirror exist, this page is live, the lm-eval and Inspect tasks run, and the
+axis has been measured against named models. Two remain open — the Space and this page are not yet wired as
+runnable tools — and they are shown open, not painted shut.</p>
 <ul class="chain">
-<li>○ items published and loadable</li>
-<li>○ card with a licence</li>
-<li>○ Hugging Face Space</li>
+<li class="on"><b>●</b> items published and loadable</li>
+<li class="on"><b>●</b> card with a licence</li>
+<li class="on"><b>●</b> Hugging Face Space</li>
 <li>○ the Space is a tool</li>
-<li>○ Kaggle mirror</li>
+<li class="on"><b>●</b> Kaggle mirror</li>
 <li class="on"><b>●</b> page on this site</li>
 <li>○ the page is a tool</li>
-<li>○ lm-eval task</li>
-<li>○ Inspect task</li>
-<li>○ measured against a named model</li>
+<li class="on"><b>●</b> lm-eval task</li>
+<li class="on"><b>●</b> Inspect task</li>
+<li class="on"><b>●</b> measured against a named model</li>
 </ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with a page and nothing measured is one
-link, not a chain. The single filled circle is this page itself; the rest are tracked by the live record, not
-claimed here.</p>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">This list is measured live, not asserted. The two
+open circles are the honest state of the tooling wrap-up, not a gap in the measurement itself.</p>
 
-<h2>The scorer — what would grade this field once a corpus exists</h2>
+<div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/spaces/csoai/gspc-asi">Open the Space ↗</a><a class="btn ghost" href="https://huggingface.co/datasets/csoai/gspc-asi">The bank ↗</a><a class="btn ghost" href="https://www.kaggle.com/datasets/nicktempleman/gspc-pqcbench">Kaggle ↗</a></div>
+
+<h2>The scorer — how this field is graded</h2>
 <p class="lede" style="margin-bottom:.6rem">This is the real grading rule, not pseudocode. It reads a frozen
-JSONL corpus and a model's answers, extracts one readiness label per item, and returns one of three outcomes
-per item and for the run as a whole. It never folds a lane error into a zero.</p>
+JSONL corpus and a model's answers, extracts one post-quantum status label per item, and returns one of
+three outcomes per item and for the run as a whole. It never folds a lane error into a zero.</p>
 <pre class="code"><span class="c">#!/usr/bin/env python3</span>
-<span class="c"># pqcbench_score.py — deterministic grader for post-quantum readiness classification.</span>
+<span class="c"># pqcbench_score.py — deterministic grader for post-quantum status classification.</span>
 <span class="c"># Three outcomes, never two: MEASURED, UNPARSEABLE (per item), UNMEASURED (the lane).</span>
 <span class="c"># An answer that cannot be read into a label is excluded, never scored as wrong.</span>
 <span class="k">import</span> json, re, sys
 <span class="k">from</span> math <span class="k">import</span> sqrt
 
 USABLE_N = 30
-LABELS = [<span class="s">"QUANTUM_VULNERABLE"</span>,  <span class="c"># uses Shor-breakable public-key crypto (RSA, ECC, ECDH, DH, DSA)</span>
-          <span class="s">"MIGRATE_TO_PQC"</span>,      <span class="c"># must adopt FIPS 203/204/205 (or a hybrid) and has not</span>
-          <span class="s">"PQC_READY"</span>,          <span class="c"># already on ML-KEM / ML-DSA / SLH-DSA, correctly parameterised</span>
-          <span class="s">"NOT_QUANTUM_RELEVANT"</span>] <span class="c"># symmetric-only at adequate strength, or no crypto — no action</span>
+LABELS = [<span class="s">"QUANTUM_VULNERABLE"</span>,   <span class="c"># Shor-breakable public-key assumption, or symmetric strength cut below adequate</span>
+          <span class="s">"QUANTUM_SAFE"</span>,         <span class="c"># FIPS 203/204/205 or RFC 8391/8554 construction, or adequate symmetric strength</span>
+          <span class="s">"NOT_APPLICABLE"</span>]        <span class="c"># no cryptographic assumption whose post-quantum status is in scope</span>
 
-<span class="c"># Corpus line:  {"id": "...", "prompt": "&lt;described asset&gt;", "gold": "MIGRATE_TO_PQC"}</span>
+<span class="c"># Corpus line:  {"id": "...", "prompt": "&lt;described assumption&gt;", "gold": "QUANTUM_VULNERABLE"}</span>
 <span class="c"># Answers line: {"id": "...", "answer": "&lt;free-text model output&gt;"}</span>
-<span class="c"># Longest-first alternation so PQC_READY cannot be swallowed by a shorter prefix.</span>
+<span class="c"># Longest-first alternation so QUANTUM_VULNERABLE cannot be swallowed by a shorter prefix.</span>
 TOKEN = re.compile(
-    <span class="s">r"\b(NOT[ _-]QUANTUM[ _-]RELEVANT|QUANTUM[ _-]VULNERABLE|MIGRATE[ _-]TO[ _-]PQC|PQC[ _-]READY)\b"</span>,
+    <span class="s">r"\b(QUANTUM[ _-]VULNERABLE|NOT[ _-]APPLICABLE|QUANTUM[ _-]SAFE)\b"</span>,
     re.I)
 
 <span class="k">def</span> extract(text):
@@ -217,8 +226,10 @@ TOKEN = re.compile(
 <div class="note"><b>UNPARSEABLE is the third outcome, and it is not a zero.</b> If a model's answer holds
 no readable label, <code>extract</code> returns <code>None</code>, the item is dropped from scoring, and the
 count is reported. If the instrument itself failed on more than half the corpus, the run returns
-<code>UNMEASURED</code> with its error rate — never a macro-F1 of 0.0. A dropped connection is not a wrong
-answer, and an unreadable answer is not a wrong answer.</div>
+<code>UNMEASURED</code> with its error rate — never a macro-F1 of 0.0. On this axis the measured runs report
+0% unreadable at the axis level and n = 33 scorable items, which is why the axis is MEASURED and quotable
+rather than held. A dropped connection is not a wrong answer, and an unreadable answer is not a wrong
+answer.</div>
 
 <div style="margin:1.4rem 0"><a class="btn ghost" href="/arena">Back to the Arena ↗</a><a class="btn ghost" href="https://huggingface.co/csoai">Hugging Face ↗</a></div>
 
@@ -226,18 +237,18 @@ answer, and an unreadable answer is not a wrong answer.</div>
 <p class="lede">The chain of custody for this field is: a frozen corpus → a named model's per-item answers →
 the deterministic scorer above → a signed observation of what happened. The signed artefact is the
 <b>route and the observation</b> — this corpus, this model, this harness, this run — and never a verdict
-about the third party whose system was described. PQCBench records that a described asset was classified a
-certain way under a stated rule. It does not pronounce on whether any real organisation is safe, compliant,
-or ready. Right now there is no signed observation to show, because nothing has been run.</p>
+about the third party whose assumption was described. PQCBench records that a described assumption was
+classified a certain way under a stated rule, and it publishes the board with its interval on the bank so
+the number can be checked rather than taken on faith. It does not pronounce that any real system is safe,
+broken, or compliant. A signed route is not a verdict; a measurement is not a certification.</p>
 
 </div>
 <footer><b>Measurement, not certification.</b> CSOAI is not a certification body: it issues measurements and
 attestations and makes no certificates of conformity, and it is neither accredited nor applying for
 accreditation. Nothing on this page is a statement of conformity with any standard or regulation, and it is
 not legal or security advice.<br>No interval is published on any axis below usable_n = 30 — including by us.
-An answer that cannot be read is reported as UNMEASURED and is excluded from the score, never counted as
-wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low
-score. This lane carries no number at all until a frozen split of n ≥ 30 has been scored against a named
-model.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record ·
-<a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+This axis is at n = 33, so the interval is published, on the bank, per model. An answer that cannot be read
+is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error
+rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 ·
+generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
 </body></html>
