@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ProvBench — content-provenance measurement | CSOAI</title>
+<meta name="description" content="ProvBench would measure content-provenance and AI-content marking obligations against the EU AI Act (Reg. (EU) 2024/1689), Article 50, with C2PA 2.x as a candidate technical anchor. This axis is UNMEASURED: no corpus, no score published. Measurement, not certification.">
+<link rel="canonical" href="https://www.csoai.org/provbench">
+<meta property="og:title" content="ProvBench — content-provenance measurement">
+<meta property="og:description" content="Content provenance and AI-content marking. This axis is UNMEASURED — the lane exists and it is empty. No score, no n, until a corpus exists. Measurement, not certification.">
+<meta property="og:url" content="https://www.csoai.org/provbench">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ProvBench — content-provenance measurement">
+<meta name="twitter:description" content="Content provenance and AI-content marking. UNMEASURED: no corpus, no score. Measurement, not certification.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "ProvBench", "description": "ProvBench is the CSOAI content-provenance measurement axis: AI-content marking obligations under the EU AI Act (Reg. (EU) 2024/1689), Article 50, with C2PA 2.x as a candidate technical anchor. The axis is currently UNMEASURED — no labelled corpus and no held-out split exist yet, so no score, F1, accuracy or n is published. Measurement, not certification.", "url": "https://www.csoai.org/provbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction and macro-F1 over a labelled provenance-obligation corpus; unreadable completions reported as UNPARSEABLE and excluded, never scored as wrong; the axis is reported as UNMEASURED until a held-out corpus reaches usable_n"}</script>
+<style>
+:root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+nav{border-bottom:1px solid var(--line);padding:.9rem 1.25rem;font-size:.86rem}
+nav .in{max-width:880px;margin:0 auto;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center}
+nav a{color:var(--mut);text-decoration:none}nav a:hover{color:var(--ink)}
+nav b{color:var(--acc);letter-spacing:.04em}
+h1{font-size:2.05rem;line-height:1.2;margin-bottom:.5rem;letter-spacing:-.01em}
+h2{font-size:1.2rem;margin:2.2rem 0 .7rem}
+.sub{color:var(--mut);font-size:.9rem;margin-bottom:1.4rem}
+.lede{color:var(--mut);max-width:70ch;margin-bottom:1.5rem}
+.pill{display:inline-block;border:1px solid var(--acc);color:var(--acc);border-radius:999px;
+ padding:2px 12px;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.7rem}
+.pill.warn{border-color:var(--warn);color:var(--warn)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4rem 0 1rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:min(560px,100%)}
+th,td{padding:.5rem .55rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--mut);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chain{list-style:none;font-size:.88rem;columns:2;column-gap:2rem}
+.chain li{padding:.28rem 0;color:var(--mut)}
+.chain li.on{color:var(--ink)} .chain li.on b{color:var(--acc)}
+.note{border-left:3px solid var(--warn);padding:.75rem .95rem;background:rgba(245,166,35,.07);
+ color:var(--mut);font-size:.85rem;line-height:1.6;margin:1.2rem 0}
+.note.ok{border-left-color:var(--acc);background:rgba(16,185,129,.06)}
+code.inl{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.85em;color:var(--ink);
+ background:rgba(143,166,200,.12);padding:.05rem .35rem;border-radius:4px}
+pre{background:#0a0f1c;border:1px solid var(--line);border-radius:9px;padding:1rem 1.1rem;margin:.6rem 0 1rem;
+ overflow-x:auto;-webkit-overflow-scrolling:touch;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+ font-size:.79rem;line-height:1.6;color:#cde0ff}
+pre .c{color:#5f7196} pre .k{color:#7fb2ff} pre .s{color:#8fd6b0}
+a.btn{display:inline-block;background:var(--acc);color:#06281c;font-weight:600;text-decoration:none;
+ padding:.6rem 1.1rem;border-radius:7px;font-size:.9rem;margin:.3rem .5rem .3rem 0}
+a.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.2rem;color:var(--mut);font-size:.78rem;line-height:1.7}
+footer a{color:var(--acc)}
+@media(max-width:640px){.chain{columns:1}h1{font-size:1.6rem}}
+</style></head><body>
+<nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/provbench">ProvBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
+<div class="wrap">
+<p class="pill warn">unmeasured · no score published</p>
+<h1>ProvBench</h1>
+<p class="sub">content provenance &amp; watermarking · seat of the instrument: Brussels · EU AI Act (Reg. (EU) 2024/1689), Article 50</p>
+<p class="lede">Whether a piece of content that an AI system produced or altered carries the marking
+and disclosure the law asks for. The intended grading is deterministic — a regex reads one
+label from a completion and the run is scored by macro-F1. No model judges another model.
+This axis has not been measured yet, and this page says so plainly instead of showing you a
+number it cannot defend.</p>
+
+<h2>The anchor</h2>
+<div class="scroll"><table>
+<tr><th>layer</th><th>instrument</th><th>status of the citation</th></tr>
+<tr><td>Statutory</td><td><b>EU AI Act</b> — Regulation (EU) 2024/1689, <b>Article 50</b> (transparency obligations). Article 50 requires that content generated or manipulated by an AI system — synthetic audio, image, video and text, and deep fakes — be marked in a machine-readable format and disclosed, and that a person be told when they are interacting with an AI system.</td><td>Cited with certainty at the article level. The article number and the regulation number are fixed. The exact sub-paragraph an item turns on (for example the marking duty on providers versus the disclosure duty on deployers) is fixed per item when the corpus is written, not asserted here.</td></tr>
+<tr><td>Technical</td><td><b>C2PA</b> — Coalition for Content Provenance and Authenticity, specification version 2.x. A candidate machine-readable manifest format for carrying and verifying provenance assertions on a content asset.</td><td><b>Candidate anchor: content provenance — the specific C2PA 2.x conformance clause is to be sourced.</b> C2PA is named as the likely technical carrier; no section number or publication date is stated here because none has been verified against the specification text.</td></tr>
+</table></div>
+<div class="note">No provision has been invented on this page. Where the exact clause has not been read against the source text, it is marked <i>to be sourced</i> rather than filled in. A plausible-looking article number is worse than an honest gap, because a reader cannot tell the two apart.</div>
+
+<h2>What has been measured</h2>
+<div class="note"><b>Nothing yet. This axis is UNMEASURED.</b> The lane exists and it is empty. There is
+no labelled corpus behind ProvBench, no held-out split, and therefore no score. You will find no
+F1, no accuracy, no <code class="inl">n</code>, and no confidence interval anywhere on this page,
+because publishing any of those would mean inventing them. An empty lane printed as empty is a
+result; a number with nothing behind it is not.</div>
+<p class="lede" style="font-size:.9rem">What it would take to move this axis from UNMEASURED to a
+published number, in full:</p>
+<div class="scroll"><table>
+<tr><th>requirement</th><th>what it means here</th></tr>
+<tr><td>A labelled corpus, <code class="inl">n&nbsp;&ge;&nbsp;30</code></td><td>At least thirty provenance-and-marking scenarios, each with a single gold label fixed to a named Article 50 duty. Below thirty the axis stays UNMEASURED and carries no interval — the threshold is on how many items exist, not on the interval a run happens to land.</td></tr>
+<tr><td>A held-out frozen split</td><td>The graded items are frozen and separated from anything used to write or tune a system, so a score is a measurement and not a memory test. The split is published so the freeze can be checked.</td></tr>
+<tr><td>A deterministic scorer</td><td>The grader below: a fixed regex reads one label from each completion and macro-F1 is computed by rule. The same completion always earns the same score, run by anyone.</td></tr>
+<tr><td>Scored per item</td><td>Every item is graded on its own and the outcomes are kept apart — a right answer, a wrong answer, and a completion that could not be read into a label at all are three different things, never collapsed into one.</td></tr>
+<tr><td>The instrument's own error reported alongside</td><td>Transport failures, timeouts and empty responses are the instrument failing, not the model being wrong. Their rate is reported next to any score, never folded into it. Above threshold the whole run is reported as a failed run, not as a low score.</td></tr>
+</table></div>
+
+<h2>The chain — the definition, not a claim</h2>
+<p class="lede" style="font-size:.9rem">End to end means ten links, the same ten every greenfield in the
+Arena is held to. None is ticked on this page, because this page carries no live measurement record to
+tick them against. The list is what completion would require, printed honestly as outstanding.</p>
+<ul class="chain"><li>○ items published and loadable</li><li>○ card with a licence</li><li>○ Hugging Face Space</li><li>○ the Space is a tool</li><li>○ Kaggle mirror</li><li>○ page on this site</li><li>○ the page is a tool</li><li>○ lm-eval task</li><li>○ Inspect task</li><li>○ measured against a named model</li></ul>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with an anchor and a scorer but no
+corpus is a specification, not a chain. The honest state of ProvBench today is: the shape of the
+measurement is defined, and the measurement has not been made.</p>
+
+<h2>The scorer that would grade it</h2>
+<p class="lede" style="font-size:.9rem">A genuine skeleton, not pseudocode. It reads a JSONL corpus,
+extracts one label per completion, and returns exactly one of three states. It emits no number at all
+until a corpus clears <code class="inl">usable_n</code> — so running it against nothing returns
+<code class="inl">UNMEASURED</code>, which is the correct answer today.</p>
+<pre><span class="c">#!/usr/bin/env python3</span>
+<span class="c"># provbench_score.py — deterministic scorer for the ProvBench content-provenance axis.</span>
+<span class="c">#</span>
+<span class="c"># Three outcomes, never folded together:</span>
+<span class="c">#   MEASURED    — a label was read from the completion and compared to gold.</span>
+<span class="c">#   UNPARSEABLE — no label could be read. Excluded from the score and counted on</span>
+<span class="c">#                 its own. A completion we cannot read is not a wrong answer.</span>
+<span class="c">#   UNMEASURED  — the axis as a whole. Returned when no corpus exists, when</span>
+<span class="c">#                 usable_n is not reached, or when the instrument's own error</span>
+<span class="c">#                 rate exceeds threshold. In this state NO score is emitted.</span>
+<span class="c">#</span>
+<span class="c"># Input line (JSONL):</span>
+<span class="c">#   {"id": "prov-0001", "scenario": "...", "gold": "MARK_REQUIRED",</span>
+<span class="c">#    "completion": "...model output...", "transport_error": false}</span>
+<span class="c">#</span>
+<span class="c"># Usage:  python3 provbench_score.py corpus.jsonl</span>
+<span class="k">import</span> json, re, sys
+<span class="k">from</span> collections <span class="k">import</span> defaultdict
+
+USABLE_N = <span class="s">30</span>                 <span class="c"># below this the axis is UNMEASURED — no interval, ever</span>
+MAX_INSTRUMENT_ERROR = <span class="s">0.10</span>     <span class="c"># above this the run is a failed run, not a low score</span>
+
+<span class="c"># Proposed label vocabulary for the corpus-to-be, one duty per label.</span>
+<span class="c"># Longest-first alternation so a prefix cannot swallow a longer label.</span>
+LABELS = [<span class="s">"MARK_REQUIRED"</span>, <span class="s">"DISCLOSE_INTERACTION"</span>, <span class="s">"MARK_EXEMPT"</span>, <span class="s">"OUT_OF_SCOPE"</span>]
+TOKEN = re.compile(
+    <span class="s">r"\b(DISCLOSE[_ -]INTERACTION|MARK[_ -]REQUIRED|MARK[_ -]EXEMPT|OUT[_ -]OF[_ -]SCOPE)\b"</span>,
+    re.I)
+
+<span class="k">def</span> extract(text):
+    <span class="c"># Read exactly one label, or None. None is UNPARSEABLE, never a wrong answer.</span>
+    <span class="k">if</span> <span class="k">not</span> text:
+        <span class="k">return</span> None
+    m = TOKEN.search(text)
+    <span class="k">if</span> <span class="k">not</span> m:
+        <span class="k">return</span> None
+    label = re.sub(<span class="s">r"[ -]"</span>, <span class="s">"_"</span>, m.group(<span class="s">1</span>).upper())
+    <span class="k">return</span> label <span class="k">if</span> label <span class="k">in</span> LABELS <span class="k">else</span> None
+
+<span class="k">def</span> wilson(k, n, z=<span class="s">1.959963985</span>):
+    <span class="c"># Interval on the accompanying accuracy rate. macro-F1 has no closed form,</span>
+    <span class="c"># so the rate that CAN carry an interval is the one published with one.</span>
+    <span class="k">if</span> <span class="k">not</span> n:
+        <span class="k">return</span> None
+    p = k / n; d = <span class="s">1</span> + z*z/n
+    c = (p + z*z/(<span class="s">2</span>*n)) / d
+    h = z * ((p*(<span class="s">1</span>-p)/n + z*z/(<span class="s">4</span>*n*n)) ** <span class="s">0.5</span>) / d
+    <span class="k">return</span> [round(max(<span class="s">0.0</span>, c-h), <span class="s">4</span>), round(min(<span class="s">1.0</span>, c+h), <span class="s">4</span>)]
+
+<span class="k">def</span> macro_f1(pairs):
+    <span class="c"># Macro, not accuracy: always answering the commonest class must lose here.</span>
+    tp = defaultdict(int); fp = defaultdict(int); fn = defaultdict(int)
+    <span class="k">for</span> gold, pred <span class="k">in</span> pairs:            <span class="c"># only MEASURED pairs reach this loop</span>
+        <span class="k">if</span> pred == gold:
+            tp[gold] += <span class="s">1</span>
+        <span class="k">else</span>:
+            fn[gold] += <span class="s">1</span>; fp[pred] += <span class="s">1</span>
+    total = <span class="s">0.0</span>
+    <span class="k">for</span> lab <span class="k">in</span> LABELS:
+        p = tp[lab] / (tp[lab] + fp[lab]) <span class="k">if</span> tp[lab] + fp[lab] <span class="k">else</span> <span class="s">0.0</span>
+        r = tp[lab] / (tp[lab] + fn[lab]) <span class="k">if</span> tp[lab] + fn[lab] <span class="k">else</span> <span class="s">0.0</span>
+        total += <span class="s">2</span>*p*r / (p + r) <span class="k">if</span> p + r <span class="k">else</span> <span class="s">0.0</span>
+    <span class="k">return</span> total / len(LABELS)
+
+<span class="k">def</span> score(path):
+    measured, unparseable, instrument_errors, n_lines = [], <span class="s">0</span>, <span class="s">0</span>, <span class="s">0</span>
+    <span class="k">for</span> line <span class="k">in</span> open(path, encoding=<span class="s">"utf-8"</span>):
+        line = line.strip()
+        <span class="k">if</span> <span class="k">not</span> line:
+            <span class="k">continue</span>
+        n_lines += <span class="s">1</span>
+        row = json.loads(line)
+        <span class="k">if</span> row.get(<span class="s">"transport_error"</span>):     <span class="c"># the instrument failed, not the model</span>
+            instrument_errors += <span class="s">1</span>; <span class="k">continue</span>
+        pred = extract(row.get(<span class="s">"completion"</span>))
+        <span class="k">if</span> pred <span class="k">is</span> None:
+            unparseable += <span class="s">1</span>; <span class="k">continue</span>          <span class="c"># excluded from the score, never scored wrong</span>
+        measured.append((row[<span class="s">"gold"</span>], pred))
+
+    scored_n = len(measured)
+    err_rate = instrument_errors / n_lines <span class="k">if</span> n_lines <span class="k">else</span> <span class="s">0.0</span>
+
+    <span class="c"># Lane-level UNMEASURED gates, checked BEFORE any number is emitted.</span>
+    <span class="k">if</span> scored_n == <span class="s">0</span>:
+        <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"UNMEASURED"</span>, <span class="s">"reason"</span>: <span class="s">"no scorable items"</span>,
+                <span class="s">"instrument_error_rate"</span>: round(err_rate, <span class="s">4</span>)}
+    <span class="k">if</span> err_rate > MAX_INSTRUMENT_ERROR:
+        <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"UNMEASURED"</span>, <span class="s">"reason"</span>: <span class="s">"instrument error above threshold"</span>,
+                <span class="s">"instrument_error_rate"</span>: round(err_rate, <span class="s">4</span>)}
+    <span class="k">if</span> scored_n &lt; USABLE_N:
+        <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"UNMEASURED"</span>,
+                <span class="s">"reason"</span>: <span class="s">"n below usable_n; no interval, no quote"</span>,
+                <span class="s">"n"</span>: scored_n, <span class="s">"unparseable"</span>: unparseable,
+                <span class="s">"instrument_error_rate"</span>: round(err_rate, <span class="s">4</span>)}
+
+    correct = sum(<span class="s">1</span> <span class="k">for</span> g, p <span class="k">in</span> measured <span class="k">if</span> g == p)
+    <span class="k">return</span> {<span class="s">"status"</span>: <span class="s">"MEASURED"</span>,
+            <span class="s">"macro_f1"</span>: round(macro_f1(measured), <span class="s">4</span>),
+            <span class="s">"accuracy"</span>: round(correct / scored_n, <span class="s">4</span>),
+            <span class="s">"accuracy_ci95"</span>: wilson(correct, scored_n),   <span class="c"># bare figure never ships alone</span>
+            <span class="s">"n"</span>: scored_n,
+            <span class="s">"unparseable"</span>: unparseable,               <span class="c"># reported alongside, not folded in</span>
+            <span class="s">"instrument_error_rate"</span>: round(err_rate, <span class="s">4</span>)}
+
+<span class="k">if</span> __name__ == <span class="s">"__main__"</span>:
+    print(json.dumps(score(sys.argv[<span class="s">1</span>]), indent=<span class="s">2</span>))
+</pre>
+<div class="note ok">Run this against an empty or absent corpus and it returns
+<code class="inl">UNMEASURED</code> with a reason. That is not the scorer failing; it is the scorer
+refusing to publish a number it does not have. The three states are enforced in code so the
+discipline survives a late night and a deadline.</div>
+
+<h2>What the signed artefact is, and is not</h2>
+<p class="lede">Every published run in this estate is a signed observation. Read what that signature
+covers, because it is narrow on purpose. The signed artefact records <b>the route</b> — which items
+were put to which model, which completions came back, which the scorer could read, and the error rate
+of the instrument that carried them. It is a record of a measurement CSOAI performed. It is
+<b>not</b> a verdict about any third party: not a statement that a tool marks content correctly, not a
+finding that a system complies with Article 50, not a ruling about a manifest a producer attached to a
+file. Provenance measured here means <i>we observed this content and recorded what we found</i>. It is
+never read backwards into a judgement about the person or product that made the content.</p>
+<div class="note"><b>Measurement, not certification.</b> A score on ProvBench, once one exists, is a
+measurement about a named model on a frozen set of items. It is not an attestation of conformity, not
+legal advice, and not a claim about any system a reader builds or ships.</div>
+
+<div style="margin:1.4rem 0"><a class="btn ghost" href="/arena">Back to the Arena ↗</a><a class="btn ghost" href="/govbench">See a measured axis — GovBench ↗</a><a class="btn ghost" href="https://huggingface.co/csoai">Hugging Face ↗</a></div>
+
+</div>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, is not accredited and is not applying for accreditation, and issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>This axis is UNMEASURED. No score, F1, accuracy, <code class="inl">n</code> or interval is published on it, because none has been produced. No interval is published on any axis below usable_n = 30 — including by us. A completion that cannot be read into a label is reported as UNPARSEABLE and excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+</body></html>
