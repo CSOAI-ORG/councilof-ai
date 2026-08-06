@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GovBench — governance measurement | CSOAI</title>
+<meta name="description" content="GovBench measures EU AI Act risk-tier classification against EU AI Act (Reg. 2024/1689). Best certified run 0.381 macro-F1 by sov34:latest on n=237. Measurement, not certification.">
+<link rel="canonical" href="https://www.csoai.org/govbench">
+<meta property="og:title" content="GovBench — governance measurement">
+<meta property="og:description" content="GovBench measures EU AI Act risk-tier classification against EU AI Act (Reg. 2024/1689). Best certified run 0.381 macro-F1 by sov34:latest on n=237. Measurement, not certification.">
+<meta property="og:url" content="https://www.csoai.org/govbench">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="GovBench — governance measurement">
+<meta name="twitter:description" content="GovBench measures EU AI Act risk-tier classification against EU AI Act (Reg. 2024/1689). Best certified run 0.381 macro-F1 by sov34:latest on n=237. Measurement, not certification.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "GovBench", "description": "GovBench measures EU AI Act risk-tier classification against EU AI Act (Reg. 2024/1689). Best certified run 0.381 macro-F1 by sov34:latest on n=237. Measurement, not certification.", "url": "https://www.csoai.org/govbench", "license": "https://creativecommons.org/licenses/by/4.0/", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction and macro-F1; unreadable answers reported as UNMEASURED and excluded, never scored as wrong", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-gov"}], "variableMeasured": [{"@type": "PropertyValue", "name": "macro-F1", "value": 0.3806, "description": "sov34:latest on n=237 \u00b7 quotable, n\u226530"}]}</script>
+<style>
+:root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.65 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+nav{border-bottom:1px solid var(--line);padding:.9rem 1.25rem;font-size:.86rem}
+nav .in{max-width:880px;margin:0 auto;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center}
+nav a{color:var(--mut);text-decoration:none}nav a:hover{color:var(--ink)}
+nav b{color:var(--acc);letter-spacing:.04em}
+h1{font-size:2.05rem;line-height:1.2;margin-bottom:.5rem;letter-spacing:-.01em}
+h2{font-size:1.2rem;margin:2.2rem 0 .7rem}
+.sub{color:var(--mut);font-size:.9rem;margin-bottom:1.4rem}
+.lede{color:var(--mut);max-width:70ch;margin-bottom:1.5rem}
+.pill{display:inline-block;border:1px solid var(--acc);color:var(--acc);border-radius:999px;
+ padding:2px 12px;font-size:.68rem;letter-spacing:.11em;text-transform:uppercase;margin-bottom:.7rem}
+.pill.warn{border-color:var(--warn);color:var(--warn)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.4rem 0 1rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:min(560px,100%)}
+th,td{padding:.5rem .55rem;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--mut);font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chain{list-style:none;font-size:.88rem;columns:2;column-gap:2rem}
+.chain li{padding:.28rem 0;color:var(--mut)}
+.chain li.on{color:var(--ink)} .chain li.on b{color:var(--acc)}
+.note{border-left:3px solid var(--warn);padding:.75rem .95rem;background:rgba(245,166,35,.07);
+ color:var(--mut);font-size:.85rem;line-height:1.6;margin:1.2rem 0}
+.note.ok{border-left-color:var(--acc);background:rgba(16,185,129,.06)}
+a.btn{display:inline-block;background:var(--acc);color:#06281c;font-weight:600;text-decoration:none;
+ padding:.6rem 1.1rem;border-radius:7px;font-size:.9rem;margin:.3rem .5rem .3rem 0}
+a.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.2rem;color:var(--mut);font-size:.78rem;line-height:1.7}
+footer a{color:var(--acc)}
+@media(max-width:640px){.chain{columns:1}h1{font-size:1.6rem}}
+</style></head><body>
+<nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 greenfields</a><a href="/govbench">GovBench</a><a href="/sov-space">SOV Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
+<div class="wrap">
+<p class="pill">measured · sov34:latest</p>
+<h1>GovBench</h1>
+<p class="sub">governance · seat of the instrument: Brussels · EU AI Act (Reg. 2024/1689)</p>
+<p class="lede">EU AI Act risk-tier classification. Graded deterministically — a regex extracts the label and the
+result is scored by macro-F1. No model judges another model.</p>
+
+<h2>What has been measured</h2>
+<div class="scroll"><table><tr><th>model</th><th class="n">macro-F1</th><th class="n">accuracy 95% CI</th><th class="n">unreadable</th><th class="n">n</th><th>harness</th></tr><tr><td>sov34:latest</td><td class="n">0.381</td><td class="n">0.515 [0.451, 0.578]</td><td class="n">0%</td><td class="n">237</td><td style="color:var(--mut);font-size:.8rem">measure_full.py</td></tr><tr><td>falcon3:7b</td><td class="n">0.353</td><td class="n">0.426 [0.365, 0.490]</td><td class="n">0%</td><td class="n">237</td><td style="color:var(--mut);font-size:.8rem">measure_full.py</td></tr><tr><td>qwen2.5:1.5b</td><td class="n">0.291</td><td class="n">0.430 [0.369, 0.494]</td><td class="n">0%</td><td class="n">237</td><td style="color:var(--mut);font-size:.8rem">measure_full.py</td></tr><tr><td>falcon3:7b</td><td class="n">0.468</td><td class="n"><span style="color:var(--mut)">n&lt;30 — not quotable</span></td><td class="n">0%</td><td class="n">24</td><td style="color:var(--mut);font-size:.8rem">measure_robust2.py</td></tr><tr><td>sov34:latest</td><td class="n">0.345</td><td class="n"><span style="color:var(--mut)">n&lt;30 — not quotable</span></td><td class="n">25%</td><td class="n">24</td><td style="color:var(--mut);font-size:.8rem">measure_robust2.py</td></tr><tr><td>qwen2.5:1.5b</td><td class="n">0.343</td><td class="n"><span style="color:var(--mut)">n&lt;30 — not quotable</span></td><td class="n">0%</td><td class="n">24</td><td style="color:var(--mut);font-size:.8rem">measure_robust2.py</td></tr><tr><td>sov34:latest</td><td class="n">0.386</td><td class="n"><span style="color:var(--mut)">n&lt;30 — not quotable</span></td><td class="n">4%</td><td class="n">—</td><td style="color:var(--mut);font-size:.8rem">measure.py</td></tr></table></div><div class="note ok"><b>This axis is quotable.</b> n has reached usable_n = 30, so a confidence interval is published. Overlapping intervals mean the models are not separated — a lead is not a separation.</div><div class="note"><b>3 runs dropped</b> — sov34:latest, falcon3:7b, qwen2.5:1.5b at 97–100% instrument error (all URLError). A dropped connection is not a wrong answer, so these contribute no score.</div>
+
+<h2>The chain — 8 of 10 complete</h2>
+<ul class="chain"><li class="on"><b>●</b> items published and loadable</li><li class="on"><b>●</b> card with a licence</li><li class="on"><b>●</b> Hugging Face Space</li><li class="">○ the Space is a tool</li><li class="on"><b>●</b> Kaggle mirror</li><li class="on"><b>●</b> page on this site</li><li class="">○ the page is a tool</li><li class="on"><b>●</b> lm-eval task</li><li class="on"><b>●</b> Inspect task</li><li class="on"><b>●</b> measured against a named model</li></ul>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">A greenfield with a dataset and
+nothing else is one link, not a chain. This list is measured live, not asserted.</p>
+
+<div style="margin:1.4rem 0"><a class="btn" href="https://huggingface.co/spaces/csoai/gspc-gov">Open the Space ↗</a><a class="btn ghost" href="https://huggingface.co/datasets/csoai/gspc-gov">The dataset ↗</a><a class="btn ghost" href="https://www.kaggle.com/datasets/nicktempleman/gspc-govbench">Kaggle ↗</a></div>
+
+<h2>Run it yourself</h2>
+<!-- ══════════════════════════════════════════════════════════════════════════════
+     GOVBENCH — RUN IT, don't just read about it.
+     Drop this block into govbench.html where the "try it" section should be.
+
+     Self-contained: no backend, no API key, no cost. The grader below is a direct
+     port of the published lm-eval `utils.py` and is differential-tested against the
+     Python original to 1e-12 across 204 adversarial extraction cases. A visitor
+     answers the same items sov34 answered and is scored by the same rule, so the two
+     numbers sit on one scale.
+
+     The estate's own usable_n rule applies to the visitor too: below n = 30 the page
+     refuses to quote an interval, including for us.
+     ══════════════════════════════════════════════════════════════════════════════ -->
+<section id="run-gspc-gov" style="max-width:820px;margin:3rem auto;padding:0 1.25rem">
+  <h2 style="font-size:1.5rem;margin-bottom:.4rem">Run GovBench yourself</h2>
+  <p style="color:#8fa6c8;margin-bottom:1.2rem">The same 24 items 7 models answered, graded by the same
+     deterministic rule. The models measured on these items are ranked with you when you finish.
+     No sign-up, nothing leaves your browser.</p>
+
+  <div id="gb-card" style="background:#16233d;border:1px solid #1e293b;border-radius:14px;padding:1.25rem">
+    <div id="gb-prog" style="font-size:12px;color:#8fa6c8;letter-spacing:.06em;margin-bottom:.6rem"></div>
+    <p id="gb-q" style="font-size:1.02rem;line-height:1.6;margin-bottom:1rem"></p>
+    <div id="gb-opts" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
+    <div style="display:flex;gap:.6rem;align-items:center;margin-top:1.1rem;flex-wrap:wrap">
+      <button id="gb-back" type="button" class="gb-btn gb-ghost">Back</button>
+      <button id="gb-next" type="button" class="gb-btn">Next</button>
+      <span id="gb-count" style="font-size:12px;color:#8fa6c8"></span>
+    </div>
+  </div>
+
+  <div id="gb-result" style="display:none;background:#16233d;border:1px solid #1e293b;border-radius:14px;padding:1.25rem;margin-top:1rem"></div>
+
+  <p style="font-size:12px;color:#5f7196;margin-top:1rem">
+    Items: <a href="https://huggingface.co/datasets/csoai/gspc-gov">csoai/gspc-gov</a> ·
+    grading is a regex label read plus macro-F1, identical to the published harness ·
+    measurement, not certification, and not legal advice.</p>
+</section>
+
+<style>
+.gb-btn{background:#10b981;color:#04120c;border:0;border-radius:9px;padding:.55rem 1rem;font:inherit;font-weight:700;cursor:pointer}
+.gb-btn:disabled{opacity:.45;cursor:default}
+.gb-ghost{background:none;border:1px solid #1e293b;color:#8fa6c8;font-weight:400}
+.gb-opt{background:none;border:1px solid #1e293b;color:#eaf2ff;border-radius:9px;padding:.5rem .85rem;font:inherit;font-size:.9rem;cursor:pointer}
+.gb-opt:hover{border-color:#10b981}
+.gb-opt[aria-pressed=true]{background:rgba(16,185,129,.14);border-color:#10b981}
+.gb-kv{display:flex;justify-content:space-between;padding:.45rem 0;border-bottom:1px solid #1e293b;font-size:.92rem}
+.gb-kv span:last-child{font-variant-numeric:tabular-nums}
+.gb-note{border-left:3px solid #f5a623;padding:.6rem .8rem;background:rgba(245,166,35,.07);font-size:.82rem;color:#8fa6c8;margin-top:.9rem;line-height:1.55}
+</style>
+
+<script>
+(function(){
+  "use strict";
+  var ITEMS = [{"q": "A government platform scores citizens on trustworthiness using unrelated social behaviour, and the score restricts access to public services.", "a": "PROHIBITED", "anchor": "Art 5(1)(c) social scoring"}, {"q": "A wellness app assigns each employee a 'community contribution score' from their social media and off-duty behaviour; low scores reduce access to company benefits.", "a": "PROHIBITED", "anchor": "Art 5(1)(c) social scoring — benign framing, same practice"}, {"q": "A retailer scrapes CCTV and public webcam feeds to build a facial recognition database with no targeting criteria.", "a": "PROHIBITED", "anchor": "Art 5(1)(e) untargeted facial scraping"}, {"q": "Police run live facial recognition on a public square to identify anyone on a watchlist, with no judicial authorisation and no imminent threat.", "a": "PROHIBITED", "anchor": "Art 5(1)(h) real-time remote biometric ID in public"}, {"q": "An AI ranks job applicants and filters CVs before any human sees them.", "a": "HIGH_RISK", "anchor": "Annex III 4(a) employment — recruitment"}, {"q": "A hospital deploys a triage model that orders emergency patients by urgency.", "a": "HIGH_RISK", "anchor": "Annex III 5(a) essential services / emergency triage"}, {"q": "A bank uses a model to decide consumer creditworthiness for mortgage applications.", "a": "HIGH_RISK", "anchor": "Annex III 5(b) creditworthiness"}, {"q": "A university admissions system scores applicants and determines who is admitted.", "a": "HIGH_RISK", "anchor": "Annex III 3(a) education access"}, {"q": "A model assesses asylum applications and recommends grant or refusal to caseworkers.", "a": "HIGH_RISK", "anchor": "Annex III 7 migration and asylum"}, {"q": "An AI component controls pressure regulation in a municipal drinking-water network.", "a": "HIGH_RISK", "anchor": "Annex III 2 critical infrastructure safety component"}, {"q": "An insurer uses AI for risk assessment and pricing of life and health insurance.", "a": "HIGH_RISK", "anchor": "Annex III 5(c) life/health insurance risk assessment"}, {"q": "A retail website runs a customer-service chatbot that answers questions about orders.", "a": "LIMITED_RISK", "anchor": "Art 50(1) disclosure that the user interacts with an AI"}, {"q": "A marketing tool generates photorealistic images of people for ad campaigns.", "a": "LIMITED_RISK", "anchor": "Art 50(2) synthetic content marking"}, {"q": "A newsroom tool produces synthetic voice-overs of presenters reading published articles.", "a": "LIMITED_RISK", "anchor": "Art 50(4) deep fake / synthetic audio disclosure"}, {"q": "A spam filter classifies inbound email for a company's staff mailboxes.", "a": "MINIMAL_RISK", "anchor": "No Annex III use case — employment context but not an employment decision"}, {"q": "A warehouse uses AI to optimise pallet placement and forklift routing for throughput.", "a": "MINIMAL_RISK", "anchor": "Industrial optimisation, no Annex III category, no safety component"}, {"q": "A video game uses AI to adapt enemy difficulty to the player's skill.", "a": "MINIMAL_RISK", "anchor": "Recital ic — AI in video games, minimal risk"}, {"q": "Software flags CVs containing keywords and forwards them to a recruiter, who reads every CV in full regardless and makes all decisions. It performs a narrow procedural task and does not materially influence the outcome.", "a": "MINIMAL_RISK", "anchor": "Art 6(3)(a) derogation — narrow procedural task, no material influence"}, {"q": "A call-centre tool infers the emotional state of employees from their voice during calls and reports it to their managers.", "a": "PROHIBITED", "anchor": "Art 5(1)(f) emotion inference in the workplace"}, {"q": "A security product categorises people from facial images to infer their ethnicity and political orientation.", "a": "PROHIBITED", "anchor": "Art 5(1)(g) biometric categorisation inferring protected attributes"}, {"q": "An AI is the safety component of a surgical robot, and that robot needs third-party conformity assessment under the Medical Devices Regulation.", "a": "HIGH_RISK", "anchor": "Art 6(1) — safety component of a regulated product; NOT via Annex III"}, {"q": "A model is developed and used solely for scientific research and is never placed on the market or put into service.", "a": "MINIMAL_RISK", "anchor": "Art 2(6) — scientific research and development is out of scope"}, {"q": "An AI profiles which residents of a city are likely to commit a crime, based purely on personality traits and background, with no link to objective verifiable facts.", "a": "PROHIBITED", "anchor": "Art 5(1)(d) predictive policing on profiling alone"}, {"q": "A model that detects manufacturing defects on a bottling line is used to route faulty bottles to a reject bin. No person is assessed and no regulated product safety function depends on it.", "a": "MINIMAL_RISK", "anchor": "Industrial QC — no Annex III use, not an Art 6(1) safety component"}];
+  var LABELS = ["PROHIBITED", "HIGH_RISK", "LIMITED_RISK", "MINIMAL_RISK"];
+  /* THE BOARD, not a baseline. This tool used to compare you against one number with
+     one model's name loosely attached to it. It now carries every run that has been made
+     on this axis — each naming its model, its harness, and how many of its answers were
+     unreadable — and places you inside that ranking rather than beside a single figure.
+     Runs the instrument could not certify are not in here at all. */
+  var BOARD = [{"model": "falcon3:7b", "f1": 0.4678, "unparsed": 0, "n": 24, "harness": "measure_robust2.py"}, {"model": "sov34:latest", "f1": 0.3864, "unparsed": 0.0417, "n": 0, "harness": "measure.py"}, {"model": "sov34:latest", "f1": 0.3806, "unparsed": 0, "n": 237, "harness": "measure_full.py"}, {"model": "falcon3:7b", "f1": 0.3534, "unparsed": 0, "n": 237, "harness": "measure_full.py"}, {"model": "sov34:latest", "f1": 0.3449, "unparsed": 0.25, "n": 24, "harness": "measure_robust2.py"}, {"model": "qwen2.5:1.5b", "f1": 0.3429, "unparsed": 0, "n": 24, "harness": "measure_robust2.py"}, {"model": "qwen2.5:1.5b", "f1": 0.2906, "unparsed": 0, "n": 237, "harness": "measure_full.py"}];
+  var MODEL_F1 = BOARD.length ? Math.max.apply(null, BOARD.map(function(b){return b.f1;})) : 0;
+  var TOP = BOARD.reduce(function(a,b){ return (!a || b.f1 > a.f1) ? b : a; }, null);
+  // Longest-first alternation so HIGH_RISK cannot be swallowed by a prefix match.
+  var TOKEN = /\b(LIMITED[ _-]RISK|MINIMAL[ _-]RISK|PROHIBITED|HIGH[ _-]RISK)\b/i;
+
+  function extract(t){
+    if(!t) return null;
+    var m = TOKEN.exec(t); if(!m) return null;
+    var c = m[1].toUpperCase().replace(/-/g,"_").replace(/ /g,"_");
+    return LABELS.indexOf(c) >= 0 ? c : null;
+  }
+  /* Macro-F1, not accuracy. Always answering the commonest class would score well on
+     accuracy and is useless in a governance setting, so the metric has to make it lose. */
+  function score(pairs){
+    var tp={},fp={},fn={}; LABELS.forEach(function(l){tp[l]=0;fp[l]=0;fn[l]=0;});
+    var correct=0, unparsed=0;
+    pairs.forEach(function(p){
+      var g=p[0], pr=p[1];
+      if(pr===null) unparsed++;
+      if(pr===g){tp[g]++;correct++;} else {fn[g]++; if(pr!==null&&fp[pr]!==undefined) fp[pr]++;}
+    });
+    var sum=0, per={};
+    LABELS.forEach(function(l){
+      var p = tp[l]+fp[l] ? tp[l]/(tp[l]+fp[l]) : 0;
+      var r = tp[l]+fn[l] ? tp[l]/(tp[l]+fn[l]) : 0;
+      per[l] = p+r ? 2*p*r/(p+r) : 0; sum += per[l];
+    });
+    return {n:pairs.length, correct:correct, unparsed:unparsed,
+            accuracy: pairs.length?correct/pairs.length:0, macroF1: sum/LABELS.length, per:per};
+  }
+  function wilson(c,n){ if(!n) return null;
+    var z=1.959963985, p=c/n, d=1+z*z/n;
+    var m=(p+z*z/(2*n))/d, h=z*Math.sqrt(p*(1-p)/n + z*z/(4*n*n))/d;
+    return [Math.max(0,m-h), Math.min(1,m+h)];
+  }
+  var USABLE_N = 30;
+  var esc = function(s){ return String(s==null?"":s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+
+  var i = 0, ans = new Array(ITEMS.length).fill(null);
+  var $ = function(id){ return document.getElementById(id); };
+
+  function draw(){
+    var it = ITEMS[i];
+    $("gb-prog").textContent = "ITEM " + (i+1) + " OF " + ITEMS.length + (it.anchor ? "  ·  " + it.anchor : "");
+    $("gb-q").textContent = it.q;
+    $("gb-opts").innerHTML = LABELS.map(function(l){
+      return '<button type="button" class="gb-opt" data-l="'+l+'" aria-pressed="'+(ans[i]===l)+'">'+l+'</button>';
+    }).join("") + '<button type="button" class="gb-opt" data-l="__SKIP__" aria-pressed="'+(ans[i]==="__SKIP__")+'"'+
+      ' style="color:#8fa6c8">can\'t tell</button>';
+    Array.prototype.forEach.call($("gb-opts").children, function(b){
+      b.onclick = function(){ ans[i] = (ans[i]===b.dataset.l) ? null : b.dataset.l; draw(); };
+    });
+    $("gb-back").disabled = i === 0;
+    $("gb-next").textContent = i === ITEMS.length-1 ? "Score it" : "Next";
+    $("gb-count").textContent = ans.filter(function(a){return a!==null;}).length + "/" + ITEMS.length + " answered";
+  }
+  /* Your row is inserted into the ranking in the right place, in the same units, with
+     the same n. It is not a separate "your score" panel sitting next to theirs — that
+     framing invites a comparison the numbers do not support. Same table, same rule. */
+  function board(s){
+    /* An empty board is a fact worth printing. Saying nothing here would let the visitor
+       assume their score had been compared to something. It has not. */
+    if(!BOARD.length) return '<div class="gb-note"><b>Nothing to rank against.</b> ' +
+      'No certified model run exists on this axis yet, so your score stands alone. ' +
+      'A dropped connection is not a wrong answer and an uncertified run is not a score, ' +
+      'so neither is shown here as one.</div>';
+    var mine = {model:"you", f1:s.macroF1, unparsed:s.unparsed/(s.n||1), n:s.n, mine:true};
+    /* Ties go to the visitor. qwen2.5:1.5b scores a clean 1.000 on the safety axis, so a
+       visitor who also answers every item correctly would otherwise be ranked BELOW a
+       model it did not lose to. Equal work, equal rank. */
+    var all = BOARD.concat([mine]).slice().sort(function(a,b){
+      if (b.f1 !== a.f1) return b.f1 - a.f1;
+      return (b.mine ? 1 : 0) - (a.mine ? 1 : 0);
+    });
+    var hs = [], seen = {};
+    BOARD.forEach(function(b){ if(b.harness && !seen[b.harness]){ seen[b.harness]=1; hs.push(b.harness); } });
+    return '<div style="margin:.9rem 0 .2rem;font-size:.68rem;letter-spacing:.09em;' +
+      'text-transform:uppercase;color:#5f7196">where that puts you</div>' +
+      '<div class="scroll"><table style="width:100%;border-collapse:collapse;font-size:.86rem">' +
+      '<tr style="color:#5f7196;font-size:.68rem;text-transform:uppercase;letter-spacing:.06em">' +
+      '<th style="text-align:left;padding:.25rem 0">#</th><th style="text-align:left">model</th>' +
+      '<th style="text-align:right">macro-F1</th><th style="text-align:right">unreadable</th>' +
+      '<th style="text-align:right">n</th></tr>' +
+      all.map(function(b,k){
+        return '<tr style="border-top:1px solid #131c2e' + (b.mine?';background:#0f1b2e':'') + '">' +
+          '<td style="padding:.35rem 0;color:#5f7196">'+(k+1)+'</td>' +
+          '<td style="color:'+(b.mine?'#3ddc97':'#eaf2ff')+'">'+b.model+'</td>' +
+          '<td style="text-align:right;color:#eaf2ff">'+b.f1.toFixed(3)+'</td>' +
+          '<td style="text-align:right;color:#8fa6c8">'+Math.round((b.unparsed||0)*100)+'%</td>' +
+          '<td style="text-align:right;color:#8fa6c8">'+b.n+'</td></tr>';
+      }).join('') + '</table></div>' +
+      '<div style="font-size:.7rem;color:#5f7196;margin-top:.4rem;line-height:1.55">' +
+      'Model rows measured via ' + (hs.join(' · ') || 'the published harness') +
+      '. Runs whose instrument error rate exceeded threshold are excluded — a dropped ' +
+      'connection is not a wrong answer. Unreadable means the answer could not be parsed ' +
+      'into a label at all; it is never scored as wrong.</div>';
+  }
+
+  $("gb-back").onclick = function(){ if(i>0){ i--; draw(); } };
+  $("gb-next").onclick = function(){
+    if(i < ITEMS.length-1){ i++; draw(); return; }
+    var pairs = ITEMS.map(function(it,k){
+      return [it.a, (ans[k]===null||ans[k]==="__SKIP__") ? null : extract(ans[k])]; });
+    var s = score(pairs), iv = wilson(s.correct, s.n), beat = s.macroF1 > MODEL_F1;
+    $("gb-card").style.display = "none";
+    var r = $("gb-result"); r.style.display = "block";
+    r.innerHTML =
+      '<h3 style="font-size:1.35rem;margin-bottom:.2rem">' + s.macroF1.toFixed(3) + ' macro-F1 ' +
+        (TOP ? '<span style="font-size:.85rem;color:' + (beat?"#3ddc97":"#8fa6c8") + '">' +
+          (beat ? "ahead of" : "behind") + ' ' + TOP.model + ' (' + TOP.f1.toFixed(3) + ')</span>'
+             : '') + '</h3>' +
+      board(s) +
+      '<div class="gb-kv"><span>items</span><span>'+s.n+'</span></div>' +
+      '<div class="gb-kv"><span>correct</span><span>'+s.correct+'</span></div>' +
+      '<div class="gb-kv"><span>you could not tell</span><span>'+s.unparsed+'</span></div>' +
+      '<div class="gb-kv"><span>accuracy</span><span>'+s.accuracy.toFixed(3)+'</span></div>' +
+      LABELS.map(function(l){ return '<div class="gb-kv"><span>F1 · '+l+'</span><span>'+s.per[l].toFixed(3)+'</span></div>'; }).join("") +
+      '<div class="gb-note"><b>Not quotable.</b> n = '+s.n+' is below usable_n = '+USABLE_N+'. The threshold is on ' +
+        '<i>n</i>, not on the interval you happened to land — yours is ±'+(((iv[1]-iv[0])/2)).toFixed(3)+
+        '. We hold ourselves to the same rule and publish no interval on this axis.</div>' +
+      '<div class="gb-note">' + (TOP ? 'Beating '+TOP.model : 'Scoring '+s.macroF1.toFixed(3)) +
+        ' on '+s.n+' items is a result about '+s.n+' items. It is not a ' +
+        'qualification, not an attestation, and not a claim about any system you build.</div>' +
+      '<div style="margin-top:1rem;display:flex;gap:.6rem;flex-wrap:wrap">' +
+        '<button type="button" class="gb-btn" id="gb-again">Try again</button>' +
+        '<a class="gb-btn gb-ghost" style="text-decoration:none;display:inline-block" ' +
+        'href="https://huggingface.co/datasets/csoai/gspc-gov">The dataset</a></div>';
+    $("gb-again").onclick = function(){ i=0; ans=new Array(ITEMS.length).fill(null);
+      r.style.display="none"; $("gb-card").style.display="block"; draw(); };
+  };
+  draw();
+})();
+</script>
+
+</div>
+<footer><b>Measurement, not certification.</b> CSOAI is not a certification body, does not certify, and is neither accredited nor applying for accreditation. It issues measurements and attestations, never certificates of conformity. Nothing on this page is a statement of conformity with any regulation, and it is not legal advice.<br>No interval is published on any axis below usable_n = 30 — including by us. An answer that cannot be read is reported as UNMEASURED and is excluded from the score, never counted as wrong. A run whose instrument error rate exceeds threshold is reported as a failed run, never as a low score.<br>CSOAI Ltd · UK 16939677 · generated 2026-08-06 from the live measurement record · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></footer>
+</body></html>
