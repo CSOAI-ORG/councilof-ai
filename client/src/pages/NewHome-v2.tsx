@@ -242,13 +242,13 @@ export default function NewHomeV2() {
       {/* ============================================ */}
       {/* SECTION 1: HERO — arena.ai-inspired: console is the product, not copy about it */}
       {/* ============================================ */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-white via-emerald-50 to-white">
         {/* Background depth — pure CSS, no external asset */}
         <div
           className="absolute inset-0 opacity-60"
           style={{ backgroundImage: "radial-gradient(1000px 500px at 50% -10%, rgba(16,185,129,0.25), transparent 60%), radial-gradient(700px 400px at 85% 20%, rgba(13,148,136,0.18), transparent 55%)" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 via-emerald-900/70 to-slate-900/95" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-transparent to-white/70" />
 
         {/* Animated particles */}
         <AnimatedParticles />
@@ -263,7 +263,7 @@ export default function NewHomeV2() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="mb-4 text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-emerald-300/80"
+                className="mb-4 text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-emerald-700"
               >
                 Describe an AI system. Get the provisions that bind — deterministically.
               </motion.p>
@@ -272,11 +272,11 @@ export default function NewHomeV2() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
-                className="text-4xl md:text-6xl xl:text-7xl font-bold text-white mb-5 leading-[1.05] tracking-tight"
+                className="text-4xl md:text-6xl xl:text-7xl font-bold text-slate-900 mb-5 leading-[1.05] tracking-tight"
               >
                 Measured,
                 <br />
-                <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 bg-clip-text text-transparent">
                   not modelled.
                 </span>
               </motion.h1>
@@ -285,7 +285,7 @@ export default function NewHomeV2() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.25 }}
-                className="text-base md:text-xl text-gray-300 mb-7 max-w-xl mx-auto lg:mx-0 leading-relaxed"
+                className="text-base md:text-xl text-slate-600 mb-7 max-w-xl mx-auto lg:mx-0 leading-relaxed"
               >
                 {canonValue("totalProvisions")} frozen statutory provisions. Four lenses.
                 Zero models in the verdict path — every verdict{" "}
@@ -310,7 +310,7 @@ export default function NewHomeV2() {
                   </Button>
                 </Link>
                 <Link href="/sov-space">
-                  <Button size="lg" variant="outline" className="border-2 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 px-8 py-6 text-base font-semibold rounded-xl">
+                  <Button size="lg" variant="outline" className="border-2 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 px-8 py-6 text-base font-semibold rounded-xl">
                     Try Sov Space
                   </Button>
                 </Link>
