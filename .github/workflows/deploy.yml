@@ -1,20 +1,12 @@
-name: Build + deploy site (prerender → both domains)
+name: Build + deploy site (prerender + fields + tour → both domains)
 
 on:
   push:
     branches: [master, main]
-    paths:
-      - 'client/**'
-      - 'functions/**'
-      - 'scripts/**'
-      - 'package.json'
-      - '.github/workflows/deploy.yml'
+    paths: ['client/**', 'functions/**', 'scripts/**', 'package.json', '.github/workflows/deploy.yml']
   workflow_dispatch: {}
 
-# One deploy at a time; newer push cancels an in-flight build.
-concurrency:
-  group: site-deploy
-  cancel-in-progress: true
+concurrency: { group: site-deploy, cancel-in-progress: true }
 
 jobs:
   build-deploy:
@@ -22,40 +14,42 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+        with: { node-version: 20 }
 
       - name: Install deps
         run: npm install --no-audit --no-fund
 
-      - name: Build client (SPA + static field pages + functions)
+      - name: Build client
         run: npm run build:client
 
-      - name: Prerender all routes (crawler-visible HTML)
+      - name: Prerender all routes
         run: |
           npx playwright install --with-deps chromium
           node scripts/prerender.mjs --dist dist/client --wait 900 --min 350
 
-      - name: Overlay standalone field pages at their route paths
+      - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
-          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench; do
-            if [ -f "dist/client/$b.html" ]; then
+          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench; do
+            if [ -f "client/public/$b.html" ]; then
+              cp "client/public/$b.html" "dist/client/$b.html"
               mkdir -p "dist/client/$b"
-              cp "dist/client/$b.html" "dist/client/$b/index.html"
-              echo "overlaid $b (standalone wins over prerendered shell)"
+              cp "client/public/$b.html" "dist/client/$b/index.html"
+              echo "placed $b (standalone wins over prerendered shell)"
             fi
           done
 
+      - name: Wire the AI-voice tour into every page
+        run: |
+          for f in $(find dist/client -name "*.html"); do
+            grep -q "sov-tour.js" "$f" || sed -i 's#</body>#<script defer src="/sov-tour.js"></script></body>#I' "$f"
+          done
+          echo "tour wired; sov-tour.js present: $([ -f dist/client/sov-tour.js ] && echo yes || echo NO)"
+
       - name: Deploy → councilof.ai
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
         run: npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true
 
       - name: Deploy → csoai.org
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
         run: npx wrangler pages deploy dist/client --project-name=csoai-site --branch=main --commit-dirty=true
