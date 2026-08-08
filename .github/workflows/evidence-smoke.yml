@@ -26,9 +26,9 @@ jobs:
 
       # Authoritative: the deployment that csoai.org serves.
       - name: Evidence contract (deployment host)
-        run: node scripts/smoke-evidence.mjs https://csoai-site.pages.dev
+        run: node scripts/smoke-evidence.mjs https://councilof-ai.pages.dev
 
       # Informational: apex reachability. Exit 75 means edge-blocked, not broken.
       - name: Evidence contract (apex, may be edge-blocked)
         continue-on-error: true
-        run: node scripts/smoke-evidence.mjs https://csoai.org
+        run: node scripts/smoke-evidence.mjs https://councilof.ai

@@ -3,7 +3,7 @@
  *
  * CREDENTIAL BOUNDARY
  * The STRIPE_SECRET_KEY is never handled by automation: the owner provisions it with
- *   npx wrangler pages secret put STRIPE_SECRET_KEY --project-name=csoai-site
+ *   npx wrangler pages secret put STRIPE_SECRET_KEY --project-name=councilof-ai
  * Until then this endpoint returns 503 with `configured: false` — a dead-honest state the
  * front can render ("checkout not yet enabled") instead of a silent failure. When the key
  * exists, we call Stripe's REST API directly (no SDK needed on Workers).

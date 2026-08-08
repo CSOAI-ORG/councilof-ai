@@ -20,7 +20,7 @@ fi
 echo "deploy-verified: ${COUNT} function files staged"
 
 npx wrangler pages deploy dist/client \
-  --project-name=csoai-site --branch=main --commit-dirty=true | tee /tmp/deploy.log
+  --project-name=councilof-ai --branch=main --commit-dirty=true | tee /tmp/deploy.log
 
 grep -q "Uploading Functions bundle" /tmp/deploy.log || {
   echo "deploy-verified: REFUSING to pass — wrangler did not report a Functions bundle." >&2
@@ -29,5 +29,5 @@ grep -q "Uploading Functions bundle" /tmp/deploy.log || {
 
 echo "deploy-verified: waiting for propagation…"
 sleep 20
-node scripts/smoke-evidence.mjs https://csoai.org
+node scripts/smoke-evidence.mjs https://councilof-ai.pages.dev
 echo "deploy-verified: live evidence contract PASSED"

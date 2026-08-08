@@ -32,5 +32,5 @@ jobs:
         run: sleep 90
       - name: Run claims verification against live site + brain
         env:
-          SITE: https://csoai-site.pages.dev
+          SITE: https://councilof-ai.pages.dev
         run: node scripts/claims-e2e.mjs
