@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# deploy-prod.sh — guards the master-site deploy to PRODUCTION (csoai-org → www.csoai.org).
+# deploy-prod.sh — guards the master-site deploy to PRODUCTION (csoai-site → www.csoai.org).
 #
 # Why this exists (2026-07-31 incident):
 #   `npx wrangler pages deploy dist/client --project-name csoai-site` WITHOUT --branch=main
@@ -8,11 +8,13 @@
 #   site untouched — a deploy "succeeds" but nothing reaches the user, exactly the kind
 #   of silent failure that erodes trust in the deploy log.
 #
-# 2026-08-01 correction: the custom domains csoai.org + www.csoai.org are attached to
-#   Pages project **csoai-org**, NOT csoai-site (verified via `wrangler pages project
-#   list` — csoai-site has no custom domain). Deploying to csoai-site updated
-#   csoai-site.pages.dev but left www.csoai.org serving a stale bundle. PROJECT is now
-#   csoai-org. csoai-site remains the staging/preview project.
+# 2026-08-06 correction: the csoai-org project was wrongly targeted as the production
+#   deployment destination. Apex csoai.org + www.csoai.org are bound to the csoai-site
+#   Pages project (verified via `wrangler pages project list` 2026-08-06: csoai-site shows
+#   "csoai-site.pages.dev, csoai.org" in Project Domains). Deploying to csoai-org uploaded
+#   to csoai-org.pages.dev only and left the apex serving the previous csoai-site bundle.
+#   PROJECT is now csoai-site. csoai-org remains the staging project for the dark-theme
+#   donor. This file's comment history records the round-trip; do not revert again.
 #
 # Usage:
 #   bash scripts/deploy-prod.sh            # build + deploy to production
@@ -23,9 +25,9 @@
 # Always run from the councilof-ai repo root. Exits non-zero on any failure.
 set -euo pipefail
 
-PROJECT="csoai-org"
+PROJECT="councilof-ai"
 BRANCH="main"
-DOMAIN="www.csoai.org"
+DOMAIN="councilof.ai"
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 

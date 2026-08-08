@@ -27,7 +27,7 @@
 # remote (CF fetches it during deploy).
 set -euo pipefail
 
-PROJECT="csoai-site"
+PROJECT="councilof-ai"
 BRANCH="staging"
 ALIAS="staging.csoai-site.pages.dev"
 
