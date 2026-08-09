@@ -41,7 +41,7 @@ export default function EarlyAccessLanding() {
               Be First to Access AI Safety Certification
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join the movement. Get exclusive early access to CEASAI certification, Byzantine Council training, and our complete AI safety platform.
+              Join the movement. Get early access to Watchdog training, council review, and our complete AI safety platform.
             </p>
           </motion.div>
 
@@ -119,7 +119,7 @@ export default function EarlyAccessLanding() {
             {[
               {
                 icon: <Shield className="h-8 w-8" />,
-                title: 'CEASAI Certification',
+                title: 'CSOAI Certification',
                 description: 'Professional certification in AI safety, compliance frameworks, and incident analysis. Valid for 3 years.'
               },
               {
@@ -180,7 +180,7 @@ export default function EarlyAccessLanding() {
                 price: '£249',
                 originalPrice: '£499',
                 description: 'Perfect for individuals',
-                features: ['CEASAI Certification', 'Training Courses', 'Watchdog Access', 'Community']
+                features: ['CSOAI Certification', 'Training Courses', 'Watchdog Access', 'Community']
               },
               {
                 name: 'Enterprise',

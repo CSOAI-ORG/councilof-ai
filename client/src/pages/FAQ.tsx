@@ -295,9 +295,9 @@ const faqData: FAQItem[] = [
   },
   {
     category: "TRAINING & CERTIFICATION",
-    question: "What is the CEASAI certification?",
+    question: "What is the CSOAI certification?",
     answer:
-      "The Certified EU AI Act Specialist (CEASAI) certification demonstrates expertise in implementing and auditing compliance with the EU AI Act. It covers risk classification, conformity assessment, documentation requirements, high-risk system governance, and incident reporting. CEASAI holders are qualified to lead compliance programs and conduct EU AI Act audits.",
+      "The Certified EU AI Act Specialist (CSOAI) certification demonstrates expertise in implementing and auditing compliance with the EU AI Act. It covers risk classification, conformity assessment, documentation requirements, high-risk system governance, and incident reporting. CSOAI holders are qualified to lead compliance programs and conduct EU AI Act audits.",
     tags: ["certification", "eu-ai-act"],
   },
   {

@@ -179,7 +179,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "Do we need to hire compliance experts?",
-      answer: "Not necessarily! CSOAI's tools and training help your team build compliance expertise. Many organizations upskill their existing teams using our CEASAI certification program."
+      answer: "Not necessarily! CSOAI's tools and training help your team build compliance expertise. Many organizations upskill their existing teams using our CSOAI certification program."
     }
   ];
 

@@ -14,6 +14,7 @@ import WidgetLayout from "./components/widget/WidgetLayout";
 import WidgetCourses from "./components/widget/WidgetCourses";
 import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
+import { JurisdictionProvider } from "./components/gspc/jurisdiction-link";
 // Home removed - using NewHomeV2 instead
 const Landing = lazy(() => import("./pages/Landing"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
@@ -92,11 +93,11 @@ const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const ProvenanceFinding = lazy(() => import("./pages/ProvenanceFinding"));
 const AiTransparency = lazy(() => import("./pages/AiTransparency"));
 const ABTesting = lazy(() => import("./pages/ABTesting"));
-const AboutCEASAI = lazy(() => import("./pages/AboutCEASAI"));
+const AboutCSOAI = lazy(() => import("./pages/AboutCSOAI"));
 const Accessibility = lazy(() => import("./pages/Accessibility"));
 const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
 const ByzantineConsensus = lazy(() => import("./pages/ByzantineConsensus"));
-const CEASAITraining = lazy(() => import("./pages/CEASAITraining"));
+const CSOAITraining = lazy(() => import("./pages/CSOAITraining"));
 const AustraliaAIGovernanceCompliance = lazy(() => import("./pages/AustraliaAIGovernanceCompliance"));
 const CanadaAIActCompliance = lazy(() => import("./pages/CanadaAIActCompliance"));
 const EUAIActCompliance = lazy(() => import("./pages/EUAIActCompliance"));
@@ -123,6 +124,7 @@ const GlobalAISafetyInitiative = lazy(() => import("./pages/GlobalAISafetyInitia
 const GovBench = lazy(() => import("./pages/GovBench"));
 const DriftProduct = lazy(() => import("./pages/DriftProduct"));
 const SovTownLab = lazy(() => import("./pages/SovTownLab"));
+const SovCity = lazy(() => import("./pages/SovCity"));
 const GovernmentLinks = lazy(() => import("./pages/GovernmentLinks"));
 const GovernmentPortal = lazy(() => import("./pages/GovernmentPortal"));
 const HelpCenter = lazy(() => import("./pages/HelpCenter"));
@@ -319,7 +321,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
   "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
-  "/certification": "CEASAI certification — the ISO 42001 fast-path | CSOAI",
+  "/certification": "CSOAI certification — the ISO 42001 fast-path | CSOAI",
   "/courses": "AI governance courses & training | CSOAI",
   "/api-docs": "API & MCP documentation | CSOAI",
   "/academy": "Sovereign Academy — AI governance training | CSOAI",
@@ -482,6 +484,7 @@ function App() {
         <AuthProvider>
           <AnalyticsProvider>
             <TooltipProvider>
+              <JurisdictionProvider>
               <div className="flex flex-col min-h-screen">
                 {/* Skip Navigation - must be first focusable element */}
                 <SkipNavigation />
@@ -515,11 +518,11 @@ function App() {
                   <Route path="/provenance-finding" component={ProvenanceFinding} />
                   <Route path="/ai-transparency" component={AiTransparency} />
                   <Route path="/ab-testing" component={ABTesting} />
-                  <Route path="/about-ceasai" component={AboutCEASAI} />
+                  <Route path="/about-csoai" component={AboutCSOAI} />
                   <Route path="/accessibility" component={Accessibility} />
                   <Route path="/analytics" component={AnalyticsDashboard} />
                   <Route path="/byzantine-consensus" component={ByzantineConsensus} />
-                  <Route path="/ceasai-training" component={CEASAITraining} />
+                  <Route path="/ceasai-training" component={CSOAITraining} />
                   <Route path="/certificate-verification" component={CertificateVerification} />
                   <Route path="/compliance/australia-ai-governance" component={AustraliaAIGovernanceCompliance} />
                   <Route path="/compliance/canada-ai-act" component={CanadaAIActCompliance} />
@@ -546,6 +549,7 @@ function App() {
                   <Route path="/govbench" component={GovBench} />
                   <Route path="/drift-audit" component={DriftProduct} />
                   <Route path="/sov-town-lab" component={SovTownLab} />
+                  <Route path="/sov-city" component={SovCity} />
                   <Route path="/government-links" component={GovernmentLinks} />
                   <Route path="/government-portal" component={GovernmentPortal} />
                   <Route path="/help" component={HelpCenter} />
@@ -944,6 +948,7 @@ function App() {
                   },
                 }}
               />
+            </JurisdictionProvider>
             </TooltipProvider>
           </AnalyticsProvider>
         </AuthProvider>

@@ -221,7 +221,7 @@ export default function GlobalAISafetyInitiative() {
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>CEASAI certification for 100 government officials</span>
+                    <span>CSOAI certification for 100 government officials</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
@@ -396,7 +396,7 @@ export default function GlobalAISafetyInitiative() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  We train your first cohort of AI Safety Analysts through CEASAI certification
+                  We train your first cohort of AI Safety Analysts through CSOAI certification
                 </p>
                 <Badge className="mt-4" variant="outline">
                   <Clock className="mr-1 h-3 w-3" /> 8-12 Weeks

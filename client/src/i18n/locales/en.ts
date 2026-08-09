@@ -6,7 +6,7 @@
 // legal text is an accuracy risk, so it stays as-authored in the source data.
 // Localizing framework *content* is a future pass (per-locale data overlays).
 //
-// Proper nouns (EU AI Act, NIST, ISO 42001, CSOAI, CEASAI, OpenGridWorks) are
+// Proper nouns (EU AI Act, NIST, ISO 42001, CSOAI, CSOAI, OpenGridWorks) are
 // kept untranslated across every locale.
 //
 // To add a new language: copy this file to locales/<lang>.ts, translate the

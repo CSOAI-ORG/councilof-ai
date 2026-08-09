@@ -8,6 +8,22 @@ import { Link } from "wouter";
 import SovNav from "../components/SovNav";
 import AISystemNotice from "../components/AISystemNotice";
 import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from "../data/layer0Nodes";
+import { useJurisdiction } from "../components/gspc/jurisdiction-link";
+
+/** A6 — globe ↔ arena link. WorldGlobe's pin regions ("EU"/"UK"/"US") map directly
+ *  to the jurisdiction-link context's three jurisdictions, so a click on a pin
+ *  lights the same jurisdiction as a click on ArenaGlobe, and vice versa. Pins
+ *  outside that set (Canada, APAC, Global) intentionally do not write — they have
+ *  no counterpart in the arena's measured cells. */
+const ARENA_JURISDICTIONS = new Set(["EU", "UK", "US"]);
+
+/** Region → globe anchor. Mirrors the jurisdiction-link EU/UK/US layout used by
+ *  ArenaGlobe so the flyTo lands on the same point the arena's Globe would light. */
+const JUR_ANCHOR: Record<string, [number, number]> = {
+  EU: [10, 50.5],
+  UK: [-2.5, 54],
+  US: [-98, 39.5],
+};
 
 // sovAgent region name → 3D globe REGIONS code + globe3d layer tag maps (module-level).
 const REGION3D: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
@@ -120,6 +136,26 @@ function project(lat: number, lng: number, rot: number) {
 }
 
 export default function WorldGlobe() {
+  // A6 — wired into the arena's jurisdiction-link context. The 3D globe flies
+  // to the lit jurisdiction when something else (e.g. ArenaGlobe, JSpacePanel,
+  // BranchView) lights it; clicking a pin here writes to the same context so
+  // the three arena surfaces light up alongside the world globe.
+  const { active: activeJur, select: selectJur } = useJurisdiction();
+  const activeJurRef = useRef<string | undefined>(activeJur);
+  activeJurRef.current = activeJur;
+  useEffect(() => {
+    if (!activeJur) return;
+    const anchor = JUR_ANCHOR[activeJur];
+    if (!anchor) return;
+    const win = globe3dRef.current?.contentWindow;
+    if (!win) return;
+    // 3D mode — fly there. The 2D SVG below already rotates via `rot` state when
+    // a pin is selected; we mirror that behaviour for context-driven lights by
+    // aligning the rotation as well.
+    setSpin(false);
+    setRot((((-anchor[0]) % 360) + 360) % 360);
+    flyAndConvene(win, anchor[0], anchor[1], { spiral: false, height: 2200000, duration: 2.4 });
+  }, [activeJur]);
   useEffect(() => {
     document.title = "The Sovereign Globe - AI governance, layered on the world | CSOAI";
     // Handoff from Sov Space: /globe?ask=… auto-asks + drives the globe agentically.
@@ -326,7 +362,7 @@ export default function WorldGlobe() {
               const q = project(p.lat, p.lng, rot); if (!q.front) return null;
               const on = sel && sel.id === p.id; const sc = 0.6 + q.depth * 0.6;
               return (
-                <g key={p.id} onClick={() => { setSel(p); setSpin(false); }} style={{ cursor: "pointer" }}>
+                <g key={p.id} onClick={() => { setSel(p); setSpin(false); if (ARENA_JURISDICTIONS.has(p.region)) selectJur(p.region, "globe"); }} style={{ cursor: "pointer" }}>
                   <circle cx={q.x} cy={q.y} r={(on ? 9 : 6) * sc} fill={p.color} opacity={on ? 1 : 0.85} stroke="#fff" strokeWidth={on ? 2 : 1} />
                   {on && <circle cx={q.x} cy={q.y} r={16} fill="none" stroke={p.color} strokeWidth={2} opacity={0.6} />}
                 </g>

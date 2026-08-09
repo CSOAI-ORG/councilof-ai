@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 /**
- * About CEASAI Page
- * Explains the Centre for Excellence in AI Safety Analyst Training (CEASAI),
+ * About CSOAI Page
+ * Explains the Centre for Excellence in AI Safety Analyst Training (CSOAI),
  * its mission, relationship with CSOAI, and key differentiators
  */
 
@@ -9,8 +9,8 @@ import { Shield, Users, Globe, Award, BookOpen, TrendingUp } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 
-export default function AboutCEASAI() {
-  useEffect(() => { document.title = "AboutCEASAI | CSOAI"; }, []);
+export default function AboutCSOAI() {
+  useEffect(() => { document.title = "AboutCSOAI | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-gray-50">
       {/* Hero Section */}
@@ -22,11 +22,11 @@ export default function AboutCEASAI() {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            About <span className="text-blue-600">CEASAI</span>
+            About <span className="text-blue-600">CSOAI</span>
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            The <strong>Centre for Excellence in AI Safety Analyst Training</strong> (CEASAI) is the world's leading 
+            The <strong>Centre for Excellence in AI Safety Analyst Training</strong> (CSOAI) is the world's leading 
             independent training organization dedicated to creating a global workforce of certified AI Safety Analysts.
           </p>
           
@@ -60,7 +60,7 @@ export default function AboutCEASAI() {
               <p className="text-lg text-gray-700 leading-relaxed">
                 By <strong>August 2, 2026</strong>, the EU AI Act enforcement deadline, enterprises worldwide will need{' '}
                 <strong className="text-blue-600">certified AI Safety Analysts</strong> to ensure compliance,
-                transparency, and safety. CEASAI exists to train, certify, and deploy this critical workforce—preventing
+                transparency, and safety. CSOAI exists to train, certify, and deploy this critical workforce—preventing
                 compliance chaos and ensuring AI systems serve humanity responsibly.
               </p>
             </div>
@@ -68,17 +68,17 @@ export default function AboutCEASAI() {
         </div>
       </section>
 
-      {/* CEASAI + CSOAI Integration */}
+      {/* CSOAI + CSOAI Integration */}
       <section className="py-16 md:py-20">
         <div className="container max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12">CEASAI + CSOAI: A Unified Ecosystem</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">CSOAI + CSOAI: A Unified Ecosystem</h2>
           
           <div className="grid md:grid-cols-2 gap-8">
-            {/* CEASAI */}
+            {/* CSOAI */}
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl border-2 border-blue-200">
               <div className="flex items-center gap-3 mb-4">
                 <BookOpen className="h-8 w-8 text-blue-600" />
-                <h3 className="text-2xl font-bold">CEASAI</h3>
+                <h3 className="text-2xl font-bold">CSOAI</h3>
               </div>
               <p className="text-gray-600 font-medium mb-4">The Training Body</p>
               <ul className="space-y-3">
@@ -146,16 +146,16 @@ export default function AboutCEASAI() {
           </div>
 
           <p className="text-center text-lg text-gray-700 mt-8 max-w-3xl mx-auto">
-            <strong>Together</strong>, CEASAI trains the analysts and CSOAI provides the platform where they work—creating 
+            <strong>Together</strong>, CSOAI trains the analysts and CSOAI provides the platform where they work—creating 
             a complete ecosystem for AI safety, transparency, and compliance.
           </p>
         </div>
       </section>
 
-      {/* Why CEASAI is Different */}
+      {/* Why CSOAI is Different */}
       <section className="bg-gray-50 py-16 md:py-20">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Why CEASAI is Different</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Why CSOAI is Different</h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Open Source */}
@@ -177,7 +177,7 @@ export default function AboutCEASAI() {
               </div>
               <h3 className="text-xl font-bold mb-3">Creating Real Jobs</h3>
               <p className="text-gray-600">
-                We're not just training people—we're creating a new profession. CEASAI graduates become certified Watchdog 
+                We're not just training people—we're creating a new profession. CSOAI graduates become certified Watchdog 
                 Analysts with real employment opportunities globally.
               </p>
             </div>

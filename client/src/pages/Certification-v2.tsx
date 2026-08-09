@@ -1,5 +1,5 @@
 /**
- * CEASAI Certification Page - Clear Certification Tiers & Licensing
+ * CSOAI Certification Page - Clear Certification Tiers & Licensing
  * Professional certification pathway with clear progression
  */
 
@@ -32,7 +32,7 @@ import { Card } from "@/components/ui/card";
 const faqItems = [
   {
     question: "What's the difference between an attestation and a subscription?",
-    answer: "The attestation is a signed record of measured performance on a proctored assessment. The Analyst subscription is an annual or monthly plan that unlocks paid engagement workflows through CEASAI. The attestation is your measured record; the subscription activates marketplace participation. Paid analyst workflows require both."
+    answer: "The attestation is a signed record of measured performance on a proctored assessment. The Analyst subscription is an annual or monthly plan that unlocks paid engagement workflows through CSOAI. The attestation is your measured record; the subscription activates marketplace participation. Paid analyst workflows require both."
   },
   {
     question: "Can I get assessed without the subscription?",
@@ -74,7 +74,7 @@ const certificationTiers = [
       duration: "2 hours"
     },
     benefits: [
-      "Official CEASAI Certificate",
+      "Official CSOAI Certificate",
       "LinkedIn digital badge",
       "Public registry listing",
       "Access to entry-level reviews"
@@ -153,7 +153,7 @@ const certificationTiers = [
       "Council nomination eligible",
       "Create and teach courses",
       "Revenue sharing on courses",
-      "Shape CEASAI standards"
+      "Shape CSOAI standards"
     ],
     earnings: "—",
     description: "The highest certification level. Shape the future of AI safety as an industry leader."
@@ -238,7 +238,7 @@ function CertificationTierCard({ tier, index }: { tier: typeof certificationTier
           <IconComponent className={`h-7 w-7 ${colors.iconText}`} />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-gray-900">CEASAI {tier.title}</h3>
+          <h3 className="text-xl font-bold text-gray-900">CSOAI {tier.title}</h3>
           <p className="text-gray-600 text-sm mt-1">{tier.description}</p>
         </div>
       </div>
@@ -330,7 +330,7 @@ export default function CertificationV2() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              CEASAI Professional Certification
+              CSOAI Professional Certification
             </h1>
 
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -529,7 +529,7 @@ export default function CertificationV2() {
                 <h3 className="text-xl font-bold mb-2">Subscription is Separate from Attestation</h3>
                 <p className="text-green-50 leading-relaxed">
                   Assessments produce a signed record of measured performance. The Analyst subscription is an
-                  ongoing plan that unlocks paid engagement workflows through CEASAI. You can hold an attestation
+                  ongoing plan that unlocks paid engagement workflows through CSOAI. You can hold an attestation
                   without a subscription; paid workflows require both. This keeps every working analyst's
                   measured record current and publicly verifiable.
                 </p>
@@ -544,7 +544,7 @@ export default function CertificationV2() {
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Why Get CEASAI Certified?
+              Why Get CSOAI Certified?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Join the global network of professionals protecting humanity from AI risks
@@ -627,7 +627,7 @@ export default function CertificationV2() {
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-600">
-              Everything you need to know about CEASAI attestation and subscriptions
+              Everything you need to know about CSOAI attestation and subscriptions
             </p>
           </div>
 

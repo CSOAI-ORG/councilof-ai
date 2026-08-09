@@ -216,7 +216,7 @@ export default function Documentation() {
                       <h5 className="font-semibold text-gray-900 mb-2">Participants</h5>
                       <ul className="space-y-1 text-gray-700">
                         <li>• 33 AI safety agents</li>
-                        <li>• Certified human analysts</li>
+                        <li>• Human analysts (assessed competence)</li>
                         <li>• Independent reviewers</li>
                         <li>• Domain experts</li>
                       </ul>
@@ -293,7 +293,7 @@ export default function Documentation() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-700 mb-4">
-                    A public transparency system for reporting and tracking AI safety incidents, powered by certified analysts and the Byzantine Council.
+                    A public transparency system for reporting and tracking AI safety incidents, powered by human-analyst review and the Byzantine Council.
                   </p>
                   <div className="grid md:grid-cols-3 gap-4 text-sm">
                     <div>

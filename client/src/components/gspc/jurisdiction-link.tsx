@@ -9,6 +9,16 @@
  *   C-space branch chip → jurisdiction lit amber on the globe
  *
  * State only. No model in the render loop.
+ *
+ * A7 — also broadcasts cross-route and cross-iframe. Every change emits a
+ *   CustomEvent('sov:jurisdiction', {detail:{id, source}}) on window AND
+ *   mirrors the active id to sessionStorage under 'sov:jurisdiction'. The
+ *   live 3D globe in /public/globe3d.html listens for both, so:
+ *     - on the same page, an iframe hosting globe3d.html reacts immediately
+ *       when something on the React side changes the context;
+ *     - navigating from /gspc-arena to /globe3d.html carries the lit
+ *       jurisdiction across the route change, and the camera flies there
+ *       on mount instead of starting on the default Atlantic view.
  */
 
 import { createContext, useContext, useState, type ReactNode } from "react";
@@ -29,7 +39,12 @@ const JurisdictionLink = createContext<JurisdictionLinkState>({
 });
 
 export function JurisdictionProvider({ children }: { children: ReactNode }) {
-  const [active, setActive] = useState<string | undefined>();
+  const [active, setActive] = useState<string | undefined>(() => {
+    // A7 — hydrate from sessionStorage so a hot reload or remount keeps the
+    // selected jurisdiction. Live-globe listeners read the same key.
+    if (typeof window === "undefined") return undefined;
+    try { return window.sessionStorage.getItem("sov:jurisdiction") || undefined; } catch { return undefined; }
+  });
   const [source, setSource] = useState<string | undefined>();
 
   function select(id?: string, src?: string) {
@@ -40,6 +55,14 @@ export function JurisdictionProvider({ children }: { children: ReactNode }) {
       setActive(id);
       setSource(src);
     }
+    // A7 — broadcast cross-route + cross-iframe. The live 3D globe and any
+    // other surface listening on window hears this without needing React
+    // context reach. sessionStorage is the cross-route bridge for hard
+    // navigations that lose the in-memory state.
+    try { window.sessionStorage.setItem("sov:jurisdiction", id || ""); } catch {}
+    try {
+      window.dispatchEvent(new CustomEvent("sov:jurisdiction", { detail: { id: id || null, source: src || null } }));
+    } catch {}
   }
 
   return (

@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 const CERT_HOWTO_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "How to get CSOAI certified as an AI Safety Analyst",
-  description: "The CSOAI exam process from enrollment to earning: enroll, study, schedule, take the exam, get results, and start earning.",
+  name: "How to train as a CSOAI AI-Safety Analyst (assessed competence)",
+  description: "The CSOAI Watchdog training path: enroll, study, take the assessment, get a signed result, and start applying your competence.",
   step: [
-    { "@type": "HowToStep", position: 1, name: "Enroll", text: "Choose your certification level and pay (or start free with Watchdog training)." },
+    { "@type": "HowToStep", position: 1, name: "Enroll", text: "Choose your Watchdog training track and begin (or start free)." },
     { "@type": "HowToStep", position: 2, name: "Study", text: "Work through modules at your own pace, complete quizzes and case studies." },
     { "@type": "HowToStep", position: 3, name: "Schedule", text: "Choose your exam date and time (24/7 availability)." },
     { "@type": "HowToStep", position: 4, name: "Take Exam", text: "Complete 50 questions in 90 minutes with proctored supervision." },
@@ -28,7 +28,7 @@ const CERT_BREADCRUMB_SCHEMA = {
 };
 
 export default function CertificationHowItWorks() {
-  useEffect(() => { document.title = "CSOAI Certification Guide — Exam Process & Pricing"; }, []);
+  useEffect(() => { document.title = "CSOAI Watchdog Analyst Programme — Training & Assessment"; }, []);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const certificationPathway = [
@@ -39,22 +39,22 @@ export default function CertificationHowItWorks() {
       duration: "4 hours"
     },
     {
-      level: "CEASAI Fundamentals",
-      requirement: "Pass 50-question exam (70% pass rate)",
+      level: "Watchdog Analyst — Core",
+      requirement: "Pass 50-question assessment (70% pass rate)",
       benefits: "Job board positions, basic compliance reviews",
-      duration: "6-8 weeks study + 90 min exam"
+      duration: "6-8 weeks study + 90 min assessment"
     },
     {
-      level: "CEASAI Professional",
-      requirement: "Pass advanced exam covering all frameworks",
+      level: "Watchdog Analyst — Advanced",
+      requirement: "Pass advanced assessment covering all frameworks",
       benefits: "Job board positions, complex compliance projects",
-      duration: "10-12 weeks study + 90 min exam"
+      duration: "10-12 weeks study + 90 min assessment"
     },
     {
-      level: "CEASAI Expert",
-      requirement: "Pass master-level exam + capstone project",
+      level: "Watchdog Analyst — Expert",
+      requirement: "Pass master-level assessment + capstone project",
       benefits: "Enterprise contracts, consulting",
-      duration: "14-16 weeks study + 90 min exam + capstone"
+      duration: "14-16 weeks study + 90 min assessment + capstone"
     }
   ];
 
@@ -82,7 +82,7 @@ export default function CertificationHowItWorks() {
     {
       step: "5. Get Results",
       description: "Receive instant pass/fail notification with detailed feedback",
-      action: "If you pass, your certificate is issued immediately"
+      action: "If you pass, your signed assessment result (Ed25519, Layer 0) is issued immediately"
     },
     {
       step: "6. Start Earning",
@@ -114,11 +114,11 @@ export default function CertificationHowItWorks() {
 
   const faqs = [
     {
-      question: "How long is the certification valid?",
-      answer: "CEASAI certifications are valid for 2 years from the date you pass the exam. You'll receive renewal reminders 90 days before expiration. You can renew anytime after 18 months."
+      question: "How long is a competence assessment valid?",
+      answer: "Assessed competence is re-checked annually via a short re-assessment. You'll get a reminder 60 days before your next check."
     },
     {
-      question: "What's the difference between the certification levels?",
+      question: "What's the difference between the assessment levels?",
       answer: "Fundamentals covers basics of all frameworks. Professional goes deeper into each framework and adds UK AI Bill and Canada AI Act. Expert covers everything plus Australia AI Governance, ISO 42001, and SOAI-PDCA methodology."
     },
     {
@@ -134,16 +134,16 @@ export default function CertificationHowItWorks() {
       answer: "No problem! You get detailed feedback showing which topics to review. You can retake after 7 days. We offer free review sessions and study groups to help you prepare for your next attempt."
     },
     {
-      question: "Can I upgrade my certification level?",
+      question: "Can I move to a higher assessment level?",
       answer: "Yes! You can upgrade at any time. If you have Fundamentals and want Professional, you only pay the difference ($100). Your study time carries over."
     },
     {
-      question: "Do I need to renew my certification?",
-      answer: "Yes, certifications expire after 2 years. Renewal is simple: take a 30-minute renewal exam ($29), complete continuing education, or use a hybrid approach. Most people renew in 30 minutes."
+      question: "Do I need to re-assess each year?",
+      answer: "Yes — competence checks are per-year. The simple path is a 30-minute re-assessment ($29); continuing education can replace it. Most people do it in 30 minutes."
     },
     {
-      question: "Can I use my certification internationally?",
-      answer: "Yes! CEASAI certification is recognized globally. Our frameworks cover EU, US, China, UK, Canada, and Australia regulations. You can work with international clients and enterprises."
+      question: "Are CSOAI assessments recognised internationally?",
+      answer: "CSOAI assessments map to the EU, US, China, UK, Canada and Australia regulatory frameworks we crosswalk (30 frameworks, 417 provisions — published). They are evidence of measured competence, not a licence to practise."
     },
     {
       question: "What happens if I don't renew?",
@@ -323,7 +323,7 @@ export default function CertificationHowItWorks() {
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Certified?</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Start with free training and work toward your CEASAI certification
+            Start with free training and work toward your CSOAI certification
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

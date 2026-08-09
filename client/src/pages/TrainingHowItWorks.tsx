@@ -44,7 +44,7 @@ export default function TrainingHowItWorks() {
       price: "Free"
     },
     {
-      level: "CEASAI Fundamentals",
+      level: "CSOAI Fundamentals",
       duration: "6-8 weeks",
       description: "Entry-level certification covering core frameworks",
       modules: [
@@ -57,7 +57,7 @@ export default function TrainingHowItWorks() {
       price: "$99"
     },
     {
-      level: "CEASAI Professional",
+      level: "CSOAI Professional",
       duration: "10-12 weeks",
       description: "Advanced certification for experienced analysts",
       modules: [
@@ -71,7 +71,7 @@ export default function TrainingHowItWorks() {
       price: "$199"
     },
     {
-      level: "CEASAI Expert",
+      level: "CSOAI Expert",
       duration: "14-16 weeks",
       description: "Master-level certification for senior analysts",
       modules: [
@@ -162,7 +162,7 @@ export default function TrainingHowItWorks() {
     },
     {
       question: "How long is the certification valid?",
-      answer: "CEASAI certifications are valid for 2 years. You can renew by taking a 30-minute renewal exam or by completing continuing education credits."
+      answer: "CSOAI certifications are valid for 2 years. You can renew by taking a 30-minute renewal exam or by completing continuing education credits."
     },
     {
       question: "Can I upgrade from Fundamentals to Professional?",

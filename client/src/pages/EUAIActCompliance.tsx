@@ -68,7 +68,7 @@ export default function EUAIActCompliance() {
     {
       requirement: "Data Governance",
       euaiActRequirement: "Ensure data quality and bias mitigation",
-      csoaiApproach: "CEASAI training covers data governance. Analysts assess data quality as part of compliance reviews.",
+      csoaiApproach: "CSOAI training covers data governance. Analysts assess data quality as part of compliance reviews.",
       soaiPdcaRole: "PLAN: Define data standards. DO: Audit data. CHECK: Test for bias. ACT: Remediate issues."
     },
     {
@@ -104,7 +104,7 @@ export default function EUAIActCompliance() {
     },
     {
       question: "How does CSOAI help with compliance?",
-      answer: "CSOAI provides: compliance assessment tools, Byzantine Council review, CEASAI training for your team, incident reporting system, and continuous monitoring. We handle the technical complexity."
+      answer: "CSOAI provides: compliance assessment tools, Byzantine Council review, CSOAI training for your team, incident reporting system, and continuous monitoring. We handle the technical complexity."
     },
     {
       question: "Can we get certified for EU AI Act compliance?",

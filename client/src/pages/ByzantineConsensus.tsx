@@ -117,7 +117,7 @@ const PIPELINES = [
   },
   {
     icon: BookOpen,
-    title: 'CEASAI Training',
+    title: 'CSOAI Training',
     color: '#F59E0B',
     description: 'Professional certification program for AI safety analysts.',
     items: ['Training Courses', 'Certification Exams', 'Certified Analysts', 'Job Marketplace']

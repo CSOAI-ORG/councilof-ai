@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { CheckCircle, BookOpen, Award, Users, Zap, Globe } from "lucide-react";
-export default function CEASAITraining() {
+export default function CSOAITraining() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -71,13 +71,13 @@ export default function CEASAITraining() {
         <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 py-24">
           <div className="container max-w-4xl">
             <Badge className="mb-4 bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
-              CEASAI Certified Program
+              CSOAI Certified Program
             </Badge>
             <h1 className="text-5xl font-bold text-gray-900 mb-6">
-              CEASAI AI Safety Training
+              CSOAI AI Safety Training
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Comprehensive training program aligned with CEASAI standards. Learn from industry experts and get certified to monitor AI systems for compliance and safety.
+              Comprehensive training program aligned with CSOAI standards. Learn from industry experts and get certified to monitor AI systems for compliance and safety.
             </p>
             <Link href="/signup">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
@@ -168,10 +168,10 @@ export default function CEASAITraining() {
             </div>
           </div>
 
-          {/* Why CEASAI? */}
+          {/* Why CSOAI? */}
           <div className="mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-              Why Choose CEASAI Training?
+              Why Choose CSOAI Training?
             </h2>
             
             <div className="grid md:grid-cols-2 gap-6">
@@ -186,7 +186,7 @@ export default function CEASAITraining() {
 
           {/* Certification Value */}
           <div className="mb-20 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg p-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Your CEASAI Certification</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Your CSOAI Certification</h2>
             
             <div className="grid md:grid-cols-3 gap-8">
               <div>
@@ -243,7 +243,7 @@ export default function CEASAITraining() {
               
               <Card className="p-6 border border-gray-200">
                 <h3 className="font-bold text-gray-900 mb-2">Is this training aligned with EU AI Act requirements?</h3>
-                <p className="text-gray-600">Yes, our training is specifically designed to meet CEASAI standards and EU AI Act compliance requirements.</p>
+                <p className="text-gray-600">Yes, our training is specifically designed to meet CSOAI standards and EU AI Act compliance requirements.</p>
               </Card>
               
               <Card className="p-6 border border-gray-200">
@@ -255,7 +255,7 @@ export default function CEASAITraining() {
 
           {/* CTA Section */}
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-lg p-12 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">Ready to Get CEASAI Certified?</h2>
+            <h2 className="text-3xl font-bold mb-4">Ready to Get CSOAI Certified?</h2>
             <p className="text-lg mb-8 text-emerald-50">
               Start your free training today. No credit card required.
             </p>

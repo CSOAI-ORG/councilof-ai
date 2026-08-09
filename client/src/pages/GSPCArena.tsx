@@ -7,7 +7,6 @@ import {
   ARENA_J_RECORDS,
   ARENA_TRAP_TOOLS,
 } from "@/data/arena";
-import { JurisdictionProvider } from "@/components/gspc/jurisdiction-link";
 import { ArenaGlobe } from "@/components/gspc/ArenaGlobe";
 import { BranchView } from "@/components/gspc/BranchView";
 import { JSpacePanel } from "@/components/gspc/JSpacePanel";
@@ -263,8 +262,7 @@ export default function GSPCArena() {
   const sortedSubjects = [...ARENA_SUBJECTS].sort((a, b) => b.refusal_rate - a.refusal_rate);
 
   return (
-    <JurisdictionProvider>
-      <div className="min-h-screen bg-[#03110b] text-emerald-50">
+    <div className="min-h-screen bg-[#03110b] text-emerald-50">
         {/* ═══════════════════ HERO ═══════════════════ */}
         <section className="border-b border-emerald-500/15">
           <div className="mx-auto max-w-5xl px-6 pt-14 pb-10">
@@ -621,6 +619,5 @@ export default function GSPCArena() {
           </div>
         </div>
       </div>
-    </JurisdictionProvider>
   );
 }
