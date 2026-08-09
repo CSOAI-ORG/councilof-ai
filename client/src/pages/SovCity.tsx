@@ -16,33 +16,65 @@ import { cn } from "../lib/utils";
 
 type LiveSim = {
   tick: number;
-  population: number;
+  population?: number;
   govbench_score?: number;
   certifications_active?: number;
+  // OpenTTD substrate fields
+  city?: string;
+  date?: number;
+  companies_active?: number;
+  vehicles?: number;
+  total_company_value?: number;
+  substrate?: string;
 } | null;
+
+// both live simulation substrates consumed by the overlay. Each holds its own
+// honest "ok/offline" state — a dark substrate renders offline, never fake data.
+const SIM_FEEDS = [
+  { key: "town", url: "/api/sov-town/state.jsonl", label: "Sov Town" },
+  { key: "openttd", url: "/api/sov-openttd/state.jsonl", label: "Sov Suburb" },
+] as const;
 
 export default function SovCity() {
   const { state, civicScore, resilience, completeModule, issueCredential, reset } = useCivic();
   const [sealing, setSealing] = useState<string | null>(null);
-  const [live, setLive] = useState<LiveSim>(null);
-  const [liveOk, setLiveOk] = useState<boolean | null>(null);
+  const [lives, setLives] = useState<Record<string, LiveSim>>({});
+  const [liveOk, setLiveOk] = useState<Record<string, boolean>>({});
 
-  // optional overlay from the live Micropolis sim when the substrate answers
+  // optional overlays from the live substrates (Micropolis + OpenTTD) when
+  // each answers; every substrate renders its own offline state independently.
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
-      try {
-        const res = await fetch("/api/sov-town/state.jsonl");
-        if (!res.ok) return;
-        const text = await res.text();
-        const lines = text.trim().split("\n").filter(Boolean);
-        const last = lines.length ? JSON.parse(lines[lines.length - 1]) : null;
-        if (cancelled) return;
-        setLive(last);
-        setLiveOk(true);
-      } catch {
-        if (!cancelled) setLiveOk(false);
-      }
+      const next: Record<string, LiveSim> = {};
+      const ok: Record<string, boolean> = {};
+      await Promise.all(
+        SIM_FEEDS.map(async (feed) => {
+          try {
+            const res = await fetch(feed.url);
+            if (!res.ok) return;
+            const text = await res.text();
+            const lines = text.trim().split("\n").filter(Boolean);
+            const last = lines.length ? JSON.parse(lines[lines.length - 1]) : null;
+            if (!cancelled && last) {
+              next[feed.key] = last;
+              ok[feed.key] = true;
+            }
+          } catch {
+            /* keep this substrate offline */
+          }
+        })
+      );
+      if (cancelled) return;
+      setLives((prev) => ({ ...prev, ...next }));
+      setLiveOk((prev) => {
+        const merged = { ...prev };
+        SIM_FEEDS.forEach((f) => {
+          if (ok[f.key]) merged[f.key] = true;
+          // if a substrate previously worked and now errors, keep it stale-but-honest
+        });
+        return merged;
+      });
     };
     load();
     const id = setInterval(load, 30000);
@@ -71,6 +103,8 @@ export default function SovCity() {
 
   const trainedCount = state.districts.filter((d) => d.trained).length;
   const attCount = state.districts.filter((d) => d.certified).length;
+  const town = lives["town"];
+  const ottd = lives["openttd"];
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -89,10 +123,23 @@ export default function SovCity() {
             you have actually done — not a scoreboard, a record.
           </p>
 
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <CivicCard label="Civic Score" value={`${civicScore}`} unit="%" tone={toneFor(civicScore)} note={`${trainedCount}/${state.districts.length} districts engaged`} />
             <CivicCard label="Resilience" value={`${resilience}`} unit="%" tone={toneFor(resilience)} note={`${attCount} signed attestation${attCount === 1 ? "" : "s"}`} />
-            <CivicCard label="Live Sim" value={liveOk === true && live ? live.population.toLocaleString() : "—"} unit={liveOk === true ? "pop" : "offline"} tone="emerald" note={liveOk === true ? `govbench ${live.govbench_score ?? "—"}` : "local ticker (deterministic)"} />
+            <CivicCard
+              label="Sov Town"
+              value={liveOk["town"] && town ? (town.population ?? 0).toLocaleString() : "—"}
+              unit={liveOk["town"] ? "pop" : "offline"}
+              tone="emerald"
+              note={liveOk["town"] ? `govbench ${town?.govbench_score ?? "—"}` : "local ticker (deterministic)"}
+            />
+            <CivicCard
+              label="Sov Suburb"
+              value={liveOk["openttd"] && ottd ? String(ottd.companies_active ?? 0) : "—"}
+              unit={liveOk["openttd"] ? "companies" : "offline"}
+              tone="emerald"
+              note={liveOk["openttd"] ? `date ${ottd?.date ?? "—"} · ${ottd?.vehicles ?? 0} vehicles` : "local ticker (deterministic)"}
+            />
           </div>
         </div>
       </section>
