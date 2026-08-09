@@ -7,7 +7,7 @@ import { useState } from "react";
 // commons: open tools + A2A + Sovereign orchestration, easy for anyone.
 
 type Badge = { id: string; label: string; dot: string };
-const VERIFY = "https://os.csoai.org/verify";
+const VERIFY = "https://councilof.ai/verify";
 const BADGES: Badge[] = [
   { id: "sovereign-verified", label: "Sovereign-Verified \u00B7 CSOAI", dot: "#10b981" },
   { id: "layer0-signed", label: "Layer 0 Signed \u00B7 Ed25519", dot: "#34d399" },

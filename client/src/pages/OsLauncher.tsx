@@ -12,7 +12,7 @@ function osRoute(a: any): string | null { if (!a || !a.command) return null; if 
 
 // CSOAI OS — the unified launcher. One surface where an end user opens every
 // CSOAI governance tool working together: the live Sovereign Town heartbeat, the Layer 0
-// status, and a launchpad of every app. This is os.csoai.org's home.
+// status, and a launchpad of every app. This is councilof.ai's home.
 
 type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean; pro?: boolean };
 
