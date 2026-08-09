@@ -188,6 +188,84 @@ const frameworks = [
     borderColor: "border-pink-200",
     textColor: "text-pink-600",
   },
+  {
+    id: "uk-gdpr",
+    name: "UK GDPR & DPA 2018",
+    year: "2018",
+    region: "United Kingdom",
+    description: "The UK's data-protection regime: the GDPR post-Brexit plus the Data Protection Act 2018, with AI-relevant automated-decision protections.",
+    articles: "DPA 2018",
+    icon: BadgeCheck,
+    color: "from-sky-500 to-sky-600",
+    bgColor: "bg-sky-50",
+    borderColor: "border-sky-200",
+    textColor: "text-sky-600",
+  },
+  {
+    id: "nis2",
+    name: "NIS2",
+    year: "2023",
+    region: "Europe",
+    description: "EU cybersecurity directive for critical sectors — AI security, incident reporting and supply-chain obligations.",
+    articles: "Directive",
+    icon: Target,
+    color: "from-cyan-500 to-cyan-600",
+    bgColor: "bg-cyan-50",
+    borderColor: "border-cyan-200",
+    textColor: "text-cyan-600",
+  },
+  {
+    id: "dora",
+    name: "DORA",
+    year: "2023",
+    region: "Europe",
+    description: "EU Digital Operational Resilience Act — ICT risk, third-party oversight and reporting for financial entities.",
+    articles: "Regulation",
+    icon: Zap,
+    color: "from-orange-500 to-orange-600",
+    bgColor: "bg-orange-50",
+    borderColor: "border-orange-200",
+    textColor: "text-orange-600",
+  },
+  {
+    id: "coe-convention",
+    name: "Council of Europe",
+    year: "2024",
+    region: "International",
+    description: "The world's first binding international treaty on AI — human rights, democracy and the rule of law (CETS 225).",
+    articles: "CETS 225",
+    icon: Crown,
+    color: "from-violet-500 to-violet-600",
+    bgColor: "bg-violet-50",
+    borderColor: "border-violet-200",
+    textColor: "text-violet-600",
+  },
+  {
+    id: "cra",
+    name: "Cyber Resilience Act",
+    year: "2024",
+    region: "Europe",
+    description: "EU security requirements for connected products — vulnerability handling, SBOMs and lifecycle support.",
+    articles: "Regulation",
+    icon: FileText,
+    color: "from-lime-500 to-lime-600",
+    bgColor: "bg-lime-50",
+    borderColor: "border-lime-200",
+    textColor: "text-lime-600",
+  },
+  {
+    id: "c2pa",
+    name: "C2PA Provenance",
+    year: "2023",
+    region: "International",
+    description: "Content Credentials — the open provenance standard that survives real-world transforms (measured in ProvBench).",
+    articles: "Spec 2.4",
+    icon: Eye,
+    color: "from-fuchsia-500 to-fuchsia-600",
+    bgColor: "bg-fuchsia-50",
+    borderColor: "border-fuchsia-200",
+    textColor: "text-fuchsia-600",
+  },
 ];
 
 // Framework guide URL mapping
@@ -200,6 +278,12 @@ const getFrameworkGuideUrl = (id: string): string => {
     'uk-aisi': '/standards',
     'singapore': '/standards',
     'korea': '/standards',
+    'uk-gdpr': '/standards',
+    'nis2': '/standards',
+    'dora': '/standards',
+    'coe-convention': '/standards',
+    'cra': '/standards',
+    'c2pa': '/standards',
   };
   return urlMap[id] || '/standards';
 };
@@ -224,7 +308,7 @@ const faqs = [
   },
   {
     question: "What frameworks does CSOAI cover?",
-    answer: "We cover 7 major global frameworks: EU AI Act (Europe), NIST AI RMF (USA), ISO 42001 (International), TC260 (China), UK AI Safety Institute guidelines (UK), Singapore Model AI Governance (APAC), and the new South Korea AI Framework Act (2026). Our platform synthesizes all of these into one operational system.",
+    answer: "We crosswalk 30 frameworks — the measured count in the published GSPC crosswalk (2026-07-29) — spotlighting the majors: EU AI Act (Europe), NIST AI RMF (US), ISO/IEC 42001 (International), UK GDPR & DPA 2018, NIS2, DORA, the Council of Europe AI Convention (CETS 225), the Cyber Resilience Act, C2PA provenance, TC260 (China), UK AI Safety Institute guidelines, Singapore Model AI Governance, and the South Korea AI Framework Act (2026) — plus voluntary frameworks such as Anthropic CAI and the Asilomar principles. Our platform synthesizes all of these into one operational system.",
   },
   {
     question: "Can I earn money as an AI Safety Analyst?",
@@ -232,7 +316,7 @@ const faqs = [
   },
   {
     question: "How do enterprises register AI systems?",
-    answer: "Enterprises can register AI systems through our Enterprise portal. The process involves: describing your AI system, self-assessing risk level (minimal, limited, high, or unacceptable), uploading documentation, and receiving automated compliance assessments against all 7 frameworks. Ongoing monitoring is provided through the Byzantine Council.",
+    answer: "Enterprises can register AI systems through our Enterprise portal. The process involves: describing your AI system, self-assessing risk level (minimal, limited, high, or unacceptable), uploading documentation, and receiving automated compliance assessments against all 30 crosswalked frameworks. Ongoing monitoring is provided through the Byzantine Council.",
   },
 ];
 
@@ -414,7 +498,7 @@ export default function NewHomeV2() {
                     <Building2 className="h-7 w-7 text-blue-600" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900 mb-2">Enterprise / Government</h3>
-                  <p className="text-sm text-gray-600">Register AI systems, ensure compliance across 7 frameworks</p>
+                  <p className="text-sm text-gray-600">Register AI systems, ensure compliance across all 30+ frameworks</p>
                 </CardContent>
               </Card>
             </Link>
@@ -658,7 +742,7 @@ export default function NewHomeV2() {
                     },
                     {
                       title: "Enterprise Burden",
-                      desc: "Companies must comply with 7+ frameworks separately — massive cost.",
+                      desc: "Companies must comply with 30+ frameworks separately — massive cost.",
                     },
                     {
                       title: "No Real Enforcement",
@@ -705,7 +789,7 @@ export default function NewHomeV2() {
                   {[
                     {
                       title: "Unified Framework",
-                      desc: "All 7 major frameworks synthesized into one operational system.",
+                      desc: "All 30 crosswalked frameworks synthesized into one operational system.",
                     },
                     {
                       title: "One Registration",
@@ -945,10 +1029,10 @@ export default function NewHomeV2() {
               Global Coverage
             </Badge>
             <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
-              Our <span className="text-emerald-400">7 Frameworks</span>
+              Our <span className="text-emerald-400">{canonValue("frameworks")} Frameworks</span>
             </h2>
             <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-              Master every major AI governance framework. One platform, complete global coverage.
+              Master every major AI governance framework — <a href="/frameworks" className="text-emerald-500 underline underline-offset-4 hover:text-emerald-400">all {canonValue("frameworks")} crosswalks</a> are measured, Ed25519-signed and publicly verifiable. One platform, complete global coverage.
             </p>
           </motion.div>
 
@@ -1361,7 +1445,7 @@ export default function NewHomeV2() {
                 {[
                   { value: "33+", label: "Training Courses", icon: BookOpen },
                   { value: "FREE", label: "Cost", icon: DollarSign },
-                  { value: "7", label: "Frameworks", icon: Globe2 },
+                  { value: "30+", label: "Frameworks", icon: Globe2 },
                   { value: "Signed", label: "Verifiable Records", icon: TrendingUp },
                 ].map((stat, i) => (
                   <div key={i} className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
