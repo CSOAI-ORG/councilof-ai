@@ -97,7 +97,7 @@ export default function Traction() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
           <Stat n={monthlyTotal.toLocaleString()} label="PyPI pulls / month" sub="19 measured packages · pepy.tech" />
           <Stat n="193" label="deterministic items" sub="vs 417 statutory provisions" />
-          <Stat n="378" label="governed MCP tools" sub="live in catalogue" />
+          <Stat n="291" label="governed MCP servers" sub="registry-backed" />
           <Stat n="579" label="public repos" sub="CSOAI-ORG · gh CLI" />
         </div>
       </section>
@@ -172,7 +172,7 @@ export default function Traction() {
         <h2 className="text-3xl font-bold mb-2">Sovereign MCP — live on councilof.ai</h2>
         <p className="text-slate-600 mb-6 max-w-3xl">
           6 servers and {soverTotal} tools under the canonical <code className="bg-slate-100 px-1 rounded">/api/mcp</code>.
-          Deterministic, not LLM-as-judge. Every response is signed. Catalogue total (including unmarked): 378 governed tools.
+          Deterministic, not LLM-as-judge. Every response is signed. Broader estate: 291 governed MCP servers (registry-backed, separate metric — not interchangeable with sovereign count).
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {SOVEREIGN_SERVERS.map(s => (
