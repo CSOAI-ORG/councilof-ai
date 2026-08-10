@@ -213,6 +213,7 @@ const IndustrySolutions = lazy(() => import("./pages/IndustrySolutions"));
 const PartnersAdvisory = lazy(() => import("./pages/PartnersAdvisory"));
 const CaseStudies = lazy(() => import("./pages/CaseStudies"));
 const TrustCenter = lazy(() => import("./pages/TrustCenter"));
+const Traction = lazy(() => import("./pages/Traction"));
 const ComparisonPage = lazy(() => import("./pages/ComparisonPage"));
 const ROICalculator = lazy(() => import("./pages/ROICalculator"));
 const Technology = lazy(() => import("./pages/Technology"));
@@ -882,6 +883,7 @@ function App() {
                   <Route path="/case-studies" component={CaseStudies} />
                   <Route path="/trust-center" component={TrustCenter} />
                   <Route path="/security" component={TrustCenter} />
+                  <Route path="/traction" component={Traction} />
                   <Route path="/comparison" component={ComparisonPage} />
                   <Route path="/roi-calculator" component={ROICalculator} />
                   <Route path="/roi" component={ROICalculator} />
