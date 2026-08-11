@@ -12,7 +12,9 @@ import { Map as MapLibreMap, Marker, NavigationControl, setWorkerUrl } from "map
 import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?url";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { AXES, COUNTS, MEASURED_ON, STATUS_TONE, confidence, hasInterval, quotable, wilson, type Axis } from "@/lib/gspcAxes";
+import { AXES, MEASURED_ON, STATUS_TONE, confidence, countOf, fetchAxes, hasInterval, quotable, wilson,
+         type Axis, type AxesState } from "@/lib/gspcAxes";
+import { createContext, useContext } from "react";
 import { Globe2, LayoutGrid, MessageSquare, Server, ScrollText, Building2, Command as CmdIcon } from "lucide-react";
 import CityPanel from "@/components/sovos/CityPanel";
 
@@ -21,6 +23,31 @@ import CityPanel from "@/components/sovos/CityPanel";
 try { setWorkerUrl(maplibreWorkerUrl); } catch { /* older maplibre */ }
 
 const LAYOUT_KEY = "sovos.layout.v2";
+
+
+/* ── live axes, shared by every panel ──────────────────────────────────────── */
+
+const AxesCtx = createContext<AxesState>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, loading: true });
+const useAxes = () => useContext(AxesCtx);
+
+function AxesProvider({ children }: { children: React.ReactNode }) {
+  const [state, setState] = useState<AxesState>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, loading: true });
+  useEffect(() => {
+    const ac = new AbortController();
+    fetchAxes(ac.signal).then((r) => setState({ ...r, loading: false })).catch(() => setState((s) => ({ ...s, loading: false })));
+    return () => ac.abort();
+  }, []);
+  return <AxesCtx.Provider value={state}>{children}</AxesCtx.Provider>;
+}
+
+/** Says where the numbers came from. Never lets a stale snapshot look live. */
+function SourceChip() {
+  const { source, measuredOn, loading, error } = useAxes();
+  if (loading) return <span className="text-[11px] text-slate-600">reading /api/gspc…</span>;
+  return source === "wire"
+    ? <span className="text-[11px] text-emerald-400/80">live · /api/gspc · measured {measuredOn}</span>
+    : <span className="text-[11px] text-amber-400/80" title={error}>bundled snapshot ({measuredOn}) — /api/gspc unreachable</span>;
+}
 
 /* ── shared chrome ─────────────────────────────────────────────────────────── */
 
@@ -58,6 +85,9 @@ function Score({ a }: { a: Axis }) {
 /* ── panel: globe ──────────────────────────────────────────────────────────── */
 
 function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
+  const { axes } = useAxes();
+  const axesRef = useRef(axes);
+  axesRef.current = axes;
   const host = useRef<HTMLDivElement>(null);
   const map = useRef<MapLibreMap | null>(null);
 
@@ -72,7 +102,7 @@ function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
     m.addControl(new NavigationControl({ showCompass: false }), "bottom-right");
     m.on("style.load", () => { try { m.setProjection({ type: "globe" } as any); } catch { /* older gl */ } });
 
-    for (const a of AXES) {
+    for (const a of axesRef.current) {
       const el = document.createElement("button");
       el.className = "sov-seat";
       el.style.cssText =
@@ -107,10 +137,17 @@ function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
 /* ── panel: the board ──────────────────────────────────────────────────────── */
 
 function BoardPanel({ containerApi }: IDockviewPanelProps) {
+  const { axes, doi, issuer } = useAxes();
+  const c = countOf(axes);
   return (
-    <PanelShell subtitle={`GSPC board · ${COUNTS.measured}/${COUNTS.total} measured · ${COUNTS.withInterval} carrying an interval · ${MEASURED_ON.model} @ ${MEASURED_ON.date}`}>
+    <PanelShell subtitle={`GSPC board · ${c.measured}/${c.total} measured · ${c.withInterval} carrying an interval`}>
+      <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+        <SourceChip />
+        {issuer && <span className="text-[11px] text-slate-500">issuer {issuer}</span>}
+        {doi && <a className="text-[11px] text-teal-400 hover:underline" href={`https://doi.org/${doi}`} target="_blank" rel="noreferrer">DOI {doi} ↗</a>}
+      </div>
       <div className="space-y-1.5">
-        {AXES.map((a) => (
+        {axes.map((a) => (
           <button
             key={a.axis}
             onClick={() => openEvidence(containerApi, a.axis)}
@@ -138,7 +175,8 @@ function BoardPanel({ containerApi }: IDockviewPanelProps) {
 /* ── panel: evidence ───────────────────────────────────────────────────────── */
 
 function EvidencePanel({ params }: IDockviewPanelProps<{ axis: string }>) {
-  const a = AXES.find((x) => x.axis === params.axis) ?? AXES[0];
+  const { axes } = useAxes();
+  const a = axes.find((x) => x.axis === params.axis) ?? axes[0];
   const rows: [string, React.ReactNode][] = [
     ["status", <StatusChip a={a} />],
     ["score", <Score a={a} />],
@@ -302,6 +340,12 @@ const LAUNCHER: { id: keyof typeof COMPONENTS; title: string; icon: any }[] = [
 ];
 
 export default function SovOS() {
+  return <AxesProvider><SovOSInner /></AxesProvider>;
+}
+
+function SovOSInner() {
+  const { axes } = useAxes();
+  const COUNTS = countOf(axes);
   const [api, setApi] = useState<DockviewApi | null>(null);
   const [palette, setPalette] = useState(false);
 
@@ -376,7 +420,7 @@ export default function SovOS() {
             ))}
           </CommandGroup>
           <CommandGroup heading="Axes">
-            {AXES.map((a) => (
+            {axes.map((a) => (
               <CommandItem key={a.axis} onSelect={() => { if (api) { open("board", "GSPC Board"); openEvidence(api, a.axis); } setPalette(false); }}>
                 {a.axis} <span className="ml-2 text-[10px] text-slate-500">{a.status}</span>
               </CommandItem>

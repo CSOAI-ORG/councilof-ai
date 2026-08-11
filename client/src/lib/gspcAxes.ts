@@ -107,3 +107,78 @@ export const COUNTS = {
   measured: AXES.filter(quotable).length,
   withInterval: AXES.filter(hasInterval).length,
 };
+
+/* ── live wire ──────────────────────────────────────────────────────────────
+ * The board above is a snapshot committed to the bundle. /api/gspc is the
+ * authoritative published measurement (it carries the issuer and DOI). Read the
+ * wire and merge it over the snapshot, keeping the geography the API does not
+ * publish (lng/lat/seat/instrument).
+ *
+ * The source is always reported. A surface that silently falls back to a stale
+ * snapshot while looking live is the same defect as reporting an unearned score.
+ */
+
+export type AxesSource = "wire" | "snapshot";
+
+export interface AxesState {
+  axes: Axis[];
+  source: AxesSource;
+  measuredOn: string;
+  issuer?: string;
+  doi?: string;
+  error?: string;
+  loading: boolean;
+}
+
+export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "loading">> {
+  try {
+    const r = await fetch("/api/gspc", { signal });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const j: any = await r.json();
+    const live: any[] = Array.isArray(j?.axes) ? j.axes : [];
+    if (!live.length) throw new Error("no axes in payload");
+
+    const bySlug = new Map(AXES.map((a) => [a.axis, a]));
+    const merged: Axis[] = live.map((w) => {
+      const base = bySlug.get(w.axis);
+      return {
+        ...(base ?? ({} as Axis)),
+        axis: w.axis,
+        bench: w.bench ?? base?.bench ?? "",
+        n: Number(w.n ?? base?.n ?? 0),
+        macro_f1: Number(w.macro_f1 ?? 0),
+        accuracy: Number(w.accuracy ?? 0),
+        unparsed_rate: Number(w.unparsed_rate ?? 0),
+        status: (w.status ?? base?.status ?? "UNMEASURED") as AxisStatus,
+        colour: w.colour ?? base?.colour ?? "#94a3b8",
+        // geography is not published by the API — keep the snapshot's, or park it at 0,0
+        lng: base?.lng ?? 0, lat: base?.lat ?? 0,
+        seat: base?.seat ?? "—",
+        instrument: base?.instrument ?? w.instrument ?? "—",
+        task: w.task ?? base?.task ?? "",
+        note: w.note ?? base?.note,
+      };
+    });
+
+    return {
+      axes: merged,
+      source: "wire",
+      measuredOn: j?.measured_on?.date ?? j?.measured_on ?? MEASURED_ON.date,
+      issuer: j?.issuer,
+      doi: j?.doi,
+    };
+  } catch (e: any) {
+    return {
+      axes: AXES,
+      source: "snapshot",
+      measuredOn: MEASURED_ON.date,
+      error: String(e?.message ?? e),
+    };
+  }
+}
+
+export const countOf = (axes: Axis[]) => ({
+  total: axes.length,
+  measured: axes.filter(quotable).length,
+  withInterval: axes.filter(hasInterval).length,
+});
