@@ -195,6 +195,46 @@ header>*{pointer-events:auto}
   <div class="chat-note">Measurement, not legal advice. Answers cite the provision; verdicts are the AI Act's, not CSOAI's.</div>
 </section>
 
+<!-- ◧ SOV OS — left rail: software + tooling as opening MCP/tool cards (glass-OS dashboard) -->
+<style>
+#dashToggle{position:fixed;left:14px;top:88px;z-index:40;background:#0b1220cc;color:#e6f2ef;border:1px solid #2dd4bf55;border-radius:10px;padding:8px 12px;font:600 13px system-ui;cursor:pointer;backdrop-filter:blur(8px)}
+#sovosDash{position:fixed;left:0;top:0;bottom:0;width:340px;max-width:86vw;background:#070d16f2;border-right:1px solid #17324a;z-index:39;transform:translateX(-105%);transition:transform .25s;backdrop-filter:blur(10px);display:flex;flex-direction:column}
+#sovosDash.open{transform:none}
+.dash-head{display:flex;align-items:center;gap:8px;padding:16px 16px 10px;color:#e6f2ef;border-bottom:1px solid #17324a}
+.dash-head small{color:#7aa7b8;font-size:11px}
+.dash-head .x{margin-left:auto;background:none;border:0;color:#7aa7b8;font-size:20px;cursor:pointer}
+.dash-body{overflow:auto;padding:8px 14px 24px}
+.dash-sec{color:#5f8ba0;font:700 11px system-ui;letter-spacing:.08em;margin:14px 2px 8px}
+.cards{display:flex;flex-direction:column;gap:8px}
+.oscard{display:block;text-align:left;width:100%;background:#0c1626;border:1px solid #1c3550;border-radius:10px;padding:11px 12px;color:#dbeafe;cursor:pointer;transition:border .15s,background .15s}
+.oscard:hover{border-color:#2dd4bf88;background:#0e1b2e}
+.oscard b{display:block;font-size:14px;color:#eaf4ff}
+.oscard em{display:block;font-size:12px;color:#8fb0c4;margin-top:2px;font-style:normal}
+.oscard .go{float:right;color:#2dd4bf;font-size:12px}
+</style>
+<button id="dashToggle">◧ SOV OS</button>
+<aside id="sovosDash" aria-label="SOV OS — software and tooling">
+  <div class="dash-head"><b>◧ SOV OS</b><small>software · tooling · MCP · one place</small><button class="x" id="dashX" aria-label="Close">×</button></div>
+  <div class="dash-body">
+    <div class="dash-sec">MCP SERVERS</div><div id="mcpCards" class="cards"><div class="oscard">loading…</div></div>
+    <div class="dash-sec">GOVERNANCE TOOLS</div><div id="toolCards" class="cards"></div>
+    <div class="dash-sec">BENCHMARKS · 12 AXES</div><div id="benchCards" class="cards"></div>
+  </div>
+</aside>
+<script>
+(function(){
+  var dash=document.getElementById('sovosDash'),tgl=document.getElementById('dashToggle');
+  tgl.onclick=function(){dash.classList.toggle('open');tgl.style.display=dash.classList.contains('open')?'none':'block';};
+  document.getElementById('dashX').onclick=function(){dash.classList.remove('open');tgl.style.display='block';};
+  function esc(s){return String(s||'').replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});}
+  function card(name,desc,onOpen){var b=document.createElement('button');b.className='oscard';b.innerHTML='<span class="go">open &rarr;</span><b>'+esc(name)+'</b><em>'+esc(desc)+'</em>';b.onclick=onOpen;return b;}
+  function showDetail(title,html){var d=document.getElementById('detail'),body=document.getElementById('detailBody');if(body){body.innerHTML='<h2 style="margin:0 0 8px">'+esc(title)+'</h2>'+html;d.classList.add('open');d.style.transform='none';}}
+  fetch('/api/mcp').then(function(r){return r.json();}).then(function(d){var items=d.servers||d.mcp||(Array.isArray(d)?d:[]);var el=document.getElementById('mcpCards');el.innerHTML='';items.forEach(function(s){el.appendChild(card(s.name||s.id,s.description||s.desc||'MCP server',function(){showDetail(s.name||s.id,'<p style="color:#8fb0c4">'+esc(s.description||'')+'</p><pre style="background:#0c1626;padding:10px;border-radius:8px;overflow:auto;font-size:12px;color:#8fb0c4">'+esc(s.url||s.endpoint||'/mcp')+'</pre>');}));});}).catch(function(){document.getElementById('mcpCards').innerHTML='<div class="oscard">MCP list unavailable</div>';});
+  fetch('/api/tools').then(function(r){return r.json();}).then(function(d){var items=d.tools||(Array.isArray(d)?d:[]);var el=document.getElementById('toolCards');el.innerHTML='';items.slice(0,24).forEach(function(t){el.appendChild(card(t.name||t.id,t.description||t.summary||t.category||'governance tool',function(){var href=t.href||t.url||t.path;if(href){window.open(href,'_blank');}else{showDetail(t.name||t.id,'<p style="color:#8fb0c4">'+esc(t.description||t.summary||'')+'</p>');}}));});}).catch(function(){});
+  var BENCH=[["gov","govbench","Governance · EU AI Act risk tiers"],["prv","provbench","Provenance · C2PA marking survival"],["agi","defbench","Safety · calibrated refusal"],["asi","pqcbench","Continuity · post-quantum status"],["mcp","mcpbench","Conformance · MCP spec"],["oss","ossbench","Openness · licence reasoning"],["care","carebench","Care · protect × help"],["art5","conductbench","Conduct · EU AI Act Article 5"],["mach","machbench","Machinery · safety function"],["swarm","swarmbench","Swarm · multi-agent consensus"],["xr","xrbench","Cross-reality · agent authority"],["det","detbench","Detector · provenance interop"]];
+  var bel=document.getElementById('benchCards');if(bel){bel.innerHTML='';BENCH.forEach(function(x){var hf="https://huggingface.co/datasets/csoai/gspc-"+x[0],kg="https://www.kaggle.com/datasets/nicktempleman/gspc-"+x[0];bel.appendChild(card(x[1],x[2],function(){showDetail(x[1],'<p style="color:#8fb0c4">'+esc(x[2])+'</p><p style="display:flex;gap:14px;margin-top:10px;flex-wrap:wrap"><a href="/'+x[1]+'" target="_blank" style="color:#2dd4bf">live board &rarr;</a><a href="'+hf+'" target="_blank" style="color:#2dd4bf">HuggingFace</a><a href="'+kg+'" target="_blank" style="color:#2dd4bf">Kaggle</a></p>');}));});}
+})();
+</script>
 <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 <script>
 /* SOV Space — MapLibre GL globe. Open source, no API key, no paid tiles.
