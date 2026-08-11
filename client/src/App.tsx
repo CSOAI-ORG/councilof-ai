@@ -5,6 +5,7 @@ import { Route, Switch, useLocation, Redirect } from "wouter";
 import { useEffect, lazy, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
+const SovOS = lazy(() => import("./pages/SovOS"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
@@ -464,6 +465,21 @@ function App() {
   }
 
   // Immersive full-bleed routes — the live demo takes over the whole screen (no header/footer).
+  if (location === '/sov-os') {
+    return (
+      <ErrorBoundary>
+        <ThemeProvider defaultTheme="dark">
+          <TooltipProvider>
+            <Suspense fallback={<div className="grid h-[100dvh] place-items-center bg-[#04070d]"><SectionLoader /></div>}>
+              <SovOS />
+            </Suspense>
+            <Toaster position="top-right" />
+          </TooltipProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    );
+  }
+
   if (location === '/demo' || location === '/os-demo') {
     return (
       <ErrorBoundary>

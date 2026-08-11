@@ -14,6 +14,13 @@
 # for a missing /assets/*.js, and `immutable, max-age=1yr` froze that HTML under the JS URL
 # in browsers for a year — no reload or hard-refresh could clear it. `no-cache` makes every
 # asset revalidate (cheap 304 on hashed names) so a bad copy self-heals on the next load.
+# NOTE (2026-08-11, third recurrence): a hard 404 for a missing chunk is NOT expressible
+# on Cloudflare Pages. `_redirects` supports 3xx and 200 only — a 404 status is silently
+# ignored (that syntax is Netlify's). A Pages Function could return 404, but Pages excludes
+# static-asset paths from Functions, so it would only run if /assets/* were routed through
+# the Worker — which would put these very cache headers at risk. `no-cache` IS the working
+# protection: it was verified on 2026-08-11 to heal an already-poisoned browser entry
+# (cached text/html under a .js URL) on the next load.
 /assets/*
   Cache-Control: no-cache
 
