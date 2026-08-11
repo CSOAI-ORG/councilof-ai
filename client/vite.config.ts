@@ -35,6 +35,15 @@ export default defineConfig({
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
+        // One-time filename salt (r2) to abandon a poisoned immutable-cache set.
+        // 2026-08-11: a deploy-skew window served index.html (200, text/html) for
+        // missing /assets/*.js, and Pages' `immutable, max-age=31536000` header made
+        // browsers cache that HTML *under the JS URL for a year* -> white screen that
+        // a normal reload cannot clear. Changing every asset filename gives brand-new
+        // URLs the poison can never match. Bump the salt again if it ever recurs.
+        entryFileNames: 'assets/[name].r2-[hash].js',
+        chunkFileNames: 'assets/[name].r2-[hash].js',
+        assetFileNames: 'assets/[name].r2-[hash][extname]',
         // Split heavy vendors into cacheable chunks so the main app chunk is
         // small and the browser can load in parallel — big first-paint win.
         manualChunks(id: string) {
