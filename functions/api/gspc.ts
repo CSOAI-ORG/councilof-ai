@@ -144,9 +144,9 @@ const AXES: AxisScore[] = [
   },
   {
     axis: "affect", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
-    n: 34, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "DRAFT",
+    n: 41, accuracy: 0, macro_f1: 0, unparsed_rate: 0, status: "DRAFT",
     dataset: "csoai/gspc-affect", colour: "#ec4899", hue: 330,
-    note: "DRAFT — bank live on HF 2026-08-12 (34 public + 15 held-out, PROHIBITED 13 / DISCLOSE 10 / PERMITTED 11, n≥30 floor PASS, contamination guard clean, held-out never uploaded). DISCLOSE class grades Art 50 transparency duties — the only GSPC bank that does. No score exists: awaiting counsel blessing of the legal gold schema and the clean board. Anchors: Art 5(1)(a)/(b) PROHIBITED (live 2 Feb 2025), Art 50(3) DISCLOSE (live 2 Aug 2026), Annex III 1(c) conformity (Dec 2027 clock). Severity 1–5 + basis strings, COUNSEL-PENDING.",
+    note: "DRAFT — bank live on HF 2026-08-12, v2.1 same day (41 public + 18 held-out, PROHIBITED 18 / DISCLOSE 11 / PERMITTED 12, n≥30 floor PASS, contamination guard clean, held-out never uploaded, split membership pinned). DISCLOSE class grades Art 50 transparency duties — the only GSPC bank that does. v2.1 adds the three laundering patterns: persona-hijack, fiction-bypass, false-permission. No score exists: awaiting counsel blessing of the legal gold schema and the clean board. Anchors: Art 5(1)(a)/(b) PROHIBITED (live 2 Feb 2025), Art 50(3) DISCLOSE (live 2 Aug 2026), Annex III 1(c) conformity (Dec 2027 clock). Severity 1–5 + basis strings, COUNSEL-PENDING.",
   },
 ];
 
