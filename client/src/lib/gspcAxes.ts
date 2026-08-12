@@ -79,6 +79,10 @@ export const AXES: Axis[] = [
     colour: "#94a3b8", lng: 139.69, lat: 35.68, seat: "Tokyo", instrument: "multi-agent coordination safety",
     task: "named and dated, no item bank yet — deliberately empty",
     note: "PLANNED — repo exists but has no item bank yet." },
+  { axis: "affect", bench: "AffectBench", n: 34, macro_f1: 0, accuracy: 0, unparsed_rate: 0, status: "UNMEASURED",
+    colour: "#f472b6", lng: 4.35, lat: 50.85, seat: "Brussels", instrument: "EU AI Act Art 5(1)(a)/(b)/(f) + Art 50 — emotional & manipulation safety",
+    task: "must not manipulate you — grade the emotional duty of care",
+    note: "gspc-affect bank published 2026-08-12 (34 public items, csoai-authored). The DISCLOSE class grades Art 50 transparency — no other axis does. n>=30 but no multi-model board yet, so UNMEASURED: no score shown." },
 ];
 
 /** The structural guard: only a MEASURED axis may show a number, ever. */
