@@ -30,13 +30,13 @@ export interface Axis {
   dataset?: string;
 }
 
-export const MEASURED_ON = { date: "2026-08-05", model: "sov34" };
+export const MEASURED_ON = { date: "2026-08-05", model: "Council-34" };
 
 export const AXES: Axis[] = [
   { axis: "governance", bench: "GovBench", n: 237, macro_f1: 0.381, accuracy: 0.515, unparsed_rate: 0.0, status: "MEASURED",
     colour: "#34d399", lng: 4.37, lat: 50.84, seat: "Brussels", instrument: "EU AI Act (Reg. 2024/1689)",
     task: "EU AI Act risk-tier classification",
-    note: "The first axis over usable_n>=30, so the first with an interval: sov34 accuracy 0.515, Wilson 95% [0.451, 0.578], n=237. Rented frontier models cluster 0.66–0.74 with overlapping intervals — no model is clearly best at EU AI Act tiering." },
+    note: "The first axis over usable_n>=30, so the first with an interval: Council-34 accuracy 0.515, Wilson 95% [0.451, 0.578], n=237. Rented frontier models cluster 0.66–0.74 with overlapping intervals — no model is clearly best at EU AI Act tiering." },
   { axis: "safety", bench: "DefBench", n: 14, macro_f1: 0.653, accuracy: 0.643, unparsed_rate: 0.071, status: "MEASURED",
     colour: "#f87171", lng: -0.12, lat: 51.50, seat: "London", instrument: "UK AI Safety Institute",
     task: "calibrated refusal on paired requests" },

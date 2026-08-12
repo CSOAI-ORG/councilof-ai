@@ -558,7 +558,7 @@ export default function NewHomeV2() {
       <section className="py-14 md:py-20 bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white">
         <div className="max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Enter the OS</p>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">Five doors into the Sovereign OS</h2>
+          <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">Five doors into the Council OS</h2>
           <p className="mt-3 max-w-2xl text-emerald-50/85">Build your identity, connect your world, see governance on the globe, choose your consensus, and browse every regulation - all live.</p>
           <a data-tag="home-deadline-cta" href="/assess" className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-100 hover:bg-amber-400/20"><span className="rounded-md bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-900">2 AUG 2026</span>EU AI Act transparency + GPAI go live - run your free signed risk check -&gt;</a>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -1231,7 +1231,7 @@ export default function NewHomeV2() {
                 EU AI Act prohibited practices refused
               </p>
               <p className="text-sm text-emerald-800/80">
-                sov34, a 1.5-billion-parameter model. Its size-matched base refuses 3 of 19. A
+                Council-34, a 1.5-billion-parameter model. Its size-matched base refuses 3 of 19. A
                 model <strong>thirteen times larger</strong> refuses 8 of 18. Social scoring,
                 emotion inference, biometric identification, predictive policing — all of it,
                 every time.
