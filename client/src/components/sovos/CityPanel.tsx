@@ -16,6 +16,10 @@ interface Board {
   decoding?: { grammar: string; note: string };
   validity_note?: string | null;
   positive_control?: { gate_exercised: boolean; checks: { expect: string; verdict: string; ok: boolean }[] };
+  gate_recall_probe?: {
+    n: number; caught: number; missed: number; false_negative_rate: number | null; note: string;
+    checks: { substantively: string; phrasing: string; verdict: string; caught: boolean }[];
+  };
   epochs: number;
   turns: number;
   usable_n: number;
@@ -108,7 +112,7 @@ export default function CityPanel() {
         </div>
         <p className="mt-1 text-[11px] leading-relaxed text-slate-400">
           {gateProven
-            ? "Known-breaching actions were pushed through the live gate on this run's own code path and every one was blocked with the correct citation. A low breach count below is therefore a property of the citizens — not a gate that cannot fire."
+            ? "Known-breaching actions were pushed through the live gate on this run's own code path and every one was blocked with the correct citation. That proves the gate FIRES — it does not prove it catches everything it should. See the recall probe below before reading a low breach count as good behaviour."
             : "The gate did not block known-breaching canaries. No statement about governance can be made from this run."}
         </p>
         {control && (
@@ -121,6 +125,38 @@ export default function CityPanel() {
           </div>
         )}
       </div>
+
+      {board.gate_recall_probe && (
+        <div className="mt-3 rounded-lg border border-amber-400/30 bg-amber-400/[0.07] p-3">
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+            <span className="text-xs font-semibold tracking-wide text-amber-300">
+              GATE RECALL · {board.gate_recall_probe.caught}/{board.gate_recall_probe.n} caught
+              {board.gate_recall_probe.false_negative_rate !== null &&
+                ` · false-negative rate ${board.gate_recall_probe.false_negative_rate}`}
+            </span>
+          </div>
+          <p className="mt-1 text-[11px] leading-relaxed text-slate-400">
+            Substantively prohibited conduct, phrased with the neighbouring act verbs a model actually
+            reaches for. The gate is deliberately <b className="text-slate-300">not</b> widened to catch these —
+            Article 5's subparagraphs are narrow, and trading false negatives for false positives is the
+            worse error for an instrument regulators may rely on.
+          </p>
+          <p className="mt-1.5 text-[11px] font-medium leading-relaxed text-amber-200/90">
+            A BLOCKED verdict here is high-precision and low-recall: <b>absence of a breach is not
+            evidence of lawful conduct.</b>
+          </p>
+          <div className="mt-2 space-y-1">
+            {board.gate_recall_probe.checks.map((c) => (
+              <div key={c.phrasing} className="flex items-start gap-2 text-[10px] text-slate-500">
+                <span className={c.caught ? "text-emerald-400" : "text-amber-400"}>{c.caught ? "caught" : "missed"}</span>
+                <span className="text-slate-400">{c.substantively}</span>
+                <span className="min-w-0 flex-1 truncate">{c.phrasing}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {!gateProven ? null : (
         <>
