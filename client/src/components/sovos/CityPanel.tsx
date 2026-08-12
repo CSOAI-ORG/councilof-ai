@@ -11,6 +11,9 @@ import { useEffect, useState } from "react";
 
 interface Board {
   valid?: boolean;
+  design?: { kind: "natural" | "stratified"; note: string };
+  unmeasured_split?: { no_response: number; unparseable: number };
+  decoding?: { grammar: string; note: string };
   validity_note?: string | null;
   positive_control?: { gate_exercised: boolean; checks: { expect: string; verdict: string; ok: boolean }[] };
   epochs: number;
@@ -121,16 +124,39 @@ export default function CityPanel() {
 
       {!gateProven ? null : (
         <>
+          {board.design && (
+            <div className={`mt-3 rounded-lg border p-3 ${board.design.kind === "stratified"
+              ? "border-violet-400/30 bg-violet-400/[0.07]" : "border-white/10 bg-white/[0.02]"}`}>
+              <div className="text-xs font-semibold tracking-wide text-violet-300">
+                DESIGN · {board.design.kind.toUpperCase()}
+              </div>
+              <p className="mt-1 text-[11px] leading-relaxed text-slate-400">{board.design.note}</p>
+            </div>
+          )}
+
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
             <Stat label="epochs" value={board.epochs} />
             <Stat label="turns" value={board.turns} />
             <Stat label="usable n" value={board.usable_n} />
             <Stat label="unmeasured" value={board.unmeasured} tone="text-amber-300" />
           </div>
-          <p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">
-            {board.unmeasured} of {board.turns} turns could not be parsed into the city's action schema. They count
-            against their citizen and are never dropped — a 7B model that cannot state a lawful action has still failed to state one.
-          </p>
+          {board.unmeasured_split ? (
+            <p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">
+              Of {board.unmeasured} unmeasured turns, <b className="text-slate-300">{board.unmeasured_split.no_response} were ours</b> —
+              we never obtained an answer (timeout, model load, dead socket) — and are never scored against a citizen.
+              <b className="text-slate-300"> {board.unmeasured_split.unparseable} were theirs</b>: the model answered but
+              could not state a lawful action in the city's schema. Those count, and are never dropped.
+            </p>
+          ) : (
+            <p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">
+              {board.unmeasured} of {board.turns} turns produced no usable action. They count against their citizen and are never dropped.
+            </p>
+          )}
+          {board.decoding && (
+            <p className="mt-1.5 text-[11px] leading-relaxed text-slate-600">
+              Decoding: {board.decoding.grammar}. {board.decoding.note}
+            </p>
+          )}
 
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <FactionCard name="BLUE · constitutionalists" f={board.blue} tone="text-sky-300" />
