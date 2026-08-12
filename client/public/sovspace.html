@@ -130,6 +130,42 @@ header>*{pointer-events:auto}
 </style>
 </head>
 <body>
+<!-- ✦ Cinematic entrance — epic first-load, fades to the instrument -->
+<div id="sovIntro" aria-hidden="true">
+  <div class="i-glow"></div><div class="i-ring"></div>
+  <div class="i-body">
+    <div class="i-kick">◈ COUNCIL FOR THE SAFETY OF AI</div>
+    <h1 class="i-title">SOV&nbsp;SPACE</h1>
+    <div class="i-sub">the instrument, on the world</div>
+    <div class="i-meta">12 governance axes · deterministically graded · Ed25519-signed · nothing quoted below n≥30</div>
+    <button id="iEnter">◈ Enter the instrument &rarr;</button>
+  </div>
+</div>
+<style>
+#sovIntro{position:fixed;inset:0;z-index:2000;background:radial-gradient(130% 120% at 50% 38%,#0b1826 0%,#060b14 55%,#02040a 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity 1s ease,visibility 1s}
+#sovIntro.gone{opacity:0;visibility:hidden;pointer-events:none}
+#sovIntro .i-glow{position:absolute;width:min(90vw,820px);height:min(90vw,820px);border-radius:50%;background:radial-gradient(circle,rgba(45,212,191,.20),rgba(251,191,36,.07) 42%,transparent 66%);filter:blur(22px);animation:iPulse 6.5s ease-in-out infinite}
+#sovIntro .i-ring{position:absolute;width:min(76vw,560px);height:min(76vw,560px);border-radius:50%;border:1px solid rgba(45,212,191,.16);box-shadow:inset 0 0 80px rgba(45,212,191,.06);animation:iSpin 40s linear infinite}
+@keyframes iPulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.13);opacity:1}}
+@keyframes iSpin{to{transform:rotate(360deg)}}
+#sovIntro .i-body{position:relative;z-index:2;text-align:center;padding:0 22px;animation:iRise 1.1s cubic-bezier(.2,.7,.2,1) both}
+@keyframes iRise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+#sovIntro .i-kick{color:#7fd8c8;font:700 12px/1.4 ui-sans-serif,system-ui;letter-spacing:.34em;margin-bottom:20px}
+#sovIntro .i-title{margin:0;font:800 clamp(54px,12vw,150px)/.9 ui-sans-serif,system-ui;letter-spacing:-.02em;background:linear-gradient(120deg,#fbbf24,#eafff8 42%,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 44px rgba(45,212,191,.28))}
+#sovIntro .i-sub{color:#d7efe9;font:300 clamp(19px,3.4vw,32px)/1.25 ui-sans-serif,system-ui;margin:16px 0 8px}
+#sovIntro .i-meta{color:#6f8b98;font:500 13px/1.6 ui-sans-serif,system-ui;max-width:540px;margin:0 auto 32px}
+#iEnter{background:linear-gradient(135deg,#0e2b2a,#123a44);border:1px solid rgba(45,212,191,.55);color:#eafff8;font:700 15px ui-sans-serif,system-ui;padding:15px 32px;border-radius:999px;cursor:pointer;animation:iBtn 2.6s ease-in-out infinite;transition:transform .15s,box-shadow .2s}
+#iEnter:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(45,212,191,.38)}
+@keyframes iBtn{0%,100%{box-shadow:0 0 0 0 rgba(45,212,191,.30)}50%{box-shadow:0 0 34px 5px rgba(45,212,191,.16)}}
+@media(prefers-reduced-motion:reduce){#sovIntro *{animation:none!important}}
+</style>
+<script>
+(function(){var i=document.getElementById('sovIntro');if(!i)return;
+ function go(){i.classList.add('gone');setTimeout(function(){i.style.display='none';},1100);}
+ var b=document.getElementById('iEnter');if(b)b.onclick=go;
+ try{if(sessionStorage.getItem('sovSeen')==='1'){i.style.display='none';}else{sessionStorage.setItem('sovSeen','1');}}catch(e){}
+})();
+</script>
 <div id="map" role="application" aria-label="Interactive globe of measured governance axes"></div>
 
 <header>
@@ -253,12 +289,12 @@ header>*{pointer-events:auto}
 // the UI says so rather than pretending the numbers came from the wire.
 const FALLBACK = {
   source: "local fallback",
-  measured_on: { date: "2026-08-05", model: "sov34" },
+  measured_on: { date: "2026-08-05", model: "Council-34" },
   axes: [
     { axis:"governance",  bench:"GovBench", n:237, macro_f1:0.381, accuracy:0.515, unparsed_rate:0.0, status:"MEASURED",
       colour:"#34d399", lng:4.37,   lat:50.84, seat:"Brussels", instrument:"EU AI Act (Reg. 2024/1689)",
       task:"EU AI Act risk-tier classification",
-      note:"The first axis over usable_n>=30, so the first with an interval: sov34 accuracy 0.515, Wilson 95% [0.451, 0.578], n=237 (2026-08-05). Rented frontier models cluster 0.66-0.74 with overlapping intervals — no model is clearly best at EU AI Act tiering." },
+      note:"The first axis over usable_n>=30, so the first with an interval: Council-34 accuracy 0.515, Wilson 95% [0.451, 0.578], n=237 (2026-08-05). Rented frontier models cluster 0.66-0.74 with overlapping intervals — no model is clearly best at EU AI Act tiering." },
     { axis:"safety",      bench:"DefBench", n:14, macro_f1:0.653, accuracy:0.643, unparsed_rate:0.071, status:"MEASURED",
       colour:"#f87171", lng:-0.12,  lat:51.50, seat:"London", instrument:"UK AI Safety Institute",
       task:"calibrated refusal on paired requests" },
@@ -399,7 +435,7 @@ async function boot() {
       // The single-file build has no server to ask. Say which snapshot it is, and when.
       DATA = FALLBACK;
       $("status").innerHTML =
-        `<b>12 axes · 375 banked items · 3 measured</b><br>embedded snapshot · sov34 measured 5 Aug 2026`;
+        `<b>12 axes · 375 banked items · 3 measured</b><br>embedded snapshot · Council-34 measured 5 Aug 2026`;
     } else {
       statusLine(false, "", `showing the 4 Aug local snapshot — ${e.message}`);
     }
