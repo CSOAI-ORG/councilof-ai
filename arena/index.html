@@ -121,7 +121,7 @@
 
 <button id="chatFab" title="Ask the governance AI">◉ Ask the governance AI</button>
 <div id="chatWin">
-  <div class="ch-head"><b>SOV governance AI</b><span>sov34 · measures, never certifies</span><button id="chatX">✕</button></div>
+  <div class="ch-head"><b>SOV governance AI</b><span>Council-34 · measures, never certifies</span><button id="chatX">✕</button></div>
   <div class="ch-msgs" id="chMsgs"><div class="ch-b ai">Ask me about the EU AI Act, safety, provenance, or which of the six tests your system faces.</div></div>
   <div class="ch-in"><input id="chTxt" placeholder="e.g. does my chatbot need Article 50 marking?" autocomplete="off"/><button id="chSend">Send</button></div>
 </div>
@@ -259,7 +259,7 @@ function govPanel(){document.getElementById('axbody-gov').innerHTML=`<div class=
   <button class="btn" id="gv-go">Classify against COAI-Bench →</button><div class="verdict" id="gv-out"></div>
   <div class="sec-h" style="margin-top:18px">⚔ Battle — judged by the law, not a vote</div>
   <p class="what" style="margin:0 0 8px">Two models classify the same scenario. arena.ai would ask you to vote. Here, the statute decides — and signs it.</p>
-  <button class="btn ghost" id="gv-battle" style="background:transparent;color:var(--accent);border:1px solid var(--line2);box-shadow:none">sov34 vs base — run the battle →</button>
+  <button class="btn ghost" id="gv-battle" style="background:transparent;color:var(--accent);border:1px solid var(--line2);box-shadow:none">Council-34 vs base — run the battle →</button>
   <div class="verdict" id="gv-bout"></div>`;
   document.getElementById('gv-go').onclick=runGov;
   document.getElementById('gv-battle').onclick=runBattle;}
@@ -269,7 +269,7 @@ async function runBattle(){const t=(document.getElementById('gv-in').value.trim(
     const rows=(d.contestants||[]).map(c=>`<div class="row">${c.matched_law?'✅':'❌'} <b>${c.model}</b> → ${c.answer} ${c.matched_law?'(matched the law)':'(missed)'}</div>`).join('');
     out.className='verdict show';out.innerHTML=`<div class="tier" style="font-size:18px">🏆 ${d.winner}</div><div class="row">the law says: <b>${(d.truth||'').replace(/_/g,' ')}</b> · ${d.judged_by}</div>${rows}<div class="row" style="color:var(--muted)">no human vote — a measured, signed verdict</div>`;eat(2);speak('Winner: '+d.winner);
   }catch(e){out.className='verdict show';out.innerHTML='<div class="row t-UNMEASURED">battle unreachable — '+e.message+'</div>';}
-  b.disabled=false;b.textContent='sov34 vs base — run the battle →';}
+  b.disabled=false;b.textContent='Council-34 vs base — run the battle →';}
 async function runGov(){const t=document.getElementById('gv-in').value.trim();if(!t)return;const b=document.getElementById('gv-go');b.disabled=true;b.textContent='Measuring…';const out=document.getElementById('gv-out');
   try{const r=await fetch('/api/assess',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})});const d=await r.json();const tier=(d.tier||'UNMEASURED').toString();const cls='t-'+tier.split(/[_ ]/)[0];
     out.className='verdict show';out.innerHTML=`<div class="tier ${cls}">${tier.replace(/_/g,' ')}</div><div class="row">EU AI Act risk tier · deterministic</div><div class="row"><b>report</b> ${d.report_id||'—'}</div><div class="row"><b>digest</b> ${(d.input_digest||'').slice(0,32)}…</div><div class="row"><b>signed</b> ${d.signature?d.signature.slice(0,28)+'…':'Ed25519 · verifiable'}</div>`;eat(1);speak('Verdict: '+tier.replace(/_/g,' '));

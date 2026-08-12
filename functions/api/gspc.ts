@@ -13,7 +13,7 @@
 //   This is the missing join. One endpoint, six axes, measured numbers with their n.
 //
 // REGISTER
-//   Every score below is MEASURED — sov34:latest on sov-brain-2, 2026-08-04,
+//   Every score below is MEASURED — Council-34 on sov-brain-2, 2026-08-04,
 //   graded by the same deterministic regex the published lm-eval and Inspect tasks
 //   use. unparsed_rate is reported, never folded into the error rate. n is on every
 //   row. Nothing here is an attestation and nothing here is certification.
@@ -59,7 +59,7 @@ const AXES: AxisScore[] = [
     dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
     note:
       "The first axis over usable_n>=30 (7.9x), so the first with a Wilson interval. Shown here is OUR " +
-      "model, Council-34 (model id sov34): accuracy 0.515 [0.451, 0.578] at n=237 (2026-08-05) — mid-pack, not flattered. The " +
+      "model, Council-34 (model id Council-34): accuracy 0.515 [0.451, 0.578] at n=237 (2026-08-05) — mid-pack, not flattered. The " +
       "full n=237 board: sovereign Council-34 0.515 / falcon3 0.426 / qwen2.5-1.5b 0.430; rented frontier " +
       "models cluster higher at 0.66-0.74, all with overlapping intervals. No model is clearly best at " +
       "EU AI Act tiering — a finding, not a broken bank. We show our own model's honest number, not a " +

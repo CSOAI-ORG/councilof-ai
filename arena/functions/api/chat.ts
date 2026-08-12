@@ -8,7 +8,7 @@ export const onRequestPost: PagesFunction = async (ctx) => {
     "You answer questions about AI governance, the EU AI Act, safety, provenance and compliance — concisely, plainly, honestly. " +
     "CSOAI measures and attests; it does not certify and is not a notified body. If you are unsure of a statutory detail, say so rather than guess.";
   const body = JSON.stringify({
-    model: "sov34:latest",
+    model: "Council-34",
     prompt: `${sys}\n\nUser: ${message}\nAssistant:`,
     stream: false,
     options: { num_predict: 220, temperature: 0.4 },
@@ -24,7 +24,7 @@ export const onRequestPost: PagesFunction = async (ctx) => {
     clearTimeout(t);
     const d: any = await r.json();
     const reply = (d.response || "").trim() || "The governance model is warming up — try again in a moment.";
-    return new Response(JSON.stringify({ reply, model: "sov34" }), { headers: { "content-type": "application/json" } });
+    return new Response(JSON.stringify({ reply, model: "Council-34" }), { headers: { "content-type": "application/json" } });
   } catch (e: any) {
     return new Response(JSON.stringify({ reply: "The governance model is unreachable right now. The deterministic tools on the globe still work — run one to see a signed verdict." }), { headers: { "content-type": "application/json" } });
   }

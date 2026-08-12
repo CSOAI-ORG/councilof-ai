@@ -48,11 +48,11 @@ export const onRequestPost: PagesFunction = async (ctx) => {
   } catch {}
   const truthB = bucket(truth);
 
-  const [aRaw, bRaw] = await Promise.all([podTier("sov34:latest", scenario), podTier("qwen2.5:0.5b", scenario)]);
+  const [aRaw, bRaw] = await Promise.all([podTier("Council-34", scenario), podTier("qwen2.5:0.5b", scenario)]);
   const aB = aRaw ? bucket(aRaw) : "", bB = bRaw ? bucket(bRaw) : "";
   const aMatch = aB === truthB && !!aRaw, bMatch = bB === truthB && !!bRaw;
   let winner = "tie";
-  if (aMatch && !bMatch) winner = "sov34";
+  if (aMatch && !bMatch) winner = "Council-34";
   else if (bMatch && !aMatch) winner = "qwen2.5:0.5b";
   else if (aMatch && bMatch) winner = "both correct";
   else winner = "neither matched the law";
@@ -60,7 +60,7 @@ export const onRequestPost: PagesFunction = async (ctx) => {
   return new Response(JSON.stringify({
     scenario, truth, truth_bucket: truthB,
     contestants: [
-      { model: "sov34 (MEOK operator)", answer: aRaw || "— declined", matched_law: aMatch },
+      { model: "Council-34 (MEOK operator)", answer: aRaw || "— declined", matched_law: aMatch },
       { model: "qwen2.5:0.5b (base)", answer: bRaw || "— declined", matched_law: bMatch },
     ],
     winner, judged_by: "EU AI Act — deterministic, not a human vote",
