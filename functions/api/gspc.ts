@@ -59,8 +59,8 @@ const AXES: AxisScore[] = [
     dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
     note:
       "The first axis over usable_n>=30 (7.9x), so the first with a Wilson interval. Shown here is OUR " +
-      "model, sov34: accuracy 0.515 [0.451, 0.578] at n=237 (2026-08-05) — mid-pack, not flattered. The " +
-      "full n=237 board: sovereign sov34 0.515 / falcon3 0.426 / qwen2.5-1.5b 0.430; rented frontier " +
+      "model, Council-34 (model id sov34): accuracy 0.515 [0.451, 0.578] at n=237 (2026-08-05) — mid-pack, not flattered. The " +
+      "full n=237 board: sovereign Council-34 0.515 / falcon3 0.426 / qwen2.5-1.5b 0.430; rented frontier " +
       "models cluster higher at 0.66-0.74, all with overlapping intervals. No model is clearly best at " +
       "EU AI Act tiering — a finding, not a broken bank. We show our own model's honest number, not a " +
       "rented model's higher one.",
