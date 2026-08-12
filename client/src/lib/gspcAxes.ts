@@ -23,6 +23,11 @@ export interface Axis {
   instrument: string;
   task: string;
   note?: string;
+  /** The published dataset slug, e.g. "csoai/gspc-gov". NEVER construct this from
+   *  the axis name: the axes are `governance`/`safety` but the datasets are
+   *  `gspc-gov`/`gspc-agi`, so a constructed link 401s. Always use what /api/gspc
+   *  publishes; when it is absent the UI shows no link rather than a broken one. */
+  dataset?: string;
 }
 
 export const MEASURED_ON = { date: "2026-08-05", model: "sov34" };
@@ -157,6 +162,7 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
         instrument: base?.instrument ?? w.instrument ?? "—",
         task: w.task ?? base?.task ?? "",
         note: w.note ?? base?.note,
+        dataset: w.dataset ?? base?.dataset,
       };
     });
 

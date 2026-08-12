@@ -198,10 +198,17 @@ function EvidencePanel({ params }: IDockviewPanelProps<{ axis: string }>) {
         ))}
       </dl>
       {a.note && <p className="mt-4 rounded-lg border border-white/10 bg-white/[0.03] p-3 text-[12px] leading-relaxed text-slate-400">{a.note}</p>}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <a className="rounded-md border border-white/10 px-2.5 py-1.5 text-[11px] text-slate-300 hover:bg-white/5" href={`https://huggingface.co/datasets/csoai/gspc-${a.axis}`} target="_blank" rel="noreferrer">HF dataset ↗</a>
-        <a className="rounded-md border border-white/10 px-2.5 py-1.5 text-[11px] text-slate-300 hover:bg-white/5" href={`https://www.kaggle.com/datasets/nicktempleman/gspc-${a.axis}`} target="_blank" rel="noreferrer">Kaggle mirror ↗</a>
-      </div>
+      {a.dataset ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          <a className="rounded-md border border-white/10 px-2.5 py-1.5 text-[11px] text-slate-300 hover:bg-white/5"
+             href={`https://huggingface.co/datasets/${a.dataset}`} target="_blank" rel="noreferrer">HF dataset ↗</a>
+          <a className="rounded-md border border-white/10 px-2.5 py-1.5 text-[11px] text-slate-300 hover:bg-white/5"
+             href={`https://www.kaggle.com/datasets/nicktempleman/${a.dataset.split("/").pop()}`} target="_blank" rel="noreferrer">Kaggle mirror ↗</a>
+          <span className="self-center font-mono text-[10px] text-slate-600">{a.dataset}</span>
+        </div>
+      ) : (
+        <p className="mt-4 text-[11px] text-slate-600">No dataset published for this axis yet — no link is shown rather than a broken one.</p>
+      )}
     </PanelShell>
   );
 }
