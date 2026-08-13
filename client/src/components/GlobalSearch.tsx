@@ -90,7 +90,7 @@ interface QuickAction {
 const SEARCH_INDEX: SearchResult[] = [
   // ===== PAGES (68+ routes) =====
   // Main Pages
-  { id: 'home', title: 'Home', description: 'CSOAI homepage - AI safety partnership platform', category: 'pages', href: '/', icon: Home, keywords: ['main', 'landing', 'start'] },
+  { id: 'home', title: 'Home', description: 'Council of AI — independent, signed measurement of AI systems', category: 'pages', href: '/', icon: Home, keywords: ['main', 'landing', 'start'] },
   { id: 'dashboard', title: 'Dashboard', description: 'Your personal AI compliance dashboard', category: 'pages', href: '/dashboard', icon: BarChart3, keywords: ['overview', 'stats', 'progress'] },
   { id: 'login', title: 'Sign In', description: 'Access your CSOAI account', category: 'pages', href: '/login', icon: Users, keywords: ['login', 'account', 'signin'] },
   { id: 'signup', title: 'Get Started', description: 'Create a new CSOAI account', category: 'pages', href: '/signup', icon: Plus, keywords: ['register', 'create account', 'join'] },
@@ -280,7 +280,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'fw-oecd', title: 'OECD AI Principles', description: 'OECD recommendations on AI', category: 'frameworks', href: '/standards#oecd', icon: Globe2, keywords: ['oecd', 'principles', 'international'] },
 
   // ===== FAQ / COMMON QUESTIONS =====
-  { id: 'faq-1', title: 'What is CSOAI?', description: 'CSOAI is the Council for Safe, Open AI - a partnership framework for AI safety', category: 'faq', href: '/about', icon: HelpCircle, keywords: ['what', 'csoai', 'council'] },
+  { id: 'faq-1', title: 'What is CSOAI?', description: 'Council of AI (CSOAI) is an independent measurement instrument: we measure AI systems against the rules that govern them, sign the result (Ed25519), and publish what we cannot yet measure. Not a certifier, not an enforcer, no accreditation chain.', category: 'faq', href: '/about', icon: HelpCircle, keywords: ['what', 'csoai', 'council'] },
   { id: 'faq-2', title: 'How do I get certified?', description: 'Complete training courses and pass the CEASAI certification exam', category: 'faq', href: '/certification', icon: HelpCircle, keywords: ['certification', 'how', 'exam'] },
   { id: 'faq-3', title: 'What is the Maternal Covenant?', description: 'A care-based paradigm for AI safety inspired by Geoffrey Hinton', category: 'faq', href: '/maternal-covenant', icon: HelpCircle, keywords: ['maternal', 'covenant', 'what'] },
   { id: 'faq-4', title: 'How does the Prosperity Fund work?', description: 'AI companies contribute 1-3% revenue to fund UBI for all', category: 'faq', href: '/prosperity', icon: HelpCircle, keywords: ['prosperity', 'fund', 'ubi'] },

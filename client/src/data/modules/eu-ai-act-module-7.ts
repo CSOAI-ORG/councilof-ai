@@ -75,15 +75,15 @@ export const euAiActModule7Quiz: QuizQuestion[] = [
   },
   {
     id: 7,
-    question: 'How should an organization approach compliance with the August 2026 high-risk AI system deadline?',
+    question: 'How should an organization sequence EU AI Act compliance after the Digital Omnibus?',
     options: [
-      'Delay all planning until August 2026',
-      'Immediately conduct gap analyses, prioritize high-risk systems, develop quality management systems, and create technical documentation well in advance of the deadline',
+      'Delay all planning until the high-risk regime is fully in force',
+      'Sequence by deadline: transparency evidence first (Art. 50 in force since 2 Aug 2026; pre-existing generative systems machine-readably marked by 2 Dec 2026), then high-risk conformity as Annex III phases in from Dec 2027 and Annex I from Aug 2028',
       'Request unlimited extensions from the EU to avoid compliance',
-      'Ignore the deadline; the EU AI Act is not enforceable'
+      'Ignore the timeline; the EU AI Act is not enforceable'
     ],
     correctAnswer: 1,
-    explanation: 'Proactive compliance begins immediately despite the August 2026 deadline. Organizations should identify high-risk AI systems now, conduct gap analyses, implement quality management systems, create technical documentation, and prepare conformity assessment procedures to meet the deadline.'
+    explanation: 'Transparency duties (Art. 50) are in force since 2 August 2026; pre-existing generative systems must be machine-readably marked by 2 December 2026; the Annex III high-risk regime phases in from December 2027 and Annex I from August 2028. Sequence: inventory now, transparency evidence first, high-risk conformity second.'
   },
   {
     id: 8,
