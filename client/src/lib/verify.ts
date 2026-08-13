@@ -81,10 +81,23 @@ export async function verifyEd25519Detached(
     pubkey_b64: pubkeyB64,
   };
 
-  // Import the published/pinned key. Distinguish a genuine browser gap
-  // (Ed25519 unavailable) from malformed input — the latter is INVALID, never
-  // the amber "can't check here" state, or tampering would masquerade as a
-  // browser limitation. Verify against the PUBLISHED key when we have it.
+  // Browser-INDEPENDENT invalidators first. A key that is not the published
+  // anchor, or bytes that do not match the stated hash, are INVALID regardless
+  // of whether this browser supports Ed25519 — both are plain comparisons that
+  // never touch WebCrypto. Returning them as supported:true, ok:false keeps a
+  // swapped key or tampered body RED, not the amber "can't check here" state
+  // (which would let tampering masquerade as a browser gap).
+  if (!key_is_published) {
+    return { ...base, supported: true, ok: false,
+      reason: "Signed by a key that is NOT the published trust anchor — untrusted signer." };
+  }
+  if (!sha256_matches) {
+    return { ...base, supported: true, ok: false,
+      reason: "The signed bytes do not match the stated hash — artifact altered." };
+  }
+
+  // Only now does WebCrypto matter. Distinguish a genuine browser gap (Ed25519
+  // unavailable) from malformed input — the latter is INVALID, never amber.
   const keyToUse = publishedPubkeyB64 || pubkeyB64;
   let key: CryptoKey;
   try {
@@ -113,18 +126,15 @@ export async function verifyEd25519Detached(
     sig_ok = false;
   }
 
-  const ok = sig_ok && sha256_matches && key_is_published;
+  // key_is_published and sha256_matches are guaranteed true here (both short-circuit
+  // above), so the only remaining question is whether the signature itself verifies.
   return {
     ...base,
     supported: true,
-    ok,
-    reason: !key_is_published
-      ? "Signed by a key that is NOT the published trust anchor — untrusted signer."
-      : !sha256_matches
-        ? "The signed bytes do not match the stated hash — artifact altered."
-        : sig_ok
-          ? "Signature valid over the exact signed bytes by the published key; content is unaltered."
-          : "Signature does NOT verify — altered, or signed by a different key.",
+    ok: sig_ok,
+    reason: sig_ok
+      ? "Signature valid over the exact signed bytes by the published key; content is unaltered."
+      : "Signature does NOT verify — altered, or signed by a different key.",
   };
 }
 
