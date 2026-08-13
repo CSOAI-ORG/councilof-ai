@@ -129,7 +129,7 @@ export default function Login() {
             </div>
             <CardTitle className="text-2xl">Sign In to CSOAI</CardTitle>
             <CardDescription>
-              Access your Sovereign OS
+              Access your Council OS
             </CardDescription>
           </CardHeader>
 

@@ -68,7 +68,7 @@ export default function OsEnter() {
             <div className="h-24 w-24 rounded-full bg-emerald-500/20 animate-ping absolute inset-0" />
             <div className="flex h-24 w-24 items-center justify-center rounded-full border border-emerald-400/40 bg-emerald-500/10 text-3xl font-black text-emerald-300">C</div>
           </div>
-          <div className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70 animate-pulse">Initializing CSOAI Sovereign OS</div>
+          <div className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70 animate-pulse">Initializing CSOAI Council OS</div>
         </div>
       )}
 
