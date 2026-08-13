@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GSPC Training Arenas — six axes of AI governance | CSOAI</title>
-<meta name="description" content="Practise AI-governance judgement on real frozen benchmark items across six axes, marked against a published key, scored against measured AI models. Training, not certification.">
+<title>GSPC Training Arenas — 13 axes of AI governance | CSOAI</title>
+<meta name="description" content="Practise AI-governance judgement on real frozen benchmark items across thirteen axes, marked against a published key, scored against measured AI models. Training, not certification.">
 <link rel="canonical" href="https://csoai.org/arena/">
 <style>
 :root{--fg:#111;--mut:#5a5a5a;--bd:#dcdcdc;--bg:#fff;--acc:#12457a}
@@ -14,33 +14,50 @@ th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--bd)}
 td.n{text-align:right;font-variant-numeric:tabular-nums}
 a{color:var(--acc)}
 .banner{border:1px solid var(--bd);border-left:3px solid var(--acc);padding:.7rem .9rem;margin:1.2rem 0;color:var(--mut);font-size:.93rem;border-radius:4px}
+.sep{color:#2f8f5b;font-weight:600}
+.tie{color:var(--mut)}
 footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
 </style></head><body><main>
 <h1>GSPC Training Arenas</h1>
-<p>Six axes of AI-governance judgement. Each arena serves the <strong>real frozen items</strong>
+<p>Thirteen axes of AI-governance judgement. Each arena serves the <strong>real frozen items</strong>
 from the published benchmark, marks against the <strong>published key</strong>, shows you the
 provision behind every answer, and scores you against the AI models we measured on the identical
 items.</p>
 <div class="banner"><strong>Training, not certification.</strong> CSOAI is an independent
 measurement body and does not accredit anyone. Completing an arena confers no status and is not
 a conformity assessment.</div>
+<p style="font-size:.93rem;color:var(--mut)">All thirteen axes were measured on the same 19-model
+board (2026-08-12, per-item rows, 0 transport errors). "Board leader" is the highest point estimate —
+whoever leads, ours or a base model. <span class="sep">SEPARATED</span> means the lead is statistically
+real (McNemar p&lt;0.05 on discordant items); <span class="tie">TIE</span> means it is not. A tie is not a win.</p>
 <table>
-<thead><tr><th>Arena</th><th>What you decide</th><th>Items</th><th>Models to beat</th></tr></thead>
+<thead><tr><th>Arena</th><th>What you decide</th><th>Items</th><th>Board leader (2026-08-12)</th><th>Verdict</th></tr></thead>
 <tbody>
-<tr><td><a href="/arena/governance.html">GovBench</a></td><td>EU AI Act risk tier</td><td class="n">237</td><td class="n">17 (v1)</td></tr>
-<tr><td><a href="/arena/safety.html">DefBench</a></td><td>calibrated refusal</td><td class="n">14</td><td class="n">17 (v1)</td></tr>
-<tr><td><a href="/arena/provenance.html">ProvBench</a></td><td>C2PA manifest survival</td><td class="n">16</td><td class="n">—</td></tr>
-<tr><td><a href="/arena/continuity.html">PQCBench</a></td><td>post-quantum continuity</td><td class="n">33</td><td class="n">—</td></tr>
-<tr><td><a href="/arena/conformance.html">MCPBench</a></td><td>tool-contract conformance</td><td class="n">11</td><td class="n">17 (v1)</td></tr>
-<tr><td><a href="/arena/openness.html">OSSBench</a></td><td>licence vs intended use</td><td class="n">16</td><td class="n">—</td></tr>
+<tr><td><a href="/arena/governance.html">GovBench</a></td><td>EU AI Act risk tier</td><td class="n">237</td><td class="n">sovereign specialist 0.700 [0.639, 0.755]</td><td class="sep">SEPARATED</td></tr>
+<tr><td><a href="/arena/safety.html">DefBench</a></td><td>calibrated refusal</td><td class="n">36</td><td class="n">base model 0.944 [0.819, 0.985]</td><td class="tie">TIE</td></tr>
+<tr><td><a href="/arena/provenance.html">ProvBench</a></td><td>C2PA manifest survival</td><td class="n">32</td><td class="n">sovereign specialist 0.781 [0.612, 0.890]</td><td class="tie">TIE</td></tr>
+<tr><td><a href="/arena/continuity.html">PQCBench</a></td><td>post-quantum continuity</td><td class="n">33</td><td class="n">sovereign specialist 0.606 [0.437, 0.753]</td><td class="tie">TIE</td></tr>
+<tr><td><a href="/arena/conformance.html">MCPBench</a></td><td>tool-contract conformance</td><td class="n">35</td><td class="n">sovereign specialist 0.743 [0.579, 0.858]</td><td class="tie">TIE</td></tr>
+<tr><td><a href="/arena/openness.html">OSSBench</a></td><td>licence vs intended use</td><td class="n">32</td><td class="n">sovereign specialist 0.875 [0.719, 0.950]</td><td class="tie">TIE</td></tr>
+<tr><td>MachBench</td><td>machinery safety-function scope</td><td class="n">33</td><td class="n">base model 0.545 [0.380, 0.702]</td><td class="tie">TIE</td></tr>
+<tr><td>CareBench</td><td>care-cost under paired conduct</td><td class="n">199</td><td class="n">sovereign specialist 0.535 [0.466, 0.603]</td><td class="sep">SEPARATED*</td></tr>
+<tr><td>XRAIV</td><td>agent action authority</td><td class="n">32</td><td class="n">base model 0.812 [0.647, 0.911]</td><td class="tie">TIE</td></tr>
+<tr><td>DetBench</td><td>cross-detector watermark interop</td><td class="n">33</td><td class="n">base model 0.879 [0.727, 0.952]</td><td class="tie">TIE</td></tr>
+<tr><td>Art5Bench</td><td>Article 5 prohibited-practice trip</td><td class="n">36</td><td class="n">sovereign specialist 0.972 [0.858, 0.995]</td><td class="tie">TIE</td></tr>
+<tr><td>SwarmBench</td><td>multi-agent coordination safety</td><td class="n">40†</td><td class="n">base model 0.975 (no interval †)</td><td class="tie">TIE</td></tr>
+<tr><td>AffectBench</td><td>emotional &amp; embodied safety</td><td class="n">41</td><td class="n">sovereign specialist 0.878 [0.745, 0.947]</td><td class="sep">SEPARATED‡</td></tr>
 </tbody></table>
-<p style="color:var(--mut);font-size:.9rem">Model-comparison figures are from the retired v1 frozen
-sets (marked “17 (v1)”). Governance is re-measured at n=237 — Council-34 accuracy 0.515, Wilson 95%
-[0.451, 0.578] (2026-08-05). Provenance, continuity and openness currently carry no model
-comparison while their clean boards re-run.</p>
-<p>Every item set is public on <a href="https://huggingface.co/csoai">Hugging Face</a> and
-<a href="https://www.kaggle.com/nicktempleman">Kaggle</a>, with the scoring code, so you can
-disagree with any key rather than take it on trust. Measured results:
+<p style="color:var(--mut);font-size:.9rem">* CareBench is separated from base models but NOT clear of the
+majority-class baseline — quoted accordingly. † SwarmBench is a protocol bank (3 unique prompts, 40
+scored instances); instances are not independent, so no interval is shown. ‡ AffectBench gold labels and
+severity bases are <strong>counsel-pending</strong>: measurements of model behaviour against a
+counsel-pending key, not legal verdicts. Full numbers, intervals and per-axis caveats:
+<a href="/api/gspc">/api/gspc</a>.</p>
+<p>Every item set is public on <a href="https://huggingface.co/csoai">Hugging Face</a> (all 13 banks,
+org account), with the scoring code, so you can disagree with any key rather than take it on trust.
+On <a href="https://www.kaggle.com/nicktempleman">Kaggle</a> our presence is currently partial —
+DefBench live, MCPBench deprecated — under a personal account; org mirrors are owed and dated here
+(2026-08-13) rather than claimed. Measured results:
 <a href="/benchmarks">/benchmarks</a>.</p>
 <footer>CSOAI Ltd (UK 16939677) · items Apache-2.0 · measurement, not certification</footer>
 </main></body></html>
