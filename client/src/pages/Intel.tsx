@@ -71,7 +71,7 @@ export default function Intel() {
         <SovNav />
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Distribution Hive · account intelligence</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">The market is <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">nameable.</span></h1>
-        <p className="mt-3 max-w-3xl text-emerald-100/80">Governments, regulators, Fortune 500 and high-exposure sectors — under ~10,000 public accounts. Each is one row that feeds the globe, Sov Space and the demo. Pick an account, run the rubric, tailor the demo.</p>
+        <p className="mt-3 max-w-3xl text-emerald-100/80">Governments, regulators, Fortune 500 and high-exposure sectors — under ~10,000 public accounts. Each is one row that feeds the globe, Council Space and the demo. Pick an account, run the rubric, tailor the demo.</p>
 
         <div className="mt-6 flex flex-wrap gap-2">
           {TABS.map((t) => (

@@ -102,7 +102,7 @@ function buildAssessmentResults() {
     "assessment-results": {
       uuid: uuid(),
       metadata: {
-        title: "CSOAI — Sovereign Town Governance Assessment",
+        title: "CSOAI — Council City Governance Assessment",
         "last-modified": nowIso(),
         version: "1.0.0",
         "oscal-version": "1.1.2",
@@ -311,7 +311,7 @@ export default function OscalStudio() {
               className="w-full rounded-lg bg-gray-900 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-gray-800"
             >
               ↓ Assessment Results
-              <span className="block text-xs font-normal text-gray-300">Sovereign Town governed-vs-ungoverned, OSCAL findings</span>
+              <span className="block text-xs font-normal text-gray-300">Council City governed-vs-ungoverned, OSCAL findings</span>
             </button>
           </div>
           <p className="mt-4 text-xs text-gray-500">

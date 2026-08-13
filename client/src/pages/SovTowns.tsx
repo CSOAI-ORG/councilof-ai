@@ -27,7 +27,7 @@ const LOOP = [
 ];
 
 export default function SovTowns() {
-  useEffect(() => { document.title = "Sov Towns — the learning multiplication engine · CSOAI"; }, []);
+  useEffect(() => { document.title = "Council Towns — the learning multiplication engine · CSOAI"; }, []);
   const totalPapers = TOWNS.reduce((a, t) => a + t.papers, 0);
   const totalTowns = TOWNS.length + TOWNS.reduce((a, t) => a + t.spawned, 0);
 
@@ -46,7 +46,7 @@ export default function SovTowns() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">ONE OS · the learning multiplication engine</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Sov Towns</h1>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Council Towns</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Living governed worlds. Each town ingests white papers and regulations, simulates the scenarios for its industry and region, accumulates its own dataset — and spawns specialised child towns. One town becomes a civilization; the data compounds toward true governance of all.</p>
           <div className="mt-7 flex flex-wrap gap-3 text-sm">
             <span className="rounded-xl bg-white/10 px-4 py-2 font-semibold">{totalTowns} towns live</span>
@@ -120,7 +120,7 @@ export default function SovTowns() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          Yes — we can train more Sov Towns on every white paper, and that multiplies into more data. The full learning loop (real ingestion, simulation, spawning, inner Sovereign queens per town) lights up with the Layer 0 gateway. Until then this models the engine and accumulates the registry, one town at a time.
+          Yes — we can train more Council Towns on every white paper, and that multiplies into more data. The full learning loop (real ingestion, simulation, spawning, inner Sovereign queens per town) lights up with the Layer 0 gateway. Until then this models the engine and accumulates the registry, one town at a time.
         </div>
       </section>
     </div>

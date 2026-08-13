@@ -4,10 +4,10 @@ import { Link, useLocation, useSearch } from "wouter";
 // 2026-08-01 unification: the globe, the arena and the towns are LAYERS of
 // Sov Space now, not separate products; the links carry ?view=.
 const LINKS = [
-  { href: "/sov-space?view=globe", label: "🌍 Globe", view: "globe" },
-  { href: "/sov-space", label: "◈ Sov Space", alt: "/simulate", view: "" },
-  { href: "/sov-space?view=arena", label: "🏟 Arena", view: "arena" },
-  { href: "/sov-space?view=towns", label: "🏘 Towns", view: "towns" },
+  { href: "/council-space?view=globe", label: "🌍 Globe", view: "globe" },
+  { href: "/council-space", label: "◈ Council Space", alt: "/simulate", view: "" },
+  { href: "/council-space?view=arena", label: "🏟 Arena", view: "arena" },
+  { href: "/council-space?view=towns", label: "🏘 Towns", view: "towns" },
   { href: "/intel", label: "⬡ Distribution Hive", view: null },
   { href: "/try", label: "▶ Live Council", view: null },
 ];
@@ -18,7 +18,7 @@ export default function SovNav() {
   const currentView = new URLSearchParams(search).get("view") || "";
   return (
     <div className="flex flex-wrap items-center gap-2 pb-4">
-      <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/55">Sovereign Space ·</span>
+      <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/55">Council Space ·</span>
       {LINKS.map((l) => {
         const linkPath = l.href.split("?")[0];
         const active = l.view !== null

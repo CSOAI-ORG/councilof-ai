@@ -23,7 +23,7 @@ function GlobeView() {
   const search = useSearch();
   const ask = new URLSearchParams(search).get("ask") || "";
   const frameRef = useRef<HTMLIFrameElement | null>(null);
-  // Handoff from the console ("See it on the Sovereign Globe →"): fly the
+  // Handoff from the console ("See it on the Council Globe →"): fly the
   // full-frame globe to the scenario's jurisdiction and convene the council.
   function onLoad() {
     if (!ask) return;
@@ -36,7 +36,7 @@ function GlobeView() {
     <div className="mx-auto max-w-6xl px-6 pb-10">
       <div className="overflow-hidden rounded-2xl border border-sky-500/25">
         <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
-          <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Sovereign Globe — the GLOBE AI OS, living inside Sov Space{ask ? " · flown to your scenario" : ""}</div>
+          <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Council Globe — the GLOBE AI OS, living inside Council Space{ask ? " · flown to your scenario" : ""}</div>
           <a href="/globe3d.html" className="text-[11px] font-semibold text-sky-200 hover:underline">Open full screen →</a>
         </div>
         <iframe ref={frameRef} onLoad={onLoad} src="/globe3d.html" title="Sovereign 3D Governance Earth" loading="lazy" className="block h-[70vh] w-full" style={{ border: 0 }} />
@@ -95,10 +95,10 @@ function ArenaEvidenceStrip() {
 }
 
 const SS_VIEWS = [
-  { id: "console", label: "🎛 Console", href: "/sov-space" },
-  { id: "arena", label: "🏟 Arena", href: "/sov-space?view=arena" },
-  { id: "globe", label: "🌍 Globe", href: "/sov-space?view=globe" },
-  { id: "towns", label: "🏘 Towns", href: "/sov-space?view=towns" },
+  { id: "console", label: "🎛 Console", href: "/council-space" },
+  { id: "arena", label: "🏟 Arena", href: "/council-space?view=arena" },
+  { id: "globe", label: "🌍 Globe", href: "/council-space?view=globe" },
+  { id: "towns", label: "🏘 Towns", href: "/council-space?view=towns" },
 ] as const;
 
 type SovViewId = (typeof SS_VIEWS)[number]["id"];
@@ -495,7 +495,7 @@ export default function SovSpace() {
   const timers = useRef<any[]>([]);
 
   useEffect(() => {
-    document.title = "Sovereign Space - simulate, experiment, govern | CSOAI";
+    document.title = "Council Space - simulate, experiment, govern | CSOAI";
     // Handoff from the Sovereign Globe: /simulate?q=… pre-loads the scenario so one
     // Sovereign flows from "ask on the globe" straight into "run the full simulation".
     try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}
@@ -714,7 +714,7 @@ export default function SovSpace() {
       <section className="relative overflow-hidden mx-auto max-w-6xl px-6 pt-14 pb-6">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 30% -10%, rgba(16,185,129,.18), transparent 60%)" }} />
         <div className="relative"><SovNav /><ViewSwitcher view={view} /></div>
-        <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Sovereign Space</p>
+        <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Council Space</p>
         <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Simulate. Experiment. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Govern.</span></h1>
         <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the 33-agent council deliberate live while your Sovereign narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
         <div className="relative mt-4 max-w-2xl"><AISystemNotice route="/simulate" /></div>
@@ -762,7 +762,7 @@ export default function SovSpace() {
             <button onClick={() => run()} disabled={running} className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">{running ? "Running..." : "Run experiment"}</button>
             <button onClick={reset} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm font-semibold text-emerald-100 hover:bg-white/5">Reset</button>
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm text-emerald-100 hover:bg-white/5">{voiceOn ? "Voice on" : "Voice off"}</button>
-            <a href={"/sov-space?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Sovereign Globe →</a>
+            <a href={"/council-space?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Council Globe →</a>
             <button onClick={() => stampPresence("walk-around", { pov: "all", zoom: "all" })} className="rounded-xl border border-amber-400/40 px-3 py-2 text-sm font-semibold text-amber-100 hover:bg-white/5" title="Stamp your POV as 'all-of-data' — every event in the ledger, every zoom level, no filtering">EAT ALL</button>
           </div>
           {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026;
@@ -867,7 +867,7 @@ export default function SovSpace() {
         <div className="overflow-hidden rounded-2xl border border-sky-500/25">
           <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
             <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Sovereign Globe — {globeRegion ? "flown to " + globeRegion + " for your scenario" : "one Sovereign, one world — run a scenario to fly it"}</div>
-            <a href={"/sov-space?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="text-[11px] font-semibold text-sky-200 hover:underline">Open the full globe →</a>
+            <a href={"/council-space?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="text-[11px] font-semibold text-sky-200 hover:underline">Open the full globe →</a>
           </div>
           <iframe ref={globeRef} src={"/globe3d.html" + (loc.region.code !== "GLOBAL" ? "?region=" + loc.region.code : "")} title="Sovereign globe" loading="lazy" className="block h-[360px] w-full" style={{ border: 0 }} />
           {selectedStamp && (

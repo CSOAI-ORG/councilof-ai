@@ -23,13 +23,13 @@ import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 const navigation = [
   {
     name: "Council OS",
-    href: "/sov-space",
+    href: "/council-space",
     icon: Globe2,
     description: "Your AI OS",
     submenu: [
-      { name: "Council Space", href: "/sov-space", description: "Simulate and govern in real time" },
+      { name: "Council Space", href: "/council-space", description: "Simulate and govern in real time" },
       { name: "Governance Graph", href: "/graph", description: "The governed Google" },
-      { name: "Your Sovereign Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
+      { name: "Your Council Twin (Design)", href: "/council-twin", description: "Personalisation surface — illustrative, not a claim" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
       { name: "Start free", href: "/start", description: "Build your own AI" },
       { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },

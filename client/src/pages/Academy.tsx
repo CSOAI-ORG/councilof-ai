@@ -22,7 +22,7 @@ const TRACKS: Track[] = [
   ]},
   { id: "build", name: "Build on the OS", level: "Advanced", mins: 30, blurb: "Legacy bridging, sovereign towns, and the distribution model.", steps: [
     { t: "Legacy Bridge", href: "/legacy" },
-    { t: "Sov Towns - the multiplication engine", href: "/towns" },
+    { t: "Council Towns - the multiplication engine", href: "/towns" },
     { t: "Services - the whole OS", href: "/services" },
   ]},
 ];

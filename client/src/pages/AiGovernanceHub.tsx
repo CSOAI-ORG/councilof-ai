@@ -37,7 +37,7 @@ const GROUPS: Group[] = [
     { label: "vs Credo AI", href: "/credo-ai-alternative" },
   ]},
   { title: "The CSOAI OS", blurb: "Put governance to work.", links: [
-    { label: "Your Sovereign identity", href: "/sovereign" },
+    { label: "Your Council identity", href: "/council-hub" },
     { label: "The Sovereign Globe", href: "/globe" },
     { label: "Choose your BFT", href: "/bft" },
     { label: "The Registry", href: "/registry" },

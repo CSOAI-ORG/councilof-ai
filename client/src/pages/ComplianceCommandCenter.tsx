@@ -142,7 +142,7 @@ export default function ComplianceCommandCenter() {
           {/* Activity + moat */}
           <div className="space-y-6">
             <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
-              <div className="text-xs font-semibold uppercase tracking-wide text-amber-700">Sovereign Town moat</div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-amber-700">Council City moat</div>
               <div className="mt-2 text-3xl font-extrabold text-amber-700">{fmt(ung)}+</div>
               <div className="text-xs text-amber-700/80">ungoverned crimes prevented (counterfactual)</div>
               <div className="mt-2 text-xs text-gray-500">Anchored to Bitcoin block 954857</div>
