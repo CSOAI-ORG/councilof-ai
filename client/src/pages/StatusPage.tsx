@@ -43,7 +43,7 @@ export default function StatusPage() {
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    document.title = "System Status - the Sovereign OS, live | CSOAI";
+    document.title = "System Status - the Council OS, live | CSOAI";
     fetchHealth().then((h) => { setLive(h); setChecked(true); });
     fetchToolCount().then(setTools);
   }, []);
@@ -73,7 +73,7 @@ export default function StatusPage() {
             </span>
             <span className="text-lg font-black">{connected ? "Sovereign brain - CONNECTED" : checked ? "Sovereign brain - reachable, degraded" : "Checking the Sovereign brain..."}</span>
             {live && live.version && <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300">v{live.version}</span>}
-            <span className="ml-auto font-mono text-[11px] text-emerald-300/60">CSOAI Sovereign OS</span>
+            <span className="ml-auto font-mono text-[11px] text-emerald-300/60">CSOAI Council OS</span>
           </div>
           <div className="mt-3 grid gap-2 sm:grid-cols-4 text-sm">
             <Stat label="Substrate" value="Layer 0" />

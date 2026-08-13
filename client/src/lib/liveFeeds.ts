@@ -1,4 +1,4 @@
-// liveFeeds.ts — CSOAI clean-room live data adapter for the Sovereign OS.
+// liveFeeds.ts — CSOAI clean-room live data adapter for the Council OS.
 //
 // Purpose: pull REAL, keyless, public data feeds and reframe them through an
 // AI-governance + AI-economy lens. This is our own code and our own model —

@@ -22,7 +22,7 @@ import CityPanel from "@/components/sovos/CityPanel";
 // so the chunk 404s and the SPA fallback serves HTML. Point it at the emitted asset.
 try { setWorkerUrl(maplibreWorkerUrl); } catch { /* older maplibre */ }
 
-const LAYOUT_KEY = "sovos.layout.v2";
+const LAYOUT_KEY = "councilos.layout.v1";
 
 
 /* ── live axes, shared by every panel ──────────────────────────────────────── */
@@ -166,7 +166,7 @@ function BoardPanel({ containerApi }: IDockviewPanelProps) {
       </div>
       <p className="mt-4 border-t border-white/5 pt-3 text-[11px] leading-relaxed text-slate-500">
         Nine axes show no number on purpose. A score appears only once an axis is MEASURED, and an interval only
-        once usable n ≥ 30. Unparsed answers are counted incorrect, never dropped.
+        once usable n ≥ 30. Unparsed answers are reported separately as UNMEASURED — never scored wrong, never dropped.
       </p>
     </PanelShell>
   );
@@ -182,7 +182,7 @@ function EvidencePanel({ params }: IDockviewPanelProps<{ axis: string }>) {
     ["score", <Score a={a} />],
     ["items (n)", a.n || "no item bank yet"],
     ["macro F1", quotable(a) ? a.macro_f1.toFixed(3) : "—"],
-    ["unparsed", quotable(a) ? `${(a.unparsed_rate * 100).toFixed(1)}% (counted incorrect)` : "—"],
+    ["unparsed", quotable(a) ? `${(a.unparsed_rate * 100).toFixed(1)}% (reported UNMEASURED)` : "—"],
     ["instrument", a.instrument],
     ["task", a.task],
     ["seat", a.seat],
@@ -307,7 +307,7 @@ function AskPanel() {
 
 function MethodPanel() {
   const rules = [
-    ["Unparsed counted incorrect", "An answer we cannot read is a wrong answer, never a dropped row."],
+    ["Unparsed reported as UNMEASURED", "An answer we cannot read is a measurement failure, reported in its own column — never a wrong answer, never a dropped row."],
     ["No model judges another model", "Every grader is deterministic. There is no LLM jury."],
     ["Nothing quoted below n ≥ 30", "Under thirty usable items an axis carries no interval, and says so."],
     ["Canaries excluded", "Canary items detect contamination; they never enter a score."],
@@ -342,7 +342,7 @@ const LAUNCHER: { id: keyof typeof COMPONENTS; title: string; icon: any }[] = [
   { id: "board", title: "GSPC Board", icon: LayoutGrid },
   { id: "ask", title: "Ask SOV", icon: MessageSquare },
   { id: "fleet", title: "MCP Fleet", icon: Server },
-  { id: "city", title: "SOV City", icon: Building2 },
+  { id: "city", title: "Council City", icon: Building2 },
   { id: "method", title: "Method", icon: ScrollText },
 ];
 
@@ -369,7 +369,7 @@ function SovOSInner() {
     event.api.addPanel({ id: "globe", component: "globe", title: "Globe" });
     event.api.addPanel({ id: "board", component: "board", title: "GSPC Board", position: { referencePanel: "globe", direction: "right" } });
     event.api.addPanel({ id: "ask", component: "ask", title: "Ask SOV", position: { referencePanel: "globe", direction: "below" } });
-    event.api.addPanel({ id: "city", component: "city", title: "SOV City", position: { referencePanel: "ask", direction: "within" } });
+    event.api.addPanel({ id: "city", component: "city", title: "Council City", position: { referencePanel: "ask", direction: "within" } });
     event.api.addPanel({ id: "method", component: "method", title: "Method", position: { referencePanel: "ask", direction: "within" } });
   }, []);
 
@@ -391,7 +391,7 @@ function SovOSInner() {
   return (
     <div className="flex h-[100dvh] w-full flex-col overflow-hidden bg-[#04070d] text-slate-200">
       <header className="flex h-11 shrink-0 items-center gap-3 border-b border-white/8 bg-[#080c14] px-3">
-        <span className="text-[13px] font-semibold tracking-[0.22em] text-emerald-300">SOV&nbsp;OS</span>
+        <span className="text-[13px] font-semibold tracking-[0.22em] text-emerald-300">Council&nbsp;OS</span>
         <span className="hidden text-[11px] text-slate-500 sm:block">
           {COUNTS.measured}/{COUNTS.total} axes measured · {COUNTS.withInterval} with an interval · signed, recomputable
         </span>
