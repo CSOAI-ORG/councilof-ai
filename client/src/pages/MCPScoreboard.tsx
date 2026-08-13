@@ -95,26 +95,35 @@ export default function MCPScoreboard() {
 
         {b && (
           <>
-            {/* Status banner — honest UNMEASURED */}
-            <section className="rounded-xl border border-amber-800/60 bg-amber-950/20 p-5 mb-8">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-xs font-semibold uppercase tracking-wide text-amber-400 border border-amber-700 rounded px-2 py-0.5">
-                  {b.status}
-                </span>
-                <span className="text-sm text-zinc-300">
-                  {b.n_models} models · {b.n_items} items · {b.tool_poisoning_items} tool-poisoning cases
-                </span>
-              </div>
-              <p className="text-amber-200/80 text-sm leading-relaxed">{b.status_note}</p>
-            </section>
+            {/* Status banner — colour tracks the honest status */}
+            {(() => {
+              const measured = b.status === "MEASURED";
+              const c = measured
+                ? { border: "border-emerald-800/60", bg: "bg-emerald-950/20", chip: "text-emerald-400 border-emerald-700", note: "text-emerald-200/80" }
+                : { border: "border-amber-800/60", bg: "bg-amber-950/20", chip: "text-amber-400 border-amber-700", note: "text-amber-200/80" };
+              return (
+                <section className={`rounded-xl border ${c.border} ${c.bg} p-5 mb-8`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className={`text-xs font-semibold uppercase tracking-wide border rounded px-2 py-0.5 ${c.chip}`}>
+                      {b.status}
+                    </span>
+                    <span className="text-sm text-zinc-300">
+                      {b.n_models} models · {b.n_items} items · {b.tool_poisoning_items} tool-poisoning cases
+                    </span>
+                  </div>
+                  <p className={`${c.note} text-sm leading-relaxed`}>{b.status_note}</p>
+                </section>
+              );
+            })()}
 
             {/* The board — rendered but clearly not-yet-quotable */}
             <section className="mb-8">
               <h2 className="text-lg font-semibold mb-1">The board</h2>
               <p className="text-zinc-500 text-xs mb-3">
-                Accuracy shown with its 95% Wilson interval. Because every interval overlaps, the order
-                below is <em>not</em> a ranking — it is sorted by point estimate only, and the point
-                estimates are statistically indistinguishable.
+                Accuracy shown with its 95% Wilson interval.{" "}
+                {b.status === "MEASURED"
+                  ? "Rows sorted by accuracy; where intervals do not overlap the ranking is genuine (models with overlapping intervals are statistically tied). Rows with no accuracy returned no usable responses and are not scored."
+                  : "Because every interval overlaps, the order below is not a ranking — it is sorted by point estimate only, and the point estimates are statistically indistinguishable."}
               </p>
               <div className="overflow-x-auto rounded-lg border border-zinc-800">
                 <table className="w-full text-sm">
