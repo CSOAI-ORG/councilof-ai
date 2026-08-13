@@ -22,12 +22,12 @@ import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 // Navigation structure with icons
 const navigation = [
   {
-    name: "Sovereign OS",
+    name: "Council OS",
     href: "/sov-space",
     icon: Globe2,
     description: "Your AI OS",
     submenu: [
-      { name: "Sov Space", href: "/sov-space", description: "Simulate and govern in real time" },
+      { name: "Council Space", href: "/sov-space", description: "Simulate and govern in real time" },
       { name: "Governance Graph", href: "/graph", description: "The governed Google" },
       { name: "Your Sovereign Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
@@ -315,7 +315,7 @@ export function Header() {
               href="/sov-os"
               className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-emerald-300 border border-emerald-400/30 hover:bg-emerald-400/10 transition-all"
             >
-              <span className="text-base leading-none">◧</span> SOV OS
+              <span className="text-base leading-none">◧</span> Council OS
             </a>
 
             {/* CSOAI OS launcher — yields its space below 2xl so the nav never wraps */}

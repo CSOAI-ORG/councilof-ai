@@ -13,7 +13,7 @@ export const TOUR: TourStep[] = [
   },
   {
     path: "/os",
-    title: "The Sovereign OS - 291 governed tools",
+    title: "The Council OS - 291 governed tools",
     usp: "An operating system for AI governance, not a dashboard",
     say: "This is the OS. Every capability - crosswalks, risk, cyber, attestation - is a live tool running on the Sovereign brain, keyless and on-demand. Nobody else ships governance as a working operating system. Open any tile and it just runs.",
     tip: "Click any tool - it opens live in a window.",
@@ -36,7 +36,7 @@ export const TOUR: TourStep[] = [
   },
   {
     path: "/workbench",
-    title: "SOV3 Workbench - the governance floor",
+    title: "Council Workbench - the governance floor",
     usp: "Signed, reproducible artifacts under any AI agent",
     say: "This is the part that changes everything. Any AI task - a policy, a risk assessment, a crosswalk - becomes a signed, reproducible, council-reviewed artifact, sealed with Ed25519. This is the governance floor that sits UNDER Claude Science, Claude Code, any agent. They generate; we make it provable.",
     demo: "Draft an EU AI Act risk classification for an autonomous credit model",
@@ -82,7 +82,7 @@ export const TOUR: TourStep[] = [
     path: "/govbench",
     title: "Measured, not modelled",
     usp: "Deterministic instruments — never an LLM judging an LLM",
-    say: "This is the proof layer. 193 deterministic GovBench items, keystone guards, survival matrices — every score a predicate you can recompute offline. Nobody else shows the instrument: they show a leaderboard and ask you to trust it.",
+    say: "This is the proof layer. 237 scored GovBench items, keystone guards, survival matrices — every score a predicate you can recompute offline. Nobody else shows the instrument: they show a leaderboard and ask you to trust it.",
     tip: "Every number here traces to a signed artefact.",
   },
   {
@@ -121,7 +121,7 @@ const A = "sov_tour_active", S = "sov_tour_step", SEEN = "sov_tour_seen";
 // step its visitor actually cares about instead of always at the beginning.
 // Values are indexes into TOUR: 1=/os, 3=/try, 7=/watchdog-map.
 export const TOUR_TOPICS: Record<string, number> = {
-  os: 1,          // the Sovereign OS tool floor
+  os: 1,          // the Council OS tool floor
   measurement: 3, // the 33-agent Byzantine council rules on a real scenario
   regulator: 7,   // public, cryptographic accountability
 };

@@ -15,7 +15,7 @@ export default function Welcome() {
   const [plan, setPlan] = useState("");
   const [credits, setCredits] = useState("");
   useEffect(() => {
-    document.title = "Welcome to your Sovereign OS — CSOAI";
+    document.title = "Welcome to your Council OS — CSOAI";
     try {
       const p = (localStorage.getItem("sov_intended_plan") || "").toLowerCase();
       const c = (localStorage.getItem("sov_intended_credits") || "").toLowerCase();

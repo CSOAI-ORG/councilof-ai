@@ -52,7 +52,7 @@ export const SURFACES: Surface[] = [
   { route: "/sovereign-dock", label: "Sovereign dock (global)", nature: "ai_system",
     mechanism: "The dock sends your message to the live Sovereign gateway (os.meok.ai/api/chat) and a model writes the reply. It is mounted on every page; the notice below the dock header discloses this at first interaction, per Article 50(1).",
     evidence: ["client/src/components/SovereignDock.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/", label: "Home + Sovereign Console", nature: "rule_based",
+  { route: "/", label: "Home + Council Console", nature: "rule_based",
     mechanism: "The console pattern-matches your question against frozen statute text and renders the matching provision. There is no inference call in the console's code, and nothing you type into it is transmitted or stored. The page also carries an email form posting to /api/subscribe, and — like every page — the global Sovereign dock, which IS an AI-system surface (see the note at the top of this file).",
     evidence: ["client/src/components/SovereignConsole.tsx", "client/src/pages/NewHome-v2.tsx"] },
   { route: "/tour", label: "Guided product tour", nature: "rule_based",

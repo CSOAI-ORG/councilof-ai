@@ -110,7 +110,7 @@ export default function Signup() {
               "Comply once and it crosswalks everywhere — EU AI Act, NIST, ISO 42001, PIPL. The Council
               signs every decision to Layer 0, so it's provable, not promised."
             </p>
-            <p className="text-xs text-green-700">— Why teams pick the Sovereign OS</p>
+            <p className="text-xs text-green-700">— Why teams pick the Council OS</p>
           </div>
 
           <div className="space-y-4">

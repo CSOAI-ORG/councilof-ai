@@ -6,7 +6,7 @@ import { Link } from "wouter";
  *
  * Three slides, each an animated canvas scene in brand light:
  *   1. "Measured, not modelled" — the grid of measured cells connecting (emerald)
- *   2. "The Sovereign OS" — the 33-seat council ring, breathing (teal/gold)
+ *   2. "The Council OS" — the 33-seat council ring, breathing (teal/gold)
  *   3. "We publish our failures" — refutation glyphs falling like snow (amber)
  *
  * Discipline: every number on screen is canon (417 provisions, 193 GovBench
@@ -26,15 +26,15 @@ const SLIDES: Slide[] = [
   {
     kicker: "THE INSTRUMENTS",
     headline: ["Measured,", "not modelled."],
-    sub: "417 statutory provisions · 193 deterministic GovBench items · every verdict a predicate an auditor can recompute.",
+    sub: "417 statutory provisions · 237 scored GovBench items · every verdict a predicate an auditor can recompute.",
     cta: { label: "See the instruments", href: "/govbench", primary: true },
     scene: "cells",
   },
   {
-    kicker: "THE SOVEREIGN OS",
-    headline: ["One ring.", "Thirty-three seats."],
+    kicker: "THE COUNCIL OS",
+    headline: ["Every seat signed.", "Every vote an artefact."],
     sub: "A council architecture where every seat is signed and every vote is an artefact — shown, not claimed.",
-    cta: { label: "Enter Sov Space", href: "/sov-space", primary: true },
+    cta: { label: "See the council board", href: "/arena", primary: true },
     scene: "council",
   },
   {
