@@ -1,4 +1,4 @@
-// SOV CITY — the arena run, surfaced as evidence rather than as a story.
+// COUNCIL CITY — the arena run, surfaced as evidence rather than as a story.
 //
 // Reads the signed artefacts of a real run: /city/board.json (the counts), and
 // /city/chain.jsonl (one Ed25519-signed ChainResult per epoch, sha256-chained).
@@ -253,7 +253,7 @@ function Wrap({ children }: { children: React.ReactNode }) {
   return (
     <div className="h-full w-full overflow-auto bg-[#080c14] text-slate-200">
       <div className="sticky top-0 z-10 border-b border-white/5 bg-[#080c14]/95 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-slate-500 backdrop-blur">
-        SOV City — governed multi-agent arena
+        Council City — governed multi-agent arena
       </div>
       <div className="p-4">{children}</div>
     </div>

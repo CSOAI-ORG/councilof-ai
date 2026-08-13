@@ -132,7 +132,7 @@ export default function Dashboard() {
           <div>
             <h1 className="text-2xl font-semibold font-primary">Dashboard</h1>
             <p className="text-muted-foreground text-sm">
-              Your Sovereign OS — governance across every framework, signed to Layer 0
+              Your Council OS — governance across every framework, signed to Layer 0
             </p>
           </div>
           <div className="flex items-center gap-2">

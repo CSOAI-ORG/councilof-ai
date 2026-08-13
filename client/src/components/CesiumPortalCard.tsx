@@ -29,7 +29,7 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
     preset: "EU_Brussels_50_85_4_35",
     tour: "measurement",
     routes: [
-      { label: "Open Sovereign Console", href: "/", tour: true },
+      { label: "Open Council Console", href: "/", tour: true },
       { label: "View Refutation Ledger", href: "/refutation-ledger" },
       { label: "GSPC Instrument", href: "/instrument" },
       { label: "Measured Results", href: "/benchmarks" },

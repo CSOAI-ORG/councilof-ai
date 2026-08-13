@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // Sovereign Authority Badges - the open, embeddable brand layer. Any website or
 // front end drops in a badge (free, MIT, copy-paste); each one links back to a
-// live verify on the Sovereign OS. Being governed becomes a visible asset, and
+// live verify on the Council OS. Being governed becomes a visible asset, and
 // every badge is free distribution. This is step one of the Sov Space open
 // commons: open tools + A2A + Sovereign orchestration, easy for anyone.
 
@@ -41,7 +41,7 @@ export default function BadgesPage() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - open commons</p>
         <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Wear your <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">governance.</span></h1>
-        <p className="mt-3 max-w-2xl text-emerald-100/80">Sovereign authority badges for any website or front end. Free, MIT, copy-paste. Each badge links back to a live verify on the Sovereign OS - so being governed becomes a visible brand asset, and every embed spreads the network. Open by construction.</p>
+        <p className="mt-3 max-w-2xl text-emerald-100/80">Sovereign authority badges for any website or front end. Free, MIT, copy-paste. Each badge links back to a live verify on the Council OS - so being governed becomes a visible brand asset, and every embed spreads the network. Open by construction.</p>
       </section>
       <section className="mx-auto max-w-5xl px-6 pb-10 space-y-4">
         {BADGES.map((b) => (

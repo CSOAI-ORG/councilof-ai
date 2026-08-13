@@ -10,7 +10,7 @@ export default function ConsensusHero({ className = "" }: { className?: string }
   const cx = 470, cy = 190; // council hub
   return (
     <svg viewBox="0 0 820 380" className={className} role="img"
-      aria-label="Seven AI-governance frameworks reach a 23-of-33 council consensus, producing one Ed25519-signed, offline-verifiable proof"
+      aria-label="Illustration: seven AI-governance frameworks converge on a designed 23-of-33 council consensus that yields one Ed25519-signed, offline-verifiable proof"
       xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="ch-bg" x1="0" y1="0" x2="1" y2="1">
@@ -52,7 +52,7 @@ export default function ConsensusHero({ className = "" }: { className?: string }
         <path d={`M${cx - 15} ${cy} l10 11 20 -22`} fill="none" stroke="url(#ch-em)" strokeWidth="4"
           strokeLinecap="round" strokeLinejoin="round" className="ch-check" />
         <text x={cx} y={cy + 74} fontFamily="ui-monospace,monospace" fontSize="11" fontWeight="700"
-          textAnchor="middle" fill={TE}>23 / 33 quorum</text>
+          textAnchor="middle" fill={TE}>23 / 33 · by design</text>
       </g>
 
       {/* signed receipt card, stamped out on the right */}

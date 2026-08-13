@@ -86,7 +86,7 @@ export default function Traction() {
           <p className="text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto">
             Every number on this page is reproducible from the cited endpoint on the audit date.
             PyPI downloads are mostly CI / mirrors / scrapers — we state them as "being pulled,"
-            never as "users." The headline is the <strong>193 deterministic benchmark items against 417 statutory provisions</strong>,
+            never as "users." The headline is the <strong>237 scored benchmark items against 417 statutory provisions</strong>,
             with a live leaderboard and signed attestation. <em>Recompute it yourself.</em>
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function Traction() {
       <section className="container pb-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
           <Stat n={monthlyTotal.toLocaleString()} label="PyPI pulls / month" sub="19 measured packages · pepy.tech" />
-          <Stat n="193" label="deterministic items" sub="vs 417 statutory provisions" />
+          <Stat n="237" label="scored items" sub="vs 417 statutory provisions" />
           <Stat n="291" label="governed MCP servers" sub="registry-backed" />
           <Stat n="579" label="public repos" sub="CSOAI-ORG · gh CLI" />
         </div>
