@@ -23,6 +23,94 @@ export async function sha256Hex(input: string): Promise<string> {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+function b64ToBytes(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+function bytesToHex(bytes: Uint8Array): string {
+  return [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+export interface Ed25519Result {
+  ok: boolean;
+  supported: boolean;        // false only if this browser lacks WebCrypto Ed25519
+  sha256: string;            // sha256 of the exact signed bytes, recomputed here
+  sha256_matches: boolean;   // vs the sidecar's stated body_sha256
+  pubkey_b64: string;
+  reason: string;
+}
+
+/**
+ * Verify an Ed25519 signature over the EXACT bytes that were signed — no
+ * re-canonicalization in the browser (Python's float/ASCII JSON repr is not
+ * byte-reproducible in JS, and a mismatch there would show a FALSE "invalid").
+ * The caller fetches the raw `.body` file (the signed bytes) and the sidecar
+ * (sig + pubkey + expected sha256). We recompute sha256 locally, and verify the
+ * signature with WebCrypto Ed25519 against the published public key.
+ *
+ * This authenticates BOTH: integrity (bytes unaltered) AND that the holder of
+ * the published key signed them. It does NOT by itself prove the key belongs to
+ * CSOAI — that is identity binding (a published key page / cert chain), a
+ * separate claim the page must not overstate.
+ */
+export async function verifyEd25519Detached(
+  body: ArrayBuffer,
+  sigB64: string,
+  pubkeyB64: string,
+  expectedSha256?: string,
+): Promise<Ed25519Result> {
+  const bodyBytes = new Uint8Array(body);
+  const sha = bytesToHex(new Uint8Array(await crypto.subtle.digest("SHA-256", bodyBytes)));
+  const sha256_matches = expectedSha256 ? sha === expectedSha256 : true;
+
+  const base = {
+    sha256: sha,
+    sha256_matches,
+    pubkey_b64: pubkeyB64,
+  };
+
+  // WebCrypto Ed25519 — supported in Chrome 137+, Safari 17+, Firefox 130+.
+  try {
+    const key = await crypto.subtle.importKey(
+      "raw",
+      b64ToBytes(pubkeyB64),
+      { name: "Ed25519" },
+      false,
+      ["verify"],
+    );
+    const ok = await crypto.subtle.verify(
+      "Ed25519",
+      key,
+      b64ToBytes(sigB64),
+      bodyBytes,
+    );
+    return {
+      ...base,
+      supported: true,
+      ok: ok && sha256_matches,
+      reason: !sha256_matches
+        ? "The signed bytes do not match the stated hash — artifact altered."
+        : ok
+          ? "Signature valid over the exact signed bytes; content is unaltered."
+          : "Signature does NOT verify — altered, or signed by a different key.",
+    };
+  } catch (e) {
+    // Older browser without Ed25519 in WebCrypto: report honestly, do not fake a pass.
+    return {
+      ...base,
+      supported: false,
+      ok: false,
+      reason:
+        "This browser's WebCrypto lacks Ed25519, so the signature can't be checked here. " +
+        "The sha256 above is still recomputed locally; verify the signature with " +
+        "`python3 sign.py --verify` offline. (" + String((e as Error).message || e) + ")",
+    };
+  }
+}
+
 /** Canonical JSON: stable key order so the digest is deterministic. */
 export function canonicalJSON(value: unknown): string {
   if (value === null || typeof value !== "object") return JSON.stringify(value);
