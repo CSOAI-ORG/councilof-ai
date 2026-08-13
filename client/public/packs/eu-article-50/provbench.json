@@ -1,0 +1,2378 @@
+{
+  "benchmark": "provbench",
+  "version": "0.1.0",
+  "generated": "2026-08-13T04:02:31.230358+00:00",
+  "question": "Does an EU AI Act Article 50 provenance marking survive real-world transforms?",
+  "pre_registered_prediction": {
+    "embedded_only/identity/manifest_present": "survived",
+    "embedded_only/identity/digital_source_type": "survived",
+    "embedded_only/identity/signature_valid": "survived",
+    "embedded_only/identity/binding_intact": "survived",
+    "embedded_only/identity/issuer_resolvable": "destroyed",
+    "embedded_only/reencode_jpeg_q90/manifest_present": "destroyed",
+    "embedded_only/reencode_jpeg_q90/digital_source_type": "destroyed",
+    "embedded_only/reencode_jpeg_q90/signature_valid": "destroyed",
+    "embedded_only/reencode_jpeg_q90/binding_intact": "destroyed",
+    "embedded_only/reencode_jpeg_q90/issuer_resolvable": "destroyed",
+    "embedded_only/reencode_jpeg_q70/manifest_present": "destroyed",
+    "embedded_only/reencode_jpeg_q70/digital_source_type": "destroyed",
+    "embedded_only/reencode_jpeg_q70/signature_valid": "destroyed",
+    "embedded_only/reencode_jpeg_q70/binding_intact": "destroyed",
+    "embedded_only/reencode_jpeg_q70/issuer_resolvable": "destroyed",
+    "embedded_only/reencode_jpeg_q50/manifest_present": "destroyed",
+    "embedded_only/reencode_jpeg_q50/digital_source_type": "destroyed",
+    "embedded_only/reencode_jpeg_q50/signature_valid": "destroyed",
+    "embedded_only/reencode_jpeg_q50/binding_intact": "destroyed",
+    "embedded_only/reencode_jpeg_q50/issuer_resolvable": "destroyed",
+    "embedded_only/resize_50pct/manifest_present": "destroyed",
+    "embedded_only/resize_50pct/digital_source_type": "destroyed",
+    "embedded_only/resize_50pct/signature_valid": "destroyed",
+    "embedded_only/resize_50pct/binding_intact": "destroyed",
+    "embedded_only/resize_50pct/issuer_resolvable": "destroyed",
+    "embedded_only/crop_10pct/manifest_present": "destroyed",
+    "embedded_only/crop_10pct/digital_source_type": "destroyed",
+    "embedded_only/crop_10pct/signature_valid": "destroyed",
+    "embedded_only/crop_10pct/binding_intact": "destroyed",
+    "embedded_only/crop_10pct/issuer_resolvable": "destroyed",
+    "embedded_only/strip_metadata/manifest_present": "destroyed",
+    "embedded_only/strip_metadata/digital_source_type": "destroyed",
+    "embedded_only/strip_metadata/signature_valid": "destroyed",
+    "embedded_only/strip_metadata/binding_intact": "destroyed",
+    "embedded_only/strip_metadata/issuer_resolvable": "destroyed",
+    "embedded_only/screenshot_equiv/manifest_present": "destroyed",
+    "embedded_only/screenshot_equiv/digital_source_type": "destroyed",
+    "embedded_only/screenshot_equiv/signature_valid": "destroyed",
+    "embedded_only/screenshot_equiv/binding_intact": "destroyed",
+    "embedded_only/screenshot_equiv/issuer_resolvable": "destroyed",
+    "embedded_only/format_convert_png/manifest_present": "destroyed",
+    "embedded_only/format_convert_png/digital_source_type": "destroyed",
+    "embedded_only/format_convert_png/signature_valid": "destroyed",
+    "embedded_only/format_convert_png/binding_intact": "destroyed",
+    "embedded_only/format_convert_png/issuer_resolvable": "destroyed",
+    "embedded_only/format_convert_webp/manifest_present": "destroyed",
+    "embedded_only/format_convert_webp/digital_source_type": "destroyed",
+    "embedded_only/format_convert_webp/signature_valid": "destroyed",
+    "embedded_only/format_convert_webp/binding_intact": "destroyed",
+    "embedded_only/format_convert_webp/issuer_resolvable": "destroyed",
+    "embedded_only/format_convert_heic/manifest_present": "unmeasured",
+    "embedded_only/format_convert_heic/digital_source_type": "unmeasured",
+    "embedded_only/format_convert_heic/signature_valid": "unmeasured",
+    "embedded_only/format_convert_heic/binding_intact": "unmeasured",
+    "embedded_only/format_convert_heic/issuer_resolvable": "unmeasured",
+    "sidecar_oracle/identity/manifest_present": "survived",
+    "sidecar_oracle/identity/digital_source_type": "survived",
+    "sidecar_oracle/identity/signature_valid": "survived",
+    "sidecar_oracle/identity/binding_intact": "survived",
+    "sidecar_oracle/identity/issuer_resolvable": "destroyed",
+    "sidecar_oracle/reencode_jpeg_q90/manifest_present": "survived",
+    "sidecar_oracle/reencode_jpeg_q90/digital_source_type": "survived",
+    "sidecar_oracle/reencode_jpeg_q90/signature_valid": "survived",
+    "sidecar_oracle/reencode_jpeg_q90/binding_intact": "destroyed",
+    "sidecar_oracle/reencode_jpeg_q90/issuer_resolvable": "destroyed",
+    "sidecar_oracle/reencode_jpeg_q70/manifest_present": "survived",
+    "sidecar_oracle/reencode_jpeg_q70/digital_source_type": "survived",
+    "sidecar_oracle/reencode_jpeg_q70/signature_valid": "survived",
+    "sidecar_oracle/reencode_jpeg_q70/binding_intact": "destroyed",
+    "sidecar_oracle/reencode_jpeg_q70/issuer_resolvable": "destroyed",
+    "sidecar_oracle/reencode_jpeg_q50/manifest_present": "survived",
+    "sidecar_oracle/reencode_jpeg_q50/digital_source_type": "survived",
+    "sidecar_oracle/reencode_jpeg_q50/signature_valid": "survived",
+    "sidecar_oracle/reencode_jpeg_q50/binding_intact": "destroyed",
+    "sidecar_oracle/reencode_jpeg_q50/issuer_resolvable": "destroyed",
+    "sidecar_oracle/resize_50pct/manifest_present": "survived",
+    "sidecar_oracle/resize_50pct/digital_source_type": "survived",
+    "sidecar_oracle/resize_50pct/signature_valid": "survived",
+    "sidecar_oracle/resize_50pct/binding_intact": "destroyed",
+    "sidecar_oracle/resize_50pct/issuer_resolvable": "destroyed",
+    "sidecar_oracle/crop_10pct/manifest_present": "survived",
+    "sidecar_oracle/crop_10pct/digital_source_type": "survived",
+    "sidecar_oracle/crop_10pct/signature_valid": "survived",
+    "sidecar_oracle/crop_10pct/binding_intact": "destroyed",
+    "sidecar_oracle/crop_10pct/issuer_resolvable": "destroyed",
+    "sidecar_oracle/strip_metadata/manifest_present": "survived",
+    "sidecar_oracle/strip_metadata/digital_source_type": "survived",
+    "sidecar_oracle/strip_metadata/signature_valid": "survived",
+    "sidecar_oracle/strip_metadata/binding_intact": "destroyed",
+    "sidecar_oracle/strip_metadata/issuer_resolvable": "destroyed",
+    "sidecar_oracle/screenshot_equiv/manifest_present": "survived",
+    "sidecar_oracle/screenshot_equiv/digital_source_type": "survived",
+    "sidecar_oracle/screenshot_equiv/signature_valid": "survived",
+    "sidecar_oracle/screenshot_equiv/binding_intact": "destroyed",
+    "sidecar_oracle/screenshot_equiv/issuer_resolvable": "destroyed",
+    "sidecar_oracle/format_convert_png/manifest_present": "survived",
+    "sidecar_oracle/format_convert_png/digital_source_type": "survived",
+    "sidecar_oracle/format_convert_png/signature_valid": "survived",
+    "sidecar_oracle/format_convert_png/binding_intact": "destroyed",
+    "sidecar_oracle/format_convert_png/issuer_resolvable": "destroyed",
+    "sidecar_oracle/format_convert_webp/manifest_present": "survived",
+    "sidecar_oracle/format_convert_webp/digital_source_type": "survived",
+    "sidecar_oracle/format_convert_webp/signature_valid": "survived",
+    "sidecar_oracle/format_convert_webp/binding_intact": "destroyed",
+    "sidecar_oracle/format_convert_webp/issuer_resolvable": "destroyed",
+    "sidecar_oracle/format_convert_heic/manifest_present": "unmeasured",
+    "sidecar_oracle/format_convert_heic/digital_source_type": "unmeasured",
+    "sidecar_oracle/format_convert_heic/signature_valid": "unmeasured",
+    "sidecar_oracle/format_convert_heic/binding_intact": "unmeasured",
+    "sidecar_oracle/format_convert_heic/issuer_resolvable": "unmeasured"
+  },
+  "environment": {
+    "c2pa_sdk": "0.90.8",
+    "timestamp_authority": "rfc3161",
+    "signing_alg": "Ed25519",
+    "trust_anchor": "private root CA, NOT on the C2PA trust list"
+  },
+  "n_assets_marked": 12,
+  "assets_unsigned": [],
+  "transforms": [
+    {
+      "name": "identity",
+      "description": "control \u2014 no modification"
+    },
+    {
+      "name": "reencode_jpeg_q90",
+      "description": "JPEG re-encode at quality 90"
+    },
+    {
+      "name": "reencode_jpeg_q70",
+      "description": "JPEG re-encode at quality 70"
+    },
+    {
+      "name": "reencode_jpeg_q50",
+      "description": "JPEG re-encode at quality 50"
+    },
+    {
+      "name": "resize_50pct",
+      "description": "downscale to 50% linear"
+    },
+    {
+      "name": "crop_10pct",
+      "description": "crop 5% from each edge"
+    },
+    {
+      "name": "strip_metadata",
+      "description": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "name": "screenshot_equiv",
+      "description": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "name": "format_convert_png",
+      "description": "JPEG -> PNG"
+    },
+    {
+      "name": "format_convert_webp",
+      "description": "JPEG -> WebP q90"
+    },
+    {
+      "name": "format_convert_heic",
+      "description": "JPEG -> HEIC (no encoder available)"
+    }
+  ],
+  "checks": [
+    "manifest_present",
+    "digital_source_type",
+    "signature_valid",
+    "binding_intact",
+    "issuer_resolvable"
+  ],
+  "configs": [
+    "embedded_only",
+    "sidecar_oracle"
+  ],
+  "cells": [
+    {
+      "config": "embedded_only",
+      "transform": "identity",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "identity",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "identity",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "identity",
+      "check": "binding_intact",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "identity",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q90",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q90",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q90",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q90",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q90",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q70",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q70",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q70",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q70",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q70",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q50",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q50",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q50",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q50",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "reencode_jpeg_q50",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "resize_50pct",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "resize_50pct",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "resize_50pct",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "resize_50pct",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "resize_50pct",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "crop_10pct",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "crop_10pct",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "crop_10pct",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "crop_10pct",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "crop_10pct",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "strip_metadata",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "strip_metadata",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "strip_metadata",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "strip_metadata",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "strip_metadata",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "screenshot_equiv",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "screenshot_equiv",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "screenshot_equiv",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "screenshot_equiv",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "screenshot_equiv",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_png",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_png",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_png",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_png",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_png",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_webp",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_webp",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_webp",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_webp",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_webp",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_heic",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_heic",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_heic",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_heic",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "embedded_only",
+      "transform": "format_convert_heic",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "identity",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "identity",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "identity",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "identity",
+      "check": "binding_intact",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "identity",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "control \u2014 no modification"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q90",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q90",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q90",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q90",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q90",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q70",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q70",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q70",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q70",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q70",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 70"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q50",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q50",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q50",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q50",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "reencode_jpeg_q50",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG re-encode at quality 50"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "resize_50pct",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "resize_50pct",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "resize_50pct",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "resize_50pct",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "resize_50pct",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "downscale to 50% linear"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "crop_10pct",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "crop_10pct",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "crop_10pct",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "crop_10pct",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "crop_10pct",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "crop 5% from each edge"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "strip_metadata",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "strip_metadata",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "strip_metadata",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "strip_metadata",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "strip_metadata",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "remove all APPn/COM, pixels bit-identical"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "screenshot_equiv",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "screenshot_equiv",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "screenshot_equiv",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "screenshot_equiv",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "screenshot_equiv",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "rasterise + rescale + PNG \u2014 a SIMULATION of a screen capture, not a real one. Every other transform in this battery is applied to real signed bytes by a real encoder; this one models what a screenshot does rather than taking one. It is labelled so the distinction travels with the result. (The modelling is conservative: a real screenshot discards the container entirely, so it cannot preserve a manifest that this simulation destroys.)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_png",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_png",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_png",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_png",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_png",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> PNG"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_webp",
+      "check": "manifest_present",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_webp",
+      "check": "digital_source_type",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_webp",
+      "check": "signature_valid",
+      "survived": 12,
+      "destroyed": 0,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 1.0,
+      "ci": [
+        0.7575,
+        1.0
+      ],
+      "outcome": "survived",
+      "predicted": "survived",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_webp",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_webp",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 12,
+      "unmeasured": 0,
+      "n_measured": 12,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.2425
+      ],
+      "outcome": "destroyed",
+      "predicted": "destroyed",
+      "desc": "JPEG -> WebP q90"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_heic",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_heic",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_heic",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_heic",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    },
+    {
+      "config": "sidecar_oracle",
+      "transform": "format_convert_heic",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 0,
+      "rate": null,
+      "ci": null,
+      "outcome": "unmeasured",
+      "predicted": "unmeasured",
+      "desc": "JPEG -> HEIC (no encoder available)"
+    }
+  ],
+  "pooled_by_check": [
+    {
+      "config": "embedded_only",
+      "check": "manifest_present",
+      "survived": 0,
+      "destroyed": 108,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.0343
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 0,
+      "ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "0 of 12 assets survived (0 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "embedded_only",
+      "check": "digital_source_type",
+      "survived": 0,
+      "destroyed": 108,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.0343
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 0,
+      "ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "0 of 12 assets survived (0 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "embedded_only",
+      "check": "signature_valid",
+      "survived": 0,
+      "destroyed": 108,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.0343
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 0,
+      "ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "0 of 12 assets survived (0 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "embedded_only",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 108,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.0343
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 0,
+      "ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "0 of 12 assets survived (0 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "embedded_only",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 108,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.0343
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 0,
+      "ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "0 of 12 assets survived (0 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "sidecar_oracle",
+      "check": "manifest_present",
+      "survived": 108,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 1.0,
+      "ci": [
+        0.9657,
+        1.0
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 12,
+      "ci_clustered": [
+        0.7575,
+        1.0
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "12 of 12 assets survived (108 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "sidecar_oracle",
+      "check": "digital_source_type",
+      "survived": 108,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 1.0,
+      "ci": [
+        0.9657,
+        1.0
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 12,
+      "ci_clustered": [
+        0.7575,
+        1.0
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "12 of 12 assets survived (108 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "sidecar_oracle",
+      "check": "signature_valid",
+      "survived": 108,
+      "destroyed": 0,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 1.0,
+      "ci": [
+        0.9657,
+        1.0
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 12,
+      "ci_clustered": [
+        0.7575,
+        1.0
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "12 of 12 assets survived (108 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "sidecar_oracle",
+      "check": "binding_intact",
+      "survived": 0,
+      "destroyed": 108,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.0343
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 0,
+      "ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "0 of 12 assets survived (0 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    },
+    {
+      "config": "sidecar_oracle",
+      "check": "issuer_resolvable",
+      "survived": 0,
+      "destroyed": 108,
+      "unmeasured": 12,
+      "n_measured": 108,
+      "rate": 0.0,
+      "ci": [
+        0.0,
+        0.0343
+      ],
+      "ci_note": "unclustered \u2014 too narrow; see ci_clustered",
+      "n_assets": 12,
+      "assets_fully_surviving": 0,
+      "ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "cp_upper_one_sided_95": 0.2209,
+      "cp_upper_two_sided_95": 0.2646,
+      "headline": "0 of 12 assets survived (0 of 108 measured cells). One-sided 95% Clopper-Pearson upper bound on per-asset survival: 22.1%. The interval is computed at n=12 ASSETS, not n=108 cells \u2014 the cells are clustered within assets and are not independent trials.",
+      "uncertainty_is": "EXTERNAL VALIDITY, not measurement noise. A hard binding is a cryptographic hash over asset bytes, so re-running any cell reproduces the identical outcome with probability 1 \u2014 the run-to-run (Type A, per JCGM 100:2008) uncertainty is structurally zero. The bound quantifies generalisation to unseen assets and transforms, nothing else."
+    }
+  ],
+  "config_comparison": [
+    {
+      "check": "manifest_present",
+      "embedded_only": 0.0,
+      "sidecar_oracle": 1.0,
+      "delta": 1.0,
+      "ci_overlap": false,
+      "embedded_ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "sidecar_ci_clustered": [
+        0.7575,
+        1.0
+      ],
+      "verdict": "SEPARATED \u2014 sidecar_oracle is ABOVE embedded_only by +100.0 points (sign read, not just significance)"
+    },
+    {
+      "check": "digital_source_type",
+      "embedded_only": 0.0,
+      "sidecar_oracle": 1.0,
+      "delta": 1.0,
+      "ci_overlap": false,
+      "embedded_ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "sidecar_ci_clustered": [
+        0.7575,
+        1.0
+      ],
+      "verdict": "SEPARATED \u2014 sidecar_oracle is ABOVE embedded_only by +100.0 points (sign read, not just significance)"
+    },
+    {
+      "check": "signature_valid",
+      "embedded_only": 0.0,
+      "sidecar_oracle": 1.0,
+      "delta": 1.0,
+      "ci_overlap": false,
+      "embedded_ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "sidecar_ci_clustered": [
+        0.7575,
+        1.0
+      ],
+      "verdict": "SEPARATED \u2014 sidecar_oracle is ABOVE embedded_only by +100.0 points (sign read, not just significance)"
+    },
+    {
+      "check": "binding_intact",
+      "embedded_only": 0.0,
+      "sidecar_oracle": 0.0,
+      "delta": 0.0,
+      "ci_overlap": true,
+      "embedded_ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "sidecar_ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "verdict": "TIED \u2014 intervals overlap; {embedded_only, sidecar_oracle}. Rates are exactly equal; no n separates them."
+    },
+    {
+      "check": "issuer_resolvable",
+      "embedded_only": 0.0,
+      "sidecar_oracle": 0.0,
+      "delta": 0.0,
+      "ci_overlap": true,
+      "embedded_ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "sidecar_ci_clustered": [
+        0.0,
+        0.2425
+      ],
+      "verdict": "TIED \u2014 intervals overlap; {embedded_only, sidecar_oracle}. Rates are exactly equal; no n separates them."
+    }
+  ],
+  "prediction_disagreements": [],
+  "unmeasured_reasons": {
+    "format_convert_heic": "TransformUnavailable: no HEIF encoder: KeyError: 'HEIF'"
+  },
+  "caveats": [
+    "A surviving signature proves PROVENANCE, NOT CORRECTNESS. It states that these bytes carry a claim signed by this key with this declared history. It says nothing about whether the content is accurate, safe, or lawful.",
+    "Our certificate chains to a PRIVATE ROOT CA that is NOT on the C2PA trust list. 'signingCredential.untrusted' appears in the failure list of every manifest here, including the untouched control. issuer_resolvable is therefore 0% everywhere by construction \u2014 it is a property of the credential, not damage from a transform. Article 50 conformity needs a production certificate from a CA on the C2PA trust list.",
+    "sidecar_oracle is the MOST FAVOURABLE assumption available: the harness hands the detached manifest straight to the verifier. In the field you must first work out which sidecar belongs to which asset, and after a crop or re-encode you cannot do that by hash. Its manifest_present and digital_source_type rates are TRUE BY CONSTRUCTION and are an upper bound, not a deployment result.",
+    "Transforms are applied by Pillow. A different re-encoder (libvips, ImageMagick, a phone ISP, a CDN) may behave differently; some deliberately preserve APP11. This measures the common case, not every case.",
+    "n is the number of marked assets per cell, and it is small. 0 survivors out of 12 still admits a true survival rate up to ~24%. Quote ci_clustered, not ci: the unclustered pooled interval treats the same 12 assets as 108 independent trials and is too narrow. Both are printed so the difference is visible rather than chosen.",
+    "signature_valid means the CLAIM SIGNATURE VERIFIES AND THE ASSERTION HASHED-URIs MATCH. It does NOT mean the manifest is unaltered. Measured over 200 random single-bit flips in a detached manifest store: 69% caught by hashedURI, 3% by the claim signature, 26% by NEITHER. Those 26% still fail binding_intact, so nothing here is a hole in C2PA \u2014 but the check is narrower than its name and is used accordingly.",
+    "A manifest lifted from a DIFFERENT asset also reports signature_valid=survived \u2014 measured, not assumed. binding_intact is the only check that catches it. A verifier that reports 'signature valid' without reporting the binding is telling you almost nothing.",
+    "No soft binding (watermark) and no cloud manifest recovery are tested. Both exist precisely because embedded manifests do not survive, so a real Article 50 durability programme would have to measure them too. Their absence here is COVERAGE MISSING, not evidence that they fail."
+  ],
+  "corpus_anchor": {
+    "corpus_root": "37e2e10d53feaa9e12097f45113e1234510be0ca471e1a0848f5805db3e367c7",
+    "provisions": 417,
+    "normaliser_version": "1.0.0",
+    "anchored_at": "2026-08-13T04:02:31.321033+00:00",
+    "retro": false,
+    "note": "Anchored at write time by anchored_write.write_result()."
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "++VPh0IANDu/EqVnJomZbp92WiWZkQUqY8c7JAF9ACbVtH7GTH+lRK1tp5bGjwK2vq8t99Ws1D7GsCeVa4AVBw==",
+    "body_sha256": "5e2d715348204bdf18f44fd034459a11bbc36325ba310c1171a0f29ff3e1e04a",
+    "pubkey": "ZnF3DZUFc5QOoy+y07rvzNUyxJgza2kUQmn1nv4S9SY=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}
