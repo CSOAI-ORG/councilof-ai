@@ -40,7 +40,9 @@ async function loadAndVerify(name: string): Promise<{ sidecar: Sidecar; res: Ed2
   ]);
   const body = await bodyRes.arrayBuffer();
   const sidecar: Sidecar = await sideRes.json();
-  const res = await verifyEd25519Detached(body, sidecar.sig_b64, sidecar.pubkey_b64, sidecar.body_sha256);
+  // Pin verification to the PUBLISHED key shown on this page, not the sidecar's
+  // self-declared key — a swapped sidecar keypair must fail, not verify green.
+  const res = await verifyEd25519Detached(body, sidecar.sig_b64, sidecar.pubkey_b64, sidecar.body_sha256, PUBKEY);
   return { sidecar, res, body };
 }
 
