@@ -92,6 +92,7 @@ const Sov3Whitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
 const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const ProvenanceFinding = lazy(() => import("./pages/ProvenanceFinding"));
 const Article50Pack = lazy(() => import("./pages/Article50Pack"));
+const SandboxEscapePOC = lazy(() => import("./pages/SandboxEscapePOC"));
 const AiTransparency = lazy(() => import("./pages/AiTransparency"));
 const ABTesting = lazy(() => import("./pages/ABTesting"));
 const AboutCEASAI = lazy(() => import("./pages/AboutCEASAI"));
@@ -347,6 +348,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
+  "/poc/sandbox-escape": "Catching a model that tries to escape its sandbox — signed POC | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Sovereign Governance Layer | CSOAI",
   "/article-50-kit": "Article 50 Kit | CSOAI",
@@ -919,6 +921,7 @@ function App() {
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
+                  <Route path="/poc/sandbox-escape" component={SandboxEscapePOC} />
                   <Route path="/verify" component={Article50Pack} />
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
