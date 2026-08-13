@@ -596,7 +596,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
     "id": "eu-ai-act-compliance-mcp",
     "name": "Eu AI Act Compliance",
     "type": "server",
-    "description": "EU AI Act compliance MCP with 410 verbatim articles from EUR-Lex. Risk classification, 42-point audit, Article 11 docs, penalty calculator. MIT",
+    "description": "EU AI Act compliance MCP with 113 verbatim articles from EUR-Lex. Risk classification, 42-point audit, Article 11 docs, penalty calculator. MIT",
     "category": "Compliance & Regulatory",
     "url": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
     "tags": [],

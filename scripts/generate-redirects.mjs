@@ -42,7 +42,7 @@ const OUT = join(ROOT, "public/_redirects");
 
 // Static asset directories served directly by Pages — must NOT be routed to the app.
 const STATIC_DIRS = ["/arena", "/benchmarks", "/sov-space", "/vendor", "/assets",
-                     "/.well-known", "/corpus-watch", "/flywheel"];
+                     "/.well-known", "/corpus-watch", "/flywheel", "/packs"];
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
