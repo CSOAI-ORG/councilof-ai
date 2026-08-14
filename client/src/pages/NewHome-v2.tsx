@@ -365,6 +365,28 @@ export default function NewHomeV2() {
         </div>
       </section>
 
+      {/* Start here - three-step funnel strip */}
+      <section className="relative border-y border-emerald-400/20 bg-[#03110b] py-14">
+        <div className="mx-auto max-w-6xl px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300/80">Start here</p>
+          <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Three steps, about ten minutes</h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            {[
+              { n: "1", href: "/try", title: "Run the check", body: "Answer a short set of questions and see which frameworks actually bind you." },
+              { n: "2", href: "/sectors", title: "Find your sector", body: "Industries mapped onto their binding frameworks and risk tier." },
+              { n: "3", href: "/playbooks", title: "Take the playbook", body: "The routines your team can start running this week." },
+            ].map((s) => (
+              <Link key={s.href} href={s.href} className="group block h-full rounded-2xl border border-emerald-400/25 bg-white/5 p-6 transition-colors hover:border-emerald-300/60 hover:bg-white/10">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-400 text-sm font-bold text-[#03110b]">{s.n}</span>
+                  <h3 className="mt-4 text-lg font-semibold text-white">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-emerald-100/75">{s.body}</p>
+                  <span className="mt-4 inline-block text-sm font-semibold text-emerald-300 group-hover:text-emerald-200">Open -&gt;</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Cinematic slide band — instruments, council, refutations (canon numbers only) */}
       <HeroSlides />
 
