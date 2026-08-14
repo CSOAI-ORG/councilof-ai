@@ -1,5 +1,5 @@
 // sovCharge - the twin charge the whole OS shares. Every real interaction
-// with your Sovereign (a question, a query, an experiment, a verdict) nudges the
+// with your Council assistant (a question, a query, an experiment, a verdict) nudges the
 // living egg toward hatching. Persisted in localStorage; read by SovereignTwin.
 
 const KEY = "sov_charge";

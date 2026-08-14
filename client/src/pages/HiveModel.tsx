@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 // HiveModel - the Hive explains the BFT. Every tool in the OS is a hive with an inner
 // Sovereign queen: workers gather signal, the queen proposes, the swarm debates, a Byzantine
-// -fault-tolerant vote decides, the outcome is attested, and the hive learns. The
+// -council vote decides, the outcome is attested, and the hive learns. The
 // teaching surface for the architecture - it feeds the Academy, demos and distribution.
 
 type Stage = { id: string; n: string; glyph: string; body: string };
@@ -10,7 +10,7 @@ const LOOP: Stage[] = [
   { id: "gather", n: "Gather", glyph: "1", body: "Worker agents sense the world - the request, the data, the live reg-delta feed - and carry signal to the hive." },
   { id: "propose", n: "Propose", glyph: "2", body: "The inner Sovereign queen forms a proposal from the signal: a decision, an action, a verdict." },
   { id: "debate", n: "Debate", glyph: "3", body: "The swarm challenges it from every wing - Governance, Intelligence, Safety, Cybersecurity." },
-  { id: "vote", n: "Vote (BFT)", glyph: "4", body: "designed multi-agent review vote: passes only on supermajority, so one corrupt agent can't decide." },
+  { id: "vote", n: "Vote (multi-agent)", glyph: "4", body: "designed multi-agent review vote: passes only on supermajority, so one corrupt agent can't decide." },
   { id: "attest", n: "Attest", glyph: "5", body: "The outcome is Ed25519-signed and logged - provable, replayable, never deniable." },
   { id: "learn", n: "Learn", glyph: "6", body: "The result feeds back into the queen's memory. The hive gets sharper; it never gets stuck." },
 ];
@@ -25,13 +25,13 @@ const HIVES: Hive[] = [
 ];
 const FAQ = [
   { q: "Why a hive, not a server?", a: "A single server is a single point of failure and capture. A hive distributes the decision across many agents, so resilience and honesty are structural - not promised." },
-  { q: "Why does BFT matter?", a: "designed multi-agent review means the swarm reaches the right answer even if some agents lie or break. The math behind Bitcoin and the Athenian Boule - now governing AI." },
+  { q: "Why does BFT matter?", a: "designed multi-agent review means a decision passes only on a supermajority, so no single agent decides the outcome. Effective independence is measured, not assumed." },
   { q: "Why an inner queen?", a: "The Sovereign queen gives each hive memory and intent - it proposes and learns - while the swarm keeps it honest. Intelligence with checks, not intelligence unchecked." },
   { q: "Why does it never get stuck?", a: "If the swarm can't agree, it escalates - to another hive, the Council of AI, then the human. There is always a path forward, always an owner." },
 ];
 
 export default function HiveModel() {
-  useEffect(() => { document.title = "The Hive - how BFT consensus works | CSOAI"; }, []);
+  useEffect(() => { document.title = "The Hive - how multi-agent council works | CSOAI"; }, []);
   const [step, setStep] = useState(0);
   return (
     <div className="min-h-screen bg-white">

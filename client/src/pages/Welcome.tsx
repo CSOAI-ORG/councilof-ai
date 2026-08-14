@@ -39,7 +39,7 @@ export default function Welcome() {
         <div className="text-center">
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/15 text-2xl text-emerald-300">◉</div>
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS — you're in</p>
-          <h1 className="mt-3 text-3xl sm:text-4xl font-black tracking-tight">Welcome to your Sovereign.</h1>
+          <h1 className="mt-3 text-3xl sm:text-4xl font-black tracking-tight">Welcome to your Council assistant.</h1>
           <p className="mt-3 text-emerald-100/75">Your account is live. Your data is yours to own and export, and every action is signed to Layer 0.</p>
         </div>
 

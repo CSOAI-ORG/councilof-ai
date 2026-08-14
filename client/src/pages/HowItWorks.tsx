@@ -6,7 +6,7 @@ const STEPS: Step[] = [
   { n: 1, title: "Ask in plain language", body: "Type any AI-governance question - 'Can we deploy this hiring model in the EU?' No forms, no jargon required.", href: "/try", label: "Try a question now" },
   { n: 2, title: "The classifier scopes it", body: "The engine identifies your risk tier and the frameworks that apply - across 13+ regulations and 47 industries.", href: "/map", label: "See what governs what" },
   { n: 3, title: "Five agents debate", body: "Governance, Intelligence, Safety, Cybersecurity and a neutral Speaker argue it from every angle - at least three rounds.", href: "/dragonfly", label: "Meet the 4 wings" },
-  { n: 4, title: "Byzantine consensus decides", body: "The verdict passes only on supermajority, so no single agent can capture the outcome - the math that secures Bitcoin.", href: "/hive", label: "How consensus works" },
+  { n: 4, title: "Council vote decides", body: "The verdict passes only on supermajority, so no single agent can capture the outcome.", href: "/hive", label: "How consensus works" },
   { n: 5, title: "Signed verdict + evidence", body: "You get the decision, the reasoning, the frameworks cited, and an Ed25519-signed, replayable record. Provable, never deniable.", href: "/playbooks", label: "Your sector's playbook" },
 ];
 

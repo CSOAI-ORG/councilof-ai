@@ -121,7 +121,7 @@ function project(lat: number, lng: number, rot: number) {
 
 export default function WorldGlobe() {
   useEffect(() => {
-    document.title = "The Sovereign Globe - AI governance, layered on the world | CSOAI";
+    document.title = "The Council Globe - AI governance, layered on the world | CSOAI";
     // Handoff from Sov Space: /globe?ask=… auto-asks + drives the globe agentically.
     try { const a = new URLSearchParams(window.location.search).get("ask"); if (a) { setAsk(a); setTimeout(() => runAsk(a), 400); } } catch (e) {}
   }, []);

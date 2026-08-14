@@ -104,7 +104,7 @@ export default function Layer0() {
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Layer 0 is the floor every other claim stands on:{" "}
             <strong className="text-emerald-50">
-              Ed25519 signing, the care-floor gate, a 33-agent Byzantine council, and offline
+              Ed25519 signing, the care-floor gate, a 33-agent council, and offline
               verification
             </strong>{" "}
             — and every claim made on this floor carries either a measurement or an honest

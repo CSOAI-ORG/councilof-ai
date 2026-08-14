@@ -245,7 +245,7 @@ export default function TrustCenter() {
       id: "sub-processors",
       title: "Who are your sub-processors?",
       content:
-        "The named register is published on this page — see the Subprocessors section above. It covers Cloudflare (hosting/edge), Stripe (payments), Vercel (legacy hosting, being retired), GitHub (code), Hugging Face (public dataset hosting), our first-party sovereign gateway os.meok.ai, and our email provider. We notify customers before adding any new processor.",
+        "The named register is published on this page — see the Subprocessors section above. It covers Cloudflare (hosting/edge), Stripe (payments), Vercel (legacy hosting, being retired), GitHub (code), Hugging Face (public dataset hosting), our first-party measurement gateway os.meok.ai, and our email provider. We notify customers before adding any new processor.",
       icon: <Users className="h-5 w-5" />,
     },
     {
@@ -360,7 +360,7 @@ export default function TrustCenter() {
     },
     {
       title: "Live Status Page",
-      description: "Real-time probe of the Sovereign gateway, plus our honest incident log.",
+      description: "Real-time probe of the Council gateway, plus our honest incident log.",
       href: "/status",
     },
   ];

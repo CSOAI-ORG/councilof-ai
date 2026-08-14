@@ -26,7 +26,7 @@ export default function EnterprisePlansLanding() {
               Enterprise AI Compliance at Scale
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Empower your organization with enterprise-grade AI safety, compliance monitoring, and Byzantine Council governance.
+              Empower your organization with enterprise-grade AI safety, compliance monitoring, and Council governance.
             </p>
             <Link href="/contact">
               <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg font-semibold">
@@ -70,7 +70,7 @@ export default function EnterprisePlansLanding() {
                 users: 'Up to 100 users',
                 features: [
                   'Everything in Growth',
-                  'Byzantine Council voting',
+                  'Council voting',
                   'Advanced analytics',
                   'Custom workflows',
                   'Full API access',
@@ -171,7 +171,7 @@ export default function EnterprisePlansLanding() {
               },
               {
                 icon: <Shield className="h-8 w-8" />,
-                title: 'Byzantine Council',
+                title: 'Council',
                 description: 'Multi-stakeholder consensus model for critical compliance decisions and governance.'
               },
               {

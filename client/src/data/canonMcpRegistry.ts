@@ -1336,7 +1336,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
     "id": "bft-progress-council-mcp",
     "name": "Bft Progress Council",
     "type": "server",
-    "description": "BFT Progress Council MCP \u2014 5-voter Byzantine council halts agentic loops when no real progress is happening. Stops tokens bleeding on infinite spins. MIT-licensed. Part of MEOK A2A Substrate.",
+    "description": "BFT Progress Council MCP \u2014 5-voter council halts agentic loops when no real progress is happening. Stops tokens bleeding on infinite spins. MIT-licensed. Part of MEOK A2A Substrate.",
     "category": "Agent Infrastructure (A2A)",
     "url": "https://github.com/CSOAI-ORG/bft-progress-council-mcp",
     "tags": [],

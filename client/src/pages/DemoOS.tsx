@@ -18,7 +18,7 @@ type Win = { title: string; src: string; slot: Slot };
 type Step = { say: string; wins?: Win[]; fly?: { lng: number; lat: number; height: number }; layer?: { tag: string; on: boolean }; home?: boolean; full?: boolean; neutralize?: boolean; rearm?: boolean; cmd?: any };
 
 const STEPS: Step[] = [
-  { say: "Welcome. Every other AI-governance tool hands you a checklist and a dashboard. This is different - a live Sovereign operating system for AI governance, running on the real world, with cryptographic proof behind every move. I'm your Sovereign, and I'll show you everything others can't. Just watch, and interrupt me any time." },
+  { say: "Welcome. Every other AI-governance tool hands you a checklist and a dashboard. This is different - a live Sovereign operating system for AI governance, running on the real world, with cryptographic proof behind every move. I'm your Council assistant, and I'll show you everything others can't. Just watch, and interrupt me any time." },
   { say: "First, let me see where you are.", fly: { lng: 0, lat: 20, height: 20000000 } },
   { say: "Watch - I can drop into any real place on Earth. Here's London, live, from orbit down to the street.", fly: { lng: -0.118, lat: 51.509, height: 15000 } },
   { say: "Now up to orbit - the live view from space, every satellite and signal, mapped and governed.", wins: [{ title: "🛰 Earth from orbit - live", src: "/spacecam.html", slot: "tr" }], fly: { lng: -0.118, lat: 40, height: 22000000 }, layer: { tag: "sats", on: true } },
@@ -47,9 +47,9 @@ const STEPS: Step[] = [
   { say: "Under it all, a living mesh - cross-region handoffs, so a decision made anywhere is honoured everywhere.", layer: { tag: "arcs", on: true } },
   { say: "And the agents themselves - governed swarms across every hub, each one accountable, each one signed.", layer: { tag: "swarm", on: true } },
   { say: "Every framework lives where it's made - the EU AI Act in Brussels, NIST near Washington, PIPL in Beijing. Comply once, and I crosswalk it everywhere.", full: true, fly: { lng: 116.4, lat: 39.9, height: 2600000 } },
-  { say: "Now here's why we're a generation ahead. Watch our Byzantine council rise. Thirty-three sovereign agents, spiralling into consensus - no single model decides, a fault-tolerant council does, and every vote is held to a 0.95 care-floor. This is governance that can't be captured or bribed.", cmd: { cmd: "bftSpiral" }, full: true },
+  { say: "Now here's why we're a generation ahead. Watch our designed 33-agent council rise. Thirty-three agents, spiralling into a vote - no single model decides, the council does, and every vote is held to a 0.95 care-floor. This is governance that can't be captured or bribed.", cmd: { cmd: "bftSpiral" }, full: true },
   { say: "And beneath every agent, our Rainbow Stack - defence-in-depth in seven layers. Red attestation, orange identity, yellow transport, green access, blue payment, indigo memory, violet governance. Security woven through the whole spiral, not bolted on. No one else builds it this way.", cmd: { cmd: "rainbowStack" }, full: true },
-  { say: "Now - personalisation. As you use the OS, your Sovereign learns your preferences and becomes your signed digital counterpart - carrying a signed digital ID passport via proofof.ai. And you can mint the same: digital-passported agents for your enterprise or government, each one identified, accountable and Ed25519-signed to Layer 0.", cmd: { cmd: "clearViz" }, wins: [{ title: "Your sovereign twin (design)", src: "/sovereign-twin", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
+  { say: "Now - personalisation. As you use the OS, your Council assistant learns your preferences and becomes your signed digital counterpart - carrying a signed digital ID passport via proofof.ai. And you can mint the same: digital-passported agents for your enterprise or government, each one identified, accountable and Ed25519-signed to Layer 0.", cmd: { cmd: "clearViz" }, wins: [{ title: "Your sovereign twin (design)", src: "/sovereign-twin", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
   { say: "Now the proof. This is ONE OS for agents AND humanoids - I track every single one, live and global.", layer: { tag: "humanoids", on: true }, fly: { lng: 10, lat: 25, height: 26000000 } },
   { say: "I map their environments by WiFi sensing, LoRa and Bluetooth mesh - consent-first, no private cameras - and every humanoid runs PDCA, simulating outcomes to pick the governed path.", full: true },
   { say: "Here's a humanoid on the ground in London. Let me bring up the local public street cam - live - so you can watch the real world and the AI economy moving in it.", wins: [{ title: "◉ Public street cam - London (live)", src: "/livecam.html?loc=London", slot: "tr" }], layer: { tag: "humanoids", on: true }, fly: { lng: -0.118, lat: 51.509, height: 60000 } },
@@ -383,7 +383,7 @@ export default function DemoOS() {
           <div role="status" aria-live="polite" className="mt-3 max-w-md rounded-md border border-amber-400/35 bg-amber-400/15 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
             You are interacting with an AI system.
           </div>
-          <h2 className="mt-4 text-2xl font-black text-emerald-100">Grant your Sovereign a voice</h2>
+          <h2 className="mt-4 text-2xl font-black text-emerald-100">Grant your Council assistant a voice</h2>
           <p className="mt-2 max-w-md text-sm text-emerald-100/75">Allow the mic so you can just talk to me during the tour - interrupt any time and I'll listen. Nothing is recorded or sold; on-device, consent-first.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <button onClick={allowVoice} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">🎙 Allow &amp; continue</button>
@@ -396,7 +396,7 @@ export default function DemoOS() {
       {mode === null && i === -1 && !booting && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#03080e]/55 backdrop-blur-sm px-6 text-center">
           <div className="h-12 w-12 animate-pulse rounded-full border border-emerald-300/40 bg-emerald-500/10" style={{ boxShadow: "0 0 40px rgba(16,185,129,.4)" }} />
-          <p className="mt-5 font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Your Sovereign is taking over…</p>
+          <p className="mt-5 font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Your Council assistant is taking over…</p>
           <p className="mt-2 text-sm text-emerald-100/70">🎙 Speak or tap any time to interrupt.</p>
         </div>
       )}

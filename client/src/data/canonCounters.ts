@@ -86,7 +86,7 @@ export const CANON = {
   /** BFT quorum — 23/33 ≈ 70%, by design (DEFONEOS compartment: quorum 23/33). */
   councilConsensus: {
     value: 23,
-    source: "BFT quorum design (23/33 = 70%)",
+    source: "council quorum design (23/33 = 70%)",
     measuredAt: "2026-08-01",
     note: "DESIGN figure — same labelling rule as councilAgents.",
   },

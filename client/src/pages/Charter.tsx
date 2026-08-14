@@ -55,7 +55,7 @@ const charterSections = [
     items: [
       { num: 1, title: "The Maternal Covenant", desc: "Foundational relationship between humanity and AI", highlight: true },
       { num: 2, title: "Provable Safety Requirements", desc: "Mathematical and empirical safety standards" },
-      { num: 3, title: "Byzantine Council Oversight", desc: "33-agent AI-to-AI monitoring architecture" },
+      { num: 3, title: "Council Oversight", desc: "33-agent AI-to-AI monitoring architecture" },
       { num: 4, title: "Value Uncertainty Principles", desc: "Handling moral and ethical uncertainty" },
       { num: 5, title: "Constitutional AI Principles", desc: "Core values embedded in AI systems" },
       { num: 6, title: "Consciousness Preparedness", desc: "Protocols for potential AI consciousness" },
@@ -74,7 +74,7 @@ const charterSections = [
     items: [
       { num: 9, title: "Founding Principles & Definitions", desc: "Core terminology and interpretive principles" },
       { num: 10, title: "Licensing Framework", desc: "Tiered licensing system and requirements" },
-      { num: 11, title: "Byzantine Council Specifications", desc: "Technical architecture of AI oversight" },
+      { num: 11, title: "Council Specifications", desc: "Technical architecture of AI oversight" },
       { num: 12, title: "Human Council", desc: "Human oversight body structure" },
       { num: 13, title: "Public Watchdog", desc: "Transparency and public accountability" },
       { num: 14, title: "Democratic Participation", desc: "Public input and governance participation" },
@@ -175,7 +175,7 @@ const schedules = [
   { id: "H", title: "Reference Standards", desc: "Mappings to ISO, NIST, EU AI Act, and other frameworks", icon: Layers },
   { id: "I", title: "Consciousness Indicators", desc: "14 markers for detecting potential AI sentience", icon: Brain },
   { id: "J", title: "Prosperity Fund Calculations", desc: "Contribution formulas based on revenue and AI impact", icon: Landmark },
-  { id: "K", title: "Voting Procedures", desc: "Byzantine Council consensus rules and human override protocols", icon: Vote },
+  { id: "K", title: "Voting Procedures", desc: "Council consensus rules and human override protocols", icon: Vote },
   { id: "L", title: "Appeal Forms", desc: "Templates for disputes, exemptions, and regulatory challenges", icon: Scale },
   { id: "M", title: "Certification Marks", desc: "CSOAI badge specifications and usage guidelines", icon: Award },
 ];
@@ -187,7 +187,7 @@ const faqItems = [
   },
   {
     question: "How is this different from the EU AI Act?",
-    answer: "The EU AI Act is a government regulation focused on compliance and penalties. The CSOAI Charter is a voluntary framework that goes further in three key ways: (1) It establishes a relationship-based approach through the Maternal Covenant rather than just rules-based compliance; (2) It creates economic redistribution through the Prosperity Fund, ensuring AI wealth benefits everyone; (3) It provides operational infrastructure—the Byzantine Council, Watchdog system, and certified analysts—to actually implement safety monitoring. The Charter is designed to complement the EU AI Act, helping organizations exceed regulatory requirements while creating meaningful jobs in AI oversight."
+    answer: "The EU AI Act is a government regulation focused on compliance and penalties. The CSOAI Charter is a voluntary framework that goes further in three key ways: (1) It establishes a relationship-based approach through the Maternal Covenant rather than just rules-based compliance; (2) It creates economic redistribution through the Prosperity Fund, ensuring AI wealth benefits everyone; (3) It provides operational infrastructure—the Council, Watchdog system, and certified analysts—to actually implement safety monitoring. The Charter is designed to complement the EU AI Act, helping organizations exceed regulatory requirements while creating meaningful jobs in AI oversight."
   },
   {
     question: "Who wrote this Charter?",
@@ -207,11 +207,11 @@ const faqItems = [
   },
   {
     question: "How is the Charter enforced?",
-    answer: "Enforcement operates through four mechanisms: (1) the designed Council—a 33-agent AI system using 12 different AI providers intended to monitors licensed systems 24/7 for safety violations; (2) Public Watchdog—a transparency platform where safety incidents are publicly disclosed; (3) Certified Analysts—trained human professionals who review AI systems and validate Byzantine Council decisions; (4) License Revocation—organizations that violate Charter terms lose their license and CSOAI certification, which is publicly disclosed. The combination of AI monitoring, human oversight, and public transparency creates accountability at every level."
+    answer: "Enforcement operates through four mechanisms: (1) the designed Council—a 33-agent AI system using 12 different AI providers intended to monitors licensed systems 24/7 for safety violations; (2) Public Watchdog—a transparency platform where safety incidents are publicly disclosed; (3) Certified Analysts—trained human professionals who review AI systems and validate Council decisions; (4) License Revocation—organizations that violate Charter terms lose their license and CSOAI certification, which is publicly disclosed. The combination of AI monitoring, human oversight, and public transparency creates accountability at every level."
   },
   {
     question: "Can the Charter be amended?",
-    answer: "Yes, Article 48 establishes the amendment process. Minor amendments require 67% approval from the Human Council. Major amendments (changes to foundational principles) require 80% approval plus a 90-day public comment period. Emergency amendments for safety-critical issues can be fast-tracked with 90% approval. Founding Members have enhanced voting rights (2 votes vs. 1) on all amendments. The Byzantine Council can propose amendments based on patterns detected in safety monitoring, but all amendments must be approved by humans."
+    answer: "Yes, Article 48 establishes the amendment process. Minor amendments require 67% approval from the Human Council. Major amendments (changes to foundational principles) require 80% approval plus a 90-day public comment period. Emergency amendments for safety-critical issues can be fast-tracked with 90% approval. Founding Members have enhanced voting rights (2 votes vs. 1) on all amendments. The Council can propose amendments based on patterns detected in safety monitoring, but all amendments must be approved by humans."
   },
 ];
 
@@ -223,9 +223,9 @@ const integrationSteps = [
     details: ["Risk classification system", "Documentation requirements", "Testing protocols", "Audit procedures"]
   },
   {
-    title: "Byzantine Council",
+    title: "Council",
     icon: Users,
-    description: "33 AI agents from 12 different providers monitor licensed systems 24/7, using Byzantine consensus to prevent single-vendor bias.",
+    description: "33 AI agents from 12 different providers monitor licensed systems 24/7, using multi-agent council to prevent single-vendor bias.",
     details: ["Real-time safety monitoring", "Multi-vendor consensus", "Automated alerts", "Human escalation"]
   },
   {
@@ -332,7 +332,7 @@ export default function Charter() {
                     <h3 className="font-bold text-lg">Safety First</h3>
                   </div>
                   <p className="text-gray-600">
-                    Mathematical proof of safety, not just promises. The Byzantine Council monitors AI systems 24/7.
+                    Mathematical proof of safety, not just promises. The Council monitors AI systems 24/7.
                   </p>
                 </CardContent>
               </Card>
@@ -515,7 +515,7 @@ export default function Charter() {
             {[
               { num: 1, title: "Maternal Covenant", icon: Heart, color: "emerald", desc: "Care-based safety relationship" },
               { num: 2, title: "Provable Safety", icon: Shield, color: "green", desc: "Mathematical proof requirements" },
-              { num: 3, title: "Byzantine Council", icon: Users, color: "teal", desc: "33-agent AI monitoring" },
+              { num: 3, title: "Council", icon: Users, color: "teal", desc: "33-agent AI monitoring" },
               { num: 4, title: "Value Uncertainty", icon: Scale, color: "lime", desc: "Epistemic humility in ethics" },
               { num: 5, title: "Constitutional", icon: BookOpen, color: "emerald", desc: "10 core embedded principles" },
               { num: 6, title: "Consciousness", icon: Brain, color: "green", desc: "14 sentience indicators" },
@@ -758,7 +758,7 @@ export default function Charter() {
                   { step: "1", label: "Organization obtains License", icon: Award },
                   { step: "2", label: "Staff complete CEASAI Certification", icon: BookOpen },
                   { step: "3", label: "AI systems registered in Charter", icon: FileText },
-                  { step: "4", label: "Byzantine Council monitors 24/7", icon: Eye },
+                  { step: "4", label: "Council monitors 24/7", icon: Eye },
                   { step: "5", label: "Analysts review flagged issues", icon: Users },
                   { step: "6", label: "Compliance reports published", icon: Globe2 },
                   { step: "7", label: "Prosperity Fund receives contributions", icon: DollarSign },

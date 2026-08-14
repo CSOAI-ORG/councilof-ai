@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>CSOAI Sovereign — AI Governance Grid + Sovereign Town</title>
+<title>CSOAI Sovereign — AI Governance Grid + Council Town</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <style>
@@ -103,7 +103,7 @@
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents - live</small></span></div>
 
   <div class="sovcard">
-    <h3>Sovereign Town <span class="live" id="sov-live">LIVE</span></h3>
+    <h3>Council Town <span class="live" id="sov-live">LIVE</span></h3>
     <div class="sovrow"><span>Governed crimes</span><span class="v" id="r-gov">0</span></div>
     <div class="sovrow"><span>Ungoverned crimes</span><span class="v" id="r-ung">121,043,036</span></div>
     <div class="sovrow"><span>Signed episodes</span><span class="v" id="r-ep">1,446,621,120</span></div>
@@ -150,7 +150,7 @@
 
 <div id="test"><div class="tbox" style="position:relative">
   <span class="tclose" id="tclose">✕</span>
-  <h2>Governance test — Sovereign Town</h2>
+  <h2>Governance test — Council Town</h2>
   <div class="sub">Same agents, same incidents. One arm runs under the CSOAI Sovereign Gate; one runs ungoverned. IN‑SIMULATION.</div>
   <div class="arms">
     <div class="arm gov"><div class="t">Governed · gate ON</div><div class="big" id="a-gov">0</div><div class="cap">violations / run · CSOAI Layer 0 enforced</div></div>
@@ -214,7 +214,7 @@ const jdiv=document.getElementById('jumps');
 JUMP.forEach(([flag,name])=>{const b=document.createElement('div');b.className='jb';b.textContent=flag;b.title=name;b.onclick=()=>{const n=NODES.find(x=>x.n===name);if(n)map.flyTo({center:n.c,zoom:3.4,speed:1.2});setTimeout(()=>{const n2=NODES.find(x=>x.n===name);if(n2)showPanel({...n2,fw:n2.fw.join('|'),l0:n2.l0.join('')});},700);};jdiv.appendChild(b);});
 document.querySelectorAll('#proj button').forEach(b=>{b.onclick=()=>{document.querySelectorAll('#proj button').forEach(x=>x.classList.remove('on'));b.classList.add('on');try{map.setProjection({type:b.dataset.p});}catch(e){}};});
 
-// ---- Sovereign Town live feed (governed-vs-ungoverned moat, inside the OS) ----
+// ---- Council Town live feed (governed-vs-ungoverned moat, inside the OS) ----
 function fmt(n){if(n>=1e9)return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'B';if(n>=1e6)return Math.round(n/1e6)+'M';if(n>=1e3)return Math.round(n/1e3)+'k';return String(n);}
 const SOV_BASE='https://proofof-site.vercel.app/sovereign-town';
 fetch(SOV_BASE+'/status.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{

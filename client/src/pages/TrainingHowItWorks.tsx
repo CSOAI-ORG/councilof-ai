@@ -79,7 +79,7 @@ export default function TrainingHowItWorks() {
         "Australia AI Governance",
         "ISO 42001 Mastery",
         "SOAI-PDCA Methodology",
-        "Byzantine Council Decision Making",
+        "Council Decision Making",
         "Enterprise Compliance Strategy",
         "Capstone Project"
       ],

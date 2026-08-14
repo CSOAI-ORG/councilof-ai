@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>CSOAI Charter Network — Interactive Force Graph</title>
-<meta name="description" content="CSOAI Charter Network — sovereign charter governance framework. Ed25519-signed, BFT-verified.">
+<meta name="description" content="CSOAI Charter Network — sovereign charter governance framework. Ed25519-signed, multi-agent-reviewed.">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --ink: #0b1020; --bg: #050816; --panel: #0d1330; --line: #1a2050;
@@ -33,12 +33,12 @@
 </style>
 <link rel="canonical" href="https://csoai.org/charter-network.html">
 <meta property="og:title" content="Charter Network">
-<meta property="og:description" content="CSOAI Charter Network — sovereign charter governance framework. Ed25519-signed, BFT-verified.">
+<meta property="og:description" content="CSOAI Charter Network — sovereign charter governance framework. Ed25519-signed, multi-agent-reviewed.">
 <meta property="og:image" content="https://csoai.org/og-defoneos.png">
 <meta property="og:url" content="https://csoai.org/charter-network.html">
 <meta property="og:type" content="website">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","name":"Charter Network","description":"CSOAI Charter Network — sovereign charter governance framework. Ed25519-signed, BFT-verified.","url":"https://csoai.org/charter-network.html","publisher":{"@type":"Organization","name":"CSOAI Ltd","url":"https://csoai.org/"}}
+{"@context":"https://schema.org","@type":"WebPage","name":"Charter Network","description":"CSOAI Charter Network — sovereign charter governance framework. Ed25519-signed, multi-agent-reviewed.","url":"https://csoai.org/charter-network.html","publisher":{"@type":"Organization","name":"CSOAI Ltd","url":"https://csoai.org/"}}
 </script>
 </head>
 <body>
@@ -55,7 +55,7 @@
   <header>
     <span class="pill">CHARTER NETWORK · INTERACTIVE</span>
     <h1>Sovereign Charter Force Graph</h1>
-    <p style="color:var(--mut);">41 charters cross-walked to 142 frameworks. Drag nodes, click to inspect, scroll to zoom.</p>
+    <p style="color:var(--mut);">41 charters cross-walked to 142 provisions. Drag nodes, click to inspect, scroll to zoom.</p>
   </header>
 
   <div class="controls">
@@ -70,7 +70,7 @@
     <canvas id="canvas"></canvas>
     <div class="info" id="info">
       <div class="info-h">Hover or click a node</div>
-      <div style="color:var(--mut);">41 charters, 142 frameworks, 5,043 cross-walks</div>
+      <div style="color:var(--mut);">41 charters, 142 crosswalked provisions, 5,043 cross-walks</div>
     </div>
   </div>
 
@@ -84,7 +84,7 @@
   </div>
 
   <footer>
-    CSOAI Ltd · UK 16939677 · Sovereign by design · Article 0 binding · Ed25519-signed · BFT-ratified · OTS-anchored
+    CSOAI Ltd · UK 16939677 · Sovereign by design · Article 0 binding · Ed25519-signed · council-ratified · OTS-anchored
   </footer>
 </div>
 
@@ -248,7 +248,7 @@ canvas.onmousemove = (e) => {
     info.innerHTML = '<div class="info-h">' + found.label + '</div><div>Category: ' + found.cat + '</div><div>Size: ' + found.size + 'px</div><div>Position: (' + found.x.toFixed(0) + ', ' + found.y.toFixed(0) + ')</div>';
     canvas.style.cursor = 'pointer';
   } else {
-    info.innerHTML = '<div class="info-h">Hover or click a node</div><div style="color:var(--mut);">41 charters, 142 frameworks, 5,043 cross-walks</div>';
+    info.innerHTML = '<div class="info-h">Hover or click a node</div><div style="color:var(--mut);">41 charters, 142 crosswalked provisions, 5,043 cross-walks</div>';
     canvas.style.cursor = 'default';
   }
 };

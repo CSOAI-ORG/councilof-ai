@@ -10,7 +10,7 @@ const OAUTH: Record<Profile, { name: string; why: string }[]> = {
 const TOUR: { pane: string; text: string }[] = [
   { pane: "social", text: "Left: your social world. Every channel in one rail, kept calm and governed." },
   { pane: "browser", text: "Centre: a full web browser. Work where you already work; I ride along, never in the way." },
-  { pane: "sovereign", text: "Right: me, your Sovereign. Speak or type and I act - and I always tell you it is me. No hidden AI." },
+  { pane: "sovereign", text: "Right: me, your Council assistant. Speak or type and I act - and I always tell you it is me. No hidden AI." },
 ];
 const CONSENTS = ["Calendar", "Photos", "Contacts", "Camera"];
 
@@ -36,7 +36,7 @@ export default function OnboardOS() {
       <div className="min-h-screen bg-[#03110b] text-emerald-50 flex flex-col items-center justify-center px-6 py-16">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - welcome</p>
         <h1 className="mt-2 text-5xl sm:text-6xl font-black tracking-tight text-center">This becomes <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">your OS.</span></h1>
-        <p className="mt-3 max-w-xl text-center text-emerald-100/80">One thing first - who is this for? I will set up your Sovereign and suggest the right logins. Nothing is connected until you say so.</p>
+        <p className="mt-3 max-w-xl text-center text-emerald-100/80">One thing first - who is this for? I will set up your Council assistant and suggest the right logins. Nothing is connected until you say so.</p>
         <div className="mt-8 grid gap-4 sm:grid-cols-3 w-full max-w-4xl">
           {cards.map((c) => (
             <button key={c.id} onClick={() => { setProfile(c.id); setTour(0); }} className="rounded-2xl border border-emerald-500/25 bg-[#05140d] p-6 text-left hover:border-emerald-400/60 hover:bg-emerald-500/5">

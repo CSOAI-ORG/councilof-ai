@@ -26,7 +26,7 @@ export type SovPersona = {
 export const PERSONAS: Record<SovPersonaId, SovPersona> = {
   csoai: {
     id: "csoai",
-    name: "Your Sovereign",
+    name: "Your Council assistant",
     sub: "CSOAI OS — agent-first",
     glyph: "◉",
     greeting:

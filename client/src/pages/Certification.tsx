@@ -63,10 +63,10 @@ const sampleQuestions = [
   },
   {
     id: 4,
-    question: "In the CSOAI 33-agent Council, how many votes ratify a decision (the BFT quorum)?",
+    question: "In the CSOAI 33-agent Council, how many votes ratify a decision (the council quorum)?",
     options: [
       "17 of 33 (simple majority)",
-      "23 of 33 (Byzantine two-thirds quorum, ~70%)",
+      "23 of 33 (two-thirds quorum, ~70%)",
       "25 of 33 (three-quarters)",
       "33 of 33 (unanimous)"
     ],

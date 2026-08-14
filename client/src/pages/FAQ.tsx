@@ -406,7 +406,7 @@ const faqData: FAQItem[] = [
   },
   {
     category: "TECHNICAL",
-    question: "How does the 33-Agent Byzantine consensus work?",
+    question: "How does the designed 33-agent council work?",
     answer:
       "The 33-Agent Council uses designed multi-agent review (BFT-style) consensus where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). If up to 10 agents malfunction or provide incorrect information, the council can still reach correct consensus with mathematical certainty. Decisions require approval from at least 23 agents (67%), ensuring robust, reliable governance outcomes.",
     tags: ["technical", "council"],

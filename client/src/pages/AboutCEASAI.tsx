@@ -139,7 +139,7 @@ export default function AboutCEASAI() {
                   <div className="h-5 w-5 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-white text-xs">✓</span>
                   </div>
-                  <span className="text-gray-700">Byzantine Council oversight</span>
+                  <span className="text-gray-700">Council oversight</span>
                 </li>
               </ul>
             </div>
@@ -189,7 +189,7 @@ export default function AboutCEASAI() {
               </div>
               <h3 className="text-xl font-bold mb-3">Industry Recognition</h3>
               <p className="text-gray-600">
-                Our certifications are recognized by enterprises, regulators, and the Byzantine Council—the global oversight 
+                Our certifications are recognized by enterprises, regulators, and the Council—the global oversight 
                 body for AI safety.
               </p>
             </div>

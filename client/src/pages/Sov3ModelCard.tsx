@@ -34,7 +34,7 @@ export default function Sov3ModelCard() {
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Model card · v1</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
-            SOV3 — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a governed sovereign substrate</span>, not a foundation model.
+            SOV3 — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a governed the measurement engine</span>, not a foundation model.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             SOV3 is a <b className="text-emerald-200">sandwich architecture</b>: open-weight base models wrapped in a
@@ -101,7 +101,7 @@ export default function Sov3ModelCard() {
               <tr className="border-t border-emerald-500/10"><td className="py-2">Chain-of-thought</td><td>DeepSeek-R1</td><td>MIT</td></tr>
               <tr className="border-t border-emerald-500/10"><td className="py-2">Voice</td><td>Kokoro-82M / Piper TTS</td><td>Apache/MIT</td></tr>
               <tr className="border-t border-emerald-500/10"><td className="py-2">Retrieval</td><td>BGE-M3 + BGE-reranker</td><td>MIT</td></tr>
-              <tr className="border-t border-emerald-500/10"><td className="py-2">Attestation</td><td>Ed25519 hash-chained SIGIL, every hop signed</td><td>ours</td></tr>
+              <tr className="border-t border-emerald-500/10"><td className="py-2">Attestation</td><td>Ed25519-signed measurement card, every hop signed</td><td>ours</td></tr>
             </tbody>
           </table>
         </Section>

@@ -11,7 +11,7 @@ const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/
 function osRoute(a: any): string | null { if (!a || !a.command) return null; if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url); if (a.command === "open_app" && a.args && a.args.id) return OS_APP_ROUTES[String(a.args.id).toLowerCase()] || null; if (a.command === "govern") return "/graph"; return null; }
 
 // CSOAI OS — the unified launcher. One surface where an end user opens every
-// CSOAI governance tool working together: the live Sovereign Town heartbeat, the Layer 0
+// CSOAI governance tool working together: the live Council Town heartbeat, the Layer 0
 // status, and a launchpad of every app. This is os.csoai.org's home.
 
 type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean; pro?: boolean };
@@ -33,7 +33,7 @@ const APPS: App[] = [
   { name: "Sov Space", desc: "Simulate a real-world governance experiment — the council deliberates live and seals a signed verdict with a ledger hash.", href: "/sov-space", glyph: "◈", tone: "from-emerald-500/25 to-sky-400/10 border-emerald-400/35" },
   { name: "Tool Commons", desc: "Search 370+ governed MCP tools — copy a pip install, wire it into your stack, Layer 0 covered.", href: "/tool-commons", glyph: "⊟", tone: "from-cyan-500/20 to-emerald-400/5 border-cyan-400/30" },
   { name: "Open Commons", desc: "Creative-Commons media search, keyless — build in the open.", href: "/commons", glyph: "◐", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
-  { name: "Your Sovereign twin", desc: "Your AI learns you as you use the OS and grows into your own AI character.", href: "/sovereign-twin", glyph: "◍", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30", pro: true },
+  { name: "Your Council assistant twin", desc: "Your AI learns you as you use the OS and grows into your own AI character.", href: "/sovereign-twin", glyph: "◍", tone: "from-amber-500/20 to-emerald-400/5 border-amber-400/30", pro: true },
   { name: "System Status", desc: "The transparency board — every core system, live.", href: "/status", glyph: "◉", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
   { name: "Global AI Watchdog", desc: "The public watchdog for humans, agents, humanoids and systems — report a signal, watch the world heat-map by problem layer, live.", href: "/watchdog-map", glyph: "◎", tone: "from-rose-500/20 to-amber-400/5 border-rose-400/30" },
   { name: "ONE OS — agents & humanoids", desc: "The proof of concept: live-track every agent and humanoid, PDCA auto-simulation, and watch the Sovereign stop a rogue swarm before it ungoverns — signed.", href: "/poc", glyph: "⬢", tone: "from-emerald-500/25 to-rose-400/10 border-emerald-400/35", pro: true },
@@ -46,7 +46,7 @@ const APPS: App[] = [
   { name: "Relevance Map", desc: "What governs what — pick your industry, see the relevant CSOAI bridges, frameworks and gaps.", href: "/map", glyph: "◌", tone: "from-sky-500/20 to-emerald-400/5 border-sky-400/30" },
   { name: "Framework Temples", desc: "Each regulation a temple at its real-world seat — step inside for the visual breakdown.", href: "/temples", glyph: "卂", tone: "from-amber-500/20 to-teal-400/5 border-amber-400/30" },
   { name: "Industry Playbooks", desc: "For your sector: the AI scenario, risk tier, frameworks, the CSOAI bridges that cover you, and the steps.", href: "/playbooks", glyph: "▣", tone: "from-emerald-500/20 to-sky-400/5 border-emerald-400/30" },
-  { name: "Sovereign Town", desc: "The signed record of AI governance — governed vs ungoverned, live.", href: "/sovereign-town", glyph: "▦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
+  { name: "Council Town", desc: "The signed record of AI governance — governed vs ungoverned, live.", href: "/sovereign-town", glyph: "▦", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Command Center", desc: "Your whole governance program on one screen.", href: "/command-center", glyph: "◉", tone: "from-emerald-500/20 to-emerald-400/5 border-emerald-400/30" },
   { name: "Layer 0 Protocol", desc: "The 8 trust controls every governed agent stands on.", href: "/trust-center", glyph: "▥", tone: "from-amber-500/20 to-amber-400/5 border-amber-400/30" },
   { name: "Regulation Atlas", desc: "Live AI law across 40+ jurisdictions — what applies, what to do.", href: "/global-regulations", glyph: "❖", tone: "from-teal-500/20 to-teal-400/5 border-teal-400/30" },
@@ -195,7 +195,7 @@ export default function OsLauncher() {
             </p>
             <div className="mt-6">
               <div className="flex gap-2">
-                <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="Ask your Sovereign anything…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-3.5 text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
+                <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="Ask your Council assistant anything…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-3.5 text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
                 <button onClick={runAsk} className="rounded-xl bg-emerald-500 px-6 py-3.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60" disabled={asking}>{asking ? "Reasoning…" : "Ask"}</button>
               </div>
               {answer && <div className="mt-3 whitespace-pre-wrap rounded-xl border border-emerald-400/25 bg-white/[0.03] px-4 py-3 text-sm leading-relaxed text-emerald-50/90">{answer}</div>}

@@ -234,7 +234,7 @@ export default function MembershipAgreement() {
                     "Maintain confidentiality of Member information",
                     "Provide reasonable notice of Charter amendments",
                     "Operate governance processes democratically",
-                    "Maintain the Byzantine Council monitoring infrastructure"
+                    "Maintain the Council monitoring infrastructure"
                   ].map((item, index) => (
                     <li key={index} className="flex items-start gap-2">
                       <CheckCircle className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />

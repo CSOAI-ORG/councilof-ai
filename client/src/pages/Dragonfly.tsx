@@ -65,7 +65,7 @@ export default function Dragonfly() {
               );
             })}
             <rect x={246} y={310} width={8} height={70} rx={4} fill="#0f766e" opacity={0.7} />
-            <text x={250} y={405} textAnchor="middle" fill="#64748b" fontSize={12} fontWeight={700}>designed: all four must agree -&gt; BFT consensus</text>
+            <text x={250} y={405} textAnchor="middle" fill="#64748b" fontSize={12} fontWeight={700}>designed: all four must agree -&gt; multi-agent council</text>
           </svg>
         </div>
         <div className="rounded-2xl border border-gray-200 overflow-hidden">
@@ -91,7 +91,7 @@ export default function Dragonfly() {
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-14">
-        <h2 className="text-xl font-bold text-gray-900">The Council of AI - five agents, Byzantine consensus <span className="ml-2 align-middle rounded-full border border-amber-400/50 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700">Designed — not yet live</span></h2>
+        <h2 className="text-xl font-bold text-gray-900">The Council of AI - five agents, multi-agent council <span className="ml-2 align-middle rounded-full border border-amber-400/50 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700">Designed — not yet live</span></h2>
         <p className="mt-1 text-sm text-gray-500">Five independent legs is the design target; measured effective independence is published on /benchmarks and the Refutation Ledger (DR-0007) rather than assumed</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {COUNCIL.map((m) => (

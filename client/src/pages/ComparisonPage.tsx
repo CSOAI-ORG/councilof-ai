@@ -75,7 +75,7 @@ const differentiators = [
     title: "Governance",
     csoai: "Open standards",
     competitors: "Proprietary/closed",
-    description: "Byzantine Council consensus, transparent decision-making",
+    description: "Council consensus, transparent decision-making",
   },
 ];
 
@@ -179,7 +179,7 @@ const comparisonFeatures = [
         consulting: "✗",
       },
       {
-        name: "Byzantine Council (33-agent consensus)",
+        name: "Council (33-agent consensus)",
         csoai: "✓",
         traditional: "✗",
         aiTools: "✗",
@@ -338,7 +338,7 @@ const uniqueAdvantages = [
   },
   {
     icon: Users,
-    title: "Byzantine Council",
+    title: "Council",
     description:
       "33-agent consensus mechanism ensures transparent, unbiased decision-making. Distributed governance prevents any single entity from controlling AI safety outcomes.",
   },
@@ -881,7 +881,7 @@ export default function ComparisonPage() {
               {
                 number: "3",
                 title: "Activate Monitoring",
-                description: "Start real-time Byzantine Council consensus immediately",
+                description: "Start real-time Council consensus immediately",
               },
               {
                 number: "4",
@@ -975,8 +975,8 @@ export default function ComparisonPage() {
                 a: "Consultants provide one-time advice. CSOAI provides continuous, real-time monitoring and compliance automation across all 40+ nations—at a fraction of consulting costs.",
               },
               {
-                q: "Is the Byzantine Council approach proven?",
-                a: "Yes, Byzantine consensus mechanisms are well-established in distributed systems. Our 33-agent council is designed to make decisions reviewable; live fault-tolerance is unproven (measured n_eff 1.21 of 3).",
+                q: "Is the Council approach proven?",
+                a: "Yes, multi-agent council mechanisms are well-established in distributed systems. Our 33-agent council is designed to make decisions reviewable; live fault-tolerance is unproven (measured n_eff 1.21 of 3).",
               },
               {
                 q: "What happens to our data if we leave?",

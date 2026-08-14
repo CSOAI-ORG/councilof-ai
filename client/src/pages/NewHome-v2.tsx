@@ -219,8 +219,8 @@ const faqs = [
     answer: "Yes, ALL 33 courses are 100% free - including Foundation courses, Regional Compliance courses (EU AI Act, NIST, UK, Canada, Australia), and all Industry Specialization courses. The only costs are the attestation exam (£49 one-time) and the Analyst License (£199/year or £19.99/month) which is only required if you want to work as a paid analyst.",
   },
   {
-    question: "How does the Byzantine Council work?",
-    answer: `The Byzantine Council is designed as ${CANON.councilAgents.value} agents across multiple providers (GPT-4, Claude, Gemini, and others). Any safety decision requires ${CANON.councilConsensus.value}/${CANON.councilAgents.value} (70%) for consensus. The council is DESIGNED — measured status is on the Refutation Ledger. No single AI provider has majority control. Human analysts provide final oversight.`,
+    question: "How does the Council work?",
+    answer: `The Council is designed as ${CANON.councilAgents.value} agents across multiple providers (GPT-4, Claude, Gemini, and others). Any safety decision requires ${CANON.councilConsensus.value}/${CANON.councilAgents.value} (70%) for consensus. The council is DESIGNED — measured status is on the Refutation Ledger. No single AI provider has majority control. Human analysts provide final oversight.`,
   },
   {
     question: "What frameworks does CSOAI cover?",
@@ -232,7 +232,7 @@ const faqs = [
   },
   {
     question: "How do enterprises register AI systems?",
-    answer: "Enterprises can register AI systems through our Enterprise portal. The process involves: describing your AI system, self-assessing risk level (minimal, limited, high, or unacceptable), uploading documentation, and receiving automated compliance assessments against all 7 frameworks. Ongoing monitoring is provided through the Byzantine Council.",
+    answer: "Enterprises can register AI systems through our Enterprise portal. The process involves: describing your AI system, self-assessing risk level (minimal, limited, high, or unacceptable), uploading documentation, and receiving automated compliance assessments against all 7 frameworks. Ongoing monitoring is provided through the Council.",
   },
 ];
 
@@ -562,9 +562,9 @@ export default function NewHomeV2() {
           <p className="mt-3 max-w-2xl text-emerald-50/85">Build your identity, connect your world, see governance on the globe, choose your consensus, and browse every regulation - all live.</p>
           <a data-tag="home-deadline-cta" href="/assess" className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-100 hover:bg-amber-400/20"><span className="rounded-md bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-900">2 AUG 2026</span>EU AI Act transparency + GPAI go live - run your free signed risk check -&gt;</a>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <a href="/sovereign" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Sovereign</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
+            <a href="/sovereign" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Council assistant</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
             <a href="/connect" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Connect socials</div><p className="mt-1 text-xs text-white/90">Give your AI character a face.</p></a>
-            <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Sovereign Globe</div><p className="mt-1 text-xs text-white/90">AI governance, layered on the world.</p></a>
+            <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Council Globe</div><p className="mt-1 text-xs text-white/90">AI governance, layered on the world.</p></a>
             <a href="/bft" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Choose your BFT</div><p className="mt-1 text-xs text-white/90">5, 12-around-1, or 33-node swarm.</p></a>
             <a href="/registry" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Registry</div><p className="mt-1 text-xs text-white/90">Every regulation, standard, protocol.</p></a>
           </div>
@@ -1131,7 +1131,7 @@ export default function NewHomeV2() {
                 Designed — not yet measured
               </Badge>
               <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
-                The <span className="text-emerald-400">Byzantine Council</span>
+                The <span className="text-emerald-400">Council</span>
               </h2>
               <p className="text-xl text-gray-500 mb-8 leading-relaxed">
                 A multi-provider council so no single vendor can move a safety decision alone.
@@ -1149,7 +1149,7 @@ export default function NewHomeV2() {
                   </div>
                   <div>
                     <h4 className="font-bold text-white mb-1">23/33 Consensus Required</h4>
-                    <p className="text-gray-500">70% agreement for any safety decision. designed multi-agent review ensures reliability even if agents fail or are compromised.</p>
+                    <p className="text-gray-500">70% agreement for any safety decision. A designed multi-agent review; effective independence is measured, not assumed.</p>
                   </div>
                 </div>
 
@@ -1480,7 +1480,7 @@ export default function NewHomeV2() {
                   <div className="mt-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
                     <div className="flex items-center gap-2 text-emerald-700">
                       <CheckCircle className="h-5 w-5" />
-                      <span className="font-semibold">Verified by Byzantine Council</span>
+                      <span className="font-semibold">Verified by Council</span>
                     </div>
                   </div>
                 </CardContent>
@@ -1509,7 +1509,7 @@ export default function NewHomeV2() {
                 {[
                   "One registration covers ALL 7 frameworks",
                   "Automated compliance scoring in real-time",
-                  "Continuous monitoring by Byzantine Council",
+                  "Continuous monitoring by Council",
                   "Public transparency badges for trust",
                   "Avoid fines up to €35M (EU AI Act)",
                 ].map((item, i) => (

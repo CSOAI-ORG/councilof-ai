@@ -155,7 +155,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "Can I use CSOAI's compliance tools for my enterprise?",
-      answer: "Yes! CSOAI provides compliance assessment tools, documentation templates, and integration with our Byzantine Council for independent review. Contact our enterprise team for custom solutions."
+      answer: "Yes! CSOAI provides compliance assessment tools, documentation templates, and integration with our Council for independent review. Contact our enterprise team for custom solutions."
     },
     {
       question: "What if we fail a compliance audit?",
@@ -267,9 +267,9 @@ export default function ComplianceHowItWorks() {
           </div>
         </div>
 
-        {/* Byzantine Council Role */}
+        {/* Council Role */}
         <div className="mb-20">
-          <h2 className="text-3xl font-bold mb-8 text-center">How the Byzantine Council Helps</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">How the Council Helps</h2>
           <Card className="p-12 border-2 border-emerald-200">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
@@ -326,7 +326,7 @@ export default function ComplianceHowItWorks() {
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold flex-shrink-0">Month 4</div>
                 <div>
-                  <h4 className="font-bold text-emerald-900 mb-1">Byzantine Council Review</h4>
+                  <h4 className="font-bold text-emerald-900 mb-1">Council Review</h4>
                   <p className="text-gray-700">Council independently reviews your compliance</p>
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function ComplianceHowItWorks() {
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Achieve Compliance?</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Start your compliance journey with CSOAI's comprehensive framework and Byzantine Council oversight
+            Start your compliance journey with CSOAI's comprehensive framework and Council oversight
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

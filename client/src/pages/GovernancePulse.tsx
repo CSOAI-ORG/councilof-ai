@@ -76,7 +76,7 @@ export default function GovernancePulse() {
         )}
 
         <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          This feed is produced by the CSOAI intelligence agent (the csoai‑dashboard intel hive) and consumed live by the OS — one source of truth, kept current daily. Your Sovereign uses it to keep your guidance fresh without you lifting a finger.
+          This feed is produced by the CSOAI intelligence agent (the csoai‑dashboard intel hive) and consumed live by the OS — one source of truth, kept current daily. Your Council assistant uses it to keep your guidance fresh without you lifting a finger.
         </div>
       </section>
     </div>

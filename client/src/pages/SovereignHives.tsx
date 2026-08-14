@@ -10,7 +10,7 @@ type State = "Learning" | "Aware" | "Evolving";
 type Hive = { queen: string; name: string; href: string; state: State };
 
 const HIVES: Hive[] = [
-  { queen: "▦", name: "Sovereign Town", href: "/sovereign-town", state: "Evolving" },
+  { queen: "▦", name: "Council Town", href: "/sovereign-town", state: "Evolving" },
   { queen: "◉", name: "Command Center", href: "/command-center", state: "Aware" },
   { queen: "▥", name: "Layer 0", href: "/trust-center", state: "Aware" },
   { queen: "⊟", name: "MCP Fleet", href: "/mcp-fleet", state: "Evolving" },

@@ -34,7 +34,7 @@ export default function WatchdogHelpProtectHumanity() {
     },
     {
       step: "2. Learn the Framework",
-      description: "Understand how CSOAI's Byzantine Council works and how your assessments contribute to global AI safety",
+      description: "Understand how CSOAI's Council works and how your assessments contribute to global AI safety",
       time: "2 hours",
       cost: "Free"
     },
@@ -114,7 +114,7 @@ export default function WatchdogHelpProtectHumanity() {
     },
     {
       step: "Review",
-      description: "Byzantine Council reviews your report and makes recommendations"
+      description: "Council reviews your report and makes recommendations"
     },
     {
       step: "Public",
@@ -137,7 +137,7 @@ export default function WatchdogHelpProtectHumanity() {
     },
     {
       question: "What happens after I report?",
-      answer: "Your report goes to the Byzantine Council for review. They analyze it using their 33-Agent Council methodology. The decision and full analysis are published publicly within 5 business days."
+      answer: "Your report goes to the Council for review. They analyze it using their 33-Agent Council methodology. The decision and full analysis are published publicly within 5 business days."
     },
     {
       question: "Can I report incidents anonymously?",
@@ -157,7 +157,7 @@ export default function WatchdogHelpProtectHumanity() {
     },
     {
       question: "How do I know my work matters?",
-      answer: "Every incident you report is published publicly. You can see the Byzantine Council's analysis and recommendations. You're directly contributing to global AI safety and transparency."
+      answer: "Every incident you report is published publicly. You can see the Council's analysis and recommendations. You're directly contributing to global AI safety and transparency."
     },
     {
       question: "What if I disagree with the Council's decision?",
@@ -282,7 +282,7 @@ export default function WatchdogHelpProtectHumanity() {
             <Card className="p-8 border-2 border-emerald-200">
               <AlertCircle className="w-12 h-12 text-emerald-600 mb-4" />
               <h3 className="text-xl font-bold text-emerald-900 mb-3">Incident Investigation</h3>
-              <p className="text-gray-700 mb-4">Investigate reported AI incidents, gather evidence, assess severity, and document findings for the Byzantine Council.</p>
+              <p className="text-gray-700 mb-4">Investigate reported AI incidents, gather evidence, assess severity, and document findings for the Council.</p>
             </Card>
             <Card className="p-8 border-2 border-emerald-200">
               <BookOpen className="w-12 h-12 text-emerald-600 mb-4" />

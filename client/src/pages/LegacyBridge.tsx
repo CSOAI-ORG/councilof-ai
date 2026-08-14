@@ -55,7 +55,7 @@ export default function LegacyBridge() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          Google built coordination. Stripe built checkout. CSOAI built the floor under it all — including the half‑century of COBOL still running banks, governments and insurers. Ask your Sovereign “bridge my mainframe” and it routes you here. Live tunnels and attestation switch on with the Layer 0 gateway.
+          Google built coordination. Stripe built checkout. CSOAI built the floor under it all — including the half‑century of COBOL still running banks, governments and insurers. Ask your Council assistant “bridge my mainframe” and it routes you here. Live tunnels and attestation switch on with the Layer 0 gateway.
         </div>
       </section>
     </div>

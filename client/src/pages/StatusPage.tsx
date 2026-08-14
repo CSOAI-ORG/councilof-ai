@@ -5,10 +5,10 @@ import { CANON } from "../data/canonCounters";
 // Components listed on this page. Only entries with a probe are checked live from
 // the browser; everything else is labelled honestly as not probed from this page.
 const COMPONENTS: { name: string; probe: "gateway" | "tools" | null }[] = [
-  { name: "Sovereign gateway (os.meok.ai/api/health)", probe: "gateway" },
-  { name: "Governed tool fleet (os.meok.ai/api/tools)", probe: "tools" },
-  { name: "Byzantine Council (BFT consensus)", probe: null },
-  { name: "Compliance engine (30 frameworks)", probe: null },
+  { name: "Council gateway (health probe)", probe: "gateway" },
+  { name: "Governed tool fleet (tools probe)", probe: "tools" },
+  { name: "Council (multi-agent council)", probe: null },
+  { name: "Compliance engine (4 control-sets)", probe: null },
   { name: "Layer 0 signing (Ed25519)", probe: null },
   { name: "Governance Graph (live world data)", probe: null },
   { name: "Sigil ledger + hash-chain", probe: null },

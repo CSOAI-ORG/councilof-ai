@@ -44,7 +44,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
 
 const KNOWLEDGE: { re: RegExp; a: string }[] = [
   { re: /what.?s? layer ?0|explain layer ?0/i, a: "Layer 0 is the trust floor for AI: identity (did:csoai), runtime policy, agentic-finance pre-checks, a legacy bridge and cross-region handoff, plus Ed25519 attestation and A2A. Every governed agent stands on it." },
-  { re: /who are you|what are you/i, a: "I am your Sovereign - the agent-first interface to the CSOAI OS. Speak or type and I act: open any tool, explain any framework, answer with live world data, and route you to a signed council verdict." },
+  { re: /who are you|what are you/i, a: "I am your Council assistant - the agent-first interface to the CSOAI OS. Speak or type and I act: open any tool, explain any framework, answer with live world data, and route you to a signed council verdict." },
 ];
 
 const QUICK: { label: string; href: string }[] = [
@@ -115,7 +115,7 @@ export default function SovereignDock() {
   const go = (href: string) => { if (/^https?:\/\//.test(href)) window.open(href, "_blank"); else navigate(href); };
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "I am your Sovereign. Ask me anything, or tell me what to do - I answer with live world data and take you where you need to go." }]);
+  const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "I am your Council assistant. Ask me anything, or tell me what to do - I answer with live world data and take you where you need to go." }]);
   const [listening, setListening] = useState(false);
   const [voiceOn, setVoiceOn] = useState(true);
   const [hz, setHz] = useState<any>(null);
@@ -138,9 +138,9 @@ export default function SovereignDock() {
     chargeSovereign(4); try { e.target.value = ""; } catch (er) {}
   }
   const BRAIN: Record<string, string> = {
-    offline: "Offline brain — a local open-source model runs on your own hardware. Fully sovereign, no data leaves you. I wrap it in BFT + Layer 0 so it still stays compliant.",
+    offline: "Offline brain — a local open-source model runs on your own hardware. Fully sovereign, no data leaves you. I wrap it in multi-agent review + Layer 0 so it still stays compliant.",
     hosted: "Hosted brain — premium models, governed. I route your request to the best model (MoE, world model or VLM), the Council of AI checks the answer, and every decision is signed.",
-    paygo: "Pay-as-you-go — you only pay per governed call. Same BFT + Layer 0 floor; ideal for bursty or trial use.",
+    paygo: "Pay-as-you-go — you only pay per governed call. Same multi-agent review + Layer 0 floor; ideal for bursty or trial use.",
   };
   function setBrain(mode: string) { setBrainMode(mode); try { localStorage.setItem("sov_brain_mode", mode); } catch (e) {} setMsgs((m) => m.concat({ role: "sov", text: BRAIN[mode] })); }
 
@@ -173,7 +173,7 @@ export default function SovereignDock() {
     setInput("");
     // Doctrine hard-stop — enforced before any network call, in every persona.
     if (DOCTRINE_RE.test(t)) { setMsgs((m) => m.concat({ role: "sov", text: DOCTRINE_REFUSAL })); return; }
-    chargeSovereign(4); // every question teaches your Sovereign
+    chargeSovereign(4); // every question teaches your Council assistant
     // Only treat input as a navigation command when it's an explicit nav verb or a
     // short topic phrase - never when the user is asking a question (answer those).
     const words = t.split(/\s+/).length;
@@ -203,7 +203,7 @@ export default function SovereignDock() {
       }
     }
     setMsgs((m) => m.concat({ role: "sov", text: "Reasoning over live governance data…" }));
-    // Reason via the live Sovereign gateway; in parallel map the industry to its framework stack.
+    // Reason via the live Council gateway; in parallel map the industry to its framework stack.
     const ind = INDUSTRIES.find((w) => new RegExp("\\b" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i").test(t));
     const [answer, gov] = await Promise.all([askChat(t, persona.system), ind ? askGovern(ind) : Promise.resolve(null)]);
     let out = answer || "";
@@ -241,7 +241,7 @@ export default function SovereignDock() {
   return (
     <>
       {!open && (
-        <button onClick={() => setOpen(true)} aria-label="Open your Sovereign" className="fixed right-4 bottom-4 z-[9998] flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04110b]/90 px-4 py-3 text-emerald-200 shadow-[0_8px_30px_-6px_rgba(16,185,129,.5)] backdrop-blur hover:bg-[#062016]">
+        <button onClick={() => setOpen(true)} aria-label="Open your Council assistant" className="fixed right-4 bottom-4 z-[9998] flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04110b]/90 px-4 py-3 text-emerald-200 shadow-[0_8px_30px_-6px_rgba(16,185,129,.5)] backdrop-blur hover:bg-[#062016]">
           <span className="relative flex h-3 w-3"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" /><span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400" /></span>
           <span className="text-sm font-bold">Sovereign</span>
         </button>
@@ -301,7 +301,7 @@ export default function SovereignDock() {
           <div className="border-t border-emerald-500/15 p-3">
             {brainOpen && (
               <div className="mb-2 rounded-xl border border-emerald-400/25 bg-[#04120c] p-3">
-                <div className="text-[11px] font-bold text-emerald-100">Your Sovereign brain</div>
+                <div className="text-[11px] font-bold text-emerald-100">Your Council assistant brain</div>
                 <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">A sandwich: a <b className="text-emerald-200">left brain</b> (reasoning, tools, BFT compliance) and a <b className="text-emerald-200">right brain</b> (perception, vision/VLM). Route any model underneath — MoE, mixture-of-models, a world model, a VLM — and the Sovereign wraps it in the 33-agent Council of AI + Layer 0 so whatever you plug in stays compliant and signed.</p>
                 <div className="mt-2 grid grid-cols-3 gap-1.5">
                   {[["offline", "Offline"], ["hosted", "Hosted"], ["paygo", "PAYG"]].map(([id, label]) => (
@@ -314,7 +314,7 @@ export default function SovereignDock() {
             <div className="flex items-center gap-1.5 rounded-xl border border-emerald-400/30 bg-white/[0.04] px-2 py-1.5">
               <button onClick={() => fileRef.current && fileRef.current.click()} aria-label="Upload files or photos" title="Upload files / photos — governed under Layer 0" className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-lg font-bold text-emerald-200 hover:bg-emerald-500/25">+</button>
               <button onClick={() => setBrainOpen((b) => !b)} aria-label="Sovereign brain setup" title="Brain setup — offline / hosted / PAYG" className={"flex h-8 w-8 items-center justify-center rounded-lg text-sm " + (brainOpen ? "bg-emerald-500/30 text-emerald-100" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>{"◉"}</button>
-              <button onClick={voice} aria-label="Speak to your Sovereign" className={"flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold " + (listening ? "bg-rose-500/30 text-rose-200 animate-pulse" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>MIC</button>
+              <button onClick={voice} aria-label="Speak to your Council assistant" className={"flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold " + (listening ? "bg-rose-500/30 text-rose-200 animate-pulse" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>MIC</button>
               <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") act(input); }} placeholder="Ask me anything..." className="flex-1 bg-transparent text-sm text-emerald-50 placeholder-emerald-300/40 focus:outline-none" />
               <button onClick={() => act(input)} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Send</button>
             </div>

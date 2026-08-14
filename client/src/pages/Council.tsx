@@ -1,6 +1,6 @@
 /**
- * Byzantine Council Page
- * Dedicated page explaining the 33-agent fault-tolerant oversight system
+ * Council Page
+ * Dedicated page explaining the designed 33-agent oversight system
  */
 
 import { motion } from "framer-motion";
@@ -109,7 +109,7 @@ export default function Council() {
               designed multi-agent review
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-              The <span className="text-emerald-400">Byzantine Council</span>
+              The <span className="text-emerald-400">Council</span>
             </h1>
             <p className="text-xl text-gray-300 mb-4 leading-relaxed">
               A designed 33-agent oversight architecture across 7 providers — so no single company
@@ -155,8 +155,8 @@ export default function Council() {
               What is <span className="text-emerald-600">designed multi-agent review?</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Named after the Byzantine Generals' Problem in distributed computing,
-              our system ensures reliable consensus even when some agents fail or are compromised.
+              A supermajority (23 of 33) of the designed council is required for any safety decision,
+              so no single agent decides the outcome. Effective independence is measured, not assumed.
             </p>
           </motion.div>
 
@@ -384,7 +384,7 @@ export default function Council() {
                 Human <span className="text-emerald-600">Oversight</span>
               </h2>
               <p className="text-lg text-gray-600 mb-8">
-                While the Byzantine Council handles continuous monitoring, certified
+                While the Council handles continuous monitoring, certified
                 AI Safety Analysts provide essential human judgment for critical decisions.
               </p>
 
@@ -519,7 +519,7 @@ export default function Council() {
             variants={fadeInUp}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Join the Byzantine Council
+              Join the Council
             </h2>
             <p className="text-xl text-emerald-100 mb-8">
               Become a certified AI Safety Analyst and work alongside the Council

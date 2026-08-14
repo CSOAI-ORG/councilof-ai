@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 // Sept 2026. Imports any OSCAL model (catalog, profile, SSP, component-definition,
 // assessment-results), summarises it, and exports CSOAI's cross-framework control
 // implementation as a valid OSCAL component-definition + an assessment-results
-// snapshot derived from Sovereign Town. No backend required — pure front-end,
+// snapshot derived from Council Town. No backend required — pure front-end,
 // so it runs in the demo and as a real, usable tool.
 
 type OscalModel =
@@ -102,7 +102,7 @@ function buildAssessmentResults() {
     "assessment-results": {
       uuid: uuid(),
       metadata: {
-        title: "CSOAI — Sovereign Town Governance Assessment",
+        title: "CSOAI — Council Town Governance Assessment",
         "last-modified": nowIso(),
         version: "1.0.0",
         "oscal-version": "1.1.2",
@@ -311,7 +311,7 @@ export default function OscalStudio() {
               className="w-full rounded-lg bg-gray-900 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-gray-800"
             >
               ↓ Assessment Results
-              <span className="block text-xs font-normal text-gray-300">Sovereign Town governed-vs-ungoverned, OSCAL findings</span>
+              <span className="block text-xs font-normal text-gray-300">Council Town governed-vs-ungoverned, OSCAL findings</span>
             </button>
           </div>
           <p className="mt-4 text-xs text-gray-500">

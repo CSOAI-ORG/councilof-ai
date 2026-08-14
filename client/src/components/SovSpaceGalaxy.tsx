@@ -55,7 +55,7 @@ type Props = {
   cspace: number;            // c-space event count
   jspace: number;            // j-space signed record count
   flywheels: FlywheelPlanet[];
-  citizens?: CitizenNode[];  // OWEM citizen nodes (one per spawned user)
+  citizens?: CitizenNode[];  // citizen nodes (one per spawned user)
   height?: number;
 };
 
@@ -311,7 +311,7 @@ export default function SovSpaceGalaxy({
     ctx.textAlign = "left";
     ctx.fillText("LIVE DATA · unbounded working memory", 8 * DPR, H - 14 * DPR);
 
-    // LAYER 5 — CITIZEN SWARM (the OWEM fluid cluster)
+    // LAYER 5 — CITIZEN SWARM (the fluid cluster)
     // Each citizen is one user. Dim if local, bright if on free GPU.
     // They drift in the outermost ring, representing the unbounded fleet
     // of users the sovereign estate grows into.

@@ -57,7 +57,7 @@ export const LANE4: Record<string, Lane4Page> = {
         a: "Each governed action is decomposed into checks we can run and count: who proposed it, what policy applied, whether the care floor held, and whether the record is signed. If a check cannot run, it is reported UNMEASURED — not assumed.",
       },
       {
-        q: "Does the Byzantine council approve agent actions live?",
+        q: "Does the council approve agent actions live?",
         a: "That is the design, not a live claim. The measured cross-checking status today is n_eff 1.21 of 3, published on the Refutation Ledger. The 33-seat council architecture is labelled as a design simulation wherever it is shown.",
       },
       {
@@ -72,7 +72,7 @@ export const LANE4: Record<string, Lane4Page> = {
     spotTitle: "Agent governance: design vs measured",
     spotStats: [
       { value: "n_eff 1.21 / 3", label: "measured cross-architecture decorrelation today", evidence: "measured" },
-      { value: "33 seats", label: "target Byzantine council architecture — design, not live", evidence: "design" },
+      { value: "33 seats", label: "target council architecture — design, not live", evidence: "design" },
       { value: "0", label: "mechanisms sold as live that are design-stage", evidence: "measured" },
     ],
     spotSource: "Refutation Ledger DR-0007 + gate1 decorrelation runs, 2026-08-01",

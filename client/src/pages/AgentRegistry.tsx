@@ -8,11 +8,11 @@ type Agent = { name: string; domain: string; purpose: string; tools: string; sta
 const AGENTS: Agent[] = [
   { name: "ProofOf", domain: "proofof.ai", purpose: "Identity + provenance attestation for agents & content", tools: "sign · verify · agent-card", status: "signed" },
   { name: "SafetyOf", domain: "safetyof.ai", purpose: "Safety evaluation + red-team gating before action", tools: "evaluate · gate · escalate", status: "signed" },
-  { name: "Sovereign Council", domain: "csoai.org", purpose: "33-agent Byzantine review of high-impact decisions", tools: "council-vote · care-floor", status: "signed" },
-  { name: "Crosswalk", domain: "os.meok.ai", purpose: "Map any control across 13 frameworks", tools: "govern · crosswalk", status: "signed" },
+  { name: "Council", domain: "csoai.org", purpose: "designed 33-agent review of high-impact decisions", tools: "council-vote · care-floor", status: "signed" },
+  { name: "Crosswalk", domain: "councilof.ai", purpose: "Map any control across 13 frameworks", tools: "govern · crosswalk", status: "signed" },
   { name: "Watchdog", domain: "csoai.org/watchdog", purpose: "Incident intake + cryptographic logging", tools: "report · seal", status: "signed" },
-  { name: "OSCAL Signer", domain: "os.meok.ai", purpose: "Machine-readable OSCAL + Ed25519 (RFC-0024)", tools: "oscal · sign", status: "signed" },
-  { name: "Watermark", domain: "os.meok.ai", purpose: "Art. 50 C2PA content marking + provenance", tools: "mark · verify", status: "signed" },
+  { name: "OSCAL Signer", domain: "councilof.ai", purpose: "Machine-readable OSCAL + Ed25519 (RFC-0024)", tools: "oscal · sign", status: "signed" },
+  { name: "Watermark", domain: "councilof.ai", purpose: "Art. 50 C2PA content marking + provenance", tools: "mark · verify", status: "signed" },
   { name: "Classifier", domain: "csoai.org/classifier", purpose: "EU AI Act risk-tier classification", tools: "govern", status: "signed" },
 ];
 
@@ -48,7 +48,7 @@ export default function AgentRegistry() {
 
         <div className="mt-8 rounded-2xl border border-emerald-400/25 bg-emerald-500/[0.06] p-5">
           <div className="text-sm font-black text-emerald-100">Register your own agent</div>
-          <p className="mt-1 text-sm text-emerald-100/75">Mint a signed agent card for any enterprise or government agent — purpose-bound, guardrail-declared, Ed25519-signed to Layer 0, and reviewable by the Byzantine council. Governance that travels with the agent.</p>
+          <p className="mt-1 text-sm text-emerald-100/75">Mint a signed agent card for any enterprise or government agent — purpose-bound, guardrail-declared, Ed25519-signed to Layer 0, and reviewable by the council. Governance that travels with the agent.</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <a href="/agent-governance" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-400">How agent governance works →</a>
             <a href="/tool-commons" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Run the governance MCP →</a>

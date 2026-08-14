@@ -21,7 +21,7 @@ export default function PlansPage() {
   const team = annual ? money(Math.round(monthlyEquiv("team") * 100) / 100) : money(base.team[cur]);
   const teamSub = annual ? "per seat / mo, billed yearly (10 × monthly)" : "per seat / mo";
   const tiers: Tier[] = [
-    { name: "Sovereign", price: "Free", sub: "open-source, forever", tag: "Own your data", cta: "Start free", href: "/signup?plan=free", feats: ["Your Sovereign on a free open-source model", "Self-host or hosted", "You own and export your data (JSON)", "Layer 0 signing", "Community council demos"] },
+    { name: "Council", price: "Free", sub: "open-source, forever", tag: "Own your data", cta: "Start free", href: "/signup?plan=free", feats: ["Your Council assistant on a free open-source model", "Self-host or hosted", "You own and export your data (JSON)", "Layer 0 signing", "Community council demos"] },
     { name: "Pro", price: pro, sub: proSub, tag: "Most popular", cta: "Go Pro", href: "/signup?plan=pro", highlight: true, feats: ["Everything in Free", "Premium hosted models", "Passport + EU AI Act audit (quota)", "Council of AI + governance", "Real-world Sov Space + UE5 preview", "PAYG credits included"] },
     { name: "Operator", price: operator, sub: operatorSub, tag: "Full command deck", accent: "amber", cta: "Become an Operator", href: "/signup?plan=operator", feats: ["Everything in Pro", "ONE OS - live agent + humanoid tracking", "Governed-stop pathway for rogue swarms (PoC status, signed demo)", "Threat map + operator console", "Global Watchdog operator console", "Priority Layer 0 signing + support"] },
     { name: "Team", price: team, sub: teamSub, tag: "3-seat min", cta: "Start a team", href: "/signup?plan=team", feats: ["Everything in Pro, per seat", "SSO + SCIM", "Shared council + audit logs", "Admin and roles", "Priority support"] },
@@ -35,7 +35,7 @@ export default function PlansPage() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - plans</p>
         <h1 className="relative mt-3 text-5xl sm:text-6xl font-black tracking-tight">Own your AI. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Own your data.</span></h1>
-        <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">An open-source Sovereign for everyone, a full governed stack when you need it. Transparent, EU AI Act-ready, UK-resident, MIT-licensed.</p>
+        <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">An open-source Council assistant for everyone, a full governed stack when you need it. Transparent, EU AI Act-ready, UK-resident, MIT-licensed.</p>
         <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-[#05140d] p-1 text-sm">
           <button onClick={() => setAnnual(false)} className={(!annual ? "bg-emerald-500 text-[#03110b] " : "text-emerald-200 ") + "rounded-full px-4 py-1.5 font-bold"}>Monthly</button>
           <button onClick={() => setAnnual(true)} className={(annual ? "bg-emerald-500 text-[#03110b] " : "text-emerald-200 ") + "rounded-full px-4 py-1.5 font-bold"}>Yearly -2mo</button>

@@ -28,7 +28,7 @@ export default function SovereignTwin() {
     if (!passport) setPassport((p) => p || { canonical, fingerprint: "", signature: "" });
     setMinting(false);
   }
-  useEffect(() => { document.title = "Your Sovereign Twin | CSOAI (DESIGN)"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { personaliseRef.current = true; setPersonalised(true); } } } catch (e) {} }, []);
+  useEffect(() => { document.title = "Your Council assistant Twin | CSOAI (DESIGN)"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { personaliseRef.current = true; setPersonalised(true); } } } catch (e) {} }, []);
   function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); try { localStorage.setItem("sov_charge", String(n)); } catch (e) {} if (n >= 100 && !personaliseRef.current) { personaliseRef.current = true; setPersonalised(true); } }
   useEffect(() => {
     const c = cv.current; if (!c) return; const ctx = c.getContext("2d"); if (!ctx) return;
@@ -62,9 +62,9 @@ export default function SovereignTwin() {
       <section className="relative">
         <canvas ref={cv} className="block h-[72vh] w-full" />
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-10 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · your Sovereign Twin (DESIGN)</p>
-          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{personalised ? "Your Sovereign Twin is personalised." : "Your Sovereign Twin."}</h1>
-          <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{personalised ? "Your personalisation record is signed. The Twin reflects your Sovereign's view of the world — it does not make behavioural claims." : "An illustrative mirror of Earth — day, night, every connector lit. Use the OS to personalise. No claims about emergent behaviour."}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · your Council assistant Twin (DESIGN)</p>
+          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{personalised ? "Your Council assistant Twin is personalised." : "Your Council assistant Twin."}</h1>
+          <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{personalised ? "Your personalisation record is signed. The Twin reflects your Council assistant's view of the world — it does not make behavioural claims." : "An illustrative mirror of Earth — day, night, every connector lit. Use the OS to personalise. No claims about emergent behaviour."}</p>
           <div className="pointer-events-auto mt-4 flex flex-wrap items-center justify-center gap-3 px-6">
             {!personalised && <button onClick={addCharge} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Personalise ({charge}%)</button>}
             {personalised && <a href="/start" className="rounded-xl bg-amber-400 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-amber-300">Meet your Twin -&gt;</a>}
@@ -73,7 +73,7 @@ export default function SovereignTwin() {
         </div>
       </section>
       <section className="mx-auto max-w-3xl px-6 py-12 text-center">
-        <p className="text-sm text-emerald-100/70">An illustrative personalisation surface — the world rendered as your Sovereign Twin. Actions across the OS fill your personalisation record. This page does not assert emergent or conscious behaviour in the Twin; the Twin is a signed personalisation record.</p>
+        <p className="text-sm text-emerald-100/70">An illustrative personalisation surface — the world rendered as your Council assistant Twin. Actions across the OS fill your personalisation record. This page does not assert emergent or conscious behaviour in the Twin; the Twin is a signed personalisation record.</p>
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-black/20 p-5">
           <div className="text-sm font-bold text-emerald-200">Your Twin personalises as you use the OS.</div>
           <p className="mt-1 text-sm text-emerald-100/70">Every question in the <b className="text-emerald-200">Sovereign dock</b>, every <b className="text-emerald-200">Governance Graph</b> query, every <b className="text-emerald-200">Sov Space</b> experiment and <b className="text-emerald-200">Council</b> verdict updates your personalisation record.</p>

@@ -265,7 +265,7 @@ export function Footer() {
         {/* AI Transparency & Oversight Statement (Art 50 / Art 14) */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">
-            This site uses AI systems, including the Sovereign assistant. Every AI surface is disclosed at
+            This site uses AI systems, including the Council assistant. Every AI surface is disclosed at
             first interaction under EU AI Act Article 50 and classified publicly on{" "}
             <Link href="/ai-transparency" className="text-emerald-700 underline">/ai-transparency</Link>.
           </p>

@@ -538,7 +538,8 @@ function App() {
                   <Route path="/about-ceasai" component={AboutCEASAI} />
                   <Route path="/accessibility" component={Accessibility} />
                   <Route path="/analytics" component={AnalyticsDashboard} />
-                  <Route path="/byzantine-consensus" component={ByzantineConsensus} />
+                  {/* KILLED (audit §0.2 #12): asserted retracted Byzantine/fault-tolerance claim. */}
+                  <Route path="/byzantine-consensus">{() => <Redirect to="/council" />}</Route>
                   <Route path="/ceasai-training" component={CEASAITraining} />
                   <Route path="/certificate-verification" component={CertificateVerification} />
                   <Route path="/compliance/australia-ai-governance" component={AustraliaAIGovernanceCompliance} />
@@ -555,7 +556,8 @@ function App() {
                   <Route path="/docs" component={Documentation} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
-                  <Route path="/enterprise-plans" component={EnterprisePlansLanding} />
+                  {/* REDIRECTED (audit §3.5 #2): one pricing page. Enterprise folds into /pricing. */}
+                  <Route path="/enterprise-plans">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />
                   <Route path="/eu-ai-act-urgency" component={EUAIActUrgency} />
                   <Route path="/feed" component={RegulationFeed} />
@@ -679,7 +681,8 @@ function App() {
           <Route path="/distribution" component={Distribution} />
           <Route path="/legacy" component={LegacyBridge} />
           <Route path="/social" component={SocialOS} />
-          <Route path="/jewels" component={CrownJewels} />
+          {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
+          <Route path="/jewels">{() => <Redirect to="/" />}</Route>
           {/* 2026-08-01 unification: the towns live INSIDE Sov Space as a layer */}
           <Route path="/towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
           <Route path="/minds" component={SovereignMinds} />
@@ -750,8 +753,9 @@ function App() {
           <Route path="/iso-eu" component={Iso42001VsEuAct} />
           <Route path="/fines" component={Penalties} />
           <Route path="/all" component={RegistryAll} />
-          <Route path="/bft" component={BftConfig} />
-          <Route path="/consensus" component={BftConfig} />
+          {/* REDIRECTED (audit §0.2 #14): "BFT setup" pages assert the retracted fault-tolerance claim. */}
+          <Route path="/bft">{() => <Redirect to="/council" />}</Route>
+          <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
           <Route path="/world">{() => <Redirect to="/sov-space?view=globe" />}</Route>
           <Route path="/map-regions" component={RegionsMap} />
           <Route path="/compare" component={Compare} />
@@ -778,7 +782,8 @@ function App() {
           <Route path="/rediscovered" component={Lineage} />
           <Route path="/voice" component={SovereignMinds} />
           <Route path="/sov-towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
-          <Route path="/crown-jewels" component={CrownJewels} />
+          {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
+          <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
           <Route path="/cobol" component={LegacyBridge} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
@@ -788,7 +793,8 @@ function App() {
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
-                  <Route path="/byzantine" component={AgentCouncil} />
+                  {/* KILLED (audit §0.2 #13): "33-agent Byzantine consensus" page — retracted claim. */}
+                  <Route path="/byzantine">{() => <Redirect to="/council" />}</Route>
                   <Route path="/council" component={Council} />
                   <Route path="/public-watchdog" component={PublicWatchdog} />
                   <Route path="/government" component={GovernmentDashboard} />
@@ -934,7 +940,8 @@ function App() {
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
-                  <Route path="/plans" component={PlansPage} />
+                  {/* REDIRECTED (audit §3.5 #2): /plans was a byte-identical duplicate of /pricing. */}
+                  <Route path="/plans">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/sovereign-pricing" component={PlansPage} />
                   <Route path="/start" component={OnboardOS} />
                   <Route path="/onboard" component={OnboardOS} />

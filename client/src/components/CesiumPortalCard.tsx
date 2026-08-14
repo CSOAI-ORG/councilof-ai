@@ -58,7 +58,7 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
       { label: "Open Sov Space", href: "/sov-space", tour: true },
       { label: "Governance Graph", href: "/graph" },
       { label: "Tool Commons (370+ governed MCPs)", href: "/tool-commons" },
-      { label: "Your Sovereign Twin", href: "/emergence" },
+      { label: "Your Council assistant Twin", href: "/emergence" },
     ],
   },
 };

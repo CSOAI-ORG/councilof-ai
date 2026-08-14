@@ -41,7 +41,7 @@ export default function EarlyAccessLanding() {
               Be First to Access AI Safety Certification
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join the movement. Get exclusive early access to CEASAI certification, Byzantine Council training, and our complete AI safety platform.
+              Join the movement. Get exclusive early access to CEASAI certification, Council training, and our complete AI safety platform.
             </p>
           </motion.div>
 
@@ -124,7 +124,7 @@ export default function EarlyAccessLanding() {
               },
               {
                 icon: <Users className="h-8 w-8" />,
-                title: 'Byzantine Council Training',
+                title: 'Council Training',
                 description: 'Learn from 33-agent consensus model. Master multi-stakeholder decision making in AI governance.'
               },
               {
@@ -187,7 +187,7 @@ export default function EarlyAccessLanding() {
                 price: '£499',
                 originalPrice: '£999',
                 description: 'For organizations',
-                features: ['Team Accounts (5)', 'Byzantine Council', 'API Access', 'Priority Support']
+                features: ['Team Accounts (5)', 'Council', 'API Access', 'Priority Support']
               },
               {
                 name: 'Government',

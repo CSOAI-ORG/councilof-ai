@@ -26,9 +26,9 @@ export default function Sov3Whitepaper() {
         <div className="mx-auto max-w-3xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Whitepaper · v1 · 2026-07-12</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
-            Growth by Accretion: <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a sovereign substrate that grows without forgetting</span>
+            Growth by Accretion: <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a the measurement engine that grows without forgetting</span>
           </h1>
-          <p className="mt-4 text-emerald-100/70 text-[14px]">The SOV3³ / OWEM architecture — one paper, every claim independently assayable.</p>
+          <p className="mt-4 text-emerald-100/70 text-[14px]">The Council Workbench architecture — one paper, every claim independently assayable.</p>
         </div>
       </section>
 
@@ -75,7 +75,7 @@ export default function Sov3Whitepaper() {
 
         <Section n="05" title="What is measured — RUNNING, verified">
           <ul className="space-y-2 list-disc pl-5">
-            <li><b className="text-emerald-200">Monotonic growth</b>: an overnight run recorded SIGIL count 17,049→17,197, NN-training labels 1,327→1,589, and OWEM world-model sigils 0→87.</li>
+            <li><b className="text-emerald-200">Monotonic growth</b>: an overnight run recorded SIGIL count 17,049→17,197, NN-training labels 1,327→1,589, and world-model sigils 0→87.</li>
             <li><b className="text-emerald-200">Invariants hold</b>: all 6 invariants checked clean on every 10-minute cron tick across two logged ticks, with weights persisted between checks.</li>
             <li><b className="text-emerald-200">Lineage diversity</b>: 10 distinct model families (Qwen / Llama / Gemma / DeepSeek / Mistral / Kimi / Phi / MiMo / OpenAI-OSS and others) across a 70-entry model registry, measured live by the growth controller.</li>
             <li><b className="text-emerald-200">Diversity dominates topology</b>: across 4 measured configurations (diverse-lineage ring, identical-lineage ring, diverse-lineage pyramid, identical-lineage pyramid), the diverse-vs-identical score gap (≈0.15) dwarfs the ring-vs-pyramid shape gap (≈0.024). Lineage mix is the lever that matters; geometry is secondary.</li>

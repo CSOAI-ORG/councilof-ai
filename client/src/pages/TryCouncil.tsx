@@ -209,7 +209,7 @@ export default function TryCouncil() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3 text-center text-sm">
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">13</div><div className="text-gray-500">frameworks auto-mapped</div></div>
-          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">5</div><div className="text-gray-500">agents · BFT voting</div></div>
+          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">5</div><div className="text-gray-500">agents · multi-agent vote</div></div>
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">Aug 2 2026</div><div className="text-gray-500">EU AI Act deadline</div></div>
         </div>
 

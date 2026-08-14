@@ -74,7 +74,7 @@ const certificationTiers = [
       duration: "2 hours"
     },
     benefits: [
-      "Official CEASAI Certificate",
+      "Signed measurement record",
       "LinkedIn digital badge",
       "Public registry listing",
       "Access to entry-level reviews"

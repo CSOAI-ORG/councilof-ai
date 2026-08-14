@@ -626,7 +626,7 @@
 
 <div class="cmd">
   <div class="cmdsugg" id="cmdSugg"></div>
-  <span class="cmdmic" id="cmdMic" title="speak to your Sovereign · hands-free (AWARE)" onclick="toggleAware()">🎙</span>
+  <span class="cmdmic" id="cmdMic" title="speak to your Council assistant · hands-free (AWARE)" onclick="toggleAware()">🎙</span>
   <input id="cmd" placeholder="ask your sovereign — 'scan tokyo' · 'weather in kyiv' · 'cameras in london' · 'news in ukraine' · 'what is near gibraltar' · 'arrange windows' · 'help'" oninput="cmdSuggest(this.value)" onblur="setTimeout(function(){var b=document.getElementById('cmdSugg');if(b)b.classList.remove('open');},180)" onkeydown="if(event.key==='Enter')cmdGo()">
   <button onclick="cmdGo()">▶</button>
 </div>
@@ -3632,7 +3632,7 @@ loadStatus(); loadThreats(); loadQuakes(); connectMarkets();
 try{ setDoctrine(localStorage.getItem('def_doctrine')||'west', true); }catch(e){ try{ setDoctrine('west',true); }catch(_){} }
 try{ if(localStorage.getItem('def_lite')) setTimeout(function(){ toggleLite(true); }, 2600); }catch(e){}
 try{ setTimeout(liteAutoDetect, 4000); }catch(e){}
-try{ pushFeed('sovereign substrate online · all feeds live · SIGIL signing active'); }catch(e){}
+try{ pushFeed('the measurement engine online · all feeds live · SIGIL signing active'); }catch(e){}
 try{ if(!/tour/.test(location.hash)) setTimeout(defRestoreLayers, 4200); }catch(e){}
 try{ _syncSpeakUI(); }catch(e){}
 // living-organism breathing — the atmosphere gently pulses

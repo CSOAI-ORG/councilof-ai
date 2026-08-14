@@ -53,7 +53,7 @@ const FALLBACK: SovTownStats = {
   fetchedAt: "",
 };
 
-// Frameworks Sovereign Town measures conduct against — the "governed against"
+// Frameworks Council Town measures conduct against — the "governed against"
 // wall (modelled on Red Hat's customer-logo wall: concrete, scannable proof of reach).
 const FRAMEWORKS = [
   "EU AI Act",
@@ -71,7 +71,7 @@ const FRAMEWORKS = [
 const EXPLAINERS = [
   {
     t: "Explore the live governance grid →",
-    d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Sovereign Town feed, live on one Earth.",
+    d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Council Town feed, live on one Earth.",
     href: "/globe3d.html",
   },
   {
@@ -95,7 +95,7 @@ export default function SovereignTown() {
   const [s, setS] = useState<SovTownStats>(FALLBACK);
 
   useEffect(() => {
-    document.title = "Sovereign Town — Live Governed AI World · CSOAI";
+    document.title = "Council Town — Live Governed AI World · CSOAI";
     let live = true;
     fetchSovTownStats()
       .then((d) => {
@@ -161,7 +161,7 @@ export default function SovereignTown() {
           </div>
           {/* Cited source — Red Hat's "Source: …" credibility move */}
           <p className="mt-6 text-sm text-emerald-100/70 max-w-2xl">
-            Source: Sovereign Town hash-chained Ed25519 ledger, externally committed to{" "}
+            Source: Council Town hash-chained Ed25519 ledger, externally committed to{" "}
             <span className="font-semibold text-emerald-200">Bitcoin block 954857</span>. Independently
             verifiable &mdash; no trust in CSOAI required.
           </p>
@@ -193,7 +193,7 @@ export default function SovereignTown() {
             Governed against the frameworks that matter
           </h2>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-            Sovereign Town measures conduct against the binding and emerging regimes in force across
+            Council Town measures conduct against the binding and emerging regimes in force across
             177 jurisdictions &mdash; not a private rulebook.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

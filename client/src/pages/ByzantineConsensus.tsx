@@ -98,7 +98,7 @@ const PIPELINES = [
     icon: Cpu,
     title: 'AI Companies',
     color: '#8B5CF6',
-    description: 'Major AI providers whose models are evaluated for safety and compliance by the Byzantine Council.',
+    description: 'Major AI providers whose models are evaluated for safety and compliance by the Council.',
     items: ['OpenAI', 'Anthropic', 'Google DeepMind', 'Meta AI', 'Microsoft', 'Mistral AI']
   },
   {
@@ -145,7 +145,7 @@ export default function ByzantineConsensus() {
             </Button>
           </Link>
           <Badge variant="outline" className="text-primary border-primary">
-            TC 260 Byzantine Consensus
+            TC 260 Multi-Agent Council
           </Badge>
         </div>
       </header>
@@ -197,11 +197,11 @@ export default function ByzantineConsensus() {
         </div>
       </section>
 
-      {/* What is Byzantine Consensus */}
+      {/* What is Multi-Agent Council */}
       <section className="py-16 bg-white dark:bg-gray-950">
         <div className="container">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 text-center">What is Byzantine Consensus?</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center">What is Multi-Agent Council?</h2>
             <div className="prose prose-lg dark:prose-invert mx-auto">
               <p>
                 designed multi-agent review (BFT-style) is a property of distributed systems that allows them to 
@@ -210,7 +210,7 @@ export default function ByzantineConsensus() {
                 correctly as long as fewer than one-third of the participants are compromised.
               </p>
               <p>
-                In the context of AI safety, we apply Byzantine consensus principles to ensure that 
+                In the context of AI safety, we apply multi-agent council principles to ensure that 
                 no single AI provider, bias, or perspective can dominate safety decisions. Our 33-agent 
                 council uses models from 12 different AI providers, each with different training data, 
                 architectures, and perspectives.
@@ -338,7 +338,7 @@ export default function ByzantineConsensus() {
         <div className="container">
           <h2 className="text-3xl font-bold mb-4 text-center">Data Pipelines</h2>
           <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
-            The Byzantine Council receives data from multiple sources to make informed decisions.
+            The Council receives data from multiple sources to make informed decisions.
             Each pipeline provides crucial information for comprehensive AI safety governance.
           </p>
           
@@ -380,16 +380,16 @@ export default function ByzantineConsensus() {
         </div>
       </section>
 
-      {/* Why Byzantine Consensus */}
+      {/* Why Multi-Agent Council */}
       <section className="py-16 bg-white dark:bg-gray-950">
         <div className="container">
-          <h2 className="text-3xl font-bold mb-12 text-center">Why Byzantine Consensus for AI Safety?</h2>
+          <h2 className="text-3xl font-bold mb-12 text-center">Why Multi-Agent Council for AI Safety?</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
               {
                 icon: Lock,
-                title: 'Fault Tolerance',
-                description: 'The system continues to function correctly even if up to 10 agents are compromised, biased, or malfunctioning.'
+                title: 'Supermajority vote',
+                description: 'A decision requires a supermajority (23 of 33) of the designed council to agree; no single agent decides.'
               },
               {
                 icon: Scale,

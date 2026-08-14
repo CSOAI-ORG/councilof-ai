@@ -34,7 +34,7 @@ const ITEMS: Item[] = [
   { name: "MCP (Model Context Protocol)", cat: "Protocol", seat: "Open spec", region: "Global", status: "In force", href: "/agents" },
   { name: "MEOK Law cross-layer engine", cat: "Protocol", seat: "CSOAI", region: "Global", status: "Live", href: "/meok-law" },
   { name: "Sovereign Compliance Passport", cat: "Protocol", seat: "CSOAI - Ed25519 attestation", region: "Global", status: "Live", href: "/readiness" },
-  { name: "BFT Consensus (configurable)", cat: "Council", seat: "CSOAI - open at openpatent.ai", region: "Global", status: "Live", href: "/bft" },
+  { name: "Multi-Agent Council (configurable)", cat: "Council", seat: "CSOAI - open at openpatent.ai", region: "Global", status: "Live", href: "/bft" },
   { name: "The 4-Wing Council", cat: "Council", seat: "CSOAI", region: "Global", status: "Live", href: "/dragonfly" },
   { name: "The Hive (Sovereign queens)", cat: "Council", seat: "CSOAI", region: "Global", status: "Live", href: "/hive" },
 ];

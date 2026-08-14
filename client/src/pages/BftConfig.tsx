@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-// BftConfig - end-user-selectable BFT consensus topology. Pick a preset or drag the
+// BftConfig - end-user-selectable multi-agent council topology. Pick a preset or drag the
 // slider; see the live Byzantine math (max faults f = floor((n-1)/3), quorum 2f+1),
 // resilience, and the security/speed/cost trade. The topology is published open-patent
 // at openpatent.ai - fork it, don't fence it.

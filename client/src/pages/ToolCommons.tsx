@@ -54,7 +54,7 @@ export default function ToolCommons() {
           ))}
         </div>
         {matches.length === 0 && !loading && <p className="text-center text-sm text-emerald-300/75">No tools matched - try another term.</p>}
-        <p className="mt-8 text-center text-xs text-emerald-300/75">Every tool is governed by Layer 0 and signed. Open, MIT-licensed, sovereign by construction. Live via the Sovereign gateway.</p>
+        <p className="mt-8 text-center text-xs text-emerald-300/75">Every tool is governed by Layer 0 and signed. Open, MIT-licensed, sovereign by construction. Live via the Council gateway.</p>
       </section>
     </div>
   );
