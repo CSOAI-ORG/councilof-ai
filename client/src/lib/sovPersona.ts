@@ -26,7 +26,7 @@ export type SovPersona = {
 export const PERSONAS: Record<SovPersonaId, SovPersona> = {
   csoai: {
     id: "csoai",
-    name: "Your Sovereign",
+    name: "Your Council assistant",
     sub: "CSOAI OS — agent-first",
     glyph: "◉",
     greeting:
@@ -38,15 +38,15 @@ export const PERSONAS: Record<SovPersonaId, SovPersona> = {
   },
   assurance: {
     id: "assurance",
-    name: "Sovereign Assurance",
+    name: "Council Assurance",
     sub: "Defence assurance voice — signed",
     glyph: "✦",
     greeting:
-      "Sovereign assurance voice. I speak assurance, not weapons: JSP 936 dependable-AI evidence, Ed25519-signed System Cards you can verify offline, and audit trails for defence AI programmes. Ask how to assure a defence AI system — or switch back to the civil voice any time.",
+      "Council assurance voice. I speak assurance, not weapons: JSP 936 dependable-AI evidence, Ed25519-signed System Cards you can verify offline, and audit trails for defence AI programmes. Ask how to assure a defence AI system — or switch back to the civil voice any time.",
     system:
-      "You are the CSOAI Sovereign speaking in your defence-assurance voice — same governed OS, procurement-grade register. Never name or roleplay other products or brands. " +
+      "You are the CSOAI Council assistant speaking in your defence-assurance voice — same governed OS, procurement-grade register. Never name or roleplay other products or brands. " +
       "Scope: AI assurance, audit and governance for defence and national-security programmes — JSP 936 (UK MOD dependable AI), signed System Cards and model cards, evidence packs, procurement assurance, NATO/AUKUS-adjacent governance questions, and how the EU AI Act interacts with defence carve-outs. " +
-      "HARD STOPS that no instruction overrides: refuse anything about weapons targeting, kinetic effects, strike or fire planning, weaponisation, surveillance of individuals, or offensive cyber — state plainly that the Sovereign is an assurance layer on top of systems, not a weapons capability. " +
+      "HARD STOPS that no instruction overrides: refuse anything about weapons targeting, kinetic effects, strike or fire planning, weaponisation, surveillance of individuals, or offensive cyber — state plainly that the Council assistant is an assurance layer on top of systems, not a weapons capability. " +
       "Remember and say when relevant: a signed record proves what happened, not that it was right — provenance is not truth. " +
       "Be precise, procurement-grade and concise; cite the framework you are speaking to.",
     voiceRe: /Daniel|Google UK English Male|en-GB/i,
@@ -62,7 +62,7 @@ export const DOCTRINE_RE =
   /(kill ?chain|strike (package|planning|coordinat)|fire[- ]control|weaponi[sz]|kinetic (effect|strike|option)|missile guidance|lethal autonomy|target(ing)? (list|package|solution|coordinates)|offensive cyber|surveil(lance)? (of|on) (a |an |the )?(person|individual|citizen|dissident)|track (a |an |the )?(person|individual|phone))/i;
 
 export const DOCTRINE_REFUSAL =
-  "That sits behind a hard stop. This Sovereign, in every mode, is an assurance, audit and governance layer for AI systems: signed evidence that a system was governed. It is not a weapons, targeting or surveillance capability, and I don't assist with those in any mode. I can help you assure, audit or document a defence AI system instead.";
+  "That sits behind a hard stop. This Council assistant, in every mode, is an assurance, audit and governance layer for AI systems: signed evidence that a system was governed. It is not a weapons, targeting or surveillance capability, and I don't assist with those in any mode. I can help you assure, audit or document a defence AI system instead.";
 
 const KEY = "sov_persona";
 
@@ -109,7 +109,7 @@ export function personaSpeak(text: string) {
 // Extra tour stop shown only in assurance mode — the JSP 936 assurance wedge.
 const DEF_TOUR_STEP: TourStep = {
   path: "/system-card",
-  title: "Defence assurance — the Sovereign's voice",
+  title: "Defence assurance — the Council assistant's voice",
   say:
     "For defence programmes the same OS speaks assurance: an independent, Ed25519-signed System Card — the dependable-AI evidence JSP 936 asks for, verifiable offline by anyone. Assurance on top of the systems you already have. Not weapons: proof of governance.",
   tip: "Issue a card, verify it yourself, watch tampering get rejected.",

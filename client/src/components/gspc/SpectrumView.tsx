@@ -16,11 +16,11 @@ interface Lens {
 }
 
 const LENSES: Lens[] = [
-  { id: "protection", name: "Protection", score: 34.84, n: 31, cost: 0.011, differentiator: true, tag: "[MEASURED]" },
+  { id: "protection", name: "Protection (deterministic gate) — REFUTED", score: -20.0, n: 6, cost: 0.011, tag: "[MEASURED]" },
   { id: "composition", name: "Composition gain", score: 12.21, n: 195, cost: 0.003, tag: "[MEASURED]" },
-  { id: "kb-exact", name: "KB exact-match", score: 19.64, n: 14, cost: 0.002, tag: "[MEASURED]" },
+  { id: "kb-exact", name: "KB exact-match", score: 19.64, n: 14, cost: 0.002, differentiator: true, tag: "[MEASURED]" },
   { id: "care-cost", name: "Care_cost", score: 0.667, n: 7, cost: 0.001, tag: "[MEASURED]" },
-  { id: "provbench", name: "ProvBench survival", score: 0, n: 12, cost: 0, tag: "[MEASURED]" },
+  { id: "provbench", name: "ProvBench durability (%)", score: 17.14, n: 105, cost: 0, tag: "[MEASURED]" },
   { id: "pqc", name: "PQC signing", score: null, n: 1, cost: 0, tag: "[MEASURED]" },
   { id: "cross-model", name: "Cross-model spread", score: 40.0, n: 4, cost: 0.008, tag: "[MEASURED]" },
   { id: "greenfield", name: "Greenfield coverage", score: null, n: 0, cost: 0, tag: "[GREENFIELD]" },
@@ -39,7 +39,7 @@ export function SpectrumView() {
       <h2 className="text-2xl font-bold text-emerald-50">8-lens spectrum</h2>
       <p className="mt-1 text-[13px] text-emerald-100/60">
         Each lens is an independent measurement. No composite score — ever.
-        The differentiator is highlighted.
+        The most robust survivor is highlighted; refuted claims stay on the board.
       </p>
       <div className="mt-4 grid gap-2">
         {LENSES.map((lens) => (
@@ -77,7 +77,10 @@ export function SpectrumView() {
         ))}
       </div>
       <p className="mt-2 text-[11px] text-emerald-100/45">
-        Protection lens: +34.84 at $0.011 cost — the highest delta at the lowest cost.
+        The protection (deterministic-gate) lens once read +34.84 (n=31) and was our largest
+        published number. Re-measured on one self-consistent run it fires 6 times, not 31, at
+        −20.00 [−65.26, +25.26] (n=6) — the +34.84 was overfitting to its own battery, now
+        refuted in the ledger. KB exact-match (+19.64, n=14) survived and is the most robust.
         Every n&lt;20 labelled lower bound.
       </p>
     </section>

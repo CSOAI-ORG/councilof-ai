@@ -363,7 +363,7 @@ export default function AgentCouncil() {
                 <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                 <h3 className="font-medium mb-2">No voting sessions yet</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Trigger a council vote to see the 33-agent Byzantine consensus in action.
+                  Trigger a council vote to see the designed 33-agent council in action.
                 </p>
                 <Button onClick={() => setIsVoteDialogOpen(true)}>
                   <Zap className="h-4 w-4 mr-2" />

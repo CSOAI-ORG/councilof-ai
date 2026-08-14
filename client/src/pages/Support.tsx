@@ -327,7 +327,7 @@ Is there anything else I can help you with in the meantime?`,
     },
     {
       question: 'How do I become a Watchdog Analyst?',
-      answer: 'Complete the CEASAI training program, pass the certification exam with at least 70%, then apply through the Watchdog → Analyst Jobs page. Analysts review AI safety incidents for compliance.',
+      answer: 'Complete the measurement credential training program, pass the assessment with at least 70%, then apply through the Watchdog → Analyst Jobs page. Analysts review AI safety incidents for compliance.',
     },
     {
       question: 'Can I get a refund?',

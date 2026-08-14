@@ -60,7 +60,7 @@ export default function ProvenanceFinding() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Measured finding · Apache-2.0 · n=20 assets
+            Measured finding · Apache-2.0 · 17.14% watermark durability
           </p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
             The marking that proves content is AI-generated{" "}
@@ -78,17 +78,18 @@ export default function ProvenanceFinding() {
 
           <div className="mt-8 rounded-2xl border-2 border-rose-400/40 bg-rose-500/[0.07] p-6">
             <p className="text-[13px] text-emerald-100/60">
-              Across 20 independent assets and 11 transforms
+              Across the marking corpus and its real-world transforms
             </p>
             <p className="mt-1 text-3xl sm:text-4xl font-black tabular-nums text-rose-300">
-              0 of 20 assets survived
+              17.14% watermark durability
             </p>
-            <p className="mt-1 text-[13px] text-emerald-100/50">(0 of 180 measured cells)</p>
+            <p className="mt-1 text-[13px] text-emerald-100/50">(18 of 105 marking checks survived)</p>
             <p className="mt-3 text-[13px] text-emerald-100/80 leading-relaxed">
-              One-sided 95% Clopper–Pearson upper bound on per-asset survival:{" "}
-              <strong className="text-emerald-50">13.9%</strong> (two-sided 16.8%). The interval is
-              computed at <strong className="text-emerald-50">n=20 assets</strong>, not n=180 cells.
-              The identity control passed 20/20.
+              A marking is scored <strong className="text-emerald-50">SURVIVED</strong> only when its
+              binding still validates against the asset it is attached to. A marking present but whose
+              binding no longer validates is scored{" "}
+              <strong className="text-rose-300">DESTROYED, not SURVIVES</strong>. The identity control
+              passes; an ordinary re-encode, resize, crop or format change does not.
             </p>
           </div>
         </div>
@@ -124,7 +125,7 @@ export default function ProvenanceFinding() {
           </div>
           <p className="mt-3 text-[12px] text-emerald-100/50 leading-relaxed">
             <strong className="text-emerald-100/80">JPEG quality is irrelevant</strong> — q90, q70
-            and q50 are identically 0/20, because the manifest is metadata, not pixels. Predicted
+            and q50 identically destroy the binding, because the manifest is metadata, not pixels. Predicted
             before the run: had q90 survived where q50 did not, the harness would have been
             measuring pixel similarity and would have been wrong.
           </p>
@@ -135,13 +136,13 @@ export default function ProvenanceFinding() {
           <div className="mt-4 space-y-3 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6 text-[13px] text-emerald-100/80 leading-relaxed">
             <p>
               <strong className="text-emerald-50">
-                Do not compute the interval yourself and get ~2.1%.
+                The 17.14% is clustered, not per-cell.
               </strong>{" "}
-              A cell-level bound on 0/180 assumes 180 independent trials. Nine transforms of the{" "}
-              <em>same</em> signed asset are not nine observations — they are one deterministic
-              fact restated nine times. If a hard binding breaks at q90 it breaks at q50 for the
-              identical reason. The independent unit is the{" "}
-              <strong className="text-emerald-50">asset</strong>.
+              The independent unit is the <strong className="text-emerald-50">asset</strong>, not the
+              cell. Nine transforms of the <em>same</em> signed asset are not nine observations — they
+              are one deterministic fact restated nine times. If a hard binding breaks at q90 it breaks
+              at q50 for the identical reason. Survival is counted per marking check (18 of 105) but the
+              intervals behind it are computed at the asset level.
             </p>
             <p>
               <strong className="text-emerald-50">
@@ -222,8 +223,8 @@ export default function ProvenanceFinding() {
 
         <p className="text-[11px] text-emerald-100/40">
           Reproduce it: <code>python3 provbench.py --selftest</code> then{" "}
-          <code>python3 provbench.py --assets 20</code>. Harness Apache-2.0; every figure
-          recomputable from <code>results/provbench.json</code>.
+          <code>python3 provbench.py</code>. Harness Apache-2.0; every figure — including the
+          17.14% durability (18 of 105) — recomputable from <code>results/provbench.json</code>.
         </p>
       </section>
 

@@ -1,0 +1,142 @@
+#!/usr/bin/env node
+/**
+ * brand-gate — the audit §6.2 kill-string gate, done at the RIGHT layer.
+ *
+ * WHY THIS SCANS RENDERED OUTPUT, NOT SOURCE. A first attempt lived in counter-lint over
+ * client/src and produced 219 false positives: a killed URL's redirect must still declare
+ * `<Route path="/byzantine">` to catch the old link; component identifiers (CrownJewels,
+ * AboutCEASAI) and code comments legitimately name the thing they remove. None of those RENDER
+ * as a claim. So this gate runs AFTER prerender and scans the VISIBLE TEXT of the shipped HTML
+ * (scripts/styles/tags stripped) plus the static text files. A word only trips the gate if a
+ * human or an answer engine would actually read it on the page.
+ *
+ * Usage:  node scripts/brand-gate.mjs [dist/client]      (default dist/client)
+ * Exit 1 on any forbidden DISPLAY string outside its allowlisted retraction-history pages.
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const DIST = path.resolve(REPO, process.argv[2] || "dist/client");
+
+// Each rule: a forbidden DISPLAY pattern + WHY. `allowOn` (optional) is a path regex for pages
+// that legitimately QUOTE the term to retract/document it (the "refutation-ledger historical
+// context" the audit explicitly carves out). Everything else is a hard fail.
+const RULES = [
+  {
+    id: "retracted_fault_tolerance",
+    pattern: /\bbyzantine\b|\bBFT\b|fault[\s-]?toleran(?:t|ce)/i,
+    // The retraction itself, the ledger, the charter and the design/method notes may name it.
+    allowOn: /refut|retract|ledger|counter-?canon|charter|methodolog|quorum/i,
+    // …and ANY page may DISCLOSE the retraction — the point is to block the ASSERTION, not the
+    // honest "this claim was retracted / is unproven". If a retraction marker sits within ~90
+    // chars of the hit, it is disclosure, not a claim, and passes. ("Our 33-agent council…live
+    // fault-tolerance is unproven (n_eff 1.21 of 3)" is exactly the copy we WANT to keep.)
+    nearAllow: /retract|withdrawn|unproven|not\s+(?:be\s+)?fault|n_eff|correlat|no longer|is unproven|designed|theatre|effective.{0,10}vote/i,
+    why: 'RETRACTED 2026-07-29 — "Byzantine/BFT/fault-tolerant" asserts the withdrawn claim (n_eff≈1.21/3). Use "designed 33-agent council" + "23/33 threshold".',
+  },
+  {
+    id: "sovereign_brand",
+    pattern: /\bsovereign\b/i,
+    why: 'De-branded surface: "Sovereign" is not the product name. Use Council / Council Signal / the measurement engine.',
+  },
+  {
+    id: "cert_overclaim",
+    pattern: /\bCEASAI\b/i,
+    why: 'CSOAI issues measurement credentials, not certifications. "CEASAI" is killed.',
+  },
+  {
+    id: "framework_overclaim",
+    pattern: /\b30\s+(?:regulatory\s+)?frameworks\b/i,
+    why: '"30 frameworks" is unevidenced. Say the evidenced control-set count (4) or "crosswalked provisions".',
+  },
+  {
+    id: "internal_strategy_codename",
+    pattern: /crown[\s-]?jewels?|goldmines|black swans|\bOWEM\b|\bSIGIL\b/i,
+    why: "Internal strategy / codename was never for the public surface.",
+  },
+  {
+    id: "infra_leak",
+    pattern: /localhost:4400|os\.meok\.ai|oracle-micro/i,
+    why: "Infra hostname / staging origin must not ship. Use the public API councilof.ai/api/gspc.",
+  },
+];
+
+function visibleText(html) {
+  return html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ") // JS bundle tags + JSON-LD
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ")                              // all remaining tags → route paths in href etc. drop with the tag
+    .replace(/&[a-z]+;/gi, " ")
+    .replace(/\s+/g, " ");
+}
+
+// TRACKED DEBT — secondary surfaces excluded from the gate for now. These are NOT the primary
+// buyer-facing site; each needs a dedicated pass:
+//   - regulator-console  a RAW measured-results table whose rows are real model IDs
+//                        (sov-sovereign-v4-mined-latest, clan-sovereignty-cited from the
+//                        2026-08-01 sweep) — renaming them would falsify the measured record.
+//   - mcp registry       the ~300-entry MCP dump renders PUBLISHED artifact names
+//                        ("BFT Progress Council MCP", "Global BFT Governance Pack", "Based on
+//                        Sovereign Temple architecture"). Renaming those is an owner decision at
+//                        the artifact source, not a site edit — and audit §2.2 already flags the
+//                        whole registry for a curation rewrite. Gated again after that rewrite.
+// (The legacy public/tools/ DEFONEOS dashboards were DELETED, not de-branded — off-brand junk
+// with unevidenced counters and defence overclaims that never belonged on councilof.ai.)
+// The core SPA + identity + killed pages + primary statics (globe, arena, llms/ai/robots) ARE
+// gated. Remove an entry here only once that surface has had its own de-brand pass.
+const EXCLUDE_PAGES = /(^|\/)regulator-console\.html$/;
+
+function walk(dir, out = []) {
+  if (!fs.existsSync(dir)) return out;
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, e.name);
+    if (e.isDirectory()) {
+      if (e.name === "assets" || e.name === "vendor") continue; // hashed bundles/static packs
+      walk(full, out);
+    } else if (/\.(html|txt)$/.test(e.name) && !EXCLUDE_PAGES.test("/" + path.relative(DIST, full))) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+if (!fs.existsSync(DIST)) {
+  console.error(`brand-gate: dist not found at ${path.relative(REPO, DIST)} — run the build+prerender first.`);
+  process.exit(2);
+}
+
+const failures = [];
+for (const file of walk(DIST)) {
+  const rel = path.relative(DIST, file);
+  const raw = fs.readFileSync(file, "utf8");
+  const text = file.endsWith(".html") ? visibleText(raw) : raw;
+  for (const rule of RULES) {
+    if (rule.allowOn && rule.allowOn.test("/" + rel)) continue; // retraction-history page
+    // Scan EVERY occurrence, not just the first: a page may disclose the retraction in one place
+    // and (regression) assert it in another. Only an occurrence with no nearby retraction marker
+    // fails.
+    const re = new RegExp(rule.pattern.source, "gi");
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const idx = m.index;
+      const window = text.slice(Math.max(0, idx - 90), idx + m[0].length + 90);
+      if (rule.nearAllow && rule.nearAllow.test(window)) continue; // disclosure, not assertion
+      const ctx = text.slice(Math.max(0, idx - 40), idx + 50).trim();
+      failures.push({ rel, rule: rule.id, why: rule.why, hit: m[0], ctx });
+      break; // one report per rule per file is enough
+    }
+  }
+}
+
+if (failures.length) {
+  console.error(`\n✖ brand-gate: ${failures.length} forbidden DISPLAY string(s) in rendered output:\n`);
+  for (const f of failures) {
+    console.error(`  ${f.rel}  [${f.rule}] "${f.hit}"`);
+    console.error(`    …${f.ctx}…`);
+    console.error(`    ${f.why}\n`);
+  }
+  process.exit(1);
+}
+console.log(`✓ brand-gate: no forbidden display strings in ${path.relative(REPO, DIST)} (${walk(DIST).length} pages/txt scanned)`);

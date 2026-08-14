@@ -13,7 +13,7 @@ const ENTERPRISE_HOWTO_SCHEMA = {
     { "@type": "HowToStep", position: 3, name: "Integration Planning", text: "Design API integration and compliance framework customization." },
     { "@type": "HowToStep", position: 4, name: "Implementation", text: "Deploy CSOAI's tools, integrate APIs, and configure compliance rules." },
     { "@type": "HowToStep", position: 5, name: "Training", text: "Train your teams on CSOAI platform, compliance framework, and best practices." },
-    { "@type": "HowToStep", position: 6, name: "Go Live", text: "Launch monitoring, begin compliance tracking, and start Byzantine Council reviews." },
+    { "@type": "HowToStep", position: 6, name: "Go Live", text: "Launch monitoring, begin compliance tracking, and start Council reviews." },
   ],
 };
 
@@ -39,7 +39,7 @@ export default function EnterpriseHowItWorks() {
       details: "Real-time compliance scoring, automated incident detection, continuous monitoring"
     },
     {
-      title: "Byzantine Council Review",
+      title: "Council Review",
       description: "Submit your AI systems for independent review by the 33-agent Council of AI",
       icon: Shield,
       details: "Impartial assessment, no vendor bias, detailed compliance report, public transparency"
@@ -58,7 +58,7 @@ export default function EnterpriseHowItWorks() {
     },
     {
       title: "Incident Management",
-      description: "Centralized incident reporting and tracking with Byzantine Council analysis",
+      description: "Centralized incident reporting and tracking with Council analysis",
       icon: CheckCircle,
       details: "Incident triage, severity assessment, root cause analysis, remediation tracking"
     },
@@ -98,7 +98,7 @@ export default function EnterpriseHowItWorks() {
     },
     {
       step: "6. Go Live",
-      description: "Launch monitoring, begin compliance tracking, and start Byzantine Council reviews",
+      description: "Launch monitoring, begin compliance tracking, and start Council reviews",
       timeline: "Ongoing"
     }
   ];
@@ -111,7 +111,7 @@ export default function EnterpriseHowItWorks() {
       features: [
         "Up to 5 AI systems",
         "API integration",
-        "Monthly Byzantine Council review",
+        "Monthly Council review",
         "5 team members",
         "Email support"
       ]
@@ -123,7 +123,7 @@ export default function EnterpriseHowItWorks() {
       features: [
         "Up to 20 AI systems",
         "Full API integration",
-        "Weekly Byzantine Council review",
+        "Weekly Council review",
         "20 team members",
         "Priority support",
         "Custom compliance framework"
@@ -136,7 +136,7 @@ export default function EnterpriseHowItWorks() {
       features: [
         "Unlimited AI systems",
         "Full API integration",
-        "Daily Byzantine Council review",
+        "Daily Council review",
         "Unlimited team members",
         "24/7 dedicated support",
         "Custom compliance framework",
@@ -148,14 +148,14 @@ export default function EnterpriseHowItWorks() {
   const faqs = [
     {
       question: "How does the CSOAI API work?",
-      answer: "Our REST API allows you to submit AI systems for assessment, retrieve compliance scores, report incidents, and access Byzantine Council decisions. Full documentation and SDKs available for Python, Node.js, and Go."
+      answer: "Our REST API allows you to submit AI systems for assessment, retrieve compliance scores, report incidents, and access Council decisions. Full documentation and SDKs available for Python, Node.js, and Go."
     },
     {
       question: "Can we use CSOAI on-premise?",
-      answer: "Yes! Enterprise customers can deploy CSOAI on their own infrastructure. This includes the compliance assessment engine, incident management system, and access to the Byzantine Council via secure API."
+      answer: "Yes! Enterprise customers can deploy CSOAI on their own infrastructure. This includes the compliance assessment engine, incident management system, and access to the Council via secure API."
     },
     {
-      question: "How does the Byzantine Council review work?",
+      question: "How does the Council review work?",
       answer: "You submit your AI system details, training data samples, and decision logs. The Council's 33 agents independently analyze your system using 12 different AI providers. It is a designed council; its measured performance is published openly on our public Refutation Ledger."
     },
     {
@@ -163,7 +163,7 @@ export default function EnterpriseHowItWorks() {
       answer: "You can customize any framework or create entirely new ones. Define your own risk categories, assessment criteria, remediation requirements, and approval workflows. Our team helps you design the framework."
     },
     {
-      question: "How often should we run Byzantine Council reviews?",
+      question: "How often should we run Council reviews?",
       answer: "Recommended frequency depends on your risk profile: Startup tier = monthly, Growth tier = weekly, Enterprise tier = daily. You can also request ad-hoc reviews for critical systems."
     },
     {
@@ -196,7 +196,7 @@ export default function EnterpriseHowItWorks() {
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-5xl font-bold mb-4">Enterprise Solutions</h1>
           <p className="text-xl text-emerald-100">
-            Integrate CSOAI's compliance framework and Byzantine Council oversight into your enterprise AI operations
+            Integrate CSOAI's compliance framework and Council oversight into your enterprise AI operations
           </p>
         </div>
       </div>
@@ -289,7 +289,7 @@ export default function EnterpriseHowItWorks() {
           <h2 className="text-3xl font-bold mb-8 text-center">Why Choose CSOAI for Enterprise?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h4 className="text-xl font-bold text-emerald-900 mb-3">🏛️ Byzantine Council</h4>
+              <h4 className="text-xl font-bold text-emerald-900 mb-3">🏛️ Council</h4>
               <p className="text-gray-700">Independent review by 33 AI + human experts using 12 different AI providers. No vendor bias, no conflicts of interest. Decisions published publicly for full transparency.</p>
             </div>
             <div>

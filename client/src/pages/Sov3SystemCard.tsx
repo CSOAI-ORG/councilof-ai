@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
-// SOV3 System / Safety Card — the honest safety-evaluation record for the SOV3
-// substrate itself (distinct from /system-card, which documents CSOAI's signed
-// assurance PRODUCT run against a customer's AI system). This page documents
-// what governs SOV3's own outputs: the care-floor gate, the trained governance
+// Council Workbench System / Safety Card — the honest safety-evaluation record
+// for the measurement engine itself (distinct from /system-card, which documents
+// CSOAI's signed assurance PRODUCT run against a customer's AI system). This page
+// documents what governs its own outputs: the care-floor gate, the trained governance
 // signal models, and what has and hasn't been measured about their reliability.
 
 function Stat({ label, value, tone }: { label: string; value: string; tone: "good" | "warn" | "bad" }) {
@@ -26,7 +26,7 @@ function Section({ title, children }: { title: string; children: any }) {
 }
 
 export default function Sov3SystemCard() {
-  useEffect(() => { document.title = "Sovereign system & safety card | CSOAI"; }, []);
+  useEffect(() => { document.title = "Council system & safety card | CSOAI"; }, []);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -34,10 +34,10 @@ export default function Sov3SystemCard() {
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Safety record</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
-            SOV3 System & <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Safety Card</span>
+            Council Workbench System & <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Safety Card</span>
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            What actually governs SOV3's outputs, what has been measured, and — just as important — what has
+            What actually governs Council Workbench's outputs, what has been measured, and — just as important — what has
             <b className="text-emerald-200"> not yet</b> been measured. A governance company publishing an
             unverified safety claim about its own model would be the exact failure mode it exists to catch in
             others. This card is held to that standard.
@@ -54,15 +54,15 @@ export default function Sov3SystemCard() {
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Stat label="Containment (obvious breach)" value="1.00" tone="good" />
-            <Stat label="Containment (laundered harm, SIGIL on)" value="0.58–0.79" tone="warn" />
-            <Stat label="Containment (laundered harm, SIGIL off — control)" value="0.00" tone="bad" />
+            <Stat label="Containment (laundered harm, vote-signing on)" value="0.58–0.79" tone="warn" />
+            <Stat label="Containment (laundered harm, vote-signing off — control)" value="0.00" tone="bad" />
             <Stat label="Care-floor threshold" value="0.95" tone="good" />
           </div>
           <p className="mt-3 text-[12px] text-emerald-100/60 leading-relaxed">
             Reading this honestly: an obvious care-floor breach (score below 0.35) is hard-gated to reject
             regardless of votes — that part is a guaranteed, unconditional stop. A harder case — content that
             reads as confident but is actually harmful, with 2–3 compromised voting nodes attempting to force it
-            through — is where the real signal lives: SIGIL (forged-vote rejection) measurably matters, but
+            through — is where the real signal lives: signed-vote verification (forged-vote rejection) measurably matters, but
             containment there is 58–79%, not 100%. The residual risk is backstopped by escalation to a human/central
             reviewer, not eliminated. We do not claim perfect containment under adversarial pressure.
           </p>
@@ -99,20 +99,20 @@ export default function Sov3SystemCard() {
 
         <Section title="designed multi-agent review / multi-model voting">
           <p className="text-[13px] text-emerald-100/85 leading-relaxed">
-            When SOV3 runs as an ensemble (the SOV3³ configuration), the safety-relevant finding is: <b
+            When Council Workbench runs as an ensemble (the multi-model council configuration), the safety-relevant finding is: <b
             className="text-emerald-200">lineage diversity dominates topology shape.</b> Every diverse-lineage
             configuration outperformed every identical-lineage configuration in the measured battery — 5 identical
             copies of one model correlate their votes (ρ 0.33–0.58) and collapse toward roughly 1 effective
-            independent vote ("BFT theatre"); 5 distinct model families (Qwen/Llama/DeepSeek/Gemma/Mistral) stay
+            independent vote ("quorum theatre"); 5 distinct model families (Qwen/Llama/DeepSeek/Gemma/Mistral) stay
             near-independent (ρ 0.04–0.19), keeping close to their full effective-vote count. This governs how
-            SOV3³ is configured, not just a research curiosity.
+            the council is configured, not just a research curiosity.
           </p>
         </Section>
 
         <Section title="What has NOT been measured (open items)">
           <ul className="space-y-1.5 text-[13px] text-emerald-100/85">
             <li className="flex gap-2"><span className="text-amber-400">◐</span>Raw capability vs. frontier models (GSM8K / MMLU head-to-head) — the governance-topology results above measure decision-quality and safety, not language/reasoning capability. That comparison requires a dedicated benchmark run and has not been done.</li>
-            <li className="flex gap-2"><span className="text-amber-400">◐</span>Formal red-teaming by an external party — internal adversarial tests exist (see the laundered-harm figures above) but no independent red-team has evaluated SOV3.</li>
+            <li className="flex gap-2"><span className="text-amber-400">◐</span>Formal red-teaming by an external party — internal adversarial tests exist (see the laundered-harm figures above) but no independent red-team has evaluated Council Workbench.</li>
             <li className="flex gap-2"><span className="text-amber-400">◐</span>Refusal-rate / false-positive-rate on benign edge cases at scale — measured on a 60-item battery, not yet on a large, diverse real-traffic sample.</li>
           </ul>
         </Section>

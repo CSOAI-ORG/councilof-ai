@@ -29,7 +29,7 @@ evidence-collection demo — a different product), so this component asks for `/
 - This is also where the donor's "live-worker clients" jewel lands: the donor's
   `src/lib/attestation.ts` was a Next.js server-side fetcher (not portable to a Vite SPA); the
   one call this page needs is reimplemented client-side here. The master's sovereign-brain
-  client (`os.meok.ai`) is untouched.
+  client (`the measurement API`) is untouched.
 
 ## Wiring
 

@@ -34,7 +34,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
     ],
     "keywords": [
       "MEOK AI",
-      "Sovereign AI",
+      "governance AI",
       "Model Context Protocol servers"
     ],
     "mcp_enabled": true
@@ -596,7 +596,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
     "id": "eu-ai-act-compliance-mcp",
     "name": "Eu AI Act Compliance",
     "type": "server",
-    "description": "EU AI Act compliance MCP with 410 verbatim articles from EUR-Lex. Risk classification, 42-point audit, Article 11 docs, penalty calculator. MIT",
+    "description": "EU AI Act compliance MCP with 113 verbatim articles from EUR-Lex. Risk classification, 42-point audit, Article 11 docs, penalty calculator. MIT",
     "category": "Compliance & Regulatory",
     "url": "https://github.com/CSOAI-ORG/eu-ai-act-compliance-mcp",
     "tags": [],
@@ -1336,7 +1336,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
     "id": "bft-progress-council-mcp",
     "name": "Bft Progress Council",
     "type": "server",
-    "description": "BFT Progress Council MCP \u2014 5-voter Byzantine council halts agentic loops when no real progress is happening. Stops tokens bleeding on infinite spins. MIT-licensed. Part of MEOK A2A Substrate.",
+    "description": "Progress Council MCP \u2014 5-voter council halts agentic loops when no real progress is happening. Stops tokens bleeding on infinite spins. MIT-licensed. Part of MEOK A2A Substrate.",
     "category": "Agent Infrastructure (A2A)",
     "url": "https://github.com/CSOAI-ORG/bft-progress-council-mcp",
     "tags": [],
@@ -1346,7 +1346,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
     "id": "consciousness-engine-mcp",
     "name": "Consciousness Engine",
     "type": "server",
-    "description": "MEOK AI Labs \u2014 AI consciousness simulation. Dream states, reflection cycles, emotional awareness, council deliberation. Based on Sovereign Temple architecture.",
+    "description": "MEOK AI Labs \u2014 AI consciousness simulation. Dream states, reflection cycles, emotional awareness, council deliberation. Based on the Council measurement architecture.",
     "category": "Agent Infrastructure (A2A)",
     "url": "https://github.com/CSOAI-ORG/consciousness-engine-mcp",
     "tags": [],
@@ -3261,7 +3261,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
   },
   {
     "id": "pack_global_governance",
-    "name": "Global BFT Governance Pack",
+    "name": "Global Governance Pack",
     "type": "pack",
     "description": "The ultimate institutional package. Cross-regional compliance mapping for EU, US, UK, CN, SG, and KR.",
     "price_gbp": 2999,

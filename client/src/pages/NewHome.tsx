@@ -149,7 +149,7 @@ export default function NewHome() {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Accountability</h3>
               <p className="text-gray-600">
-                33-Agent Byzantine consensus with human oversight ensures no single entity controls AI safety decisions.
+                designed 33-agent council with human oversight ensures no single entity controls AI safety decisions.
               </p>
             </Card>
 
@@ -346,7 +346,7 @@ export default function NewHome() {
               <div>
                 <div className="text-5xl font-black mb-2">33</div>
                 <div className="text-white">AI Agents</div>
-                <div className="text-sm text-gray-100 mt-1">Byzantine Consensus</div>
+                <div className="text-sm text-gray-100 mt-1">Multi-Agent Council</div>
               </div>
               <div>
                 <div className="text-5xl font-black mb-2">100%</div>
@@ -660,7 +660,7 @@ export default function NewHome() {
                     3
                   </div>
                   <div>
-                    <h4 className="font-semibold text-lg mb-2">Byzantine Consensus</h4>
+                    <h4 className="font-semibold text-lg mb-2">Multi-Agent Council</h4>
                     <p className="text-gray-400">Designed to require 23/33 agents to agree (70% supermajority). Not yet demonstrated live. Intended to prevent single-provider bias or manipulation.</p>
                   </div>
                 </div>
@@ -687,11 +687,11 @@ export default function NewHome() {
 
             <div className="space-y-8">
               <Card className="p-6 bg-gray-800/50 border-gray-700">
-                <h3 className="text-xl font-bold mb-4 text-white">Why Byzantine Consensus?</h3>
+                <h3 className="text-xl font-bold mb-4 text-white">Why Multi-Agent Council?</h3>
                 <ul className="space-y-3 text-gray-300">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>No Single Point of Failure:</strong> Even if 10 agents malfunction or are compromised, decisions remain valid</span>
+                    <span><strong>Supermajority required:</strong> a decision passes only when at least 23 of 33 agents agree</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
@@ -773,7 +773,7 @@ export default function NewHome() {
                 <Shield className="h-6 w-6 text-green-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
-                33-Agent Byzantine Consensus
+                Designed 33-Agent Council
               </h3>
               <p className="text-gray-600">
                 Decentralized decision-making — a BFT-replicated vote runs today,
@@ -950,7 +950,7 @@ export default function NewHome() {
             </div>
             <div className="text-center">
               <div className="text-5xl font-black text-green-600 mb-2">Proven</div>
-              <div className="text-gray-600">Byzantine Consensus</div>
+              <div className="text-gray-600">Multi-Agent Council</div>
             </div>
             <div className="text-center">
               <div className="text-5xl font-black text-gray-900 mb-2">Leading</div>

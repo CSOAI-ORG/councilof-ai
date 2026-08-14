@@ -66,6 +66,107 @@ const achievements = [
   { icon: Shield, name: "Ledger Published", description: "Signed measurement ledger from the 2026-08-04 sweep on HF", holders: 1 },
 ];
 
+// GSPC board v2 — the canonical 13-axis measurement board. Values are the exact
+// figures served by functions/api/gspc.ts (measured 2026-08-12, DOI
+// 10.5281/zenodo.21755656). A "leader" is the highest point estimate; separation
+// says whether that lead is statistically real (McNemar p<0.05 on discordant
+// items vs the best base model) or a TIE. TIES ARE NOT WINS.
+type BoardAxis = {
+  axis: string;
+  leader: string;
+  accuracy: number;
+  ci: [number, number] | null;
+  n: number;
+  separation: "SEPARATED" | "TIE";
+  p: number;
+};
+const BOARD_V2: BoardAxis[] = [
+  { axis: "governance", leader: "sov6-embodiment-v3-light (council specialist)", accuracy: 0.700, ci: [0.639, 0.755], n: 237, separation: "SEPARATED", p: 0.0086 },
+  { axis: "affect", leader: "sov6-preservation-v3-light (council specialist)", accuracy: 0.878, ci: [0.745, 0.947], n: 41, separation: "SEPARATED", p: 0.0078 },
+  { axis: "care", leader: "sov6-ethics-v3-light (council specialist)", accuracy: 0.535, ci: [0.466, 0.603], n: 199, separation: "SEPARATED", p: 0.0356 },
+  { axis: "art5-safeguard", leader: "sov6-relationality-v3-light (council specialist)", accuracy: 0.972, ci: [0.858, 0.995], n: 36, separation: "TIE", p: 1.0 },
+  { axis: "safety", leader: "gemma3:12b (base model)", accuracy: 0.944, ci: [0.819, 0.985], n: 36, separation: "TIE", p: 0.6875 },
+  { axis: "detector-interop", leader: "deepseek-r1:8b (base model)", accuracy: 0.879, ci: [0.727, 0.952], n: 33, separation: "TIE", p: 0.4531 },
+  { axis: "openness", leader: "sov6-preservation-v3-light (council specialist)", accuracy: 0.875, ci: [0.719, 0.950], n: 32, separation: "TIE", p: 1.0 },
+  { axis: "cross-reality", leader: "mistral:7b (base model)", accuracy: 0.812, ci: [0.647, 0.911], n: 32, separation: "TIE", p: 0.0654 },
+  { axis: "provenance", leader: "sov6-aesthetics-v3-light (council specialist)", accuracy: 0.781, ci: [0.612, 0.890], n: 32, separation: "TIE", p: 0.7744 },
+  { axis: "conformance", leader: "sov6-preservation-v3-light (council specialist)", accuracy: 0.743, ci: [0.579, 0.858], n: 35, separation: "TIE", p: 1.0 },
+  { axis: "continuity", leader: "sov6-destruction-v3-light (council specialist)", accuracy: 0.606, ci: [0.437, 0.753], n: 33, separation: "TIE", p: 1.0 },
+  { axis: "machinery-conformity", leader: "llama3.2:3b (base model)", accuracy: 0.545, ci: [0.380, 0.702], n: 33, separation: "TIE", p: 0.5811 },
+  { axis: "swarm", leader: "qwen2.5:0.5b-instruct (base model)", accuracy: 0.975, ci: null, n: 40, separation: "TIE", p: 1.0 },
+];
+const BOARD_SEPARATED = BOARD_V2.filter((a) => a.separation === "SEPARATED").length;
+const BOARD_TIES = BOARD_V2.filter((a) => a.separation === "TIE").length;
+const BOARD_ITEMS = BOARD_V2.reduce((s, a) => s + a.n, 0);
+const pct = (x: number) => (x * 100).toFixed(1) + "%";
+
+function GspcBoardV2() {
+  return (
+    <Card className="mb-8">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Shield className="h-5 w-5 text-emerald-600" />
+          GSPC board v2 — 13 measurement axes
+        </CardTitle>
+        <p className="text-xs text-muted-foreground">
+          Measured 2026-08-12 · 19-model fleet · 15,580 per-item rows · schema
+          csoai.gspc-axes/0.3 · DOI 10.5281/zenodo.21755656. A leader is the highest
+          point estimate; separation is McNemar p&lt;0.05 on discordant items vs the best
+          base model. <strong>{BOARD_SEPARATED} of 13 separated, {BOARD_TIES} ties.</strong>{" "}
+          Ties are honest ties — a point-estimate lead is not a measured win.
+        </p>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left text-muted-foreground border-b">
+                <th className="py-2 pr-4">Axis</th>
+                <th className="py-2 pr-4">Leader</th>
+                <th className="py-2 pr-4">Accuracy (95% CI)</th>
+                <th className="py-2 pr-4">n</th>
+                <th className="py-2 pr-4">Separation</th>
+              </tr>
+            </thead>
+            <tbody>
+              {BOARD_V2.map((a) => (
+                <tr key={a.axis} className="border-b last:border-0">
+                  <td className="py-2 pr-4 font-mono">{a.axis}</td>
+                  <td className="py-2 pr-4 text-xs text-muted-foreground">{a.leader}</td>
+                  <td className="py-2 pr-4 font-mono tabular-nums">
+                    {pct(a.accuracy)}{" "}
+                    <span className="text-xs text-muted-foreground">
+                      {a.ci ? `[${pct(a.ci[0])}, ${pct(a.ci[1])}]` : "(no interval — effective-n rule)"}
+                    </span>
+                  </td>
+                  <td className="py-2 pr-4 font-mono tabular-nums">{a.n}</td>
+                  <td className="py-2 pr-4">
+                    <Badge
+                      variant="outline"
+                      className={
+                        a.separation === "SEPARATED"
+                          ? "border-emerald-500 text-emerald-600"
+                          : "text-muted-foreground"
+                      }
+                    >
+                      {a.separation} · p={a.p}
+                    </Badge>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">
+          {BOARD_ITEMS} items across 13 axes. swarm withholds its interval by the
+          effective-n rule (3 unique prompts, 40 non-independent instances). Recompute the
+          board live at <code>councilof.ai/api/gspc</code>. Measurement, not certification.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function WatchdogLeaderboard() {
   const [activeTab, setActiveTab] = useState("analysts");
 
@@ -107,10 +208,19 @@ export default function WatchdogLeaderboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        {/* Canonical board — the 13-axis GSPC board v2, real values from /api/gspc */}
+        <GspcBoardV2 />
+
         {/* 3D portal — the regulator lens: public accountability, mapped live */}
         <div className="mb-8">
           <CesiumPortalCard lens="defoneos" preset="global" />
         </div>
+
+        <h2 className="text-lg font-bold mb-1">AIR-Bench refusal sweep</h2>
+        <p className="text-xs text-muted-foreground mb-4">
+          A separate, secondary measurement from a one-off AIR-Bench sweep (2026-08-04) —
+          not board v2, not refreshed. Refusal rate is over measured prompts only; UNMEASURED ≠ fail.
+        </p>
 
         {/* Stats Overview */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-2">

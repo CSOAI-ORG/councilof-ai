@@ -148,7 +148,7 @@ export default function Disclaimers() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-purple-900">
                   <Info className="h-5 w-5 text-purple-600" />
-                  3. AI-Generated Content & Byzantine Council
+                  3. AI-Generated Content & Council
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

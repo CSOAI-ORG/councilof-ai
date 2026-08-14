@@ -4,7 +4,7 @@ import { useEffect } from "react";
 // front door (/try) and the sector view (/playbooks).
 type Svc = { name: string; glyph: string; body: string; href: string; cta: string };
 const SERVICES: Svc[] = [
-  { name: "Live Council of AI", glyph: "BFT", body: "Ask any AI-governance question and watch five independent agents debate and reach designed multi-agent review - with the frameworks that apply and why.", href: "/try", cta: "Try it free" },
+  { name: "Live Council of AI", glyph: "Vote", body: "Ask any AI-governance question and watch five independent agents debate and reach designed multi-agent review - with the frameworks that apply and why.", href: "/try", cta: "Try it free" },
   { name: "Industry Playbooks", glyph: "SEC", body: "Your sector's scenario, the frameworks that bind you, the bridges you need, and the exact next steps - across 47 industries.", href: "/playbooks", cta: "Find your sector" },
   { name: "MEOK Law", glyph: "LAW", body: "For any place - city, state, nation, bloc - the full stack of AI rules that apply and how each layer cross-references the others.", href: "/meok-law", cta: "What governs you" },
   { name: "Framework Temples", glyph: "GOV", body: "13+ regulations and standards - EU AI Act, NIST AI RMF, ISO 42001 - each with its own temple, mapped to your systems.", href: "/temples", cta: "See the temples" },

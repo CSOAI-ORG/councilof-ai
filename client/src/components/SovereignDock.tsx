@@ -11,7 +11,7 @@ import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, per
 
 // SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
 // acts: routes you to the right surface, answers from the framework knowledge
-// base, and now answers any question with live world data via os.meok.ai.
+// base, and now answers any question with live world data via the measurement API.
 
 type Msg = { role: "you" | "sov"; text: string };
 
@@ -19,9 +19,9 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/graph", label: "the Governance Graph" },
   { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/graph", label: "the Governance Graph" },
   { re: /framework|crosswalk|\biso\b|\bnist\b|tc260|eu ai act/i, href: "/crosswalks", label: "Framework crosswalks" },
-  { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/council-space", label: "Council Space" },
-  { re: /sovereign town|\btown\b|incident/i, href: "/council-space?view=towns", label: "the Towns layer of Council Space" },
-  { re: /arena|benchmark|head.?to.?head|model compar/i, href: "/council-space?view=arena", label: "the Arena layer of Council Space" },
+  { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/sov-space", label: "Council Space" },
+  { re: /sovereign town|\btown\b|incident/i, href: "/sov-space?view=towns", label: "the Towns layer of Council Space" },
+  { re: /arena|benchmark|head.?to.?head|model compar/i, href: "/sov-space?view=arena", label: "the Arena layer of Council Space" },
   { re: /distribution|\bmcp\b|pypi|npm|glama|mcpize|registry/i, href: "/distribution", label: "Distribution & Layer 0 coverage" },
   { re: /jsp ?936|defence assurance|defense assurance|system card|mod evidence|evidence pack|dependable ai/i, href: "/system-card", label: "the Signed System Card — JSP 936 assurance" },
   { re: /evidence|connect|integrat|webhook/i, href: "/evidence", label: "Evidence Hub" },
@@ -35,8 +35,8 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
   { re: /humanoid|\bpoc\b|proof of concept|one os|rogue|swarm|bad actor/i, href: "/poc", label: "the ONE OS proof of concept" },
-  { re: /globe|earth|world map|3d/i, href: "/council-space?view=globe", label: "the Globe layer of Council Space" },
-  { re: /sovereign network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Sovereign network" },
+  { re: /globe|earth|world map|3d/i, href: "/sov-space?view=globe", label: "the Globe layer of Council Space" },
+  { re: /council network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Council network" },
   { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
   { re: /\bos\b|launch|grid|everything/i, href: "/os", label: "the OS launcher" },
@@ -44,19 +44,19 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
 
 const KNOWLEDGE: { re: RegExp; a: string }[] = [
   { re: /what.?s? layer ?0|explain layer ?0/i, a: "Layer 0 is the trust floor for AI: identity (did:csoai), runtime policy, agentic-finance pre-checks, a legacy bridge and cross-region handoff, plus Ed25519 attestation and A2A. Every governed agent stands on it." },
-  { re: /who are you|what are you/i, a: "I am your Sovereign - the agent-first interface to the CSOAI OS. Speak or type and I act: open any tool, explain any framework, answer with live world data, and route you to a signed council verdict." },
+  { re: /who are you|what are you/i, a: "I am your Council assistant - the agent-first interface to the CSOAI OS. Speak or type and I act: open any tool, explain any framework, answer with live world data, and route you to a signed council verdict." },
 ];
 
 const QUICK: { label: string; href: string }[] = [
   { label: "Governance Graph", href: "/graph" },
-  { label: "Council Space", href: "/council-space" },
+  { label: "Council Space", href: "/sov-space" },
   { label: "Open Commons", href: "/commons" },
   { label: "Plans", href: "/plans" },
   { label: "Status", href: "/status" },
   { label: "Full OS", href: "/os" },
 ];
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 const INDUSTRIES = ["healthcare","health","hospital","clinical","finance","fintech","banking","insurance","education","edtech","retail","ecommerce","legal","law firm","government","public sector","defense","energy","utilities","automotive","telecom","pharma","biotech","manufacturing","logistics","supply chain","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing","advertising"];
 
 async function askChat(msg: string, system?: string): Promise<string | null> {
@@ -73,16 +73,16 @@ async function askGovern(q: string): Promise<any | null> {
 }
 
 // SOV3 shared brain: /orchestrate returns {say, actions}. The Sovereign SEES the
-// page (getScreenContext), THINKS via os.meok.ai, then ACTS - opening OS surfaces.
+// page (getScreenContext), THINKS via the measurement API, then ACTS - opening OS surfaces.
 const APP_ROUTES: Record<string, string> = {
   revenue: "/pricing", pricing: "/pricing", plans: "/pricing", billing: "/pricing",
   king: "/try", council: "/try", try: "/try", vote: "/try", bft: "/try",
   setup: "/start", onboard: "/start", start: "/start", welcome: "/start",
   graph: "/graph", knowledge: "/graph", search: "/graph",
-  space: "/council-space", sim: "/council-space", simulation: "/council-space", experiment: "/council-space", sovspace: "/council-space",
+  space: "/sov-space", sim: "/sov-space", simulation: "/sov-space", experiment: "/sov-space", sovspace: "/sov-space",
   tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
   status: "/status", system: "/status", os: "/os", home: "/os", grid: "/os",
-  twin: "/council-twin",
+  twin: "/sovereign-twin",
   certification: "/certification", cert: "/certification", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
   layer0: "/trust-center", distribution: "/distribution", command: "/command-center",
@@ -115,7 +115,7 @@ export default function SovereignDock() {
   const go = (href: string) => { if (/^https?:\/\//.test(href)) window.open(href, "_blank"); else navigate(href); };
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "I am your Sovereign. Ask me anything, or tell me what to do - I answer with live world data and take you where you need to go." }]);
+  const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "I am your Council assistant. Ask me anything, or tell me what to do - I answer with live world data and take you where you need to go." }]);
   const [listening, setListening] = useState(false);
   const [voiceOn, setVoiceOn] = useState(true);
   const [hz, setHz] = useState<any>(null);
@@ -138,9 +138,9 @@ export default function SovereignDock() {
     chargeSovereign(4); try { e.target.value = ""; } catch (er) {}
   }
   const BRAIN: Record<string, string> = {
-    offline: "Offline brain — a local open-source model runs on your own hardware. Fully sovereign, no data leaves you. I wrap it in BFT + Layer 0 so it still stays compliant.",
+    offline: "Offline brain — a local open-source model runs on your own hardware. Fully sovereign, no data leaves you. I wrap it in multi-agent review + Layer 0 so it still stays compliant.",
     hosted: "Hosted brain — premium models, governed. I route your request to the best model (MoE, world model or VLM), the Council of AI checks the answer, and every decision is signed.",
-    paygo: "Pay-as-you-go — you only pay per governed call. Same BFT + Layer 0 floor; ideal for bursty or trial use.",
+    paygo: "Pay-as-you-go — you only pay per governed call. Same multi-agent review + Layer 0 floor; ideal for bursty or trial use.",
   };
   function setBrain(mode: string) { setBrainMode(mode); try { localStorage.setItem("sov_brain_mode", mode); } catch (e) {} setMsgs((m) => m.concat({ role: "sov", text: BRAIN[mode] })); }
 
@@ -173,7 +173,7 @@ export default function SovereignDock() {
     setInput("");
     // Doctrine hard-stop — enforced before any network call, in every persona.
     if (DOCTRINE_RE.test(t)) { setMsgs((m) => m.concat({ role: "sov", text: DOCTRINE_REFUSAL })); return; }
-    chargeSovereign(4); // every question teaches your Sovereign
+    chargeSovereign(4); // every question teaches your Council assistant
     // Only treat input as a navigation command when it's an explicit nav verb or a
     // short topic phrase - never when the user is asking a question (answer those).
     const words = t.split(/\s+/).length;
@@ -203,7 +203,7 @@ export default function SovereignDock() {
       }
     }
     setMsgs((m) => m.concat({ role: "sov", text: "Reasoning over live governance data…" }));
-    // Reason via the live Sovereign gateway; in parallel map the industry to its framework stack.
+    // Reason via the live Council gateway; in parallel map the industry to its framework stack.
     const ind = INDUSTRIES.find((w) => new RegExp("\\b" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i").test(t));
     const [answer, gov] = await Promise.all([askChat(t, persona.system), ind ? askGovern(ind) : Promise.resolve(null)]);
     let out = answer || "";
@@ -241,9 +241,9 @@ export default function SovereignDock() {
   return (
     <>
       {!open && (
-        <button onClick={() => setOpen(true)} aria-label="Open your Sovereign" className="fixed right-4 bottom-4 z-[9998] flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04110b]/90 px-4 py-3 text-emerald-200 shadow-[0_8px_30px_-6px_rgba(16,185,129,.5)] backdrop-blur hover:bg-[#062016]">
-          <span className="relative flex h-3 w-3"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" /><span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400" /></span>
-          <span className="text-sm font-bold">Sovereign</span>
+        <button onClick={() => setOpen(true)} aria-label="Open the Council assistant" title="Ask the Council" className="group fixed right-4 bottom-4 z-[9998] flex h-12 w-12 items-center justify-center rounded-full border border-emerald-400/40 bg-[#04110b]/90 text-emerald-200 shadow-[0_8px_24px_-8px_rgba(16,185,129,.5)] backdrop-blur transition hover:bg-[#062016]">
+          <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 1 1 16.1-3.8Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <span className="absolute right-0 top-0 flex h-2.5 w-2.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" /><span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" /></span>
         </button>
       )}
       {open && (
@@ -301,7 +301,7 @@ export default function SovereignDock() {
           <div className="border-t border-emerald-500/15 p-3">
             {brainOpen && (
               <div className="mb-2 rounded-xl border border-emerald-400/25 bg-[#04120c] p-3">
-                <div className="text-[11px] font-bold text-emerald-100">Your Sovereign brain</div>
+                <div className="text-[11px] font-bold text-emerald-100">Your Council assistant brain</div>
                 <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">A sandwich: a <b className="text-emerald-200">left brain</b> (reasoning, tools, BFT compliance) and a <b className="text-emerald-200">right brain</b> (perception, vision/VLM). Route any model underneath — MoE, mixture-of-models, a world model, a VLM — and the Sovereign wraps it in the 33-agent Council of AI + Layer 0 so whatever you plug in stays compliant and signed.</p>
                 <div className="mt-2 grid grid-cols-3 gap-1.5">
                   {[["offline", "Offline"], ["hosted", "Hosted"], ["paygo", "PAYG"]].map(([id, label]) => (
@@ -314,7 +314,7 @@ export default function SovereignDock() {
             <div className="flex items-center gap-1.5 rounded-xl border border-emerald-400/30 bg-white/[0.04] px-2 py-1.5">
               <button onClick={() => fileRef.current && fileRef.current.click()} aria-label="Upload files or photos" title="Upload files / photos — governed under Layer 0" className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-lg font-bold text-emerald-200 hover:bg-emerald-500/25">+</button>
               <button onClick={() => setBrainOpen((b) => !b)} aria-label="Sovereign brain setup" title="Brain setup — offline / hosted / PAYG" className={"flex h-8 w-8 items-center justify-center rounded-lg text-sm " + (brainOpen ? "bg-emerald-500/30 text-emerald-100" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>{"◉"}</button>
-              <button onClick={voice} aria-label="Speak to your Sovereign" className={"flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold " + (listening ? "bg-rose-500/30 text-rose-200 animate-pulse" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>MIC</button>
+              <button onClick={voice} aria-label="Speak to your Council assistant" className={"flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold " + (listening ? "bg-rose-500/30 text-rose-200 animate-pulse" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>MIC</button>
               <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") act(input); }} placeholder="Ask me anything..." className="flex-1 bg-transparent text-sm text-emerald-50 placeholder-emerald-300/40 focus:outline-none" />
               <button onClick={() => act(input)} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Send</button>
             </div>

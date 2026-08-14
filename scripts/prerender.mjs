@@ -52,6 +52,10 @@ const MIN = Number(arg("min", 400));       // visible chars below which a route 
 const WAIT = Number(arg("wait", 1800));    // ms after load before snapshotting
 const PORT = Number(arg("port", 4400));
 const CONC = Number(arg("conc", 4));
+// Production origin the prerendered canonical/og:url/twitter:url must carry (NOT the
+// localhost:PORT staging origin the snapshot runs on). Override with --prod-origin if the
+// canonical host ever changes.
+const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
 
 if (!existsSync(DIST)) {
   console.error(`no ${DIST}/ — run \`vite build\` first`);
@@ -134,7 +138,13 @@ async function worker(id) {
 
       // The snapshot keeps <script> tags so the app still hydrates on top of it. Only the
       // rendered markup is added — nothing is removed.
-      const html = await page.content();
+      // Canonical fix: the per-route self-canonical script in index.html sets canonical/og:url/
+      // twitter:url to `location.origin` — which, DURING PRERENDER, is http://localhost:4400.
+      // Left unrewritten it bakes the staging origin into every static page (the sitewide
+      // localhost:4400 canonical the 2026-08-14 audit flagged). Rewrite it to the prod origin
+      // in the captured markup before it is written to dist.
+      const html = (await page.content())
+        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN);
       const out = route === "/" ? join(DIST, "index.html")
                                 : join(DIST, route.replace(/^\//, ""), "index.html");
       mkdirSync(dirname(out), { recursive: true });

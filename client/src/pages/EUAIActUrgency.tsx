@@ -57,9 +57,9 @@ const checklistItems = [
     link: "/how-it-works",
   },
   {
-    title: "CEASAI Certification (CSOAI specific)",
+    title: "Measurement Credential (CSOAI specific)",
     description:
-      "Complete the 20-week CEASAI program to earn an externally recognized certificate that demonstrates your organization meets EU AI Act obligations.",
+      "Complete the 20-week measurement credential program to earn an externally recognized measurement attestation of your team's EU AI Act competence.",
     link: "/certification",
   },
 ];
@@ -92,7 +92,7 @@ const comparisonRows = [
     highlight: false,
   },
   {
-    approach: "CSOAI CEASAI",
+    approach: "CSOAI measurement credential",
     time: "20 weeks",
     cost: "£3.5K-£7.5K",
     risk: "Low",
@@ -108,19 +108,19 @@ const faqs = [
       "Regulators can impose fines of up to €35 million or 7% of global annual turnover—whichever is higher. They may also issue corrective orders, ban specific AI systems, or mandate recalls. Early compliance builds defensible documentation that reduces enforcement risk.",
   },
   {
-    question: "How long does CEASAI certification take?",
+    question: "How long does the measurement credential take?",
     answer:
-      "The standard CEASAI program runs 20 weeks: 8 weeks of structured coursework, 8 weeks of guided implementation, and 4 weeks of final assessment and Byzantine Council review. Accelerated tracks are available for teams with existing compliance infrastructure.",
+      "The standard measurement credential program runs 20 weeks: 8 weeks of structured coursework, 8 weeks of guided implementation, and 4 weeks of final assessment and Council review. Accelerated tracks are available for teams with existing compliance infrastructure.",
   },
   {
-    question: "Does CEASAI cover EU AI Act specifically?",
+    question: "Does the measurement credential cover EU AI Act specifically?",
     answer:
-      "Yes. The CEASAI curriculum is explicitly mapped to every high-risk requirement in the EU AI Act, including risk classification, conformity assessment, technical documentation, post-market monitoring, human oversight, and quality management.",
+      "Yes. The measurement credential curriculum is explicitly mapped to every high-risk requirement in the EU AI Act, including risk classification, conformity assessment, technical documentation, post-market monitoring, human oversight, and quality management.",
   },
   {
     question: "Can I get certified if my AI is still in development?",
     answer:
-      "Absolutely. CEASAI certification applies to your organization's compliance processes and governance framework, not just deployed systems. Getting certified during development ensures you build compliance in from the start—cheaper and faster than retrofitting later.",
+      "Absolutely. The measurement credential applies to your organization's compliance processes and governance framework, not just deployed systems. Getting certified during development ensures you build compliance in from the start—cheaper and faster than retrofitting later.",
   },
   {
     question: "What's the difference between compliance software and certification?",
@@ -410,7 +410,7 @@ export default function EUAIActUrgency() {
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
                   After certification, your AI systems receive continuous
-                  oversight from a fault-tolerant council of 33 independent
+                  oversight from a designed council of 33 independent
                   agents. Bias-resistant, manipulation-proof, always on.
                 </p>
               </CardContent>

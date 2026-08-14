@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TRUST, KIND_META, type TrustItem } from "../data/trustWall";
 import { CANON } from "../data/canonCounters";
 
-const BRAIN = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const BRAIN = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "/api";
 function fmt(n: number) { return n >= 1e6 ? Math.round(n / 1e6) + "M" : n >= 1e3 ? Math.round(n / 1e3) + "k" : String(n); }
 
 // Live credibility chips — real numbers pulled from the Sovereign brain, with an

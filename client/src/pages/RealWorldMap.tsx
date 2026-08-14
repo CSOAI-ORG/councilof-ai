@@ -15,7 +15,7 @@ export default function RealWorldMap() {
   const [err, setErr] = useState("");
   useEffect(() => {
     document.title = "Real-world 3D map | CSOAI";
-    if (!KEY) { setErr("The photorealistic 3D map is temporarily unavailable. Explore the Sovereign Globe instead — no key, no account, always on."); return; }
+    if (!KEY) { setErr("The photorealistic 3D map is temporarily unavailable. Explore the Council Globe instead — no key, no account, always on."); return; }
     let cancelled = false;
     loadMaps3d().then(() => {
       if (cancelled || !ref.current) return;

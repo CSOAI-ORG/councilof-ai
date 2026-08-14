@@ -138,7 +138,7 @@ export default function TrainingCertificationFeature() {
               <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent"> Expert</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Earn professional certifications in EU AI Act, NIST AI RMF, and ISO 42001.
+              Earn measurement attestations in EU AI Act, NIST AI RMF, and ISO 42001.
               Master the frameworks shaping the future of responsible AI.
             </p>
             <div className="flex gap-4 justify-center">

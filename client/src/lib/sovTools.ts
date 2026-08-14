@@ -1,11 +1,11 @@
 // sovTools - the real bridge from the front end to the live Sovereign brain.
-// Talks JSON-RPC to os.meok.ai/api/mcp: lists the tools the brain executes
+// Talks JSON-RPC to /api/mcp: lists the tools the brain executes
 // server-side, and actually RUNS them (governed, care-floored, Ed25519-signable).
 // This is what turns the catalogue from a directory into working tooling.
 
 const GW: string =
   ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) ||
-  "https://os.meok.ai/api";
+  "/api";
 
 export type SovTool = {
   name: string;
@@ -43,7 +43,7 @@ export async function callTool(name: string, args: Record<string, any>): Promise
     const text = content.map((c: any) => c && c.text).filter(Boolean).join("\n") || JSON.stringify(d && d.result ? d.result : d);
     return { ok: true, text, raw: d };
   } catch (e) {
-    return { ok: false, text: "Couldn't reach the Sovereign brain — check your connection and try again." };
+    return { ok: false, text: "Couldn't reach the Council engine — check your connection and try again." };
   }
 }
 
@@ -73,6 +73,6 @@ export const TOOL_META: Record<string, { glyph: string; label: string }> = {
   meok_govern: { glyph: "⚖", label: "What governs this?" },
   meok_sign: { glyph: "✶", label: "Seal to Layer 0" },
   meok_verify: { glyph: "✓", label: "Verify a seal" },
-  meok_talk: { glyph: "◉", label: "Ask the Sovereign" },
+  meok_talk: { glyph: "◉", label: "Ask the Council" },
   meok_agent_card: { glyph: "🪪", label: "Agent card" },
 };

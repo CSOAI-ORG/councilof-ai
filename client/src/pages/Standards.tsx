@@ -48,7 +48,7 @@ export default function Standards() {
       version: "v1.0",
       status: "Active Development",
       date: "2025-01-15",
-      description: "Western equivalent to China's TC260, establishing comprehensive AI safety governance through Byzantine consensus and public watchdog oversight.",
+      description: "Western equivalent to China's TC260, establishing comprehensive AI safety governance through multi-agent council and public watchdog oversight.",
       coverage: ["33-Agent Council", "Watchdog System", "PDCA Cycles", "Compliance Scoring", "Public Transparency"],
       pdfUrl: "/docs/coai-framework-v1.pdf",
       externalUrl: null,

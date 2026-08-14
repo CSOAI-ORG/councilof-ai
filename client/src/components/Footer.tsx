@@ -7,8 +7,6 @@ import { Link } from 'wouter';
 import { Github, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { Button } from '@/components/ui/button';
-import { BuiltOnFooter } from "@/components/BuiltOnFooter";
-import { AnchoredToPanel } from "@/components/AnchoredToPanel";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -41,6 +39,8 @@ export function Footer() {
       title: 'Resources',
       links: [
         { name: 'FAQ', href: '/faq' },
+        { name: 'Methodology', href: '/methodology' },
+        { name: 'Verify a card', href: '/gspc-verify' },
         { name: 'AI Glossary', href: '/glossary' },
         { name: 'Readiness Assessment', href: '/readiness-assessment' },
         { name: 'Industry Solutions', href: '/industry-solutions' },
@@ -60,6 +60,8 @@ export function Footer() {
         { name: 'Technology', href: '/technology' },
         { name: 'Integrations', href: '/integrations' },
         { name: 'Pricing', href: '/pricing' },
+        { name: 'Contact', href: '/contact' },
+        { name: 'Status', href: '/status' },
         { name: 'Careers', href: '/careers' },
         { name: 'Accreditation', href: '/accreditation' },
       ],
@@ -227,11 +229,6 @@ export function Footer() {
           </div>
         </div>
 
-        <BuiltOnFooter />
-
-        {/* Anchored To — live watcher timestamps pulled from D1 */}
-        <AnchoredToPanel />
-
         {/* What We Don't Claim */}
         <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
           <h4 className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-2">
@@ -265,7 +262,7 @@ export function Footer() {
         {/* AI Transparency & Oversight Statement (Art 50 / Art 14) */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">
-            This site uses AI systems, including the Sovereign assistant. Every AI surface is disclosed at
+            This site uses AI systems, including the Council assistant. Every AI surface is disclosed at
             first interaction under EU AI Act Article 50 and classified publicly on{" "}
             <Link href="/ai-transparency" className="text-emerald-700 underline">/ai-transparency</Link>.
           </p>

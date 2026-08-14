@@ -51,7 +51,7 @@ const foundingMemberBenefits = [
   {
     icon: Shield,
     title: "Priority Access",
-    description: "First access to new services, features, and Byzantine Council monitoring"
+    description: "First access to new services, features, and Council monitoring"
   },
   {
     icon: Users,

@@ -60,7 +60,7 @@ export default function SocialOS() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">ONE OS · the social layer · second missing key</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Social OS</h1>
-          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Your Sovereign AI character <em>is</em> your social presence. One unified inbox across 50+ platforms, a cross-post engine, an AI content generator — and social governance (DSA, GDPR, C2PA) woven into compliance. You speak once; the world hears, on every network the user cares about.</p>
+          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Your Council assistant AI character <em>is</em> your social presence. One unified inbox across 50+ platforms, a cross-post engine, an AI content generator — and social governance (DSA, GDPR, C2PA) woven into compliance. You speak once; the world hears, on every network the user cares about.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/enter" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Enter the OS →</a>
             <a href="/legacy" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">See the Legacy Bridge →</a>

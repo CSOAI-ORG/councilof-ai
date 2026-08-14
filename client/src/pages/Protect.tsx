@@ -3,17 +3,17 @@ import { chargeSovereign } from "../lib/sovCharge";
 
 // Personal Protection — a one-stop shop the Sovereign runs for anyone: execs, governments,
 // people of influence, and every person of the earth. Deepfake + impersonation protection,
-// powered by real Ed25519 signing (os.meok.ai) so YOUR words/likeness are provably yours and a
+// powered by real Ed25519 signing (the measurement API) so YOUR words/likeness are provably yours and a
 // deepfake fails verification. Consent-first, open, for all.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 const MODULES = [
   { icon: "🛡", name: "Deepfake & likeness shield", note: "Sign your statements, voice and content so anyone can verify it's really you. A deepfake has no signature — it fails. Powered by proofof.ai.", tag: "proofof.ai" },
   { icon: "🪪", name: "Identity & content authenticity", note: "Every post, email or clip you sign carries a verifiable Layer 0 seal. Impersonation is detectable in seconds.", tag: "Layer 0" },
-  { icon: "👁", name: "Executive / VIP monitoring", note: "The Sovereign watches for impersonation, doxxing, fake endorsements and scams using your name — and flags them.", tag: "Watchdog" },
-  { icon: "🎣", name: "Scam & phishing defense", note: "AI-driven scams are surging. The Sovereign screens inbound approaches and verifies who's really contacting you.", tag: "AI-security" },
-  { icon: "🔐", name: "Data ownership & privacy", note: "You own and export your data. On-device where possible; nothing sold, no facial recognition, consent-first.", tag: "Sovereign" },
+  { icon: "👁", name: "Executive / VIP monitoring", note: "The Council assistant watches for impersonation, doxxing, fake endorsements and scams using your name — and flags them.", tag: "Watchdog" },
+  { icon: "🎣", name: "Scam & phishing defense", note: "AI-driven scams are surging. The Council assistant screens inbound approaches and verifies who's really contacting you.", tag: "AI-security" },
+  { icon: "🔐", name: "Data ownership & privacy", note: "You own and export your data. On-device where possible; nothing sold, no facial recognition, consent-first.", tag: "Council" },
   { icon: "👨‍👩‍👧", name: "Family & guardian", note: "Extend the same protection to your family — child-safe, private, and simple. Protection isn't only for the wealthy.", tag: "For all" },
 ];
 
@@ -52,7 +52,7 @@ export default function Protect() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · personal protection</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Your Sovereign <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">protects you.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Your Council assistant <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">protects you.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Deepfakes, impersonation and AI-driven scams target executives, governments and people of influence — but everyone deserves the shield. The Sovereign signs what's really you, so a fake fails, and watches your name across the world. One stop. For all people of the earth.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             {["Executives & boards", "Governments & officials", "Creators & influencers", "Families", "Everyone"].map((t) => <span key={t} className="rounded-full border border-emerald-500/25 bg-emerald-500/5 px-3 py-1 text-xs font-semibold text-emerald-100/80">{t}</span>)}

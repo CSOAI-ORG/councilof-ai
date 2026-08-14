@@ -60,8 +60,8 @@ const faqData = [
     answer: "If your AI system doesn't meet compliance requirements, our platform provides detailed remediation recommendations prioritized by risk level. You'll receive specific action items, implementation guidance, and the ability to re-assess once changes are made. Our goal is to help you achieve compliance, not just identify gaps."
   },
   {
-    question: "How does the Byzantine Council monitor us?",
-    answer: "After initial assessment, the Byzantine Council performs continuous monitoring based on your subscription tier. This includes periodic re-assessments, real-time alerts for regulatory changes affecting your systems, and proactive notifications when your systems may be drifting out of compliance."
+    question: "How does the Council monitor us?",
+    answer: "After initial assessment, the Council performs continuous monitoring based on your subscription tier. This includes periodic re-assessments, real-time alerts for regulatory changes affecting your systems, and proactive notifications when your systems may be drifting out of compliance."
   },
   {
     question: "What reports do we receive?",
@@ -138,7 +138,7 @@ export default function Enterprise() {
                 Avoid €35M Fines. Ensure AI Compliance Across Every Framework.
               </h1>
               <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                The EU AI Act is here with fines up to €35M or 7% of global revenue. CSOAI's Byzantine Council
+                The EU AI Act is here with fines up to €35M or 7% of global revenue. CSOAI's Council
                 automates compliance across EU AI Act, NIST AI RMF, ISO 42001, and TC260—all from one platform.
               </p>
 
@@ -280,7 +280,7 @@ export default function Enterprise() {
                 <Eye className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Ongoing Monitoring</h3>
                 <p className="text-sm text-gray-600">
-                  Byzantine Council continuously monitors compliance status and alerts you to regulatory changes.
+                  Council continuously monitors compliance status and alerts you to regulatory changes.
                 </p>
               </Card>
             </div>

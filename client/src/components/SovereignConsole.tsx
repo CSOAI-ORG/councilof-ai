@@ -109,17 +109,25 @@ function dispatch(q: string, lens: LensKey): Line[] {
   return out;
 }
 
-const EXAMPLES = ["We screen CVs and rank job applicants", "Our chatbot generates marketing images", "Face matching across our camera network"];
+// Each example is paired with the lens it demonstrates. Image generation is an Article 50
+// (provenance) matter, NOT an Annex III high-risk category — reading it under governance
+// correctly returns "NO CATEGORY MATCHED", which is honest but a poor demo. So the chip
+// selects its lens when clicked, and the invariant below checks each example under that lens.
+const EXAMPLES: { q: string; lens: LensKey }[] = [
+  { q: "We screen CVs and rank job applicants", lens: "governance" },
+  { q: "Our chatbot generates marketing images", lens: "provenance" },
+  { q: "Face matching across our camera network", lens: "governance" },
+];
 
 // Every example we put in front of a visitor must produce a categorised verdict under the
-// governance lens. "NO CATEGORY MATCHED" on our own demo input is a false negative shipping as
-// a feature — it happened, live, with the biometric chip. Dev builds throw here; the check costs
-// nothing in production because bundlers strip it with import.meta.env.DEV.
+// lens it demonstrates. "NO CATEGORY MATCHED" on our own demo input is a false negative
+// shipping as a feature — it happened, live, with the biometric chip. Dev builds throw here;
+// the check costs nothing in production because bundlers strip it with import.meta.env.DEV.
 if (import.meta.env.DEV) {
   for (const e of EXAMPLES) {
-    const lines = dispatch(e, "governance");
+    const lines = dispatch(e.q, e.lens);
     if (lines.some((l) => l.tag === "NO CATEGORY MATCHED"))
-      throw new Error(`SovereignConsole: example chip matches no category: "${e}"`);
+      throw new Error(`SovereignConsole: example chip matches no category: "${e.q}" under ${e.lens}`);
   }
 }
 
@@ -137,10 +145,12 @@ export function SovereignConsole() {
   const endRef = useRef<HTMLDivElement>(null);
   useEffect(() => { if (turns.length) endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }); }, [turns]);
 
-  const run = (text?: string) => {
+  const run = (text?: string, lensOverride?: LensKey) => {
     const s = (text ?? q).trim();
     if (!s) return;
-    setTurns((t) => [...t.slice(-3), { q: s, lens, lines: dispatch(s, lens) }]);
+    const useLens = lensOverride ?? lens;
+    if (lensOverride && lensOverride !== lens) setLens(lensOverride);
+    setTurns((t) => [...t.slice(-3), { q: s, lens: useLens, lines: dispatch(s, useLens) }]);
     setQ("");
   };
 
@@ -181,9 +191,9 @@ export function SovereignConsole() {
             </p>
             <div className="flex flex-wrap gap-1.5">
               {EXAMPLES.map((e) => (
-                <button key={e} onClick={() => run(e)}
+                <button key={e.q} onClick={() => run(e.q, e.lens)}
                   className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] text-gray-600 hover:bg-gray-50">
-                  {e}
+                  {e.q}
                 </button>
               ))}
             </div>

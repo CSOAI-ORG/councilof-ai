@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 // action sealed to Layer 0 and answerable to a single council. Public-safe by
 // design: domain + role only. No keys, fingerprints, ports, or infrastructure.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 type Agent = { domain: string; role: string; blurb: string; group: "core" | "governance" | "protection" | "applied" };
 const CROWN: Agent = { domain: "csoai.org", role: "the standards crown", blurb: "The Charter, the frameworks and the council that every agent below answers to.", group: "core" };

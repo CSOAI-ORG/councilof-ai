@@ -90,16 +90,16 @@ Safety verification shall be proportionate to risk level and reviewed by certifi
   },
   3: {
     id: 3,
-    title: "Byzantine Council",
+    title: "Council",
     part: 1,
     partTitle: "Foundational Principles",
     content: `Establishment of the designed 33-agent Council of AI (measured status on the public Refutation Ledger). This council consists of 33 independent AI agents, each trained to evaluate whether other AI systems are operating safely within their defined parameters.
 
-The Byzantine Council requires 22 out of 33 agents to agree (66.67% supermajority) before any governance decision is executed or any AI system receives approval for high-risk deployment. This architecture is resistant to up to 10 simultaneous agent failures, corruptions, or biases.
+The Council requires 22 out of 33 agents to agree (66.67% supermajority) before any governance decision is executed or any AI system receives approval for high-risk deployment. This architecture is resistant to up to 10 simultaneous agent failures, corruptions, or biases.
 
-No single agent can dominate decisions. No government, corporation, or AI system can manipulate outcomes. The Byzantine Council operates continuously, monitoring deployed AI systems and flagging anomalies in real-time. The council's decisions are transparent and auditable.
+No single agent can dominate decisions. No government, corporation, or AI system can manipulate outcomes. The Council operates continuously, monitoring deployed AI systems and flagging anomalies in real-time. The council's decisions are transparent and auditable.
 
-The Byzantine Council represents the distributed, resilient oversight that the Maternal Covenant requires—ensuring that protective instincts cannot be overridden by any single actor.`,
+The Council represents the distributed, resilient oversight that the Maternal Covenant requires—ensuring that protective instincts cannot be overridden by any single actor.`,
     frameworks: {
       euAIAct: "Article 63 (Competent authorities)",
       nist: "GV (Governance), RM (Risk Management)",
@@ -235,7 +235,7 @@ The foundational principles include:
 4. CSOAI coordinates with existing regulatory bodies but remains autonomous
 5. CSOAI's authority derives from voluntary membership and licensing agreements
 
-CSOAI is governed by a dual structure: the Human Council (elected representatives) and the Byzantine Council (AI-based consensus monitoring). Neither can function without the other, creating checks and balances.
+CSOAI is governed by a dual structure: the Human Council (elected representatives) and the Council (AI-based consensus monitoring). Neither can function without the other, creating checks and balances.
 
 Interpretive Principles: In cases of ambiguity, this Charter shall be interpreted in favor of (1) human safety first, (2) transparency, and (3) the protective intent of the Maternal Covenant.`,
     frameworks: {
@@ -256,7 +256,7 @@ License Tiers:
 1. Tier 1 (Minimal Risk): Low-risk AI systems, assistants, analytics. Self-certification pathway.
 2. Tier 2 (Limited Risk): Moderate-risk systems, sector-specific assessment. Annual review required.
 3. Tier 3 (High Risk): Critical systems (healthcare, autonomous vehicles, financial). Full assessment by CSOAI analysts.
-4. Tier 4 (Critical Risk): Advanced AI systems requiring Byzantine Council approval.
+4. Tier 4 (Critical Risk): Advanced AI systems requiring Council approval.
 
 Practitioner Licenses:
 1. Associate Analyst: 40-hour foundational training
@@ -277,7 +277,7 @@ All licenses require periodic renewal and continuing education. Schedule E provi
   },
   11: {
     id: 11,
-    title: "Byzantine Council Specifications",
+    title: "Council Specifications",
     part: 2,
     partTitle: "Governance Structure",
     content: `Technical specifications for the designed 33-node multi-agent review system that implements distributed AI governance.
@@ -307,7 +307,7 @@ Agent Training:
 - Agents cannot be modified or updated without supermajority approval
 - Regular adversarial testing to detect manipulation attempts
 
-The Byzantine Council represents the technical embodiment of distributed governance.`,
+The Council represents the technical embodiment of distributed governance.`,
     frameworks: {
       euAIAct: "Article 63 (Competent authorities)",
       nist: "RM (Risk Management), 6.3 (Risk assessment)",
@@ -320,7 +320,7 @@ The Byzantine Council represents the technical embodiment of distributed governa
     title: "Human Council",
     part: 2,
     partTitle: "Governance Structure",
-    content: `The Human Council is the elected body providing human governance and oversight of CSOAI operations. The Human Council operates in parallel with the Byzantine Council, with neither subordinate to the other.
+    content: `The Human Council is the elected body providing human governance and oversight of CSOAI operations. The Human Council operates in parallel with the Council, with neither subordinate to the other.
 
 Composition:
 - 15 elected members representing diverse stakeholder groups
@@ -329,7 +329,7 @@ Composition:
 
 Authority:
 - Approves high-level policy and strategic direction
-- Can override Byzantine Council decisions by unanimous vote (for explicit overrides)
+- Can override Council decisions by unanimous vote (for explicit overrides)
 - Appoints human members of committees and working groups
 - Manages budget and financial oversight
 - Represents public interests in governance
@@ -559,7 +559,7 @@ Appeal Rights:
 1. Right to appeal licensing denials
 2. Right to appeal enforcement actions
 3. Right to appeal assessment findings
-4. Right to appeal Byzantine Council decisions (through Human Council)
+4. Right to appeal Council decisions (through Human Council)
 5. Right to appeal Human Council decisions (through arbitration)
 
 Appeal Process:
@@ -2318,7 +2318,7 @@ Capability Assessment:
 
 Pre-Deployment Requirements for AGI:
 1. Extensive alignment and safety testing (minimum 1 year)
-2. Byzantine Council approval required (supermajority)
+2. Council approval required (supermajority)
 3. Independent red-team evaluation
 4. Formal safety proofs where possible
 5. Containment testing in isolated environments
@@ -2326,7 +2326,7 @@ Pre-Deployment Requirements for AGI:
 7. Kill switch tested and verified functional
 
 AGI Governance Structure:
-1. Permanent Byzantine Council oversight
+1. Permanent Council oversight
 2. Real-time monitoring of AGI decision-making
 3. Ability to pause AGI for investigation
 4. Decision review procedures requiring human approval
@@ -2469,20 +2469,20 @@ Amendment Triggers:
 6. International coordination requires Charter modifications
 
 Amendment Process:
-1. Proposal by Human Council member, Byzantine Council, or 10% of licensed organizations
+1. Proposal by Human Council member, Council, or 10% of licensed organizations
 2. Public comment period of 90 days
 3. Impact analysis assessing consequences
 4. Expert review by external advisors
 5. Human Council debate and deliberation
 6. Supermajority vote (12/15) required
-7. Byzantine Council approval (22/33) required
+7. Council approval (22/33) required
 8. Ratification by international signatories (if treaty provision)
 
 Expedited Amendment:
 For urgent amendments (existential risk, severe problem):
 1. 30-day comment period
 2. Emergency Human Council session (48-hour notice)
-3. Unanimous Human Council + Byzantine Council approval for emergency amendments
+3. Unanimous Human Council + Council approval for emergency amendments
 4. 90-day sunset: automatic repeal unless confirmed by normal process
 
 Amendment Limitations:
@@ -2537,7 +2537,7 @@ Principles:
 
 Organizational Change Mechanisms:
 1. New council positions can be created by Human Council supermajority
-2. Byzantine Council composition can be adjusted for emerging risks
+2. Council composition can be adjusted for emerging risks
 3. Committee structures can be reorganized for efficiency
 4. Regional offices can be established for distributed governance
 5. International coordination structures can be expanded
@@ -2671,7 +2671,7 @@ Financial Continuity:
 6. Regular financial audits
 
 Governance Continuity:
-1. Byzantine Council continues operating with departing leader's replacement
+1. Council continues operating with departing leader's replacement
 2. Human Council continues deliberating
 3. Committees continue functioning
 4. No interruption of licensing and assessment functions
@@ -2906,7 +2906,7 @@ const scheduleMap: Record<string, { title: string; description: string }> = {
   },
   D: {
     title: "Training Curriculum",
-    description: "CEASAI certification program",
+    description: "measurement credential program",
   },
   E: {
     title: "Pricing Schedule",
@@ -2934,7 +2934,7 @@ const scheduleMap: Record<string, { title: string; description: string }> = {
   },
   K: {
     title: "Voting Procedures",
-    description: "Byzantine Council consensus rules",
+    description: "Council consensus rules",
   },
   L: {
     title: "Appeal Forms",

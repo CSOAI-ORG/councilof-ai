@@ -19,7 +19,7 @@ export default function CouncilDetail() {
         <div className="container max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
-              Byzantine Consensus System
+              Multi-Agent Council
             </Badge>
             <h1 className="text-5xl font-bold text-gray-900 mb-6">
               The 33-Agent Council
@@ -104,9 +104,9 @@ export default function CouncilDetail() {
                 <span className="text-2xl font-bold text-emerald-600">3</span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-4">Byzantine Consensus Algorithm</h3>
+                <h3 className="text-2xl font-bold mb-4">Council Vote</h3>
                 <p className="text-gray-600 text-lg">
-                  The system uses multi-leg (BFT) consensus, which means it can reach agreement even if up to 10 agents are compromised, malfunctioning, or malicious. Consensus requires at least <strong>23 of 33 agents</strong> to agree (⅔ + 1 supermajority).
+                  The system uses a designed multi-agent vote. Consensus requires at least <strong>23 of 33 agents</strong> to agree (⅔ + 1 supermajority). Effective independence is measured, not assumed.
                 </p>
               </div>
             </div>
@@ -126,10 +126,10 @@ export default function CouncilDetail() {
         </div>
       </section>
 
-      {/* Why Byzantine Consensus */}
+      {/* Why the Council */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="container max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">Why Byzantine Consensus?</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">Why the Council?</h2>
 
           <div className="grid md:grid-cols-2 gap-8">
             <Card>
@@ -139,7 +139,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Unlike traditional systems where one compromised component can corrupt the entire decision, Byzantine consensus requires a supermajority of agents to agree. Even if 10 agents are hacked, the system still produces reliable results.
+                  Unlike a single-model decision, the council requires a supermajority (23 of 33) to agree, so no single agent decides the outcome.
                 </p>
               </CardContent>
             </Card>
@@ -201,8 +201,8 @@ export default function CouncilDetail() {
                   <Badge variant="secondary">23 (⅔ + 1)</Badge>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                  <span className="font-medium">Fault Tolerance</span>
-                  <Badge variant="secondary">10 agents</Badge>
+                  <span className="font-medium">Supermajority margin</span>
+                  <Badge variant="secondary">up to 10 dissent</Badge>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                   <span className="font-medium">Average Decision Time</span>

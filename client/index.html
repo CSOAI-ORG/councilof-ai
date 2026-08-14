@@ -7,14 +7,14 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
     <title>CSOAI — the measurement body for AI compliance</title>
-    <meta name="description" content="CSOAI is an independent AI-governance measurement body (CSOAI LTD, UK 16939677). We measure, sign and preserve the evidence; regulators and accredited bodies decide. Not a notified body — we issue measurements and attestations, never certificates of conformity. UNMEASURED is reported, never hidden, and every signed artefact verifies against a published public key." />
-    
+    <meta name="description" content="Council of AI (CSOAI LTD, UK 16939677) — a neutral AI-governance measurement body. We measure against frozen statute and issue signed, independently verifiable evidence. Measurement, not certification." />
+
     <!-- SEO Meta Tags -->
     <meta name="keywords" content="AI safety, AI governance, EU AI Act, NIST AI RMF, AI compliance, AI risk management, responsible AI, AI ethics, AI regulation, PDCA, AI auditing" />
     <meta name="author" content="CSOAI" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://councilof.ai" />
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://councilof.ai" />
@@ -22,97 +22,54 @@
     <meta property="og:description" content="Independent measurement and signed attestation for AI governance. We measure and sign the evidence; regulators and accredited bodies decide. Every signed artefact verifies against a published public key." />
     <meta property="og:image" content="https://councilof.ai/api/og?title=CSOAI%20%E2%80%94%20AI%20governance%2C%20cybersecurity%20%26%20safety&desc=Signed%20attestations%20%C2%B7%20open%20source" />
     <meta property="og:site_name" content="CSOAI" />
-    
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://councilof.ai" />
     <meta name="twitter:title" content="CSOAI — the measurement body for AI compliance" />
     <meta name="twitter:description" content="Independent AI-governance measurement and signed attestation. Measurement, not certification. Artefacts verify against published public keys." />
     <meta name="twitter:image" content="https://councilof.ai/api/og?title=CSOAI%20%E2%80%94%20AI%20governance%2C%20cybersecurity%20%26%20safety&desc=Signed%20attestations%20%C2%B7%20open%20source" />
-    
+
     <!-- Additional SEO -->
     <meta name="theme-color" content="#000000" />
     <meta name="application-name" content="CSOAI" />
     <meta name="apple-mobile-web-app-title" content="CSOAI" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    
-    <!-- Structured Data / JSON-LD -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "CSOAI - Council Safety of AI",
-      "description": "Independent AI-governance measurement body. Multi-framework measurement (EU AI Act, NIST AI RMF, ISO 42001) with signed, publicly verifiable attestations. Measurement, not certification.",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      }
-    }
-    </script>
+
+    <!-- Structured Data / JSON-LD — canon entity graph (audit §4.3, 2026-08-14).
+         One public name "Council of AI" + alternateName CSOAI; connected via @id.
+         GovernmentOrganization REMOVED — CSOAI LTD is a UK private company, that type was
+         factually false and a trust-penalty risk. Duplicate FAQ + cross-domain BreadcrumbList
+         removed. SearchAction omitted until /search?q= is verified. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "CSOAI — Council for the Safety of AI",
+      "@id": "https://councilof.ai/#org",
+      "name": "Council of AI",
       "alternateName": "CSOAI",
-      "url": "https://councilof.ai",
+      "legalName": "CSOAI LTD",
+      "identifier": [
+        {"@type": "PropertyValue", "propertyID": "Companies House", "value": "16939677"},
+        {"@type": "PropertyValue", "propertyID": "DID", "value": "did:web:csoai.org"}
+      ],
+      "url": "https://councilof.ai/",
       "logo": "https://councilof.ai/csoai-icon.svg",
-      "description": "An instrument for measuring AI governance: deterministic provision-anchored assessment, Ed25519-signed verdicts anyone can verify offline, multi-framework coverage (EU AI Act, NIST AI RMF, ISO/IEC 42001, NIS2, DORA), and open-source cyber self-scan.",
-      "founder": {
-        "@type": "Person",
-        "name": "Nicholas Templeman"
-      },
+      "description": "Council of AI (CSOAI LTD, UK) is a neutral AI measurement body. It issues verified measurement credentials — 3KB measurement cards signed with Ed25519 and anchored with OpenTimestamps — never certification, accreditation or conformity assessment.",
+      "founder": {"@type": "Person", "name": "Nicholas Templeman"},
       "foundingDate": "2025",
-      "sameAs": [
-        "https://councilof.ai",
-        "https://safetyof.ai",
-        "https://github.com/CSOAI-ORG"
-      ]
+      "sameAs": ["https://github.com/CSOAI-ORG", "https://huggingface.co/csoai"]
     }
     </script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "Council OS",
-      "url": "https://councilof.ai",
-      "publisher": {
-        "@type": "Organization",
-        "name": "CSOAI Ltd",
-        "url": "https://councilof.ai",
-        "logo": { "@type": "ImageObject", "url": "https://councilof.ai/csoai-icon.svg" }
-      },
-      "inLanguage": "en-GB",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": { "@type": "EntryPoint", "urlTemplate": "https://councilof.ai/regulators?q={search_term_string}" },
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "GovernmentOrganization",
-      "name": "CSOAI — Council for the Safety of AI",
-      "alternateName": "CSOAI",
-      "url": "https://councilof.ai",
-      "logo": "https://councilof.ai/csoai-icon.svg",
-      "description": "Multi-framework AI safety governance body: EU AI Act, NIST AI RMF, ISO/IEC 42001, NIS2, DORA. Open-source measured training records, Ed25519-signed attestations on Layer 0, public refutation ledger.",
-      "areaServed": ["European Union", "United Kingdom", "United States", "Worldwide"],
-      "knowsAbout": [
-        "EU AI Act compliance",
-        "NIST AI Risk Management Framework",
-        "ISO/IEC 42001 AI Management",
-        "NIS2 cybersecurity directive",
-        "DORA Digital Operational Resilience",
-        "AI red-teaming methodology",
-        "deterministic compliance assessment"
-      ]
+      "name": "Council of AI",
+      "url": "https://councilof.ai/",
+      "publisher": {"@id": "https://councilof.ai/#org"},
+      "inLanguage": "en"
     }
     </script>
     <script type="application/ld+json">
@@ -120,68 +77,35 @@
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is CSOAI?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "CSOAI (Council for the Safety of AI) is an independent measurement body for AI governance. We are not a notified body and issue no certificates of conformity. We publish measured governance tooling, multi-framework compliance maps (EU AI Act, NIST AI RMF, ISO/IEC 42001), and a public refutation ledger that publishes our own corrections."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is CSOAI a certification body?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. CSOAI is a training-measurement instrument, not a certification body. We publish measured training records — signed, offline-verifiable evidence of what was checked — not certifications or accreditations."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is Layer 0?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Layer 0 is our trust floor: Ed25519 cryptographic signing of every governance decision, and offline verification \u2014 anyone can recompute the hash and check the signature against our published public key, without trusting us."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Does CSOAI use LLM-as-judge?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. Every primary governance score is produced by deterministic predicates — the same model, same input, same output, byte-identical. The LLM is used only for narration (text, never scoring). When the LLM is disabled, every score is identical to when it is enabled."
-          }
-        }
+        {"@type": "Question", "name": "What is the Council of AI?",
+         "acceptedAnswer": {"@type": "Answer", "text": "The Council of AI (CSOAI LTD, UK 16939677) is a neutral measurement body for AI. It measures AI system behaviour against published regulatory provisions and issues verified measurement credentials — signed, provision-anchored records anyone can verify offline. It is not a certification or accreditation body."}},
+        {"@type": "Question", "name": "Is CSOAI a certification body?",
+         "acceptedAnswer": {"@type": "Answer", "text": "No. CSOAI is a measurement body. You receive a verified measurement credential — a signed record of measured behaviour. Accredited conformity certification requires a national accreditation chain, which CSOAI does not hold and does not claim."}},
+        {"@type": "Question", "name": "What does the Council of AI measure?",
+         "acceptedAnswer": {"@type": "Answer", "text": "AI system behaviour against published regulatory provisions, across four axes: Governance, Safety, Provenance and Continuity (GSPC). Every published number traces to a signed measurement artefact, and UNMEASURED results are reported openly, never hidden or scored as failures."}},
+        {"@type": "Question", "name": "Does CSOAI use LLM-as-judge?",
+         "acceptedAnswer": {"@type": "Answer", "text": "No. Every primary governance score is produced by deterministic predicates — same model, same input, same output, byte-identical. The LLM is used only for narration, never for scoring. When the LLM is disabled, every score is identical to when it is enabled."}},
+        {"@type": "Question", "name": "How current is the regulatory data behind the scores?",
+         "acceptedAnswer": {"@type": "Answer", "text": "The public corpus-watch instrument re-hashes 127 provisions across four instruments (EU AI Act, UK GDPR, DPA 2018, NIS2-UK) every day and publishes drift events. Measurement records go stale when the underlying provision text changes."}}
       ]
     }
     </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://csoai.org"},
-        {"@type": "ListItem", "position": 2, "name": "Council OS", "item": "https://councilof.ai/os"},
-        {"@type": "ListItem", "position": 3, "name": "ProvBench", "item": "https://csoai.org/provbench"},
-        {"@type": "ListItem", "position": 4, "name": "RegArena", "item": "https://csoai.org/arena"},
-        {"@type": "ListItem", "position": 5, "name": "Measured Results", "item": "https://csoai.org/results"}
-      ]
-    }
-    </script>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/csoai-icon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    
+
     <!-- Google Fonts: Inter + Archivo + Source Serif 4 (editorial headlines) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
 
-    <!-- Per-route self-canonical: each crawled URL canonicals to itself (not just the root). -->
+    <!-- Per-route self-canonical: each crawled URL canonicals to itself (not just the root).
+         NB: during prerender (scripts/prerender.mjs) the captured markup's localhost origin is
+         rewritten to the production origin, so static pages never ship a localhost canonical. -->
     <script>(function(){try{var u=location.origin+location.pathname.replace(/\/$/,"")||location.origin;var c=document.querySelector('link[rel=canonical]');if(c)c.href=u;var o=document.querySelector('meta[property="og:url"]');if(o)o.setAttribute("content",u);var t=document.querySelector('meta[name="twitter:url"]');if(t)t.setAttribute("content",u);}catch(e){}})();</script>
   </head>
 

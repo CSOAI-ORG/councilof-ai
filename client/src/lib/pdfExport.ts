@@ -323,9 +323,9 @@ export async function generateComplianceAssessmentPDF(data: ComplianceAssessment
 
   y += 45;
 
-  // Byzantine Council Verification
+  // Council Verification
   if (data.byzantineCouncilStatus) {
-    y = addSectionTitle(doc, 'Byzantine Council Verification', y);
+    y = addSectionTitle(doc, 'Council Verification', y);
 
     const bcStatus = data.byzantineCouncilStatus;
 
@@ -531,7 +531,7 @@ export async function generateCertificatePDF(data: CertificateData): Promise<Blo
     doc.text(`with a score of ${data.score}%`, pageWidth / 2, 140, { align: 'center' });
   }
 
-  // Byzantine Council Verification Seal
+  // Council Verification Seal
   if (data.byzantineVerified) {
     const sealX = pageWidth / 2;
     const sealY = 158;

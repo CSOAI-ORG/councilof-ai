@@ -351,19 +351,19 @@ const faqItems = [
   },
   {
     question: "What data do we share with regulators?",
-    answer: "We provide regulators with real-time compliance status, risk assessments, incident reports, and audit trails for AI systems within their jurisdiction. All data sharing follows strict protocols aligned with GDPR and other data protection frameworks. Regulators can access aggregated compliance metrics, individual system assessments (with appropriate authority), enforcement action histories, and Byzantine Council decision records.",
+    answer: "We provide regulators with real-time compliance status, risk assessments, incident reports, and audit trails for AI systems within their jurisdiction. All data sharing follows strict protocols aligned with GDPR and other data protection frameworks. Regulators can access aggregated compliance metrics, individual system assessments (with appropriate authority), enforcement action histories, and Council decision records.",
   },
   {
     question: "How does cross-border cooperation work?",
-    answer: "Our platform is designed for mutual recognition — compliance assessments conducted in one jurisdiction routed so others can recognize them. The Byzantine Council routes cases to appropriate authorities based on system deployment geography, company headquarters, and affected populations. No bilateral data-sharing agreements are in force yet; this section describes the design, not an operating network.",
+    answer: "Our platform is designed for mutual recognition — compliance assessments conducted in one jurisdiction routed so others can recognize them. The Council routes cases to appropriate authorities based on system deployment geography, company headquarters, and affected populations. No bilateral data-sharing agreements are in force yet; this section describes the design, not an operating network.",
   },
   {
     question: "Can regulators initiate investigations?",
-    answer: "Yes. Authorized regulators can flag systems for investigation, request detailed compliance audits, and trigger Byzantine Council reviews. Investigation requests are processed within 24 hours, with critical cases escalated immediately. Regulators can also request emergency halt orders for systems posing immediate harm, subject to Council supermajority approval.",
+    answer: "Yes. Authorized regulators can flag systems for investigation, request detailed compliance audits, and trigger Council reviews. Investigation requests are processed within 24 hours, with critical cases escalated immediately. Regulators can also request emergency halt orders for systems posing immediate harm, subject to Council supermajority approval.",
   },
   {
     question: "How are compliance disputes resolved?",
-    answer: "Disputes follow a three-tier resolution process: (1) Internal review by our compliance team within 14 days, (2) Byzantine Council arbitration with independent assessment within 30 days, (3) External appeals to designated regulatory tribunals. All parties receive full documentation and evidence packages, and decisions are published in our transparency reports.",
+    answer: "Disputes follow a three-tier resolution process: (1) Internal review by our compliance team within 14 days, (2) Council arbitration with independent assessment within 30 days, (3) External appeals to designated regulatory tribunals. All parties receive full documentation and evidence packages, and decisions are published in our transparency reports.",
   },
   {
     question: "What reporting formats are available?",
@@ -968,13 +968,13 @@ export default function GovernmentDashboard() {
         </div>
       </section>
 
-      {/* Byzantine Council Integration Section */}
+      {/* Council Integration Section */}
       <section className="py-16 bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 text-white">
         <div className="container max-w-7xl">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-white/20 text-white border-white/30">
               <Layers className="h-3 w-3 mr-1" />
-              Byzantine Council Integration
+              Council Integration
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               AI-Powered Regulatory Support

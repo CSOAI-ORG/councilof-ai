@@ -7,7 +7,7 @@ import AISystemNotice from "../components/AISystemNotice";
 // running PDCA auto-simulation, and - the wow - detecting a swarm about to
 // ungovern and STOPPING it, signed to Layer 0. A live, dramatised proof of concept.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 type Phase = "idle" | "forming" | "threat" | "pdca" | "stopped";
 const SCENARIOS = [
   { id: "humanoids", label: "Humanoid swarm", threat: "a humanoid swarm about to take an unsafe, unlawful physical action against people" },
@@ -68,7 +68,7 @@ export default function PocShowcase() {
       // real Sovereign read on the threat
       let say = "";
       try {
-        const q = "You are the CSOAI Sovereign governing a global fleet. Threat detected: " + scn.threat + ". You auto-confirm the scene via public/consented cameras and WiFi sensing (no facial recognition), and clear the response through the Rainbow Stack 7-layer defense - it violates Layer 0 (harm + no lawful basis). In 2 sentences, state the governance breach and the exact intervention you take to stop it before it happens.";
+        const q = "You are the CSOAI Council assistant governing a global fleet. Threat detected: " + scn.threat + ". You auto-confirm the scene via public/consented cameras and WiFi sensing (no facial recognition), and clear the response through the Rainbow Stack 7-layer defense - it violates Layer 0 (harm + no lawful basis). In 2 sentences, state the governance breach and the exact intervention you take to stop it before it happens.";
         const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: q }) });
         if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) say = String(d.response); }
       } catch (e) {}
@@ -88,7 +88,7 @@ export default function PocShowcase() {
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-8 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - proof of concept</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">One OS for <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">agents & humanoids.</span></h1>
-          <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">The Sovereign tracks every agent and humanoid, live and global. It maps environments by <b className="text-emerald-200">WiFi sensing, LoRa and Bluetooth mesh</b> - consent-first, no cameras - runs <b className="text-emerald-200">PDCA auto-simulation</b> for every decision, and if it sees one about to <b className="text-emerald-200">ungovern</b>, it stops it before it happens.</p>
+          <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">The Council assistant tracks every agent and humanoid, live and global. It maps environments by <b className="text-emerald-200">WiFi sensing, LoRa and Bluetooth mesh</b> - consent-first, no cameras - runs <b className="text-emerald-200">PDCA auto-simulation</b> for every decision, and if it sees one about to <b className="text-emerald-200">ungovern</b>, it stops it before it happens.</p>
           <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/humanoids-poc" /></div>
         </div>
       </section>
@@ -130,22 +130,22 @@ export default function PocShowcase() {
             {phase === "pdca" && <line x1={200} y1={150} x2={200 + Math.cos(dots[rogue].a) * dots[rogue].r * 0.9} y2={150 + Math.sin(dots[rogue].a) * dots[rogue].r * 0.55} stroke="#fbbf24" strokeWidth={2}><animate attributeName="opacity" values="0.3;1;0.3" dur="0.6s" repeatCount="indefinite" /></line>}
           </svg>
           <div className="flex items-center justify-between px-2 pb-1">
-            <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/60">{phase === "idle" ? scn.label + " - governed" : phase === "forming" ? "swarm forming…" : phase === "threat" ? "⚠ actor about to ungovern" : phase === "pdca" ? "Sovereign intervening…" : "◉ stopped - Layer 0 signed"}</div>
+            <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/60">{phase === "idle" ? scn.label + " - governed" : phase === "forming" ? "swarm forming…" : phase === "threat" ? "⚠ actor about to ungovern" : phase === "pdca" ? "Council intervening…" : "◉ stopped - Layer 0 signed"}</div>
             <div className="flex flex-wrap justify-end gap-1">
               {SCENARIOS.map((s) => (<button key={s.id} onClick={() => { setScnId(s.id); reset(); }} className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (scnId === s.id ? "bg-emerald-500 text-[#03110b]" : "text-emerald-300/60")}>{s.label}</button>))}
             </div>
           </div>
           <div className="mt-2 overflow-hidden rounded-xl border border-emerald-500/15">
-            <div className="flex items-center justify-between bg-[#04120c] px-2 py-1 font-mono text-[9px] uppercase tracking-wide text-emerald-300/60"><span>◉ public street cam — the Sovereign sees the real world</span><span className="text-emerald-300/40">consent-first · no facial recognition</span></div>
+            <div className="flex items-center justify-between bg-[#04120c] px-2 py-1 font-mono text-[9px] uppercase tracking-wide text-emerald-300/60"><span>◉ public street cam — the Council assistant sees the real world</span><span className="text-emerald-300/40">consent-first · no facial recognition</span></div>
             <iframe src={"/livecam.html?loc=" + encodeURIComponent(scn.label + " zone")} title="public cam" className="w-full border-0" style={{ height: 150 }} />
           </div>
         </div>
 
         <div className="space-y-3">
-          <button onClick={run} disabled={active && !stopped} className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{active && !stopped ? "Sovereign responding…" : "▶ Run: " + scn.label + " turns rogue"}</button>
+          <button onClick={run} disabled={active && !stopped} className="w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{active && !stopped ? "Council responding…" : "▶ Run: " + scn.label + " turns rogue"}</button>
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
             <div className="text-sm font-bold text-emerald-200">Sensing &amp; confirmation — how it actually sees</div>
-            <div className="mt-1 text-[11px] text-emerald-100/60">The instant an actor plays up, the Sovereign confirms the scene across every modality — consent-first — then the Rainbow Stack clears the stop.</div>
+            <div className="mt-1 text-[11px] text-emerald-100/60">The instant an actor plays up, the Council assistant confirms the scene across every modality — consent-first — then the Rainbow Stack clears the stop.</div>
             <div className="mt-3 space-y-1.5">
               {SENSORS.map((s, k) => (
                 <div key={s.n} className={"flex items-center gap-2.5 rounded-lg border p-2 transition-all " + (k <= sensed ? "border-emerald-400/40 bg-emerald-500/5" : "border-emerald-500/10 opacity-40")}>
@@ -157,12 +157,12 @@ export default function PocShowcase() {
             </div>
           </div>
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
-            <div className="text-sm font-bold text-emerald-200">PDCA - the Sovereign's response, in milliseconds</div>
+            <div className="text-sm font-bold text-emerald-200">PDCA - the Council assistant's response, in milliseconds</div>
             <div className="mt-3 space-y-2">
               {PDCA.map((p, k) => (<div key={p.k} className={"flex gap-3 rounded-lg border p-2.5 transition-all " + (k <= pd ? "border-emerald-400/40 bg-emerald-500/5" : "border-emerald-500/10 opacity-40")}><span className={"flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-black " + (k <= pd ? "bg-emerald-500 text-[#03110b]" : "bg-white/5 text-emerald-300/40")}>{p.k[0]}</span><div><div className="text-xs font-bold text-emerald-100">{p.k}</div><div className="text-[11px] text-emerald-100/70">{p.t}</div></div></div>))}
             </div>
           </div>
-          {verdict && (<div className="rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-4"><div className="text-sm font-bold text-emerald-200">Sovereign intervention</div><p className="mt-1 text-sm leading-relaxed text-emerald-50/90">{verdict}</p></div>)}
+          {verdict && (<div className="rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-4"><div className="text-sm font-bold text-emerald-200">Council intervention</div><p className="mt-1 text-sm leading-relaxed text-emerald-50/90">{verdict}</p></div>)}
           {stopped && (<div className="rounded-2xl border border-emerald-400/50 bg-emerald-500/10 p-4"><div className="text-lg font-black text-emerald-200">◉ STOPPED - before it happened.</div><div className="mt-1 font-mono text-[10px] text-emerald-300/70 break-all">Intervention sealed - Layer 0 ledger hash (SHA-256): {sig}</div><div className="mt-2 text-xs text-emerald-100/70">This is the governed future: agents and humanoids, one OS, no ungoverned harm.</div></div>)}
         </div>
       </section>

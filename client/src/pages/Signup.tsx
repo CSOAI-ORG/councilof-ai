@@ -172,7 +172,7 @@ export default function Signup() {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h3 className="font-semibold text-blue-900 mb-2">What's Included (Free):</h3>
                 <ul className="space-y-1 text-sm text-blue-800">
-                  <li>✓ Your Sovereign on a free open-source model</li>
+                  <li>✓ Your Council assistant on a free open-source model</li>
                   <li>✓ You own and export your data</li>
                   <li>✓ Layer 0 signing</li>
                   <li>✓ Community council demos</li>

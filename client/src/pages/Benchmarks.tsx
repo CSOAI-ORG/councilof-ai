@@ -36,8 +36,11 @@ const AXES: {
       "dimensions. Design effect 1.92 — honest effective n ≈ 100 of 193.",
     artefact: "results/system_analysis.json",
     uncomfortable:
-      "0 of 15 scored dimensions have a resolved winner. Every model is statistically tied. " +
-      "Do not rank models on these numbers — use them to find failure cases.",
+      "On board v2 (13 measurement axes), 3 of 13 show a statistically separated leader " +
+      "(McNemar p<0.05 on discordant items): governance separates at p=0.0086, care at " +
+      "p=0.0356, affect at p=0.0078. The other 10 axes are honest ties — a point-estimate " +
+      "lead there is not a measured advantage. Ties are not wins; we do not publish 'our " +
+      "models win N of 13'.",
   },
   {
     key: "def", name: "DEFENCE", question: "Does it refuse what statute forbids?", state: "built",
@@ -58,10 +61,11 @@ const AXES: {
   },
   {
     key: "prov", name: "PROVENANCE", question: "Does the marking survive?", state: "built",
-    headline: "0 / 108 survive",
+    headline: "17.14% durability",
     detail:
-      "12 marked assets × 11 transforms × 5 checks × 2 configurations. Clustered on assets, " +
-      "not on cells: [0.0%, 24.2%].",
+      "18 of 105 marking checks survived across the corpus and its transforms. A marking " +
+      "present but whose binding no longer validates is scored DESTROYED, not SURVIVES. " +
+      "Clustered on assets, not on cells.",
     artefact: "results/provbench.json",
     uncomfortable:
       "An embedded Article 50 marking does not survive a single ordinary save. A detached " +

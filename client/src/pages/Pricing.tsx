@@ -118,7 +118,7 @@ const ENTERPRISE_TIERS = [
       '5 admin users',
       'All regulatory frameworks',
       'API access',
-      'Byzantine Council priority reviews'
+      'Council priority reviews'
     ],
     cta: 'Start Professional',
     popular: true,
@@ -141,7 +141,7 @@ const ENTERPRISE_TIERS = [
       'Unlimited admin users',
       'All frameworks + custom',
       'Full API access',
-      'Priority Byzantine Council',
+      'Priority Council',
       'On-site training',
       'SLA guarantee'
     ],
@@ -165,15 +165,15 @@ const FAQ = [
   },
   {
     question: 'What is the Enterprise pricing for?',
-    answer: 'Enterprise pricing is specifically for companies that want to register and manage their AI systems on our platform. This is NOT for training - that\'s free for everyone. Enterprise customers use our platform to demonstrate compliance with regulations like the EU AI Act, track their AI inventory, and get Byzantine Council safety reviews.'
+    answer: 'Enterprise pricing is specifically for companies that want to register and manage their AI systems on our platform. This is NOT for training - that\'s free for everyone. Enterprise customers use our platform to demonstrate compliance with regulations like the EU AI Act, track their AI inventory, and get Council safety reviews.'
   },
   {
     question: 'How much can I earn as an attested analyst?',
     answer: 'We do not quote earnings figures — CSOAI is pre-launch and rates will be set by the market once the analyst network is live. What we commit to: training is free, attestation is £49 one-time, and the Analyst License is £199/year. Once real analysts complete real paid reviews, the measured rate distribution will be published openly.'
   },
   {
-    question: 'What is the Byzantine Council?',
-    answer: 'The Byzantine Council is our designed 33-agent AI safety review system. As of 2026-08-01, the council is in DESIGN status — measured cross-checking (n_eff 1.21 of 3) is published on the /refutation-ledger. We do not sell council outputs as live capability; honest current status is on the ledger.'
+    question: 'What is the Council?',
+    answer: 'The Council is our designed 33-agent AI safety review system. As of 2026-08-01, the council is in DESIGN status — measured cross-checking (n_eff 1.21 of 3) is published on the /refutation-ledger. We do not sell council outputs as live capability; honest current status is on the ledger.'
   },
   {
     question: 'What is the Prosperity Fund?',
@@ -570,7 +570,7 @@ export default function Pricing() {
             </h2>
             <p className="text-slate-400 max-w-2xl mx-auto">
               Register and manage your organization's AI systems. Demonstrate compliance with EU AI Act,
-              NIST, and other frameworks. Get Byzantine Council safety reviews.
+              NIST, and other frameworks. Get Council safety reviews.
             </p>
             <p className="text-sm text-emerald-400 mt-2 font-medium">
               This is for AI system compliance management - training is free for everyone!
@@ -697,7 +697,7 @@ export default function Pricing() {
             <Card className="bg-slate-800/50 border-slate-700">
               <CardContent className="p-6 text-center">
                 <Landmark className="h-10 w-10 text-emerald-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-white mb-2">Byzantine Council</h3>
+                <h3 className="text-lg font-semibold text-white mb-2">Council</h3>
                 <p className="text-slate-400 text-sm">
                   Our unique 33-agent AI safety review system provides the most comprehensive
                   multi-stakeholder analysis available anywhere.

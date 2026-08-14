@@ -9,7 +9,7 @@ import { useState } from "react";
 type Badge = { id: string; label: string; dot: string };
 const VERIFY = "https://os.csoai.org/verify";
 const BADGES: Badge[] = [
-  { id: "sovereign-verified", label: "Sovereign-Verified \u00B7 CSOAI", dot: "#10b981" },
+  { id: "sovereign-verified", label: "Council-Verified \u00B7 CSOAI", dot: "#10b981" },
   { id: "layer0-signed", label: "Layer 0 Signed \u00B7 Ed25519", dot: "#34d399" },
   { id: "eu-ai-act-ready", label: "EU AI Act Ready", dot: "#059669" },
   { id: "council-governed", label: "Governed by the 33-Agent Council", dot: "#10b981" },

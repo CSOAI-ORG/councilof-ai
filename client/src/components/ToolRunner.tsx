@@ -98,7 +98,7 @@ export default function ToolRunner() {
           </div>
           <button onClick={run} disabled={busy}
             className="mt-3 w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">
-            {busy ? "Running on the Sovereign brain…" : "Run tool ▶"}
+            {busy ? "Running on the Council engine…" : "Run tool ▶"}
           </button>
         </div>
       )}

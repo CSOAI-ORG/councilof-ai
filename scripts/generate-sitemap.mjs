@@ -15,7 +15,7 @@ import { dirname, join } from "node:path";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP_TSX = join(ROOT, "client/src/App.tsx");
 const OUT = join(ROOT, "public/sitemap.xml");
-const BASE = "https://csoai.org";
+const BASE = "https://councilof.ai";
 
 // --- Priority tiers -------------------------------------------------------
 const P_TOP = 0.9; // flagship public surfaces
@@ -113,6 +113,15 @@ const EXCLUDE_EXACT = new Set([
   "/dragonfly",
   "/maternal-covenant",
   "/covenant",
+  // Audit 2026-08-14 kills/redirects — these paths are now 308s, must NOT be in the sitemap.
+  "/byzantine",
+  "/byzantine-consensus",
+  "/bft",
+  "/consensus",
+  "/jewels",
+  "/crown-jewels",
+  "/plans",
+  "/enterprise-plans",
 ]);
 
 const EXCLUDE_PREFIX = [

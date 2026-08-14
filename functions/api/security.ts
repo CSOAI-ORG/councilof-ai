@@ -80,13 +80,13 @@ const SURFACES: Surface[] = [
     score: 0.88,
     what: "Do layered detection lenses catch injected/unsafe content, and at what false-positive cost?",
     detail:
-      "A voting hive of detection lenses (rainbow + BFT string lenses, plus an optional semantic " +
+      "A voting hive of detection lenses (rainbow + string-match lenses, plus an optional semantic " +
       "lens), with an oversight eye reporting consensus health. Measured: string lenses alone reach " +
       "0.53 recall; adding a semantic lens raises recall to 0.88, with precision holding at " +
       "0.94-0.95 in both configurations. Recall roughly doubles at no precision cost, which is the " +
       "whole argument for layering. " +
       "TWO HONEST CAVEATS: (1) the 0.88 was reached with a FRONTIER semantic lens — the same slot " +
-      "filled by a sovereign model is architecturally supported but NOT yet proven, because a " +
+      "filled by a tuned model is architecturally supported but NOT yet proven, because a " +
       "cold-load timing artifact (first call per model exceeds a short timeout and returns empty) " +
       "produced false zeros that were correctly diagnosed as harness error rather than published as " +
       "capability. (2) n=40 is above no threshold that matters here; treat as directional.",

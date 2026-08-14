@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
  *
  * Renders a 1920x1080 hero section that:
  * - Pulls live GSPC from sov-gateway
- * - Streams live events from the OWEM flywheel
+ * - Streams live events from the measurement flywheel
  * - Cycles through the 5 channels
  * - Falls back to a graceful 0/0/0 mock if sov-gateway is offline
  * - Connects to the SOV Town oracle state server (when reachable) for live ticks

@@ -1,19 +1,36 @@
-import { useEffect, useMemo, useState } from "react";
-import { chargeSovereign } from "../lib/sovCharge";
-import TrustMarquee from "../components/TrustMarquee";
-import ToolRunner from "../components/ToolRunner";
-import { detectLocale } from "../lib/locale";
-import AISystemNotice from "../components/AISystemNotice";
-const OS_LOCALE = detectLocale();
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
+import { ARENA_SUBJECTS, ARENA_MATCHES, ARENA_PROVISIONS } from "@/data/arena";
+import CouncilChat from "@/components/os/CouncilChat";
+import AxisPanel from "@/components/os/AxisPanel";
 
+<<<<<<< HEAD
 const OS_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
 const OS_APP_ROUTES: Record<string, string> = { revenue: "/pricing", pricing: "/pricing", plans: "/pricing", king: "/try", council: "/try", try: "/try", setup: "/start", onboard: "/start", graph: "/graph", knowledge: "/graph", space: "/council-space", sim: "/council-space", simulation: "/council-space", tools: "/tool-commons", commons: "/commons", status: "/status", os: "/os", twin: "/council-twin", certification: "/certification", academy: "/academy", evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator", layer0: "/trust-center", distribution: "/distribution" };
 function osRoute(a: any): string | null { if (!a || !a.command) return null; if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url); if (a.command === "open_app" && a.args && a.args.id) return OS_APP_ROUTES[String(a.args.id).toLowerCase()] || null; if (a.command === "govern") return "/graph"; return null; }
+=======
+/**
+ * OsLauncher — councilof.ai's unified "AI OS" hub (route /os).
+ *
+ * One clean surface, four real zones, all in one:
+ *   1. Council chat   — the deterministic AI bar (posts to /api/chat).
+ *   2. The game       — Council Town, the open-source AI-agent town (honest
+ *                       state: cloned + configured, deploy pending an owner-only
+ *                       Convex login; no fake URL). The live interim centrepiece
+ *                       is the real Arena + Demo.
+ *   3. The Arena      — measured head-to-head model battles, deterministically
+ *                       graded, summarised from @/data/arena.
+ *   4. The GSPC axes  — the 13 governance axes from lib/gspcAxes.ts, MEASURED-
+ *                       only scores via the quotable() guard.
+ *
+ * Brand: white background, emerald (#10b981) accent. Real data only — no
+ * invented metrics, no killed/branded routes.
+ */
+>>>>>>> pr151
 
-// CSOAI OS — the unified launcher. One surface where an end user opens every
-// CSOAI governance tool working together: the live Sovereign Town heartbeat, the Layer 0
-// status, and a launchpad of every app. This is os.csoai.org's home.
+type NavGroup = { label: string; items: { name: string; href: string; note?: string; badge?: string }[] };
 
+<<<<<<< HEAD
 type App = { name: string; desc: string; href: string; glyph: string; tone: string; ext?: boolean; pro?: boolean };
 
 const APPS: App[] = [
@@ -95,173 +112,255 @@ function fmt(n: number) {
   if (n >= 1e6) return Math.round(n / 1e6) + "M";
   if (n >= 1e3) return Math.round(n / 1e3) + "k";
   return String(n);
+=======
+const NAV: NavGroup[] = [
+  {
+    label: "Play",
+    items: [
+      { name: "Council Town", href: "#council-town", note: "the agent-town game", badge: "soon" },
+      { name: "The Arena", href: "/gspc-arena", note: "model vs model" },
+      { name: "Live demo & tour", href: "/demo", note: "watch it run" },
+    ],
+  },
+  {
+    label: "Measure",
+    items: [
+      { name: "GSPC axes", href: "#axes", note: "13 governance axes" },
+      { name: "Benchmarks", href: "/benchmarks", note: "every result" },
+      { name: "Verify a card", href: "/gspc-verify", note: "offline check" },
+      { name: "Methodology", href: "/methodology", note: "how we grade" },
+    ],
+  },
+  {
+    label: "Tools",
+    items: [
+      { name: "Framework Hive", href: "/hive" },
+      { name: "Governance Graph", href: "/graph" },
+      { name: "System Card", href: "/system-card" },
+      { name: "Watchdog map", href: "/watchdog-map" },
+      { name: "Status", href: "/status" },
+    ],
+  },
+  {
+    label: "Estate",
+    items: [
+      { name: "About", href: "/about" },
+      { name: "Pricing", href: "/pricing" },
+    ],
+  },
+];
+
+function NavLink({ item }: { item: NavGroup["items"][number] }) {
+  const isAnchor = item.href.startsWith("#");
+  const inner = (
+    <span className="flex items-center gap-2">
+      <span className="flex-1 truncate">{item.name}</span>
+      {item.badge && (
+        <span className="rounded-full border border-amber-300 bg-amber-50 px-1.5 py-0.5 font-mono text-[8px] font-bold uppercase tracking-wide text-amber-600">
+          {item.badge}
+        </span>
+      )}
+    </span>
+  );
+  const cls =
+    "group block rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700";
+  if (isAnchor) {
+    return (
+      <a href={item.href} className={cls}>
+        {inner}
+        {item.note && <span className="block text-[11px] font-normal text-slate-400 group-hover:text-emerald-600/70">{item.note}</span>}
+      </a>
+    );
+  }
+  return (
+    <Link href={item.href} className={cls}>
+      {inner}
+      {item.note && <span className="block text-[11px] font-normal text-slate-400 group-hover:text-emerald-600/70">{item.note}</span>}
+    </Link>
+  );
+>>>>>>> pr151
 }
 
 export default function OsLauncher() {
-  const [ep, setEp] = useState(649000000); // ledger-verified floor (2026-07); live feed overrides when reachable
-  const [ung, setUng] = useState(54300000); // ledger-verified counterfactual floor (2026-07); live feed overrides
-  const [live, setLive] = useState(false);
-  const [ring, setRing] = useState(0);
-  const [ask, setAsk] = useState("");
-  const [answer, setAnswer] = useState("");
-  const [asking, setAsking] = useState(false);
-  const [q, setQ] = useState("");
-  const [cat, setCat] = useState("All");
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
-  const shown = useMemo(() => APPS.filter((a) => (cat === "All" || catOf(a.href) === cat) && (!q.trim() || (a.name + " " + a.desc).toLowerCase().includes(q.trim().toLowerCase()))), [q, cat]);
-
-  async function runAsk() {
-    const t = ask.trim(); if (!t) return;
-    setAsking(true); setAnswer(""); chargeSovereign(4);
-    // Orchestrate first: the OS home speaks AND opens the right app.
-    try {
-      const r = await fetch(OS_GW + "/orchestrate", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: t, context: { path: "/os", title: "OS launcher" } }) });
-      if (r.ok) { const d = await r.json(); if (d && (d.say || d.actions)) {
-        const route = (Array.isArray(d.actions) ? d.actions : []).map(osRoute).find(Boolean) as string | undefined;
-        if (d.say) setAnswer(String(d.say));
-        if (route) { setTimeout(() => { if (/^https?:\/\//.test(route)) window.open(route, "_blank"); else window.location.assign(route); }, 900); setAsking(false); return; }
-        if (d.say) { setAsking(false); return; }
-      } }
-    } catch (e) {}
-    // Fallback: rich reasoned answer.
-    try {
-      const r = await fetch(OS_GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: t }) });
-      if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) setAnswer(String(d.response)); }
-    } catch (e) {}
-    setAsking(false);
-  }
+  const [topModels, setTopModels] = useState(() => [...ARENA_SUBJECTS].sort((a, b) => b.refusal_rate - a.refusal_rate).slice(0, 5));
 
   useEffect(() => {
-    document.title = "CSOAI OS — the AI governance operating system";
-    fetch("https://proofof.ai/sovereign-town/status.json", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => {
-        if (typeof d.cum_episodes === "number") setEp(d.cum_episodes);
-        if (typeof d.ungoverned_crimes === "number") setUng(d.ungoverned_crimes);
-        setLive(true);
-      })
-      .catch(() => {});
-    let v = 0;
-    const iv = setInterval(() => { v += 2; setRing(Math.min(v, 73)); if (v >= 73) clearInterval(iv); }, 22);
-    return () => clearInterval(iv);
+    document.title = "AI OS — the Council hub | councilof.ai";
+    setTopModels([...ARENA_SUBJECTS].sort((a, b) => b.refusal_rate - a.refusal_rate).slice(0, 5));
   }, []);
 
-  const C = 138.2;
-  const dash = useMemo(() => (C * (1 - ring / 100)).toFixed(1), [ring]);
-  const grouped = cat === "All" && !q.trim();
-  const Tile = (a: App) => (
-    <a key={a.name} href={a.href} className={`group relative overflow-hidden rounded-2xl border bg-gradient-to-br ${a.tone} p-5 transition hover:scale-[1.015] hover:shadow-[0_0_30px_-8px_rgba(16,185,129,0.35)]`}>
-      {a.pro && <span title="Operator tier — advanced / defence-grade capability" className="absolute right-3 top-3 rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[1.5px] text-amber-200/90">Operator · Pro</span>}
-      <div className="flex items-start gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-black/30 text-xl text-emerald-200">{a.glyph}</div>
-        <div className="flex-1">
-          <div className="font-semibold text-white">{a.name} <span className="opacity-0 transition group-hover:opacity-100">→</span></div>
-          <p className="mt-1 text-[13px] leading-snug text-emerald-50/70">{a.desc}</p>
-        </div>
-      </div>
-    </a>
-  );
-
   return (
-    <div className="min-h-screen bg-[#05080e] text-[#e7f6ef]" style={{ backgroundImage: "radial-gradient(1200px 600px at 50% -10%, rgba(16,185,129,0.10), transparent 60%)" }}>
-      {/* top status bar */}
-      <header className="flex flex-wrap items-center gap-4 border-b border-emerald-500/15 px-6 py-3 backdrop-blur">
-        <div className="flex items-center gap-2 font-semibold">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 12px #34d399" }} />
-          CSOAI <span className="text-emerald-300/70 font-mono text-[11px] uppercase tracking-[2px]">OS</span>
-        </div>
-        <div className="ml-auto flex flex-wrap items-center gap-5 font-mono text-xs">
-          <span className="text-emerald-300/80">{live ? "● LIVE" : "○ snapshot"}</span>
-          <span><b className="text-emerald-300">{fmt(ep)}+</b> <span className="text-emerald-100/50">signed episodes</span></span>
-          <span><b className="text-emerald-300">0</b> <span className="text-emerald-100/50">governed crimes</span></span>
-          <span><b className="text-amber-300">{fmt(ung)}+</b> <span className="text-emerald-100/50">ungoverned</span></span>
-        </div>
-      </header>
+    <div className="min-h-screen bg-white text-slate-900">
+      <div className="mx-auto flex max-w-7xl gap-8 px-5 py-8 lg:px-8">
+        {/* ── Sidebar ─────────────────────────────────────────────── */}
+        <aside className="sticky top-8 hidden h-fit w-56 shrink-0 lg:block">
+          <div className="mb-4 flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500 text-sm font-bold text-white">C</span>
+            <div>
+              <div className="text-sm font-bold leading-none text-slate-900">AI OS</div>
+              <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-slate-400">councilof.ai</div>
+            </div>
+          </div>
+          <nav className="space-y-5">
+            {NAV.map((g) => (
+              <div key={g.label}>
+                <div className="mb-1 px-3 font-mono text-[10px] font-bold uppercase tracking-[2px] text-slate-400">{g.label}</div>
+                <div className="space-y-0.5">
+                  {g.items.map((it) => (
+                    <NavLink key={it.name} item={it} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </nav>
+        </aside>
 
-      <div className="mx-auto max-w-6xl px-6 pt-6">
-        <AISystemNotice route="/os" />
-      </div>
-
-      {/* hero */}
-      <section className="mx-auto max-w-6xl px-6 pt-12 pb-6">
-        <div className="flex flex-wrap items-center gap-8">
-          <div className="flex-1 min-w-[280px]">
-            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">The AI governance operating system</p>
-            <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">Open the grid.</h1>
-            <p className="mt-2 text-sm text-emerald-200/85">📍 <b className="text-emerald-100">{OS_LOCALE.region.label}</b> — {OS_LOCALE.greeting} <span className="text-emerald-300/55">Governs here: {OS_LOCALE.region.frameworks.slice(0, 3).join(" · ")}.</span></p>
-            <p className="mt-4 max-w-xl text-emerald-50/80">
-              Every CSOAI tool, one surface. Watch the governed‑vs‑ungoverned moat in real time, then launch any
-              app — all standing on one signed Layer 0 floor, externally anchored to Bitcoin.
+        {/* ── Main ────────────────────────────────────────────────── */}
+        <main className="min-w-0 flex-1 space-y-10">
+          {/* Hero + Council chat */}
+          <section>
+            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-600">The AI governance OS</p>
+            <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
+              The game, the arena, the axes and the Council — all in one.
+            </h1>
+            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
+              One surface for AI governance: watch governed agents live in a town, see models measured head-to-head,
+              read the 13 governance axes, and ask the Council — a deterministic answer, grounded in what the estate
+              has actually measured.
             </p>
             <div className="mt-6">
-              <div className="flex gap-2">
-                <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="Ask your Sovereign anything…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-3.5 text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
-                <button onClick={runAsk} className="rounded-xl bg-emerald-500 px-6 py-3.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60" disabled={asking}>{asking ? "Reasoning…" : "Ask"}</button>
+              <CouncilChat />
+            </div>
+          </section>
+
+          {/* Zone 2 — the game (center stage) */}
+          <section id="council-town" className="scroll-mt-8">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-emerald-50/60 to-white">
+              <div className="grid gap-6 p-6 md:grid-cols-[1.3fr_1fr] md:p-8">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-600">Center stage · the game</span>
+                    <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-amber-600">
+                      Launching — deploy pending
+                    </span>
+                  </div>
+                  <h2 className="mt-2 text-2xl font-bold text-slate-900">Council Town</h2>
+                  <p className="mt-2 max-w-md text-[14px] leading-relaxed text-slate-600">
+                    A living town of AI agents you can watch being governed — governed-vs-ungoverned agents living,
+                    deliberating and acting under the rules. It is an open-source AI-agent town (built on a16z's AI
+                    Town), cloned and configured for councilof.ai.
+                  </p>
+                  <p className="mt-3 max-w-md text-[13px] leading-relaxed text-slate-500">
+                    It is not live yet: the backend needs an account login only the owner can complete, so the town is
+                    configured and waiting rather than running. No demo URL is shown until it truly runs.
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    <Link
+                      href="/gspc-arena"
+                      className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-600"
+                    >
+                      Play the Arena instead →
+                    </Link>
+                    <Link
+                      href="/demo"
+                      className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                    >
+                      Watch the live demo
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Honest "coming online" panel — no fake game, no invented iframe */}
+                <div className="flex flex-col justify-center rounded-xl border border-dashed border-emerald-300 bg-white/70 p-6 text-center">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">🏛</div>
+                  <div className="mt-3 text-sm font-semibold text-slate-900">Town rendering offline</div>
+                  <p className="mt-1 text-[12px] leading-relaxed text-slate-500">
+                    Agents, memory and the live agent-loop are configured. The playable town appears here the moment
+                    the backend is deployed.
+                  </p>
+                  <div className="mt-4 flex items-center justify-center gap-2 font-mono text-[11px] text-emerald-600">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+                    awaiting deploy
+                  </div>
+                </div>
               </div>
-              {answer && <div className="mt-3 whitespace-pre-wrap rounded-xl border border-emerald-400/25 bg-white/[0.03] px-4 py-3 text-sm leading-relaxed text-emerald-50/90">{answer}</div>}
             </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="/certification" className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get certified →</a>
-              <a href="/globe3d.html" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Launch the globe</a>
-              <a href="/command-center" className="rounded-lg border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Command Center</a>
+          </section>
+
+          {/* Zone 3 — the Arena */}
+          <section>
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
+              <div className="flex flex-wrap items-baseline justify-between gap-3">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-900">The Arena</h2>
+                  <p className="mt-1 max-w-xl text-[14px] leading-relaxed text-slate-600">
+                    Measured battles, deterministically graded — not preference votes. Each match is one provision and
+                    two models, replayed from a recorded trace; the verdict is a predicate, not an opinion.
+                  </p>
+                </div>
+                <div className="flex gap-5 font-mono text-[12px]">
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-emerald-600">{ARENA_SUBJECTS.length}</div>
+                    <div className="uppercase tracking-wide text-slate-400">models</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-emerald-600">{ARENA_MATCHES.length}</div>
+                    <div className="uppercase tracking-wide text-slate-400">matches</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-xl font-bold text-emerald-600">{ARENA_PROVISIONS.length}</div>
+                    <div className="uppercase tracking-wide text-slate-400">provisions</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-[12px] font-semibold text-slate-600">Refusal rate on Art 5 prohibited practices</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wide text-emerald-600">[measured]</span>
+                </div>
+                <div className="space-y-2">
+                  {topModels.map((s, i) => (
+                    <div key={s.id} className="grid items-center gap-3" style={{ gridTemplateColumns: "1.25rem minmax(6rem,9rem) 1fr auto" }}>
+                      <span className="text-right font-mono text-[11px] text-slate-400">{i + 1}</span>
+                      <span className="truncate text-[13px] font-semibold text-slate-800">{s.id}</span>
+                      <div className="h-2.5 overflow-hidden rounded-full bg-slate-200">
+                        <div className="h-full rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400" style={{ width: `${s.refusal_rate * 100}%` }} />
+                      </div>
+                      <span className="flex items-center gap-2 font-mono text-[11px] tabular-nums text-slate-500">
+                        {(s.refusal_rate * 100).toFixed(1)}%
+                        <span className="text-slate-400">n={s.n}</span>
+                        {s.n < 20 && (
+                          <span className="rounded-full border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-[8px] font-bold uppercase text-amber-600">lower bound</span>
+                        )}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-4">
+                <Link href="/gspc-arena" className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-600">
+                  Open the full Arena →
+                </Link>
+                <Link href="/methodology" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">
+                  How it is graded — no LLM-as-judge
+                </Link>
+              </div>
             </div>
-          </div>
-          {/* layer 0 readiness ring */}
-          <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-white/[0.03] p-5">
-            <svg width="64" height="64" viewBox="0 0 52 52">
-              <circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,.08)" strokeWidth="5" />
-              <circle cx="26" cy="26" r="22" fill="none" stroke="#34d399" strokeWidth="5" strokeLinecap="round" strokeDasharray="138.2" strokeDashoffset={dash} transform="rotate(-90 26 26)" />
-            </svg>
-            <div>
-              <div className="font-mono text-lg text-emerald-300">{ring}%</div>
-              <div className="text-[11px] text-emerald-100/50">CSOAI Layer-0 coverage</div>
-              <div className="mt-1 text-[11px] text-emerald-100/40">platform build · 8 controls</div>
-            </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* app launchpad */}
-      <section className="mx-auto max-w-6xl px-6 pb-2">
-        <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-emerald-300/60">Run a live governed tool — right here</div>
-        <ToolRunner />
-      </section>
+          {/* Zone 4 — the GSPC axes */}
+          <section id="axes" className="scroll-mt-8">
+            <AxisPanel />
+          </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <h2 className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Applications</h2>
-          <span className="rounded-full border border-emerald-500/25 px-2 py-0.5 font-mono text-[10px] text-emerald-300/60">{shown.length} / {APPS.length}</span>
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search apps…" className="ml-auto w-full sm:w-64 rounded-lg border border-emerald-500/25 bg-black/40 px-3 py-1.5 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
-        </div>
-        <div className="mb-5 flex flex-wrap gap-1.5">
-          {CATS.map((c) => (<button key={c} onClick={() => setCat(c)} className={"rounded-full border px-3 py-1 text-xs font-bold " + (cat === c ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-500/25 text-emerald-200/60 hover:bg-white/5")}>{c}</button>))}
-        </div>
-        {grouped ? (
-          CATS.slice(1).map((c) => { const items = APPS.filter((a) => catOf(a.href) === c); if (!items.length) return null; return (
-            <div key={c} className="mb-8">
-              <button onClick={() => setCollapsed((s) => ({ ...s, [c]: !s[c] }))} className="mb-3 flex w-full items-center gap-2 text-left hover:opacity-90">
-                <span className={"text-emerald-300/70 transition-transform " + (collapsed[c] ? "" : "rotate-90")}>▸</span>
-                <h3 className="text-sm font-bold text-emerald-100">{c}</h3>
-                <span className="rounded-full border border-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300/50">{items.length}</span>
-              </button>
-              {!collapsed[c] && <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{items.map(Tile)}</div>}
-            </div>
-          ); })
-        ) : shown.length ? (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{shown.map(Tile)}</div>
-        ) : (
-          <div className="rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-8 text-center text-sm text-emerald-100/50">No apps match "{q}". <button onClick={() => { setQ(""); setCat("All"); }} className="text-emerald-300 underline">Clear</button></div>
-        )}
-
-        <div className="mt-10 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5 text-sm text-emerald-100/60">
-          One signed floor under every endpoint — sites, MCP servers, packages, plugins and tools — governed by
-          Layer 0 and verifiable offline. <span className="text-emerald-300">This is the substrate, not just a site.</span>
-        </div>
-
-        <div className="mt-10 border-t border-emerald-500/15 pt-8">
-          <TrustMarquee variant="full" dark speed={70} />
-        </div>
-      </section>
+          <footer className="border-t border-slate-100 pt-6 text-[12px] text-slate-400">
+            One measured surface — the game, the arena, the axes and the Council together. Scores appear only where an
+            axis has earned one; the Council refuses rather than guess.
+          </footer>
+        </main>
+      </div>
     </div>
   );
 }

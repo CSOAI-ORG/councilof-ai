@@ -54,7 +54,7 @@ import { cn } from '@/lib/utils';
 import { chargeSovereign } from '@/lib/sovCharge';
 import { askSovereign } from '@/lib/sovAsk';
 
-const SOV_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || 'https://os.meok.ai/api';
+const SOV_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || '/api';
 
 // Types
 interface SearchResult {
@@ -106,8 +106,8 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'training', title: 'Training Center', description: 'AI safety and compliance training programs', category: 'pages', href: '/training', icon: GraduationCap, keywords: ['learn', 'education', 'courses'] },
   { id: 'courses', title: 'Course Catalog', description: 'Browse all available AI compliance courses', category: 'pages', href: '/courses', icon: BookOpen, keywords: ['catalog', 'browse', 'all courses'] },
   { id: 'my-courses', title: 'My Courses', description: 'Your enrolled courses and progress', category: 'pages', href: '/my-courses', icon: BookOpen, keywords: ['enrolled', 'progress', 'learning'] },
-  { id: 'certification', title: 'Certification', description: 'CEASAI professional certification program', category: 'pages', href: '/certification', icon: Award, keywords: ['exam', 'certificate', 'credential'] },
-  { id: 'certification-exam', title: 'Take Certification Exam', description: 'Start your CEASAI certification exam', category: 'pages', href: '/certification/exam', icon: FileCheck, keywords: ['test', 'exam', 'assessment'] },
+  { id: 'certification', title: 'Certification', description: 'Professional AI governance measurement credential', category: 'pages', href: '/certification', icon: Award, keywords: ['exam', 'certificate', 'credential'] },
+  { id: 'certification-exam', title: 'Take Certification Exam', description: 'Start your measurement credential assessment', category: 'pages', href: '/certification/exam', icon: FileCheck, keywords: ['test', 'exam', 'assessment'] },
   { id: 'certificates', title: 'My Certificates', description: 'View your earned certificates', category: 'pages', href: '/certificates', icon: Award, keywords: ['credentials', 'badges', 'achievements'] },
   { id: 'verify-certificate', title: 'Verify Certificate', description: 'Verify authenticity of a certificate', category: 'pages', href: '/verify-certificate', icon: Shield, keywords: ['validate', 'check', 'authentic'] },
   { id: 'student-progress', title: 'My Progress', description: 'Track your learning progress and achievements', category: 'pages', href: '/dashboard/progress', icon: BarChart3, keywords: ['stats', 'achievements', 'tracker'] },
@@ -180,7 +180,7 @@ const SEARCH_INDEX: SearchResult[] = [
   // Part I: Foundational Principles (Articles 1-8)
   { id: 'art-1', title: 'Article 1: The Maternal Covenant', description: 'Foundational relationship between humanity and AI based on care', category: 'charter', href: '/charter#part-i', icon: Heart, keywords: ['maternal', 'covenant', 'care', 'hinton'], highlight: true },
   { id: 'art-2', title: 'Article 2: Provable Safety Requirements', description: 'Mathematical and empirical safety standards for AI systems', category: 'charter', href: '/charter#part-i', icon: Shield, keywords: ['provable', 'safety', 'mathematical', 'proof'] },
-  { id: 'art-3', title: 'Article 3: Byzantine Council Oversight', description: '33-agent AI-to-AI monitoring architecture', category: 'charter', href: '/charter#part-i', icon: Users, keywords: ['byzantine', 'council', 'oversight', '33 agents'] },
+  { id: 'art-3', title: 'Article 3: Council Oversight', description: '33-agent AI-to-AI monitoring architecture', category: 'charter', href: '/charter#part-i', icon: Users, keywords: ['byzantine', 'council', 'oversight', '33 agents'] },
   { id: 'art-4', title: 'Article 4: Value Uncertainty Principles', description: 'Handling moral and ethical uncertainty in AI', category: 'charter', href: '/charter#part-i', icon: Scale, keywords: ['value', 'uncertainty', 'ethics', 'moral'] },
   { id: 'art-5', title: 'Article 5: Constitutional AI Principles', description: 'Core values embedded in AI systems', category: 'charter', href: '/charter#part-i', icon: FileText, keywords: ['constitutional', 'principles', 'values'] },
   { id: 'art-6', title: 'Charter Article 6', description: 'Forward-looking charter provision — not a measured capability', category: 'charter', href: '/charter#part-i', icon: Brain, keywords: ['consciousness', 'sentience', 'awareness'] },
@@ -190,7 +190,7 @@ const SEARCH_INDEX: SearchResult[] = [
   // Part II: Governance Structure (Articles 9-18)
   { id: 'art-9', title: 'Article 9: Founding Principles & Definitions', description: 'Core terminology and interpretive principles', category: 'charter', href: '/charter#part-ii', icon: FileText, keywords: ['definitions', 'founding', 'terminology'] },
   { id: 'art-10', title: 'Article 10: Licensing Framework', description: 'Tiered licensing system and requirements', category: 'charter', href: '/charter#part-ii', icon: Award, keywords: ['licensing', 'tiers', 'requirements'] },
-  { id: 'art-11', title: 'Article 11: Byzantine Council Specifications', description: 'Technical architecture of AI oversight', category: 'charter', href: '/charter#part-ii', icon: Shield, keywords: ['byzantine', 'specifications', 'technical'] },
+  { id: 'art-11', title: 'Article 11: Council Specifications', description: 'Technical architecture of AI oversight', category: 'charter', href: '/charter#part-ii', icon: Shield, keywords: ['byzantine', 'specifications', 'technical'] },
   { id: 'art-12', title: 'Article 12: Human Council', description: 'Human oversight body structure', category: 'charter', href: '/charter#part-ii', icon: Users, keywords: ['human', 'council', 'oversight'] },
   { id: 'art-13', title: 'Article 13: Public Watchdog', description: 'Transparency and public accountability', category: 'charter', href: '/charter#part-ii', icon: Eye, keywords: ['watchdog', 'public', 'transparency'] },
   { id: 'art-14', title: 'Article 14: Democratic Participation', description: 'Public input and governance participation', category: 'charter', href: '/charter#part-ii', icon: Users, keywords: ['democratic', 'participation', 'voting'] },
@@ -253,16 +253,16 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'train-iso-spec', title: 'ISO 42001 Lead Implementer', description: 'Lead implementer certification', category: 'training', href: '/courses?framework=iso&level=specialist', icon: Award, keywords: ['iso', 'lead', 'implementer'] },
   { id: 'train-tc260', title: 'TC260 Chinese Standards', description: 'Chinese AI safety standards training', category: 'training', href: '/courses?framework=tc260', icon: GraduationCap, keywords: ['tc260', 'china', 'chinese'] },
   { id: 'train-pdca', title: 'SOAI-PDCA Methodology', description: 'Master the Plan-Do-Check-Act framework', category: 'training', href: '/courses?framework=pdca', icon: Scale, keywords: ['pdca', 'methodology', 'soai'] },
-  { id: 'train-byzantine', title: 'Byzantine Council Training', description: 'Understanding multi-agent AI monitoring', category: 'training', href: '/courses?framework=byzantine', icon: Shield, keywords: ['byzantine', 'council', 'monitoring'] },
+  { id: 'train-byzantine', title: 'Council Training', description: 'Understanding multi-agent AI monitoring', category: 'training', href: '/courses?framework=byzantine', icon: Shield, keywords: ['byzantine', 'council', 'monitoring'] },
   { id: 'train-risk', title: 'AI Risk Assessment', description: 'Learn to assess AI system risks', category: 'training', href: '/courses?framework=risk', icon: AlertTriangle, keywords: ['risk', 'assessment', 'evaluation'] },
   { id: 'train-ethics', title: 'AI Ethics & Governance', description: 'Ethical considerations in AI development', category: 'training', href: '/courses?framework=ethics', icon: Scale, keywords: ['ethics', 'governance', 'moral'] },
   { id: 'train-healthcare', title: 'Healthcare AI Compliance', description: 'Medical AI regulatory requirements', category: 'training', href: '/courses?sector=healthcare', icon: Heart, keywords: ['healthcare', 'medical', 'compliance'] },
   { id: 'train-finance', title: 'Financial AI Compliance', description: 'Banking and fintech AI regulations', category: 'training', href: '/courses?sector=finance', icon: DollarSign, keywords: ['finance', 'banking', 'fintech'] },
   { id: 'train-transport', title: 'Transportation AI Standards', description: 'Autonomous vehicle compliance', category: 'training', href: '/courses?sector=transport', icon: Globe2, keywords: ['transport', 'autonomous', 'vehicle'] },
   { id: 'train-watchdog', title: 'Watchdog Analyst Training', description: 'Become an AI safety analyst', category: 'training', href: '/courses?framework=watchdog', icon: Eye, keywords: ['watchdog', 'analyst', 'safety'] },
-  { id: 'train-ceasai-1', title: 'CEASAI Level 1', description: 'Foundation certification in AI safety', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'certification', 'level 1'] },
-  { id: 'train-ceasai-2', title: 'CEASAI Level 2', description: 'Advanced practitioner certification', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'certification', 'level 2'] },
-  { id: 'train-ceasai-3', title: 'CEASAI Level 3', description: 'Expert certification in AI safety', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'certification', 'level 3'] },
+  { id: 'train-ceasai-1', title: 'Measurement Credential Level 1', description: 'Foundation certification in AI safety', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'certification', 'level 1'] },
+  { id: 'train-ceasai-2', title: 'Measurement Credential Level 2', description: 'Advanced practitioner certification', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'certification', 'level 2'] },
+  { id: 'train-ceasai-3', title: 'Measurement Credential Level 3', description: 'Expert certification in AI safety', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'certification', 'level 3'] },
   { id: 'train-maternal', title: 'Maternal Covenant Principles', description: 'Understanding care-based AI safety', category: 'training', href: '/courses?framework=maternal', icon: Heart, keywords: ['maternal', 'covenant', 'care'] },
   { id: 'train-prosperity', title: 'Prosperity Fund Mechanics', description: 'AI wealth redistribution training', category: 'training', href: '/courses?framework=prosperity', icon: DollarSign, keywords: ['prosperity', 'ubi', 'wealth'] },
   { id: 'train-compliance', title: 'Compliance Officer Bootcamp', description: 'Comprehensive compliance training', category: 'training', href: '/courses?framework=compliance', icon: Shield, keywords: ['compliance', 'officer', 'bootcamp'] },
@@ -281,7 +281,7 @@ const SEARCH_INDEX: SearchResult[] = [
 
   // ===== FAQ / COMMON QUESTIONS =====
   { id: 'faq-1', title: 'What is CSOAI?', description: 'Council of AI (CSOAI) is an independent measurement instrument: we measure AI systems against the rules that govern them, sign the result (Ed25519), and publish what we cannot yet measure. Not a certifier, not an enforcer, no accreditation chain.', category: 'faq', href: '/about', icon: HelpCircle, keywords: ['what', 'csoai', 'council'] },
-  { id: 'faq-2', title: 'How do I get certified?', description: 'Complete training courses and pass the CEASAI certification exam', category: 'faq', href: '/certification', icon: HelpCircle, keywords: ['certification', 'how', 'exam'] },
+  { id: 'faq-2', title: 'How do I get certified?', description: 'Complete training courses and pass the measurement credential assessment', category: 'faq', href: '/certification', icon: HelpCircle, keywords: ['certification', 'how', 'exam'] },
   { id: 'faq-3', title: 'What is the Maternal Covenant?', description: 'A care-based paradigm for AI safety inspired by Geoffrey Hinton', category: 'faq', href: '/maternal-covenant', icon: HelpCircle, keywords: ['maternal', 'covenant', 'what'] },
   { id: 'faq-4', title: 'How does the Prosperity Fund work?', description: 'AI companies contribute 1-3% revenue to fund UBI for all', category: 'faq', href: '/prosperity', icon: HelpCircle, keywords: ['prosperity', 'fund', 'ubi'] },
   { id: 'faq-5', title: 'What is the 33-agent Council of AI?', description: 'An AI-to-AI monitoring system for continuous safety oversight', category: 'faq', href: '/byzantine', icon: HelpCircle, keywords: ['byzantine', '33', 'council'] },
@@ -310,7 +310,7 @@ const SEARCH_INDEX: SearchResult[] = [
 const QUICK_ACTIONS: QuickAction[] = [
   { id: 'action-start-training', title: 'Start Training', description: 'Begin your AI safety certification journey', href: '/courses', icon: GraduationCap, color: 'bg-emerald-500' },
   { id: 'action-register-ai', title: 'Register AI System', description: 'Add a new AI system to the registry', href: '/ai-systems', icon: Plus, color: 'bg-blue-500' },
-  { id: 'action-take-exam', title: 'Take Certification Exam', description: 'Start your CEASAI certification exam', href: '/certification/exam', icon: FileCheck, color: 'bg-purple-500' },
+  { id: 'action-take-exam', title: 'Take Certification Exam', description: 'Start your measurement credential assessment', href: '/certification/exam', icon: FileCheck, color: 'bg-purple-500' },
   { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/watchdog', icon: AlertTriangle, color: 'bg-red-500' },
   { id: 'action-apply-job', title: 'Browse Analyst Jobs', description: 'Find Watchdog analyst opportunities', href: '/jobs', icon: Briefcase, color: 'bg-amber-500' },
   { id: 'action-view-charter', title: 'View Partnership Charter', description: 'Read the 52 Articles', href: '/charter', icon: FileText, color: 'bg-slate-700' },
@@ -592,7 +592,7 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Search the OS, or ask the Sovereign anything…"
+            placeholder="Search the OS, or ask the Council anything…"
             className="flex-1 text-base outline-none bg-transparent placeholder:text-gray-400"
           />
           {query && (

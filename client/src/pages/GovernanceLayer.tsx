@@ -36,7 +36,7 @@ const LAWS = [
 
 export default function GovernanceLayer() {
   useEffect(() => {
-    document.title = "Sovereign Governance Layer — measured compliance for your AI | CSOAI";
+    document.title = "Council Governance Layer — measured compliance for your AI | CSOAI";
   }, []);
 
   return (

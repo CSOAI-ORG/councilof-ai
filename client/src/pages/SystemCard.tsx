@@ -4,9 +4,9 @@ import { chargeSovereign } from "../lib/sovCharge";
 // Signed AI System Card — the independent, cryptographically-signed, OFFLINE-verifiable
 // record that an AI system was governed. The primitive UK JSP 936 assurance (and the
 // Alan Turing Institute) named as missing: nobody ships a tamper-evident System Card.
-// CSOAI does. Live on the sovereign signing backend (os.meok.ai/api/systemcard + /verify).
+// CSOAI does. Live on the sovereign signing backend (/api/systemcard + /verify).
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 // Keep substrate codenames off the public UI.
 function clean(s: any): string { return typeof s === "string" ? s.replace(/defoneos/gi, "CSOAI") : String(s ?? ""); }
 

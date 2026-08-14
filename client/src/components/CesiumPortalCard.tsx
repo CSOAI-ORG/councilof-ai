@@ -55,10 +55,10 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
     preset: "US_SF_37_77_-122_42",
     tour: "sovspace",
     routes: [
-      { label: "Open Council Space", href: "/council-space", tour: true },
+      { label: "Open Sov Space", href: "/sov-space", tour: true },
       { label: "Governance Graph", href: "/graph" },
       { label: "Tool Commons (370+ governed MCPs)", href: "/tool-commons" },
-      { label: "Your Council Twin", href: "/emergence" },
+      { label: "Your Council assistant Twin", href: "/emergence" },
     ],
   },
 };

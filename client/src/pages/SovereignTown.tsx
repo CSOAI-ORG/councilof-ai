@@ -53,7 +53,7 @@ const FALLBACK: SovTownStats = {
   fetchedAt: "",
 };
 
-// Frameworks Sovereign Town measures conduct against — the "governed against"
+// Frameworks Council Town measures conduct against — the "governed against"
 // wall (modelled on Red Hat's customer-logo wall: concrete, scannable proof of reach).
 const FRAMEWORKS = [
   "EU AI Act",
@@ -71,7 +71,11 @@ const FRAMEWORKS = [
 const EXPLAINERS = [
   {
     t: "Explore the live governance grid →",
+<<<<<<< HEAD
     d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Council City feed, live on one Earth.",
+=======
+    d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Council Town feed, live on one Earth.",
+>>>>>>> pr151
     href: "/globe3d.html",
   },
   {
@@ -85,7 +89,7 @@ const EXPLAINERS = [
     href: "/regulation-tracker",
   },
   {
-    t: "Verify a Sovereign passport",
+    t: "Verify a Council passport",
     d: "Offline-verify any agent's identity and governance state directly on the chain.",
     href: "https://proofof.ai/passport",
   },
@@ -95,7 +99,11 @@ export default function SovereignTown() {
   const [s, setS] = useState<SovTownStats>(FALLBACK);
 
   useEffect(() => {
+<<<<<<< HEAD
     document.title = "Council City — Live Governed AI World · CSOAI";
+=======
+    document.title = "Council Town — Live Governed AI World · CSOAI";
+>>>>>>> pr151
     let live = true;
     fetchSovTownStats()
       .then((d) => {
@@ -161,7 +169,11 @@ export default function SovereignTown() {
           </div>
           {/* Cited source — Red Hat's "Source: …" credibility move */}
           <p className="mt-6 text-sm text-emerald-100/70 max-w-2xl">
+<<<<<<< HEAD
             Source: Council City hash-chained Ed25519 ledger, externally committed to{" "}
+=======
+            Source: Council Town hash-chained Ed25519 ledger, externally committed to{" "}
+>>>>>>> pr151
             <span className="font-semibold text-emerald-200">Bitcoin block 954857</span>. Independently
             verifiable &mdash; no trust in CSOAI required.
           </p>
@@ -175,7 +187,7 @@ export default function SovereignTown() {
               Verify the chain →
             </a>
             <a
-              href="mailto:nicholas@csoai.org?subject=Sovereign%20Town%20pilot"
+              href="mailto:nicholas@csoai.org?subject=Council%20Town%20pilot"
               className="rounded-lg border border-emerald-300/50 px-5 py-3 font-semibold text-emerald-100 hover:bg-white/5"
             >
               Request a pilot
@@ -193,7 +205,11 @@ export default function SovereignTown() {
             Governed against the frameworks that matter
           </h2>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
+<<<<<<< HEAD
             Council City measures conduct against the binding and emerging regimes in force across
+=======
+            Council Town measures conduct against the binding and emerging regimes in force across
+>>>>>>> pr151
             177 jurisdictions &mdash; not a private rulebook.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -234,7 +250,7 @@ export default function SovereignTown() {
         <div className="max-w-5xl mx-auto px-6 py-16">
           <h2 className="text-2xl font-bold text-gray-900">Why we anchor to Bitcoin</h2>
           <p className="mt-4 max-w-3xl text-gray-700 leading-relaxed">
-            A governance record is only worth what it cannot be quietly rewritten. Every Sovereign
+            A governance record is only worth what it cannot be quietly rewritten. Every Council
             Town episode is signed with an Ed25519 key and its hash is committed to the Bitcoin
             blockchain &mdash; so the record of what an AI did, and whether it was governed, becomes as
             tamper-evident as the chain itself. This is digital autonomy for AI oversight: control and
@@ -292,11 +308,11 @@ export default function SovereignTown() {
         <div className="max-w-5xl mx-auto px-6 py-16 text-center">
           <h2 className="text-3xl font-black tracking-tight">Put your AI on the record</h2>
           <p className="mt-3 text-emerald-50 max-w-2xl mx-auto">
-            Run it under the Sovereign Gate &mdash; with real identity, policy, and proof.
+            Run it under the Council Gate &mdash; with real identity, policy, and proof.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a
-              href="mailto:nicholas@csoai.org?subject=Sovereign%20Town%20pilot"
+              href="mailto:nicholas@csoai.org?subject=Council%20Town%20pilot"
               className="rounded-lg bg-emerald-400 px-5 py-3 font-bold text-emerald-950 hover:bg-emerald-300"
             >
               Request a pilot

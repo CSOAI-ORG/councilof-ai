@@ -53,7 +53,7 @@ export default function OsEnter() {
   const lat = loc ? loc.lat : 20, lon = loc ? loc.lon : 0, dd = 0.05;
   const bbox = (lon - dd) + "," + (lat - dd) + "," + (lon + dd) + "," + (lat + dd);
   const mapUrl = "https://www.openstreetmap.org/export/embed.html?bbox=" + bbox + "&layer=mapnik&marker=" + lat + "," + lon;
-  const place = loc ? [loc.city, loc.country].filter(Boolean).join(", ") : "the Sovereign Grid";
+  const place = loc ? [loc.city, loc.country].filter(Boolean).join(", ") : "the Council Grid";
   const jur = jurisdiction(loc ? loc.cc : "");
   const aurora = { background: "radial-gradient(900px 520px at 50% -10%, rgba(16,185,129,.20), transparent 60%), radial-gradient(700px 520px at 85% 115%, rgba(45,212,191,.16), transparent 60%)" };
 
@@ -94,14 +94,18 @@ export default function OsEnter() {
             <h1 className="mt-1 text-3xl sm:text-4xl font-black tracking-tight">{place}</h1>
 
             <div className="mt-6 w-full rounded-2xl border border-emerald-400/25 bg-white/[0.04] p-5 text-left">
-              <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Your Sovereign already knows your jurisdiction</div>
+              <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Your Council assistant already knows your jurisdiction</div>
               <div className="mt-1 text-lg font-bold text-emerald-100">{jur.region}</div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {jur.fw.map((f) => (
                   <span key={f} className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">{f}</span>
                 ))}
               </div>
+<<<<<<< HEAD
               <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Council City. No setup, no training required {"\u2014"} your Sovereign helps automatically. Prefer to learn? Immersive courses are inside.</p>
+=======
+              <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Council Town. No setup, no training required {"\u2014"} your Council assistant helps automatically. Prefer to learn? Immersive courses are inside.</p>
+>>>>>>> pr151
               <div className="mt-4 border-t border-emerald-400/15 pt-3">
                 <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Live regulation pulse · synced from the grid</div>
                 {deltas.length === 0 ? (
@@ -117,7 +121,7 @@ export default function OsEnter() {
             </div>
 
             <div className="mt-6 flex w-full flex-wrap justify-center gap-3">
-              <a href="/command-center" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 transition">Talk to your Sovereign {"\u2192"}</a>
+              <a href="/command-center" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 transition">Talk to your Council assistant {"\u2192"}</a>
               <a href="/evidence" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Connect your stack {"\u2192"}</a>
             </div>
             <button onClick={() => setPhase(3)} className="mt-5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60 hover:text-emerald-300">Or choose how you enter {"\u2193"}</button>
@@ -139,11 +143,19 @@ export default function OsEnter() {
             <a href="/council-city" className="group rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-teal-400/5 p-6 text-left transition hover:scale-[1.02]">
               <div className="text-3xl">{"\u25D1"}</div>
               <div className="mt-3 text-lg font-bold text-white">Right brain {"\u2014"} Explore</div>
+<<<<<<< HEAD
               <p className="mt-1 text-sm text-emerald-50/70">Council City, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>
             </a>
           </div>
           <a href="/os" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\u2192"}</a>
           <div className="mt-6 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/40">Council City is learning {"\u00B7"} accumulating {"\u00B7"} spawning {"\u00B7"} on one signed Layer 0 floor</div>
+=======
+              <p className="mt-1 text-sm text-emerald-50/70">Council Town, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>
+            </a>
+          </div>
+          <a href="/os" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\u2192"}</a>
+          <div className="mt-6 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/40">Council Town is learning {"\u00B7"} accumulating {"\u00B7"} spawning {"\u00B7"} on one signed Layer 0 floor</div>
+>>>>>>> pr151
         </div>
       )}
 

@@ -42,7 +42,7 @@ const OUT = join(ROOT, "public/_redirects");
 
 // Static asset directories served directly by Pages — must NOT be routed to the app.
 const STATIC_DIRS = ["/arena", "/benchmarks", "/sov-space", "/vendor", "/assets",
-                     "/.well-known", "/corpus-watch", "/flywheel"];
+                     "/.well-known", "/corpus-watch", "/flywheel", "/packs"];
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
@@ -58,6 +58,16 @@ const EXISTING = [
   "/sovereign-town /sov-space?view=towns   308",
   "/towns          /sov-space?view=towns   308",
   "/globe          /globe3d.html           308",
+  // Audit 2026-08-14 kills/consolidations — edge 308s so crawlers + direct hits redirect
+  // WITHOUT booting the SPA at a killed path. Must mirror the client Redirects in App.tsx.
+  "/byzantine            /council   308",   // §0.2 #13 — retracted fault-tolerance claim
+  "/byzantine-consensus  /council   308",   // §0.2 #12 — same
+  "/bft                  /council   308",   // §0.2 #14 — "BFT setup" asserts the retracted claim
+  "/consensus            /council   308",   // §0.2 #14 — same
+  "/jewels               /          308",   // §0.2 #22 — internal strategy page was public
+  "/crown-jewels         /          308",   // §0.2 #22 — same
+  "/plans                /pricing   308",   // §3.5 #2 — duplicate of /pricing
+  "/enterprise-plans     /pricing   308",   // §3.5 #2 — fold Enterprise into one pricing page
 ];
 
 // Hashed build output. Handled by functions/assets/[[path]].ts, NOT here: Pages

@@ -40,7 +40,7 @@ const CARDS = [
     badgeCls: "bg-amber-500 hover:bg-amber-500",
     title: "Is your AI high-risk? Signed answer in 2 minutes.",
     body: "Run the free check. The result is signed — you can prove compliance instead of asserting it.",
-    href: "/tools/article50-passport.html",
+    href: "/article-50",
     cta: "Run the free check →",
     primary: true,
   },

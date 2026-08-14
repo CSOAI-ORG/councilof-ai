@@ -27,8 +27,8 @@ const MEM: Mem[] = [
 
 type Cap = { name: string; src: string; body: string };
 const VOICE: Cap[] = [
-  { name: "Speaks", src: "Kokoro TTS", body: "On-device, natural voice — the Sovereign talks back, no cloud round-trip required." },
-  { name: "Listens", src: "openWakeWord", body: "Custom wake word on any device — 'Sovereign…' and it's listening." },
+  { name: "Speaks", src: "Kokoro TTS", body: "On-device, natural voice — the Council assistant talks back, no cloud round-trip required." },
+  { name: "Listens", src: "openWakeWord", body: "Custom wake word on any device — 'Council…' and it's listening." },
   { name: "Converses", src: "Sovereign Dock", body: "The right-hand dock already turns speech and chat into governed actions, live now." },
 ];
 
@@ -86,7 +86,7 @@ export default function SovereignMinds() {
 
         <h2 className="mt-12 text-xl font-bold text-gray-900">How a mind acts</h2>
         <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-          <span className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-gray-700">You · "Sovereign, handle this"</span>
+          <span className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-gray-700">You · "Council, handle this"</span>
           <span className="text-emerald-500 font-bold">→</span>
           <span className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 font-semibold text-emerald-800">Mind · perceive · recall · reflect · plan · Layer 0 gate</span>
           <span className="text-emerald-500 font-bold">→</span>
@@ -100,7 +100,7 @@ export default function SovereignMinds() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          We take the end user from doing the work to the Sovereign doing it for them — that clean, that seamless. The mind is modelled and the voice is live in the Sovereign Dock today; full memory, reflection and on-device voice (Kokoro + openWakeWord) switch on with the Layer 0 gateway. One mind per town, per humanoid, per node — governed, attested, always yours.
+          We take the end user from doing the work to the Council assistant doing it for them — that clean, that seamless. The mind is modelled and the voice is live in the Sovereign Dock today; full memory, reflection and on-device voice (Kokoro + openWakeWord) switch on with the Layer 0 gateway. One mind per town, per humanoid, per node — governed, attested, always yours.
         </div>
       </section>
     </div>
