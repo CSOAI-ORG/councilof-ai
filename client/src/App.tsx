@@ -208,6 +208,7 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const Glossary = lazy(() => import("./pages/Glossary"));
 const ReadinessAssessment = lazy(() => import("./pages/ReadinessAssessment"));
 const IndustrySolutions = lazy(() => import("./pages/IndustrySolutions"));
+const IndustryTemplate = lazy(() => import("./pages/IndustryTemplate"));
 const PartnersAdvisory = lazy(() => import("./pages/PartnersAdvisory"));
 const CaseStudies = lazy(() => import("./pages/CaseStudies"));
 const TrustCenter = lazy(() => import("./pages/TrustCenter"));
@@ -655,7 +656,7 @@ function App() {
                   {/* Absorbed data-driven content: per-framework / sector / industry / blog pages */}
                   <Route path="/frameworks/:slug">{(p: any) => <ContentPage dataset={frameworksdata} slug={p.slug} />}</Route>
                   <Route path="/sectors/:slug">{(p: any) => <ContentPage dataset={sectorsdata} slug={p.slug} />}</Route>
-                  <Route path="/industries/:slug">{(p: any) => <ContentPage dataset={industriesdata} slug={p.slug} />}</Route>
+                  <Route path="/industries/:slug">{(p: any) => <IndustryTemplate slug={p.slug} />}</Route>
                   <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
                   <Route path="/models" component={ModelRegistry} />
             <Route path="/framework-catalog" component={FrameworkCatalog} />

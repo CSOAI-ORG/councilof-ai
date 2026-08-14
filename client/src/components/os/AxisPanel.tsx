@@ -1,0 +1,85 @@
+import { AXES, MEASURED_ON, quotable, hasInterval, wilson, type Axis, type AxisStatus } from "@/lib/gspcAxes";
+
+/**
+ * AxisPanel — the 13 GSPC governance axes, rendered from the single source of
+ * truth (client/src/lib/gspcAxes.ts).
+ *
+ * The invariant, enforced by `quotable()`: an axis shows a score ONLY when its
+ * status is MEASURED. UNMEASURED / DRAFT / SPEC / PLANNED axes show their state
+ * and NO number. This panel never decides for itself whether a number may
+ * appear — it asks the guard. That is the whole point of the instrument.
+ */
+
+// Light-theme status tones (the shared STATUS_TONE is tuned for dark surfaces).
+const TONE: Record<AxisStatus, string> = {
+  MEASURED: "border-emerald-300 bg-emerald-50 text-emerald-700",
+  UNMEASURED: "border-sky-300 bg-sky-50 text-sky-700",
+  DRAFT: "border-amber-300 bg-amber-50 text-amber-700",
+  SPEC: "border-violet-300 bg-violet-50 text-violet-700",
+  PLANNED: "border-slate-300 bg-slate-100 text-slate-500",
+};
+
+function AxisCard({ a }: { a: Axis }) {
+  const scored = quotable(a);
+  const withCI = hasInterval(a);
+  const [lo, hi] = scored ? wilson(a.accuracy, a.n) : [0, 0];
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-emerald-300 hover:shadow-sm">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="truncate font-semibold text-slate-900">{a.axis}</div>
+          <div className="font-mono text-[11px] text-slate-400">{a.bench}</div>
+        </div>
+        <span className={`shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${TONE[a.status]}`}>
+          {a.status}
+        </span>
+      </div>
+
+      {scored ? (
+        <div className="mt-3">
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold tabular-nums text-emerald-600">{a.accuracy.toFixed(3)}</span>
+            <span className="text-[11px] text-slate-400">accuracy · n={a.n}</span>
+          </div>
+          <div className="mt-1 font-mono text-[11px] text-slate-500">
+            macro F1 {a.macro_f1.toFixed(3)}
+            {withCI
+              ? ` · Wilson 95% [${lo.toFixed(3)}, ${hi.toFixed(3)}]`
+              : " · n<30 usable — no interval"}
+          </div>
+        </div>
+      ) : (
+        <div className="mt-3">
+          <div className="text-sm font-medium text-slate-400">No score — not earned</div>
+          <div className="mt-0.5 text-[11px] text-slate-400">
+            {a.n ? `Item bank n=${a.n}` : "No item bank yet (n=0)"}
+          </div>
+        </div>
+      )}
+
+      <p className="mt-2 text-[12px] leading-snug text-slate-500">{a.task}</p>
+    </div>
+  );
+}
+
+export default function AxisPanel() {
+  const measured = AXES.filter(quotable).length;
+  const withCI = AXES.filter(hasInterval).length;
+  return (
+    <div>
+      <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <h2 className="text-xl font-bold text-slate-900">13 governance axes</h2>
+        <p className="text-[13px] text-slate-500">
+          <span className="font-semibold text-emerald-600">{measured}</span> measured ·{" "}
+          <span className="font-semibold text-slate-700">{withCI}</span> carry a confidence interval ·
+          measured on {MEASURED_ON.date}. Only a MEASURED axis shows a number.
+        </p>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {AXES.map((a) => (
+          <AxisCard key={a.axis} a={a} />
+        ))}
+      </div>
+    </div>
+  );
+}

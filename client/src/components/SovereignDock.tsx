@@ -241,9 +241,9 @@ export default function SovereignDock() {
   return (
     <>
       {!open && (
-        <button onClick={() => setOpen(true)} aria-label="Open your Council assistant" className="fixed right-4 bottom-4 z-[9998] flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04110b]/90 px-4 py-3 text-emerald-200 shadow-[0_8px_30px_-6px_rgba(16,185,129,.5)] backdrop-blur hover:bg-[#062016]">
-          <span className="relative flex h-3 w-3"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" /><span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-400" /></span>
-          <span className="text-sm font-bold">Sovereign</span>
+        <button onClick={() => setOpen(true)} aria-label="Open the Council assistant" title="Ask the Council" className="group fixed right-4 bottom-4 z-[9998] flex h-12 w-12 items-center justify-center rounded-full border border-emerald-400/40 bg-[#04110b]/90 text-emerald-200 shadow-[0_8px_24px_-8px_rgba(16,185,129,.5)] backdrop-blur transition hover:bg-[#062016]">
+          <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 1 1 16.1-3.8Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <span className="absolute right-0 top-0 flex h-2.5 w-2.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" /><span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" /></span>
         </button>
       )}
       {open && (

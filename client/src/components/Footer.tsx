@@ -7,8 +7,6 @@ import { Link } from 'wouter';
 import { Github, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { Button } from '@/components/ui/button';
-import { BuiltOnFooter } from "@/components/BuiltOnFooter";
-import { AnchoredToPanel } from "@/components/AnchoredToPanel";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -41,6 +39,8 @@ export function Footer() {
       title: 'Resources',
       links: [
         { name: 'FAQ', href: '/faq' },
+        { name: 'Methodology', href: '/methodology' },
+        { name: 'Verify a card', href: '/gspc-verify' },
         { name: 'AI Glossary', href: '/glossary' },
         { name: 'Readiness Assessment', href: '/readiness-assessment' },
         { name: 'Industry Solutions', href: '/industry-solutions' },
@@ -60,6 +60,8 @@ export function Footer() {
         { name: 'Technology', href: '/technology' },
         { name: 'Integrations', href: '/integrations' },
         { name: 'Pricing', href: '/pricing' },
+        { name: 'Contact', href: '/contact' },
+        { name: 'Status', href: '/status' },
         { name: 'Careers', href: '/careers' },
         { name: 'Accreditation', href: '/accreditation' },
       ],
@@ -226,11 +228,6 @@ export function Footer() {
             </Link>
           </div>
         </div>
-
-        <BuiltOnFooter />
-
-        {/* Anchored To — live watcher timestamps pulled from D1 */}
-        <AnchoredToPanel />
 
         {/* What We Don't Claim */}
         <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
