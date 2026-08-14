@@ -49,7 +49,7 @@ export interface Surface {
 
 
 export const SURFACES: Surface[] = [
-  { route: "/sovereign-dock", label: "Sovereign dock (global)", nature: "ai_system",
+  { route: "/council-dock", label: "Council dock (global)", nature: "ai_system",
     mechanism: "The dock sends your message to the live Sovereign gateway (os.meok.ai/api/chat) and a model writes the reply. It is mounted on every page; the notice below the dock header discloses this at first interaction, per Article 50(1).",
     evidence: ["client/src/components/SovereignDock.tsx", "client/src/lib/sovAsk.ts"] },
   { route: "/", label: "Home + Council Console", nature: "rule_based",
@@ -160,7 +160,7 @@ export const SURFACES: Surface[] = [
   { route: "/demo", label: "DemoOS", nature: "ai_system",
     mechanism: "The guided demo answers questions through askSovereign, which sends your input to the live Sovereign chat endpoint (os.meok.ai/api/chat), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
     evidence: ["client/src/pages/DemoOS.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/sovereign-twin", label: "SovereignTwin", nature: "rule_based",
+  { route: "/council-twin", label: "CouncilTwin", nature: "rule_based",
     mechanism: "A canvas visualisation plus a passport-minting call to a signing endpoint (sha256 / Ed25519), not a model. No model call exists in this surface's code.",
     evidence: ["client/src/pages/SovereignTwin.tsx"] },
   { route: "/enter", label: "OsEnter", nature: "rule_based",
@@ -394,7 +394,7 @@ export const SURFACES: Surface[] = [
   { route: "/simulate", label: "SovSpace", nature: "ai_system",
     mechanism: "Scenario verdicts are written by the live Sovereign chat endpoint (os.meok.ai/api/chat), a model prompted as the governance council. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
     evidence: ["client/src/pages/SovSpace.tsx"] },
-  { route: "/sov-space", label: "SovSpace", nature: "ai_system",
+  { route: "/council-space", label: "SovSpace", nature: "ai_system",
     mechanism: "Scenario verdicts are written by the live Sovereign chat endpoint (os.meok.ai/api/chat), a model prompted as the governance council. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
     evidence: ["client/src/pages/SovSpace.tsx"] },
   { route: "/sov-towns", label: "SovTowns", nature: "rule_based",
@@ -403,12 +403,11 @@ export const SURFACES: Surface[] = [
   { route: "/sov3", label: "Workbench", nature: "ai_system",
     mechanism: "The workbench asks the live Sovereign (askSovereign) to produce the governance artifact for the skill you pick. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
     evidence: ["client/src/pages/Workbench.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/sovereign-network", label: "NetworkPage", nature: "rule_based",
+  { route: "/council-network", label: "NetworkPage", nature: "rule_based",
     mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
     evidence: ["client/src/pages/NetworkPage.tsx"] },
-  { route: "/sovereign-space", label: "SovSpace", nature: "ai_system",
-    mechanism: "Scenario verdicts are written by the live Sovereign chat endpoint (os.meok.ai/api/chat), a model prompted as the governance council. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/SovSpace.tsx"] },
+  // 2026-08-13 Part CJ: the "/sovereign-space" entry was merged into "/council-space"
+  // above — the old route now redirects there; one canonical disclosure entry.
   { route: "/system-card", label: "SystemCard", nature: "rule_based",
     mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
     evidence: ["client/src/pages/SystemCard.tsx"] },

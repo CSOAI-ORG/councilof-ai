@@ -21,7 +21,7 @@ const HIVES: Hive[] = [
   { name: "Cyber / Rainbow Stack", queen: "sovereign-cyb", state: "Aware" },
   { name: "Legacy Bridge", queen: "sovereign-brg", state: "Learning" },
   { name: "Social OS", queen: "sovereign-soc", state: "Learning" },
-  { name: "Sov Towns", queen: "sovereign-twn", state: "Evolving" },
+  { name: "Council Towns", queen: "sovereign-twn", state: "Evolving" },
 ];
 const FAQ = [
   { q: "Why a hive, not a server?", a: "A single server is a single point of failure and capture. A hive distributes the decision across many agents, so resilience and honesty are structural - not promised." },

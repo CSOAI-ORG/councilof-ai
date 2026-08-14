@@ -90,6 +90,16 @@ const EXCLUDE_EXACT = new Set([
   "/marketing",
   "/brief",
   "/public",
+  // 2026-08-13 Part CJ: legacy sovereign-class redirects — sitemap lists canonical URLs only
+  "/sovereign",
+  "/sovereign-network",
+  "/sovereign-town",
+  "/sovereign-space",
+  "/sovereign-pricing",
+  "/sovereign-twin",
+  "/sov-space",
+  "/sov-towns",
+  "/simulate",
   // legacy / shadow surfaces
   "/old-home",
   "/landing",

@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache">
 <link rel="icon" type="image/svg+xml" href="seal.svg">
-<title>SOV Space — the governance instrument on the world | CSOAI</title>
-<meta name="description" content="SOV Space — the CSOAI governance instrument on a live world globe. Six measured axes, dated law, measurement not certification layers, governed SOV SPACE simulation. Americas-compatible.">
+<title>Council Space — the governance instrument on the world | CSOAI</title>
+<meta name="description" content="Council Space — the CSOAI governance instrument on a live world globe. Six measured axes, dated law, measurement not certification layers, governed Council Space simulation. Americas-compatible.">
 <link href="https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.118/Build/Cesium/';</script>
@@ -638,7 +638,7 @@
   <a class="sblink" onclick="var c=document.getElementById('lyCameras');if(c)c.checked=true;toggleLayer('cameras',true)" title="public live cameras">📷 Cameras</a>
   <a class="sblink" onclick="openWin('aircraft')" title="live aircraft · ADS-B">✈ Aircraft</a>
   <a class="sblink" onclick="var c=_entCenter();loadForecast(c[1],c[0],'current view')" title="weather forecast for the view">🌦 Weather</a>
-  <a class="sblink" onclick="openSovSpace()" title="talk to the Sovereign & run a governed scenario">🧪 SOV Space</a>
+  <a class="sblink" onclick="openSovSpace()" title="talk to the Sovereign & run a governed scenario">🧪 Council Space</a>
   <a class="sblink" onclick="openWin('aigov')" title="monitor governed AI agents + the AI economy">🛡️ AI Gov</a>
   <a class="sblink hide-narrow" onclick="openWin('mcps')" title="MCP federation">🧿 MCPs</a>
   <a class="sblink hide-narrow" onclick="scanMyArea()" title="scan around your location (consented)">📍 My area</a>
@@ -1381,7 +1381,7 @@ function _briefHTML(body,sig){ function e(s){ return String(s==null?'':s).replac
   var vlink=''; if(sig){ try{ var rc={ defoneos_signed_contact:{ message:{i:sig.i,ts:sig.ts,action:sig.action,detail:sig.detail,prev:sig.prev}, signature_ed25519:sig.sig, public_key_ed25519:sig.pub } }; vlink=location.origin+'/verify.html?receipt='+_b64url(JSON.stringify(rc)); }catch(_){} }
   var qrBlock = vlink ? ('<div class="qr"><div id="qrimg"></div><div class="qcap">Scan to verify this brief on any phone — opens the independent verifier and checks the Ed25519 signature offline.</div><div class="qlink">'+e(vlink)+'</div></div>') : '';
   var sigBlock = sig ? ('<div class="sig"><div class="sigh">◉ Ed25519 SIGNATURE · offline-verifiable</div><div class="kv"><span>signature</span><code>'+e(sig.sig)+'</code></div><div class="kv"><span>public key</span><code>'+e(sig.pub)+'</code></div><div class="kv"><span>entry</span><code>#'+sig.i+' · '+e(sig.ts)+'</code></div><div class="note">Verify independently at <b>defoneos.vercel.app/verify.html</b> — recompute utf8(JSON.stringify({i,ts,action,detail,prev})) and Ed25519-verify. No server, no trust required.</div>'+qrBlock+'</div>') : '<div class="note">Signing key still initialising — re-export for the signed version.</div>';
-  return '<!doctype html><html><head><meta charset="utf-8"><title>SOV Space — the governance instrument on the world | CSOAI</title><style>'+
+  return '<!doctype html><html><head><meta charset="utf-8"><title>Council Space — the governance instrument on the world | CSOAI</title><style>'+
     'body{font:13px/1.55 -apple-system,system-ui,Segoe UI,sans-serif;color:#12151b;background:#fff;max-width:720px;margin:32px auto;padding:0 24px}'+
     'h1{font-size:19px;letter-spacing:.5px;margin:0 0 2px;color:#08221a}.sub{color:#5a6472;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}'+
     '.summary{font-size:14px;background:#f4f7fb;border-left:3px solid #08221a;padding:11px 14px;border-radius:6px;margin:14px 0}'+
@@ -2386,8 +2386,8 @@ function _simTheatre(scn){ var T={ 'humanitarian-corridor':[31.2,49.9,'aid corri
 function _simClearAnim(){ try{ (window._simTimers||[]).forEach(clearTimeout); }catch(_){} window._simTimers=[]; try{ if(window._simPulse){ clearInterval(window._simPulse); window._simPulse=null; } }catch(_){} }
 // ── SOV SPACE · talk-to-the-Sovereign + run real-world sims, together ──
 function openSovSpace(){ if(window.openWin) openWin('sim'); if(window.openHorus) openHorus();
-  if(window.horusAppend && !window._sovSpaceHi){ window._sovSpaceHi=true; horusAppend('horus', '<b>SOV Space.</b> Talk to me and I’ll run real-world simulations through the <b>signed attestation chain</b>, then <b>SIGIL-sign</b> the verdict on the globe. Try <b>“run a flood response”</b>, <b>“content-provenance”</b>, or describe your own — <b>“simulate a medevac from a contested zone.”</b> Or tap a scenario in the panel.'); }
-  if(window._speak) _speak('This is SOV Space. Talk to me and I’ll run real-world simulations and sign the verdict. Try a flood response, content-provenance, or describe your own.');
+  if(window.horusAppend && !window._sovSpaceHi){ window._sovSpaceHi=true; horusAppend('horus', '<b>Council Space.</b> Talk to me and I’ll run real-world simulations through the <b>signed attestation chain</b>, then <b>SIGIL-sign</b> the verdict on the globe. Try <b>“run a flood response”</b>, <b>“content-provenance”</b>, or describe your own — <b>“simulate a medevac from a contested zone.”</b> Or tap a scenario in the panel.'); }
+  if(window._speak) _speak('This is Council Space. Talk to me and I’ll run real-world simulations and sign the verdict. Try a flood response, content-provenance, or describe your own.');
 }
 window.openSovSpace=openSovSpace;
 // route free-text through the command pipeline: scenario words → runSim; anything else → the Sovereign brain (talk + act)

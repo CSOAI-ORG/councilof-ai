@@ -602,8 +602,8 @@ function App() {
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
-                  {/* 2026-08-01 unification: the arena lives INSIDE Sov Space as a layer */}
-                  <Route path="/gspc-arena">{() => <Redirect to="/sov-space?view=arena" />}</Route>
+                  {/* 2026-08-01 unification: the arena lives INSIDE Council Space as a layer */}
+                  <Route path="/gspc-arena">{() => <Redirect to="/council-space?view=arena" />}</Route>
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
@@ -617,7 +617,8 @@ function App() {
                   <Route path="/deepfake-protection" component={Protect} />
                   <Route path="/ontology" component={Ontology} />
           <Route path="/network" component={NetworkPage} />
-          <Route path="/sovereign-network" component={NetworkPage} />
+          <Route path="/council-network" component={NetworkPage} />
+          <Route path="/sovereign-network">{() => <Redirect to="/council-network" />}</Route>
           <Route path="/agents-network" component={NetworkPage} />
           <Route path="/regulators" component={RegulatorAtlas} />
           <Route path="/regulator-atlas" component={RegulatorAtlas} />
@@ -680,8 +681,8 @@ function App() {
           <Route path="/legacy" component={LegacyBridge} />
           <Route path="/social" component={SocialOS} />
           <Route path="/jewels" component={CrownJewels} />
-          {/* 2026-08-01 unification: the towns live INSIDE Sov Space as a layer */}
-          <Route path="/towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
+          {/* 2026-08-01 unification: the towns live INSIDE Council Space as a layer */}
+          <Route path="/towns">{() => <Redirect to="/council-space?view=towns" />}</Route>
           <Route path="/minds" component={SovereignMinds} />
           <Route path="/try" component={TryCouncil} />
           <Route path="/lineage" component={Lineage} />
@@ -697,8 +698,8 @@ function App() {
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/sectors" component={SectorsAtlas} />
           <Route path="/regions" component={RegionsMap} />
-          {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
-          <Route path="/globe">{() => <Redirect to="/sov-space?view=globe" />}</Route>
+          {/* 2026-08-01 unification: the globe lives INSIDE Council Space as a layer */}
+          <Route path="/globe">{() => <Redirect to="/council-space?view=globe" />}</Route>
           <Route path="/registry" component={RegistryAll} />
           <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
           <Route path="/checklist" component={EUActChecklist} />
@@ -729,8 +730,9 @@ function App() {
           <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
           <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
           <Route path="/connect" component={SocialConnect} />
-          <Route path="/sovereign" component={SovereignHub} />
-          <Route path="/me" component={SovereignHub} />
+          <Route path="/council-hub" component={SovereignHub} />
+          <Route path="/sovereign">{() => <Redirect to="/council-hub" />}</Route>
+          <Route path="/me">{() => <Redirect to="/council-hub" />}</Route>
           <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
           <Route path="/nist-eu" component={NistVsEuAct} />
           <Route path="/iso-42001-vs-eu-ai-act" component={Iso42001VsEuAct} />
@@ -752,7 +754,7 @@ function App() {
           <Route path="/all" component={RegistryAll} />
           <Route path="/bft" component={BftConfig} />
           <Route path="/consensus" component={BftConfig} />
-          <Route path="/world">{() => <Redirect to="/sov-space?view=globe" />}</Route>
+          <Route path="/world">{() => <Redirect to="/council-space?view=globe" />}</Route>
           <Route path="/map-regions" component={RegionsMap} />
           <Route path="/compare" component={Compare} />
           <Route path="/vs" component={Compare} />
@@ -777,14 +779,15 @@ function App() {
           <Route path="/relevance-map" component={RelevanceMap} />
           <Route path="/rediscovered" component={Lineage} />
           <Route path="/voice" component={SovereignMinds} />
-          <Route path="/sov-towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
+          <Route path="/sov-towns">{() => <Redirect to="/council-space?view=towns" />}</Route>
           <Route path="/crown-jewels" component={CrownJewels} />
           <Route path="/cobol" component={LegacyBridge} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
             <Route path="/evidence" component={EvidenceHub} />
             <Route path="/oscal" component={OscalStudio} />
-            <Route path="/sovereign-town">{() => <Redirect to="/sov-space?view=towns" />}</Route>
+            <Route path="/council-city">{() => <Redirect to="/council-space?view=towns" />}</Route>
+            <Route path="/sovereign-town">{() => <Redirect to="/council-city" />}</Route>
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
@@ -927,15 +930,16 @@ function App() {
                   <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
-                  <Route path="/sov-space" component={SovSpace} />
-                  <Route path="/sovereign-space" component={SovSpace} />
-                  <Route path="/simulate" component={SovSpace} />
+                  <Route path="/council-space" component={SovSpace} />
+                  <Route path="/sov-space">{() => <Redirect to={`/council-space${window.location.search}`} />}</Route>
+                  <Route path="/sovereign-space">{() => <Redirect to={`/council-space${window.location.search}`} />}</Route>
+                  <Route path="/simulate">{() => <Redirect to={`/council-space${window.location.search}`} />}</Route>
                   <Route path="/badges" component={BadgesPage} />
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
                   <Route path="/plans" component={PlansPage} />
-                  <Route path="/sovereign-pricing" component={PlansPage} />
+                  <Route path="/sovereign-pricing">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/start" component={OnboardOS} />
                   <Route path="/onboard" component={OnboardOS} />
                   <Route path="/open-media" component={OpenMedia} />
@@ -948,7 +952,8 @@ function App() {
                   <Route path="/tools" component={ToolCommons} />
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
-                  <Route path="/sovereign-twin" component={SovereignTwin} />
+                  <Route path="/council-twin" component={SovereignTwin} />
+                  <Route path="/sovereign-twin">{() => <Redirect to="/council-twin" />}</Route>
                   <Route component={NotFound} />
                   </Switch></Suspense>
                 </main>

@@ -11,7 +11,7 @@ const DEADLINES: { d: string; label: string; href: string }[] = [
   { d: "2026-12-02", label: "EU AI Act Article 50 — AI-content marking (legacy systems)", href: "/article-50" },
 ];
 // Routes where the banner would clutter the immersive experience.
-const HIDE = ["/os", "/workbench", "/world", "/globe", "/demo", "/try", "/scan", "/watchdog-map", "/sov-space", "/graph", "/sovereign-twin", "/enter", "/globe3d"];
+const HIDE = ["/os", "/workbench", "/world", "/globe", "/demo", "/try", "/scan", "/watchdog-map", "/council-space", "/sov-space", "/graph", "/council-twin", "/sovereign-twin", "/enter", "/globe3d"];
 
 export default function EnforcementBanner() {
   const [loc] = useLocation();

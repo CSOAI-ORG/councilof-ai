@@ -118,7 +118,7 @@ export default function OnboardOS() {
               ))}
             </div>
           </div>
-          <div className="flex flex-wrap justify-center gap-2 text-center"><a href="/sov-space" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS -&gt;</a><button onClick={() => { startTour(); window.location.assign("/"); }} className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Show me around first</button></div>
+          <div className="flex flex-wrap justify-center gap-2 text-center"><a href="/council-space" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS -&gt;</a><button onClick={() => { startTour(); window.location.assign("/"); }} className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Show me around first</button></div>
         </div>
       )}
     </div>

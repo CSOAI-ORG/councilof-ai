@@ -56,7 +56,7 @@ function AgentCard({ a, crown }: { a: Agent; crown?: boolean }) {
 
 export default function NetworkPage() {
   const [live, setLive] = useState(false);
-  useEffect(() => { document.title = "The Sovereign Network — every signed agent, one council | CSOAI"; }, []);
+  useEffect(() => { document.title = "The Council Network — every signed agent, one council | CSOAI"; }, []);
   useEffect(() => { let ok = true; fetch(GW + "/health").then((r) => r.ok ? r.json() : null).then((d) => { if (ok && d) setLive(true); }).catch(() => {}); return () => { ok = false; }; }, []);
 
   return (

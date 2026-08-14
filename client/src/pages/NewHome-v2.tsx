@@ -309,9 +309,9 @@ export default function NewHomeV2() {
                     Free AI Risk Check — signed in 2 min
                   </Button>
                 </Link>
-                <Link href="/sov-space">
+                <Link href="/council-space">
                   <Button size="lg" variant="outline" className="border-2 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 px-8 py-6 text-base font-semibold rounded-xl">
-                    Try Sov Space
+                    Try Council Space
                   </Button>
                 </Link>
               </motion.div>
@@ -562,7 +562,7 @@ export default function NewHomeV2() {
           <p className="mt-3 max-w-2xl text-emerald-50/85">Build your identity, connect your world, see governance on the globe, choose your consensus, and browse every regulation - all live.</p>
           <a data-tag="home-deadline-cta" href="/assess" className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-100 hover:bg-amber-400/20"><span className="rounded-md bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-900">2 AUG 2026</span>EU AI Act transparency + GPAI go live - run your free signed risk check -&gt;</a>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <a href="/sovereign" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Sovereign</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
+            <a href="/council-hub" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Council Hub</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
             <a href="/connect" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Connect socials</div><p className="mt-1 text-xs text-white/90">Give your AI character a face.</p></a>
             <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Sovereign Globe</div><p className="mt-1 text-xs text-white/90">AI governance, layered on the world.</p></a>
             <a href="/bft" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Choose your BFT</div><p className="mt-1 text-xs text-white/90">5, 12-around-1, or 33-node swarm.</p></a>

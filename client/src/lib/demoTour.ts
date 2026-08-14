@@ -43,7 +43,7 @@ export const TOUR: TourStep[] = [
     tip: "Pick a skill - it produces a sealed, verifiable artifact.",
   },
   {
-    path: "/sov-space",
+    path: "/council-space",
     title: "Govern by simulation",
     usp: "Test governance before you deploy - like code",
     say: "Run a real-world governance experiment before it's real. I simulate it and seal the verdict with a Layer 0 ledger hash you can verify offline. Governance you can test, not just tick. Watch: a fintech credit model in the EU.",

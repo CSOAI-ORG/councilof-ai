@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const PLAN: Record<string, { label: string; price: string; accent: "amber" | "emerald"; feats: string[] }> = {
   operator: { label: "Operator", price: "$249/mo", accent: "amber", feats: ["ONE OS — live agent", "Signed attestation records, Ed25519-verifiable", "Watchdog operator console", "Regulatory drift alerts via corpus-watch", "Priority Layer 0 signing + support"] },
-  pro: { label: "Pro", price: "from $82.50/mo", accent: "emerald", feats: ["Premium hosted models", "Passport + EU AI Act audit", "Council of AI + governance", "Real-world Sov Space", "PAYG credits included"] },
+  pro: { label: "Pro", price: "from $82.50/mo", accent: "emerald", feats: ["Premium hosted models", "Passport + EU AI Act audit", "Council of AI + governance", "Real-world Council Space", "PAYG credits included"] },
   team: { label: "Team", price: "from $124/seat/mo", accent: "emerald", feats: ["Everything in Pro, per seat", "SSO + SCIM", "Shared council + audit logs", "Admin and roles", "Priority support"] },
   enterprise: { label: "Enterprise", price: "custom", accent: "emerald", feats: ["Full EU AI Act audit suite", "Dedicated Council of AI + defence", "Data residency + SLA", "Audit export (CSV/JSON/Parquet)", "Onboarding + success"] },
 };

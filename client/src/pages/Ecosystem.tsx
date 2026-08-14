@@ -74,7 +74,7 @@ export default function Ecosystem() {
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Every framework, every standard, every lab's safety work, and the open-source commons — collected on one signed Layer 0 floor. Not to own them: to crosswalk them, credit them, and let you test, simulate and prove compliance in one place.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             <a href="/hive" className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Open the framework hive →</a>
-            <a href="/sov-space" className="rounded-full border border-emerald-400/40 px-4 py-2 text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Run a simulation</a>
+            <a href="/council-space" className="rounded-full border border-emerald-400/40 px-4 py-2 text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Run a simulation</a>
             <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold text-amber-100 hover:bg-amber-400/20">Get a signed proof</a>
           </div>
         </div>
