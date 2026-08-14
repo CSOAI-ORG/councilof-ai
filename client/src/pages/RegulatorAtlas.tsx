@@ -7,7 +7,7 @@ import AISystemNotice from "../components/AISystemNotice";
 // tools, and its next-7 movements — with the live Sovereign giving a current
 // read on any of them. The structured spine the Sovereign acts on.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 const STATUS: Record<string, { label: string; cls: string }> = {
   "in-force": { label: "In force", cls: "bg-emerald-500/15 text-emerald-300 border-emerald-400/30" },
   "phasing-in": { label: "Phasing in", cls: "bg-amber-500/15 text-amber-200 border-amber-400/30" },

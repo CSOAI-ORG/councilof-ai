@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 /**
- * About CEASAI Page
- * Explains the Centre for Excellence in AI Safety Analyst Training (CEASAI),
- * its mission, relationship with CSOAI, and key differentiators
+ * About the measurement credential page
+ * Explains CSOAI's AI Safety Analyst training & measurement program,
+ * its mission, and key differentiators. CSOAI measures and attests — it
+ * is not a certification body.
  */
 
 import { Shield, Users, Globe, Award, BookOpen, TrendingUp } from 'lucide-react';
@@ -22,7 +23,7 @@ export default function AboutCEASAI() {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            About <span className="text-blue-600">CEASAI</span>
+            About the <span className="text-blue-600">measurement credential</span>
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -38,7 +39,7 @@ export default function AboutCEASAI() {
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">13</div>
-              <div className="text-sm text-gray-600">Certifications</div>
+              <div className="text-sm text-gray-600">Measurement modules</div>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">£1M</div>
@@ -59,8 +60,8 @@ export default function AboutCEASAI() {
               <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
               <p className="text-lg text-gray-700 leading-relaxed">
                 By <strong>August 2, 2026</strong>, the EU AI Act enforcement deadline, enterprises worldwide will need{' '}
-                <strong className="text-blue-600">certified AI Safety Analysts</strong> to ensure compliance,
-                transparency, and safety. CEASAI exists to train, certify, and deploy this critical workforce—preventing
+                <strong className="text-blue-600">measured AI Safety Analysts</strong> to ensure compliance,
+                transparency, and safety. This program exists to train, measure, and deploy this critical workforce—preventing
                 compliance chaos and ensuring AI systems serve humanity responsibly.
               </p>
             </div>
@@ -71,22 +72,22 @@ export default function AboutCEASAI() {
       {/* CEASAI + CSOAI Integration */}
       <section className="py-16 md:py-20">
         <div className="container max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12">CEASAI + CSOAI: A Unified Ecosystem</h2>
-          
+          <h2 className="text-3xl font-bold text-center mb-12">Training + platform: one CSOAI ecosystem</h2>
+
           <div className="grid md:grid-cols-2 gap-8">
-            {/* CEASAI */}
+            {/* Training & measurement */}
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl border-2 border-blue-200">
               <div className="flex items-center gap-3 mb-4">
                 <BookOpen className="h-8 w-8 text-blue-600" />
-                <h3 className="text-2xl font-bold">CEASAI</h3>
+                <h3 className="text-2xl font-bold">Training &amp; measurement</h3>
               </div>
-              <p className="text-gray-600 font-medium mb-4">The Training Body</p>
+              <p className="text-gray-600 font-medium mb-4">The training &amp; measurement program</p>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <div className="h-5 w-5 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-white text-xs">✓</span>
                   </div>
-                  <span className="text-gray-700">Comprehensive certification programs</span>
+                  <span className="text-gray-700">Comprehensive measurement modules</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="h-5 w-5 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -133,7 +134,7 @@ export default function AboutCEASAI() {
                   <div className="h-5 w-5 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-white text-xs">✓</span>
                   </div>
-                  <span className="text-gray-700">Certified Watchdog Analyst deployment</span>
+                  <span className="text-gray-700">Attested Watchdog Analyst deployment</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="h-5 w-5 rounded-full bg-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -155,7 +156,7 @@ export default function AboutCEASAI() {
       {/* Why CEASAI is Different */}
       <section className="bg-gray-50 py-16 md:py-20">
         <div className="container">
-          <h2 className="text-3xl font-bold text-center mb-12">Why CEASAI is Different</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Why the measurement credential is different</h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Open Source */}
@@ -189,7 +190,7 @@ export default function AboutCEASAI() {
               </div>
               <h3 className="text-xl font-bold mb-3">Industry Recognition</h3>
               <p className="text-gray-600">
-                Our certifications are recognized by enterprises, regulators, and the Council—the global oversight 
+                Our measurement credentials are recognized by enterprises, regulators, and the Council—the global oversight
                 body for AI safety.
               </p>
             </div>
@@ -299,7 +300,7 @@ export default function AboutCEASAI() {
         <div className="container text-center max-w-3xl">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Join the AI Safety Movement</h2>
           <p className="text-xl text-blue-100 mb-8">
-            Become a certified Watchdog Analyst and help ensure AI systems are safe, transparent, and beneficial for all.
+            Become an attested Watchdog Analyst and help ensure AI systems are safe, transparent, and beneficial for all.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/training">

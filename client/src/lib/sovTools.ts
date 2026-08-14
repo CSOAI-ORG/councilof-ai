@@ -1,11 +1,11 @@
 // sovTools - the real bridge from the front end to the live Sovereign brain.
-// Talks JSON-RPC to os.meok.ai/api/mcp: lists the tools the brain executes
+// Talks JSON-RPC to /api/mcp: lists the tools the brain executes
 // server-side, and actually RUNS them (governed, care-floored, Ed25519-signable).
 // This is what turns the catalogue from a directory into working tooling.
 
 const GW: string =
   ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) ||
-  "https://os.meok.ai/api";
+  "/api";
 
 export type SovTool = {
   name: string;

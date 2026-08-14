@@ -8,7 +8,7 @@ import AISystemNotice from "../components/AISystemNotice";
 // SOC 2), and drafts remediation — signed to Layer 0. Test your own cyber; the
 // Sovereign helps you fix it. Value back to you, not an expensive vendor.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 type Tool = { name: string; what: string; run: string; maps: string };
 type Domain = { id: string; label: string; glyph: string; tools: Tool[] };

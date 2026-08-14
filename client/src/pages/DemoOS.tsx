@@ -11,7 +11,7 @@ import { currentPersona } from "../lib/sovPersona";
 import TrustMarquee from "../components/TrustMarquee";
 import { askSovereign } from "../lib/sovAsk";
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 type Slot = "tr" | "tl" | "br" | "c";
 type Win = { title: string; src: string; slot: Slot };
@@ -31,7 +31,7 @@ const STEPS: Step[] = [
   { say: "This is our public Watchdog - humans, agents, humanoids and systems report incidents, and the world heat-maps by problem layer.", wins: [{ title: "Global AI Watchdog", src: "/watchdog-map", slot: "c" }], layer: { tag: "nodes", on: true } },
   { say: "In Council Space you run a real governance experiment - I simulate it and seal a verdict with a Layer 0 ledger hash.", wins: [{ title: "Council Space", src: "/sov-space?demo=A%20fintech%20in%20the%20EU%20deploying%20an%20AI%20credit-scoring%20model", slot: "tr" }], fly: { lng: 103.8, lat: 1.35, height: 2600000 } },
   { say: "And this is Sov Town Space. Here the OS simulates real-world scenarios to actually help humanity - redirecting data, resources and decisions toward a future of abundance, not extraction. Each town learns, simulates, and compounds.", wins: [{ title: "Sov Town Space", src: "/towns", slot: "tr" }], fly: { lng: 20, lat: 5, height: 9000000 } },
-  { say: "None of this is extraction. It's built on our Sovereignty Charter and our Partnership Charter - you own your data, you stay in control, and value flows to people, not away from them.", wins: [{ title: "The Council Charter", src: "/charter", slot: "tr" }], full: true },
+  { say: "None of this is extraction. It's built on our Council Charter and our Partnership Charter - you own your data, you stay in control, and value flows to people, not away from them.", wins: [{ title: "The Council Charter", src: "/charter", slot: "tr" }], full: true },
   { say: "Now - say you run a Fortune 500. Watch. I map your entire AI estate against every framework that touches you, live - credit, fraud, hiring, all of it.", wins: [{ title: "Governance Graph - your AI estate", src: "/graph?demo=a%20Fortune%20500%20bank%20using%20AI%20for%20credit%2C%20fraud%20and%20hiring", slot: "tr" }], layer: { tag: "fortune", on: true }, fly: { lng: -95, lat: 39, height: 6000000 } },
   { say: "Cybersecurity is governance too. I bring your Cyber Resilience Act, NIS2 and DORA exposure into the same OS - collected, with the deadline clock running.", wins: [{ title: "The Hive - Cyber Resilience Act", src: "/hive/cra", slot: "tr" }], layer: { tag: "cyber", on: true } },
   { say: "So sit back. You talk - I do the work: classify the systems, run the assessments, prepare the evidence. And every decision I make is signed to Layer 0, so it's auditable forever. Don't trust me - verify it.", wins: [{ title: "Signed AI System Card - auditable proof", src: "/system-card", slot: "c" }] },
@@ -365,7 +365,7 @@ export default function DemoOS() {
       {booting && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center px-6" style={{ background: "#03080f", backgroundImage: "radial-gradient(1100px 720px at 50% 40%, rgba(16,185,129,.22), transparent 68%), radial-gradient(700px 500px at 50% 42%, rgba(56,189,248,.12), transparent 70%), radial-gradient(1.6px 1.6px at 20% 30%, rgba(125,211,252,.7), transparent), radial-gradient(1.6px 1.6px at 70% 60%, rgba(167,243,208,.65), transparent), radial-gradient(1.2px 1.2px at 40% 80%, rgba(255,255,255,.5), transparent), radial-gradient(1.6px 1.6px at 85% 25%, rgba(125,211,252,.6), transparent), radial-gradient(1.2px 1.2px at 55% 15%, rgba(255,255,255,.45), transparent)" }}>
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/10 text-3xl text-emerald-300" style={{ boxShadow: "0 0 44px rgba(16,185,129,.4)" }}>{"◉"}</div>
-          <div className="font-mono text-[11px] uppercase tracking-[4px] text-emerald-300/70">CSOAI {"·"} Sovereign {"·"} Governance {"·"} Layer 0</div>
+          <div className="font-mono text-[11px] uppercase tracking-[4px] text-emerald-300/70">CSOAI {"·"} Council {"·"} Governance {"·"} Layer 0</div>
           <div className="mt-6 w-full max-w-sm space-y-1.5 font-mono text-xs">
             {BOOT.map((l, k) => (<div key={k} className={"flex items-center justify-between " + (k < bootN ? "text-emerald-200" : "text-emerald-300/25")}><span>{l}</span><span>{k < bootN ? "✓" : "…"}</span></div>))}
           </div>
@@ -456,7 +456,7 @@ export default function DemoOS() {
               </div>
               {(() => { const nd = NET_DOMAINS.filter((x) => !drawerQ.trim() || (x.n + " " + x.d).toLowerCase().includes(drawerQ.trim().toLowerCase())); if (!nd.length) return null; return (
               <div className="mb-4">
-                <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Sovereign network <span className="rounded-full border border-emerald-200 px-1.5 text-[9px] text-emerald-500">{NET_DOMAINS.length} signed</span></div>
+                <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Council network <span className="rounded-full border border-emerald-200 px-1.5 text-[9px] text-emerald-500">{NET_DOMAINS.length} signed</span></div>
                 <div className="flex flex-wrap gap-1.5">
                   {nd.map((x) => (
                     <a key={x.d} href={"https://" + x.d} target="_blank" rel="noreferrer" title={x.d} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-700 hover:border-emerald-400 hover:bg-emerald-50">{x.n} <span className="text-gray-400">↗</span></a>
@@ -500,8 +500,8 @@ export default function DemoOS() {
 
 
       {mode !== null && chatMin && (
-        <button onClick={() => setChatMin(false)} title="Open the Sovereign" className="absolute right-3 top-3 z-40 flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04120c]/90 px-3 py-2 text-sm font-bold text-emerald-100 shadow-2xl backdrop-blur-xl hover:bg-[#04120c]">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">◉</span> Sovereign
+        <button onClick={() => setChatMin(false)} title="Open the Council assistant" className="absolute right-3 top-3 z-40 flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04120c]/90 px-3 py-2 text-sm font-bold text-emerald-100 shadow-2xl backdrop-blur-xl hover:bg-[#04120c]">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">◉</span> Council
           {listening && <span className="h-2 w-2 rounded-full bg-rose-400 animate-pulse" />}
         </button>
       )}
@@ -526,7 +526,7 @@ export default function DemoOS() {
           )}
           <div className="flex items-center gap-1.5 border-b border-emerald-500/15 px-3 py-1.5">
             <div className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">{"◉"}</div>
-            <div className="truncate text-[13px] font-bold text-emerald-100">Sovereign {geoCity && <span className="font-mono text-[9px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
+            <div className="truncate text-[13px] font-bold text-emerald-100">Council {geoCity && <span className="font-mono text-[9px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
             <button onClick={() => setHandsFree((h) => { const n = !h; if (n) startRec(); else stopRec(); return n; })} title={handsFree ? "Hands-free on" : "Hands-free off"} className={"ml-auto rounded-full px-1.5 py-0.5 text-[11px] " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/45 hover:bg-white/5")}>{handsFree ? "🎙⏺" : "🎙"}</button>
             <button onClick={() => setChatMin(true)} title="Collapse chat" className="rounded px-1.5 py-0.5 text-[13px] text-emerald-300/60 hover:bg-white/5">»</button>
             <button onClick={stop} title="End tour" className="rounded px-1.5 py-0.5 text-[11px] text-emerald-300/60 hover:bg-white/5">End</button>

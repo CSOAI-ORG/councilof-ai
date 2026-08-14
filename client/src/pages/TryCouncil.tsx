@@ -27,7 +27,7 @@ const EXAMPLES = [
   "We run facial recognition in a public space. Is that allowed?",
 ];
 
-const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
 async function sha256Hex(s: string): Promise<string> { try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join(""); } catch (e) { return ""; } }
 
 type Domain = { key: string; label: string; tier: "Prohibited" | "High-risk" | "Limited" | "Minimal"; frameworks: string[]; why: string };

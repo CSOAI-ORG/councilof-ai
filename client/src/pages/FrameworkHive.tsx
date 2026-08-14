@@ -5,7 +5,7 @@ import { chargeSovereign } from "../lib/sovCharge";
 
 import { askSovereign } from "../lib/sovAsk";
 import AISystemNotice from "../components/AISystemNotice";
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 async function askSov(q: string): Promise<string> {
   // Route through the CSOAI-Sovereign guard (role-framed + companion-bleed rejected).
   const r = await askSovereign(q, { fallback: "" });

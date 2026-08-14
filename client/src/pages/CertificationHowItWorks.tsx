@@ -323,7 +323,7 @@ export default function CertificationHowItWorks() {
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Certified?</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Start with free training and work toward your CEASAI certification
+            Start with free training and work toward your measurement credential
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

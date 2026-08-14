@@ -8,7 +8,7 @@
 import { detectLocale } from "./locale";
 import { emitCard } from "./aiCardBus";
 
-const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
 
 // Respond in the visitor's language (the conversation localizes; regulatory names stay canonical).
 const LANG_NAMES: Record<string, string> = { ja: "Japanese", de: "German", fr: "French", es: "Spanish", ko: "Korean", zh: "Chinese", it: "Italian", pt: "Portuguese", nl: "Dutch" };

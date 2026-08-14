@@ -11,7 +11,7 @@ import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, per
 
 // SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
 // acts: routes you to the right surface, answers from the framework knowledge
-// base, and now answers any question with live world data via os.meok.ai.
+// base, and now answers any question with live world data via the measurement API.
 
 type Msg = { role: "you" | "sov"; text: string };
 
@@ -36,7 +36,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
   { re: /humanoid|\bpoc\b|proof of concept|one os|rogue|swarm|bad actor/i, href: "/poc", label: "the ONE OS proof of concept" },
   { re: /globe|earth|world map|3d/i, href: "/sov-space?view=globe", label: "the Globe layer of Council Space" },
-  { re: /sovereign network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Sovereign network" },
+  { re: /council network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Council network" },
   { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
   { re: /\bos\b|launch|grid|everything/i, href: "/os", label: "the OS launcher" },
@@ -56,7 +56,7 @@ const QUICK: { label: string; href: string }[] = [
   { label: "Full OS", href: "/os" },
 ];
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 const INDUSTRIES = ["healthcare","health","hospital","clinical","finance","fintech","banking","insurance","education","edtech","retail","ecommerce","legal","law firm","government","public sector","defense","energy","utilities","automotive","telecom","pharma","biotech","manufacturing","logistics","supply chain","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing","advertising"];
 
 async function askChat(msg: string, system?: string): Promise<string | null> {
@@ -73,7 +73,7 @@ async function askGovern(q: string): Promise<any | null> {
 }
 
 // SOV3 shared brain: /orchestrate returns {say, actions}. The Sovereign SEES the
-// page (getScreenContext), THINKS via os.meok.ai, then ACTS - opening OS surfaces.
+// page (getScreenContext), THINKS via the measurement API, then ACTS - opening OS surfaces.
 const APP_ROUTES: Record<string, string> = {
   revenue: "/pricing", pricing: "/pricing", plans: "/pricing", billing: "/pricing",
   king: "/try", council: "/try", try: "/try", vote: "/try", bft: "/try",

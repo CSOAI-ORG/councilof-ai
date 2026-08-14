@@ -192,8 +192,10 @@ export default function Methodology() {
             <li>Not exhaustive. 1,301 of 1,312 cells have no field measurement.</li>
             <li>Not LLM-as-judge. Every verdict is a deterministic predicate.</li>
             <li>
-              Not &quot;verified authentic&quot;. Chain intact — tamper-evidence (sha256).
-              Ed25519/ML-DSA capability ships with the label upgrade, in the same commit.
+              Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
+              tamper-evidence; authorship is carried by the ~3KB card, signed with Ed25519 and
+              anchored with OpenTimestamps (published key f4b4278d…, did:web:csoai.org). The
+              post-quantum ML-DSA-65 (FIPS-204) signer is built, not shipped.
             </li>
           </ul>
         </section>

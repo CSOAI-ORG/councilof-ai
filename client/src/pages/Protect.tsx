@@ -3,10 +3,10 @@ import { chargeSovereign } from "../lib/sovCharge";
 
 // Personal Protection — a one-stop shop the Sovereign runs for anyone: execs, governments,
 // people of influence, and every person of the earth. Deepfake + impersonation protection,
-// powered by real Ed25519 signing (os.meok.ai) so YOUR words/likeness are provably yours and a
+// powered by real Ed25519 signing (the measurement API) so YOUR words/likeness are provably yours and a
 // deepfake fails verification. Consent-first, open, for all.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 const MODULES = [
   { icon: "🛡", name: "Deepfake & likeness shield", note: "Sign your statements, voice and content so anyone can verify it's really you. A deepfake has no signature — it fails. Powered by proofof.ai.", tag: "proofof.ai" },

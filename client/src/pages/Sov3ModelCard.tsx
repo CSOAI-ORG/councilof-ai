@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-// SOV3 Model Card — the honest, current record of what SOV3 (the sovereign
-// open-world-model substrate) actually is, how it serves, and what it does not
+// Council Workbench Model Card — the honest, current record of what the
+// measurement engine actually is, how it serves, and what it does not
 // yet claim. Written to the same RUNNING / DESIGNED / STUB honesty register
 // used across the estate's internal alignment docs — nothing here overstates
 // what is verified. See /sov3-system-card for the safety/eval record and
@@ -34,11 +34,11 @@ export default function Sov3ModelCard() {
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Model card · v1</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
-            SOV3 — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a governed the measurement engine</span>, not a foundation model.
+            Council Workbench — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a governed measurement engine</span>, not a foundation model.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            SOV3 is a <b className="text-emerald-200">sandwich architecture</b>: open-weight base models wrapped in a
-            sovereign, Ed25519-signed, evolving substrate. It is not trained from scratch and does not claim to beat
+            Council Workbench is a <b className="text-emerald-200">sandwich architecture</b>: open-weight base models wrapped in a
+            governed, Ed25519-signed, evolving measurement engine. It is not trained from scratch and does not claim to beat
             frontier models on raw capability — its differentiator is the <b className="text-emerald-200">governed,
             auditable layer</b> around whatever base model it runs.
           </p>
@@ -50,7 +50,7 @@ export default function Sov3ModelCard() {
       </section>
 
       <section className="mx-auto max-w-5xl px-6 py-10 space-y-5">
-        <Section title="What SOV3 is">
+        <Section title="What Council Workbench is">
           <p className="text-[13px] text-emerald-100/85 leading-relaxed">
             <b>Not</b> a from-scratch foundation model. <b>Is</b> a governed wrapper: base open-weight models
             (Apache-2.0 / MIT licensed) sit inside a substrate that adds long-context state, cryptographic
@@ -78,7 +78,7 @@ export default function Sov3ModelCard() {
             <Tag kind="designed" />
             <p className="text-[13px] text-emerald-100/85 leading-relaxed">
               A locally-hosted <code className="text-emerald-200">qwen3:30b-a3b</code> mixture-of-experts base,
-              targeted at dedicated on-prem hardware (192GB Mac-class machine). This is the intended sovereign,
+              targeted at dedicated on-prem hardware (192GB Mac-class machine). This is the intended
               fully offline configuration — it is the architecture target, not yet the model answering live
               traffic.
             </p>
@@ -106,7 +106,7 @@ export default function Sov3ModelCard() {
           </table>
         </Section>
 
-        <Section title="What SOV3 is NOT (binding limits)">
+        <Section title="What Council Workbench is NOT (binding limits)">
           <ul className="space-y-1.5 text-[13px] text-emerald-100/85">
             <li className="flex gap-2"><span className="text-rose-400">✕</span>Not a from-scratch trained foundation model — every language capability is borrowed from an open base.</li>
             <li className="flex gap-2"><span className="text-rose-400">✕</span>Not benchmarked head-to-head against frontier models (GSM8K/MMLU) — that capability grade is still open, gated on a real GPU run.</li>
@@ -117,9 +117,9 @@ export default function Sov3ModelCard() {
 
         <Section title="License">
           <p className="text-[13px] text-emerald-100/85 leading-relaxed">
-            SOV3's own substrate code and governance layer are CSOAI's IP. The base models it wraps are
+            Council Workbench's own engine code and governance layer are CSOAI's IP. The base models it wraps are
             individually permissively licensed (Apache-2.0 / MIT — see table above); no copyleft (AGPL/GPL)
-            component is used in the paid/sovereign tier, by design — copyleft dependencies are quarantined to
+            component is used in the paid tier, by design — copyleft dependencies are quarantined to
             the fully-open free tier only, to avoid forcing the commercial stack open.
           </p>
         </Section>

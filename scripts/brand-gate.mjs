@@ -72,9 +72,8 @@ function visibleText(html) {
     .replace(/\s+/g, " ");
 }
 
-// TRACKED DEBT — secondary static surfaces excluded from the gate for now. These are NOT the
-// primary buyer-facing site; they need a dedicated de-brand pass (filename renames + content):
-//   - tools/*            standalone dashboards, filenames are literally "sovereign-*.html"
+// TRACKED DEBT — secondary surfaces excluded from the gate for now. These are NOT the primary
+// buyer-facing site; each needs a dedicated pass:
 //   - regulator-console  a RAW measured-results table whose rows are real model IDs
 //                        (sov-sovereign-v4-mined-latest, clan-sovereignty-cited from the
 //                        2026-08-01 sweep) — renaming them would falsify the measured record.
@@ -83,9 +82,11 @@ function visibleText(html) {
 //                        Sovereign Temple architecture"). Renaming those is an owner decision at
 //                        the artifact source, not a site edit — and audit §2.2 already flags the
 //                        whole registry for a curation rewrite. Gated again after that rewrite.
+// (The legacy public/tools/ DEFONEOS dashboards were DELETED, not de-branded — off-brand junk
+// with unevidenced counters and defence overclaims that never belonged on councilof.ai.)
 // The core SPA + identity + killed pages + primary statics (globe, arena, llms/ai/robots) ARE
 // gated. Remove an entry here only once that surface has had its own de-brand pass.
-const EXCLUDE_PAGES = /(^|\/)(tools\/|regulator-console\.html$|mcps?(\/|\.html|$)|mcp-)/;
+const EXCLUDE_PAGES = /(^|\/)regulator-console\.html$/;
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;

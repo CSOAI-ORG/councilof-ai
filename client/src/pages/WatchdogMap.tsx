@@ -7,7 +7,7 @@ import AISystemNotice from "../components/AISystemNotice";
 // systems. Anyone (or anything) can report an incident; signals heat-map the world
 // by region and by problem layer; the Sovereign pulls live signals for any region.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 type Cat = "bias" | "safety" | "privacy" | "unlawful" | "agent" | "transparency" | "systemic";
 const CATS: { id: Cat; label: string; color: string }[] = [

@@ -116,7 +116,7 @@ export const LANE4: Record<string, Lane4Page> = {
       },
       {
         q: "What are the current measured results?",
-        a: "Interim and honestly small: the ProvBench manifest-survival run is at an early measured sample, with survival clustered well below half under lossy transforms. We publish the n and the method; the dataset stays private until the T-14 notice period clears (~17 August).",
+        a: "17.14% watermark durability: 18 of 105 marking checks survived across the corpus. A marking present but whose binding no longer validates is scored DESTROYED, not SURVIVES — embedded C2PA bindings do not survive an ordinary re-save, and a detached sidecar recovers the disclosure but never the binding. We publish the count and the method.",
       },
       {
         q: "Does a provenance marker prove content is true?",
@@ -127,13 +127,13 @@ export const LANE4: Record<string, Lane4Page> = {
         a: "Article 50 requires AI-generated content to be labelled in a machine-readable way. Provenance measurement tells you whether your labelling actually survives contact with the real internet.",
       },
     ],
-    spotTitle: "ProvBench interim status",
+    spotTitle: "ProvBench measured status",
     spotStats: [
-      { value: "0 / 20", label: "assets in the current public-count run — early stage, published as-is", evidence: "measured" },
-      { value: "T-14", label: "notice period before the dataset goes public (~17 Aug)", evidence: "measured" },
-      { value: "signed", label: "every manifest verdict is Ed25519-signed and verifiable", evidence: "measured" },
+      { value: "17.14%", label: "watermark durability — present-but-invalid markings scored DESTROYED, not SURVIVES", evidence: "measured" },
+      { value: "18 / 105", label: "marking checks that survived across the corpus and its transforms", evidence: "measured" },
+      { value: "signed", label: "every manifest verdict is Ed25519-signed and OpenTimestamps-anchored, verifiable offline", evidence: "measured" },
     ],
-    spotSource: "ProvBench manifest-survival corpus (private until T-14), 2026-08-01",
+    spotSource: "ProvBench manifest-survival corpus (results/provbench.json), 2026-08",
   },
 
   govbench: {
@@ -170,7 +170,7 @@ export const LANE4: Record<string, Lane4Page> = {
     faq: [
       {
         q: "Where is CSOAI infrastructure hosted?",
-        a: "The public site is served from Cloudflare's edge network; measurement services run on a small sovereign fleet (Oracle Cloud and self-hosted nodes). We publish the real posture — no borrowed multi-region claims.",
+        a: "The public site is served from Cloudflare's edge network; measurement services run on a small self-hosted fleet (Oracle Cloud and self-hosted nodes). We publish the real posture — no borrowed multi-region claims.",
       },
       {
         q: "Is there a real status page?",
@@ -248,7 +248,7 @@ export const LANE4: Record<string, Lane4Page> = {
       { value: "6", label: "role packs live: CISO, developer, product, finance-legacy, regulator, watchdog", evidence: "measured" },
       { value: "45", label: "canonical adversarial items behind the scenario generator", evidence: "measured" },
       { value: "daily", label: "corpus re-hash cadence that keeps training current", evidence: "measured" },
-      { value: "£0", label: "marginal cost of a training run on the sovereign stack", evidence: "measured" },
+      { value: "£0", label: "marginal cost of a training run on our own stack", evidence: "measured" },
     ],
     spotSource: "training_engine sessions + corpus-watch, 2026-08-01",
   },

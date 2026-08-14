@@ -11,7 +11,7 @@ Donor: `~/clawd/csoai-org-v2/src/app/verify/VerifyClient.tsx` (CONSOLIDATION.md 
 
 ## Why this is not redundant with the master's existing verify surfaces
 
-- `/system-card` — verifies signed System Cards against the live backend (`os.meok.ai`).
+- `/system-card` — verifies signed System Cards against the live backend (`the measurement API`).
 - `/gspc-verify` — recomputes the GSPC hash chain in the browser (chain scheme, not a pasted
   Ed25519 manifest).
 - `/verify-certificate` — course attestation records via tRPC.

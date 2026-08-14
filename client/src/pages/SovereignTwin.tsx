@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-const EMG_GW = "https://os.meok.ai/api";
+const EMG_GW = "/api";
 /**
  * DESIGN — not a live claim. This page shows what a personalized Sovereign Twin
  * experience WOULD look like. The visualizer is an illustrative canvas; the

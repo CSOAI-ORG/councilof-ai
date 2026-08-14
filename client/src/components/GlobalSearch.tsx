@@ -54,7 +54,7 @@ import { cn } from '@/lib/utils';
 import { chargeSovereign } from '@/lib/sovCharge';
 import { askSovereign } from '@/lib/sovAsk';
 
-const SOV_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || 'https://os.meok.ai/api';
+const SOV_GW: string = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || '/api';
 
 // Types
 interface SearchResult {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 import AISystemNotice from "../components/AISystemNotice";
-const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
 const FW = [{ name: "EU AI Act", href: "/eu-ai-act-checklist" }, { name: "NIST AI RMF", href: "/nist-vs-eu-ai-act" }, { name: "ISO 42001", href: "/iso-42001-vs-eu-ai-act" }, { name: "GDPR", href: "/eu-ai-act-vs-gdpr" }];
 const EXAMPLES = ["a hospital in Texas", "a fintech in Singapore", "an HR recruiting tool", "Germany"];
 const INDUSTRIES = ["healthcare","health","hospital","clinical","pharma","biotech","finance","fintech","banking","insurance","education","edtech","retail","ecommerce","legal","government","public sector","defense","energy","utilities","automotive","telecom","manufacturing","logistics","supply chain","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing"];

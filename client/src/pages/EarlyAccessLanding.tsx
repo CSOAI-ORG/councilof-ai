@@ -41,7 +41,7 @@ export default function EarlyAccessLanding() {
               Be First to Access AI Safety Certification
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join the movement. Get exclusive early access to CEASAI certification, Council training, and our complete AI safety platform.
+              Join the movement. Get exclusive early access to the CSOAI measurement credential, Council training, and our complete AI safety platform.
             </p>
           </motion.div>
 

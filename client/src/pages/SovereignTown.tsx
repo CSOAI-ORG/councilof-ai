@@ -85,7 +85,7 @@ const EXPLAINERS = [
     href: "/regulation-tracker",
   },
   {
-    t: "Verify a Sovereign passport",
+    t: "Verify a Council passport",
     d: "Offline-verify any agent's identity and governance state directly on the chain.",
     href: "https://proofof.ai/passport",
   },
@@ -175,7 +175,7 @@ export default function SovereignTown() {
               Verify the chain →
             </a>
             <a
-              href="mailto:nicholas@csoai.org?subject=Sovereign%20Town%20pilot"
+              href="mailto:nicholas@csoai.org?subject=Council%20Town%20pilot"
               className="rounded-lg border border-emerald-300/50 px-5 py-3 font-semibold text-emerald-100 hover:bg-white/5"
             >
               Request a pilot
@@ -234,7 +234,7 @@ export default function SovereignTown() {
         <div className="max-w-5xl mx-auto px-6 py-16">
           <h2 className="text-2xl font-bold text-gray-900">Why we anchor to Bitcoin</h2>
           <p className="mt-4 max-w-3xl text-gray-700 leading-relaxed">
-            A governance record is only worth what it cannot be quietly rewritten. Every Sovereign
+            A governance record is only worth what it cannot be quietly rewritten. Every Council
             Town episode is signed with an Ed25519 key and its hash is committed to the Bitcoin
             blockchain &mdash; so the record of what an AI did, and whether it was governed, becomes as
             tamper-evident as the chain itself. This is digital autonomy for AI oversight: control and
@@ -292,11 +292,11 @@ export default function SovereignTown() {
         <div className="max-w-5xl mx-auto px-6 py-16 text-center">
           <h2 className="text-3xl font-black tracking-tight">Put your AI on the record</h2>
           <p className="mt-3 text-emerald-50 max-w-2xl mx-auto">
-            Run it under the Sovereign Gate &mdash; with real identity, policy, and proof.
+            Run it under the Council Gate &mdash; with real identity, policy, and proof.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a
-              href="mailto:nicholas@csoai.org?subject=Sovereign%20Town%20pilot"
+              href="mailto:nicholas@csoai.org?subject=Council%20Town%20pilot"
               className="rounded-lg bg-emerald-400 px-5 py-3 font-bold text-emerald-950 hover:bg-emerald-300"
             >
               Request a pilot

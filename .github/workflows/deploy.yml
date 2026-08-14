@@ -39,13 +39,6 @@ jobs:
             fi
           done
 
-      - name: Wire the AI-voice tour into every page
-        run: |
-          for f in $(find dist/client -name "*.html"); do
-            grep -q "sov-tour.js" "$f" || sed -i 's#</body>#<script defer src="/sov-tour.js"></script></body>#I' "$f"
-          done
-          echo "tour wired; sov-tour.js present: $([ -f dist/client/sov-tour.js ] && echo yes || echo NO)"
-
       - name: Brand gate — block deploy on any forbidden display string (audit §6.2)
         run: node scripts/brand-gate.mjs dist/client
 

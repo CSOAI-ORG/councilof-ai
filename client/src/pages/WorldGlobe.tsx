@@ -13,7 +13,7 @@ import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from 
 const REGION3D: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
 const LAYER3D: Record<string, string> = { fw: "frameworks", council: "gov", watchdog: "cyber", ontology: "ontology", hive: "fortune" };
 
-const GLOBE_GW = "https://os.meok.ai/api";
+const GLOBE_GW = "/api";
 const PLACE_HINTS: { re: RegExp; id: string }[] = [
   { re: /\beu\b|europe|brussels|german|france|spain|italy|ireland/i, id: "euaa" },
   { re: /fedramp|oscal|\bdc\b|washington/i, id: "fedramp" },

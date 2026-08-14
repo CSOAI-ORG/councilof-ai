@@ -174,7 +174,7 @@ const FLYWHEELS: FlywheelPlanet[] = [
     metric: "Ed25519 sigil · care_score=0.7891", last_run_iso: "2026-07-30T12:00:00Z" },
 ];
 
-const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
 // Local sov-gateway (the coai-dashboard hub at :8080) is DEV-ONLY — set
 // VITE_LOCAL_GATEWAY explicitly to use it. Production must NEVER probe the
 // visitor's own localhost (audit P1-1); the deployed master serves /kb,

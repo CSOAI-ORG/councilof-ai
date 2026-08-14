@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ToolRunner from "../components/ToolRunner";
-const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
 const EX = ["audit", "compliance", "EU AI Act", "payments", "defence", "identity"];
 export default function ToolCommons() {
   const [q, setQ] = useState(""); const [data, setData] = useState<any>(null); const [loading, setLoading] = useState(false); const [copied, setCopied] = useState("");
