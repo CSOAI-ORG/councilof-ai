@@ -39,19 +39,19 @@ export default function CertificationHowItWorks() {
       duration: "4 hours"
     },
     {
-      level: "CEASAI Fundamentals",
+      level: "Measurement Credential Fundamentals",
       requirement: "Pass 50-question exam (70% pass rate)",
       benefits: "Job board positions, basic compliance reviews",
       duration: "6-8 weeks study + 90 min exam"
     },
     {
-      level: "CEASAI Professional",
+      level: "Measurement Credential Professional",
       requirement: "Pass advanced exam covering all frameworks",
       benefits: "Job board positions, complex compliance projects",
       duration: "10-12 weeks study + 90 min exam"
     },
     {
-      level: "CEASAI Expert",
+      level: "Measurement Credential Expert",
       requirement: "Pass master-level exam + capstone project",
       benefits: "Enterprise contracts, consulting",
       duration: "14-16 weeks study + 90 min exam + capstone"
@@ -115,7 +115,7 @@ export default function CertificationHowItWorks() {
   const faqs = [
     {
       question: "How long is the certification valid?",
-      answer: "CEASAI certifications are valid for 2 years from the date you pass the exam. You'll receive renewal reminders 90 days before expiration. You can renew anytime after 18 months."
+      answer: "Measurement credentials are valid for 2 years from the date you pass the assessment. You'll receive renewal reminders 90 days before expiration. You can renew anytime after 18 months."
     },
     {
       question: "What's the difference between the certification levels?",
@@ -143,7 +143,7 @@ export default function CertificationHowItWorks() {
     },
     {
       question: "Can I use my certification internationally?",
-      answer: "Yes! CEASAI certification is recognized globally. Our frameworks cover EU, US, China, UK, Canada, and Australia regulations. You can work with international clients and enterprises."
+      answer: "Yes! The measurement credential is recognized globally. Our frameworks cover EU, US, China, UK, Canada, and Australia regulations. You can work with international clients and enterprises."
     },
     {
       question: "What happens if I don't renew?",

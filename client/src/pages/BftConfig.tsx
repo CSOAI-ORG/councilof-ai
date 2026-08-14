@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 type Preset = { n: number; name: string; blurb: string };
 const PRESETS: Preset[] = [
   { n: 5, name: "Council (f=1)", blurb: "The minimum for designed multi-agent review - the default 5-agent Council." },
-  { n: 13, name: "Queen + 12", blurb: "One Sovereign queen surrounded by twelve - higher assurance for regulated workloads." },
-  { n: 33, name: "Sovereign Swarm (33)", blurb: "Maximum decentralization - survives ten compromised agents." },
+  { n: 13, name: "Queen + 12", blurb: "One Council queen surrounded by twelve - higher assurance for regulated workloads." },
+  { n: 33, name: "Council Swarm (33)", blurb: "Maximum decentralization — a designed 33-agent council with a 23/33 vote threshold." },
 ];
 function maths(n: number) {
   const f = Math.floor((n - 1) / 3);
@@ -32,7 +32,7 @@ function Bar({ label, v }: { label: string; v: number }) {
 }
 
 export default function BftConfig() {
-  useEffect(() => { document.title = "Choose your BFT setup - configurable consensus | CSOAI"; }, []);
+  useEffect(() => { document.title = "Choose your council setup - configurable consensus | CSOAI"; }, []);
   const [n, setN] = useState(5);
   const m = maths(n); const r = rate(n);
   const nodes = Array.from({ length: n }, (_, i) => i);

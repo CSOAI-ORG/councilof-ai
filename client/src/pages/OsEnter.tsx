@@ -53,7 +53,7 @@ export default function OsEnter() {
   const lat = loc ? loc.lat : 20, lon = loc ? loc.lon : 0, dd = 0.05;
   const bbox = (lon - dd) + "," + (lat - dd) + "," + (lon + dd) + "," + (lat + dd);
   const mapUrl = "https://www.openstreetmap.org/export/embed.html?bbox=" + bbox + "&layer=mapnik&marker=" + lat + "," + lon;
-  const place = loc ? [loc.city, loc.country].filter(Boolean).join(", ") : "the Sovereign Grid";
+  const place = loc ? [loc.city, loc.country].filter(Boolean).join(", ") : "the Council Grid";
   const jur = jurisdiction(loc ? loc.cc : "");
   const aurora = { background: "radial-gradient(900px 520px at 50% -10%, rgba(16,185,129,.20), transparent 60%), radial-gradient(700px 520px at 85% 115%, rgba(45,212,191,.16), transparent 60%)" };
 

@@ -26,7 +26,7 @@ export default function SovereignRegistry() {
   const [mine, setMine] = useState<Record<Kind, number>>({ humanoid: 0, enterprise: 0, government: 0 });
   const [minted, setMinted] = useState(false);
 
-  useEffect(() => { document.title = "Join the Sovereign Grid — CSOAI"; setMine(load()); }, []);
+  useEffect(() => { document.title = "Join the Council Grid — CSOAI"; setMine(load()); }, []);
 
   function mint() {
     if (!pick) return;
@@ -46,7 +46,7 @@ export default function SovereignRegistry() {
         <p className="mt-4 max-w-2xl text-lg text-emerald-50/80">Every sovereign that registers \u2014 a humanoid agent, an enterprise, a government \u2014 makes the grid smarter for all. CSOAI frameworks bridge each one to sovereignty without overwhelm. One by one, this becomes governance of all.</p>
 
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-3xl">
-          <Stat v={total.toLocaleString()} l="Sovereign nodes" />
+          <Stat v={total.toLocaleString()} l="Council nodes" />
           <Stat v={(BASE.humanoid + mine.humanoid).toLocaleString()} l="Humanoid / agent" />
           <Stat v={(BASE.enterprise + mine.enterprise).toLocaleString()} l="Enterprise" />
           <Stat v={(BASE.government + mine.government).toLocaleString()} l="Government" />

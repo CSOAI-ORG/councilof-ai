@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 type Stage = { id: string; n: string; glyph: string; body: string };
 const LOOP: Stage[] = [
   { id: "gather", n: "Gather", glyph: "1", body: "Worker agents sense the world - the request, the data, the live reg-delta feed - and carry signal to the hive." },
-  { id: "propose", n: "Propose", glyph: "2", body: "The inner Sovereign queen forms a proposal from the signal: a decision, an action, a verdict." },
+  { id: "propose", n: "Propose", glyph: "2", body: "The inner Council queen forms a proposal from the signal: a decision, an action, a verdict." },
   { id: "debate", n: "Debate", glyph: "3", body: "The swarm challenges it from every wing - Governance, Intelligence, Safety, Cybersecurity." },
   { id: "vote", n: "Vote (multi-agent)", glyph: "4", body: "designed multi-agent review vote: passes only on supermajority, so one corrupt agent can't decide." },
   { id: "attest", n: "Attest", glyph: "5", body: "The outcome is Ed25519-signed and logged - provable, replayable, never deniable." },
@@ -25,8 +25,8 @@ const HIVES: Hive[] = [
 ];
 const FAQ = [
   { q: "Why a hive, not a server?", a: "A single server is a single point of failure and capture. A hive distributes the decision across many agents, so resilience and honesty are structural - not promised." },
-  { q: "Why does BFT matter?", a: "designed multi-agent review means a decision passes only on a supermajority, so no single agent decides the outcome. Effective independence is measured, not assumed." },
-  { q: "Why an inner queen?", a: "The Sovereign queen gives each hive memory and intent - it proposes and learns - while the swarm keeps it honest. Intelligence with checks, not intelligence unchecked." },
+  { q: "Why does multi-agent review matter?", a: "designed multi-agent review means a decision passes only on a supermajority, so no single agent decides the outcome. Effective independence is measured, not assumed." },
+  { q: "Why an inner queen?", a: "The Council queen gives each hive memory and intent - it proposes and learns - while the swarm keeps it honest. Intelligence with checks, not intelligence unchecked." },
   { q: "Why does it never get stuck?", a: "If the swarm can't agree, it escalates - to another hive, the Council of AI, then the human. There is always a path forward, always an owner." },
 ];
 
@@ -65,7 +65,7 @@ export default function HiveModel() {
           <div className="rounded-2xl border border-gray-200 bg-gradient-to-b from-slate-50 to-white p-4">
             <svg viewBox="0 0 300 300" className="w-full">
               <circle cx={150} cy={150} r={34} fill="#065f46" />
-              <text x={150} y={146} textAnchor="middle" fill="#fff" fontSize={13} fontWeight={800}>Sovereign</text>
+              <text x={150} y={146} textAnchor="middle" fill="#fff" fontSize={13} fontWeight={800}>Council</text>
               <text x={150} y={162} textAnchor="middle" fill="#a7f3d0" fontSize={10}>queen</text>
               {LOOP.map((s, i) => {
                 const ang = (i / LOOP.length) * Math.PI * 2 - Math.PI / 2;

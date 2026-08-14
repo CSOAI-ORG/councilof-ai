@@ -15,7 +15,7 @@ export const TOUR: TourStep[] = [
     path: "/os",
     title: "The Council OS - 291 governed tools",
     usp: "An operating system for AI governance, not a dashboard",
-    say: "This is the OS. Every capability - crosswalks, risk, cyber, attestation - is a live tool running on the Sovereign brain, keyless and on-demand. Nobody else ships governance as a working operating system. Open any tile and it just runs.",
+    say: "This is the OS. Every capability - crosswalks, risk, cyber, attestation - is a live tool running on the Council engine, keyless and on-demand. Nobody else ships governance as a working operating system. Open any tile and it just runs.",
     tip: "Click any tool - it opens live in a window.",
   },
   {
@@ -69,7 +69,7 @@ export const TOUR: TourStep[] = [
     path: "/status",
     title: "Total transparency",
     usp: "The most transparent system you run",
-    say: "The Sovereign brain and every Layer 0 protocol, checked live in front of you. An AI-governance company should be the most transparent system you run - so we show you everything, always.",
+    say: "The Council engine and every Layer 0 protocol, checked live in front of you. An AI-governance company should be the most transparent system you run - so we show you everything, always.",
   },
   {
     path: "/pricing",

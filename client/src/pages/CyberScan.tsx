@@ -55,7 +55,7 @@ const STACK: Domain[] = [
 
 const USPS = [
   "You run the tools — your data never leaves your control. Open source, no lock-in.",
-  "The Sovereign maps every finding to the frameworks that bite (NIS2, DORA, CRA, ISO 27001, SOC 2) — not just a scary list.",
+  "The Council assistant maps every finding to the frameworks that bite (NIS2, DORA, CRA, ISO 27001, SOC 2) — not just a scary list.",
   "Remediation guidance you can act on, prioritised by real risk — then re-scan to prove it's fixed.",
   "Every fix signed to Layer 0 — provable evidence for auditors and regulators.",
   "Value back to you and your team — not a five-figure certificate from a governance middleman.",
@@ -65,13 +65,13 @@ export default function CyberScan() {
   const [findings, setFindings] = useState("");
   const [triage, setTriage] = useState("");
   const [busy, setBusy] = useState(false);
-  useEffect(() => { document.title = "Cyber self-scan — test your own systems, open-source, Sovereign-guided | CSOAI"; }, []);
+  useEffect(() => { document.title = "Cyber self-scan — test your own systems, open-source, Council-guided | CSOAI"; }, []);
 
   async function runTriage() {
     const text = findings.trim(); if (!text) return;
     setBusy(true); setTriage(""); chargeSovereign(10);
     try {
-      const m = "You are the CSOAI Sovereign security analyst. A CISO pasted raw findings from open-source security scanners. Triage them: (1) rank the top 3 by real risk, (2) for each give a concrete fix, (3) map each to the frameworks it affects (NIS2, DORA, CRA, ISO 27001, SOC 2), (4) end with the single most urgent action. Be concise and practical. Findings:\n" + text.slice(0, 4000);
+      const m = "You are the CSOAI Council security analyst. A CISO pasted raw findings from open-source security scanners. Triage them: (1) rank the top 3 by real risk, (2) for each give a concrete fix, (3) map each to the frameworks it affects (NIS2, DORA, CRA, ISO 27001, SOC 2), (4) end with the single most urgent action. Be concise and practical. Findings:\n" + text.slice(0, 4000);
       const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: m }) });
       if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) setTriage(String(d.response)); }
     } catch (e) {}

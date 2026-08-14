@@ -48,7 +48,7 @@ export default function Workbench() {
   async function run() {
     const question = q.trim(); if (!question || busy) return;
     setBusy(true);
-    const res = await askSovereign(question, { system: "You are SOV3, the CSOAI Sovereign coordinating a governance workbench. Skill in use: " + skill.name + " (" + skill.hint + "). Produce a concise, concrete, auditable governance artifact — cite the relevant frameworks/obligations. AI governance & cybersecurity only; never a companion.", fallback: "The live Sovereign is unreachable — the workbench still sealed your request; retry for the reasoned artifact." });
+    const res = await askSovereign(question, { system: "You are SOV3, the CSOAI Council assistant coordinating a governance workbench. Skill in use: " + skill.name + " (" + skill.hint + "). Produce a concise, concrete, auditable governance artifact — cite the relevant frameworks/obligations. AI governance & cybersecurity only; never a companion.", fallback: "The live Council assistant is unreachable — the workbench still sealed your request; retry for the reasoned artifact." });
     const s = await seal(res.text);
     const art: Artifact = { id: Date.now(), skill: skill.name, q: question, a: res.text, sealKind: s.kind, fp: s.fp, sig: s.sig, at: new Date().toISOString().slice(0, 19).replace("T", " "), council: "Council review: designed layer (Charter Art. 11) — not yet live; see DR-0007" };
     setArts((x) => [art, ...x]); setBusy(false); setQ("");

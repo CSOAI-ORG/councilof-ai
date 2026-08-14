@@ -77,7 +77,7 @@ function buildComponentDefinition() {
         {
           uuid: uuid(),
           type: "service",
-          title: "CSOAI Sovereign Gate",
+          title: "CSOAI Council Gate",
           description:
             "Layer 0 enforcement point through which every governed AI action passes; Ed25519-signed and externally anchored to Bitcoin.",
           "control-implementations": sources.map((fw) => ({
@@ -113,7 +113,7 @@ function buildAssessmentResults() {
           uuid: uuid(),
           title: "Governed-vs-ungoverned counterfactual",
           description:
-            "Identical agent population replayed under the Sovereign Gate (governed) and ungoverned (counterfactual). Governed violations trend to 0 as enforcement approaches 1.",
+            "Identical agent population replayed under the Council Gate (governed) and ungoverned (counterfactual). Governed violations trend to 0 as enforcement approaches 1.",
           start: nowIso(),
           props: [
             { name: "governed-crimes", value: "0" },

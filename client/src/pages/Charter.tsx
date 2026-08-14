@@ -168,7 +168,7 @@ const schedules = [
   { id: "A", title: "Technical Specifications", desc: "Detailed technical requirements for AI systems, including compute thresholds and safety benchmarks", icon: Settings },
   { id: "B", title: "Risk Classification Matrix", desc: "4-tier risk classification system with specific criteria for each level", icon: AlertTriangle },
   { id: "C", title: "Compliance Checklists", desc: "Step-by-step assessment criteria for each license tier", icon: CheckCircle2 },
-  { id: "D", title: "Training Curriculum", desc: "CEASAI certification program content and exam specifications", icon: BookOpen },
+  { id: "D", title: "Training Curriculum", desc: "Measurement credential program content and exam specifications", icon: BookOpen },
   { id: "E", title: "Pricing Schedule", desc: "Complete license and fee structure across all tiers", icon: DollarSign },
   { id: "F", title: "Regional Adaptations", desc: "Jurisdiction-specific rules for EU, US, UK, China, and others", icon: Globe2 },
   { id: "G", title: "Glossary of Terms", desc: "300+ defined terms for consistent interpretation", icon: FileText },
@@ -199,7 +199,7 @@ const faqItems = [
   },
   {
     question: "How do I become a signatory?",
-    answer: "To become a Charter signatory: (1) Apply for a license tier appropriate to your organization (Individual, Startup, SME, Enterprise, or Government); (2) Complete the CEASAI certification for your designated AI safety staff; (3) Register your AI systems in the CSOAI registry; (4) Sign the Partnership Agreement committing to Charter compliance; (5) Begin contributing to the Prosperity Fund based on your tier. Founding Members who join before March 31, 2026 receive enhanced voting rights and board nomination privileges."
+    answer: "To become a Charter signatory: (1) Apply for a license tier appropriate to your organization (Individual, Startup, SME, Enterprise, or Government); (2) Complete the measurement credential for your designated AI safety staff; (3) Register your AI systems in the CSOAI registry; (4) Sign the Partnership Agreement committing to Charter compliance; (5) Begin contributing to the Prosperity Fund based on your tier. Founding Members who join before March 31, 2026 receive enhanced voting rights and board nomination privileges."
   },
   {
     question: "What are the Schedules?",
@@ -232,7 +232,7 @@ const integrationSteps = [
     title: "Licensing System",
     icon: Award,
     description: "Tiered licensing ensures organizations have appropriate oversight for their AI risk level, from individuals to governments.",
-    details: ["5 license tiers", "CEASAI certification", "Annual renewals", "Compliance audits"]
+    details: ["5 license tiers", "measurement credential", "Annual renewals", "Compliance audits"]
   },
   {
     title: "Prosperity Fund",
@@ -756,7 +756,7 @@ export default function Charter() {
               <div className="flex flex-wrap justify-center items-center gap-4">
                 {[
                   { step: "1", label: "Organization obtains License", icon: Award },
-                  { step: "2", label: "Staff complete CEASAI Certification", icon: BookOpen },
+                  { step: "2", label: "Staff complete measurement credential", icon: BookOpen },
                   { step: "3", label: "AI systems registered in Charter", icon: FileText },
                   { step: "4", label: "Council monitors 24/7", icon: Eye },
                   { step: "5", label: "Analysts review flagged issues", icon: Users },

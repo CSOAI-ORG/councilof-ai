@@ -31,7 +31,7 @@ const PATHS: Path[] = [
 ];
 
 export default function SovereignAcademy() {
-  useEffect(() => { document.title = "Sovereign Academy — CSOAI"; }, []);
+  useEffect(() => { document.title = "Council Academy — CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
@@ -75,7 +75,7 @@ export default function SovereignAcademy() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          You never have to read a manual. Open the <b>Sovereign</b> on any page and say <i>"teach me about the EU AI Act"</i> or <i>"start my certification"</i> — it takes you straight there. Learning and doing are the same motion now.
+          You never have to read a manual. Open the <b>Council assistant</b> on any page and say <i>"teach me about the EU AI Act"</i> or <i>"start my certification"</i> — it takes you straight there. Learning and doing are the same motion now.
         </div>
       </section>
     </div>

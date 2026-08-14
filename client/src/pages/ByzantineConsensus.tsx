@@ -117,7 +117,7 @@ const PIPELINES = [
   },
   {
     icon: BookOpen,
-    title: 'CEASAI Training',
+    title: 'Measurement Credential Training',
     color: '#F59E0B',
     description: 'Professional certification program for AI safety analysts.',
     items: ['Training Courses', 'Certification Exams', 'Certified Analysts', 'Job Marketplace']
@@ -132,7 +132,7 @@ const PIPELINES = [
 ];
 
 export default function ByzantineConsensus() {
-  useEffect(() => { document.title = "ByzantineConsensus | CSOAI"; }, []);
+  useEffect(() => { document.title = "Designed multi-agent council | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -204,10 +204,10 @@ export default function ByzantineConsensus() {
             <h2 className="text-3xl font-bold mb-6 text-center">What is Multi-Agent Council?</h2>
             <div className="prose prose-lg dark:prose-invert mx-auto">
               <p>
-                designed multi-agent review (BFT-style) is a property of distributed systems that allows them to 
-                reach consensus even when some participants are faulty or malicious. Named after the 
-                "Byzantine Generals Problem," this approach ensures that a system can continue to operate 
-                correctly as long as fewer than one-third of the participants are compromised.
+                Our design is a multi-agent vote: 33 specialized agents each weigh in, and a decision passes only on a
+                23/33 (67%) supermajority. The intent is that no single agent, provider, or bias decides an
+                outcome. We do not claim guaranteed fault tolerance — effective independence is measured,
+                not assumed.
               </p>
               <p>
                 In the context of AI safety, we apply multi-agent council principles to ensure that 

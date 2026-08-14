@@ -295,9 +295,9 @@ const faqData: FAQItem[] = [
   },
   {
     category: "TRAINING & CERTIFICATION",
-    question: "What is the CEASAI certification?",
+    question: "What is the measurement credential?",
     answer:
-      "The Certified EU AI Act Specialist (CEASAI) certification demonstrates expertise in implementing and auditing compliance with the EU AI Act. It covers risk classification, conformity assessment, documentation requirements, high-risk system governance, and incident reporting. CEASAI holders are qualified to lead compliance programs and conduct EU AI Act audits.",
+      "The CSOAI measurement credential is a signed record of measured competence in implementing and auditing compliance with the EU AI Act. It covers risk classification, conformity assessment, documentation requirements, high-risk system governance, and incident reporting. Credential holders have a measured record of EU AI Act compliance competence — CSOAI is not a certification body.",
     tags: ["certification", "eu-ai-act"],
   },
   {
@@ -408,7 +408,7 @@ const faqData: FAQItem[] = [
     category: "TECHNICAL",
     question: "How does the designed 33-agent council work?",
     answer:
-      "The 33-Agent Council uses designed multi-agent review (BFT-style) consensus where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). If up to 10 agents malfunction or provide incorrect information, the council can still reach correct consensus with mathematical certainty. Decisions require approval from at least 23 agents (67%), ensuring robust, reliable governance outcomes.",
+      "The 33-Agent Council is a designed multi-agent vote where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). Decisions require approval from at least 23 agents (67%). The design intent is that no single agent decides an outcome; effective independence is measured, not assumed — we do not claim guaranteed fault tolerance.",
     tags: ["technical", "council"],
   },
   {

@@ -52,7 +52,7 @@ interface GameDef {
 const GAMES: GameDef[] = [
   {
     id: "sovereign-city",
-    name: "Sovereign City",
+    name: "Council City",
     tagline: "Build. Govern. Survive regulation changes.",
     description: "Age of Empires meets AI governance. Build your city where every building is an AI system. Manage Honey (knowledge), Trust (compliance), and Power (influence). When regulations change, your buildings need re-governance or they crumble.",
     genre: "City Builder · Resource Management",
@@ -144,7 +144,7 @@ const GAMES: GameDef[] = [
     axes: ["S", "P"],
     dataCollected: "Anomaly Detection Patterns",
     dataDescription: "How users detect compromised AI reasoning — what signals they look for, what patterns they trust. The human intuition for AI safety.",
-    mechanics: ["Analyze AI council deliberations", "Check sources and reasoning", "Vote out the rogue AI", "Learn Byzantine fault patterns", "Earn trust for correct detections"],
+    mechanics: ["Analyze AI council deliberations", "Check sources and reasoning", "Vote out the rogue AI", "Learn multi-agent failure patterns", "Earn trust for correct detections"],
     route: "/rogue-detective",
     unlocked: true,
     players: "9,156",

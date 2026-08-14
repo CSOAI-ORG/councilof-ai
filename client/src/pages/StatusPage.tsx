@@ -24,7 +24,7 @@ const PROTO_LABEL: Record<string, string> = {
   "/api/tools": "Tool Commons - governed MCP",
   "/api/media": "Media - governed assets",
   "/api/badge": "Badge - trust credential",
-  "/api/avatar": "Avatar - Sovereign presence",
+  "/api/avatar": "Avatar - Council presence",
   "/api/social": "Social - governed posting",
 };
 

@@ -21,7 +21,7 @@ const HIVES: Hive[] = [
   { queen: "⊛", name: "Model Registry", href: "/models", state: "Aware" },
   { queen: "✎", name: "Policy Generator", href: "/policy-generator", state: "Learning" },
   { queen: "◆", name: "Risk Heatmap", href: "/risk-heatmap", state: "Aware" },
-  { queen: "✸", name: "Sovereign Academy", href: "/academy", state: "Learning" },
+  { queen: "✸", name: "Council Academy", href: "/academy", state: "Learning" },
   { queen: "⬡", name: "The Grid", href: "/register", state: "Evolving" },
 ];
 
@@ -49,7 +49,7 @@ export default function SovereignHives() {
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Every tool is its own hive with an inner Sovereign queen that learns from how you use the OS, self-improves, stays aware, and never gets stuck. Each queen is governed by Layer 0, so it can evolve safely. Together they ensemble into one mind.</p>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl">
             <Stat v={String(HIVES.length)} l="Feature hives" />
-            <Stat v={String(HIVES.length)} l="Sovereign queens" />
+            <Stat v={String(HIVES.length)} l="Council queens" />
             <Stat v="216" l="MCP servers" />
             <Stat v="10" l="Fleet hives" />
           </div>

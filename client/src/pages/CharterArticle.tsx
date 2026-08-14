@@ -2906,7 +2906,7 @@ const scheduleMap: Record<string, { title: string; description: string }> = {
   },
   D: {
     title: "Training Curriculum",
-    description: "CEASAI certification program",
+    description: "measurement credential program",
   },
   E: {
     title: "Pricing Schedule",

@@ -321,7 +321,7 @@ export default function TrustCenter() {
     },
     {
       vendor: "os.meok.ai (first-party)",
-      purpose: "Sovereign inference and governance gateway",
+      purpose: "Council inference and governance gateway",
       data: "Governance and inference requests",
       location: "Self-hosted, UK/EU",
       safeguard: "First-party infrastructure — not a subprocessor; listed for transparency",

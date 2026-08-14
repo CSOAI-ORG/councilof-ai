@@ -39,7 +39,7 @@ const GROUPS: Group[] = [
   { title: "The CSOAI OS", blurb: "Put governance to work.", links: [
     { label: "Your Council assistant identity", href: "/sovereign" },
     { label: "The Council Globe", href: "/globe" },
-    { label: "Choose your BFT", href: "/bft" },
+    { label: "Choose your council", href: "/bft" },
     { label: "The Registry", href: "/registry" },
     { label: "Ask the Council", href: "/try" },
   ]},

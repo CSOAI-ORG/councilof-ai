@@ -10,7 +10,7 @@ export default function TC260Compliance() {
   const faqs = [
     { question: "What is TC260?", answer: "TC260 is China's Technical Committee for Standardization of Information Security. It develops technical standards for AI security, algorithm governance, and data protection in China." },
     { question: "Do I need TC260 compliance?", answer: "Yes, if you operate in China or serve Chinese customers. TC260 standards are mandatory for AI systems deployed in China." },
-    { question: "How does CSOAI help with TC260?", answer: "CSOAI provides TC260 compliance assessment, Council review, and CEASAI training. We help you implement required algorithm audits and data security controls." },
+    { question: "How does CSOAI help with TC260?", answer: "CSOAI provides TC260 compliance assessment, Council review, and measurement credential training. We help you implement required algorithm audits and data security controls." },
     { question: "What are the key TC260 requirements?", answer: "Algorithm audit, data security, user rights protection, transparency, and algorithm governance. CSOAI helps you implement each requirement." }
   ];
 

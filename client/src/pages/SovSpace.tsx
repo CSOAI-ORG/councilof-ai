@@ -495,7 +495,7 @@ export default function SovSpace() {
   const timers = useRef<any[]>([]);
 
   useEffect(() => {
-    document.title = "Sovereign Space - simulate, experiment, govern | CSOAI";
+    document.title = "Council Space - simulate, experiment, govern | CSOAI";
     // Handoff from the Council Globe: /simulate?q=… pre-loads the scenario so one
     // Sovereign flows from "ask on the globe" straight into "run the full simulation".
     try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}

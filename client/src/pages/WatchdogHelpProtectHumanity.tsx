@@ -40,7 +40,7 @@ export default function WatchdogHelpProtectHumanity() {
     },
     {
       step: "3. Get Certified",
-      description: "Pass the CEASAI certification exam to become an official Watchdog Analyst",
+      description: "Pass the measurement credential assessment to become an official Watchdog Analyst",
       time: "6-8 weeks",
       cost: "$99-499"
     },
@@ -72,7 +72,7 @@ export default function WatchdogHelpProtectHumanity() {
       price: "Free"
     },
     {
-      title: "CEASAI Fundamentals",
+      title: "Measurement Credential Fundamentals",
       description: "Professional certification covering core compliance frameworks",
       modules: [
         "EU AI Act Fundamentals",
@@ -85,7 +85,7 @@ export default function WatchdogHelpProtectHumanity() {
       price: "$99"
     },
     {
-      title: "CEASAI Professional",
+      title: "Measurement Credential Professional",
       description: "Advanced certification for experienced analysts",
       modules: [
         "Deep Dive: All Frameworks",

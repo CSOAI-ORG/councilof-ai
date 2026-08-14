@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 
 export default function AboutCEASAI() {
-  useEffect(() => { document.title = "AboutCEASAI | CSOAI"; }, []);
+  useEffect(() => { document.title = "About the measurement credential | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-gray-50">
       {/* Hero Section */}
@@ -26,8 +26,8 @@ export default function AboutCEASAI() {
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            The <strong>Centre for Excellence in AI Safety Analyst Training</strong> (CEASAI) is the world's leading 
-            independent training organization dedicated to creating a global workforce of certified AI Safety Analysts.
+            The <strong>CSOAI measurement credential for AI safety analysts</strong> is a measurement program 
+            dedicated to building a global, measured workforce of AI Safety Analysts.
           </p>
           
           {/* Key Metrics */}
@@ -146,7 +146,7 @@ export default function AboutCEASAI() {
           </div>
 
           <p className="text-center text-lg text-gray-700 mt-8 max-w-3xl mx-auto">
-            <strong>Together</strong>, CEASAI trains the analysts and CSOAI provides the platform where they work—creating 
+            <strong>Together</strong>, the measurement credential trains the analysts and CSOAI provides the platform where they work—creating 
             a complete ecosystem for AI safety, transparency, and compliance.
           </p>
         </div>
@@ -177,8 +177,8 @@ export default function AboutCEASAI() {
               </div>
               <h3 className="text-xl font-bold mb-3">Creating Real Jobs</h3>
               <p className="text-gray-600">
-                We're not just training people—we're creating a new profession. CEASAI graduates become certified Watchdog 
-                Analysts with real employment opportunities globally.
+                We're not just training people—we're creating a new profession. Credential holders become Watchdog 
+                Analysts with a measured record and real employment opportunities globally.
               </p>
             </div>
 

@@ -26,7 +26,7 @@ function Section({ title, children }: { title: string; children: any }) {
 }
 
 export default function Sov3SystemCard() {
-  useEffect(() => { document.title = "Sovereign system & safety card | CSOAI"; }, []);
+  useEffect(() => { document.title = "Council system & safety card | CSOAI"; }, []);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">

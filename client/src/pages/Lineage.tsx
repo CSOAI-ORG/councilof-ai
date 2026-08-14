@@ -12,7 +12,7 @@ const ROWS: Row[] = [
   { system: "12 Civilizations", original: "12 Tribes of Israel", age: "3,000 yrs", rediscovered: "12 = the max distinct identities humans can hold" },
   { system: "Pheromone Matrix", original: "I Ching (Book of Changes)", age: "3,000 yrs", rediscovered: "Binary state-transition protocols model everything" },
   { system: "Worm Hive", original: "The Silk Road", age: "2,000 yrs", rediscovered: "Decentralized mesh networks outlast empires" },
-  { system: "Sovereign Lens", original: "Oracle of Delphi", age: "2,700 yrs", rediscovered: "Probabilistic simulation is the best decision-aid" },
+  { system: "Council Lens", original: "Oracle of Delphi", age: "2,700 yrs", rediscovered: "Probabilistic simulation is the best decision-aid" },
   { system: "Pond OS", original: "Bagua (Eight Trigrams)", age: "3,000 yrs", rediscovered: "Observer-dependent reality matches how humans think" },
   { system: "Layer 0 Protocol", original: "Treaty of Westphalia", age: "378 yrs", rediscovered: "Shared protocols enable coexistence without control" },
   { system: "Ed25519 Sigil", original: "The Great Seal", age: "3,000+ yrs", rediscovered: "Cryptographic proof of authority IS trust" },

@@ -11,9 +11,9 @@ const GW = "https://os.meok.ai/api";
 const MODULES = [
   { icon: "🛡", name: "Deepfake & likeness shield", note: "Sign your statements, voice and content so anyone can verify it's really you. A deepfake has no signature — it fails. Powered by proofof.ai.", tag: "proofof.ai" },
   { icon: "🪪", name: "Identity & content authenticity", note: "Every post, email or clip you sign carries a verifiable Layer 0 seal. Impersonation is detectable in seconds.", tag: "Layer 0" },
-  { icon: "👁", name: "Executive / VIP monitoring", note: "The Sovereign watches for impersonation, doxxing, fake endorsements and scams using your name — and flags them.", tag: "Watchdog" },
-  { icon: "🎣", name: "Scam & phishing defense", note: "AI-driven scams are surging. The Sovereign screens inbound approaches and verifies who's really contacting you.", tag: "AI-security" },
-  { icon: "🔐", name: "Data ownership & privacy", note: "You own and export your data. On-device where possible; nothing sold, no facial recognition, consent-first.", tag: "Sovereign" },
+  { icon: "👁", name: "Executive / VIP monitoring", note: "The Council assistant watches for impersonation, doxxing, fake endorsements and scams using your name — and flags them.", tag: "Watchdog" },
+  { icon: "🎣", name: "Scam & phishing defense", note: "AI-driven scams are surging. The Council assistant screens inbound approaches and verifies who's really contacting you.", tag: "AI-security" },
+  { icon: "🔐", name: "Data ownership & privacy", note: "You own and export your data. On-device where possible; nothing sold, no facial recognition, consent-first.", tag: "Council" },
   { icon: "👨‍👩‍👧", name: "Family & guardian", note: "Extend the same protection to your family — child-safe, private, and simple. Protection isn't only for the wealthy.", tag: "For all" },
 ];
 

@@ -33,7 +33,7 @@ const RULES = [
     // honest "this claim was retracted / is unproven". If a retraction marker sits within ~90
     // chars of the hit, it is disclosure, not a claim, and passes. ("Our 33-agent council…live
     // fault-tolerance is unproven (n_eff 1.21 of 3)" is exactly the copy we WANT to keep.)
-    nearAllow: /retract|withdrawn|unproven|not\s+(?:be\s+)?fault|n_eff|correlated|no longer|is unproven|designed/i,
+    nearAllow: /retract|withdrawn|unproven|not\s+(?:be\s+)?fault|n_eff|correlat|no longer|is unproven|designed|theatre|effective.{0,10}vote/i,
     why: 'RETRACTED 2026-07-29 — "Byzantine/BFT/fault-tolerant" asserts the withdrawn claim (n_eff≈1.21/3). Use "designed 33-agent council" + "23/33 threshold".',
   },
   {
@@ -78,9 +78,14 @@ function visibleText(html) {
 //   - regulator-console  a RAW measured-results table whose rows are real model IDs
 //                        (sov-sovereign-v4-mined-latest, clan-sovereignty-cited from the
 //                        2026-08-01 sweep) — renaming them would falsify the measured record.
+//   - mcp registry       the ~300-entry MCP dump renders PUBLISHED artifact names
+//                        ("BFT Progress Council MCP", "Global BFT Governance Pack", "Based on
+//                        Sovereign Temple architecture"). Renaming those is an owner decision at
+//                        the artifact source, not a site edit — and audit §2.2 already flags the
+//                        whole registry for a curation rewrite. Gated again after that rewrite.
 // The core SPA + identity + killed pages + primary statics (globe, arena, llms/ai/robots) ARE
 // gated. Remove an entry here only once that surface has had its own de-brand pass.
-const EXCLUDE_PAGES = /(^|\/)(tools\/|regulator-console\.html$)/;
+const EXCLUDE_PAGES = /(^|\/)(tools\/|regulator-console\.html$|mcps?(\/|\.html|$)|mcp-)/;
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;

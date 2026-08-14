@@ -119,7 +119,7 @@ export default function EarlyAccessLanding() {
             {[
               {
                 icon: <Shield className="h-8 w-8" />,
-                title: 'CEASAI Certification',
+                title: 'Measurement Credential',
                 description: 'Professional certification in AI safety, compliance frameworks, and incident analysis. Valid for 3 years.'
               },
               {
@@ -180,7 +180,7 @@ export default function EarlyAccessLanding() {
                 price: '£249',
                 originalPrice: '£499',
                 description: 'Perfect for individuals',
-                features: ['CEASAI Certification', 'Training Courses', 'Watchdog Access', 'Community']
+                features: ['Measurement Credential', 'Training Courses', 'Watchdog Access', 'Community']
               },
               {
                 name: 'Enterprise',

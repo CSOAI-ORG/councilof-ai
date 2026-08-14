@@ -239,7 +239,7 @@ export default function WorldGlobe() {
     const [c, gov] = await Promise.all([globeChat(t), ind ? globeGovern(ind) : Promise.resolve(null)]);
     let out = c || "";
     if (gov && gov.frameworks) out += (out ? "\n\n" : "") + "Governance stack for " + gov.industry + ": " + gov.frameworks.map((f: any) => f.name).join(", ") + ". Layer 0 signed.";
-    setAns(out || "I could not reach the Sovereign just now - try a place or a sector.");
+    setAns(out || "I could not reach the Council assistant just now - try a place or a sector.");
     setAsking(false);
   }
   useEffect(() => {

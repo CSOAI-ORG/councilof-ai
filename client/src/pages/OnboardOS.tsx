@@ -30,7 +30,7 @@ export default function OnboardOS() {
     const cards: { id: Profile; t: string; d: string }[] = [
       { id: "work", t: "Work", d: "Governance, compliance, your work stack." },
       { id: "personal", t: "Personal", d: "Your own AI, your data, your life - free." },
-      { id: "smb", t: "Small business", d: "Run the business with one Sovereign." },
+      { id: "smb", t: "Small business", d: "Run the business with one Council assistant." },
     ];
     return (
       <div className="min-h-screen bg-[#03110b] text-emerald-50 flex flex-col items-center justify-center px-6 py-16">
@@ -53,7 +53,7 @@ export default function OnboardOS() {
   const panes: { id: string; label: string; body: string }[] = [
     { id: "social", label: "Social", body: "Your channels, unified." },
     { id: "browser", label: "Web", body: "Full browser, where you work." },
-    { id: "sovereign", label: "Sovereign", body: "Speak or type. I act." },
+    { id: "sovereign", label: "Council", body: "Speak or type. I act." },
   ];
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">

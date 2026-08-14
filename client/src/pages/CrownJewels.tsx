@@ -14,7 +14,7 @@ const JEWELS: Jewel[] = [
   { name: "agent-village", domain: "Simulation", stars: "1", why: "Economy, democracy, crime, art — a complete civilization", use: "Sov Town base", tier: "Diamond" },
   { name: "NodeTool", domain: "No-Code Builder", stars: "406", why: "9,246 commits, 115 releases — closest to the ONE OS vision", use: "Visual builder layer", tier: "Diamond" },
   { name: "A-MEM", domain: "AI Memory", stars: "363", why: "Zettelkasten memory linking + auto LLM metadata", use: "Character memory", tier: "Diamond" },
-  { name: "Kokoro TTS", domain: "Voice AI", stars: "~10K", why: "Best on-device TTS, 82M params, MIT license", use: "Sovereign voice", tier: "Gold" },
+  { name: "Kokoro TTS", domain: "Voice AI", stars: "~10K", why: "Best on-device TTS, 82M params, MIT license", use: "Council voice", tier: "Gold" },
   { name: "Augustus", domain: "Red Team", stars: "~200", why: "210+ probes, 47 attack categories, single Go binary", use: "Safety engine", tier: "Gold" },
   { name: "AegisAI", domain: "AI GRC", stars: "~300", why: "Full AI-GRC: EU AI Act + LLM Guard + RAG intelligence", use: "Governance platform", tier: "Gold" },
   { name: "forkd", domain: "Isolation", stars: "~200", why: "fork() for AI microVMs — 100 children in 101ms", use: "Agent sandboxing", tier: "Gold" },
@@ -23,7 +23,7 @@ const JEWELS: Jewel[] = [
   { name: "Mnemosyne", domain: "AI Memory", stars: "85", why: "7-memory-type taxonomy for agent personality", use: "Agent memory", tier: "Silver" },
   { name: "Attestix", domain: "Identity", stars: "~100", why: "DID-based identity, W3C verifiable credentials", use: "Identity layer", tier: "Silver" },
   { name: "PeerPigeon", domain: "P2P Mesh", stars: "~150", why: "WebRTC mesh, XOR routing, gossip, CRDT", use: "Worm Hive mesh", tier: "Silver" },
-  { name: "openWakeWord", domain: "Wake Word", stars: "~1.4K", why: "Trains custom wake words on any device", use: "Sovereign voice", tier: "Silver" },
+  { name: "openWakeWord", domain: "Wake Word", stars: "~1.4K", why: "Trains custom wake words on any device", use: "Council voice", tier: "Silver" },
 ];
 
 type Swan = { name: string; src: string; steal: string };
@@ -101,7 +101,7 @@ export default function CrownJewels() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          Distribution is not a quality problem — it's a discoverability crisis. 160K lines of Rust with 300 stars proves it. CSOAI's mission: become the distribution layer for every solo builder with a goldmine, and the absorption layer for every black swan the world abandoned. The Sovereign routes the right jewel to the right need, automatically.
+          Distribution is not a quality problem — it's a discoverability crisis. 160K lines of Rust with 300 stars proves it. CSOAI's mission: become the distribution layer for every solo builder with a goldmine, and the absorption layer for every black swan the world abandoned. The Council assistant routes the right jewel to the right need, automatically.
         </div>
       </section>
     </div>

@@ -73,7 +73,7 @@ const STATUS_NOTE: Record<NodeStatus, string> = {
 
 const L0_LEVELS = [
   { id: "L0-1", name: "Identity", body: "Every tool call carries a checked identity — no anonymous calls through the gate." },
-  { id: "L0-2", name: "Policy-gated", body: "Every call passes the Sovereign Gate policy check before it reaches the tool." },
+  { id: "L0-2", name: "Policy-gated", body: "Every call passes the Council Gate policy check before it reaches the tool." },
   { id: "L0-3", name: "Signed", body: "Every call is Ed25519-attestable — a record another governed agent can verify offline." },
 ];
 

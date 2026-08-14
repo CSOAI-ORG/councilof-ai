@@ -58,7 +58,7 @@ const navigation = [
     submenu: [
       { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
       { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
-      { name: 'Cyber self-scan', href: '/scan', description: 'Scan your own systems with open-source tools; the Sovereign helps fix them' },
+      { name: 'Cyber self-scan', href: '/scan', description: 'Scan your own systems with open-source tools; the Council assistant helps fix them' },
       { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },
       { name: 'The Council Globe', href: '/globe', description: 'AI governance, layered on the world' },
       { name: 'AI governance: the guide', href: '/ai-governance', description: 'The complete map — start here' },
