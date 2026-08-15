@@ -15,7 +15,7 @@ import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, C
 import { AXES, MEASURED_ON, STATUS_TONE, confidence, countOf, fetchAxes, hasInterval, quotable, wilson,
          type Axis, type AxesState } from "@/lib/gspcAxes";
 import { createContext, useContext } from "react";
-import { Globe2, LayoutGrid, MessageSquare, Server, ScrollText, Building2, Command as CmdIcon } from "lucide-react";
+import { Globe2, LayoutGrid, MessageSquare, Server, ScrollText, Building2, Gamepad2, Command as CmdIcon, ShieldCheck } from "lucide-react";
 import CityPanel from "@/components/sovos/CityPanel";
 
 // Vite cannot see maplibre's `new URL("./maplibre-gl-worker.mjs", import.meta.url)`,
@@ -126,7 +126,7 @@ function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
     <div className="relative h-full w-full bg-[#04070d]">
       <div ref={host} style={{ position: "absolute", inset: 0 }} />
       <div className="pointer-events-none absolute left-3 top-3 rounded-md border border-white/10 bg-black/55 px-3 py-2 text-[11px] leading-relaxed backdrop-blur">
-        <div className="font-semibold tracking-[0.2em] text-emerald-300">TWELVE SEATS</div>
+        <div className="font-semibold tracking-[0.2em] text-emerald-300">{axes.length} SEATS</div>
         <div className="text-slate-400">dot size = confidence (items ÷ 30, discounted by unparsed)</div>
         <div className="text-slate-500">dim = no score earned yet</div>
       </div>
@@ -165,8 +165,10 @@ function BoardPanel({ containerApi }: IDockviewPanelProps) {
         ))}
       </div>
       <p className="mt-4 border-t border-white/5 pt-3 text-[11px] leading-relaxed text-slate-500">
-        Nine axes show no number on purpose. A score appears only once an axis is MEASURED, and an interval only
-        once usable n ≥ 30. Unparsed answers are reported separately as UNMEASURED — never scored wrong, never dropped.
+        {c.total - c.measured === 0
+          ? `All ${c.total} axes are MEASURED.`
+          : `${c.total - c.measured} of ${c.total} axes carry no number yet — only MEASURED axes earn a score.`} An interval only
+        appears once usable n ≥ 30. Unparsed answers are reported separately as UNMEASURED — never scored wrong, never dropped.
       </p>
     </PanelShell>
   );
@@ -303,6 +305,58 @@ function AskPanel() {
   );
 }
 
+/* ── panel: Council Town — the living game exhibit ──────────────────────────── */
+
+const TOWN_SRC = "/town/";
+const TOWN_BACKEND_NOTE =
+  "The town's world runs on its own game backend (Convex), which is owner-gated — one login the estate owner clears. " +
+  "Until it is wired, this panel shows the deployed client with no world; nothing here is simulated or fabricated.";
+
+function TownPanel() {
+  const [reachable, setReachable] = useState<boolean | null>(null);
+  useEffect(() => {
+    let dead = false;
+    fetch(TOWN_SRC, { method: "GET" })
+      .then((r) => { if (!dead) setReachable(r.ok); })
+      .catch(() => { if (!dead) setReachable(false); });
+    return () => { dead = true; };
+  }, []);
+
+  return (
+    <div className="flex h-full w-full flex-col bg-[#080c14]">
+      <div className="flex shrink-0 items-center gap-2 border-b border-white/5 bg-[#080c14]/95 px-3 py-2">
+        <Gamepad2 className="h-3.5 w-3.5 text-emerald-300" />
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">Council Town</span>
+        <span className="text-[11px] text-slate-500">living exhibit — agent clans deliberating in an open world</span>
+        <span className="ml-auto rounded border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-300">
+          game backend owner-gated
+        </span>
+      </div>
+      {reachable === false ? (
+        <div className="flex flex-1 items-center justify-center p-6">
+          <div className="max-w-md rounded-xl border border-white/10 bg-white/[0.02] p-5 text-center">
+            <Gamepad2 className="mx-auto h-6 w-6 text-slate-600" />
+            <div className="mt-2 text-sm font-medium text-slate-200">Town client not built into this bundle yet</div>
+            <p className="mt-1 text-[12px] leading-relaxed text-slate-500">
+              The static client ships at <code className="text-slate-400">/town/</code> once built. Until then the
+              signed measurement records stay available in the Council City panel.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="flex-1">
+            <iframe src={TOWN_SRC} title="Council Town" className="h-full w-full border-0" allow="clipboard-write" />
+          </div>
+          <div className="shrink-0 border-t border-white/5 px-3 py-1.5 text-[10px] leading-relaxed text-slate-600">
+            {TOWN_BACKEND_NOTE}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 /* ── panel: method ─────────────────────────────────────────────────────────── */
 
 function MethodPanel() {
@@ -329,7 +383,7 @@ function MethodPanel() {
 
 /* ── workspace ─────────────────────────────────────────────────────────────── */
 
-const COMPONENTS = { globe: GlobePanel, board: BoardPanel, evidence: EvidencePanel, fleet: FleetPanel, ask: AskPanel, method: MethodPanel, city: CityPanel };
+const COMPONENTS = { globe: GlobePanel, board: BoardPanel, evidence: EvidencePanel, fleet: FleetPanel, ask: AskPanel, method: MethodPanel, city: CityPanel, town: TownPanel };
 
 function openEvidence(api: DockviewApi, axis: string) {
   const existing = api.getPanel("evidence");
@@ -337,13 +391,37 @@ function openEvidence(api: DockviewApi, axis: string) {
   api.addPanel({ id: "evidence", component: "evidence", title: "Evidence", params: { axis }, position: { referencePanel: "board", direction: "below" } });
 }
 
-const LAUNCHER: { id: keyof typeof COMPONENTS; title: string; icon: any }[] = [
-  { id: "globe", title: "Globe", icon: Globe2 },
-  { id: "board", title: "GSPC Board", icon: LayoutGrid },
-  { id: "ask", title: "Ask SOV", icon: MessageSquare },
-  { id: "fleet", title: "MCP Fleet", icon: Server },
-  { id: "city", title: "Council City", icon: Building2 },
-  { id: "method", title: "Method", icon: ScrollText },
+type LauncherItem = { id: keyof typeof COMPONENTS; title: string; icon: any; hint: string };
+type LauncherSection = { heading: string; items: LauncherItem[] };
+
+const LAUNCHER_SECTIONS: LauncherSection[] = [
+  {
+    heading: "Workspace",
+    items: [
+      { id: "globe", title: "Globe", icon: Globe2, hint: "Thirteen seats, one per axis" },
+      { id: "board", title: "GSPC Board", icon: LayoutGrid, hint: "Scores only where measured" },
+    ],
+  },
+  {
+    heading: "Measurement",
+    items: [
+      { id: "city", title: "Council City", icon: Building2, hint: "Signed arena runs" },
+      { id: "method", title: "Method", icon: ScrollText, hint: "The rules the boards run on" },
+    ],
+  },
+  {
+    heading: "Living exhibit",
+    items: [
+      { id: "town", title: "Council Town", icon: Gamepad2, hint: "Agent clans in an open world" },
+    ],
+  },
+  {
+    heading: "Intelligence",
+    items: [
+      { id: "ask", title: "Ask SOV", icon: MessageSquare, hint: "Answers from the signed layer" },
+      { id: "fleet", title: "MCP Fleet", icon: Server, hint: "Declared tool servers" },
+    ],
+  },
 ];
 
 export default function SovOS() {
@@ -367,8 +445,9 @@ function SovOSInner() {
     const saved = localStorage.getItem(LAYOUT_KEY);
     if (saved) { try { event.api.fromJSON(JSON.parse(saved)); return; } catch { localStorage.removeItem(LAYOUT_KEY); } }
     event.api.addPanel({ id: "globe", component: "globe", title: "Globe" });
-    event.api.addPanel({ id: "board", component: "board", title: "GSPC Board", position: { referencePanel: "globe", direction: "right" } });
-    event.api.addPanel({ id: "ask", component: "ask", title: "Ask SOV", position: { referencePanel: "globe", direction: "below" } });
+    event.api.addPanel({ id: "town", component: "town", title: "Council Town", position: { referencePanel: "globe", direction: "right" } });
+    event.api.addPanel({ id: "board", component: "board", title: "GSPC Board", position: { referencePanel: "town", direction: "right" } });
+    event.api.addPanel({ id: "ask", component: "ask", title: "Ask SOV", position: { referencePanel: "town", direction: "below" } });
     event.api.addPanel({ id: "city", component: "city", title: "Council City", position: { referencePanel: "ask", direction: "within" } });
     event.api.addPanel({ id: "method", component: "method", title: "Method", position: { referencePanel: "ask", direction: "within" } });
   }, []);
@@ -393,7 +472,7 @@ function SovOSInner() {
       <header className="flex h-11 shrink-0 items-center gap-3 border-b border-white/8 bg-[#080c14] px-3">
         <span className="text-[13px] font-semibold tracking-[0.22em] text-emerald-300">Council&nbsp;OS</span>
         <span className="hidden text-[11px] text-slate-500 sm:block">
-          {COUNTS.measured}/{COUNTS.total} axes measured · {COUNTS.withInterval} with an interval · signed, recomputable
+          {COUNTS.measured}/{COUNTS.total} measured · {COUNTS.withInterval} carrying an interval
         </span>
         <div className="ml-auto flex items-center gap-1.5">
           <button onClick={() => setPalette(true)} className="flex items-center gap-1.5 rounded-md border border-white/10 px-2 py-1 text-[11px] text-slate-400 hover:bg-white/5">
@@ -404,13 +483,37 @@ function SovOSInner() {
       </header>
 
       <div className="flex min-h-0 flex-1">
-        <nav className="flex w-12 shrink-0 flex-col items-center gap-1 border-r border-white/8 bg-[#080c14] py-2">
-          {LAUNCHER.map(({ id, title, icon: Icon }) => (
-            <button key={id} title={title} onClick={() => open(id, title)}
-              className="grid h-9 w-9 place-items-center rounded-lg text-slate-500 transition hover:bg-white/5 hover:text-emerald-300">
-              <Icon className="h-4 w-4" />
-            </button>
-          ))}
+        <nav className="flex w-52 shrink-0 flex-col border-r border-white/8 bg-[#080c14]">
+          <div className="flex items-center gap-2 border-b border-white/5 px-3 py-2.5">
+            <ShieldCheck className="h-4 w-4 text-emerald-300" />
+            <div>
+              <span className="block text-[11px] font-semibold tracking-[0.16em] text-slate-200">Council OS</span>
+              <SourceChip />
+            </div>
+          </div>
+          <div className="flex-1 overflow-auto py-1.5">
+            {LAUNCHER_SECTIONS.map((section) => (
+              <div key={section.heading} className="mb-0.5">
+                <div className="px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">{section.heading}</div>
+                {section.items.map(({ id, title, icon: Icon, hint }) => (
+                  <button
+                    key={id}
+                    onClick={() => open(id, title)}
+                    title={hint}
+                    className="flex w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-left text-[12px] font-medium text-slate-400 transition hover:bg-white/5 hover:text-emerald-200"
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">{title}</span>
+                    {id === "board" && <span className="ml-auto shrink-0 rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-emerald-300">{COUNTS.measured}</span>}
+                    {id === "town" && <span className="ml-auto shrink-0 rounded border border-amber-400/30 px-1 py-0.5 text-[9px] font-semibold text-amber-400/70">gate</span>}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-white/5 px-3 py-2 text-[10px] leading-relaxed text-slate-600">
+            {COUNTS.total} axes · {COUNTS.measured} measured · signed, recomputable
+          </div>
         </nav>
         <div className="min-w-0 flex-1">
           <DockviewReact components={COMPONENTS} onReady={onReady} theme={themeAbyss} disableTabsContextMenu />
@@ -422,7 +525,7 @@ function SovOSInner() {
         <CommandList>
           <CommandEmpty>Nothing matches.</CommandEmpty>
           <CommandGroup heading="Panels">
-            {LAUNCHER.map(({ id, title }) => (
+            {LAUNCHER_SECTIONS.flatMap((s) => s.items).map(({ id, title }) => (
               <CommandItem key={id} onSelect={() => { open(id, title); setPalette(false); }}>{title}</CommandItem>
             ))}
           </CommandGroup>
