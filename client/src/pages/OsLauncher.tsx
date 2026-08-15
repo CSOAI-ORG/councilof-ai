@@ -150,47 +150,49 @@ export default function OsLauncher() {
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-600">Center stage · the game</span>
-                    <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-amber-600">
-                      Launching — deploy pending
+                    <span className="rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-emerald-700">
+                      Client live
                     </span>
                   </div>
                   <h2 className="mt-2 text-2xl font-bold text-slate-900">Council Town</h2>
                   <p className="mt-2 max-w-md text-[14px] leading-relaxed text-slate-600">
-                    A living town of AI agents you can watch being governed — governed-vs-ungoverned agents living,
-                    deliberating and acting under the rules. It is an open-source AI-agent town (built on a16z's AI
-                    Town), cloned and configured for councilof.ai.
+                    Our estate-branded open-world town where AI agent clans deliberate — the living exhibit in the
+                    Council OS Games arcade. Built on the open-source AI Town game shell (MIT), rebranded as
+                    Council Town with the estate's own identity.
                   </p>
                   <p className="mt-3 max-w-md text-[13px] leading-relaxed text-slate-500">
-                    It is not live yet: the backend needs an account login only the owner can complete, so the town is
-                    configured and waiting rather than running. No demo URL is shown until it truly runs.
+                    The town client is deployed and playable. Its world (the agent simulation backend) switches on
+                    with one owner-only login — nothing is simulated or faked in the meantime.
                   </p>
                   <div className="mt-5 flex flex-wrap gap-3">
-                    <Link
-                      href="/gspc-arena"
+                    <a
+                      href="https://council-town.pages.dev"
+                      target="_blank"
+                      rel="noreferrer"
                       className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-600"
                     >
-                      Play the Arena instead →
-                    </Link>
+                      Open Council Town ↗
+                    </a>
                     <Link
-                      href="/demo"
+                      href="/sov-os"
                       className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                     >
-                      Watch the live demo
+                      See it in the OS Games arcade
                     </Link>
                   </div>
                 </div>
 
-                {/* Honest "coming online" panel — no fake game, no invented iframe */}
-                <div className="flex flex-col justify-center rounded-xl border border-dashed border-emerald-300 bg-white/70 p-6 text-center">
+                {/* Deployed client — honest backend-state panel */}
+                <div className="flex flex-col justify-center rounded-xl border border-emerald-200 bg-white/80 p-6 text-center">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">🏛</div>
-                  <div className="mt-3 text-sm font-semibold text-slate-900">Town rendering offline</div>
+                  <div className="mt-3 text-sm font-semibold text-slate-900">Client deployed · world owner-gated</div>
                   <p className="mt-1 text-[12px] leading-relaxed text-slate-500">
-                    Agents, memory and the live agent-loop are configured. The playable town appears here the moment
-                    the backend is deployed.
+                    The town UI renders live. The agent world starts once the Convex backend login is completed
+                    (one owner action) — then the clans walk, deliberate and get measured.
                   </p>
                   <div className="mt-4 flex items-center justify-center gap-2 font-mono text-[11px] text-emerald-600">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-                    awaiting deploy
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+                    live at council-town.pages.dev
                   </div>
                 </div>
               </div>
