@@ -305,51 +305,78 @@ function AskPanel() {
   );
 }
 
-/* ── panel: Council Town — the living game exhibit ──────────────────────────── */
+/* ── panel: Games — the estate's game arcade ───────────────────────────────── */
+//
+// Each game in the arcade is one entry in GAMES. A game ships on its own deploy
+// cycle (its own CF Pages project) and the OS just hosts it — the estate owns
+// the brand, the purpose, and the surface; the game client stays independent.
 
-const TOWN_SRC = "https://council-town.pages.dev/";
-const TOWN_BACKEND_NOTE =
-  "The town's world runs on its own game backend (Convex), which is owner-gated — one login the estate owner clears. " +
-  "Until it is wired, the town client shows its loading shell; nothing here is simulated or fabricated.";
+type Game = { id: string; title: string; tagline: string; src: string; note: string; gated: boolean };
 
-function TownPanel() {
-  const [reachable, setReachable] = useState<boolean | null>(null);
+const GAMES: Game[] = [
+  {
+    id: "council-town",
+    title: "Council Town",
+    tagline: "Agent clans deliberating in an open world",
+    src: "https://council-town.pages.dev/",
+    note:
+      "Council Town's world runs on its game backend (Convex), which is owner-gated — one login the estate owner clears. " +
+      "Until it is wired, the client shows its loading shell; nothing is simulated or fabricated.",
+    gated: true,
+  },
+];
+
+function GamesPanel({ params }: IDockviewPanelProps<{ game?: string }>) {
+  const [activeId, setActiveId] = useState<string>(GAMES[0].id);
+  const [reachable, setReachable] = useState<Record<string, boolean | null>>({});
+  const game = GAMES.find((g) => g.id === activeId) ?? GAMES[0];
+
   useEffect(() => {
+    if (params?.game && GAMES.some((g) => g.id === params.game)) setActiveId(params.game);
+  }, [params?.game]);
+
+  useEffect(() => {
+    if (reachable[game.id] !== undefined) return;
     let dead = false;
-    fetch(TOWN_SRC, { method: "GET" })
-      .then((r) => { if (!dead) setReachable(r.ok); })
-      .catch(() => { if (!dead) setReachable(false); });
+    fetch(game.src, { method: "GET" })
+      .then((r) => { if (!dead) setReachable((m) => ({ ...m, [game.id]: r.ok })); })
+      .catch(() => { if (!dead) setReachable((m) => ({ ...m, [game.id]: false })); });
     return () => { dead = true; };
-  }, []);
+  }, [game, reachable]);
 
   return (
     <div className="flex h-full w-full flex-col bg-[#080c14]">
-      <div className="flex shrink-0 items-center gap-2 border-b border-white/5 bg-[#080c14]/95 px-3 py-2">
-        <Gamepad2 className="h-3.5 w-3.5 text-emerald-300" />
-        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-300">Council Town</span>
-        <span className="text-[11px] text-slate-500">living exhibit — agent clans deliberating in an open world</span>
-        <span className="ml-auto rounded border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-300">
-          game backend owner-gated
-        </span>
+      <div className="flex shrink-0 items-center gap-1 border-b border-white/5 bg-[#080c14]/95 px-2 py-1.5">
+        {GAMES.map((g) => (
+          <button
+            key={g.id}
+            onClick={() => setActiveId(g.id)}
+            className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition ${g.id === activeId ? "bg-emerald-400/15 text-emerald-200" : "text-slate-500 hover:bg-white/5 hover:text-slate-300"}`}
+          >
+            {g.title}
+            {g.gated && <span className="ml-1.5 rounded border border-amber-400/30 px-1 py-0.5 text-[9px] font-semibold text-amber-400/70">gate</span>}
+          </button>
+        ))}
+        <span className="ml-auto hidden pr-2 text-[10px] text-slate-600 sm:block">{game.tagline}</span>
       </div>
-      {reachable === false ? (
+      {reachable[game.id] === false ? (
         <div className="flex flex-1 items-center justify-center p-6">
           <div className="max-w-md rounded-xl border border-white/10 bg-white/[0.02] p-5 text-center">
             <Gamepad2 className="mx-auto h-6 w-6 text-slate-600" />
-            <div className="mt-2 text-sm font-medium text-slate-200">Town client not built into this bundle yet</div>
+            <div className="mt-2 text-sm font-medium text-slate-200">{game.title} client unreachable</div>
             <p className="mt-1 text-[12px] leading-relaxed text-slate-500">
-              The static client ships at <code className="text-slate-400">/town/</code> once built. Until then the
-              signed measurement records stay available in the Council City panel.
+              The game client did not answer at {game.src}. The signed measurement records stay available in the
+              Council City panel meanwhile.
             </p>
           </div>
         </div>
       ) : (
         <>
           <div className="flex-1">
-            <iframe src={TOWN_SRC} title="Council Town" className="h-full w-full border-0" allow="clipboard-write" />
+            <iframe src={game.src} title={game.title} className="h-full w-full border-0" allow="clipboard-write" />
           </div>
           <div className="shrink-0 border-t border-white/5 px-3 py-1.5 text-[10px] leading-relaxed text-slate-600">
-            {TOWN_BACKEND_NOTE}
+            {game.note}
           </div>
         </>
       )}
@@ -383,7 +410,7 @@ function MethodPanel() {
 
 /* ── workspace ─────────────────────────────────────────────────────────────── */
 
-const COMPONENTS = { globe: GlobePanel, board: BoardPanel, evidence: EvidencePanel, fleet: FleetPanel, ask: AskPanel, method: MethodPanel, city: CityPanel, town: TownPanel };
+const COMPONENTS = { globe: GlobePanel, board: BoardPanel, evidence: EvidencePanel, fleet: FleetPanel, ask: AskPanel, method: MethodPanel, city: CityPanel, games: GamesPanel };
 
 function openEvidence(api: DockviewApi, axis: string) {
   const existing = api.getPanel("evidence");
@@ -391,9 +418,11 @@ function openEvidence(api: DockviewApi, axis: string) {
   api.addPanel({ id: "evidence", component: "evidence", title: "Evidence", params: { axis }, position: { referencePanel: "board", direction: "below" } });
 }
 
-type LauncherItem = { id: keyof typeof COMPONENTS; title: string; icon: any; hint: string };
+type LauncherItem = { id: keyof typeof COMPONENTS; title: string; icon: any; hint: string; gated?: boolean };
 type LauncherSection = { heading: string; items: LauncherItem[] };
 
+// The Games section is built from the game registry — adding a game to GAMES
+// adds its own sidebar entry automatically. The arcade holds up to 6 games.
 const LAUNCHER_SECTIONS: LauncherSection[] = [
   {
     heading: "Workspace",
@@ -410,10 +439,8 @@ const LAUNCHER_SECTIONS: LauncherSection[] = [
     ],
   },
   {
-    heading: "Living exhibit",
-    items: [
-      { id: "town", title: "Council Town", icon: Gamepad2, hint: "Agent clans in an open world" },
-    ],
+    heading: "Games",
+    items: GAMES.map((g) => ({ id: "games", title: g.title, icon: Gamepad2, hint: g.tagline, gated: g.gated })),
   },
   {
     heading: "Intelligence",
@@ -445,9 +472,9 @@ function SovOSInner() {
     const saved = localStorage.getItem(LAYOUT_KEY);
     if (saved) { try { event.api.fromJSON(JSON.parse(saved)); return; } catch { localStorage.removeItem(LAYOUT_KEY); } }
     event.api.addPanel({ id: "globe", component: "globe", title: "Globe" });
-    event.api.addPanel({ id: "town", component: "town", title: "Council Town", position: { referencePanel: "globe", direction: "right" } });
-    event.api.addPanel({ id: "board", component: "board", title: "GSPC Board", position: { referencePanel: "town", direction: "right" } });
-    event.api.addPanel({ id: "ask", component: "ask", title: "Ask SOV", position: { referencePanel: "town", direction: "below" } });
+    event.api.addPanel({ id: "games", component: "games", title: "Games", position: { referencePanel: "globe", direction: "right" } });
+    event.api.addPanel({ id: "board", component: "board", title: "GSPC Board", position: { referencePanel: "games", direction: "right" } });
+    event.api.addPanel({ id: "ask", component: "ask", title: "Ask SOV", position: { referencePanel: "games", direction: "below" } });
     event.api.addPanel({ id: "city", component: "city", title: "Council City", position: { referencePanel: "ask", direction: "within" } });
     event.api.addPanel({ id: "method", component: "method", title: "Method", position: { referencePanel: "ask", direction: "within" } });
   }, []);
@@ -495,17 +522,17 @@ function SovOSInner() {
             {LAUNCHER_SECTIONS.map((section) => (
               <div key={section.heading} className="mb-0.5">
                 <div className="px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">{section.heading}</div>
-                {section.items.map(({ id, title, icon: Icon, hint }) => (
+                {section.items.map(({ id, title, icon: Icon, hint, gated }) => (
                   <button
-                    key={id}
-                    onClick={() => open(id, title)}
+                    key={id + title}
+                    onClick={() => open(id, title, id === "games" && gated ? { game: GAMES[0].id } : undefined)}
                     title={hint}
                     className="flex w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-left text-[12px] font-medium text-slate-400 transition hover:bg-white/5 hover:text-emerald-200"
                   >
                     <Icon className="h-3.5 w-3.5 shrink-0" />
                     <span className="truncate">{title}</span>
                     {id === "board" && <span className="ml-auto shrink-0 rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-emerald-300">{COUNTS.measured}</span>}
-                    {id === "town" && <span className="ml-auto shrink-0 rounded border border-amber-400/30 px-1 py-0.5 text-[9px] font-semibold text-amber-400/70">gate</span>}
+                    {gated && <span className="ml-auto shrink-0 rounded border border-amber-400/30 px-1 py-0.5 text-[9px] font-semibold text-amber-400/70">gate</span>}
                   </button>
                 ))}
               </div>
