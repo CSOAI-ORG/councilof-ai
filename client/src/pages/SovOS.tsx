@@ -307,10 +307,10 @@ function AskPanel() {
 
 /* ── panel: Council Town — the living game exhibit ──────────────────────────── */
 
-const TOWN_SRC = "/town/";
+const TOWN_SRC = "https://council-town.pages.dev/";
 const TOWN_BACKEND_NOTE =
   "The town's world runs on its own game backend (Convex), which is owner-gated — one login the estate owner clears. " +
-  "Until it is wired, this panel shows the deployed client with no world; nothing here is simulated or fabricated.";
+  "Until it is wired, the town client shows its loading shell; nothing here is simulated or fabricated.";
 
 function TownPanel() {
   const [reachable, setReachable] = useState<boolean | null>(null);
