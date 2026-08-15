@@ -334,6 +334,14 @@ export function Header() {
               <span className="text-base leading-none">◎</span> Globe
             </a>
 
+            {/* J-Space — the signed event world */}
+            <a
+              href="/j-space"
+              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
+            >
+              <span className="text-base leading-none">◉</span> J-Space
+            </a>
+
             {/* CSOAI OS launcher — yields its space below 2xl so the nav never wraps */}
             <a
               href="/os"
