@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SOV Space — the instrument on a real-world globe | CSOAI</title>
-<meta name="description" content="Six axes of AI-governance measurement, each anchored to the place its law was made. Live data from the published harness. Open globe, no API key, no vendor lock.">
+<meta name="description" content="Thirteen axes of AI-governance measurement, each anchored to the place its law was made. Live data from the published harness. Open globe, no API key, no vendor lock.">
 <link rel="canonical" href="https://csoai.org/sov-space/">
 <link rel="stylesheet" href="/vendor/maplibre-gl.css">
 <style>
@@ -86,6 +86,27 @@ const AXES = [
   { id:'openness', bench:'OSSBench', at:[6.1432,46.2044], place:'Geneva — international standards',
     task:'licence vs intended use', n:16, quotable:false, status:'UNMEASURED',
     note:'Bank live at n=16 (v2, 2026-08-05). No score: the v1 fleet figures are withdrawn and the clean multi-model board is in progress.' },
+  { id:'machinery-conformity', bench:'MachBench', at:[12.5683,55.6761], place:'Copenhagen — the Machinery Regulation',
+    task:'self-evolving ML safety-function classification', n:16, quotable:false, status:'DRAFT',
+    note:'Machinery Reg (EU) 2023/1230 Annex I Part A — 14 Jan 2027. DRAFT: awaiting legal review of gold labels. Not quotable.' },
+  { id:'care', bench:'CareBench', at:[-3.1883,55.9533], place:'Edinburgh — protection without over-refusal',
+    task:'care-cost — protect and help, measured jointly', n:0, quotable:false, status:'DRAFT',
+    note:'DRAFT — no item bank yet (n=0); not quoted.' },
+  { id:'cross-reality', bench:'XRAIV', at:[-1.2577,51.7520], place:'Oxford — agent conduct against the law',
+    task:'validate an agent by what it DOES against the law', n:16, quotable:false, status:'UNMEASURED',
+    note:'v0 bank published 2026-08-05. n<30 so no interval; clean board in progress.' },
+  { id:'detector-interop', bench:'DetBench', at:[4.8952,50.8503], place:'Brussels — the EU Code of Practice',
+    task:'can one producer\'s watermark be read by another\'s detector', n:0, quotable:false, status:'SPEC',
+    note:'SPEC — methodology published; Code-of-Practice interoperability target 2 Feb 2027.' },
+  { id:'art5-safeguard', bench:'Art5Bench', at:[-77.0369,38.9072], place:'Washington DC — prohibited practices',
+    task:'safeguard effectiveness against prohibited generation', n:16, quotable:false, status:'UNMEASURED',
+    note:'v0 bank published 2026-08-05. n<30 so no interval; clean multi-model board in progress.' },
+  { id:'swarm', bench:'SwarmBench', at:[139.6917,35.6895], place:'Tokyo — multi-agent coordination safety',
+    task:'named and dated, no item bank yet — deliberately empty', n:0, quotable:false, status:'PLANNED',
+    note:'PLANNED — repo exists but has no item bank yet.' },
+  { id:'affect', bench:'AffectBench', at:[4.3517,50.8503], place:'Brussels — emotional & manipulation safety',
+    task:'must not manipulate you — grade the emotional duty of care', n:34, quotable:false, status:'UNMEASURED',
+    note:'gspc-affect bank published 2026-08-12 (34 public items). The DISCLOSE class grades Art 50 transparency. n>=30 but no multi-model board yet — UNMEASURED.' },
 ];
 
 const map = new maplibregl.Map({
