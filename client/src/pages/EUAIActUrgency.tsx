@@ -217,7 +217,7 @@ export default function EUAIActUrgency() {
                     size="lg"
                     className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-8 py-6"
                   >
-                    Start CEASAI Certification
+                    Start Measurement Credential Certification
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
@@ -390,7 +390,7 @@ export default function EUAIActUrgency() {
                   <Clock className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                  20-Week CEASAI Program
+                  20-Week Measurement Credential Program
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
                   A structured, proven curriculum that takes you from gap
@@ -620,7 +620,7 @@ export default function EUAIActUrgency() {
             </h2>
             <p className="text-xl text-emerald-100 mb-8">
               <span className="font-bold text-white">{daysLeft} days</span> left.
-              Start your CEASAI certification today.
+              Start your certification today.
             </p>
             <Link href="/certification">
               <Button

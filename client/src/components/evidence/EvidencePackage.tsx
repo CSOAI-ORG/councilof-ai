@@ -63,7 +63,7 @@ const CHAIN_STEPS = [
   },
   {
     title: "2. The signature",
-    body: "The signature is over (digest + prev_sig), where digest is SHA-256 of the canonical SIGIL line.",
+    body: "The signature is over (digest + prev_sig), where digest is SHA-256 of the canonical signed-vote line.",
   },
   {
     title: "3. The chain",

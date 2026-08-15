@@ -16,12 +16,12 @@ const LOOP: Stage[] = [
 ];
 type Hive = { name: string; queen: string; state: "Learning" | "Aware" | "Evolving" };
 const HIVES: Hive[] = [
-  { name: "Compliance Engine", queen: "sovereign-gov", state: "Evolving" },
-  { name: "Safety / Red Team", queen: "sovereign-saf", state: "Aware" },
-  { name: "Cyber / Rainbow Stack", queen: "sovereign-cyb", state: "Aware" },
-  { name: "Legacy Bridge", queen: "sovereign-brg", state: "Learning" },
-  { name: "Social OS", queen: "sovereign-soc", state: "Learning" },
-  { name: "Council Towns", queen: "sovereign-twn", state: "Evolving" },
+  { name: "Compliance Engine", queen: "council-gov", state: "Evolving" },
+  { name: "Safety / Red Team", queen: "council-saf", state: "Aware" },
+  { name: "Cyber / Rainbow Stack", queen: "council-cyb", state: "Aware" },
+  { name: "Legacy Bridge", queen: "council-brg", state: "Learning" },
+  { name: "Social OS", queen: "council-soc", state: "Learning" },
+  { name: "Council Towns", queen: "council-twn", state: "Evolving" },
 ];
 const FAQ = [
   { q: "Why a hive, not a server?", a: "A single server is a single point of failure and capture. A hive distributes the decision across many agents, so resilience and honesty are structural - not promised." },
@@ -40,7 +40,7 @@ export default function HiveModel() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the hive model</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Hive - how consensus is reached</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every tool in the OS is a hive with an inner Sovereign queen. Workers gather, the queen proposes, the swarm debates, and a designed multi-agent review vote decides - so no single agent can corrupt the whole. The hive attests, learns, and never gets stuck.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every tool in the OS is a hive with an inner Council queen. Workers gather, the queen proposes, the swarm debates, and a designed multi-agent review vote decides - so no single agent can corrupt the whole. The hive attests, learns, and never gets stuck.</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-12">
@@ -84,7 +84,7 @@ export default function HiveModel() {
           </div>
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Every component is a hive</h2>
-        <p className="mt-1 text-sm text-gray-500">Each tool runs the same loop with its own Sovereign queen - learning, aware, evolving. Together they are the swarm.</p>
+        <p className="mt-1 text-sm text-gray-500">Each tool runs the same loop with its own Council queen - learning, aware, evolving. Together they are the swarm.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {HIVES.map((h) => (
             <div key={h.name} className="rounded-2xl border border-gray-200 p-5">

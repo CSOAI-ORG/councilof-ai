@@ -112,7 +112,7 @@ export default function AiTransparency() {
             this site call a model. That was wrong, and the method was why: the scan walked
             imports of model-provider SDKs, but the surfaces that talk to a model do it with a
             plain fetch to our own gateway — no SDK involved. A manual audit of every fetch on
-            1 August 2026 found {AI_SYSTEM_COMPONENTS} components calling the live Sovereign
+            1 August 2026 found {AI_SYSTEM_COMPONENTS} components calling the live Council
             chat endpoint. They are classified below, and the guard is being extended to cover
             gateway fetches so the next miss is caught by the machine, not by a deadline.
           </p>

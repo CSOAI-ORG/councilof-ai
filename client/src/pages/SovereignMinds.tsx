@@ -29,7 +29,7 @@ type Cap = { name: string; src: string; body: string };
 const VOICE: Cap[] = [
   { name: "Speaks", src: "Kokoro TTS", body: "On-device, natural voice — the Council assistant talks back, no cloud round-trip required." },
   { name: "Listens", src: "openWakeWord", body: "Custom wake word on any device — 'Council…' and it's listening." },
-  { name: "Converses", src: "Sovereign Dock", body: "The right-hand dock already turns speech and chat into governed actions, live now." },
+  { name: "Converses", src: "Council Dock", body: "The right-hand dock already turns speech and chat into governed actions, live now." },
 ];
 
 export default function SovereignMinds() {

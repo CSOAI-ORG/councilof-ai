@@ -107,7 +107,7 @@ function buildAssessmentResults() {
         version: "1.0.0",
         "oscal-version": "1.1.2",
       },
-      "import-ap": { href: "#csoai-sovereign-gate-ap" },
+      "import-ap": { href: "#csoai-council-gate-ap" },
       results: [
         {
           uuid: uuid(),

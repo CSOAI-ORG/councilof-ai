@@ -551,7 +551,7 @@ export async function generateCertificatePDF(data: CertificateData): Promise<Blo
     doc.text('33', sealX, sealY + 3, { align: 'center' });
 
     doc.setFontSize(7);
-    doc.text('BYZANTINE VERIFIED', sealX, sealY + 18, { align: 'center' });
+    doc.text('COUNCIL VERIFIED', sealX, sealY + 18, { align: 'center' });
   }
 
   // Certificate details

@@ -387,7 +387,7 @@ export const ENTITIES: Entity[] = [
     sector: 'AI research lab',
     sizeBand: 'sme',
     systems: [
-      { name: 'Luminous / Pharia', kind: 'llm', riskTier: 'gpai', description: 'European sovereign LLM stack.' },
+      { name: 'Luminous / Pharia', kind: 'llm', riskTier: 'gpai', description: 'European sovereignty-focused LLM stack.' },
     ],
     inScope: scope('DEU'),
     layer0: { id: 'ent:deu:de-alephalpha' },
@@ -1120,7 +1120,7 @@ export const ENTITIES: Entity[] = [
     sector: 'AI infrastructure',
     sizeBand: 'mid',
     systems: [
-      { name: 'Ilmu LLM', kind: 'llm', riskTier: 'gpai', description: 'Malaysian sovereign LLM.' },
+      { name: 'Ilmu LLM', kind: 'llm', riskTier: 'gpai', description: 'Malaysian sovereignty-focused LLM.' },
     ],
     inScope: scope('MYS'),
     layer0: { id: 'ent:mys:my-ytl' },
@@ -1816,7 +1816,7 @@ export const ENTITIES: Entity[] = [
     sector: 'AI cloud infrastructure',
     sizeBand: 'mid',
     systems: [
-      { name: 'Sovereign AI cloud', kind: 'other', description: 'Compute & MLOps for sovereign AI.' },
+      { name: 'National sovereignty AI cloud', kind: 'other', description: 'Compute & MLOps for sovereignty-focused AI.' },
     ],
     inScope: scope('ARE'),
     layer0: { id: 'ent:are:ae-core42' },

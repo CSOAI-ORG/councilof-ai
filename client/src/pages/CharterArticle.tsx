@@ -1142,8 +1142,8 @@ Interoperability enables innovation and prevents monopolistic control of AI mark
     partTitle: "Technical Standards",
     content: `Standards for AI practitioner education and ongoing professional development, building a skilled and ethical AI workforce.
 
-CEASAI Certification Program:
-The Cooperative Education in AI Safety and Governance (CEASAI) program provides tiered certification:
+Measurement Credential Program:
+The Cooperative Education in AI Safety and Governance program provides tiered certification:
 
 Associate Analyst (40 hours):
 - Foundations of AI safety

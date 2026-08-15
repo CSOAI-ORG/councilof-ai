@@ -396,7 +396,7 @@ export default function GlobalAISafetyInitiative() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  We train your first cohort of AI Safety Analysts through CEASAI certification
+                  We train your first cohort of AI Safety Analysts through measurement credential certification
                 </p>
                 <Badge className="mt-4" variant="outline">
                   <Clock className="mr-1 h-3 w-3" /> 8-12 Weeks

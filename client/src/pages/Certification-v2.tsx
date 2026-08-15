@@ -238,7 +238,7 @@ function CertificationTierCard({ tier, index }: { tier: typeof certificationTier
           <IconComponent className={`h-7 w-7 ${colors.iconText}`} />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-gray-900">CEASAI {tier.title}</h3>
+          <h3 className="text-xl font-bold text-gray-900">Measurement Credential — {tier.title}</h3>
           <p className="text-gray-600 text-sm mt-1">{tier.description}</p>
         </div>
       </div>
@@ -330,7 +330,7 @@ export default function CertificationV2() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              CEASAI Professional Certification
+              Professional Measurement Credential
             </h1>
 
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -544,7 +544,7 @@ export default function CertificationV2() {
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Why Get CEASAI Certified?
+              Why Get Certified?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Join the global network of professionals protecting humanity from AI risks
@@ -627,7 +627,7 @@ export default function CertificationV2() {
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-600">
-              Everything you need to know about CEASAI attestation and subscriptions
+              Everything you need to know about measurement attestation and subscriptions
             </p>
           </div>
 

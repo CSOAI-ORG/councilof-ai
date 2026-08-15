@@ -138,7 +138,7 @@ export default function SovereignDock() {
     chargeSovereign(4); try { e.target.value = ""; } catch (er) {}
   }
   const BRAIN: Record<string, string> = {
-    offline: "Offline brain — a local open-source model runs on your own hardware. Fully sovereign, no data leaves you. I wrap it in multi-agent review + Layer 0 so it still stays compliant.",
+    offline: "Offline brain — a local open-source model runs on your own hardware. Fully self-hosted, no data leaves you. I wrap it in multi-agent review + Layer 0 so it still stays compliant.",
     hosted: "Hosted brain — premium models, governed. I route your request to the best model (MoE, world model or VLM), the Council of AI checks the answer, and every decision is signed.",
     paygo: "Pay-as-you-go — you only pay per governed call. Same multi-agent review + Layer 0 floor; ideal for bursty or trial use.",
   };
@@ -302,7 +302,7 @@ export default function SovereignDock() {
             {brainOpen && (
               <div className="mb-2 rounded-xl border border-emerald-400/25 bg-[#04120c] p-3">
                 <div className="text-[11px] font-bold text-emerald-100">Your Council assistant brain</div>
-                <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">A sandwich: a <b className="text-emerald-200">left brain</b> (reasoning, tools, BFT compliance) and a <b className="text-emerald-200">right brain</b> (perception, vision/VLM). Route any model underneath — MoE, mixture-of-models, a world model, a VLM — and the Council assistant wraps it in the 33-agent Council of AI + Layer 0 so whatever you plug in stays compliant and signed.</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">A sandwich: a <b className="text-emerald-200">left brain</b> (reasoning, tools, multi-agent compliance) and a <b className="text-emerald-200">right brain</b> (perception, vision/VLM). Route any model underneath — MoE, mixture-of-models, a world model, a VLM — and the Council assistant wraps it in the 33-agent Council of AI + Layer 0 so whatever you plug in stays compliant and signed.</p>
                 <div className="mt-2 grid grid-cols-3 gap-1.5">
                   {[["offline", "Offline"], ["hosted", "Hosted"], ["paygo", "PAYG"]].map(([id, label]) => (
                     <button key={id} onClick={() => setBrain(id)} className={"rounded-lg px-2 py-1.5 text-[11px] font-bold " + (brainMode === id ? "bg-emerald-500 text-[#03110b]" : "border border-emerald-400/30 text-emerald-100 hover:bg-white/5")}>{label}</button>

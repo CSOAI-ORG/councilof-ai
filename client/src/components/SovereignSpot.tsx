@@ -40,7 +40,7 @@ export default function SovereignSpot({
     setQ(question); setBusy(true); setA("");
     const r = await askSovereign(question, {
       system:
-        "You are the CSOAI Sovereign — the AI-governance and cybersecurity assistant. Answer only in that role, specifically about: " +
+        "You are the CSOAI Council assistant — the AI-governance and cybersecurity assistant. Answer only in that role, specifically about: " +
         topic +
         ". Be concise, concrete and practical (regulations, obligations, dates, controls, risk). Never a personal companion, never poetic.",
     });
@@ -50,7 +50,7 @@ export default function SovereignSpot({
   return (
     <div className="grid gap-4 rounded-2xl border border-emerald-500/20 bg-[#04120c] p-4 md:grid-cols-2">
       <div className="overflow-hidden rounded-xl border border-emerald-500/15 bg-black/40" style={{ height }}>
-        <iframe ref={f} src="/globe3d.html" title="Sovereign governance globe" loading="lazy" className="h-full w-full border-0" />
+        <iframe ref={f} src="/globe3d.html" title="Council governance globe" loading="lazy" className="h-full w-full border-0" />
       </div>
       <div className="flex min-h-0 flex-col">
         <div className="text-sm font-bold text-emerald-100">Ask the Council assistant — {topic}</div>

@@ -97,7 +97,7 @@ const AXES: {
       "RFC 4998 renewal, and any PQC option (ML-DSA, COSE −48/−49/−50 per RFC 9964).",
     artefact: "results/pqcbench.json",
     uncomfortable:
-      "The first subject scored is our own. All four SIGIL chains fail every criterion — no " +
+      "The first subject scored is our own. All four signed-vote chains fail every criterion — no " +
       "signed record carries an algorithm identifier, so a verifier cannot know what produced " +
       "the signature and the chain cannot migrate link by link. Only our C2PA manifest passes " +
       "algorithm agility. NIST IR 8547 disallows EdDSA after 2035.",

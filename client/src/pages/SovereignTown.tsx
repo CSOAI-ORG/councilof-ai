@@ -71,7 +71,7 @@ const FRAMEWORKS = [
 const EXPLAINERS = [
   {
     t: "Explore the live governance grid →",
-    d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Council Town feed, live on one Earth.",
+    d: "The immersive globe — 177 jurisdictions, council nodes, the MCP fleet and the Council Town feed, live on one Earth.",
     href: "/globe3d.html",
   },
   {

@@ -161,7 +161,7 @@ export default function SystemCard() {
             <a href="/readiness-assessment" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get compliant</a>
             <a href="/pricing" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Operator tier (defence-grade) →</a>
           </div>
-          <p className="mt-4 text-[11px] text-emerald-300/50">Demo card data is synthetic; the signing and verification are genuinely real, on the CSOAI sovereign signing backend. For a named engagement the card is issued under your own sovereign key.</p>
+          <p className="mt-4 text-[11px] text-emerald-300/50">Demo card data is synthetic; the signing and verification are genuinely real, on the CSOAI measurement signing backend. For a named engagement the card is issued under your own signing key.</p>
         </div>
       </section>
     </div>

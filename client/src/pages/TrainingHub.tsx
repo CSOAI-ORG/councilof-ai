@@ -502,7 +502,7 @@ export default function TrainingHub() {
             <div className="flex items-center justify-center gap-3 mb-6">
               <Gamepad2 className="h-8 w-8 text-emerald-400" />
               <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-400/30 text-sm px-4 py-1">
-                Sovereign Arcade
+                Council Arcade
               </Badge>
             </div>
 
@@ -606,7 +606,7 @@ export default function TrainingHub() {
             <Link href="/sov-city">
               <Button size="lg" className="bg-white text-emerald-700 hover:bg-gray-100 px-8 py-6 text-lg font-bold rounded-xl">
                 <Castle className="mr-2 h-5 w-5" />
-                Start with Sovereign City
+                Start with Council City
               </Button>
             </Link>
             <Link href="/ai-hunter">

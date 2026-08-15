@@ -57,7 +57,7 @@ const SCOPE = [
 const CAVEATS = [
   "The benchmark's gold labels are LLM-generated (upstream disclosure) — we measure agreement with the benchmark, not legal truth.",
   "Article retrieval is one task. It does not measure compliance judgement, obligation drafting, or deployment safety.",
-  "These are small sovereign variants (≤4B class). The size ladder (0.5B → 8B, second substrate: Kaggle T4) publishes next; we expect the ordering to change and we will publish that too.",
+  "These are small council-tuned variants (≤4B class). The size ladder (0.5B → 8B, second substrate: Kaggle T4) publishes next; we expect the ordering to change and we will publish that too.",
 ];
 
 const STATS = [

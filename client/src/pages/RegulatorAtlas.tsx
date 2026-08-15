@@ -4,7 +4,7 @@ import { chargeSovereign } from "../lib/sovCharge";
 import AISystemNotice from "../components/AISystemNotice";
 
 // /regulators — the Regulator Atlas. Every major AI + cyber regime, its top-7
-// tools, and its next-7 movements — with the live Sovereign giving a current
+// tools, and its next-7 movements — with the live Council assistant giving a current
 // read on any of them. The structured spine the Council assistant acts on.
 
 const GW = "/api";
@@ -83,7 +83,7 @@ export default function RegulatorAtlas() {
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · the regulator atlas</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Every regulator. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">The tools and the clock.</span></h1>
-          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">The major AI and cybersecurity regimes worldwide — each with the top 7 tools you need and the next 7 dates that matter. The Sovereign gives a live read on any of them, then does the work: classify, assess, sign.</p>
+          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">The major AI and cybersecurity regimes worldwide — each with the top 7 tools you need and the next 7 dates that matter. The Council assistant gives a live read on any of them, then does the work: classify, assess, sign.</p>
           <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/regulator-atlas" /></div>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             {KINDS.map((k) => (<button key={k.id} onClick={() => setKind(k.id)} className={"rounded-full border px-4 py-1.5 text-xs font-bold " + (kind === k.id ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-emerald-500/25 text-emerald-200/70 hover:bg-white/5")}>{k.label}</button>))}
@@ -95,7 +95,7 @@ export default function RegulatorAtlas() {
         <div className="grid gap-5 lg:grid-cols-2">{list.map((r) => <RegCard key={r.slug} r={r} />)}</div>
 
         <div className="mt-8 rounded-2xl border border-amber-400/25 bg-amber-400/5 p-4 text-center text-xs text-amber-100/70">
-          Dates and obligations are compiled from established framework knowledge and evolve constantly — always verify against the primary regulator before you rely on a specific date. The Sovereign's live read pulls the current picture; volatile items are marked <b className="text-amber-200">Status shifting</b>.
+          Dates and obligations are compiled from established framework knowledge and evolve constantly — always verify against the primary regulator before you rely on a specific date. The Council assistant's live read pulls the current picture; volatile items are marked <b className="text-amber-200">Status shifting</b>.
         </div>
 
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-6 text-center">

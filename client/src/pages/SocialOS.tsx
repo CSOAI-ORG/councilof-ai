@@ -100,7 +100,7 @@ export default function SocialOS() {
         </div>
 
         <h2 className="mt-12 text-xl font-bold text-gray-900">Social by civilization</h2>
-        <p className="mt-1 text-sm text-gray-500">The Sovereign meets each region where it already lives. Don't compete with super-apps — become a service inside them.</p>
+        <p className="mt-1 text-sm text-gray-500">The Council assistant meets each region where it already lives. Don't compete with super-apps — become a service inside them.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {CIVS.map((c) => (
             <div key={c.name} className="rounded-2xl border border-gray-200 p-5">
@@ -123,7 +123,7 @@ export default function SocialOS() {
 
         <h2 className="mt-12 text-xl font-bold text-gray-900">How it flows</h2>
         <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-          <span className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-gray-700">You · "Sovereign, post this"</span>
+          <span className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-gray-700">You · "Council, post this"</span>
           <span className="text-emerald-500 font-bold">→</span>
           <span className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 font-semibold text-emerald-800">Social OS · per-platform tailor + C2PA label + policy gate</span>
           <span className="text-emerald-500 font-bold">→</span>

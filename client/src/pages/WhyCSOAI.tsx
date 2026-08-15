@@ -50,7 +50,7 @@ export default function WhyCsoai() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-8">
-        <SovereignSpot topic="why CSOAI beats Vanta, Credo AI and OneTrust" layer="frameworks" suggest="How does CSOAI's open-source + BFT-council model undercut the incumbents?" />
+        <SovereignSpot topic="why CSOAI beats Vanta, Credo AI and OneTrust" layer="frameworks" suggest="How does CSOAI's open-source + designed 33-agent council undercut the incumbents?" />
       </section>
 
       <section className="mx-auto max-w-5xl px-6 py-8">

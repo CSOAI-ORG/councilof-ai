@@ -776,7 +776,7 @@ export default function NewHome() {
                 Designed 33-Agent Council
               </h3>
               <p className="text-gray-600">
-                Decentralized decision-making — a BFT-replicated vote runs today,
+                Decentralized decision-making — a designed multi-agent vote runs today,
                 expanding to 5 LLM providers (beta). No single point of failure.
               </p>
             </Card>

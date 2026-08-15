@@ -39,7 +39,7 @@ function GlobeView() {
           <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Council Globe — the GLOBE AI OS, living inside Sov Space{ask ? " · flown to your scenario" : ""}</div>
           <a href="/globe3d.html" className="text-[11px] font-semibold text-sky-200 hover:underline">Open full screen →</a>
         </div>
-        <iframe ref={frameRef} onLoad={onLoad} src="/globe3d.html" title="Sovereign 3D Governance Earth" loading="lazy" className="block h-[70vh] w-full" style={{ border: 0 }} />
+        <iframe ref={frameRef} onLoad={onLoad} src="/globe3d.html" title="Council 3D Governance Earth" loading="lazy" className="block h-[70vh] w-full" style={{ border: 0 }} />
       </div>
     </div>
   );
@@ -149,7 +149,7 @@ const FLYWHEELS: FlywheelPlanet[] = [
     description: "21-subject Day-1 sweep, care_cost joint scoring",
     metric: "composite=3.1564 (sov33-unified)", last_run_iso: "2026-07-30T11:17:00Z" },
   { id: "n-eff", name: "n_eff_diversity", axis: "continuity", phase: "milk",
-    description: "pairwise ρ + Kish n_eff across sovereign roster",
+    description: "pairwise ρ + Kish n_eff across council roster",
     metric: "n_eff=1.285 · gate failed (>2.0 required)", last_run_iso: "2026-07-30T11:25:00Z" },
   { id: "provbench", name: "ProvBench", axis: "provenance", phase: "honey",
     description: "0/20 C2PA markings survive binding-intact",
@@ -262,7 +262,7 @@ function buildRun(scenario: string): Step[] {
   return [
     { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
     { t: "Classifying the system - risk tier and applicable regimes detected (EU AI Act, NIST AI RMF, ISO 42001).", phase: 1 },
-    { t: "Convening the council - 33 sovereign agents, designed multi-agent review. Quorum forming...", phase: 2 },
+    { t: "Convening the council - 33 council agents, designed multi-agent review. Quorum forming...", phase: 2 },
     { t: "Agents deliberating - mapping controls, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
     { t: "Crosswalking once -> EU AI Act, NIST, ISO 42001 and TC260 satisfied from one evidence set.", phase: 3 },
     { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
@@ -649,7 +649,7 @@ export default function SovSpace() {
       { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
       { t: "Classifying the system - jurisdiction: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
       { t: "Applicable regimes detected: " + fwList + ".", phase: 1 },
-      { t: "Convening the council - 33 sovereign agents, designed multi-agent review. Quorum forming...", phase: 2 },
+      { t: "Convening the council - 33 council agents, designed multi-agent review. Quorum forming...", phase: 2 },
       { t: "Agents deliberating - risk tier, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
       { t: "Crosswalking once -> " + fwList + " satisfied from one evidence set." + (bridges.length ? " Legacy bridge: " + bridges.join(", ") + "." : ""), phase: 3 },
       { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
@@ -771,7 +771,7 @@ export default function SovSpace() {
             You are interacting with an AI system.
           </div>
           <div className="mt-3 flex-1 space-y-2 overflow-y-auto rounded-xl border border-emerald-500/10 bg-black/20 p-3 text-sm" style={{ minHeight: 180 }}>
-            {log.length === 0 && <div className="text-emerald-300/40">The Sovereign will narrate here as your experiment runs.</div>}
+            {log.length === 0 && <div className="text-emerald-300/40">The Council assistant will narrate here as your experiment runs.</div>}
             {log.map((m, i) => (<div key={i} className="flex gap-2"><span className="text-emerald-400">{String.fromCharCode(9673)}</span><span className="text-emerald-50/90">{m}</span></div>))}
             {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council verdict:</b> {verdictText}</div> : <div className="mb-2"><b>Verdict:</b> simulation complete.</div>}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
             <div ref={endRef} />
@@ -807,7 +807,7 @@ export default function SovSpace() {
           </div>
           <div className="border-t border-sky-500/15 px-4 py-3 text-[11px] text-sky-300/70">
             <p>
-              <strong className="text-sky-200">The metaphor:</strong> the sovereign estate is a galaxy. The HIVE is the central star — water, the pinned facts that ground everything. C-space orbits it — milk, the local deliberation the council does. J-space is the next shell — honey, the signed decisions in the D1 ledger. Each flywheel is its own planet, orbiting on its own radius; its <em>phase</em> shows where it sits in the water→milk→honey flow. The outer halo is the unbounded working memory — the infinite drawing.
+              <strong className="text-sky-200">The metaphor:</strong> the Council estate is a galaxy. The HIVE is the central star — water, the pinned facts that ground everything. C-space orbits it — milk, the local deliberation the council does. J-space is the next shell — honey, the signed decisions in the D1 ledger. Each flywheel is its own planet, orbiting on its own radius; its <em>phase</em> shows where it sits in the water→milk→honey flow. The outer halo is the unbounded working memory — the infinite drawing.
             </p>
             <p className="mt-2">
               So front-end and back-end sovereigns operate across all the data <em>living</em>, not frozen — the same way the flywheels keep running while the user looks at any layer. Click a planet, hover for its phase and last-run time, then jump to the J-space timeline below for the signed events it produced.
@@ -866,10 +866,10 @@ export default function SovSpace() {
       <section className="mx-auto max-w-6xl px-6 pb-8">
         <div className="overflow-hidden rounded-2xl border border-sky-500/25">
           <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
-            <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Council Globe — {globeRegion ? "flown to " + globeRegion + " for your scenario" : "one Sovereign, one world — run a scenario to fly it"}</div>
+            <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Council Globe — {globeRegion ? "flown to " + globeRegion + " for your scenario" : "one Council, one world — run a scenario to fly it"}</div>
             <a href={"/sov-space?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="text-[11px] font-semibold text-sky-200 hover:underline">Open the full globe →</a>
           </div>
-          <iframe ref={globeRef} src={"/globe3d.html" + (loc.region.code !== "GLOBAL" ? "?region=" + loc.region.code : "")} title="Sovereign globe" loading="lazy" className="block h-[360px] w-full" style={{ border: 0 }} />
+          <iframe ref={globeRef} src={"/globe3d.html" + (loc.region.code !== "GLOBAL" ? "?region=" + loc.region.code : "")} title="Council globe" loading="lazy" className="block h-[360px] w-full" style={{ border: 0 }} />
           {selectedStamp && (
             <div className="border-t border-sky-500/15 px-4 py-3">
               <div className="flex items-center justify-between">
@@ -915,11 +915,11 @@ export default function SovSpace() {
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="grid gap-4 sm:grid-cols-3">
           <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Ask the live Council</div><p className="mt-1 text-sm text-emerald-100/70">Take a real question to the 33 agents and get a signed verdict.</p></a>
-          <a href="/certification" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Training and Certification</div><p className="mt-1 text-sm text-emerald-100/70">Learn the framework and earn your verifiable Sovereign credential.</p></a>
-          <a href="/charter" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">The Sovereign Charter</div><p className="mt-1 text-sm text-emerald-100/70">The constitution the OS is governed by - read and align.</p></a>
+          <a href="/certification" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Training and Certification</div><p className="mt-1 text-sm text-emerald-100/70">Learn the framework and earn your verifiable Council credential.</p></a>
+          <a href="/charter" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">The Council Charter</div><p className="mt-1 text-sm text-emerald-100/70">The constitution the OS is governed by - read and align.</p></a>
         </div>
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/70">
-          <b className="text-emerald-200">Roadmap to Unreal Engine 5.</b> This Sov Space runs natively in your browser today. The full immersive OS renders in UE5 and reaches you by pixel-stream, with the same Sovereign voice loop and Layer 0 signing - you take control, it explains as it happens. Building in the open on GitHub; aligned across the M4 build line.
+          <b className="text-emerald-200">Roadmap to Unreal Engine 5.</b> This Sov Space runs natively in your browser today. The full immersive OS renders in UE5 and reaches you by pixel-stream, with the same Council voice loop and Layer 0 signing - you take control, it explains as it happens. Building in the open on GitHub; aligned across the M4 build line.
         </div>
       </section>
     </div>

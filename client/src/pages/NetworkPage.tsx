@@ -11,7 +11,7 @@ type Agent = { domain: string; role: string; blurb: string; group: "core" | "gov
 const CROWN: Agent = { domain: "csoai.org", role: "the standards crown", blurb: "The Charter, the frameworks and the council that every agent below answers to.", group: "core" };
 const AGENTS: Agent[] = [
   { domain: "councilof.ai", role: "the Council of AI", blurb: "A designed 33-agent Council of AI; its measured status is published on the public Refutation Ledger.", group: "core" },
-  { domain: "meok.ai", role: "the sovereign brain", blurb: "The reasoning substrate — routes any model, left-brain / right-brain, on your terms.", group: "core" },
+  { domain: "meok.ai", role: "the reasoning brain", blurb: "The reasoning substrate — routes any model, left-brain / right-brain, on your terms.", group: "core" },
   { domain: "proofof.ai", role: "deepfake & identity proof", blurb: "Sign what's really you; a deepfake carries no seal and fails verification.", group: "protection" },
   { domain: "safetyof.ai", role: "AI safety", blurb: "Safety evaluation and harm monitoring across the AI estate.", group: "governance" },
   { domain: "accountabilityof.ai", role: "accountability", blurb: "Traceable, answerable AI — who decided, on what basis, and when.", group: "governance" },
@@ -20,7 +20,7 @@ const AGENTS: Agent[] = [
   { domain: "careshield.ai", role: "care & safeguarding", blurb: "The care floor — safeguarding the vulnerable in every AI interaction.", group: "protection" },
   { domain: "diyhelp.ai", role: "guided help", blurb: "Step-by-step guided assistance for everyday tasks.", group: "applied" },
   { domain: "grabhire.ai", role: "hire marketplace", blurb: "A governed marketplace for on-demand hire.", group: "applied" },
-  { domain: "planthire.ai", role: "plant hire", blurb: "Equipment hire, brought under the same sovereign layer.", group: "applied" },
+  { domain: "planthire.ai", role: "plant hire", blurb: "Equipment hire, brought under the same Council layer.", group: "applied" },
   { domain: "muckaway.ai", role: "logistics", blurb: "Waste and logistics coordination, agent-run.", group: "applied" },
   { domain: "koikeeper.ai", role: "koi care", blurb: "Specialist koi and pond intelligence.", group: "applied" },
   { domain: "fishkeeper.ai", role: "aquatics", blurb: "Aquatics husbandry guidance for keepers.", group: "applied" },
@@ -64,7 +64,7 @@ export default function NetworkPage() {
       <section className="relative overflow-hidden border-b border-emerald-500/15">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(34,211,238,.14), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · the sovereign network</p>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · the Council network</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">One crown. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">Nineteen signed agents.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Every agent in the ecosystem answers to a single council and seals every action to Layer 0. This is the network, in the open — what each one does, and where to find it.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">

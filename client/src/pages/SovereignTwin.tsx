@@ -91,7 +91,7 @@ export default function SovereignTwin() {
           <div className="mt-3 flex flex-wrap gap-2">
             <input value={pName} onChange={(e) => setPName(e.target.value)} placeholder="Holder — you, an agent, or an org" className="flex-1 min-w-[200px] rounded-lg border border-emerald-500/25 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
             <select value={pKind} onChange={(e) => setPKind(e.target.value)} className="rounded-lg border border-emerald-500/25 bg-black/30 px-2 py-2 text-sm text-emerald-50">
-              <option>Digital sovereign twin</option><option>Enterprise agent</option><option>Government agent</option><option>Humanoid / robot</option>
+              <option>Council twin</option><option>Enterprise agent</option><option>Government agent</option><option>Humanoid / robot</option>
             </select>
             <button onClick={mintPassport} disabled={minting} className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{minting ? "Signing…" : "🪪 Mint signed passport"}</button>
           </div>

@@ -64,7 +64,7 @@ export default function Welcome() {
         ) : (
           <div className="mt-8 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
             {credits && <div className="mb-3 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">Your <b className="text-emerald-300">{credits}</b> credit pack is noted — top up anytime from Plans.</div>}
-            <div className="text-sm text-emerald-100/80">You're on the free, open-source base — your own Sovereign, the governance graph, the council and Layer 0 signing, forever. Upgrade whenever you need the managed stack.</div>
+            <div className="text-sm text-emerald-100/80">You're on the free, open-source base — your own Council assistant, the governance graph, the council and Layer 0 signing, forever. Upgrade whenever you need the managed stack.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
               <button onClick={() => go("/os")} className="flex-1 rounded-xl bg-emerald-500 px-4 py-2.5 text-center text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS →</button>
               <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>

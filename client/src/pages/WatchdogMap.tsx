@@ -165,7 +165,7 @@ export default function WatchdogMap() {
           <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/heatmap" /></div>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/globe3d.html" className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-semibold text-amber-100 hover:bg-amber-400/20">🟡 AI economy on the globe</a>
-            <a href="/network" className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/20">🩵 The Sovereign network</a>
+            <a href="/network" className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/20">🩵 The Council network</a>
             <a href="/graph" className="rounded-full border border-emerald-400/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</a>
           </div>
         </div>
@@ -203,7 +203,7 @@ export default function WatchdogMap() {
 
           {sel && (
             <div className="mt-4 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-5">
-              <div className="flex items-baseline justify-between"><div className="text-lg font-bold">{sel.region} - Sovereign read</div><span className="font-mono text-[10px] uppercase tracking-wide text-emerald-300/40">{briefing ? "reasoning…" : "live"}</span></div>
+              <div className="flex items-baseline justify-between"><div className="text-lg font-bold">{sel.region} - Council read</div><span className="font-mono text-[10px] uppercase tracking-wide text-emerald-300/40">{briefing ? "reasoning…" : "live"}</span></div>
               <p className="mt-2 text-sm leading-relaxed text-emerald-50/85 whitespace-pre-wrap">{briefing ? "Pulling live signals…" : (brief || "Click a hub to pull live signals.")}</p>
               {!briefing && brief && (
                 <div className="mt-3 flex flex-wrap gap-2">

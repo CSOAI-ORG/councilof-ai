@@ -276,7 +276,7 @@ function AskPanel() {
       <div className="flex-1 space-y-3 overflow-auto p-4">
         {!turns.length && (
           <div className="rounded-lg border border-white/10 bg-white/[0.02] p-4 text-[12px] leading-relaxed text-slate-400">
-            Ask the sovereign specialist. It answers from the signed measurement layer — and says
+            Ask the Council specialist. It answers from the signed measurement layer — and says
             <span className="text-slate-200"> "unmeasured" </span> where the estate has not earned a number.
           </div>
         )}

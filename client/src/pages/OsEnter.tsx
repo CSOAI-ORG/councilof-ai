@@ -75,10 +75,10 @@ export default function OsEnter() {
       {phase === 1 && (
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center gap-5 px-6 text-center">
           <div className="h-3 w-3 rounded-full bg-emerald-400 animate-ping" />
-          <div className="font-mono text-sm text-emerald-200/80">Establishing sovereign link{loc || err ? " complete" : "..."}</div>
+          <div className="font-mono text-sm text-emerald-200/80">Establishing Council link{loc || err ? " complete" : "..."}</div>
           {(loc || err) && (
             <div className="mt-2 rounded-2xl border border-emerald-400/30 bg-white/5 px-6 py-4">
-              <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Sovereign node located</div>
+              <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Council node located</div>
               <div className="mt-1 text-xl font-bold text-emerald-200">{"\u25C9 " + place}</div>
             </div>
           )}
@@ -87,7 +87,7 @@ export default function OsEnter() {
 
       {phase === 2 && (
         <div className="relative z-10 min-h-screen">
-          <iframe title="Your sovereign location" src={mapUrl} className="absolute inset-0 h-full w-full opacity-40" style={{ filter: "grayscale(0.3) saturate(1.2) hue-rotate(95deg) brightness(0.7)", border: "0" }} />
+          <iframe title="Your Council location" src={mapUrl} className="absolute inset-0 h-full w-full opacity-40" style={{ filter: "grayscale(0.3) saturate(1.2) hue-rotate(95deg) brightness(0.7)", border: "0" }} />
           <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(70% 70% at 50% 40%, transparent, rgba(4,7,13,.9) 80%)" }} />
           <div className="relative z-10 mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center px-6 py-12 text-center">
             <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">This is where you stand</div>
@@ -129,7 +129,7 @@ export default function OsEnter() {
         <div className="relative z-10 mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-6 py-12 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">Choose your hemisphere</p>
           <h2 className="mt-2 text-3xl font-black tracking-tight">How will you enter the CSOAI world?</h2>
-          <p className="mt-3 max-w-xl text-emerald-50/70">Your sovereign self can lead with either mind. Switch any time inside the OS.</p>
+          <p className="mt-3 max-w-xl text-emerald-50/70">Your Council self can lead with either mind. Switch any time inside the OS.</p>
           <div className="mt-8 grid w-full gap-4 sm:grid-cols-2">
             <a href="/command-center" className="group rounded-2xl border border-sky-400/30 bg-gradient-to-br from-sky-500/15 to-sky-400/5 p-6 text-left transition hover:scale-[1.02]">
               <div className="text-3xl">{"\u25D0"}</div>

@@ -12,7 +12,7 @@ const TOWNS: Town[] = [
   { name: "Pan-America Hub", civ: "US", focus: "NIST AI RMF · sectoral", papers: 388, state: "Evolving", spawned: 7 },
   { name: "Sino-Nova Gate", civ: "China", focus: "TC260 · algorithm filing", papers: 256, state: "Aware", spawned: 5 },
   { name: "Indo-Sphere Field", civ: "India", focus: "DPDP · UPI governance", papers: 174, state: "Aware", spawned: 4 },
-  { name: "Khaleej Crescent", civ: "Middle East", focus: "PDPL · sovereign AI", papers: 96, state: "Learning", spawned: 2 },
+  { name: "Khaleej Crescent", civ: "Middle East", focus: "PDPL · Council AI", papers: 96, state: "Learning", spawned: 2 },
   { name: "Nubia Prime", civ: "Africa", focus: "mobile money · data acts", papers: 71, state: "Learning", spawned: 2 },
   { name: "Brasilia Verde", civ: "LATAM", focus: "LGPD · WhatsApp commerce", papers: 88, state: "Learning", spawned: 1 },
   { name: "ASEAN-IX Mesh", civ: "SE Asia", focus: "PDPA · cross-border flows", papers: 64, state: "Learning", spawned: 1 },
@@ -120,7 +120,7 @@ export default function SovTowns() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          Yes — we can train more Council Towns on every white paper, and that multiplies into more data. The full learning loop (real ingestion, simulation, spawning, inner Sovereign queens per town) lights up with the Layer 0 gateway. Until then this models the engine and accumulates the registry, one town at a time.
+          Yes — we can train more Council Towns on every white paper, and that multiplies into more data. The full learning loop (real ingestion, simulation, spawning, inner Council queens per town) lights up with the Layer 0 gateway. Until then this models the engine and accumulates the registry, one town at a time.
         </div>
       </section>
     </div>

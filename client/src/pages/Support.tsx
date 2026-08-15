@@ -125,7 +125,7 @@ Need more specific help with exam preparation?`
 • All reports are reviewed by certified analysts
 
 **Becoming an Analyst:**
-1. Complete the CEASAI training program
+1. Complete the measurement credential training program
 2. Pass the certification exam (70% minimum)
 3. Apply through **Watchdog → Analyst Jobs**
 4. Start reviewing incidents

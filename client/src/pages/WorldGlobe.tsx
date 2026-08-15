@@ -290,7 +290,7 @@ export default function WorldGlobe() {
       </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
         <SovNav />
-        <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the sovereign globe</p>
+        <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the council globe</p>
         <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">AI governance, layered on the world</h1>
         <p className="mt-2 max-w-2xl text-emerald-50/80">Every framework lives where it is made. Spin the globe, toggle the layers, click any node to see what it governs and jump straight into the OS.</p>
         <div className="mt-4 flex flex-wrap gap-2">
@@ -301,13 +301,13 @@ export default function WorldGlobe() {
           <button onClick={() => setLayers((l) => ({ ...l, ontology: !l.ontology, fw: true }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.ontology ? "border-violet-400 bg-violet-600 text-white" : "border-white/20 text-white/60")}>Ontology</button>
           <button onClick={() => setLayers((l) => ({ ...l, hive: !l.hive }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.hive ? "border-sky-400 bg-sky-600 text-white" : "border-white/20 text-white/60")}>Hive coverage{hiveAccounts.length ? " (" + hiveAccounts.length + ")" : ""}</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
-          <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Sovereign responding…" : threat === "stopped" ? "◉ Stopped — signed" : "⚠ Rogue swarm → watch it stop"}</button>
+          <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Council responding…" : threat === "stopped" ? "◉ Stopped — signed" : "⚠ Rogue swarm → watch it stop"}</button>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-16 grid gap-6 lg:grid-cols-[1fr_320px] items-start">
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-2">
           {mode === "3d" ? (
-            <iframe ref={globe3dRef} src="/globe3d.html" title="3D Sovereign globe" loading="lazy" className="block h-[560px] w-full rounded-xl" style={{ border: 0 }} />
+            <iframe ref={globe3dRef} src="/globe3d.html" title="3D council globe" loading="lazy" className="block h-[560px] w-full rounded-xl" style={{ border: 0 }} />
           ) : (
           <svg viewBox="0 0 600 600" className="w-full" onMouseEnter={() => setSpin(false)} onMouseLeave={() => sel ? null : setSpin(true)}>
             <defs>
@@ -406,7 +406,7 @@ export default function WorldGlobe() {
           {threat !== "idle" && (
             <div className={"mt-4 rounded-xl border p-3 " + (threat === "stopped" ? "border-emerald-400/50 bg-emerald-500/10" : "border-rose-400/50 bg-rose-500/10")}>
               <div className={"text-sm font-black " + (threat === "stopped" ? "text-emerald-200" : "text-rose-200")}>{threat === "stopped" ? "◉ STOPPED — before it happened." : "⚠ Rogue swarm detected over London"}</div>
-              {threatMsg ? <p className="mt-1 text-[12px] leading-relaxed text-white/80 break-words">{threatMsg}</p> : <p className="mt-1 text-[12px] text-white/60">The Sovereign sees it and is intervening — halt, quarantine, re-govern…</p>}
+              {threatMsg ? <p className="mt-1 text-[12px] leading-relaxed text-white/80 break-words">{threatMsg}</p> : <p className="mt-1 text-[12px] text-white/60">The Council assistant sees it and is intervening — halt, quarantine, re-govern…</p>}
               {threat === "stopped" && <a href="/poc" className="mt-2 inline-block text-[12px] font-semibold text-emerald-300 hover:underline">See the full agents &amp; humanoids POC →</a>}
             </div>
           )}

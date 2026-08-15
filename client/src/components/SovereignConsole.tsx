@@ -162,7 +162,7 @@ export function SovereignConsole() {
     <div className="rounded-2xl border-2 border-emerald-200 bg-white/95 shadow-lg backdrop-blur overflow-hidden">
       <div className="flex items-center justify-between gap-3 border-b border-emerald-100 bg-emerald-50/60 px-4 py-2.5">
         <span className="flex items-center gap-2 text-sm font-bold text-emerald-900">
-          <Sparkles className="h-4 w-4" /> Sovereign Console
+          <Sparkles className="h-4 w-4" /> Council Console
         </span>
         <span className="text-[11px] text-emerald-800/70">
           runs in your browser · nothing is sent anywhere · no model in the verdict

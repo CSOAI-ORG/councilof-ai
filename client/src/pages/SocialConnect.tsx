@@ -71,7 +71,7 @@ export default function SocialConnect() {
           <p className="mt-3 text-xs text-gray-400">Every post your character makes is governed by your council setup and signed with your Council assistant passport. Configure once - it carries across CSOAI and MEOK OS.</p>
           <a href="/sovereign" className="mt-4 inline-block rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-500">Save to your Council assistant -&gt;</a>
           <div className="mt-3 flex flex-wrap gap-2 text-xs">
-            <a href="/bft" className="rounded-lg border border-gray-200 px-3 py-1.5 font-semibold text-emerald-700">Set BFT -&gt;</a>
+            <a href="/bft" className="rounded-lg border border-gray-200 px-3 py-1.5 font-semibold text-emerald-700">Set council -&gt;</a>
             <a href="/social" className="rounded-lg border border-gray-200 px-3 py-1.5 font-semibold text-emerald-700">Social OS -&gt;</a>
           </div>
         </div>

@@ -45,7 +45,7 @@ export default function RealWorldMap() {
               <p className="text-sm text-emerald-200/80">
                 Meanwhile:{" "}
                 <a href="/globe" className="font-medium text-emerald-300 hover:underline">
-                  open the sovereign globe →
+                  open the council globe →
                 </a>
               </p>
             </div>

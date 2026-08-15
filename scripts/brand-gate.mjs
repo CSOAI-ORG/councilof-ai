@@ -86,7 +86,10 @@ function visibleText(html) {
 // with unevidenced counters and defence overclaims that never belonged on councilof.ai.)
 // The core SPA + identity + killed pages + primary statics (globe, arena, llms/ai/robots) ARE
 // gated. Remove an entry here only once that surface has had its own de-brand pass.
-const EXCLUDE_PAGES = /(^|\/)regulator-console\.html$/;
+//   - refutation-ledger  the honest evidence/retraction page — renders real measured model IDs
+//                        (sov-sovereign-v4-mined-latest), SIGIL evidence hashes, and the
+//                        Byzantine/BFT RETRACTION history. All legitimate in this exact context.
+const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-)/;
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
