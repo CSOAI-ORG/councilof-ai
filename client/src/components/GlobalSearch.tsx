@@ -562,7 +562,7 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
     setAiLoading(false);
   }, [query]);
 
-  // Ask the Sovereign - fuse live governance reasoning into the command bar
+  // Ask the Council assistant - fuse live governance reasoning into the command bar
   const askSovereign = useCallback(async () => {
     const t = query.trim();
     if (!t) return;
@@ -618,7 +618,7 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
                   <Brain className="h-5 w-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="text-sm font-semibold text-emerald-900">Ask the Sovereign{aiLoading ? '…' : ''}</div>
+                  <div className="text-sm font-semibold text-emerald-900">Ask the Council assistant{aiLoading ? '…' : ''}</div>
                   <div className="truncate text-xs text-emerald-700/70">Reason live over governance — “{query.trim()}”</div>
                 </div>
                 <CornerDownLeft className="h-4 w-4 flex-shrink-0 text-emerald-500" />

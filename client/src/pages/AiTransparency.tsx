@@ -75,7 +75,7 @@ export default function AiTransparency() {
             {COUNTS.total} interactive surfaces on this site are classified: {COUNTS.rule_based}{" "}
             are rule-based instruments or deterministic displays that call no model;{" "}
             {COUNTS.ai_system} routes across {AI_SYSTEM_COMPONENTS} components are AI systems —
-            they send your input to the live Sovereign chat endpoint, and they say so. Any
+            they send your input to the live Council chat endpoint, and they say so. Any
             surface not in the registry defaults to the strictest reading — treated as an AI
             system — until it is classified.
           </p>
@@ -281,7 +281,7 @@ export default function AiTransparency() {
             </li>
             <li>
               <strong className="text-emerald-50">The gateway is ours.</strong> The model behind
-              the Sovereign chat endpoint is operated under our own governance boundary; the
+              the Council chat endpoint is operated under our own governance boundary; the
               endpoint, not the model vendor, is what these surfaces call.
             </li>
             <li>

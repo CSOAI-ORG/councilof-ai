@@ -5,7 +5,7 @@ import AISystemNotice from "../components/AISystemNotice";
 
 // /regulators — the Regulator Atlas. Every major AI + cyber regime, its top-7
 // tools, and its next-7 movements — with the live Sovereign giving a current
-// read on any of them. The structured spine the Sovereign acts on.
+// read on any of them. The structured spine the Council assistant acts on.
 
 const GW = "/api";
 const STATUS: Record<string, { label: string; cls: string }> = {
@@ -62,7 +62,7 @@ function RegCard({ r }: { r: Regime }) {
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <button onClick={ask} disabled={busy} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{busy ? "Reading…" : "Ask the Sovereign for a live read"}</button>
+        <button onClick={ask} disabled={busy} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{busy ? "Reading…" : "Ask the Council assistant for a live read"}</button>
         {r.hiveSlug && <a href={"/hive/" + r.hiveSlug} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Open in the Hive →</a>}
         <a href={"/graph?demo=" + encodeURIComponent("an organisation subject to " + r.name)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern a case →</a>
       </div>

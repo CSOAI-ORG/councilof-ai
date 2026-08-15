@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-// /network — the Sovereign Network directory. The public face of the ecosystem:
+// /network — the Council assistant Network directory. The public face of the ecosystem:
 // every signed agent domain, what it's for, and the one thing they share — each
 // action sealed to Layer 0 and answerable to a single council. Public-safe by
 // design: domain + role only. No keys, fingerprints, ports, or infrastructure.
@@ -69,7 +69,7 @@ export default function NetworkPage() {
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Every agent in the ecosystem answers to a single council and seals every action to Layer 0. This is the network, in the open — what each one does, and where to find it.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             <span className={"inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold " + (live ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200" : "border-emerald-500/20 text-emerald-200/60")}>
-              <span className={"h-1.5 w-1.5 rounded-full " + (live ? "bg-emerald-400 animate-pulse" : "bg-emerald-500/40")} />{live ? "Sovereign brain · LIVE" : "Sovereign brain"}
+              <span className={"h-1.5 w-1.5 rounded-full " + (live ? "bg-emerald-400 animate-pulse" : "bg-emerald-500/40")} />{live ? "Council engine · LIVE" : "Council engine"}
             </span>
             <a href="/globe3d.html" className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-bold text-cyan-100 hover:bg-cyan-500/20">See it on the globe →</a>
             <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">How signing works →</a>

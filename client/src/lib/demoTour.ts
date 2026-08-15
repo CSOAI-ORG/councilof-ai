@@ -1,4 +1,4 @@
-// demoTour - the Sovereign's guided, self-driving walkthrough of the whole OS.
+// demoTour - the Council assistant's guided, self-driving walkthrough of the whole OS.
 // Every step leads with a CSOAI USP - what we do that no compliance-SaaS does -
 // then auto-runs the live feature so the user watches it happen, not hears about it.
 

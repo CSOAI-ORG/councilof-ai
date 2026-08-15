@@ -71,11 +71,7 @@ const FRAMEWORKS = [
 const EXPLAINERS = [
   {
     t: "Explore the live governance grid →",
-<<<<<<< HEAD
-    d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Council City feed, live on one Earth.",
-=======
     d: "The immersive globe — 177 jurisdictions, sovereign nodes, the MCP fleet and the Council Town feed, live on one Earth.",
->>>>>>> pr151
     href: "/globe3d.html",
   },
   {
@@ -99,11 +95,7 @@ export default function SovereignTown() {
   const [s, setS] = useState<SovTownStats>(FALLBACK);
 
   useEffect(() => {
-<<<<<<< HEAD
-    document.title = "Council City — Live Governed AI World · CSOAI";
-=======
     document.title = "Council Town — Live Governed AI World · CSOAI";
->>>>>>> pr151
     let live = true;
     fetchSovTownStats()
       .then((d) => {
@@ -169,11 +161,7 @@ export default function SovereignTown() {
           </div>
           {/* Cited source — Red Hat's "Source: …" credibility move */}
           <p className="mt-6 text-sm text-emerald-100/70 max-w-2xl">
-<<<<<<< HEAD
-            Source: Council City hash-chained Ed25519 ledger, externally committed to{" "}
-=======
             Source: Council Town hash-chained Ed25519 ledger, externally committed to{" "}
->>>>>>> pr151
             <span className="font-semibold text-emerald-200">Bitcoin block 954857</span>. Independently
             verifiable &mdash; no trust in CSOAI required.
           </p>
@@ -205,11 +193,7 @@ export default function SovereignTown() {
             Governed against the frameworks that matter
           </h2>
           <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-<<<<<<< HEAD
-            Council City measures conduct against the binding and emerging regimes in force across
-=======
             Council Town measures conduct against the binding and emerging regimes in force across
->>>>>>> pr151
             177 jurisdictions &mdash; not a private rulebook.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

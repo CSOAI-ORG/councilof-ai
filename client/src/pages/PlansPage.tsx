@@ -37,35 +37,7 @@ const MATRIX: [string, string, string, string, string][] = [
 ];
 
 export default function PlansPage() {
-<<<<<<< HEAD
-  const [annual, setAnnual] = useState(true);
-  // P2-10: UK Ltd bills in GBP — GBP is the canonical price; USD is a reference
-  // display at the fixed policy rate (reviewed quarterly).
-  const [cur, setCur] = useState<"GBP" | "USD">("GBP");
-  const sym = cur === "GBP" ? "£" : "$";
-  const base = { pro: { GBP: 79, USD: 99 }, operator: { GBP: 239, USD: 299 }, team: { GBP: 119, USD: 149 } } as const;
-  const money = (n: number) => sym + (Number.isInteger(n) ? n.toLocaleString() : n.toFixed(2));
-  // Yearly = 10 × monthly ("-2mo"). Monthly-equivalent shown = total/12. Arithmetic is visible.
-  const monthlyEquiv = (k: keyof typeof base) => (base[k][cur] * 10) / 12;
-  const yearlyTotal = (k: keyof typeof base) => base[k][cur] * 10;
-  const pro = annual ? money(Math.round(monthlyEquiv("pro") * 100) / 100) : money(base.pro[cur]);
-  const proSub = annual ? `per month, billed yearly (${money(yearlyTotal("pro"))} = 10 × ${money(base.pro[cur])})` : "per month";
-  const operator = annual ? money(Math.round(monthlyEquiv("operator") * 100) / 100) : money(base.operator[cur]);
-  const operatorSub = annual ? `per month, billed yearly (${money(yearlyTotal("operator"))} = 10 × ${money(base.operator[cur])})` : "per month";
-  const team = annual ? money(Math.round(monthlyEquiv("team") * 100) / 100) : money(base.team[cur]);
-  const teamSub = annual ? "per seat / mo, billed yearly (10 × monthly)" : "per seat / mo";
-  const tiers: Tier[] = [
-    { name: "Sovereign", price: "Free", sub: "open-source, forever", tag: "Own your data", cta: "Start free", href: "/signup?plan=free", feats: ["Your Sovereign on a free open-source model", "Self-host or hosted", "You own and export your data (JSON)", "Layer 0 signing", "Community council demos"] },
-    { name: "Pro", price: pro, sub: proSub, tag: "Most popular", cta: "Go Pro", href: "/signup?plan=pro", highlight: true, feats: ["Everything in Free", "Premium hosted models", "Passport + EU AI Act audit (quota)", "Council of AI + governance", "Real-world Council Space + UE5 preview", "PAYG credits included"] },
-    { name: "Operator", price: operator, sub: operatorSub, tag: "Full command deck", accent: "amber", cta: "Become an Operator", href: "/signup?plan=operator", feats: ["Everything in Pro", "ONE OS - live agent + humanoid tracking", "Governed-stop pathway for rogue swarms (PoC status, signed demo)", "Threat map + operator console", "Global Watchdog operator console", "Priority Layer 0 signing + support"] },
-    { name: "Team", price: team, sub: teamSub, tag: "3-seat min", cta: "Start a team", href: "/signup?plan=team", feats: ["Everything in Pro, per seat", "SSO + SCIM", "Shared council + audit logs", "Admin and roles", "Priority support"] },
-    { name: "Enterprise", price: "Custom", sub: "from ~£24k / yr", tag: "Governance-grade", cta: "Talk to us", href: "/contact", feats: ["Full EU AI Act audit suite", "Dedicated council + audit suite", "Data residency + SLA", "SAML, audit export (CSV/JSON/Parquet)", "Onboarding + success"] },
-  ];
-  const packs = [{ n: "Starter", GBP: 20, USD: 25 }, { n: "Builder", GBP: 80, USD: 100 }, { n: "Scale", GBP: 400, USD: 500 }];
-  const meters: [string, { GBP: string; USD: string }][] = [["Passport", { GBP: "£0.08", USD: "$0.10" }], ["EU AI Act audit", { GBP: "£0.20", USD: "$0.25" }], ["Council review", { GBP: "£0.08", USD: "$0.10" }], ["Governance", { GBP: "£0.40", USD: "$0.50" }], ["Sigil", { GBP: "£0.01", USD: "$0.01" }], ["Watchdog scan", { GBP: "£0.80", USD: "$1.00" }]];
-=======
   useEffect(() => { document.title = "Pricing — two rails, one signed card | Council of AI"; }, []);
->>>>>>> pr151
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       {/* Header */}

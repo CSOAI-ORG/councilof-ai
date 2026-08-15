@@ -3,9 +3,9 @@ import AISystemNotice from "../components/AISystemNotice";
 import { currentPersona } from "../lib/sovPersona";
 
 // DemoOS - the immersive AI-OS experience. A live Cesium globe (globe3d.html,
-// driven by postMessage) is the backdrop; the Sovereign narrates step by step
+// driven by postMessage) is the backdrop; the Council assistant narrates step by step
 // (typed + voice); live SaaS windows glide open, tile like a real desktop, and
-// close on the globe; the Sovereign is screen-aware and moves windows aside;
+// close on the globe; the Council assistant is screen-aware and moves windows aside;
 // the user can barge in by voice any time. Doubles as SOV33 training.
 
 import TrustMarquee from "../components/TrustMarquee";
@@ -128,7 +128,7 @@ function OsWindow({ title, src, idx, onClose, innerRef }: { title: string; src: 
   );
 }
 
-// Speak-to-map: the Sovereign toggles globe data layers from natural language.
+// Speak-to-map: the Council assistant toggles globe data layers from natural language.
 const GLOBE_LAYERS: { re: RegExp; tag: string; label: string }[] = [
   { re: /ontolog|relationship|how.*relate|connect|graph of/i, tag: "ontology", label: "the governance ontology" },
   { re: /framework|regulation|\blaw\b|eu ai act|nist|iso/i, tag: "frameworks", label: "the frameworks" },
@@ -146,7 +146,7 @@ const GLOBE_LAYERS: { re: RegExp; tag: string; label: string }[] = [
   { re: /sovereign network|agent.?card|our (agents|network|ecosystem)|signed agents|the ecosystem/i, tag: "network", label: "the Council network" },
   { re: /regulator|regime|authorit|watchdog seat|regulatory/i, tag: "regulators", label: "the regulators, at their seats" },
 ];
-// Narration→globe bridge: as the Sovereign SAYS a word, the globe reacts in sync.
+// Narration→globe bridge: as the Council assistant SAYS a word, the globe reacts in sync.
 // Two kinds: place words fly the camera; concept words light up the matching layer.
 const BRIDGE_PLACE: { re: RegExp; lng: number; lat: number; h: number }[] = [
   { re: /london/i, lng: -0.118, lat: 51.509, h: 140000 },

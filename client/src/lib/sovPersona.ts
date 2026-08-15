@@ -1,7 +1,7 @@
-// sovPersona.ts — one place for the Sovereign's selectable voices.
+// sovPersona.ts — one place for the Council assistant's selectable voices.
 //
 // Two personas share ONE Sovereign: "csoai" (civil governance, default) and
-// "assurance" — the Sovereign's defence-assurance voice (JSP 936, signed
+// "assurance" — the Council assistant's defence-assurance voice (JSP 936, signed
 // System Cards, evidence packs). BRAND RULE: the DEFONEOS brand lives on
 // defoneos.com ONLY and must NEVER appear on csoai.org — this is the
 // Sovereign speaking, not another product. Not a weapons assistant. Doctrine hard-stops apply in EVERY persona and cannot be

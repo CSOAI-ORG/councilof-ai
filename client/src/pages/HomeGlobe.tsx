@@ -97,7 +97,7 @@ export default function HomeGlobe() {
           </div>
         ))}
         <p className="mt-1 text-center text-[11px] text-gray-400">
-          Runs on the Sovereign engine →{" "}
+          Runs on the Council assistant engine →{" "}
           <a href="https://meok.ai" className="underline hover:text-gray-200 pointer-events-auto">meok.ai</a>
         </p>
       </div>

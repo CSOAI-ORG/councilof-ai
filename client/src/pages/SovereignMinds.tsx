@@ -100,7 +100,7 @@ export default function SovereignMinds() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          We take the end user from doing the work to the Council assistant doing it for them — that clean, that seamless. The mind is modelled and the voice is live in the Sovereign Dock today; full memory, reflection and on-device voice (Kokoro + openWakeWord) switch on with the Layer 0 gateway. One mind per town, per humanoid, per node — governed, attested, always yours.
+          We take the end user from doing the work to the Council assistant doing it for them — that clean, that seamless. The mind is modelled and the voice is live in the Council assistant Dock today; full memory, reflection and on-device voice (Kokoro + openWakeWord) switch on with the Layer 0 gateway. One mind per town, per humanoid, per node — governed, attested, always yours.
         </div>
       </section>
     </div>

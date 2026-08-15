@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // The Sovereign Ontology — the semantic layer for AI governance. What Palantir's Ontology did
-// for enterprise data (Objects · Properties · Links · Actions), the Sovereign Ontology does for
+// for enterprise data (Objects · Properties · Links · Actions), the Council assistant Ontology does for
 // AI governance: every governed object, how they relate, and the actions you can take on them.
 
 const OBJECTS = [

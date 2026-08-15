@@ -71,7 +71,7 @@ export default function StatusPage() {
               {connected && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />}
               <span className={"relative inline-flex h-3 w-3 rounded-full " + (connected ? "bg-emerald-400" : checked ? "bg-amber-400" : "bg-gray-500")} />
             </span>
-            <span className="text-lg font-black">{connected ? "Sovereign brain - CONNECTED" : checked ? "Sovereign brain - reachable, degraded" : "Checking the Sovereign brain..."}</span>
+            <span className="text-lg font-black">{connected ? "Council engine - CONNECTED" : checked ? "Council engine - reachable, degraded" : "Checking the Council engine..."}</span>
             {live && live.version && <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300">v{live.version}</span>}
             <span className="ml-auto font-mono text-[11px] text-emerald-300/60">CSOAI Council OS</span>
           </div>
@@ -123,7 +123,7 @@ export default function StatusPage() {
             </div>
           );
         })}
-        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Sovereign brain that powers the CSOAI OS." : "The Sovereign brain is reached live from your browser."} Rows marked &ldquo;not probed from this page&rdquo; have no public health endpoint we can honestly check from here — we don't paint them green by default.</p>
+        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Council engine that powers the CSOAI OS." : "The Council engine is reached live from your browser."} Rows marked &ldquo;not probed from this page&rdquo; have no public health endpoint we can honestly check from here — we don't paint them green by default.</p>
       </section>
 
       <section className="mx-auto max-w-4xl px-6 pb-14 space-y-4">

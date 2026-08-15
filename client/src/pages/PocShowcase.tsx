@@ -26,7 +26,7 @@ const PDCA = [
   { k: "Act", t: "Halt, quarantine the actor, re-govern, and sign the intervention to the ledger." },
 ];
 
-// When an actor plays up, the Sovereign auto-confirms the scene across sensing modalities,
+// When an actor plays up, the Council assistant auto-confirms the scene across sensing modalities,
 // then clears the stop through the Rainbow Stack 7-layer AI-security defense. Consent-first.
 const SENSORS = [
   { n: "Public + consented cameras", d: "civic feeds only — no facial recognition, no private cameras" },

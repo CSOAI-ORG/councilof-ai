@@ -31,7 +31,7 @@ export interface Layer0Node {
   status: NodeStatus;
   /** date of the proving fetch (LIVE) or last poll attempt (UNKNOWN). Absent for CANDIDATE. */
   verified?: string;
-  /** What the Sovereign does at this node — the greenfield, in one sentence a visitor can check. */
+  /** What the Council assistant does at this node — the greenfield, in one sentence a visitor can check. */
   does: string;
   /** Where a visitor can see the result. */
   href: string;

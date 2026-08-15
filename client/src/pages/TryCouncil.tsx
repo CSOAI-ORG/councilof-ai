@@ -130,7 +130,7 @@ export default function TryCouncil() {
             <textarea value={q} onChange={(e) => setQ(e.target.value)} rows={2} placeholder="Describe your AI system… e.g. 'We use AI to screen job applicants'"
               className="w-full resize-none rounded-xl px-4 py-3 text-gray-900 outline-none placeholder:text-gray-400" />
             <div className="flex items-center justify-between gap-3 px-1 pb-1">
-              <span className="text-xs text-gray-400">Classification runs locally · convening the council sends your description to the Sovereign</span>
+              <span className="text-xs text-gray-400">Classification runs locally · convening the council sends your description to the Council assistant</span>
               <button onClick={() => ask(q)} className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Ask the Council →</button>
             </div>
           </div>

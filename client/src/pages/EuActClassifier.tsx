@@ -3,7 +3,7 @@ import { askSovereign } from "../lib/sovAsk";
 import AISystemNotice from "../components/AISystemNotice";
 
 // /classifier — an interactive EU AI Act risk-tier classifier, wired to the live
-// Sovereign brain. Describe an AI system → get its risk tier, why, the obligations
+// Council engine. Describe an AI system → get its risk tier, why, the obligations
 // that follow, and the frameworks that apply. Real reasoning, governed, not a lookup.
 const EXAMPLES = [
   "AI that screens job applicants and ranks CVs",

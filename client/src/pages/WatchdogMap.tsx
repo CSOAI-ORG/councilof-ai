@@ -5,7 +5,7 @@ import AISystemNotice from "../components/AISystemNotice";
 
 // Global AI Watchdog - the public watchdog for humans, AI agents, humanoids and
 // systems. Anyone (or anything) can report an incident; signals heat-map the world
-// by region and by problem layer; the Sovereign pulls live signals for any region.
+// by region and by problem layer; the Council assistant pulls live signals for any region.
 
 const GW = "/api";
 
@@ -199,7 +199,7 @@ export default function WatchdogMap() {
               })}
             </svg>
           </div>
-          <p className="mt-2 text-center text-[11px] text-emerald-300/50">Bloom size = signal intensity for the selected layer. Click a hub for the Sovereign's live read. Seeded baseline + live reports.</p>
+          <p className="mt-2 text-center text-[11px] text-emerald-300/50">Bloom size = signal intensity for the selected layer. Click a hub for the Council assistant's live read. Seeded baseline + live reports.</p>
 
           {sel && (
             <div className="mt-4 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-5">

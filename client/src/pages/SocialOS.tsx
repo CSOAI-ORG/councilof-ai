@@ -70,7 +70,7 @@ export default function SocialOS() {
 
       <section className="max-w-6xl mx-auto px-6 py-14">
         <h2 className="text-xl font-bold text-gray-900">Priority reach — connect first</h2>
-        <p className="mt-1 text-sm text-gray-500">Free, high-reach, low-complexity platforms the Sovereign wires in first.</p>
+        <p className="mt-1 text-sm text-gray-500">Free, high-reach, low-complexity platforms the Council assistant wires in first.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {P0.map((p) => (
             <div key={p.name} className="rounded-2xl border border-gray-200 p-5">

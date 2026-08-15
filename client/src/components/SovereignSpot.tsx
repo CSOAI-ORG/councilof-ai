@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { askSovereign } from "../lib/sovAsk";
 
-// SovereignSpot — a reusable "this page, on the globe + ask the Sovereign" panel.
+// SovereignSpot — a reusable "this page, on the globe + ask the Council assistant" panel.
 // Drops the live governance globe (auto-lighting the page's layer) next to a
 // topic-scoped, guarded Sovereign chat. One primitive, every route can carry the
 // globe + the Sov. Answers go through askSovereign (no companion-persona bleed).
@@ -11,7 +11,7 @@ export default function SovereignSpot({
   suggest,
   height = 300,
 }: {
-  topic: string;        // scopes the Sovereign's answers + the ask label
+  topic: string;        // scopes the Council assistant's answers + the ask label
   layer?: string;       // globe layerTag to light on load (e.g. "frameworks","regulators","industries")
   suggest?: string;     // a pre-filled example question
   height?: number;
@@ -53,7 +53,7 @@ export default function SovereignSpot({
         <iframe ref={f} src="/globe3d.html" title="Sovereign governance globe" loading="lazy" className="h-full w-full border-0" />
       </div>
       <div className="flex min-h-0 flex-col">
-        <div className="text-sm font-bold text-emerald-100">Ask the Sovereign — {topic}</div>
+        <div className="text-sm font-bold text-emerald-100">Ask the Council assistant — {topic}</div>
         <div className="mb-2 text-[11px] text-emerald-300/50">Governed answer · AI governance &amp; cybersecurity only · signed to Layer 0</div>
         <div className="flex gap-2">
           <input

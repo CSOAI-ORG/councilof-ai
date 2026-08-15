@@ -188,7 +188,7 @@ export default function SovereignDock() {
       setTimeout(() => { go(hit.href); }, 650);
       return;
     }
-    // SOV3: the Sovereign is page-aware. For a command or an "explain this page"
+    // SOV3: the Council assistant is page-aware. For a command or an "explain this page"
     // request, orchestrate over the live brain - it speaks and opens the right surface.
     const ctx = getScreenContext();
     const commandLike = navVerb || /\bexplain (this|the) page\b|\bwhat can i do here\b|\bwhere am i\b|\bhelp me (here|with this)\b|\bwhat is this page\b|\bwalk me through\b|\btake me\b|\bopen \b/i.test(t);
@@ -302,7 +302,7 @@ export default function SovereignDock() {
             {brainOpen && (
               <div className="mb-2 rounded-xl border border-emerald-400/25 bg-[#04120c] p-3">
                 <div className="text-[11px] font-bold text-emerald-100">Your Council assistant brain</div>
-                <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">A sandwich: a <b className="text-emerald-200">left brain</b> (reasoning, tools, BFT compliance) and a <b className="text-emerald-200">right brain</b> (perception, vision/VLM). Route any model underneath — MoE, mixture-of-models, a world model, a VLM — and the Sovereign wraps it in the 33-agent Council of AI + Layer 0 so whatever you plug in stays compliant and signed.</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">A sandwich: a <b className="text-emerald-200">left brain</b> (reasoning, tools, BFT compliance) and a <b className="text-emerald-200">right brain</b> (perception, vision/VLM). Route any model underneath — MoE, mixture-of-models, a world model, a VLM — and the Council assistant wraps it in the 33-agent Council of AI + Layer 0 so whatever you plug in stays compliant and signed.</p>
                 <div className="mt-2 grid grid-cols-3 gap-1.5">
                   {[["offline", "Offline"], ["hosted", "Hosted"], ["paygo", "PAYG"]].map(([id, label]) => (
                     <button key={id} onClick={() => setBrain(id)} className={"rounded-lg px-2 py-1.5 text-[11px] font-bold " + (brainMode === id ? "bg-emerald-500 text-[#03110b]" : "border border-emerald-400/30 text-emerald-100 hover:bg-white/5")}>{label}</button>
@@ -313,12 +313,12 @@ export default function SovereignDock() {
             <input ref={fileRef} type="file" multiple accept="image/*,application/pdf,.txt,.csv,.json,.docx" className="hidden" onChange={onFiles} />
             <div className="flex items-center gap-1.5 rounded-xl border border-emerald-400/30 bg-white/[0.04] px-2 py-1.5">
               <button onClick={() => fileRef.current && fileRef.current.click()} aria-label="Upload files or photos" title="Upload files / photos — governed under Layer 0" className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-lg font-bold text-emerald-200 hover:bg-emerald-500/25">+</button>
-              <button onClick={() => setBrainOpen((b) => !b)} aria-label="Sovereign brain setup" title="Brain setup — offline / hosted / PAYG" className={"flex h-8 w-8 items-center justify-center rounded-lg text-sm " + (brainOpen ? "bg-emerald-500/30 text-emerald-100" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>{"◉"}</button>
+              <button onClick={() => setBrainOpen((b) => !b)} aria-label="Council engine setup" title="Brain setup — offline / hosted / PAYG" className={"flex h-8 w-8 items-center justify-center rounded-lg text-sm " + (brainOpen ? "bg-emerald-500/30 text-emerald-100" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>{"◉"}</button>
               <button onClick={voice} aria-label="Speak to your Council assistant" className={"flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold " + (listening ? "bg-rose-500/30 text-rose-200 animate-pulse" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>MIC</button>
               <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") act(input); }} placeholder="Ask me anything..." className="flex-1 bg-transparent text-sm text-emerald-50 placeholder-emerald-300/40 focus:outline-none" />
               <button onClick={() => act(input)} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Send</button>
             </div>
-            <div className={"mt-2 text-center font-mono text-[9px] uppercase tracking-[2px] " + (personaId === "assurance" ? "text-amber-300/50" : "text-emerald-300/40")}>{personaId === "assurance" ? "Assurance, never weapons \u00B7 provenance is not truth \u00B7 Layer 0 signed" : "You command \u00B7 the Sovereign acts \u00B7 Layer 0 signed"}</div>
+            <div className={"mt-2 text-center font-mono text-[9px] uppercase tracking-[2px] " + (personaId === "assurance" ? "text-amber-300/50" : "text-emerald-300/40")}>{personaId === "assurance" ? "Assurance, never weapons \u00B7 provenance is not truth \u00B7 Layer 0 signed" : "You command \u00B7 the Council assistant acts \u00B7 Layer 0 signed"}</div>
           </div>
         </div>
       )}

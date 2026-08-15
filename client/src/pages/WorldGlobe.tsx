@@ -148,7 +148,7 @@ export default function WorldGlobe() {
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const globe3dRef = useRef<HTMLIFrameElement | null>(null);
   // ── The Sovereign tour ─────────────────────────────────────────────────────
-  // Watch the Sovereign work the Layer-0 estate, one persona at a time. Every stop is a real
+  // Watch the Council assistant work the Layer-0 estate, one persona at a time. Every stop is a real
   // node with the status it has earned (LIVE by proven fetch / UNKNOWN said honestly /
   // CANDIDATE not yet earned) — the tour is the node registry made visible, not a promo reel.
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -216,7 +216,7 @@ export default function WorldGlobe() {
     const hint = PLACE_HINTS.find((h) => h.re.test(t));
     const pin = hint ? FRAMEWORKS.find((p) => p.id === hint.id) : null;
     if (pin) { setLayers((l) => ({ ...l, fw: true })); setSel(pin); setSpin(false); setRot((((-pin.lng) % 360) + 360) % 360); }
-    // AGENTIC: the Sovereign drives the globe as it answers — toggle layers, fly to the
+    // AGENTIC: the Council assistant drives the globe as it answers — toggle layers, fly to the
     // region, or respond to a rogue swarm, straight from what you asked.
     const acts = sovActions(t);
     setActed(describeActions(acts.filter((a) => a.kind !== "simulate")));
@@ -225,7 +225,7 @@ export default function WorldGlobe() {
       else if (a.kind === "region" && !pin) { setSpin(false); setRot((((-a.lng) % 360) + 360) % 360); }
       else if (a.kind === "threat" && threat === "idle") runThreat();
     }
-    // 3D mode: drive the real Cesium globe as the Sovereign answers — fly + pulse the place,
+    // 3D mode: drive the real Cesium globe as the Council assistant answers — fly + pulse the place,
     // light the layer, respond to the threat. Same agent, richer surface.
     if (mode === "3d") {
       const win = globe3dRef.current?.contentWindow;
@@ -254,7 +254,7 @@ export default function WorldGlobe() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      {/* Watch the Sovereign — persona tours over the real Layer-0 estate. */}
+      {/* Watch the Council assistant — persona tours over the real Layer-0 estate. */}
       <div className="fixed bottom-4 left-1/2 z-40 w-[min(680px,94vw)] -translate-x-1/2">
         {persona && (() => { const stop = nodesById[PERSONA_TOURS[persona].stops[stopIdx]]; return stop ? (
           <div className="mb-2 rounded-2xl border border-emerald-400/40 bg-black/80 p-4 text-left backdrop-blur">
@@ -276,7 +276,7 @@ export default function WorldGlobe() {
           </div>
         ) : null; })()}
         <div className="flex flex-wrap items-center justify-center gap-2 rounded-full border border-emerald-400/40 bg-black/70 px-3 py-2 text-xs backdrop-blur">
-          <span className="hidden text-emerald-100/50 sm:inline">Watch the Sovereign:</span>
+          <span className="hidden text-emerald-100/50 sm:inline">Watch the Council assistant:</span>
           {(Object.keys(PERSONA_TOURS) as Persona[]).map((k) => (
             <button key={k} onClick={() => (persona === k ? stopTour() : startTour(k))}
               className={"rounded-full px-3 py-1 capitalize transition " + (persona === k ? "bg-emerald-500/30 text-emerald-100" : "text-emerald-100/70 hover:bg-white/10")}>
@@ -411,7 +411,7 @@ export default function WorldGlobe() {
             </div>
           )}
           <div className="mt-5 border-t border-white/10 pt-4">
-            <label className="text-[11px] uppercase tracking-wide text-emerald-300/60">Ask the Sovereign about the world</label>
+            <label className="text-[11px] uppercase tracking-wide text-emerald-300/60">Ask the Council assistant about the world</label>
             <div className="mt-2">
               <AISystemNotice route="/globe" />
             </div>
@@ -419,7 +419,7 @@ export default function WorldGlobe() {
               <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="e.g. show the watchdog heat over London and stop any rogue swarm" className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-emerald-400 focus:outline-none" />
               <button onClick={() => runAsk()} disabled={asking} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-60">{asking ? "…" : "Ask"}</button>
             </div>
-            <p className="mt-1 text-[11px] text-white/40">Agentic — the Sovereign flies the globe, toggles layers, and responds to threats as it answers.</p>
+            <p className="mt-1 text-[11px] text-white/40">Agentic — the Council assistant flies the globe, toggles layers, and responds to threats as it answers.</p>
             {acted && <div className="mt-2 inline-block rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">◉ {acted}</div>}
             {ans && <div className="mt-3 max-h-52 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-white/85">{ans}</div>}
             {ans && <Link href={"/simulate?q=" + encodeURIComponent(ask)} className="mt-3 inline-block rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-200 hover:bg-white/5">Run this through the full 33-agent simulation →</Link>}

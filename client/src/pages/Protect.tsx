@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { chargeSovereign } from "../lib/sovCharge";
 
-// Personal Protection — a one-stop shop the Sovereign runs for anyone: execs, governments,
+// Personal Protection — a one-stop shop the Council assistant runs for anyone: execs, governments,
 // people of influence, and every person of the earth. Deepfake + impersonation protection,
 // powered by real Ed25519 signing (the measurement API) so YOUR words/likeness are provably yours and a
 // deepfake fails verification. Consent-first, open, for all.

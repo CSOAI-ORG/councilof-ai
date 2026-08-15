@@ -86,7 +86,7 @@ export default function CyberScan() {
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · cyber self-scan</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Scan your own business. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">The Sovereign fixes it.</span></h1>
-          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">A CISO-grade stack of reputable open-source tools to test your own cyber — network, web, cloud, containers, code, supply chain. Run them, bring the findings, and the Sovereign triages, maps them to the regulations that bite, and guides the fix. Signed to Layer 0.</p>
+          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">A CISO-grade stack of reputable open-source tools to test your own cyber — network, web, cloud, containers, code, supply chain. Run them, bring the findings, and the Council assistant triages, maps them to the regulations that bite, and guides the fix. Signed to Layer 0.</p>
         </div>
       </section>
 
@@ -111,7 +111,7 @@ export default function CyberScan() {
 
         {/* Live Sovereign triage */}
         <div className="mt-8 rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-cyan-500/10 to-transparent p-5">
-          <div className="text-sm font-bold text-cyan-200">Bring your findings — the Sovereign triages them live</div>
+          <div className="text-sm font-bold text-cyan-200">Bring your findings — the Council assistant triages them live</div>
           <div className="mt-3">
             <AISystemNotice route="/scan" />
           </div>

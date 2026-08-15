@@ -5,7 +5,7 @@ import { CANON } from "../data/canonCounters";
 const BRAIN = ((import.meta as any).env?.VITE_KNOWLEDGE_BASE) || "/api";
 function fmt(n: number) { return n >= 1e6 ? Math.round(n / 1e6) + "M" : n >= 1e3 ? Math.round(n / 1e3) + "k" : String(n); }
 
-// Live credibility chips — real numbers pulled from the Sovereign brain, with an
+// Live credibility chips — real numbers pulled from the Council engine, with an
 // honest, established-fact fallback (from canon) if the endpoint is unreachable. No fabrication.
 function LiveStats({ dark }: { dark?: boolean }) {
   const [s, setS] = useState<{ tools?: number; episodes?: number; agents?: number }>({});
@@ -41,7 +41,7 @@ function LiveStats({ dark }: { dark?: boolean }) {
           <b className={dark ? "text-emerald-300" : "text-emerald-700"}>{c.v}</b> {c.l}
         </span>
       ))}
-      <span className={"text-[10px] " + (dark ? "text-emerald-200/40" : "text-gray-400")}>live from the Sovereign brain</span>
+      <span className={"text-[10px] " + (dark ? "text-emerald-200/40" : "text-gray-400")}>live from the Council engine</span>
     </div>
   );
 }
