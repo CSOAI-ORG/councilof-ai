@@ -22,7 +22,7 @@ import CityPanel from "@/components/sovos/CityPanel";
 // so the chunk 404s and the SPA fallback serves HTML. Point it at the emitted asset.
 try { setWorkerUrl(maplibreWorkerUrl); } catch { /* older maplibre */ }
 
-const LAYOUT_KEY = "councilos.layout.v1";
+const LAYOUT_KEY = "councilos.layout.v2";
 
 
 /* ── live axes, shared by every panel ──────────────────────────────────────── */
@@ -598,7 +598,18 @@ function SovOSInner() {
   const onReady = useCallback((event: DockviewReadyEvent) => {
     setApi(event.api);
     const saved = localStorage.getItem(LAYOUT_KEY);
-    if (saved) { try { event.api.fromJSON(JSON.parse(saved)); return; } catch { localStorage.removeItem(LAYOUT_KEY); } }
+    if (saved) {
+      try {
+        // Sanitize: drop any saved panel whose component no longer exists, so a
+        // renamed panel (e.g. town -> games) can never break the workspace.
+        const json = JSON.parse(saved);
+        const known = new Set(Object.keys(COMPONENTS));
+        const panels = json?.panels ?? [];
+        json.panels = panels.filter((p: any) => known.has(p?.component ?? p?.contentComponent ?? ""));
+        if (json.panels.length) { event.api.fromJSON(json); return; }
+      } catch { /* fall through to default */ }
+      localStorage.removeItem(LAYOUT_KEY);
+    }
     event.api.addPanel({ id: "globe", component: "globe", title: "Globe" });
     event.api.addPanel({ id: "games", component: "games", title: "Games", position: { referencePanel: "globe", direction: "right" } });
     event.api.addPanel({ id: "board", component: "board", title: "GSPC Board", position: { referencePanel: "games", direction: "right" } });
