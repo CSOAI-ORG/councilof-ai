@@ -299,8 +299,8 @@ export function Header() {
             </div>
           </div>
 
-          {/* Right Side Actions */}
-          <div className="hidden xl:flex items-center gap-2 2xl:gap-3">
+          {/* Right Side Actions — flex-nowrap + shrink-0 prevents vertical-letter collapse on 1280-1400px viewports */}
+          <div className="hidden xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}

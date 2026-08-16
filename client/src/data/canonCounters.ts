@@ -66,11 +66,15 @@ export const CANON = {
     source: "client/src/data/layer0Nodes.ts",
     measuredAt: "2026-08-01",
   },
-  /** Regulatory frameworks in the published crosswalk (GSPC-Crosswalk-2026-07-29). */
+  /** Regulatory frameworks in the published crosswalk. PUBLIC LOCK = 13.
+   *  (Internal crosswalk GSPC-Crosswalk-2026-07-29 covers 30+; the verified
+   *  public claim is 13 frameworks — rendering "30" on a public page is a
+   *  locked-language breach per SOVOS-MASTER.md EU-1a F1/B2.) */
   FRAMEWORKS_CROSSWALKED: {
-    value: 30,
-    source: "GSPC-Crosswalk-2026-07-29.md (estate corpus)",
-    measuredAt: "2026-07-29",
+    value: 13,
+    source: "verified framework lock (EU AI Act · NIST AI RMF · ISO/IEC 42001 · DORA · NIS2 · GDPR · CRA · HIPAA · CO AI Treaty · UK AI Principles · CAI Act · Singapore MGF · Korea AI Basic Act)",
+    measuredAt: "2026-08-01",
+    note: "Internal crosswalk covers 30+ (GSPC-Crosswalk-2026-07-29); public lock = 13 verified. NEVER render 30 on a public surface."
   },
   // ── camelCase entries for direct CANON.x.value access (NewHome-v2 FAQ,
   // TrustMarquee). Adding these fixed the 2026-08-01 P0: CANON.councilAgents
