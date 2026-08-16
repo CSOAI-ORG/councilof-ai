@@ -135,8 +135,8 @@ export default function Technology() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold text-white mb-4">How the 33-agent Council of AI Works</h2>
-            <p className="text-blue-200 text-lg">Distributed consensus for uncompromising compliance verification</p>
+            <h2 className="text-4xl font-bold text-white mb-4">How the designed 33-agent Council reviews decisions</h2>
+            <p className="text-blue-200 text-lg">Signed, checkable multi-perspective review — measurement, not certification</p>
           </div>
 
           {/* Byzantine Explanation Card */}

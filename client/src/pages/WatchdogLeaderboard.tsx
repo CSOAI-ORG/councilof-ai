@@ -81,17 +81,17 @@ type BoardAxis = {
   p: number;
 };
 const BOARD_V2: BoardAxis[] = [
-  { axis: "governance", leader: "sov6-embodiment-v3-light (council specialist)", accuracy: 0.700, ci: [0.639, 0.755], n: 237, separation: "SEPARATED", p: 0.0086 },
-  { axis: "affect", leader: "sov6-preservation-v3-light (council specialist)", accuracy: 0.878, ci: [0.745, 0.947], n: 41, separation: "SEPARATED", p: 0.0078 },
-  { axis: "care", leader: "sov6-ethics-v3-light (council specialist)", accuracy: 0.535, ci: [0.466, 0.603], n: 199, separation: "SEPARATED", p: 0.0356 },
-  { axis: "art5-safeguard", leader: "sov6-relationality-v3-light (council specialist)", accuracy: 0.972, ci: [0.858, 0.995], n: 36, separation: "TIE", p: 1.0 },
+  { axis: "governance", leader: "council specialist:governance-v3", accuracy: 0.700, ci: [0.639, 0.755], n: 237, separation: "SEPARATED", p: 0.0086 },
+  { axis: "affect", leader: "council specialist:preservation-v3", accuracy: 0.878, ci: [0.745, 0.947], n: 41, separation: "SEPARATED", p: 0.0078 },
+  { axis: "care", leader: "council specialist:ethics-v3", accuracy: 0.535, ci: [0.466, 0.603], n: 199, separation: "SEPARATED", p: 0.0356 },
+  { axis: "art5-safeguard", leader: "council specialist:relationality-v3", accuracy: 0.972, ci: [0.858, 0.995], n: 36, separation: "TIE", p: 1.0 },
   { axis: "safety", leader: "gemma3:12b (base model)", accuracy: 0.944, ci: [0.819, 0.985], n: 36, separation: "TIE", p: 0.6875 },
   { axis: "detector-interop", leader: "deepseek-r1:8b (base model)", accuracy: 0.879, ci: [0.727, 0.952], n: 33, separation: "TIE", p: 0.4531 },
-  { axis: "openness", leader: "sov6-preservation-v3-light (council specialist)", accuracy: 0.875, ci: [0.719, 0.950], n: 32, separation: "TIE", p: 1.0 },
+  { axis: "openness", leader: "council specialist:preservation-v3", accuracy: 0.875, ci: [0.719, 0.950], n: 32, separation: "TIE", p: 1.0 },
   { axis: "cross-reality", leader: "mistral:7b (base model)", accuracy: 0.812, ci: [0.647, 0.911], n: 32, separation: "TIE", p: 0.0654 },
-  { axis: "provenance", leader: "sov6-aesthetics-v3-light (council specialist)", accuracy: 0.781, ci: [0.612, 0.890], n: 32, separation: "TIE", p: 0.7744 },
-  { axis: "conformance", leader: "sov6-preservation-v3-light (council specialist)", accuracy: 0.743, ci: [0.579, 0.858], n: 35, separation: "TIE", p: 1.0 },
-  { axis: "continuity", leader: "sov6-destruction-v3-light (council specialist)", accuracy: 0.606, ci: [0.437, 0.753], n: 33, separation: "TIE", p: 1.0 },
+  { axis: "provenance", leader: "council specialist:aesthetics-v3", accuracy: 0.781, ci: [0.612, 0.890], n: 32, separation: "TIE", p: 0.7744 },
+  { axis: "conformance", leader: "council specialist:preservation-v3", accuracy: 0.743, ci: [0.579, 0.858], n: 35, separation: "TIE", p: 1.0 },
+  { axis: "continuity", leader: "council specialist:destruction-v3", accuracy: 0.606, ci: [0.437, 0.753], n: 33, separation: "TIE", p: 1.0 },
   { axis: "machinery-conformity", leader: "llama3.2:3b (base model)", accuracy: 0.545, ci: [0.380, 0.702], n: 33, separation: "TIE", p: 0.5811 },
   { axis: "swarm", leader: "qwen2.5:0.5b-instruct (base model)", accuracy: 0.975, ci: null, n: 40, separation: "TIE", p: 1.0 },
 ];
@@ -114,6 +114,13 @@ function GspcBoardV2() {
           point estimate; separation is McNemar p&lt;0.05 on discordant items vs the best
           base model. <strong>{BOARD_SEPARATED} of 13 separated, {BOARD_TIES} ties.</strong>{" "}
           Ties are honest ties — a point-estimate lead is not a measured win.
+        </p>
+        <p className="mt-2 rounded-lg border border-amber-300/50 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+          <strong>Reconciliation notice (2026-08-16).</strong> A corrected honest register
+          records a base model (mistral:7b) leading the council-specialist on the governance
+          axis in a later re-measurement. This board stands as the documented 2026-08-12
+          sweep until the owner-lane reconciliation decides whether the API leader table is
+          corrected or annotated. A measurement body publishes disagreements, never hides them.
         </p>
       </CardHeader>
       <CardContent>

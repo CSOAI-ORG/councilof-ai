@@ -22,7 +22,7 @@ const USPS: { t: string; d: string }[] = [
   { t: "The Council of AI", d: "Five to thirty-three specialised agents deliberate every verdict with designed multi-agent review — a council beats one model." },
   { t: "Layer 0 signing", d: "Every decision sealed with Ed25519 and written to a tamper-evident ledger — provable, not promised." },
   { t: "Cyber self-scan", d: "A stack of reputable open-source security tools so any CISO can test their own cyber — the Council assistant triages and fixes." },
-  { t: "The Care Floor", d: "A hard 0.95 care threshold below which the system won't act — safety is a floor, not a marketing line." },
+  { t: "The Care Floor", d: "A designed 0.95 care threshold below which the system won't act — safety is a floor, not a marketing line. Measured behaviour, not a guarantee." },
   { t: "Comply once, crosswalk everywhere", d: "One evidence set mapped across EU AI Act, NIST, ISO 42001, NIS2, DORA, CRA and more." },
   { t: "Fair economics", d: "Value flows to the people doing the work — SMBs and enterprises — not to a middleman selling expensive certificates." },
 ];

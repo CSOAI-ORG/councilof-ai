@@ -292,7 +292,7 @@ export default function LicensingAgreement() {
                     </h4>
                     <ul className="space-y-1 text-sm text-muted-foreground">
                       <li>• "CSOAI Certified Analyst" mark</li>
-                      <li>• Tier-specific certification badge</li>
+                      <li>• Tier-specific measurement credential badge</li>
                       <li>• License number for verification</li>
                     </ul>
                   </div>

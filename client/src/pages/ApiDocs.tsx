@@ -97,7 +97,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
       "task": "EU AI Act risk-tier classification",
       "n": 237,
       "accuracy": 0.700,
-      "leader": "sov6-embodiment-v3-light (council specialist)",
+      "leader": "council specialist:governance-v3",
       "separation": "SEPARATED",
       "separation_p": 0.0086,
       "interval": [0.639, 0.755],
