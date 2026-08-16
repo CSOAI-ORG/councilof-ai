@@ -28,7 +28,7 @@ const NAV: NavGroup[] = [
   {
     label: "Play",
     items: [
-      { name: "Council Town", href: "#council-town", note: "the agent-town game", badge: "soon" },
+      { name: "Council Town", href: "#council-town", note: "the agent-town game", badge: "live" },
       { name: "The Arena", href: "/gspc-arena", note: "model vs model" },
       { name: "Live demo & tour", href: "/demo", note: "watch it run" },
     ],
