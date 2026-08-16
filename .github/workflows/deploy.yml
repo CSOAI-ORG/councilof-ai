@@ -30,7 +30,7 @@ jobs:
 
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
-          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench; do
+          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench gspc-scoreboard; do
             if [ -f "client/public/$b.html" ]; then
               cp "client/public/$b.html" "dist/client/$b.html"
               mkdir -p "dist/client/$b"

@@ -30,6 +30,23 @@ export default function EnterpriseTrust() {
             return s.href ? <a key={s.label} href={s.href} className="block">{Inner}</a> : <div key={s.label}>{Inner}</div>;
           })}
         </div>
+        {/* Memberships & registrations — only EXECUTED agreements badge as members.
+            C2PA: docusign 7C9592DB executed 2026-08-06 · OIN: signed 2026-08-15 ·
+            LOT Network: application submitted, membership pending (labelled). */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          <a href="/about" className="flex items-center gap-2 rounded-full border border-emerald-500/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-emerald-50 hover:border-emerald-400/50">
+            <span aria-hidden>🪪</span> C2PA Contributor Member
+            <span className="text-emerald-300/80 font-normal">· Linux Foundation project</span>
+          </a>
+          <a href="/about" className="flex items-center gap-2 rounded-full border border-emerald-500/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-emerald-50 hover:border-emerald-400/50">
+            <span aria-hidden>🛡</span> Open Invention Network
+            <span className="text-emerald-300/80 font-normal">· member</span>
+          </a>
+          <a href="/about" className="flex items-center gap-2 rounded-full border border-amber-400/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-amber-50 hover:border-amber-300/50">
+            <span aria-hidden>🤝</span> LOT Network
+            <span className="text-amber-300/80 font-normal">· application submitted</span>
+          </a>
+        </div>
         <p className="mt-5 text-center text-sm font-semibold text-emerald-100/90">Governance shouldn't cost more than the AI it governs. Open-source core · free to start · own your data · <span className="text-emerald-300">no per-seat rent.</span></p>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
           <a href="/assess" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Get your free signed assessment →</a>
