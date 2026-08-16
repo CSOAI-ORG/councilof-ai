@@ -81,6 +81,7 @@ const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
+const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
 const Welcome = lazy(() => import("./pages/Welcome"));
@@ -517,6 +518,7 @@ function App() {
                   <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
                   {/* Main routes */}
                   <Route path="/" component={NewHomeV2} />
+                  <Route path="/home-v3" component={NewHomeV3} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
                   <Route path="/welcome" component={Welcome} />
