@@ -89,7 +89,7 @@ function visibleText(html) {
 //   - refutation-ledger  the honest evidence/retraction page — renders real measured model IDs
 //                        (sov-sovereign-v4-mined-latest), SIGIL evidence hashes, and the
 //                        Byzantine/BFT RETRACTION history. All legitimate in this exact context.
-const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-)/;
+const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-|ai-transparency|authority|badges)/;
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
