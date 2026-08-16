@@ -151,7 +151,7 @@ export default function Methodology() {
             <li><strong className="text-emerald-50">Read the claim.</strong> What did we assert?</li>
             <li><strong className="text-emerald-50">Read the result.</strong> What did the measurement show?</li>
             <li>
-              <strong className="text-emerald-50">Check the sigil.</strong>{" "}
+              <strong className="text-emerald-50">Check the signed record.</strong>{" "}
               <Link href="/gspc-verify" className="text-emerald-300 hover:underline">
                 Recompute the chain hash
               </Link>{" "}

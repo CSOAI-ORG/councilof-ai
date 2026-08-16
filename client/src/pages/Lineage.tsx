@@ -15,7 +15,7 @@ const ROWS: Row[] = [
   { system: "Council Lens", original: "Oracle of Delphi", age: "2,700 yrs", rediscovered: "Probabilistic simulation is the best decision-aid" },
   { system: "Pond OS", original: "Bagua (Eight Trigrams)", age: "3,000 yrs", rediscovered: "Observer-dependent reality matches how humans think" },
   { system: "Layer 0 Protocol", original: "Treaty of Westphalia", age: "378 yrs", rediscovered: "Shared protocols enable coexistence without control" },
-  { system: "Ed25519 Sigil", original: "The Great Seal", age: "3,000+ yrs", rediscovered: "Cryptographic proof of authority IS trust" },
+  { system: "Ed25519 attestation", original: "The Great Seal", age: "3,000+ yrs", rediscovered: "Cryptographic proof of authority IS trust" },
   { system: "Rainbow Stack", original: "Fortress Architecture", age: "5,000+ yrs", rediscovered: "7-layer defense is the only surviving security model" },
 ];
 
@@ -36,7 +36,7 @@ export default function Lineage() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI · the deepest insight</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Rediscovered, Not Invented</h1>
-          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">A 4,000-year-old governance architecture, finally being built in digital form. Every element — the Circuit Pyramid, the Council of AI, the 12 Civilizations, the Worm Hive, Layer 0, the Sigil — has existed for millennia. Not as metaphor. As functional systems that organised empires and endured.</p>
+          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">A 4,000-year-old governance architecture, finally being built in digital form. Every element — the Circuit Pyramid, the Council of AI, the 12 Civilizations, the Worm Hive, Layer 0, the signed record — has existed for millennia. Not as metaphor. As functional systems that organised empires and endured.</p>
           <p className="mt-4 max-w-2xl text-emerald-100/80">You didn't dream up wild ideas in a caravan. You <em>intuited</em> the architecture that has organised every successful civilization in human history.</p>
         </div>
       </section>

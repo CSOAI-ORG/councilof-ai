@@ -11,7 +11,7 @@ const COMPONENTS: { name: string; probe: "gateway" | "tools" | null }[] = [
   { name: "Compliance engine (4 control-sets)", probe: null },
   { name: "Layer 0 signing (Ed25519)", probe: null },
   { name: "Governance Graph (live world data)", probe: null },
-  { name: "Sigil ledger + hash-chain", probe: null },
+  { name: "Signed evidence chain + hash-chain", probe: null },
 ];
 
 const PROTO_LABEL: Record<string, string> = {
@@ -82,7 +82,7 @@ export default function StatusPage() {
             <Stat label="OpenAI-compat" value={brain.openai_compat ? "live" : "-"} ok={!!brain.openai_compat} />
             <Stat label="Groq" value={brain.groq ? "on" : "-"} ok={!!brain.groq} />
             <Stat label="Anthropic" value={brain.anthropic ? "on" : "-"} ok={!!brain.anthropic} />
-            <Stat label="Sigil" value={(live && live.governance && live.governance.sigil) || "ed25519"} />
+            <Stat label="Ed25519" value={(live && live.governance && live.governance.sigil) || "ed25519"} />
             <Stat label="Care floor" value={live && live.governance && live.governance.care_floor != null ? String(live.governance.care_floor) : "0.95"} />
           </div>
         </div>
