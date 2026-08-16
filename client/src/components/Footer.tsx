@@ -62,6 +62,7 @@ export function Footer() {
         { name: 'Pricing', href: '/pricing' },
         { name: 'Contact', href: '/contact' },
         { name: 'Status', href: '/status' },
+        { name: 'Remediation Partners', href: '/remediation-partners' },
         { name: 'Careers', href: '/careers' },
         { name: 'Accreditation', href: '/accreditation' },
       ],
