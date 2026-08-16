@@ -425,7 +425,7 @@ export default function EUAIActUrgency() {
                   UK-Registered Measurement Body
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  CSOAI operates under CEASAI Limited, UK Companies House
+                  CSOAI operates under CSOAI Ltd, UK Companies House
                   16939677 — an independent legal entity that measures and attests
                   system behaviour against dated law. It is not an accredited
                   certification body and does not declare conformity.
