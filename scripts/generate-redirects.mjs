@@ -56,8 +56,9 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
 // clobbering them would break live inbound links.
 const EXISTING = [
   // 17 Aug 2026: /gspc-arena is the spectator (Council Space).
-  // Trailing slash must 308 to canonical (no slash) to bust stale prerender cache.
-  "/gspc-arena/    /gspc-arena             308",
+  // NOTE: Do NOT add /gspc-arena/ → /gspc-arena 308 here! Cloudflare Pages canonicalizes
+  // trailing slashes itself, so adding a 308 causes a redirect ping-pong (ERR_TOO_MANY_REDIRECTS).
+  // The SPA router handles both /gspc-arena and /gspc-arena/ as the same component.
   "/sov-space      /gspc-arena             308",
   "/sov-space/     /gspc-arena             308",
   "/sov-space/*    /gspc-arena             308",

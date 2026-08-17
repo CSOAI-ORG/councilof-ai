@@ -607,8 +607,11 @@ function App() {
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
-                  {/* /gspc-arena is the Council Space spectator — AI-vs-AI watch surface, measured cells. */}
+                  {/* /gspc-arena is the Council Space spectator — AI-vs-AI watch surface, measured cells.
+                      Both /gspc-arena and /gspc-arena/ serve the same component (no redirect between them)
+                      to avoid Cloudflare Pages trailing-slash canonicalization causing ERR_TOO_MANY_REDIRECTS. */}
                   <Route path="/gspc-arena" component={GSPCArena} />
+                  <Route path="/gspc-arena/" component={GSPCArena} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
