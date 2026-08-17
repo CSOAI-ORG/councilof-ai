@@ -19,18 +19,20 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 
-// Navigation structure — consolidated to 4 key areas to avoid cramming
+// Navigation structure — 7 dropdowns as per live spec
+// Council OS → /gspc-arena (the arena, NOT /os city)
 const navigation = [
   {
-    name: "Arena",
+    name: "Council OS",
     href: "/gspc-arena",
     icon: Globe2,
     description: "The live contest",
     submenu: [
-      { name: "Council Space", href: "/gspc-arena", description: "AI vs AI — night coverage on frozen provisions" },
+      { name: "Council Space (Arena)", href: "/gspc-arena", description: "AI vs AI — night coverage on frozen provisions" },
       { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 measured × 19 models, every cell signed" },
-      { name: "Verify", href: "/gspc-verify", description: "Free and loginless — check any signed card" },
+      { name: "Verify a Card", href: "/gspc-verify", description: "Free and loginless — check any signed card" },
       { name: "Get Measured", href: "/assess", description: "Your first measurement card — free" },
+      { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
   {
@@ -39,9 +41,11 @@ const navigation = [
     icon: BookOpen,
     description: "The moat, visible",
     submenu: [
-      { name: "Refutation Ledger", href: "/refutation-ledger", description: "8 experiments that killed our own theses" },
-      { name: "Live Ledger", href: "/live-ledger", description: "Signed decision_records with supersession trail" },
-      { name: "Benchmarks", href: "/benchmarks", description: "Every number traces to a published artefact" },
+      { name: "The Refutation Ledger", href: "/refutation-ledger", description: "8 experiments that killed our own theses — published" },
+      { name: "Live Ledger (signed)", href: "/live-ledger", description: "D1 queryable decision_records with supersession trail" },
+      { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions" },
+      { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact" },
+      { name: "Signed Scoreboard", href: "/gspc-scoreboard", description: "15 slots × 19 models — 13 measured, jail + slot-15 empty" },
     ],
   },
   {
@@ -50,22 +54,61 @@ const navigation = [
     icon: Globe2,
     description: 'Regulation & frameworks',
     submenu: [
-      { name: 'Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime' },
-      { name: 'Framework Crosswalk', href: '/crosswalk', description: '13 frameworks × 8 controls' },
-      { name: 'How It Works', href: '/how', description: 'From question to signed verdict' },
-      { name: 'Why CSOAI', href: '/why', description: 'What we do that others don\'t' },
+      { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus' },
+      { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
+      { name: 'Framework Crosswalk', href: '/crosswalk', description: 'Map frameworks to a single instrument' },
+      { name: 'Global Regulation Tracker', href: '/global-ai-regulation', description: 'Every AI regime worldwide, current' },
+      { name: 'Free AI Assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps' },
+      { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
     ]
   },
   {
-    name: 'About',
+    name: 'Learn',
+    href: '/how',
+    icon: GraduationCap,
+    description: 'Resources & verification',
+    submenu: [
+      { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
+      { name: 'Methodology', href: '/method', description: 'How we measure, what we publish' },
+      { name: 'Verify a Record', href: '/gspc-verify', description: 'Free and loginless — check any signed card' },
+      { name: 'Drift Audit', href: '/drift-product', description: 'Live regulatory corpus change reports' },
+    ]
+  },
+  {
+    name: 'Solutions',
+    href: '/enterprise',
+    icon: Building2,
+    description: 'Enterprise & government',
+    submenu: [
+      { name: 'Enterprise Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
+      { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
+      { name: 'Government Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
+      { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
+      { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
+    ]
+  },
+  {
+    name: 'Watchdog',
+    href: '/public-watchdog',
+    icon: Eye,
+    description: 'Monitor AI incidents',
+    submenu: [
+      { name: 'Public Watchdog', href: '/public-watchdog', description: 'Crowdsourced AI incident monitoring' },
+      { name: 'Report Incident', href: '/watchdog', description: 'Submit AI safety incident' },
+      { name: 'Leaderboard', href: '/leaderboard', description: 'Top performing analysts' },
+    ]
+  },
+  {
+    name: 'Company',
     href: '/charter',
     icon: BookMarked,
-    description: 'Charter & trust',
+    description: 'Charter, knowledge & trust',
     submenu: [
       { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
-      { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
-      { name: 'Blog', href: '/blog', description: 'Latest news & insights' },
       { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
+      { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
+      { name: 'Technology', href: '/technology', description: 'Our architecture & measurement stack' },
+      { name: 'Blog', href: '/blog', description: 'Latest news & insights' },
     ]
   },
 ];
@@ -246,39 +289,43 @@ export function Header() {
             </div>
           </div>
 
-          {/* Right Side Actions — search + key product links only. No Clerk/auth buttons. */}
-          <div className="hidden xl:flex flex-nowrap items-center gap-2">
+          {/* Right Side Actions — chips + search. No Clerk/auth buttons. No /os city CTA. */}
+          <div className="hidden xl:flex items-center gap-1.5 shrink-0">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+              className="shrink-0 p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
             </button>
 
-            {/* Scoreboard — the 15-slot measured board */}
+            {/* Chips — nowrap to prevent one-char-per-line wrapping */}
             <a
-              href="/gspc-scoreboard"
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
+              href="/models"
+              className="shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
             >
-              Scoreboard
+              Models
+            </a>
+            <a
+              href="/gspc-arena"
+              className="shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
+            >
+              Globe
+            </a>
+            <a
+              href="/j-space"
+              className="shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
+            >
+              J-Space
             </a>
 
             {/* Verify — free and loginless, always prominent */}
             <a
               href="/gspc-verify"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-all"
+              className="shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-all"
             >
               <Eye className="h-4 w-4" /> Verify
-            </a>
-
-            {/* Measure CTA — leads to free assessment */}
-            <a
-              href="/assess"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all"
-            >
-              Measure
             </a>
 
             {/* User menu only if logged in — no Sign In / Start free buttons */}
@@ -287,7 +334,7 @@ export function Header() {
                 <NotificationCenter />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-gray-600 h-8 w-8 rounded-full bg-emerald-50 hover:bg-emerald-100">
+                    <Button variant="ghost" size="icon" className="shrink-0 text-gray-600 h-8 w-8 rounded-full bg-emerald-50 hover:bg-emerald-100">
                       <User className="h-4 w-4 text-emerald-700" />
                     </Button>
                   </DropdownMenuTrigger>
