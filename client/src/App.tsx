@@ -79,6 +79,7 @@ const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
 const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
+const Founder = lazy(() => import("./pages/Founder"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
@@ -640,6 +641,7 @@ function App() {
                   <Route path="/resources" component={Resources} />
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
+                  <Route path="/founder" component={Founder} />
                   <Route path="/careers" component={Careers} />
                   {/* Key CSOAI pages */}
                   <Route path="/charter" component={Charter} />

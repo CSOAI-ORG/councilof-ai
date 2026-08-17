@@ -323,6 +323,19 @@ export default function NewHomeV3() {
 
       {/* existing trust strip with C2PA/OIN/LOT badges */}
       <EnterpriseTrust />
+
+      {/* Founder line — VC sees the person, not an anonymous product */}
+      <section className="py-12 px-6 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-lg text-gray-700 leading-relaxed">
+            <a href="/founder" className="font-semibold text-gray-900 hover:text-emerald-700 transition-colors">Nicholas Templeman</a> founded Council of AI, an independent measurement body. It measures, signs, and re-attests AI behaviour. It never certifies or sells ratings. Verify stays free.
+          </p>
+          <p className="mt-3 text-sm text-gray-500">
+            <a href="/founder" className="hover:text-emerald-600 transition-colors">Read more about the founder →</a>
+          </p>
+        </div>
+      </section>
+
       {/* keep the region-detection banner */}
       <RegionBanner />
 
