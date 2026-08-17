@@ -22,7 +22,7 @@ import {
 const FOUR_BUYERS = [
   { icon: Shield, who: "Insurers", tagline: "Price AI risk on signed evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with tamper-evident measurement cards — every risk tier, every compliance flag, independently verifiable." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
-  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. One dashboard, 15 slots — 13 measured." },
+  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get measured", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. One dashboard, 15 slots — 13 measured." },
   { icon: Zap, who: "Developers", tagline: "Measure per call on the agent rail", cta: "Explore the MCP fleet", href: "/mcp-fleet", desc: "291 governed MCP servers. Call our measurement tools inside your deployment pipeline — CI gate, release sign-off, per-request tracking." },
 ];
 
@@ -37,7 +37,7 @@ const SEVEN_INDUSTRIES = [
 ];
 
 const THREE_UPS = [
-  { icon: Shield, title: "Get measured", sub: "Send us your AI system. We run it against our frozen instruments and return a 3KB signed card. Free first measurement.", href: "/assess", btn: "Start — free" },
+  { icon: Shield, title: "Get measured", sub: "Send us your AI system. We run it against our frozen instruments and return a 3KB signed card. Verify stays free.", href: "/assess", btn: "Get measured" },
   { icon: CheckCircle, title: "Verify any card", sub: "Recompute the published hash chain in your browser. No account. The verify runs on your machine, not ours.", href: "/gspc-verify", btn: "Verify now" },
   { icon: TrendingUp, title: "Re-attest monthly", sub: "AI changes. Regulation changes. We re-measure on schedule and issue delta cards. Your compliance evidence stays current, not stale.", href: "/pricing", btn: "See plans" },
 ];
@@ -292,7 +292,7 @@ const FAQ_SCHEMA = {
   "mainEntity": [
     { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks across 15 slots (13 measured; 2 unmeasured — no score yet). Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
     { "@type": "Question", "name": "Do you certify AI systems?", "acceptedAnswer": { "@type": "Answer", "text": "No. We issue verified measurement credentials — a 3KB signed card showing what your AI did when we measured it. That is evidence, not a certification badge." } },
-    { "@type": "Question", "name": "How much does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "Your first measurement card is free. Plans for ongoing re-attestation start at £199/month. Enterprise plans available — see /pricing." } },
+    { "@type": "Question", "name": "Is it free?", "acceptedAnswer": { "@type": "Answer", "text": "Verify is free — recompute the hash chain in your browser, no account needed. Measurement (running your AI against our instruments and issuing a signed card) is a paid service. Enterprise plans available — see /pricing." } },
   ]
 };
 
