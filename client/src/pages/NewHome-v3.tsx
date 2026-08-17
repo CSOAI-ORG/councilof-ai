@@ -136,7 +136,7 @@ function UspGrid() {
 
 function AxesGrid() {
   return (
-    <Section title="The 15 measurement slots" subtitle="13 measured on the live GSPC API. 2 public slots with no score on this stamp. 12 Aug 2026 stamp is unsigned." bg="bg-white">
+    <Section title="The GSPC measurement slots" subtitle="13 measured axes, jail floor (measured, empty on this stamp), unnamed slot-15. 12 Aug 2026 stamp is unsigned." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {AXES.map(a => {
           const q = quotable(a);
@@ -290,7 +290,7 @@ const SCHEMA = {
 const FAQ_SCHEMA = {
   "@context": "https://schema.org", "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks across 15 slots (13 measured; 2 public slots with no score on this stamp). Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
+    { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks: 13 measured axes, jail floor (measured, empty on this stamp), unnamed slot-15. Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
     { "@type": "Question", "name": "Do you certify AI systems?", "acceptedAnswer": { "@type": "Answer", "text": "No. We issue verified measurement credentials — a 3KB signed card showing what your AI did when we measured it. That is evidence, not a certification badge." } },
     { "@type": "Question", "name": "How much does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "Your first measurement card is free. Plans for ongoing re-attestation start at £199/month. Enterprise plans available — see /pricing." } },
   ]
@@ -332,7 +332,7 @@ export default function NewHomeV3() {
           <FaqBlock
             title="Questions people ask"
             items={[
-              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks across 15 slots (13 measured; 2 public slots with no score on this stamp), and issue the result as a verified measurement credential — a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
+              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks: 13 measured axes, jail floor (measured, empty on this stamp), unnamed slot-15, and issue the result as a verified measurement credential — a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
               { q: "What does a measurement card cost?", a: "Your first measurement card is free. Ongoing re-attestation starts at £199/month. Enterprise plans available — see the pricing page." },
               { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },
