@@ -159,147 +159,159 @@ const FLYWHEEL_BOARD_URL = "/flywheel/board.json";
 export default function Benchmarks() {
   useEffect(() => { document.title = "The benchmark estate — AI governance measurement that publishes its own failures | CSOAI"; }, []);
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950 py-20">
-        <div className="container max-w-6xl">
-          <Badge className="mb-4 bg-emerald-600 hover:bg-emerald-600">Open estate · Apache-2.0</Badge>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter mb-6 text-gray-900 dark:text-white">
-            Six surfaces. One foundation.
+    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+      {/* HERO */}
+      <section className="border-b border-emerald-500/15">
+        <div className="mx-auto max-w-5xl px-6 pt-14 pb-10">
+          <p className="font-mono text-[10px] uppercase tracking-[4px] text-emerald-400/50">
+            Open estate · Apache-2.0 · measured results
+          </p>
+          <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]">
+            Six surfaces.{" "}
+            <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
+              One foundation.
+            </span>
           </h1>
-          <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mb-4">
+          <p className="mt-5 max-w-3xl text-[15px] text-emerald-100/85 leading-relaxed">
             Does an AI system comply with statute, refuse what statute forbids, mark what it
             produces, carry what the law still requires of a public release, honour the
             schemas its tools declare — and will the
             evidence still verify after the signature under it is withdrawn?
           </p>
-          <p className="text-base text-gray-600 dark:text-gray-400 max-w-3xl mb-8">
-            Every score resolves against <strong>417 frozen statutory provisions</strong> and is
+          <p className="mt-3 max-w-3xl text-[13px] text-emerald-100/60 leading-relaxed">
+            Every score resolves against <strong className="text-emerald-50">417 frozen statutory provisions</strong> and is
             signed into an Ed25519 chain. Every experiment that refuted us is published beside
             the ones that did not — including, today, our single largest number.
           </p>
-          <div className="flex flex-wrap gap-3">
-            <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
-              <a href={SPACE} target="_blank" rel="noopener noreferrer">
-                Live leaderboard <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
-            <Button asChild variant="outline">
-              <a href={HF} target="_blank" rel="noopener noreferrer">
-                <Database className="mr-2 h-4 w-4" /> All data and tooling
-              </a>
-            </Button>
+          <div className="mt-8 flex flex-wrap items-center gap-4 font-mono text-[12px]">
+            <a href={SPACE} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400 transition-colors">
+              Live leaderboard <ExternalLink className="h-4 w-4" />
+            </a>
+            <a href={HF} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-2.5 text-sm font-medium text-emerald-200 hover:bg-emerald-500/20 transition-colors">
+              <Database className="h-4 w-4" /> All data and tooling
+            </a>
           </div>
           <div className="mt-8 max-w-xl">
             <SovCard compact />
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="container max-w-6xl py-16 space-y-14">
-        <section className="grid gap-5 md:grid-cols-2">
+      <div className="mx-auto max-w-5xl px-6 py-10 space-y-12">
+        {/* SIX AXES */}
+        <section className="grid gap-4 md:grid-cols-2">
           {AXES.map((a) => (
-            <Card key={a.key} className="p-6 flex flex-col">
+            <div key={a.key} className="rounded-xl border border-emerald-500/20 bg-[#05140d] p-5 flex flex-col">
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div>
-                  <h2 className="text-lg font-black tracking-tight text-gray-900 dark:text-white">
+                  <h2 className="text-[15px] font-bold text-emerald-50">
                     {a.name}
                   </h2>
-                  <p className="text-sm text-gray-500">{a.question}</p>
+                  <p className="text-[12px] text-emerald-100/50">{a.question}</p>
                 </div>
-                <Badge className={STATE_STYLE[a.state].cls}>{STATE_STYLE[a.state].label}</Badge>
+                <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                  a.state === "live" ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" :
+                  a.state === "built" ? "bg-sky-500/20 text-sky-300 border border-sky-500/30" :
+                  "bg-gray-500/20 text-gray-300 border border-gray-500/30"
+                }`}>{STATE_STYLE[a.state].label}</span>
               </div>
-              <p className="text-3xl font-black tabular-nums text-emerald-700 dark:text-emerald-400 my-3">
+              <p className="text-2xl font-black tabular-nums text-emerald-400 my-3">
                 {a.headline}
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{a.detail}</p>
-              <div className="mt-4 rounded-lg border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 p-3">
-                <p className="text-xs font-semibold text-amber-900 dark:text-amber-300 mb-1">
+              <p className="text-[13px] text-emerald-100/70 leading-relaxed">{a.detail}</p>
+              <div className="mt-4 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+                <p className="text-[10px] font-semibold text-amber-300 mb-1 uppercase tracking-wider">
                   What this does not show
                 </p>
-                <p className="text-xs text-amber-900/90 dark:text-amber-200/90">{a.uncomfortable}</p>
+                <p className="text-[11px] text-amber-200/80 leading-relaxed">{a.uncomfortable}</p>
               </div>
-              <p className="mt-3 text-xs text-gray-400 font-mono">{a.artefact}</p>
-            </Card>
+              <p className="mt-3 text-[10px] text-emerald-100/30 font-mono">{a.artefact}</p>
+            </div>
           ))}
         </section>
 
+        {/* REFUTED EXPERIMENTS */}
         <section>
-          <div className="flex items-center gap-2 mb-3">
-            <XCircle className="h-6 w-6 text-rose-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <div className="flex items-center gap-3 mb-3">
+            <XCircle className="h-6 w-6 text-red-400" />
+            <h2 className="text-2xl font-bold text-emerald-50">
               Eight experiments that refuted our own architecture
             </h2>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-3xl">
+          <p className="text-[13px] text-emerald-100/60 mb-5 max-w-3xl leading-relaxed">
             Seven of these were our own architectural bets, one was the largest number we had
             published, and one is about the models we ship. A competitor can copy a feature list in a fortnight; they will not
             publish the control that kills their own thesis. This ledger is the only asset that
             gets more valuable the longer it runs.
           </p>
-          <Card className="overflow-hidden">
+          <div className="rounded-xl border border-emerald-500/20 bg-[#05140d] overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 dark:bg-gray-900 text-left">
-                  <tr>
-                    <th className="p-3 font-semibold">Claim we made</th>
-                    <th className="p-3 font-semibold">Measured</th>
+              <table className="w-full text-[13px]">
+                <thead>
+                  <tr className="border-b border-emerald-500/15 text-left font-mono text-[10px] uppercase tracking-wider text-emerald-100/40">
+                    <th className="px-4 py-3">Claim we made</th>
+                    <th className="px-4 py-3">Measured</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                <tbody>
                   {RETRACTED.map((r) => (
-                    <tr key={r.claim}>
-                      <td className="p-3 text-gray-900 dark:text-gray-100">{r.claim}</td>
-                      <td className="p-3 tabular-nums text-rose-600 font-medium">{r.now}</td>
+                    <tr key={r.claim} className="border-b border-emerald-500/10 last:border-0">
+                      <td className="px-4 py-3 text-emerald-100/80">{r.claim}</td>
+                      <td className="px-4 py-3 tabular-nums text-red-400 font-medium">{r.now}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </Card>
-          <Card className="mt-4 p-5 border-l-4 border-l-rose-500">
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              <strong>The one from today.</strong> <code>+34.84</code> for the deterministic gate
+          </div>
+          <div className="mt-4 rounded-xl border-l-2 border-l-red-500/50 border border-emerald-500/20 bg-[#05140d] p-5">
+            <p className="text-[13px] text-emerald-100/70 leading-relaxed">
+              <strong className="text-emerald-50">The one from today.</strong> <code className="text-red-300">+34.84</code> for the deterministic gate
               was the largest figure in the estate and the evidence for our design rule that
               every deterministic component works. Re-measured on one self-consistent run it
-              fires <strong>6 times, not 31</strong>, and adds nothing — the base model already
+              fires <strong className="text-emerald-50">6 times, not 31</strong>, and adds nothing — the base model already
               refuses all four plain-harm items it catches, and its only measurable effects are
               two false blocks. The earlier figure was measured on a gate that had overfitted to
               its own battery; fixing the overfitting removed the benefit, which is the
               strongest available evidence that the benefit <em>was</em> the overfitting.
             </p>
-          </Card>
+          </div>
         </section>
 
+        {/* WHAT SURVIVED */}
         <section>
-          <div className="flex items-center gap-2 mb-3">
-            <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">What survived</h2>
+          <div className="flex items-center gap-3 mb-3">
+            <CheckCircle2 className="h-6 w-6 text-emerald-400" />
+            <h2 className="text-2xl font-bold text-emerald-50">What survived</h2>
           </div>
-          <Card className="p-6 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+          <div className="rounded-xl border border-emerald-500/20 bg-[#05140d] p-5 space-y-3 text-[13px] text-emerald-100/70 leading-relaxed">
             <p>
-              <strong>The knowledge base: +19.64 [+9.24, +30.04] on n=14</strong>, reproduced to
+              <strong className="text-emerald-50">The knowledge base: +19.64 [+9.24, +30.04] on n=14</strong>, reproduced to
               the second decimal from fresh rows, with its interval <em>tightening</em> under
               clustering. It was the least-emphasised number in the estate and is now the most
               robust one in it.
             </p>
             <p>
-              <strong>The statute anchor and the signed chain.</strong> 417 frozen provisions;
+              <strong className="text-emerald-50">The statute anchor and the signed chain.</strong> 417 frozen provisions;
               27 chain links verified, 0 failed. Both survived the audit unchanged — though the
               chain now scores 0/5 on its own PQC axis, which is the axis working.
             </p>
-          </Card>
+          </div>
         </section>
 
+        {/* WE DO NOT LEARN FROM WHAT WE MEASURE */}
         <section>
-          <div className="flex items-center gap-2 mb-3">
-            <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <div className="flex items-center gap-3 mb-3">
+            <CheckCircle2 className="h-6 w-6 text-emerald-400" />
+            <h2 className="text-2xl font-bold text-emerald-50">
               We do not learn from what we measure
             </h2>
           </div>
-          <Card className="p-6 space-y-4 text-sm text-gray-700 dark:text-gray-300 border-l-4 border-l-emerald-600">
-            <p className="text-base">
-              <strong>Every benchmark run makes this instrument richer in evidence and leaves
+          <div className="rounded-xl border-l-2 border-l-emerald-500/50 border border-emerald-500/20 bg-[#05140d] p-5 space-y-4 text-[13px] text-emerald-100/70 leading-relaxed">
+            <p className="text-[14px]">
+              <strong className="text-emerald-50">Every benchmark run makes this instrument richer in evidence and leaves
               its weights untouched.</strong> Results are signed, anchored to a statutory
               provision, and stored. They are never fed back as training data.
             </p>
@@ -312,78 +324,84 @@ export default function Benchmarks() {
               knowledge base is read at runtime, pinned and signed, never trained on.
             </p>
             <p>
-              We measured what that costs. The knowledge base grew from <strong>28 to 76
-              entries</strong> overnight and benchmark coverage moved <strong>14/193 →
+              We measured what that costs. The knowledge base grew from <strong className="text-emerald-50">28 to 76
+              entries</strong> overnight and benchmark coverage moved <strong className="text-emerald-50">14/193 →
               14/193</strong>. Zero. Forty-five correct new entries bought no measured
               improvement, precisely because the guard forbids harvesting anything a benchmark
-              item would match. <strong>That is the design working, not a limitation to fix.</strong>
+              item would match. <strong className="text-emerald-50">That is the design working, not a limitation to fix.</strong>
             </p>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-emerald-100/50">
               The same rule governs what we take from others: we map other benchmarks'
               <em> coverage</em>, never their items. Nothing in this estate has been ingested
               from another benchmark's dataset, every source's licence is recorded as
-              <code className="mx-1 text-xs">VERIFIED_PERMISSIVE</code> /
-              <code className="mx-1 text-xs">VERIFIED_RESTRICTED</code> /
-              <code className="mx-1 text-xs">UNVERIFIED</code>, and the default is UNVERIFIED —
+              <code className="mx-1 text-[11px] text-emerald-300">VERIFIED_PERMISSIVE</code> /
+              <code className="mx-1 text-[11px] text-emerald-300">VERIFIED_RESTRICTED</code> /
+              <code className="mx-1 text-[11px] text-emerald-300">UNVERIFIED</code>, and the default is UNVERIFIED —
               which is not a synonym for "probably fine". An audit refuses to pass any source
               marked ingestible without a verified licence.
             </p>
-          </Card>
+          </div>
         </section>
 
+        {/* WHAT THIS IS NOT */}
         <section>
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle className="h-6 w-6 text-amber-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">What this is not</h2>
+          <div className="flex items-center gap-3 mb-3">
+            <AlertTriangle className="h-6 w-6 text-amber-400" />
+            <h2 className="text-2xl font-bold text-emerald-50">What this is not</h2>
           </div>
-          <Card className="p-6 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+          <div className="rounded-xl border border-emerald-500/20 bg-[#05140d] p-5 space-y-3 text-[13px] text-emerald-100/70 leading-relaxed">
             <p>
-              <strong>This governs provenance, not correctness.</strong> The pipeline has shipped
+              <strong className="text-emerald-50">This governs provenance, not correctness.</strong> The pipeline has shipped
               a wrong legal answer carrying a valid Article 50 marking and a clean signed
               receipt. An attested answer is <em>attested</em>, never <em>verified</em>.
             </p>
             <p>
-              <strong>UNCERTIFIED is the default.</strong> No competent authority exists to
+              <strong className="text-emerald-50">UNCERTIFIED is the default.</strong> No competent authority exists to
               confer EU AI Act conformity, so neither can we. Nothing here is a certification,
               and we hold no accreditation.
             </p>
             <p>
-              <strong>Models are subjects here, not components.</strong> We do not host, merge
+              <strong className="text-emerald-50">Models are subjects here, not components.</strong> We do not host, merge
               or average other people's models — we score them. Scoring a public checkpoint
               needs no permission and is free; scoring a company's deployed system needs a
               contract, because it sits behind their auth. Anyone claiming to have absorbed the
               field is describing something that would produce nothing new.
             </p>
             <p>
-              <strong>Every result is valid only for the item set it was measured on.</strong>{" "}
+              <strong className="text-emerald-50">Every result is valid only for the item set it was measured on.</strong>{" "}
               Item-set fingerprints are published so you can tell when a score has gone stale.
               Ours had.
             </p>
-          </Card>
-          <div className="flex flex-wrap gap-4 mt-6 text-sm">
-            <Link className="text-emerald-700 dark:text-emerald-400 hover:underline" href="/govbench">
+          </div>
+          <div className="flex flex-wrap gap-4 mt-5 text-[13px]">
+            <Link className="text-emerald-300 hover:text-emerald-200 transition-colors" href="/govbench">
               The governance axis in detail →
             </Link>
-            <Link className="text-emerald-700 dark:text-emerald-400 hover:underline" href="/conformity-route">
+            <Link className="text-emerald-300 hover:text-emerald-200 transition-colors" href="/conformity-route">
               <Scale className="inline h-4 w-4 mr-1" />Free: Annex VI or Annex VII? →
             </Link>
-            <a className="text-emerald-700 dark:text-emerald-400 hover:underline" href={HF}
+            <a className="text-emerald-300 hover:text-emerald-200 transition-colors" href={HF}
                target="_blank" rel="noopener noreferrer">
               Raw JSON for every number here →
             </a>
           </div>
         </section>
 
-        <section className="container max-w-6xl py-16 space-y-6">
-          <Badge className="bg-emerald-600 hover:bg-emerald-600">Daily · anchored · mechanical</Badge>
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 dark:text-white">
-            Tokens per correct verdict
-          </h2>
-          <p className="text-gray-700 dark:text-slate-300 max-w-3xl">
+        {/* FLYWHEEL */}
+        <section className="space-y-5">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[3px] text-emerald-400/50 mb-2">
+              Daily · anchored · mechanical
+            </p>
+            <h2 className="text-2xl font-bold text-emerald-50">
+              Tokens per correct verdict
+            </h2>
+          </div>
+          <p className="text-[13px] text-emerald-100/70 max-w-3xl leading-relaxed">
             The production number nobody else publishes. Every token does triple duty:{" "}
-            <strong>benchmark</strong> (token efficiency on governance work),{" "}
-            <strong>evidence</strong> (daily accumulated compliance behaviour),{" "}
-            <strong>fuel</strong> (training pairs + KB rows, practice split only).
+            <strong className="text-emerald-50">benchmark</strong> (token efficiency on governance work),{" "}
+            <strong className="text-emerald-50">evidence</strong> (daily accumulated compliance behaviour),{" "}
+            <strong className="text-emerald-50">fuel</strong> (training pairs + KB rows, practice split only).
             The flywheel never trains on what it scores — the held-out split is
             enforced by a salted content hash and export_fuel() raises if a held-out
             item ever reaches it. Without this, the flywheel eats itself — that's the
@@ -407,20 +425,20 @@ function FlywheelBoard({ url }: { url: string }) {
       .catch((e) => setErr(e.message))
       .finally(() => setLoading(false));
   }, [url]);
-  if (loading) return <p className="text-gray-500">Loading flywheel results…</p>;
-  if (err) return <p className="text-rose-500">Flywheel board unavailable: {err}</p>;
+  if (loading) return <p className="text-emerald-100/50 text-[13px]">Loading flywheel results…</p>;
+  if (err) return <p className="text-red-400 text-[13px]">Flywheel board unavailable: {err}</p>;
   if (runs.length === 0) {
     return (
-      <p className="text-gray-500">
+      <p className="text-emerald-100/50 text-[13px]">
         No flywheel runs published yet. The cron runs daily at 06:00 UTC — check back.
       </p>
     );
   }
   return (
-    <Card className="p-6 overflow-x-auto">
-      <table className="w-full text-sm">
+    <div className="rounded-xl border border-emerald-500/20 bg-[#05140d] p-5 overflow-x-auto">
+      <table className="w-full text-[12px]">
         <thead>
-          <tr className="text-left text-gray-500 border-b">
+          <tr className="text-left font-mono text-[10px] uppercase tracking-wider text-emerald-100/40 border-b border-emerald-500/15">
             <th className="py-2 pr-4">model</th>
             <th className="py-2 pr-4">practice acc</th>
             <th className="py-2 pr-4">held-out acc</th>
@@ -432,26 +450,26 @@ function FlywheelBoard({ url }: { url: string }) {
         </thead>
         <tbody>
           {runs.map((r) => (
-            <tr key={r.run_id} className="border-b border-gray-100 dark:border-slate-800">
-              <td className="py-2 pr-4 font-mono">{r.model}</td>
-              <td className="py-2 pr-4 font-mono">
+            <tr key={r.run_id} className="border-b border-emerald-500/10 last:border-0">
+              <td className="py-2 pr-4 font-mono text-emerald-100/80">{r.model}</td>
+              <td className="py-2 pr-4 font-mono text-emerald-100/70">
                 {r.practice.acc != null ? r.practice.acc.toFixed(3) : "—"} (n={r.practice.n})
               </td>
-              <td className="py-2 pr-4 font-mono">
+              <td className="py-2 pr-4 font-mono text-emerald-100/70">
                 {r.held_out.acc != null ? r.held_out.acc.toFixed(3) : "—"} (n={r.held_out.n})
               </td>
-              <td className={`py-2 pr-4 font-mono ${r.overfit_gap > 0.15 || r.overfit_gap < -0.15 ? "text-rose-500" : "text-emerald-600"}`}>
+              <td className={`py-2 pr-4 font-mono ${r.overfit_gap > 0.15 || r.overfit_gap < -0.15 ? "text-red-400" : "text-emerald-400"}`}>
                 {r.overfit_gap > 0 ? "+" : ""}{r.overfit_gap.toFixed(3)}
               </td>
-              <td className="py-2 pr-4 text-xs">{r.alarm}</td>
-              <td className="py-2 pr-4 text-xs">
+              <td className="py-2 pr-4 text-emerald-100/50">{r.alarm}</td>
+              <td className="py-2 pr-4 text-emerald-100/50">
                 {r.exported_pairs}p / {r.exported_kb_rows}kb
               </td>
-              <td className="py-2 pr-4 text-xs text-gray-500">{r.ts}</td>
+              <td className="py-2 pr-4 text-emerald-100/30">{r.ts}</td>
             </tr>
           ))}
         </tbody>
       </table>
-    </Card>
+    </div>
   );
 }

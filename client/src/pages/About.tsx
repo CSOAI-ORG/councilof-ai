@@ -155,7 +155,7 @@ export default function About() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>Every AI system monitored by certified analysts</span>
+                  <span>Every AI system monitored by trained analysts</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
@@ -202,7 +202,7 @@ export default function About() {
               <div className="inline-flex p-4 bg-emerald-100 rounded-full mb-4">
                 <Shield className="h-8 w-8 text-emerald-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Certify</h3>
+              <h3 className="text-xl font-bold mb-3">Assess</h3>
               <p className="text-gray-600">
                 Rigorous assessment with a 70% passing threshold. It records what you demonstrated — it is training, not accreditation, and confers no regulatory status.
               </p>
@@ -437,7 +437,7 @@ export default function About() {
           <Heart className="h-16 w-16 text-emerald-400 mx-auto mb-6" />
           <h2 className="text-4xl font-bold mb-6">Our Commitment to You</h2>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            We're building CSOAI in public. Every decision, every framework update, every certification standard
+            We're building CSOAI in public. Every decision, every framework update, every measurement standard
             is documented and transparent. We answer to the community, not shareholders. Our success is measured
             by one metric: <span className="text-emerald-300 font-semibold">Are we making AI safer while creating meaningful jobs?</span>
           </p>
@@ -447,9 +447,9 @@ export default function About() {
                 Start Training Today
               </Button>
             </Link>
-            <Link href="/certification">
+            <Link href="/assess">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Learn About Certification
+                Get Measured Free
               </Button>
             </Link>
           </div>
@@ -467,14 +467,14 @@ export default function About() {
               <div className="flex-1 text-center md:text-left">
                 <h3 className="text-3xl font-bold mb-4">Aligned with Global Standards</h3>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  CSOAI training and certification aligns with the three major global AI governance frameworks:
+                  CSOAI training and measurement aligns with the three major global AI governance frameworks:
                   EU AI Act (Europe), NIST AI RMF (United States), and ISO 42001 (International).
-                  Our certification is recognized by enterprises and governments worldwide.
+                  Our measurement credentials are verified by enterprises and governments worldwide.
                 </p>
                 <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                  <Badge variant="outline" className="text-sm py-2 px-4">EU AI Act Compliant</Badge>
+                  <Badge variant="outline" className="text-sm py-2 px-4">EU AI Act Aligned</Badge>
                   <Badge variant="outline" className="text-sm py-2 px-4">NIST AI RMF Aligned</Badge>
-                  <Badge variant="outline" className="text-sm py-2 px-4">ISO 42001 Certified</Badge>
+                  <Badge variant="outline" className="text-sm py-2 px-4">ISO 42001 Aligned</Badge>
                 </div>
               </div>
             </div>
@@ -580,9 +580,9 @@ export default function About() {
             </Card>
 
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
-              <h3 className="text-xl font-bold mb-3">How long does certification take?</h3>
+              <h3 className="text-xl font-bold mb-3">How long does training take?</h3>
               <p className="text-gray-600 leading-relaxed">
-                Most students complete the training in 4-6 hours and pass the certification exam on their first attempt.
+                Most students complete the training in 4-6 hours and pass the assessment on their first attempt.
                 The exam is 50 questions, 90 minutes, with a 70% passing threshold. You can retake it as many times as needed.
               </p>
             </Card>
