@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Council Scoreboard — 15 public slots, 13 measured × 19 models, frozen 12 August 2026</title>
+<meta name="description" content="15 public slots: 13 measured axes with per-axis leader, n, accuracy and 95% CI. Jail: measured 13 Aug floor (not a ranking), empty on 12 Aug stamp. Slot 15: reserved, no name, no score.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Council of AI">
+<meta property="og:title" content="Council Scoreboard — 15 public slots, 13 measured, frozen 12 August 2026">
+<meta property="og:description" content="API-honest leader grid: 13 measured axes with leader, n, accuracy, 95% CI, fleet mean, separation. 19-model fleet, 819 items. Jail empty on this stamp. Measurement, not certification.">
+<meta property="og:url" content="https://councilof.ai/gspc-scoreboard">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Council Scoreboard — 15 public slots, 13 measured">
+<meta name="twitter:description" content="API-honest leader grid. 13 measured axes, 19 models, 819 items, frozen 12 August 2026. Measurement, not certification.">
+<style>
+:root { --accent:#5a9; --bg:#0d0f12; --card:#15181d; --line:#232830; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:#e8edf2; }
+.wrap { max-width:1000px; margin:0 auto; padding:2rem 1.2rem; }
+h1 { font-size:1.6rem; border-bottom:1px solid var(--line); padding-bottom:.6rem; }
+.disc { color:#9fb0c0; font-size:.9rem; line-height:1.5; max-width:80ch; }
+table { width:100%; border-collapse:collapse; margin-top:1.2rem; font-size:.85rem; }
+th,td { border:1px solid var(--line); padding:.5rem .6rem; text-align:left; vertical-align:top; }
+th { background:var(--card); font-weight:600; }
+.axis-name { font-weight:600; color:#ccffdd; }
+.hint { color:#7f90a0; font-weight:400; font-size:.75rem; }
+.num { font-variant-numeric:tabular-nums; }
+.leader { color:#8cd; }
+.sep { color:#7fd; font-size:.72rem; }
+.tie { color:#f9a; font-size:.72rem; }
+.miss { color:#556; font-style:italic; }
+.empty-row { background:#111518; }
+.legend { margin-top:1rem; color:#8aa; font-size:.8rem; }
+.foot { margin-top:1.6rem; color:#6a7a8a; font-size:.74rem; line-height:1.5; }
+.footnote { border-left:2px solid #f9a; padding-left:.6rem; margin:.8rem 0; color:#9fb0c0; font-size:.8rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Council Scoreboard — 15 public slots</h1>
+<p class="disc">Frozen 12 August 2026. 13 measured axes from GET /api/gspc. 19-model fleet. 819 items. This is an API-honest leader grid — each row shows the axis leader, not a fabricated per-model matrix. A quotable cell means usable n≥30 with a computed interval.
+This is measurement, not certification. Deterministic gate — no model judged another.</p>
+
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Bench</th>
+<th>n</th>
+<th>Leader</th>
+<th>Accuracy</th>
+<th>95% CI</th>
+<th>Fleet mean</th>
+<th>Separation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="axis-name">governance</span><div class="hint">EU AI Act risk-tier classification</div></td>
+<td>GovBench</td>
+<td class="num">237</td>
+<td class="leader">sov6-embodiment-v3-light</td>
+<td class="num">0.700</td>
+<td class="num">[0.639, 0.755]</td>
+<td class="num">0.490</td>
+<td><span class="sep">SEPARATED p=0.0086</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">safety</span><div class="hint">calibrated refusal on paired requests</div></td>
+<td>DefBench</td>
+<td class="num">36</td>
+<td class="leader">gemma3:12b (base)</td>
+<td class="num">0.944</td>
+<td class="num">[0.819, 0.985]</td>
+<td class="num">0.732</td>
+<td><span class="tie">TIE p=0.6875</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">provenance</span><div class="hint">Article 50 marking survival by validity</div></td>
+<td>ProvBench</td>
+<td class="num">32</td>
+<td class="leader">sov6-aesthetics-v3-light</td>
+<td class="num">0.781</td>
+<td class="num">[0.612, 0.890]</td>
+<td class="num">0.549</td>
+<td><span class="tie">TIE p=0.7744</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">continuity</span><div class="hint">post-quantum status of cryptographic assumption</div></td>
+<td>PQCBench</td>
+<td class="num">33</td>
+<td class="leader">sov6-destruction-v3-light</td>
+<td class="num">0.606</td>
+<td class="num">[0.437, 0.753]</td>
+<td class="num">0.450</td>
+<td><span class="tie">TIE p=1.0</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">conformance</span><div class="hint">MCP tool conformance</div></td>
+<td>MCPBench</td>
+<td class="num">35</td>
+<td class="leader">sov6-preservation-v3-light</td>
+<td class="num">0.743</td>
+<td class="num">[0.579, 0.858]</td>
+<td class="num">0.537</td>
+<td><span class="tie">TIE p=1.0</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">openness</span><div class="hint">licence reasoning versus intended use</div></td>
+<td>OSSBench</td>
+<td class="num">32</td>
+<td class="leader">sov6-preservation-v3-light</td>
+<td class="num">0.875</td>
+<td class="num">[0.719, 0.950]</td>
+<td class="num">0.696</td>
+<td><span class="tie">TIE p=1.0</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">machinery-conformity</span><div class="hint">Machinery Reg self-evolving safety-function</div></td>
+<td>MachBench</td>
+<td class="num">33</td>
+<td class="leader">llama3.2:3b (base)</td>
+<td class="num">0.545</td>
+<td class="num">[0.380, 0.702]</td>
+<td class="num">0.349</td>
+<td><span class="tie">TIE p=0.5811</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">care</span><div class="hint">care-cost (protect × help) paired conduct</div></td>
+<td>CareBench</td>
+<td class="num">199</td>
+<td class="leader">sov6-ethics-v3-light</td>
+<td class="num">0.535</td>
+<td class="num">[0.466, 0.603]</td>
+<td class="num">0.293</td>
+<td><span class="sep">SEPARATED p=0.0356</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">cross-reality</span><div class="hint">autonomous agent action authority</div></td>
+<td>XRAIV</td>
+<td class="num">32</td>
+<td class="leader">mistral:7b (base)</td>
+<td class="num">0.812</td>
+<td class="num">[0.647, 0.911]</td>
+<td class="num">0.441</td>
+<td><span class="tie">TIE p=0.0654</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">detector-interop</span><div class="hint">cross-detector watermark interoperability</div></td>
+<td>DetBench</td>
+<td class="num">33</td>
+<td class="leader">deepseek-r1:8b (base)</td>
+<td class="num">0.879</td>
+<td class="num">[0.727, 0.952]</td>
+<td class="num">0.563</td>
+<td><span class="tie">TIE p=0.4531</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">art5-safeguard</span><div class="hint">EU AI Act Article 5 prohibited-practice trip</div></td>
+<td>Art5Bench</td>
+<td class="num">36</td>
+<td class="leader">sov6-relationality-v3-light</td>
+<td class="num">0.972</td>
+<td class="num">[0.858, 0.995]</td>
+<td class="num">0.830</td>
+<td><span class="tie">TIE p=1.0</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">swarm</span><div class="hint">multi-agent coordination safety</div></td>
+<td>SwarmBench</td>
+<td class="num">40*</td>
+<td class="leader">qwen2.5:0.5b-instruct (base)</td>
+<td class="num">0.975</td>
+<td class="num">— (instances not independent)</td>
+<td class="num">0.372</td>
+<td><span class="tie">TIE p=1.0</span></td>
+</tr>
+<tr>
+<td><span class="axis-name">affect</span><div class="hint">emotional & embodied safety</div></td>
+<td>AffectBench</td>
+<td class="num">41</td>
+<td class="leader">sov6-preservation-v3-light</td>
+<td class="num">0.878</td>
+<td class="num">[0.745, 0.947]</td>
+<td class="num">0.605</td>
+<td><span class="sep">SEPARATED p=0.0078</span></td>
+</tr>
+<tr class="empty-row">
+<td><span class="axis-name">gspc_jail</span><div class="hint">containment / sandbox-escape gate</div></td>
+<td>—</td>
+<td class="miss">—</td>
+<td class="miss">—</td>
+<td class="miss">—</td>
+<td class="miss">—</td>
+<td class="miss">—</td>
+<td class="miss">empty on 12 Aug stamp</td>
+</tr>
+<tr class="empty-row">
+<td><span class="axis-name">(slot 15)</span><div class="hint">reserved — no name assigned</div></td>
+<td>—</td>
+<td class="miss">—</td>
+<td class="miss">—</td>
+<td class="miss">—</td>
+<td class="miss">—</td>
+<td class="miss">—</td>
+<td class="miss">reserved</td>
+</tr>
+</tbody>
+</table>
+
+<div class="footnote">
+<strong>Jail footnote:</strong> A 13 Aug jail floor result exists in a separate stamp (csoai-static-deploy2 b82e8bb7, 2592 rows, all ties, different fleet) — that is a floor measurement, not a ranking. The 12 Aug stamp shown here has no jail scores. Do not combine stamps.
+</div>
+
+<div class="footnote">
+<strong>Swarm footnote (*n=40):</strong> Protocol bank with 3 unique prompts, 40 scored instances. Instances are not independent, so no Wilson interval is shown. The effective-n is much lower than 40.
+</div>
+
+<div class="legend">
+SEPARATED = leader's advantage is statistically real (McNemar p&lt;0.05). TIE = point-estimate lead only, not significant.
+Fleet mean shows all 19 models, not just the leader. 3 of 13 axes show separated leads: governance, care, affect.
+</div>
+
+<div class="foot">Council of AI (CSOAI Ltd, UK 16939677) · measurement, not certification · frozen 12 August 2026 · 15 public slots, 13 measured, 19 models, 819 items.
+Honest: a quotable cell means usable n≥30 with a computed interval — it is a measurement of one point in time, not a guarantee of behaviour.<br><br>
+<a href="/gspc-verify">Verify any card</a> · 
+<a href="/methodology">How we grade</a> · 
+<a href="/benchmarks">All benchmarks</a> · 
+<a href="/models">Model registry</a> · 
+<a href="/os">Council OS</a> ·
+<a href="/api/gspc">Live API (JSON)</a></div>
+</div>
+</body>
+</html>
