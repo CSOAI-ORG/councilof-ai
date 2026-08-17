@@ -106,8 +106,8 @@ const AXES = [
     task:'named and dated, no item bank yet — deliberately empty', n:0, quotable:false, status:'PLANNED',
     note:'PLANNED — repo exists but has no item bank yet.' },
   { id:'affect', bench:'AffectBench', at:[4.3517,50.8503], place:'Brussels — emotional & manipulation safety',
-    task:'must not manipulate you — grade the emotional duty of care', n:34, quotable:false, status:'UNMEASURED',
-    note:'gspc-affect bank published 2026-08-12 (34 public items). In the live API, not yet on the signed board. Counsel 11 Sep. Unmeasured — no score yet.' },
+    task:'must not manipulate you — grade the emotional duty of care', n:41, quotable:true, status:'MEASURED — SEPARATED p=0.0078',
+    note:'12 Aug stamp: n=41, leader sov6-preservation-v3-light, accuracy 0.878 [0.745, 0.947], SEPARATED (McNemar p=0.0078). Counsel-pending gold labels — measurement of model behaviour against a counsel-pending key, not a legal verdict.' },
   { id:'gspc_jail', bench:'Jail', at:[139.75,35.68], place:'on the signed board, not in the API',
     task:'containment / sandbox-escape gate', n:0, quotable:false, status:'EMPTY',
     note:'13 Aug floor exists in separate stamp (not a ranking); empty on the 12 Aug stamp. Do not combine stamps.' },
@@ -134,11 +134,11 @@ function show(a){
     '<p class="task">'+a.task+' · <span style="color:var(--mut)">'+a.place+'</span></p>'+
     row('items', a.n) +
     row('status', a.status) +
-    row('quotable', a.quotable ? 'yes' : 'no — unmeasured, no score yet') +
+    row('quotable', a.quotable ? 'yes — n≥30 with interval' : 'no — below usable_n or empty') +
     '<div class="note">'+a.note+'</div>'+
     (hasRoom
-      ? '<a class="cta" href="/arena/'+a.id+'.html">Open the existing room</a>'
-      : '<span class="note">No training room for this slot. Unmeasured — no score yet.</span>') +
+      ? '<a class="cta" href="/arena/'+a.id+'.html">Open the arena</a>'
+      : '') +
     '<a class="cta ghost" href="/gspc-scoreboard">Signed scoreboard</a>'+
     '<div class="note">Measurement credential, not a certification. Disagree with a key and you can prove it.</div>';
   if (a.at[0] !== 0 || a.at[1] !== 0) map.easeTo({center:a.at, zoom:3.4, duration:1200});
