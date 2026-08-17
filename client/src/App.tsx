@@ -79,6 +79,7 @@ const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
 const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
+const Founder = lazy(() => import("./pages/Founder"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const Login = lazy(() => import("./pages/Login"));
@@ -353,6 +354,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/status": "System Status | CSOAI",
   "/contact": "Contact | CSOAI",
   "/about": "About | CSOAI",
+  "/founder": "Nicholas Templeman — Founder, Council of AI",
   "/mcp": "MCP Hub | CSOAI",
   "/mcp-fleet": "MCP Fleet | CSOAI",
   "/tool-commons": "Tool Commons | CSOAI",
@@ -633,6 +635,7 @@ function App() {
                   <Route path="/resources" component={Resources} />
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
+                  <Route path="/founder" component={Founder} />
                   <Route path="/careers" component={Careers} />
                   {/* Key CSOAI pages */}
                   <Route path="/charter" component={Charter} />
