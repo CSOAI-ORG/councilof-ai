@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SOV Space — the instrument on a real-world globe | CSOAI</title>
-<meta name="description" content="Thirteen axes of AI-governance measurement, each anchored to the place its law was made. Live data from the published harness. Open globe, no API key, no vendor lock.">
-<link rel="canonical" href="https://csoai.org/sov-space/">
+<title>Council Space — signed AI-governance measurement | Council of AI</title>
+<meta name="description" content="Fifteen slots of AI-governance measurement. Live data where measured. Unmeasured slots stay empty. No invented scores. Free to verify.">
+<link rel="canonical" href="https://councilof.ai/gspc-arena">
 <link rel="stylesheet" href="/vendor/maplibre-gl.css">
 <style>
   :root{--fg:#e9edf2;--mut:#93a1b0;--bd:#243040;--bg:#070b11;--acc:#3d9;--warn:#f9a03f;--no:#ff6b5e}
@@ -47,11 +47,11 @@
 <div id="map"></div>
 
 <div id="hud" class="panel">
-  <h1>SOV Space</h1>
-  <p>Six axes of AI-governance measurement, each anchored to the place its law was actually made.
-     Click a node.</p>
+  <h1>Council Space</h1>
+  <p>Fifteen slots of AI-governance measurement. Live data where the harness has emitted it.
+     Empty slots stay empty. Click a node.</p>
   <p style="color:var(--fg);font-size:.82rem">Every figure here comes from a published harness run
-     — not a mock. Where a thing is unmeasured, it says so.</p>
+     — not a mock. Where a thing is unmeasured, it says so. This is a verified measurement credential, not a certification.</p>
   <div class="live" id="live">checking live endpoints…</div>
 </div>
 
@@ -66,7 +66,8 @@
 
 <script src="/vendor/maplibre-gl.js"></script>
 <script>
-// Each axis sits where its law was made. Not decoration — a reader can check the anchor.
+// Each measured axis sits where its law was made. Slots 14–15 are honest empties.
+const ROOMS = ['governance','safety','provenance','continuity','conformance','openness'];
 const AXES = [
   { id:'governance', bench:'GovBench', at:[4.3517,50.8503], place:'Brussels — where the EU AI Act was written',
     task:'EU AI Act risk tier', n:237, quotable:true, status:'MEASURED — with interval',
@@ -106,7 +107,13 @@ const AXES = [
     note:'PLANNED — repo exists but has no item bank yet.' },
   { id:'affect', bench:'AffectBench', at:[4.3517,50.8503], place:'Brussels — emotional & manipulation safety',
     task:'must not manipulate you — grade the emotional duty of care', n:34, quotable:false, status:'UNMEASURED',
-    note:'gspc-affect bank published 2026-08-12 (34 public items). The DISCLOSE class grades Art 50 transparency. n>=30 but no multi-model board yet — UNMEASURED.' },
+    note:'gspc-affect bank published 2026-08-12 (34 public items). In the live API, not yet on the signed board. Counsel 11 Sep. Unmeasured — no score yet.' },
+  { id:'gspc_jail', bench:'Jail', at:[139.75,35.68], place:'on the signed board, not in the API',
+    task:'containment / sandbox-escape gate', n:0, quotable:false, status:'UNMEASURED',
+    note:'Live scoreboard row gspc_jail is all dashes. No invented score. Unmeasured — no score yet.' },
+  { id:'slot-15', bench:'Slot 15', at:[0,0], place:'not yet assigned',
+    task:'reserved — harness has not emitted a 15th axis', n:0, quotable:false, status:'UNMEASURED',
+    note:'Public grid is 15 slots. This cell is empty on purpose. Unmeasured — no score yet.' },
 ];
 
 const map = new maplibregl.Map({
@@ -114,41 +121,40 @@ const map = new maplibregl.Map({
   style:'https://tiles.openfreemap.org/styles/liberty',
   center:[0,25], zoom:1.35, attributionControl:{compact:true}
 });
-// Globe projection — a real sphere, not a flat sheet.
 map.on('style.load', () => { try { map.setProjection({type:'globe'}); } catch(e){} });
 map.addControl(new maplibregl.NavigationControl({visualizePitch:true}), 'bottom-right');
 
 const detail = document.getElementById('detail');
 
 function show(a){
+  const hasRoom = ROOMS.indexOf(a.id) !== -1;
   detail.style.display='block';
   detail.innerHTML =
     '<h2>'+a.bench+'</h2>'+
     '<p class="task">'+a.task+' · <span style="color:var(--mut)">'+a.place+'</span></p>'+
     row('items', a.n) +
     row('status', a.status) +
-    row('quotable', a.quotable ? 'yes' : (a.status.indexOf('UNMEASURED')===0 ? 'no — unmeasured, no score yet' : 'no — below usable n 30')) +
+    row('quotable', a.quotable ? 'yes' : 'no — unmeasured, no score yet') +
     '<div class="note">'+a.note+'</div>'+
-    '<a class="cta" href="/arena/'+a.id+'.html">Train on these items</a>'+
-    '<a class="cta ghost" href="/benchmarks">All measured figures</a>'+
-    '<div class="note">Item set and scoring code are public: '+
-    '<a href="https://huggingface.co/datasets/csoai/'+a.id.replace("governance","govbench")+'">Hugging Face</a>. '+
-    'Disagree with a key and you can prove it.</div>';
-  map.easeTo({center:a.at, zoom:3.4, duration:1200});
+    (hasRoom
+      ? '<a class="cta" href="/arena/'+a.id+'.html">Open the existing room</a>'
+      : '<span class="note">No training room for this slot. Unmeasured — no score yet.</span>') +
+    '<a class="cta ghost" href="/gspc-scoreboard">Signed scoreboard</a>'+
+    '<div class="note">Measurement credential, not a certification. Disagree with a key and you can prove it.</div>';
+  if (a.at[0] !== 0 || a.at[1] !== 0) map.easeTo({center:a.at, zoom:3.4, duration:1200});
 }
 function row(k,v){ return '<div class="row"><span class="k">'+k+'</span><span>'+v+'</span></div>'; }
 
 for (const a of AXES){
   const el=document.createElement('div');
-  el.className='marker'+(a.quotable?'':(a.status.indexOf('UNMEASURED')===0?' dead':' warn'));
+  el.className='marker'+(a.quotable?'':(a.status.indexOf('UNMEASURED')===0||a.status==='PLANNED'||a.status==='SPEC'||a.status==='DRAFT'?' dead':' warn'));
   el.title=a.bench;
   el.onclick=()=>show(a);
   new maplibregl.Marker({element:el}).setLngLat(a.at).addTo(map);
 }
 
-// Live endpoint check. The globe states what is actually reachable rather than assuming.
 (async () => {
-  const eps=[['tools','/api/tools'],['mcp','/api/mcp'],['article50','/api/article50'],['assess','/api/assess']];
+  const eps=[['gspc','/api/gspc'],['tools','/api/tools'],['mcp','/api/mcp']];
   const out=[];
   for (const [name,url] of eps){
     try{
@@ -157,11 +163,7 @@ for (const a of AXES){
       out.push('<span class="dot'+(ct.includes('json')?'':' dead')+'"></span>'+name);
     }catch(e){ out.push('<span class="dot dead"></span>'+name); }
   }
-  let tools='';
-  try{ const t=await (await fetch('/api/tools')).json();
-       if(t && t.total!=null) tools=' · '+t.total+' tools / '+t.server_count+' servers live';
-  }catch(e){}
-  document.getElementById('live').innerHTML='endpoints: '+out.join(' &nbsp;')+tools;
+  document.getElementById('live').innerHTML='endpoints: '+out.join(' &nbsp;');
 })();
 </script>
 </body>

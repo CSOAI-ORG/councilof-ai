@@ -3,9 +3,14 @@
 # Per-route exact rules to /index.html are FORBIDDEN: Pages canonicalizes them to / (308).
 
 # --- hand-written consolidation redirects (preserved) ---
-/gspc-arena     /sov-space?view=arena   308
-/sovereign-town /sov-space?view=towns   308
-/towns          /sov-space?view=towns   308
+/gspc-arena     /sov-space/index.html   200
+/sov-space      /gspc-arena             308
+/sov-space/     /gspc-arena             308
+/sov-space/*    /gspc-arena             308
+/sovereign-space /gspc-arena            308
+/simulate       /gspc-arena             308
+/sovereign-town /gspc-arena?view=towns  308
+/towns          /gspc-arena?view=towns  308
 /globe          /globe3d.html           308
 /byzantine            /council   308
 /byzantine-consensus  /council   308
@@ -19,7 +24,6 @@
 # --- static asset trees: served directly, never routed to the app ---
 /arena/*  /arena/:splat  200
 /benchmarks/*  /benchmarks/:splat  200
-/sov-space/*  /sov-space/:splat  200
 /vendor/*  /vendor/:splat  200
 /.well-known/*  /.well-known/:splat  200
 /corpus-watch/*  /corpus-watch/:splat  200
