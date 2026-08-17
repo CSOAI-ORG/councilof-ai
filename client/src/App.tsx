@@ -935,9 +935,10 @@ function App() {
                   {/* Individual Charter Articles */}
                   <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
-                  {/* 410 Gone — /sov-space was retired 17 Aug 2026; do not redirect. */}
+                  {/* 410 Gone — retired routes, do not redirect. */}
                   <Route path="/sov-space" component={Gone} />
                   <Route path="/sovereign-space" component={Gone} />
+                  <Route path="/stripe-checkout.js" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/badges" component={BadgesPage} />
                   <Route path="/authority" component={BadgesPage} />
