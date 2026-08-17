@@ -29,7 +29,7 @@ const navigation = [
     description: "The live contest",
     submenu: [
       { name: "Council Space (Arena)", href: "/gspc-arena", description: "AI vs AI — night coverage on frozen provisions" },
-      { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 measured × 19 models, every cell signed" },
+      { name: "Scoreboard", href: "/gspc-scoreboard", description: "15 public slots, 13 measured × 19 models, frozen 12 Aug 2026" },
       { name: "Verify a Card", href: "/gspc-verify", description: "Free and loginless — check any signed card" },
       { name: "Get Measured", href: "/assess", description: "Book a measurement — verify stays free" },
       { name: "System Status", href: "/status", description: "Live transparency" },
@@ -45,7 +45,7 @@ const navigation = [
       { name: "Live Ledger (signed)", href: "/live-ledger", description: "D1 queryable decision_records with supersession trail" },
       { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions" },
       { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact" },
-      { name: "Signed Scoreboard", href: "/gspc-scoreboard", description: "15 slots × 19 models — 13 measured, jail + slot-15 empty" },
+      { name: "Scoreboard", href: "/gspc-scoreboard", description: "15 slots × 19 models — 13 measured, jail + slot-15 empty" },
     ],
   },
   {

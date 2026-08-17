@@ -13,7 +13,7 @@ const SKUS = [
     name: "Bench-as-a-Service",
     price: "per evaluation",
     pitch:
-      "Your model, our battery. Governance, safety, provenance and continuity cells run against your release — every cell signed Ed25519, every claim traceable to the run that produced it.",
+      "Your model, our battery. Governance, safety, provenance and continuity cells run against your release — every claim traceable to the run that produced it.",
     proof:
       "Running today: govbench (237 scored items, cluster-robust), defbench (45-item care battery), provbench (C2PA binding-survival). Re-certify on every model update — that's the subscription.",
   },

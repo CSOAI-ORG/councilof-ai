@@ -181,7 +181,7 @@ function AxesGrid() {
       </div>
       <div className="mt-8 text-center">
         <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 19 models, frozen 12 August 2026, every cell signed
+          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 15 public slots, 13 measured × 19 models, frozen 12 August 2026
         </a>
       </div>
     </Section>
@@ -348,7 +348,7 @@ export default function NewHomeV3() {
               { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks across 15 slots (13 measured; 2 unmeasured — no score yet), and issue the result as a verified measurement credential — a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
               { q: "Is verify free?", a: "Yes — verify is free. Recompute the hash chain in your browser with no account needed. Measurement (running your AI against our instruments and issuing a signed card) is a paid service. Enterprise plans available — see the pricing page." },
-              { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },
+              { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF. New instruments ship as regulation lands." },
               { q: "Who can see my measurement results?", a: "You decide. Cards are signed but disclosure is yours — publish them to your customers and regulators, or keep them private. The signing key is public; your data never leaves your control." },
             ]}
           />

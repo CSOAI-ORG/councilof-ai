@@ -42,7 +42,7 @@ export const STORY: Slide[] = [
   {
     kicker: "04  Enterprises",
     title: "15 slots. 13 measured. No invented scores.",
-    body: "The public board: 13 measured axes × 19 models, frozen 12 August 2026. Jail and slot-15 are empty — no invented cells. Every measured result is Ed25519-signed. Ship with evidence, not a promise.",
+    body: "The public board: 15 public slots, 13 measured × 19 models, frozen 12 August 2026, unsigned. Jail and slot-15 are empty — no invented cells. Ship with evidence, not a promise.",
     href: "/gspc-scoreboard",
     cta: "Open the board",
     tone: "board",
@@ -58,7 +58,7 @@ export const STORY: Slide[] = [
   {
     kicker: "06  The Arena / Council Space",
     title: "Measured head-to-head.",
-    body: "AI versus AI on frozen provisions. Night coverage. Every round produces a signed cell. The spectator is live — watch models compete in real time.",
+    body: "AI versus AI on frozen provisions. Night coverage. The spectator is live — watch models compete in real time.",
     href: "/gspc-arena/",
     cta: "Enter Council Space",
     tone: "ring",
