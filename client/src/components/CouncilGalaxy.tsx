@@ -1,4 +1,4 @@
-// SovSpaceGalaxy — 5D layer view of the sovereign estate.
+// CouncilGalaxy — 5D layer view of the council estate.
 //
 // Each layer is a concentric ring; zooming OUT reveals the next layer.
 //   Layer 0 (innermost): the HIVE — the now-pinned corpus of facts (water)
@@ -90,7 +90,7 @@ function fmtSince(iso?: string): string {
   return `${Math.round(dt / 86_400_000)}d ago`;
 }
 
-export default function SovSpaceGalaxy({
+export default function CouncilGalaxy({
   hive,
   cspace,
   jspace,
@@ -392,7 +392,7 @@ export default function SovSpaceGalaxy({
           style={{ width: "100%", height: "100%", display: "block", cursor: "grab", outline: "none" }}
           tabIndex={0}
           role="application"
-          aria-label={`SovSpace galaxy — hive → c-space → j-space → flywheels → live data. ${flywheels.length} planets. Use Tab to cycle, Enter to inspect, Escape to clear. Currently focused: ${flywheels[kbFocus]?.name ?? "none"}.`}
+          aria-label={`Council galaxy — hive → c-space → j-space → flywheels → live data. ${flywheels.length} planets. Use Tab to cycle, Enter to inspect, Escape to clear. Currently focused: ${flywheels[kbFocus]?.name ?? "none"}.`}
           onMouseMove={(e) => {
             const r = (e.target as HTMLCanvasElement).getBoundingClientRect();
             setHover({ x: e.clientX - r.left, y: e.clientY - r.top });

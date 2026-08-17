@@ -62,11 +62,8 @@ const navItems = [
   { path: "/reports", label: "Reports", icon: FileText },
   { path: "/training", label: "Training", icon: GraduationCap },
   { path: "/workbench", label: "Governance Workbench", icon: Briefcase },
-  { path: "/admin", label: "Admin Panel", icon: ShieldCheck },
   { path: "/api-docs", label: "API Docs", icon: Code },
-  { path: "/api-keys", label: "API Keys", icon: Key },
   { path: "/pdca", label: "PDCA Cycles", icon: RefreshCw },
-  { path: "/settings/billing", label: "Billing", icon: CreditCard },
   { path: "/knowledge-base", label: "Knowledge Base", icon: Brain },
   { path: "/regulator", label: "Regulator View", icon: Building2 },
   { path: "/leaderboard", label: "Leaderboard", icon: Trophy },
@@ -160,10 +157,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             variant="ghost"
             className="w-full justify-start gap-3 px-3 py-2 text-sm hover:bg-accent"
           >
-            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-amber-500 text-white font-medium text-xs">
-              AD
+            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-slate-500 text-white font-medium text-xs">
+              ?
             </div>
-            <span className="truncate">Admin User</span>
+            <span className="truncate">Guest</span>
           </Button>
         </div>
       </motion.aside>

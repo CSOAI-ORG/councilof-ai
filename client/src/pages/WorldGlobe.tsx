@@ -5,7 +5,7 @@ import { sovActions, describeActions } from "../lib/sovAgent";
 import { flyAndConvene, drive } from "../lib/globeDrive";
 import { REGIONS } from "../lib/locale";
 import { Link } from "wouter";
-import SovNav from "../components/SovNav";
+import CouncilNav from "../components/CouncilNav";
 import AISystemNotice from "../components/AISystemNotice";
 import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from "../data/layer0Nodes";
 
@@ -289,7 +289,7 @@ export default function WorldGlobe() {
         </div>
       </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
-        <SovNav />
+        <CouncilNav />
         <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the council globe</p>
         <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">AI governance, layered on the world</h1>
         <p className="mt-2 max-w-2xl text-emerald-50/80">Every framework lives where it is made. Spin the globe, toggle the layers, click any node to see what it governs and jump straight into the OS.</p>

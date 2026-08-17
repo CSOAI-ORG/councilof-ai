@@ -4,11 +4,11 @@ import { chargeSovereign } from "../lib/sovCharge";
 import { sovActions } from "../lib/sovAgent";
 import { detectLocale, REGIONS } from "../lib/locale";
 import { flyAndConvene, neutralize } from "../lib/globeDrive";
-import SovNav from "../components/SovNav";
+import CouncilNav from "../components/CouncilNav";
 import AISystemNotice from "../components/AISystemNotice";
 import { useLedger, type DecisionRecord } from "../hooks/useLedger";
 import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
-import SovSpaceGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } from "../components/SovSpaceGalaxy";
+import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } from "../components/CouncilGalaxy";
 
 // SOV SPACE is the container OS — the arena, the globe and the towns live
 // INSIDE it as layers, not as separate products (Nick's unification law,
@@ -36,7 +36,7 @@ function GlobeView() {
     <div className="mx-auto max-w-6xl px-6 pb-10">
       <div className="overflow-hidden rounded-2xl border border-sky-500/25">
         <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
-          <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Council Globe — the GLOBE AI OS, living inside Sov Space{ask ? " · flown to your scenario" : ""}</div>
+          <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Council Globe — the GLOBE AI OS, living inside Council Space{ask ? " · flown to your scenario" : ""}</div>
           <a href="/globe3d.html" className="text-[11px] font-semibold text-sky-200 hover:underline">Open full screen →</a>
         </div>
         <iframe ref={frameRef} onLoad={onLoad} src="/globe3d.html" title="Council 3D Governance Earth" loading="lazy" className="block h-[70vh] w-full" style={{ border: 0 }} />
@@ -122,7 +122,7 @@ const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CA
 function ssGlobeCode(text: string): string { const r = sovActions(text).find((a) => a.kind === "region"); return r && r.kind === "region" ? (SS_GLOBE_CODE[r.region] || "") : ""; }
 
 // Sovereign Space - the CSOAI AI-OS simulation. Feed data + text, watch the
-// 33-agent council deliberate, and the Council assistant narrates + speaks every step.
+// multi-agent council deliberate, and the Council assistant narrates + speaks every step.
 // When VITE_SOV_GATEWAY is set it runs LIVE against the MEOK 59-MCP substrate
 // (council + audit + sigil); otherwise it runs the local simulation. The same
 // flow pixel-streams from Unreal Engine 5 in the full OS.
@@ -197,7 +197,7 @@ async function ssGovern(ind: string): Promise<any | null> {
 }
 async function ssVerdict(scenario: string): Promise<string> {
   try {
-    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI 33-agent governance council. In 3 sentences, deliver a verdict on this AI system: is it permitted, and under what key conditions (risk tier, human oversight, transparency, data duties)? System: " + scenario }) });
+    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI multi-agent governance council. In 3 sentences, deliver a verdict on this AI system: is it permitted, and under what key conditions (risk tier, human oversight, transparency, data duties)? System: " + scenario }) });
     if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) return String(d.response); }
   } catch (e) {}
   return "";
@@ -260,9 +260,9 @@ function buildRun(scenario: string): Step[] {
   const s = (scenario || "").trim() || SAMPLE;
   const head = s.slice(0, 88) + (s.length > 88 ? "..." : "");
   return [
-    { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
+    { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
     { t: "Classifying the system - risk tier and applicable regimes detected (EU AI Act, NIST AI RMF, ISO 42001).", phase: 1 },
-    { t: "Convening the council - 33 council agents, designed multi-agent review. Quorum forming...", phase: 2 },
+    { t: "Convening the council - council agents, designed multi-agent review. Quorum forming...", phase: 2 },
     { t: "Agents deliberating - mapping controls, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
     { t: "Crosswalking once -> EU AI Act, NIST, ISO 42001 and TC260 satisfied from one evidence set.", phase: 3 },
     { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
@@ -300,7 +300,7 @@ function convertToTimeline(records: DecisionRecord[]): TimelineEvent[] {
 // decision_records in J-space replay mode — no inference, no fabrication. Honest
 // framing: "current as of the last fetch".
 
-export default function SovSpace() {
+export default function CouncilSpace() {
   const search = useSearch();
   const view = (new URLSearchParams(search).get("view") || "console") as SovViewId | string;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -480,7 +480,7 @@ export default function SovSpace() {
     return () => window.removeEventListener("message", onMessage);
   }, []);
   // The Sovereign flies the embedded globe to the scenario's jurisdiction (auto-pulses),
-  // convenes the 33-agent council spiral there, and neutralizes any rogue-swarm threat.
+  // convenes the multi-agent council spiral there, and neutralizes any rogue-swarm threat.
   function flyToScenario(text: string) {
     const code = ssGlobeCode(text);
     const prof = (code && REGIONS[code]) ? REGIONS[code] : REGIONS.GLOBAL;
@@ -495,7 +495,7 @@ export default function SovSpace() {
   const timers = useRef<any[]>([]);
 
   useEffect(() => {
-    document.title = "Council Space - simulate, experiment, govern | CSOAI";
+    document.title = "Council Space | CSOAI";
     // Handoff from the Council Globe: /simulate?q=… pre-loads the scenario so one
     // Sovereign flows from "ask on the globe" straight into "run the full simulation".
     try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}
@@ -581,7 +581,7 @@ export default function SovSpace() {
         };
         setCSpaceEvents((prev) => [cEvent, ...prev].slice(0, 50));
         // The same verdict is a card on the AI card bus — every AI call visible.
-        const vCard = emitCard({ kind: "council-verdict", summary: cEvent.claim, detail: "33-agent council deliberation on: " + scenario.slice(0, 140), axis: "governance", source: verdict ? "live" : "local-sim" });
+        const vCard = emitCard({ kind: "council-verdict", summary: cEvent.claim, detail: "multi-agent council deliberation on: " + scenario.slice(0, 140), axis: "governance", source: verdict ? "live" : "local-sim" });
         // Persist to the sov-time ledger — the VWM spacetime canvas. The
         // ledger is append-only with a 16-byte event_id hash; the timestamp
         // is the canonical position on the log-scale timeline.
@@ -646,10 +646,10 @@ export default function SovSpace() {
     const head = s.slice(0, 88) + (s.length > 88 ? "..." : "");
     const fwList = fwNames.length ? fwNames.join(", ") : "EU AI Act, NIST AI RMF, ISO 42001";
     return [
-      { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
+      { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
       { t: "Classifying the system - jurisdiction: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
       { t: "Applicable regimes detected: " + fwList + ".", phase: 1 },
-      { t: "Convening the council - 33 council agents, designed multi-agent review. Quorum forming...", phase: 2 },
+      { t: "Convening the council - council agents, designed multi-agent review. Quorum forming...", phase: 2 },
       { t: "Agents deliberating - risk tier, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
       { t: "Crosswalking once -> " + fwList + " satisfied from one evidence set." + (bridges.length ? " Legacy bridge: " + bridges.join(", ") + "." : ""), phase: 3 },
       { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
@@ -694,7 +694,7 @@ export default function SovSpace() {
     return (
       <div className="min-h-screen bg-[#03110b] text-emerald-50">
         <section className="relative mx-auto max-w-6xl px-6 pt-14 pb-2">
-          <SovNav />
+          <CouncilNav />
           <ViewSwitcher view={view} />
         </section>
         <Suspense fallback={<div className="mx-auto max-w-6xl px-6 py-16 font-mono text-sm text-emerald-300/60">loading the {view} layer…</div>}>
@@ -713,10 +713,10 @@ export default function SovSpace() {
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <section className="relative overflow-hidden mx-auto max-w-6xl px-6 pt-14 pb-6">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 30% -10%, rgba(16,185,129,.18), transparent 60%)" }} />
-        <div className="relative"><SovNav /><ViewSwitcher view={view} /></div>
+        <div className="relative"><CouncilNav /><ViewSwitcher view={view} /></div>
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Council Space</p>
-        <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Simulate. Experiment. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Govern.</span></h1>
-        <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the 33-agent council deliberate live while your Council assistant narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
+        <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Measure. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Record.</span></h1>
+        <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the multi-agent council deliberate live while your Council assistant narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
         <div className="relative mt-4 max-w-2xl"><AISystemNotice route="/simulate" /></div>
         <div className="relative mt-4 inline-flex max-w-2xl flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-emerald-500/20 bg-black/25 px-3 py-2 text-sm">
           <span className="font-semibold text-emerald-200">{loc.greeting}</span>
@@ -743,7 +743,7 @@ export default function SovSpace() {
       <section className="mx-auto grid max-w-6xl gap-5 px-6 pb-12 lg:grid-cols-[1.1fr_1fr]">
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
           <canvas ref={canvasRef} className="h-[420px] w-full block" />
-          <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "council complete - verdict below" : "sov space - idle"}</div>
+          <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "council complete - verdict below" : "council space - idle"}</div>
           <div
             className={"absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] " + (
               gwOnline === null ? "bg-slate-500/20 text-slate-200"
@@ -762,7 +762,7 @@ export default function SovSpace() {
             <button onClick={() => run()} disabled={running} className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">{running ? "Running..." : "Run experiment"}</button>
             <button onClick={reset} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm font-semibold text-emerald-100 hover:bg-white/5">Reset</button>
             <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm text-emerald-100 hover:bg-white/5">{voiceOn ? "Voice on" : "Voice off"}</button>
-            <a href={"/sov-space?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Council Globe →</a>
+            <a href={"/gspc-arena?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Council Globe →</a>
             <button onClick={() => stampPresence("walk-around", { pov: "all", zoom: "all" })} className="rounded-xl border border-amber-400/40 px-3 py-2 text-sm font-semibold text-amber-100 hover:bg-white/5" title="Stamp your POV as 'all-of-data' — every event in the ledger, every zoom level, no filtering">EAT ALL</button>
           </div>
           {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026;
@@ -788,7 +788,7 @@ export default function SovSpace() {
         <div className="overflow-hidden rounded-2xl border border-sky-500/25 bg-[#05140d]">
           <div className="flex items-center justify-between border-b border-sky-500/15 px-4 py-2">
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">SovSpace · 5D layered view</div>
+              <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">Council Space · 5D layered view</div>
               <div className="text-sm font-bold text-sky-100">Hive → C-space → J-space → flywheels → live data — the estate as a galaxy</div>
             </div>
             <div className="text-right font-mono text-[10px] text-sky-300/60">
@@ -796,7 +796,7 @@ export default function SovSpace() {
             </div>
           </div>
           <div className="p-2">
-            <SovSpaceGalaxy
+            <CouncilGalaxy
               hive={HIVE}
               cspace={cSpaceEvents.length}
               jspace={jrecords.length}
@@ -867,7 +867,7 @@ export default function SovSpace() {
         <div className="overflow-hidden rounded-2xl border border-sky-500/25">
           <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
             <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Council Globe — {globeRegion ? "flown to " + globeRegion + " for your scenario" : "one Council, one world — run a scenario to fly it"}</div>
-            <a href={"/sov-space?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="text-[11px] font-semibold text-sky-200 hover:underline">Open the full globe →</a>
+            <a href={"/gspc-arena?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="text-[11px] font-semibold text-sky-200 hover:underline">Open the full globe →</a>
           </div>
           <iframe ref={globeRef} src={"/globe3d.html" + (loc.region.code !== "GLOBAL" ? "?region=" + loc.region.code : "")} title="Council globe" loading="lazy" className="block h-[360px] w-full" style={{ border: 0 }} />
           {selectedStamp && (
@@ -914,12 +914,12 @@ export default function SovSpace() {
       </section>
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="grid gap-4 sm:grid-cols-3">
-          <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Ask the live Council</div><p className="mt-1 text-sm text-emerald-100/70">Take a real question to the 33 agents and get a signed verdict.</p></a>
+          <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Ask the live Council</div><p className="mt-1 text-sm text-emerald-100/70">Take a real question to the the council and get a verdict.</p></a>
           <a href="/certification" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Training and Certification</div><p className="mt-1 text-sm text-emerald-100/70">Learn the framework and earn your verifiable Council credential.</p></a>
           <a href="/charter" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">The Council Charter</div><p className="mt-1 text-sm text-emerald-100/70">The constitution the OS is governed by - read and align.</p></a>
         </div>
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/70">
-          <b className="text-emerald-200">Roadmap to Unreal Engine 5.</b> This Sov Space runs natively in your browser today. The full immersive OS renders in UE5 and reaches you by pixel-stream, with the same Council voice loop and Layer 0 signing - you take control, it explains as it happens. Building in the open on GitHub; aligned across the M4 build line.
+          <b className="text-emerald-200">Roadmap to Unreal Engine 5.</b> This Council Space runs natively in your browser today. The full immersive OS renders in UE5 and reaches you by pixel-stream, with the same Council voice loop and Layer 0 signing - you take control, it explains as it happens. Building in the open on GitHub; aligned across the M4 build line.
         </div>
       </section>
     </div>
