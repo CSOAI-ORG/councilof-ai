@@ -230,36 +230,6 @@ export function Footer() {
           </div>
         </div>
 
-        {/* What We Don't Claim */}
-        <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-2">
-            What We Don&apos;t Claim
-          </h4>
-          <ul className="space-y-1 text-xs text-gray-600">
-            <li>Not a certifier · not an enforcer · no accreditation chain</li>
-            <li>Our own systems are scored on this board, no exemption</li>
-            <li>We measure. Others enforce. The distinction is the business.</li>
-          </ul>
-        </div>
-
-        {/* Refutation Ledger — prominent link */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/refutation-ledger"
-            className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-600 transition hover:bg-rose-100"
-          >
-            <span className="h-2 w-2 rounded-full bg-rose-500" />
-            9 published refutations · 4 killed our own bets
-          </Link>
-          <Link
-            href="/live-ledger"
-            className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100"
-          >
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            Live D1 ledger · signed · queryable
-          </Link>
-        </div>
-
         {/* AI Transparency & Oversight Statement (Art 50 / Art 14) */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">

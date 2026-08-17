@@ -15,6 +15,7 @@ import FaqBlock from "@/components/FaqBlock";
 import {
   Shield, CheckCircle, ArrowRight, Users, Building2,
   Zap, ChevronRight, BarChart3, Gamepad2, TrendingUp,
+  Eye, FileCheck, RefreshCw, Ban, Landmark, Scale,
 } from "lucide-react";
 
 // ── data ────────────────────────────────────────────────────────────────────
@@ -37,7 +38,7 @@ const SEVEN_INDUSTRIES = [
 
 const THREE_UPS = [
   { icon: Shield, title: "Get measured", sub: "Send us your AI system. We run it against our frozen instruments and return a 3KB signed card. Free first measurement.", href: "/assess", btn: "Start — free" },
-  { icon: CheckCircle, title: "Verify any card", sub: "Recompute the published 6-record hash chain in your browser. Client-side WebCrypto — the verify runs in YOUR browser, never on our server. Paste and QR scan are not wired on this page.", href: "/gspc-verify", btn: "Verify now" },
+  { icon: CheckCircle, title: "Verify any card", sub: "Recompute the published hash chain in your browser. No account. The verify runs on your machine, not ours.", href: "/gspc-verify", btn: "Verify now" },
   { icon: TrendingUp, title: "Re-attest monthly", sub: "AI changes. Regulation changes. We re-measure on schedule and issue delta cards. Your compliance evidence stays current, not stale.", href: "/pricing", btn: "See plans" },
 ];
 
@@ -114,6 +115,74 @@ function HeroStrip() {
 }
 
 // ── 15-slot grid (13 measured + 2 honest empties) ───────────────────────────
+
+// ── problem we fix ───────────────────────────────────────────────────
+function ProblemStrip() {
+  return (
+    <Section
+      id="problem"
+      title="The problem we fix"
+      subtitle="Assertions are cheap. Proof is not. Buyers and regulators are asked to trust a PDF."
+      bg="bg-white"
+    >
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="rounded-2xl border border-rose-100 bg-rose-50/70 p-7">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-rose-600">What they sell you</p>
+          <h3 className="mt-2 text-2xl font-black text-gray-900">A claim you cannot recompute</h3>
+          <ul className="mt-4 space-y-3 text-sm text-gray-600">
+            <li>A vendor says the model is safe, aligned, or compliant.</li>
+            <li>The evidence is a slide, a badge, or a private report.</li>
+            <li>You cannot run the same test. You cannot see what was left unmeasured.</li>
+            <li>Six months later the model has changed and the PDF has not.</li>
+          </ul>
+        </div>
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-7">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">What we issue</p>
+          <h3 className="mt-2 text-2xl font-black text-gray-900">A card anyone can check</h3>
+          <ul className="mt-4 space-y-3 text-sm text-gray-600">
+            <li>We run the system on frozen, published instruments.</li>
+            <li>We sign the result. You keep the 3KB card.</li>
+            <li>Unmeasured slots stay empty. No invented scores.</li>
+            <li>Re-attest is a new record, never an edit of the old one.</li>
+          </ul>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+const USPS = [
+  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
+  { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
+  { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail plus one reserved slot stay unmeasured — no score yet.", href: "/gspc-scoreboard" },
+  { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
+  { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/city" },
+  { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/method" },
+  { icon: Ban, title: "No money from what we rank", body: "We do not sell ratings and we do not take a cut from anything on the board.", href: "/method" },
+  { icon: Shield, title: "Measurement credential", body: "Not a certification. Not a notified body. We measure, sign, and keep the evidence.", href: "/gspc-verify" },
+];
+
+function UspGrid() {
+  return (
+    <Section
+      id="usps"
+      title="What you actually get"
+      subtitle="The product is the stack: measure, sign, live contest, living layer. The scoreboard is how people cite it."
+      bg="bg-gray-50"
+    >
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {USPS.map(u => (
+          <a key={u.title} href={u.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-lg hover:border-emerald-200 transition-all">
+            <u.icon className="w-8 h-8 text-emerald-500 mb-3" />
+            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-600">{u.title}</h3>
+            <p className="mt-2 text-sm text-gray-500 leading-relaxed flex-1">{u.body}</p>
+          </a>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 function AxesGrid() {
   return (
     <Section title="The 15 measurement slots" subtitle="13 measured on the live GSPC API. 2 slots unmeasured — no score yet. Every measured axis carries a frozen benchmark at usable n≥30 where possible. Empty cells stay empty." bg="bg-white">
@@ -232,9 +301,8 @@ function ArenaStrip() {
             <BarChart3 className="w-4 h-4" /> View leaderboard
           </a>
         </div>
-        <div className="mt-10 grid grid-cols-3 gap-4 max-w-md mx-auto text-sm">
-          <div><span className="block text-2xl font-black text-amber-300">527</span><span className="text-emerald-100/70">live rounds</span></div>
-          <div><span className="block text-2xl font-black text-amber-300">22</span><span className="text-emerald-100/70">models ranked</span></div>
+        <div className="mt-10 grid grid-cols-2 gap-4 max-w-md mx-auto text-sm">
+          <div><span className="block text-2xl font-black text-amber-300">22</span><span className="text-emerald-100/70">models on the board</span></div>
           <div><span className="block text-2xl font-black text-amber-300">13</span><span className="text-emerald-100/70">axes measured</span></div>
         </div>
       </div>
@@ -313,6 +381,10 @@ export default function NewHomeV3() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_SCHEMA) }} />
 
       <HeroStrip />
+      <div className="border-b border-gray-100" />
+      <ProblemStrip />
+      <div className="border-b border-gray-100" />
+      <UspGrid />
       <div className="border-b border-gray-100" />
       <BuyerCards />
       <div className="border-b border-gray-100" />
