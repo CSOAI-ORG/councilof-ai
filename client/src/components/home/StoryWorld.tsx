@@ -40,7 +40,7 @@ export const STORY: Slide[] = [
   {
     kicker: "04  Honest grid",
     title: "15 slots. 13 measured. 2 empty.",
-    body: "Empty cells stay empty. No invented scores. Jail and slot 15 remain unmeasured — no score yet. The live board is 13 measured axes × 19 models, frozen 12 August 2026, every measured cell signed.",
+    body: "Empty cells stay empty. No invented scores. Jail: measured 13 Aug floor in separate stamp (not a ranking), empty on 12 Aug. Slot-15: reserved. The live board is 13 measured axes × 19 models, frozen 12 August 2026, every measured cell signed.",
     href: "/gspc-scoreboard",
     cta: "Open the board",
     tone: "board",
