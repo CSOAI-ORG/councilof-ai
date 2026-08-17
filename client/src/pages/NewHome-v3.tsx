@@ -103,7 +103,7 @@ function ProblemStrip() {
 }
 
 const USPS = [
-  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
+  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. Verify stays free and loginless.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
   { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail: 13 Aug floor in separate stamp, empty on 12 Aug. Slot-15: reserved.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
@@ -347,7 +347,7 @@ export default function NewHomeV3() {
             items={[
               { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks across 15 slots (13 measured; 2 unmeasured — no score yet), and issue the result as a verified measurement credential — a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
-              { q: "What does a measurement card cost?", a: "Your first measurement card is free. Ongoing re-attestation starts at £199/month. Enterprise plans available — see the pricing page." },
+              { q: "Is verify free?", a: "Yes — verify is free. Recompute the hash chain in your browser with no account needed. Measurement (running your AI against our instruments and issuing a signed card) is a paid service. Enterprise plans available — see the pricing page." },
               { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },
               { q: "Who can see my measurement results?", a: "You decide. Cards are signed but disclosure is yours — publish them to your customers and regulators, or keep them private. The signing key is public; your data never leaves your control." },
             ]}

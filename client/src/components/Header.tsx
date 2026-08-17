@@ -31,7 +31,7 @@ const navigation = [
       { name: "Council Space (Arena)", href: "/gspc-arena", description: "AI vs AI — night coverage on frozen provisions" },
       { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 measured × 19 models, every cell signed" },
       { name: "Verify a Card", href: "/gspc-verify", description: "Free and loginless — check any signed card" },
-      { name: "Get Measured", href: "/assess", description: "Your first measurement card — free" },
+      { name: "Get Measured", href: "/assess", description: "Book a measurement — verify stays free" },
       { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
