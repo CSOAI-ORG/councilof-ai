@@ -19,20 +19,18 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 
-// Navigation structure with icons
+// Navigation structure — consolidated to 4 key areas to avoid cramming
 const navigation = [
   {
-    name: "Council Space",
+    name: "Arena",
     href: "/gspc-arena",
     icon: Globe2,
     description: "The live contest",
     submenu: [
-      { name: "Council Space (Arena)", href: "/gspc-arena", description: "AI vs AI — night coverage on frozen provisions" },
-      { name: "Colosseum", href: "/os", description: "Human vs AI — CITIZEN, MAYOR, RED play modes" },
-      { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 measured axes × 19 models, every cell signed" },
-      { name: "Verify a Card", href: "/gspc-verify", description: "Free and loginless — check any signed card" },
+      { name: "Council Space", href: "/gspc-arena", description: "AI vs AI — night coverage on frozen provisions" },
+      { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 measured × 19 models, every cell signed" },
+      { name: "Verify", href: "/gspc-verify", description: "Free and loginless — check any signed card" },
       { name: "Get Measured", href: "/assess", description: "Your first measurement card — free" },
-      { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
   {
@@ -41,82 +39,33 @@ const navigation = [
     icon: BookOpen,
     description: "The moat, visible",
     submenu: [
-      { name: "The Refutation Ledger", href: "/refutation-ledger", description: "8 experiments that killed our own theses — published, with artefacts" },
-      { name: "Live Ledger (signed)", href: "/live-ledger", description: "Live D1 queryable decision_records — signed, with supersession trail" },
-      { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
-      { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
-      { name: "Signed Scoreboard", href: "/gspc-scoreboard", description: "15 public slots × 19 models — 13 measured. Jail: 13 Aug floor in separate stamp, empty on 12 Aug. Slot-15: reserved. Frozen 12 August 2026, every measured cell Ed25519-signed" },
-      { name: "AI Act Benchmark", href: "/ai-act-benchmark", description: "170/170 held-out scenarios against the EU benchmark — with CIs and caveats" },
-      { name: "ProvBench", href: "/provbench", description: "Does C2PA provenance survive real-world transforms? 20 assets × 11 transforms" },
+      { name: "Refutation Ledger", href: "/refutation-ledger", description: "8 experiments that killed our own theses" },
+      { name: "Live Ledger", href: "/live-ledger", description: "Signed decision_records with supersession trail" },
+      { name: "Benchmarks", href: "/benchmarks", description: "Every number traces to a published artefact" },
     ],
   },
   {
     name: 'Explore',
-    href: '/os',
+    href: '/regulators',
     icon: Globe2,
-    description: 'The agentic governance OS',
+    description: 'Regulation & frameworks',
     submenu: [
-      { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
-      { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
-      { name: 'Cyber self-scan', href: '/scan', description: 'Scan your own systems with open-source tools; the Council assistant helps fix them' },
-      { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },
-      { name: 'The Council Globe', href: '/globe', description: 'AI governance, layered on the world' },
-      { name: 'AI governance: the guide', href: '/ai-governance', description: 'The complete map — start here' },
-      { name: 'Global regulation tracker', href: '/global-ai-regulation', description: 'Every AI regime worldwide, current' },
-      { name: 'Framework crosswalk', href: '/crosswalk', description: '13 frameworks × 8 controls — comply once' },
-      { name: 'Free AI assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps in minutes' },
-      { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
-      { name: 'Open the full launcher', href: '/os', description: 'Every app on one grid' },
+      { name: 'Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime' },
+      { name: 'Framework Crosswalk', href: '/crosswalk', description: '13 frameworks × 8 controls' },
+      { name: 'How It Works', href: '/how', description: 'From question to signed verdict' },
+      { name: 'Why CSOAI', href: '/why', description: 'What we do that others don\'t' },
     ]
   },
   {
-    name: 'Learn',
-    href: '/courses',
-    icon: GraduationCap,
-    description: 'Resources & verification',
-    submenu: [
-      { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
-      { name: 'Drift Audit', href: '/drift-product', description: '£5–15k drift audit — live regulatory corpus change reports' },
-      { name: 'Methodology', href: '/method', description: 'How we measure, what we publish' },
-      { name: 'Verify a Record', href: '/gspc-verify', description: 'Free and loginless — check any signed card' },
-    ]
-  },
-  {
-    name: 'Solutions',
-    href: '/enterprise',
-    icon: Building2,
-    description: 'Enterprise & government',
-    submenu: [
-      { name: 'Enterprise Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
-      { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
-      { name: 'Government Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
-      { name: 'Measurement Council', href: '/agent-council', description: 'Multi-provider scoring, published harness' },
-      { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
-      { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
-    ]
-  },
-  {
-    name: 'Watchdog',
-    href: '/public-watchdog',
-    icon: Eye,
-    description: 'Monitor AI incidents',
-    submenu: [
-      { name: 'Public Watchdog', href: '/public-watchdog', description: 'Crowdsourced AI incident monitoring' },
-      { name: 'Report Incident', href: '/watchdog', description: 'Submit AI safety incident' },
-      { name: 'Leaderboard', href: '/leaderboard', description: 'Top performing analysts' },
-    ]
-  },
-  {
-    name: 'Company',
+    name: 'About',
     href: '/charter',
     icon: BookMarked,
-    description: 'Charter, knowledge & trust',
+    description: 'Charter & trust',
     submenu: [
       { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
-      { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
-      { name: 'Technology', href: '/technology', description: 'Our architecture & measurement stack' },
       { name: 'Blog', href: '/blog', description: 'Latest news & insights' },
+      { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
     ]
   },
 ];
@@ -297,8 +246,8 @@ export function Header() {
             </div>
           </div>
 
-          {/* Right Side Actions — clean, spaced CTAs for key surfaces */}
-          <div className="hidden xl:flex flex-nowrap items-center gap-3">
+          {/* Right Side Actions — search + key product links only. No Clerk/auth buttons. */}
+          <div className="hidden xl:flex flex-nowrap items-center gap-2">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
@@ -311,34 +260,34 @@ export function Header() {
             {/* Scoreboard — the 15-slot measured board */}
             <a
               href="/gspc-scoreboard"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
             >
-              <BarChart3 className="h-4 w-4" /> Scoreboard
+              Scoreboard
             </a>
 
-            {/* Council Space — the arena */}
-            <a
-              href="/gspc-arena"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
-            >
-              <span className="text-base leading-none">◎</span> Council Space
-            </a>
-
-            {/* Verify — free and loginless */}
+            {/* Verify — free and loginless, always prominent */}
             <a
               href="/gspc-verify"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-all"
             >
               <Eye className="h-4 w-4" /> Verify
             </a>
 
-            {user ? (
+            {/* Measure CTA — leads to free assessment */}
+            <a
+              href="/assess"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all"
+            >
+              Measure
+            </a>
+
+            {/* User menu only if logged in — no Sign In / Start free buttons */}
+            {user && (
               <>
                 <NotificationCenter />
-
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-gray-600 h-9 w-9 rounded-full bg-emerald-50 hover:bg-emerald-100">
+                    <Button variant="ghost" size="icon" className="text-gray-600 h-8 w-8 rounded-full bg-emerald-50 hover:bg-emerald-100">
                       <User className="h-4 w-4 text-emerald-700" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -357,18 +306,6 @@ export function Header() {
                       </a>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <a href="/my-courses" className="flex items-center">
-                        <BookOpen className="h-4 w-4 mr-2" />
-                        My Courses
-                      </a>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <a href="/certificates" className="flex items-center">
-                        <Award className="h-4 w-4 mr-2" />
-                        My Certificates
-                      </a>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                       <a href="/settings" className="flex items-center">
                         <Settings className="h-4 w-4 mr-2" />
                         Settings
@@ -381,19 +318,6 @@ export function Header() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </>
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-gray-600 font-medium">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/start">
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm">
-                    Start free
-                  </Button>
-                </Link>
               </>
             )}
           </div>
@@ -458,31 +382,20 @@ export function Header() {
                 </div>
               ))}
 
-              {/* Key surfaces — always visible */}
+              {/* Key actions — no Clerk/auth buttons */}
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
-                <a href="/gspc-scoreboard" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full justify-start">
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    Scoreboard
-                  </Button>
-                </a>
-                <a href="/gspc-arena" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="outline" className="w-full justify-start">
-                    <span className="mr-2">◎</span>
-                    Council Space
-                  </Button>
-                </a>
                 <a href="/gspc-verify" className="block" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full justify-start">
                     <Eye className="h-4 w-4 mr-2" />
-                    Verify
+                    Verify — free
                   </Button>
                 </a>
-              </div>
-
-              {/* Auth section */}
-              <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
-                {user ? (
+                <a href="/assess" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                    Get measured
+                  </Button>
+                </a>
+                {user && (
                   <>
                     <a href="/dashboard" className="block">
                       <Button variant="outline" className="w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
@@ -498,19 +411,6 @@ export function Header() {
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign Out
                     </Button>
-                  </>
-                ) : (
-                  <>
-                    <a href="/login" className="block">
-                      <Button variant="outline" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                        Sign In
-                      </Button>
-                    </a>
-                    <a href="/start" className="block">
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => setMobileMenuOpen(false)}>
-                        Get measured — free
-                      </Button>
-                    </a>
                   </>
                 )}
               </div>
