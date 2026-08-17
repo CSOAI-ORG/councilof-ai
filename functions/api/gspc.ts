@@ -213,22 +213,19 @@ export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const axis = url.searchParams.get("axis");
 
-  // LIVING BOARD MERGE — append axes from the synced living DB not in the
+  // LIVING BOARD MERGE — append axes from the bundled living DB not in the
   // hardcoded 13 (e.g. jail, measured 2026-08-13). The site runs on living
   // benchmarks, not only the frozen snapshot. (JEEVES 2026-08-17)
   let merged = AXES;
   try {
-    const fs = await import("node:fs");
-    const living = JSON.parse(
-      fs.readFileSync(new URL("./data/board_living.json", import.meta.url), "utf-8"),
-    );
+    const { LIVING_BOARD } = await import("./living_board.ts");
     const known = new Set(AXES.map((a) => a.axis));
-    const extra = (living.axes || []).filter(
+    const extra = (LIVING_BOARD.axes || []).filter(
       (a: any) => a.axis && !known.has(a.axis),
     );
     if (extra.length) merged = [...AXES, ...extra];
   } catch {
-    merged = AXES; // no living board synced — serve frozen snapshot (never fail)
+    merged = AXES; // no living board bundled — serve frozen snapshot (never fail)
   }
 
   const selected = axis ? merged.filter((a: any) => a.axis === axis) : merged;
