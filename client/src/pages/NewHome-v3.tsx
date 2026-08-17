@@ -5,15 +5,15 @@
  * White/green palette. AEO-optimised: answer-first blocks, FAQPage schema,
  * H1 in raw HTML. Every section explains what we do for which end-user.
  */
-import { Link } from "wouter";
 import type { ReactNode } from "react";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import { AXES, quotable, hasInterval, wilson } from "../lib/gspcAxes";
-import { canonValue } from "../data/canonCounters";
 import FaqBlock from "@/components/FaqBlock";
+import StoryWorld from "@/components/home/StoryWorld";
+import LivingStages from "@/components/home/LivingStages";
 import {
-  Shield, CheckCircle, ArrowRight, Users, Building2,
+  Shield, CheckCircle, Users, Building2,
   Zap, ChevronRight, BarChart3, Gamepad2, TrendingUp,
   Eye, FileCheck, RefreshCw, Ban, Landmark, Scale,
 } from "lucide-react";
@@ -60,55 +60,6 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
         {title && <h2 className="text-3xl font-extrabold text-center text-gray-900 sm:text-4xl">{title}</h2>}
         {subtitle && <p className="mt-3 text-center text-lg text-gray-500 max-w-2xl mx-auto">{subtitle}</p>}
         <div className="mt-12">{children}</div>
-      </div>
-    </section>
-  );
-}
-
-// ── hero ───────────────────────────────────────────────────────────────
-function HeroStrip() {
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50 via-white to-white">
-      <div className="mx-auto max-w-6xl px-6 pb-20 pt-24 sm:pt-32">
-        <div className="text-center">
-          <span className="inline-block text-xs font-bold uppercase tracking-[0.18em] text-emerald-600 bg-emerald-100/70 rounded-full px-4 py-1.5">
-            Council of AI — the neutral referee for AI behaviour
-          </span>
-          <h1 className="mt-5 text-4xl font-black text-gray-900 sm:text-5xl lg:text-6xl leading-[1.08]">
-            We measure.<br />
-            We sign.<br />
-            We re-attest.<br />
-            <span className="text-emerald-500">Everyone can check.</span>
-          </h1>
-          <p className="mt-5 max-w-2xl mx-auto text-lg text-gray-500 leading-relaxed">
-            Council of AI measures how your AI behaves on our own published instruments and issues the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored, that anyone can verify without asking us. Then we measure again — so the evidence stays current. Not certification. Not another observability dashboard.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a href="/assess" className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white hover:bg-emerald-400 transition-colors shadow-md shadow-emerald-500/20">
-              Get your first measurement card — free <ArrowRight className="w-4 h-4" />
-            </a>
-            <a href="/gspc-verify" className="inline-flex items-center gap-2 rounded-xl border-2 border-emerald-200 bg-white px-6 py-3 text-base font-bold text-emerald-700 hover:bg-emerald-50 transition-colors">
-              <CheckCircle className="w-4 h-4" /> Verify a card
-            </a>
-            <a href="/gspc-arena" className="inline-flex items-center gap-2 rounded-xl border-2 border-amber-200 bg-white px-6 py-3 text-base font-bold text-amber-700 hover:bg-amber-50 transition-colors">
-              <Gamepad2 className="w-4 h-4" /> Watch the arena
-            </a>
-          </div>
-          {/* trust bar */}
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto border-t border-gray-100 pt-8">
-            {[
-              { n: canonValue("totalProvisions"), l: "statutory provisions" },
-              { n: canonValue("frameworks"), l: "frameworks crosswalked" },
-              { n: AXES.filter(quotable).length, l: "axes measured" },
-              { n: 0, l: "models in the verdict path" },
-            ].map(s => (
-              <div key={s.l}>
-                <span className="text-2xl font-black text-emerald-500">{s.n}</span>
-                <span className="block text-xs text-gray-400 mt-0.5">{s.l}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -283,33 +234,6 @@ function IndustryGrid() {
   );
 }
 
-// ── arena ──────────────────────────────────────────────────────────
-function ArenaStrip() {
-  return (
-    <section className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 py-20 px-6 text-white">
-      <div className="mx-auto max-w-6xl text-center">
-        <span className="inline-block text-xs font-bold uppercase tracking-[0.15em] text-emerald-200 bg-emerald-700/50 rounded-full px-4 py-1.5">Live arena — the game</span>
-        <h2 className="mt-4 text-3xl sm:text-4xl font-black">Watch AI compete.<br />Every move becomes signed evidence.</h2>
-        <p className="mt-4 max-w-xl mx-auto text-emerald-100/80 leading-relaxed">
-          The arena runs live model-vs-model matches against frozen benchmarks. Every round produces a signed measurement card. Every card is verifiable. Nobody can edit yesterday's scoreboard.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <a href="/gspc-arena" className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3 text-base font-extrabold text-gray-900 hover:bg-amber-300 transition-colors shadow-lg shadow-amber-400/20">
-            <Gamepad2 className="w-4 h-4" /> Enter the arena
-          </a>
-          <a href="/gspc-arena" className="inline-flex items-center gap-2 rounded-xl border-2 border-emerald-400/50 px-6 py-3 text-base font-bold text-emerald-50 hover:bg-emerald-700/50 transition-colors">
-            <BarChart3 className="w-4 h-4" /> View leaderboard
-          </a>
-        </div>
-        <div className="mt-10 grid grid-cols-2 gap-4 max-w-md mx-auto text-sm">
-          <div><span className="block text-2xl font-black text-amber-300">22</span><span className="text-emerald-100/70">models on the board</span></div>
-          <div><span className="block text-2xl font-black text-amber-300">13</span><span className="text-emerald-100/70">axes measured</span></div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ── blog strip ───────────────────────────────────────────────────────
 function BlogStrip() {
   return (
@@ -380,7 +304,7 @@ export default function NewHomeV3() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_SCHEMA) }} />
 
-      <HeroStrip />
+      <StoryWorld />
       <div className="border-b border-gray-100" />
       <ProblemStrip />
       <div className="border-b border-gray-100" />
@@ -391,7 +315,7 @@ export default function NewHomeV3() {
       <AxesGrid />
       <div className="border-b border-gray-100" />
       <IndustryGrid />
-      <ArenaStrip />
+      <LivingStages />
       <div className="border-b border-gray-100" />
       <BlogStrip />
       <div className="border-b border-gray-100" />

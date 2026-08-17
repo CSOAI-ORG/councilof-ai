@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ARENA_SUBJECTS, ARENA_MATCHES, ARENA_PROVISIONS } from "@/data/arena";
 import CouncilChat from "@/components/os/CouncilChat";
+import GameBar from "@/components/os/GameBar";
 import AxisPanel from "@/components/os/AxisPanel";
 
 /**
@@ -36,7 +37,7 @@ const NAV: NavGroup[] = [
   {
     label: "Measure",
     items: [
-      { name: "GSPC axes", href: "#axes", note: "13 governance axes" },
+      { name: "GSPC axes", href: "#axes", note: "15 slots · 13 measured" },
       { name: "Benchmarks", href: "/benchmarks", note: "every result" },
       { name: "Verify a card", href: "/gspc-verify", note: "offline check" },
       { name: "Methodology", href: "/methodology", note: "how we grade" },
@@ -135,11 +136,14 @@ export default function OsLauncher() {
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
               One surface for AI governance: watch governed agents live in a town, see models measured head-to-head,
-              read the 13 governance axes, and ask the Council — a deterministic answer, grounded in what the estate
+              read the 15-slot grid (13 measured), and ask the Council — a deterministic answer, grounded in what the estate
               has actually measured.
             </p>
-            <div className="mt-6">
-              <CouncilChat />
+            <div className="mt-6 space-y-4">
+              <GameBar />
+              <div id="council-chat">
+                <CouncilChat />
+              </div>
             </div>
           </section>
 
@@ -174,10 +178,10 @@ export default function OsLauncher() {
                       Open Council Town ↗
                     </a>
                     <Link
-                      href="/sov-os"
+                      href="/os"
                       className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                     >
-                      See it in the OS Games arcade
+                      Stay in the OS
                     </Link>
                   </div>
                 </div>

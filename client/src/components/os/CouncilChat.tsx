@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { markQuest } from "./GameBar";
 
 /**
  * CouncilChat — the AI bar for the unified /os hub.
@@ -45,6 +46,7 @@ export default function CouncilChat() {
       const j: any = await r.json();
       const answer = j.answer ?? j.reply ?? "(empty answer)";
       setTurns((t) => [...t, { role: "assistant", text: String(answer), state: j.state, signature: j.signature }]);
+      markQuest("ask");
     } catch (e: any) {
       setTurns((t) => [
         ...t,
