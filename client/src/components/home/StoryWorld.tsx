@@ -64,7 +64,7 @@ export const STORY: Slide[] = [
   {
     kicker: "07  The board",
     title: "13 × 19. UNSIGNED on this stamp.",
-    body: "Leaders that have earned a quote stay quoted: Art5 0.972, Swarm 0.975, Governance 0.700. Everything else is a cell, a hash, or an honest dash. Nobody edits yesterday.",
+    body: "UNSIGNED on this stamp. Every cell is live from the GSPC API. Empty cells stay empty. Nobody edits yesterday.",
     href: "/gspc-scoreboard",
     cta: "Read the scoreboard",
     tone: "board",
