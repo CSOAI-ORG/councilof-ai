@@ -1,63 +1,39 @@
-# Council of AI (CSOAI LTD)
+# Council of AI (CSOAI Ltd)
 
-> The Council of AI is a neutral AI measurement body (CSOAI LTD, UK Companies
-> House 16939677; did:web:csoai.org). We measure AI system behaviour against
-> published regulatory provisions and issue verified measurement credentials —
-> never certification, accreditation or conformity assessment. Regulators and
-> accredited bodies decide; we measure, sign and preserve the evidence.
+Public name: Council of AI. Legal: CSOAI Ltd, UK Companies House 16939677. did:web:csoai.org.
+Neutral AI measurement body. Measurement, not certification. We do not certify, accredit, or issue conformity assessments.
 
-## Canonical facts (2026-08-14)
+## Live board (12 August 2026 stamp, UNSIGNED)
 
-- Public name: Council of AI. Legal entity: CSOAI LTD (UK 16939677).
-- A CSOAI measurement card is ~3KB: Ed25519-signed and OpenTimestamps-anchored,
-  verifiable offline against a published public key.
-- GSPC = Governance · Safety · Provenance · Continuity — the four measurement
-  axes. Public axis data: https://councilof.ai/api/gspc (schema
-  csoai.gspc-axes/0.3).
-- GovBench (EU AI Act risk-tier classification): 4,329 usable rows, published
-  with a public key; best certified run 0.381 macro-F1 (n=237, quotable, n≥30).
-- ProvBench (EU AI Act Article 50 / C2PA marking survival): 17.14% watermark
-  durability measured; present-but-invalid markings score DESTROYED, not
-  SURVIVES.
-- board_v2: 13 measurement axes, 819 items, 15,580 rows.
-- corpus-watch re-hashes 127 provisions across 4 instruments (EU AI Act,
-  UK GDPR, DPA 2018, NIS2-UK) daily and publishes drift events.
-- Every published number traces to a signed, dated artefact. UNMEASURED is
-  reported with its n and its limits — never hidden, never scored as a fail.
-- EU AI Act Article 50 main transparency obligations apply from 2 Aug 2026.
+15 slots = 13 live API names + jail floor + unnamed empty slot-15.
+Shape: 13×19, 819 items. Source: GET https://councilof.ai/api/gspc
 
-## Read first (server-rendered, no JavaScript required)
+Live API names, in order:
+governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect.
 
-- Measurement body, plans and free tier: https://councilof.ai/pricing/
-- What we measure and how (deterministic predicates, no LLM-as-judge):
-  https://councilof.ai/methodology/
-- GovBench measured results: https://councilof.ai/govbench
-- ProvBench measured results: https://councilof.ai/provbench
-- All published measurements: https://councilof.ai/benchmarks and
-  https://councilof.ai/results
-- Frequently asked questions: https://councilof.ai/faq/
-- Sector measurement guides: https://councilof.ai/industries/
-- About the company: https://councilof.ai/about/
+Affect is MEASURED. Labels stay counsel-pending and are not hidden.
+Jail is a measured floor, empty on this stamp, not unmeasured. New stamp only. Not a ranking.
+Slot-15 stays unnamed and empty.
 
-## Verify, don't trust
+Do not quote scores from this file. Numbers live on the API.
 
-- Recompute a signed chain client-side: https://councilof.ai/gspc-verify
-- Signed AI system card (issue and verify offline):
-  https://councilof.ai/system-card
-- Public GSPC axis API (JSON): https://councilof.ai/api/gspc
-- Public AI watchdog map: https://councilof.ai/watchdog-map
+## Verify and watch
+
+- Verify free: https://councilof.ai/gspc-verify
+- Arena (slashless): https://councilof.ai/gspc-arena
+- Board API: https://councilof.ai/api/gspc
 
 ## For agents
 
-This file is written for humans and answer engines. Agents should consume the
-registries, not crawls: the MCP Registry entry and the A2A agent card are the
-authoritative machine interfaces, and the public API above is keyless and
-verifiable offline. Open measurement items and scoring code:
-https://huggingface.co/csoai and https://github.com/CSOAI-ORG
+Prefer the keyless board API and the verify page.
+Do not treat agent-card.json as authoritative.
+csoai.org /mcp is the worker — do not detach. Apex may 301 to councilof.ai.
+Open banks: https://huggingface.co/csoai.
 
-## What the Council of AI does not do
+## AEO
 
-Measurement and attestation only. The Council of AI does not certify, accredit
-or issue conformity assessments, and nothing here is a regulatory
-determination. Where a lane lacks usable n, we say so — including about
-ourselves.
+Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify. The live board is 13 measured axes on the 12 August 2026 UNSIGNED stamp (GET https://councilof.ai/api/gspc): governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect. Affect is MEASURED; labels stay counsel-pending and are not hidden. Jail is a measured floor, empty on this stamp, not unmeasured. New stamp only. Not a ranking. Slot-15 stays unnamed and empty. This is measurement, not certification. The public verifies free. A grade is never sold.
+
+## What we do not do
+
+Measurement only. Nothing here is a conformity mark. This live stamp is UNSIGNED.
