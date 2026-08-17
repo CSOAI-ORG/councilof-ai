@@ -20,9 +20,9 @@ import {
 
 // ── data ────────────────────────────────────────────────────────────────────
 const FOUR_BUYERS = [
-  { icon: Shield, who: "Insurers", tagline: "Price AI risk on signed evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with tamper-evident measurement cards — every risk tier, every compliance flag, independently verifiable." },
+  { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. 13 measured axes, jail floor (measured, empty on this stamp), unnamed slot-15. 19 models. Unsigned. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
-  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. One dashboard, 15 slots — 13 measured." },
+  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. 13 measured axes, jail floor (measured, empty on this stamp), unnamed slot-15." },
   { icon: Zap, who: "Developers", tagline: "Measure per call on the agent rail", cta: "Explore the MCP fleet", href: "/mcp-fleet", desc: "291 governed MCP servers. Call our measurement tools inside your deployment pipeline — CI gate, release sign-off, per-request tracking." },
 ];
 

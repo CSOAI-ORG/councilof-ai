@@ -539,15 +539,15 @@ export default function CertificationV2() {
         </div>
       </section>
 
-      {/* Why Get Certified */}
+      {/* Why a Measurement Credential */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Why Get Certified?
+              Why a Measurement Credential?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Join the global network of professionals protecting humanity from AI risks
+              A verified measurement credential shows what was measured, by whom, and when — evidence anyone can check
             </p>
           </div>
 
