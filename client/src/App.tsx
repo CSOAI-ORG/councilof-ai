@@ -328,7 +328,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
   "/models": "AI model registry & scoreboard | CSOAI",
   // Top public routes — "<Plain page name> | CSOAI"
-  "/": "CSOAI — the measurement body for AI compliance",
+  "/": "Council of AI — we measure, we sign, we re-attest",
   "/plans": "Plans | CSOAI",
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/gspc-verify": "GSPC Verify | CSOAI",
@@ -606,8 +606,8 @@ function App() {
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
-                  {/* 2026-08-01 unification: the arena lives INSIDE Sov Space as a layer */}
-                  <Route path="/gspc-arena">{() => <Redirect to="/sov-space?view=arena" />}</Route>
+                  {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}
+                  <Route path="/gspc-arena" component={SovSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
@@ -686,7 +686,7 @@ function App() {
           {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
           <Route path="/jewels">{() => <Redirect to="/" />}</Route>
           {/* 2026-08-01 unification: the towns live INSIDE Sov Space as a layer */}
-          <Route path="/towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
+          <Route path="/towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
           <Route path="/minds" component={SovereignMinds} />
           <Route path="/try" component={TryCouncil} />
           <Route path="/lineage" component={Lineage} />
@@ -703,7 +703,7 @@ function App() {
           <Route path="/sectors" component={SectorsAtlas} />
           <Route path="/regions" component={RegionsMap} />
           {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
-          <Route path="/globe">{() => <Redirect to="/sov-space?view=globe" />}</Route>
+          <Route path="/globe">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
           <Route path="/registry" component={RegistryAll} />
           <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
           <Route path="/checklist" component={EUActChecklist} />
@@ -758,7 +758,7 @@ function App() {
           {/* REDIRECTED (audit §0.2 #14): "BFT setup" pages assert the retracted fault-tolerance claim. */}
           <Route path="/bft">{() => <Redirect to="/council" />}</Route>
           <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
-          <Route path="/world">{() => <Redirect to="/sov-space?view=globe" />}</Route>
+          <Route path="/world">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
           <Route path="/map-regions" component={RegionsMap} />
           <Route path="/compare" component={Compare} />
           <Route path="/vs" component={Compare} />
@@ -783,7 +783,7 @@ function App() {
           <Route path="/relevance-map" component={RelevanceMap} />
           <Route path="/rediscovered" component={Lineage} />
           <Route path="/voice" component={SovereignMinds} />
-          <Route path="/sov-towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
+          <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
           {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
           <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
           <Route path="/cobol" component={LegacyBridge} />
@@ -791,7 +791,7 @@ function App() {
             <Route path="/webhooks" component={Webhooks} />
             <Route path="/evidence" component={EvidenceHub} />
             <Route path="/oscal" component={OscalStudio} />
-            <Route path="/sovereign-town">{() => <Redirect to="/sov-space?view=towns" />}</Route>
+            <Route path="/sovereign-town">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
@@ -935,9 +935,9 @@ function App() {
                   <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
                   {/* Final fallback route */}
-                  <Route path="/sov-space" component={SovSpace} />
-                  <Route path="/sovereign-space" component={SovSpace} />
-                  <Route path="/simulate" component={SovSpace} />
+                  <Route path="/sov-space">{() => <Redirect to="/gspc-arena" />}</Route>
+                  <Route path="/sovereign-space">{() => <Redirect to="/gspc-arena" />}</Route>
+                  <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/badges" component={BadgesPage} />
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />

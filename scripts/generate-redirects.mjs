@@ -55,8 +55,9 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
 // Preserve hand-written rules that already exist — they are consolidation redirects and
 // clobbering them would break live inbound links.
 const EXISTING = [
-  // 17 Aug 2026: /gspc-arena is the spectator (Council Space). Do not 308 it to /sov-space.
-  "/gspc-arena     /sov-space/index.html   200",
+  // 17 Aug 2026: /gspc-arena is the spectator (Council Space).
+  // Do NOT 200-rewrite it to /sov-space/index.html — Pages canonicalizes that to a 308 /sov-space/ and loops with the 308s below.
+  // SPA catch-all serves /gspc-arena as /index.html. App mounts SovSpace there.
   "/sov-space      /gspc-arena             308",
   "/sov-space/     /gspc-arena             308",
   "/sov-space/*    /gspc-arena             308",
