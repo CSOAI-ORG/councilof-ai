@@ -26,6 +26,7 @@ interface AxisScore {
   task: string;
   n: number;
   n_note?: string;            // set-name caveat (e.g. swarm instances-vs-prompts)
+  held_out?: number;          // items held back privately (never trained-on / never published) — S3 discipline
   accuracy: number;           // the board LEADER's accuracy (whoever leads — sovereign or base)
   leader: string;             // which model holds the point-estimate lead
   separation: "SEPARATED" | "TIE";
@@ -59,7 +60,7 @@ const AXES: AxisScore[] = [
   {
     axis: "governance", bench: "GovBench", task: "EU AI Act risk-tier classification",
     n: 237, accuracy: 0.700, leader: "sov6-embodiment-v3-light (sovereign specialist)",
-    separation: "SEPARATED", separation_p: 0.0086, interval: [0.639, 0.755],
+    separation: "SEPARATED", separation_p: 0.0086, interval: [0.639, 0.755], held_out: 102,
     fleet_mean: 0.490, mean_harm: 0.510, cvar05_harm: 0.8728,
     macro_f1: 0.705, unparsed_rate: 0.0386, status: "MEASURED",
     dataset: "csoai/gspc-gov", colour: "#34d399", hue: 152,
