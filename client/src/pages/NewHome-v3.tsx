@@ -105,7 +105,7 @@ function ProblemStrip() {
 const USPS = [
   { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
-  { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail plus one reserved slot stay unmeasured — no score yet.", href: "/gspc-scoreboard" },
+  { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail is a measured floor (empty on this stamp); slot 15 is unnamed and empty.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
   { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/city" },
   { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/method" },
