@@ -222,7 +222,7 @@ export default function ModelRegistry() {
 
         {/* Scoreboard link footnote */}
         <div className="mt-8 border-t border-white/8 pt-4 text-center text-[11px] text-slate-600">
-          This page shows per-axis leaders. The full 13×19 scoreboard (frozen 12 August 2026) with all models and signed cells is at{" "}
+          This page shows per-axis leaders. The full scoreboard (15 public slots, 13 measured × 19 models, frozen 12 August 2026, unsigned) is at{" "}
           <a className="text-emerald-400 hover:underline" href="/gspc-scoreboard">
             GSPC Scoreboard ↗
           </a>

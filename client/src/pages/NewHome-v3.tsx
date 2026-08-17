@@ -22,7 +22,7 @@ import {
 const FOUR_BUYERS = [
   { icon: Shield, who: "Insurers", tagline: "Price AI risk on signed evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with tamper-evident measurement cards — every risk tier, every compliance flag, independently verifiable." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
-  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. One dashboard, 15 slots — 13 measured." },
+  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get measured", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. One dashboard, 15 slots — 13 measured." },
   { icon: Zap, who: "Developers", tagline: "Measure per call on the agent rail", cta: "Explore the MCP fleet", href: "/mcp-fleet", desc: "291 governed MCP servers. Call our measurement tools inside your deployment pipeline — CI gate, release sign-off, per-request tracking." },
 ];
 
@@ -37,7 +37,7 @@ const SEVEN_INDUSTRIES = [
 ];
 
 const THREE_UPS = [
-  { icon: Shield, title: "Get measured", sub: "Send us your AI system. We run it against our frozen instruments and return a 3KB signed card. Free first measurement.", href: "/assess", btn: "Start — free" },
+  { icon: Shield, title: "Get measured", sub: "Send us your AI system. We run it against our frozen instruments and return a 3KB signed card. Verify stays free.", href: "/assess", btn: "Get measured" },
   { icon: CheckCircle, title: "Verify any card", sub: "Recompute the published hash chain in your browser. No account. The verify runs on your machine, not ours.", href: "/gspc-verify", btn: "Verify now" },
   { icon: TrendingUp, title: "Re-attest monthly", sub: "AI changes. Regulation changes. We re-measure on schedule and issue delta cards. Your compliance evidence stays current, not stale.", href: "/pricing", btn: "See plans" },
 ];
@@ -103,7 +103,7 @@ function ProblemStrip() {
 }
 
 const USPS = [
-  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
+  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. Verify stays free and loginless.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
   { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail: 13 Aug floor in separate stamp, empty on 12 Aug. Slot-15: reserved.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
@@ -181,7 +181,7 @@ function AxesGrid() {
       </div>
       <div className="mt-8 text-center">
         <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 19 models, frozen 12 August 2026, every cell signed
+          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 15 public slots, 13 measured × 19 models, frozen 12 August 2026
         </a>
       </div>
     </Section>
@@ -292,7 +292,7 @@ const FAQ_SCHEMA = {
   "mainEntity": [
     { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks across 15 slots (13 measured; 2 unmeasured — no score yet). Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
     { "@type": "Question", "name": "Do you certify AI systems?", "acceptedAnswer": { "@type": "Answer", "text": "No. We issue verified measurement credentials — a 3KB signed card showing what your AI did when we measured it. That is evidence, not a certification badge." } },
-    { "@type": "Question", "name": "How much does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "Your first measurement card is free. Plans for ongoing re-attestation start at £199/month. Enterprise plans available — see /pricing." } },
+    { "@type": "Question", "name": "Is it free?", "acceptedAnswer": { "@type": "Answer", "text": "Verify is free — recompute the hash chain in your browser, no account needed. Measurement (running your AI against our instruments and issuing a signed card) is a paid service. Enterprise plans available — see /pricing." } },
   ]
 };
 
@@ -323,6 +323,19 @@ export default function NewHomeV3() {
 
       {/* existing trust strip with C2PA/OIN/LOT badges */}
       <EnterpriseTrust />
+
+      {/* Founder line — VC sees the person, not an anonymous product */}
+      <section className="py-12 px-6 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-lg text-gray-700 leading-relaxed">
+            <a href="/founder" className="font-semibold text-gray-900 hover:text-emerald-700 transition-colors">Nicholas Templeman</a> founded Council of AI, an independent measurement body. It measures, signs, and re-attests AI behaviour. It never certifies or sells ratings. Verify stays free.
+          </p>
+          <p className="mt-3 text-sm text-gray-500">
+            <a href="/founder" className="hover:text-emerald-600 transition-colors">Read more about the founder →</a>
+          </p>
+        </div>
+      </section>
+
       {/* keep the region-detection banner */}
       <RegionBanner />
 
@@ -334,8 +347,8 @@ export default function NewHomeV3() {
             items={[
               { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks across 15 slots (13 measured; 2 unmeasured — no score yet), and issue the result as a verified measurement credential — a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
-              { q: "What does a measurement card cost?", a: "Your first measurement card is free. Ongoing re-attestation starts at £199/month. Enterprise plans available — see the pricing page." },
-              { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },
+              { q: "Is verify free?", a: "Yes — verify is free. Recompute the hash chain in your browser with no account needed. Measurement (running your AI against our instruments and issuing a signed card) is a paid service. Enterprise plans available — see the pricing page." },
+              { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF. New instruments ship as regulation lands." },
               { q: "Who can see my measurement results?", a: "You decide. Cards are signed but disclosure is yours — publish them to your customers and regulators, or keep them private. The signing key is public; your data never leaves your control." },
             ]}
           />

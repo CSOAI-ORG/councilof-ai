@@ -19,20 +19,19 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 
-// Navigation structure with icons
+// Navigation structure — 7 dropdowns as per live spec
+// Council OS → /gspc-arena (the arena, NOT /os city)
 const navigation = [
   {
     name: "Council OS",
     href: "/gspc-arena",
     icon: Globe2,
-    description: "Your AI OS",
+    description: "The live contest",
     submenu: [
-      { name: "Council Space", href: "/gspc-arena", description: "Simulate and govern in real time" },
-      { name: "Governance Graph", href: "/graph", description: "The governed Google" },
-      { name: "Your Council assistant Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
-      { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
-      { name: "Start free", href: "/start", description: "Build your own AI" },
-      { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },
+      { name: "Council Space (Arena)", href: "/gspc-arena", description: "AI vs AI — night coverage on frozen provisions" },
+      { name: "Scoreboard", href: "/gspc-scoreboard", description: "15 public slots, 13 measured × 19 models, frozen 12 Aug 2026" },
+      { name: "Verify a Card", href: "/gspc-verify", description: "Free and loginless — check any signed card" },
+      { name: "Get Measured", href: "/assess", description: "Book a measurement — verify stays free" },
       { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
@@ -42,46 +41,37 @@ const navigation = [
     icon: BookOpen,
     description: "The moat, visible",
     submenu: [
-      { name: "The Refutation Ledger", href: "/refutation-ledger", description: "8 experiments that killed our own theses — published, with artefacts" },
-      { name: "Live Ledger (signed)", href: "/live-ledger", description: "Live D1 queryable decision_records — signed, with supersession trail" },
-      { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
-      { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
-      { name: "Signed Scoreboard", href: "/gspc-scoreboard", description: "15 public slots × 19 models — 13 measured. Jail: 13 Aug floor in separate stamp, empty on 12 Aug. Slot-15: reserved. Frozen 12 August 2026, every measured cell Ed25519-signed" },
-      { name: "AI Act Benchmark", href: "/ai-act-benchmark", description: "170/170 held-out scenarios against the EU benchmark — with CIs and caveats" },
-      { name: "ProvBench", href: "/provbench", description: "Does C2PA provenance survive real-world transforms? 20 assets × 11 transforms" },
+      { name: "The Refutation Ledger", href: "/refutation-ledger", description: "8 experiments that killed our own theses — published" },
+      { name: "Live Ledger (signed)", href: "/live-ledger", description: "D1 queryable decision_records with supersession trail" },
+      { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions" },
+      { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact" },
+      { name: "Scoreboard", href: "/gspc-scoreboard", description: "15 slots × 19 models — 13 measured, jail + slot-15 empty" },
     ],
   },
   {
     name: 'Explore',
-    href: '/os',
+    href: '/regulators',
     icon: Globe2,
-    description: 'The agentic governance OS',
+    description: 'Regulation & frameworks',
     submenu: [
-      { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
+      { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus' },
       { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
-      { name: 'Cyber self-scan', href: '/scan', description: 'Scan your own systems with open-source tools; the Council assistant helps fix them' },
-      { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },
-      { name: 'The Council Globe', href: '/globe', description: 'AI governance, layered on the world' },
-      { name: 'AI governance: the guide', href: '/ai-governance', description: 'The complete map — start here' },
-      { name: 'Global regulation tracker', href: '/global-ai-regulation', description: 'Every AI regime worldwide, current' },
-      { name: 'Framework crosswalk', href: '/crosswalk', description: '13 frameworks × 8 controls — comply once' },
-      { name: 'Free AI assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps in minutes' },
+      { name: 'Framework Crosswalk', href: '/crosswalk', description: 'Map frameworks to a single instrument' },
+      { name: 'Global Regulation Tracker', href: '/global-ai-regulation', description: 'Every AI regime worldwide, current' },
+      { name: 'Free AI Assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps' },
       { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
-      { name: 'Open the full launcher', href: '/os', description: 'Every app on one grid' },
     ]
   },
   {
     name: 'Learn',
-    href: '/courses',
+    href: '/how',
     icon: GraduationCap,
-    description: 'Training & attestation',
+    description: 'Resources & verification',
     submenu: [
-      { name: 'Training Hub', href: '/training-hub', description: 'Gamified training on live regulations — free for everyone' },
-      { name: 'Drift Audit', href: '/drift-product', description: '£5–15k drift audit — live regulatory corpus change reports' },
-      { name: 'All Courses', href: '/courses', description: 'Browse our complete course catalog' },
-      { name: 'Attestation Overview', href: '/certification', description: 'Attestation paths and requirements' },
-      { name: 'Take Exam', href: '/certification/exam', description: 'Start your attestation exam' },
-      { name: 'Verify Record', href: '/verify-certificate', description: 'Verify any CSOAI attestation record' },
+      { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
+      { name: 'Methodology', href: '/method', description: 'How we measure, what we publish' },
+      { name: 'Verify a Record', href: '/gspc-verify', description: 'Free and loginless — check any signed card' },
+      { name: 'Drift Audit', href: '/drift-product', description: 'Live regulatory corpus change reports' },
     ]
   },
   {
@@ -93,7 +83,6 @@ const navigation = [
       { name: 'Enterprise Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
       { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
       { name: 'Government Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
-      { name: 'Measurement Council', href: '/agent-council', description: 'Multi-provider scoring, published harness' },
       { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
       { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
     ]
@@ -300,64 +289,45 @@ export function Header() {
             </div>
           </div>
 
-          {/* Right Side Actions — flex-nowrap + shrink-0 prevents vertical-letter collapse on 1280-1400px viewports */}
-          <div className="hidden xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
+          {/* Right Side Actions — chips + search. No Clerk/auth buttons. No /os city CTA. */}
+          <div className="hidden xl:flex items-center gap-1.5 shrink-0">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+              className="shrink-0 p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
             </button>
 
-            {/* Council OS — the dockable measurement workspace */}
-            <a
-              href="/os"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-emerald-300 border border-emerald-400/30 hover:bg-emerald-400/10 transition-all"
-            >
-              <span className="text-base leading-none">◧</span> Council OS
-            </a>
-
-            {/* Model Registry — the 15-slot measured scoreboard */}
+            {/* Chips — nowrap to prevent one-char-per-line wrapping */}
             <a
               href="/models"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
+              className="shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
             >
-              <span className="text-base leading-none">▦</span> Models
+              Models
             </a>
-
-            {/* Globe — 15 slots on a real sphere */}
             <a
               href="/gspc-arena"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
+              className="shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
             >
-              <span className="text-base leading-none">◎</span> Globe
+              Globe
             </a>
-
-            {/* J-Space — the signed event world */}
+            {/* Verify — free and loginless, always prominent */}
             <a
-              href="/j-space"
-              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
+              href="/gspc-verify"
+              className="shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition-all"
             >
-              <span className="text-base leading-none">◉</span> J-Space
+              <Eye className="h-4 w-4" /> Verify
             </a>
 
-            {/* CSOAI OS launcher — yields its space below 2xl so the nav never wraps */}
-            <a
-              href="/os"
-              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
-            >
-              <span className="text-base leading-none">⊡</span> AI OS
-            </a>
-
-            {user ? (
+            {/* User menu only if logged in — no Sign In / Start free buttons */}
+            {user && (
               <>
                 <NotificationCenter />
-
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-gray-600 h-9 w-9 rounded-full bg-emerald-50 hover:bg-emerald-100">
+                    <Button variant="ghost" size="icon" className="shrink-0 text-gray-600 h-8 w-8 rounded-full bg-emerald-50 hover:bg-emerald-100">
                       <User className="h-4 w-4 text-emerald-700" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -376,18 +346,6 @@ export function Header() {
                       </a>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <a href="/my-courses" className="flex items-center">
-                        <BookOpen className="h-4 w-4 mr-2" />
-                        My Courses
-                      </a>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <a href="/certificates" className="flex items-center">
-                        <Award className="h-4 w-4 mr-2" />
-                        My Certificates
-                      </a>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
                       <a href="/settings" className="flex items-center">
                         <Settings className="h-4 w-4 mr-2" />
                         Settings
@@ -400,19 +358,6 @@ export function Header() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </>
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-gray-600 font-medium">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/start">
-                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm">
-                    Start free
-                  </Button>
-                </Link>
               </>
             )}
           </div>
@@ -477,11 +422,20 @@ export function Header() {
                 </div>
               ))}
 
+              {/* Key actions — no Clerk/auth buttons */}
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
-                <a href="/os" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊡ AI OS</Button>
+                <a href="/gspc-verify" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full justify-start">
+                    <Eye className="h-4 w-4 mr-2" />
+                    Verify — free
+                  </Button>
                 </a>
-                {user ? (
+                <a href="/assess" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                    Get measured
+                  </Button>
+                </a>
+                {user && (
                   <>
                     <a href="/dashboard" className="block">
                       <Button variant="outline" className="w-full justify-start" onClick={() => setMobileMenuOpen(false)}>
@@ -497,19 +451,6 @@ export function Header() {
                       <LogOut className="h-4 w-4 mr-2" />
                       Sign Out
                     </Button>
-                  </>
-                ) : (
-                  <>
-                    <a href="/login" className="block">
-                      <Button variant="outline" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                        Sign In
-                      </Button>
-                    </a>
-                    <a href="/start" className="block">
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => setMobileMenuOpen(false)}>
-                        Start free
-                      </Button>
-                    </a>
                   </>
                 )}
               </div>

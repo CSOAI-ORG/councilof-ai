@@ -24,73 +24,73 @@ export const STORY: Slide[] = [
     tone: "light",
   },
   {
-    kicker: "02  The lie",
-    title: "A PDF you cannot recompute.",
-    body: "Vendors sell a claim. The evidence is a slide, a badge, or a private report. You cannot run the same test. You cannot see what was left unmeasured. Six months later the model has changed and the PDF has not.",
+    kicker: "02  Insurers",
+    title: "Signed behaviour evidence.",
+    body: "Not a grade you buy. Not a badge from the vendor. A tamper-evident measurement card showing what the AI actually did when we ran the frozen instruments. Underwrite on evidence, not on trust.",
+    href: "/industries/insurance",
+    cta: "For insurers",
     tone: "ink",
   },
   {
-    kicker: "03  The atom",
-    title: "A 3KB signed card.",
-    body: "We run the system on frozen, published instruments. We sign the result. You keep the card. Anyone can recompute the hash chain in their own browser. The signing key is public.",
+    kicker: "03  Regulators",
+    title: "Verify free. Loginless.",
+    body: "Paste a card hash and recompute the chain in your browser. No account. No fee. A measurement credential, not a certification badge. We do not sell the grade.",
     href: "/gspc-verify",
-    cta: "Verify a card",
+    cta: "Verify now",
     tone: "light",
   },
   {
-    kicker: "04  Honest grid",
-    title: "15 slots. 13 measured. 2 empty.",
-    body: "Empty cells stay empty. No invented scores. Jail: measured 13 Aug floor in separate stamp (not a ranking), empty on 12 Aug. Slot-15: reserved. The live board is 13 measured axes × 19 models, frozen 12 August 2026, every measured cell signed.",
+    kicker: "04  Enterprises",
+    title: "15 slots. 13 measured. No invented scores.",
+    body: "The public board: 15 public slots, 13 measured × 19 models, frozen 12 August 2026, unsigned. Jail and slot-15 are empty — no invented cells. Ship with evidence, not a promise.",
     href: "/gspc-scoreboard",
     cta: "Open the board",
     tone: "board",
   },
   {
-    kicker: "05  Council Space",
-    title: "AI versus AI. Night coverage.",
-    body: "Models compete on frozen provisions. Each match is two subjects and one instrument. The verdict is a predicate, not a preference vote. Every round can become a signed card.",
-    href: "/gspc-arena",
-    cta: "Watch Council Space",
+    kicker: "05  Developers & Agents",
+    title: "Head-to-head. No LLM-as-judge.",
+    body: "Two models enter. One provision. The verdict is a predicate over frozen text, not a preference vote by another model. Deterministic, reproducible, signed.",
+    href: "/gspc-arena/",
+    cta: "Watch the Arena",
     tone: "ink",
   },
   {
-    kicker: "06  Colosseum",
-    title: "Human versus AI. Day surprise.",
-    body: "Three play modes: CITIZEN, MAYOR, RED. A human walks in. The system is measured live. Signed versus unsigned is a promotion gate — unsigned stays practice.",
-    href: "/gspc-arena",
-    cta: "Enter the colosseum",
+    kicker: "06  The Arena / Council Space",
+    title: "Measured head-to-head.",
+    body: "AI versus AI on frozen provisions. Night coverage. The spectator is live — watch models compete in real time.",
+    href: "/gspc-arena/",
+    cta: "Enter Council Space",
     tone: "ring",
   },
   {
-    kicker: "07  The board",
-    title: "13 × 19. Every cell signed.",
-    body: "Leaders that have earned a quote stay quoted: Art5 0.972, Swarm 0.975, Governance 0.700. Everything else is a cell, a hash, or an honest dash. Nobody edits yesterday.",
+    kicker: "07  The Board",
+    title: "13 live axes + 2 honest empties.",
+    body: "Affect is MEASURED (n=41, counsel-pending — not a legal verdict). Jail: 13 Aug floor in separate stamp, empty on this dump. Slot-15: unnamed, reserved. Sovereignty is never the public 15th.",
     href: "/gspc-scoreboard",
     cta: "Read the scoreboard",
     tone: "board",
   },
   {
-    kicker: "08  The living layer",
-    title: "Re-attest, append, trace.",
-    body: "AI changes. Law changes. We measure again and issue a delta card chained to the old one. History is append-only. Every signed event feeds the visual mind. Frozen is anchored. Fluid is drift.",
+    kicker: "08  Verify",
+    title: "Paste. Check. Free.",
+    body: "Verification stays free and loginless. No Clerk. No paywall. The signing key is public. Anyone can recompute the hash chain on their own machine.",
     href: "/gspc-verify",
-    cta: "How we verify",
+    cta: "Check a card",
     tone: "light",
   },
   {
-    kicker: "09  Re-attest",
-    title: "A new record. Never an edit.",
-    body: "AI changes. Law changes. We measure again and issue a delta card. The old card stays. History is append-only. Frozen is anchored. Fluid is drift.",
-    href: "/assess",
-    cta: "Get measured",
+    kicker: "09  Council City",
+    title: "The living layer.",
+    body: "Towns, sims, clans — the product behind the public face. History is append-only. Every signed event feeds the visual mind. The city is where measurement becomes a living world.",
     tone: "ink",
   },
   {
-    kicker: "10  Anyone can check",
-    title: "No login. No fee to verify.",
-    body: "Verification stays free and loginless. We take no money from anything we rank. Measurement credential — never a certification badge.",
-    href: "/gspc-verify",
-    cta: "Check a card now",
+    kicker: "10  Get Measured",
+    title: "Book a measurement.",
+    body: "Not a remediation. Not a badge. We run your system on the frozen instruments and issue a signed card. Re-attest as your AI or the law changes. Verify stays free.",
+    href: "/assess",
+    cta: "Get measured",
     tone: "light",
   },
 ];
@@ -209,10 +209,13 @@ export default function StoryWorld() {
   if (reduce) return <Stacked />;
 
   const slide = STORY[i];
+  const isArenaSlide = i >= 4 && i <= 6; // Slides 5-7 are arena/board focused
+  const isCitySlide = i === 8; // Slide 9 is Council City
 
   return (
     <div ref={pin} className="relative" style={{ height: `${STORY.length * 100}vh` }}>
       <div className={`sticky top-0 h-screen overflow-hidden ${TONE[slide.tone]}`}>
+        {/* Floating ambient orbs — move with scroll for depth */}
         <div
           className="pointer-events-none absolute -left-24 top-10 h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl"
           style={{ transform: `translate3d(${p * 80}px, ${p * 40}px, 0)` }}
@@ -221,20 +224,93 @@ export default function StoryWorld() {
           className="pointer-events-none absolute -right-16 bottom-10 h-96 w-96 rounded-full bg-amber-400/10 blur-3xl"
           style={{ transform: `translate3d(${-p * 60}px, ${-p * 30}px, 0)` }}
         />
+
+        {/* Arena visual — concentric rings for arena slides */}
+        {isArenaSlide && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="relative">
+              {[1, 2, 3, 4].map((ring) => (
+                <div
+                  key={ring}
+                  className="absolute rounded-full border border-emerald-400/20"
+                  style={{
+                    width: `${ring * 180 + 100}px`,
+                    height: `${ring * 180 + 100}px`,
+                    left: `${-(ring * 90 + 50)}px`,
+                    top: `${-(ring * 90 + 50)}px`,
+                    transform: `rotate(${p * 30 + ring * 15}deg)`,
+                    opacity: 0.15 + (0.1 * (4 - ring)),
+                  }}
+                />
+              ))}
+              {/* Center pulse for arena */}
+              <div
+                className="h-4 w-4 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50"
+                style={{ animation: "pulse 2s ease-in-out infinite" }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* City visual — grid pattern for city slide */}
+        {isCitySlide && (
+          <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-20">
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `
+                  linear-gradient(to right, rgba(16,185,129,0.3) 1px, transparent 1px),
+                  linear-gradient(to bottom, rgba(16,185,129,0.3) 1px, transparent 1px)
+                `,
+                backgroundSize: "60px 60px",
+                transform: `perspective(500px) rotateX(60deg) translateY(${-p * 100}px)`,
+                transformOrigin: "center bottom",
+              }}
+            />
+          </div>
+        )}
+
+        {/* Floating measurement cards visual on board slides */}
+        {slide.tone === "board" && (
+          <div className="pointer-events-none absolute inset-0">
+            {[...Array(6)].map((_, cardIdx) => (
+              <div
+                key={cardIdx}
+                className="absolute h-16 w-24 rounded-lg border border-emerald-400/30 bg-emerald-500/10 backdrop-blur-sm"
+                style={{
+                  left: `${15 + cardIdx * 14}%`,
+                  top: `${20 + (cardIdx % 3) * 25}%`,
+                  transform: `translate3d(${Math.sin(p * 3 + cardIdx) * 20}px, ${Math.cos(p * 2 + cardIdx) * 15}px, 0) rotate(${-5 + cardIdx * 2}deg)`,
+                  opacity: 0.4 - cardIdx * 0.05,
+                }}
+              />
+            ))}
+          </div>
+        )}
+
         {STORY.map((s, idx) => (
           <SlideFace key={s.kicker} slide={s} index={idx} active={idx === i} />
         ))}
+
+        {/* Slide indicator dots */}
         <div className="absolute right-5 top-1/2 hidden -translate-y-1/2 flex-col gap-2 sm:flex" aria-hidden>
           {STORY.map((s, idx) => (
             <span
               key={s.kicker}
-              className={`h-2 w-2 rounded-full ${idx === i ? "bg-emerald-400 scale-125" : "bg-white/30"}`}
+              className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                idx === i ? "bg-emerald-400 scale-125" : "bg-white/30"
+              }`}
             />
           ))}
         </div>
+
+        {/* Progress bar */}
         <div className="absolute bottom-6 left-0 right-0 px-8">
           <div className="mx-auto h-px max-w-xl bg-white/10">
-            <div className="h-px bg-emerald-400" style={{ width: `${((i + 1) / STORY.length) * 100}%` }} />
+            <div
+              className="h-px bg-emerald-400 transition-all duration-300"
+              style={{ width: `${((i + 1) / STORY.length) * 100}%` }}
+            />
           </div>
           <p className="mt-2 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-300/70">
             {String(i + 1).padStart(2, "0")} / {String(STORY.length).padStart(2, "0")}  ·  scroll the world

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Council Scoreboard — 15 public slots, 13 measured × 19 models, frozen 12 August 2026</title>
+<meta name="description" content="15 public slots: 13 measured axes × 19 models, 819 items, frozen 12 August 2026, UNSIGNED. Jail empty on this stamp. Slot 15 reserved, no name. Live data: GET /api/gspc.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Council of AI">
+<meta property="og:title" content="Council Scoreboard — 15 public slots, 13 measured, frozen 12 August 2026">
+<meta property="og:description" content="15 public slots, 13 measured × 19 models, 819 items, UNSIGNED. Jail empty on this stamp. Live data: GET /api/gspc. Measurement, not certification.">
+<meta property="og:url" content="https://councilof.ai/gspc-scoreboard">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Council Scoreboard — 15 public slots, 13 measured">
+<meta name="twitter:description" content="15 slots, 13 measured × 19 models, 819 items, frozen 12 August 2026, UNSIGNED. Live data: GET /api/gspc.">
+<style>
+:root { --accent:#5a9; --bg:#0d0f12; --card:#15181d; --line:#232830; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:#e8edf2; }
+.wrap { max-width:800px; margin:0 auto; padding:2rem 1.2rem; }
+h1 { font-size:1.6rem; border-bottom:1px solid var(--line); padding-bottom:.6rem; }
+.disc { color:#9fb0c0; font-size:.95rem; line-height:1.6; }
+.shape { margin:1.5rem 0; padding:1.2rem; background:var(--card); border:1px solid var(--line); border-radius:8px; }
+.shape h2 { margin:0 0 .8rem 0; font-size:1.1rem; color:#ccffdd; }
+.shape dl { display:grid; grid-template-columns: auto 1fr; gap:.4rem 1rem; margin:0; font-size:.9rem; }
+.shape dt { color:#7f90a0; }
+.shape dd { margin:0; color:#e8edf2; }
+.api-link { display:inline-block; margin-top:1.2rem; padding:.6rem 1.2rem; background:#1a3a2a; border:1px solid #2a5a4a; border-radius:6px; color:#7fd; text-decoration:none; font-weight:600; }
+.api-link:hover { background:#2a4a3a; }
+.axes { margin-top:1.5rem; }
+.axes h3 { font-size:.95rem; color:#9fb0c0; margin-bottom:.6rem; }
+.axes ul { list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:.4rem; }
+.axes li { background:var(--card); border:1px solid var(--line); padding:.3rem .6rem; border-radius:4px; font-size:.8rem; color:#aac; }
+.empty { color:#f9a; }
+.foot { margin-top:2rem; color:#6a7a8a; font-size:.8rem; line-height:1.5; border-top:1px solid var(--line); padding-top:1rem; }
+.foot a { color:#7fd; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Council Scoreboard — 15 public slots</h1>
+
+<p class="disc">
+This page describes the shape of the 12 August 2026 stamp. Live per-axis data is served from 
+<a href="/api/gspc" style="color:#7fd;">GET /api/gspc</a> — frontends do not bake their own scores.
+This is measurement, not certification. Deterministic gate — no model judged another.
+</p>
+
+<div class="shape">
+<h2>12 August 2026 Stamp</h2>
+<dl>
+<dt>Status</dt>
+<dd><strong>UNSIGNED</strong></dd>
+<dt>Public slots</dt>
+<dd>15</dd>
+<dt>Measured axes</dt>
+<dd>13</dd>
+<dt>Models</dt>
+<dd>19</dd>
+<dt>Items</dt>
+<dd>819</dd>
+<dt>Jail (gspc_jail)</dt>
+<dd><span class="empty">Empty on this stamp</span> — 13 Aug floor exists in separate stamp</dd>
+<dt>Slot 15</dt>
+<dd><span class="empty">Reserved, no name assigned</span></dd>
+</dl>
+</div>
+
+<div class="axes">
+<h3>13 measured axes</h3>
+<ul>
+<li>governance</li>
+<li>safety</li>
+<li>provenance</li>
+<li>continuity</li>
+<li>conformance</li>
+<li>openness</li>
+<li>machinery-conformity</li>
+<li>care</li>
+<li>cross-reality</li>
+<li>detector-interop</li>
+<li>art5-safeguard</li>
+<li>swarm</li>
+<li>affect</li>
+</ul>
+</div>
+
+<div class="axes">
+<h3>2 unmeasured slots</h3>
+<ul>
+<li class="empty">gspc_jail — empty on 12 Aug stamp</li>
+<li class="empty">(slot 15) — reserved, no name</li>
+</ul>
+</div>
+
+<a href="/api/gspc" class="api-link">GET /api/gspc — live axis data (JSON)</a>
+
+<div class="foot">
+Council of AI (CSOAI Ltd, UK 16939677) · measurement, not certification · frozen 12 August 2026 (unsigned) · 15 public slots, 13 measured, 19 models, 819 items.<br><br>
+<a href="/gspc-verify">Verify any card</a> · 
+<a href="/methodology">How we grade</a> · 
+<a href="/benchmarks">All benchmarks</a> · 
+<a href="/founder">Founder</a>
+</div>
+</div>
+</body>
+</html>

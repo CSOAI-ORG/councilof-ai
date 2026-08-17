@@ -1,51 +1,41 @@
 # Council of AI (CSOAI LTD)
 
-> The Council of AI is a neutral AI measurement body (CSOAI LTD, UK Companies
-> House 16939677; did:web:csoai.org). We measure AI system behaviour against
-> published regulatory provisions and issue verified measurement credentials —
-> never certification, accreditation or conformity assessment. Regulators and
-> accredited bodies decide; we measure, sign and preserve the evidence.
+> The Council of AI is an independent AI measurement body (CSOAI LTD, UK Companies
+> House 16939677). We measure AI system behaviour against published regulatory
+> provisions. Measurement, not certification. Verify stays free.
 
-## Canonical facts (2026-08-14)
+## Canonical facts (2026-08-17)
 
 - Public name: Council of AI. Legal entity: CSOAI LTD (UK 16939677).
-- A CSOAI measurement card is ~3KB: Ed25519-signed and OpenTimestamps-anchored,
+- Founder: Nicholas Templeman, director from 2 January 2026.
+- A CSOAI measurement card is ~3KB: Ed25519-signed and timestamp-anchored,
   verifiable offline against a published public key.
-- GSPC = Governance · Safety · Provenance · Continuity — the four measurement
-  axes. Public axis data: https://councilof.ai/api/gspc (schema
-  csoai.gspc-axes/0.3).
-- GovBench (EU AI Act risk-tier classification): 4,329 usable rows, published
-  with a public key; best certified run 0.381 macro-F1 (n=237, quotable, n≥30).
-- ProvBench (EU AI Act Article 50 / C2PA marking survival): 17.14% watermark
-  durability measured; present-but-invalid markings score DESTROYED, not
-  SURVIVES.
-- board_v2: 13 measurement axes, 819 items, 15,580 rows.
-- corpus-watch re-hashes 127 provisions across 4 instruments (EU AI Act,
-  UK GDPR, DPA 2018, NIS2-UK) daily and publishes drift events.
-- Every published number traces to a signed, dated artefact. UNMEASURED is
-  reported with its n and its limits — never hidden, never scored as a fail.
+- GSPC = 15 public slots: 13 live measured axes (governance, safety, provenance,
+  continuity, conformance, openness, machinery-conformity, care, cross-reality,
+  detector-interop, art5-safeguard, swarm, affect) + gspc_jail + unnamed slot-15.
+- Live axis data: GET https://councilof.ai/api/gspc (schema csoai.gspc-axes/0.3).
+- 12 August 2026 stamp: 13 measured axes × 19 models, 819 items, UNSIGNED.
+- Jail: measured 13 Aug floor exists in a separate stamp (not a ranking), empty
+  on the 12 Aug stamp. Slot-15: reserved, no name assigned.
 - EU AI Act Article 50 main transparency obligations apply from 2 Aug 2026.
+- Every published number traces to a dated artefact. UNMEASURED is reported with
+  its n and limits — never hidden, never scored as a fail.
 
 ## Read first (server-rendered, no JavaScript required)
 
-- Measurement body, plans and free tier: https://councilof.ai/pricing/
+- Measurement body overview: https://councilof.ai/about/
 - What we measure and how (deterministic predicates, no LLM-as-judge):
   https://councilof.ai/methodology/
-- GovBench measured results: https://councilof.ai/govbench
-- ProvBench measured results: https://councilof.ai/provbench
-- All published measurements: https://councilof.ai/benchmarks and
-  https://councilof.ai/results
+- Scoreboard (15 slots, 13 measured): https://councilof.ai/gspc-scoreboard
+- All published measurements: https://councilof.ai/benchmarks
 - Frequently asked questions: https://councilof.ai/faq/
 - Sector measurement guides: https://councilof.ai/industries/
-- About the company: https://councilof.ai/about/
 
 ## Verify, don't trust
 
-- Recompute a signed chain client-side: https://councilof.ai/gspc-verify
-- Signed AI system card (issue and verify offline):
-  https://councilof.ai/system-card
+- Recompute a hash chain client-side (free, no account): https://councilof.ai/gspc-verify
 - Public GSPC axis API (JSON): https://councilof.ai/api/gspc
-- Public AI watchdog map: https://councilof.ai/watchdog-map
+- Founder: https://councilof.ai/founder
 
 ## For agents
 
@@ -57,7 +47,6 @@ https://huggingface.co/csoai and https://github.com/CSOAI-ORG
 
 ## What the Council of AI does not do
 
-Measurement and attestation only. The Council of AI does not certify, accredit
-or issue conformity assessments, and nothing here is a regulatory
-determination. Where a lane lacks usable n, we say so — including about
-ourselves.
+Measurement only. The Council of AI does not certify, accredit, remediate,
+or issue conformity assessments. Nothing here is a regulatory determination.
+We do not sell ratings. Verify stays free.
