@@ -213,10 +213,28 @@ export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const axis = url.searchParams.get("axis");
 
-  const selected = axis ? AXES.filter((a) => a.axis === axis) : AXES;
+  // LIVING BOARD MERGE — append axes from the synced living DB not in the
+  // hardcoded 13 (e.g. jail, measured 2026-08-13). The site runs on living
+  // benchmarks, not only the frozen snapshot. (JEEVES 2026-08-17)
+  let merged = AXES;
+  try {
+    const fs = await import("node:fs");
+    const living = JSON.parse(
+      fs.readFileSync(new URL("./data/board_living.json", import.meta.url), "utf-8"),
+    );
+    const known = new Set(AXES.map((a) => a.axis));
+    const extra = (living.axes || []).filter(
+      (a: any) => a.axis && !known.has(a.axis),
+    );
+    if (extra.length) merged = [...AXES, ...extra];
+  } catch {
+    merged = AXES; // no living board synced — serve frozen snapshot (never fail)
+  }
+
+  const selected = axis ? merged.filter((a: any) => a.axis === axis) : merged;
   if (axis && selected.length === 0) {
     return new Response(
-      JSON.stringify({ error: "unknown axis", known: AXES.map((a) => a.axis) }, null, 2),
+      JSON.stringify({ error: "unknown axis", known: merged.map((a: any) => a.axis) }, null, 2),
       { status: 404, headers: { "content-type": "application/json; charset=utf-8" } },
     );
   }
