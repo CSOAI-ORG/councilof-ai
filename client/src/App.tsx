@@ -280,7 +280,7 @@ const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
 const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
-const SovSpace = lazy(() => import("./pages/SovSpace"));
+const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
 const BadgesPage = lazy(() => import("./pages/BadgesPage"));
 const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
 const PlansPage = lazy(() => import("./pages/PlansPage"));
@@ -296,6 +296,7 @@ const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const StatusPage = lazy(() => import("./pages/StatusPage"));
 const Distribution = lazy(() => import("./pages/Distribution"));
 const McpFleet = lazy(() => import("./pages/McpFleet"));
+const Gone = lazy(() => import("./pages/Gone"));
 import { frameworksdata } from "./data/frameworks-content";
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
@@ -607,7 +608,7 @@ function App() {
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
                   {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}
-                  <Route path="/gspc-arena" component={SovSpace} />
+                  <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
@@ -934,9 +935,9 @@ function App() {
                   {/* Individual Charter Articles */}
                   <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
-                  {/* Final fallback route */}
-                  <Route path="/sov-space">{() => <Redirect to="/gspc-arena" />}</Route>
-                  <Route path="/sovereign-space">{() => <Redirect to="/gspc-arena" />}</Route>
+                  {/* 410 Gone — /sov-space was retired 17 Aug 2026; do not redirect. */}
+                  <Route path="/sov-space" component={Gone} />
+                  <Route path="/sovereign-space" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/badges" component={BadgesPage} />
                   <Route path="/authority" component={BadgesPage} />

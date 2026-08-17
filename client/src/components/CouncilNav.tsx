@@ -1,8 +1,8 @@
 import { Link, useLocation, useSearch } from "wouter";
 
-// SovNav — one sub-nav binding the agentic Sovereign surfaces into a single suite.
+// CouncilNav — one sub-nav binding the agentic council surfaces into a single suite.
 // 2026-08-01 unification: the globe, the arena and the towns are LAYERS of
-// Sov Space now, not separate products; the links carry ?view=.
+// Council Space now, not separate products; the links carry ?view=.
 const LINKS = [
   { href: "/council-space?view=globe", label: "🌍 Globe", view: "globe" },
   { href: "/council-space", label: "◈ Council Space", alt: "/simulate", view: "" },
@@ -12,7 +12,7 @@ const LINKS = [
   { href: "/try", label: "▶ Live Council", view: null },
 ];
 
-export default function SovNav() {
+export default function CouncilNav() {
   const [loc] = useLocation();
   const search = useSearch();
   const currentView = new URLSearchParams(search).get("view") || "";

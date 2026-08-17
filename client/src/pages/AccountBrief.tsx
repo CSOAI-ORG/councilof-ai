@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
 import { scoreAccount } from "../lib/hiveScore";
 import { flyAndConvene } from "../lib/globeDrive";
-import SovNav from "../components/SovNav";
+import CouncilNav from "../components/CouncilNav";
 
 // /brief?id=<accountId> — a per-account tailored one-pager: region-flown globe, the
 // frameworks that govern them, the CSOAI play + the exact USPs to lead with, and
@@ -42,7 +42,7 @@ export default function AccountBrief() {
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <div className="mx-auto max-w-5xl px-6 py-12">
-        <SovNav />
+        <CouncilNav />
         <a href="/intel" className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/75 hover:text-emerald-200">← Distribution Hive</a>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <h1 className="text-4xl font-black tracking-tight">{a.name}</h1>
