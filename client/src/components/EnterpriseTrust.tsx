@@ -52,7 +52,7 @@ export default function EnterpriseTrust() {
           <a href="/gspc-verify" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Verify a measurement →</a>
           <a href="/benchmarks" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">See benchmarks →</a>
         </div>
-        <p className="mt-2 text-center text-[11px] text-emerald-100/60">Honest by design: we show what's true and verifiable, not badges we don't hold.</p>
+        <p className="mt-2 text-center text-[11px] text-emerald-100/60">Honest by design: we measure, we do not certify. We do not hold SOC 2 or ISO 42001.</p>
       </div>
     </section>
   );
