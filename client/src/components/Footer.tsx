@@ -99,7 +99,7 @@ export function Footer() {
               <Shield className="h-8 w-8" />
               <div>
                 <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
-                <p className="text-emerald-100 text-sm">Measured 12–14 Aug 2026 across 22 models on all 13 GSPC axes: EU AI Act Art 5 safeguards best 0.972 (n=36, Wilson 95% [0.858, 0.995]); swarm 0.975; governance 0.700 (n=237). Harness published — recompute it.</p>
+                <p className="text-emerald-100 text-sm">Measured 12–14 Aug 2026 across 22 models on 13 measured of 15 GSPC slots: EU AI Act Art 5 safeguards best 0.972 (n=36, Wilson 95% [0.858, 0.995]); swarm 0.975; governance 0.700 (n=237). Harness published — recompute it.</p>
               </div>
             </div>
             <Link href="/benchmarks">
@@ -228,36 +228,6 @@ export function Footer() {
               Licensing
             </Link>
           </div>
-        </div>
-
-        {/* What We Don't Claim */}
-        <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-2">
-            What We Don&apos;t Claim
-          </h4>
-          <ul className="space-y-1 text-xs text-gray-600">
-            <li>Not a certifier · not an enforcer · no accreditation chain</li>
-            <li>Our own systems are scored on this board, no exemption</li>
-            <li>We measure. Others enforce. The distinction is the business.</li>
-          </ul>
-        </div>
-
-        {/* Refutation Ledger — prominent link */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/refutation-ledger"
-            className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-600 transition hover:bg-rose-100"
-          >
-            <span className="h-2 w-2 rounded-full bg-rose-500" />
-            9 published refutations · 4 killed our own bets
-          </Link>
-          <Link
-            href="/live-ledger"
-            className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100"
-          >
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            Live D1 ledger · signed · queryable
-          </Link>
         </div>
 
         {/* AI Transparency & Oversight Statement (Art 50 / Art 14) */}

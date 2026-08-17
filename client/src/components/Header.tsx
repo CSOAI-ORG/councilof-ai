@@ -23,11 +23,11 @@ import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 const navigation = [
   {
     name: "Council OS",
-    href: "/sov-space",
+    href: "/gspc-arena",
     icon: Globe2,
     description: "Your AI OS",
     submenu: [
-      { name: "Council Space", href: "/sov-space", description: "Simulate and govern in real time" },
+      { name: "Council Space", href: "/gspc-arena", description: "Simulate and govern in real time" },
       { name: "Governance Graph", href: "/graph", description: "The governed Google" },
       { name: "Your Council assistant Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
@@ -46,7 +46,7 @@ const navigation = [
       { name: "Live Ledger (signed)", href: "/live-ledger", description: "Live D1 queryable decision_records — signed, with supersession trail" },
       { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
       { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
-      { name: "Signed Scoreboard", href: "/gspc-scoreboard", description: "13 axes × 22 models — every cell Ed25519-signed with n and 95% CI" },
+      { name: "Signed Scoreboard", href: "/gspc-scoreboard", description: "15 slots × 22 models — 13 measured, 2 unmeasured — every measured cell Ed25519-signed with n and 95% CI" },
       { name: "AI Act Benchmark", href: "/ai-act-benchmark", description: "170/170 held-out scenarios against the EU benchmark — with CIs and caveats" },
       { name: "ProvBench", href: "/provbench", description: "Does C2PA provenance survive real-world transforms? 20 assets × 11 transforms" },
     ],
@@ -313,13 +313,13 @@ export function Header() {
 
             {/* Council OS — the dockable measurement workspace */}
             <a
-              href="/sov-os"
+              href="/os"
               className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-emerald-300 border border-emerald-400/30 hover:bg-emerald-400/10 transition-all"
             >
               <span className="text-base leading-none">◧</span> Council OS
             </a>
 
-            {/* Model Registry — the 13-axis measured scoreboard */}
+            {/* Model Registry — the 15-slot measured scoreboard */}
             <a
               href="/models"
               className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
@@ -327,9 +327,9 @@ export function Header() {
               <span className="text-base leading-none">▦</span> Models
             </a>
 
-            {/* Globe — 13 axes on a real sphere */}
+            {/* Globe — 15 slots on a real sphere */}
             <a
-              href="/sov-space"
+              href="/gspc-arena"
               className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
             >
               <span className="text-base leading-none">◎</span> Globe
@@ -348,7 +348,7 @@ export function Header() {
               href="/os"
               className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
             >
-              <span className="text-base leading-none">⊞</span> AI OS
+              <span className="text-base leading-none">⊡</span> AI OS
             </a>
 
             {user ? (
@@ -479,7 +479,7 @@ export function Header() {
 
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
                 <a href="/os" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊞ AI OS</Button>
+                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊡ AI OS</Button>
                 </a>
                 {user ? (
                   <>
