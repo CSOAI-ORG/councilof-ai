@@ -107,7 +107,7 @@ const USPS = [
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
   { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail plus one reserved slot stay unmeasured — no score yet.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
-  { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/city" },
+  { icon: Landmark, title: "Verify any card", body: "Free and loginless. The verify path runs in your browser — no account, no fee. Check any signed card.", href: "/gspc-verify" },
   { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/method" },
   { icon: Ban, title: "No money from what we rank", body: "We do not sell ratings and we do not take a cut from anything on the board.", href: "/method" },
   { icon: Shield, title: "Measurement credential", body: "Not a certification. Not a notified body. We measure, sign, and keep the evidence.", href: "/gspc-verify" },
@@ -181,7 +181,7 @@ function AxesGrid() {
       </div>
       <div className="mt-8 text-center">
         <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 22 models, every cell signed
+          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 19 models, frozen 12 August 2026, every cell signed
         </a>
       </div>
     </Section>

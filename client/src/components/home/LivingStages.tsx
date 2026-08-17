@@ -75,7 +75,7 @@ export default function LivingStages() {
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-300">The board · signed cells</p>
-              <h2 className="mt-3 text-4xl font-black">{MEASURED} measured × 22 models</h2>
+              <h2 className="mt-3 text-4xl font-black">{MEASURED} measured × 19 models</h2>
               <p className="mt-3 max-w-lg text-emerald-100/70">
                 A filled cell is a signed measurement. A dash is honest emptiness. Two public slots stay unmeasured — no score yet.
               </p>

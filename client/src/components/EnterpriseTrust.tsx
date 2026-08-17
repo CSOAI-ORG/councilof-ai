@@ -6,7 +6,7 @@ import { CANON } from "../data/canonCounters";
 
 const SIGNALS: { icon: string; label: string; sub: string; href?: string }[] = [
   { icon: "✶", label: "Ed25519 · Layer 0", sub: "Every decision cryptographically signed", href: "/workbench" },
-  { icon: "⚖", label: "Multi-provider measurement", sub: "30 models measured, no single vendor grades itself", href: "/benchmarks" },
+  { icon: "⚖", label: "Multi-provider measurement", sub: "19 models measured, frozen 12 August 2026, no single vendor grades itself", href: "/benchmarks" },
   { icon: "◫", label: "Aligned to 13 frameworks", sub: "EU AI Act · NIST · ISO 42001 · DORA · NIS2", href: "/crosswalk" },
   { icon: "◍", label: "Open source · MIT", sub: `${CANON.MCP_SERVERS.value} governed MCP servers, inspectable`, href: "/tool-commons" },
   { icon: "🛡", label: "Coordinated disclosure", sub: "Published security.txt + CVD policy", href: "/vulnerability-disclosure" },

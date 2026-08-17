@@ -24,7 +24,7 @@ export const LANE4: Record<string, Lane4Page> = {
     faq: [
       {
         q: "What does CSOAI actually measure?",
-        a: "AI system behaviour against published regulatory provisions, across four axes: Governance, Safety, Provenance and Continuity (GSPC). Every published number traces to a signed measurement artefact — not to a self-assessment form.",
+        a: "AI system behaviour against published regulatory provisions, across 13 measured axes (governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect) plus 2 unmeasured slots (jail and slot-15). Every published number traces to a signed measurement artefact — not to a self-assessment form.",
       },
       {
         q: "Is CSOAI a certification body?",
@@ -44,7 +44,7 @@ export const LANE4: Record<string, Lane4Page> = {
       { value: "127", label: "regulatory provisions re-hashed daily for drift (4 instruments)", evidence: "measured" },
       { value: "45", label: "adversarial care-battery items in the core safety instrument", evidence: "measured" },
       { value: "1,127 / 27,216", label: "AIR-Bench safety verdicts measured so far — interim, climbing", evidence: "measured" },
-      { value: "4", label: "GSPC measurement axes: Governance · Safety · Provenance · Continuity", evidence: "measured" },
+      { value: "13", label: "GSPC measured axes (+ 2 unmeasured slots: jail and slot-15) — frozen 12 August 2026", evidence: "measured" },
     ],
     spotSource: "corpus-watch baseline + flywheel + AIR-Bench harvester, 2026-08-01",
   },

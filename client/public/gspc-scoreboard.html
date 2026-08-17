@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Council Scoreboard — 13 axes × 22 models, measured &amp; signed</title>
-<meta name="description" content="13 measured axes plus jail, which stays unmeasured — no score yet. Every cell shows n, accuracy and 95% confidence interval. A cell shows a number only if quotable (usable n≥30).">
+<title>Council Scoreboard — 13 measured × 19 models, frozen 12 August 2026</title>
+<meta name="description" content="15 public slots: 13 measured axes, jail unmeasured (footnote: 13 Aug floor exists in separate stamp, not a ranking), slot 15 reserved. Every cell shows n, accuracy and 95% confidence interval. A cell shows a number only if quotable (usable n≥30).">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Council of AI">
-<meta property="og:title" content="Council Scoreboard — 13 axes × 22 models, measured & signed">
-<meta property="og:description" content="Every cell: n, accuracy, 95% CI, Ed25519-signed. 22 models. UNMEASURED cells shown honestly. Measurement, not certification.">
-<meta property="og:url" content="https://csoai-site.pages.dev/gspc-scoreboard">
+<meta property="og:title" content="Council Scoreboard — 13 measured × 19 models, frozen 12 August 2026">
+<meta property="og:description" content="Every cell: n, accuracy, 95% CI, Ed25519-signed. 19 models. 15 public slots. UNMEASURED cells shown honestly. Measurement, not certification.">
+<meta property="og:url" content="https://councilof.ai/gspc-scoreboard">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Council Scoreboard — 13 axes × 22 models">
-<meta name="twitter:description" content="249 signed cells. n per cell, 95% CIs, quotable thresholds. Measurement, not certification.">
+<meta name="twitter:title" content="Council Scoreboard — 13 measured × 19 models">
+<meta name="twitter:description" content="15 public slots, 13 measured, 19 models. n per cell, 95% CIs, quotable thresholds. Measurement, not certification.">
 <style>
 :root { --accent:#5a9; --bg:#0d0f12; --card:#15181d; --line:#232830; }
 * { box-sizing:border-box; }
@@ -38,8 +38,8 @@ td.miss { color:#556; text-align:center; }
 </head>
 <body>
 <div class="wrap">
-<h1>Council Scoreboard — 13 axes × 22 models</h1>
-<p class="disc">Fused from measured board data. Each cell shows the model's
+<h1>Council Scoreboard — 13 measured × 19 models</h1>
+<p class="disc">Frozen 12 August 2026. 15 public slots: 13 measured, jail unmeasured on this stamp (a 13 Aug jail floor exists in a separate stamp at csoai-static-deploy2 b82e8bb7 — not a ranking, footnote only), slot 15 reserved. Each cell shows the model's
 accuracy and 95% confidence interval at its measured n. A cell shows a number
 <strong>only if quotable</strong> (usable n ≥ 30); a dash means not quotable.
 This is measurement, not certification. Deterministic gate — no model judged
@@ -50,14 +50,14 @@ another. Every row is reproducible from the signed board records.</p>
 </table>
 <div class="legend">Cells: accuracy / (n, 95% CI) · ✓signed marks Ed25519 spine
 signing + time-anchor (SCITT/RFC 9943) · signing overhead: 40.8µs / 517B median
-per card (bench, n=500). Generated <span id="settle-clock">2026-08-15T14:35:19Z</span>.</div>
+per card (bench, n=500). Frozen <span id="settle-clock">2026-08-12T00:00:00Z</span>.</div>
 <script>
 /* Settle clock — boards settle on a measured schedule; this clock makes the
    age of the numbers visible. Zero-dep, ~300B. */
 (function(){
   var el = document.getElementById('settle-clock');
   if (!el) return;
-  var gen = new Date('2026-08-15T14:35:19Z');
+  var gen = new Date('2026-08-12T00:00:00Z');
   var d = document.createElement('span');
   d.style.color = '#8cd'; d.style.marginLeft = '.4rem';
   function tick(){
@@ -69,14 +69,14 @@ per card (bench, n=500). Generated <span id="settle-clock">2026-08-15T14:35:19Z<
 })();
 </script>
 <div class="foot">Council of AI (CSOAI Ltd, UK 16939677) · measurement, not
-certification · generated from boards-v2-2026-08-12. Honest: a quotable cell
-means usable n≥30 with a computed interval — it is a measurement of one point
+certification · frozen 12 August 2026 from boards-v2. 15 public slots, 13 measured, 19 models, 819 items.
+Honest: a quotable cell means usable n≥30 with a computed interval — it is a measurement of one point
 in time, not a guarantee of behaviour.<br><br>
 <a href="/gspc-verify">Verify any card</a> · 
 <a href="/methodology">How we grade</a> · 
 <a href="/benchmarks">All benchmarks</a> · 
 <a href="/models">Model registry</a> · 
-<a href="/sov-os">Council OS</a></div>
+<a href="/os">Council OS</a></div>
 </div>
 </body>
 </html>
