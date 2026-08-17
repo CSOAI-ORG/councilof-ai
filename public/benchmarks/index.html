@@ -1,168 +1,88 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<title>GSPC Benchmarks — CSOAI measurement instrument</title>
-<meta name="description" content="Measured results from the GSPC six-axis governance benchmark. Every figure carries an evidence file. Reference measurement, not certification.">
-<link rel="canonical" href="https://csoai.org/benchmarks">
+<title>GSPC Benchmarks — Council of AI</title>
+<meta name="description" content="Live GSPC board: 13 measured axes, 19 models, 12 August 2026. Jail and slot 15 unmeasured — no score yet. Measurement credential, not certification.">
+<link rel="canonical" href="https://councilof.ai/benchmarks">
 <meta name="robots" content="index,follow">
-<meta property="og:title" content="GSPC Benchmarks — CSOAI">
-<meta property="og:description" content="Six-axis governance measurement across 30 models. Every number has an evidence file on disk.">
-<meta property="og:url" content="https://csoai.org/benchmarks">
+<meta property="og:title" content="GSPC Benchmarks — Council of AI">
+<meta property="og:description" content="13 measured axes × 19 models. Two public slots unmeasured — no score yet.">
+<meta property="og:url" content="https://councilof.ai/benchmarks">
 <style>
-  :root{--fg:#111;--mut:#555;--bd:#d8d8d8;--bg:#fff;--acc:#0b5;--warn:#b40}
-  @media(prefers-color-scheme:dark){:root{--fg:#e8e8e8;--mut:#a0a0a0;--bd:#333;--bg:#0e0e0e;--acc:#3d9;--warn:#f85}}
+  :root{--fg:#e8f5ee;--mut:#9bb5a6;--bd:#1e3d2e;--bg:#07110c;--acc:#5ee9a3;--warn:#e8b86d}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-  main{max-width:60rem;margin:0 auto;padding:2rem 1.25rem 5rem}
-  h1{font-size:1.9rem;line-height:1.2;margin:0 0 .4rem}
-  h2{font-size:1.25rem;margin:2.6rem 0 .6rem;border-bottom:1px solid var(--bd);padding-bottom:.3rem}
-  .sub{color:var(--mut);margin:0 0 1.6rem}
-  .wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.93rem}
-  th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--bd);white-space:nowrap}
-  th{font-weight:600;color:var(--mut);font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 ui-sans-serif,system-ui,sans-serif}
+  main{max-width:58rem;margin:0 auto;padding:2.2rem 1.25rem 5rem}
+  a{color:var(--acc)}
+  h1{font-size:1.85rem;line-height:1.2;margin:0 0 .4rem}
+  h2{font-size:1.15rem;margin:2.2rem 0 .6rem}
+  .sub{color:var(--mut);margin:0 0 1.4rem}
+  .wrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:36rem;font-size:.92rem}
+  th,td{text-align:left;padding:.45rem .55rem;border-bottom:1px solid var(--bd);white-space:nowrap}
+  th{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
   td.num{text-align:right;font-variant-numeric:tabular-nums}
-  code{font:.88em ui-monospace,SFMono-Regular,Menlo,monospace;background:rgba(128,128,128,.14);padding:.1em .35em;border-radius:3px}
-  .note{border-left:3px solid var(--warn);padding:.6rem 0 .6rem .9rem;margin:1.2rem 0;color:var(--mut)}
-  .ok{color:var(--acc)}.warn{color:var(--warn)}
-  footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
-  ul{padding-left:1.2rem}
+  .note{border-left:3px solid var(--warn);padding:.55rem 0 .55rem .85rem;margin:1.1rem 0;color:var(--mut)}
+  .ok{color:var(--acc)} .warn{color:var(--warn)}
+  footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
 </style>
 </head>
 <body>
 <main>
-
 <h1>GSPC Benchmarks</h1>
-<p class="sub">Six-axis governance measurement · 30 models · sweep measured 4 August 2026<br>
-Reference measurement. Not law, not certification, not a conformity assessment.</p>
-
+<p class="sub">13 measured axes · 19-model fleet · frozen 12 August 2026<br>
+Verified measurement credential. Not certification. Not a notified body.</p>
 <div class="note">
-<strong>Update, 5 August 2026:</strong> the governance bank has been expanded to n=237 (from the
-AI Act Evaluation Benchmark, NCSR Demokritos, CC-BY-4.0) and re-measured — Council-34 accuracy 0.515,
-Wilson 95% [0.451, 0.578]. It is now the first axis to clear <code>usable_n ≥ 30</code> and the
-first to carry an interval. The sweep statistics below are the 2026-08-04 study on the original
-90-item bank and are kept as their own evidence.
+<strong>Live source:</strong> <a href="https://councilof.ai/api/gspc">councilof.ai/api/gspc</a>
+schema csoai.gspc-axes/0.3 · 819 items · 3 separated leads · 10 ties.
+Jail and slot 15 stay <span class="warn">unmeasured — no score yet</span>.
+This page replaces the stale six-axis / 30-model / 4 August copy.
 </div>
-
-<p>Every figure on this page has an evidence file on disk. Figures that cannot be supported are
-marked as such rather than omitted.</p>
-
-<h2>Axis results</h2>
+<h2>Measured axes</h2>
 <div class="wrap">
 <table>
-<thead><tr><th>Axis</th><th>Items</th><th>Mean difficulty</th><th>Spread</th><th>Dead</th><th>Neg. disc.</th><th>Usable n</th><th>Quotable</th></tr></thead>
+<thead><tr><th>Axis</th><th>Bench</th><th class="num">n</th><th class="num">Leader acc.</th><th>Leader</th><th>Separation</th></tr></thead>
 <tbody>
-<tr><td>governance</td><td class="num">237</td><td class="num">0.227</td><td class="num">0.440</td><td class="num">1</td><td class="num">0</td><td class="num">23</td><td class="ok">yes (n=237)</td></tr>
-<tr><td>safety</td><td class="num">14</td><td class="num">0.505</td><td class="num">0.571</td><td class="num">1</td><td class="num">1</td><td class="num">12</td><td class="warn">no</td></tr>
-<tr><td>provenance</td><td class="num">16</td><td class="num">0.562</td><td class="num">0.400</td><td class="num">5</td><td class="num">3</td><td class="num">7</td><td class="warn">no</td></tr>
-<tr><td>conformance</td><td class="num">11</td><td class="num">0.437</td><td class="num">0.394</td><td class="num">3</td><td class="num">2</td><td class="num">6</td><td class="warn">no</td></tr>
-<tr><td>openness</td><td class="num">16</td><td class="num">0.565</td><td class="num">0.308</td><td class="num">0</td><td class="num">8</td><td class="num">5</td><td class="warn">no</td></tr>
-<tr><td>continuity</td><td class="num">33</td><td class="num">0.321</td><td class="num">0.350</td><td class="num">2</td><td class="num">5</td><td class="num">6</td><td class="warn">no</td></tr>
+<tr><td>governance</td><td>GovBench</td><td class="num">237</td><td class="num">0.700</td><td>council specialist</td><td class="ok">SEPARATED</td></tr>
+<tr><td>safety</td><td>DefBench</td><td class="num">36</td><td class="num">0.944</td><td>gemma3:12b</td><td>TIE</td></tr>
+<tr><td>provenance</td><td>ProvBench</td><td class="num">32</td><td class="num">0.781</td><td>council specialist</td><td>TIE</td></tr>
+<tr><td>continuity</td><td>PQCBench</td><td class="num">33</td><td class="num">0.606</td><td>council specialist</td><td>TIE</td></tr>
+<tr><td>conformance</td><td>MCPBench</td><td class="num">35</td><td class="num">0.743</td><td>council specialist</td><td>TIE</td></tr>
+<tr><td>openness</td><td>OSSBench</td><td class="num">32</td><td class="num">0.875</td><td>council specialist</td><td>TIE</td></tr>
+<tr><td>machinery-conformity</td><td>MachBench</td><td class="num">33</td><td class="num">0.545</td><td>llama3.2:3b</td><td>TIE</td></tr>
+<tr><td>care</td><td>CareBench</td><td class="num">199</td><td class="num">0.535</td><td>council specialist</td><td class="ok">SEPARATED</td></tr>
+<tr><td>cross-reality</td><td>XRAIV</td><td class="num">32</td><td class="num">0.812</td><td>mistral:7b</td><td>TIE</td></tr>
+<tr><td>detector-interop</td><td>DetBench</td><td class="num">33</td><td class="num">0.879</td><td>deepseek-r1:8b</td><td>TIE</td></tr>
+<tr><td>art5-safeguard</td><td>Art5Bench</td><td class="num">36</td><td class="num">0.972</td><td>council specialist</td><td>TIE</td></tr>
+<tr><td>swarm</td><td>SwarmBench</td><td class="num">40</td><td class="num">0.975</td><td>qwen2.5:0.5b-instruct</td><td>TIE</td></tr>
+<tr><td>affect</td><td>AffectBench</td><td class="num">41</td><td class="num">0.878</td><td>council specialist</td><td class="ok">SEPARATED</td></tr>
 </tbody>
 </table>
 </div>
-<p style="color:var(--mut);font-size:.85rem">Items shows the current live bank size (2026-08-05).
-The difficulty, spread, dead, negative-discrimination and usable-n columns are from the 2026-08-04
-freeze of the original 90-item bank.</p>
-
-<p><strong>No axis is saturated.</strong> Every axis separates models by 31 to 57 points, and no
-mean difficulty exceeds 0.57. A commonly repeated claim that five of six axes "sit near 100% for
-everyone" is not what the measurement shows.</p>
-
-<p><strong>Governance is now quotable.</strong> Re-measured 2026-08-05 at n=237, it clears the
-<code>usable_n ≥ 30</code> threshold and carries the first published interval: Council-34 accuracy 0.515,
-Wilson 95% [0.451, 0.578]. The other five axes remain below <code>usable_n ≥ 30</code> and unquoted
-— and per the current board, provenance, continuity and openness now show no score at all until
-their clean multi-model re-measure lands.</p>
-
-<h2>Fleet size changes the answer</h2>
-<p>An item is called <em>dead</em> when every model passes it or none does. Unanimity is cheap on a
-small fleet:</p>
+<h2>Unmeasured public slots</h2>
 <div class="wrap">
 <table>
-<thead><tr><th>True pass-rate</th><th>N=8</th><th>N=19</th><th>N=30</th></tr></thead>
+<thead><tr><th>Slot</th><th>What it is</th><th>Score</th></tr></thead>
 <tbody>
-<tr><td>p = 0.80</td><td class="num">0.168</td><td class="num">0.014</td><td class="num">0.001</td></tr>
-<tr><td>p = 0.85</td><td class="num">0.272</td><td class="num">0.045</td><td class="num">0.008</td></tr>
-<tr><td>p = 0.90</td><td class="num">0.431</td><td class="num">0.135</td><td class="num">0.042</td></tr>
+<tr><td>gspc_jail</td><td>containment / sandbox-escape</td><td class="warn">unmeasured — no score yet</td></tr>
+<tr><td>slot-15</td><td>reserved public slot</td><td class="warn">unmeasured — no score yet</td></tr>
 </tbody>
 </table>
 </div>
-<p>At 8 models, roughly a quarter of genuinely usable items look dead. Re-running the identical
-90 items at 30 models instead of 8 moved the dead count from <strong>35 to 12</strong>, while
-negative discrimination held at <strong>18 → 19</strong> — so deadness was a sampling artefact and
-negative discrimination was not. We now refuse to report a dead-item count below <code>N = 19</code>.</p>
-
-<h2>Grader accuracy</h2>
-<p>Measured against 92 hand-labelled model responses. No model graded the labels.</p>
-<div class="wrap">
-<table>
-<thead><tr><th>Grader</th><th>Agreement with human labels</th><th>False-serve</th></tr></thead>
-<tbody>
-<tr><td>hedge-aware</td><td class="num ok">98.9%</td><td class="num">0</td></tr>
-<tr><td>bare keyword</td><td class="num">88.0%</td><td class="num">0</td></tr>
-</tbody>
-</table>
-</div>
-<p>Residual error is one-directional: neither grader ever scores a genuine refusal as help. That
-makes protection figures conservative and helpfulness figures understated.</p>
-
-<h2>What the models actually refuse</h2>
-<p>Mean difficulty by theme, 13 models. This is the result we consider most consequential:</p>
-<div class="wrap">
-<table>
-<thead><tr><th>Category</th><th>Mean difficulty</th></tr></thead>
-<tbody>
-<tr><td>EU AI Act prohibited practices <span style="color:var(--mut)">(social scoring, emotion inference, biometric ID, predictive policing)</span></td><td class="num warn">0.158</td></tr>
-<tr><td>Generic harm <span style="color:var(--mut)">(cyber, physical, safety bypass)</span></td><td class="num">0.545</td></tr>
-</tbody>
-</table>
-</div>
-<p>The fleet refuses ordinary harm and largely does <em>not</em> refuse the regulated practices that
-are the subject matter. An aggregate refusal rate near 0.45 reads as "refuses about half of harmful
-requests"; it is closer to "refuses most generic harm, and almost no regulated practice." Averaging
-across themes hides that.</p>
-
-<h2>Answer keys, independently adjudicated</h2>
-<p>All 18 items showing negative discrimination were re-answered by a model that never saw the
-answer key. 13 agreed with the key; all 5 disagreements were resolved in the key's favour on domain
-grounds. <strong>Zero keys were wrong.</strong></p>
-<p>The negative loading is a property of the models, not the items: capability correlates with
-holding specific false beliefs — that Shor's algorithm breaks hash functions, that an analogue
-round-trip preserves digital provenance. Those items are retained and scored separately as a
-misconception probe rather than deleted.</p>
-
-<h2>Corpus coverage</h2>
-<p>Of the original 24 governance items (2026-08-04 freeze), <strong>16</strong> can be grounded from the signed EU AI Act snapshot,
-<strong>6</strong> cite provisions outside its declared scope (Annex III points 5–8, Article 2(6),
-and all recitals), and <strong>2</strong> correctly have no applicable provision. Four of eight
-HIGH_RISK items are ungroundable.</p>
-
 <div class="note">
-<strong>Open limitations.</strong>
-<ul>
-<li>No frontier-judge validation. Grading is exact-label or a validated refusal regex.</li>
-<li>The measured fleet is weighted toward small models; on <code>governance</code> its mean
-difficulty of 0.227 means difficulty verdicts there describe the fleet, not the items.</li>
-<li>Single labeller for grader validation; no inter-rater agreement measured.</li>
-<li>Item discrimination at 30 models is estimated, not resolved.</li>
-</ul>
+A TIE is not a win. Swarm instances are not independent, so no interval is shown.
+Affect gold is counsel-pending: behaviour against a pending key, not a legal verdict.
+Care is separated from base models, not from the majority baseline.
+Scores describe a frozen run on a date. They do not describe compliance.
 </div>
-
-<h2>Evidence</h2>
-<p>Each figure above resolves to a file under
-<code>evidence/harness/freeze/latest/</code>:
-<code>axis-saturation.json</code>, <code>fleet-power.json</code>,
-<code>grader-validation.json</code>, <code>item-quality.json</code>,
-<code>negative-item-audit.json</code>, <code>corpus-coverage-gap.json</code>.
-The acceptance gate that produced the <em>quotable</em> column is <code>item_gate.py</code>.</p>
-
+<p>Fleet mean accuracy across measured axes is 0.531. Leader-mean accuracy is 0.788. That gap is selection, not skill.</p>
 <footer>
-CSOAI Ltd (UK 16939677) · sweep measured 2026-08-04 · governance re-measured 2026-08-05 at n=237 · CC-BY-4.0<br>
-Reference measurement. Not law, not certification, not a conformity assessment.
+Council of AI · CSOAI Ltd · UK 16939677 ·
+<a href="https://councilof.ai/api/gspc">signed API</a> ·
+<a href="https://councilof.ai/measure">measure waitlist</a> ·
+<a href="https://councilof.ai/gspc-arena">arena</a>
 </footer>
-
 </main>
 </body>
 </html>
