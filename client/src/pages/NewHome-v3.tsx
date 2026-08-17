@@ -105,9 +105,9 @@ function ProblemStrip() {
 const USPS = [
   { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
-  { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail plus one reserved slot stay unmeasured — no score yet.", href: "/gspc-scoreboard" },
+  { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail: 13 Aug floor in separate stamp, empty on 12 Aug. Slot-15: reserved.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
-  { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/city" },
+  { icon: Landmark, title: "Verify any card", body: "Free and loginless. The verify path runs in your browser — no account, no fee. Check any signed card.", href: "/gspc-verify" },
   { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/method" },
   { icon: Ban, title: "No money from what we rank", body: "We do not sell ratings and we do not take a cut from anything on the board.", href: "/method" },
   { icon: Shield, title: "Measurement credential", body: "Not a certification. Not a notified body. We measure, sign, and keep the evidence.", href: "/gspc-verify" },
@@ -136,7 +136,7 @@ function UspGrid() {
 
 function AxesGrid() {
   return (
-    <Section title="The 15 measurement slots" subtitle="13 measured on the live GSPC API. 2 slots unmeasured — no score yet. Every measured axis carries a frozen benchmark at usable n≥30 where possible. Empty cells stay empty." bg="bg-white">
+    <Section title="The 15 measurement slots" subtitle="13 measured on the live GSPC API. Jail: measured 13 Aug floor (not a ranking), empty on 12 Aug stamp. Slot-15: reserved, no name. Every measured axis carries a frozen benchmark at usable n≥30 where possible." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {AXES.map(a => {
           const q = quotable(a);
@@ -163,25 +163,25 @@ function AxesGrid() {
           );
         })}
         {[
-          { axis: "gspc_jail", bench: "Jail", task: "containment / sandbox-escape gate — signed board row is all dashes" },
-          { axis: "slot-15", bench: "Slot 15", task: "reserved — harness has not emitted a 15th axis" },
+          { axis: "gspc_jail", bench: "Jail", task: "containment / sandbox-escape gate", note: "13 Aug floor in separate stamp (not a ranking); empty on 12 Aug stamp" },
+          { axis: "slot-15", bench: "Slot 15", task: "reserved — harness has not emitted a 15th axis", note: "reserved, no name assigned" },
         ].map(e => (
           <div key={e.axis} className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 p-5">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-bold text-gray-800">{e.bench}</span>
               <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
-                UNMEASURED
+                EMPTY
               </span>
             </div>
             <h3 className="text-base font-extrabold text-gray-900">{e.axis}</h3>
             <p className="mt-1 text-xs text-gray-400 line-clamp-2">{e.task}</p>
-            <div className="mt-3 text-xs text-gray-400 italic">unmeasured — no score yet</div>
+            <div className="mt-3 text-xs text-gray-400 italic">{e.note}</div>
           </div>
         ))}
       </div>
       <div className="mt-8 text-center">
         <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 22 models, every cell signed
+          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 19 models, frozen 12 August 2026, every cell signed
         </a>
       </div>
     </Section>

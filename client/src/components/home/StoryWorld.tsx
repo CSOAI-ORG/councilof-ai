@@ -40,7 +40,7 @@ export const STORY: Slide[] = [
   {
     kicker: "04  Honest grid",
     title: "15 slots. 13 measured. 2 empty.",
-    body: "Empty cells stay empty. No invented scores. Jail and slot 15 remain unmeasured — no score yet. The live board is 13 axes × 22 models, every measured cell signed.",
+    body: "Empty cells stay empty. No invented scores. Jail: measured 13 Aug floor in separate stamp (not a ranking), empty on 12 Aug. Slot-15: reserved. The live board is 13 measured axes × 19 models, frozen 12 August 2026, every measured cell signed.",
     href: "/gspc-scoreboard",
     cta: "Open the board",
     tone: "board",
@@ -63,18 +63,18 @@ export const STORY: Slide[] = [
   },
   {
     kicker: "07  The board",
-    title: "13 × 22. Every cell signed.",
+    title: "13 × 19. Every cell signed.",
     body: "Leaders that have earned a quote stay quoted: Art5 0.972, Swarm 0.975, Governance 0.700. Everything else is a cell, a hash, or an honest dash. Nobody edits yesterday.",
     href: "/gspc-scoreboard",
     cta: "Read the scoreboard",
     tone: "board",
   },
   {
-    kicker: "08  Council City",
-    title: "The living layer.",
-    body: "Cities, towns, sims, clans. Signed events feed the visual mind. The public face is Council City — a place you can walk, not a marketing page.",
-    href: "/city",
-    cta: "Enter the city",
+    kicker: "08  The living layer",
+    title: "Re-attest, append, trace.",
+    body: "AI changes. Law changes. We measure again and issue a delta card chained to the old one. History is append-only. Every signed event feeds the visual mind. Frozen is anchored. Fluid is drift.",
+    href: "/gspc-verify",
+    cta: "How we verify",
     tone: "light",
   },
   {

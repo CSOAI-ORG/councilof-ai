@@ -132,11 +132,9 @@ export default function ModelRegistry() {
             {issuer && <span className="text-slate-600">issuer {issuer}</span>}
             <a
               className="rounded border border-white/10 px-2.5 py-1 text-emerald-400 hover:bg-white/5"
-              href="https://csoai-site.pages.dev/gspc-scoreboard"
-              target="_blank"
-              rel="noreferrer"
+              href="/gspc-scoreboard"
             >
-              Full scoreboard (22 models) ↗
+              Full scoreboard (19 models) ↗
             </a>
           </div>
           {limitations.length > 0 && (
@@ -224,8 +222,8 @@ export default function ModelRegistry() {
 
         {/* Scoreboard link footnote */}
         <div className="mt-8 border-t border-white/8 pt-4 text-center text-[11px] text-slate-600">
-          This page shows per-axis leaders. The full 13×22 scoreboard with all models and signed cells is at{" "}
-          <a className="text-emerald-400 hover:underline" href="https://csoai-site.pages.dev/gspc-scoreboard" target="_blank" rel="noreferrer">
+          This page shows per-axis leaders. The full 13×19 scoreboard (frozen 12 August 2026) with all models and signed cells is at{" "}
+          <a className="text-emerald-400 hover:underline" href="/gspc-scoreboard">
             GSPC Scoreboard ↗
           </a>
           . Measurement, not certification. Every cell recomputable.
