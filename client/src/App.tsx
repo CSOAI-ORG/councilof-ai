@@ -155,6 +155,7 @@ const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
 const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
+const GSPCArena = lazy(() => import("./pages/GSPCArena"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
@@ -606,8 +607,8 @@ function App() {
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
-                  {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}
-                  <Route path="/gspc-arena" component={SovSpace} />
+                  {/* /gspc-arena is the Council Space spectator — AI-vs-AI watch surface, measured cells. */}
+                  <Route path="/gspc-arena" component={GSPCArena} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
