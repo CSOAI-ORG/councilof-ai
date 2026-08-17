@@ -88,9 +88,9 @@ export const STORY: Slide[] = [
   {
     kicker: "10  Get Measured",
     title: "Book a measurement.",
-    body: "Not a remediation. Not a badge. We run your system on the frozen instruments and issue a signed card. Your first measurement is free. Re-attest as your AI or the law changes.",
+    body: "Not a remediation. Not a badge. We run your system on the frozen instruments and issue a signed card. Re-attest as your AI or the law changes. Verify stays free.",
     href: "/assess",
-    cta: "Get measured — free",
+    cta: "Get measured",
     tone: "light",
   },
 ];
