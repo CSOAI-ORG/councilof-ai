@@ -7,7 +7,7 @@ import { CANON } from "../data/canonCounters";
 const SIGNALS: { icon: string; label: string; sub: string; href?: string }[] = [
   { icon: "✶", label: "Ed25519 · Layer 0", sub: "Every decision cryptographically signed", href: "/workbench" },
   { icon: "⚖", label: "Multi-provider measurement", sub: "19 models measured, frozen 12 August 2026, no single vendor grades itself", href: "/benchmarks" },
-  { icon: "◫", label: "Aligned to 13 frameworks", sub: "EU AI Act · NIST · ISO 42001 · DORA · NIS2", href: "/crosswalk" },
+  { icon: "◫", label: "Measures against 13 instruments", sub: "EU AI Act · NIST · DORA · NIS2 + 9 more", href: "/crosswalk" },
   { icon: "◍", label: "Open source · MIT", sub: `${CANON.MCP_SERVERS.value} governed MCP servers, inspectable`, href: "/tool-commons" },
   { icon: "🛡", label: "Coordinated disclosure", sub: "Published security.txt + CVD policy", href: "/vulnerability-disclosure" },
   { icon: "🏛", label: "CSOAI Ltd · UK", sub: "Companies House 16939677", href: "/about" },
@@ -49,10 +49,10 @@ export default function EnterpriseTrust() {
         </div>
         <p className="mt-5 text-center text-sm font-semibold text-emerald-100/90">Governance shouldn't cost more than the AI it governs. Open-source core · free to start · own your data · <span className="text-emerald-300">no per-seat rent.</span></p>
         <div className="mt-4 flex flex-wrap justify-center gap-2">
-          <a href="/assess" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Get your free signed assessment →</a>
-          <a href="/pricing" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">See pricing →</a>
+          <a href="/gspc-verify" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Verify a measurement →</a>
+          <a href="/benchmarks" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">See benchmarks →</a>
         </div>
-        <p className="mt-2 text-center text-[11px] text-emerald-100/60">Honest by design: we show what's true and verifiable, not badges we don't hold. Formal certifications (e.g. SOC 2, ISO 42001) are pursued as the platform matures.</p>
+        <p className="mt-2 text-center text-[11px] text-emerald-100/60">Honest by design: we measure, we do not certify. We do not hold SOC 2 or ISO 42001.</p>
       </div>
     </section>
   );
