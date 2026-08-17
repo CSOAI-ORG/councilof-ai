@@ -136,7 +136,7 @@ function UspGrid() {
 
 function AxesGrid() {
   return (
-    <Section title="The 15 measurement slots" subtitle="13 measured on the live GSPC API. 2 slots unmeasured — no score yet. Every measured axis carries a frozen benchmark at usable n≥30 where possible. Empty cells stay empty." bg="bg-white">
+    <Section title="The 15 measurement slots" subtitle="13 measured on the live GSPC API. 2 public slots with no score on this stamp. 12 Aug 2026 stamp is unsigned." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {AXES.map(a => {
           const q = quotable(a);
@@ -181,7 +181,7 @@ function AxesGrid() {
       </div>
       <div className="mt-8 text-center">
         <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 22 models, every cell signed
+          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 15 public slots, 13 measured × 19 models, 12 Aug 2026 UNSIGNED
         </a>
       </div>
     </Section>
