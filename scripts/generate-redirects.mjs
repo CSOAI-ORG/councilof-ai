@@ -54,9 +54,11 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
 // Preserve hand-written rules that already exist — they are consolidation redirects and
 // clobbering them would break live inbound links.
 const EXISTING = [
-  "/gspc-arena     /sov-space?view=arena   308",
-  "/sovereign-town /sov-space?view=towns   308",
-  "/towns          /sov-space?view=towns   308",
+  // 17 Aug 2026: /gspc-arena → council-space (was sov-space — renamed; the stale
+  // /sov-space target combined with App.tsx's /council-space redirect caused a 308 loop).
+  "/gspc-arena     /council-space?view=arena   308",
+  "/sovereign-town /council-space?view=towns   308",
+  "/towns          /council-space?view=towns   308",
   "/globe          /globe3d.html           308",
 ];
 
