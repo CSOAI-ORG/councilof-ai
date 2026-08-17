@@ -99,7 +99,7 @@ export function Footer() {
               <Shield className="h-8 w-8" />
               <div>
                 <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
-                <p className="text-emerald-100 text-sm">Measured 12–14 Aug 2026 across 19 models on 13 measured of 15 GSPC slots: EU AI Act Art 5 safeguards best 0.972 (n=36, Wilson 95% [0.858, 0.995]); swarm 0.975; governance 0.700 (n=237). Harness published — recompute it.</p>
+                <p className="text-emerald-100 text-sm">Measured 12 Aug 2026 across 19 models on 13 measured of 15 GSPC slots: EU AI Act Art 5 safeguards best 0.972 (n=36, Wilson 95% [0.858, 0.995]); swarm 0.975; governance 0.700 (n=237). Harness published — recompute it.</p>
               </div>
             </div>
             <Link href="/benchmarks">

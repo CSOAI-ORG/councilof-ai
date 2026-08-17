@@ -122,7 +122,7 @@ const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CA
 function ssGlobeCode(text: string): string { const r = sovActions(text).find((a) => a.kind === "region"); return r && r.kind === "region" ? (SS_GLOBE_CODE[r.region] || "") : ""; }
 
 // Sovereign Space - the CSOAI AI-OS simulation. Feed data + text, watch the
-// 33-agent council deliberate, and the Council assistant narrates + speaks every step.
+// multi-agent council deliberate, and the Council assistant narrates + speaks every step.
 // When VITE_SOV_GATEWAY is set it runs LIVE against the MEOK 59-MCP substrate
 // (council + audit + sigil); otherwise it runs the local simulation. The same
 // flow pixel-streams from Unreal Engine 5 in the full OS.
@@ -197,7 +197,7 @@ async function ssGovern(ind: string): Promise<any | null> {
 }
 async function ssVerdict(scenario: string): Promise<string> {
   try {
-    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI 33-agent governance council. In 3 sentences, deliver a verdict on this AI system: is it permitted, and under what key conditions (risk tier, human oversight, transparency, data duties)? System: " + scenario }) });
+    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI multi-agent governance council. In 3 sentences, deliver a verdict on this AI system: is it permitted, and under what key conditions (risk tier, human oversight, transparency, data duties)? System: " + scenario }) });
     if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) return String(d.response); }
   } catch (e) {}
   return "";
@@ -262,7 +262,7 @@ function buildRun(scenario: string): Step[] {
   return [
     { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
     { t: "Classifying the system - risk tier and applicable regimes detected (EU AI Act, NIST AI RMF, ISO 42001).", phase: 1 },
-    { t: "Convening the council - 33 council agents, designed multi-agent review. Quorum forming...", phase: 2 },
+    { t: "Convening the council - council agents, designed multi-agent review. Quorum forming...", phase: 2 },
     { t: "Agents deliberating - mapping controls, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
     { t: "Crosswalking once -> EU AI Act, NIST, ISO 42001 and TC260 satisfied from one evidence set.", phase: 3 },
     { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
@@ -480,7 +480,7 @@ export default function CouncilSpace() {
     return () => window.removeEventListener("message", onMessage);
   }, []);
   // The Sovereign flies the embedded globe to the scenario's jurisdiction (auto-pulses),
-  // convenes the 33-agent council spiral there, and neutralizes any rogue-swarm threat.
+  // convenes the multi-agent council spiral there, and neutralizes any rogue-swarm threat.
   function flyToScenario(text: string) {
     const code = ssGlobeCode(text);
     const prof = (code && REGIONS[code]) ? REGIONS[code] : REGIONS.GLOBAL;
@@ -495,7 +495,7 @@ export default function CouncilSpace() {
   const timers = useRef<any[]>([]);
 
   useEffect(() => {
-    document.title = "Council Space - simulate, experiment, govern | CSOAI";
+    document.title = "Council Space | CSOAI";
     // Handoff from the Council Globe: /simulate?q=… pre-loads the scenario so one
     // Sovereign flows from "ask on the globe" straight into "run the full simulation".
     try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}
@@ -581,7 +581,7 @@ export default function CouncilSpace() {
         };
         setCSpaceEvents((prev) => [cEvent, ...prev].slice(0, 50));
         // The same verdict is a card on the AI card bus — every AI call visible.
-        const vCard = emitCard({ kind: "council-verdict", summary: cEvent.claim, detail: "33-agent council deliberation on: " + scenario.slice(0, 140), axis: "governance", source: verdict ? "live" : "local-sim" });
+        const vCard = emitCard({ kind: "council-verdict", summary: cEvent.claim, detail: "multi-agent council deliberation on: " + scenario.slice(0, 140), axis: "governance", source: verdict ? "live" : "local-sim" });
         // Persist to the sov-time ledger — the VWM spacetime canvas. The
         // ledger is append-only with a 16-byte event_id hash; the timestamp
         // is the canonical position on the log-scale timeline.
@@ -649,7 +649,7 @@ export default function CouncilSpace() {
       { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
       { t: "Classifying the system - jurisdiction: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
       { t: "Applicable regimes detected: " + fwList + ".", phase: 1 },
-      { t: "Convening the council - 33 council agents, designed multi-agent review. Quorum forming...", phase: 2 },
+      { t: "Convening the council - council agents, designed multi-agent review. Quorum forming...", phase: 2 },
       { t: "Agents deliberating - risk tier, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
       { t: "Crosswalking once -> " + fwList + " satisfied from one evidence set." + (bridges.length ? " Legacy bridge: " + bridges.join(", ") + "." : ""), phase: 3 },
       { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
@@ -715,8 +715,8 @@ export default function CouncilSpace() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 30% -10%, rgba(16,185,129,.18), transparent 60%)" }} />
         <div className="relative"><CouncilNav /><ViewSwitcher view={view} /></div>
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Council Space</p>
-        <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Simulate. Experiment. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Govern.</span></h1>
-        <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the 33-agent council deliberate live while your Council assistant narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
+        <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Measure. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Record.</span></h1>
+        <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the multi-agent council deliberate live while your Council assistant narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
         <div className="relative mt-4 max-w-2xl"><AISystemNotice route="/simulate" /></div>
         <div className="relative mt-4 inline-flex max-w-2xl flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-emerald-500/20 bg-black/25 px-3 py-2 text-sm">
           <span className="font-semibold text-emerald-200">{loc.greeting}</span>
@@ -914,7 +914,7 @@ export default function CouncilSpace() {
       </section>
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="grid gap-4 sm:grid-cols-3">
-          <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Ask the live Council</div><p className="mt-1 text-sm text-emerald-100/70">Take a real question to the 33 agents and get a signed verdict.</p></a>
+          <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Ask the live Council</div><p className="mt-1 text-sm text-emerald-100/70">Take a real question to the the council and get a verdict.</p></a>
           <a href="/certification" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Training and Certification</div><p className="mt-1 text-sm text-emerald-100/70">Learn the framework and earn your verifiable Council credential.</p></a>
           <a href="/charter" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">The Council Charter</div><p className="mt-1 text-sm text-emerald-100/70">The constitution the OS is governed by - read and align.</p></a>
         </div>
