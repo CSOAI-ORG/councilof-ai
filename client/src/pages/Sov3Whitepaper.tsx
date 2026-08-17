@@ -67,7 +67,7 @@ export default function Sov3Whitepaper() {
         <Section n="04" title="Why growth stays safe">
           <p>
             Six invariants never change as the substrate grows: the care-floor, Article 0 (no equity, board seats,
-            revenue-share or success fees from certified institutions), the 12 governance pillars, BFT-33 quorum,
+            revenue-share or success fees from certified institutions), the 12 governance pillars, Byzantine fault-tolerant council,
             SIGIL attestation, and sovereign-binding. Growth that would violate an invariant is rejected outright —
             this is what separates accretive growth from unconstrained drift.
           </p>

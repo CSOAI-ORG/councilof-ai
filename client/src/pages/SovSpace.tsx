@@ -260,7 +260,7 @@ function buildRun(scenario: string): Step[] {
   const s = (scenario || "").trim() || SAMPLE;
   const head = s.slice(0, 88) + (s.length > 88 ? "..." : "");
   return [
-    { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
+    { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
     { t: "Classifying the system - risk tier and applicable regimes detected (EU AI Act, NIST AI RMF, ISO 42001).", phase: 1 },
     { t: "Convening the council - 33 sovereign agents, designed multi-agent review. Quorum forming...", phase: 2 },
     { t: "Agents deliberating - mapping controls, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
@@ -646,7 +646,7 @@ export default function SovSpace() {
     const head = s.slice(0, 88) + (s.length > 88 ? "..." : "");
     const fwList = fwNames.length ? fwNames.join(", ") : "EU AI Act, NIST AI RMF, ISO 42001";
     return [
-      { t: "Ingesting your scenario into Sov Space: \"" + head + "\"", phase: 1 },
+      { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
       { t: "Classifying the system - jurisdiction: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
       { t: "Applicable regimes detected: " + fwList + ".", phase: 1 },
       { t: "Convening the council - 33 sovereign agents, designed multi-agent review. Quorum forming...", phase: 2 },
@@ -743,7 +743,7 @@ export default function SovSpace() {
       <section className="mx-auto grid max-w-6xl gap-5 px-6 pb-12 lg:grid-cols-[1.1fr_1fr]">
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
           <canvas ref={canvasRef} className="h-[420px] w-full block" />
-          <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "council complete - verdict below" : "sov space - idle"}</div>
+          <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "council complete - verdict below" : "council space - idle"}</div>
           <div
             className={"absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] " + (
               gwOnline === null ? "bg-slate-500/20 text-slate-200"
@@ -788,7 +788,7 @@ export default function SovSpace() {
         <div className="overflow-hidden rounded-2xl border border-sky-500/25 bg-[#05140d]">
           <div className="flex items-center justify-between border-b border-sky-500/15 px-4 py-2">
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">SovSpace · 5D layered view</div>
+              <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">Council Space · 5D layered view</div>
               <div className="text-sm font-bold text-sky-100">Hive → C-space → J-space → flywheels → live data — the estate as a galaxy</div>
             </div>
             <div className="text-right font-mono text-[10px] text-sky-300/60">
@@ -919,7 +919,7 @@ export default function SovSpace() {
           <a href="/charter" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">The Sovereign Charter</div><p className="mt-1 text-sm text-emerald-100/70">The constitution the OS is governed by - read and align.</p></a>
         </div>
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/70">
-          <b className="text-emerald-200">Roadmap to Unreal Engine 5.</b> This Sov Space runs natively in your browser today. The full immersive OS renders in UE5 and reaches you by pixel-stream, with the same Sovereign voice loop and Layer 0 signing - you take control, it explains as it happens. Building in the open on GitHub; aligned across the M4 build line.
+          <b className="text-emerald-200">Roadmap to Unreal Engine 5.</b> This Council Space runs natively in your browser today. The full immersive OS renders in UE5 and reaches you by pixel-stream, with the same Sovereign voice loop and Layer 0 signing - you take control, it explains as it happens. Building in the open on GitHub; aligned across the M4 build line.
         </div>
       </section>
     </div>

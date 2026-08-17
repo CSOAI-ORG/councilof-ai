@@ -8,7 +8,7 @@ const COMPONENTS: { name: string; probe: "gateway" | "tools" | null }[] = [
   { name: "Sovereign gateway (os.meok.ai/api/health)", probe: "gateway" },
   { name: "Governed tool fleet (os.meok.ai/api/tools)", probe: "tools" },
   { name: "Byzantine Council (BFT consensus)", probe: null },
-  { name: "Compliance engine (30 frameworks)", probe: null },
+  { name: "Compliance engine (13 measurement axes)", probe: null },
   { name: "Layer 0 signing (Ed25519)", probe: null },
   { name: "Governance Graph (live world data)", probe: null },
   { name: "Sigil ledger + hash-chain", probe: null },

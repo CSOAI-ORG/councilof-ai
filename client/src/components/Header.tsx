@@ -310,9 +310,9 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* SOV OS — the dockable measurement workspace (globe, GSPC board, arena) */}
+            {/* Council OS — the dockable measurement workspace (globe, GSPC board, arena) */}
             <a
-              href="/sov-os"
+              href="/council-os"
               className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-emerald-300 border border-emerald-400/30 hover:bg-emerald-400/10 transition-all"
             >
               <span className="text-base leading-none">◧</span> Council OS
