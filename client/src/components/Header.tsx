@@ -22,17 +22,16 @@ import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 // Navigation structure with icons
 const navigation = [
   {
-    name: "Council OS",
+    name: "Council Space",
     href: "/gspc-arena",
     icon: Globe2,
-    description: "Your AI OS",
+    description: "The live contest",
     submenu: [
-      { name: "Council Space", href: "/gspc-arena", description: "Simulate and govern in real time" },
-      { name: "Governance Graph", href: "/graph", description: "The governed Google" },
-      { name: "Your Council assistant Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
-      { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
-      { name: "Start free", href: "/start", description: "Build your own AI" },
-      { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },
+      { name: "Council Space (Arena)", href: "/gspc-arena", description: "AI vs AI — night coverage on frozen provisions" },
+      { name: "Colosseum", href: "/os", description: "Human vs AI — CITIZEN, MAYOR, RED play modes" },
+      { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 measured axes × 19 models, every cell signed" },
+      { name: "Verify a Card", href: "/gspc-verify", description: "Free and loginless — check any signed card" },
+      { name: "Get Measured", href: "/assess", description: "Your first measurement card — free" },
       { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
@@ -74,14 +73,12 @@ const navigation = [
     name: 'Learn',
     href: '/courses',
     icon: GraduationCap,
-    description: 'Training & attestation',
+    description: 'Resources & verification',
     submenu: [
-      { name: 'Training Hub', href: '/training-hub', description: 'Gamified training on live regulations — free for everyone' },
+      { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
       { name: 'Drift Audit', href: '/drift-product', description: '£5–15k drift audit — live regulatory corpus change reports' },
-      { name: 'All Courses', href: '/courses', description: 'Browse our complete course catalog' },
-      { name: 'Attestation Overview', href: '/certification', description: 'Attestation paths and requirements' },
-      { name: 'Take Exam', href: '/certification/exam', description: 'Start your attestation exam' },
-      { name: 'Verify Record', href: '/verify-certificate', description: 'Verify any CSOAI attestation record' },
+      { name: 'Methodology', href: '/method', description: 'How we measure, what we publish' },
+      { name: 'Verify a Record', href: '/gspc-verify', description: 'Free and loginless — check any signed card' },
     ]
   },
   {
@@ -300,8 +297,8 @@ export function Header() {
             </div>
           </div>
 
-          {/* Right Side Actions — flex-nowrap + shrink-0 prevents vertical-letter collapse on 1280-1400px viewports */}
-          <div className="hidden xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
+          {/* Right Side Actions — clean, spaced CTAs for key surfaces */}
+          <div className="hidden xl:flex flex-nowrap items-center gap-3">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
@@ -311,44 +308,28 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* Council OS — the dockable measurement workspace */}
+            {/* Scoreboard — the 15-slot measured board */}
             <a
-              href="/os"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-emerald-300 border border-emerald-400/30 hover:bg-emerald-400/10 transition-all"
+              href="/gspc-scoreboard"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
             >
-              <span className="text-base leading-none">◧</span> Council OS
+              <BarChart3 className="h-4 w-4" /> Scoreboard
             </a>
 
-            {/* Model Registry — the 15-slot measured scoreboard */}
-            <a
-              href="/models"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
-            >
-              <span className="text-base leading-none">▦</span> Models
-            </a>
-
-            {/* Globe — 15 slots on a real sphere */}
+            {/* Council Space — the arena */}
             <a
               href="/gspc-arena"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
             >
-              <span className="text-base leading-none">◎</span> Globe
+              <span className="text-base leading-none">◎</span> Council Space
             </a>
 
-            {/* J-Space — the signed event world */}
+            {/* Verify — free and loginless */}
             <a
-              href="/j-space"
-              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
+              href="/gspc-verify"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
             >
-              <span className="text-base leading-none">◉</span> J-Space
-            </a>
-
-            {/* CSOAI OS launcher — yields its space below 2xl so the nav never wraps */}
-            <a
-              href="/os"
-              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
-            >
-              <span className="text-base leading-none">⊡</span> AI OS
+              <Eye className="h-4 w-4" /> Verify
             </a>
 
             {user ? (
@@ -477,10 +458,30 @@ export function Header() {
                 </div>
               ))}
 
+              {/* Key surfaces — always visible */}
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
-                <a href="/os" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊡ AI OS</Button>
+                <a href="/gspc-scoreboard" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full justify-start">
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    Scoreboard
+                  </Button>
                 </a>
+                <a href="/gspc-arena" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full justify-start">
+                    <span className="mr-2">◎</span>
+                    Council Space
+                  </Button>
+                </a>
+                <a href="/gspc-verify" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full justify-start">
+                    <Eye className="h-4 w-4 mr-2" />
+                    Verify
+                  </Button>
+                </a>
+              </div>
+
+              {/* Auth section */}
+              <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
                 {user ? (
                   <>
                     <a href="/dashboard" className="block">
@@ -507,7 +508,7 @@ export function Header() {
                     </a>
                     <a href="/start" className="block">
                       <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => setMobileMenuOpen(false)}>
-                        Start free
+                        Get measured — free
                       </Button>
                     </a>
                   </>
