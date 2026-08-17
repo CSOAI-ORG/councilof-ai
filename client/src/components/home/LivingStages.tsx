@@ -74,10 +74,10 @@ export default function LivingStages() {
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-300">The board · signed cells</p>
-              <h2 className="mt-3 text-4xl font-black">{MEASURED} measured × 22 models</h2>
+              <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-300">The board · attested cells</p>
+              <h2 className="mt-3 text-4xl font-black">{MEASURED} measured × 19 models</h2>
               <p className="mt-3 max-w-lg text-emerald-100/70">
-                A filled cell is a signed measurement. A dash is honest emptiness. Two public slots stay unmeasured — no score yet.
+                A filled cell is an attested measurement (12 Aug stamp). A dash is honest emptiness. Two public slots stay unmeasured — no score yet.
               </p>
             </div>
             <a href="/gspc-scoreboard" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white hover:bg-emerald-400">

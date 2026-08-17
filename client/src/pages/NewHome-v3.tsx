@@ -181,7 +181,7 @@ function AxesGrid() {
       </div>
       <div className="mt-8 text-center">
         <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 22 models, every cell signed
+          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured axes × 19 models, attested 12 Aug
         </a>
       </div>
     </Section>
