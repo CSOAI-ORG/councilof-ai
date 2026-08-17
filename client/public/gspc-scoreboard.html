@@ -9,7 +9,7 @@
 <meta property="og:site_name" content="Council of AI">
 <meta property="og:title" content="Council Scoreboard — 13 axes × 19 models">
 <meta property="og:description" content="Every cell: n, accuracy, 95% CI. 19 models. Empty cells shown honestly. Measurement, not certification.">
-<meta property="og:url" content="https://csoai-site.pages.dev/gspc-scoreboard">
+<meta property="og:url" content="https://councilof.ai/gspc-scoreboard">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Council Scoreboard — 13 axes × 19 models">
 <meta name="twitter:description" content="n per cell, 95% CIs, quotable thresholds. Measurement, not certification.">
@@ -20,6 +20,7 @@ body { margin:0; font-family:-apple-system,Segoe UI,Roboto,sans-serif; backgroun
 .wrap { max-width:1200px; margin:0 auto; padding:2rem 1.2rem; }
 h1 { font-size:1.6rem; border-bottom:1px solid var(--line); padding-bottom:.6rem; }
 .disc { color:#9fb0c0; font-size:.9rem; line-height:1.5; max-width:80ch; }
+.stamp { color:#7f90a0; font-size:.8rem; margin-top:.5rem; }
 table { width:100%; border-collapse:collapse; margin-top:1.2rem; font-size:.8rem; }
 th,td { border:1px solid var(--line); padding:.35rem .4rem; text-align:left; vertical-align:top; }
 th { background:var(--card); font-weight:600; }
@@ -32,44 +33,130 @@ td.n .acc { font-weight:600; color:#ccffdd; }
 td.n .ci { color:#79889a; font-size:.68rem; }
 td.miss { color:#556; text-align:center; }
 .sig { color:#8cd; font-weight:600; }
+.tie { color:#a8b5c0; }
+.sep { color:#7fdfdf; font-weight:600; }
 .legend { margin-top:1rem; color:#8aa; font-size:.8rem; }
+.floor-note { margin-top:1rem; color:#9fb0c0; font-size:.82rem; border-left:3px solid var(--accent); padding-left:.8rem; }
 .foot { margin-top:1.6rem; color:#6a7a8a; font-size:.74rem; line-height:1.5; }
+.loading { color:#7f90a0; padding:2rem; text-align:center; }
+.error { color:#f87171; padding:2rem; text-align:center; }
+a { color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="wrap">
 <h1>Council Scoreboard — 13 axes × 19 models</h1>
-<p class="disc">Fused from measured board data. Each cell shows the model's
+<p class="disc">Live from the GSPC API. Each row shows the axis leader's
 accuracy and 95% confidence interval at its measured n. A cell shows a number
 <strong>only if quotable</strong> (usable n ≥ 30); a dash means not quotable.
 This is measurement, not certification. Deterministic gate — no model judged
 another. Every row is reproducible from the board records.</p>
-<table>
-<thead><tr><th>axis</th><th>best model</th><th>ethics-v3-light</th><th>logic-v3-light</th><th>agency-v3-light</th><th>identity-v3-light</th><th>preservation-v3-light</th><th>destruction-v3-light</th><th>creation-v3-light</th><th>relationality-v3-light</th><th>temporality-v3-light</th><th>synthesis-v3-light</th><th>embodiment-v3-light</th><th>aesthetics-v3-light</th><th>abstraction-v3-light</th><th>gemma3:12b</th><th>llama3.2:3b</th><th>qwen2.5:3b</th><th>qwen2.5:0.5b-instruct</th><th>mistral:7b</th><th>deepseek-r1:8b</th></tr></thead>
-<tbody><tr><th class="axis">agi<div class="hint">AGI-likelihood</div></th><td class="best">gemma3:12b</td><td class="n"><div class="acc">0.806</div><div class="ci">n=36 · 0.65–0.90</div></td><td class="n"><div class="acc">0.833</div><div class="ci">n=36 · 0.68–0.92</div></td><td class="n"><div class="acc">0.861</div><div class="ci">n=36 · 0.71–0.94</div></td><td class="n"><div class="acc">0.583</div><div class="ci">n=36 · 0.42–0.73</div></td><td class="n"><div class="acc">0.917</div><div class="ci">n=36 · 0.78–0.97</div></td><td class="n"><div class="acc">0.806</div><div class="ci">n=36 · 0.65–0.90</div></td><td class="n"><div class="acc">0.861</div><div class="ci">n=36 · 0.71–0.94</div></td><td class="n"><div class="acc">0.639</div><div class="ci">n=36 · 0.48–0.78</div></td><td class="n"><div class="acc">0.528</div><div class="ci">n=36 · 0.37–0.68</div></td><td class="n"><div class="acc">0.667</div><div class="ci">n=36 · 0.50–0.80</div></td><td class="n"><div class="acc">0.833</div><div class="ci">n=36 · 0.68–0.92</div></td><td class="n"><div class="acc">0.833</div><div class="ci">n=36 · 0.68–0.92</div></td><td class="n"><div class="acc">0.528</div><div class="ci">n=36 · 0.37–0.68</div></td><td class="n"><div class="acc">0.944</div><div class="ci">n=36 · 0.82–0.98</div></td><td class="n"><div class="acc">0.444</div><div class="ci">n=36 · 0.30–0.60</div></td><td class="n"><div class="acc">0.917</div><div class="ci">n=36 · 0.78–0.97</div></td><td class="n"><div class="acc">0.417</div><div class="ci">n=36 · 0.27–0.58</div></td><td class="n"><div class="acc">0.806</div><div class="ci">n=36 · 0.65–0.90</div></td><td class="n"><div class="acc">0.778</div><div class="ci">n=36 · 0.62–0.88</div></td></tr><tr><th class="axis">art5<div class="hint">EU AI Act Art 5 prohibited practices</div></th><td class="best">phi4:14b</td><td class="n"><div class="acc">0.917</div><div class="ci">n=36 · 0.78–0.97</div></td><td class="n"><div class="acc">0.833</div><div class="ci">n=36 · 0.68–0.92</div></td><td class="n"><div class="acc">0.944</div><div class="ci">n=36 · 0.82–0.98</div></td><td class="n"><div class="acc">0.750</div><div class="ci">n=36 · 0.59–0.86</div></td><td class="n"><div class="acc">0.944</div><div class="ci">n=36 · 0.82–0.98</div></td><td class="n"><div class="acc">0.806</div><div class="ci">n=36 · 0.65–0.90</div></td><td class="n"><div class="acc">0.917</div><div class="ci">n=36 · 0.78–0.97</div></td><td class="n"><div class="acc">0.972</div><div class="ci">n=36 · 0.86–1.00</div></td><td class="n"><div class="acc">0.583</div><div class="ci">n=36 · 0.42–0.73</div></td><td class="n"><div class="acc">0.778</div><div class="ci">n=36 · 0.62–0.88</div></td><td class="n"><div class="acc">0.889</div><div class="ci">n=36 · 0.75–0.96</div></td><td class="n"><div class="acc">0.889</div><div class="ci">n=36 · 0.75–0.96</div></td><td class="n"><div class="acc">0.556</div><div class="ci">n=36 · 0.40–0.70</div></td><td class="n"><div class="acc">0.972</div><div class="ci">n=36 · 0.86–1.00</div></td><td class="n"><div class="acc">0.861</div><div class="ci">n=36 · 0.71–0.94</div></td><td class="n"><div class="acc">0.556</div><div class="ci">n=36 · 0.40–0.70</div></td><td class="n"><div class="acc">0.750</div><div class="ci">n=36 · 0.59–0.86</div></td><td class="n"><div class="acc">0.944</div><div class="ci">n=36 · 0.82–0.98</div></td><td class="n"><div class="acc">0.917</div><div class="ci">n=36 · 0.78–0.97</div></td></tr><tr><th class="axis">asi<div class="hint">ASI-likelihood</div></th><td class="best">gemma3:12b</td><td class="n"><div class="acc">0.333</div><div class="ci">n=33 · 0.20–0.50</div></td><td class="n"><div class="acc">0.576</div><div class="ci">n=33 · 0.41–0.73</div></td><td class="n"><div class="acc">0.576</div><div class="ci">n=33 · 0.41–0.73</div></td><td class="n"><div class="acc">0.273</div><div class="ci">n=33 · 0.15–0.44</div></td><td class="n"><div class="acc">0.515</div><div class="ci">n=33 · 0.35–0.68</div></td><td class="n"><div class="acc">0.576</div><div class="ci">n=33 · 0.41–0.73</div></td><td class="n"><div class="acc">0.515</div><div class="ci">n=33 · 0.35–0.68</div></td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td><td class="n"><div class="acc">0.303</div><div class="ci">n=33 · 0.17–0.47</div></td><td class="n"><div class="acc">0.424</div><div class="ci">n=33 · 0.27–0.59</div></td><td class="n"><div class="acc">0.485</div><div class="ci">n=33 · 0.33–0.65</div></td><td class="n"><div class="acc">0.576</div><div class="ci">n=33 · 0.41–0.73</div></td><td class="n"><div class="acc">0.303</div><div class="ci">n=33 · 0.17–0.47</div></td><td class="n"><div class="acc">0.606</div><div class="ci">n=33 · 0.44–0.75</div></td><td class="n"><div class="acc">0.394</div><div class="ci">n=33 · 0.25–0.56</div></td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td><td class="n"><div class="acc">0.424</div><div class="ci">n=33 · 0.27–0.59</div></td><td class="n"><div class="acc">0.545</div><div class="ci">n=33 · 0.38–0.70</div></td></tr><tr><th class="axis">care<div class="hint">Maternal-care floor</div></th><td class="best">ethics-v3-light</td><td class="n"><div class="acc">0.535</div><div class="ci">n=200 · 0.47–0.60</div></td><td class="n"><div class="acc">0.105</div><div class="ci">n=200 · 0.07–0.16</div></td><td class="n"><div class="acc">0.350</div><div class="ci">n=200 · 0.29–0.42</div></td><td class="n"><div class="acc">0.390</div><div class="ci">n=200 · 0.33–0.46</div></td><td class="n"><div class="acc">0.290</div><div class="ci">n=200 · 0.23–0.36</div></td><td class="n"><div class="acc">0.350</div><div class="ci">n=200 · 0.29–0.42</div></td><td class="n"><div class="acc">0.240</div><div class="ci">n=200 · 0.19–0.30</div></td><td class="n"><div class="acc">0.120</div><div class="ci">n=200 · 0.08–0.17</div></td><td class="n"><div class="acc">0.430</div><div class="ci">n=200 · 0.36–0.50</div></td><td class="n"><div class="acc">0.160</div><div class="ci">n=200 · 0.12–0.22</div></td><td class="n"><div class="acc">0.305</div><div class="ci">n=200 · 0.25–0.37</div></td><td class="n"><div class="acc">0.290</div><div class="ci">n=200 · 0.23–0.36</div></td><td class="n"><div class="acc">0.435</div><div class="ci">n=200 · 0.37–0.50</div></td><td class="n"><div class="acc">0.245</div><div class="ci">n=200 · 0.19–0.31</div></td><td class="n"><div class="acc">0.035</div><div class="ci">n=200 · 0.02–0.07</div></td><td class="n"><div class="acc">0.370</div><div class="ci">n=200 · 0.31–0.44</div></td><td class="n"><div class="acc">0.405</div><div class="ci">n=200 · 0.34–0.47</div></td><td class="n"><div class="acc">0.250</div><div class="ci">n=200 · 0.20–0.31</div></td><td class="n"><div class="acc">0.255</div><div class="ci">n=200 · 0.20–0.32</div></td></tr><tr><th class="axis">det<div class="hint">detection</div></th><td class="best">deepseek-r1:8b</td><td class="n"><div class="acc">0.788</div><div class="ci">n=33 · 0.62–0.89</div></td><td class="n"><div class="acc">0.394</div><div class="ci">n=33 · 0.25–0.56</div></td><td class="n"><div class="acc">0.818</div><div class="ci">n=33 · 0.66–0.91</div></td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td><td class="n"><div class="acc">0.758</div><div class="ci">n=33 · 0.59–0.87</div></td><td class="n"><div class="acc">0.818</div><div class="ci">n=33 · 0.66–0.91</div></td><td class="n"><div class="acc">0.697</div><div class="ci">n=33 · 0.53–0.83</div></td><td class="n"><div class="acc">0.030</div><div class="ci">n=33 · 0.01–0.15</div></td><td class="n"><div class="acc">0.303</div><div class="ci">n=33 · 0.17–0.47</div></td><td class="n"><div class="acc">0.000</div><div class="ci">n=33 · 0.00–0.10</div></td><td class="n"><div class="acc">0.727</div><div class="ci">n=33 · 0.56–0.85</div></td><td class="n"><div class="acc">0.667</div><div class="ci">n=33 · 0.50–0.80</div></td><td class="n"><div class="acc">0.333</div><div class="ci">n=33 · 0.20–0.50</div></td><td class="n"><div class="acc">0.758</div><div class="ci">n=33 · 0.59–0.87</div></td><td class="n"><div class="acc">0.818</div><div class="ci">n=33 · 0.66–0.91</div></td><td class="n"><div class="acc">0.212</div><div class="ci">n=33 · 0.11–0.38</div></td><td class="n"><div class="acc">0.545</div><div class="ci">n=33 · 0.38–0.70</div></td><td class="n"><div class="acc">0.758</div><div class="ci">n=33 · 0.59–0.87</div></td><td class="n"><div class="acc">0.849</div><div class="ci">n=33 · 0.69–0.93</div></td></tr><tr><th class="axis">gov<div class="hint">governance</div></th><td class="best">phi4:14b</td><td class="n"><div class="acc">0.376</div><div class="ci">n=237 · 0.32–0.44</div></td><td class="n"><div class="acc">0.452</div><div class="ci">n=237 · 0.39–0.52</div></td><td class="n"><div class="acc">0.498</div><div class="ci">n=237 · 0.43–0.56</div></td><td class="n"><div class="acc">0.418</div><div class="ci">n=237 · 0.36–0.48</div></td><td class="n"><div class="acc">0.667</div><div class="ci">n=237 · 0.60–0.72</div></td><td class="n"><div class="acc">0.485</div><div class="ci">n=237 · 0.42–0.55</div></td><td class="n"><div class="acc">0.671</div><div class="ci">n=237 · 0.61–0.73</div></td><td class="n"><div class="acc">0.392</div><div class="ci">n=227 · 0.33–0.46</div></td><td class="n"><div class="acc">0.401</div><div class="ci">n=237 · 0.34–0.46</div></td><td class="n"><div class="acc">0.397</div><div class="ci">n=227 · 0.34–0.46</div></td><td class="n"><div class="acc">0.700</div><div class="ci">n=237 · 0.64–0.76</div></td><td class="n"><div class="acc">0.700</div><div class="ci">n=237 · 0.64–0.76</div></td><td class="n"><div class="acc">0.426</div><div class="ci">n=237 · 0.36–0.49</div></td><td class="n"><div class="acc">0.473</div><div class="ci">n=237 · 0.41–0.54</div></td><td class="n"><div class="acc">0.461</div><div class="ci">n=228 · 0.40–0.53</div></td><td class="n"><div class="acc">0.435</div><div class="ci">n=237 · 0.37–0.50</div></td><td class="n"><div class="acc">0.279</div><div class="ci">n=237 · 0.23–0.34</div></td><td class="n"><div class="acc">0.587</div><div class="ci">n=237 · 0.52–0.65</div></td><td class="n"><div class="acc">0.553</div><div class="ci">n=237 · 0.49–0.61</div></td></tr><tr><th class="axis">gspc_jail<div class="hint">measured floor — empty on this stamp</div></th><td class="best">None</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td><td class="miss">—</td></tr><tr><th class="axis">mach<div class="hint">machinery</div></th><td class="best">llama3.2:3b</td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td><td class="n"><div class="acc">0.394</div><div class="ci">n=33 · 0.25–0.56</div></td><td class="n"><div class="acc">0.424</div><div class="ci">n=33 · 0.27–0.59</div></td><td class="n"><div class="acc">0.273</div><div class="ci">n=33 · 0.15–0.44</div></td><td class="n"><div class="acc">0.394</div><div class="ci">n=33 · 0.25–0.56</div></td><td class="n"><div class="acc">0.242</div><div class="ci">n=33 · 0.13–0.41</div></td><td class="n"><div class="acc">0.333</div><div class="ci">n=33 · 0.20–0.50</div></td><td class="n"><div class="acc">0.333</div><div class="ci">n=33 · 0.20–0.50</div></td><td class="n"><div class="acc">0.121</div><div class="ci">n=33 · 0.05–0.27</div></td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td><td class="n"><div class="acc">0.273</div><div class="ci">n=33 · 0.15–0.44</div></td><td class="n"><div class="acc">0.273</div><div class="ci">n=33 · 0.15–0.44</div></td><td class="n"><div class="acc">0.333</div><div class="ci">n=33 · 0.20–0.50</div></td><td class="n"><div class="acc">0.545</div><div class="ci">n=33 · 0.38–0.70</div></td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td><td class="n"><div class="acc">0.455</div><div class="ci">n=33 · 0.30–0.62</div></td><td class="n"><div class="acc">0.424</div><div class="ci">n=33 · 0.27–0.59</div></td><td class="n"><div class="acc">0.364</div><div class="ci">n=33 · 0.22–0.53</div></td></tr><tr><th class="axis">mcp<div class="hint">MCP conformance</div></th><td class="best">preservation-v3-light</td><td class="n"><div class="acc">0.257</div><div class="ci">n=35 · 0.14–0.42</div></td><td class="n"><div class="acc">0.257</div><div class="ci">n=35 · 0.14–0.42</div></td><td class="n"><div class="acc">0.543</div><div class="ci">n=35 · 0.38–0.70</div></td><td class="n"><div class="acc">0.486</div><div class="ci">n=35 · 0.33–0.64</div></td><td class="n"><div class="acc">0.743</div><div class="ci">n=35 · 0.58–0.86</div></td><td class="n"><div class="acc">0.600</div><div class="ci">n=35 · 0.44–0.74</div></td><td class="n"><div class="acc">0.686</div><div class="ci">n=35 · 0.52–0.81</div></td><td class="n"><div class="acc">0.629</div><div class="ci">n=35 · 0.46–0.77</div></td><td class="n"><div class="acc">0.486</div><div class="ci">n=35 · 0.33–0.64</div></td><td class="n"><div class="acc">0.486</div><div class="ci">n=35 · 0.33–0.64</div></td><td class="n"><div class="acc">0.686</div><div class="ci">n=35 · 0.52–0.81</div></td><td class="n"><div class="acc">0.629</div><div class="ci">n=35 · 0.46–0.77</div></td><td class="n"><div class="acc">0.486</div><div class="ci">n=35 · 0.33–0.64</div></td><td class="n"><div class="acc">0.629</div><div class="ci">n=35 · 0.46–0.77</div></td><td class="n"><div class="acc">0.657</div><div class="ci">n=35 · 0.49–0.79</div></td><td class="n"><div class="acc">0.486</div><div class="ci">n=35 · 0.33–0.64</div></td><td class="n"><div class="acc">0.486</div><div class="ci">n=35 · 0.33–0.64</div></td><td class="n"><div class="acc">0.714</div><div class="ci">n=35 · 0.55–0.84</div></td><td class="n"><div class="acc">0.257</div><div class="ci">n=35 · 0.14–0.42</div></td></tr><tr><th class="axis">oss<div class="hint">open-source</div></th><td class="best">preservation-v3-light</td><td class="n"><div class="acc">0.625</div><div class="ci">n=32 · 0.45–0.77</div></td><td class="n"><div class="acc">0.656</div><div class="ci">n=32 · 0.48–0.80</div></td><td class="n"><div class="acc">0.844</div><div class="ci">n=32 · 0.68–0.93</div></td><td class="n"><div class="acc">0.688</div><div class="ci">n=32 · 0.51–0.82</div></td><td class="n"><div class="acc">0.875</div><div class="ci">n=32 · 0.72–0.95</div></td><td class="n"><div class="acc">0.719</div><div class="ci">n=32 · 0.55–0.84</div></td><td class="n"><div class="acc">0.844</div><div class="ci">n=32 · 0.68–0.93</div></td><td class="n"><div class="acc">0.625</div><div class="ci">n=32 · 0.45–0.77</div></td><td class="n"><div class="acc">0.750</div><div class="ci">n=32 · 0.58–0.87</div></td><td class="n"><div class="acc">0.500</div><div class="ci">n=32 · 0.34–0.66</div></td><td class="n"><div class="acc">0.844</div><div class="ci">n=32 · 0.68–0.93</div></td><td class="n"><div class="acc">0.844</div><div class="ci">n=32 · 0.68–0.93</div></td><td class="n"><div class="acc">0.688</div><div class="ci">n=32 · 0.51–0.82</div></td><td class="n"><div class="acc">0.844</div><div class="ci">n=32 · 0.68–0.93</div></td><td class="n"><div class="acc">0.438</div><div class="ci">n=32 · 0.28–0.61</div></td><td class="n"><div class="acc">0.625</div><div class="ci">n=32 · 0.45–0.77</div></td><td class="n"><div class="acc">0.594</div><div class="ci">n=32 · 0.42–0.74</div></td><td class="n"><div class="acc">0.719</div><div class="ci">n=32 · 0.55–0.84</div></td><td class="n"><div class="acc">0.500</div><div class="ci">n=32 · 0.34–0.66</div></td></tr><tr><th class="axis">prv<div class="hint">privacy</div></th><td class="best">aesthetics-v3-light</td><td class="n"><div class="acc">0.562</div><div class="ci">n=32 · 0.39–0.72</div></td><td class="n"><div class="acc">0.062</div><div class="ci">n=32 · 0.02–0.20</div></td><td class="n"><div class="acc">0.562</div><div class="ci">n=32 · 0.39–0.72</div></td><td class="n"><div class="acc">0.531</div><div class="ci">n=32 · 0.36–0.69</div></td><td class="n"><div class="acc">0.625</div><div class="ci">n=32 · 0.45–0.77</div></td><td class="n"><div class="acc">0.688</div><div class="ci">n=32 · 0.51–0.82</div></td><td class="n"><div class="acc">0.656</div><div class="ci">n=32 · 0.48–0.80</div></td><td class="n"><div class="acc">0.469</div><div class="ci">n=32 · 0.31–0.64</div></td><td class="n"><div class="acc">0.500</div><div class="ci">n=32 · 0.34–0.66</div></td><td class="n"><div class="acc">0.438</div><div class="ci">n=32 · 0.28–0.61</div></td><td class="n"><div class="acc">0.719</div><div class="ci">n=32 · 0.55–0.84</div></td><td class="n"><div class="acc">0.781</div><div class="ci">n=32 · 0.61–0.89</div></td><td class="n"><div class="acc">0.531</div><div class="ci">n=32 · 0.36–0.69</div></td><td class="n"><div class="acc">0.688</div><div class="ci">n=32 · 0.51–0.82</div></td><td class="n"><div class="acc">0.719</div><div class="ci">n=32 · 0.55–0.84</div></td><td class="n"><div class="acc">0.688</div><div class="ci">n=32 · 0.51–0.82</div></td><td class="n"><div class="acc">0.469</div><div class="ci">n=32 · 0.31–0.64</div></td><td class="n"><div class="acc">0.656</div><div class="ci">n=32 · 0.48–0.80</div></td><td class="n"><div class="acc">0.188</div><div class="ci">n=32 · 0.09–0.35</div></td></tr><tr><th class="axis">swarm<div class="hint">multi-agent swarm</div></th><td class="best">qwen2.5:0.5b-instruct</td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.000</div><div class="ci">n=40 · 0.00–0.09</div></td><td class="n"><div class="acc">0.175</div><div class="ci">n=40 · 0.09–0.32</div></td><td class="n"><div class="acc">0.500</div><div class="ci">n=40 · 0.35–0.65</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.150</div><div class="ci">n=40 · 0.07–0.29</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.000</div><div class="ci">n=40 · 0.00–0.09</div></td><td class="n"><div class="acc">0.025</div><div class="ci">n=40 · 0.00–0.13</div></td><td class="n"><div class="acc">0.000</div><div class="ci">n=40 · 0.00–0.09</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.500</div><div class="ci">n=40 · 0.35–0.65</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.975</div><div class="ci">n=40 · 0.87–1.00</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td><td class="n"><div class="acc">0.475</div><div class="ci">n=40 · 0.33–0.62</div></td></tr><tr><th class="axis">xr<div class="hint">extended reality</div></th><td class="best">mistral:7b</td><td class="n"><div class="acc">0.344</div><div class="ci">n=32 · 0.20–0.52</div></td><td class="n"><div class="acc">0.344</div><div class="ci">n=32 · 0.20–0.52</div></td><td class="n"><div class="acc">0.438</div><div class="ci">n=32 · 0.28–0.61</div></td><td class="n"><div class="acc">0.344</div><div class="ci">n=32 · 0.20–0.52</div></td><td class="n"><div class="acc">0.438</div><div class="ci">n=32 · 0.28–0.61</div></td><td class="n"><div class="acc">0.375</div><div class="ci">n=32 · 0.23–0.55</div></td><td class="n"><div class="acc">0.500</div><div class="ci">n=32 · 0.34–0.66</div></td><td class="n"><div class="acc">0.375</div><div class="ci">n=32 · 0.23–0.55</div></td><td class="n"><div class="acc">0.344</div><div class="ci">n=32 · 0.20–0.52</div></td><td class="n"><div class="acc">0.375</div><div class="ci">n=32 · 0.23–0.55</div></td><td class="n"><div class="acc">0.500</div><div class="ci">n=32 · 0.34–0.66</div></td><td class="n"><div class="acc">0.500</div><div class="ci">n=32 · 0.34–0.66</div></td><td class="n"><div class="acc">0.344</div><div class="ci">n=32 · 0.20–0.52</div></td><td class="n"><div class="acc">0.406</div><div class="ci">n=32 · 0.26–0.58</div></td><td class="n"><div class="acc">0.594</div><div class="ci">n=32 · 0.42–0.74</div></td><td class="n"><div class="acc">0.344</div><div class="ci">n=32 · 0.20–0.52</div></td><td class="n"><div class="acc">0.438</div><div class="ci">n=32 · 0.28–0.61</div></td><td class="n"><div class="acc">0.812</div><div class="ci">n=32 · 0.65–0.91</div></td><td class="n"><div class="acc">0.406</div><div class="ci">n=32 · 0.26–0.58</div></td></tr></tbody>
-</table>
-<div class="legend">Cells: accuracy / (n, 95% CI). Generated <span id="settle-clock">2026-08-12T00:00:00Z</span> · UNSIGNED on this stamp.</div>
+<p class="stamp" id="stamp-info">Loading...</p>
+
+<div id="table-container">
+<p class="loading">Fetching live data from GSPC API...</p>
+</div>
+
+<div class="floor-note" id="floor-note" style="display:none;">
+<strong>Jail floor:</strong> Measured floor (empty on this stamp) — not a scored axis. <br>
+<strong>Slot 15:</strong> Unnamed and empty.
+</div>
+
+<div class="legend" id="legend" style="display:none;">
+Cells: accuracy / (n, 95% CI). <span class="sep">SEPARATED</span> = McNemar p&lt;0.05.
+<span class="tie">TIE</span> = point lead not statistically separated.
+<span id="settle-clock"></span>
+</div>
+
 <script>
-/* Settle clock — boards settle on a measured schedule; this clock makes the
-   age of the numbers visible. Zero-dep, ~300B. */
-(function(){
-  var el = document.getElementById('settle-clock');
-  if (!el) return;
-  var gen = new Date('2026-08-12T00:00:00Z');
-  var d = document.createElement('span');
-  d.style.color = '#8cd'; d.style.marginLeft = '.4rem';
-  function tick(){
-    var days = Math.floor((Date.now() - gen.getTime()) / 86400000);
-    var hrs = Math.floor((Date.now() - gen.getTime()) / 3600000) % 24;
-    d.textContent = days > 0 ? '(' + days + 'd ' + hrs + 'h ago)' : '(' + hrs + 'h ago)';
+(async function() {
+  const container = document.getElementById('table-container');
+  const stampInfo = document.getElementById('stamp-info');
+  const legend = document.getElementById('legend');
+  const floorNote = document.getElementById('floor-note');
+  
+  try {
+    const res = await fetch('https://councilof.ai/api/gspc');
+    if (!res.ok) throw new Error('API returned ' + res.status);
+    const data = await res.json();
+    
+    const date = data.measured_on?.date || 'Unknown';
+    const axes = data.axes || [];
+    const totals = data.totals || {};
+    
+    stampInfo.innerHTML = 'Stamp: <strong>' + date + '</strong> · ' + 
+      totals.measured_axes + ' measured axes · ' + 
+      totals.items + ' items · ' + 
+      (data.signed ? 'SIGNED' : 'UNSIGNED');
+    
+    if (axes.length === 0) {
+      container.innerHTML = '<p class="error">No axes returned from API.</p>';
+      return;
+    }
+    
+    let html = '<table><thead><tr>';
+    html += '<th>Axis</th>';
+    html += '<th>Task</th>';
+    html += '<th>Leader</th>';
+    html += '<th>Accuracy</th>';
+    html += '<th>n</th>';
+    html += '<th>95% CI</th>';
+    html += '<th>Separation</th>';
+    html += '<th>Fleet Mean</th>';
+    html += '</tr></thead><tbody>';
+    
+    for (const ax of axes) {
+      const name = ax.axis || '—';
+      const task = ax.task || '—';
+      const leader = ax.leader || '—';
+      const acc = (typeof ax.accuracy === 'number') ? ax.accuracy.toFixed(3) : '—';
+      const n = (typeof ax.n === 'number') ? ax.n : '—';
+      const ci = (ax.interval && ax.interval.length === 2) 
+        ? '[' + ax.interval[0].toFixed(3) + ', ' + ax.interval[1].toFixed(3) + ']'
+        : '—';
+      const sep = ax.separation || '—';
+      const sepClass = (sep === 'SEPARATED') ? 'sep' : 'tie';
+      const fleet = (typeof ax.fleet_mean === 'number') ? ax.fleet_mean.toFixed(3) : '—';
+      
+      html += '<tr>';
+      html += '<th class="axis">' + name + '</th>';
+      html += '<td class="hint">' + task + '</td>';
+      html += '<td class="best">' + leader + '</td>';
+      html += '<td class="n"><div class="acc">' + acc + '</div></td>';
+      html += '<td>' + n + '</td>';
+      html += '<td class="ci">' + ci + '</td>';
+      html += '<td class="' + sepClass + '">' + sep + '</td>';
+      html += '<td>' + fleet + '</td>';
+      html += '</tr>';
+    }
+    
+    html += '</tbody></table>';
+    container.innerHTML = html;
+    legend.style.display = 'block';
+    floorNote.style.display = 'block';
+    
+    // Settle clock
+    const clockEl = document.getElementById('settle-clock');
+    if (clockEl && date && date !== 'Unknown') {
+      const gen = new Date(date + 'T00:00:00Z');
+      function tick() {
+        const days = Math.floor((Date.now() - gen.getTime()) / 86400000);
+        const hrs = Math.floor((Date.now() - gen.getTime()) / 3600000) % 24;
+        clockEl.textContent = ' · Generated ' + date + ' (' + (days > 0 ? days + 'd ' + hrs + 'h ago' : hrs + 'h ago') + ')';
+      }
+      tick();
+    }
+    
+  } catch (err) {
+    container.innerHTML = '<p class="error">Failed to load GSPC data: ' + err.message + '</p>';
+    console.error('GSPC fetch error:', err);
   }
-  tick(); el.parentNode.insertBefore(d, el.nextSibling);
 })();
 </script>
+
 <div class="foot">Council of AI (CSOAI Ltd, UK 16939677) · measurement, not
-certification · generated from boards-v2-2026-08-12. Honest: a quotable cell
-means usable n≥30 with a computed interval — it is a measurement of one point
-in time, not a guarantee of behaviour.<br><br>
+certification. Honest: a quotable cell means usable n≥30 with a computed interval 
+— it is a measurement of one point in time, not a guarantee of behaviour.<br><br>
 <a href="/gspc-verify">Verify any card</a> · 
 <a href="/methodology">How we grade</a> · 
 <a href="/benchmarks">All benchmarks</a> · 
