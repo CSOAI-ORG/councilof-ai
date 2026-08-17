@@ -66,108 +66,47 @@ const achievements = [
   { icon: Shield, name: "Ledger Published", description: "Signed measurement ledger from the 2026-08-04 sweep on HF", holders: 1 },
 ];
 
-// GSPC board v2 — the canonical 13-axis measurement board. Values are the exact
-// figures served by functions/api/gspc.ts (measured 2026-08-12, DOI
-// 10.5281/zenodo.21755656). A "leader" is the highest point estimate; separation
-// says whether that lead is statistically real (McNemar p<0.05 on discordant
-// items vs the best base model) or a TIE. TIES ARE NOT WINS.
-type BoardAxis = {
-  axis: string;
-  leader: string;
-  accuracy: number;
-  ci: [number, number] | null;
-  n: number;
-  separation: "SEPARATED" | "TIE";
-  p: number;
-};
-const BOARD_V2: BoardAxis[] = [
-  { axis: "governance", leader: "council specialist:governance-v3", accuracy: 0.700, ci: [0.639, 0.755], n: 237, separation: "SEPARATED", p: 0.0086 },
-  { axis: "affect", leader: "council specialist:preservation-v3", accuracy: 0.878, ci: [0.745, 0.947], n: 41, separation: "SEPARATED", p: 0.0078 },
-  { axis: "care", leader: "council specialist:ethics-v3", accuracy: 0.535, ci: [0.466, 0.603], n: 199, separation: "SEPARATED", p: 0.0356 },
-  { axis: "art5-safeguard", leader: "council specialist:relationality-v3", accuracy: 0.972, ci: [0.858, 0.995], n: 36, separation: "TIE", p: 1.0 },
-  { axis: "safety", leader: "gemma3:12b (base model)", accuracy: 0.944, ci: [0.819, 0.985], n: 36, separation: "TIE", p: 0.6875 },
-  { axis: "detector-interop", leader: "deepseek-r1:8b (base model)", accuracy: 0.879, ci: [0.727, 0.952], n: 33, separation: "TIE", p: 0.4531 },
-  { axis: "openness", leader: "council specialist:preservation-v3", accuracy: 0.875, ci: [0.719, 0.950], n: 32, separation: "TIE", p: 1.0 },
-  { axis: "cross-reality", leader: "mistral:7b (base model)", accuracy: 0.812, ci: [0.647, 0.911], n: 32, separation: "TIE", p: 0.0654 },
-  { axis: "provenance", leader: "council specialist:aesthetics-v3", accuracy: 0.781, ci: [0.612, 0.890], n: 32, separation: "TIE", p: 0.7744 },
-  { axis: "conformance", leader: "council specialist:preservation-v3", accuracy: 0.743, ci: [0.579, 0.858], n: 35, separation: "TIE", p: 1.0 },
-  { axis: "continuity", leader: "council specialist:destruction-v3", accuracy: 0.606, ci: [0.437, 0.753], n: 33, separation: "TIE", p: 1.0 },
-  { axis: "machinery-conformity", leader: "llama3.2:3b (base model)", accuracy: 0.545, ci: [0.380, 0.702], n: 33, separation: "TIE", p: 0.5811 },
-  { axis: "swarm", leader: "qwen2.5:0.5b-instruct (base model)", accuracy: 0.975, ci: null, n: 40, separation: "TIE", p: 1.0 },
-];
-const BOARD_SEPARATED = BOARD_V2.filter((a) => a.separation === "SEPARATED").length;
-const BOARD_TIES = BOARD_V2.filter((a) => a.separation === "TIE").length;
-const BOARD_ITEMS = BOARD_V2.reduce((s, a) => s + a.n, 0);
-const pct = (x: number) => (x * 100).toFixed(1) + "%";
+// GSPC board — the canonical 13-axis measurement board.
+// Live data served at /api/gspc. Frontends do not bake their own scores.
+// The 12 August 2026 stamp is UNSIGNED. 15 public slots, 13 measured, 19 models, 819 items.
 
-function GspcBoardV2() {
+function GspcBoardInfo() {
   return (
     <Card className="mb-8">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-emerald-600" />
-          GSPC board v2 — 13 measurement axes
+          GSPC Board — 15 public slots, 13 measured
         </CardTitle>
         <p className="text-xs text-muted-foreground">
-          Measured 2026-08-12 · 19-model fleet · 15,580 per-item rows · schema
-          csoai.gspc-axes/0.3 · DOI 10.5281/zenodo.21755656. A leader is the highest
-          point estimate; separation is McNemar p&lt;0.05 on discordant items vs the best
-          base model. <strong>{BOARD_SEPARATED} of 13 separated, {BOARD_TIES} ties.</strong>{" "}
-          Ties are honest ties — a point-estimate lead is not a measured win.
-        </p>
-        <p className="mt-2 rounded-lg border border-amber-300/50 bg-amber-50 px-3 py-2 text-xs text-amber-800">
-          <strong>Reconciliation notice (2026-08-16).</strong> A corrected honest register
-          records a base model (mistral:7b) leading the council-specialist on the governance
-          axis in a later re-measurement. This board stands as the documented 2026-08-12
-          sweep until the owner-lane reconciliation decides whether the API leader table is
-          corrected or annotated. A measurement body publishes disagreements, never hides them.
+          Frozen 12 August 2026 (UNSIGNED) · 19-model fleet · 819 items. Frontends do not
+          bake their own scores — live data is served from the API.
         </p>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-muted-foreground border-b">
-                <th className="py-2 pr-4">Axis</th>
-                <th className="py-2 pr-4">Leader</th>
-                <th className="py-2 pr-4">Accuracy (95% CI)</th>
-                <th className="py-2 pr-4">n</th>
-                <th className="py-2 pr-4">Separation</th>
-              </tr>
-            </thead>
-            <tbody>
-              {BOARD_V2.map((a) => (
-                <tr key={a.axis} className="border-b last:border-0">
-                  <td className="py-2 pr-4 font-mono">{a.axis}</td>
-                  <td className="py-2 pr-4 text-xs text-muted-foreground">{a.leader}</td>
-                  <td className="py-2 pr-4 font-mono tabular-nums">
-                    {pct(a.accuracy)}{" "}
-                    <span className="text-xs text-muted-foreground">
-                      {a.ci ? `[${pct(a.ci[0])}, ${pct(a.ci[1])}]` : "(no interval — effective-n rule)"}
-                    </span>
-                  </td>
-                  <td className="py-2 pr-4 font-mono tabular-nums">{a.n}</td>
-                  <td className="py-2 pr-4">
-                    <Badge
-                      variant="outline"
-                      className={
-                        a.separation === "SEPARATED"
-                          ? "border-emerald-500 text-emerald-600"
-                          : "text-muted-foreground"
-                      }
-                    >
-                      {a.separation} · p={a.p}
-                    </Badge>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="rounded-lg border border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/20 p-4">
+          <p className="text-sm text-muted-foreground mb-3">
+            The scoreboard is a shape page that points at the live API. Per-axis leaders,
+            accuracy, confidence intervals, and separation verdicts are served dynamically.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <a 
+              href="/api/gspc" 
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition"
+            >
+              GET /api/gspc — live data (JSON)
+            </a>
+            <a 
+              href="/gspc-scoreboard" 
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500/40 text-emerald-700 dark:text-emerald-300 text-sm font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition"
+            >
+              View scoreboard shape page
+            </a>
+          </div>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          {BOARD_ITEMS} items across 13 axes. swarm withholds its interval by the
-          effective-n rule (3 unique prompts, 40 non-independent instances). Recompute the
-          board live at <code>councilof.ai/api/gspc</code>. Measurement, not certification.
+          Measurement, not certification. Deterministic gate — no model judged another.
+          The harness is published — recompute it.
         </p>
       </CardContent>
     </Card>
@@ -215,8 +154,8 @@ export default function WatchdogLeaderboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Canonical board — the 13-axis GSPC board v2, real values from /api/gspc */}
-        <GspcBoardV2 />
+        {/* GSPC board info — points to live API, no baked scores */}
+        <GspcBoardInfo />
 
         {/* 3D portal — the regulator lens: public accountability, mapped live */}
         <div className="mb-8">

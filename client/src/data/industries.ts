@@ -124,9 +124,9 @@ export const industries: Industry[] = [
       nearest:
         "No dedicated life/health underwriting bank exists yet. What an insurer " +
         "relies on is already measured: EU AI Act risk-tiering on GovBench " +
-        "(n=237, leader 0.700 [0.639–0.755], fleet mean 0.490) and calibrated care " +
-        "on CareBench (n=199, fleet mean 0.293). The underwriting bank is on the " +
-        "build list; until it lands, we will not quote an insurance number we have not measured.",
+        "and calibrated care on CareBench. Live scores at /api/gspc. The underwriting " +
+        "bank is on the build list; until it lands, we will not quote an insurance " +
+        "number we have not measured.",
     },
     artefactProves:
       "which model priced or triaged, on which frozen bank, and that the score " +
