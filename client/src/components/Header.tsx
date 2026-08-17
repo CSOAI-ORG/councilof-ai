@@ -313,13 +313,6 @@ export function Header() {
             >
               Globe
             </a>
-            <a
-              href="/j-space"
-              className="shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:bg-emerald-50 transition-all"
-            >
-              J-Space
-            </a>
-
             {/* Verify — free and loginless, always prominent */}
             <a
               href="/gspc-verify"
