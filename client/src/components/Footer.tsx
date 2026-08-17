@@ -15,8 +15,8 @@ export function Footer() {
     {
       title: 'Platform',
       links: [
-        { name: 'Training Courses', href: '/training' },
-        { name: 'Attestation', href: '/certification' },
+        { name: 'The Arena', href: '/gspc-arena' },
+        { name: 'Methodology', href: '/methodology' },
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
         { name: 'API Documentation', href: '/api-docs' },
@@ -161,7 +161,7 @@ export function Footer() {
               <span className="text-2xl font-bold">CSOAI</span>
             </Link>
             <p className="text-gray-600 text-sm mb-4">
-              Building the future of AI safety through independent training, signed attestation, and transparent measurement.
+              Verified measurement credentials for AI governance. Measurement, not certification.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
