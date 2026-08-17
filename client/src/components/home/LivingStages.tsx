@@ -54,7 +54,7 @@ export default function LivingStages() {
           </p>
           <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-3">
             {[
-              { m: "CITIZEN", d: "Walk the city. Ask. Check a card." },
+              { m: "CITIZEN", d: "Ask. Verify. Check a measurement card." },
               { m: "MAYOR", d: "Set the quest. Hold the town to the instruments." },
               { m: "RED", d: "Try to break it. The harness records the attempt." },
             ].map((x) => (
@@ -64,8 +64,8 @@ export default function LivingStages() {
               </div>
             ))}
           </div>
-          <a href="/os" className="mt-8 inline-flex rounded-xl bg-amber-400 px-6 py-3 text-sm font-extrabold text-gray-900 hover:bg-amber-300">
-            Play in the OS
+          <a href="/gspc-arena" className="mt-8 inline-flex rounded-xl bg-amber-400 px-6 py-3 text-sm font-extrabold text-gray-900 hover:bg-amber-300">
+            Open the contest
           </a>
         </div>
       </section>
@@ -77,7 +77,7 @@ export default function LivingStages() {
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-300">The board · signed cells</p>
               <h2 className="mt-3 text-4xl font-black">{MEASURED} measured × 22 models</h2>
               <p className="mt-3 max-w-lg text-emerald-100/70">
-                A filled cell is a signed measurement. A dash is honest emptiness. Two public slots stay unmeasured — no score yet.
+                A filled cell is a signed measurement. A dash is honest emptiness. 2 public slots with no score on this stamp.
               </p>
             </div>
             <a href="/gspc-scoreboard" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white hover:bg-emerald-400">

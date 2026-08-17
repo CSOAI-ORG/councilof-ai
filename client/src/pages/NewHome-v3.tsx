@@ -158,24 +158,24 @@ function AxesGrid() {
                   <span className="text-[11px] text-gray-400">n={a.n}{ci ? ` · [${(ci[0]*100).toFixed(0)}–${(ci[1]*100).toFixed(0)}%]` : ""}</span>
                 </div>
               )}
-              {!q && <div className="mt-3 text-xs text-gray-400 italic">unmeasured — no score yet</div>}
+              {!q && <div className="mt-3 text-xs text-gray-400 italic">no score on this stamp</div>}
             </a>
           );
         })}
         {[
-          { axis: "gspc_jail", bench: "Jail", task: "containment / sandbox-escape gate — signed board row is all dashes" },
-          { axis: "slot-15", bench: "Slot 15", task: "reserved — harness has not emitted a 15th axis" },
+          { axis: "gspc_jail", bench: "Jail", task: "containment / sandbox-escape gate", note: "13 Aug floor in separate stamp (not a ranking); empty on 12 Aug stamp", status: "EMPTY" },
+          { axis: "slot-15", bench: "Slot 15", task: "reserved — harness has not emitted a 15th axis", note: "reserved, no name assigned", status: "EMPTY" },
         ].map(e => (
           <div key={e.axis} className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 p-5">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-bold text-gray-800">{e.bench}</span>
               <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
-                UNMEASURED
+                {e.status}
               </span>
             </div>
             <h3 className="text-base font-extrabold text-gray-900">{e.axis}</h3>
             <p className="mt-1 text-xs text-gray-400 line-clamp-2">{e.task}</p>
-            <div className="mt-3 text-xs text-gray-400 italic">unmeasured — no score yet</div>
+            <div className="mt-3 text-xs text-gray-400 italic">{e.note}</div>
           </div>
         ))}
       </div>
@@ -290,7 +290,7 @@ const SCHEMA = {
 const FAQ_SCHEMA = {
   "@context": "https://schema.org", "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks across 15 slots (13 measured; 2 unmeasured — no score yet). Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
+    { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks across 15 slots (13 measured; 2 public slots with no score on this stamp). Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
     { "@type": "Question", "name": "Do you certify AI systems?", "acceptedAnswer": { "@type": "Answer", "text": "No. We issue verified measurement credentials — a 3KB signed card showing what your AI did when we measured it. That is evidence, not a certification badge." } },
     { "@type": "Question", "name": "How much does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "Your first measurement card is free. Plans for ongoing re-attestation start at £199/month. Enterprise plans available — see /pricing." } },
   ]
@@ -332,7 +332,7 @@ export default function NewHomeV3() {
           <FaqBlock
             title="Questions people ask"
             items={[
-              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks across 15 slots (13 measured; 2 unmeasured — no score yet), and issue the result as a verified measurement credential — a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
+              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks across 15 slots (13 measured; 2 public slots with no score on this stamp), and issue the result as a verified measurement credential — a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
               { q: "What does a measurement card cost?", a: "Your first measurement card is free. Ongoing re-attestation starts at £199/month. Enterprise plans available — see the pricing page." },
               { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },
