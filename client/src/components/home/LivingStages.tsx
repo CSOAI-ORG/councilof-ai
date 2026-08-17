@@ -77,7 +77,7 @@ export default function LivingStages() {
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-300">The board · 15 slots</p>
               <h2 className="mt-3 text-4xl font-black">{MEASURED} measured × 19 models</h2>
               <p className="mt-3 max-w-lg text-emerald-100/70">
-                A filled cell is a signed measurement. A dash is honest emptiness. Two public slots stay unmeasured — no score yet.
+                A filled cell is a measurement. A dash is honest emptiness. Two public slots stay unmeasured — no score yet. 12 Aug 2026 stamp is unsigned.
               </p>
             </div>
             <a href="/gspc-scoreboard" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white hover:bg-emerald-400">

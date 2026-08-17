@@ -50,8 +50,7 @@ export default function GovernanceLayer() {
           </h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">
             The Council Governance Layer wraps your model in the duties regulators actually enforce —
-            EU AI Act transparency and high-risk obligations, NIST AI RMF, ISO 42001 — and proves it
-            with signed, per-cell evidence. Not a promise. A measurement.
+            EU AI Act transparency and high-risk obligations, NIST AI RMF. Not a promise. A measurement.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="/contact" className="rounded-xl bg-emerald-400 px-6 py-3 font-bold text-emerald-950 hover:bg-emerald-300">Request a pilot</a>
