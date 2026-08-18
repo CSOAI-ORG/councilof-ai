@@ -99,6 +99,7 @@ const ACRONYMS: [RegExp, string][] = [
   [/\bGdpr\b/g, "GDPR"], [/\bTc260\b/g, "TC260"], [/\bC2pa\b/gi, "C2PA"], [/\bRoi\b/g, "ROI"],
   [/\bAi\b/g, "AI"], [/\bUs\b/g, "US"], [/\bUk\b/g, "UK"], [/\bEu\b/g, "EU"], [/\bOs\b/g, "OS"],
   [/\bJsp\b/g, "JSP"], [/\bA2a\b/gi, "A2A"], [/\bDpa\b/g, "DPA"], [/\bSla\b/g, "SLA"],
+  [/\bVs\b/g, "vs"],
 ];
 // Killed display strings (mirror scripts/brand-gate.mjs RULES). Manifest titles are derived from
 // stale component names (SovereignTour → "Sovereign Tour", AboutCEASAI → "About CEASAI"), so the
