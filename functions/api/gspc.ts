@@ -353,6 +353,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       return {
         axes: selected.length,
         measured_axes: m.length,
+        public_count: "13 measured of 14 quotable (GSPC ruling 2026-08-18)",
         items,
         separated_leads: m.filter((a) => a.separation === "SEPARATED").length,
         ties: m.filter((a) => a.separation === "TIE").length,
