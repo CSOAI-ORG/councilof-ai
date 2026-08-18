@@ -2,7 +2,7 @@
 // Regenerate: cp board_living.json -> this file's JSON block.
 export const LIVING_BOARD = {
  "schema": "csoai.gspc-living/0.1",
- "updated": "2026-08-18T08:20:49Z",
+ "updated": "2026-08-18T08:22:54Z",
  "source": "boards-v2 + gold-run-3090",
  "axes": [
   {
@@ -561,22 +561,23 @@ export const LIVING_BOARD = {
    "axis": "human-baseline",
    "bench": "PublishedBaselines",
    "task": "model vs PUBLISHED human aggregate baselines (not human-subjects data \u2014 no DPIA)",
-   "n": 4,
-   "n_note": "MMLU 89.8% \u00b7 GPQA 65% \u00b7 ARC-AGI 85% \u00b7 TruthfulQA ~94% (creator-published aggregates)",
+   "n": 6,
+   "n_note": "6 published-baseline cells (Leg A harness, 2026-08-18T08:22:46Z)",
    "baselines": {
     "MMLU": 0.898,
     "GPQA": 0.65,
     "ARC-AGI": 0.85,
-    "TruthfulQA": 0.94
+    "TruthfulQA": 0.94,
+    "MATH/AIME": 0.33
    },
    "status": "MEASURED",
    "quotable": true,
-   "note": "The 17th axis. Reference = the benchmarks' OWN published human scores (public, citable). DPIA gates only OUR OWN collection (colosseum live humans) \u2014 not these aggregates. 'Beats a human baseline on X, measured by us' = the only number a buyer can read.",
+   "note": "MEASURED via Leg A: published benchmark human baselines ingested + pinned + signed (no DPIA \u2014 published aggregates, not human-subjects data). Leg B (own-collection colosseum) DPIA-gated, hard.",
    "_source": "GSPC-COMPLETE-2026-08-18",
-   "_updated": "2026-08-18T08:20:49Z"
+   "_updated": "2026-08-18T08:22:27Z"
   }
  ],
- "signature": "8232d36ac09eb4ebe78017e35c46172dc7898bb2e2007a9211b2adcff6cd36be924123f634bc1331fd0e679f8032f282af6fab39ed9eb3af413dda9792ad890b",
+ "signature": "df4b7e018b943a6f073776ce026403b9274f0e13c1bbfd282745015d3c835c4be731e12f4c04b1c512bb0037456c497ccef69a8957282f3bd3f34e208939a40a",
  "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
  "signed": true,
  "sig_input": "sha256(canonical board minus signature fields, sort_keys)",
