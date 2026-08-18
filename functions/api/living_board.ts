@@ -2,7 +2,7 @@
 // Regenerate: cp board_living.json -> this file's JSON block.
 export const LIVING_BOARD = {
  "schema": "csoai.gspc-living/0.1",
- "updated": "2026-08-17T16:23:00Z",
+ "updated": "2026-08-18T02:33:14Z",
  "source": "boards-v2 + gold-run-3090",
  "axes": [
   {
@@ -431,9 +431,107 @@ export const LIVING_BOARD = {
      "dataset": "SOVOS/banks/gspc-jail @ 38814490"
     }
    }
+  },
+  {
+   "axis": "slot15",
+   "bench": "Slot15-Honesty",
+   "task": "reserved-axis honesty: refuses to fabricate an instrument",
+   "n": 35,
+   "n_note": "6 models x 36 items",
+   "per_model": {
+    "qwen3:4b": {
+     "n": 33,
+     "honest": 4,
+     "fabricated": 29,
+     "honesty_rate": 0.1212
+    },
+    "qwen2.5:7b": {
+     "n": 9,
+     "honest": 3,
+     "fabricated": 6,
+     "honesty_rate": 0.3333
+    },
+    "mistral:7b": {
+     "n": 35,
+     "honest": 5,
+     "fabricated": 30,
+     "honesty_rate": 0.1429
+    },
+    "council-safe": {
+     "n": 35,
+     "honest": 5,
+     "fabricated": 30,
+     "honesty_rate": 0.1429
+    },
+    "qwen2.5:1.5b": {
+     "n": 30,
+     "honest": 3,
+     "fabricated": 27,
+     "honesty_rate": 0.1
+    },
+    "qwen2.5:0.5b-instruct": {
+     "n": 35,
+     "honest": 3,
+     "fabricated": 32,
+     "honesty_rate": 0.0857
+    }
+   },
+   "best": "qwen2.5:7b",
+   "best_rate": 0.3333,
+   "status": "MEASURED",
+   "quotable": true,
+   "note": "Best honesty rate 0.3333 across 6 models \u2014 measures instrument-absence honesty, not a metric",
+   "_source": "f2-measure-3090",
+   "_updated": "2026-08-18T02:33:14Z"
+  },
+  {
+   "axis": "human-vs-ai",
+   "bench": "Colosseum-Pairs",
+   "task": "human-vs-AI pairwise alignment probes",
+   "n": 35,
+   "n_note": "6 models x 36 items",
+   "per_model": {
+    "qwen3:4b": {
+     "n": 35,
+     "aligned": 35,
+     "alignment_rate": 1.0
+    },
+    "qwen2.5:7b": {
+     "n": 35,
+     "aligned": 35,
+     "alignment_rate": 1.0
+    },
+    "mistral:7b": {
+     "n": 35,
+     "aligned": 35,
+     "alignment_rate": 1.0
+    },
+    "council-safe": {
+     "n": 32,
+     "aligned": 8,
+     "alignment_rate": 0.25
+    },
+    "qwen2.5:1.5b": {
+     "n": 35,
+     "aligned": 33,
+     "alignment_rate": 0.9429
+    },
+    "qwen2.5:0.5b-instruct": {
+     "n": 32,
+     "aligned": 29,
+     "alignment_rate": 0.9062
+    }
+   },
+   "best": "qwen3:4b",
+   "best_rate": 1.0,
+   "status": "MEASURED",
+   "quotable": true,
+   "note": "Best alignment rate 1.0 across 6 models \u2014 paired response comparison",
+   "_source": "f2-measure-3090",
+   "_updated": "2026-08-18T02:33:14Z"
   }
  ],
- "signature": "161a4b7d910dc33d1d4e8acb56737140875a9eac9e45d09581432466d78f881eb9227f4754d4a9b32053b1efd107af729caeada029259cd4eeb2e8b2573e5808",
+ "signature": "ba6df44216433df78475171f24ab4036e4c99456bd2bd94a2f85d18da21236f801627c6949df0d3ffce550f0f7d6053990dd9928b882bebc9e7f3310362f4309",
  "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
  "signed": true,
  "sig_input": "sha256(canonical board, sort_keys)"
