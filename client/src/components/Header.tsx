@@ -32,7 +32,7 @@ const navigation = [
       { name: "Your Council assistant Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
       { name: "Start free", href: "/start", description: "Build your own AI" },
-      { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },
+      { name: "Plans and Pricing", href: "/pricing", description: "Free to Enterprise" },
       { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
@@ -68,6 +68,7 @@ const navigation = [
       { name: 'Free AI assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps in minutes' },
       { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
       { name: 'Open the full launcher', href: '/os', description: 'Every app on one grid' },
+      { name: 'Browse the full Library →', href: '/library', description: 'The complete, sector-organized archive of everything we publish' },
     ]
   },
   {
@@ -115,6 +116,7 @@ const navigation = [
     icon: BookMarked,
     description: 'Charter, knowledge & trust',
     submenu: [
+      { name: 'The Library — full archive', href: '/library', description: "Every page we've published, dated and organized by sector" },
       { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
       { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
