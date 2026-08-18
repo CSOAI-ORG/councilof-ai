@@ -350,9 +350,14 @@ export const onRequestGet: PagesFunction = async (context) => {
         const vals = m.map(f).filter((v): v is number => typeof v === "number");
         return vals.length ? round(vals.reduce((s, v) => s + v, 0) / vals.length) : null;
       };
+      // GR.2 ruling: "14 axes, 13 measured, jail quotable". A slot is MEASURED when it has a
+      // completed separation determination (SEPARATED or TIE); jail's separation is UNTESTED, so
+      // it is quotable (carries data) but is NOT one of the 13 measured axes. quotable_axes counts
+      // every slot with data.
       return {
         axes: selected.length,
-        measured_axes: m.length,
+        measured_axes: m.filter((a) => a.separation !== "UNTESTED").length,
+        quotable_axes: m.length,
         public_count: "13 measured of 14 quotable (GSPC ruling 2026-08-18)",
         items,
         separated_leads: m.filter((a) => a.separation === "SEPARATED").length,
