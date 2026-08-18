@@ -232,6 +232,28 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Standards participation & memberships — only genuine, verifiable affiliations.
+            A measurement body must never overclaim a membership. DIF is a signed Contributor
+            membership; C2PA is Contributor participation with conformance in progress (matches
+            the honest status stated below). Swap these text links for official member badges only
+            once the body's logo-use guidelines are checked. */}
+        <div className="border-t border-gray-200 mt-8 pt-8">
+          <p className="text-gray-500 text-xs text-center uppercase tracking-wider mb-3">Standards participation &amp; memberships</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+            <a href="https://identity.foundation" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
+              Decentralized Identity Foundation (DIF) — Contributor member
+            </a>
+            <span className="text-gray-300" aria-hidden="true">·</span>
+            <a href="https://c2pa.org" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
+              Content Authenticity / C2PA — Contributor (conformance in progress)
+            </a>
+            <span className="text-gray-300" aria-hidden="true">·</span>
+            <a href="https://doi.org/10.5281/zenodo.21991105" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
+              Zenodo DOI 10.5281/zenodo.21991105
+            </a>
+          </div>
+        </div>
+
         {/* AI Transparency & Oversight Statement (Art 50 / Art 14) */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">
