@@ -8,6 +8,11 @@
 /towns          /council-space?view=towns   308
 /globe          /globe3d.html           308
 
+# naming-lock redirects (SOV3 codename -> Sovereign OS public brand)
+/sov3-model-card /sovereign-os-model-card 301
+/sov3-system-card /sovereign-os-system-card 301
+/sov3-whitepaper /sovereign-os-whitepaper 301
+
 # --- static asset trees: served directly, never routed to the app ---
 /arena/*  /arena/:splat  200
 /benchmarks/*  /benchmarks/:splat  200
@@ -19,6 +24,3 @@
 
 # --- SPA catch-all: boots the app for every path; wouter routes or 404s in-app ---
 /*  /index.html  200
-/sov3-model-card /sovereign-os-model-card 301
-/sov3-system-card /sovereign-os-system-card 301
-/sov3-whitepaper /sovereign-os-whitepaper 301
