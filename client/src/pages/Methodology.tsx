@@ -178,7 +178,7 @@ export default function Methodology() {
             documented in the whitepaper.
           </p>
           <p className="mt-3 text-[13px]">
-            <Link href="/sov3-whitepaper" className="text-amber-300 hover:underline">
+            <Link href="/sovereign-os-whitepaper" className="text-amber-300 hover:underline">
               Read the whitepaper: &ldquo;Measuring What AI Actually Does Under the Law&rdquo; →
             </Link>
           </p>

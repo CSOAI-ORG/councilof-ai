@@ -34,10 +34,10 @@ export default function Sov3ModelCard() {
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Model card · v1</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
-            SOV3 — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a governed sovereign substrate</span>, not a foundation model.
+            Sovereign OS — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a governed sovereign substrate</span>, not a foundation model.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            SOV3 is a <b className="text-emerald-200">sandwich architecture</b>: open-weight base models wrapped in a
+            Sovereign OS is a <b className="text-emerald-200">sandwich architecture</b>: open-weight base models wrapped in a
             sovereign, Ed25519-signed, evolving substrate. It is not trained from scratch and does not claim to beat
             frontier models on raw capability — its differentiator is the <b className="text-emerald-200">governed,
             auditable layer</b> around whatever base model it runs.
@@ -50,7 +50,7 @@ export default function Sov3ModelCard() {
       </section>
 
       <section className="mx-auto max-w-5xl px-6 py-10 space-y-5">
-        <Section title="What SOV3 is">
+        <Section title="What the Sovereign OS is">
           <p className="text-[13px] text-emerald-100/85 leading-relaxed">
             <b>Not</b> a from-scratch foundation model. <b>Is</b> a governed wrapper: base open-weight models
             (Apache-2.0 / MIT licensed) sit inside a substrate that adds long-context state, cryptographic
@@ -106,7 +106,7 @@ export default function Sov3ModelCard() {
           </table>
         </Section>
 
-        <Section title="What SOV3 is NOT (binding limits)">
+        <Section title="What the Sovereign OS is NOT (binding limits)">
           <ul className="space-y-1.5 text-[13px] text-emerald-100/85">
             <li className="flex gap-2"><span className="text-rose-400">✕</span>Not a from-scratch trained foundation model — every language capability is borrowed from an open base.</li>
             <li className="flex gap-2"><span className="text-rose-400">✕</span>Not benchmarked head-to-head against frontier models (GSM8K/MMLU) — that capability grade is still open, gated on a real GPU run.</li>
@@ -117,7 +117,7 @@ export default function Sov3ModelCard() {
 
         <Section title="License">
           <p className="text-[13px] text-emerald-100/85 leading-relaxed">
-            SOV3's own substrate code and governance layer are CSOAI's IP. The base models it wraps are
+            The Sovereign OS substrate code and governance layer are CSOAI's IP. The base models it wraps are
             individually permissively licensed (Apache-2.0 / MIT — see table above); no copyleft (AGPL/GPL)
             component is used in the paid/sovereign tier, by design — copyleft dependencies are quarantined to
             the fully-open free tier only, to avoid forcing the commercial stack open.
@@ -127,8 +127,8 @@ export default function Sov3ModelCard() {
         <div className="rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5">
           <div className="text-sm font-bold text-emerald-100">Related pages</div>
           <div className="mt-3 flex flex-wrap gap-2">
-            <a href="/sov3-system-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">System / safety card →</a>
-            <a href="/sov3-whitepaper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
+            <a href="/sovereign-os-system-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">System / safety card →</a>
+            <a href="/sovereign-os-whitepaper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
             <a href="/research-transparency" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Research & transparency →</a>
           </div>
           <p className="mt-4 text-[11px] text-emerald-300/50">Last reviewed 2026-07-12. This card is updated whenever the serving configuration changes materially — it is not a one-time launch document.</p>

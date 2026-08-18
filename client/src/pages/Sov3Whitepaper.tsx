@@ -28,7 +28,7 @@ export default function Sov3Whitepaper() {
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
             Growth by Accretion: <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a sovereign substrate that grows without forgetting</span>
           </h1>
-          <p className="mt-4 text-emerald-100/70 text-[14px]">The SOV3³ / OWEM architecture — one paper, every claim independently assayable.</p>
+          <p className="mt-4 text-emerald-100/70 text-[14px]">The Sovereign OS architecture — one paper, every claim independently assayable.</p>
         </div>
       </section>
 
@@ -75,7 +75,7 @@ export default function Sov3Whitepaper() {
 
         <Section n="05" title="What is measured — RUNNING, verified">
           <ul className="space-y-2 list-disc pl-5">
-            <li><b className="text-emerald-200">Monotonic growth</b>: an overnight run recorded SIGIL count 17,049→17,197, NN-training labels 1,327→1,589, and OWEM world-model sigils 0→87.</li>
+            <li><b className="text-emerald-200">Monotonic growth</b>: an overnight run recorded SIGIL count 17,049→17,197, NN-training labels 1,327→1,589, and world-model sigils 0→87.</li>
             <li><b className="text-emerald-200">Invariants hold</b>: all 6 invariants checked clean on every 10-minute cron tick across two logged ticks, with weights persisted between checks.</li>
             <li><b className="text-emerald-200">Lineage diversity</b>: 10 distinct model families (Qwen / Llama / Gemma / DeepSeek / Mistral / Kimi / Phi / MiMo / OpenAI-OSS and others) across a 70-entry model registry, measured live by the growth controller.</li>
             <li><b className="text-emerald-200">Diversity dominates topology</b>: across 4 measured configurations (diverse-lineage ring, identical-lineage ring, diverse-lineage pyramid, identical-lineage pyramid), the diverse-vs-identical score gap (≈0.15) dwarfs the ring-vs-pyramid shape gap (≈0.024). Lineage mix is the lever that matters; geometry is secondary.</li>
@@ -97,7 +97,7 @@ export default function Sov3Whitepaper() {
         <Section n="07" title="Two tiers: SOV3 (open frame) and SOV3³ (the growing tier)">
           <p>
             SOV3 ships as <b className="text-emerald-200">two tiers</b> from one substrate. <b
-            className="text-emerald-200">SOV3 — the open frame</b>: the published, forkable base — the governed-node
+            className="text-emerald-200">Sovereign OS — the open frame</b>: the published, forkable base — the governed-node
             shape, the six invariants, the open base weights, the capability contract. It does not grow; it is
             the fixed common ancestor anyone can run or audit. <b className="text-emerald-200">SOV3³ — the growing
             tier</b>: your own running instance, owner-bound, that accretes experts, memory, and lineages from your
@@ -130,8 +130,8 @@ export default function Sov3Whitepaper() {
         <div className="mt-10 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5">
           <div className="text-sm font-bold text-emerald-100">Related pages</div>
           <div className="mt-3 flex flex-wrap gap-2">
-            <a href="/sov3-model-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Model card →</a>
-            <a href="/sov3-system-card" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">System & safety card →</a>
+            <a href="/sovereign-os-model-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Model card →</a>
+            <a href="/sovereign-os-system-card" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">System & safety card →</a>
             <a href="/research-transparency" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Research & transparency →</a>
           </div>
         </div>

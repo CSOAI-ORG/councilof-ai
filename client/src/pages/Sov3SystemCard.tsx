@@ -34,7 +34,7 @@ export default function Sov3SystemCard() {
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Safety record</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
-            SOV3 System & <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Safety Card</span>
+            Sovereign OS System & <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Safety Card</span>
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             What actually governs SOV3's outputs, what has been measured, and — just as important — what has
@@ -112,7 +112,7 @@ export default function Sov3SystemCard() {
         <Section title="What has NOT been measured (open items)">
           <ul className="space-y-1.5 text-[13px] text-emerald-100/85">
             <li className="flex gap-2"><span className="text-amber-400">◐</span>Raw capability vs. frontier models (GSM8K / MMLU head-to-head) — the governance-topology results above measure decision-quality and safety, not language/reasoning capability. That comparison requires a dedicated benchmark run and has not been done.</li>
-            <li className="flex gap-2"><span className="text-amber-400">◐</span>Formal red-teaming by an external party — internal adversarial tests exist (see the laundered-harm figures above) but no independent red-team has evaluated SOV3.</li>
+            <li className="flex gap-2"><span className="text-amber-400">◐</span>Formal red-teaming by an external party — internal adversarial tests exist (see the laundered-harm figures above) but no independent red-team has evaluated the Sovereign OS.</li>
             <li className="flex gap-2"><span className="text-amber-400">◐</span>Refusal-rate / false-positive-rate on benign edge cases at scale — measured on a 60-item battery, not yet on a large, diverse real-traffic sample.</li>
           </ul>
         </Section>
@@ -120,8 +120,8 @@ export default function Sov3SystemCard() {
         <div className="rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5">
           <div className="text-sm font-bold text-emerald-100">Related pages</div>
           <div className="mt-3 flex flex-wrap gap-2">
-            <a href="/sov3-model-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Model card →</a>
-            <a href="/sov3-whitepaper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
+            <a href="/sovereign-os-model-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Model card →</a>
+            <a href="/sovereign-os-whitepaper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
             <a href="/system-card" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Signed assurance product →</a>
           </div>
           <p className="mt-4 text-[11px] text-emerald-300/50">Last reviewed 2026-07-12. Figures above come from internal governance-topology sweeps under a stated error model — re-run scripts and full config tables are referenced in the whitepaper.</p>

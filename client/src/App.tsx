@@ -530,9 +530,9 @@ function App() {
                   <Route path="/system-card" component={SystemCard} />
                   <Route path="/assurance" component={SystemCard} />
                   <Route path="/systemcard" component={SystemCard} />
-                  <Route path="/sov3-model-card" component={Sov3ModelCard} />
-                  <Route path="/sov3-system-card" component={Sov3SystemCard} />
-                  <Route path="/sov3-whitepaper" component={Sov3Whitepaper} />
+                  <Route path="/sovereign-os-model-card" component={Sov3ModelCard} />
+                  <Route path="/sovereign-os-system-card" component={Sov3SystemCard} />
+                  <Route path="/sovereign-os-whitepaper" component={Sov3Whitepaper} />
                   <Route path="/research-transparency" component={ResearchTransparency} />
                   <Route path="/provenance-finding" component={ProvenanceFinding} />
                   <Route path="/ai-transparency" component={AiTransparency} />

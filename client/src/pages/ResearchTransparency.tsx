@@ -65,7 +65,7 @@ export default function ResearchTransparency() {
         </Finding>
 
         <Finding title="A capability benchmark we do not yet have" verdict="OPEN — NOT DONE" tone="partial">
-          <p>We have not run a head-to-head capability benchmark (e.g. GSM8K, MMLU) of SOV3 against frontier models. The governance-topology results above measure decision-quality, safety, and cost under a stated error model — they are a real, useful, and different thing from a capability benchmark, and we do not present one as a substitute for the other. This is an open item, not a hidden one.</p>
+          <p>We have not run a head-to-head capability benchmark (e.g. GSM8K, MMLU) of the Sovereign OS against frontier models. The governance-topology results above measure decision-quality, safety, and cost under a stated error model — they are a real, useful, and different thing from a capability benchmark, and we do not present one as a substitute for the other. This is an open item, not a hidden one.</p>
         </Finding>
       </section>
 
@@ -79,9 +79,9 @@ export default function ResearchTransparency() {
             credibility signal.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <a href="/sov3-model-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Model card →</a>
-            <a href="/sov3-system-card" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">System & safety card →</a>
-            <a href="/sov3-whitepaper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
+            <a href="/sovereign-os-model-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Model card →</a>
+            <a href="/sovereign-os-system-card" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">System & safety card →</a>
+            <a href="/sovereign-os-whitepaper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
           </div>
           <p className="mt-4 text-[11px] text-emerald-300/50">Updated as findings are confirmed or corrected. Last reviewed 2026-07-12.</p>
         </div>

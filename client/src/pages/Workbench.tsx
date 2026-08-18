@@ -3,7 +3,7 @@ import { askSovereign } from "../lib/sovAsk";
 import ToolRunner from "../components/ToolRunner";
 import AISystemNotice from "../components/AISystemNotice";
 
-// /workbench — the CSOAI AI OS as a GOVERNANCE WORKBENCH, powered by SOV3.
+// /workbench — the CSOAI AI OS as a GOVERNANCE WORKBENCH, powered by the Sovereign OS.
 // The Claude-Science pattern, applied to AI governance: a coordinating Sovereign
 // agent + a skill/MCP palette + every output produced as a SIGNED, reproducible,
 // council-reviewed artifact. Answers go through the guarded Sovereign; artifacts
@@ -57,7 +57,7 @@ export default function Workbench() {
   return (
     <div className="min-h-screen bg-[#03080e] text-emerald-50">
       <div className="mx-auto max-w-6xl px-5 py-10">
-        <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · governance workbench · powered by SOV3</p>
+        <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · governance workbench · powered by the Sovereign OS</p>
         <h1 className="mt-3 text-3xl sm:text-4xl font-black tracking-tight">Every output — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">signed, reproducible, designed for council review.</span></h1>
         <p className="mt-3 max-w-3xl text-emerald-100/75 text-[15px]">The AI-workbench pattern, applied to AI governance. A coordinating Sovereign agent runs your skills; every result is produced as an auditable artifact — sealed to Layer 0 and reproducible from its own provenance. Council review is a designed layer (Charter Art. 11), not a live pipeline — measured status on the <a href="/refutation-ledger" className="underline text-emerald-300">Refutation Ledger</a> (DR-0007). {tools ? <span className="text-emerald-300">{tools} governed skills live.</span> : null}</p>
         <div className="mt-5 max-w-3xl"><AISystemNotice route="/sov3" /></div>
@@ -80,7 +80,7 @@ export default function Workbench() {
           {/* Coordinating agent + artifacts */}
           <div>
             <div className="rounded-2xl border border-emerald-500/20 bg-[#04120c] p-4">
-              <div className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-100"><span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">◉</span> SOV3 coordinating agent — <span className="text-emerald-300/70">{skill.name}</span></div>
+              <div className="mb-2 flex items-center gap-2 text-sm font-bold text-emerald-100"><span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">◉</span> Sovereign OS coordinating agent — <span className="text-emerald-300/70">{skill.name}</span></div>
               {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026. */}
               <div role="status" aria-live="polite" className="mb-2 rounded-md border border-amber-400/35 bg-amber-400/10 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
                 You are interacting with an AI system.
