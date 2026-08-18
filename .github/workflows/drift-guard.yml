@@ -15,6 +15,10 @@ on:
 jobs:
   drift-guard:
     runs-on: ubuntu-latest
+    # actions:write lets a detected drift self-heal by re-triggering the official deploy.
+    permissions:
+      actions: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,4 +29,25 @@ jobs:
         if: github.event_name == 'push'
         run: sleep 420
       - name: Assert live site matches canon.json
+        id: assert
+        continue-on-error: true
         run: node scripts/drift-guard.mjs --host https://councilof.ai
+      # SELF-HEAL: a clobber (direct `wrangler pages deploy` over the gated build) is restored
+      # automatically by re-running the official deploy of canonical master. Only on scheduled
+      # runs — a push already deployed, so re-triggering there would loop. deploy.yml's own
+      # concurrency (cancel-in-progress) makes repeated triggers safe.
+      - name: Self-heal on drift (redeploy canonical master)
+        if: steps.assert.outcome == 'failure' && github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "DRIFT DETECTED — re-running the official deploy to restore canon (self-heal)."
+          gh workflow run deploy.yml --ref master
+      # Keep the alert RED so the clobber stays visible even though it self-heals — the durable
+      # fix is still revoking the clobbering lane's direct-deploy token (see DEPLOY-LOCK.md).
+      - name: Fail the run if drift was detected
+        if: steps.assert.outcome == 'failure'
+        run: |
+          echo "DRIFT-GUARD RED: live site drifted from canon; self-heal deploy triggered."
+          echo "Durable fix: revoke the clobbering lane's Cloudflare Pages token. See DEPLOY-LOCK.md."
+          exit 1
