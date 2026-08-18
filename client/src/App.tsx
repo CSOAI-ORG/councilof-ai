@@ -307,7 +307,6 @@ import { industriesdata } from "./data/industries-content";
 import { blogdata } from "./data/blog-content";
 import { AnalyticsProvider } from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
-import EnforcementBanner from "./components/EnforcementBanner";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -512,7 +511,6 @@ function App() {
                 <ScrollToTop />
                 <RouteTitle />
                 <RouteAnnouncer />
-                <EnforcementBanner />
                 <Header />
                 <PageSchema />
                 <ArchivedBanner />

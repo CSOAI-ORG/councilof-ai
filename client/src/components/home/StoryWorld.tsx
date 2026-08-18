@@ -19,7 +19,7 @@ type Slide = {
 
 export const STORY: Slide[] = [
   {
-    kicker: "Council of AI — the neutral referee for AI behaviour",
+    kicker: "Council of AI — the independent measurement body for AI behaviour",
     body: "We measure how your AI behaves on our own published instruments and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored. Then we measure again. Not certification. Not another dashboard.",
     tone: "light",
   },
@@ -95,6 +95,47 @@ export const STORY: Slide[] = [
   },
 ];
 
+// The four doors, folded into the hero (the old top banner is gone).
+const PERSONAS: { who: string; hook: string; href: string }[] = [
+  { who: "Insurers", hook: "price AI risk on signed evidence", href: "/industries/insurance" },
+  { who: "Regulators", hook: "check behaviour against the law", href: "/regulators" },
+  { who: "Enterprises", hook: "prove your AI before you ship", href: "/start" },
+  { who: "Developers", hook: "measure per call on the agent rail", href: "/payg" },
+];
+
+function HeroActions() {
+  return (
+    <>
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="/gspc-verify"
+          className="inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-md transition-colors hover:bg-emerald-400"
+        >
+          Verify a card — free
+        </a>
+        <a
+          href="/gspc-scoreboard"
+          className="inline-flex items-center rounded-xl border-2 border-emerald-500/40 px-6 py-3 text-base font-extrabold text-emerald-700 transition-colors hover:bg-emerald-50"
+        >
+          Open the live board
+        </a>
+      </div>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+        {PERSONAS.map((p) => (
+          <a
+            key={p.who}
+            href={p.href}
+            title={p.hook}
+            className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-white/70 px-3 py-1 text-[13px] font-semibold text-emerald-800 transition hover:border-emerald-500 hover:bg-emerald-50"
+          >
+            {p.who} <span aria-hidden className="text-emerald-500">→</span>
+          </a>
+        ))}
+      </div>
+    </>
+  );
+}
+
 const TONE: Record<Tone, string> = {
   light: "bg-gradient-to-b from-emerald-50 via-white to-white text-gray-900",
   ink: "bg-[#06140f] text-emerald-50",
@@ -132,6 +173,7 @@ function SlideFace({ slide, index, active }: { slide: Slide; index: number; acti
       }`}>
         {slide.body}
       </p>
+      {index === 0 && <HeroActions />}
       {slide.href && slide.cta && (
         <a
           href={slide.href}
@@ -166,6 +208,7 @@ function Stacked() {
               <h2 className="mt-5 text-4xl font-black leading-[1.08] sm:text-5xl">{slide.title}</h2>
             )}
             <p className={`mt-5 max-w-2xl text-lg ${slide.tone === "light" ? "text-gray-500" : "text-emerald-100/75"}`}>{slide.body}</p>
+            {i === 0 && <HeroActions />}
             {slide.href && slide.cta && (
               <a href={slide.href} className="mt-8 inline-flex rounded-xl bg-emerald-500 px-6 py-3 font-extrabold text-white">{slide.cta}</a>
             )}
