@@ -1,6 +1,8 @@
 /**
- * Certificate Component
- * Displays a professional certificate that can be downloaded or shared
+ * Completion Record Component
+ * Displays a Council Academy course completion record that can be downloaded or shared.
+ * A completion record attests training completion, not conformity. Council of AI
+ * measures; it does not certify or issue conformity marks.
  */
 
 import { useRef, useState } from "react";
@@ -43,7 +45,7 @@ export default function Certificate({
     try {
       const pdfBlob = await generateCertificatePDF({
         recipientName: userName,
-        certificateType: "AI Safety Analyst Certification",
+        certificateType: "AI Safety Analyst — Council Academy Course Completion",
         issueDate: formatDate(issuedDate),
         expiryDate: formatDate(expiryDate),
         certificateId: certificateNumber,
@@ -57,14 +59,14 @@ export default function Certificate({
       const url = URL.createObjectURL(pdfBlob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `CSOAI-Certificate-${certificateNumber}.pdf`;
+      link.download = `CSOAI-Completion-Record-${certificateNumber}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      toast.success("Certificate downloaded!", {
-        description: "Your PDF certificate has been saved.",
+      toast.success("Completion record downloaded!", {
+        description: "Your PDF completion record has been saved.",
       });
     } catch (error) {
       console.error("PDF generation error:", error);
@@ -78,8 +80,8 @@ export default function Certificate({
 
   const handleShare = async () => {
     const shareData = {
-      title: "CSOAI Watchdog Analyst Certification",
-      text: `I just earned my CSOAI Watchdog Analyst Certification! Certificate #${certificateNumber}`,
+      title: "CSOAI Watchdog Analyst — Council Academy Course Completion",
+      text: `I just completed the CSOAI Watchdog Analyst course! Completion record #${certificateNumber}`,
       url: window.location.href,
     };
 
@@ -128,7 +130,7 @@ export default function Certificate({
           {/* Title */}
           <div>
             <h2 className="text-sm uppercase tracking-[0.3em] text-amber-600 dark:text-amber-400 font-medium mb-2">
-              Certificate of Achievement
+              Record of Course Completion
             </h2>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
               CSOAI Watchdog Analyst
@@ -144,7 +146,7 @@ export default function Certificate({
 
           {/* Recipient */}
           <div>
-            <p className="text-sm text-muted-foreground mb-1">This certifies that</p>
+            <p className="text-sm text-muted-foreground mb-1">This confirms that</p>
             <p className="text-2xl font-serif font-semibold text-gray-900 dark:text-gray-100">
               {userName}
             </p>
@@ -152,8 +154,9 @@ export default function Certificate({
 
           {/* Description */}
           <p className="text-muted-foreground max-w-md mx-auto">
-            has successfully completed the {testName} and demonstrated proficiency in AI safety 
-            governance, regulatory compliance, and incident analysis.
+            has completed the {testName} training and demonstrated understanding of AI safety
+            governance and incident analysis. This is a record of training completion, not a
+            conformity mark.
           </p>
 
           {/* Score Badge */}
@@ -176,15 +179,15 @@ export default function Certificate({
             </div>
           </div>
 
-          {/* Certificate Number */}
+          {/* Completion Record Number */}
           <div className="pt-4 border-t border-amber-200 dark:border-amber-800">
-            <p className="text-xs text-muted-foreground">Certificate Number</p>
+            <p className="text-xs text-muted-foreground">Completion Record Number</p>
             <p className="font-mono text-sm font-medium">{certificateNumber}</p>
           </div>
 
           {/* Verification */}
           <p className="text-xs text-muted-foreground">
-            Verify this certificate at coai.org/verify/{certificateNumber}
+            Verify this completion record at coai.org/verify/{certificateNumber}
           </p>
         </div>
       </motion.div>

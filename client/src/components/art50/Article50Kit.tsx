@@ -26,14 +26,6 @@ function daysUntil(iso: string): number {
   return Math.max(0, Math.ceil((target.getTime() - now.getTime()) / 86400000));
 }
 
-// Canonical Stripe price IDs (from meok-attestation-api/checkout canonical ladder)
-// £999 one-time Article 50 Kit
-const STRIPE_KIT_URL = "https://buy.stripe.com/4gMcN7a8s6oq0ZTaqI8k91Z";
-// £199/mo Pro (unlimited + signed attestations)
-const STRIPE_PRO_URL = "https://buy.stripe.com/00wfZjbcw9ACcIBfL28k91K";
-// £4,950 Assessment (full gap analysis)
-const STRIPE_ASSESS_URL = "https://buy.stripe.com/cNieVf0xS7sueQJfL28k91G";
-
 const OBLIGATIONS = [
   { code: "Art 50(1)", title: "Chatbot disclosure", fine: "€15M or 3% of global turnover" },
   { code: "Art 50(2)", title: "Synthetic content watermarking (C2PA-2.0)", fine: "€15M or 3% of global turnover" },
@@ -51,7 +43,7 @@ const MCP_TOOLS = [
   { name: "c2pa_generate_manifest", desc: "C2PA-2.0 manifest with cryptographic watermark." },
   { name: "c2pa_validate_manifest", desc: "Verify an existing C2PA manifest." },
   { name: "get_deadline_status", desc: "Live days-to-cliff + transition-window timeline." },
-  { name: "check_access", desc: "API key + tier check (Free 10/day, Pro, Enterprise)." },
+  { name: "check_access", desc: "API key check (free, 10 calls/day)." },
 ];
 
 // 5 surfaces × 5 languages the MCP covers
@@ -67,7 +59,7 @@ const productSchema = {
   brand: { "@type": "Brand", name: "CSOAI" },
   offers: {
     "@type": "Offer",
-    price: "999",
+    price: "0",
     priceCurrency: "GBP",
     availability: "https://schema.org/InStock",
     url: "https://www.csoai.org/article-50-kit",
@@ -81,7 +73,7 @@ const softwareSchema = {
   name: "meok-watermark-attest-mcp",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Any",
-  offers: { "@type": "Offer", price: "999", priceCurrency: "GBP" },
+  offers: { "@type": "Offer", price: "0", priceCurrency: "GBP" },
   featureList: [
     "Classify Art 50(1)-(5) obligations",
     "Generate per-surface × per-language disclosure text",
@@ -125,7 +117,7 @@ const faqSchema = {
 const KIT_FEATURES = [
   { title: "Transparency Docs", desc: "Ready-to-file technical documentation for Article 50(1)." },
   { title: "Risk Classification", desc: "Automated Annex III risk assessment templates." },
-  { title: "MCP Pro Tier (12 mo)", desc: "Unlimited audits + signed attestations + monthly regression checks." },
+  { title: "MCP Toolkit", desc: "Unlimited audits + signed attestations + monthly regression checks." },
   { title: "C2PA Manifest Templates", desc: "Drop-in C2PA-2.0 manifests for your content pipeline." },
   { title: "Disclosure String Library", desc: "25 native-language strings, 5 surfaces, MIT-licensed, your product." },
   { title: "Post-Market Plan", desc: "Monitoring system for continuous runtime compliance." },
@@ -282,7 +274,7 @@ export default function Article50Kit() {
 
         {/* THE KIT — what's inside */}
         <section className="mb-16">
-          <h2 className="mb-6 text-3xl font-bold tracking-tight">What&apos;s in the £999 Kit</h2>
+          <h2 className="mb-6 text-3xl font-bold tracking-tight">What&apos;s in the Kit</h2>
           <div className="grid gap-4 md:grid-cols-2">
             {KIT_FEATURES.map((f) => (
               <div key={f.title} className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
@@ -293,65 +285,20 @@ export default function Article50Kit() {
           </div>
         </section>
 
-        {/* PRICING — 3 tiers */}
+        {/* THE KIT — free & open source */}
         <section className="mb-12">
-          <h2 className="mb-6 text-center text-3xl font-bold tracking-tight">Three Tiers, One Cliff</h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
-              <div className="mb-1 text-sm uppercase tracking-widest text-emerald-100/60">Free</div>
-              <div className="mb-3 text-3xl font-black">£0</div>
-              <p className="mb-4 text-sm text-emerald-100/65">
-                10 audits / day. Full classifier + disclosure templates.
-              </p>
-              <code className="text-xs text-emerald-300">pip install meok-watermark-attest-mcp</code>
-            </div>
-            <div className="relative rounded-2xl border-2 border-rose-400/50 bg-rose-500/[0.08] p-6">
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-rose-500 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-white">
-                Kit
-              </span>
-              <div className="mb-1 text-sm uppercase tracking-widest text-rose-200">One-time</div>
-              <div className="mb-3 text-3xl font-black">£999</div>
-              <p className="mb-4 text-sm text-emerald-100/75">
-                One-time purchase. MCP Pro tier (12 mo) + transparency docs + C2PA templates +
-                disclosure library + post-market plan.
-              </p>
-              <a
-                href={STRIPE_KIT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full rounded-xl bg-rose-600 px-6 py-3 text-center font-bold text-white transition hover:bg-rose-500"
-              >
-                Secure Compliance Now
-              </a>
-            </div>
-            <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
-              <div className="mb-1 text-sm uppercase tracking-widest text-emerald-100/60">Assessment</div>
-              <div className="mb-3 text-3xl font-black">£4,950</div>
-              <p className="mb-4 text-sm text-emerald-100/65">
-                Full gap analysis + a signed attestation of the result + a 1-on-1 review session.
-              </p>
-              <a
-                href={STRIPE_ASSESS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-6 py-3 text-center font-bold text-emerald-100 transition hover:bg-emerald-500/20"
-              >
-                Book Assessment
-              </a>
+          <h2 className="mb-6 text-center text-3xl font-bold tracking-tight">Free &amp; Open Source</h2>
+          <div className="mx-auto max-w-xl rounded-2xl border border-emerald-500/20 bg-[#05140d] p-8 text-center">
+            <div className="mb-1 text-sm uppercase tracking-widest text-emerald-100/60">Measurement kit</div>
+            <p className="mb-5 text-sm leading-relaxed text-emerald-100/75">
+              The full classifier, disclosure templates, C2PA-2.0 manifests, and Ed25519 attestations
+              ship in the open-source MCP. Install it and measure your Article 50 surface — no licence,
+              no gate, transparency docs and post-market plan included.
+            </p>
+            <div className="inline-flex items-center rounded-xl border border-emerald-500/20 bg-black/30 px-4 py-3 font-mono text-sm">
+              <code className="text-emerald-300">pip install meok-watermark-attest-mcp</code>
             </div>
           </div>
-          <p className="mt-4 text-center text-sm text-emerald-100/50">
-            Pro subscription{" "}
-            <a
-              href={STRIPE_PRO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-emerald-100"
-            >
-              £199/mo
-            </a>{" "}
-            for ongoing compliance + monthly regression checks.
-          </p>
         </section>
 
         {/* SOURCES */}

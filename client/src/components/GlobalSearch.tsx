@@ -563,7 +563,7 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
   }, [query]);
 
   // Ask the Council assistant - fuse live governance reasoning into the command bar
-  const askSovereign = useCallback(async () => {
+  const runCouncilAsk = useCallback(async () => {
     const t = query.trim();
     if (!t) return;
     setAiLoading(true); setAiAnswer(''); chargeSovereign(4);
@@ -613,7 +613,7 @@ export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearc
         <div ref={resultsRef} className="max-h-[60vh] overflow-y-auto p-2">
           {query.trim().length >= 3 && (
             <div className="mb-2 rounded-lg border border-emerald-200 bg-emerald-50/60 p-2">
-              <button onClick={askSovereign} className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left hover:bg-emerald-100/60">
+              <button onClick={runCouncilAsk} className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left hover:bg-emerald-100/60">
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
                   <Brain className="h-5 w-5" />
                 </div>

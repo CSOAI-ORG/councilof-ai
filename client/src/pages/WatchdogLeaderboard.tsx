@@ -69,7 +69,7 @@ const achievements = [
 // GSPC board — the canonical 14-slot measurement board, "13 measured of 14"
 // (SITTING 1 ruling 2026-08-18). Values are the exact figures served by
 // functions/api/gspc.ts (13 canonical measured 2026-08-12, DOI
-// 10.5281/zenodo.21755656; jail promoted 2026-08-18 from the signed living board,
+// 10.5281/zenodo.21991104; jail promoted 2026-08-18 from the signed living board,
 // smaller fleet, separation UNTESTED). slot15/human-vs-ai are measured IN-LANE only
 // (see the API's measured_in_lane) and are NOT board rows. A "leader" is the highest
 // point estimate; separation says whether that lead is statistically real (McNemar
@@ -116,7 +116,7 @@ function GspcBoardV2() {
         </CardTitle>
         <p className="text-xs text-muted-foreground">
           13 measured axes, 2026-08-12 (19-model fleet, 15,580 per-item rows, DOI
-          10.5281/zenodo.21755656) · jail (slot 14, containment) promoted 2026-08-18 from the
+          10.5281/zenodo.21991104) · jail (slot 14, containment) promoted 2026-08-18 from the
           signed living board (7-model fleet) · schema csoai.gspc-axes/0.5. A leader is the
           highest point estimate; separation is McNemar p&lt;0.05 on discordant items vs the best
           base model. <strong>{BOARD_SEPARATED} separated, {BOARD_TIES} ties, jail untested.</strong>{" "}

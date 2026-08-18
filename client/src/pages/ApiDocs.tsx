@@ -52,7 +52,7 @@ with urllib.request.urlopen("https://councilof.ai/api/gspc") as r:
     board = json.load(r)
 
 print(board["schema"])            # csoai.gspc-axes/0.3
-print(board["doi"])               # 10.5281/zenodo.21755656
+print(board["doi"])               # 10.5281/zenodo.21991104
 print(board["totals"]["axes"], "axes")
 print(board["totals"]["separated_leads"], "separated,",
       board["totals"]["ties"], "ties")
@@ -77,7 +77,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
   const responseExample = `{
   "schema": "csoai.gspc-axes/0.3",
   "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
-  "doi": "10.5281/zenodo.21755656",
+  "doi": "10.5281/zenodo.21991104",
   "measured_on": {
     "model": "13 canonical axes: 19-model fleet. Jail (slot 14): 7-model fleet",
     "date": "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
@@ -117,7 +117,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
   const FIELDS = [
     { f: "schema", d: "Always csoai.gspc-axes/0.5 — the payload contract version." },
     { f: "issuer", d: "CSOAI Ltd (GB, Companies House 16939677)." },
-    { f: "doi", d: "10.5281/zenodo.21755656 — the citable dataset record (13 canonical axes)." },
+    { f: "doi", d: "10.5281/zenodo.21991104 — the citable dataset record (13 canonical axes)." },
     { f: "totals.axes / measured_axes", d: "The 14-slot board: 13 canonical axes (same fleet, rows and grader) + jail (slot 14; smaller fleet, stated on the axis)." },
     { f: "totals.separated_leads / ties", d: "3 separated (McNemar p<0.05 on discordant items), 10 ties, 1 untested (jail has no separation test yet). A TIE is not a win." },
     { f: "totals.items", d: "Sum of per-axis n across the selection (890 across the 14-slot board)." },
