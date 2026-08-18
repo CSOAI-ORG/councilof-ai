@@ -37,7 +37,7 @@ const NAV: NavGroup[] = [
   {
     label: "Measure",
     items: [
-      { name: "GSPC axes", href: "#axes", note: "13 axes · jail · slot-15" },
+      { name: "GSPC axes", href: "#axes", note: "16 axes · incl. jail · instrument-honesty" },
       { name: "Benchmarks", href: "/benchmarks", note: "every result" },
       { name: "Verify a card", href: "/gspc-verify", note: "offline check" },
       { name: "Methodology", href: "/methodology", note: "how we grade" },

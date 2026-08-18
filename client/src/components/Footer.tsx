@@ -40,6 +40,7 @@ export function Footer() {
       links: [
         { name: 'FAQ', href: '/faq' },
         { name: 'Library — full archive', href: '/library' },
+        { name: 'The honesty gate — our own losses', href: '/honesty' },
         { name: 'Methodology', href: '/methodology' },
         { name: 'Verify a card', href: '/gspc-verify' },
         { name: 'AI Glossary', href: '/glossary' },
@@ -100,7 +101,7 @@ export function Footer() {
               <Shield className="h-8 w-8" />
               <div>
                 <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
-                <p className="text-emerald-100 text-sm">Measured 12 Aug 2026 across 19 models on 13 measured axes. Jail floor measured (empty on this stamp). Slot-15 unnamed. UNSIGNED on this stamp. Harness published — recompute it.</p>
+                <p className="text-emerald-100 text-sm">16 measured axes: 13 canonical (12 Aug, 19 models) + jail, instrument-honesty and human-vs-ai (18 Aug, 6–7 models, no separation test yet). Signed 18 Aug stamp. Harness published — recompute it.</p>
               </div>
             </div>
             <Link href="/benchmarks">

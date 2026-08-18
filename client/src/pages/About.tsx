@@ -617,7 +617,7 @@ export default function About() {
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
               <h3 className="text-xl font-bold mb-3">How is CSOAI different from other AI safety organizations?</h3>
               <p className="text-gray-600 leading-relaxed">
-                Most AI safety organisations focus on research or advocacy. We publish a measurement instrument instead: thirteen axes across frozen benchmarks, open on Hugging Face and Kaggle with the scoring code, so anyone can recompute what we claim or dispute an answer key. We also publish the results that go against us — our own model gives up 27.9 points of general reasoning to reach its refusal rate, and that number is on our homepage.
+                Most AI safety organisations focus on research or advocacy. We publish a measurement instrument instead: sixteen axes across frozen benchmarks, open on Hugging Face and Kaggle with the scoring code, so anyone can recompute what we claim or dispute an answer key. We also publish the results that go against us — our own model gives up 27.9 points of general reasoning to reach its refusal rate, and that number is on our homepage.
               </p>
             </Card>
           </div>

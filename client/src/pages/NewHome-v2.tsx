@@ -1073,7 +1073,7 @@ export default function NewHomeV2() {
           >
             <h3 className="text-2xl font-bold text-gray-900 mb-2">The instrument behind it</h3>
             <p className="text-gray-600 mb-6">
-              Thirteen axes, frozen benchmarks, open on Hugging Face and Kaggle with the scoring code —
+              Sixteen axes, frozen benchmarks, open on Hugging Face and Kaggle with the scoring code —
               so you can recompute any figure we publish, or disagree with any answer key.
             </p>
             <div className="overflow-x-auto">

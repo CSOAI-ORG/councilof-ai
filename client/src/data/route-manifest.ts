@@ -853,6 +853,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "New Home"
  },
  {
+  "path": "/honesty",
+  "comp": "Honesty",
+  "title": "Honesty"
+ },
+ {
   "path": "/horus",
   "comp": "HorusIntel",
   "title": "Horus Intel"
