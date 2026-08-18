@@ -1,0 +1,111 @@
+// functions/api/badge.ts — the README badge endpoint (GROWTH-300 #41).
+//
+// A shields.io-style badge any project can drop into its README:
+//     ![measured](https://councilof.ai/api/badge)
+//     ![measured](https://councilof.ai/api/badge?measured=9&total=14&label=agentname)
+//
+// The default badge states the board's own honest count — "13 of 14 axes" — the same
+// number the /api/gspc totals report ("13 measured of 14 quotable", SITTING 1 2026-08-18).
+// A visiting agent that enrols and is measured on fewer axes states its real count, and an
+// unmeasured subject renders honestly as "unmeasured" in grey — never a fabricated score.
+//
+// Formats:
+//   (default)        → SVG (image/svg+xml), embeddable directly in a README
+//   ?format=shields  → shields.io endpoint JSON {schemaVersion,label,message,color}
+//                      use as https://img.shields.io/endpoint?url=<this-url>&format=shields
+//   ?format=json     → the raw {measured,total,message,color,verify} object
+//
+// Doctrine: measurement, not certification. The badge is an image that points home to
+// /honesty, where the number is recomputable from its rows. It asserts nothing it cannot show.
+
+const BOARD = { measured: 13, total: 14 }; // canon: 13 measured of 14 (mirrors /api/gspc totals)
+const VERIFY_URL = "https://councilof.ai/honesty";
+const BRAND = "#4f46e5"; // indigo — matches the site
+const GREY = "#9ca3af";
+
+const clampInt = (raw: string | null, fallback: number, max = 999): number => {
+  const n = raw === null ? NaN : Number.parseInt(raw, 10);
+  return Number.isFinite(n) && n >= 0 && n <= max ? n : fallback;
+};
+
+// Colour ramp on the measured fraction: grey when nothing is measured, red→amber→green as
+// coverage rises. Honest by construction — 0 measured is never green.
+const colourFor = (measured: number, total: number): string => {
+  if (measured <= 0 || total <= 0) return GREY;
+  const frac = measured / total;
+  if (frac >= 0.999) return "#16a34a"; // full — green
+  if (frac >= 0.66) return "#65a30d"; // most — lime
+  if (frac >= 0.34) return "#ca8a04"; // some — amber
+  return "#dc2626"; // few — red
+};
+
+// Verdana-11 width estimate (shields uses the same font). Generous enough not to clip.
+const textWidth = (s: string): number =>
+  [...s].reduce((w, c) => w + (c === " " ? 3.5 : /[iIl.:'|]/.test(c) ? 3 : /[mwMW]/.test(c) ? 9 : 6.6), 0);
+
+const esc = (s: string): string =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const svgBadge = (label: string, message: string, colour: string): string => {
+  const padH = 6;
+  const lw = Math.ceil(textWidth(label)) + padH * 2;
+  const mw = Math.ceil(textWidth(message)) + padH * 2;
+  const w = lw + mw;
+  const lx = (lw / 2) * 10;
+  const mx = (lw + mw / 2) * 10;
+  const lt = (textWidth(label)) * 10;
+  const mt = (textWidth(message)) * 10;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="20" role="img" aria-label="${esc(label)}: ${esc(message)}">
+  <title>${esc(label)}: ${esc(message)}</title>
+  <linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
+  <clipPath id="r"><rect width="${w}" height="20" rx="3" fill="#fff"/></clipPath>
+  <g clip-path="url(#r)">
+    <rect width="${lw}" height="20" fill="#555"/>
+    <rect x="${lw}" width="${mw}" height="20" fill="${colour}"/>
+    <rect width="${w}" height="20" fill="url(#s)"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" font-size="110" text-rendering="geometricPrecision">
+    <text aria-hidden="true" x="${lx}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="${lt}">${esc(label)}</text>
+    <text x="${lx}" y="140" transform="scale(.1)" fill="#fff" textLength="${lt}">${esc(label)}</text>
+    <text aria-hidden="true" x="${mx}" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="${mt}">${esc(message)}</text>
+    <text x="${mx}" y="140" transform="scale(.1)" fill="#fff" textLength="${mt}">${esc(message)}</text>
+  </g>
+</svg>`;
+};
+
+export const onRequestGet: PagesFunction = async (context) => {
+  const url = new URL(context.request.url);
+  const total = clampInt(url.searchParams.get("total"), BOARD.total);
+  // `measured` may be omitted (board default) or explicitly 0 for an unmeasured subject.
+  const measured = url.searchParams.has("measured")
+    ? clampInt(url.searchParams.get("measured"), 0, total)
+    : BOARD.measured;
+  const label = (url.searchParams.get("label") || "GSPC measured").slice(0, 40);
+  const format = url.searchParams.get("format");
+
+  const message = measured <= 0 ? "unmeasured" : `${measured} of ${total} axes`;
+  const colour = colourFor(measured, total);
+
+  const headers: Record<string, string> = {
+    "cache-control": "public, max-age=300",
+    "access-control-allow-origin": "*",
+  };
+
+  if (format === "shields") {
+    // shields.io endpoint schema — https://shields.io/badges/endpoint-badge
+    return new Response(
+      JSON.stringify({ schemaVersion: 1, label, message, color: measured <= 0 ? "lightgrey" : colour }),
+      { headers: { ...headers, "content-type": "application/json; charset=utf-8" } },
+    );
+  }
+  if (format === "json") {
+    return new Response(
+      JSON.stringify({ measured, total, message, color: colour, verify: VERIFY_URL, ruling: "13 measured of 14 (SITTING 1, 2026-08-18)" }, null, 2),
+      { headers: { ...headers, "content-type": "application/json; charset=utf-8" } },
+    );
+  }
+
+  return new Response(svgBadge(label, message, colour), {
+    headers: { ...headers, "content-type": "image/svg+xml; charset=utf-8" },
+  });
+};
