@@ -114,7 +114,7 @@ export default function ModelRegistry() {
       {/* Header */}
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <a href="/sov-os" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
+          <a href="/os" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
             ← Open in Council OS
           </a>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">Model Registry</h1>
