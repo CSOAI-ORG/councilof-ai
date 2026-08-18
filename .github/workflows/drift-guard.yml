@@ -1,0 +1,28 @@
+name: Drift guard — live site vs ruled canon
+
+# Goes RED when the live councilof.ai drifts from canon.json — i.e. when a direct
+# `wrangler pages deploy` overwrote the gated CI build. See DEPLOY-LOCK.md.
+# Read-only: fetches public URLs, changes nothing, needs no secrets.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes
+  workflow_dispatch: {}       # run on demand from the Actions tab
+  push:
+    branches: [master]
+    paths: ["canon.json", "scripts/drift-guard.mjs", ".github/workflows/drift-guard.yml"]
+
+jobs:
+  drift-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # Give the just-pushed deploy time to propagate before asserting (skip wait on schedule).
+      - name: Settle
+        if: github.event_name == 'push'
+        run: sleep 420
+      - name: Assert live site matches canon.json
+        run: node scripts/drift-guard.mjs --host https://councilof.ai
