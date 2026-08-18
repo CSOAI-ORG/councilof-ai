@@ -55,7 +55,7 @@ export default function EarlyAccessLanding() {
             <ul className="space-y-3 mb-8 text-left">
               <li className="flex items-center gap-3">
                 <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                <span className="text-gray-700">50% discount on all plans</span>
+                <span className="text-gray-700">Full access to every feature</span>
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
@@ -165,34 +165,28 @@ export default function EarlyAccessLanding() {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* What Early Access Includes */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
           <motion.div {...fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Early Access Pricing</h2>
-            <p className="text-xl text-gray-600">50% off all plans for early access members</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Early Access Includes</h2>
+            <p className="text-xl text-gray-600">Full access to every feature for early members</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 name: 'Analyst',
-                price: '£249',
-                originalPrice: '£499',
                 description: 'Perfect for individuals',
                 features: ['Measurement Credential', 'Training Courses', 'Watchdog Access', 'Community']
               },
               {
                 name: 'Enterprise',
-                price: '£499',
-                originalPrice: '£999',
                 description: 'For organizations',
                 features: ['Team Accounts (5)', 'Council', 'API Access', 'Priority Support']
               },
               {
                 name: 'Government',
-                price: 'Custom',
-                originalPrice: 'Custom',
                 description: 'For regulatory bodies',
                 features: ['Unlimited Users', 'Full API', 'Custom Integration', 'Dedicated Support']
               },
@@ -207,11 +201,6 @@ export default function EarlyAccessLanding() {
                   {index === 1 && <div className="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold w-fit mb-4">Most Popular</div>}
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
                   <p className="text-gray-600 mb-6">{plan.description}</p>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                    <span className="text-gray-500 line-through ml-2">{plan.originalPrice}</span>
-                    <p className="text-sm text-gray-600 mt-2">per month (billed annually)</p>
-                  </div>
                   <ul className="space-y-3 mb-8 flex-1">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-2">

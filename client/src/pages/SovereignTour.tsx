@@ -299,7 +299,7 @@ export default function SovereignTour() {
               <span className="text-xs text-amber-300/70">Mint endpoint</span>
             </div>
             <p className="mt-2 text-sm text-amber-100/80">Endpoint status: {data.passportError}</p>
-            <p className="mt-1 text-xs text-amber-200/60">The live mint is available when the MEOK OS API is reachable.</p>
+            <p className="mt-1 text-xs text-amber-200/60">The live mint is available when the Layer 0 API is reachable.</p>
           </div>
         );
       }

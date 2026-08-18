@@ -39,10 +39,10 @@ export default function WatchdogHelpProtectHumanity() {
       cost: "Free"
     },
     {
-      step: "3. Get Certified",
+      step: "3. Get Your Credential",
       description: "Pass the measurement credential assessment to become an official Watchdog Analyst",
       time: "6-8 weeks",
-      cost: "$99-499"
+      cost: "Free"
     },
     {
       step: "4. Start Reporting",
@@ -82,7 +82,7 @@ export default function WatchdogHelpProtectHumanity() {
         "Case Studies & Practice Exams"
       ],
       duration: "6-8 weeks",
-      price: "$99"
+      price: "Free"
     },
     {
       title: "Measurement Credential Professional",
@@ -95,7 +95,7 @@ export default function WatchdogHelpProtectHumanity() {
         "Capstone Project"
       ],
       duration: "10-12 weeks",
-      price: "$199"
+      price: "Free"
     }
   ];
 
@@ -226,7 +226,7 @@ export default function WatchdogHelpProtectHumanity() {
 
         {/* Training Courses */}
         <div className="mb-20">
-          <h2 className="text-4xl font-bold mb-12 text-center">Free & Paid Training Courses</h2>
+          <h2 className="text-4xl font-bold mb-12 text-center">Free Training Courses</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {trainingCourses.map((course, idx) => (
               <Card key={idx} className="p-8 border-2 border-emerald-200 hover:border-emerald-600 transition-colors">

@@ -1,6 +1,7 @@
 /**
- * Certification Results Page
- * Displays exam results, score breakdown, and certificate if passed
+ * Council Academy Results Page
+ * Displays assessment results, score breakdown, and completion record if passed.
+ * A completion record attests training completion, not conformity.
  */
 
 import { useEffect, useState } from "react";
@@ -130,7 +131,7 @@ export default function CertificationResults() {
                   className="text-lg text-muted-foreground mb-6"
                 >
                   {passed
-                    ? "You've passed the Watchdog Analyst Certification Exam!"
+                    ? "You've completed the Watchdog Analyst course!"
                     : "You didn't pass this time, but you can try again."}
                 </motion.p>
 
@@ -161,7 +162,7 @@ export default function CertificationResults() {
                     transition={{ delay: 0.6 }}
                     className="bg-muted/50 rounded-lg p-4 inline-block"
                   >
-                    <div className="text-sm text-muted-foreground mb-1">Certificate Number</div>
+                    <div className="text-sm text-muted-foreground mb-1">Completion Record</div>
                     <div className="font-mono font-bold">{certificateNumber}</div>
                   </motion.div>
                 )}
@@ -183,17 +184,17 @@ export default function CertificationResults() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-amber-700 dark:text-amber-300">
                       <Award className="h-5 w-5" />
-                      Your Certificate
+                      Your Completion Record
                     </CardTitle>
                     <CardDescription>
-                      You are now a certified CSOAI Watchdog Analyst
+                      You've completed the CSOAI Watchdog Analyst course training
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
                       <Button className="w-full" variant="outline">
                         <Download className="h-4 w-4 mr-2" />
-                        Download Certificate
+                        Download Completion Record
                       </Button>
                       <Button className="w-full" variant="outline">
                         <Share2 className="h-4 w-4 mr-2" />

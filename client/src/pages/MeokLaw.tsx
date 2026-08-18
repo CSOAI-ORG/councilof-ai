@@ -56,7 +56,7 @@ const STATUS_TONE: Record<string, string> = {
 };
 
 export default function MeokLaw() {
-  useEffect(() => { document.title = "MEOK Law - cross-layer jurisdiction engine | CSOAI"; }, []);
+  useEffect(() => { document.title = "Jurisdiction Engine - cross-layer AI law | CSOAI"; }, []);
   const [r, setR] = useState("ca");
   const region = REGIONS.find((x) => x.id === r) || REGIONS[0];
   return (
@@ -64,9 +64,9 @@ export default function MeokLaw() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - MEOK Law</p>
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - Jurisdiction Engine</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">What governs you, here</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Pick a place. MEOK Law shows the full stack of AI rules that apply - city, state, nation, bloc - and how each layer cross-references the others. One question, the whole jurisdiction.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Pick a place. The Jurisdiction Engine shows the full stack of AI rules that apply - city, state, nation, bloc - and how each layer cross-references the others. One question, the whole jurisdiction.</p>
           <p className="mt-3 inline-block rounded-lg bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-100">As of June 2026 - EU AI Act: transparency 2 Aug 2026, high-risk deferred to Dec 2027 (Digital Omnibus).</p>
         </div>
       </section>
@@ -110,7 +110,7 @@ export default function MeokLaw() {
           <a href="/map" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The relevance map -&gt;</a>
           <a href="/try" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Ask the Council -&gt;</a>
         </div>
-        <p className="mt-6 text-xs text-gray-400 max-w-3xl">Worked examples shown. The live MEOK Law engine resolves any address against the full framework graph and keeps the layers current via the reg-delta feed once the Layer 0 backend is connected.</p>
+        <p className="mt-6 text-xs text-gray-400 max-w-3xl">Worked examples shown. The live jurisdiction engine resolves any address against the full framework graph and keeps the layers current via the reg-delta feed once the Layer 0 backend is connected.</p>
       </section>
     </div>
   );

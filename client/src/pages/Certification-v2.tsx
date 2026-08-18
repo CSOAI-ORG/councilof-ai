@@ -1,6 +1,7 @@
 /**
- * CEASAI Certification Page - Clear Certification Tiers & Licensing
- * Professional certification pathway with clear progression
+ * Council Academy Page - Course Levels & Training Progression
+ * Course completion attests training completion, not conformity.
+ * Council of AI measures; it does not certify or issue conformity marks.
  */
 
 import { Link } from "wouter";
@@ -22,7 +23,6 @@ import {
   ChevronDown,
   ChevronUp,
   BadgeCheck,
-  CreditCard,
   HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,28 +31,28 @@ import { Card } from "@/components/ui/card";
 // FAQ Data
 const faqItems = [
   {
-    question: "What's the difference between an attestation and a subscription?",
-    answer: "The attestation is a signed record of measured performance on a proctored assessment. The Analyst subscription is an annual or monthly plan that unlocks paid engagement workflows through the CSOAI measurement program. The attestation is your measured record; the subscription activates marketplace participation. Paid analyst workflows require both."
+    question: "What does a completion record attest?",
+    answer: "A completion record is a signed record that you completed a Council Academy course and its assessment. It attests training completion — nothing about any AI system's compliance or conformity. Council of AI measures; it does not certify or issue conformity marks."
   },
   {
-    question: "Can I get assessed without the subscription?",
-    answer: "Yes. You can complete every assessment without purchasing a subscription. Many people build their measured track record first, then activate a subscription when ready for paid engagement workflows. Your signed attestation remains verifiable regardless of subscription status."
+    question: "Is the training free?",
+    answer: "Yes. You can complete every Council Academy course and assessment without any payment. Many people work through the free Foundation courses first, then progress to higher course levels as they build their measured track record. Your signed completion record remains verifiable at any time."
   },
   {
-    question: "How long does certification take?",
-    answer: "Level 1 certification typically takes 2-4 weeks if you study part-time, completing the free Foundation courses and passing the 100-question exam. Higher levels require more time due to review count requirements and additional coursework. Level 2 typically takes 3-6 months, Level 3 takes 6-12 months, and Level 4 can take 1-2+ years depending on your pace."
+    question: "How long does a course take?",
+    answer: "Level 1 typically takes 2-4 weeks if you study part-time, completing the free Foundation courses and passing the 100-question assessment. Higher levels require more time due to review count requirements and additional coursework. Level 2 typically takes 3-6 months, Level 3 takes 6-12 months, and Level 4 can take 1-2+ years depending on your pace."
   },
   {
-    question: "What if I fail the exam?",
+    question: "What if I don't pass the assessment?",
     answer: "You can retake any assessment after a 24-hour waiting period. There's no limit to retake attempts. We recommend reviewing the training materials and focusing on areas where you struggled before retaking."
   },
   {
-    question: "Do certifications expire?",
-    answer: "Attestations are valid for 1 year from the date of the measured assessment. To keep your record current, an active Analyst subscription includes automatic re-attestation scheduling. Without an active subscription, you'll retake the assessment to refresh your record."
+    question: "Do completion records expire?",
+    answer: "Completion records are valid for 1 year from the date of the measured assessment. To keep your record current, you retake the assessment to refresh it."
   },
   {
     question: "Can I skip levels?",
-    answer: "No, certification levels must be completed in order. Each level builds on the knowledge and experience from the previous level. You must hold Level 1 before attempting Level 2, and so on."
+    answer: "No, course levels must be completed in order. Each level builds on the knowledge and experience from the previous level. You must complete Level 1 before attempting Level 2, and so on."
   }
 ];
 
@@ -80,7 +80,7 @@ const certificationTiers = [
       "Access to entry-level reviews"
     ],
     earnings: "—",
-    description: "Entry-level certification for aspiring AI Safety Analysts. Perfect starting point for your career."
+    description: "Entry-level course for aspiring AI Safety Analysts. Perfect starting point for your training."
   },
   {
     level: 2,
@@ -89,7 +89,7 @@ const certificationTiers = [
     icon: Briefcase,
     color: "blue",
     requirements: [
-      "Hold Level 1 Certification",
+      "Complete Level 1 course",
       "Complete Regional Specialization course",
       "500+ verified reviews completed"
     ],
@@ -105,7 +105,7 @@ const certificationTiers = [
       "Complex case assignments"
     ],
     earnings: "—",
-    description: "For experienced analysts ready to take on senior responsibilities and mentor others."
+    description: "A course for experienced analysts ready to take on senior responsibilities and mentor others."
   },
   {
     level: 3,
@@ -114,7 +114,7 @@ const certificationTiers = [
     icon: GraduationCap,
     color: "purple",
     requirements: [
-      "Hold Level 2 Certification",
+      "Complete Level 2 course",
       "Complete 5 Industry Specialization courses",
       "2,000+ verified reviews completed"
     ],
@@ -130,7 +130,7 @@ const certificationTiers = [
       "Speaking opportunities"
     ],
     earnings: "—",
-    description: "Expert-level certification for those leading teams and consulting with enterprises."
+    description: "Expert-level course for those leading teams and consulting with enterprises."
   },
   {
     level: 4,
@@ -139,7 +139,7 @@ const certificationTiers = [
     icon: Crown,
     color: "amber",
     requirements: [
-      "Hold Level 3 Certification",
+      "Complete Level 3 course",
       "Complete ALL 33 courses",
       "5,000+ verified reviews completed",
       "Published research or case study"
@@ -156,7 +156,7 @@ const certificationTiers = [
       "Shape measurement credential standards"
     ],
     earnings: "—",
-    description: "The highest certification level. Shape the future of AI safety as an industry leader."
+    description: "The highest course level. Shape the future of AI safety as an industry leader."
   }
 ];
 
@@ -238,16 +238,16 @@ function CertificationTierCard({ tier, index }: { tier: typeof certificationTier
           <IconComponent className={`h-7 w-7 ${colors.iconText}`} />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-gray-900">Measurement Credential — {tier.title}</h3>
+          <h3 className="text-xl font-bold text-gray-900">Council Academy — {tier.title}</h3>
           <p className="text-gray-600 text-sm mt-1">{tier.description}</p>
         </div>
       </div>
 
-      {/* Exam Fee */}
+      {/* Course Access */}
       <div className="mb-6 p-4 bg-white rounded-lg border border-gray-200">
         <div className="flex items-center justify-between">
-          <span className="text-gray-600">Exam Fee</span>
-          <span className={`text-2xl font-bold ${colors.accent}`}>{tier.examFee}</span>
+          <span className="text-gray-600">Course Access</span>
+          <span className={`text-2xl font-bold ${colors.accent}`}>Free</span>
         </div>
       </div>
 
@@ -305,13 +305,6 @@ function CertificationTierCard({ tier, index }: { tier: typeof certificationTier
         </ul>
       </div>
 
-      {/* Earnings */}
-      <div className={`p-4 ${colors.iconBg} rounded-lg`}>
-        <div className="flex items-center justify-between">
-          <span className={`font-semibold ${colors.iconText}`}>Earning Potential</span>
-          <span className={`text-xl font-bold ${colors.accent}`}>{tier.earnings}</span>
-        </div>
-      </div>
     </Card>
   );
 }
@@ -330,12 +323,16 @@ export default function CertificationV2() {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Professional Measurement Credential
+              Council Academy
             </h1>
 
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Four measured assessment levels from entry to expert. Earn signed, verifiable records
+              Four course levels from entry to expert. Earn signed, verifiable completion records
               of measured performance and join the global AI safety measurement community.
+            </p>
+            <p className="text-sm text-gray-400 mb-8 max-w-3xl mx-auto">
+              Course completion attests training completion, not conformity. Council of AI
+              measures; it does not certify or issue conformity marks.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -355,7 +352,7 @@ export default function CertificationV2() {
             <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                 <div className="text-3xl font-bold mb-1">4</div>
-                <div className="text-gray-300 text-sm">Certification Levels</div>
+                <div className="text-gray-300 text-sm">Course Levels</div>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                 <div className="text-3xl font-bold mb-1">33</div>
@@ -379,10 +376,10 @@ export default function CertificationV2() {
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Clear Certification Pathway
+              Clear Council Academy Pathway
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Progress through four levels from entry analyst to expert. Each level builds on the previous,
+              Progress through four course levels from entry analyst to expert. Each level builds on the previous,
               extending your measured track record and assessment scope.
             </p>
           </div>
@@ -417,7 +414,7 @@ export default function CertificationV2() {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Certification Levels
+              Course Levels
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Choose your starting point and progress through the levels as you gain experience and expertise
@@ -432,90 +429,50 @@ export default function CertificationV2() {
         </div>
       </section>
 
-      {/* Analyst Subscription Section */}
+      {/* Keeping Your Completion Record Current */}
       <section className="py-20 bg-gradient-to-br from-green-600 to-emerald-700 text-white">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 mb-6">
-              <CreditCard className="h-4 w-4" />
-              <span className="text-sm font-medium">For Paid Engagement Workflows</span>
+              <BadgeCheck className="h-4 w-4" />
+              <span className="text-sm font-medium">Free · Signed · Publicly Verifiable</span>
             </div>
             <h2 className="text-4xl font-bold mb-6">
-              Analyst Subscription
+              Your Completion Record
             </h2>
             <p className="text-xl text-green-50 max-w-3xl mx-auto">
-              Your attestation records measured performance. The Analyst subscription unlocks paid engagement workflows.
+              Every Council Academy course and assessment is free. Passing produces a signed
+              completion record of your measured performance.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {/* Annual Plan */}
-            <Card className="p-8 bg-white text-gray-900 border-4 border-green-400 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-1 rounded-full text-sm font-bold">
-                BEST VALUE
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="p-8 bg-white text-gray-900">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <BookOpen className="h-6 w-6 text-green-600" />
               </div>
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold mb-2">Annual Plan</h3>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-5xl font-bold text-green-600">—</span>
-                  <span className="text-gray-500">/year</span>
-                </div>
-                <p className="text-sm text-gray-500 mt-2">One payment, twelve months</p>
-              </div>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Full access to paid engagement workflows</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Priority support and escalation</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Automatic re-attestation scheduling</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Public registry verified status</span>
-                </li>
-              </ul>
-              <Button className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg">
-                Get Annual Plan
-              </Button>
+              <h3 className="text-xl font-bold mb-2">Free to Learn</h3>
+              <p className="text-gray-600">
+                Work through every course and assessment at no cost. No payment, no plan, no tiers.
+              </p>
             </Card>
-
-            {/* Monthly Plan */}
-            <Card className="p-8 bg-white/95 text-gray-900">
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold mb-2">Monthly Plan</h3>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-5xl font-bold text-gray-700">—</span>
-                  <span className="text-gray-500">/month</span>
-                </div>
-                <p className="text-sm text-gray-500 mt-2">Flexible, cancel anytime</p>
+            <Card className="p-8 bg-white text-gray-900">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <CheckCircle className="h-6 w-6 text-green-600" />
               </div>
-              <ul className="space-y-3 mb-6">
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Full access to paid engagement workflows</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Priority support and escalation</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Automatic re-attestation scheduling</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                  <span>Public registry verified status</span>
-                </li>
-              </ul>
-              <Button variant="outline" className="w-full border-2 border-gray-300 py-6 text-lg">
-                Get Monthly Plan
-              </Button>
+              <h3 className="text-xl font-bold mb-2">Signed Record</h3>
+              <p className="text-gray-600">
+                Passing an assessment produces a signed completion record anyone can verify.
+              </p>
+            </Card>
+            <Card className="p-8 bg-white text-gray-900">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <Clock className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-2">Keep It Current</h3>
+              <p className="text-gray-600">
+                Records are valid for one year. Retake the assessment any time to refresh yours.
+              </p>
             </Card>
           </div>
 
@@ -526,12 +483,11 @@ export default function CertificationV2() {
                 <Shield className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2">Subscription is Separate from Attestation</h3>
+                <h3 className="text-xl font-bold mb-2">A Completion Record Is Not a Conformity Mark</h3>
                 <p className="text-green-50 leading-relaxed">
-                  Assessments produce a signed record of measured performance. The Analyst subscription is an
-                  ongoing plan that unlocks paid engagement workflows through the CSOAI measurement program. You can hold an attestation
-                  without a subscription; paid workflows require both. This keeps every working analyst's
-                  measured record current and publicly verifiable.
+                  Assessments produce a signed record that a person completed Council Academy training.
+                  It attests training completion — nothing about any AI system's compliance or conformity.
+                  Council of AI measures; it does not certify or issue conformity marks.
                 </p>
               </div>
             </div>
@@ -544,10 +500,10 @@ export default function CertificationV2() {
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Why a Measurement Credential?
+              Why a Completion Record?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              A verified measurement credential shows what was measured, by whom, and when — evidence anyone can check
+              A verified completion record shows what was measured, by whom, and when — evidence anyone can check
             </p>
           </div>
 
@@ -627,7 +583,7 @@ export default function CertificationV2() {
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-600">
-              Everything you need to know about measurement attestation and subscriptions
+              Everything you need to know about Council Academy courses and completion records
             </p>
           </div>
 
@@ -645,7 +601,7 @@ export default function CertificationV2() {
       <section className="py-20 bg-slate-900 text-white">
         <div className="container mx-auto px-6 max-w-4xl text-center">
           <h2 className="text-4xl font-bold mb-6">
-            Ready to Start Your Attestation Journey?
+            Ready to Start Your Council Academy Journey?
           </h2>
           <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
             Begin with free training, complete your Level 1 measured assessment, and build a verifiable track record in AI safety.
