@@ -66,9 +66,9 @@ export default function HomeGlobe() {
       {/* Headline */}
       <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 px-6 pt-8 sm:px-10">
         <div className="max-w-2xl">
-          <Badge className="mb-3 bg-emerald-600 hover:bg-emerald-600">The measurement body for AI compliance</Badge>
+          <Badge className="mb-3 bg-emerald-600 hover:bg-emerald-600">The independent measurement body for AI</Badge>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-white drop-shadow-lg">
-            Is your AI following the rules? We measure it.
+            We measure AI systems against statute. You verify it.
           </h1>
         </div>
       </div>

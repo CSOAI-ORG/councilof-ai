@@ -330,7 +330,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
   "/models": "AI model registry & scoreboard | CSOAI",
   // Top public routes — "<Plain page name> | CSOAI"
-  "/": "CSOAI — the measurement body for AI compliance",
+  "/": "CSOAI — the independent measurement body for AI",
   "/plans": "Plans | CSOAI",
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/gspc-verify": "GSPC Verify | CSOAI",
