@@ -101,7 +101,7 @@ export function Footer() {
               <Shield className="h-8 w-8" />
               <div>
                 <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
-                <p className="text-emerald-100 text-sm">16 measured axes: 13 canonical (12 Aug, 19 models) + jail, instrument-honesty and human-vs-ai (18 Aug, 6–7 models, no separation test yet). Signed 18 Aug stamp. Harness published — recompute it.</p>
+                <p className="text-emerald-100 text-sm">GSPC 14-slot board — 13 measured axes (12 Aug, 19 models) plus jail, containment (18 Aug, n=71, separation untested). Signed 18 Aug stamp. Harness published — recompute it.</p>
               </div>
             </div>
             <Link href="/benchmarks">

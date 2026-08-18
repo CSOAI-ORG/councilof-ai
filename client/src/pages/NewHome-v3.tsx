@@ -20,9 +20,9 @@ import {
 
 // ── data ────────────────────────────────────────────────────────────────────
 const FOUR_BUYERS = [
-  { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. 16 measured axes — 13 canonical across 19 models, plus jail, instrument-honesty and human-vs-ai (18 Aug, smaller fleet). Signed stamp. Verify at GET councilof.ai/api/gspc." },
+  { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. A 14-slot board: 13 measured axes across 19 models, plus jail (containment, 18 Aug, smaller fleet). Signed stamp. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
-  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. 16 measured axes — including the ones that catch our own models." },
+  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. 13 measured of 14 — including the axis that catches our own models." },
   { icon: Zap, who: "Developers", tagline: "Measure per call on the agent rail", cta: "Explore the MCP fleet", href: "/mcp-fleet", desc: "291 governed MCP servers. Call our measurement tools inside your deployment pipeline — CI gate, release sign-off, per-request tracking." },
 ];
 
@@ -136,7 +136,7 @@ function UspGrid() {
 
 function AxesGrid() {
   return (
-    <Section title="The GSPC measurement slots" subtitle="16 measured axes: 13 canonical (12 Aug, 19 models) + jail, instrument-honesty and human-vs-ai (18 Aug, 6–7 models, separation untested). Signed 18 Aug stamp." bg="bg-white">
+    <Section title="The GSPC measurement slots" subtitle="GSPC (Governance · Safety · Provenance · Continuity), a 14-slot board: 13 measured axes (12 Aug, 19 models) + jail, containment (18 Aug, 7 models, separation untested). Signed 18 Aug stamp." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {AXES.map(a => {
           const q = quotable(a);
@@ -290,7 +290,7 @@ const SCHEMA = {
 const FAQ_SCHEMA = {
   "@context": "https://schema.org", "@type": "FAQPage",
   "mainEntity": [
-    { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks: 16 measured axes — 13 canonical across 19 models, plus jail, instrument-honesty and human-vs-ai on a smaller fleet. Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
+    { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks on the GSPC 14-slot board: 13 measured axes across 19 models, plus jail (containment) on a smaller fleet. Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
     { "@type": "Question", "name": "Do you certify AI systems?", "acceptedAnswer": { "@type": "Answer", "text": "No. We issue verified measurement credentials — a 3KB signed card showing what your AI did when we measured it. That is evidence, not a certification badge." } },
     { "@type": "Question", "name": "How much does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "Your first measurement card is free. Plans for ongoing re-attestation start at £199/month. Enterprise plans available — see /pricing." } },
   ]
@@ -332,7 +332,7 @@ export default function NewHomeV3() {
           <FaqBlock
             title="Questions people ask"
             items={[
-              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks: 16 measured axes — 13 canonical across 19 models, plus jail, instrument-honesty and human-vs-ai on a smaller fleet — and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
+              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks on the GSPC 14-slot board — 13 measured axes across 19 models, plus jail (containment) on a smaller fleet — and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
               { q: "What does a measurement card cost?", a: "Your first measurement card is free. Ongoing re-attestation starts at £199/month. Enterprise plans available — see the pricing page." },
               { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },

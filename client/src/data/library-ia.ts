@@ -43,7 +43,7 @@ export const SECTORS: Sector[] = [
     blurb: "Compliance MCPs, C2PA / Article-50 watermarking, Ed25519 signature verification, the agent (A2A) API, drift and provenance.",
     test: rx(/\bmcps?\b|layer-?0|c2pa|watermark|signature|\bverify\b|\bapi\b|distribution|sigstore|attest|did-|ed25519|oscal|\bagents?\b|registry|drift|provenance|\bledger\b|architecture|cobol|integrat|webhook|vulnerabilit|\bscan\b|cyber|deepfake|instrument|systemcard|technolog|\bdocs?\b|ontolog|\bmodels?\b|transparency|\bvoice\b/) },
   { id: "axes", title: "GSPC Axes & Benchmarks",
-    blurb: "The 16 measured axes and the board — the flagship. Every number recomputable from its rows; UNMEASURED reported, never hidden.",
+    blurb: "The GSPC 14-slot board (13 measured axes + jail) — the flagship. Every number recomputable from its rows; UNMEASURED reported, never hidden.",
     test: rx(/gspc|benchmark|\barena\b|\bboard\b|leaderboard|provbench|govbench|\baxis\b|\baxes\b|scorecard|\bmeasured?\b|evidence|anchors|gap-map|\bassess/) },
   { id: "governance", title: "Governance & Frameworks",
     blurb: "NIST AI RMF, ISO/IEC 42001, OSCAL, readiness, PDCA, sector playbooks — the frameworks crosswalked to the measured axes.",

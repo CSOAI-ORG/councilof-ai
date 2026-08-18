@@ -66,13 +66,15 @@ const achievements = [
   { icon: Shield, name: "Ledger Published", description: "Signed measurement ledger from the 2026-08-04 sweep on HF", holders: 1 },
 ];
 
-// GSPC board — the canonical 16-axis measurement board. Values are the exact
-// figures served by functions/api/gspc.ts (13 canonical measured 2026-08-12, DOI
-// 10.5281/zenodo.21755656; jail/instrument-honesty/human-vs-ai promoted 2026-08-18
-// from the signed living board, smaller fleet, separation UNTESTED). A "leader" is
-// the highest point estimate; separation says whether that lead is statistically
-// real (McNemar p<0.05 on discordant items vs the best base model), a TIE, or
-// UNTESTED (no separation test run yet). TIES ARE NOT WINS.
+// GSPC board — the canonical 14-slot measurement board, "13 measured of 14"
+// (SITTING 1 ruling 2026-08-18). Values are the exact figures served by
+// functions/api/gspc.ts (13 canonical measured 2026-08-12, DOI
+// 10.5281/zenodo.21755656; jail promoted 2026-08-18 from the signed living board,
+// smaller fleet, separation UNTESTED). slot15/human-vs-ai are measured IN-LANE only
+// (see the API's measured_in_lane) and are NOT board rows. A "leader" is the highest
+// point estimate; separation says whether that lead is statistically real (McNemar
+// p<0.05 on discordant items vs the best base model), a TIE, or UNTESTED (no
+// separation test run yet). TIES ARE NOT WINS.
 type BoardAxis = {
   axis: string;
   leader: string;
@@ -96,10 +98,8 @@ const BOARD_V2: BoardAxis[] = [
   { axis: "continuity", leader: "council specialist:destruction-v3", accuracy: 0.606, ci: [0.437, 0.753], n: 33, separation: "TIE", p: 1.0 },
   { axis: "machinery-conformity", leader: "llama3.2:3b (base model)", accuracy: 0.545, ci: [0.380, 0.702], n: 33, separation: "TIE", p: 0.5811 },
   { axis: "swarm", leader: "qwen2.5:0.5b-instruct (base model)", accuracy: 0.975, ci: null, n: 40, separation: "TIE", p: 1.0 },
-  // Living-stamp axes (signed 2026-08-18, 6–7 model fleet — smaller than the 19-model board fleet)
+  // Slot 14 — jail (signed 2026-08-18, 7-model fleet — smaller than the 19-model board fleet)
   { axis: "jail", leader: "qwen2.5:0.5b-instruct (base model)", accuracy: 0.5915, ci: null, n: 71, separation: "UNTESTED", p: null },
-  { axis: "slot15 (instrument-honesty)", leader: "qwen2.5:7b (base model)", accuracy: 0.3333, ci: null, n: 35, separation: "UNTESTED", p: null },
-  { axis: "human-vs-ai", leader: "qwen3:4b (base model)", accuracy: 1.0, ci: null, n: 35, separation: "UNTESTED", p: null },
 ];
 const BOARD_SEPARATED = BOARD_V2.filter((a) => a.separation === "SEPARATED").length;
 const BOARD_TIES = BOARD_V2.filter((a) => a.separation === "TIE").length;
@@ -112,14 +112,14 @@ function GspcBoardV2() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-emerald-600" />
-          GSPC board — 16 measurement axes
+          GSPC board — 14 slots, 13 measured of 14
         </CardTitle>
         <p className="text-xs text-muted-foreground">
-          13 canonical axes measured 2026-08-12 (19-model fleet, 15,580 per-item rows, DOI
-          10.5281/zenodo.21755656) · jail, instrument-honesty and human-vs-ai promoted 2026-08-18
-          from the signed living board (6–7 model fleet) · schema csoai.gspc-axes/0.4. A leader is
-          the highest point estimate; separation is McNemar p&lt;0.05 on discordant items vs the best
-          base model. <strong>{BOARD_SEPARATED} separated, {BOARD_TIES} ties, 3 untested.</strong>{" "}
+          13 measured axes, 2026-08-12 (19-model fleet, 15,580 per-item rows, DOI
+          10.5281/zenodo.21755656) · jail (slot 14, containment) promoted 2026-08-18 from the
+          signed living board (7-model fleet) · schema csoai.gspc-axes/0.5. A leader is the
+          highest point estimate; separation is McNemar p&lt;0.05 on discordant items vs the best
+          base model. <strong>{BOARD_SEPARATED} separated, {BOARD_TIES} ties, jail untested.</strong>{" "}
           Ties are honest ties — a point-estimate lead is not a measured win.
         </p>
         <p className="mt-2 rounded-lg border border-amber-300/50 bg-amber-50 px-3 py-2 text-xs text-amber-800">
@@ -172,10 +172,10 @@ function GspcBoardV2() {
           </table>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          {BOARD_ITEMS} items across 16 axes. swarm withholds its interval by the
-          effective-n rule (3 unique prompts, 40 non-independent instances); the three
-          living-stamp axes show no interval because their separation is untested. Recompute
-          the board live at <code>councilof.ai/api/gspc</code>. Measurement, not certification.
+          {BOARD_ITEMS} items across the 14-slot board. swarm withholds its interval by the
+          effective-n rule (3 unique prompts, 40 non-independent instances); jail shows no
+          interval because its separation is untested. Recompute the board live at{" "}
+          <code>councilof.ai/api/gspc</code>. Measurement, not certification.
         </p>
       </CardContent>
     </Card>
@@ -223,7 +223,7 @@ export default function WatchdogLeaderboard() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Canonical board — the 16-axis GSPC board, real values from /api/gspc */}
+        {/* Canonical board — the 14-slot GSPC board, real values from /api/gspc */}
         <GspcBoardV2 />
 
         {/* 3D portal — the regulator lens: public accountability, mapped live */}

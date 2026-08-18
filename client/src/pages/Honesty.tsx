@@ -29,7 +29,7 @@ const ARTICLE_LD = {
   publisher: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai", identifier: "UK Companies House 16939677" },
   author: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai" },
   description:
-    "Council of AI publishes the result that embarrasses it: its two council fine-tunes are losing to base models in its own 16-axis arena. Fully reproducible from 3,700+ signed rounds.",
+    "Council of AI publishes the result that embarrasses it: its two council fine-tunes are losing to base models in its own arena. Fully reproducible from 3,700+ signed rounds.",
 };
 
 export default function Honesty() {
@@ -55,7 +55,7 @@ export default function Honesty() {
         <h2 className="mt-10 text-xl font-bold">The verdict, plainly</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           Our two council fine-tunes — <strong>council-oowm</strong> and <strong>council-safe</strong> —
-          are <strong>losing to base models in our own 16-axis arena</strong>, on our own GPU, with our
+          are <strong>losing to base models in our own arena</strong>, on our own GPU, with our
           own Elo ladder. We trained them. We measure them. They lose. We publish it.
         </p>
 
@@ -150,7 +150,8 @@ export default function Honesty() {
         <h2 className="mt-10 text-xl font-bold">The record</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           Every number above is from the live pod state at 2026-08-18, recorded in the arena league
-          with the 16-axis battery. Recompute path: <code className="text-xs">reborn_league.json</code>,
+          (its internal battery convention, not the public board). Recompute path:{" "}
+          <code className="text-xs">reborn_league.json</code>,
           ~3,700 rounds, Elo K=32. See also the board&apos;s own catches:{" "}
           <Link href="/gspc-arena" className="text-emerald-700 underline">
             jail

@@ -77,7 +77,7 @@ export default function LivingStages() {
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-300">The board · 12 Aug 2026 UNSIGNED</p>
               <h2 className="mt-3 text-4xl font-black">{MEASURED} measured × 19 models</h2>
               <p className="mt-3 max-w-lg text-emerald-100/70">
-                A filled cell is a measurement. A dash is honest emptiness. 16 measured axes: 13 canonical plus jail, instrument-honesty and human-vs-ai (18 Aug, smaller fleet, separation untested). The 18 Aug stamp is signed.
+                A filled cell is a measurement. A dash is honest emptiness. A 14-slot board: 13 measured axes plus jail, containment (18 Aug, smaller fleet, separation untested). The 18 Aug stamp is signed.
               </p>
             </div>
             <a href="/gspc-scoreboard" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white hover:bg-emerald-400">

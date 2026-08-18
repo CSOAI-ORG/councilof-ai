@@ -18,9 +18,9 @@ import { toast } from "sonner";
  * /api-docs — the REAL public API.
  *
  * There is one public, keyless endpoint: councilof.ai/api/gspc. It returns the
- * 16-axis GSPC board (schema csoai.gspc-axes/0.4) — the exact shape served by
- * functions/api/gspc.ts. No accounts, no API keys, no /v1/* SaaS surface, no
- * tiers. Everything here is recomputable from the published harness.
+ * GSPC 14-slot board, "13 measured of 14" (schema csoai.gspc-axes/0.5) — the exact
+ * shape served by functions/api/gspc.ts. No accounts, no API keys, no /v1/* SaaS
+ * surface, no tiers. Everything here is recomputable from the published harness.
  */
 
 const BASE = "https://councilof.ai/api/gspc";
@@ -35,7 +35,7 @@ export default function ApiDocs() {
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  const curlExample = `# The whole 16-axis board (keyless — no auth header)
+  const curlExample = `# The whole 14-slot board (keyless — no auth header)
 curl https://councilof.ai/api/gspc
 
 # A single axis
@@ -79,17 +79,17 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
   "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
   "doi": "10.5281/zenodo.21755656",
   "measured_on": {
-    "model": "13 canonical axes: 19-model fleet. Living-stamp axes: 6-7 model fleet",
-    "date": "2026-08-12 (13 canonical axes) · 2026-08-18 (jail, slot15, human-vs-ai)",
+    "model": "13 canonical axes: 19-model fleet. Jail (slot 14): 7-model fleet",
+    "date": "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
     "grading": "deterministic grading on 15,580 per-item rows (0 transport errors)"
   },
   "totals": {
-    "axes": 16,
-    "measured_axes": 16,
-    "items": 960,
+    "axes": 14,
+    "measured_axes": 14,
+    "items": 890,
     "separated_leads": 3,
     "ties": 10,
-    "untested_separations": 3
+    "untested_separations": 1
   },
   "axes": [
     {
@@ -108,23 +108,25 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
       "status": "MEASURED",
       "dataset": "csoai/gspc-gov"
     }
-    // ... 15 more axes
+    // ... 13 more axes
   ],
+  "measured_in_lane": [ /* slot15 (instrument-honesty), human-vs-ai — in-lane only, not the board */ ],
   "limitations": [ "3 of the 13 canonical axes show a statistically separated leader ...", "..." ]
 }`;
 
   const FIELDS = [
-    { f: "schema", d: "Always csoai.gspc-axes/0.4 — the payload contract version." },
+    { f: "schema", d: "Always csoai.gspc-axes/0.5 — the payload contract version." },
     { f: "issuer", d: "CSOAI Ltd (GB, Companies House 16939677)." },
     { f: "doi", d: "10.5281/zenodo.21755656 — the citable dataset record (13 canonical axes)." },
-    { f: "totals.axes / measured_axes", d: "16 measurement axes: 13 canonical (same fleet, rows and grader) + 3 living-stamp axes (jail, slot15, human-vs-ai; smaller fleet, stated per axis)." },
-    { f: "totals.separated_leads / ties", d: "3 separated (McNemar p<0.05 on discordant items), 10 ties, 3 untested (living-stamp axes have no separation test yet). A TIE is not a win." },
-    { f: "totals.items", d: "Sum of per-axis n across the selection (960 across all 16 axes)." },
+    { f: "totals.axes / measured_axes", d: "The 14-slot board: 13 canonical axes (same fleet, rows and grader) + jail (slot 14; smaller fleet, stated on the axis)." },
+    { f: "totals.separated_leads / ties", d: "3 separated (McNemar p<0.05 on discordant items), 10 ties, 1 untested (jail has no separation test yet). A TIE is not a win." },
+    { f: "totals.items", d: "Sum of per-axis n across the selection (890 across the 14-slot board)." },
     { f: "axes[].n / accuracy / interval", d: "Per-axis item count, the LEADER's accuracy, and its Wilson 95% CI where n is honestly independent." },
     { f: "axes[].separation / separation_p", d: "SEPARATED, TIE or UNTESTED, with the McNemar exact p on discordant pairs vs the best base model where the test has run." },
     { f: "axes[].fleet_mean / mean_harm", d: "The axis's measured-fleet mean, and (canonical axes only) the severity-weighted failure mass the accuracy hides." },
-    { f: "axes[].per_model", d: "Living-stamp axes only: the verbatim per-model rows from the signed living board (TP/FP/TN/FN, honesty or alignment rates)." },
-    { f: "measured_on.living_stamp", d: "The signed living-board stamp: Ed25519 signer, signature, and sig_input recipe for the 3 living-stamp axes." },
+    { f: "axes[].per_model", d: "Jail only: the verbatim per-model rows from the signed living board (TP/FP/TN/FN, precision, recall)." },
+    { f: "measured_in_lane", d: "slot15 (instrument-honesty) and human-vs-ai — measured in-lane on 6 models under the internal living-board convention. Served for honesty; NOT board-quotable and never counted in totals." },
+    { f: "measured_on.living_stamp", d: "The signed living-board stamp: Ed25519 signer, signature, and sig_input recipe for jail and the in-lane measurements." },
     { f: "axes[].unparsed_rate", d: "Share of responses no label could be read from — reported, never scored as a wrong answer." },
     { f: "axes[].status", d: "MEASURED / UNMEASURED / DRAFT / SPEC / PLANNED. UNMEASURED is reported with its n, never hidden." },
   ];
@@ -162,7 +164,8 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
             </div>
             <h1 className="text-4xl font-bold mb-4">The GSPC axis API</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              One public endpoint returns the 16-axis GSPC measurement board as JSON.
+              One public endpoint returns the GSPC (Governance · Safety · Provenance · Continuity)
+              14-slot measurement board — 13 measured of 14 — as JSON.
               No account, no API key, no tiers. Every number is recomputable from the
               published harness.
             </p>
@@ -183,7 +186,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
                 <div className="col-span-4">Returns</div>
               </div>
               {[
-                { method: "GET", endpoint: "/api/gspc", desc: "The full 16-axis board" },
+                { method: "GET", endpoint: "/api/gspc", desc: "The full 14-slot board" },
                 { method: "GET", endpoint: "/api/gspc?axis=<name>", desc: "One axis (404 lists known axes)" },
               ].map((api, i) => (
                 <div key={i} className="grid grid-cols-12 gap-4 p-3 border-b last:border-0 text-sm">

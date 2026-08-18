@@ -39,8 +39,8 @@ export const STORY: Slide[] = [
   },
   {
     kicker: "04  Honest grid",
-    title: "16 measured axes — including the ones that catch us.",
-    body: "Empty cells stay empty. No invented scores. 13 canonical axes across 19 models; jail (escape detection), instrument-honesty and human-vs-ai measured 18 Aug on a smaller fleet, separation untested. Every measured cell with n, and CI where the n is honest.",
+    title: "13 measured of 14 — including the axis that catches us.",
+    body: "Empty cells stay empty. No invented scores. 13 measured axes across 19 models; jail (escape detection, the 14th slot) measured 18 Aug on a smaller fleet, separation untested — it caught our own fine-tune missing every escape, and we published that. Every measured cell with n, and CI where the n is honest.",
     href: "/gspc-scoreboard",
     cta: "Open the board",
     tone: "board",
