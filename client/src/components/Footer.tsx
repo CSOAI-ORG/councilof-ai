@@ -100,7 +100,7 @@ export function Footer() {
               <Shield className="h-8 w-8" />
               <div>
                 <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
-                <p className="text-emerald-100 text-sm">Measured 12 Aug 2026 across 19 models on 13 measured axes. Jail floor measured (empty on this stamp). Slot-15 unnamed. UNSIGNED on this stamp. Harness published — recompute it.</p>
+                <p className="text-emerald-100 text-sm">Measured 12 Aug 2026 across 19 models on 16 measured axes (960 items), including jail, slot-15 and human-vs-AI. UNSIGNED on this stamp. Harness published — recompute it.</p>
               </div>
             </div>
             <Link href="/benchmarks">

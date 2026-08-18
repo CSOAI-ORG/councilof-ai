@@ -46,7 +46,7 @@ const navigation = [
       { name: "Live Ledger (signed)", href: "/live-ledger", description: "Live D1 queryable decision_records — signed, with supersession trail" },
       { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
       { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
-      { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 axes × 19 models — every measured cell with n and 95% CI" },
+      { name: "Scoreboard", href: "/gspc-scoreboard", description: "16 axes × 19 models, 960 items (12 Aug stamp) — every measured cell with n and 95% CI" },
       { name: "AI Act Benchmark", href: "/ai-act-benchmark", description: "170/170 held-out scenarios against the EU benchmark — with CIs and caveats" },
       { name: "ProvBench", href: "/provbench", description: "Does C2PA provenance survive real-world transforms? 20 assets × 11 transforms" },
     ],

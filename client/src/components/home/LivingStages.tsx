@@ -77,7 +77,7 @@ export default function LivingStages() {
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-300">The board · 12 Aug 2026 UNSIGNED</p>
               <h2 className="mt-3 text-4xl font-black">{MEASURED} measured × 19 models</h2>
               <p className="mt-3 max-w-lg text-emerald-100/70">
-                A filled cell is a measurement. A dash is honest emptiness. 13 measured axes, jail floor (measured, empty on this stamp), unnamed slot-15. 12 Aug stamp is unsigned.
+                A filled cell is a measurement. A dash is honest emptiness. 16 measured axes, 960 items on the 12 Aug stamp. Jail, slot-15 and human-vs-AI are measured, not empty. 12 Aug stamp is unsigned.
               </p>
             </div>
             <a href="/gspc-scoreboard" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-extrabold text-white hover:bg-emerald-400">
