@@ -980,7 +980,7 @@ export default function GovernmentDashboard() {
               AI-Powered Regulatory Support
             </h2>
             <p className="text-lg text-emerald-100 max-w-3xl mx-auto">
-              Our 33-agent Council of AI provides automated, tamper-proof compliance monitoring
+              Our designed 33-agent Council of AI provides automated, tamper-proof compliance monitoring (design; live independence measured at n_eff 1.21 of 3)
               that supports regulatory decision-making with unprecedented accuracy and speed.
             </p>
           </div>
@@ -1015,7 +1015,7 @@ export default function GovernmentDashboard() {
                 Recent Council Actions
               </CardTitle>
               <CardDescription className="text-emerald-200">
-                Enforcement decisions by the 33-agent Council of AI
+                Enforcement decisions by the designed 33-agent Council of AI
               </CardDescription>
             </CardHeader>
             <CardContent>

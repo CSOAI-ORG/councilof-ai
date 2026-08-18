@@ -252,7 +252,7 @@ export default function Enterprise() {
                 <Zap className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Automated Assessment</h3>
                 <p className="text-sm text-gray-600">
-                  33-agent Council of AI evaluates your systems against selected compliance frameworks.
+                  The designed 33-agent Council of AI reviews your systems against selected compliance frameworks (design; live independence measured at n_eff 1.21 of 3).
                 </p>
               </Card>
             </div>

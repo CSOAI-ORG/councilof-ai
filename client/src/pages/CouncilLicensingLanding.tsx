@@ -29,7 +29,7 @@ export default function CouncilLicensingLanding() {
               Byzantine Council Licensing
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Deploy consensus-based AI governance. License our 33-agent Council of AI for your organization's critical compliance decisions.
+              Deploy consensus-based AI governance. License our designed 33-agent Council of AI for your organization's critical compliance decisions (design; live independence measured at n_eff 1.21 of 3).
             </p>
           </motion.div>
 

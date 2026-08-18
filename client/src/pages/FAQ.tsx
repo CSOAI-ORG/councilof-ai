@@ -53,7 +53,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "How is CSOAI different from other AI governance platforms?",
     answer:
-      "CSOAI uniquely combines automated governance tools with human expertise through our Watchdog analyst network. Unlike competitors like Credo AI, Holistic AI, or OneTrust, we focus on solving two problems simultaneously: ensuring AI safety AND creating jobs for workers displaced by automation. Our 33-agent Council of AI provides unprecedented consensus-driven decision-making.",
+      "CSOAI uniquely combines automated governance tools with human expertise through our Watchdog analyst network. Unlike competitors like Credo AI, Holistic AI, or OneTrust, we focus on solving two problems simultaneously: ensuring AI safety AND creating jobs for workers displaced by automation. Our designed 33-agent Council of AI provides consensus-driven decision-making within its measured limits (n_eff 1.21 of 3).",
     tags: ["comparison", "differentiation"],
   },
   {

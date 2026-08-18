@@ -51,7 +51,7 @@ export default function Technology() {
       id: 'analysis-engine',
       title: 'Analysis Engine',
       icon: Brain,
-      description: '33-agent Council of AI processes in parallel',
+      description: 'Designed 33-agent Council of AI processes in parallel',
       details: [
         'Distributed processing across multiple nodes',
         'designed multi-agent review algorithm',
@@ -135,7 +135,7 @@ export default function Technology() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold text-white mb-4">How the 33-agent Council of AI Works</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">How the Designed 33-agent Council of AI Works</h2>
             <p className="text-blue-200 text-lg">Distributed consensus for uncompromising compliance verification</p>
           </div>
 
@@ -263,7 +263,7 @@ export default function Technology() {
                 <Brain className="text-blue-400 flex-shrink-0" size={28} />
                 <div>
                   <h4 className="font-bold text-white">Analysis Engine</h4>
-                  <p className="text-sm text-blue-200">33-agent Council of AI (22/33 consensus)</p>
+                  <p className="text-sm text-blue-200">Designed 33-agent Council of AI (22/33 consensus — a design parameter, live independence measured at n_eff 1.21 of 3)</p>
                 </div>
               </div>
 
