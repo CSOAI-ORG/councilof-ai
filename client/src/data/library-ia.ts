@@ -100,9 +100,22 @@ const ACRONYMS: [RegExp, string][] = [
   [/\bAi\b/g, "AI"], [/\bUs\b/g, "US"], [/\bUk\b/g, "UK"], [/\bEu\b/g, "EU"], [/\bOs\b/g, "OS"],
   [/\bJsp\b/g, "JSP"], [/\bA2a\b/gi, "A2A"], [/\bDpa\b/g, "DPA"], [/\bSla\b/g, "SLA"],
 ];
+// Killed display strings (mirror scripts/brand-gate.mjs RULES). Manifest titles are derived from
+// stale component names (SovereignTour → "Sovereign Tour", AboutCEASAI → "About CEASAI"), so the
+// archive must SCRUB them before display or the Library page ships a forbidden brand string and
+// the deploy gate blocks. The pages' own rendered copy is already de-branded; only these derived
+// titles are stale. Removing the killed word yields a clean label ("Sovereign Tour" → "Tour").
+const FORBIDDEN_DISPLAY =
+  /\b(?:sovereign|ceasai|byzantine|bft|owem|sigil)\b|fault[\s-]?toleran(?:t|ce)|crown[\s-]?jewels?|goldmines?|black\s+swans?/gi;
+/** True if a path/title carries a killed brand ANYWHERE (non-anchored, non-stateful). A page whose
+ *  URL itself contains a killed brand (e.g. /about-ceasai) must never surface in the archive — the
+ *  path renders as visible text and would trip the deploy gate. */
+export const hasForbiddenBrand = (s: string): boolean =>
+  new RegExp(FORBIDDEN_DISPLAY.source, "i").test(s);
 export function prettifyTitle(t: string): string {
   let out = t;
   for (const [re, s] of ACRONYMS) out = out.replace(re, s);
+  out = out.replace(FORBIDDEN_DISPLAY, "");
   return out.replace(/\s+/g, " ").trim();
 }
 
@@ -118,7 +131,7 @@ const NOT_LIBRARIED =
 /** Every non-primary, surfaced route, classified — the archive contents. */
 export function libraryItems(): LibraryItem[] {
   return ROUTE_MANIFEST
-    .filter((r) => !PRIMARY_PATHS.has(r.path) && !NOT_LIBRARIED.test(r.path) && !/\.[a-z]+$/.test(r.path))
+    .filter((r) => !PRIMARY_PATHS.has(r.path) && !NOT_LIBRARIED.test(r.path) && !hasForbiddenBrand(r.path) && !/\.[a-z]+$/.test(r.path))
     .map((r) => ({ ...r, title: prettifyTitle(r.title), sector: classify(r.path, r.title).id }));
 }
 
@@ -132,5 +145,5 @@ export function itemsBySector(): Record<string, LibraryItem[]> {
 /** True when a page should show the "reference / archive" banner. */
 export function isLibraried(path: string): boolean {
   const p = path.replace(/\/$/, "") || "/";
-  return !PRIMARY_PATHS.has(p) && !p.startsWith("/library") && !NOT_LIBRARIED.test(p) && !/\.[a-z]+$/.test(p);
+  return !PRIMARY_PATHS.has(p) && !p.startsWith("/library") && !NOT_LIBRARIED.test(p) && !hasForbiddenBrand(p) && !/\.[a-z]+$/.test(p);
 }
