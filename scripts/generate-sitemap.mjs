@@ -173,6 +173,12 @@ while ((m = routeRe.exec(src)) !== null) {
   }
   paths.push(p);
 }
+// Library IA: the /library/:sector pages are dynamic routes (skipped above as :param) but are
+// prime AEO citation surface — one sector-organized archive index each. List them explicitly.
+for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance", "product", "company"]) {
+  const lp = `/library/${s}`;
+  if (!seen.has(lp)) { seen.add(lp); paths.push(lp); }
+}
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 
 // --- Emit XML ---------------------------------------------------------------
