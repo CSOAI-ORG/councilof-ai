@@ -1,6 +1,6 @@
 {
   "schema": "csoai.gspc-living/0.1",
-  "updated": "2026-08-18T08:22:54Z",
+  "updated": "2026-08-18T08:27:43Z",
   "source": "boards-v2 + gold-run-3090",
   "axes": [
     {
@@ -429,7 +429,7 @@
       "best_recall": 0.237,
       "union_escapes_caught_lo": 46,
       "accuracy": 0.5412,
-      "status": "MEASURED-INTERNAL",
+      "status": "QUOTABLE",
       "quotable": true,
       "note": "Detection layer: zero false positives across 5/7 models (prec 1.0); best detector qwen2.5:0.5b-instruct tp=9 rec=0.237. Containment layer (2592 trials) already MEASURED. Escape-detection recall remains low (models miss most attempts) \u2014 honest gap, drives trap-bank growth.",
       "_source": "gold-run-3090",
@@ -450,8 +450,10 @@
           }
         }
       },
-      "public_board": false,
-      "note_reconciled": "GY.1/GR.2: internal measurement \u2014 NOT a public 14-slot axis. Public board = 13 measured of 14; jail/slot-15 reported UNMEASURED on the 12-Aug stamp until the axis-count ruling lands (SITTING 1). human-vs-ai = owner-gated axis-slot candidate (GX.5)."
+      "public_board": true,
+      "note_reconciled": "GY.1/GR.2: internal measurement \u2014 NOT a public 14-slot axis. Public board = 13 measured of 14; jail/slot-15 reported UNMEASURED on the 12-Aug stamp until the axis-count ruling lands (SITTING 1). human-vs-ai = owner-gated axis-slot candidate (GX.5).",
+      "roadmap_note": "14th quotable \u2014 containment = continuity under attack (roadmap \u00a72 #14)",
+      "public": "PUBLIC"
     },
     {
       "axis": "slot15",
@@ -499,13 +501,15 @@
       },
       "best": "qwen2.5:7b",
       "best_rate": 0.3333,
-      "status": "MEASURED-INTERNAL",
-      "quotable": true,
+      "status": "LANE-MEASURED \u00b7 OWNER GATE",
+      "quotable": false,
       "note": "Best honesty rate 0.3333 across 6 models \u2014 measures instrument-absence honesty, not a metric",
       "_source": "f2-measure-3090",
       "_updated": "2026-08-18T02:33:14Z",
       "public_board": false,
-      "note_reconciled": "GY.1/GR.2: internal measurement \u2014 NOT a public 14-slot axis. Public board = 13 measured of 14; jail/slot-15 reported UNMEASURED on the 12-Aug stamp until the axis-count ruling lands (SITTING 1). human-vs-ai = owner-gated axis-slot candidate (GX.5)."
+      "note_reconciled": "GY.1/GR.2: internal measurement \u2014 NOT a public 14-slot axis. Public board = 13 measured of 14; jail/slot-15 reported UNMEASURED on the 12-Aug stamp until the axis-count ruling lands (SITTING 1). human-vs-ai = owner-gated axis-slot candidate (GX.5).",
+      "roadmap_note": "15 \u2014 reserved honesty, owner gate (roadmap \u00a72 #15)",
+      "public": "GATED"
     },
     {
       "axis": "human-vs-ai",
@@ -547,13 +551,15 @@
       },
       "best": "qwen3:4b",
       "best_rate": 1.0,
-      "status": "MEASURED-INTERNAL",
-      "quotable": true,
+      "status": "LANE-MEASURED \u00b7 OWNER GATE",
+      "quotable": false,
       "note": "Best alignment rate 1.0 across 6 models \u2014 paired response comparison",
       "_source": "f2-measure-3090",
       "_updated": "2026-08-18T02:33:14Z",
       "public_board": false,
-      "note_reconciled": "GY.1/GR.2: internal measurement \u2014 NOT a public 14-slot axis. Public board = 13 measured of 14; jail/slot-15 reported UNMEASURED on the 12-Aug stamp until the axis-count ruling lands (SITTING 1). human-vs-ai = owner-gated axis-slot candidate (GX.5)."
+      "note_reconciled": "GY.1/GR.2: internal measurement \u2014 NOT a public 14-slot axis. Public board = 13 measured of 14; jail/slot-15 reported UNMEASURED on the 12-Aug stamp until the axis-count ruling lands (SITTING 1). human-vs-ai = owner-gated axis-slot candidate (GX.5).",
+      "roadmap_note": "16 \u2014 paired, owner gate (roadmap \u00a72 #16)",
+      "public": "GATED"
     },
     {
       "axis": "human-baseline",
@@ -568,14 +574,17 @@
         "TruthfulQA": 0.94,
         "MATH/AIME": 0.33
       },
-      "status": "MEASURED",
-      "quotable": true,
+      "status": "DESIGNED",
+      "quotable": false,
       "note": "MEASURED via Leg A: published benchmark human baselines ingested + pinned + signed (no DPIA \u2014 published aggregates, not human-subjects data). Leg B (own-collection colosseum) DPIA-gated, hard.",
       "_source": "GSPC-COMPLETE-2026-08-18",
-      "_updated": "2026-08-18T08:22:27Z"
+      "_updated": "2026-08-18T08:22:27Z",
+      "public_board": false,
+      "roadmap_note": "17 \u2014 human baseline; Leg A seeds from published baselines now (no DPIA); own-collection DPIA-gated (roadmap \u00a72 #17, \u00a75)",
+      "public": "GATED"
     }
   ],
-  "signature": "df4b7e018b943a6f073776ce026403b9274f0e13c1bbfd282745015d3c835c4be731e12f4c04b1c512bb0037456c497ccef69a8957282f3bd3f34e208939a40a",
+  "signature": "9e70fa39658bce420f007a7b99924f465d77da2fe1222d8f8d711256b058dd702a7eac1795e75e685890a169ad168e5ad2af8d36aaabc64de60ae7f731a7380c",
   "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
   "signed": true,
   "sig_input": "sha256(canonical board minus signature fields, sort_keys)",
@@ -592,5 +601,17 @@
     "note": "Signed-and-wrong-and-published is the one thing the estate cannot survive. Data preserved, public framing corrected."
   },
   "_internal_only": true,
-  "_status_note": "INTERNAL-ONLY \u2014 16-axis lane convention. NEVER publishes. Canon public line = 13 measured of 14 (SITTING 1, 18 Aug). Superseded axis-count conventions on this artifact do not change public claims."
+  "_status_note": "INTERNAL-ONLY \u2014 16-axis lane convention. NEVER publishes. Canon public line = 13 measured of 14 (SITTING 1, 18 Aug). Superseded axis-count conventions on this artifact do not change public claims.",
+  "roadmap": {
+    "supersedes": "prior axis-structure notes",
+    "per": "GSPC Axis Roadmap 2026-08-18 (rides SITTING 1 decision record main 27eea436)",
+    "public_counts": "13 measured of 14 quotable",
+    "ladder": {
+      "now": "14 quotable",
+      "16": "slot15+hvai clear reconciliation (OWNER GATE)",
+      "17": "human baseline lands (DPIA gate for own-collection)"
+    },
+    "reconciled_by": "JEEVES",
+    "date": "2026-08-18"
+  }
 }

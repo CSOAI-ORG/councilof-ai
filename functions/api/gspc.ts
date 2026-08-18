@@ -216,13 +216,24 @@ export const onRequestGet: PagesFunction = async (context) => {
   // LIVING BOARD MERGE — append axes from the bundled living DB not in the
   // hardcoded 13 (e.g. jail, measured 2026-08-13). The site runs on living
   // benchmarks, not only the frozen snapshot. (JEEVES 2026-08-17)
+  // PUBLIC-COUNT RULING (GSPC roadmap 2026-08-18): the public measured total
+  // holds at 13 core + jail = 14 quotable. The gated axes (slot15, human-vs-ai,
+  // human-baseline) are served with their LANE/GATED status but are NOT counted
+  // in measured_axes until SITTING 1 moves the ladder. Each gated axis carries
+  // `quotable: false` and `public: "GATED"`.
+  const GATED_AXES = new Set(["slot15", "human-vs-ai", "human-baseline"]);
   let merged = AXES;
   try {
     const { LIVING_BOARD } = await import("./living_board.ts");
-    const known = new Set(AXES.map((a) => a.axis));
-    const extra = (LIVING_BOARD.axes || []).filter(
-      (a: any) => a.axis && !known.has(a.axis),
-    );
+    const known = new Set(AXES.map((a: any) => a.axis));
+    const extra = (LIVING_BOARD.axes || [])
+      .filter((a: any) => a.axis && !known.has(a.axis))
+      .map((a: any) => {
+        if (GATED_AXES.has(a.axis)) {
+          return { ...a, quotable: false, public: "GATED", status: a.status || "GATED" };
+        }
+        return a;
+      });
     if (extra.length) merged = [...AXES, ...extra];
   } catch {
     merged = AXES; // no living board bundled — serve frozen snapshot (never fail)
@@ -249,12 +260,20 @@ export const onRequestGet: PagesFunction = async (context) => {
       "as UNMEASURED, never scored as a wrong answer. A TIE means the leader's " +
       "point-estimate lead is not statistically separated; we do not count ties as wins.",
     totals: (() => {
-      const m = selected.filter((a) => a.status === "MEASURED");
+      // PUBLIC-COUNT RULING: measured_axes = 13 core + jail = 14 quotable.
+      // Gated axes (slot15/hvai/human-baseline) are served but NOT counted
+      // until SITTING 1 moves the ladder.
+      const m = selected.filter(
+        (a) => a.status === "MEASURED" && a.public !== "GATED",
+      );
+      const gated = selected.filter((a) => a.public === "GATED").length;
       const avg = (f: (a: typeof m[number]) => number) =>
         m.length ? round(m.reduce((s, a) => s + f(a), 0) / m.length) : null;
       return {
         axes: selected.length,
         measured_axes: m.length,
+        public_count: "13 measured of 14 quotable (GSPC ruling 2026-08-18)",
+        gated_axes: gated,
         items,
         separated_leads: m.filter((a) => a.separation === "SEPARATED").length,
         ties: m.filter((a) => a.separation === "TIE").length,
@@ -263,9 +282,12 @@ export const onRequestGet: PagesFunction = async (context) => {
         mean_fleet_mean: avg((a) => a.fleet_mean),
         mean_harm: avg((a) => a.mean_harm),
         mean_unparsed_rate: avg((a) => a.unparsed_rate),
-        mean_note: "Means are over MEASURED axes only. mean_accuracy averages the per-axis LEADERS; " +
-          "mean_fleet_mean averages the full 19-model fleet — the difference is selection, not skill. " +
-          "mean_harm is the severity-weighted failure mass the mean accuracy hides.",
+        mean_note: "Means are over PUBLIC MEASURED axes only (13 core + jail). " +
+          "mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages " +
+          "the full 19-model fleet — the difference is selection, not skill. " +
+          "mean_harm is the severity-weighted failure mass the mean accuracy hides. " +
+          "Gated axes (slot15, human-vs-ai, human-baseline) are served but not counted " +
+          "in measured_axes until SITTING 1 moves the ladder.",
       };
     })(),
     axes: selected,
