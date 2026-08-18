@@ -1,7 +1,7 @@
 /**
  * CSOAI Training Page - Enhanced Professional Design
- * Comprehensive training overview with course catalog, certification paths, FAQ
- * Updated pricing model: Free training, paid certification and licensing
+ * Comprehensive training overview with course catalog, attestation paths, FAQ
+ * Free-rail posture: the rail is free, verification is free forever
  */
 
 import { useState } from "react";
@@ -28,19 +28,15 @@ interface FAQItem {
 const faqItems: FAQItem[] = [
   {
     question: "Why is training free?",
-    answer: "We believe AI safety education should be accessible to everyone. The world needs more AI safety professionals, and cost shouldn't be a barrier. We sustain our operations through attestation fees and enterprise licensing, not by charging for education. This ensures anyone with the motivation can learn these critical skills."
+    answer: "We believe AI safety education should be accessible to everyone. The world needs more AI safety professionals, and cost shouldn't be a barrier. The rail is free — training is free, and verification is free forever. This ensures anyone with the motivation can learn these critical skills."
   },
   {
-    question: "What does the £49 exam fee cover?",
-    answer: "The £49 attestation exam fee covers exam administration and proctoring, signed attestation record generation, LinkedIn badge and digital credentials, lifetime verification through our public registry, and ongoing record validation. This is a one-time fee per attestation level."
+    question: "What does the attestation include?",
+    answer: "Your attestation covers a signed attestation record, LinkedIn badge and digital credentials, lifetime verification through our public registry, and ongoing record validation. Verification is free forever — anyone can check your record without asking us."
   },
   {
-    question: "Is the £199 license required?",
-    answer: "The Analyst License (£199/year or £19.99/month) is only required if you want to work as a paid analyst through the CSOAI platform. If you're learning for personal development or to enhance your current job skills, you don't need it. The license gives you access to paid case reviews, the analyst job board, and client matching."
-  },
-  {
-    question: "Can I pay monthly for the license?",
-    answer: "Yes! We offer flexible payment options. You can pay £199/year (best value - save £40) or £19.99/month with no long-term commitment. Monthly subscribers can cancel anytime. Both options include full platform access and earning capabilities."
+    question: "Do I need a license to take part?",
+    answer: "No. The analyst roster is open — you don't need to pay for access. When you're ready to work as an analyst through the CSOAI platform, you can join the roster and access case reviews, the analyst job board, and client matching. The rail is free."
   },
   {
     question: "How long does it take to complete training?",
@@ -48,15 +44,15 @@ const faqItems: FAQItem[] = [
   },
   {
     question: "What attestation do I get?",
-    answer: "Upon passing the attestation exam (£49), you receive the CSOAI Attested AI Safety Analyst credential. This includes a signed, verifiable digital record, a unique attestation ID, LinkedIn badge, and listing in our public registry. You can also earn specialised attestations for each framework."
+    answer: "Upon completing the attestation exam, you receive the CSOAI Attested AI Safety Analyst record. This includes a signed, verifiable digital record, a unique attestation ID, LinkedIn badge, and listing in our public registry. You can also earn specialised attestations for each framework."
   },
   {
-    question: "Are certificates recognised by employers?",
+    question: "Are attestation records recognised by employers?",
     answer: "Every attestation record is signed and independently verifiable in our public registry — any employer can check it in seconds. Our curriculum aligns with actual regulatory requirements from EU, US, and international standards bodies. We are pre-launch, so we make no recognition claims we cannot yet evidence; the record speaks for itself."
   },
   {
-    question: "What if I fail an exam?",
-    answer: "You can retake any exam after a 7-day waiting period. We provide detailed feedback on areas needing improvement, and you can review the relevant modules before retaking. Retakes are £25 each. Most learners pass on their first or second attempt."
+    question: "What if I don't pass an exam?",
+    answer: "You can retake any exam after a 7-day waiting period, free of charge. We provide detailed feedback on areas needing improvement, and you can review the relevant modules before retaking. Most learners complete it on their first or second attempt."
   }
 ];
 
@@ -246,19 +242,19 @@ const certificationSteps = [
   },
   {
     step: 2,
-    title: "Pass Attestation Exam",
+    title: "Complete Attestation Exam",
     description: "Demonstrate your expertise with our comprehensive attestation exam. Get your signed, verifiable record.",
     icon: GraduationCap,
-    price: "£49",
-    priceNote: "One-time fee"
+    price: "Free",
+    priceNote: "Verification free forever"
   },
   {
     step: 3,
-    title: "Get Analyst License",
-    description: "Activate your license to access paid work opportunities through the CSOAI platform.",
+    title: "Join the Analyst Roster",
+    description: "Join the roster to access work opportunities through the CSOAI platform. The rail is free.",
     icon: BadgeCheck,
-    price: "£199/year",
-    priceNote: "or £19.99/month"
+    price: "Free",
+    priceNote: "Open roster"
   },
   {
     step: 4,
@@ -281,7 +277,7 @@ const competitorComparison = [
   {
     feature: "Signed Attestation",
     csoai: true,
-    csoaiNote: "£49 exam fee",
+    csoaiNote: "Free — verified forever",
     competitors: true,
     competitorsNote: "£200-500"
   },
@@ -472,8 +468,8 @@ export default function TrainingV2() {
             </p>
 
             <p className="text-lg text-green-100 mb-10 max-w-2xl mx-auto">
-              <strong className="text-white">Only pay when you start earning.</strong> Training is free.
-              Attestation is £49. License to earn is £199/year.
+              <strong className="text-white">The rail is free.</strong> Training is free.
+              Attestation is free, and verification is free forever.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -525,7 +521,7 @@ export default function TrainingV2() {
               Your Path as an Analyst
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Simple, transparent pricing. Free training, pay only when you're ready to earn.
+              The rail is free. Free training, free attestation, verification free forever.
             </p>
           </div>
 
@@ -549,7 +545,7 @@ export default function TrainingV2() {
           <div className="mt-12 text-center">
             <div className="inline-flex items-center gap-3 bg-green-100 border border-green-200 rounded-full px-6 py-3">
               <CheckCircle className="h-5 w-5 text-green-600" />
-              <span className="text-green-800 font-medium">Monthly license option: £19.99/month - cancel anytime</span>
+              <span className="text-green-800 font-medium">No credit card, no subscription — the rail is free</span>
             </div>
           </div>
         </div>
@@ -738,7 +734,7 @@ export default function TrainingV2() {
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Everything you need to know about our free training and pricing
+              Everything you need to know about our free training and attestation
             </p>
           </div>
 
@@ -769,12 +765,12 @@ export default function TrainingV2() {
                 <div className="text-sm text-green-100">Training</div>
               </div>
               <div>
-                <div className="text-2xl font-bold">£49</div>
+                <div className="text-2xl font-bold text-yellow-300">FREE</div>
                 <div className="text-sm text-green-100">Attestation</div>
               </div>
               <div>
-                <div className="text-2xl font-bold">£199/yr</div>
-                <div className="text-sm text-green-100">License to Earn</div>
+                <div className="text-2xl font-bold text-yellow-300">FOREVER</div>
+                <div className="text-sm text-green-100">Verification</div>
               </div>
             </div>
           </div>
@@ -799,11 +795,11 @@ export default function TrainingV2() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5" />
-              <span>Only pay when earning</span>
+              <span>No subscription, ever</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5" />
-              <span>Monthly license option</span>
+              <span>Verification free forever</span>
             </div>
           </div>
         </div>

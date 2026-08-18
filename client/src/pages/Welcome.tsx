@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 
 // Welcome - the post-signup interstitial. Reads the plan the user picked on /pricing
 // (persisted to localStorage by Signup) and acknowledges it before dropping them into
-// the OS. No charge here - billing is confirmed on a later step once checkout is wired.
+// the OS. Free-rail posture: the rail is free, verification is free forever — no charge, no checkout.
 
 const PLAN: Record<string, { label: string; price: string; accent: "amber" | "emerald"; feats: string[] }> = {
-  operator: { label: "Operator", price: "$249/mo", accent: "amber", feats: ["ONE OS — live agent", "Signed attestation records, Ed25519-verifiable", "Watchdog operator console", "Regulatory drift alerts via corpus-watch", "Priority Layer 0 signing + support"] },
-  pro: { label: "Pro", price: "from $82.50/mo", accent: "emerald", feats: ["Premium hosted models", "Passport + EU AI Act audit", "Council of AI + governance", "Real-world Council Space", "PAYG credits included"] },
-  team: { label: "Team", price: "from $124/seat/mo", accent: "emerald", feats: ["Everything in Pro, per seat", "SSO + SCIM", "Shared council + audit logs", "Admin and roles", "Priority support"] },
-  enterprise: { label: "Enterprise", price: "custom", accent: "emerald", feats: ["Full EU AI Act audit suite", "Dedicated Council of AI + defence", "Data residency + SLA", "Audit export (CSV/JSON/Parquet)", "Onboarding + success"] },
+  operator: { label: "Operator", price: "Free", accent: "amber", feats: ["ONE OS — live agent", "Signed attestation records, Ed25519-verifiable", "Watchdog operator console", "Regulatory drift alerts via corpus-watch", "Layer 0 signing + support"] },
+  pro: { label: "Pro", price: "Free", accent: "emerald", feats: ["Premium hosted models", "Passport + EU AI Act audit", "Council of AI + governance", "Real-world Council Space", "Verification free forever"] },
+  team: { label: "Team", price: "Free", accent: "emerald", feats: ["Everything in Pro, for the whole team", "SSO + SCIM", "Shared council + audit logs", "Admin and roles", "Community support"] },
+  enterprise: { label: "Enterprise", price: "Free", accent: "emerald", feats: ["Full EU AI Act audit suite", "Dedicated Council of AI + defence", "Data residency + SLA", "Audit export (CSV/JSON/Parquet)", "Onboarding + success"] },
 };
 
 export default function Welcome() {
@@ -55,7 +55,7 @@ export default function Welcome() {
             <ul className="mt-4 space-y-1.5 text-sm text-emerald-100/85">
               {info.feats.map((f) => (<li key={f} className="flex gap-2"><span className={amber ? "text-amber-400" : "text-emerald-400"}>+</span>{f}</li>))}
             </ul>
-            <div className="mt-4 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">No charge today — you'll confirm billing before anything is charged. Explore the full OS now on your free base.</div>
+            <div className="mt-4 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">The rail is free. Verification is free forever — explore the full OS now.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
               <button onClick={() => go("/os")} className={"flex-1 rounded-xl px-4 py-2.5 text-center text-sm font-bold " + (amber ? "bg-amber-400 text-[#1a1206] hover:bg-amber-300" : "bg-emerald-500 text-[#03110b] hover:bg-emerald-400")}>Enter your OS →</button>
               <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
@@ -63,8 +63,8 @@ export default function Welcome() {
           </div>
         ) : (
           <div className="mt-8 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
-            {credits && <div className="mb-3 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">Your <b className="text-emerald-300">{credits}</b> credit pack is noted — top up anytime from Plans.</div>}
-            <div className="text-sm text-emerald-100/80">You're on the free, open-source base — your own Council assistant, the governance graph, the council and Layer 0 signing, forever. Upgrade whenever you need the managed stack.</div>
+            {credits && <div className="mb-3 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">Your <b className="text-emerald-300">{credits}</b> pack is noted.</div>}
+            <div className="text-sm text-emerald-100/80">You're on the free, open-source base — your own Council assistant, the governance graph, the council and Layer 0 signing, forever. The rail is free; verification is free forever.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
               <button onClick={() => go("/os")} className="flex-1 rounded-xl bg-emerald-500 px-4 py-2.5 text-center text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS →</button>
               <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>

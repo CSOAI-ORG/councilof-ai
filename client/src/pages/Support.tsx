@@ -69,10 +69,9 @@ Would you like me to connect you with a human support agent for further assistan
     response: `I can help with payment and billing questions!
 
 **Common Payment Topics:**
-• **FOUNDING10K Code** - First 10,000 signups get free access to the £499 course
-• **Monthly Plans** - Flexible payment options available for all courses
-• **Refunds** - 30-day money-back guarantee on all purchases
-• **Subscription Management** - Manage your subscription in Settings → Payment
+• **Free Access** - The core measurement credential training is free to everyone
+• **Refunds** - 30-day money-back guarantee on any paid add-ons
+• **Subscription Management** - Manage your account in Settings → Payment
 
 **For specific billing issues** (refunds, disputed charges, or account-specific questions), I recommend connecting with our human support team who can access your account details.
 
@@ -318,8 +317,8 @@ Is there anything else I can help you with in the meantime?`,
       answer: 'Go to the Login page and click "Forgot Password?" Enter your email address and check your inbox for the reset link. The link expires in 1 hour.',
     },
     {
-      question: 'How do I use the FOUNDING10K promo code?',
-      answer: 'Enter FOUNDING10K at checkout when enrolling in any course. This gives the first 10,000 users free access to the £499 course. The code is automatically applied if you\'re among the first 10,000 signups.',
+      question: 'Is the training free?',
+      answer: 'Yes. The core measurement credential training is free to everyone — no code or checkout required. Just create an account and start learning.',
     },
     {
       question: 'What is the passing score for the certification exam?',

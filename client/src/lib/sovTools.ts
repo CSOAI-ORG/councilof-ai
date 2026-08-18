@@ -57,7 +57,7 @@ export async function sealArtifact(artifact: string): Promise<ToolResult> {
       const d = await r.json();
       const sig = String((d && (d.signature || d.sig)) || "");
       const fp = String((d && (d.fingerprint || d.publicKey || d.key)) || "");
-      if (sig || fp) return { ok: true, text: "SOV:" + fp.slice(0, 40) + "\nsig " + sig.slice(0, 56) + " · Ed25519 · Layer 0", raw: d };
+      if (sig || fp) return { ok: true, text: "COAI:" + fp.slice(0, 40) + "\nsig " + sig.slice(0, 56) + " · Ed25519 · Layer 0", raw: d };
     }
   } catch (e) {}
   try {

@@ -39,7 +39,7 @@ const SEVEN_INDUSTRIES = [
 const THREE_UPS = [
   { icon: Shield, title: "Get measured", sub: "Send us your AI system. We run it against our frozen instruments and return a 3KB signed card. Free first measurement.", href: "/assess", btn: "Start — free" },
   { icon: CheckCircle, title: "Verify any card", sub: "Recompute the published hash chain in your browser. No account. The verify runs on your machine, not ours.", href: "/gspc-verify", btn: "Verify now" },
-  { icon: TrendingUp, title: "Re-attest monthly", sub: "AI changes. Regulation changes. We re-measure on schedule and issue delta cards. Your compliance evidence stays current, not stale.", href: "/pricing", btn: "See plans" },
+  { icon: TrendingUp, title: "Re-attest on schedule", sub: "AI changes. Regulation changes. We re-measure on schedule and issue delta cards. Your compliance evidence stays current, not stale — the rail is free.", href: "/pricing", btn: "How it works" },
 ];
 
 interface Post { title: string; date: string; desc: string; href: string; }
@@ -292,7 +292,7 @@ const FAQ_SCHEMA = {
   "mainEntity": [
     { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks on the GSPC 14-slot board: 13 measured axes across 19 models, plus jail (containment) on a smaller fleet. Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
     { "@type": "Question", "name": "Do you certify AI systems?", "acceptedAnswer": { "@type": "Answer", "text": "No. We issue verified measurement credentials — a 3KB signed card showing what your AI did when we measured it. That is evidence, not a certification badge." } },
-    { "@type": "Question", "name": "How much does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "Your first measurement card is free. Plans for ongoing re-attestation start at £199/month. Enterprise plans available — see /pricing." } },
+    { "@type": "Question", "name": "How much does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "The rail is free. Verification is free forever — your measurement cards and ongoing re-attestation cost nothing to run or verify. Where evidence is sold, it is a signed artefact on its own page, never access." } },
   ]
 };
 
@@ -334,7 +334,7 @@ export default function NewHomeV3() {
             items={[
               { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks on the GSPC 14-slot board — 13 measured axes across 19 models, plus jail (containment) on a smaller fleet — and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
-              { q: "What does a measurement card cost?", a: "Your first measurement card is free. Ongoing re-attestation starts at £199/month. Enterprise plans available — see the pricing page." },
+              { q: "What does a measurement card cost?", a: "The rail is free. Verification is free forever — running and verifying your measurement cards costs nothing. Where we sell evidence, it is a signed artefact on its own page, never access to the rail." },
               { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },
               { q: "Who can see my measurement results?", a: "You decide. Cards are signed but disclosure is yours — publish them to your customers and regulators, or keep them private. The signing key is public; your data never leaves your control." },
             ]}

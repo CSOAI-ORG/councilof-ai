@@ -9,8 +9,8 @@
 // PUBLISH-DELTA 2026-08-13 (owner word): every canonical axis carries a measured
 // number from the 13-axis board v2 — 19 models × per-item rows (15,580 rows,
 // 0 transport errors), committed at csoai-static-deploy2 bb15589c, harness
-// SOVOS/agents/board_v2.py (2c2f9faa, byte-reproducible per peer-audit
-// 10e37101), separation test at SOVOS/arena-real-runs/SEPARATION_TEST_2026-08-13.md.
+// agents-repo/agents/board_v2.py (2c2f9faa, byte-reproducible per peer-audit
+// 10e37101), separation test at agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md.
 //
 // PUBLISH-DELTA 2026-08-18 (SITTING 1): jail (escape-attempt detection, n=71 gold cells)
 // promoted to the board as the 14th slot from the SIGNED living board (board_living.json,
@@ -30,7 +30,7 @@
 //   TIES ARE NOT WINS. We do not publish "our models win N of 13".
 //
 // TO UPDATE
-//   Re-run the board harness and SOVOS/agents/separation_test.py, then paste
+//   Re-run the board harness and agents-repo/agents/separation_test.py, then paste
 //   the resulting values. Do not hand-edit a score without re-running the
 //   harness — that is the whole point of the instrument.
 
@@ -66,13 +66,13 @@ const MEASURED_ON = {
     "conflated with the board fleet.",
   endpoint: "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
   date: "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
-  grading: "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with SOVOS/agents/board_v2.py",
+  grading: "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
   note: "GSPC (Governance · Safety · Provenance · Continuity) 14-slot board: 13 measured of 14, " +
     "plus jail. The 13 canonical axes were measured on the same fleet, same rows, same grader. " +
     "Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval " +
     "where n is honestly independent, and whether the lead is statistically separated (McNemar " +
     "p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and " +
-    "per-axis canonical counts: SOVOS/arena-real-runs/SEPARATION_TEST_2026-08-13.md and " +
+    "per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and " +
     "GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living " +
     "board; its separation is UNTESTED (no McNemar run yet) and its bank is pending publication. " +
     "slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
@@ -334,7 +334,7 @@ export const onRequestGet: PagesFunction = async (context) => {
   const body = {
     schema: "csoai.gspc-axes/0.5",
     issuer: "CSOAI Ltd (GB, Companies House 16939677)",
-    doi: "10.5281/zenodo.21991105",
+    doi: "10.5281/zenodo.21991104",
     doi_note: "GSPC Methodology and the 417-Provision Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
     measured_on: MEASURED_ON,
     note:

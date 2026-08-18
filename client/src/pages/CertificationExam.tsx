@@ -1,6 +1,7 @@
 /**
- * Certification Exam Page
- * Full exam taking interface with timer, progress tracking, and submission
+ * Council Academy Course Assessment
+ * Full assessment interface with timer, progress tracking, and submission.
+ * Passing earns a training completion record, not a conformity mark.
  */
 
 import { useState, useEffect, useCallback, useMemo } from "react";
@@ -250,7 +251,7 @@ export default function CertificationExam() {
                 <Award className="h-8 w-8 text-primary" />
               </div>
               <CardTitle className="text-2xl">
-                {testData?.test?.title || "Watchdog Analyst Certification Exam"}
+                {testData?.test?.title || "Watchdog Analyst Course Assessment"}
               </CardTitle>
               <CardDescription className="text-base mt-2">
                 {testData?.test?.description}
@@ -306,7 +307,7 @@ export default function CertificationExam() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-bold">•</span>
-                    <span>You need <strong>{testData?.test?.passingScore || 70}%</strong> to pass and receive your certification.</span>
+                    <span>You need <strong>{testData?.test?.passingScore || 70}%</strong> to pass and earn your completion record.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-bold">•</span>
@@ -314,6 +315,12 @@ export default function CertificationExam() {
                   </li>
                 </ul>
               </div>
+
+              {/* Honest scope note */}
+              <p className="text-xs text-muted-foreground text-center">
+                Course completion attests training completion, not conformity. Council of AI
+                measures; it does not certify or issue conformity marks.
+              </p>
 
               {/* Topics Covered */}
               <div>

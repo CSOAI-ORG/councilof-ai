@@ -107,24 +107,24 @@ export default function EnterpriseHowItWorks() {
     {
       tier: "Startup",
       description: "For early-stage AI companies",
-      price: "£4,000/month",
+      price: "Free",
       features: [
         "Up to 5 AI systems",
         "API integration",
         "Monthly Council review",
-        "5 team members",
-        "Email support"
+        "Unlimited team members",
+        "Community support"
       ]
     },
     {
       tier: "Growth",
       description: "For scaling AI companies",
-      price: "£12,000/month",
+      price: "Free",
       features: [
         "Up to 20 AI systems",
         "Full API integration",
         "Weekly Council review",
-        "20 team members",
+        "Unlimited team members",
         "Priority support",
         "Custom compliance framework"
       ]
@@ -132,7 +132,7 @@ export default function EnterpriseHowItWorks() {
     {
       tier: "Enterprise",
       description: "For large organizations",
-      price: "Custom pricing",
+      price: "Free",
       features: [
         "Unlimited AI systems",
         "Full API integration",
@@ -244,9 +244,13 @@ export default function EnterpriseHowItWorks() {
           </div>
         </div>
 
-        {/* Pricing Tiers */}
+        {/* Deployment Tiers */}
         <div className="mb-20">
-          <h2 className="text-4xl font-bold mb-12 text-center">Pricing Plans</h2>
+          <h2 className="text-4xl font-bold mb-4 text-center">Deployment Tiers</h2>
+          <p className="text-lg text-gray-600 mb-12 text-center max-w-2xl mx-auto">
+            The rail is free. Verification is free forever — tiers differ by scope and cadence, not by price.
+            The product is the evidence, not access.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {pricingTiers.map((tier, idx) => (
               <Card key={idx} className={`p-8 border-2 transition-colors ${

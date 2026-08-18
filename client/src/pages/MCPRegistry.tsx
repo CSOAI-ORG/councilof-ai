@@ -57,7 +57,7 @@ export default function MCPRegistry() {
       {/* Hero */}
       <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 text-gray-900 py-20">
         <div className="container max-w-5xl">
-          <Badge className="mb-6 bg-emerald-500/20 text-emerald-700 border-emerald-500/30">MEOK A2A Substrate</Badge>
+          <Badge className="mb-6 bg-emerald-500/20 text-emerald-700 border-emerald-500/30">A2A Substrate</Badge>
           <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
             The <span className="text-emerald-600">{registry.total}-MCP</span> Governance Fleet
           </h1>
@@ -214,13 +214,11 @@ export default function MCPRegistry() {
           </p>
           <div className="grid sm:grid-cols-2 gap-4 max-w-xl mx-auto mb-8 text-left">
             <div className="bg-white/10 rounded-xl p-5 border border-white/10">
-              <p className="text-sm text-emerald-300 font-semibold">Pro</p>
-              <p className="text-3xl font-bold">£999<span className="text-base font-normal text-gray-300">/mo</span></p>
-              <p className="text-sm text-gray-300 mt-1">Full MCP suite + EU AI Act tracking</p>
+              <p className="text-sm text-emerald-300 font-semibold">Full MCP suite</p>
+              <p className="text-sm text-gray-300 mt-1">Every governance tool + EU AI Act tracking, signed evidence on every call</p>
             </div>
             <div className="bg-white/10 rounded-xl p-5 border border-white/10">
               <p className="text-sm text-emerald-300 font-semibold">Enterprise</p>
-              <p className="text-3xl font-bold">£1,999<span className="text-base font-normal text-gray-300">/mo</span></p>
               <p className="text-sm text-gray-300 mt-1">Custom dev + SLA + dedicated support</p>
             </div>
           </div>

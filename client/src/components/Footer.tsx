@@ -248,8 +248,8 @@ export function Footer() {
               Content Authenticity / C2PA — Contributor (conformance in progress)
             </a>
             <span className="text-gray-300" aria-hidden="true">·</span>
-            <a href="https://doi.org/10.5281/zenodo.21991105" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
-              Zenodo DOI 10.5281/zenodo.21991105
+            <a href="https://doi.org/10.5281/zenodo.21991104" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
+              Zenodo DOI 10.5281/zenodo.21991104
             </a>
           </div>
         </div>
