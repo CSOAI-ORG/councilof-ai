@@ -264,6 +264,7 @@ const Agents = lazy(() => import("./pages/Agents"));
 const Academy = lazy(() => import("./pages/Academy"));
 import SovereignDock from "./components/SovereignDock";
 import ArchivedBanner from "./components/ArchivedBanner";
+import PageSchema from "./components/PageSchema";
 import DemoTour from "./components/DemoTour";
 const WatchdogMap = lazy(() => import("./pages/WatchdogMap"));
 const IncidentReport = lazy(() => import("./pages/IncidentReport"));
@@ -512,6 +513,7 @@ function App() {
                 <RouteAnnouncer />
                 <EnforcementBanner />
                 <Header />
+                <PageSchema />
                 <ArchivedBanner />
                 <main
                   id="main-content"
