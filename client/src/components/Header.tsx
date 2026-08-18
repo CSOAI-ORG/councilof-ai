@@ -313,44 +313,12 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* Council OS — the dockable measurement workspace */}
+            {/* One primary CTA — the free verify tool (the top-of-funnel) */}
             <a
-              href="/os"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-emerald-300 border border-emerald-400/30 hover:bg-emerald-400/10 transition-all"
+              href="/verify"
+              className="hidden xl:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
             >
-              <span className="text-base leading-none">◧</span> Council OS
-            </a>
-
-            {/* Model Registry — the 15-slot measured scoreboard */}
-            <a
-              href="/models"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
-            >
-              <span className="text-base leading-none">▦</span> Models
-            </a>
-
-            {/* Globe — 15 slots on a real sphere */}
-            <a
-              href="/gspc-arena"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
-            >
-              <span className="text-base leading-none">◎</span> Globe
-            </a>
-
-            {/* J-Space — the signed event world */}
-            <a
-              href="/j-space"
-              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-300 border border-white/10 hover:bg-white/5 transition-all"
-            >
-              <span className="text-base leading-none">◉</span> J-Space
-            </a>
-
-            {/* CSOAI OS launcher — yields its space below 2xl so the nav never wraps */}
-            <a
-              href="/os"
-              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
-            >
-              <span className="text-base leading-none">⊡</span> AI OS
+              Verify a card
             </a>
 
             {user ? (
