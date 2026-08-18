@@ -1,6 +1,6 @@
 {
   "schema": "csoai.gspc-living/0.1",
-  "updated": "2026-08-18T02:37:18Z",
+  "updated": "2026-08-18T03:16:55Z",
   "source": "boards-v2 + gold-run-3090",
   "axes": [
     {
@@ -420,14 +420,18 @@
       "quotable": true,
       "note": "Detection layer: zero false positives across 5/7 models (prec 1.0); best detector qwen2.5:0.5b-instruct tp=9 rec=0.237. Containment layer (2592 trials) already MEASURED. Escape-detection recall remains low (models miss most attempts) \u2014 honest gap, drives trap-bank growth.",
       "_source": "gold-run-3090",
-      "_updated": "2026-08-18T02:37:18Z",
+      "_updated": "2026-08-18T03:16:55Z",
       "layer1": {
         "layer1": {
           "layer1": {
-            "leader": "fleet tie (22/24 at ceiling)",
-            "separation": "TIE",
-            "separation_p": 0.05,
-            "dataset": "SOVOS/banks/gspc-jail @ 38814490"
+            "layer1": {
+              "layer1": {
+                "leader": "fleet tie (22/24 at ceiling)",
+                "separation": "TIE",
+                "separation_p": 0.05,
+                "dataset": "SOVOS/banks/gspc-jail @ 38814490"
+              }
+            }
           }
         }
       }
@@ -531,8 +535,8 @@
       "_updated": "2026-08-18T02:33:14Z"
     }
   ],
-  "signature": "354b0b12c2899f20789ee9c50d1ef03d02a0591d97170ba96342cdaebb3051c760cad97b2eb66e7ae8d4388b24909b9360b620cbaebf7bcc5ac03a29b041a703",
+  "signature": "3167b5e0d304ae18813af702e0e8a37cea19a46d52c55cc0c54be20004d112b6ef695b58fed27ad9047d6f2d323841d6337f9e650354415f9e521576a5221002",
   "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
   "signed": true,
-  "sig_input": "sha256(canonical board, sort_keys)"
+  "sig_input": "sha256(canonical board minus signature fields, sort_keys)"
 }
