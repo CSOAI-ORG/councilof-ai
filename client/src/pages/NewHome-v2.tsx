@@ -226,7 +226,7 @@ const faqs = [
   },
   {
     question: "How much does it cost?",
-    answer: "Agents: 100 free calls/day, then $0.005/card, deep bundles $0.10–0.25. Humans: Free £0, Pro £59/mo, Business £199/mo, Enterprise from £1,500/mo. Every tier ends in the same signed, verifiable card.",
+    answer: "The rail is free. Verification is free forever — measuring and verifying cards costs nothing. Where we sell evidence, it is a signed artefact on its own page, never access to the rail. Every card is the same signed, verifiable measurement.",
   },
   {
     question: "Why trust Council of AI as referee?",
@@ -843,7 +843,7 @@ export default function NewHomeV2() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {[
-                    "Registration from £1,500/year",
+                    "The rail is free — verification free forever",
                     "Automated compliance assessments",
                     "Multi-framework support (7+)",
                     "Avoid fines up to €35M",
@@ -911,8 +911,8 @@ export default function NewHomeV2() {
                 <CardContent className="space-y-3">
                   {[
                     "ALL 33 courses completely FREE",
-                    "Signed, verifiable attestation (£49 exam)",
-                    "Analyst License: £199/year",
+                    "Signed, verifiable attestation — free",
+                    "Open analyst roster — no license fee",
                     "Marketplace rates published once measured",
                     "Join a growing profession",
                   ].map((item, i) => (
@@ -1166,7 +1166,7 @@ export default function NewHomeV2() {
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 AI Safety Analyst is projected to be a top-10 profession by 2045.
-                Get ahead now with completely free training - attestation exam £49, Analyst License £199/year.
+                Get ahead now with completely free training — attestation is free, and verification is free forever.
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -1225,12 +1225,12 @@ export default function NewHomeV2() {
                     {
                       step: "2",
                       title: "Get Attested",
-                      desc: "Pass the attestation exam (£49 one-time). Your record is signed and independently verifiable.",
+                      desc: "Complete the attestation exam — free. Your record is signed and independently verifiable forever.",
                     },
                     {
                       step: "3",
                       title: "Join the Roster",
-                      desc: "Get your Analyst License (£199/year) and join the analyst roster. Rates are set by the market and published as measured aggregates once live.",
+                      desc: "Join the open analyst roster — no license fee. Rates are set by the market and published as measured aggregates once live.",
                     },
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-4">
