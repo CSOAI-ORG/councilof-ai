@@ -159,6 +159,7 @@ const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
 const Library = lazy(() => import("./pages/Library"));
+const Honesty = lazy(() => import("./pages/Honesty"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
 const Layer0 = lazy(() => import("./pages/Layer0"));
@@ -611,6 +612,8 @@ function App() {
                   {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />
+                  {/* The honesty gate — our own losses, published (owner GO 2026-08-18) */}
+                  <Route path="/honesty" component={Honesty} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
