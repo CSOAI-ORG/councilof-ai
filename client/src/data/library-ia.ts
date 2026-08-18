@@ -58,8 +58,52 @@ export const SECTORS: Sector[] = [
 
 const FALLBACK_SECTOR = SECTORS.find((s) => s.id === "governance")!;
 
+// Canonical replacements — an archived page's current primary home, so the banner can point the
+// reader (and answer engines) forward. Only high-confidence 1:1 supersessions; when a page has no
+// single current equivalent it simply has no replacement link (the sector link still applies).
+export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
+  "/industry-solutions": { path: "/industries", label: "Industries" },
+  "/sector-atlas": { path: "/industries", label: "Industries" },
+  "/sectors": { path: "/industries", label: "Industries" },
+  "/industry-playbooks": { path: "/industries", label: "Industries" },
+  "/about-ceasai": { path: "/academy", label: "Council Academy" },
+  "/ceasai-training": { path: "/academy", label: "Council Academy" },
+  "/certification": { path: "/academy", label: "Council Academy" },
+  "/certificate-verification": { path: "/gspc-verify", label: "Verify a card" },
+  "/leaderboard": { path: "/gspc-arena", label: "the arena" },
+  "/eu-ai-act-explained": { path: "/eu-ai-act", label: "the EU AI Act guide" },
+  "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
+  "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
+  "/how-it-works": { path: "/methodology", label: "Methodology" },
+  "/roi-calculator": { path: "/pricing", label: "Pricing" },
+  "/compare": { path: "/about", label: "About" },
+  "/our-difference": { path: "/about", label: "About" },
+};
+
+/** The current primary page that supersedes an archived one, if any. */
+export function replacementFor(path: string): { path: string; label: string } | null {
+  return REPLACEMENTS[path.replace(/\/$/, "")] ?? null;
+}
+
 export function classify(path: string, title = ""): Sector {
   return SECTORS.find((s) => s.test(path, title)) ?? FALLBACK_SECTOR;
+}
+
+// The manifest titles are derived from component names (e.g. "EUAIAct Compliance"). Fix the
+// acronyms generically so the archive reads cleanly without a hand-maintained title map.
+const ACRONYMS: [RegExp, string][] = [
+  [/\bEUAIAct\b/g, "EU AI Act"], [/\bAIAct\b/g, "AI Act"], [/\bEUAct\b/g, "EU Act"],
+  [/\bGspc\b/g, "GSPC"], [/\bCsoai\b/gi, "CSOAI"], [/\bMcps?\b/g, "MCP"], [/\bNist\b/g, "NIST"],
+  [/\bIso\b/g, "ISO"], [/\bApi\b/g, "API"], [/\bFaq\b/g, "FAQ"], [/\bPdca\b/g, "PDCA"],
+  [/\bOscal\b/g, "OSCAL"], [/\bDora\b/g, "DORA"], [/\bNis2?\b/g, "NIS2"], [/\bCra\b/g, "CRA"],
+  [/\bGdpr\b/g, "GDPR"], [/\bTc260\b/g, "TC260"], [/\bC2pa\b/gi, "C2PA"], [/\bRoi\b/g, "ROI"],
+  [/\bAi\b/g, "AI"], [/\bUs\b/g, "US"], [/\bUk\b/g, "UK"], [/\bEu\b/g, "EU"], [/\bOs\b/g, "OS"],
+  [/\bJsp\b/g, "JSP"], [/\bA2a\b/gi, "A2A"], [/\bDpa\b/g, "DPA"], [/\bSla\b/g, "SLA"],
+];
+export function prettifyTitle(t: string): string {
+  let out = t;
+  for (const [re, s] of ACRONYMS) out = out.replace(re, s);
+  return out.replace(/\s+/g, " ").trim();
 }
 
 export interface LibraryItem extends RouteEntry { sector: string }
@@ -75,7 +119,7 @@ const NOT_LIBRARIED =
 export function libraryItems(): LibraryItem[] {
   return ROUTE_MANIFEST
     .filter((r) => !PRIMARY_PATHS.has(r.path) && !NOT_LIBRARIED.test(r.path) && !/\.[a-z]+$/.test(r.path))
-    .map((r) => ({ ...r, sector: classify(r.path, r.title).id }));
+    .map((r) => ({ ...r, title: prettifyTitle(r.title), sector: classify(r.path, r.title).id }));
 }
 
 export function itemsBySector(): Record<string, LibraryItem[]> {

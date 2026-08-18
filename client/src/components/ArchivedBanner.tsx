@@ -1,5 +1,5 @@
 import { useLocation, Link } from "wouter";
-import { isLibraried, classify, PRIMARY_PATHS } from "../data/library-ia";
+import { isLibraried, classify, replacementFor, PRIMARY_PATHS } from "../data/library-ia";
 
 // ArchivedBanner — mounted once globally. On any LIBRARIED (non-primary) page it shows a slim,
 // honest "archived / reference" strip that (a) tells the reader this is an archive page, (b)
@@ -12,6 +12,7 @@ export default function ArchivedBanner() {
   if (!isLibraried(path)) return null;
 
   const sector = classify(path);
+  const repl = replacementFor(path);
   return (
     <div
       role="note"
@@ -24,8 +25,17 @@ export default function ArchivedBanner() {
           Reference / archive
         </span>
         <span className="text-amber-800/80">
-          A dated reference page, kept for the record. For the current experience, start at{" "}
-          <Link href="/" className="font-semibold underline hover:text-amber-950">the measurement board</Link>.
+          {repl ? (
+            <>
+              A reference page — there is a current version:{" "}
+              <Link href={repl.path} className="font-semibold underline hover:text-amber-950">{repl.label} →</Link>
+            </>
+          ) : (
+            <>
+              A dated reference page, kept for the record. For the current experience, start at{" "}
+              <Link href="/" className="font-semibold underline hover:text-amber-950">the measurement board</Link>.
+            </>
+          )}
         </span>
         <Link
           href={"/library/" + sector.id}
