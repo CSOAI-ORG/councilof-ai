@@ -6,7 +6,6 @@ import { askSovereign } from "../lib/sovAsk";
 import { fetchHealth } from "../lib/sovHealth";
 import { subscribeBus, busHealth, fetchAnchors, fetchLedgerStats, fetchFlywheelSnapshot, fetchHiveCoverage } from "../lib/sovDataBus";
 import { useGeolibre, GEO_REGION_OPTIONS } from "../lib/geolibre";
-import { startTour } from "../lib/demoTour";
 import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, personaSpeak, DOCTRINE_RE, DOCTRINE_REFUSAL } from "../lib/sovPersona";
 
 // SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
@@ -25,12 +24,12 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /distribution|\bmcp\b|pypi|npm|glama|mcpize|registry/i, href: "/distribution", label: "Distribution & Layer 0 coverage" },
   { re: /jsp ?936|defence assurance|defense assurance|system card|mod evidence|evidence pack|dependable ai/i, href: "/system-card", label: "the Signed System Card — JSP 936 assurance" },
   { re: /evidence|connect|integrat|webhook/i, href: "/evidence", label: "Evidence Hub" },
-  { re: /certif|attest|train/i, href: "/certification", label: "Certification" },
+  { re: /certif|attest|train|academy|course|learn/i, href: "/academy", label: "Council Academy (training, not conformity)" },
   { re: /policy/i, href: "/policy-generator", label: "Policy Generator" },
   { re: /risk|heatmap/i, href: "/risk-heatmap", label: "Risk Heatmap" },
   { re: /oscal|fedramp/i, href: "/oscal", label: "OSCAL Studio" },
   { re: /model|bias|fairness/i, href: "/models", label: "Model Registry" },
-  { re: /price|pricing|plan|cost/i, href: "/plans", label: "Plans and pricing" },
+  { re: /price|pricing|plan|cost/i, href: "/pricing", label: "Plans and pricing" },
   { re: /media|image|photo|creative commons/i, href: "/commons", label: "Open Commons media" },
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
@@ -51,7 +50,7 @@ const QUICK: { label: string; href: string }[] = [
   { label: "Governance Graph", href: "/graph" },
   { label: "Council Space", href: "/gspc-arena" },
   { label: "Open Commons", href: "/commons" },
-  { label: "Plans", href: "/plans" },
+  { label: "Plans", href: "/pricing" },
   { label: "Status", href: "/status" },
   { label: "Full OS", href: "/os" },
 ];
@@ -83,7 +82,7 @@ const APP_ROUTES: Record<string, string> = {
   tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
   status: "/status", system: "/status", os: "/os", home: "/os", grid: "/os",
   twin: "/sovereign-twin",
-  certification: "/certification", cert: "/certification", academy: "/academy",
+  certification: "/academy", cert: "/academy", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
   layer0: "/trust-center", distribution: "/distribution", command: "/command-center",
 };
@@ -286,7 +285,7 @@ export default function SovereignDock() {
             {(Object.keys(PERSONAS) as SovPersonaId[]).map((id) => (
               <button key={id} onClick={() => switchPersona(id)} title={id === "assurance" ? "Defence assurance voice — JSP 936, signed System Cards. Assurance, never weapons." : "Civil governance voice"} className={"rounded-full px-2.5 py-1 text-[11px] font-bold " + (personaId === id ? (id === "assurance" ? "border border-amber-400/60 bg-amber-500/25 text-amber-100" : "border border-emerald-400/60 bg-emerald-500/30 text-emerald-100") : "border border-white/15 bg-white/[0.03] text-white/50 hover:bg-white/10")}>{id === "assurance" ? "✦ Assurance" : "◉ Civil"}</button>
             ))}
-            <button onClick={() => { startTour(); go("/"); }} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live tour</button>
+            <button onClick={() => go("/demo")} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live demo</button>
             <button onClick={() => act("explain this page and what I can do here")} className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-100 hover:bg-emerald-500/30">Explain this page</button>
             {QUICK.map((q) => (<button key={q.label} onClick={() => go(q.href)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</button>))}
           </div>

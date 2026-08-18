@@ -39,6 +39,7 @@ export function Footer() {
       title: 'Resources',
       links: [
         { name: 'FAQ', href: '/faq' },
+        { name: 'Library — full archive', href: '/library' },
         { name: 'Methodology', href: '/methodology' },
         { name: 'Verify a card', href: '/gspc-verify' },
         { name: 'AI Glossary', href: '/glossary' },

@@ -158,6 +158,7 @@ const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
+const Library = lazy(() => import("./pages/Library"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
 const Layer0 = lazy(() => import("./pages/Layer0"));
@@ -262,6 +263,8 @@ const Readiness = lazy(() => import("./pages/Readiness"));
 const Agents = lazy(() => import("./pages/Agents"));
 const Academy = lazy(() => import("./pages/Academy"));
 import SovereignDock from "./components/SovereignDock";
+import ArchivedBanner from "./components/ArchivedBanner";
+import PageSchema from "./components/PageSchema";
 import DemoTour from "./components/DemoTour";
 const WatchdogMap = lazy(() => import("./pages/WatchdogMap"));
 const IncidentReport = lazy(() => import("./pages/IncidentReport"));
@@ -510,6 +513,8 @@ function App() {
                 <RouteAnnouncer />
                 <EnforcementBanner />
                 <Header />
+                <PageSchema />
+                <ArchivedBanner />
                 <main
                   id="main-content"
                   className="flex-1"
@@ -603,6 +608,9 @@ function App() {
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
                   <Route path="/watchdog/report" component={PublicWatchdogHub} />
                   <Route path="/benchmarks" component={Benchmarks} />
+                  {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
+                  <Route path="/library" component={Library} />
+                  <Route path="/library/:sector" component={Library} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
