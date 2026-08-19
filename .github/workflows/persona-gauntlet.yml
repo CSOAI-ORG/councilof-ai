@@ -1,0 +1,24 @@
+name: Persona gauntlet — 8 personas vs live canon
+
+# EAT 0.8: every persona's surface asserted against the ruled canon on a schedule
+# and after each deploy. Read-only; no secrets. Complements drift-guard (which
+# checks canon.json invariants) with per-persona route + kill-string coverage.
+
+on:
+  schedule:
+    - cron: "15 */2 * * *"   # every 2 hours, offset from drift-guard
+  workflow_dispatch: {}
+  push:
+    branches: [master]
+    paths: ["scripts/persona-gauntlet.mjs", ".github/workflows/persona-gauntlet.yml"]
+
+jobs:
+  gauntlet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run the 8-persona gauntlet against live
+        run: node scripts/persona-gauntlet.mjs --host https://councilof.ai
