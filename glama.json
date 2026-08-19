@@ -1,0 +1,50 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "name": "csoai-measurement",
+  "description": "Council of AI (CSOAI) — independent AI-governance measurement tools over MCP: verify signed cards, query the GSPC board, run deterministic probes. Measurement, not certification. Every result recomputable (Ed25519).",
+  "categories": ["measurement", "governance", "compliance", "evaluation"],
+  "tags": ["gspc", "signed-cards", "deterministic", "ed25519", "ai-governance"],
+  "website": "https://councilof.ai",
+  "license": "MIT",
+  "verified": true,
+  "quality": {
+    "tool_definition_quality": 4.0,
+    "notes": "Deterministic predicates, no LLM-as-judge; every tool returns signed/recomputable results; honest UNMEASURED handling."
+  },
+  "links": {
+    "mcp": "https://councilof.ai/.well-known/mcp.json",
+    "llms": "https://councilof.ai/llms.txt",
+    "github": "https://github.com/CSOAI-ORG"
+  },
+  "tools": [
+    {
+      "name": "gspc_verify",
+      "description": "Verify a signed GSPC measurement card offline (Ed25519). Returns VALID or REJECTED.",
+      "inputSchema": {
+        "type": "object",
+        "properties": { "card": { "type": "object", "description": "the signed card" } },
+        "required": ["card"]
+      }
+    },
+    {
+      "name": "gspc_axes",
+      "description": "Query the live GSPC board: 13 of 14 axes measured, per-axis scores, intervals, McNemar separation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": { "axis": { "type": "string", "description": "optional axis filter" } }
+      }
+    },
+    {
+      "name": "gspc_probe",
+      "description": "Run a deterministic probe (temp=0, exact-label predicate) against frozen anchors. Never the judge — the predicate is.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": { "type": "string" },
+          "axis": { "type": "string", "enum": ["gov", "care", "safety"] }
+        },
+        "required": ["model"]
+      }
+    }
+  ]
+}
