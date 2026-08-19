@@ -76,6 +76,10 @@ const EXISTING = [
   "/crown-jewels         /          308",   // §0.2 #22 — same
   "/plans                /pricing   308",   // §3.5 #2 — duplicate of /pricing
   "/enterprise-plans     /pricing   308",   // §3.5 #2 — fold Enterprise into one pricing page
+  // qa-sweep 2026-08-19: dead internal links found on live pages — no such routes existed.
+  "/council-space  /gspc-arena             308",  // Council Space's own console/nav linked it
+  "/city           /gspc-arena?view=towns  308",  // home "Council City" CTA target
+  "/method         /methodology            308",  // home USP cards linked /method
 ];
 
 const HASHED_DIRS = ["/assets"];

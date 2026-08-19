@@ -123,7 +123,7 @@ export const STORY: Slide[] = [
       "Cities, towns, sims — a world you can walk",
       "Every scene traces back to a receipt",
     ],
-    href: "/city",
+    href: "/gspc-arena?view=towns",
     cta: "Enter the city",
     tone: "light",
   },

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { setMetaDescription } from "@/lib/utils";
 
 // /start (and /onboard) — first-card-free activation (audit §3.5 #3).
 // No persona triage, no assistant setup, no price gate. One clear path: describe
@@ -12,7 +13,10 @@ const STEPS: { n: string; t: string; d: string }[] = [
 ];
 
 export default function OnboardOS() {
-  useEffect(() => { document.title = "Get your first measurement card — free | Council of AI"; }, []);
+  useEffect(() => {
+    document.title = "Get your first measurement card — free | Council of AI";
+    setMetaDescription("Get your first Ed25519-signed AI measurement card free from the Council of AI (CSOAI LTD, UK 16939677). Measure against the GSPC board in minutes — measurement, not certification.");
+  }, []);
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <section className="relative overflow-hidden mx-auto max-w-4xl px-6 pt-20 pb-10 text-center">
@@ -50,7 +54,7 @@ export default function OnboardOS() {
 
         <div className="mt-8 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/75">
           Council of AI is a measurement body — we measure and sign, we do not certify. After your first
-          free card you can keep measuring on the agent rail ($0.005/card, 100 free calls a day) or on a
+          free card you can keep measuring on the pay-as-you-go agent rail (with a free daily allowance) or on a
           monthly Council plan. <a href="/pricing" className="font-semibold text-emerald-300 underline hover:text-emerald-200">See pricing →</a>
         </div>
       </section>

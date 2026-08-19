@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { setMetaDescription } from "@/lib/utils";
 
 /**
  * /gspc-scoreboard — the live board, honestly displayed (NEXT-100 #2).
@@ -46,6 +47,7 @@ export default function GspcScoreboard() {
 
   useEffect(() => {
     document.title = "The GSPC board — 13 measured of 14, live | Council of AI";
+    setMetaDescription("The live GSPC board — 13 measured of 14, every measured cell with n and 95% CI where honest. UNMEASURED is reported, never hidden. Counts and stamps come from GET /api/gspc.");
     fetch("/api/gspc")
       .then((r) => r.json())
       .then(setData)

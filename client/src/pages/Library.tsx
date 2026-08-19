@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "wouter";
 import { SECTORS, itemsBySector, libraryItems, type LibraryItem } from "../data/library-ia";
+import { setMetaDescription } from "@/lib/utils";
 
 // /library and /library/:sector — the archive hub. The "align, don't delete" surface: every
 // page Council of AI has published, kept, dated, and organized by the 8 content sectors. This is
@@ -17,6 +18,12 @@ export default function Library() {
     document.title = activeSector
       ? `${SECTORS.find((s) => s.id === activeSector)?.title ?? "Library"} — Library | Council of AI`
       : "Library — the Council of AI reference archive";
+    const sectorMeta = activeSector ? SECTORS.find((s) => s.id === activeSector) : null;
+    setMetaDescription(
+      sectorMeta
+        ? `${sectorMeta.title} — Library, Council of AI (CSOAI LTD, UK 16939677). ${sectorMeta.blurb}`
+        : "The Council of AI reference library: every page we publish, dated and organised by sector — EU AI Act and regulation, GSPC benchmarks, frameworks, academy, regions, verification, product and company.",
+    );
     const sc = document.createElement("script");
     sc.type = "application/ld+json";
     sc.text = JSON.stringify({

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { setMetaDescription } from "@/lib/utils";
 
 /**
  * /insurers — the evidence pack, underwriter-legible.
@@ -91,6 +92,7 @@ export default function Insurers() {
 
   useEffect(() => {
     document.title = "Evidence an underwriter can verify | Council of AI";
+    setMetaDescription("Evidence an underwriter can verify: Ed25519-signed AI measurement cards, recomputable from published rows. Council of AI (CSOAI LTD, UK 16939677) — measurement, not certification. Live board: GET /api/gspc.");
     fetch("/api/gspc")
       .then((r) => r.json())
       .then(setBoard)

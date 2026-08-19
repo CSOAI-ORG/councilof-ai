@@ -106,8 +106,11 @@ const ACRONYMS: [RegExp, string][] = [
 // archive must SCRUB them before display or the Library page ships a forbidden brand string and
 // the deploy gate blocks. The pages' own rendered copy is already de-branded; only these derived
 // titles are stale. Removing the killed word yields a clean label ("Sovereign Tour" → "Tour").
+// NB "ceasai" is matched WITHOUT a trailing word boundary: manifest titles derived from
+// CamelCase component names concatenate it ("CEASAITraining"), which \bceasai\b missed —
+// that title shipped verbatim on /library (qa-sweep 2026-08-19).
 const FORBIDDEN_DISPLAY =
-  /\b(?:sovereign|ceasai|byzantine|bft|owem|sigil)\b|33[\s-]?agent|fault[\s-]?toleran(?:t|ce)|crown[\s-]?jewels?|goldmines?|black\s+swans?/gi;
+  /\b(?:sovereign|byzantine|bft|owem|sigil)\b|\bceasai|33[\s-]?agent|fault[\s-]?toleran(?:t|ce)|crown[\s-]?jewels?|goldmines?|black\s+swans?/gi;
 /** True if a path/title carries a killed brand ANYWHERE (non-anchored, non-stateful). A page whose
  *  URL itself contains a killed brand (e.g. /about-ceasai) must never surface in the archive — the
  *  path renders as visible text and would trip the deploy gate. */

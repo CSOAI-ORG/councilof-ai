@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { VerifyButton } from "@/components/gspc/VerifyButton";
+import { setMetaDescription } from "@/lib/utils";
 import { CHAIN_STATUS } from "@/data/chain";
 
 // ---- single-record verify: the estate envelope, checked entirely in-browser ----
@@ -241,6 +242,7 @@ function SingleRecordVerify() {
 export default function GSPCVerify() {
   useEffect(() => {
     document.title = "Verify the chain — recompute it yourself, client-side | CSOAI";
+    setMetaDescription("Verify a Council of AI measurement card client-side: recompute the Ed25519 signature chain in your browser against the published public key. No account, no server trust.");
   }, []);
 
   return (

@@ -43,7 +43,9 @@ const RULES = [
   },
   {
     id: "cert_overclaim",
-    pattern: /\bCEASAI\b/i,
+    // No trailing \b: CamelCase-derived titles concatenate the brand ("CEASAITraining"
+    // shipped on /library because \bCEASAI\b missed it — qa-sweep 2026-08-19).
+    pattern: /\bCEASAI/i,
     why: 'CSOAI issues measurement credentials, not certifications. "CEASAI" is killed.',
   },
   {
