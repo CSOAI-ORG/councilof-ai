@@ -161,6 +161,7 @@ const Methodology = lazy(() => import("./pages/Methodology"));
 const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
+const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
 const Layer0 = lazy(() => import("./pages/Layer0"));
@@ -614,6 +615,7 @@ function App() {
                   {/* The honesty gate — our own losses, published (owner GO 2026-08-18) */}
                   <Route path="/honesty" component={Honesty} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
+                  <Route path="/gspc-scoreboard" component={GspcScoreboard} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
