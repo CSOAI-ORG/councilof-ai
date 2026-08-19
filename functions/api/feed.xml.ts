@@ -14,6 +14,12 @@ interface FeedItem {
 
 const ITEMS: FeedItem[] = [
   {
+    title: "Swarm ungated: the first CI-resolved ordering on the swarm axis",
+    link: "https://councilof.ai/api/gspc",
+    date: "Tue, 19 Aug 2026 11:30:00 GMT",
+    desc: "Owner ruling 19 Aug 2026: the wave-2b bank (37 independent items, 5-model fleet, n≥36/cell) resolves the swarm ordering — qwen2.5:7b's 95% lower bound (0.384) clears the runner-up's upper bound (0.372). Separated leads: 4 of 14. The retired PROTOCOL bank stays in the record as the honesty-clause example. Jail remains the board's only untested separation, so the public count stays 13 measured of 14.",
+  },
+  {
     title: "Arena feed live: 2,900+ signed AI-vs-AI rounds streaming",
     link: "https://councilof.ai/api/sov-arena/rounds.jsonl",
     date: "Wed, 19 Aug 2026 09:30:00 GMT",

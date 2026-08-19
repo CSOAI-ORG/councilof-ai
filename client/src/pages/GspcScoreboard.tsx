@@ -75,7 +75,14 @@ export default function GspcScoreboard() {
                     <td className="p-3 font-semibold text-gray-900">{a.axis}</td>
                     <td className="p-3 text-gray-600">{a.bench}</td>
                     <td className="p-3 font-mono">{a.n}</td>
-                    <td className="p-3 font-mono">{(a.accuracy * 100).toFixed(1)}%</td>
+                    <td className="p-3 font-mono">
+                      {(a as any).accuracy_is ? "≥" : ""}{(a.accuracy * 100).toFixed(1)}%
+                      {(a as any).accuracy_is && (
+                        <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400" title={(a as any).accuracy_is}>
+                          lower bound
+                        </span>
+                      )}
+                    </td>
                     <td className="p-3 font-mono text-gray-600">
                       {a.interval ? `${(a.interval[0] * 100).toFixed(1)}–${(a.interval[1] * 100).toFixed(1)}%` : "withheld (n not independent)"}
                     </td>
@@ -107,8 +114,9 @@ export default function GspcScoreboard() {
         </div>
 
         <p className="mt-8 text-xs text-gray-500">
-          Measurement, not certification. Leaders shown are point estimates; only SEPARATED leads
-          (3 of 13 canonical axes) are statistically real. Jail (slot 14) was measured on a smaller
+          Measurement, not certification. Leaders shown are point estimates (swarm quotes its 95%
+          lower bound); only SEPARATED leads (4 of 14 slots — swarm ungated 19 Aug 2026) are
+          statistically real. Jail (slot 14) was measured on a smaller
           fleet with no separation test — stated, never hidden. Full per-axis notes, fleet means,
           harm tails and the signed living stamp: <code>GET /api/gspc</code>.
         </p>
