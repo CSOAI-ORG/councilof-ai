@@ -1,0 +1,43 @@
+name: Reg-watch — regulation-change detector (living loop)
+
+# Polls the official sources of the instruments the board measures against
+# (EUR-Lex ELI + legislation.gov.uk) and raises a provision-change event when
+# one changes. Detection only (v0.1): the event is the trigger later stages
+# consume (pass issuer -> EXPIRED-REGULATION-CHANGED). Free feeds, no secrets.
+
+on:
+  schedule:
+    - cron: "45 6 * * *"   # daily 06:45 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  reg-watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run the detector
+        id: watch
+        continue-on-error: true
+        run: node scripts/reg-watch.mjs
+      - name: Commit updated state (and any events)
+        run: |
+          git config user.name "reg-watch"
+          git config user.email "nicholas@csoai.org"
+          git add reg-watch-state.json reg-watch-events/ 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "reg-watch: state update $(date -u +%F)"
+          git push
+      - name: Raise the alarm on a provision change
+        if: steps.watch.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="Provision change detected — $(date -u +%F)"
+          BODY="reg-watch detected a change in a watched legal instrument. Event files are in reg-watch-events/. Detection only — map to affected provisions and (once passes exist) flip dependent state records to EXPIRED-REGULATION-CHANGED. Not a legal interpretation."
+          gh issue create --title "$TITLE" --body "$BODY" --label "reg-watch" 2>/dev/null || gh issue create --title "$TITLE" --body "$BODY"
