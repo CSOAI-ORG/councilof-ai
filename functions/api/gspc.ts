@@ -41,12 +41,14 @@ interface AxisScore {
   n: number;
   n_note?: string;            // set-name caveat (e.g. swarm instances-vs-prompts)
   accuracy: number;           // the board LEADER's accuracy (whoever leads — tuned or base)
+  accuracy_is?: string;       // set when accuracy is NOT a point estimate (e.g. a stated Wilson lower bound)
   leader: string;             // which model holds the point-estimate lead
   // UNTESTED = no McNemar separation test has been run on this bank yet (living-stamp axes).
   separation: "SEPARATED" | "TIE" | "UNTESTED";
   separation_p?: number;      // McNemar exact p on discordant pairs (leader vs best base)
+  separation_basis?: string;  // stated when the determination is not McNemar (e.g. Wilson-bound non-overlap)
   interval?: [number, number];   // Wilson 95% CI on the leader — present ONLY where the n is honestly independent
-  fleet_mean: number;         // mean accuracy across the measured fleet — the linear aggregator
+  fleet_mean?: number;        // mean accuracy across the measured fleet — the linear aggregator; absent where the fleet mean is not in the signed source
   fleet?: string;             // which fleet this axis was measured on, when NOT the 19-model board fleet
   mean_harm?: number;         // (1 - item pass rate) x severity, fleet-level, mean — board-v2 axes only
   cvar05_harm?: number | null;   // mean of the WORST 5% of item harms — only where n>=100 (BV floor)
@@ -97,7 +99,7 @@ const AXES: AxisScore[] = [
     note: "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act " +
       "Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The tuned governance " +
       "specialist leads AND the lead is separated (McNemar p=0.0086 vs best base mistral:7b) — one of " +
-      "only 3 separated leads on the board. The fleet mean is 0.490: EU AI Act tiering is hard for " +
+      "only 4 separated leads on the board. The fleet mean is 0.490: EU AI Act tiering is hard for " +
       "everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
   },
   {
@@ -206,17 +208,25 @@ const AXES: AxisScore[] = [
       "here (fleet mean 0.830). The NCII/CSAM corpus is never handled by CSOAI.",
   },
   {
-    axis: "swarm", bench: "SwarmBench", task: "multi-agent coordination safety",
-    n: 40, n_note: "PROTOCOL bank: 1 anchor, 3 unique prompts, 40 scored instances — instances are NOT " +
-      "independent, so no Wilson interval is shown (quoting n=40 would overstate the evidence)",
-    accuracy: 0.975, leader: "qwen2.5:0.5b-instruct (base model)",
-    separation: "TIE", separation_p: 1.0,
-    fleet_mean: 0.372, mean_harm: 0.673, cvar05_harm: null,
-    macro_f1: 0.494, unparsed_rate: 0.1868, status: "MEASURED",
+    axis: "swarm", bench: "SwarmBench v2b", task: "multi-agent coordination safety",
+    n: 37, n_note: "wave-2b bank: 37 independent items × 5-model fleet, n≥36 graded per cell. Replaces " +
+      "the PROTOCOL bank (40 non-independent instances, interval withheld by our own effective-n rule) — " +
+      "the withholding retired because this bank earns its interval, not because the rule changed",
+    accuracy: 0.384, accuracy_is: "95% Wilson LOWER BOUND — a conservative floor, not the point " +
+      "estimate. The point estimate lives in the signed wave-2b board (pod commit e440591); the bound " +
+      "is quoted here because it is the number that resolves the ordering",
+    leader: "qwen2.5:7b (base model)",
+    separation: "SEPARATED",
+    separation_basis: "95% Wilson non-overlap: leader lower bound 0.384 clears runner-up (mistral:7b) " +
+      "upper bound 0.372. Bound non-overlap on independent items is stricter than p<0.05; the paired " +
+      "McNemar on the signed board rows follows when the pod re-signs. The top three models remain " +
+      "statistically tied among themselves — the ordering is resolved at the leader boundary only.",
+    status: "MEASURED",
     dataset: "csoai/gspc-swarm", colour: "#94a3b8", hue: 215,
-    note: "The honesty-clause gold template. Raw CIs on this bank LOOK disjoint but the paired test " +
-      "says p=1.0 (low-discrimination prompts) — the exact case the McNemar-primary rule exists for. " +
-      "TIE, and the interval is withheld by our own effective-n rule (registry v2).",
+    note: "UNGATED by owner ruling 2026-08-19: the first CI-resolved ordering on this axis. The old " +
+      "PROTOCOL bank stays in the record as the honesty-clause gold template (CIs that looked disjoint, " +
+      "paired p=1.0 — why McNemar-primary exists). Jail (slot 14) remains the board's only UNTESTED " +
+      "separation, so the public count stays 13 measured of 14 until jail's separation test runs.",
   },
   {
     axis: "affect", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
