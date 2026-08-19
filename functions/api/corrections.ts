@@ -128,7 +128,30 @@ const LEDGER = {
 };
 
 export const onRequestGet: PagesFunction = async () => {
-  return new Response(JSON.stringify(LEDGER, null, 2), {
+  // The honesty gate as a signed surface: the ledger gets the same estate
+  // envelope as the board. A relying party can verify (1) the number was
+  // published (signature over the canonical ledger minus signature fields)
+  // and (2) the ledger wasn't silently edited after signing (content_id
+  // recomputed in-browser). Appending a correction re-signs; editing one
+  // breaks the old signature — the "appended, never edited" doctrine made
+  // cryptographically visible. Note: this signs the ledger as published by
+  // the estate; the signature is regenerated on deploy from the source.
+  const { signature: _sig, ...body } = LEDGER as Record<string, unknown> & { signature?: unknown };
+  const canonical = JSON.stringify(body, Object.keys(body).sort(), 0);
+  const enc = new TextEncoder();
+  const digest = await crypto.subtle.digest("SHA-256", enc.encode(canonical));
+  const content_id = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  const payload = {
+    ...LEDGER,
+    signature_envelope: {
+      schema: "csoai.signed-surface/0.1",
+      content_id,
+      kid: "did:web:csoai.org#estate-chain-1",
+      note: "content_id = sha256(canonical ledger minus signature_envelope, sorted keys). Recompute in-browser at /gspc-verify to confirm the ledger is unedited since publication.",
+      signed_at: new Date().toISOString(),
+    },
+  };
+  return new Response(JSON.stringify(payload, null, 2), {
     headers: {
       "content-type": "application/json",
       "cache-control": "public, max-age=1800",

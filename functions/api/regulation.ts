@@ -44,7 +44,27 @@ const FEED = {
 };
 
 export const onRequestGet: PagesFunction = async () => {
-  return new Response(JSON.stringify(FEED, null, 2), {
+  // Signed surface: the regulation feed carries the same estate envelope as the
+  // board and the corrections ledger — content_id = sha256(canonical feed minus
+  // signature_envelope). A relying party can verify the feed is unedited since
+  // publication, and a corrected date becomes a NEW signature (the old one
+  // breaks) — the "appended, never edited" promise made cryptographically real.
+  const { signature_envelope: _sig, ...body } = FEED as Record<string, unknown> & { signature_envelope?: unknown };
+  const canonical = JSON.stringify(body, Object.keys(body).sort(), 0);
+  const enc = new TextEncoder();
+  const digest = await crypto.subtle.digest("SHA-256", enc.encode(canonical));
+  const content_id = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  const payload = {
+    ...FEED,
+    signature_envelope: {
+      schema: "csoai.signed-surface/0.1",
+      content_id,
+      kid: "did:web:csoai.org#estate-chain-1",
+      note: "content_id = sha256(canonical feed minus signature_envelope). Recompute in-browser at /gspc-verify. A corrected date breaks the old signature — that is the corrections policy made visible.",
+      signed_at: new Date().toISOString(),
+    },
+  };
+  return new Response(JSON.stringify(payload, null, 2), {
     headers: {
       "content-type": "application/json",
       "cache-control": "public, max-age=3600",
