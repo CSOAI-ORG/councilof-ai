@@ -21,6 +21,19 @@ interface Axis {
   status: string;
 }
 
+const DATASET_LD = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  name: "GSPC 14-slot board — live AI measurement results",
+  description:
+    "Deterministic per-axis AI measurement results: n, leader accuracy, Wilson intervals, separation verdicts (McNemar-primary; ties stated as ties). 13 measured of 14 slots; live item count in the API.",
+  url: "https://councilof.ai/gspc-scoreboard",
+  distribution: [{ "@type": "DataDownload", encodingFormat: "application/json", contentUrl: "https://councilof.ai/api/gspc" }],
+  license: "https://creativecommons.org/licenses/by/4.0/",
+  creator: { "@type": "Organization", name: "Council of AI (CSOAI Ltd)", url: "https://councilof.ai", identifier: "UK Companies House 16939677" },
+  isAccessibleForFree: true,
+};
+
 const CHIP: Record<string, string> = {
   SEPARATED: "bg-emerald-100 text-emerald-800 border-emerald-300",
   TIE: "bg-amber-100 text-amber-800 border-amber-300",
@@ -41,6 +54,7 @@ export default function GspcScoreboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(DATASET_LD) }} />
       <div className="mx-auto max-w-5xl px-6 py-14">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
           Live from GET /api/gspc — recompute anything, free
