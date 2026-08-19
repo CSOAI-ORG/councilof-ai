@@ -1,7 +1,7 @@
 /**
  * GET /api/sov-town/state.jsonl — live SOV Town sim state (STAGING, DESIGN-labelled).
  *
- * Source: the MicropolisJ headless engine ticking on oracle-micro-2 every 5 min
+ * Source: the MicropolisJ headless engine ticking on a design-lab worker every 5 min
  * (cron every-5-min, sov_town_cron.sh). A Mac-side cron rsyncs state_live.jsonl and puts it
  * into the SOV_TOWN_STATE KV namespace; this function serves the latest value.
  *
@@ -32,7 +32,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     headers: {
       'content-type': 'application/x-ndjson',
       'cache-control': 'public, max-age=60',
-      'x-sov-town-source': 'oracle-micro-2 micropolisj, 5-min tick, DESIGN LAB',
+      'x-sov-town-source': 'micropolisj engine, 5-min tick, DESIGN LAB',
     },
   });
 };

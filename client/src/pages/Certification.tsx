@@ -1,6 +1,8 @@
 /*
- * CSOAI Certification Test Page
- * Take the certification test to become a Watchdog Analyst
+ * Council Academy — Watchdog Analyst Course
+ * Complete the course assessment to earn a training completion record.
+ * Note: this is a training completion record, not a conformity mark.
+ * Council of AI measures; it does not certify or issue conformity marks.
  */
 
 import { useState, useEffect } from "react";
@@ -63,10 +65,10 @@ const sampleQuestions = [
   },
   {
     id: 4,
-    question: "In the CSOAI designed 33-agent Council, how many votes ratify a decision in the design (the BFT quorum)?",
+    question: "In the CSOAI 33-agent Council, how many votes ratify a decision (the council quorum)?",
     options: [
       "17 of 33 (simple majority)",
-      "23 of 33 (Byzantine two-thirds quorum, ~70%)",
+      "23 of 33 (two-thirds quorum, ~70%)",
       "25 of 33 (three-quarters)",
       "33 of 33 (unanimous)"
     ],
@@ -139,7 +141,7 @@ export default function Certification() {
     setTestState("results");
 
     if (percentScore >= 70) {
-      toast.success("Congratulations! You passed the certification test!");
+      toast.success("Congratulations! You've completed the course assessment!");
     } else {
       toast.error("You didn't pass this time. Review the material and try again.");
     }
@@ -177,15 +179,15 @@ export default function Certification() {
               <Trophy className="h-12 w-12 text-green-600 dark:text-green-400" />
             </motion.div>
             
-            <h1 className="text-3xl font-bold mb-2">You're Certified!</h1>
+            <h1 className="text-3xl font-bold mb-2">Course Completed!</h1>
             <p className="text-muted-foreground mb-6">
-              Certificate Number: {certificates[0].certificateNumber}
+              Completion Record: {certificates[0].certificateNumber}
             </p>
-            
+
             <div className="flex justify-center gap-4">
               <Button variant="outline" className="gap-2">
                 <Download className="h-4 w-4" />
-                Download Certificate
+                Download Completion Record
               </Button>
               <Button onClick={() => setLocation("/workbench")}>
                 Go to Analyst Workbench
@@ -213,13 +215,17 @@ export default function Certification() {
                   <Award className="h-8 w-8 text-primary" />
                 </div>
                 <CardTitle className="text-2xl">
-                  CSOAI Watchdog Analyst Certification
+                  Council Academy — Watchdog Analyst Course
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <p className="text-center text-muted-foreground">
-                  This certification test will assess your understanding of AI safety concepts,
-                  compliance frameworks, and case review methodology.
+                  This course assessment measures your understanding of AI safety concepts,
+                  governance frameworks, and case review methodology.
+                </p>
+                <p className="text-center text-xs text-muted-foreground">
+                  Course completion attests training completion, not conformity. Council of AI
+                  measures; it does not certify or issue conformity marks.
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
@@ -237,7 +243,7 @@ export default function Certification() {
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold">1 Year</p>
-                    <p className="text-sm text-muted-foreground">Certificate Validity</p>
+                    <p className="text-sm text-muted-foreground">Record Validity</p>
                   </div>
                 </div>
 
@@ -259,7 +265,7 @@ export default function Certification() {
                 </div>
 
                 <Button onClick={handleStartTest} className="w-full" size="lg">
-                  Start Certification Test
+                  Start the Course
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </CardContent>
@@ -403,8 +409,8 @@ export default function Certification() {
                 </h1>
                 
                 <p className="text-muted-foreground mb-6">
-                  {passed 
-                    ? "You've passed the CSOAI Watchdog Analyst Certification!"
+                  {passed
+                    ? "You've completed the Council Academy Watchdog Analyst course!"
                     : "You didn't pass this time, but you can try again."
                   }
                 </p>
@@ -420,7 +426,7 @@ export default function Certification() {
                   <div className="space-y-4">
                     <div className="p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
                       <p className="text-green-700 dark:text-green-300">
-                        You&apos;ve passed the assessment. Your certificate is being processed and will
+                        You&apos;ve completed the assessment. Your completion record is being processed and will
                         appear in your Analyst Workbench shortly, where you can start reviewing AI safety cases.
                       </p>
                     </div>
@@ -428,7 +434,7 @@ export default function Certification() {
                     <div className="flex justify-center gap-4">
                       <Button variant="outline" className="gap-2">
                         <Download className="h-4 w-4" />
-                        Download Certificate
+                        Download Completion Record
                       </Button>
                       <Button onClick={() => setLocation("/workbench")}>
                         Go to Workbench

@@ -40,7 +40,7 @@ export default function DashboardHowItWorks() {
     },
     {
       title: "Training Hub",
-      description: "Access all CEASAI training modules and track your learning progress",
+      description: "Access all measurement credential training modules and track your learning progress",
       icon: Users,
       details: "Self-paced modules, interactive quizzes, real-world case studies, and downloadable resources"
     },

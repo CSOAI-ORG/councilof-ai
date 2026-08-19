@@ -93,12 +93,16 @@ export default function GSPCVerify() {
           <h2 className="text-2xl font-bold text-emerald-50">What this button does NOT do</h2>
           <ul className="mt-4 space-y-3 text-[13px] text-emerald-100/80 leading-relaxed list-disc pl-5">
             <li>
-              It does not authenticate <em>who</em> wrote a record. Today the chain is
-              sha256-linked; authorship authentication requires a signature. The hybrid
-              Ed25519 + ML-DSA-65 signer is built (see Master Playbook Part E1); the verify
-              button label will upgrade to include authorship in the{" "}
-              <strong className="text-emerald-50">same commit</strong> as that capability —
-              never ahead of it.
+              This button recomputes the <strong className="text-emerald-50">sha256 hash
+              chain</strong> — tamper-evidence, not authorship. Authorship is carried by the
+              signed card: a <strong className="text-emerald-50">~3KB</strong> measurement card
+              signed with <strong className="text-emerald-50">Ed25519</strong> and anchored with{" "}
+              <strong className="text-emerald-50">OpenTimestamps</strong>, verifiable offline
+              against the published key <code className="text-emerald-300">f4b4278d…</code>{" "}
+              (<code className="text-emerald-300">did:web:csoai.org</code>). The post-quantum
+              ML-DSA-65 (FIPS-204) signer is <strong className="text-emerald-50">built, not
+              shipped</strong>; the label will name it in the same commit it ships — never ahead
+              of it.
             </li>
             <li>
               It does not contact a server. Verification is local; you bring the records and

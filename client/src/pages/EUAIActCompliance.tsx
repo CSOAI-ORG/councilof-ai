@@ -50,7 +50,7 @@ export default function EUAIActCompliance() {
     {
       requirement: "Risk Classification",
       euaiActRequirement: "Classify AI systems by risk level",
-      csoaiApproach: "Byzantine Council assesses risk level using 33 independent agents. Results published publicly for transparency.",
+      csoaiApproach: "Council assesses risk level using 33 independent agents. Results published publicly for transparency.",
       soaiPdcaRole: "PLAN: Define risk categories. DO: Implement controls. CHECK: Monitor incidents. ACT: Adjust controls."
     },
     {
@@ -62,25 +62,25 @@ export default function EUAIActCompliance() {
     {
       requirement: "Human Oversight",
       euaiActRequirement: "Maintain meaningful human control",
-      csoaiApproach: "Byzantine Council is 50% human experts + 50% AI agents. Humans have final say on all critical decisions.",
+      csoaiApproach: "Council is 50% human experts + 50% AI agents. Humans have final say on all critical decisions.",
       soaiPdcaRole: "PLAN: Define oversight procedures. DO: Train analysts. CHECK: Audit decisions. ACT: Improve processes."
     },
     {
       requirement: "Data Governance",
       euaiActRequirement: "Ensure data quality and bias mitigation",
-      csoaiApproach: "CEASAI training covers data governance. Analysts assess data quality as part of compliance reviews.",
+      csoaiApproach: "Measurement credential training covers data governance. Analysts assess data quality as part of compliance reviews.",
       soaiPdcaRole: "PLAN: Define data standards. DO: Audit data. CHECK: Test for bias. ACT: Remediate issues."
     },
     {
       requirement: "Conformity Assessment",
       euaiActRequirement: "Document compliance through assessment",
-      csoaiApproach: "Byzantine Council provides independent conformity assessment. Reports detail compliance with each requirement.",
+      csoaiApproach: "Council provides independent conformity assessment. Reports detail compliance with each requirement.",
       soaiPdcaRole: "PLAN: Define assessment criteria. DO: Conduct assessment. CHECK: Verify compliance. ACT: Document findings."
     },
     {
       requirement: "Post-Market Monitoring",
       euaiActRequirement: "Monitor systems after deployment",
-      csoaiApproach: "CSOAI provides continuous monitoring. Incidents are reported to Byzantine Council within 24 hours.",
+      csoaiApproach: "CSOAI provides continuous monitoring. Incidents are reported to Council within 24 hours.",
       soaiPdcaRole: "PLAN: Define monitoring strategy. DO: Monitor systems. CHECK: Analyze incidents. ACT: Implement fixes."
     }
   ];
@@ -104,7 +104,7 @@ export default function EUAIActCompliance() {
     },
     {
       question: "How does CSOAI help with compliance?",
-      answer: "CSOAI provides: compliance assessment tools, Byzantine Council review, CEASAI training for your team, incident reporting system, and continuous monitoring. We handle the technical complexity."
+      answer: "CSOAI provides: compliance assessment tools, Council review, measurement credential training for your team, incident reporting system, and continuous monitoring. We handle the technical complexity."
     },
     {
       question: "Can we get certified for EU AI Act compliance?",
@@ -123,7 +123,7 @@ export default function EUAIActCompliance() {
       answer: "Required documentation: system description, risk assessment, training data documentation, testing results, human oversight procedures, incident reports, and post-market monitoring plan. CSOAI helps you organize this."
     },
     {
-      question: "Can we appeal a Byzantine Council decision?",
+      question: "Can we appeal a Council decision?",
       answer: "Yes! You can submit additional evidence and request a re-review. The Council will reconsider with new information. All appeals and dissenting opinions are documented and published."
     }
   ];
@@ -232,8 +232,8 @@ export default function EUAIActCompliance() {
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold flex-shrink-0">4</div>
                 <div>
-                  <h4 className="font-bold text-emerald-900 mb-1">Byzantine Council Review (Month 4)</h4>
-                  <p className="text-gray-700">Submit to independent Byzantine Council review. Receive compliance assessment and recommendations.</p>
+                  <h4 className="font-bold text-emerald-900 mb-1">Council Review (Month 4)</h4>
+                  <p className="text-gray-700">Submit to independent Council review. Receive compliance assessment and recommendations.</p>
                 </div>
               </div>
             </Card>
@@ -280,7 +280,7 @@ export default function EUAIActCompliance() {
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Achieve EU AI Act Compliance?</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Start your compliance journey with CSOAI's Byzantine Council oversight and SOAI-PDCA methodology
+            Start your compliance journey with CSOAI's Council oversight and SOAI-PDCA methodology
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

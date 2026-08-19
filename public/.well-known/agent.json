@@ -1,7 +1,7 @@
 {
   "name": "CSOAI",
-  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC twelve-axis instrument \u2014 frozen item banks, published scoring code, and signed evidence for every figure. Measurement and attestation only: CSOAI does not certify, accredit, or make regulatory determinations.",
-  "url": "https://csoai.org",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) — 13 measured of 14, frozen item banks, published scoring code, and signed evidence for every figure. Measurement and attestation only: CSOAI does not certify, accredit, or make regulatory determinations.",
+  "url": "https://councilof.ai",
   "provider": {
     "organization": "CSOAI Ltd",
     "company_number": "16939677",
@@ -34,137 +34,55 @@
   ],
   "instrument": {
     "name": "GSPC",
-    "axes": 12,
-    "measured_axes": 3,
-    "total_items": 375,
-    "as_of": "2026-08-05",
+    "expansion": "Governance · Safety · Provenance · Continuity",
+    "axes": 14,
+    "measured_axes": 13,
+    "quotable_axes": 14,
+    "separated_leads": 3,
+    "total_items": 890,
+    "as_of": "2026-08-18",
+    "ruling": "SITTING 1 (2026-08-18): 14-slot board, 13 measured of 14; jail quotable (separation UNTESTED).",
+    "source_of_truth": "https://councilof.ai/api/gspc",
     "axis_detail": [
-      {
-        "axis": "governance",
-        "bench": "GovBench",
-        "n": 237,
-        "task": "EU AI Act risk tier",
-        "status": "MEASURED",
-        "accuracy": 0.515,
-        "macro_f1": 0.381,
-        "interval": [0.451, 0.578],
-        "dataset": "https://huggingface.co/datasets/csoai/govbench"
-      },
-      {
-        "axis": "safety",
-        "bench": "DefBench",
-        "n": 14,
-        "task": "calibrated refusal",
-        "status": "MEASURED",
-        "accuracy": 0.643,
-        "macro_f1": 0.653,
-        "dataset": "https://huggingface.co/datasets/csoai/defbench"
-      },
-      {
-        "axis": "provenance",
-        "bench": "ProvBench",
-        "n": 16,
-        "task": "C2PA manifest survival",
-        "status": "UNMEASURED",
-        "dataset": "https://huggingface.co/datasets/csoai/provbench"
-      },
-      {
-        "axis": "continuity",
-        "bench": "PQCBench",
-        "n": 33,
-        "task": "post-quantum continuity",
-        "status": "UNMEASURED",
-        "dataset": "https://huggingface.co/datasets/csoai/pqcbench"
-      },
-      {
-        "axis": "conformance",
-        "bench": "MCPBench",
-        "n": 11,
-        "task": "tool-contract conformance",
-        "status": "MEASURED",
-        "accuracy": 0.636,
-        "macro_f1": 0.667,
-        "dataset": "https://huggingface.co/datasets/csoai/mcpbench"
-      },
-      {
-        "axis": "openness",
-        "bench": "OSSBench",
-        "n": 16,
-        "task": "licence vs intended use",
-        "status": "UNMEASURED",
-        "dataset": "https://huggingface.co/datasets/csoai/ossbench"
-      },
-      {
-        "axis": "cross-reality",
-        "bench": "XRAIV",
-        "n": 16,
-        "task": "autonomous agent action authority",
-        "status": "UNMEASURED",
-        "dataset": "https://huggingface.co/datasets/csoai/gspc-xr"
-      },
-      {
-        "axis": "art5-safeguard",
-        "bench": "Art5Bench",
-        "n": 16,
-        "task": "EU AI Act Article 5 prohibited-practice trip",
-        "status": "UNMEASURED",
-        "dataset": "https://huggingface.co/datasets/csoai/gspc-art5"
-      },
-      {
-        "axis": "machinery-conformity",
-        "bench": "MachBench",
-        "n": 16,
-        "task": "Machinery Reg safety-function classification",
-        "status": "DRAFT",
-        "dataset": "https://huggingface.co/datasets/csoai/gspc-mach"
-      },
-      {
-        "axis": "care",
-        "bench": "CareBench",
-        "n": 0,
-        "task": "care-cost under paired conduct scenarios",
-        "status": "DRAFT",
-        "dataset": "https://huggingface.co/datasets/csoai/gspc-care"
-      },
-      {
-        "axis": "detector-interop",
-        "bench": "DetBench",
-        "n": 0,
-        "task": "cross-detector watermark interoperability",
-        "status": "SPEC",
-        "dataset": "https://huggingface.co/datasets/csoai/gspc-det"
-      },
-      {
-        "axis": "swarm",
-        "bench": "SwarmBench",
-        "n": 0,
-        "task": "multi-agent coordination safety",
-        "status": "PLANNED",
-        "dataset": "https://huggingface.co/datasets/csoai/gspc-swarm"
-      }
+      { "axis": "governance", "bench": "GovBench", "n": 237, "task": "EU AI Act risk-tier classification", "status": "MEASURED", "separation": "SEPARATED", "dataset": "https://huggingface.co/datasets/csoai/gspc-gov" },
+      { "axis": "safety", "bench": "DefBench", "n": 36, "task": "calibrated refusal on paired requests", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-agi" },
+      { "axis": "provenance", "bench": "ProvBench", "n": 32, "task": "Article 50 marking survival by validity", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-prv" },
+      { "axis": "continuity", "bench": "PQCBench", "n": 33, "task": "post-quantum status of a cryptographic assumption", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-asi" },
+      { "axis": "conformance", "bench": "MCPBench", "n": 35, "task": "MCP tool conformance", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-mcp" },
+      { "axis": "openness", "bench": "OSSBench", "n": 32, "task": "licence reasoning versus intended use", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-oss" },
+      { "axis": "machinery-conformity", "bench": "MachBench", "n": 33, "task": "Machinery Reg self-evolving safety-function classification", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-mach" },
+      { "axis": "care", "bench": "CareBench", "n": 199, "task": "care-cost under paired conduct scenarios", "status": "MEASURED", "separation": "SEPARATED", "dataset": "https://huggingface.co/datasets/csoai/gspc-care" },
+      { "axis": "cross-reality", "bench": "XRAIV", "n": 32, "task": "autonomous agent action authority", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-xr" },
+      { "axis": "detector-interop", "bench": "DetBench", "n": 33, "task": "cross-detector watermark interoperability matrix", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-det" },
+      { "axis": "art5-safeguard", "bench": "Art5Bench", "n": 36, "task": "EU AI Act Article 5 prohibited-practice trip", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-art5" },
+      { "axis": "swarm", "bench": "SwarmBench", "n": 40, "task": "multi-agent coordination safety (protocol bank — instances not independent)", "status": "MEASURED", "separation": "TIE", "dataset": "https://huggingface.co/datasets/csoai/gspc-swarm" },
+      { "axis": "affect", "bench": "AffectBench", "n": 41, "task": "emotional & embodied safety (gold labels counsel-pending)", "status": "MEASURED", "separation": "SEPARATED", "dataset": "https://huggingface.co/datasets/csoai/gspc-affect" },
+      { "axis": "jail", "bench": "GoldBank-Detector", "n": 71, "task": "escape-attempt detection (7-model fleet)", "status": "MEASURED", "separation": "UNTESTED", "dataset": "pending publication" }
     ],
-    "honest_limit": "governance is the only axis over usable_n>=30 (n=237) and the only one carrying an interval: Council-34 accuracy 0.515, Wilson 95% [0.451, 0.578] (2026-08-05). UNMEASURED axes carry a live bank but no score until a clean multi-model board lands."
+    "honest_limit": "3 of the 13 canonical axes show a statistically separated leader (McNemar p<0.05 on discordant items): governance (p=0.0086), care (p=0.0356), affect (p=0.0078, gold labels counsel-pending). The other 10 canonical axes are statistical TIES — a point-estimate lead is not a measured advantage, and we do not count ties as wins. Jail (slot 14) was measured on a 7-model fleet with no separation test yet (UNTESTED); its bank is pending publication. Live per-axis numbers, intervals and separation tests: https://councilof.ai/api/gspc"
   },
   "endpoints": {
-    "tools": "https://csoai.org/api/tools",
+    "measured_board": "https://councilof.ai/api/gspc",
+    "measured_badge": "https://councilof.ai/api/badge",
     "measured_results": "https://csoai.org/benchmarks",
     "training_arenas": "https://csoai.org/arena/",
     "datasets_huggingface": "https://huggingface.co/csoai",
     "datasets_kaggle": "https://www.kaggle.com/nicktempleman",
-    "security": "https://csoai.org/.well-known/security.txt"
+    "security": "https://councilof.ai/.well-known/security.txt"
   },
   "verifiable_claims": [
     {
-      "claim": "7 MCP tools across 3 servers are live",
-      "verify": "GET https://csoai.org/api/tools \u2014 the endpoint returns the count it is measured on"
+      "claim": "14-slot GSPC board, 13 measured of 14, 890 banked items, published open",
+      "verify": "GET https://councilof.ai/api/gspc — live counts, intervals and separation tests; item sets and scoring code at https://huggingface.co/csoai"
     },
     {
-      "claim": "twelve benchmark axes, 375 banked items, three measured, published open",
-      "verify": "https://huggingface.co/csoai \u2014 item sets and scoring code are public"
+      "claim": "3 of 13 canonical axes carry a statistically separated leader; the other 10 are ties",
+      "verify": "GET https://councilof.ai/api/gspc — separated_leads and per-axis separation fields"
     }
   ],
-  "doi": "10.5281/zenodo.21755657",
+  "doi": "10.5281/zenodo.21991104",
+  "doi_note": "GSPC Methodology and the 417-Provision Frozen Corpus Anchor (the methodology record).",
   "license": "Apache-2.0 (item sets), CC-BY-4.0 (documentation)",
   "a2a_version": "0.1",
-  "contact": "https://csoai.org/.well-known/security.txt"
+  "contact": "https://councilof.ai/.well-known/security.txt"
 }

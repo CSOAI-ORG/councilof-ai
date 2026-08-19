@@ -18,7 +18,7 @@ const COMPS: Record<string, Comp> = {
       { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
     ],
     faqs: [
-      { q: "Is CSOAI an alternative to Vanta?", a: "For AI governance specifically, yes. Vanta excels at security-compliance automation (SOC 2, ISO 27001); CSOAI is purpose-built for AI governance - EU AI Act readiness, multi-framework crosswalks, and BFT decision governance." },
+      { q: "Is CSOAI an alternative to Vanta?", a: "For AI governance specifically, yes. Vanta excels at security-compliance automation (SOC 2, ISO 27001); CSOAI is purpose-built for AI governance - EU AI Act readiness, multi-framework crosswalks, and multi-agent decision governance." },
       { q: "Can CSOAI and Vanta be used together?", a: "Yes. Many teams keep a security-compliance tool for SOC 2 and add CSOAI for AI-specific obligations like the EU AI Act, GPAI documentation, and model-decision governance." },
     ],
   },

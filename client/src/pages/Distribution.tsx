@@ -96,7 +96,7 @@ export default function Distribution() {
         </div>
 
         <div className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          Every governed channel carries <b>@csoai/layer0</b> — Sovereign Gate on each call, Ed25519 attestation, and an
+          Every governed channel carries <b>@csoai/layer0</b> — Council Gate on each call, Ed25519 attestation, and an
           A2A envelope other governed agents verify offline. Channels at L0-1 are identity-checked today; the gateway
           deploy lifts the whole fleet to L0-3+ and the directories to A2A.
         </div>

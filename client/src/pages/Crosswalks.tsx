@@ -75,12 +75,12 @@ const crosswalkData: CrosswalkEntry[] = [
   {
     id: "3",
     csoaiArticle: "Art. 3",
-    csoaiTitle: "Byzantine Council",
+    csoaiTitle: "Council",
     euAIAct: "Art. 9(4) Oversight",
     nistAIRMF: "GOVERN 5.1-5.2",
     iso42001: "5.1 Leadership",
     alignmentStrength: "Strong",
-    notes: "33-node BFT consensus mirrors third-party conformity assessment requirements",
+    notes: "33-node multi-agent council mirrors third-party conformity assessment requirements",
   },
   {
     id: "4",
@@ -155,7 +155,7 @@ const crosswalkData: CrosswalkEntry[] = [
   {
     id: "11",
     csoaiArticle: "Art. 11",
-    csoaiTitle: "Byzantine Council Specs",
+    csoaiTitle: "Council Specs",
     euAIAct: "Art. 32-34 Notified Bodies",
     nistAIRMF: "GOVERN 5.1-5.2",
     iso42001: "5.1 Leadership",
@@ -342,7 +342,7 @@ const keyInsights: KeyInsight[] = [
   {
     title: "Governance & Oversight",
     description:
-      "The Byzantine Council (Article 3) and Human Council structures provide 24/7 distributed oversight exceeding notified body requirements while maintaining human control.",
+      "The Council (Article 3) and Human Council structures provide 24/7 distributed oversight exceeding notified body requirements while maintaining human control.",
     frameworks: ["All Frameworks"],
     icon: <Globe2 className="h-6 w-6" />,
     color: "from-violet-500 to-purple-600",

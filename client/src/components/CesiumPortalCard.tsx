@@ -50,15 +50,15 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
   },
   meok: {
     title: "End-User OS Lens",
-    subtitle: "Your sovereign AI · agentic governance",
+    subtitle: "Your Council AI · agentic governance",
     color: "#8b5cf6",
     preset: "US_SF_37_77_-122_42",
     tour: "sovspace",
     routes: [
-      { label: "Open Council Space", href: "/council-space", tour: true },
+      { label: "Open Council Space", href: "/gspc-arena", tour: true },
       { label: "Governance Graph", href: "/graph" },
       { label: "Tool Commons (370+ governed MCPs)", href: "/tool-commons" },
-      { label: "Your Council Twin", href: "/emergence" },
+      { label: "Your Council assistant Twin", href: "/emergence" },
     ],
   },
 };

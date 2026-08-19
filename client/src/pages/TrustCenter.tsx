@@ -217,7 +217,7 @@ export default function TrustCenter() {
       id: "data-location",
       title: "Where is my data stored?",
       content:
-        "The public site is served from Cloudflare's global edge network, and the measurement backend (os.meok.ai) is first-party infrastructure in the UK/EU. Per-region residency selection (EU/US/APAC) is designed but not yet offered — when it ships, this answer will name the regions and the safeguards.",
+        "The public site is served from Cloudflare's global edge network, and the measurement backend (the measurement API) is first-party infrastructure in the UK/EU. Per-region residency selection (EU/US/APAC) is designed but not yet offered — when it ships, this answer will name the regions and the safeguards.",
       icon: <MapPin className="h-5 w-5" />,
     },
     {
@@ -245,7 +245,7 @@ export default function TrustCenter() {
       id: "sub-processors",
       title: "Who are your sub-processors?",
       content:
-        "The named register is published on this page — see the Subprocessors section above. It covers Cloudflare (hosting/edge), Stripe (payments), Vercel (legacy hosting, being retired), GitHub (code), Hugging Face (public dataset hosting), our first-party sovereign gateway os.meok.ai, and our email provider. We notify customers before adding any new processor.",
+        "The named register is published on this page — see the Subprocessors section above. It covers Cloudflare (hosting/edge), Stripe (payments), Vercel (legacy hosting, being retired), GitHub (code), Hugging Face (public dataset hosting), our first-party measurement gateway the measurement API, and our email provider. We notify customers before adding any new processor.",
       icon: <Users className="h-5 w-5" />,
     },
     {
@@ -320,8 +320,8 @@ export default function TrustCenter() {
       safeguard: "Public data only — no personal data is processed",
     },
     {
-      vendor: "os.meok.ai (first-party)",
-      purpose: "Sovereign inference and governance gateway",
+      vendor: "the measurement API (first-party)",
+      purpose: "Council inference and governance gateway",
       data: "Governance and inference requests",
       location: "Self-hosted, UK/EU",
       safeguard: "First-party infrastructure — not a subprocessor; listed for transparency",
@@ -360,7 +360,7 @@ export default function TrustCenter() {
     },
     {
       title: "Live Status Page",
-      description: "Real-time probe of the Sovereign gateway, plus our honest incident log.",
+      description: "Real-time probe of the Council gateway, plus our honest incident log.",
       href: "/status",
     },
   ];
@@ -473,7 +473,7 @@ export default function TrustCenter() {
             </h3>
             <p className="text-gray-600 mt-2">
               The public site is served from Cloudflare&rsquo;s global edge network; the measurement
-              backend (os.meok.ai) runs on first-party infrastructure in the UK/EU. A per-region
+              backend (the measurement API) runs on first-party infrastructure in the UK/EU. A per-region
               residency choice (EU / US / APAC) is designed but <strong>not yet offered</strong> —
               this card will name regions and safeguards on the day it ships, not before.
             </p>

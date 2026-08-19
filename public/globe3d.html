@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>CSOAI Sovereign 3D — Photorealistic Governance Earth (beta)</title>
+<title>CSOAI Council 3D — Photorealistic Governance Earth (beta)</title>
 <script>window.CESIUM_BASE_URL='https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/';</script>
 <link href="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Widgets/widgets.css" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/cesium@1.119/Build/Cesium/Cesium.js"></script>
@@ -47,7 +47,7 @@
 <div id="c"></div>
 
 <div id="hud">
-  <div class="brand"><span class="dot"></span>CSOAI · Sovereign <small>3D Governance Earth</small> <span class="beta">BETA</span></div>
+  <div class="brand"><span class="dot"></span>CSOAI · Council <small>3D Governance Earth</small> <span class="beta">BETA</span></div>
   <div class="stats">
     <div class="stat"><b>417</b><span>Frozen provisions</span></div>
     <!-- Canon counters (client/src/data/canonCounters.ts, 2026-08-01): 291 MCP servers, 6 anchors (5 live) — s-nodes is overwritten by the live D1 feed when reachable -->
@@ -60,7 +60,7 @@
 
 <div id="rail" class="card">
   <h3>Data layers</h3>
-  <div class="lyr" data-layer="nodes"><span class="sw on"><i></i></span><span class="nm">Sovereign nodes<small>12 civilizations</small></span></div>
+  <div class="lyr" data-layer="nodes"><span class="sw on"><i></i></span><span class="nm">Council nodes<small>12 civilizations</small></span></div>
   <div class="lyr" data-layer="arcs"><span class="sw on"><i></i></span><span class="nm">Cross-region mesh<small>illustrative link arcs — all-pairs, not measured handoffs</small></span></div>
   <div class="lyr" data-layer="swarm"><span class="sw"><i></i></span><span class="nm">Agent swarm<small>governed agents</small></span></div>
   <div id="ring">
@@ -117,7 +117,7 @@ if(viewer){
   sc.fog.enabled=true;
   viewer.camera.setView({destination:Cesium.Cartesian3.fromDegrees(20,28,26000000)});
 
-  // ----- Sovereign nodes (points + labels) -----
+  // ----- Council nodes (points + labels) -----
   NODES.forEach(function(d){
     viewer.entities.add({
       layerTag:'nodes', position:Cesium.Cartesian3.fromDegrees(d.c[0],d.c[1]),
@@ -237,7 +237,7 @@ if(viewer){
   //                                             current camera target)
   //   {cmd:'rainbowStack', lng?, lat?}          — seven-layer defence-in-depth
   //                                             rings at a point
-  //   {cmd:'lightup'}                           — pulse every sovereign node
+  //   {cmd:'lightup'}                           — pulse every council node
   //   {cmd:'clearViz'}                          — clear spiral/stack/pulses
   //   {cmd:'stamps', stamps:[{id,kind,region,lng,lat,claim,ts,scenario?,tag?,weight?,space?}]}
   //                                           — plot the sov-time stamps as
@@ -277,7 +277,7 @@ if(viewer){
   }
 
   function bftSpiral(lng, lat){
-    // 33 seats of the Byzantine council, golden-angle spiral, alternating
+    // 33 seats of the council, golden-angle spiral, alternating
     // emerald (voters) / amber (generals). One ring binds the quorum.
     clearViz();
     for(var i=0;i<33;i++){
@@ -320,7 +320,7 @@ if(viewer){
       if(d.cmd==='flyTo'){
         viewer.camera.flyTo({destination:Cesium.Cartesian3.fromDegrees(d.lng, d.lat-4, d.height||2200000),
           duration:(d.duration!=null?d.duration:1.8)});
-        addPulse(d.lng, d.lat, d.col);   // narration lands where the Sovereign speaks
+        addPulse(d.lng, d.lat, d.col);   // narration lands where the Council speaks
       }
       else if(d.cmd==='pulse'){
         addPulse(d.lng, d.lat, d.col);

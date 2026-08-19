@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>J-Space — the signed event world | CSOAI</title>
+<meta name="description" content="Every signed event in the estate signature chain, embedded in hyperbolic space. Zoom forever — each point is an Ed25519-signed record. Measurement, not certification.">
+<style>
+  :root{--bg:#04070d;--fg:#e9edf2;--mut:#7d8ea3;--acc:#34d399;--warn:#f9a03f;--bd:#1c2733}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);overflow:hidden;
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  #stage{position:absolute;inset:0}
+  canvas{display:block}
+  .hud{position:absolute;background:rgba(4,7,13,.88);border:1px solid var(--bd);
+    border-radius:10px;backdrop-filter:blur(8px);z-index:5}
+  #hud{top:14px;left:14px;max-width:23rem;padding:13px 16px}
+  #hud h1{font-size:1.05rem;margin:0 0 .25rem;letter-spacing:.04em}
+  #hud h1 span{color:var(--acc)}
+  #hud p{margin:.3rem 0;color:var(--mut);font-size:.82rem}
+  #stats{font-variant-numeric:tabular-nums;font-size:.78rem;color:var(--acc);margin-top:.4rem}
+  #legend{bottom:14px;left:14px;padding:9px 13px;font-size:.78rem;color:var(--mut);display:flex;gap:14px;align-items:center}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+  #tip{position:absolute;display:none;z-index:6;max-width:19rem;background:rgba(4,7,13,.95);
+    border:1px solid var(--bd);border-radius:8px;padding:9px 12px;font-size:.76rem;color:var(--mut)}
+  #tip b{color:var(--fg)}
+  #tip .sig{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--acc)}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="cv"></canvas></div>
+
+<div id="hud" class="hud">
+  <h1>J-SPACE <span>· the signed event world</span></h1>
+  <p>The hyperbolic memory of the Council estate. Every dot is one event from the
+     live signature chain — an Ed25519-signed, hash-chained record. Radius = time
+     (centre is the first event, the rim is now). Angle = the axis the event belongs to.
+     Scroll to zoom — the space never ends; each cluster opens into sub-events.</p>
+  <div id="stats">loading…</div>
+</div>
+
+<div id="legend" class="hud">
+  <span><span class="dot" style="background:var(--acc)"></span>signed event (100% of this chain)</span>
+  <span><span class="dot" style="background:var(--warn)"></span>unsigned — dimmed, never bright</span>
+  <span>radius = time · angle = axis</span>
+</div>
+
+<div id="tip"></div>
+
+<script>
+const AXIS_LABELS = {
+  governance:"Governance · EU AI Act", safety:"Safety · DefBench", provenance:"Provenance · C2PA",
+  continuity:"Continuity · PQC", conformance:"Conformance · MCP", openness:"Openness · OSI",
+  "machinery-conformity":"Machinery · EU 2023/1230", care:"Care", "cross-reality":"Cross-reality · XR",
+  "detector-interop":"Detector interop", "art5-safeguard":"Art 5 safeguards", swarm:"Swarm",
+  affect:"Affect · Art 50"
+};
+
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+const stats = document.getElementById('stats');
+const tip = document.getElementById('tip');
+
+let W=0, H=0, S=1;              // size + unit scale
+let view = { x:0, y:0, zoom:1 }; // pan + zoom (zoom = pixels per unit)
+let events = [], anchors = [];
+let hovered = null;
+
+function resize(){
+  W = cv.width = innerWidth * devicePixelRatio;
+  H = cv.height = innerHeight * devicePixelRatio;
+  S = Math.min(W, H) * 0.42;   // disk radius in device px
+  draw();
+}
+addEventListener('resize', resize);
+
+// ── fetch + map ────────────────────────────────────────────────────────
+fetch('/j-space/events.json')
+  .then(r => r.json())
+  .then(d => {
+    events = d.events;
+    anchors = Object.entries(d.axis_anchors);
+    stats.textContent =
+      `${d.n_events.toLocaleString()} events · ${d.n_signed.toLocaleString()} signed ` +
+      `· ${d.time_range.min} → ${d.time_range.max}`;
+    draw();
+  })
+  .catch(e => { stats.textContent = 'events.json unreachable — no invented data shown'; });
+
+function diskX(angle, radius){ return Math.cos(angle) * radius; }
+function diskY(angle, radius){ return Math.sin(angle) * radius; }
+function toScreen(u, v){
+  return [W/2 + (view.x + u) * S * view.zoom, H/2 + (view.y + v) * S * view.zoom];
+}
+
+// ── draw ───────────────────────────────────────────────────────────────
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  // dark void
+  const g = ctx.createRadialGradient(W/2,H/2,0, W/2,H/2, S*view.zoom);
+  g.addColorStop(0,'#0a1220'); g.addColorStop(1,'#04070d');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+
+  const cx = W/2 + view.x*S*view.zoom, cy = H/2 + view.y*S*view.zoom, R = S*view.zoom;
+
+  // disk boundary
+  ctx.strokeStyle = 'rgba(52,211,153,.35)'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
+
+  // hyperbolic ring grid (exponential spacing — the "infinite" feel)
+  for(let k=1;k<=10;k++){
+    const r = R * (k/10);
+    ctx.strokeStyle = 'rgba(125,142,163,.10)'; ctx.lineWidth = 0.8;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke();
+  }
+
+  // axis anchor rays
+  anchors.forEach(([axis, angle]) => {
+    const [ax, ay] = toScreen(diskX(angle,1.02), diskY(angle,1.02));
+    const [bx, by] = toScreen(diskX(angle,0.55), diskY(angle,0.55));
+    ctx.strokeStyle = 'rgba(52,211,153,.22)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(ax,ay); ctx.stroke();
+    ctx.fillStyle = 'rgba(233,237,242,.75)';
+    ctx.font = `${Math.max(9, 11*view.zoom)}px -apple-system,sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(AXIS_LABELS[axis] || axis, ax, ay + 4);
+  });
+
+  // event points — brightest where zoomed in
+  const maxR = R * 0.985;
+  for(const e of events){
+    const u = diskX(e.angle, e.radius), v = diskY(e.angle, e.radius);
+    if (Math.hypot(u,v) > 1.02) continue;
+    const [x, y] = toScreen(u, v);
+    const size = e.signed ? (hovered === e ? 4.2 : 2.6) : (hovered === e ? 3.4 : 1.8);
+    ctx.fillStyle = e.signed ? 'rgba(52,211,153,.75)' : 'rgba(249,160,63,.5)';
+    ctx.beginPath(); ctx.arc(x, y, size * view.zoom, 0, Math.PI*2); ctx.fill();
+  }
+
+  // hover ring
+  if (hovered){
+    const u = diskX(hovered.angle, hovered.radius), v = diskY(hovered.angle, hovered.radius);
+    const [x, y] = toScreen(u, v);
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(x, y, 7*view.zoom, 0, Math.PI*2); ctx.stroke();
+  }
+}
+
+// ── infinite zoom (hyperbolic feel: zoom out keeps the disk small, in reveals) ──
+cv.addEventListener('wheel', e => {
+  e.preventDefault();
+  const f = e.deltaY > 0 ? 0.88 : 1.14;
+  // zoom around cursor
+  const mx = e.clientX*devicePixelRatio - W/2, my = e.clientY*devicePixelRatio - H/2;
+  const ux = (mx/S - view.x)/view.zoom, uy = (my/S - view.y)/view.zoom;
+  view.zoom = Math.min(400, Math.max(0.55, view.zoom * f));
+  view.x = mx/S - ux*view.zoom; view.y = my/S - uy*view.zoom;
+  draw();
+}, { passive:false });
+
+// pan
+let dragging = false, last = null;
+cv.addEventListener('pointerdown', e => { dragging = true; last = [e.clientX*devicePixelRatio, e.clientY*devicePixelRatio]; });
+addEventListener('pointermove', e => {
+  const px = e.clientX*devicePixelRatio, py = e.clientY*devicePixelRatio;
+  if (dragging && last){
+    view.x += (px-last[0])/(S*view.zoom); view.y += (py-last[1])/(S*view.zoom);
+    last = [px,py]; draw();
+  } else {
+    // hover pick
+    const mx = px - W/2, my = py - H/2;
+    const ux = (mx/S - view.x)/view.zoom, uy = (my/S - view.y)/view.zoom;
+    const rr = Math.hypot(ux,uy);
+    let best = null, bd = 0.03/1;
+    if (rr <= 1.0){
+      for(const ev of events){
+        const eu = diskX(ev.angle, ev.radius), evv = diskY(ev.angle, ev.radius);
+        const d = Math.hypot(eu-ux, evv-uy);
+        if (d < bd){ bd = d; best = ev; }
+      }
+    }
+    hovered = best;
+    if (best){
+      tip.style.display='block';
+      tip.style.left = (e.clientX+14)+'px'; tip.style.top = (e.clientY+10)+'px';
+      tip.innerHTML = `<b>${AXIS_LABELS[best.axis]||best.axis}</b><br>` +
+        `${best.intent ? best.intent : '(event '+best.id+')'}<br>` +
+        `<span class="sig">${best.id} · r=${best.radius.toFixed(3)} · ${new Date(best.epoch*1000).toISOString().slice(0,16).replace('T',' ')}</span>`;
+    } else { tip.style.display='none'; }
+    draw();
+  }
+});
+addEventListener('pointerup', () => dragging = false);
+
+resize();
+</script>
+</body>
+</html>

@@ -69,7 +69,7 @@ const LENSES: Record<LensKey, {
     asks: "Does the signing chain survive a PQC migration?",
     measured: "1 / 25 criteria pass — and the failing subject is us",
     artefact: "results/pqcbench.json",
-    caveat: "All four of our own SIGIL chains fail every criterion: no signed record carries an algorithm identifier. NIST IR 8547 disallows EdDSA after 2035.",
+    caveat: "All four of our own signed-vote chains fail every criterion: no signed record carries an algorithm identifier. NIST IR 8547 disallows EdDSA after 2035.",
   },
 };
 

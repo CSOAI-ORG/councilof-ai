@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ToolRunner from "../components/ToolRunner";
-const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
 const EX = ["audit", "compliance", "EU AI Act", "payments", "defence", "identity"];
 export default function ToolCommons() {
   const [q, setQ] = useState(""); const [data, setData] = useState<any>(null); const [loading, setLoading] = useState(false); const [copied, setCopied] = useState("");
@@ -54,7 +54,7 @@ export default function ToolCommons() {
           ))}
         </div>
         {matches.length === 0 && !loading && <p className="text-center text-sm text-emerald-300/75">No tools matched - try another term.</p>}
-        <p className="mt-8 text-center text-xs text-emerald-300/75">Every tool is governed by Layer 0 and signed. Open, MIT-licensed, sovereign by construction. Live via the Sovereign gateway.</p>
+        <p className="mt-8 text-center text-xs text-emerald-300/75">Every tool is governed by Layer 0 and signed. Open, MIT-licensed, council-tuned by construction. Live via the Council gateway.</p>
       </section>
     </div>
   );

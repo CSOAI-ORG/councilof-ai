@@ -15,14 +15,14 @@ import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, C
 import { AXES, MEASURED_ON, STATUS_TONE, confidence, countOf, fetchAxes, hasInterval, quotable, wilson,
          type Axis, type AxesState } from "@/lib/gspcAxes";
 import { createContext, useContext } from "react";
-import { Globe2, LayoutGrid, MessageSquare, Server, ScrollText, Building2, Command as CmdIcon } from "lucide-react";
+import { Globe2, LayoutGrid, MessageSquare, Server, ScrollText, Building2, Gamepad2, GraduationCap, Command as CmdIcon, ShieldCheck } from "lucide-react";
 import CityPanel from "@/components/sovos/CityPanel";
 
 // Vite cannot see maplibre's `new URL("./maplibre-gl-worker.mjs", import.meta.url)`,
 // so the chunk 404s and the SPA fallback serves HTML. Point it at the emitted asset.
 try { setWorkerUrl(maplibreWorkerUrl); } catch { /* older maplibre */ }
 
-const LAYOUT_KEY = "councilos.layout.v1";
+const LAYOUT_KEY = "councilos.layout.v2";
 
 
 /* ── live axes, shared by every panel ──────────────────────────────────────── */
@@ -126,7 +126,7 @@ function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
     <div className="relative h-full w-full bg-[#04070d]">
       <div ref={host} style={{ position: "absolute", inset: 0 }} />
       <div className="pointer-events-none absolute left-3 top-3 rounded-md border border-white/10 bg-black/55 px-3 py-2 text-[11px] leading-relaxed backdrop-blur">
-        <div className="font-semibold tracking-[0.2em] text-emerald-300">TWELVE SEATS</div>
+        <div className="font-semibold tracking-[0.2em] text-emerald-300">{axes.length} SEATS</div>
         <div className="text-slate-400">dot size = confidence (items ÷ 30, discounted by unparsed)</div>
         <div className="text-slate-500">dim = no score earned yet</div>
       </div>
@@ -165,8 +165,10 @@ function BoardPanel({ containerApi }: IDockviewPanelProps) {
         ))}
       </div>
       <p className="mt-4 border-t border-white/5 pt-3 text-[11px] leading-relaxed text-slate-500">
-        Nine axes show no number on purpose. A score appears only once an axis is MEASURED, and an interval only
-        once usable n ≥ 30. Unparsed answers are reported separately as UNMEASURED — never scored wrong, never dropped.
+        {c.total - c.measured === 0
+          ? `All ${c.total} axes are MEASURED.`
+          : `${c.total - c.measured} of ${c.total} axes carry no number yet — only MEASURED axes earn a score.`} An interval only
+        appears once usable n ≥ 30. Unparsed answers are reported separately as UNMEASURED — never scored wrong, never dropped.
       </p>
     </PanelShell>
   );
@@ -276,7 +278,7 @@ function AskPanel() {
       <div className="flex-1 space-y-3 overflow-auto p-4">
         {!turns.length && (
           <div className="rounded-lg border border-white/10 bg-white/[0.02] p-4 text-[12px] leading-relaxed text-slate-400">
-            Ask the sovereign specialist. It answers from the signed measurement layer — and says
+            Ask the Council specialist. It answers from the signed measurement layer — and says
             <span className="text-slate-200"> "unmeasured" </span> where the estate has not earned a number.
           </div>
         )}
@@ -300,6 +302,212 @@ function AskPanel() {
         <button onClick={send} disabled={busy} className="rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 text-sm font-medium text-emerald-200 disabled:opacity-40">Ask</button>
       </div>
     </div>
+  );
+}
+
+/* ── panel: Games — the estate's game arcade ───────────────────────────────── */
+//
+// Each game in the arcade is one entry in GAMES. A game ships on its own deploy
+// cycle (its own CF Pages project) and the OS just hosts it — the estate owns
+// the brand, the purpose, and the surface; the game client stays independent.
+
+type Game = { id: string; title: string; tagline: string; src: string; note: string; gated: boolean };
+
+const GAMES: Game[] = [
+  {
+    id: "council-town",
+    title: "Council Town",
+    tagline: "Agent clans deliberating in an open world",
+    src: "https://council-town.pages.dev/",
+    note:
+      "Council Town's world runs on its game backend (Convex), which is owner-gated — one login the estate owner clears. " +
+      "Until it is wired, the client shows its loading shell; nothing is simulated or fabricated.",
+    gated: true,
+  },
+];
+
+function GamesPanel({ params }: IDockviewPanelProps<{ game?: string }>) {
+  const [activeId, setActiveId] = useState<string>(GAMES[0].id);
+  const [reachable, setReachable] = useState<Record<string, boolean | null>>({});
+  const game = GAMES.find((g) => g.id === activeId) ?? GAMES[0];
+
+  useEffect(() => {
+    if (params?.game && GAMES.some((g) => g.id === params.game)) setActiveId(params.game);
+  }, [params?.game]);
+
+  useEffect(() => {
+    if (reachable[game.id] !== undefined) return;
+    let dead = false;
+    fetch(game.src, { method: "GET" })
+      .then((r) => { if (!dead) setReachable((m) => ({ ...m, [game.id]: r.ok })); })
+      .catch(() => { if (!dead) setReachable((m) => ({ ...m, [game.id]: false })); });
+    return () => { dead = true; };
+  }, [game, reachable]);
+
+  return (
+    <div className="flex h-full w-full flex-col bg-[#080c14]">
+      <div className="flex shrink-0 items-center gap-1 border-b border-white/5 bg-[#080c14]/95 px-2 py-1.5">
+        {GAMES.map((g) => (
+          <button
+            key={g.id}
+            onClick={() => setActiveId(g.id)}
+            className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition ${g.id === activeId ? "bg-emerald-400/15 text-emerald-200" : "text-slate-500 hover:bg-white/5 hover:text-slate-300"}`}
+          >
+            {g.title}
+            {g.gated && <span className="ml-1.5 rounded border border-amber-400/30 px-1 py-0.5 text-[9px] font-semibold text-amber-400/70">gate</span>}
+          </button>
+        ))}
+        <span className="ml-auto hidden pr-2 text-[10px] text-slate-600 sm:block">{game.tagline}</span>
+      </div>
+      {reachable[game.id] === false ? (
+        <div className="flex flex-1 items-center justify-center p-6">
+          <div className="max-w-md rounded-xl border border-white/10 bg-white/[0.02] p-5 text-center">
+            <Gamepad2 className="mx-auto h-6 w-6 text-slate-600" />
+            <div className="mt-2 text-sm font-medium text-slate-200">{game.title} client unreachable</div>
+            <p className="mt-1 text-[12px] leading-relaxed text-slate-500">
+              The game client did not answer at {game.src}. The signed measurement records stay available in the
+              Council City panel meanwhile.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="flex-1">
+            <iframe src={game.src} title={game.title} className="h-full w-full border-0" allow="clipboard-write" />
+          </div>
+          <div className="shrink-0 border-t border-white/5 px-3 py-1.5 text-[10px] leading-relaxed text-slate-600">
+            {game.note}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ── panel: Training — flywheel runs + mesh simulations ─────────────────────── */
+
+interface FlywheelRun {
+  run_id: string;
+  model: string;
+  practice: { n: number; acc: number | null };
+  held_out: { n: number; acc: number | null };
+  overfit_gap: number;
+  alarm: string;
+  exported_pairs: number;
+  exported_kb_rows: number;
+  guard: string;
+  ts: string;
+}
+interface FlywheelBoard { generated_at: string; n_runs: number; runs: FlywheelRun[]; }
+interface SimBoard {
+  generated_at: string;
+  kind: string;
+  note: string;
+  run: { scenario: string; n_runs: number; agent_count: number; mean_consensus_time_ms: number; p50_consensus_time_ms: number; p99_consensus_time_ms: number; task_success_rate: number; optimal_cluster_size: number; bottleneck_agent: string; failure_scenarios: string[] };
+}
+
+function TrainingPanel() {
+  const [board, setBoard] = useState<FlywheelBoard | null>(null);
+  const [sim, setSim] = useState<SimBoard | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    let dead = false;
+    Promise.all([
+      fetch("/flywheel/board.json").then((r) => (r.ok ? r.json() : Promise.reject(new Error(`flywheel HTTP ${r.status}`)))),
+      fetch("/flywheel/sim-board.json").then((r) => (r.ok ? r.json() : Promise.reject(new Error(`sim-board HTTP ${r.status}`)))),
+    ])
+      .then(([b, s]) => { if (!dead) { setBoard(b); setSim(s); } })
+      .catch((e) => { if (!dead) setErr(String(e.message ?? e)); });
+    return () => { dead = true; };
+  }, []);
+
+  if (err) return <PanelShell subtitle="Training"><div className="text-sm text-amber-400/80">Training records unreachable — {err}. Nothing shown rather than a fabricated run.</div></PanelShell>;
+  if (!board && !sim) return <PanelShell subtitle="Training"><div className="text-sm text-slate-500">reading /flywheel/board.json…</div></PanelShell>;
+
+  return (
+    <PanelShell subtitle={`Training · ${board?.n_runs ?? 0} flywheel runs · ${sim ? "1 mesh simulation" : "no simulation yet"}`}>
+      {/* ── training runs ── */}
+      <div className="mb-4">
+        <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Flywheel training runs</div>
+        {board && board.runs.length ? (
+          <div className="space-y-1.5">
+            {board.runs.map((r) => {
+              const gapOk = Math.abs(r.overfit_gap) <= 0.15;
+              return (
+                <div key={r.run_id} className="rounded-lg border border-white/5 bg-white/[0.02] p-3">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="font-mono text-[11px] text-slate-500">{r.run_id}</span>
+                    <span className="text-sm font-medium text-slate-100">{r.model}</span>
+                    <span className="ml-auto text-[11px] tabular-nums text-slate-400">
+                      overfit gap <b className={gapOk ? "text-emerald-300" : "text-rose-300"}>{r.overfit_gap.toFixed(4)}</b>
+                    </span>
+                    <span className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold ${gapOk ? "border-emerald-400/30 text-emerald-300" : "border-rose-400/30 text-rose-300"}`}>{gapOk ? "OK" : "ALARM"}</span>
+                  </div>
+                  <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-slate-500">
+                    <span>{r.exported_pairs} pairs exported</span>
+                    <span>{r.exported_kb_rows} KB rows</span>
+                    <span className="text-slate-600">{r.guard}</span>
+                    <span className="text-slate-600">{r.alarm}</span>
+                  </div>
+                  <div className="mt-0.5 text-[10px] text-slate-600">{new Date(r.ts).toLocaleString()}</div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-[12px] text-slate-500">No flywheel runs recorded yet.</div>
+        )}
+      </div>
+
+      {/* ── mesh simulation ── */}
+      <div>
+        <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Mesh simulation</div>
+        {sim ? (
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="font-mono text-[11px] text-slate-500">{sim.run.scenario}</span>
+              <span className="ml-auto text-[11px] text-slate-400">{sim.run.n_runs.toLocaleString()} Monte Carlo runs · {sim.run.agent_count} agents</span>
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <div className="rounded-md bg-white/[0.03] px-2.5 py-1.5">
+                <div className="text-[10px] uppercase tracking-wider text-slate-600">mean consensus</div>
+                <div className="text-sm font-semibold tabular-nums text-slate-100">{sim.run.mean_consensus_time_ms.toFixed(1)} ms</div>
+              </div>
+              <div className="rounded-md bg-white/[0.03] px-2.5 py-1.5">
+                <div className="text-[10px] uppercase tracking-wider text-slate-600">p99 consensus</div>
+                <div className="text-sm font-semibold tabular-nums text-slate-100">{sim.run.p99_consensus_time_ms.toFixed(1)} ms</div>
+              </div>
+              <div className="rounded-md bg-white/[0.03] px-2.5 py-1.5">
+                <div className="text-[10px] uppercase tracking-wider text-slate-600">task success</div>
+                <div className="text-sm font-semibold tabular-nums text-emerald-300">{(sim.run.task_success_rate * 100).toFixed(1)}%</div>
+              </div>
+              <div className="rounded-md bg-white/[0.03] px-2.5 py-1.5">
+                <div className="text-[10px] uppercase tracking-wider text-slate-600">optimal cluster</div>
+                <div className="text-sm font-semibold tabular-nums text-slate-100">{sim.run.optimal_cluster_size}</div>
+              </div>
+              <div className="rounded-md bg-white/[0.03] px-2.5 py-1.5">
+                <div className="text-[10px] uppercase tracking-wider text-slate-600">bottleneck</div>
+                <div className="text-sm font-semibold tabular-nums text-slate-100">{sim.run.bottleneck_agent}</div>
+              </div>
+              <div className="rounded-md bg-white/[0.03] px-2.5 py-1.5">
+                <div className="text-[10px] uppercase tracking-wider text-slate-600">failure scenarios</div>
+                <div className="text-sm font-semibold tabular-nums text-slate-100">{sim.run.failure_scenarios.length}</div>
+              </div>
+            </div>
+            <p className="mt-2 text-[11px] leading-relaxed text-slate-500">{sim.note}</p>
+          </div>
+        ) : (
+          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-3 text-[12px] text-slate-500">No simulation snapshot yet.</div>
+        )}
+      </div>
+
+      <p className="mt-4 border-t border-white/5 pt-3 text-[11px] leading-relaxed text-slate-600">
+        Training stays firewall-clean: the flywheel exports measurement fuel (pairs + KB rows) and refuses
+        held-out contamination; analysis over outcomes is published as signed measurement — the estate never
+        trains and ships a champion model on the collected honey.
+      </p>
+    </PanelShell>
   );
 }
 
@@ -329,7 +537,7 @@ function MethodPanel() {
 
 /* ── workspace ─────────────────────────────────────────────────────────────── */
 
-const COMPONENTS = { globe: GlobePanel, board: BoardPanel, evidence: EvidencePanel, fleet: FleetPanel, ask: AskPanel, method: MethodPanel, city: CityPanel };
+const COMPONENTS = { globe: GlobePanel, board: BoardPanel, evidence: EvidencePanel, fleet: FleetPanel, ask: AskPanel, method: MethodPanel, city: CityPanel, games: GamesPanel, training: TrainingPanel };
 
 function openEvidence(api: DockviewApi, axis: string) {
   const existing = api.getPanel("evidence");
@@ -337,13 +545,38 @@ function openEvidence(api: DockviewApi, axis: string) {
   api.addPanel({ id: "evidence", component: "evidence", title: "Evidence", params: { axis }, position: { referencePanel: "board", direction: "below" } });
 }
 
-const LAUNCHER: { id: keyof typeof COMPONENTS; title: string; icon: any }[] = [
-  { id: "globe", title: "Globe", icon: Globe2 },
-  { id: "board", title: "GSPC Board", icon: LayoutGrid },
-  { id: "ask", title: "Ask SOV", icon: MessageSquare },
-  { id: "fleet", title: "MCP Fleet", icon: Server },
-  { id: "city", title: "Council City", icon: Building2 },
-  { id: "method", title: "Method", icon: ScrollText },
+type LauncherItem = { id: keyof typeof COMPONENTS; title: string; icon: any; hint: string; gated?: boolean };
+type LauncherSection = { heading: string; items: LauncherItem[] };
+
+// The Games section is built from the game registry — adding a game to GAMES
+// adds its own sidebar entry automatically. The arcade holds up to 6 games.
+const LAUNCHER_SECTIONS: LauncherSection[] = [
+  {
+    heading: "Workspace",
+    items: [
+      { id: "globe", title: "Globe", icon: Globe2, hint: "Thirteen seats, one per axis" },
+      { id: "board", title: "GSPC Board", icon: LayoutGrid, hint: "Scores only where measured" },
+    ],
+  },
+  {
+    heading: "Measurement",
+    items: [
+      { id: "city", title: "Council City", icon: Building2, hint: "Signed arena runs" },
+      { id: "training", title: "Training", icon: GraduationCap, hint: "Flywheel runs + mesh simulations" },
+      { id: "method", title: "Method", icon: ScrollText, hint: "The rules the boards run on" },
+    ],
+  },
+  {
+    heading: "Games",
+    items: GAMES.map((g) => ({ id: "games", title: g.title, icon: Gamepad2, hint: g.tagline, gated: g.gated })),
+  },
+  {
+    heading: "Intelligence",
+    items: [
+      { id: "ask", title: "Ask SOV", icon: MessageSquare, hint: "Answers from the signed layer" },
+      { id: "fleet", title: "MCP Fleet", icon: Server, hint: "Declared tool servers" },
+    ],
+  },
 ];
 
 export default function SovOS() {
@@ -365,11 +598,24 @@ function SovOSInner() {
   const onReady = useCallback((event: DockviewReadyEvent) => {
     setApi(event.api);
     const saved = localStorage.getItem(LAYOUT_KEY);
-    if (saved) { try { event.api.fromJSON(JSON.parse(saved)); return; } catch { localStorage.removeItem(LAYOUT_KEY); } }
+    if (saved) {
+      try {
+        // Sanitize: drop any saved panel whose component no longer exists, so a
+        // renamed panel (e.g. town -> games) can never break the workspace.
+        const json = JSON.parse(saved);
+        const known = new Set(Object.keys(COMPONENTS));
+        const panels = json?.panels ?? [];
+        json.panels = panels.filter((p: any) => known.has(p?.component ?? p?.contentComponent ?? ""));
+        if (json.panels.length) { event.api.fromJSON(json); return; }
+      } catch { /* fall through to default */ }
+      localStorage.removeItem(LAYOUT_KEY);
+    }
     event.api.addPanel({ id: "globe", component: "globe", title: "Globe" });
-    event.api.addPanel({ id: "board", component: "board", title: "GSPC Board", position: { referencePanel: "globe", direction: "right" } });
-    event.api.addPanel({ id: "ask", component: "ask", title: "Ask SOV", position: { referencePanel: "globe", direction: "below" } });
+    event.api.addPanel({ id: "games", component: "games", title: "Games", position: { referencePanel: "globe", direction: "right" } });
+    event.api.addPanel({ id: "board", component: "board", title: "GSPC Board", position: { referencePanel: "games", direction: "right" } });
+    event.api.addPanel({ id: "ask", component: "ask", title: "Ask SOV", position: { referencePanel: "games", direction: "below" } });
     event.api.addPanel({ id: "city", component: "city", title: "Council City", position: { referencePanel: "ask", direction: "within" } });
+    event.api.addPanel({ id: "training", component: "training", title: "Training", position: { referencePanel: "ask", direction: "within" } });
     event.api.addPanel({ id: "method", component: "method", title: "Method", position: { referencePanel: "ask", direction: "within" } });
   }, []);
 
@@ -379,11 +625,11 @@ function SovOSInner() {
     return () => d.dispose();
   }, [api]);
 
-  const open = useCallback((id: keyof typeof COMPONENTS, title: string) => {
+  const open = useCallback((id: keyof typeof COMPONENTS, title: string, params?: Record<string, unknown>) => {
     if (!api) return;
     const p = api.getPanel(id);
-    if (p) { p.api.setActive(); return; }
-    api.addPanel({ id, component: id, title });
+    if (p) { if (params) p.api.updateParameters(params); p.api.setActive(); return; }
+    api.addPanel({ id, component: id, title, params });
   }, [api]);
 
   const resetLayout = () => { localStorage.removeItem(LAYOUT_KEY); location.reload(); };
@@ -393,7 +639,7 @@ function SovOSInner() {
       <header className="flex h-11 shrink-0 items-center gap-3 border-b border-white/8 bg-[#080c14] px-3">
         <span className="text-[13px] font-semibold tracking-[0.22em] text-emerald-300">Council&nbsp;OS</span>
         <span className="hidden text-[11px] text-slate-500 sm:block">
-          {COUNTS.measured}/{COUNTS.total} axes measured · {COUNTS.withInterval} with an interval · signed, recomputable
+          {COUNTS.measured}/{COUNTS.total} measured · {COUNTS.withInterval} carrying an interval
         </span>
         <div className="ml-auto flex items-center gap-1.5">
           <button onClick={() => setPalette(true)} className="flex items-center gap-1.5 rounded-md border border-white/10 px-2 py-1 text-[11px] text-slate-400 hover:bg-white/5">
@@ -404,13 +650,37 @@ function SovOSInner() {
       </header>
 
       <div className="flex min-h-0 flex-1">
-        <nav className="flex w-12 shrink-0 flex-col items-center gap-1 border-r border-white/8 bg-[#080c14] py-2">
-          {LAUNCHER.map(({ id, title, icon: Icon }) => (
-            <button key={id} title={title} onClick={() => open(id, title)}
-              className="grid h-9 w-9 place-items-center rounded-lg text-slate-500 transition hover:bg-white/5 hover:text-emerald-300">
-              <Icon className="h-4 w-4" />
-            </button>
-          ))}
+        <nav className="flex w-52 shrink-0 flex-col border-r border-white/8 bg-[#080c14]">
+          <div className="flex items-center gap-2 border-b border-white/5 px-3 py-2.5">
+            <ShieldCheck className="h-4 w-4 text-emerald-300" />
+            <div>
+              <span className="block text-[11px] font-semibold tracking-[0.16em] text-slate-200">Council OS</span>
+              <SourceChip />
+            </div>
+          </div>
+          <div className="flex-1 overflow-auto py-1.5">
+            {LAUNCHER_SECTIONS.map((section) => (
+              <div key={section.heading} className="mb-0.5">
+                <div className="px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">{section.heading}</div>
+                {section.items.map(({ id, title, icon: Icon, hint, gated }) => (
+                  <button
+                    key={id + title}
+                    onClick={() => open(id, title, id === "games" && gated ? { game: GAMES[0].id } : undefined)}
+                    title={hint}
+                    className="flex w-full items-center gap-2.5 rounded-md px-3 py-1.5 text-left text-[12px] font-medium text-slate-400 transition hover:bg-white/5 hover:text-emerald-200"
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                    <span className="truncate">{title}</span>
+                    {id === "board" && <span className="ml-auto shrink-0 rounded-full bg-emerald-400/15 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-emerald-300">{COUNTS.measured}</span>}
+                    {gated && <span className="ml-auto shrink-0 rounded border border-amber-400/30 px-1 py-0.5 text-[9px] font-semibold text-amber-400/70">gate</span>}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-white/5 px-3 py-2 text-[10px] leading-relaxed text-slate-600">
+            {COUNTS.total} axes · {COUNTS.measured} measured · signed, recomputable
+          </div>
         </nav>
         <div className="min-w-0 flex-1">
           <DockviewReact components={COMPONENTS} onReady={onReady} theme={themeAbyss} disableTabsContextMenu />
@@ -422,7 +692,7 @@ function SovOSInner() {
         <CommandList>
           <CommandEmpty>Nothing matches.</CommandEmpty>
           <CommandGroup heading="Panels">
-            {LAUNCHER.map(({ id, title }) => (
+            {LAUNCHER_SECTIONS.flatMap((s) => s.items).map(({ id, title }) => (
               <CommandItem key={id} onSelect={() => { open(id, title); setPalette(false); }}>{title}</CommandItem>
             ))}
           </CommandGroup>

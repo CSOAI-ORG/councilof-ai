@@ -7,7 +7,7 @@ import { Link } from 'wouter';
 
 export default function CouncilLicensingLanding() {
   useEffect(() => {
-    document.title = 'Byzantine Council Licensing - CSOAI';
+    document.title = 'Council Licensing - CSOAI';
   }, []);
 
   const fadeInUp = {
@@ -26,7 +26,7 @@ export default function CouncilLicensingLanding() {
               🏛️ Multi-Stakeholder Governance
             </div>
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Byzantine Council Licensing
+              Council Licensing
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
               Deploy consensus-based AI governance. License our designed 33-agent Council of AI for your organization's critical compliance decisions (design; live independence measured at n_eff 1.21 of 3).
@@ -39,7 +39,7 @@ export default function CouncilLicensingLanding() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-md mx-auto mb-12"
           >
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">What is Byzantine Council?</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">What is Council?</h3>
             <p className="text-gray-600 mb-6">
               A consensus-based governance model using 33 specialized AI agents representing different stakeholder perspectives. Perfect for complex compliance decisions requiring multi-stakeholder agreement.
             </p>
@@ -56,7 +56,7 @@ export default function CouncilLicensingLanding() {
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <motion.div {...fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">How Byzantine Council Works</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">How Council Works</h2>
             <p className="text-xl text-gray-600">Multi-stakeholder consensus for AI governance</p>
           </motion.div>
 
@@ -75,7 +75,7 @@ export default function CouncilLicensingLanding() {
               {
                 number: '3',
                 title: 'Consensus Voting',
-                description: 'Byzantine algorithm ensures robust agreement despite adversarial inputs'
+                description: 'A designed multi-agent vote requires a supermajority (23 of 33) to agree'
               },
               {
                 number: '4',
@@ -239,7 +239,7 @@ export default function CouncilLicensingLanding() {
         <div className="max-w-4xl mx-auto text-center">
           <motion.div {...fadeInUp}>
             <h2 className="text-4xl font-bold mb-6">Ready for Consensus-Based Governance?</h2>
-            <p className="text-xl mb-8 opacity-90">Deploy Byzantine Council for your organization today</p>
+            <p className="text-xl mb-8 opacity-90">Deploy Council for your organization today</p>
             <Link href="/contact">
               <Button className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
                 Request Demo & Pricing

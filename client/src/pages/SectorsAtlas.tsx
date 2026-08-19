@@ -49,6 +49,21 @@ const DOMAINS: Domain[] = [
     { name: "Education / grading", frameworks: ["EU AI Act (high-risk)", "FERPA", "Student-data laws"], tier: "High" },
     { name: "Proctoring", frameworks: ["EU AI Act (high-risk)", "GDPR", "Disability law"], tier: "High" },
   ]},
+  { id: "insurance", name: "Insurance & Actuarial", sectors: [
+    { name: "Life & health underwriting", frameworks: ["EU AI Act (high-risk)", "NAIC Model Bulletin", "State insurance codes"], tier: "High" },
+    { name: "Pricing & rating models", frameworks: ["NAIC Model Bulletin", "Colorado SB21-169", "Unfair trade practice law"], tier: "High" },
+    { name: "Claims triage", frameworks: ["EU AI Act (limited)", "NAIC Model Bulletin", "Claims-handling rules"], tier: "Limited" },
+    { name: "Fraud detection", frameworks: ["GDPR", "NIST AI RMF", "State insurance codes"], tier: "Limited" },
+    { name: "Policyholder chat", frameworks: ["EU AI Act (transparency)", "ISO 42001"], tier: "Minimal" },
+  ]},
+  { id: "agri", name: "Agriculture & Food", sectors: [
+    { name: "Crop yield prediction", frameworks: ["ISO 42001", "NIST AI RMF"], tier: "Minimal" },
+    { name: "Precision spraying", frameworks: ["EU Machinery Regulation", "ISO 42001", "Pesticide-use law"], tier: "Limited" },
+    { name: "Livestock monitoring", frameworks: ["ISO 42001", "Animal welfare law"], tier: "Minimal" },
+    { name: "Food safety inspection", frameworks: ["HACCP", "FDA FSMA", "EU General Food Law"], tier: "Limited" },
+    { name: "Supply-chain traceability", frameworks: ["EU Deforestation Regulation", "ISO 22005", "FSMA Rule 204"], tier: "Limited" },
+    { name: "Commodity trading models", frameworks: ["MiFID II", "CFTC rules", "ISO 42001"], tier: "Limited" },
+  ]},
 ];
 
 const TONE: Record<string, string> = {

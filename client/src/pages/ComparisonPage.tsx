@@ -58,10 +58,10 @@ const differentiators = [
   },
   {
     icon: BookOpen,
-    title: "Training + Certification",
+    title: "Training + Credential",
     csoai: "Included",
     competitors: "Separate cost",
-    description: "Free training tier plus professional certification programs",
+    description: "Free training tier plus a professional measurement credential",
   },
   {
     icon: DollarSign,
@@ -75,7 +75,7 @@ const differentiators = [
     title: "Governance",
     csoai: "Open standards",
     competitors: "Proprietary/closed",
-    description: "Byzantine Council consensus, transparent decision-making",
+    description: "Council consensus, transparent decision-making",
   },
 ];
 
@@ -132,7 +132,7 @@ const comparisonFeatures = [
     category: "Training & Education",
     features: [
       {
-        name: "Training & Certification",
+        name: "Training & Credential",
         csoai: "✓",
         traditional: "✗",
         aiTools: "✗",
@@ -146,7 +146,7 @@ const comparisonFeatures = [
         consulting: "✗",
       },
       {
-        name: "Professional Certification",
+        name: "Professional Measurement Credential",
         csoai: "✓",
         traditional: "✗",
         aiTools: "✗",
@@ -179,7 +179,7 @@ const comparisonFeatures = [
         consulting: "✗",
       },
       {
-        name: "Byzantine Council (33-agent consensus)",
+        name: "Council (33-agent consensus)",
         csoai: "✓",
         traditional: "✗",
         aiTools: "✗",
@@ -338,7 +338,7 @@ const uniqueAdvantages = [
   },
   {
     icon: Users,
-    title: "Byzantine Council",
+    title: "Council",
     description:
       "33-agent consensus mechanism ensures transparent, unbiased decision-making. Distributed governance prevents any single entity from controlling AI safety outcomes.",
   },
@@ -397,65 +397,12 @@ const testimonials = [
   },
 ];
 
-// Pricing comparison
-const pricingComparison = [
-  {
-    name: "CSOAI",
-    tiers: [
-      { name: "Free Tier", price: "$0", features: "Up to 3 AI systems, basic training" },
-      {
-        name: "Professional",
-        price: "$499/mo",
-        features: "10 systems, certification, monitoring",
-      },
-      { name: "Enterprise", price: "Custom", features: "Unlimited, 24/7 support, custom integrations" },
-    ],
-  },
-  {
-    name: "Traditional GRC Software",
-    tiers: [
-      { name: "Starter", price: "$2,000/mo", features: "Basic compliance, limited frameworks" },
-      {
-        name: "Professional",
-        price: "$5,000/mo",
-        features: "Multiple frameworks, reporting",
-      },
-      { name: "Enterprise", price: "$10,000+/mo", features: "Custom, priority support" },
-    ],
-  },
-  {
-    name: "AI-Specific Tools",
-    tiers: [
-      { name: "Starter", price: "$1,500/mo", features: "Single framework, 5 systems" },
-      {
-        name: "Growth",
-        price: "$4,000/mo",
-        features: "Multiple frameworks, 20 systems",
-      },
-      { name: "Enterprise", price: "$8,000+/mo", features: "Unlimited systems, custom workflows" },
-    ],
-  },
-  {
-    name: "Consulting Firms",
-    tiers: [
-      { name: "Project-based", price: "$50,000+", features: "1-3 month engagement" },
-      {
-        name: "Retainer",
-        price: "$10,000+/mo",
-        features: "Ongoing advisory, limited implementations",
-      },
-      { name: "Full Service", price: "$100,000+", features: "Complete transformation program" },
-    ],
-  },
-];
-
 interface ExpandedSectionState {
   [key: string]: boolean;
 }
 
 export default function ComparisonPage() {
   const [expandedCategories, setExpandedCategories] = useState<ExpandedSectionState>({});
-  const [selectedPricingCategory, setSelectedPricingCategory] = useState(0);
 
   const toggleCategory = (categoryName: string) => {
     setExpandedCategories((prev) => ({
@@ -508,7 +455,7 @@ export default function ComparisonPage() {
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               More than just compliance software. A complete AI governance platform with training,
-              certification, monitoring, and economic benefits—all designed for the global economy.
+              the measurement credential, monitoring, and economic benefits—all designed for the global economy.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="/signup">
@@ -726,75 +673,17 @@ export default function ComparisonPage() {
         </div>
       </section>
 
-      {/* Pricing Comparison */}
+      {/* Value Proposition */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl font-bold mb-4">Pricing Comparison</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              See how CSOAI's transparent pricing compares to alternatives
-            </p>
-          </motion.div>
-
-          <div className="max-w-6xl mx-auto">
-            {/* Category Selector */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              {pricingComparison.map((category, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedPricingCategory(index)}
-                  className={`p-4 rounded-lg font-semibold transition-all ${
-                    selectedPricingCategory === index
-                      ? "bg-primary text-primary-foreground shadow-lg"
-                      : "bg-muted hover:bg-muted/80 text-foreground"
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Pricing Tiers */}
-            <motion.div
-              className="grid md:grid-cols-3 gap-6"
-              key={selectedPricingCategory}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {pricingComparison[selectedPricingCategory].tiers.map((tier, index) => (
-                <Card key={index} className={index === 1 ? "border-primary border-2" : ""}>
-                  <CardHeader>
-                    <CardTitle className="text-lg">{tier.name}</CardTitle>
-                    <div className="mt-2">
-                      <div className="text-3xl font-bold">{tier.price}</div>
-                      {tier.price !== "Custom" && !tier.price.includes("+") && (
-                        <p className="text-sm text-muted-foreground">per month</p>
-                      )}
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">{tier.features}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </motion.div>
-          </div>
-
-          <div className="max-w-2xl mx-auto mt-12 p-6 bg-emerald-50 border border-emerald-200 rounded-lg">
+          <div className="max-w-2xl mx-auto p-6 bg-emerald-50 border border-emerald-200 rounded-lg">
             <div className="flex gap-3">
               <Zap className="h-5 w-5 text-emerald-700 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-emerald-900 mb-1">CSOAI's Value Proposition</p>
                 <p className="text-sm text-emerald-800">
-                  Start free with 3 AI systems. Scale with transparent pricing. No hidden fees. Get
-                  training, certification, and access to the Prosperity Fund—benefits competitors
-                  don't offer at any price.
+                  Start free with 3 AI systems. Get training, the measurement credential, and access
+                  to the Prosperity Fund—benefits competitors don't offer.
                 </p>
               </div>
             </div>
@@ -881,7 +770,7 @@ export default function ComparisonPage() {
               {
                 number: "3",
                 title: "Activate Monitoring",
-                description: "Start real-time Byzantine Council consensus immediately",
+                description: "Start real-time Council consensus immediately",
               },
               {
                 number: "4",
@@ -975,8 +864,8 @@ export default function ComparisonPage() {
                 a: "Consultants provide one-time advice. CSOAI provides continuous, real-time monitoring and compliance automation across all 40+ nations—at a fraction of consulting costs.",
               },
               {
-                q: "Is the Byzantine Council approach proven?",
-                a: "Yes, Byzantine consensus mechanisms are well-established in distributed systems. Our 33-agent council is designed to make decisions reviewable; live fault-tolerance is unproven (measured n_eff 1.21 of 3).",
+                q: "Is the Council approach proven?",
+                a: "Yes, multi-agent council mechanisms are well-established in distributed systems. Our 33-agent council is designed to make decisions reviewable; live fault-tolerance is unproven (measured n_eff 1.21 of 3).",
               },
               {
                 q: "What happens to our data if we leave?",
@@ -1030,7 +919,7 @@ export default function ComparisonPage() {
               </Link>
             </div>
             <p className="text-sm text-muted-foreground mt-8">
-              No credit card required. Free tier includes training, certification path, and
+              No credit card required. Free tier includes training, the measurement credential path, and
               watchdog access.
             </p>
           </motion.div>

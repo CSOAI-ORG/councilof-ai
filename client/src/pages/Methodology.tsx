@@ -151,7 +151,7 @@ export default function Methodology() {
             <li><strong className="text-emerald-50">Read the claim.</strong> What did we assert?</li>
             <li><strong className="text-emerald-50">Read the result.</strong> What did the measurement show?</li>
             <li>
-              <strong className="text-emerald-50">Check the sigil.</strong>{" "}
+              <strong className="text-emerald-50">Check the signed record.</strong>{" "}
               <Link href="/gspc-verify" className="text-emerald-300 hover:underline">
                 Recompute the chain hash
               </Link>{" "}
@@ -192,8 +192,10 @@ export default function Methodology() {
             <li>Not exhaustive. 1,301 of 1,312 cells have no field measurement.</li>
             <li>Not LLM-as-judge. Every verdict is a deterministic predicate.</li>
             <li>
-              Not &quot;verified authentic&quot;. Chain intact — tamper-evidence (sha256).
-              Ed25519/ML-DSA capability ships with the label upgrade, in the same commit.
+              Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
+              tamper-evidence; authorship is carried by the ~3KB card, signed with Ed25519 and
+              anchored with OpenTimestamps (published key f4b4278d…, did:web:csoai.org). The
+              post-quantum ML-DSA-65 (FIPS-204) signer is built, not shipped.
             </li>
           </ul>
         </section>

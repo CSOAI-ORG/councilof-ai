@@ -1,0 +1,8 @@
+# csoai.org → councilof.ai 301 redirect
+# Deployed to Pages project csoai-site (production) — owns csoai.org + www.csoai.org
+# Worker routes (/mcp, /verify, /.well-known) take precedence at CF edge level
+# and are unaffected by this Pages redirect.
+
+/mcp           https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp   301
+/mcp/:splat    https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp/:splat  301
+/*             https://councilof.ai/:splat                                301

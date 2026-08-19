@@ -27,9 +27,9 @@ const MEM: Mem[] = [
 
 type Cap = { name: string; src: string; body: string };
 const VOICE: Cap[] = [
-  { name: "Speaks", src: "Kokoro TTS", body: "On-device, natural voice — the Sovereign talks back, no cloud round-trip required." },
-  { name: "Listens", src: "openWakeWord", body: "Custom wake word on any device — 'Sovereign…' and it's listening." },
-  { name: "Converses", src: "Sovereign Dock", body: "The right-hand dock already turns speech and chat into governed actions, live now." },
+  { name: "Speaks", src: "Kokoro TTS", body: "On-device, natural voice — the Council assistant talks back, no cloud round-trip required." },
+  { name: "Listens", src: "openWakeWord", body: "Custom wake word on any device — 'Council…' and it's listening." },
+  { name: "Converses", src: "Council Dock", body: "The right-hand dock already turns speech and chat into governed actions, live now." },
 ];
 
 export default function SovereignMinds() {
@@ -41,7 +41,7 @@ export default function SovereignMinds() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">ONE OS · the cognition &amp; voice layer</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Council Minds</h1>
-          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Every Sov Town, humanoid and node is inhabited by a mind. It perceives, remembers, reflects, plans and acts — governed end to end. Memory that compounds, a voice that speaks, a character that walks you through the world and does the work so you don't have to.</p>
+          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Every Council Town, humanoid and node is inhabited by a mind. It perceives, remembers, reflects, plans and acts — governed end to end. Memory that compounds, a voice that speaks, a character that walks you through the world and does the work so you don't have to.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/towns" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">See the Towns they inhabit →</a>
             <a href="/tour" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Take the guided tour →</a>
@@ -86,7 +86,7 @@ export default function SovereignMinds() {
 
         <h2 className="mt-12 text-xl font-bold text-gray-900">How a mind acts</h2>
         <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-          <span className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-gray-700">You · "Sovereign, handle this"</span>
+          <span className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-gray-700">You · "Council, handle this"</span>
           <span className="text-emerald-500 font-bold">→</span>
           <span className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 font-semibold text-emerald-800">Mind · perceive · recall · reflect · plan · Layer 0 gate</span>
           <span className="text-emerald-500 font-bold">→</span>
@@ -100,7 +100,7 @@ export default function SovereignMinds() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          We take the end user from doing the work to the Sovereign doing it for them — that clean, that seamless. The mind is modelled and the voice is live in the Sovereign Dock today; full memory, reflection and on-device voice (Kokoro + openWakeWord) switch on with the Layer 0 gateway. One mind per town, per humanoid, per node — governed, attested, always yours.
+          We take the end user from doing the work to the Council assistant doing it for them — that clean, that seamless. The mind is modelled and the voice is live in the Council assistant Dock today; full memory, reflection and on-device voice (Kokoro + openWakeWord) switch on with the Layer 0 gateway. One mind per town, per humanoid, per node — governed, attested, always yours.
         </div>
       </section>
     </div>

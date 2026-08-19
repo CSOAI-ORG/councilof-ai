@@ -1,16 +1,31 @@
 {
-  "name": "CouncilOf.AI Governance Agent",
-  "description": "Enterprise AI governance platform with agent catalogue, multi-AI verification, and cryptographic audit trails.",
-  "url": "https://csoai.org",
-  "version": "1.0.0",
-  "provider": { "name": "MEOK AI Labs", "url": "https://meok.ai" },
-  "capabilities": { "streaming": true, "stateTransitionHistory": true },
+  "name": "Council of AI — Measurement Agent",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) — 13 measured of 14 — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
+  "url": "https://councilof.ai",
+  "version": "0.2.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "capabilities": {
+    "streaming": false,
+    "stateTransitionHistory": false
+  },
   "skills": [
-    { "id": "agent-catalogue", "name": "Agent Catalogue", "description": "Discover pre-audited governance agents" },
-    { "id": "verify-agent", "name": "Verification Engine", "description": "Multi-AI consensus verification for AI models" },
-    { "id": "governance-audit", "name": "Governance Audit", "description": "Enterprise compliance audit with cryptographic proof" }
+    {
+      "id": "gspc-board",
+      "name": "Signed GSPC Board",
+      "description": "Fetch the live Ed25519-signed GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, and McNemar separation. Live JSON, recomputable from published rows.",
+      "endpoint": "https://councilof.ai/api/gspc"
+    },
+    {
+      "id": "measured-badge",
+      "name": "Measured Badge",
+      "description": "Shields-style README badge stating a subject's measured-axis count; unmeasured subjects render honestly as 'unmeasured', never a fabricated score.",
+      "endpoint": "https://councilof.ai/api/badge"
+    }
   ],
-  "pricing": { "pro": "$99/mo", "enterprise": "$499/mo" },
-  "mcp_endpoint": "https://csoai.org/api/mcp",
-  "a2a_endpoint": "https://csoai.org/api/a2a"
+  "documentation": "https://councilof.ai/.well-known/agent.json",
+  "doi": "10.5281/zenodo.21991104",
+  "explicitly_not": ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"]
 }

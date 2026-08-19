@@ -80,11 +80,11 @@ export default function Login() {
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Welcome back to your Sovereign
+            Welcome back to your Council assistant
           </h1>
 
           <p className="text-lg text-gray-600 mb-8">
-            Sign in to your AI governance operating system — your Sovereign, the live governance
+            Sign in to your AI governance operating system — your Council assistant, the live governance
             graph, and the signing council are right where you left them.
           </p>
 

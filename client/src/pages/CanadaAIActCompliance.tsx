@@ -10,7 +10,7 @@ export default function CanadaAIActCompliance() {
   const faqs = [
     { question: "What is the Canada AI Act?", answer: "Canada's Artificial Intelligence and Data Act requires mandatory compliance for high-impact AI systems. It focuses on impact assessment, testing, and ongoing monitoring." },
     { question: "Is it mandatory?", answer: "Yes, for high-impact AI systems. Organizations must conduct impact assessments and implement ongoing monitoring." },
-    { question: "How does CSOAI help?", answer: "CSOAI provides impact assessment tools, Byzantine Council review, and training. We help you implement testing and monitoring requirements." },
+    { question: "How does CSOAI help?", answer: "CSOAI provides impact assessment tools, Council review, and training. We help you implement testing and monitoring requirements." },
     { question: "What are key requirements?", answer: "Impact assessment, testing, monitoring, documentation, and transparency. CSOAI helps implement each requirement." }
   ];
 

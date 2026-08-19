@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 // Sept 2026. Imports any OSCAL model (catalog, profile, SSP, component-definition,
 // assessment-results), summarises it, and exports CSOAI's cross-framework control
 // implementation as a valid OSCAL component-definition + an assessment-results
-// snapshot derived from Sovereign Town. No backend required — pure front-end,
+// snapshot derived from Council Town. No backend required — pure front-end,
 // so it runs in the demo and as a real, usable tool.
 
 type OscalModel =
@@ -77,7 +77,7 @@ function buildComponentDefinition() {
         {
           uuid: uuid(),
           type: "service",
-          title: "CSOAI Sovereign Gate",
+          title: "CSOAI Council Gate",
           description:
             "Layer 0 enforcement point through which every governed AI action passes; Ed25519-signed and externally anchored to Bitcoin.",
           "control-implementations": sources.map((fw) => ({
@@ -102,18 +102,18 @@ function buildAssessmentResults() {
     "assessment-results": {
       uuid: uuid(),
       metadata: {
-        title: "CSOAI — Council City Governance Assessment",
+        title: "CSOAI — Council Town Governance Assessment",
         "last-modified": nowIso(),
         version: "1.0.0",
         "oscal-version": "1.1.2",
       },
-      "import-ap": { href: "#csoai-sovereign-gate-ap" },
+      "import-ap": { href: "#csoai-council-gate-ap" },
       results: [
         {
           uuid: uuid(),
           title: "Governed-vs-ungoverned counterfactual",
           description:
-            "Identical agent population replayed under the Sovereign Gate (governed) and ungoverned (counterfactual). Governed violations trend to 0 as enforcement approaches 1.",
+            "Identical agent population replayed under the Council Gate (governed) and ungoverned (counterfactual). Governed violations trend to 0 as enforcement approaches 1.",
           start: nowIso(),
           props: [
             { name: "governed-crimes", value: "0" },
@@ -311,7 +311,7 @@ export default function OscalStudio() {
               className="w-full rounded-lg bg-gray-900 px-4 py-3 text-left text-sm font-semibold text-white hover:bg-gray-800"
             >
               ↓ Assessment Results
-              <span className="block text-xs font-normal text-gray-300">Council City governed-vs-ungoverned, OSCAL findings</span>
+              <span className="block text-xs font-normal text-gray-300">Council Town governed-vs-ungoverned, OSCAL findings</span>
             </button>
           </div>
           <p className="mt-4 text-xs text-gray-500">

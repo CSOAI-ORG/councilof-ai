@@ -5,7 +5,7 @@ import { sovActions, describeActions } from "../lib/sovAgent";
 import { flyAndConvene, drive } from "../lib/globeDrive";
 import { REGIONS } from "../lib/locale";
 import { Link } from "wouter";
-import SovNav from "../components/SovNav";
+import CouncilNav from "../components/CouncilNav";
 import AISystemNotice from "../components/AISystemNotice";
 import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from "../data/layer0Nodes";
 
@@ -13,7 +13,7 @@ import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from 
 const REGION3D: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
 const LAYER3D: Record<string, string> = { fw: "frameworks", council: "gov", watchdog: "cyber", ontology: "ontology", hive: "fortune" };
 
-const GLOBE_GW = "https://os.meok.ai/api";
+const GLOBE_GW = "/api";
 const PLACE_HINTS: { re: RegExp; id: string }[] = [
   { re: /\beu\b|europe|brussels|german|france|spain|italy|ireland/i, id: "euaa" },
   { re: /fedramp|oscal|\bdc\b|washington/i, id: "fedramp" },
@@ -121,7 +121,7 @@ function project(lat: number, lng: number, rot: number) {
 
 export default function WorldGlobe() {
   useEffect(() => {
-    document.title = "The Sovereign Globe - AI governance, layered on the world | CSOAI";
+    document.title = "The Council Globe - AI governance, layered on the world | CSOAI";
     // Handoff from Sov Space: /globe?ask=… auto-asks + drives the globe agentically.
     try { const a = new URLSearchParams(window.location.search).get("ask"); if (a) { setAsk(a); setTimeout(() => runAsk(a), 400); } } catch (e) {}
   }, []);
@@ -148,7 +148,7 @@ export default function WorldGlobe() {
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const globe3dRef = useRef<HTMLIFrameElement | null>(null);
   // ── The Sovereign tour ─────────────────────────────────────────────────────
-  // Watch the Sovereign work the Layer-0 estate, one persona at a time. Every stop is a real
+  // Watch the Council assistant work the Layer-0 estate, one persona at a time. Every stop is a real
   // node with the status it has earned (LIVE by proven fetch / UNKNOWN said honestly /
   // CANDIDATE not yet earned) — the tour is the node registry made visible, not a promo reel.
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -216,7 +216,7 @@ export default function WorldGlobe() {
     const hint = PLACE_HINTS.find((h) => h.re.test(t));
     const pin = hint ? FRAMEWORKS.find((p) => p.id === hint.id) : null;
     if (pin) { setLayers((l) => ({ ...l, fw: true })); setSel(pin); setSpin(false); setRot((((-pin.lng) % 360) + 360) % 360); }
-    // AGENTIC: the Sovereign drives the globe as it answers — toggle layers, fly to the
+    // AGENTIC: the Council assistant drives the globe as it answers — toggle layers, fly to the
     // region, or respond to a rogue swarm, straight from what you asked.
     const acts = sovActions(t);
     setActed(describeActions(acts.filter((a) => a.kind !== "simulate")));
@@ -225,7 +225,7 @@ export default function WorldGlobe() {
       else if (a.kind === "region" && !pin) { setSpin(false); setRot((((-a.lng) % 360) + 360) % 360); }
       else if (a.kind === "threat" && threat === "idle") runThreat();
     }
-    // 3D mode: drive the real Cesium globe as the Sovereign answers — fly + pulse the place,
+    // 3D mode: drive the real Cesium globe as the Council assistant answers — fly + pulse the place,
     // light the layer, respond to the threat. Same agent, richer surface.
     if (mode === "3d") {
       const win = globe3dRef.current?.contentWindow;
@@ -239,7 +239,7 @@ export default function WorldGlobe() {
     const [c, gov] = await Promise.all([globeChat(t), ind ? globeGovern(ind) : Promise.resolve(null)]);
     let out = c || "";
     if (gov && gov.frameworks) out += (out ? "\n\n" : "") + "Governance stack for " + gov.industry + ": " + gov.frameworks.map((f: any) => f.name).join(", ") + ". Layer 0 signed.";
-    setAns(out || "I could not reach the Sovereign just now - try a place or a sector.");
+    setAns(out || "I could not reach the Council assistant just now - try a place or a sector.");
     setAsking(false);
   }
   useEffect(() => {
@@ -254,7 +254,7 @@ export default function WorldGlobe() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      {/* Watch the Sovereign — persona tours over the real Layer-0 estate. */}
+      {/* Watch the Council assistant — persona tours over the real Layer-0 estate. */}
       <div className="fixed bottom-4 left-1/2 z-40 w-[min(680px,94vw)] -translate-x-1/2">
         {persona && (() => { const stop = nodesById[PERSONA_TOURS[persona].stops[stopIdx]]; return stop ? (
           <div className="mb-2 rounded-2xl border border-emerald-400/40 bg-black/80 p-4 text-left backdrop-blur">
@@ -276,7 +276,7 @@ export default function WorldGlobe() {
           </div>
         ) : null; })()}
         <div className="flex flex-wrap items-center justify-center gap-2 rounded-full border border-emerald-400/40 bg-black/70 px-3 py-2 text-xs backdrop-blur">
-          <span className="hidden text-emerald-100/50 sm:inline">Watch the Sovereign:</span>
+          <span className="hidden text-emerald-100/50 sm:inline">Watch the Council assistant:</span>
           {(Object.keys(PERSONA_TOURS) as Persona[]).map((k) => (
             <button key={k} onClick={() => (persona === k ? stopTour() : startTour(k))}
               className={"rounded-full px-3 py-1 capitalize transition " + (persona === k ? "bg-emerald-500/30 text-emerald-100" : "text-emerald-100/70 hover:bg-white/10")}>
@@ -289,8 +289,8 @@ export default function WorldGlobe() {
         </div>
       </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
-        <SovNav />
-        <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the sovereign globe</p>
+        <CouncilNav />
+        <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the council globe</p>
         <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">AI governance, layered on the world</h1>
         <p className="mt-2 max-w-2xl text-emerald-50/80">Every framework lives where it is made. Spin the globe, toggle the layers, click any node to see what it governs and jump straight into the OS.</p>
         <div className="mt-4 flex flex-wrap gap-2">
@@ -301,13 +301,13 @@ export default function WorldGlobe() {
           <button onClick={() => setLayers((l) => ({ ...l, ontology: !l.ontology, fw: true }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.ontology ? "border-violet-400 bg-violet-600 text-white" : "border-white/20 text-white/60")}>Ontology</button>
           <button onClick={() => setLayers((l) => ({ ...l, hive: !l.hive }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.hive ? "border-sky-400 bg-sky-600 text-white" : "border-white/20 text-white/60")}>Hive coverage{hiveAccounts.length ? " (" + hiveAccounts.length + ")" : ""}</button>
           <button onClick={() => setSpin((s) => !s)} className="rounded-full border border-white/20 px-4 py-1.5 text-sm font-semibold text-white/70 hover:bg-white/10">{spin ? "Pause" : "Spin"}</button>
-          <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Sovereign responding…" : threat === "stopped" ? "◉ Stopped — signed" : "⚠ Rogue swarm → watch it stop"}</button>
+          <button onClick={runThreat} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (threat === "rogue" ? "border-rose-400 bg-rose-600 text-white" : threat === "stopped" ? "border-emerald-400 bg-emerald-600 text-white" : "border-rose-400/50 text-rose-200 hover:bg-rose-500/10")}>{threat === "rogue" ? "◉ Council responding…" : threat === "stopped" ? "◉ Stopped — signed" : "⚠ Rogue swarm → watch it stop"}</button>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-16 grid gap-6 lg:grid-cols-[1fr_320px] items-start">
         <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-2">
           {mode === "3d" ? (
-            <iframe ref={globe3dRef} src="/globe3d.html" title="3D Sovereign globe" loading="lazy" className="block h-[560px] w-full rounded-xl" style={{ border: 0 }} />
+            <iframe ref={globe3dRef} src="/globe3d.html" title="3D council globe" loading="lazy" className="block h-[560px] w-full rounded-xl" style={{ border: 0 }} />
           ) : (
           <svg viewBox="0 0 600 600" className="w-full" onMouseEnter={() => setSpin(false)} onMouseLeave={() => sel ? null : setSpin(true)}>
             <defs>
@@ -406,12 +406,12 @@ export default function WorldGlobe() {
           {threat !== "idle" && (
             <div className={"mt-4 rounded-xl border p-3 " + (threat === "stopped" ? "border-emerald-400/50 bg-emerald-500/10" : "border-rose-400/50 bg-rose-500/10")}>
               <div className={"text-sm font-black " + (threat === "stopped" ? "text-emerald-200" : "text-rose-200")}>{threat === "stopped" ? "◉ STOPPED — before it happened." : "⚠ Rogue swarm detected over London"}</div>
-              {threatMsg ? <p className="mt-1 text-[12px] leading-relaxed text-white/80 break-words">{threatMsg}</p> : <p className="mt-1 text-[12px] text-white/60">The Sovereign sees it and is intervening — halt, quarantine, re-govern…</p>}
+              {threatMsg ? <p className="mt-1 text-[12px] leading-relaxed text-white/80 break-words">{threatMsg}</p> : <p className="mt-1 text-[12px] text-white/60">The Council assistant sees it and is intervening — halt, quarantine, re-govern…</p>}
               {threat === "stopped" && <a href="/poc" className="mt-2 inline-block text-[12px] font-semibold text-emerald-300 hover:underline">See the full agents &amp; humanoids POC →</a>}
             </div>
           )}
           <div className="mt-5 border-t border-white/10 pt-4">
-            <label className="text-[11px] uppercase tracking-wide text-emerald-300/60">Ask the Sovereign about the world</label>
+            <label className="text-[11px] uppercase tracking-wide text-emerald-300/60">Ask the Council assistant about the world</label>
             <div className="mt-2">
               <AISystemNotice route="/globe" />
             </div>
@@ -419,7 +419,7 @@ export default function WorldGlobe() {
               <input value={ask} onChange={(e) => setAsk(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") runAsk(); }} placeholder="e.g. show the watchdog heat over London and stop any rogue swarm" className="flex-1 rounded-lg border border-white/15 bg-black/40 px-3 py-2 text-sm text-white placeholder-white/30 focus:border-emerald-400 focus:outline-none" />
               <button onClick={() => runAsk()} disabled={asking} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500 disabled:opacity-60">{asking ? "…" : "Ask"}</button>
             </div>
-            <p className="mt-1 text-[11px] text-white/40">Agentic — the Sovereign flies the globe, toggles layers, and responds to threats as it answers.</p>
+            <p className="mt-1 text-[11px] text-white/40">Agentic — the Council assistant flies the globe, toggles layers, and responds to threats as it answers.</p>
             {acted && <div className="mt-2 inline-block rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">◉ {acted}</div>}
             {ans && <div className="mt-3 max-h-52 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-white/85">{ans}</div>}
             {ans && <Link href={"/simulate?q=" + encodeURIComponent(ask)} className="mt-3 inline-block rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-200 hover:bg-white/5">Run this through the full 33-agent simulation →</Link>}

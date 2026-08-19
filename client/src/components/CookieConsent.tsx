@@ -35,31 +35,25 @@ export default function CookieConsent() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-emerald-500/25 bg-white/98 backdrop-blur px-4 py-4 pr-40 text-slate-700 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
+      className="fixed bottom-3 left-3 z-40 w-[248px] max-w-[calc(100vw-1.5rem)] rounded-xl border border-emerald-500/25 bg-white/97 backdrop-blur px-3 py-2.5 text-slate-700 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.18)]"
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-[13px] text-slate-600 leading-relaxed">
-          We use essential cookies to run this site, and — only with your consent — anonymous,
-          no-third-party-cookie analytics to see which pages help. No personal data is sold or
-          shared. See our{" "}
-          <a href="/cookie-policy" className="underline text-emerald-700 hover:text-emerald-600">Cookie Policy</a>
-          {" "}and{" "}
-          <a href="/privacy" className="underline text-emerald-700 hover:text-emerald-600">Privacy Policy</a>.
-        </p>
-        <div className="flex shrink-0 gap-2">
-          <button
-            onClick={() => choose("declined")}
-            className="rounded-full border border-emerald-500/40 px-4 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-50"
-          >
-            Essential only
-          </button>
-          <button
-            onClick={() => choose("accepted")}
-            className="rounded-full border border-emerald-600 bg-emerald-600 px-4 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
-          >
-            Accept
-          </button>
-        </div>
+      <p className="text-[11px] leading-snug text-slate-500">
+        Essential cookies only by default; anonymous analytics need consent.{" "}
+        <a href="/cookie-policy" className="underline text-emerald-700 hover:text-emerald-600">Details</a>
+      </p>
+      <div className="mt-2 flex gap-1.5">
+        <button
+          onClick={() => choose("declined")}
+          className="flex-1 rounded-md border border-emerald-500/40 px-2 py-1 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-50"
+        >
+          Essential only
+        </button>
+        <button
+          onClick={() => choose("accepted")}
+          className="flex-1 rounded-md border border-emerald-600 bg-emerald-600 px-2 py-1 text-[11px] font-semibold text-white hover:bg-emerald-700"
+        >
+          Accept
+        </button>
       </div>
     </div>
   );

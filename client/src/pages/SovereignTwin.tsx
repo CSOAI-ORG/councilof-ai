@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-const EMG_GW = "https://os.meok.ai/api";
+const EMG_GW = "/api";
 /**
  * DESIGN — not a live claim. This page shows what a personalized Sovereign Twin
  * experience WOULD look like. The visualizer is an illustrative canvas; the
@@ -28,7 +28,7 @@ export default function SovereignTwin() {
     if (!passport) setPassport((p) => p || { canonical, fingerprint: "", signature: "" });
     setMinting(false);
   }
-  useEffect(() => { document.title = "Your Council Twin | CSOAI (DESIGN)"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { personaliseRef.current = true; setPersonalised(true); } } } catch (e) {} }, []);
+  useEffect(() => { document.title = "Your Council assistant Twin | CSOAI (DESIGN)"; try { var sv = parseInt(localStorage.getItem("sov_charge") || "0", 10); if (sv > 0) { chargeRef.current = sv; setCharge(sv); if (sv >= 100) { personaliseRef.current = true; setPersonalised(true); } } } catch (e) {} }, []);
   function addCharge() { const n = Math.min(100, chargeRef.current + 12); chargeRef.current = n; setCharge(n); try { localStorage.setItem("sov_charge", String(n)); } catch (e) {} if (n >= 100 && !personaliseRef.current) { personaliseRef.current = true; setPersonalised(true); } }
   useEffect(() => {
     const c = cv.current; if (!c) return; const ctx = c.getContext("2d"); if (!ctx) return;
@@ -62,9 +62,9 @@ export default function SovereignTwin() {
       <section className="relative">
         <canvas ref={cv} className="block h-[72vh] w-full" />
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-10 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · your Council Twin (DESIGN)</p>
-          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{personalised ? "Your Council Twin is personalised." : "Your Council Twin."}</h1>
-          <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{personalised ? "Your personalisation record is signed. The Twin reflects your Sovereign's view of the world — it does not make behavioural claims." : "An illustrative mirror of Earth — day, night, every connector lit. Use the OS to personalise. No claims about emergent behaviour."}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · your Council assistant Twin (DESIGN)</p>
+          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{personalised ? "Your Council assistant Twin is personalised." : "Your Council assistant Twin."}</h1>
+          <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{personalised ? "Your personalisation record is signed. The Twin reflects your Council assistant's view of the world — it does not make behavioural claims." : "An illustrative mirror of Earth — day, night, every connector lit. Use the OS to personalise. No claims about emergent behaviour."}</p>
           <div className="pointer-events-auto mt-4 flex flex-wrap items-center justify-center gap-3 px-6">
             {!personalised && <button onClick={addCharge} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Personalise ({charge}%)</button>}
             {personalised && <a href="/start" className="rounded-xl bg-amber-400 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-amber-300">Meet your Twin -&gt;</a>}
@@ -73,7 +73,7 @@ export default function SovereignTwin() {
         </div>
       </section>
       <section className="mx-auto max-w-3xl px-6 py-12 text-center">
-        <p className="text-sm text-emerald-100/70">An illustrative personalisation surface — the world rendered as your Council Twin. Actions across the OS fill your personalisation record. This page does not assert emergent or conscious behaviour in the Twin; the Twin is a signed personalisation record.</p>
+        <p className="text-sm text-emerald-100/70">An illustrative personalisation surface — the world rendered as your Council assistant Twin. Actions across the OS fill your personalisation record. This page does not assert emergent or conscious behaviour in the Twin; the Twin is a signed personalisation record.</p>
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-black/20 p-5">
           <div className="text-sm font-bold text-emerald-200">Your Twin personalises as you use the OS.</div>
           <p className="mt-1 text-sm text-emerald-100/70">Every question in the <b className="text-emerald-200">Council dock</b>, every <b className="text-emerald-200">Governance Graph</b> query, every <b className="text-emerald-200">Council Space</b> experiment and <b className="text-emerald-200">Council</b> verdict updates your personalisation record.</p>
@@ -91,7 +91,7 @@ export default function SovereignTwin() {
           <div className="mt-3 flex flex-wrap gap-2">
             <input value={pName} onChange={(e) => setPName(e.target.value)} placeholder="Holder — you, an agent, or an org" className="flex-1 min-w-[200px] rounded-lg border border-emerald-500/25 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
             <select value={pKind} onChange={(e) => setPKind(e.target.value)} className="rounded-lg border border-emerald-500/25 bg-black/30 px-2 py-2 text-sm text-emerald-50">
-              <option>Digital sovereign twin</option><option>Enterprise agent</option><option>Government agent</option><option>Humanoid / robot</option>
+              <option>Council twin</option><option>Enterprise agent</option><option>Government agent</option><option>Humanoid / robot</option>
             </select>
             <button onClick={mintPassport} disabled={minting} className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{minting ? "Signing…" : "🪪 Mint signed passport"}</button>
           </div>
@@ -102,7 +102,7 @@ export default function SovereignTwin() {
                 <div className="mt-1 break-all">seal <span className="text-emerald-200">{passport.fingerprint}</span></div>
                 <div className="mt-0.5 break-all text-emerald-300/60">sig {String(passport.signature).slice(0, 88)}…</div>
                 <div className="mt-1 text-emerald-300/70">Ed25519-signed · offline-verifiable via <a href="/protect" className="underline">proofof.ai</a> · anchored to Layer 0.</div>
-              </>) : (<div className="mt-1 text-amber-200/80">Signing service unavailable right now — the passport is issued once the Sovereign backend is reachable. Your details never leave your browser.</div>)}
+              </>) : (<div className="mt-1 text-amber-200/80">Signing service unavailable right now — the passport is issued once the Council assistant backend is reachable. Your details never leave your browser.</div>)}
             </div>
           )}
         </div>

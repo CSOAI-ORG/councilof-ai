@@ -114,7 +114,7 @@ export default function LicensingAgreement() {
                     { term: "AI System", definition: "Any artificial intelligence system submitted for CSOAI licensing" },
                     { term: "License", definition: "Authorization to operate AI systems under CSOAI governance" },
                     { term: "License Tier", definition: "Classification based on AI system risk level (Articles 6-9 of Charter)" },
-                    { term: "Byzantine Council", definition: "CSOAI's automated monitoring infrastructure" },
+                    { term: "Council", definition: "CSOAI's automated monitoring infrastructure" },
                     { term: "Charter", definition: "The CSOAI 52-article Partnership Charter" }
                   ].map((item, index) => (
                     <div key={index} className="p-3 rounded-lg bg-muted">
@@ -239,7 +239,7 @@ export default function LicensingAgreement() {
                       Submit to Monitoring
                     </h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
-                      <li>• Tier 3-4: Connect to Byzantine Council monitoring</li>
+                      <li>• Tier 3-4: Connect to Council monitoring</li>
                       <li>• Tier 1-2: Provide access for random audits</li>
                       <li>• All tiers: Incident reporting as required</li>
                     </ul>
@@ -292,7 +292,7 @@ export default function LicensingAgreement() {
                     </h4>
                     <ul className="space-y-1 text-sm text-muted-foreground">
                       <li>• "CSOAI Certified Analyst" mark</li>
-                      <li>• Tier-specific certification badge</li>
+                      <li>• Tier-specific measurement credential badge</li>
                       <li>• License number for verification</li>
                     </ul>
                   </div>

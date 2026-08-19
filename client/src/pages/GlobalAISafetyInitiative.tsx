@@ -215,13 +215,13 @@ export default function GlobalAISafetyInitiative() {
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold">£50,000</span>
-                  <span className="text-gray-600"> - £200,000/year</span>
+                  <span className="text-4xl font-bold">Free rail</span>
+                  <span className="text-gray-600"> · partnership scoped with you</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>CEASAI certification for 100 government officials</span>
+                    <span>Measurement credential for 100 government officials</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
@@ -261,8 +261,8 @@ export default function GlobalAISafetyInitiative() {
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold">£500,000</span>
-                  <span className="text-gray-600"> - £2,000,000/year</span>
+                  <span className="text-4xl font-bold">Free rail</span>
+                  <span className="text-gray-600"> · partnership scoped with you</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
@@ -308,8 +308,8 @@ export default function GlobalAISafetyInitiative() {
               </CardHeader>
               <CardContent>
                 <div className="mb-6">
-                  <span className="text-4xl font-bold">£2,000,000</span>
-                  <span className="text-gray-600"> - £10,000,000/year</span>
+                  <span className="text-4xl font-bold">Free rail</span>
+                  <span className="text-gray-600"> · partnership scoped with you</span>
                 </div>
                 <ul className="space-y-3 mb-6">
                   <li className="flex items-start gap-2">
@@ -396,7 +396,7 @@ export default function GlobalAISafetyInitiative() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  We train your first cohort of AI Safety Analysts through CEASAI certification
+                  We train your first cohort of AI Safety Analysts through free measurement-credential attestation
                 </p>
                 <Badge className="mt-4" variant="outline">
                   <Clock className="mr-1 h-3 w-3" /> 8-12 Weeks
@@ -436,8 +436,9 @@ export default function GlobalAISafetyInitiative() {
               Creating 500,250 AI Safety Analysts Worldwide
             </h2>
             <p className="mb-8 text-xl text-white/90">
-              At £1,999 per Expert certification, our £1 billion giveaway will train over half a million 
-              AI Safety Analysts globally. This creates immediate capacity for nations to implement 
+              Training and attestation are free — verification is free forever. Our £1 billion giveaway
+              represents the value of free training we are putting into the world to attest over half a million
+              AI Safety Analysts globally. This creates immediate capacity for nations to implement
               AI governance frameworks.
             </p>
             <div className="grid gap-6 md:grid-cols-3 mb-8">
@@ -455,7 +456,7 @@ export default function GlobalAISafetyInitiative() {
               </div>
             </div>
             <Button size="lg" variant="secondary" className="bg-white text-amber-600 hover:bg-gray-100">
-              Apply for Free Certification
+              Apply for Free Training
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
@@ -522,9 +523,9 @@ export default function GlobalAISafetyInitiative() {
                           <SelectValue placeholder="Select partnership tier" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="capacity">Capacity Building (£50K-£200K)</SelectItem>
-                          <SelectItem value="national">National Authority (£500K-£2M)</SelectItem>
-                          <SelectItem value="regional">Regional Consortium (£2M-£10M)</SelectItem>
+                          <SelectItem value="capacity">Capacity Building</SelectItem>
+                          <SelectItem value="national">National Authority</SelectItem>
+                          <SelectItem value="regional">Regional Consortium</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

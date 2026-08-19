@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   ChevronDown,
   Search,
@@ -67,15 +67,8 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "What is the 33-Agent Council?",
     answer:
-      "The 33-Agent Council is CSOAI's unique designed multi-agent review mechanism. It uses 33 specialized AI agents representing different governance perspectives (ethics, compliance, technical safety, etc.) to make decisions about AI system classifications, risk assessments, and compliance recommendations. This distributed approach ensures no single point of failure and balanced decision-making.",
+      "A designed 33-agent council: 33 specialized agents representing different governance perspectives vote on decisions (risk classification, compliance status), with a 23-of-33 threshold. The design intent is that no single agent decides an outcome — but effective independence is measured, not assumed, and we do not claim guaranteed fault tolerance.",
     tags: ["technology", "council"],
-  },
-  {
-    category: "GENERAL",
-    question: "What is the Maternal Covenant?",
-    answer:
-      "The Maternal Covenant is CSOAI's founding pledge to prioritize human well-being and create opportunities for displaced workers. It ensures that AI safety efforts directly translate into employment opportunities, training programs, and economic support for those affected by AI automation.",
-    tags: ["values", "covenant"],
   },
   {
     category: "GENERAL",
@@ -262,7 +255,7 @@ const faqData: FAQItem[] = [
     category: "TRAINING & CERTIFICATION",
     question: "Is the training really free?",
     answer:
-      "Yes, all CSOAI training is completely free, including certification programs. This aligns with our Maternal Covenant mission to create accessible pathways to AI safety careers. Funding comes from enterprise licensing and watchdog incident revenue. We believe AI governance expertise should be accessible to everyone.",
+      "Yes, all CSOAI training is completely free, including the measurement-credential track. We believe AI governance expertise should be accessible to everyone; funding comes from managed-stack subscriptions and the agent rail, not from gating the training.",
     tags: ["training", "free", "pricing"],
   },
   {
@@ -295,9 +288,9 @@ const faqData: FAQItem[] = [
   },
   {
     category: "TRAINING & CERTIFICATION",
-    question: "What is the CEASAI certification?",
+    question: "What is the measurement credential?",
     answer:
-      "The Certified EU AI Act Specialist (CEASAI) certification demonstrates expertise in implementing and auditing compliance with the EU AI Act. It covers risk classification, conformity assessment, documentation requirements, high-risk system governance, and incident reporting. CEASAI holders are qualified to lead compliance programs and conduct EU AI Act audits.",
+      "The CSOAI measurement credential is a signed record of measured competence in implementing and auditing compliance with the EU AI Act. It covers risk classification, conformity assessment, documentation requirements, high-risk system governance, and incident reporting. Credential holders have a measured record of EU AI Act compliance competence — CSOAI is not a certification body.",
     tags: ["certification", "eu-ai-act"],
   },
   {
@@ -406,9 +399,9 @@ const faqData: FAQItem[] = [
   },
   {
     category: "TECHNICAL",
-    question: "How does the 33-Agent Byzantine consensus work?",
+    question: "How does the designed 33-agent council work?",
     answer:
-      "The 33-Agent Council uses designed multi-agent review (BFT-style) consensus where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). If up to 10 agents malfunction or provide incorrect information, the council can still reach correct consensus with mathematical certainty. Decisions require approval from at least 23 agents (67%), ensuring robust, reliable governance outcomes.",
+      "The 33-Agent Council is a designed multi-agent vote where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). Decisions require approval from at least 23 agents (67%). The design intent is that no single agent decides an outcome; effective independence is measured, not assumed — we do not claim guaranteed fault tolerance.",
     tags: ["technical", "council"],
   },
   {
@@ -539,6 +532,25 @@ const getCategoryPillClass = (
 };
 
 export default function FAQ() {
+  // FAQPage JSON-LD generated from the same faqData the page renders (audit §4.6 — the /faq
+  // page rendered ~57 visible questions with zero matching markup). Kept in parity with the
+  // visible content by construction. Answers stripped of markup and capped so the payload stays sane.
+  useEffect(() => {
+    const sc = document.createElement("script");
+    sc.type = "application/ld+json";
+    sc.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqData.map((f) => ({
+        "@type": "Question",
+        name: f.question,
+        acceptedAnswer: { "@type": "Answer", text: f.answer.replace(/\s+/g, " ").trim() },
+      })),
+    });
+    document.head.appendChild(sc);
+    return () => { try { document.head.removeChild(sc); } catch { /* already gone */ } };
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedItems, setExpandedItems] = useState<Set<string>>(
     new Set()

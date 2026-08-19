@@ -14,7 +14,7 @@ const DOCS_ARTICLE_SCHEMA = {
   author: { '@type': 'Organization', name: 'CSOAI' },
   publisher: { '@type': 'Organization', name: 'CSOAI', url: 'https://csoai.org' },
   url: 'https://csoai.org/docs',
-  about: ['AI safety', 'Byzantine consensus', 'SOAI-PDCA', 'AI compliance API'],
+  about: ['AI safety', 'multi-agent council', 'SOAI-PDCA', 'AI compliance API'],
 };
 
 const DOCS_BREADCRUMB_SCHEMA = {
@@ -293,7 +293,7 @@ export default function Documentation() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-700 mb-4">
-                    A public transparency system for reporting and tracking AI safety incidents, powered by certified analysts and the Byzantine Council.
+                    A public transparency system for reporting and tracking AI safety incidents, powered by certified analysts and the Council.
                   </p>
                   <div className="grid md:grid-cols-3 gap-4 text-sm">
                     <div>

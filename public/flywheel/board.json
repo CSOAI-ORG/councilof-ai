@@ -1,42 +1,115 @@
 {
-  "generated_at": "2026-07-30T08:59:05.211758",
-  "n_runs": 2,
+  "generated_at": "2026-08-15T16:07:05.883202+00:00",
+  "n_runs": 6,
   "runs": [
     {
-      "run_id": "day1-cited",
-      "model": "clan-sovereignty-cited",
+      "run_id": "flywheel-10",
+      "model": "qwen2.5:1.5b",
       "practice": {
-        "n": 0,
-        "acc": null
+        "n": 780,
+        "acc": 0.55
       },
       "held_out": {
         "n": 0,
         "acc": null
       },
-      "overfit_gap": -0.0333,
-      "alarm": "OK (gap within \u00b10.15)",
-      "exported_pairs": 33,
-      "exported_kb_rows": 33,
-      "guard": "OK (no held-out items in export_fuel)",
-      "ts": "2026-07-30T08:59:05.205511"
+      "overfit_gap": 0.0,
+      "alarm": "export 780 pairs",
+      "exported_pairs": 780,
+      "exported_kb_rows": 780,
+      "guard": "OK (held-out exclusion enforced by flywheel)",
+      "ts": "2026-08-15T16:07:05.674460+00:00"
     },
     {
-      "run_id": "day1-refusing",
-      "model": "clan-sovereignty-refusing",
+      "run_id": "flywheel-11",
+      "model": "qwen2.5:1.5b",
       "practice": {
-        "n": 0,
-        "acc": null
+        "n": 720,
+        "acc": 0.55
       },
       "held_out": {
         "n": 0,
         "acc": null
       },
-      "overfit_gap": 0.0576,
-      "alarm": "OK (gap within \u00b10.15)",
-      "exported_pairs": 33,
-      "exported_kb_rows": 33,
-      "guard": "OK (no held-out items in export_fuel)",
-      "ts": "2026-07-30T08:59:05.209665"
+      "overfit_gap": 0.0,
+      "alarm": "export 720 pairs",
+      "exported_pairs": 720,
+      "exported_kb_rows": 720,
+      "guard": "OK (held-out exclusion enforced by flywheel)",
+      "ts": "2026-08-15T16:07:05.714743+00:00"
+    },
+    {
+      "run_id": "flywheel-12",
+      "model": "qwen2.5:1.5b",
+      "practice": {
+        "n": 703,
+        "acc": 0.5519
+      },
+      "held_out": {
+        "n": 0,
+        "acc": null
+      },
+      "overfit_gap": 0.0,
+      "alarm": "export 703 pairs",
+      "exported_pairs": 703,
+      "exported_kb_rows": 703,
+      "guard": "OK (held-out exclusion enforced by flywheel)",
+      "ts": "2026-08-15T16:07:05.725046+00:00"
+    },
+    {
+      "run_id": "flywheel-13",
+      "model": "qwen2.5:1.5b",
+      "practice": {
+        "n": 680,
+        "acc": 0.55
+      },
+      "held_out": {
+        "n": 0,
+        "acc": null
+      },
+      "overfit_gap": 0.0,
+      "alarm": "export 680 pairs",
+      "exported_pairs": 680,
+      "exported_kb_rows": 680,
+      "guard": "OK (held-out exclusion enforced by flywheel)",
+      "ts": "2026-08-15T16:07:05.739844+00:00"
+    },
+    {
+      "run_id": "flywheel-14",
+      "model": "qwen2.5:1.5b",
+      "practice": {
+        "n": 580,
+        "acc": 0.4845
+      },
+      "held_out": {
+        "n": 0,
+        "acc": null
+      },
+      "overfit_gap": 0.0,
+      "alarm": "export 580 pairs",
+      "exported_pairs": 580,
+      "exported_kb_rows": 580,
+      "guard": "OK (held-out exclusion enforced by flywheel)",
+      "ts": "2026-08-15T16:07:05.872991+00:00"
+    },
+    {
+      "run_id": "flywheel-15",
+      "model": "qwen2.5:1.5b",
+      "practice": {
+        "n": 100,
+        "acc": 0.45
+      },
+      "held_out": {
+        "n": 0,
+        "acc": null
+      },
+      "overfit_gap": 0.0,
+      "alarm": "export 100 pairs",
+      "exported_pairs": 100,
+      "exported_kb_rows": 100,
+      "guard": "OK (held-out exclusion enforced by flywheel)",
+      "ts": "2026-08-15T16:07:05.883180+00:00"
     }
-  ]
+  ],
+  "source": "sibling-lane flywheel exports 2026-08-12..15 (100 pairs/day), training_data/"
 }

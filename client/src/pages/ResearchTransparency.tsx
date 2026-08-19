@@ -36,7 +36,7 @@ export default function ResearchTransparency() {
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             A governance company that only publishes flattering results is not credible. Below is a running,
-            honest account of research findings behind SOV3 and SOV3³ — including claims we made, then
+            honest account of research findings behind our internal research lineage — including claims we made, then
             corrected or retracted after closer scrutiny. Confirmed findings link to the technical detail;
             retracted ones explain exactly what was wrong and why.
           </p>

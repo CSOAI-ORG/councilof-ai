@@ -15,7 +15,7 @@ import { dirname, join } from "node:path";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP_TSX = join(ROOT, "client/src/App.tsx");
 const OUT = join(ROOT, "public/sitemap.xml");
-const BASE = "https://csoai.org";
+const BASE = "https://councilof.ai";
 
 // --- Priority tiers -------------------------------------------------------
 const P_TOP = 0.9; // flagship public surfaces
@@ -113,6 +113,15 @@ const EXCLUDE_EXACT = new Set([
   "/dragonfly",
   "/maternal-covenant",
   "/covenant",
+  // Audit 2026-08-14 kills/redirects — these paths are now 308s, must NOT be in the sitemap.
+  "/byzantine",
+  "/byzantine-consensus",
+  "/bft",
+  "/consensus",
+  "/jewels",
+  "/crown-jewels",
+  "/plans",
+  "/enterprise-plans",
 ]);
 
 const EXCLUDE_PREFIX = [
@@ -163,6 +172,12 @@ while ((m = routeRe.exec(src)) !== null) {
     continue;
   }
   paths.push(p);
+}
+// Library IA: the /library/:sector pages are dynamic routes (skipped above as :param) but are
+// prime AEO citation surface — one sector-organized archive index each. List them explicitly.
+for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance", "product", "company"]) {
+  const lp = `/library/${s}`;
+  if (!seen.has(lp)) { seen.add(lp); paths.push(lp); }
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 

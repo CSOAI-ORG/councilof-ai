@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 
 type Wing = { id: string; n: string; letter: string; color: string; purpose: string; components: string[]; agents: string; quote: string; who: string };
 const WINGS: Wing[] = [
-  { id: "g", n: "Governance", letter: "G", color: "#059669", purpose: "Ensure AI systems comply with every applicable regulation.", components: ["13-framework engine", "47-industry classifier", "Sovereign Score"], agents: "Barnaby, Mei-Lin, Carlos, Amara, Ravi, Fatima", quote: "Every number tells a story. My job is to ensure it's a true one.", who: "Barnaby" },
+  { id: "g", n: "Governance", letter: "G", color: "#059669", purpose: "Ensure AI systems comply with every applicable regulation.", components: ["13-framework engine", "47-industry classifier", "Council Score"], agents: "Barnaby, Mei-Lin, Carlos, Amara, Ravi, Fatima", quote: "Every number tells a story. My job is to ensure it's a true one.", who: "Barnaby" },
   { id: "i", n: "Intelligence", letter: "I", color: "#2563eb", purpose: "Analyse, predict, and optimise AI system behaviour.", components: ["MARFT engine", "Predictive modeling", "Anomaly detection"], agents: "Oracle, Sage, Cipher, Scout, Navigator", quote: "I see patterns others miss. I predict what others can't.", who: "Oracle" },
   { id: "s", n: "Safety", letter: "S", color: "#dc2626", purpose: "Prevent harm to humans, society, and the environment.", components: ["Safety evaluation engine", "Red team (Augustus)", "Sandbox (forkd)"], agents: "Vex, Shadow, Blaze, Shield, Warden, Sentinel", quote: "I am the wall between civilization and catastrophe.", who: "Vex" },
-  { id: "c", n: "Cybersecurity", letter: "C", color: "#7c3aed", purpose: "Protect AI systems from attack, intrusion, and manipulation.", components: ["Rainbow Stack (7-layer defense)", "Worm Hive mesh", "Sigil attestation"], agents: "Phantom, Guardian, Cipher", quote: "You cannot see me. That is why you are safe.", who: "Phantom" },
+  { id: "c", n: "Cybersecurity", letter: "C", color: "#7c3aed", purpose: "Protect AI systems from attack, intrusion, and manipulation.", components: ["Rainbow Stack (7-layer defense)", "Worm Hive mesh", "Signed attestation"], agents: "Phantom, Guardian, Cipher", quote: "You cannot see me. That is why you are safe.", who: "Phantom" },
 ];
 type Member = { name: string; wing: string; style: string };
 const COUNCIL: Member[] = [
@@ -65,7 +65,7 @@ export default function Dragonfly() {
               );
             })}
             <rect x={246} y={310} width={8} height={70} rx={4} fill="#0f766e" opacity={0.7} />
-            <text x={250} y={405} textAnchor="middle" fill="#64748b" fontSize={12} fontWeight={700}>designed: all four must agree -&gt; BFT consensus</text>
+            <text x={250} y={405} textAnchor="middle" fill="#64748b" fontSize={12} fontWeight={700}>designed: all four must agree -&gt; multi-agent council</text>
           </svg>
         </div>
         <div className="rounded-2xl border border-gray-200 overflow-hidden">
@@ -91,7 +91,7 @@ export default function Dragonfly() {
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-14">
-        <h2 className="text-xl font-bold text-gray-900">The Council of AI - five agents, Byzantine consensus <span className="ml-2 align-middle rounded-full border border-amber-400/50 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700">Designed — not yet live</span></h2>
+        <h2 className="text-xl font-bold text-gray-900">The Council of AI - five agents, multi-agent council <span className="ml-2 align-middle rounded-full border border-amber-400/50 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700">Designed — not yet live</span></h2>
         <p className="mt-1 text-sm text-gray-500">Five independent legs is the design target; measured effective independence is published on /benchmarks and the Refutation Ledger (DR-0007) rather than assumed</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {COUNCIL.map((m) => (

@@ -1,6 +1,7 @@
 /**
- * Certificate Verification Portal
- * Public page where anyone can verify CSOAI certifications by ID or QR code
+ * Completion Record Verification Portal
+ * Public page where anyone can verify CSOAI Council Academy completion records by ID or QR code.
+ * A completion record attests training completion, not conformity.
  */
 
 import { useState, useEffect, useRef } from 'react';
@@ -36,9 +37,9 @@ export default function CertificateVerification() {
       setVerificationResult(data);
       setIsVerifying(false);
       if (data.valid) {
-        toast.success('Certificate verified successfully!');
+        toast.success('Completion record verified!');
       } else {
-        toast.error('Certificate not found or invalid');
+        toast.error('Completion record not found or invalid');
       }
     },
     onError: (error: any) => {
@@ -122,16 +123,17 @@ export default function CertificateVerification() {
               <Shield className="h-12 w-12 text-green-600" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Certificate Verification</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Completion Record Verification</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Verify the authenticity of CSOAI AI Safety Analyst certifications. Enter a certificate
-            ID or scan a QR code to confirm credentials.
+            Verify the authenticity of CSOAI Council Academy completion records. Enter a record
+            ID or scan a QR code to confirm training completion. A completion record attests
+            training completion, not conformity.
           </p>
         </div>
 
         {/* Honest capability notice */}
         <div className="mb-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
-          <strong>Lookup temporarily offline.</strong> Certificate lookup is down while the
+          <strong>Lookup temporarily offline.</strong> Completion record lookup is down while the
           verification service moves infrastructure. The signed chain is still publicly
           recomputable —{" "}
           <a href="/gspc-verify" className="font-medium text-emerald-700 hover:underline">
@@ -147,7 +149,7 @@ export default function CertificateVerification() {
             className={searchMode === 'manual' ? 'bg-green-600 hover:bg-green-700' : ''}
           >
             <FileText className="mr-2 h-4 w-4" />
-            Enter Certificate ID
+            Enter Record ID
           </Button>
           <Button
             variant={searchMode === 'qr' ? 'default' : 'outline'}
@@ -169,7 +171,7 @@ export default function CertificateVerification() {
               <div className="flex gap-4">
                 <div className="flex-1">
                   <Input
-                    placeholder="Enter certificate ID"
+                    placeholder="Enter completion record ID"
                     value={certificateId}
                     onChange={(e) => setCertificateId(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleVerify()}
@@ -258,12 +260,12 @@ export default function CertificateVerification() {
                 )}
                 <div>
                   <CardTitle className="text-2xl">
-                    {verificationResult.valid ? 'Certificate Verified ✓' : 'Certificate Invalid ✗'}
+                    {verificationResult.valid ? 'Completion Record Verified ✓' : 'Completion Record Invalid ✗'}
                   </CardTitle>
                   <p className="text-gray-600 mt-1">
                     {verificationResult.valid
-                      ? 'This is an authentic CSOAI certification'
-                      : 'This certificate could not be verified in our system'}
+                      ? 'This is an authentic CSOAI Council Academy completion record'
+                      : 'This completion record could not be verified in our system'}
                   </p>
                 </div>
               </div>
@@ -277,7 +279,7 @@ export default function CertificateVerification() {
                     <div>
                       <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                         <User className="h-4 w-4" />
-                        Certified Professional
+                        Record Holder
                       </div>
                       <p className="font-semibold text-gray-900">
                         {verificationResult.certificate.userName}
@@ -287,7 +289,7 @@ export default function CertificateVerification() {
                     <div>
                       <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                         <Award className="h-4 w-4" />
-                        Certification Level
+                        Course Level
                       </div>
                       <Badge className="bg-green-600 text-white">
                         {verificationResult.certificate.level || 'Professional'}
@@ -297,7 +299,7 @@ export default function CertificateVerification() {
                     <div>
                       <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
                         <FileText className="h-4 w-4" />
-                        Certificate Number
+                        Completion Record Number
                       </div>
                       <p className="font-mono text-sm text-gray-900">
                         {verificationResult.certificate.certificateNumber}
@@ -350,11 +352,12 @@ export default function CertificateVerification() {
                 {/* Verification Statement */}
                 <div className="mt-6 p-4 bg-white rounded-lg border border-green-200">
                   <p className="text-sm text-gray-700">
-                    <strong>Official Verification:</strong> This certificate has been issued by
-                    CSOAI (Certified Safety Oversight AI) and is recognized globally as proof of
-                    professional competence in AI Safety Analysis. The holder has successfully
-                    completed all required training modules and passed the certification examination
-                    with a score meeting or exceeding CSOAI standards.
+                    <strong>Verification:</strong> This completion record was issued by CSOAI
+                    (Council of AI) and attests that the holder completed the required Council
+                    Academy training modules and passed the course assessment at or above the
+                    stated threshold. It attests training completion only — not a person's
+                    professional licensure and not any AI system's compliance or conformity.
+                    Council of AI measures; it does not certify or issue conformity marks.
                   </p>
                 </div>
               </CardContent>
@@ -376,19 +379,19 @@ export default function CertificateVerification() {
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Confirm authenticity of AI Safety Analyst credentials</span>
+                    <span>Confirm authenticity of an AI Safety Analyst completion record</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Verify certification is current and not revoked</span>
+                    <span>Verify a completion record is current and not revoked</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Check professional qualifications before hiring</span>
+                    <span>Confirm training completion before hiring</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Ensure compliance with regulatory requirements</span>
+                    <span>See which Council Academy course level was completed</span>
                   </li>
                 </ul>
               </CardContent>
@@ -398,14 +401,14 @@ export default function CertificateVerification() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <AlertCircle className="h-5 w-5 text-blue-600" />
-                  Where to Find Certificate ID
+                  Where to Find the Record ID
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2">
                     <span className="font-semibold text-gray-900 flex-shrink-0">•</span>
-                    <span>On the certificate document (top right corner)</span>
+                    <span>On the completion record document (top right corner)</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-semibold text-gray-900 flex-shrink-0">•</span>
@@ -417,7 +420,7 @@ export default function CertificateVerification() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="font-semibold text-gray-900 flex-shrink-0">•</span>
-                    <span>Contact the certificate holder if you don't have access</span>
+                    <span>Contact the record holder if you don't have access</span>
                   </li>
                 </ul>
               </CardContent>
@@ -428,14 +431,15 @@ export default function CertificateVerification() {
         {/* Footer Note */}
         <div className="mt-12 text-center text-sm text-gray-600">
           <p>
-            For questions about certificate verification, contact{' '}
+            For questions about completion record verification, contact{' '}
             <a href="mailto:verify@csoai.org" className="text-green-600 hover:underline">
               verify@csoai.org
             </a>
           </p>
           <p className="mt-2">
-            All CSOAI certifications are issued in accordance with international AI safety standards
-            (EU AI Act, NIST AI RMF, TC260).
+            Council Academy training is measured against international AI safety frameworks
+            (EU AI Act, NIST AI RMF, TC260). A completion record attests training completion,
+            not conformity — Council of AI measures; it does not certify or issue conformity marks.
           </p>
         </div>
       </div>

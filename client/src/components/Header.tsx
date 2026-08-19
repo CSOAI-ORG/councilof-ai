@@ -23,16 +23,16 @@ import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 const navigation = [
   {
     name: "Council OS",
-    href: "/council-space",
+    href: "/gspc-arena",
     icon: Globe2,
     description: "Your AI OS",
     submenu: [
-      { name: "Council Space", href: "/council-space", description: "Simulate and govern in real time" },
+      { name: "Council Space", href: "/gspc-arena", description: "Simulate and govern in real time" },
       { name: "Governance Graph", href: "/graph", description: "The governed Google" },
-      { name: "Your Council Twin (Design)", href: "/council-twin", description: "Personalisation surface — illustrative, not a claim" },
+      { name: "Your Council assistant Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
       { name: "Start free", href: "/start", description: "Build your own AI" },
-      { name: "Plans and Pricing", href: "/plans", description: "Free to Enterprise" },
+      { name: "Plans and Pricing", href: "/pricing", description: "Free to Enterprise" },
       { name: "System Status", href: "/status", description: "Live transparency" },
     ],
   },
@@ -46,6 +46,7 @@ const navigation = [
       { name: "Live Ledger (signed)", href: "/live-ledger", description: "Live D1 queryable decision_records — signed, with supersession trail" },
       { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
       { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
+      { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 measured of 14 — every measured cell with n and 95% CI where honest" },
       { name: "AI Act Benchmark", href: "/ai-act-benchmark", description: "170/170 held-out scenarios against the EU benchmark — with CIs and caveats" },
       { name: "ProvBench", href: "/provbench", description: "Does C2PA provenance survive real-world transforms? 20 assets × 11 transforms" },
     ],
@@ -58,15 +59,16 @@ const navigation = [
     submenu: [
       { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
       { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
-      { name: 'Cyber self-scan', href: '/scan', description: 'Scan your own systems with open-source tools; the Sovereign helps fix them' },
+      { name: 'Cyber self-scan', href: '/scan', description: 'Scan your own systems with open-source tools; the Council assistant helps fix them' },
       { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },
-      { name: 'The Sovereign Globe', href: '/globe', description: 'AI governance, layered on the world' },
+      { name: 'The Council Globe', href: '/globe', description: 'AI governance, layered on the world' },
       { name: 'AI governance: the guide', href: '/ai-governance', description: 'The complete map — start here' },
       { name: 'Global regulation tracker', href: '/global-ai-regulation', description: 'Every AI regime worldwide, current' },
       { name: 'Framework crosswalk', href: '/crosswalk', description: '13 frameworks × 8 controls — comply once' },
       { name: 'Free AI assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps in minutes' },
       { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
       { name: 'Open the full launcher', href: '/os', description: 'Every app on one grid' },
+      { name: 'Browse the full Library →', href: '/library', description: 'The complete, sector-organized archive of everything we publish' },
     ]
   },
   {
@@ -114,6 +116,7 @@ const navigation = [
     icon: BookMarked,
     description: 'Charter, knowledge & trust',
     submenu: [
+      { name: 'The Library — full archive', href: '/library', description: "Every page we've published, dated and organized by sector" },
       { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
       { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
@@ -299,8 +302,8 @@ export function Header() {
             </div>
           </div>
 
-          {/* Right Side Actions */}
-          <div className="hidden xl:flex items-center gap-2 2xl:gap-3">
+          {/* Right Side Actions — flex-nowrap + shrink-0 prevents vertical-letter collapse on 1280-1400px viewports */}
+          <div className="hidden xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
@@ -310,20 +313,12 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* Council OS — the dockable measurement workspace (globe, GSPC board, arena) */}
+            {/* One primary CTA — the free verify tool (the top-of-funnel) */}
             <a
-              href="/council-os"
-              className="hidden xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-emerald-300 border border-emerald-400/30 hover:bg-emerald-400/10 transition-all"
+              href="/verify"
+              className="hidden xl:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
             >
-              <span className="text-base leading-none">◧</span> Council OS
-            </a>
-
-            {/* CSOAI OS launcher — yields its space below 2xl so the nav never wraps */}
-            <a
-              href="/os"
-              className="hidden 2xl:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
-            >
-              <span className="text-base leading-none">⊞</span> AI OS
+              Verify a card
             </a>
 
             {user ? (
@@ -454,7 +449,7 @@ export function Header() {
 
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
                 <a href="/os" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊞ AI OS</Button>
+                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊡ AI OS</Button>
                 </a>
                 {user ? (
                   <>

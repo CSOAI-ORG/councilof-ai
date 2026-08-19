@@ -1,0 +1,25 @@
+name: gspc-nightly-board
+# THE REAL overnight runner — runs on GitHub's servers while you sleep, NOT the agent's kernel.
+# Fires the provider-agnostic eval-as-code board against the pod + frontier judge, commits the signed result.
+on:
+  schedule: [{cron: '0 2 * * *'}]   # 02:00 UTC nightly
+  workflow_dispatch: {}
+permissions: {contents: write}
+jobs:
+  board:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - name: run nightly board
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}   # <-- YOU add this secret (the judge key)
+          POD_BASE: ${{ secrets.POD_BASE }}               # the runpod proxy url
+        run: python run_nightly_board.py --out nightly_board_$(date +%Y%m%d).json
+      - name: commit signed result
+        run: |
+          git config user.name gspc-board-bot; git config user.email board@csoai.org
+          git add nightly_board_*.json && git commit -s -m "board: nightly signed result $(date +%F)" || echo "no change"
+          git push || echo "push skipped"

@@ -26,7 +26,7 @@ export default function SovereignRegistry() {
   const [mine, setMine] = useState<Record<Kind, number>>({ humanoid: 0, enterprise: 0, government: 0 });
   const [minted, setMinted] = useState(false);
 
-  useEffect(() => { document.title = "Join the Sovereign Grid — CSOAI"; setMine(load()); }, []);
+  useEffect(() => { document.title = "Join the Council Grid — CSOAI"; setMine(load()); }, []);
 
   function mint() {
     if (!pick) return;
@@ -42,11 +42,11 @@ export default function SovereignRegistry() {
       <div className="pointer-events-none fixed inset-0" style={{ background: "radial-gradient(900px 520px at 50% -10%, rgba(16,185,129,.18), transparent 60%)" }} />
       <section className="relative z-10 mx-auto max-w-5xl px-6 py-16">
         <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">The grid grows by one</p>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">Join the Sovereign Grid</h1>
-        <p className="mt-4 max-w-2xl text-lg text-emerald-50/80">Every sovereign that registers \u2014 a humanoid agent, an enterprise, a government \u2014 makes the grid smarter for all. CSOAI frameworks bridge each one to sovereignty without overwhelm. One by one, this becomes governance of all.</p>
+        <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">Join the Council assistant Grid</h1>
+        <p className="mt-4 max-w-2xl text-lg text-emerald-50/80">Every Council agent that registers \u2014 a humanoid agent, an enterprise, a government \u2014 makes the grid smarter for all. CSOAI frameworks bridge each one to sovereignty without overwhelm. One by one, this becomes governance of all.</p>
 
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-3xl">
-          <Stat v={total.toLocaleString()} l="Sovereign nodes" />
+          <Stat v={total.toLocaleString()} l="Council nodes" />
           <Stat v={(BASE.humanoid + mine.humanoid).toLocaleString()} l="Humanoid / agent" />
           <Stat v={(BASE.enterprise + mine.enterprise).toLocaleString()} l="Enterprise" />
           <Stat v={(BASE.government + mine.government).toLocaleString()} l="Government" />
@@ -54,7 +54,7 @@ export default function SovereignRegistry() {
 
         {!minted ? (
           <div className="mt-12">
-            <h2 className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Choose your sovereign type</h2>
+            <h2 className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Choose your agent type</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-3">
               {KINDS.map((k) => (
                 <button key={k.id} onClick={() => setPick(k.id)} className={"text-left rounded-2xl border bg-gradient-to-br p-5 transition hover:scale-[1.02] " + k.tone + (pick === k.id ? " ring-2 ring-emerald-400" : "")}>
@@ -68,15 +68,15 @@ export default function SovereignRegistry() {
             <div className="mt-6 max-w-md">
               <label className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Node label (optional, stays on your device)</label>
               <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="e.g. Acme AI, did:csoai:agent-7, Dept of Digital" className="mt-2 w-full rounded-xl border border-emerald-400/30 bg-white/[0.04] px-4 py-3 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
-              <button onClick={mint} disabled={!pick} className="mt-4 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-40 transition">Mint my Sovereign node {"\u2192"}</button>
+              <button onClick={mint} disabled={!pick} className="mt-4 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-40 transition">Mint my Council node {"\u2192"}</button>
               <p className="mt-3 text-[11px] text-emerald-300/40">v1 stages your node on this device. Full network registration + the learning loop activate with the Layer 0 gateway. No personal data leaves your browser.</p>
             </div>
           </div>
         ) : (
           <div className="mt-12 rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-8 text-center">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/50 bg-emerald-500/15 text-3xl">{"\u25C9"}</div>
-            <h2 className="mt-4 text-2xl font-black">Sovereign node minted{label ? ": " + label : ""}</h2>
-            <p className="mt-2 text-emerald-50/80">Welcome to the grid. Your node stands on Layer 0. The grid just got smarter \u2014 and so will every suggestion your Sovereign makes for you.</p>
+            <h2 className="mt-4 text-2xl font-black">Council node minted{label ? ": " + label : ""}</h2>
+            <p className="mt-2 text-emerald-50/80">Welcome to the grid. Your node stands on Layer 0. The grid just got smarter \u2014 and so will every suggestion your Council assistant makes for you.</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <a href="/enter" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter the CSOAI world {"\u2192"}</a>
               <a href="/tour" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Take the tour {"\u2192"}</a>

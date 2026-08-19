@@ -33,7 +33,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       </div>
       <div style="display:flex;align-items:center;gap:14px;color:#34d399;font-size:22px;font-weight:700;">
         <span>Ed25519 · Layer 0</span><span style="color:#065f46;">|</span>
-        <span>designed 33-agent council</span><span style="color:#065f46;">|</span><span>csoai.org</span>
+        <span>designed 33-agent council</span><span style="color:#065f46;">|</span><span>councilof.ai</span>
       </div>
     </div>`;
 

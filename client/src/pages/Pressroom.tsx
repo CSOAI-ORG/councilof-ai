@@ -11,7 +11,7 @@ const FACTS = [
 ];
 const QUOTES = [
   "We did not invent AI governance. We rediscovered it - and built it in digital form.",
-  "No single agent can decide. That is the point. The same math that secures Bitcoin now governs AI.",
+  "No single agent can decide. That is the point.",
   "Ask it any governance question and watch five minds reach consensus in thirty seconds.",
 ];
 

@@ -312,7 +312,7 @@ const faqData = [
   },
   {
     question: "What happens to my report?",
-    answer: "After submission, your report enters our review queue. Our team verifies the incident, gathers additional evidence, and escalates serious cases to investigation. Critical incidents are fast-tracked to the Byzantine Council for immediate review and action."
+    answer: "After submission, your report enters our review queue. Our team verifies the incident, gathers additional evidence, and escalates serious cases to investigation. Critical incidents are fast-tracked to the Council for immediate review and action."
   },
   {
     question: "How long does investigation take?",
@@ -332,7 +332,7 @@ const faqData = [
   },
   {
     question: "Can I appeal a decision?",
-    answer: "Yes, all parties can appeal Byzantine Council decisions within 30 days. Appeals are reviewed by an independent panel. New evidence or procedural concerns can trigger a full re-review of the case."
+    answer: "Yes, all parties can appeal Council decisions within 30 days. Appeals are reviewed by an independent panel. New evidence or procedural concerns can trigger a full re-review of the case."
   },
 ];
 
@@ -510,7 +510,7 @@ export default function PublicWatchdog() {
                       Report an AI Safety Incident
                     </DialogTitle>
                     <DialogDescription>
-                      Your report will be reviewed by our team and the Byzantine Council.
+                      Your report will be reviewed by our team and the Council.
                       All reports can be submitted anonymously.
                     </DialogDescription>
                   </DialogHeader>
@@ -783,7 +783,7 @@ export default function PublicWatchdog() {
                   </div>
                   <div className="flex items-start gap-2">
                     <CircleDot className="h-5 w-5 text-amber-600 mt-0.5" />
-                    <span className="text-sm text-gray-700">Byzantine Council reviews serious cases</span>
+                    <span className="text-sm text-gray-700">Council reviews serious cases</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <CircleDot className="h-5 w-5 text-amber-600 mt-0.5" />
@@ -1088,7 +1088,7 @@ export default function PublicWatchdog() {
                                     <div className="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
                                       <div className="flex items-center justify-between mb-2">
                                         <span className="text-sm font-medium text-amber-800">
-                                          Byzantine Council Vote in Progress
+                                          Council Vote in Progress
                                         </span>
                                         <span className="text-sm text-amber-600">
                                           {incident.councilVotes.for + incident.councilVotes.against + incident.councilVotes.abstain}/33 votes
@@ -1314,7 +1314,7 @@ export default function PublicWatchdog() {
         </div>
       </section>
 
-      {/* Byzantine Council Role Section */}
+      {/* Council Role Section */}
       <section className="py-16 bg-white">
         <div className="container max-w-6xl">
           <div className="text-center mb-12">
@@ -1323,7 +1323,7 @@ export default function PublicWatchdog() {
               Governance
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              The Byzantine Council
+              The Council
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               A diverse group of 33 independent experts who review serious incidents
