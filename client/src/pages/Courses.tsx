@@ -204,13 +204,12 @@ function CourseCard({ course }: { course: any }) {
     setTimeout(() => setEnrolling(false), 1500);
   };
 
-  const formatPrice = (cents: number | null | undefined) => {
-    if (!cents) return "N/A";
-    return `$${(cents / 100).toFixed(2)}`;
+  const formatPrice = (_cents: number | null | undefined) => {
+    return "Free";
   };
 
-  const calculateMonthlyPayment = (totalCents: number, months: number) => {
-    return `$${((totalCents / months) / 100).toFixed(2)}/mo`;
+  const calculateMonthlyPayment = (_totalCents: number, _months: number) => {
+    return "Free";
   };
 
   const getLevelColor = (level: string) => {
@@ -284,7 +283,7 @@ function CourseCard({ course }: { course: any }) {
                 {calculateMonthlyPayment(course.pricing.threeMonth, 3)}
               </div>
               <div className="text-xs text-muted-foreground">
-                {formatPrice(course.pricing.threeMonth)} total
+                Full course access
               </div>
             </button>
           )}
@@ -303,7 +302,7 @@ function CourseCard({ course }: { course: any }) {
                 {calculateMonthlyPayment(course.pricing.sixMonth, 6)}
               </div>
               <div className="text-xs text-muted-foreground">
-                {formatPrice(course.pricing.sixMonth)} total
+                Full course access
               </div>
             </button>
           )}
@@ -322,7 +321,7 @@ function CourseCard({ course }: { course: any }) {
                 {calculateMonthlyPayment(course.pricing.twelveMonth, 12)}
               </div>
               <div className="text-xs text-muted-foreground">
-                {formatPrice(course.pricing.twelveMonth)} total
+                Full course access
               </div>
             </button>
           )}
@@ -341,31 +340,20 @@ function CourseCard({ course }: { course: any }) {
 }
 
 function BundleCard({ bundle }: { bundle: any }) {
-  const formatPrice = (cents: number | null | undefined) => {
-    if (!cents) return "N/A";
-    return `$${(cents / 100).toFixed(2)}`;
-  };
-
   return (
     <Card className="p-6 border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 hover:shadow-xl transition-shadow">
-      <Badge className="mb-4 bg-purple-600">Bundle Deal - Save {formatPrice(bundle.savings)}</Badge>
+      <Badge className="mb-4 bg-purple-600">Bundle Deal</Badge>
       <h3 className="text-2xl font-bold mb-2">{bundle.name}</h3>
       <p className="text-muted-foreground mb-4">{bundle.description}</p>
 
       <div className="bg-white dark:bg-gray-900 rounded-lg p-4 mb-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-muted-foreground">Regular Price:</span>
-          <span className="text-muted-foreground line-through">{formatPrice(bundle.regularPrice)}</span>
-        </div>
-        <div className="flex justify-between items-center mb-2">
           <span className="font-semibold">Bundle Price:</span>
-          <span className="text-2xl font-bold text-purple-600">{formatPrice(bundle.pricing.oneTime)}</span>
+          <span className="text-2xl font-bold text-purple-600">Free</span>
         </div>
-        {bundle.pricing.threeMonth && (
-          <div className="text-sm text-muted-foreground mt-2">
-            Or {formatPrice(bundle.pricing.threeMonth)} over 3 months
-          </div>
-        )}
+        <div className="text-sm text-muted-foreground mt-2">
+          Full bundle access
+        </div>
       </div>
 
       <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">

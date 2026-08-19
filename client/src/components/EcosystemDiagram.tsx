@@ -247,7 +247,7 @@ const ecosystemNodes: EcosystemNode[] = [
     category: "operational",
     icon: Briefcase,
     link: "/jobs",
-    stats: "$45/hr",
+    stats: "Rates pending",
     connections: ["training", "analysts"],
   },
   {
