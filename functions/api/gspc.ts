@@ -370,6 +370,8 @@ export const onRequestGet: PagesFunction = async (context) => {
         measured_axes: m.filter((a) => a.separation !== "UNTESTED").length,
         quotable_axes: m.length,
         public_count: "13 measured of 14 quotable (GSPC ruling 2026-08-18)",
+        license: "CC-BY-4.0",
+        license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
         items,
         separated_leads: m.filter((a) => a.separation === "SEPARATED").length,
         ties: m.filter((a) => a.separation === "TIE").length,
