@@ -114,6 +114,20 @@ function SingleRecordVerify() {
   const [verdict, setVerdict] = useState<RecordVerdict | null>(null);
   const [busy, setBusy] = useState(false);
   const [permalink, setPermalink] = useState<string | null>(null);
+  const [verifyCount, setVerifyCount] = useState<number | null>(null);
+
+  // The threshold made metric: count successful third-party verifications. The
+  // counter is a signed, monotonic number — proves verifications HAPPENED (each
+  // was a real in-browser Ed25519 check against published did.json), never WHO
+  // verified. No identity, no IP, no record — privacy-safe by design.
+  useEffect(() => {
+    fetch("/api/verify/count")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.ok) setVerifyCount(Number(d.count));
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get("record");
@@ -125,6 +139,9 @@ function SingleRecordVerify() {
         verifyRecord(decoded).then((v) => {
           setVerdict(v);
           setBusy(false);
+          if (v.lines.length && v.lines.every((l) => l.ok === true)) {
+            fetch("/api/verify/count", { method: "POST" }).catch(() => {});
+          }
         });
       } catch {
         setVerdict({ lines: [{ label: "Permalink", ok: false, detail: "The ?record= payload did not decode." }] });
@@ -134,7 +151,17 @@ function SingleRecordVerify() {
 
   const run = async () => {
     setBusy(true);
-    setVerdict(await verifyRecord(text));
+    const v = await verifyRecord(text);
+    setVerdict(v);
+    if (v.lines.length && v.lines.every((l) => l.ok === true)) {
+      // A successful in-browser verification — count it (signed, monotonic, anonymous).
+      fetch("/api/verify/count", { method: "POST" })
+        .then((r) => r.json())
+        .then((d) => {
+          if (d?.ok) setVerifyCount(Number(d.count));
+        })
+        .catch(() => {});
+    }
     const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(text)))
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
@@ -190,6 +217,14 @@ function SingleRecordVerify() {
         record without <code>signature</code>, against the keys published at <code>/.well-known/did.json</code>.
         A record outside this shape gets an honest &quot;not applicable&quot;, never a fake pass.
       </p>
+      {verifyCount !== null && (
+        <p className="mt-4 inline-block rounded-lg border border-emerald-500/25 bg-emerald-500/5 px-4 py-2 font-mono text-[13px] text-emerald-200">
+          <span className="text-emerald-300/70">Measured:</span>{" "}
+          <strong className="text-emerald-100">{verifyCount}</strong>{" "}
+          independent verifications of a signed receipt counted so far — a signed, monotonic
+          number (<code className="text-amber-300">/api/verify/count</code>). Never who verified, only that it happened.
+        </p>
+      )}
     </div>
   );
 }

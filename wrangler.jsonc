@@ -20,6 +20,15 @@
     {
       "binding": "SOV_ARENA_STATE",
       "id": "00634697bf5744edba3625905a922e96"
+    },
+    {
+      // VERIFY_COUNTER backs /api/verify/count — the signed, monotonic count of
+      // successful third-party verifications (the threshold made metric). Create the
+      // namespace in the deploy lane: `wrangler kv namespace create VERIFY_COUNTER`
+      // (or via the CF dashboard) and paste the id here. The endpoint fail-closes
+      // (503) until the namespace exists — the page still verifies without it.
+      "binding": "VERIFY_COUNTER",
+      "id": "REPLACE_WITH_CREATED_NAMESPACE_ID"
     }
   ]
 }
