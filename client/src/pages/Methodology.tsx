@@ -200,6 +200,24 @@ export default function Methodology() {
           </ul>
         </section>
 
+        {/* AEF-1 CONFORMANCE */}
+        <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
+          <h2 className="text-2xl font-bold text-emerald-50">AEF-1 conformance</h2>
+          <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+            We conform to <a href="https://aievaluatorforum.org/initiatives/minimum-operating-conditions" target="_blank" rel="noopener noreferrer" className="text-emerald-300 underline">AEF-1: Minimum Operating Conditions for Independent Third Party AI Evaluations</a>{" "}
+            (AI Evaluator Forum, v1, Dec 4 2025) in published evaluations that carry the completed Appendix A checklist.
+            AEF-1 is a per-evaluation, self-declared standard — there is no registry, badge, or certifying body — and we
+            publish the completed checklist (all 15 required conditions met) alongside the signed board.
+          </p>
+          <ul className="mt-4 space-y-2 text-[13px] text-emerald-100/80 leading-relaxed list-disc pl-5">
+            <li>Independence (Principle 2): the <Link href="/firewall-charter" className="text-emerald-300 underline">funding-wall charter</Link> — no measured or ranked entity pays for measurement, placement, or visibility.</li>
+            <li>Autonomy (Principle 3): deterministic predicates, our own frozen item banks, full editorial control — results published win-or-lose.</li>
+            <li>Transparency (Principle 4): frozen predicates, banks, Wilson intervals, McNemar-primary separation, per-item transcripts — all published.</li>
+            <li>Responsible disclosure (Principle 5): jail findings provider-first ≤60 days; info hazards treated per the standard.</li>
+            <li>The checklist doubles as reporting under EU AI Act CoP 7.3(1)(g) and California SB 53 §22757.12(c)(2)(C).</li>
+          </ul>
+        </section>
+
         {/* LINKS */}
         <div className="flex flex-wrap gap-4 pb-4 text-[13px]">
           <Link href="/gspc-arena" className="text-emerald-300 hover:underline">
