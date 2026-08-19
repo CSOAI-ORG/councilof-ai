@@ -120,8 +120,8 @@ export default function Sov3SystemCard() {
         <div className="rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5">
           <div className="text-sm font-bold text-emerald-100">Related pages</div>
           <div className="mt-3 flex flex-wrap gap-2">
-            <a href="/sov3-model-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Model card →</a>
-            <a href="/sov3-whitepaper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
+            <a href="/council-model-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Model card →</a>
+            <a href="/workbench-paper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
             <a href="/system-card" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Signed assurance product →</a>
           </div>
           <p className="mt-4 text-[11px] text-emerald-300/50">Last reviewed 2026-07-12. Figures above come from internal governance-topology sweeps under a stated error model — re-run scripts and full config tables are referenced in the whitepaper.</p>

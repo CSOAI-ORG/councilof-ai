@@ -23,7 +23,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "About"
  },
  {
-  "path": "/about-ceasai",
+  "path": "/about-credential",
   "comp": "AboutCEASAI",
   "title": "About CEASAI"
  },
@@ -223,11 +223,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Case Studies"
  },
  {
-  "path": "/ceasai-training",
-  "comp": "CEASAITraining",
-  "title": "CEASAITraining"
- },
- {
   "path": "/certificate-verification",
   "comp": "CertificateVerification",
   "title": "Certificate Verification"
@@ -388,6 +383,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Council Licensing Landing"
  },
  {
+  "path": "/council-model-card",
+  "comp": "Sov3ModelCard",
+  "title": "Sov3 Model Card"
+ },
+ {
+  "path": "/council-system-card",
+  "comp": "Sov3SystemCard",
+  "title": "Sov3 System Card"
+ },
+ {
   "path": "/council-vs-agents",
   "comp": "Agents",
   "title": "Agents"
@@ -406,6 +411,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/cra",
   "comp": "Cra",
   "title": "Cra"
+ },
+ {
+  "path": "/credential-training",
+  "comp": "CEASAITraining",
+  "title": "CEASAITraining"
  },
  {
   "path": "/crosswalk",
@@ -451,6 +461,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/disclaimers",
   "comp": "Disclaimers",
   "title": "Disclaimers"
+ },
+ {
+  "path": "/dispute",
+  "comp": "Dispute",
+  "title": "Dispute"
  },
  {
   "path": "/distribution",
@@ -608,6 +623,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Penalties"
  },
  {
+  "path": "/firewall-charter",
+  "comp": "FirewallCharter",
+  "title": "Firewall Charter"
+ },
+ {
   "path": "/foundation-models",
   "comp": "GpaiObligations",
   "title": "Gpai Obligations"
@@ -708,6 +728,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Cyber Scan"
  },
  {
+  "path": "/gone-space",
+  "comp": "Gone",
+  "title": "Gone"
+ },
+ {
   "path": "/govbench",
   "comp": "GovBench",
   "title": "Gov Bench"
@@ -776,6 +801,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/gspc-gap-map",
   "comp": "GSPCGapMap",
   "title": "GSPCGap Map"
+ },
+ {
+  "path": "/gspc-scoreboard",
+  "comp": "GspcScoreboard",
+  "title": "Gspc Scoreboard"
  },
  {
   "path": "/gspc-verify",
@@ -921,6 +951,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/instrument",
   "comp": "Instrument",
   "title": "Instrument"
+ },
+ {
+  "path": "/insurers",
+  "comp": "Insurers",
+  "title": "Insurers"
  },
  {
   "path": "/integrations",
@@ -1573,61 +1608,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Social OS"
  },
  {
-  "path": "/sov-space",
-  "comp": "Gone",
-  "title": "Gone"
- },
- {
-  "path": "/sov-town-lab",
-  "comp": "SovTownLab",
-  "title": "Sov Town Lab"
- },
- {
-  "path": "/sov3",
-  "comp": "Workbench",
-  "title": "Workbench"
- },
- {
-  "path": "/sov3-model-card",
-  "comp": "Sov3ModelCard",
-  "title": "Sov3 Model Card"
- },
- {
-  "path": "/sov3-system-card",
-  "comp": "Sov3SystemCard",
-  "title": "Sov3 System Card"
- },
- {
-  "path": "/sov3-whitepaper",
-  "comp": "Sov3Whitepaper",
-  "title": "Sov3 Whitepaper"
- },
- {
-  "path": "/sovereign",
-  "comp": "SovereignHub",
-  "title": "Sovereign Hub"
- },
- {
-  "path": "/sovereign-network",
-  "comp": "NetworkPage",
-  "title": "Network Page"
- },
- {
-  "path": "/sovereign-pricing",
-  "comp": "PlansPage",
-  "title": "Plans Page"
- },
- {
-  "path": "/sovereign-space",
-  "comp": "Gone",
-  "title": "Gone"
- },
- {
-  "path": "/sovereign-twin",
-  "comp": "SovereignTwin",
-  "title": "Sovereign Twin"
- },
- {
   "path": "/standards",
   "comp": "Standards",
   "title": "Standards"
@@ -1856,6 +1836,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/workbench",
   "comp": "Workbench",
   "title": "Workbench"
+ },
+ {
+  "path": "/workbench-paper",
+  "comp": "Sov3Whitepaper",
+  "title": "Sov3 Whitepaper"
  },
  {
   "path": "/world-3d",

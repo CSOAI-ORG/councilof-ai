@@ -29,6 +29,7 @@ const PRIORITY = new Map([
   ["/gspc-arena", P_TOP],
   ["/layer0", P_TOP],
   ["/refutation-ledger", P_TOP],
+  ["/dispute", P_TOP],
   ["/methodology", P_TOP],
   ["/gspc-verify", P_TOP],
   ["/gspc-anchors", P_HIGH],
@@ -99,6 +100,13 @@ const EXCLUDE_EXACT = new Set([
   "/sovereign-twin",
   "/sov-space",
   "/sov-towns",
+  "/sov3",
+  "/sov3-model-card",
+  "/sov3-system-card",
+  "/sov3-whitepaper",
+  "/sov-town-lab",
+  "/about-ceasai",
+  "/ceasai-training",
   "/simulate",
   // legacy / shadow surfaces
   "/old-home",
@@ -181,18 +189,36 @@ for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 
+// --- Machine contracts (audit rec 5, lane d971a38) — not App.tsx routes, but
+// prime agent/AEO citation surface. Kept here so regeneration never drops them.
+const MACHINE_PATHS = [
+  ["/api/gspc", "daily", "0.8"],
+  ["/api/feed.xml", "daily", "0.7"],
+  ["/api/reported", "daily", "0.6"],
+  ["/llms.txt", "daily", "0.6"],
+  ["/.well-known/agent-card.json", "daily", "0.6"],
+  ["/.well-known/did.json", "daily", "0.6"],
+];
+for (const [mp, cf, pr] of MACHINE_PATHS) {
+  if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
+}
+
 // --- Emit XML ---------------------------------------------------------------
 const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
 const urls = paths
   .map((p) => {
     const loc = p === "/" ? BASE : `${BASE}${esc(p)}`;
+    const m = MACHINE.get(p);
+    const cf = m ? m.cf : changefreqFor(p);
+    const pr = m ? m.pr : priorityFor(p).toFixed(1);
     return [
       "  <url>",
       `    <loc>${loc}</loc>`,
       `    <lastmod>${today}</lastmod>`,
-      `    <changefreq>${changefreqFor(p)}</changefreq>`,
-      `    <priority>${priorityFor(p).toFixed(1)}</priority>`,
+      `    <changefreq>${cf}</changefreq>`,
+      `    <priority>${pr}</priority>`,
       "  </url>",
     ].join("\n");
   })
