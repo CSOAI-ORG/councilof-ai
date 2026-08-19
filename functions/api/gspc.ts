@@ -423,13 +423,18 @@ export const onRequestGet: PagesFunction = async (context) => {
       const hex = (b: ArrayBuffer) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
       const signedBytes = canonical(body); // body WITHOUT site_attestation — reconstructable by anyone
       const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-      const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, false, ["sign"]);
+      const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
       const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
+      const jwk = (await crypto.subtle.exportKey("jwk", key)) as JsonWebKey;
       (body as Record<string, unknown>).site_attestation = {
         attests: "integrity of this board snapshot as published by the site (NOT a re-measurement)",
         signer: "did:web:csoai.org#board-attestation-1",
         alg: "Ed25519",
         sig,
+        // The public key is echoed for transparency, but a stranger anchors trust
+        // on the SAME key as published independently in /.well-known/did.json — the
+        // payload never vouches for its own key.
+        public_key_x: jwk.x,
         sig_input: "canonical JSON (recursively sorted keys, no whitespace) of this payload with the site_attestation field removed",
         verify: "fetch /.well-known/did.json → #board-attestation-1 public key → verify sig over canonical(payload minus site_attestation)",
       };
