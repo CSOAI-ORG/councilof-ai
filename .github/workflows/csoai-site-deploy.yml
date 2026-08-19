@@ -40,10 +40,15 @@ jobs:
         run: npx wrangler pages deploy _site --project-name=csoai-site --branch=main --commit-dirty=true
       - name: Verify trust root live on the apex
         run: |
-          sleep 10
+          # www lags apex by up to ~a minute of edge propagation — retry before failing
           for host in csoai.org www.csoai.org; do
-            kids=$(curl -s "https://$host/.well-known/did.json" | python3 -c "import json,sys; print(sorted(m['id'].split('#')[-1] for m in json.load(sys.stdin)['verificationMethod']))")
-            echo "$host kids: $kids"
-            echo "$kids" | grep -q "site-release-1" || { echo "FAIL: $host serves wrong did.json"; exit 1; }
+            ok=""
+            for i in 1 2 3 4 5 6; do
+              sleep 10
+              kids=$(curl -s "https://$host/.well-known/did.json" -H 'Cache-Control: no-cache' | python3 -c "import json,sys; print(sorted(m['id'].split('#')[-1] for m in json.load(sys.stdin)['verificationMethod']))" 2>/dev/null)
+              echo "$host attempt $i kids: $kids"
+              if echo "$kids" | grep -q "site-release-1"; then ok=1; break; fi
+            done
+            [ -n "$ok" ] || { echo "FAIL: $host serves wrong did.json after 6 attempts"; exit 1; }
           done
           curl -s -o /dev/null -w "redirect: %{http_code} -> %{redirect_url}\n" https://csoai.org/some-page
