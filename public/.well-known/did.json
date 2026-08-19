@@ -43,13 +43,9 @@
       "id": "did:web:csoai.org#verifier",
       "type": "AttestationVerifier",
       "serviceEndpoint": "https://councilof.ai/verify"
-    },
-    {
-      "id": "did:web:csoai.org#mcp",
-      "type": "MCPMeasurementServer",
-      "serviceEndpoint": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp"
     }
   ],
+  "_serviceNote": "The MCP measurement-server endpoint was removed 2026-08-19: its worker returned 404 and a DID document must not advertise dead services. It returns in the same commit that redeploys it.",
   "_keyContinuity": {
     "note": "Two signing identities per KEY-CONTINUITY.md (binding estate note, 2026-08-16). #site-release-1 signs site deploys, release cards and agent cards (keystone-held). #estate-chain-1 signs fleet board chains and measurement cards (pod-held). Public verify surfaces label which key signed each artifact. Ed25519 today; ML-DSA-65 is roadmap, not present.",
     "superseded": [
