@@ -3,7 +3,7 @@ name: Build + deploy site (prerender + fields + tour → both domains)
 on:
   push:
     branches: [master, main]
-    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.toml', '.github/workflows/deploy.yml']
+    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch: {}
 
 concurrency: { group: site-deploy, cancel-in-progress: true }
@@ -44,7 +44,7 @@ jobs:
 
       - name: Deploy → councilof.ai
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
-        run: npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true --binding SOV_ARENA_STATE=00634697bf5744edba3625905a922e96
+        run: npx wrangler pages deploy --branch=main --commit-dirty=true
 
       # csoai.org now 301s to councilof.ai (apex-redirect.yml owns that deploy).
       # Do NOT redeploy the SPA to csoai-site — that would clobber the redirect.
