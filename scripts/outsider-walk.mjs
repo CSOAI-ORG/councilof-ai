@@ -156,6 +156,32 @@ try {
   }
 } catch (e) { fail(`step 2: /api/gspc fetch error: ${e.message}`); }
 
+// ---- Step 2b: the site-attestation signature (Ed25519, reconstructable) ----
+// Distinct from the pod living_stamp: a `sig` (hex) over canonical(payload minus
+// site_attestation), signed by #board-attestation-1 whose public key is in did.json.
+try {
+  const { status, body } = await get("/api/gspc");
+  if (status === 200) {
+    const board = JSON.parse(body);
+    const att = board.site_attestation;
+    if (att && typeof att.sig === "string") {
+      // canonical: recursively sorted keys, no whitespace — must match functions/api/gspc.ts
+      const canon = (o) => o === null || typeof o !== "object"
+        ? JSON.stringify(o)
+        : Array.isArray(o) ? "[" + o.map(canon).join(",") + "]"
+        : "{" + Object.keys(o).sort().map((k) => JSON.stringify(k) + ":" + canon(o[k])).join(",") + "}";
+      const stripped = JSON.parse(JSON.stringify(board));
+      delete stripped.site_attestation;
+      const msg = Buffer.from(canon(stripped), "utf8");
+      const sig = Buffer.from(att.sig, "hex");
+      const k = keys.find((kk) => { try { return edVerify(null, msg, kk.key, sig); } catch { return false; } });
+      if (k) { pass(`step 2b: site_attestation VALID against published ${k.id} — a stranger CAN verify the board snapshot`); walkComplete = true; }
+      else if (att.error) note(`step 2b: site_attestation reports an operational error (no signature) — honest, but not verifiable: ${att.error}`);
+      else fail(`step 2b: site_attestation present but its sig verifies against no published key`);
+    }
+  }
+} catch (e) { note(`step 2b: site_attestation check skipped — ${e.message}`); }
+
 // ---- Step 3: honest verdict on the end-to-end walk ----
 if (!walkComplete) {
   fail(`OUTSIDER-WALK: INCOMPLETE — the public board payload does not yet carry an inline signature a stranger can verify; a stranger can fetch the key but cannot complete verification end-to-end`);
