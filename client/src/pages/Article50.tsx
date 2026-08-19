@@ -178,7 +178,7 @@ export default function Article50() {
 
         <SpotInfographic title={L4.spotTitle} stats={L4.spotStats} source={L4.spotSource} />
         <FaqBlock title={L4.faqTitle} intro={L4.faqIntro} items={L4.faq} />
-        <p className="mt-6 text-[11px] text-emerald-300/70">Dates verified July 2026 (AI Omnibus provisional agreement, May 2026). Indicative guidance, not legal advice — verify against primary EU sources.</p>
+        <p className="mt-6 text-[11px] text-emerald-300/70">Dates verified August 2026 (Digital Omnibus, Reg (EU) 2026/1744, in force 27 July 2026). Indicative guidance, not legal advice — verify against primary EU sources.</p>
       </div>
     </div>
   );

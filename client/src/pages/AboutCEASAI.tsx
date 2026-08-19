@@ -59,7 +59,8 @@ export default function AboutCEASAI() {
             <div>
               <h2 className="text-3xl font-bold mb-4">Our Mission</h2>
               <p className="text-lg text-gray-700 leading-relaxed">
-                By <strong>August 2, 2026</strong>, the EU AI Act enforcement deadline, enterprises worldwide will need{' '}
+                With EU AI Act penalties live since <strong>August 2, 2026</strong> and high-risk obligations landing{' '}
+                <strong>December 2, 2027</strong> (Annex III; Annex I: August 2, 2028, per the Digital Omnibus), enterprises worldwide will need{' '}
                 <strong className="text-blue-600">measured AI Safety Analysts</strong> to ensure compliance,
                 transparency, and safety. This program exists to train, measure, and deploy this critical workforce—preventing
                 compliance chaos and ensuring AI systems serve humanity responsibly.

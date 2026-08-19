@@ -148,7 +148,7 @@ export default function EUAIActUrgency() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   useEffect(() => {
-    const deadline = new Date("2026-08-02T00:00:00");
+    const deadline = new Date("2027-12-02T00:00:00");
     const update = () => {
       const now = new Date();
       const diff = deadline.getTime() - now.getTime();
@@ -203,12 +203,15 @@ export default function EUAIActUrgency() {
                 <span className="text-red-600 dark:text-red-500">
                   {daysLeft}
                 </span>{" "}
-                Days Until EU AI Act Enforcement
+                Days Until EU AI Act High-Risk Enforcement
               </h1>
 
               <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
-                Full enforcement begins <strong>August 2, 2026</strong>. Is your
-                organization ready?
+                Transparency duties and the full penalty regime have applied since{" "}
+                <strong>August 2, 2026</strong>. High-risk obligations begin{" "}
+                <strong>December 2, 2027</strong> (Annex III; product-embedded Annex I:
+                August 2, 2028), as amended by the Digital Omnibus (Reg (EU) 2026/1744).
+                Is your organization ready?
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -24,7 +24,7 @@ export default function GpaiObligations() {
     s.text = JSON.stringify({
       "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
         { "@type": "Question", "name": "What is a GPAI model under the EU AI Act?", "acceptedAnswer": { "@type": "Answer", "text": "A general-purpose AI model is one trained on broad data that can perform a wide range of tasks and be integrated into many downstream systems - for example large language models." } },
-        { "@type": "Question", "name": "When do GPAI obligations apply?", "acceptedAnswer": { "@type": "Answer", "text": "GPAI provider obligations under the EU AI Act become enforceable on 2 August 2026." } },
+        { "@type": "Question", "name": "When do GPAI obligations apply?", "acceptedAnswer": { "@type": "Answer", "text": "GPAI provider obligations (Articles 53-55) have applied since 2 August 2025 for new models; the AI Office's enforcement (penalty) powers became exercisable on 2 August 2026, and models placed on the market before 2 August 2025 must comply by 2 August 2027." } },
         { "@type": "Question", "name": "What makes a GPAI model systemic-risk?", "acceptedAnswer": { "@type": "Answer", "text": "A model is presumed to carry systemic risk when the compute used for training exceeds 10^25 floating-point operations, triggering additional evaluation, incident-reporting, and cybersecurity duties." } },
       ],
     });
@@ -38,7 +38,7 @@ export default function GpaiObligations() {
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - GPAI obligations</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">If you ship a model, this is your 2 Aug 2026 list</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">General-purpose AI provider obligations become enforceable on 2 August 2026. Here is exactly what every model provider owes - and the extra duties if your model carries systemic risk.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">General-purpose AI provider obligations have applied since 2 August 2025 - and since 2 August 2026 the AI Office can enforce them with penalties. Here is exactly what every model provider owes - and the extra duties if your model carries systemic risk.</p>
           <div className="mt-6 max-w-2xl"><AISystemNotice route="/foundation-models" /></div>
         </div>
       </section>

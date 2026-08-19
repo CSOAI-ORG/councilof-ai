@@ -7,8 +7,8 @@ type Fw = { name: string; status: "In force" | "Phasing" | "Proposed" | "Guidanc
 type Region = { id: string; name: string; tag: string; frameworks: Fw[] };
 const REGIONS: Region[] = [
   { id: "eu", name: "European Union", tag: "Comprehensive, risk-tiered", frameworks: [
-    { name: "EU AI Act - transparency (Art. 50) + GPAI", status: "Phasing", bridge: "2 Aug 2026 - /readiness" },
-    { name: "EU AI Act - high-risk (Annex III)", status: "Proposed", bridge: "Dec 2027 (Digital Omnibus)" },
+    { name: "EU AI Act - transparency (Art. 50) + GPAI", status: "In force", bridge: "since 2 Aug 2026 - /readiness" },
+    { name: "EU AI Act - high-risk (Annex III)", status: "Phasing", bridge: "Dec 2027; Annex I Aug 2028 (Digital Omnibus)" },
     { name: "GDPR", status: "In force", bridge: "Data + automated decisions" },
     { name: "Digital Services Act", status: "In force", bridge: "Algorithmic transparency" },
     { name: "Cyber Resilience Act / NIS2", status: "Phasing", bridge: "Security baseline" },
@@ -18,7 +18,7 @@ const REGIONS: Region[] = [
     { name: "NIST AI RMF 1.0", status: "Guidance", bridge: "De-facto baseline" },
     { name: "FedRAMP / OSCAL (RFC-0024)", status: "Phasing", bridge: "30 Sep 2026 - /fedramp" },
     { name: "CCPA / CPRA (California)", status: "In force", bridge: "Profiling + opt-out" },
-    { name: "Colorado AI Act (SB 26-189)", status: "Proposed", bridge: "ADMT notices, eff. Jan 2027" },
+    { name: "Colorado AI Act (SB 26-189)", status: "Phasing", bridge: "Enacted - ADMT notices, eff. 1 Jan 2027" },
     { name: "Texas TRAIGA", status: "In force", bridge: "Banned-use list (Jan 2026)" },
     { name: "NYC LL144 (AEDT bias audit)", status: "In force", bridge: "Annual bias-audit attestation" },
   ]},

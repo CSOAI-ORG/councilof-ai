@@ -15,7 +15,7 @@ const ITEMS: Item[] = [
   { name: "US EO on Safe, Secure AI", cat: "Regulation", seat: "The White House, Washington DC", region: "US", status: "Guidance", href: "/regions" },
   { name: "FedRAMP / OSCAL (RFC-0024)", cat: "Regulation", seat: "GSA, Washington DC", region: "US", status: "Phasing (30 Sep 2026)", href: "/fedramp" },
   { name: "CCPA / CPRA", cat: "Regulation", seat: "California State Capitol, Sacramento", region: "US", status: "In force", href: "/regions" },
-  { name: "Colorado AI Act (SB 26-189)", cat: "Regulation", seat: "Colorado State Capitol, Denver", region: "US", status: "Proposed (Jan 2027)", href: "/regions" },
+  { name: "Colorado AI Act (SB 26-189)", cat: "Regulation", seat: "Colorado State Capitol, Denver", region: "US", status: "Enacted (eff. 1 Jan 2027)", href: "/regions" },
   { name: "Texas TRAIGA", cat: "Regulation", seat: "Texas State Capitol, Austin", region: "US", status: "In force", href: "/regions" },
   { name: "NYC LL144 (AEDT bias audit)", cat: "Regulation", seat: "New York City Hall", region: "US", status: "In force", href: "/sectors" },
   { name: "UK pro-innovation AI", cat: "Regulation", seat: "Palace of Westminster, London", region: "UK", status: "Guidance", href: "/regions" },

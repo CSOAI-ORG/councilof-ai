@@ -46,7 +46,7 @@ export default function ActSummary() {
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-xs font-bold uppercase tracking-wide text-gray-400">Who</div><p className="mt-1 text-sm text-gray-700">Providers + deployers touching the EU market - including non-EU companies.</p></div>
-          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-xs font-bold uppercase tracking-wide text-gray-400">When</div><p className="mt-1 text-sm text-gray-700">Bans Feb 2025; GPAI Aug 2025; transparency 2 Aug 2026; high-risk through 2027.</p></div>
+          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-xs font-bold uppercase tracking-wide text-gray-400">When</div><p className="mt-1 text-sm text-gray-700">Bans Feb 2025; GPAI Aug 2025; transparency 2 Aug 2026; high-risk Dec 2027 / Aug 2028 (Digital Omnibus).</p></div>
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-xs font-bold uppercase tracking-wide text-gray-400">Penalty</div><p className="mt-1 text-sm text-gray-700">Up to EUR 35m or 7% of global turnover.</p></div>
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
