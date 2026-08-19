@@ -10,7 +10,7 @@
 
 const hostFlag = process.argv.indexOf("--host");
 const HOST = (hostFlag > 0 && process.argv[hostFlag + 1] ? process.argv[hostFlag + 1] : "https://councilof.ai").replace(/\/$/, "");
-const KILL = [/\bsovereign\b/i, /\bceasai\b/i, /\bbyzantine\b/i, /\bBFT\b/, /Watchdog certification/i, /33-Agent/i, /£\d[\d,]*\/(mo|month|yr|year)/i, /\$\d[\d,]*\/(mo|month)/i, /Pro tier/i];
+const KILL = [/\bsovereign\b/i, /\bceasai\b/i, /\bbyzantine\b/i, /\bBFT\b/, /Watchdog certification/i, /33-Agent/i, /£\d[\d,]*\/(mo|month|yr|year)/i, /\$\d[\d,]*\/(mo|month)/i, /Pro tier/i, /\bSOVOS\b/i, /\bhive\b/i, /\bclan\b/i, /\bqueen\b/i, /\bdrone\b/i, /\bnursery\b/i, /\bcolony\b/i];
 
 const PERSONAS = [
   { who: "visitor",    path: "/",                              must: ["Council of AI", "We measure"] },
@@ -45,6 +45,22 @@ for (const p of PERSONAS) {
     fail(`${p.who} ${p.path}: fetch error ${e.message}`);
   }
 }
+
+// ── extra identity-coherence probes (LIVE-POC items, added 2026-08-19 K3) ──
+// llms.txt must hold the 13-of-14 axis line and never say 12-axis; api/gspc
+// must be free of the SOVOS brand string (the reproduce pointer must not leak).
+try {
+  const llms = await fetch(`${HOST}/llms.txt`, { headers: { "user-agent": "persona-gauntlet" } }).then((r) => r.text());
+  if (!/(13 of 14|13 of the 14|13\/14)/i.test(llms)) fail("llms.txt does not state 13 of 14");
+  else pass("llms.txt 13-of-14 coherence");
+  if (/(twelve|12)[\s-]?axis/i.test(llms)) fail("llms.txt still says 12-axis");
+  else pass("llms.txt no 12-axis leak");
+} catch (e) { fail(`llms.txt fetch error ${e.message}`); }
+try {
+  const gspc = await fetch(`${HOST}/api/gspc`, { headers: { "user-agent": "persona-gauntlet" } }).then((r) => r.text());
+  if (/sovos|SOVOS/i.test(gspc)) fail("api/gspc leaks SOVOS brand string");
+  else pass("api/gspc SOVOS-free");
+} catch (e) { fail(`api/gspc fetch error ${e.message}`); }
 
 console.log("");
 if (fails) { console.error(`PERSONA-GAUNTLET: FAIL — ${fails} persona(s) regressed.`); process.exit(1); }
