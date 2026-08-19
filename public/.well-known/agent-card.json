@@ -16,16 +16,33 @@
       "id": "gspc-board",
       "name": "Signed GSPC Board",
       "description": "Fetch the live Ed25519-signed GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, and McNemar separation. Live JSON, recomputable from published rows.",
-      "endpoint": "https://councilof.ai/api/gspc"
+      "endpoint": "https://councilof.ai/api/gspc",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ]
     },
     {
       "id": "measured-badge",
       "name": "Measured Badge",
       "description": "Shields-style README badge stating a subject's measured-axis count; unmeasured subjects render honestly as 'unmeasured', never a fabricated score.",
-      "endpoint": "https://councilof.ai/api/badge"
+      "endpoint": "https://councilof.ai/api/badge",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ]
     }
   ],
   "documentation": "https://councilof.ai/.well-known/agent.json",
   "doi": "10.5281/zenodo.21991104",
-  "explicitly_not": ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"]
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "legal-determination",
+    "enforcement"
+  ],
+  "protocolVersion": "0.3.0"
 }
