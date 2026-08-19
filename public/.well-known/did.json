@@ -1,0 +1,63 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/jws-2020/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:web:csoai.org",
+  "verificationMethod": [
+    {
+      "id": "did:web:csoai.org#site-release-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "03g9l-dVNGVEAVVWQrJU9aLtkYTN3uARd52P7DEq-8g",
+        "kid": "csoai-site-release-1",
+        "use": "sig"
+      }
+    },
+    {
+      "id": "did:web:csoai.org#estate-chain-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "M0cuAmhx2yDNvZnnbEdTLr_PhLN6vtWyYNrjWJ31aW0",
+        "kid": "csoai-estate-chain-1",
+        "use": "sig"
+      }
+    }
+  ],
+  "assertionMethod": [
+    "did:web:csoai.org#site-release-1",
+    "did:web:csoai.org#estate-chain-1"
+  ],
+  "authentication": [
+    "did:web:csoai.org#site-release-1"
+  ],
+  "service": [
+    {
+      "id": "did:web:csoai.org#verifier",
+      "type": "AttestationVerifier",
+      "serviceEndpoint": "https://councilof.ai/verify"
+    },
+    {
+      "id": "did:web:csoai.org#mcp",
+      "type": "MCPMeasurementServer",
+      "serviceEndpoint": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp"
+    }
+  ],
+  "_keyContinuity": {
+    "note": "Two signing identities per KEY-CONTINUITY.md (binding estate note, 2026-08-16). #site-release-1 signs site deploys, release cards and agent cards (keystone-held). #estate-chain-1 signs fleet board chains and measurement cards (pod-held). Public verify surfaces label which key signed each artifact. Ed25519 today; ML-DSA-65 is roadmap, not present.",
+    "superseded": [
+      {
+        "x": "9LQnjdwhbC8GCyc6_P2e8AhWOZNzsjsJd5T-cvs2w0I",
+        "status": "superseded 2026-08-18",
+        "reason": "Published 2026-08-17 from a generation script, not from the production keystone; no estate artifact was ever validly signed with this key and its private half is not held. Superseded per KEY-CONTINUITY rule 4. Any artifact claiming this key and not verifiable against the two keys above is not ours."
+      }
+    ]
+  }
+}

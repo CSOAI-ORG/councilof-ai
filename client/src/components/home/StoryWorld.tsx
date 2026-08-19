@@ -128,9 +128,9 @@ export const STORY: Slide[] = [
     tone: "light",
   },
   {
-    kicker: "09  Re-attest",
+    kicker: "09  Recurrency for AI compliance",
     title: "A new record. Never an edit.",
-    body: "AI changes. Law changes. We measure again and issue a delta card. The old card stays. History is append-only. Frozen is anchored. Fluid is drift.",
+    body: "AI changes. Law changes. We measure again and issue a delta card. The old card stays. History is append-only. In aviation, a qualification you never revisit is a qualification you can't trust — AI is no different.",
     points: [
       "AI changes; law changes; we measure again",
       "A delta card is issued — the old card stays",
