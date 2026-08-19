@@ -92,6 +92,38 @@ const LEDGER = {
       fix: "Flagged for the owner to set private — the platform gates dataset visibility behind the account login.",
       status: "OPEN",
     },
+    {
+      id: "C-2026-0819-10",
+      date: "2026-08-19",
+      what_was_wrong: "The estate's own date-correction fix (C-08) initially ALSO mis-stated the GPAI date — a follow-on error that moved GPAI duties from 2 Aug 2025 to 2026 while correcting the high-risk date. A correction that introduces a new error is the worst kind.",
+      how_caught: "Self-audit of the fix against the EU official page (digital-strategy.ec.europa.eu) — the estate caught its own owner mid-correction.",
+      fix: "GPAI 2 Aug 2025 restored; Article 50 2 Aug 2026 and high-risk 2 Dec 2027 (Annex III) / 2 Aug 2028 (Annex I) stated distinctly. This entry is that admission, appended not edited.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0819-11",
+      date: "2026-08-19",
+      what_was_wrong: "mcp.json advertised three server URLs on csoai.org/api/* — every one returned 404 because the API is served from councilof.ai, and one route (corpus-watch) pointed at a non-existent path.",
+      how_caught: "End-user MCP handshake test — a real JSON-RPC initialize probe against the advertised endpoints.",
+      fix: "mcp.json now advertises councilof.ai URLs and the real /api/corpus-watch/status route; the advertised endpoints were verified 200/JSON-RPC-responsive after the fix.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0819-12",
+      date: "2026-08-19",
+      what_was_wrong: "A measurement wave was queued with sample=24, below the harness's 30-usable-item threshold — all 8 jobs returned UNMEASURED (honestly, but wasted a full wave).",
+      how_caught: "Reading the signed board's status_note ('no model reached 30 usable items') rather than assuming the bank size was the constraint.",
+      fix: "Requeued at sample=30; all 8/8 came back MEASURED and signed. The threshold is now documented in the job-spec contract.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0819-13",
+      date: "2026-08-19",
+      what_was_wrong: "Two measure-chain daemons ran simultaneously after a restart race, double-logging jobs; the restart script's pkill pattern matched its own command line and killed its own launch.",
+      how_caught: "Duplicate 'daemon start' markers in the log; the self-kill was traced to the unanchored pkill pattern.",
+      fix: "Anchored process pattern (^python3 /workspace/measure_chain.py) in the restart script; single-daemon verified after relaunch.",
+      status: "FIXED",
+    },
   ],
 };
 
