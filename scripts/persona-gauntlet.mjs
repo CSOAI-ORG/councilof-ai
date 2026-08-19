@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+/**
+ * persona-gauntlet.mjs — 8 personas hit the LIVE site; exit 1 if any persona's
+ * surface regressed on canon (EAT 0.8). Read-only; no secrets; extends the
+ * drift-guard pattern (fetch + assert) so it runs in CI with no browser.
+ *
+ * Personas: visitor · buyer · auditor · researcher · api-agent · a2a-agent ·
+ * regulator · enterprise. Each has its route, required markers, and kill-strings.
+ */
+
+const hostFlag = process.argv.indexOf("--host");
+const HOST = (hostFlag > 0 && process.argv[hostFlag + 1] ? process.argv[hostFlag + 1] : "https://councilof.ai").replace(/\/$/, "");
+const KILL = [/\bsovereign\b/i, /\bceasai\b/i, /\bbyzantine\b/i, /\bBFT\b/, /Watchdog certification/i, /33-Agent/i, /£\d[\d,]*\/(mo|month|yr|year)/i, /\$\d[\d,]*\/(mo|month)/i, /Pro tier/i];
+
+const PERSONAS = [
+  { who: "visitor",    path: "/",                              must: ["Council of AI", "We measure"] },
+  { who: "buyer",      path: "/pricing",                       must: ["free"] },
+  { who: "auditor",    path: "/honesty",                       must: ["council-oowm"] },
+  { who: "researcher", path: "/library",                       must: ["reference pages across"] },
+  { who: "api-agent",  path: "/api/gspc",                      must: ['"axes": 14', '"measured_axes": 13', "13 measured of 14"] , json: true },
+  { who: "a2a-agent",  path: "/.well-known/agent-card.json",   must: ['"doi"', "CSOAI Ltd"], json: true, forbid: [/MEOK AI Labs/, /\$\d+\/mo/] },
+  { who: "regulator",  path: "/regulators",                    must: [] },
+  { who: "enterprise", path: "/start",                         must: [] },
+];
+
+let fails = 0;
+const fail = (m) => { console.log(`  ✗ ${m}`); fails++; };
+const pass = (m) => console.log(`  ✓ ${m}`);
+
+console.log(`PERSONA-GAUNTLET — ${HOST}\n`);
+for (const p of PERSONAS) {
+  try {
+    const r = await fetch(HOST + p.path, { headers: { "user-agent": "persona-gauntlet" }, redirect: "follow" });
+    const body = await r.text();
+    if (r.status !== 200) { fail(`${p.who} ${p.path}: HTTP ${r.status}`); continue; }
+    if (p.json) { try { JSON.parse(body); } catch { fail(`${p.who} ${p.path}: not valid JSON`); continue; } }
+    const missing = p.must.filter((m) => !body.includes(m));
+    if (missing.length) { fail(`${p.who} ${p.path}: missing ${JSON.stringify(missing)}`); continue; }
+    // kill-strings scan on VISIBLE text for HTML, whole body for JSON
+    const scan = p.json ? body : body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ");
+    const killers = [...KILL, ...(p.forbid || [])].filter((re) => re.test(scan));
+    if (killers.length) { fail(`${p.who} ${p.path}: kill-string hit ${killers.map(String).join(", ")}`); continue; }
+    pass(`${p.who} ${p.path}`);
+  } catch (e) {
+    fail(`${p.who} ${p.path}: fetch error ${e.message}`);
+  }
+}
+
+console.log("");
+if (fails) { console.error(`PERSONA-GAUNTLET: FAIL — ${fails} persona(s) regressed.`); process.exit(1); }
+console.log("PERSONA-GAUNTLET: PASS — all 8 personas clean.");
