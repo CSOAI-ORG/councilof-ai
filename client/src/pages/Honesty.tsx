@@ -164,6 +164,23 @@ export default function Honesty() {
           The instrument measures everyone, including the person selling it. Verify the board at{" "}
           <code>GET councilof.ai/api/gspc</code> — no account, no key.
         </div>
+
+        {/* REPORTED — the third data state, visually segregated from MEASURED */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-gray-900">
+            REPORTED — figures by others, cited, never mixed with ours
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Three data states run this estate: <strong>MEASURED</strong> (signed runs on our frozen
+            instruments), <strong>GATED/UNMEASURED</strong> (honestly withheld), and{" "}
+            <strong>REPORTED</strong> — figures published by <em>others</em>, cited and timestamped
+            for context. Reported by the source, not measured here; unsigned; never enters the
+            board; implies no endorsement of the source&apos;s method. The machine-readable set —
+            each entry with its source URL, capture date, and attribution basis — lives at{" "}
+            <code>GET councilof.ai/api/reported</code>. Scores move: treat every figure as
+            &quot;as of its capture date&quot; and follow the source for the live number.
+          </p>
+        </div>
       </div>
     </div>
   );

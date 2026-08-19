@@ -37,6 +37,10 @@ export default function GSPCVerify() {
             visibly, with the row identified. The button below proves it, including what happens
             when a record is deliberately tampered with.
           </p>
+          <p className="mt-3 text-[13px] text-emerald-200/70">
+            Privacy: verification runs entirely in your browser. Nothing you check is sent to us,
+            logged, or stored — and it never will be. No login, no fee, forever.
+          </p>
         </div>
       </section>
 
