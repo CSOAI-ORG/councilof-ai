@@ -1,0 +1,61 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Council of AI \u2014 GSPC Measurement API",
+    "version": "1.0.0",
+    "description": "Independent AI-governance measurement. 13 of 14 GSPC axes measured, every result recomputable (Ed25519). Measurement, not certification."
+  },
+  "servers": [
+    {
+      "url": "https://councilof.ai"
+    }
+  ],
+  "paths": {
+    "/api/gspc": {
+      "get": {
+        "summary": "The live signed board",
+        "operationId": "gspc_axes"
+      }
+    },
+    "/api/badge": {
+      "get": {
+        "summary": "Shields badge endpoint",
+        "operationId": "badge"
+      }
+    },
+    "/api/health": {
+      "get": {
+        "summary": "Health probe",
+        "operationId": "health"
+      }
+    },
+    "/verify": {
+      "get": {
+        "summary": "Verify a signed card (in-browser)",
+        "operationId": "verify"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MeasurementCard": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string"
+          },
+          "axis": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "signature": {
+            "type": "string",
+            "description": "Ed25519 over canonical JSON"
+          }
+        }
+      }
+    }
+  }
+}
