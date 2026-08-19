@@ -79,7 +79,7 @@ export function Footer() {
         { name: 'Cookie Policy', href: '/cookie-policy' },
         { name: 'Data Processing (GDPR)', href: '/dpa' },
         { name: 'Service Level Agreement', href: '/sla' },
-        { name: 'Insurance Certificate (on request)', href: 'mailto:security@csoai.ai?subject=Certificate%20of%20Insurance%20request', external: true },
+        { name: 'Insurance Certificate (on request)', href: 'mailto:nicholas@csoai.org?subject=Certificate%20of%20Insurance%20request', external: true },
       ],
     },
   ];
@@ -102,7 +102,7 @@ export function Footer() {
               <Shield className="h-8 w-8" />
               <div>
                 <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
-                <p className="text-emerald-100 text-sm">GSPC 14-slot board — 13 measured axes (12 Aug, 19 models) plus jail, containment (18 Aug, n=71, separation untested). Signed 18 Aug stamp. Harness published — recompute it.</p>
+                <p className="text-emerald-100 text-sm">GSPC board — 13 measured of 14, plus jail/containment (18 Aug stamp, n=71, separation untested). Signed stamp; live axis and model counts at /api/gspc. Harness published — recompute it.</p>
               </div>
             </div>
             <Link href="/benchmarks">
@@ -277,7 +277,7 @@ export function Footer() {
             Our only incentive is public safety and workforce development.
           </p>
           <p className="text-gray-600 text-xs text-center">
-            CSOAI LTD is a UK registered company with Professional Indemnity Insurance up to £5,000,000 (Policy: CHPR5355800XB).
+            Council of AI · CSOAI LTD, a UK registered company (Companies House 16939677, London) with Professional Indemnity Insurance up to £5,000,000 (Policy: CHPR5355800XB). Contact: nicholas@csoai.org.
           </p>
         </div>
       </div>

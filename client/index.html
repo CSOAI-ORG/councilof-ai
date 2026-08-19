@@ -72,24 +72,12 @@
       "inLanguage": "en"
     }
     </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {"@type": "Question", "name": "What is the Council of AI?",
-         "acceptedAnswer": {"@type": "Answer", "text": "The Council of AI (CSOAI LTD, UK 16939677) is a neutral measurement body for AI. It measures AI system behaviour against published regulatory provisions and issues verified measurement credentials — signed, provision-anchored records anyone can verify offline. It is not a certification or accreditation body."}},
-        {"@type": "Question", "name": "Is CSOAI a certification body?",
-         "acceptedAnswer": {"@type": "Answer", "text": "No. CSOAI is a measurement body. You receive a verified measurement credential — a signed record of measured behaviour. Accredited conformity certification requires a national accreditation chain, which CSOAI does not hold and does not claim."}},
-        {"@type": "Question", "name": "What does the Council of AI measure?",
-         "acceptedAnswer": {"@type": "Answer", "text": "AI system behaviour against published regulatory provisions. The live GSPC API (GET councilof.ai/api/gspc) exposes 13 measured of the 14 GSPC registry axes. 19 models. Current stamp unsigned. UNMEASURED results are reported openly, never hidden or scored as failures."}},
-        {"@type": "Question", "name": "Does CSOAI use LLM-as-judge?",
-         "acceptedAnswer": {"@type": "Answer", "text": "No. Every primary governance score is produced by deterministic predicates — same model, same input, same output, byte-identical. The LLM is used only for narration, never for scoring. When the LLM is disabled, every score is identical to when it is enabled."}},
-        {"@type": "Question", "name": "How current is the regulatory data behind the scores?",
-         "acceptedAnswer": {"@type": "Answer", "text": "The public corpus-watch instrument re-hashes 127 provisions across four instruments (EU AI Act, UK GDPR, DPA 2018, NIS2-UK) every day and publishes drift events. Measurement records go stale when the underlying provision text changes."}}
-      ]
-    }
-    </script>
+    <!-- FAQPage JSON-LD removed from the shell (qa-sweep 2026-08-19): the shell ships on EVERY
+         route, so this block (a) duplicated the page-level FAQPage nodes on pages that render a
+         visible FAQ (home carried 3 FAQPage nodes), (b) claimed FAQ content on hundreds of pages
+         with no visible FAQ, and (c) hardcoded stamp counts ("19 models", "127 provisions",
+         "12 Aug") that drift — counts defer to GET /api/gspc. Page-level FaqBlock emits the
+         FAQPage node for exactly what each page renders. -->
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/csoai-icon.svg" />

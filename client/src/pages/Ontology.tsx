@@ -22,7 +22,7 @@ const LINKS = [
 ];
 const ACTIONS = [
   { n: "Govern", d: "classify, assess and place any object under Layer 0.", href: "/graph" },
-  { n: "Simulate", d: "run the outcome across thousands of branches before acting.", href: "/council-space" },
+  { n: "Simulate", d: "run the outcome across thousands of branches before acting.", href: "/gspc-arena" },
   { n: "Stop", d: "halt a rogue agent or humanoid before harm — signed.", href: "/poc" },
   { n: "Prove", d: "issue a signed, offline-verifiable record of governance.", href: "/system-card" },
   { n: "Crosswalk", d: "comply once, cover every framework it maps to.", href: "/hive" },

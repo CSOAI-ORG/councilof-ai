@@ -5,6 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * setMetaDescription — per-route <meta name="description">, prerender-visible.
+ * (qa-sweep 2026-08-19) Every primary page set document.title but NOT the meta
+ * description, so all prerendered routes shipped the identical shell fallback.
+ * Call next to the document.title assignment inside the page's mount effect;
+ * the prerenderer snapshots the DOM, so this becomes the route's static tag.
+ */
+export function setMetaDescription(content: string): void {
+  let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+  if (!m) {
+    m = document.createElement("meta");
+    m.name = "description";
+    document.head.appendChild(m);
+  }
+  m.content = content;
+}
+
 export function formatCurrency(cents: number, currency = 'USD'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',

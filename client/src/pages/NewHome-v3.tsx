@@ -105,11 +105,11 @@ function ProblemStrip() {
 const USPS = [
   { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
-  { icon: Scale, title: "Honest 14-slot registry", body: "13 measured of the 14 GSPC registry axes on the live board. The 14th slot (Human Baseline) is measured via published aggregate baselines; jail is a separate measured floor.", href: "/gspc-scoreboard" },
+  { icon: Scale, title: "Honest board: 13 measured of 14", body: "13 measured of 14 on the live GSPC board. Jail is a measured floor (empty on this stamp). Live counts: GET /api/gspc.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
-  { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/city" },
-  { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/method" },
-  { icon: Ban, title: "No money from what we rank", body: "We do not sell ratings and we do not take a cut from anything on the board.", href: "/method" },
+  { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/gspc-arena?view=towns" },
+  { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/methodology" },
+  { icon: Ban, title: "No money from what we rank", body: "We do not sell ratings and we do not take a cut from anything on the board.", href: "/methodology" },
   { icon: Shield, title: "Measurement credential", body: "Not a certification. Not a notified body. We measure, sign, and keep the evidence.", href: "/gspc-verify" },
 ];
 
@@ -278,31 +278,18 @@ function UpsellStrip() {
 }
 
 // ── SEO / schema ─────────────────────────────────────────────────────
-const SCHEMA = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Council of AI",
-  "url": "https://councilof.ai/",
-  "description": "Council of AI measures how your AI behaves on our own published instruments and issues the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored, that anyone can verify without asking us. Measurement, not certification.",
-  "publisher": { "@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK Companies House 16939677" },
-  "potentialAction": { "@type": "SearchAction", "target": "https://councilof.ai/search?q={search_term_string}", "query-input": "required name=search_term_string" }
-};
-const FAQ_SCHEMA = {
-  "@context": "https://schema.org", "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "What does Council of AI do?", "acceptedAnswer": { "@type": "Answer", "text": "We measure AI behaviour against frozen, published benchmarks on the GSPC 14-slot board: 13 measured axes across 19 models, plus jail (containment) on a smaller fleet. Every measurement is a verified measurement credential, Ed25519-signed, and anyone can verify it without an account." } },
-    { "@type": "Question", "name": "Do you certify AI systems?", "acceptedAnswer": { "@type": "Answer", "text": "No. We issue verified measurement credentials — a 3KB signed card showing what your AI did when we measured it. That is evidence, not a certification badge." } },
-    { "@type": "Question", "name": "How much does it cost?", "acceptedAnswer": { "@type": "Answer", "text": "The rail is free. Verification is free forever — your measurement cards and ongoing re-attestation cost nothing to run or verify. Where evidence is sold, it is a signed artefact on its own page, never access." } },
-  ]
-};
+// (qa-sweep 2026-08-19) The page-level WebSite + FAQPage constants were REMOVED:
+// the shell (client/index.html) already ships the canonical WebSite node, and the
+// FaqBlock below emits the FAQPage node for exactly the FAQ this page renders —
+// the extra copies made the prerendered home carry duplicate WebSite/FAQPage
+// JSON-LD, which answer engines treat as conflicting claims. The removed WebSite
+// node also asserted a SearchAction the shell audit (2026-08-14) had already
+// declined to claim until /search?q= is verified.
 
 // ── export ───────────────────────────────────────────────────────────
 export default function NewHomeV3() {
   return (
     <main>
-      {/* AEO schema blocks */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SCHEMA) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_SCHEMA) }} />
 
       <StoryWorld />
       <div className="border-b border-gray-100" />
@@ -332,7 +319,7 @@ export default function NewHomeV3() {
           <FaqBlock
             title="Questions people ask"
             items={[
-              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks on the GSPC 14-slot board — 13 measured axes across 19 models, plus jail (containment) on a smaller fleet — and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored. Anyone can verify a card without asking us." },
+              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks on the GSPC board — 13 measured of 14, plus jail (containment) as a measured floor — and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored. Live axis and model counts come from GET /api/gspc. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
               { q: "What does a measurement card cost?", a: "The rail is free. Verification is free forever — running and verifying your measurement cards costs nothing. Where we sell evidence, it is a signed artefact on its own page, never access to the rail." },
               { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },

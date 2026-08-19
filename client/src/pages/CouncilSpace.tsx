@@ -5,6 +5,7 @@ import { sovActions } from "../lib/sovAgent";
 import { detectLocale, REGIONS } from "../lib/locale";
 import { flyAndConvene, neutralize } from "../lib/globeDrive";
 import CouncilNav from "../components/CouncilNav";
+import { setMetaDescription } from "@/lib/utils";
 import AISystemNotice from "../components/AISystemNotice";
 import { useLedger, type DecisionRecord } from "../hooks/useLedger";
 import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
@@ -95,10 +96,10 @@ function ArenaEvidenceStrip() {
 }
 
 const SS_VIEWS = [
-  { id: "console", label: "🎛 Console", href: "/council-space" },
-  { id: "arena", label: "🏟 Arena", href: "/council-space?view=arena" },
-  { id: "globe", label: "🌍 Globe", href: "/council-space?view=globe" },
-  { id: "towns", label: "🏘 Towns", href: "/council-space?view=towns" },
+  { id: "console", label: "🎛 Console", href: "/gspc-arena" },
+  { id: "arena", label: "🏟 Arena", href: "/gspc-arena?view=arena" },
+  { id: "globe", label: "🌍 Globe", href: "/gspc-arena?view=globe" },
+  { id: "towns", label: "🏘 Towns", href: "/gspc-arena?view=towns" },
 ] as const;
 
 type SovViewId = (typeof SS_VIEWS)[number]["id"];
@@ -496,6 +497,7 @@ export default function CouncilSpace() {
 
   useEffect(() => {
     document.title = "Council Space | CSOAI";
+    setMetaDescription("Council Space — the Council of AI's live simulation arena: model versus model on frozen benchmarks, every round emitted as signed evidence. Live board counts: GET /api/gspc.");
     // Handoff from the Council Globe: /simulate?q=… pre-loads the scenario so one
     // Sovereign flows from "ask on the globe" straight into "run the full simulation".
     try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}

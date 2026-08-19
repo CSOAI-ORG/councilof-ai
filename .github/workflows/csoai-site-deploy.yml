@@ -1,0 +1,54 @@
+name: csoai-site deploy — full static site from csoai-static-deploy2 main
+
+# THE ONE DEPLOYER for the Pages project csoai-site (owns csoai.org + www).
+# Source of truth: CSOAI-ORG/csoai-static-deploy2 main (allowlist build).
+# Replaces apex-redirect.yml (2-file bundle) — that deployer clobbered the
+# full site (incl. the did:web trust root) whenever it ran; two repos must
+# never deploy one Pages project. 2026-08-19: live apex served an orphan
+# did.json while main held the real keys — this workflow ends that class.
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '15 7 * * *'   # daily re-sync after the guards run
+
+concurrency: { group: csoai-site-deploy, cancel-in-progress: true }
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Fetch source of truth (csoai-static-deploy2 main)
+        run: git clone --depth 1 https://github.com/CSOAI-ORG/csoai-static-deploy2.git src
+      - name: Build allowlisted _site
+        working-directory: src
+        run: |
+          pip install -r requirements.txt 2>/dev/null || true
+          python3 build_site.py
+          test -f _site/.well-known/did.json || { echo "FATAL: build lacks did.json"; exit 1; }
+          python3 -c "import json; d=json.load(open('_site/.well-known/did.json')); kids=[m['id'] for m in d['verificationMethod']]; assert 'did:web:csoai.org#site-release-1' in kids and 'did:web:csoai.org#estate-chain-1' in kids, kids; print('did.json kids OK:', kids)"
+      - name: Deploy to csoai-site production
+        working-directory: src
+        env:
+          CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+          CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+        run: npx wrangler pages deploy _site --project-name=csoai-site --branch=main --commit-dirty=true
+      - name: Verify trust root live on the apex
+        run: |
+          # www lags apex by up to ~a minute of edge propagation — retry before failing
+          for host in csoai.org www.csoai.org; do
+            ok=""
+            for i in 1 2 3 4 5 6; do
+              sleep 10
+              kids=$(curl -s "https://$host/.well-known/did.json" -H 'Cache-Control: no-cache' | python3 -c "import json,sys; print(sorted(m['id'].split('#')[-1] for m in json.load(sys.stdin)['verificationMethod']))" 2>/dev/null)
+              echo "$host attempt $i kids: $kids"
+              if echo "$kids" | grep -q "site-release-1"; then ok=1; break; fi
+            done
+            [ -n "$ok" ] || { echo "FAIL: $host serves wrong did.json after 6 attempts"; exit 1; }
+          done
+          curl -s -o /dev/null -w "redirect: %{http_code} -> %{redirect_url}\n" https://csoai.org/some-page

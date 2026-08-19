@@ -43,13 +43,27 @@ const RULES = [
   },
   {
     id: "cert_overclaim",
-    pattern: /\bCEASAI\b/i,
+    // No trailing \b: CamelCase-derived titles concatenate the brand ("CEASAITraining"
+    // shipped on /library because \bCEASAI\b missed it — qa-sweep 2026-08-19).
+    pattern: /\bCEASAI/i,
     why: 'CSOAI issues measurement credentials, not certifications. "CEASAI" is killed.',
   },
   {
     id: "framework_overclaim",
     pattern: /\b30\s+(?:regulatory\s+)?frameworks\b/i,
     why: '"30 frameworks" is unevidenced. Say the evidenced control-set count (4) or "crosswalked provisions".',
+  },
+  {
+    id: "pricing_leak",
+    // HO.2 (ruled): no pricing on any public surface — verification is free forever, a grade is
+    // never sold. Two priced strings ($0.005/card on /start, $45–150/hr on /about) shipped live
+    // and were caught only by the manual qa-sweep 2026-08-19. This makes it a hard build-fail:
+    // a currency amount bound to a per-unit or subscription cadence is OUR pricing (distinct from
+    // regulation PENALTY amounts, which read "€35M or 7%", never "/mo" or "/card").
+    pattern: /(?:£|\$|€)\s?\d[\d,.]*\s?(?:[-–]\s?(?:£|\$|€)?\s?\d[\d,.]*\s?)?(?:\/|\bper\s)(?:mo\b|month|year|yr\b|card|hr\b|hour|seat|user|assessment|report|query|call|run)/i,
+    // A page may DISCLOSE the no-pricing rule ("we never charge £/$ per anything") near the hit.
+    nearAllow: /free\s+forever|never\s+(?:sold|charge|priced)|no\s+pricing|not\s+for\s+sale|a\s+grade\s+is\s+never/i,
+    why: 'HO.2: no pricing on public surfaces — verification is free forever, a grade is never sold. Remove the amount.',
   },
   {
     id: "internal_strategy_codename",

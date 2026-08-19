@@ -58,11 +58,14 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 
 // Hero stats bar component
 function HeroStatsBar() {
+  // qa-sweep 2026-08-19: unverified counters removed ("10,000+ analysts", "33 agents",
+  // "40+ nations" had no source endpoint). Only numbers with a published source remain;
+  // board counts defer to GET /api/gspc.
   const stats = [
-    { label: "Analysts Training", value: 10000, suffix: "+" },
-    { label: "AI Agents", value: 33, suffix: "" },
-    { label: "Global Frameworks", value: 4, suffix: "" },
-    { label: "Nations", value: 40, suffix: "+" },
+    { label: "Measured axes of 14 — live: /api/gspc", value: 13, suffix: "" },
+    { label: "Frozen provisions in the bank", value: 417, suffix: "" },
+    { label: "Global frameworks (evidenced control set)", value: 4, suffix: "" },
+    { label: "Public signing key — verify offline", value: 1, suffix: "" },
   ];
 
   return (
@@ -93,6 +96,12 @@ function LiveIndicator() {
 }
 
 export default function About() {
+  useEffect(() => {
+    document.title = "About the Council of AI — a UK measurement body | Council of AI";
+    let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    if (!m) { m = document.createElement("meta"); m.name = "description"; document.head.appendChild(m); }
+    m.content = "The Council of AI (CSOAI LTD, UK Companies House 16939677) is an independent AI measurement body: deterministic measurement, Ed25519-signed records, no certification and no accreditation chain. Live board counts: GET /api/gspc.";
+  }, []);
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Origin Story */}
@@ -287,9 +296,9 @@ export default function About() {
                 <Card className="p-8 flex-1 bg-white">
                   <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-600">— designed, not yet measured</span></h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
-                    Oversight spread across providers so no single vendor decides alone. The 33-seat figure is an architecture, not a measurement — cross-checking measured today is n_eff 1.21 of 3, published in our Refutation Ledger. Historically this page described multi-agent council
-                    across 12 different AI providers (OpenAI, Anthropic, Google, DeepSeek, and more). No single company
-                    controls the outcome. It's democracy for AI safety decisions.
+                    Oversight spread across providers so no single vendor decides alone. The council-seat figure is an architecture, not a measurement — cross-checking measured today is n_eff 1.21 of 3, published in our Refutation Ledger. Historically this page described a multi-agent council
+                    across multiple AI providers (OpenAI, Anthropic, Google, DeepSeek, and more). No single company
+                    controls the outcome.
                   </p>
                   <p className="text-sm text-gray-500">
                     <strong>Why it matters:</strong> When a company's own AI reviews their AI, there's a conflict of interest.
@@ -377,20 +386,15 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* qa-sweep 2026-08-19: "33 AI Agents in Council", "10,000+ Analysts in Training"
+                and "$150/hr Max Analyst Earnings" removed — unverified counters / pricing with
+                no source endpoint. Board counts defer to GET /api/gspc. */}
             <Card className="p-8 text-center bg-gradient-to-br from-emerald-50 to-white border-emerald-200">
               <BarChart2 className="h-8 w-8 text-emerald-600 mx-auto mb-4" />
               <div className="text-4xl font-bold text-emerald-600 mb-2">
-                <AnimatedCounter target={33} />
+                13 of 14
               </div>
-              <p className="text-gray-600 font-semibold">AI Agents in Council</p>
-            </Card>
-
-            <Card className="p-8 text-center bg-gradient-to-br from-blue-50 to-white border-blue-200">
-              <Users className="h-8 w-8 text-blue-600 mx-auto mb-4" />
-              <div className="text-4xl font-bold text-blue-600 mb-2">
-                <AnimatedCounter target={10000} suffix="+" />
-              </div>
-              <p className="text-gray-600 font-semibold">Analysts in Training</p>
+              <p className="text-gray-600 font-semibold">Measured axes on the GSPC board — live: /api/gspc</p>
             </Card>
 
             <Card className="p-8 text-center bg-gradient-to-br from-purple-50 to-white border-purple-200">
@@ -399,15 +403,6 @@ export default function About() {
                 <AnimatedCounter target={4} />
               </div>
               <p className="text-gray-600 font-semibold">Major Frameworks</p>
-            </Card>
-
-            <Card className="p-8 text-center bg-gradient-to-br from-amber-50 to-white border-amber-200">
-              <Clock className="h-8 w-8 text-amber-600 mx-auto mb-4" />
-              <div className="text-4xl font-bold text-amber-600 mb-2">
-                $<AnimatedCounter target={150} />
-                /hr
-              </div>
-              <p className="text-gray-600 font-semibold">Max Analyst Earnings</p>
             </Card>
 
             <Card className="p-8 text-center bg-gradient-to-br from-rose-50 to-white border-rose-200">
@@ -423,9 +418,9 @@ export default function About() {
             <Card className="p-8 text-center bg-gradient-to-br from-teal-50 to-white border-teal-200">
               <Globe className="h-8 w-8 text-teal-600 mx-auto mb-4" />
               <div className="text-4xl font-bold text-teal-600 mb-2">
-                <AnimatedCounter target={40} suffix="+" />
+                417
               </div>
-              <p className="text-gray-600 font-semibold">Nations Served</p>
+              <p className="text-gray-600 font-semibold">Frozen provisions in the measurement bank</p>
             </Card>
           </div>
         </div>
@@ -580,9 +575,9 @@ export default function About() {
             </Card>
 
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
-              <h3 className="text-xl font-bold mb-3">How long does certification take?</h3>
+              <h3 className="text-xl font-bold mb-3">How long does the attestation exam take?</h3>
               <p className="text-gray-600 leading-relaxed">
-                Most students complete the training in 4-6 hours and pass the certification exam on their first attempt.
+                Most students complete the training in 4-6 hours and pass the attestation exam on their first attempt.
                 The exam is 50 questions, 90 minutes, with a 70% passing threshold. You can retake it as many times as needed.
               </p>
             </Card>
@@ -592,23 +587,23 @@ export default function About() {
               <p className="text-gray-600 leading-relaxed">
                 You review AI systems for compliance with safety frameworks (EU AI Act, NIST AI RMF, ISO 42001).
                 This includes checking documentation, assessing risk levels, identifying bias, and writing safety reports.
-                You work with our 33-Agent Council system to make final safety determinations.
+                You work with our multi-provider Measurement Council to make final safety determinations.
               </p>
             </Card>
 
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
               <h3 className="text-xl font-bold mb-3">How much can I earn?</h3>
               <p className="text-gray-600 leading-relaxed">
-                Entry-level analysts start at $45/hour. Experienced analysts earn $75-150/hour depending on expertise
-                and case complexity. All work is remote, and you set your own hours. Many analysts work part-time
-                while maintaining other jobs.
+                Analyst engagements are remote and paid per case, with rates depending on expertise
+                and case complexity. You set your own hours. Many analysts work part-time
+                while maintaining other jobs. Current terms are published when a cohort opens.
               </p>
             </Card>
 
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
               <h3 className="text-xl font-bold mb-3">Why should companies trust CSOAI?</h3>
               <p className="text-gray-600 leading-relaxed">
-                Unlike single-vendor AI safety tools, CSOAI uses a 33-Agent Council with 12 different AI providers
+                Unlike single-vendor AI safety tools, CSOAI uses a multi-provider Measurement Council
                 for unbiased assessments. Our Watchdog system is public by default, ensuring transparency.
                 We're aligned with EU AI Act, NIST AI RMF, and ISO 42001—the three major global frameworks.
               </p>
