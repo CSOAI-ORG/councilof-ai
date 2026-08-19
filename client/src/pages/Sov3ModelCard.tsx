@@ -127,8 +127,8 @@ export default function Sov3ModelCard() {
         <div className="rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5">
           <div className="text-sm font-bold text-emerald-100">Related pages</div>
           <div className="mt-3 flex flex-wrap gap-2">
-            <a href="/sov3-system-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">System / safety card →</a>
-            <a href="/sov3-whitepaper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
+            <a href="/council-system-card" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">System / safety card →</a>
+            <a href="/workbench-paper" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Architecture whitepaper →</a>
             <a href="/research-transparency" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Research & transparency →</a>
           </div>
           <p className="mt-4 text-[11px] text-emerald-300/50">Last reviewed 2026-07-12. This card is updated whenever the serving configuration changes materially — it is not a one-time launch document.</p>

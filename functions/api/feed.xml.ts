@@ -14,6 +14,30 @@ interface FeedItem {
 
 const ITEMS: FeedItem[] = [
   {
+    title: "The carder is live: deterministic fact-cards, and it caught us first",
+    link: "https://github.com/CSOAI-ORG/carder",
+    date: "Wed, 19 Aug 2026 13:30:00 GMT",
+    desc: "One engine, four valves (datasets / benchmarks / leaderboards / models). Pilot on our own 29 datasets found 14 missing machine-readable licences and near-empty cards — all fixed same day, verified by re-card: 29/29 GREEN. Valve 2 then flagged our own repos' missing LICENSE files and the board API's missing licence field — also fixed same day. Right-of-reply pipeline shipped: no third-party card publishes without a token. Own assets first, always.",
+  },
+  {
+    title: "/insurers — the evidence pack an underwriter can verify",
+    link: "https://councilof.ai/insurers",
+    date: "Wed, 19 Aug 2026 12:00:00 GMT",
+    desc: "Card anatomy, offline curl verification, severity tails (CVaR@5% where n≥100), drift via reg-watch, and the honesty gate. No pricing; verification free forever.",
+  },
+  {
+    title: "Verify one record, in your browser, with a shareable permalink",
+    link: "https://councilof.ai/gspc-verify",
+    date: "Wed, 19 Aug 2026 12:30:00 GMT",
+    desc: "Paste any estate record: content_id recomputed (both envelope generations), Ed25519 checked against the published did.json keys via WebCrypto. Tested against a real card (PASS) and a tampered copy (FAIL). Unsigned records get an honest 'hash checked only' — never a fake pass.",
+  },
+  {
+    title: "Swarm ungated: the first CI-resolved ordering on the swarm axis",
+    link: "https://councilof.ai/api/gspc",
+    date: "Tue, 19 Aug 2026 11:30:00 GMT",
+    desc: "Owner ruling 19 Aug 2026: the wave-2b bank (37 independent items, 5-model fleet, n≥36/cell) resolves the swarm ordering — qwen2.5:7b's 95% lower bound (0.384) clears the runner-up's upper bound (0.372). Separated leads: 4 of 14. The retired PROTOCOL bank stays in the record as the honesty-clause example. Jail remains the board's only untested separation, so the public count stays 13 measured of 14.",
+  },
+  {
     title: "Arena feed live: 2,900+ signed AI-vs-AI rounds streaming",
     link: "https://councilof.ai/api/sov-arena/rounds.jsonl",
     date: "Wed, 19 Aug 2026 09:30:00 GMT",

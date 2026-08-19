@@ -124,7 +124,6 @@ const UKAIBill = lazy(() => import("./pages/UKAIBill"));
 const GlobalAISafetyInitiative = lazy(() => import("./pages/GlobalAISafetyInitiative"));
 const GovBench = lazy(() => import("./pages/GovBench"));
 const DriftProduct = lazy(() => import("./pages/DriftProduct"));
-const SovTownLab = lazy(() => import("./pages/SovTownLab"));
 const GovernmentLinks = lazy(() => import("./pages/GovernmentLinks"));
 const GovernmentPortal = lazy(() => import("./pages/GovernmentPortal"));
 const HelpCenter = lazy(() => import("./pages/HelpCenter"));
@@ -160,8 +159,10 @@ const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
 const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
+const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
+const Insurers = lazy(() => import("./pages/Insurers"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
 const Layer0 = lazy(() => import("./pages/Layer0"));
@@ -296,7 +297,6 @@ const NetworkPage = lazy(() => import("./pages/NetworkPage"));
 const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
 const CyberScan = lazy(() => import("./pages/CyberScan"));
 const Competitors = lazy(() => import("./pages/Competitors"));
-const SovereignTwin = lazy(() => import("./pages/SovereignTwin"));
 const ToolCommons = lazy(() => import("./pages/ToolCommons"));
 const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const StatusPage = lazy(() => import("./pages/StatusPage"));
@@ -345,6 +345,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
   "/refutation-ledger": "Refutation Ledger | CSOAI",
+  "/dispute": "Appeals & dispute resolution | Council of AI",
   "/live-ledger": "Live Ledger | CSOAI",
   "/instrument": "The Instrument | CSOAI",
   "/benchmarks": "Benchmarks | CSOAI",
@@ -537,19 +538,25 @@ function App() {
                   <Route path="/system-card" component={SystemCard} />
                   <Route path="/assurance" component={SystemCard} />
                   <Route path="/systemcard" component={SystemCard} />
-                  <Route path="/sov3-model-card" component={Sov3ModelCard} />
-                  <Route path="/sov3-system-card" component={Sov3SystemCard} />
-                  <Route path="/sov3-whitepaper" component={Sov3Whitepaper} />
+                  {/* Clean twins — the sov3/ceasai slugs below are KILLED (IA law: banned codenames never in machine payloads, GY.0/IA.0) */}
+                  <Route path="/council-model-card" component={Sov3ModelCard} />
+                  <Route path="/council-system-card" component={Sov3SystemCard} />
+                  <Route path="/workbench-paper" component={Sov3Whitepaper} />
+                  <Route path="/sov3-model-card">{() => <Redirect to="/council-model-card" />}</Route>
+                  <Route path="/sov3-system-card">{() => <Redirect to="/council-system-card" />}</Route>
+                  <Route path="/sov3-whitepaper">{() => <Redirect to="/workbench-paper" />}</Route>
                   <Route path="/research-transparency" component={ResearchTransparency} />
                   <Route path="/provenance-finding" component={ProvenanceFinding} />
                   <Route path="/ai-transparency" component={AiTransparency} />
                   <Route path="/ab-testing" component={ABTesting} />
-                  <Route path="/about-ceasai" component={AboutCEASAI} />
+                  <Route path="/about-credential" component={AboutCEASAI} />
+                  <Route path="/about-ceasai">{() => <Redirect to="/about-credential" />}</Route>
                   <Route path="/accessibility" component={Accessibility} />
                   <Route path="/analytics" component={AnalyticsDashboard} />
                   {/* KILLED (audit §0.2 #12): asserted retracted Byzantine/fault-tolerance claim. */}
                   <Route path="/byzantine-consensus">{() => <Redirect to="/council" />}</Route>
-                  <Route path="/ceasai-training" component={CEASAITraining} />
+                  <Route path="/credential-training" component={CEASAITraining} />
+                  <Route path="/ceasai-training">{() => <Redirect to="/credential-training" />}</Route>
                   <Route path="/certificate-verification" component={CertificateVerification} />
                   <Route path="/compliance/australia-ai-governance" component={AustraliaAIGovernanceCompliance} />
                   <Route path="/compliance/canada-ai-act" component={CanadaAIActCompliance} />
@@ -576,7 +583,8 @@ function App() {
                   <Route path="/global-ai-safety-initiative" component={GlobalAISafetyInitiative} />
                   <Route path="/govbench" component={GovBench} />
                   <Route path="/drift-audit" component={DriftProduct} />
-                  <Route path="/sov-town-lab" component={SovTownLab} />
+                  {/* KILLED slug (IA law): banned codename — clean twin is /town-lab; page was design-stage */}
+                  <Route path="/sov-town-lab">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
                   <Route path="/government-links" component={GovernmentLinks} />
                   <Route path="/government-portal" component={GovernmentPortal} />
                   <Route path="/help" component={HelpCenter} />
@@ -614,8 +622,12 @@ function App() {
                   <Route path="/library/:sector" component={Library} />
                   {/* The honesty gate — our own losses, published (owner GO 2026-08-18) */}
                   <Route path="/honesty" component={Honesty} />
+                  {/* Appeals & dispute resolution — Charter Art 18, boundary #7 (GAP-E2E HM.0) */}
+                  <Route path="/dispute" component={Dispute} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
+                  {/* Insurers evidence pack — underwriter-legible measurement (3 data states, live board) */}
+                  <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
@@ -635,7 +647,8 @@ function App() {
                   <Route path="/deepfake-protection" component={Protect} />
                   <Route path="/ontology" component={Ontology} />
           <Route path="/network" component={NetworkPage} />
-          <Route path="/sovereign-network" component={NetworkPage} />
+          {/* KILLED slug (IA law): banned codename — clean twin is /network */}
+          <Route path="/sovereign-network">{() => <Redirect to="/network" />}</Route>
           <Route path="/agents-network" component={NetworkPage} />
           <Route path="/regulators" component={RegulatorAtlas} />
           <Route path="/regulator-atlas" component={RegulatorAtlas} />
@@ -684,7 +697,8 @@ function App() {
             <Route path="/mcp-fleet" component={McpFleet} />
             <Route path="/os" component={OsLauncher} />
             <Route path="/workbench" component={Workbench} />
-            <Route path="/sov3" component={Workbench} />
+            {/* KILLED slug (IA law): banned codename never in machine payloads — clean twin is /workbench */}
+            <Route path="/sov3">{() => <Redirect to="/workbench" />}</Route>
             <Route path="/demo" component={DemoOS} />
             <Route path="/os-demo" component={DemoOS} />
           <Route path="/enter" component={OsEnter} />
@@ -748,7 +762,8 @@ function App() {
           <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
           <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
           <Route path="/connect" component={SocialConnect} />
-          <Route path="/sovereign" component={SovereignHub} />
+          {/* KILLED slug (IA law): banned codename — clean twin is /me */}
+          <Route path="/sovereign">{() => <Redirect to="/me" />}</Route>
           <Route path="/me" component={SovereignHub} />
           <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
           <Route path="/nist-eu" component={NistVsEuAct} />
@@ -948,9 +963,10 @@ function App() {
                   {/* Individual Charter Articles */}
                   <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
-                  {/* 410 Gone — retired routes, do not redirect. */}
-                  <Route path="/sov-space" component={Gone} />
-                  <Route path="/sovereign-space" component={Gone} />
+                  {/* 410 Gone — retired routes, do not redirect. Clean dead-end paths (banned codename slugs killed per IA law). */}
+                  <Route path="/gone-space" component={Gone} />
+                  <Route path="/sov-space">{() => <Redirect to="/gone-space" />}</Route>
+                  <Route path="/sovereign-space">{() => <Redirect to="/gone-space" />}</Route>
                   <Route path="/stripe-checkout.js" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/badges" component={BadgesPage} />
@@ -959,7 +975,8 @@ function App() {
                   <Route path="/real-world" component={RealWorldMap} />
                   {/* REDIRECTED (audit §3.5 #2): /plans was a byte-identical duplicate of /pricing. */}
                   <Route path="/plans">{() => <Redirect to="/pricing" />}</Route>
-                  <Route path="/sovereign-pricing" component={PlansPage} />
+                  {/* KILLED slug (IA law): banned codename — clean twin is /pricing */}
+                  <Route path="/sovereign-pricing">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/start" component={OnboardOS} />
                   <Route path="/onboard" component={OnboardOS} />
                   <Route path="/open-media" component={OpenMedia} />
@@ -972,7 +989,8 @@ function App() {
                   <Route path="/tools" component={ToolCommons} />
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
-                  <Route path="/sovereign-twin" component={SovereignTwin} />
+                  {/* KILLED slug (IA law): banned codename — design-stage twin surface; /me is the live assistant */}
+                  <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>
                   <Route component={NotFound} />
                   </Switch></Suspense>
                 </main>

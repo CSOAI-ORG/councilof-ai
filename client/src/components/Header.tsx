@@ -29,7 +29,7 @@ const navigation = [
     submenu: [
       { name: "Council Space", href: "/gspc-arena", description: "Simulate and govern in real time" },
       { name: "Governance Graph", href: "/graph", description: "The governed Google" },
-      { name: "Your Council assistant Twin (Design)", href: "/sovereign-twin", description: "Personalisation surface — illustrative, not a claim" },
+      { name: "Your Council assistant Twin (Design)", href: "/me", description: "Personalisation surface — illustrative, not a claim" },
       { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
       { name: "Start free", href: "/start", description: "Build your own AI" },
       { name: "Plans and Pricing", href: "/pricing", description: "Free to Enterprise" },
