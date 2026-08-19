@@ -1,0 +1,48 @@
+name: Board attestation key — one-time setup
+
+# Generates a DEDICATED Ed25519 key for site-attestation of the public board,
+# installs the PRIVATE half as a Cloudflare Pages secret (BOARD_SIGN_KEY_PKCS8_B64
+# on the councilof-ai project), and PRINTS ONLY the public half to the run summary.
+# The private key is born and dies inside this runner + Cloudflare; it is never
+# committed, never logged, never leaves. Re-runnable (rotates the key).
+#
+# SCOPE HONESTY: this key attests "the board snapshot AS PUBLISHED BY THE SITE".
+# It is NOT the pod-held measurement-chain key (#estate-chain-1) and makes no
+# claim that a human re-ran the measurement — only that this served payload is
+# the integral, site-signed snapshot.
+
+on:
+  workflow_dispatch: {}
+
+concurrency: { group: board-key-setup, cancel-in-progress: false }
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Generate keypair, install private to Cloudflare, emit public
+        env:
+          CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
+          CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}'
+        run: |
+          node -e '
+            const { generateKeyPairSync } = require("crypto");
+            const { publicKey, privateKey } = generateKeyPairSync("ed25519");
+            const pkcs8 = privateKey.export({ type: "pkcs8", format: "der" }).toString("base64");
+            const spki = publicKey.export({ type: "spki", format: "der" });
+            const x = spki.subarray(spki.length - 32).toString("base64url");
+            require("fs").writeFileSync("/tmp/priv.b64", pkcs8);
+            require("fs").writeFileSync("/tmp/pub.x", x);
+          '
+          # install private (stdin) → Cloudflare Pages secret; never printed
+          cat /tmp/priv.b64 | npx wrangler@3 pages secret put BOARD_SIGN_KEY_PKCS8_B64 --project-name=councilof-ai
+          # emit ONLY the public key for the did.json edit
+          PUB=$(cat /tmp/pub.x)
+          echo "## Board attestation public key" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "publicKeyJwk.x (base64url, Ed25519): \`$PUB\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Add to public/.well-known/did.json as #board-attestation-1, then merge." >> "$GITHUB_STEP_SUMMARY"
+          rm -f /tmp/priv.b64
