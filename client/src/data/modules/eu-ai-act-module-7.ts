@@ -6,12 +6,12 @@ export const euAiActModule7Quiz: QuizQuestion[] = [
     question: 'Which of the following represents the correct implementation timeline for the EU AI Act?',
     options: [
       'All provisions effective immediately upon enactment',
-      'February 2025: Prohibitions take effect; August 2025: GPAI requirements begin; August 2026: High-risk system requirements start',
+      'February 2025: Prohibitions take effect; August 2025: GPAI requirements begin; August 2026: Transparency + penalties; December 2027 / August 2028: High-risk system requirements start (Digital Omnibus)',
       'All requirements effective in 2027 with no interim deadlines',
       'Different timelines for each EU member state with no coordination'
     ],
     correctAnswer: 1,
-    explanation: 'The EU AI Act follows a phased implementation: February 2025 brings prohibitions on Article 5 banned practices; August 2025 activates GPAI model requirements; August 2026 activates high-risk system conformity requirements. This staged approach allows compliance preparation.'
+    explanation: 'The EU AI Act follows a phased implementation: February 2025 brings prohibitions on Article 5 banned practices; August 2025 activates GPAI model requirements; August 2026 activates Article 50 transparency and the penalty regime; high-risk conformity requirements start 2 December 2027 (Annex III) and 2 August 2028 (Annex I), as amended by the Digital Omnibus. This staged approach allows compliance preparation.'
   },
   {
     id: 2,

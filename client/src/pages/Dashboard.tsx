@@ -35,7 +35,7 @@ import { trpc } from "@/lib/trpc";
 import { ComplianceTrendChart, FrameworkComparisonChart } from "@/components/charts";
 
 const frameworkCompliance = [
-  { name: "EU AI Act", score: 72, status: "In Progress", deadline: "Aug 2026", articles: 113 },
+  { name: "EU AI Act", score: 72, status: "In Progress", deadline: "Dec 2027", articles: 113 },
   { name: "NIST AI RMF", score: 85, status: "Compliant", deadline: "Voluntary", articles: 72 },
   { name: "TC260", score: 68, status: "In Progress", deadline: "Q2 2025", articles: 56 },
 ];

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // SectorAct - one data-driven, sector-specific EU AI Act page (healthcare / finance / hr).
 import SovereignSpot from "../components/SovereignSpot";
 // Renders sector high-risk use cases, obligations, and FAQPage JSON-LD for answer engines.
-// Date-accurate: transparency/notice from 2 Aug 2026; full high-risk obligations phase to Dec 2027.
+// Date-accurate: transparency/notice from 2 Aug 2026; high-risk obligations phase to 2 Dec 2027 (Annex III) / 2 Aug 2028 (Annex I) per the Digital Omnibus.
 
 type Faq = { q: string; a: string };
 type Sector = { key: string; eyebrow: string; title: string; intro: string; highRisk: string[]; obligations: string[]; faqs: Faq[]; callout?: string; leftLabel?: string; rightLabel?: string };
@@ -17,7 +17,7 @@ const SECTORS: Record<string, Sector> = {
     faqs: [
       { q: "Is medical AI high-risk under the EU AI Act?", a: "Yes. AI used for medical diagnosis, triage, or as a safety component of a medical device is classified high-risk under the EU AI Act, triggering conformity, oversight, and documentation duties." },
       { q: "Does the EU AI Act apply on top of MDR/IVDR?", a: "Yes. The AI Act applies alongside the Medical Device and In-Vitro Diagnostic Regulations; conformity work can be aligned but the AI-specific obligations are additional." },
-      { q: "When do healthcare AI obligations apply?", a: "Transparency duties apply from 2 August 2026; the full high-risk obligations phase in by December 2027 under the Digital Omnibus." },
+      { q: "When do healthcare AI obligations apply?", a: "Transparency duties apply from 2 August 2026; stand-alone Annex III high-risk obligations phase in by 2 December 2027, and AI embedded in regulated medical devices (Annex I) by 2 August 2028, under the Digital Omnibus." },
     ],
   },
   finance: {
@@ -53,7 +53,7 @@ const SECTORS: Record<string, Sector> = {
     faqs: [
       { q: "Is energy-grid AI high-risk under the EU AI Act?", a: "Yes. AI intended as a safety component in the management and operation of critical infrastructure, including the supply of water, gas, heating, and electricity, is listed as a high-risk use in Annex III of the EU AI Act." },
       { q: "Does the AI Act overlap with NIS2 for critical infrastructure?", a: "Yes. Energy operators face NIS2 cybersecurity duties as essential entities and, where AI is a safety component, the AI Act's high-risk obligations on top. Much governance evidence can be shared across both." },
-      { q: "When do energy AI obligations apply?", a: "Transparency duties apply from 2 August 2026; the full high-risk obligations phase in by December 2027 under the Digital Omnibus." },
+      { q: "When do energy AI obligations apply?", a: "Transparency duties apply from 2 August 2026; stand-alone Annex III high-risk obligations phase in by 2 December 2027 (product-embedded Annex I AI: 2 August 2028) under the Digital Omnibus." },
     ],
   },
   pharma: {

@@ -27,7 +27,7 @@ export default function RegulatoryCompliance() {
       name: 'EU AI Act',
       region: 'European Union',
       status: 'Active',
-      deadline: 'August 2, 2026',
+      deadline: 'High-risk: December 2, 2027 (Annex III) / August 2, 2028 (Annex I) — Digital Omnibus; transparency + penalties live since August 2, 2026',
       description: 'Comprehensive AI regulation framework establishing risk-based requirements for AI systems',
       icon: '🇪🇺',
       coverage: '50,000+ EU enterprises',
@@ -39,7 +39,7 @@ export default function RegulatoryCompliance() {
         'Data governance and quality',
         'Incident reporting'
       ],
-      penalties: 'Up to €30M or 6% of global revenue',
+      penalties: 'Up to €35M or 7% of global turnover',
       resources: [
         { title: 'Official Text', url: 'https://digital-strategy.ec.europa.eu/en/policies/ai-act' },
         { title: 'Implementation Guide', url: 'https://digital-strategy.ec.europa.eu/' },

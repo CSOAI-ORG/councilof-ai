@@ -64,7 +64,7 @@ const TIER_META: Record<Tier, {
   high: {
     title: 'High-Risk', color: 'text-amber-400', bg: 'from-amber-500/20 to-amber-900/10', Icon: ShieldAlert,
     verdict: 'High-risk system under Annex III / Annex I — the full obligations apply.',
-    deadline: 'Annex III: 2 Aug 2026 · Annex I (regulated products): 2 Aug 2027',
+    deadline: 'Annex III: 2 Dec 2027 · Annex I (regulated products): 2 Aug 2028 — as amended by the Digital Omnibus, Reg (EU) 2026/1744',
     obligations: [
       'Risk management system (Art 9) + data governance (Art 10).',
       'Technical documentation (Art 11) + automatic logging (Art 12).',
@@ -77,7 +77,7 @@ const TIER_META: Record<Tier, {
   limited: {
     title: 'Limited-Risk', color: 'text-sky-400', bg: 'from-sky-500/20 to-sky-900/10', Icon: Info,
     verdict: 'Transparency obligations apply under Article 50.',
-    deadline: '2 Aug 2026',
+    deadline: 'In force since 2 Aug 2026 (legacy generative systems: marking grace to 2 Dec 2026)',
     obligations: [
       'Tell users they are interacting with an AI system (chatbots).',
       'Mark AI-generated/manipulated content as artificial (machine-readable, e.g. C2PA) — deepfake labelling.',

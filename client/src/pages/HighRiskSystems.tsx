@@ -21,7 +21,7 @@ export default function HighRiskSystems() {
     sc.text = JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
       { "@type": "Question", "name": "What is a high-risk AI system under the EU AI Act?", "acceptedAnswer": { "@type": "Answer", "text": "A high-risk AI system is one used in a sensitive area listed in Annex III - such as biometrics, critical infrastructure, education, employment, essential services, law enforcement, migration, or justice - or as a safety component of a regulated product." } },
       { "@type": "Question", "name": "What must high-risk AI providers do?", "acceptedAnswer": { "@type": "Answer", "text": "They must implement risk management, data governance, technical documentation, logging, transparency, human oversight, and accuracy/robustness measures, and undergo conformity assessment." } },
-      { "@type": "Question", "name": "When do high-risk obligations apply?", "acceptedAnswer": { "@type": "Answer", "text": "High-risk obligations phase in through 2027 - product-safety AI (Annex I) by August 2027 and standalone Annex III systems by December 2027 under the Digital Omnibus." } },
+      { "@type": "Question", "name": "When do high-risk obligations apply?", "acceptedAnswer": { "@type": "Answer", "text": "Stand-alone Annex III high-risk systems must comply by 2 December 2027, and product-safety AI (Annex I) by 2 August 2028, as amended by the Digital Omnibus (Reg (EU) 2026/1744)." } },
     ] });
     document.head.appendChild(sc);
     return () => { document.head.removeChild(sc); };

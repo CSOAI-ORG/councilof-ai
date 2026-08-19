@@ -4,7 +4,7 @@ import { useEffect } from "react";
 type Row = { dim: string; act: string; gdpr: string };
 const ROWS: Row[] = [
   { dim: "What it regulates", act: "AI systems and models by risk", gdpr: "Processing of personal data" },
-  { dim: "In force", act: "Phasing: transparency + GPAI 2 Aug 2026; high-risk Dec 2027", gdpr: "Since May 2018" },
+  { dim: "In force", act: "Phasing: transparency + GPAI 2 Aug 2026; high-risk Dec 2027 (Annex III) / Aug 2028 (Annex I)", gdpr: "Since May 2018" },
   { dim: "Trigger", act: "Building, providing, or deploying AI in the EU market", gdpr: "Handling personal data of people in the EU" },
   { dim: "Structure", act: "Risk tiers: prohibited / high-risk / limited / minimal", gdpr: "Principles + lawful bases + data-subject rights" },
   { dim: "Max penalty", act: "EUR 35m or 7% of global turnover", gdpr: "EUR 20m or 4% of global turnover" },

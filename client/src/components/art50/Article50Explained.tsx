@@ -91,8 +91,9 @@ const KEY_DATES: { date: string; text: string; strong?: boolean }[] = [
   { date: "1 August 2024", text: "Regulation (EU) 2024/1689 enters into force." },
   { date: "2 February 2025", text: "Prohibited practices (Article 5) and AI-literacy duties apply." },
   { date: "2 August 2025", text: "Obligations for general-purpose AI models and governance bodies apply." },
-  { date: "2 August 2026", text: "Article 50 transparency obligations apply, along with Annex III high-risk rules.", strong: true },
-  { date: "2 August 2027", text: "High-risk rules for Annex I product-safety systems apply." },
+  { date: "2 August 2026", text: "Article 50 transparency obligations apply, with the full penalty and market-surveillance regime.", strong: true },
+  { date: "2 December 2027", text: "Annex III high-risk rules apply (deferred by the Digital Omnibus, Reg (EU) 2026/1744)." },
+  { date: "2 August 2028", text: "High-risk rules for Annex I product-safety systems apply (Digital Omnibus)." },
 ];
 
 const CHECKLIST = [

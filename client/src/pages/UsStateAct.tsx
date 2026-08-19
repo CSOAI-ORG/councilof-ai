@@ -29,7 +29,7 @@ const STATES: Record<string, St> = {
     faqs: [
       { q: "What is the Texas Responsible AI Governance Act?", a: "TRAIGA is a Texas AI law that focuses on banning specific harmful AI uses - such as unlawful manipulation, government social scoring, and certain biometric uses - and adds duties for government and some private deployers." },
       { q: "How is TRAIGA different from the Colorado AI Act?", a: "Colorado uses a broad high-risk / anti-discrimination framework, while Texas TRAIGA centers on a prohibited-use list and government-focused duties." },
-      { q: "When does TRAIGA take effect?", a: "It is scheduled to take effect in 2026; verify the current effective date as the law is recent and evolving." },
+      { q: "When does TRAIGA take effect?", a: "TRAIGA took effect on 1 January 2026." },
     ],
   },
   california: {
