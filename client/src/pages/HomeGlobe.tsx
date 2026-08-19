@@ -40,7 +40,7 @@ const CARDS = [
     badgeCls: "bg-amber-500 hover:bg-amber-500",
     title: "Is your AI high-risk? Signed answer in 2 minutes.",
     body: "Run the free check. The result is signed — you can prove compliance instead of asserting it.",
-    href: "/tools/article50-passport.html",
+    href: "/article-50",
     cta: "Run the free check →",
     primary: true,
   },
@@ -66,9 +66,9 @@ export default function HomeGlobe() {
       {/* Headline */}
       <div className="pointer-events-none absolute left-0 right-0 top-0 z-10 px-6 pt-8 sm:px-10">
         <div className="max-w-2xl">
-          <Badge className="mb-3 bg-emerald-600 hover:bg-emerald-600">The measurement body for AI compliance</Badge>
+          <Badge className="mb-3 bg-emerald-600 hover:bg-emerald-600">The independent measurement body for AI</Badge>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tighter text-white drop-shadow-lg">
-            Is your AI following the rules? We measure it.
+            We measure AI systems against statute. You verify it.
           </h1>
         </div>
       </div>
@@ -97,7 +97,7 @@ export default function HomeGlobe() {
           </div>
         ))}
         <p className="mt-1 text-center text-[11px] text-gray-400">
-          Runs on the Sovereign engine →{" "}
+          Runs on the Council assistant engine →{" "}
           <a href="https://meok.ai" className="underline hover:text-gray-200 pointer-events-auto">meok.ai</a>
         </p>
       </div>

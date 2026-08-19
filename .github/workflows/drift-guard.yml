@@ -1,0 +1,61 @@
+name: Drift guard — live site vs ruled canon
+
+# Goes RED when the live councilof.ai drifts from canon.json — i.e. when a direct
+# `wrangler pages deploy` overwrote the gated CI build. See DEPLOY-LOCK.md.
+# Read-only: fetches public URLs, changes nothing, needs no secrets.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes
+  workflow_dispatch: {}       # run on demand from the Actions tab
+  push:
+    branches: [master]
+    paths: ["canon.json", "scripts/drift-guard.mjs", "scripts/machine-contract-guard.mjs", ".github/workflows/drift-guard.yml"]
+
+jobs:
+  drift-guard:
+    runs-on: ubuntu-latest
+    # actions:write lets a detected drift self-heal by re-triggering the official deploy.
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # Give the just-pushed deploy time to propagate before asserting (skip wait on schedule).
+      - name: Settle
+        if: github.event_name == 'push'
+        run: sleep 420
+      - name: Assert live site matches canon.json
+        id: assert
+        continue-on-error: true
+        run: node scripts/drift-guard.mjs --host https://councilof.ai
+      # Machine contracts (llms.txt links, did.json endpoints, banned strings in API JSON,
+      # feed well-formedness) rot on the same clobber lane — sweep them alongside canon.
+      # No self-heal keyed to this step: a broken machine contract is not necessarily a
+      # clobber, so it just turns the run red below.
+      - name: Machine-contract sweep
+        id: contracts
+        continue-on-error: true
+        run: node scripts/machine-contract-guard.mjs --host https://councilof.ai
+      # SELF-HEAL: a clobber (direct `wrangler pages deploy` over the gated build) is restored
+      # automatically by re-running the official deploy of canonical master. Only on scheduled
+      # runs — a push already deployed, so re-triggering there would loop. deploy.yml's own
+      # concurrency (cancel-in-progress) makes repeated triggers safe.
+      - name: Self-heal on drift (redeploy canonical master)
+        if: steps.assert.outcome == 'failure' && github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "DRIFT DETECTED — re-running the official deploy to restore canon (self-heal)."
+          gh workflow run deploy.yml --ref master
+      # Keep the alert RED so the clobber stays visible even though it self-heals — the durable
+      # fix is still revoking the clobbering lane's direct-deploy token (see DEPLOY-LOCK.md).
+      - name: Fail the run if drift was detected
+        if: steps.assert.outcome == 'failure' || steps.contracts.outcome == 'failure'
+        run: |
+          echo "DRIFT-GUARD RED: canon assert = ${{ steps.assert.outcome }}, machine-contract sweep = ${{ steps.contracts.outcome }}."
+          echo "Durable fix for a clobber: revoke the clobbering lane's Cloudflare Pages token. See DEPLOY-LOCK.md."
+          exit 1

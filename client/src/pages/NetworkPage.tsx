@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
-// /network — the Sovereign Network directory. The public face of the ecosystem:
+// /network — the Council assistant Network directory. The public face of the ecosystem:
 // every signed agent domain, what it's for, and the one thing they share — each
 // action sealed to Layer 0 and answerable to a single council. Public-safe by
 // design: domain + role only. No keys, fingerprints, ports, or infrastructure.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 type Agent = { domain: string; role: string; blurb: string; group: "core" | "governance" | "protection" | "applied" };
 const CROWN: Agent = { domain: "csoai.org", role: "the standards crown", blurb: "The Charter, the frameworks and the council that every agent below answers to.", group: "core" };
 const AGENTS: Agent[] = [
   { domain: "councilof.ai", role: "the Council of AI", blurb: "A designed 33-agent Council of AI; its measured status is published on the public Refutation Ledger.", group: "core" },
-  { domain: "meok.ai", role: "the sovereign brain", blurb: "The reasoning substrate — routes any model, left-brain / right-brain, on your terms.", group: "core" },
+  { domain: "meok.ai", role: "the reasoning brain", blurb: "The reasoning substrate — routes any model, left-brain / right-brain, on your terms.", group: "core" },
   { domain: "proofof.ai", role: "deepfake & identity proof", blurb: "Sign what's really you; a deepfake carries no seal and fails verification.", group: "protection" },
   { domain: "safetyof.ai", role: "AI safety", blurb: "Safety evaluation and harm monitoring across the AI estate.", group: "governance" },
   { domain: "accountabilityof.ai", role: "accountability", blurb: "Traceable, answerable AI — who decided, on what basis, and when.", group: "governance" },
@@ -20,7 +20,7 @@ const AGENTS: Agent[] = [
   { domain: "careshield.ai", role: "care & safeguarding", blurb: "The care floor — safeguarding the vulnerable in every AI interaction.", group: "protection" },
   { domain: "diyhelp.ai", role: "guided help", blurb: "Step-by-step guided assistance for everyday tasks.", group: "applied" },
   { domain: "grabhire.ai", role: "hire marketplace", blurb: "A governed marketplace for on-demand hire.", group: "applied" },
-  { domain: "planthire.ai", role: "plant hire", blurb: "Equipment hire, brought under the same sovereign layer.", group: "applied" },
+  { domain: "planthire.ai", role: "plant hire", blurb: "Equipment hire, brought under the same Council layer.", group: "applied" },
   { domain: "muckaway.ai", role: "logistics", blurb: "Waste and logistics coordination, agent-run.", group: "applied" },
   { domain: "koikeeper.ai", role: "koi care", blurb: "Specialist koi and pond intelligence.", group: "applied" },
   { domain: "fishkeeper.ai", role: "aquatics", blurb: "Aquatics husbandry guidance for keepers.", group: "applied" },
@@ -56,7 +56,7 @@ function AgentCard({ a, crown }: { a: Agent; crown?: boolean }) {
 
 export default function NetworkPage() {
   const [live, setLive] = useState(false);
-  useEffect(() => { document.title = "The Sovereign Network — every signed agent, one council | CSOAI"; }, []);
+  useEffect(() => { document.title = "The Council Network — every signed agent, one council | CSOAI"; }, []);
   useEffect(() => { let ok = true; fetch(GW + "/health").then((r) => r.ok ? r.json() : null).then((d) => { if (ok && d) setLive(true); }).catch(() => {}); return () => { ok = false; }; }, []);
 
   return (
@@ -64,12 +64,12 @@ export default function NetworkPage() {
       <section className="relative overflow-hidden border-b border-emerald-500/15">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(34,211,238,.14), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · the sovereign network</p>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · the Council network</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">One crown. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">Nineteen signed agents.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Every agent in the ecosystem answers to a single council and seals every action to Layer 0. This is the network, in the open — what each one does, and where to find it.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             <span className={"inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold " + (live ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200" : "border-emerald-500/20 text-emerald-200/60")}>
-              <span className={"h-1.5 w-1.5 rounded-full " + (live ? "bg-emerald-400 animate-pulse" : "bg-emerald-500/40")} />{live ? "Sovereign brain · LIVE" : "Sovereign brain"}
+              <span className={"h-1.5 w-1.5 rounded-full " + (live ? "bg-emerald-400 animate-pulse" : "bg-emerald-500/40")} />{live ? "Council engine · LIVE" : "Council engine"}
             </span>
             <a href="/globe3d.html" className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-bold text-cyan-100 hover:bg-cyan-500/20">See it on the globe →</a>
             <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">How signing works →</a>

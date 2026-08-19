@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { listTools, callTool, sealArtifact, TOOL_META, type SovTool } from "../lib/sovTools";
 
-// ToolRunner - the real thing. Lists the tools the Sovereign brain executes
+// ToolRunner - the real thing. Lists the tools the Council engine executes
 // server-side, renders each tool's inputs, RUNS it live, shows the governed
 // result, and lets the user seal that result to Layer 0 (Ed25519). This is
 // working tooling for end users, not a demo.
@@ -55,7 +55,7 @@ export default function ToolRunner() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-500/10 text-sm">◉</span>
           <div>
             <div className="text-sm font-black text-emerald-100">Run a live governance tool</div>
-            <div className="text-[11px] text-emerald-300/60">Executed by the Sovereign brain · governed · Ed25519-signable</div>
+            <div className="text-[11px] text-emerald-300/60">Executed by the Council engine · governed · Ed25519-signable</div>
           </div>
         </div>
         <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">{tools.length ? tools.length + " live" : "connecting…"}</span>
@@ -98,7 +98,7 @@ export default function ToolRunner() {
           </div>
           <button onClick={run} disabled={busy}
             className="mt-3 w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">
-            {busy ? "Running on the Sovereign brain…" : "Run tool ▶"}
+            {busy ? "Running on the Council engine…" : "Run tool ▶"}
           </button>
         </div>
       )}

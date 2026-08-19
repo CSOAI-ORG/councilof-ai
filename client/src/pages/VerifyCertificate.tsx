@@ -30,9 +30,9 @@ export default function VerifyCertificate() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="max-w-md w-full p-8 text-center">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Invalid Certificate ID</h1>
+          <h1 className="text-2xl font-bold mb-2">Invalid Record ID</h1>
           <p className="text-muted-foreground mb-6">
-            Please provide a valid certificate ID to verify.
+            Please provide a valid completion record ID to verify.
           </p>
           <Link href="/">
             <Button>
@@ -50,9 +50,9 @@ export default function VerifyCertificate() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="max-w-md w-full p-8 text-center">
           <Loader2 className="w-16 h-16 text-blue-500 mx-auto mb-4 animate-spin" />
-          <h2 className="text-xl font-semibold">Verifying Certificate...</h2>
+          <h2 className="text-xl font-semibold">Verifying Completion Record...</h2>
           <p className="text-sm text-muted-foreground mt-2">
-            Please wait while we verify the certificate
+            Please wait while we verify the completion record
           </p>
         </Card>
       </div>
@@ -66,9 +66,9 @@ export default function VerifyCertificate() {
           <Shield className="w-16 h-16 text-amber-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Lookup temporarily offline</h1>
           <p className="text-muted-foreground mb-2">
-            Certificate lookup is temporarily offline while the verification service moves
+            Completion record lookup is temporarily offline while the verification service moves
             infrastructure. We can&apos;t confirm or deny this ID right now — and nothing
-            here means the certificate is invalid.
+            here means the completion record is invalid.
           </p>
           <p className="text-sm text-muted-foreground mb-6">
             The signed chain is still publicly recomputable —{" "}
@@ -92,12 +92,12 @@ export default function VerifyCertificate() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="max-w-md w-full p-8 text-center">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Certificate Not Found</h1>
+          <h1 className="text-2xl font-bold mb-2">Completion Record Not Found</h1>
           <p className="text-muted-foreground mb-2">
-            {(data as any)?.message || error?.message || 'This certificate could not be verified.'}
+            {(data as any)?.message || error?.message || 'This completion record could not be verified.'}
           </p>
           <p className="text-sm text-muted-foreground mb-6">
-            The certificate ID may be invalid or the certificate may have been revoked.
+            The record ID may be invalid or the completion record may have been revoked.
           </p>
           <Link href="/">
             <Button>
@@ -117,9 +117,9 @@ export default function VerifyCertificate() {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="max-w-md w-full p-8 text-center">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Certificate Data Missing</h1>
+          <h1 className="text-2xl font-bold mb-2">Completion Record Data Missing</h1>
           <p className="text-muted-foreground mb-6">
-            Unable to load certificate details.
+            Unable to load completion record details.
           </p>
           <Link href="/">
             <Button>
@@ -146,10 +146,10 @@ export default function VerifyCertificate() {
           </Link>
           <div className="flex items-center justify-center gap-3 mb-4">
             <Shield className="w-12 h-12 text-green-600 dark:text-green-400" />
-            <h1 className="text-4xl font-bold">Certificate Verification</h1>
+            <h1 className="text-4xl font-bold">Completion Record Verification</h1>
           </div>
           <p className="text-muted-foreground">
-            Official CSOAI Dashboard Training Certificate
+            Official CSOAI Council Academy Training Completion Record
           </p>
         </div>
 
@@ -162,10 +162,10 @@ export default function VerifyCertificate() {
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-green-700 dark:text-green-400">
-                  Certificate Verified
+                  Completion Record Verified
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  This is an authentic CSOAI Dashboard certificate
+                  This is an authentic CSOAI Council Academy completion record
                 </p>
               </div>
             </div>
@@ -176,7 +176,7 @@ export default function VerifyCertificate() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                   <Shield className="w-4 h-4" />
-                  Certificate ID
+                  Record ID
                 </div>
                 <div className="font-mono text-sm bg-background/50 p-3 rounded border">
                   {certificate.certificateNumber || certificate.id}
@@ -205,7 +205,7 @@ export default function VerifyCertificate() {
                   Course
                 </div>
                 <div className="text-lg font-semibold">
-                  {(certificate as any).courseName || certificate.title || 'AI Safety Certification'}
+                  {(certificate as any).courseName || certificate.title || 'AI Safety Course'}
                 </div>
               </div>
 
@@ -224,9 +224,10 @@ export default function VerifyCertificate() {
             {/* Verification Notice */}
             <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
               <p className="text-sm text-blue-900 dark:text-blue-100">
-                <strong>Verification Confirmed:</strong> This certificate has been issued by CSOAI Dashboard 
-                and represents successful completion of the training course. The certificate holder has 
-                demonstrated proficiency in AI safety and governance frameworks.
+                <strong>Verification Confirmed:</strong> This completion record was issued by CSOAI
+                Council Academy and confirms that the holder completed the training course. It attests
+                training completion only — not any AI system's compliance or conformity. Council of AI
+                measures; it does not certify or issue conformity marks.
               </p>
             </div>
           </div>
@@ -235,19 +236,19 @@ export default function VerifyCertificate() {
         {/* Additional Information */}
         <div className="max-w-3xl mx-auto">
           <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">About CSOAI Dashboard Certification</h3>
+            <h3 className="text-lg font-semibold mb-4">About CSOAI Council Academy</h3>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>
-                CSOAI Dashboard provides comprehensive training in AI safety, governance, and compliance 
-                frameworks including EU AI Act, NIST AI RMF, and ISO/IEC 42001.
+                CSOAI Council Academy provides training in AI safety and governance, measured against
+                frameworks including the EU AI Act, NIST AI RMF, and ISO/IEC 42001.
               </p>
               <p>
-                Our certification program ensures that graduates have the knowledge and skills necessary 
-                to work as AI Safety Analysts, protecting humanity from AI risks while advancing 
-                responsible AI development.
+                Our courses help learners build the knowledge and skills to work as AI Safety Analysts.
+                A completion record attests training completion, not conformity — Council of AI measures;
+                it does not certify or issue conformity marks.
               </p>
               <p className="text-xs pt-2 border-t">
-                To verify this certificate, visit: <span className="font-mono">coai.manus.space/verify-certificate/{certificateId}</span>
+                To verify this completion record, visit: <span className="font-mono">coai.manus.space/verify-certificate/{certificateId}</span>
               </p>
             </div>
           </Card>

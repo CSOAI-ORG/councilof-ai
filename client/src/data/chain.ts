@@ -39,8 +39,11 @@ export const CHAIN_STATUS: ChainStatus = {
   chain_valid: true,
   chain_length: 11,
   hash_algorithm: "sha256",
-  signature_algorithm: "sha256",
-  note: "Chain is sha256-linked today. Label changes when Ed25519 / ML-DSA ship.",
+  signature_algorithm: "Ed25519 + OpenTimestamps",
+  note: "Records are sha256 hash-linked for tamper-evidence and signed with Ed25519, " +
+    "anchored with OpenTimestamps — a ~3KB card verifiable offline against the published " +
+    "key f4b4278d… (did:web:csoai.org). The post-quantum ML-DSA-65 (FIPS-204) signer is " +
+    "built, not shipped; the label will name it in the same commit it ships.",
   last_record: {
     id: "DR-0034",
     published_at: "2026-07-31",

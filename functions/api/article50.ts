@@ -7,7 +7,7 @@
  * passport was issued by us, and anyone can re-verify it here — but it is NOT stored:
  * no KV namespace is bound, and this endpoint says so in every response (`stored: false`)
  * rather than implying a registry that does not exist yet. Pro/Governance tiers
- * (Ed25519, BFT, OTS) are advertised on the page; they are NOT issued here until the
+ * (Ed25519, OTS) are advertised on the page; they are NOT issued here until the
  * signing backend is bound — asking for them returns a clear 501, not a fake passport.
  *
  * The verify URL points at THIS domain. proofof.ai is currently unreachable (Vercel
@@ -51,7 +51,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const tier = String(body.tier ?? "free");
   if (tier !== "free") {
     return Response.json(
-      { ok: false, error: `${tier} tier is not issuing yet — the Ed25519/BFT signing backend is not bound to this deployment. The free HMAC-signed passport is available now.`, tier_requested: tier },
+      { ok: false, error: `${tier} tier is not issuing yet — the Ed25519 signing backend is not bound to this deployment. The free HMAC-signed passport is available now.`, tier_requested: tier },
       { status: 501 },
     );
   }

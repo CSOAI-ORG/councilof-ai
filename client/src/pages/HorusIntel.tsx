@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import {
-  CheckCircle2,
   Shield,
   Globe,
   Zap,
@@ -50,62 +49,14 @@ const features = [
   },
 ];
 
-const tiers = [
-  {
-    name: "Horus Brief",
-    price: "£49",
-    period: "/month",
-    description: "Weekly intelligence brief for AI governance professionals.",
-    features: [
-      "Weekly email brief (Mon 08:00 UTC)",
-      "Dashboard archive access",
-      "Competitor radar",
-      "Regulatory alerts",
-      "Pricing intelligence",
-    ],
-    cta: "Subscribe",
-    highlighted: false,
-  },
-  {
-    name: "Horus Pro",
-    price: "£199",
-    period: "/month",
-    description: "Everything in Brief + API access, custom alerts, and quarterly reports.",
-    features: [
-      "Everything in Brief",
-      "REST API access",
-      "Custom competitor alerts",
-      "Quarterly deep-dive report",
-      "Priority support",
-    ],
-    cta: "Subscribe",
-    highlighted: true,
-  },
-  {
-    name: "Enterprise",
-    price: "£999",
-    period: "/month",
-    description: "White-label briefs, dedicated analyst, and Slack integration.",
-    features: [
-      "Everything in Pro",
-      "White-label briefs",
-      "Dedicated analyst",
-      "Slack integration",
-      "Custom data sources",
-    ],
-    cta: "Contact Sales",
-    highlighted: false,
-  },
-];
-
 const sampleSections = [
   {
     title: "The Week's Big Move",
-    preview: "Credo AI raises $15M Series B — validates the market, but opens the door for CSOAI. Their pricing is enterprise-only (demo-gated). CSOAI's £3.5K self-serve is 5-10x cheaper.",
+    preview: "Credo AI raises $15M Series B — validates the market, but opens the door for CSOAI. Their offering is enterprise-only (demo-gated). CSOAI's self-serve model is far more accessible.",
   },
   {
-    title: "Pricing Intelligence",
-    preview: "Vanta dropped their AI module from $12K/yr to $8K/yr (33% cut). Likely response to Drata's $6K/yr competitive pricing. CSOAI's positioning is still 2x cheaper.",
+    title: "Competitor Pricing Moves",
+    preview: "Vanta dropped their AI module (33% cut), likely a response to Drata's competitive pricing. Tracking how the governance market repositions week to week.",
   },
   {
     title: "Regulatory Pulse",
@@ -168,7 +119,7 @@ export default function HorusIntel() {
           <div className="flex flex-wrap justify-center gap-3">
             <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
               <a href="https://proofof.ai/horus" target="_blank" rel="noopener noreferrer">
-                Subscribe — £49/mo
+                Get the brief
                 <ArrowRight className="w-4 h-4 ml-2" />
               </a>
             </Button>
@@ -234,62 +185,7 @@ export default function HorusIntel() {
           </div>
         </div>
 
-        {/* Pricing */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Pricing
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {tiers.map((tier) => (
-              <Card
-                key={tier.name}
-                className={`p-6 ${
-                  tier.highlighted
-                    ? "border-2 border-emerald-500 shadow-lg"
-                    : "border border-gray-200"
-                }`}
-              >
-                {tier.highlighted && (
-                  <Badge className="mb-3 bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
-                    Most Popular
-                  </Badge>
-                )}
-                <h3 className="text-xl font-bold text-gray-900 mb-1">{tier.name}</h3>
-                <div className="flex items-baseline gap-1 mb-3">
-                  <span className="text-3xl font-bold text-emerald-700">{tier.price}</span>
-                  <span className="text-gray-500">{tier.period}</span>
-                </div>
-                <p className="text-sm text-gray-500 mb-4">{tier.description}</p>
-                <ul className="space-y-2 mb-6">
-                  {tier.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-gray-600">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  className={`w-full ${
-                    tier.highlighted
-                      ? "bg-emerald-600 hover:bg-emerald-700 text-white"
-                      : "border-emerald-300 text-emerald-700 hover:bg-emerald-50"
-                  }`}
-                  variant={tier.highlighted ? "default" : "outline"}
-                  asChild
-                >
-                  <a href="https://proofof.ai/horus" target="_blank" rel="noopener noreferrer">
-                    {tier.cta}
-                  </a>
-                </Button>
-              </Card>
-            ))}
-          </div>
-          <p className="text-center text-sm text-gray-500 mt-4">
-            Annual billing: 15% discount (£499/yr for Brief). Cancel anytime.
-          </p>
-        </div>
-
-        /* Comparison */
+        {/* Comparison */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
             Why Horus?
@@ -325,7 +221,7 @@ export default function HorusIntel() {
                 </tr>
                 <tr className="border-t border-gray-100 bg-emerald-50">
                   <td className="p-3 font-semibold text-emerald-900">Horus Intel Brief</td>
-                  <td className="p-3 font-semibold text-emerald-900">£49/mo</td>
+                  <td className="p-3 font-semibold text-emerald-900">Free</td>
                   <td className="p-3 font-semibold text-emerald-900">AI governance</td>
                   <td className="p-3 font-semibold text-emerald-900">Only product in this niche</td>
                 </tr>
@@ -357,8 +253,8 @@ export default function HorusIntel() {
             <Card className="p-4 border border-gray-200">
               <h3 className="font-semibold text-gray-900 mb-1">Can I get a sample before subscribing?</h3>
               <p className="text-sm text-gray-600">
-                Yes. The sample brief above is a real edition from June 21, 2026. We also offer a 7-day free trial
-                for the Pro tier. No credit card required.
+                Yes. The sample brief above is a real edition from June 21, 2026. Full access is free.
+                No credit card required.
               </p>
             </Card>
             <Card className="p-4 border border-gray-200">
@@ -383,7 +279,7 @@ export default function HorusIntel() {
               <Button className="bg-emerald-600 hover:bg-emerald-700 text-white" asChild>
                 <a href="https://proofof.ai/horus" target="_blank" rel="noopener noreferrer">
                   <Mail className="w-4 h-4 mr-2" />
-                  Subscribe — £49/mo
+                  Get the brief
                 </a>
               </Button>
               <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50" asChild>

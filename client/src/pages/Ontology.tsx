@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // The Sovereign Ontology — the semantic layer for AI governance. What Palantir's Ontology did
-// for enterprise data (Objects · Properties · Links · Actions), the Sovereign Ontology does for
+// for enterprise data (Objects · Properties · Links · Actions), the Council assistant Ontology does for
 // AI governance: every governed object, how they relate, and the actions you can take on them.
 
 const OBJECTS = [
@@ -22,7 +22,7 @@ const LINKS = [
 ];
 const ACTIONS = [
   { n: "Govern", d: "classify, assess and place any object under Layer 0.", href: "/graph" },
-  { n: "Simulate", d: "run the outcome across thousands of branches before acting.", href: "/sov-space" },
+  { n: "Simulate", d: "run the outcome across thousands of branches before acting.", href: "/council-space" },
   { n: "Stop", d: "halt a rogue agent or humanoid before harm — signed.", href: "/poc" },
   { n: "Prove", d: "issue a signed, offline-verifiable record of governance.", href: "/system-card" },
   { n: "Crosswalk", d: "comply once, cover every framework it maps to.", href: "/hive" },
@@ -30,7 +30,7 @@ const ACTIONS = [
 ];
 
 export default function Ontology() {
-  useEffect(() => { document.title = "The Sovereign Ontology — the semantic layer for AI governance | CSOAI"; }, []);
+  useEffect(() => { document.title = "The Council Ontology — the semantic layer for AI governance | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <section className="border-b border-emerald-500/15">
@@ -39,7 +39,7 @@ export default function Ontology() {
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The semantic layer for <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">AI governance.</span></h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             What Palantir's Ontology did for enterprise data — turning scattered records into <b className="text-emerald-200">objects,
-            links and actions</b> you can reason over — the Sovereign Ontology does for AI governance. Every framework, agent,
+            links and actions</b> you can reason over — the Council Ontology does for AI governance. Every framework, agent,
             company, government, threat and person becomes a governed object, connected by how it relates, and actionable on one
             signed Layer 0 floor. It's live on the globe — toggle the <b className="text-emerald-200">Ontology</b> layer and watch the web light up.
           </p>

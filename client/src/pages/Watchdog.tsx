@@ -246,8 +246,8 @@ export default function Watchdog() {
             here as measured, anonymised aggregates. Until then, no invented rate cards.
           </p>
           <p className="text-sm text-gray-500">
-            What we can tell you now: training is free, attestation is £49, and the
-            Analyst License is £199/year.
+            What we can tell you now: the rail is free — training is free, attestation
+            is free, and verification is free forever.
           </p>
         </div>
       </div>
@@ -281,8 +281,8 @@ export default function Watchdog() {
           <Heart className="h-16 w-16 text-emerald-600 mx-auto mb-6" />
           <h2 className="text-4xl font-bold mb-6">Ready to Start Your New Career?</h2>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Training is free. Attestation is £49. The analyst network opens at launch —
-            and every figure on this page will be measured, signed, and real.
+            Training is free. Attestation is free, verification free forever. The analyst
+            network opens at launch — and every figure on this page will be measured, signed, and real.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/training">

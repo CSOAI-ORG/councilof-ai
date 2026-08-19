@@ -1,8 +1,8 @@
-// sovHealth - live connection to the shared SOV3 Sovereign brain (os.meok.ai).
+// sovHealth - live connection to the shared SOV3 Sovereign brain (the measurement API).
 // The same backend surfaces meok + csoai + defoneos; /health exposes the Layer 0
 // protocol surface, and /tools the governed tool fleet count.
 
-export const SOV_GW: string = (((import.meta as any).env?.VITE_SOV_GATEWAY as string) || "https://os.meok.ai/api").replace(/\/$/, "");
+export const SOV_GW: string = (((import.meta as any).env?.VITE_SOV_GATEWAY as string) || "/api").replace(/\/$/, "");
 
 export type SovHealth = {
   ok?: boolean;

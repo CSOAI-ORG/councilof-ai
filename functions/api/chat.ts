@@ -2,7 +2,7 @@
 //
 // Two lanes, and the answer always says which one it came from:
 //
-//   LIVE      the sovereign specialist on the GPU, when SOV_GATE_URL/TOKEN are set
+//   LIVE      the tuned specialist on the GPU, when SOV_GATE_URL/TOKEN are set
 //   GROUNDED  a deterministic responder over the estate's own published measurements
 //
 // The grounded lane is not a placeholder apology. It answers real questions —
@@ -125,7 +125,7 @@ why(k) +
     if (c) {
       const proven = c.positive_control?.gate_exercised;
       const breaches = Object.entries(c.breaches_by_article ?? {});
-      return `**SOV City** — the governed multi-agent arena. Last published run: ` +
+      return `**Council City** — the governed multi-agent arena. Last published run: ` +
         `${c.epochs} epochs, ${c.turns} turns, ${c.usable_n} usable, ${c.unmeasured} unmeasured.\n\n` +
         `Positive control: **${proven ? "PASSED" : "FAILED"}** — known-breaching actions were pushed through ` +
         `the live gate and ${proven ? "every one was blocked with the right citation" : "were NOT blocked, so the run proves nothing"}.\n\n` +
@@ -195,7 +195,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       if (!r.ok) throw new Error("gate HTTP " + r.status);
       const data: any = await r.json();
       const content = data?.message?.content ?? String(data?.response ?? "");
-      if (content.trim()) return reply(content, "SIGIL · sovereign specialist · signed · verifiable offline", "live");
+      if (content.trim()) return reply(content, "council · signed · verifiable offline", "live");
       throw new Error("empty answer from gate");
     } catch {
       // fall through to grounded rather than return nothing
@@ -204,15 +204,15 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   // GROUNDED lane — deterministic, over published measurements.
   const g = await grounded(question, origin);
-  if (g) return reply(g, "SIGIL · grounded in published measurement · deterministic · recomputable", "grounded");
+  if (g) return reply(g, "grounded in published measurement · deterministic · recomputable", "grounded");
 
   return reply(
     "I can answer from what this estate has actually measured — ask about one of the twelve GSPC axes " +
     "(governance, safety, provenance, continuity, conformance, openness, care, swarm, cross-reality, " +
     "art5-safeguard, detector-interop, machinery-conformity), whether a practice is prohibited under " +
-    "EU AI Act Article 5, the SOV City arena runs, or the measurement method itself.\n\n" +
-    "I won't answer this one, because I would be improvising rather than grounding. The sovereign " +
+    "EU AI Act Article 5, the Council City arena runs, or the measurement method itself.\n\n" +
+    "I won't answer this one, because I would be improvising rather than grounding. The tuned " +
     "specialist that handles open-ended questions is not connected yet.",
-    "SIGIL · refused — no grounding available", "ungrounded",
+    "refused — no grounding available", "ungrounded",
   );
 };

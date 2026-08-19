@@ -8,7 +8,7 @@ import AISystemNotice from "../components/AISystemNotice";
 // SOC 2), and drafts remediation — signed to Layer 0. Test your own cyber; the
 // Sovereign helps you fix it. Value back to you, not an expensive vendor.
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 type Tool = { name: string; what: string; run: string; maps: string };
 type Domain = { id: string; label: string; glyph: string; tools: Tool[] };
@@ -55,7 +55,7 @@ const STACK: Domain[] = [
 
 const USPS = [
   "You run the tools — your data never leaves your control. Open source, no lock-in.",
-  "The Sovereign maps every finding to the frameworks that bite (NIS2, DORA, CRA, ISO 27001, SOC 2) — not just a scary list.",
+  "The Council assistant maps every finding to the frameworks that bite (NIS2, DORA, CRA, ISO 27001, SOC 2) — not just a scary list.",
   "Remediation guidance you can act on, prioritised by real risk — then re-scan to prove it's fixed.",
   "Every fix signed to Layer 0 — provable evidence for auditors and regulators.",
   "Value back to you and your team — not a five-figure certificate from a governance middleman.",
@@ -65,13 +65,13 @@ export default function CyberScan() {
   const [findings, setFindings] = useState("");
   const [triage, setTriage] = useState("");
   const [busy, setBusy] = useState(false);
-  useEffect(() => { document.title = "Cyber self-scan — test your own systems, open-source, Sovereign-guided | CSOAI"; }, []);
+  useEffect(() => { document.title = "Cyber self-scan — test your own systems, open-source, Council-guided | CSOAI"; }, []);
 
   async function runTriage() {
     const text = findings.trim(); if (!text) return;
     setBusy(true); setTriage(""); chargeSovereign(10);
     try {
-      const m = "You are the CSOAI Sovereign security analyst. A CISO pasted raw findings from open-source security scanners. Triage them: (1) rank the top 3 by real risk, (2) for each give a concrete fix, (3) map each to the frameworks it affects (NIS2, DORA, CRA, ISO 27001, SOC 2), (4) end with the single most urgent action. Be concise and practical. Findings:\n" + text.slice(0, 4000);
+      const m = "You are the CSOAI Council security analyst. A CISO pasted raw findings from open-source security scanners. Triage them: (1) rank the top 3 by real risk, (2) for each give a concrete fix, (3) map each to the frameworks it affects (NIS2, DORA, CRA, ISO 27001, SOC 2), (4) end with the single most urgent action. Be concise and practical. Findings:\n" + text.slice(0, 4000);
       const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: m }) });
       if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) setTriage(String(d.response)); }
     } catch (e) {}
@@ -85,8 +85,8 @@ export default function CyberScan() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(34,211,238,.16), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · cyber self-scan</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Scan your own business. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">The Sovereign fixes it.</span></h1>
-          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">A CISO-grade stack of reputable open-source tools to test your own cyber — network, web, cloud, containers, code, supply chain. Run them, bring the findings, and the Sovereign triages, maps them to the regulations that bite, and guides the fix. Signed to Layer 0.</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Scan your own business. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">The Council assistant fixes it.</span></h1>
+          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">A CISO-grade stack of reputable open-source tools to test your own cyber — network, web, cloud, containers, code, supply chain. Run them, bring the findings, and the Council assistant triages, maps them to the regulations that bite, and guides the fix. Signed to Layer 0.</p>
         </div>
       </section>
 
@@ -111,11 +111,11 @@ export default function CyberScan() {
 
         {/* Live Sovereign triage */}
         <div className="mt-8 rounded-2xl border border-cyan-400/30 bg-gradient-to-br from-cyan-500/10 to-transparent p-5">
-          <div className="text-sm font-bold text-cyan-200">Bring your findings — the Sovereign triages them live</div>
+          <div className="text-sm font-bold text-cyan-200">Bring your findings — the Council assistant triages them live</div>
           <div className="mt-3">
             <AISystemNotice route="/scan" />
           </div>
-          <p className="mt-1 text-[13px] text-emerald-100/70">Paste raw output from any tool above. The Sovereign ranks by real risk, gives concrete fixes, and maps each to the frameworks it affects. Your findings stay in your browser.</p>
+          <p className="mt-1 text-[13px] text-emerald-100/70">Paste raw output from any tool above. The Council assistant ranks by real risk, gives concrete fixes, and maps each to the frameworks it affects. Your findings stay in your browser.</p>
           <textarea value={findings} onChange={(e) => setFindings(e.target.value)} rows={5} placeholder="Paste scanner output here — e.g. Nuclei / Trivy / Prowler / ZAP results…" className="mt-3 w-full resize-none rounded-xl border border-cyan-500/25 bg-black/30 p-3 font-mono text-[12px] text-emerald-50 placeholder-emerald-300/30 focus:border-cyan-400 focus:outline-none" />
           <button onClick={runTriage} disabled={busy} className="mt-2 rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-cyan-400 disabled:opacity-60">{busy ? "Triaging…" : "🛡 Triage & map to frameworks"}</button>
           {triage && <div className="mt-3 whitespace-pre-wrap rounded-lg bg-black/30 p-3 text-[13px] text-emerald-50/90">{triage}</div>}
@@ -135,7 +135,7 @@ export default function CyberScan() {
         </div>
 
         <div className="mt-6 rounded-2xl border border-amber-400/25 bg-amber-400/5 p-4 text-center text-xs text-amber-100/70">
-          The Sovereign guides <b className="text-amber-200">your own authorised testing</b> of systems you own or have permission to test. Always scan only what you're authorised to. CSOAI provides tooling guidance and analysis — not a penetration-testing service.
+          The Council assistant guides <b className="text-amber-200">your own authorised testing</b> of systems you own or have permission to test. Always scan only what you're authorised to. CSOAI provides tooling guidance and analysis — not a penetration-testing service.
         </div>
       </section>
     </div>

@@ -204,37 +204,46 @@ const getFrameworkGuideUrl = (id: string): string => {
   return urlMap[id] || '/standards';
 };
 
-// FAQ data
+// FAQ data — audit §3.4 six Q&As (answer-first). Rendered visibly in SECTION 12
+// and emitted as FAQPage JSON-LD from the same array, so the schema never claims
+// more than the page shows.
 const faqs = [
   {
-    question: "What is CSOAI?",
-    answer: "CSOAI (Civil Society Oversight of AI) is an independent, relationship-based AI safety infrastructure organization. We provide operational infrastructure for AI governance, combining licensing, training, monitoring, and economic redistribution into one unified platform. Unlike think tanks, we offer market-driven enforcement and real operational systems.",
+    question: "What is Council of AI?",
+    answer: "An independent AI measurement company — the independent measurement body for AI behaviour. We measure how an AI system behaves on our own published instruments, issue the result as an Ed25519-signed, timestamp-anchored 3KB measurement card, and re-attest it over time. Not a certification body; not an observability tool.",
   },
   {
-    question: "How do I get attested as an AI Safety Analyst?",
-    answer: "Getting attested is a 3-step process: First, complete our free comprehensive training covering EU AI Act, NIST AI RMF, ISO 42001, and other frameworks. Second, pass the attestation examination to prove your competency. Third, apply for positions in our job marketplace. The entire process can be completed online at your own pace.",
+    question: "What do I actually get?",
+    answer: "A verified measurement credential: a 3KB card stating what was measured, on which frozen instrument, and the score. Ed25519-signed and timestamp-anchored — anyone (customer, auditor, regulator) can verify it independently without asking us.",
   },
   {
-    question: "Is training really free?",
-    answer: "Yes, ALL 33 courses are 100% free - including Foundation courses, Regional Compliance courses (EU AI Act, NIST, UK, Canada, Australia), and all Industry Specialization courses. The only costs are the attestation exam (£49 one-time) and the Analyst License (£199/year or £19.99/month) which is only required if you want to work as a paid analyst.",
+    question: "Is a measurement card a certificate?",
+    answer: "No. Certification is a conformity judgement by accredited bodies; we make none. We publish a signed measurement and the instrument behind it, re-attest on a schedule, and accredited bodies, auditors and customers draw their own conclusions.",
   },
   {
-    question: "How does the Byzantine Council work?",
-    answer: `The Byzantine Council is designed as ${CANON.councilAgents.value} agents across multiple providers (GPT-4, Claude, Gemini, and others). Any safety decision requires ${CANON.councilConsensus.value}/${CANON.councilAgents.value} (70%) for consensus. The council is DESIGNED — measured status is on the Refutation Ledger. No single AI provider has majority control. Human analysts provide final oversight.`,
+    question: "How is this different from observability/logging?",
+    answer: "Those record what your system did; we measure how your AI behaves — frozen published instruments, graded behaviour, signed results, re-attestation over time. Evidence a third party can check, not a dashboard only you can see.",
   },
   {
-    question: "What frameworks does CSOAI cover?",
-    answer: "We cover 7 major global frameworks: EU AI Act (Europe), NIST AI RMF (USA), ISO 42001 (International), TC260 (China), UK AI Safety Institute guidelines (UK), Singapore Model AI Governance (APAC), and the new South Korea AI Framework Act (2026). Our platform synthesizes all of these into one operational system.",
+    question: "How much does it cost?",
+    answer: "The rail is free. Verification is free forever — measuring and verifying cards costs nothing. Where we sell evidence, it is a signed artefact on its own page, never access to the rail. Every card is the same signed, verifiable measurement.",
   },
   {
-    question: "Can I earn money as an AI Safety Analyst?",
-    answer: "Yes — it's a real, paid role. The work is remote with hours you set. Rates will be set by the marketplace once live and published as measured aggregates — we don't quote invented figures. Earnings will vary and are not guaranteed; they depend on how much you work and the demand for your specialisation. Our job marketplace connects you directly with enterprises needing compliance monitoring.",
-  },
-  {
-    question: "How do enterprises register AI systems?",
-    answer: "Enterprises can register AI systems through our Enterprise portal. The process involves: describing your AI system, self-assessing risk level (minimal, limited, high, or unacceptable), uploading documentation, and receiving automated compliance assessments against all 7 frameworks. Ongoing monitoring is provided through the Byzantine Council.",
+    question: "Why trust Council of AI as referee?",
+    answer: "You don't have to — you can check. Instruments frozen and published, every card signed and timestamp-anchored, every failed measurement in a public ledger, re-attestation showing whether a score still holds.",
   },
 ];
+
+// FAQPage JSON-LD describing exactly the six Q&As rendered below (audit §3.4).
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
 
 export default function NewHomeV2() {
   return (
@@ -265,19 +274,19 @@ export default function NewHomeV2() {
                 transition={{ duration: 0.5 }}
                 className="mb-4 text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-emerald-700"
               >
-                Describe an AI system. Get the provisions that bind — deterministically.
+                Council of AI — the independent measurement body for AI behaviour
               </motion.p>
 
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
-                className="text-4xl md:text-6xl xl:text-7xl font-bold text-slate-900 mb-5 leading-[1.05] tracking-tight"
+                className="text-4xl md:text-5xl xl:text-6xl font-bold text-slate-900 mb-5 leading-[1.08] tracking-tight"
               >
-                Measured,
+                We measure. We sign. We re-attest.
                 <br />
                 <span className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 bg-clip-text text-transparent">
-                  not modelled.
+                  Everyone can check.
                 </span>
               </motion.h1>
 
@@ -287,31 +296,27 @@ export default function NewHomeV2() {
                 transition={{ duration: 0.7, delay: 0.25 }}
                 className="text-base md:text-xl text-slate-600 mb-7 max-w-xl mx-auto lg:mx-0 leading-relaxed"
               >
-                {canonValue("totalProvisions")} frozen statutory provisions. Four lenses.
-                Zero models in the verdict path — every verdict{" "}
-                <span className="text-emerald-400 font-semibold">cited and signed</span>,
-                every failure{" "}
-                <Link href="/refutation-ledger" className="text-emerald-400 font-semibold underline decoration-dotted hover:text-emerald-300">
-                  published
-                </Link>
-                .
+                Council of AI measures how your AI behaves on our own published instruments and issues
+                the result as a verified measurement credential: a 3KB card, Ed25519-signed and
+                timestamp-anchored, that anyone can verify without asking us. Then we measure again — so
+                the evidence stays current. Not certification. Not another observability dashboard.
               </motion.p>
 
-              {/* Two focused CTAs — arena.ai pattern: one primary, one secondary */}
+              {/* Two focused CTAs — one primary (first card free), one secondary (verify) */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.4 }}
                 className="mb-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
               >
-                <Link href="/assess">
+                <Link href="/start">
                   <Button size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-emerald-950 px-8 py-6 text-base font-bold rounded-xl shadow-lg shadow-emerald-500/30">
-                    Free AI Risk Check — signed in 2 min
+                    Get your first measurement card — free
                   </Button>
                 </Link>
-                <Link href="/sov-space">
+                <Link href="/gspc-verify">
                   <Button size="lg" variant="outline" className="border-2 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50 px-8 py-6 text-base font-semibold rounded-xl">
-                    Try Sov Space
+                    Verify a card
                   </Button>
                 </Link>
               </motion.div>
@@ -562,10 +567,10 @@ export default function NewHomeV2() {
           <p className="mt-3 max-w-2xl text-emerald-50/85">Build your identity, connect your world, see governance on the globe, choose your consensus, and browse every regulation - all live.</p>
           <a data-tag="home-deadline-cta" href="/assess" className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-100 hover:bg-amber-400/20"><span className="rounded-md bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-900">2 AUG 2026</span>EU AI Act transparency + GPAI go live - run your free signed risk check -&gt;</a>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <a href="/sovereign" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Sovereign</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
+            <a href="/os" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Council assistant</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
             <a href="/connect" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Connect socials</div><p className="mt-1 text-xs text-white/90">Give your AI character a face.</p></a>
-            <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Sovereign Globe</div><p className="mt-1 text-xs text-white/90">AI governance, layered on the world.</p></a>
-            <a href="/bft" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Choose your BFT</div><p className="mt-1 text-xs text-white/90">5, 12-around-1, or 33-node swarm.</p></a>
+            <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Council Globe</div><p className="mt-1 text-xs text-white/90">AI governance, layered on the world.</p></a>
+            <a href="/council" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Council</div><p className="mt-1 text-xs text-white/90">How the designed 33-agent council votes.</p></a>
             <a href="/registry" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Registry</div><p className="mt-1 text-xs text-white/90">Every regulation, standard, protocol.</p></a>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -838,7 +843,7 @@ export default function NewHomeV2() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {[
-                    "Registration from £1,500/year",
+                    "The rail is free — verification free forever",
                     "Automated compliance assessments",
                     "Multi-framework support (7+)",
                     "Avoid fines up to €35M",
@@ -906,8 +911,8 @@ export default function NewHomeV2() {
                 <CardContent className="space-y-3">
                   {[
                     "ALL 33 courses completely FREE",
-                    "Signed, verifiable attestation (£49 exam)",
-                    "Analyst License: £199/year",
+                    "Signed, verifiable attestation — free",
+                    "Open analyst roster — no license fee",
                     "Marketplace rates published once measured",
                     "Join a growing profession",
                   ].map((item, i) => (
@@ -1005,199 +1010,6 @@ export default function NewHomeV2() {
       <Suspense fallback={<div className="min-h-[300px]" />}><GovernanceNetwork /></Suspense>
 
       {/* ============================================ */}
-      {/* SECTION 6: THE MATERNAL COVENANT */}
-      {/* ============================================ */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-emerald-50 to-white">
-        <div className="container mx-auto px-6 max-w-5xl">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeInUp}
-            className="text-center mb-12"
-          >
-            <Badge className="mb-4 bg-rose-100 text-rose-700 border-rose-200 text-sm px-4 py-1">
-              Article 1: Core Innovation
-            </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
-              The <span className="text-rose-600">Maternal Covenant</span>
-            </h2>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={scaleIn}
-          >
-            <Card className="border-2 border-rose-200 bg-white shadow-xl overflow-hidden">
-              <div className="bg-gradient-to-r from-rose-500 to-pink-500 p-1" />
-              <CardContent className="p-8 md:p-12">
-                {/* Quote */}
-                <div className="flex items-start gap-4 mb-10">
-                  <div className="w-16 h-16 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0">
-                    <Heart className="h-8 w-8 text-rose-600" />
-                  </div>
-                  <div>
-                    <Quote className="h-8 w-8 text-rose-300 mb-2" />
-                    <p className="text-xl md:text-2xl text-gray-700 italic leading-relaxed">
-                      AI should want to protect humans the way a mother wants to protect a child.
-                    </p>
-                    <p className="text-sm text-gray-500 mt-2">— The Maternal Covenant principle</p>
-                  </div>
-                </div>
-
-                {/* Comparison */}
-                <div className="grid md:grid-cols-2 gap-8 mb-10">
-                  <div className="p-6 bg-red-50 rounded-xl border border-red-200">
-                    <h4 className="font-bold text-red-700 mb-4 flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5" />
-                      Control Paradigm (Fails)
-                    </h4>
-                    <ul className="space-y-3 text-red-700">
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-500 mt-1">•</span>
-                        <span>Adversarial: AI vs Humans</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-500 mt-1">•</span>
-                        <span>Arms race: ever-stronger constraints</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-500 mt-1">•</span>
-                        <span>Inevitable failure with superintelligence</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="p-6 bg-emerald-50 rounded-xl border border-emerald-200">
-                    <h4 className="font-bold text-emerald-700 mb-4 flex items-center gap-2">
-                      <Heart className="h-5 w-5" />
-                      Covenant Paradigm (Works)
-                    </h4>
-                    <ul className="space-y-3 text-emerald-700">
-                      <li className="flex items-start gap-2">
-                        <span className="text-emerald-500 mt-1">•</span>
-                        <span>Partnership: AI + Humans together</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-emerald-500 mt-1">•</span>
-                        <span>Cooperative: mutual benefit design</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-emerald-500 mt-1">•</span>
-                        <span>Sustainable: scales with AI growth</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Core insight */}
-                <div className="p-6 bg-gradient-to-r from-rose-100 to-pink-100 rounded-xl text-center mb-8">
-                  <p className="text-rose-800 font-semibold text-lg flex items-center justify-center gap-3 flex-wrap">
-                    <Sparkles className="h-5 w-5" />
-                    Mother gives child allowance → AI gives humanity prosperity
-                    <Sparkles className="h-5 w-5" />
-                  </p>
-                </div>
-
-                <div className="text-center">
-                  <Link href="/maternal-covenant">
-                    <Button size="lg" className="bg-rose-600 hover:bg-rose-700 text-white">
-                      Read the Full Maternal Covenant
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ============================================ */}
-      {/* SECTION 7: BYZANTINE COUNCIL */}
-      {/* ============================================ */}
-      <section className="py-16 md:py-24 bg-slate-900 text-white overflow-hidden">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Content */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInUp}
-            >
-              <Badge className="mb-4 bg-amber-500/20 text-amber-300 border-amber-400/30 text-sm px-4 py-1">
-                Designed — not yet measured
-              </Badge>
-              <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
-                The <span className="text-emerald-400">Byzantine Council</span>
-              </h2>
-              <p className="text-xl text-gray-500 mb-8 leading-relaxed">
-                A multi-provider council so no single vendor can move a safety decision alone.
-                <strong className="text-amber-300"> This is the design, and we label it as such.</strong>{" "}
-                An earlier version of this page claimed 33 agents at a 23/33 quorum as a live
-                figure. It was never measured at that size, so we withdrew it rather than leave it
-                standing. What <em>is</em> measured — 29 models across six axes — is on the
-                measurement section above, and the retraction is in our public ledger.
-              </p>
-
-              <div className="space-y-6 mb-8">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Shield className="h-6 w-6 text-emerald-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white mb-1">23/33 Consensus Required</h4>
-                    <p className="text-gray-500">70% agreement for any safety decision. designed multi-agent review ensures reliability even if agents fail or are compromised.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Network className="h-6 w-6 text-emerald-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white mb-1">Multi-Provider Diversity</h4>
-                    <p className="text-gray-500">Agents span GPT-4, Claude, Gemini, Llama, and more. No single AI company has majority control.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Eye className="h-6 w-6 text-emerald-400" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white mb-1">Human Oversight</h4>
-                    <p className="text-gray-500">Attested AI Safety Analysts review critical decisions. AI monitors AI, humans oversee all.</p>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/agent-council">
-                <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
-                  Explore the Council
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-            </motion.div>
-
-            {/* Visualization */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={scaleIn}
-              className="relative"
-            >
-              <div className="aspect-square max-w-lg mx-auto bg-slate-800/50 rounded-3xl border border-slate-700 overflow-hidden">
-                <Suspense fallback={<div className="min-h-[300px]" />}><CouncilVisualization autoAnimate={true} showLabels={true} useLiveData={false} /></Suspense>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-      {/* ============================================ */}
       {/* SECTION 8: THE MEASUREMENT — every number here has an evidence file */}
       {/* ============================================ */}
       <section className="py-16 md:py-24 bg-gradient-to-b from-slate-50 to-white">
@@ -1261,7 +1073,7 @@ export default function NewHomeV2() {
           >
             <h3 className="text-2xl font-bold text-gray-900 mb-2">The instrument behind it</h3>
             <p className="text-gray-600 mb-6">
-              Six axes, 90 frozen items, open on Hugging Face and Kaggle with the scoring code —
+              Thirteen measured axes on a 14-slot board, frozen benchmarks, open on Hugging Face and Kaggle with the scoring code —
               so you can recompute any figure we publish, or disagree with any answer key.
             </p>
             <div className="overflow-x-auto">
@@ -1354,7 +1166,7 @@ export default function NewHomeV2() {
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 AI Safety Analyst is projected to be a top-10 profession by 2045.
-                Get ahead now with completely free training - attestation exam £49, Analyst License £199/year.
+                Get ahead now with completely free training — attestation is free, and verification is free forever.
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -1413,12 +1225,12 @@ export default function NewHomeV2() {
                     {
                       step: "2",
                       title: "Get Attested",
-                      desc: "Pass the attestation exam (£49 one-time). Your record is signed and independently verifiable.",
+                      desc: "Complete the attestation exam — free. Your record is signed and independently verifiable forever.",
                     },
                     {
                       step: "3",
                       title: "Join the Roster",
-                      desc: "Get your Analyst License (£199/year) and join the analyst roster. Rates are set by the market and published as measured aggregates once live.",
+                      desc: "Join the open analyst roster — no license fee. Rates are set by the market and published as measured aggregates once live.",
                     },
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-4">
@@ -1480,7 +1292,7 @@ export default function NewHomeV2() {
                   <div className="mt-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
                     <div className="flex items-center gap-2 text-emerald-700">
                       <CheckCircle className="h-5 w-5" />
-                      <span className="font-semibold">Verified by Byzantine Council</span>
+                      <span className="font-semibold">Verified by Council</span>
                     </div>
                   </div>
                 </CardContent>
@@ -1509,7 +1321,7 @@ export default function NewHomeV2() {
                 {[
                   "One registration covers ALL 7 frameworks",
                   "Automated compliance scoring in real-time",
-                  "Continuous monitoring by Byzantine Council",
+                  "Continuous monitoring by Council",
                   "Public transparency badges for trust",
                   "Avoid fines up to €35M (EU AI Act)",
                 ].map((item, i) => (
@@ -1638,6 +1450,7 @@ export default function NewHomeV2() {
       {/* SECTION 12: FAQ */}
       {/* ============================================ */}
       <section className="py-16 md:py-24 bg-gray-50">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
         <div className="container mx-auto px-6 max-w-4xl">
           <motion.div
             initial="hidden"
@@ -1919,7 +1732,6 @@ export default function NewHomeV2() {
       </section>
 
       <SpotInfographic title={L4.spotTitle} stats={L4.spotStats} source={L4.spotSource} />
-      <FaqBlock title={L4.faqTitle} intro={L4.faqIntro} items={L4.faq} />
     </div>
   );
 }

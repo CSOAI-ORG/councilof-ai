@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
 import { scoreAccount } from "../lib/hiveScore";
 import { flyAndConvene } from "../lib/globeDrive";
-import SovNav from "../components/SovNav";
+import CouncilNav from "../components/CouncilNav";
 
 // Short, honest spoken line per play (kept tight for speech synthesis).
 const SPEAK_PLAY: Record<string, string> = {
@@ -28,7 +28,7 @@ export default function Intel() {
   const tourTimers = useRef<number[]>([]);
   function speak(t: string) { if (!voiceOn) return; try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.03; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
   function sayLine(a: Account): string { const s = scoreAccount(a); if (s.confidence === "authority") return `${a.name}. ${a.country}. Regulator — we implement their regime and make it provable.`; return `${a.name}. ${a.country}. ${SPEAK_PLAY[a.play] || ""} Gap ${s.totalGap} of 21.`; }
-  // Persistent globe, mounted once: whenever you pick an account, the Sovereign flies it
+  // Persistent globe, mounted once: whenever you pick an account, the Council assistant flies it
   // to that account's exact HQ, pulses the point, and narrates the play — the market lights up.
   useEffect(() => { if (sel) { flyAndConvene(globeRef.current?.contentWindow, sel.hq[0], sel.hq[1], { height: 1400000, duration: 2.8, spiral: false }); speak(sayLine(sel)); } }, [sel]);
   useEffect(() => () => { tourTimers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} }, []);
@@ -45,7 +45,7 @@ export default function Intel() {
   const playCount = scored.reduce((m, x) => { m[x.s.play] = (m[x.s.play] || 0) + 1; return m; }, {} as Record<string, number>);
   // worst-gap leaderboard — ranked across the WHOLE dataset (not the current tab)
   const topGaps = ECOSYSTEM.map((a) => ({ a, s: scoreAccount(a) })).filter((x) => x.s.confidence !== "authority").sort((x, y) => y.s.totalGap - x.s.totalGap).slice(0, 8);
-  // Auto-fly tour: the Sovereign walks the globe through the biggest market opportunities,
+  // Auto-fly tour: the Council assistant walks the globe through the biggest market opportunities,
   // flying + pulsing each HQ in turn (reuses the fly-on-select effect via setSel).
   function tourGaps() {
     tourTimers.current.forEach(clearTimeout); tourTimers.current = [];
@@ -68,10 +68,10 @@ export default function Intel() {
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <div className="mx-auto max-w-6xl px-6 py-12">
-        <SovNav />
+        <CouncilNav />
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Distribution Hive · account intelligence</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">The market is <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">nameable.</span></h1>
-        <p className="mt-3 max-w-3xl text-emerald-100/80">Governments, regulators, Fortune 500 and high-exposure sectors — under ~10,000 public accounts. Each is one row that feeds the globe, Sov Space and the demo. Pick an account, run the rubric, tailor the demo.</p>
+        <p className="mt-3 max-w-3xl text-emerald-100/80">Governments, regulators, Fortune 500 and high-exposure sectors — under ~10,000 public accounts. Each is one row that feeds the globe, Council Space and the demo. Pick an account, run the rubric, tailor the demo.</p>
 
         <div className="mt-6 flex flex-wrap gap-2">
           {TABS.map((t) => (

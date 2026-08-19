@@ -106,7 +106,7 @@ const ecosystemNodes: EcosystemNode[] = [
     icon: FileText,
     link: "/charter",
     stats: "52 Articles",
-    connections: ["maternal", "byzantine", "eu-ai-act", "nist", "iso-42001", "licensing", "training"],
+    connections: ["maternal", "council", "eu-ai-act", "nist", "iso-42001", "licensing", "training"],
   },
   {
     id: "maternal",
@@ -117,10 +117,10 @@ const ecosystemNodes: EcosystemNode[] = [
     icon: Heart,
     link: "/charter#maternal-covenant",
     stats: "Article 1",
-    connections: ["charter", "byzantine", "prosperity", "citizens"],
+    connections: ["charter", "council", "prosperity", "citizens"],
   },
   {
-    id: "byzantine",
+    id: "council",
     label: "Measurement Council",
     shortLabel: "Council",
     description: "33 AI Agents - Real-time monitoring",
@@ -237,7 +237,7 @@ const ecosystemNodes: EcosystemNode[] = [
     category: "operational",
     icon: Eye,
     link: "/watchdog",
-    connections: ["byzantine", "citizens", "analysts"],
+    connections: ["council", "citizens", "analysts"],
   },
   {
     id: "jobs",
@@ -280,7 +280,7 @@ const ecosystemNodes: EcosystemNode[] = [
     category: "stakeholder",
     icon: Building2,
     link: "/enterprise",
-    connections: ["byzantine", "eu-ai-act", "nist", "iso-42001", "licensing"],
+    connections: ["council", "eu-ai-act", "nist", "iso-42001", "licensing"],
   },
   {
     id: "governments",
@@ -290,7 +290,7 @@ const ecosystemNodes: EcosystemNode[] = [
     category: "stakeholder",
     icon: Landmark,
     link: "/regulator",
-    connections: ["byzantine"],
+    connections: ["council"],
   },
   {
     id: "analysts",

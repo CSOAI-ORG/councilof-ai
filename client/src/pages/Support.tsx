@@ -69,10 +69,9 @@ Would you like me to connect you with a human support agent for further assistan
     response: `I can help with payment and billing questions!
 
 **Common Payment Topics:**
-• **FOUNDING10K Code** - First 10,000 signups get free access to the £499 course
-• **Monthly Plans** - Flexible payment options available for all courses
-• **Refunds** - 30-day money-back guarantee on all purchases
-• **Subscription Management** - Manage your subscription in Settings → Payment
+• **Free Access** - The core measurement credential training is free to everyone
+• **Refunds** - 30-day money-back guarantee on any paid add-ons
+• **Subscription Management** - Manage your account in Settings → Payment
 
 **For specific billing issues** (refunds, disputed charges, or account-specific questions), I recommend connecting with our human support team who can access your account details.
 
@@ -125,7 +124,7 @@ Need more specific help with exam preparation?`
 • All reports are reviewed by certified analysts
 
 **Becoming an Analyst:**
-1. Complete the CEASAI training program
+1. Complete the measurement credential training program
 2. Pass the certification exam (70% minimum)
 3. Apply through **Watchdog → Analyst Jobs**
 4. Start reviewing incidents
@@ -318,8 +317,8 @@ Is there anything else I can help you with in the meantime?`,
       answer: 'Go to the Login page and click "Forgot Password?" Enter your email address and check your inbox for the reset link. The link expires in 1 hour.',
     },
     {
-      question: 'How do I use the FOUNDING10K promo code?',
-      answer: 'Enter FOUNDING10K at checkout when enrolling in any course. This gives the first 10,000 users free access to the £499 course. The code is automatically applied if you\'re among the first 10,000 signups.',
+      question: 'Is the training free?',
+      answer: 'Yes. The core measurement credential training is free to everyone — no code or checkout required. Just create an account and start learning.',
     },
     {
       question: 'What is the passing score for the certification exam?',
@@ -327,7 +326,7 @@ Is there anything else I can help you with in the meantime?`,
     },
     {
       question: 'How do I become a Watchdog Analyst?',
-      answer: 'Complete the CEASAI training program, pass the certification exam with at least 70%, then apply through the Watchdog → Analyst Jobs page. Analysts review AI safety incidents for compliance.',
+      answer: 'Complete the measurement credential training program, pass the assessment with at least 70%, then apply through the Watchdog → Analyst Jobs page. Analysts review AI safety incidents for compliance.',
     },
     {
       question: 'Can I get a refund?',

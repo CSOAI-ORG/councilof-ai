@@ -83,7 +83,7 @@ const PERSONAS: Record<string, Persona> = {
     links: [
       { href: "/regulator-atlas", label: "Regulator atlas", note: "The global regulation map" },
       { href: "/government-dashboard", label: "Government dashboard", note: "Posture at a glance" },
-      { href: "/sov-space", label: "Sovereign Space", note: "Talk to the governance AI" },
+      { href: "/gspc-arena", label: "Council Space", note: "Talk to the governance AI" },
       { href: "/globe", label: "The governance globe", note: "Live, signed, worldwide" },
     ],
     slides: [

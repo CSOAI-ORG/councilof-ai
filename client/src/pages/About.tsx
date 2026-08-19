@@ -287,7 +287,7 @@ export default function About() {
                 <Card className="p-8 flex-1 bg-white">
                   <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-600">— designed, not yet measured</span></h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
-                    Oversight spread across providers so no single vendor decides alone. The 33-seat figure is an architecture, not a measurement — cross-checking measured today is n_eff 1.21 of 3, published in our Refutation Ledger. Historically this page described Byzantine consensus
+                    Oversight spread across providers so no single vendor decides alone. The 33-seat figure is an architecture, not a measurement — cross-checking measured today is n_eff 1.21 of 3, published in our Refutation Ledger. Historically this page described multi-agent council
                     across 12 different AI providers (OpenAI, Anthropic, Google, DeepSeek, and more). No single company
                     controls the outcome. It's democracy for AI safety decisions.
                   </p>
@@ -617,7 +617,7 @@ export default function About() {
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
               <h3 className="text-xl font-bold mb-3">How is CSOAI different from other AI safety organizations?</h3>
               <p className="text-gray-600 leading-relaxed">
-                Most AI safety organisations focus on research or advocacy. We publish a measurement instrument instead: six axes, 90 frozen items, open on Hugging Face and Kaggle with the scoring code, so anyone can recompute what we claim or dispute an answer key. We also publish the results that go against us — our own model gives up 27.9 points of general reasoning to reach its refusal rate, and that number is on our homepage.
+                Most AI safety organisations focus on research or advocacy. We publish a measurement instrument instead: thirteen measured axes on a fourteen-slot board, across frozen benchmarks, open on Hugging Face and Kaggle with the scoring code, so anyone can recompute what we claim or dispute an answer key. We also publish the results that go against us — our own model gives up 27.9 points of general reasoning to reach its refusal rate, and that number is on our homepage.
               </p>
             </Card>
           </div>

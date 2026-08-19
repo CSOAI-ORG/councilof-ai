@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button";
 const CERT_HOWTO_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "How to get CSOAI certified as an AI Safety Analyst",
-  description: "The CSOAI exam process from enrollment to earning: enroll, study, schedule, take the exam, get results, and start earning.",
+  name: "How to complete a Council Academy course as an AI Safety Analyst",
+  description: "The Council Academy process from enrollment to completion: enroll, study, schedule, take the assessment, and get your completion record.",
   step: [
-    { "@type": "HowToStep", position: 1, name: "Enroll", text: "Choose your certification level and pay (or start free with Watchdog training)." },
+    { "@type": "HowToStep", position: 1, name: "Enroll", text: "Choose your course level and start free with Watchdog training." },
     { "@type": "HowToStep", position: 2, name: "Study", text: "Work through modules at your own pace, complete quizzes and case studies." },
-    { "@type": "HowToStep", position: 3, name: "Schedule", text: "Choose your exam date and time (24/7 availability)." },
-    { "@type": "HowToStep", position: 4, name: "Take Exam", text: "Complete 50 questions in 90 minutes with proctored supervision." },
+    { "@type": "HowToStep", position: 3, name: "Schedule", text: "Choose your assessment date and time (24/7 availability)." },
+    { "@type": "HowToStep", position: 4, name: "Take Assessment", text: "Complete 50 questions in 90 minutes with proctored supervision." },
     { "@type": "HowToStep", position: 5, name: "Get Results", text: "Receive instant pass/fail notification with detailed feedback." },
-    { "@type": "HowToStep", position: 6, name: "Start Earning", text: "Access premium job board with higher-paying opportunities." },
+    { "@type": "HowToStep", position: 6, name: "Get Your Record", text: "Earn a signed completion record and access the analyst job board." },
   ],
 };
 
@@ -23,12 +23,12 @@ const CERT_BREADCRUMB_SCHEMA = {
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: "https://csoai.org/" },
     { "@type": "ListItem", position: 2, name: "How It Works", item: "https://csoai.org/how-it-works" },
-    { "@type": "ListItem", position: 3, name: "Certification", item: "https://csoai.org/how-it-works/certification" },
+    { "@type": "ListItem", position: 3, name: "Council Academy", item: "https://csoai.org/how-it-works/certification" },
   ],
 };
 
 export default function CertificationHowItWorks() {
-  useEffect(() => { document.title = "CSOAI Certification Guide — Exam Process & Pricing"; }, []);
+  useEffect(() => { document.title = "Council Academy Guide — Course & Assessment Process"; }, []);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const certificationPathway = [
@@ -39,119 +39,119 @@ export default function CertificationHowItWorks() {
       duration: "4 hours"
     },
     {
-      level: "CEASAI Fundamentals",
-      requirement: "Pass 50-question exam (70% pass rate)",
-      benefits: "Job board positions, basic compliance reviews",
-      duration: "6-8 weeks study + 90 min exam"
+      level: "Council Academy — Fundamentals",
+      requirement: "Pass 50-question assessment (70% pass rate)",
+      benefits: "Job board positions, foundational review work",
+      duration: "6-8 weeks study + 90 min assessment"
     },
     {
-      level: "CEASAI Professional",
-      requirement: "Pass advanced exam covering all frameworks",
-      benefits: "Job board positions, complex compliance projects",
-      duration: "10-12 weeks study + 90 min exam"
+      level: "Council Academy — Professional",
+      requirement: "Pass advanced assessment covering all frameworks",
+      benefits: "Job board positions, complex review projects",
+      duration: "10-12 weeks study + 90 min assessment"
     },
     {
-      level: "CEASAI Expert",
-      requirement: "Pass master-level exam + capstone project",
+      level: "Council Academy — Expert",
+      requirement: "Pass master-level assessment + capstone project",
       benefits: "Enterprise contracts, consulting",
-      duration: "14-16 weeks study + 90 min exam + capstone"
+      duration: "14-16 weeks study + 90 min assessment + capstone"
     }
   ];
 
   const examProcess = [
     {
       step: "1. Enroll",
-      description: "Choose your certification level and pay (or start free with Watchdog training)",
+      description: "Choose your course level and start free with Watchdog training",
       action: "Get instant access to all training materials"
     },
     {
       step: "2. Study",
       description: "Work through modules at your own pace, complete quizzes and case studies",
-      action: "Take unlimited practice exams to prepare"
+      action: "Take unlimited practice assessments to prepare"
     },
     {
       step: "3. Schedule",
-      description: "Choose your exam date and time (24/7 availability)",
+      description: "Choose your assessment date and time (24/7 availability)",
       action: "We'll send you proctoring instructions via email"
     },
     {
-      step: "4. Take Exam",
+      step: "4. Take Assessment",
       description: "Complete 50 questions in 90 minutes with proctored supervision",
       action: "Answer questions covering all frameworks and real-world scenarios"
     },
     {
       step: "5. Get Results",
       description: "Receive instant pass/fail notification with detailed feedback",
-      action: "If you pass, your certificate is issued immediately"
+      action: "If you pass, your completion record is issued immediately"
     },
     {
-      step: "6. Start Earning",
-      description: "Access premium job board with higher-paying opportunities",
+      step: "6. Get Your Record",
+      description: "Earn your signed completion record and access the analyst job board",
       action: "Apply for projects and start working within 24 hours"
     }
   ];
 
   const renewalProcess = [
     {
-      option: "Renewal Exam",
-      description: "Take a 30-minute renewal exam covering updates and new frameworks",
-      cost: "$29",
+      option: "Refresh Assessment",
+      description: "Take a 30-minute refresh assessment covering updates and new frameworks",
+      cost: "Free",
       time: "30 minutes"
     },
     {
       option: "Continuing Education",
       description: "Complete 10 hours of approved continuing education courses",
-      cost: "$49",
+      cost: "Free",
       time: "10 hours"
     },
     {
       option: "Hybrid Approach",
-      description: "Combine 5 hours of continuing education + 15-minute mini exam",
-      cost: "$39",
+      description: "Combine 5 hours of continuing education + 15-minute mini assessment",
+      cost: "Free",
       time: "5 hours + 15 min"
     }
   ];
 
   const faqs = [
     {
-      question: "How long is the certification valid?",
-      answer: "CEASAI certifications are valid for 2 years from the date you pass the exam. You'll receive renewal reminders 90 days before expiration. You can renew anytime after 18 months."
+      question: "How long is a completion record valid?",
+      answer: "Completion records are valid for 2 years from the date you pass the assessment. You'll receive refresh reminders 90 days before expiration. You can refresh anytime after 18 months."
     },
     {
-      question: "What's the difference between the certification levels?",
+      question: "What's the difference between the course levels?",
       answer: "Fundamentals covers basics of all frameworks. Professional goes deeper into each framework and adds UK AI Bill and Canada AI Act. Expert covers everything plus Australia AI Governance, ISO 42001, and SOAI-PDCA methodology."
     },
     {
-      question: "Can I take the exam multiple times?",
-      answer: "Yes! You can retake the exam as many times as needed. There's a 7-day waiting period between attempts. Each retake costs $29. Most students pass on their first or second attempt."
+      question: "Can I take the assessment multiple times?",
+      answer: "Yes! You can retake the assessment as many times as needed. There's a 7-day waiting period between attempts. Retakes are free. Most students pass on their first or second attempt."
     },
     {
-      question: "Is the exam proctored?",
-      answer: "Yes, all exams are proctored via video to ensure integrity. You'll use your webcam and screen sharing. Make sure you have a quiet space and stable internet connection."
+      question: "Is the assessment proctored?",
+      answer: "Yes, all assessments are proctored via video to ensure integrity. You'll use your webcam and screen sharing. Make sure you have a quiet space and stable internet connection."
     },
     {
-      question: "What if I fail the exam?",
+      question: "What if I don't pass the assessment?",
       answer: "No problem! You get detailed feedback showing which topics to review. You can retake after 7 days. We offer free review sessions and study groups to help you prepare for your next attempt."
     },
     {
-      question: "Can I upgrade my certification level?",
-      answer: "Yes! You can upgrade at any time. If you have Fundamentals and want Professional, you only pay the difference ($100). Your study time carries over."
+      question: "Can I move up a course level?",
+      answer: "Yes! You can progress at any time. Every course level is free, and your study time carries over. Complete each level in order to unlock the next."
     },
     {
-      question: "Do I need to renew my certification?",
-      answer: "Yes, certifications expire after 2 years. Renewal is simple: take a 30-minute renewal exam ($29), complete continuing education, or use a hybrid approach. Most people renew in 30 minutes."
+      question: "Do I need to refresh my completion record?",
+      answer: "Completion records expire after 2 years. Refreshing is simple and free: take a 30-minute refresh assessment, complete continuing education, or use a hybrid approach. Most people refresh in 30 minutes."
     },
     {
-      question: "Can I use my certification internationally?",
-      answer: "Yes! CEASAI certification is recognized globally. Our frameworks cover EU, US, China, UK, Canada, and Australia regulations. You can work with international clients and enterprises."
+      question: "What does a completion record mean internationally?",
+      answer: "A completion record attests that you completed Council Academy training measured against frameworks covering the EU, US, China, UK, Canada, and Australia. It is a record of your training — not a conformity mark and not proof any AI system complies with a regulation. Council of AI measures; it does not certify or issue conformity marks."
     },
     {
-      question: "What happens if I don't renew?",
-      answer: "Your certification becomes inactive. You can't access premium job board or work as a certified analyst. You can reactivate by renewing anytime. If it's been more than 2 years, you may need to retake the full exam."
+      question: "What happens if I don't refresh?",
+      answer: "Your completion record becomes inactive. You can't access the premium job board or take on analyst work that requires a current record. You can reactivate by refreshing anytime. If it's been more than 2 years, you may need to retake the full assessment."
     },
     {
       question: "Is there a guarantee I'll pass?",
-      answer: "We're confident in our training! If you don't pass on your first attempt, we offer free tutoring and a second exam attempt at no cost. Most students pass on their second try."
+      answer: "We're confident in our training! If you don't pass on your first attempt, we offer free tutoring and a second assessment attempt at no cost. Most students pass on their second try."
     }
   ];
 
@@ -161,9 +161,13 @@ export default function CertificationHowItWorks() {
       {/* Header */}
       <div className="bg-emerald-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">Certification Guide</h1>
+          <h1 className="text-5xl font-bold mb-4">Council Academy Guide</h1>
           <p className="text-xl text-emerald-100">
-            Understand the certification pathway, exam process, and how to advance your career as an AI Safety Analyst
+            Understand the course pathway, assessment process, and how to advance your career as an AI Safety Analyst
+          </p>
+          <p className="mt-4 text-sm text-emerald-100/80 max-w-3xl">
+            Course completion attests training completion, not conformity. Council of AI
+            measures; it does not certify or issue conformity marks.
           </p>
         </div>
       </div>
@@ -172,7 +176,7 @@ export default function CertificationHowItWorks() {
       <div className="max-w-6xl mx-auto px-4 py-16">
         {/* Certification Pathway */}
         <div className="mb-20">
-          <h2 className="text-4xl font-bold mb-12 text-center">Certification Pathway</h2>
+          <h2 className="text-4xl font-bold mb-12 text-center">Council Academy Pathway</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {certificationPathway.map((cert, idx) => (
               <Card key={idx} className="p-8 border-2 border-emerald-200 hover:border-emerald-600 transition-colors">
@@ -200,7 +204,7 @@ export default function CertificationHowItWorks() {
 
         {/* Exam Process */}
         <div className="mb-20">
-          <h2 className="text-4xl font-bold mb-12 text-center">The Exam Process</h2>
+          <h2 className="text-4xl font-bold mb-12 text-center">The Assessment Process</h2>
           <div className="space-y-6">
             {examProcess.map((item, idx) => (
               <Card key={idx} className="p-6 border-2 border-emerald-200">
@@ -221,7 +225,7 @@ export default function CertificationHowItWorks() {
 
         {/* Exam Details */}
         <div className="mb-20 bg-emerald-50 p-12 rounded-lg border-2 border-emerald-200">
-          <h2 className="text-3xl font-bold mb-8 text-center">Exam Specifications</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Assessment Specifications</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-bold text-emerald-900 mb-4">Format</h3>
@@ -232,7 +236,7 @@ export default function CertificationHowItWorks() {
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700"><strong>90 minutes</strong> - Total exam duration</span>
+                  <span className="text-gray-700"><strong>90 minutes</strong> - Total assessment duration</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
@@ -270,7 +274,7 @@ export default function CertificationHowItWorks() {
 
         {/* Renewal Options */}
         <div className="mb-20">
-          <h2 className="text-3xl font-bold mb-12 text-center">Certification Renewal Options</h2>
+          <h2 className="text-3xl font-bold mb-12 text-center">Completion Record Refresh Options</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {renewalProcess.map((option, idx) => (
               <Card key={idx} className="p-8 border-2 border-emerald-200 hover:border-emerald-600 transition-colors">
@@ -321,9 +325,9 @@ export default function CertificationHowItWorks() {
 
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Get Certified?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Start the Course?</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Start with free training and work toward your CEASAI certification
+            Start with free training and work toward your completion record
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -331,7 +335,7 @@ export default function CertificationHowItWorks() {
               className="bg-white text-emerald-600 hover:bg-emerald-50 font-bold"
               onClick={() => window.location.href = "/certification"}
             >
-              View Certification
+              View Council Academy
             </Button>
             <Button
               size="lg"

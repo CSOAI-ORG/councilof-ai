@@ -137,7 +137,7 @@ export default function McpFleet() {
         </div>
 
         <div className="mt-10 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-sm text-gray-600">
-          Every server here imports <code className="text-emerald-700">@csoai/layer0</code> → Sovereign Gate on each
+          Every server here imports <code className="text-emerald-700">@csoai/layer0</code> → Council Gate on each
           call, Ed25519 attestation, and an A2A envelope other governed agents verify offline. Conformance badge:
           <b> L0‑3</b> = attested · <b>L0‑5</b> = A2A‑ready.
         </div>

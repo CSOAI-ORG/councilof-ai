@@ -27,7 +27,7 @@ const EXAMPLES = [
   "We run facial recognition in a public space. Is that allowed?",
 ];
 
-const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "https://os.meok.ai/api";
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
 async function sha256Hex(s: string): Promise<string> { try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join(""); } catch (e) { return ""; } }
 
 type Domain = { key: string; label: string; tier: "Prohibited" | "High-risk" | "Limited" | "Minimal"; frameworks: string[]; why: string };
@@ -130,7 +130,7 @@ export default function TryCouncil() {
             <textarea value={q} onChange={(e) => setQ(e.target.value)} rows={2} placeholder="Describe your AI system… e.g. 'We use AI to screen job applicants'"
               className="w-full resize-none rounded-xl px-4 py-3 text-gray-900 outline-none placeholder:text-gray-400" />
             <div className="flex items-center justify-between gap-3 px-1 pb-1">
-              <span className="text-xs text-gray-400">Classification runs locally · convening the council sends your description to the Sovereign</span>
+              <span className="text-xs text-gray-400">Classification runs locally · convening the council sends your description to the Council assistant</span>
               <button onClick={() => ask(q)} className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Ask the Council →</button>
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function TryCouncil() {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3 text-center text-sm">
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">13</div><div className="text-gray-500">frameworks auto-mapped</div></div>
-          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">5</div><div className="text-gray-500">agents · BFT voting</div></div>
+          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">5</div><div className="text-gray-500">agents · multi-agent vote</div></div>
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">Aug 2 2026</div><div className="text-gray-500">EU AI Act deadline</div></div>
         </div>
 

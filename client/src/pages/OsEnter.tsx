@@ -53,7 +53,7 @@ export default function OsEnter() {
   const lat = loc ? loc.lat : 20, lon = loc ? loc.lon : 0, dd = 0.05;
   const bbox = (lon - dd) + "," + (lat - dd) + "," + (lon + dd) + "," + (lat + dd);
   const mapUrl = "https://www.openstreetmap.org/export/embed.html?bbox=" + bbox + "&layer=mapnik&marker=" + lat + "," + lon;
-  const place = loc ? [loc.city, loc.country].filter(Boolean).join(", ") : "the Sovereign Grid";
+  const place = loc ? [loc.city, loc.country].filter(Boolean).join(", ") : "the Council Grid";
   const jur = jurisdiction(loc ? loc.cc : "");
   const aurora = { background: "radial-gradient(900px 520px at 50% -10%, rgba(16,185,129,.20), transparent 60%), radial-gradient(700px 520px at 85% 115%, rgba(45,212,191,.16), transparent 60%)" };
 
@@ -75,10 +75,10 @@ export default function OsEnter() {
       {phase === 1 && (
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center gap-5 px-6 text-center">
           <div className="h-3 w-3 rounded-full bg-emerald-400 animate-ping" />
-          <div className="font-mono text-sm text-emerald-200/80">Establishing sovereign link{loc || err ? " complete" : "..."}</div>
+          <div className="font-mono text-sm text-emerald-200/80">Establishing Council link{loc || err ? " complete" : "..."}</div>
           {(loc || err) && (
             <div className="mt-2 rounded-2xl border border-emerald-400/30 bg-white/5 px-6 py-4">
-              <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Sovereign node located</div>
+              <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Council node located</div>
               <div className="mt-1 text-xl font-bold text-emerald-200">{"\u25C9 " + place}</div>
             </div>
           )}
@@ -87,21 +87,21 @@ export default function OsEnter() {
 
       {phase === 2 && (
         <div className="relative z-10 min-h-screen">
-          <iframe title="Your sovereign location" src={mapUrl} className="absolute inset-0 h-full w-full opacity-40" style={{ filter: "grayscale(0.3) saturate(1.2) hue-rotate(95deg) brightness(0.7)", border: "0" }} />
+          <iframe title="Your Council location" src={mapUrl} className="absolute inset-0 h-full w-full opacity-40" style={{ filter: "grayscale(0.3) saturate(1.2) hue-rotate(95deg) brightness(0.7)", border: "0" }} />
           <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(70% 70% at 50% 40%, transparent, rgba(4,7,13,.9) 80%)" }} />
           <div className="relative z-10 mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center px-6 py-12 text-center">
             <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">This is where you stand</div>
             <h1 className="mt-1 text-3xl sm:text-4xl font-black tracking-tight">{place}</h1>
 
             <div className="mt-6 w-full rounded-2xl border border-emerald-400/25 bg-white/[0.04] p-5 text-left">
-              <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Your Sovereign already knows your jurisdiction</div>
+              <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Your Council assistant already knows your jurisdiction</div>
               <div className="mt-1 text-lg font-bold text-emerald-100">{jur.region}</div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {jur.fw.map((f) => (
                   <span key={f} className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">{f}</span>
                 ))}
               </div>
-              <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Sovereign Town. No setup, no training required {"\u2014"} your Sovereign helps automatically. Prefer to learn? Immersive courses are inside.</p>
+              <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Council Town. No setup, no training required {"\u2014"} your Council assistant helps automatically. Prefer to learn? Immersive courses are inside.</p>
               <div className="mt-4 border-t border-emerald-400/15 pt-3">
                 <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Live regulation pulse · synced from the grid</div>
                 {deltas.length === 0 ? (
@@ -117,7 +117,7 @@ export default function OsEnter() {
             </div>
 
             <div className="mt-6 flex w-full flex-wrap justify-center gap-3">
-              <a href="/command-center" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 transition">Talk to your Sovereign {"\u2192"}</a>
+              <a href="/command-center" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 transition">Talk to your Council assistant {"\u2192"}</a>
               <a href="/evidence" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Connect your stack {"\u2192"}</a>
             </div>
             <button onClick={() => setPhase(3)} className="mt-5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60 hover:text-emerald-300">Or choose how you enter {"\u2193"}</button>
@@ -129,21 +129,21 @@ export default function OsEnter() {
         <div className="relative z-10 mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-6 py-12 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">Choose your hemisphere</p>
           <h2 className="mt-2 text-3xl font-black tracking-tight">How will you enter the CSOAI world?</h2>
-          <p className="mt-3 max-w-xl text-emerald-50/70">Your sovereign self can lead with either mind. Switch any time inside the OS.</p>
+          <p className="mt-3 max-w-xl text-emerald-50/70">Your Council self can lead with either mind. Switch any time inside the OS.</p>
           <div className="mt-8 grid w-full gap-4 sm:grid-cols-2">
             <a href="/command-center" className="group rounded-2xl border border-sky-400/30 bg-gradient-to-br from-sky-500/15 to-sky-400/5 p-6 text-left transition hover:scale-[1.02]">
               <div className="text-3xl">{"\u25D0"}</div>
               <div className="mt-3 text-lg font-bold text-white">Left brain {"\u2014"} Govern</div>
               <p className="mt-1 text-sm text-emerald-50/70">Command Center, compliance, evidence, certification. Structure, proof, control.</p>
             </a>
-            <a href="/sovereign-town" className="group rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-teal-400/5 p-6 text-left transition hover:scale-[1.02]">
+            <a href="/council-city" className="group rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-teal-400/5 p-6 text-left transition hover:scale-[1.02]">
               <div className="text-3xl">{"\u25D1"}</div>
               <div className="mt-3 text-lg font-bold text-white">Right brain {"\u2014"} Explore</div>
-              <p className="mt-1 text-sm text-emerald-50/70">Sovereign Town, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>
+              <p className="mt-1 text-sm text-emerald-50/70">Council Town, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>
             </a>
           </div>
           <a href="/os" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\u2192"}</a>
-          <div className="mt-6 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/40">Sovereign Town is learning {"\u00B7"} accumulating {"\u00B7"} spawning {"\u00B7"} on one signed Layer 0 floor</div>
+          <div className="mt-6 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/40">Council Town is learning {"\u00B7"} accumulating {"\u00B7"} spawning {"\u00B7"} on one signed Layer 0 floor</div>
         </div>
       )}
 

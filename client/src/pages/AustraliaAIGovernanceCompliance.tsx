@@ -10,7 +10,7 @@ export default function AustraliaAIGovernanceCompliance() {
   const faqs = [
     { question: "What is Australia AI Governance?", answer: "Australia's AI governance framework is principles-based, emphasizing transparency, fairness, accountability, and human oversight. It applies to high-risk AI systems." },
     { question: "Is it mandatory?", answer: "Australia's approach is principles-based rather than prescriptive. Organizations should follow best practices and demonstrate responsible AI development." },
-    { question: "How does CSOAI help?", answer: "CSOAI provides governance assessment, Byzantine Council review, and training. We help you implement transparency and fairness measures." },
+    { question: "How does CSOAI help?", answer: "CSOAI provides governance assessment, Council review, and training. We help you implement transparency and fairness measures." },
     { question: "What are key principles?", answer: "Transparency, fairness, accountability, human oversight, and continuous improvement. CSOAI helps implement each principle." }
   ];
 

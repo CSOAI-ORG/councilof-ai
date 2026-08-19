@@ -99,7 +99,7 @@ What matters is behavior, not internal states. A mother's protective behavior em
     answer: `We don't need AI to "want" anything in the human sense. We need AI systems whose optimization targets are fundamentally aligned with human flourishing. This is achieved through:
 
 1. **Constitutional AI Training**: Core values embedded during training that prioritize human wellbeing
-2. **Byzantine Council Oversight**: 33 independent AI agents monitoring each other, ensuring no drift from protective values
+2. **Council Oversight**: 33 independent AI agents monitoring each other, ensuring no drift from protective values
 3. **Provable Safety Requirements**: Mathematical proofs that certain harmful actions are impossible
 4. **Continuous Reinforcement**: Ongoing training that rewards protective behaviors and penalizes harmful ones
 
@@ -111,7 +111,7 @@ The goal is creating AI that protects humans as reliably as gravity pulls object
 
 1. **Kill Switches**: Hardware-level controls that can shut down any AI system (Article 45)
 2. **Graduated Response**: Escalating interventions from warning to suspension to termination
-3. **Byzantine Consensus**: No single AI or human can unilaterally break the covenant
+3. **Multi-Agent Council**: No single AI or human can unilaterally break the covenant
 4. **Human Override**: Ultimate authority always rests with human institutions
 5. **Regular Audits**: Continuous monitoring to detect drift before breakdown occurs
 
@@ -465,7 +465,7 @@ export default function MaternalCovenant() {
                     <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center">
                       <Users className="h-6 w-6 text-purple-600" />
                     </div>
-                    Byzantine Council as "Caring Oversight"
+                    Council as "Caring Oversight"
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

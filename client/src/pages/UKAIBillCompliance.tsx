@@ -10,7 +10,7 @@ export default function UKAIBillCompliance() {
   const faqs = [
     { question: "What is the UK AI Bill?", answer: "The UK AI Bill is a flexible, principles-based AI regulation that applies to high-risk AI systems. It emphasizes transparency, accountability, and human oversight." },
     { question: "Is it mandatory?", answer: "Yes, for high-risk AI systems operating in the UK. The UK AI Bill takes a flexible approach, allowing sector-specific guidance." },
-    { question: "How does CSOAI help?", answer: "CSOAI provides UK AI Bill compliance assessment, Byzantine Council review, and training. We help you implement transparency and accountability measures." },
+    { question: "How does CSOAI help?", answer: "CSOAI provides UK AI Bill compliance assessment, Council review, and training. We help you implement transparency and accountability measures." },
     { question: "What are key requirements?", answer: "Transparency, accountability, risk management, human oversight, and documentation. CSOAI helps implement each requirement." }
   ];
 

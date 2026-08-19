@@ -31,7 +31,7 @@ const PATHS: Path[] = [
 ];
 
 export default function SovereignAcademy() {
-  useEffect(() => { document.title = "Sovereign Academy — CSOAI"; }, []);
+  useEffect(() => { document.title = "Council Academy — CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
@@ -41,8 +41,8 @@ export default function SovereignAcademy() {
             <div className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-300/50 bg-emerald-500/15 text-xl">{"\u25C9"}</div>
             <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Learn by living it</p>
           </div>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Sovereign Academy</h1>
-          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">No manuals. Your Sovereign walks you through governance as a journey — from the Layer 0 floor to the frameworks and law that apply to you, into the tools, to certification. Every step flows into the real OS.</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Council Academy</h1>
+          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">No manuals. Your Council assistant walks you through governance as a journey — from the Layer 0 floor to the frameworks and law that apply to you, into the tools, to certification. Every step flows into the real OS.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/tour" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Take the guided tour {"\u2192"}</a>
             <a href="/readiness-assessment" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Free readiness check {"\u2192"}</a>
@@ -75,7 +75,7 @@ export default function SovereignAcademy() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          You never have to read a manual. Open the <b>Sovereign</b> on any page and say <i>"teach me about the EU AI Act"</i> or <i>"start my certification"</i> — it takes you straight there. Learning and doing are the same motion now.
+          You never have to read a manual. Open the <b>Council assistant</b> on any page and say <i>"teach me about the EU AI Act"</i> or <i>"start my certification"</i> — it takes you straight there. Learning and doing are the same motion now.
         </div>
       </section>
     </div>

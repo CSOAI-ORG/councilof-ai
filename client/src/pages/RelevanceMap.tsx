@@ -26,11 +26,28 @@ const INDUSTRIES = ["Finance", "Healthcare", "Energy & Infrastructure", "Governm
 // frameworks every high-risk deployer should also expect, surfaced as gaps if no bridge covers them
 const BASELINE = ["EU AI Act", "NIST AI RMF", "ISO 42001"];
 
+const REGION_TAGS: Record<string, string[]> = {
+  EU: ["EU AI Act", "GDPR", "DORA", "NIS2", "MDR", "eIDAS", "CRA", "Data Act", "MiCA", "PSD2", "CSRD", "MiFID"],
+  US: ["SEC", "HIPAA", "NIST", "FDA", "CCPA", "GLBA", "SOX", "FERPA", "COPPA", "FTC", "NAIC", "CFTC"],
+  Global: ["ISO", "IEC", "OECD", "UNESCO", "Basel", "SWIFT", "PCI"],
+};
+
+const REGIONS = ["All", "EU", "US", "Global"];
+
+function inRegion(frameworks: string[], region: string) {
+  if (region === "All") return true;
+  const tags = REGION_TAGS[region] || [];
+  return frameworks.some(function (f) {
+    return tags.some(function (t) { return f.toUpperCase().indexOf(t.toUpperCase()) > -1; });
+  });
+}
+
 export default function RelevanceMap() {
   useEffect(() => { document.title = "Relevance Map — what governs what · CSOAI"; }, []);
   const [industry, setIndustry] = useState<string | null>(null);
+  const [region, setRegion] = useState<string>("All");
 
-  const bridges = industry ? BRIDGES.filter((b) => b.industries.includes(industry)) : [];
+  const bridges = industry ? BRIDGES.filter((b) => b.industries.includes(industry) && inRegion(b.frameworks, region)) : [];
   const frameworks = Array.from(new Set(bridges.flatMap((b) => b.frameworks)));
   const gaps = BASELINE.filter((f) => !frameworks.includes(f));
 
@@ -53,6 +70,12 @@ export default function RelevanceMap() {
           <div className="mt-6 flex flex-wrap gap-2">
             {INDUSTRIES.map((ind) => (
               <button key={ind} onClick={() => setIndustry(ind)} className={"rounded-full border px-4 py-2 text-sm font-semibold transition-colors " + (industry === ind ? "border-emerald-300 bg-emerald-400 text-[#03110b]" : "border-emerald-300/40 text-emerald-50 hover:bg-white/10")}>{ind}</button>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-xs uppercase tracking-wider text-emerald-200/70">Region</span>
+            {REGIONS.map((r) => (
+              <button key={r} onClick={() => setRegion(r)} className={"rounded-full border px-3 py-1 text-xs font-semibold transition-colors " + (region === r ? "border-teal-300 bg-teal-400 text-[#03110b]" : "border-teal-300/40 text-teal-50 hover:bg-white/10")}>{r}</button>
             ))}
           </div>
         </div>

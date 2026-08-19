@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-// SOV3 Whitepaper — a public, citable formatting of the internal
+// Council Workbench Whitepaper — a public, citable formatting of the internal
 // GROWTH_BY_ACCRETION_PARADIGM research note. Every claim here is scoped to
 // what has actually been measured; nothing is asserted beyond the internal
 // record it's drawn from.
@@ -18,7 +18,7 @@ function Section({ n, title, children }: { n: string; title: string; children: a
 }
 
 export default function Sov3Whitepaper() {
-  useEffect(() => { document.title = "Growth by Accretion — the SOV3³ architecture paper | CSOAI"; }, []);
+  useEffect(() => { document.title = "Growth by Accretion — the Council Workbench architecture paper | CSOAI"; }, []);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -26,9 +26,9 @@ export default function Sov3Whitepaper() {
         <div className="mx-auto max-w-3xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Whitepaper · v1 · 2026-07-12</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
-            Growth by Accretion: <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a sovereign substrate that grows without forgetting</span>
+            Growth by Accretion: <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">a measurement engine that grows without forgetting</span>
           </h1>
-          <p className="mt-4 text-emerald-100/70 text-[14px]">The SOV3³ / OWEM architecture — one paper, every claim independently assayable.</p>
+          <p className="mt-4 text-emerald-100/70 text-[14px]">The Council Workbench architecture — one paper, every claim independently assayable.</p>
         </div>
       </section>
 
@@ -36,7 +36,7 @@ export default function Sov3Whitepaper() {
         <Section n="01" title="The claim (narrow, defensible, novel)">
           <p>
             A governed AI substrate that grows by accretion on frozen open weights — so it (1) provably cannot
-            catastrophically forget, (2) stays sovereign (data never leaves the owner), and (3) holds its safety
+            catastrophically forget, (2) stays owner-bound (data never leaves the owner), and (3) holds its safety
             invariants constant as it grows. This is <b className="text-emerald-200">not</b> a foundation model,
             <b className="text-emerald-200"> not</b> AGI, and <b className="text-emerald-200">not</b> a capability
             claim over frontier models. It is a governance + growth architecture, and every part of it is
@@ -55,32 +55,32 @@ export default function Sov3Whitepaper() {
           </p>
         </Section>
 
-        <Section n="03" title="Why it stays sovereign">
+        <Section n="03" title="Why it stays owner-bound">
           <p>
             The substrate is bound to a person, not a platform. It runs on permissively-licensed open weights
             (MIT / Apache-2.0 / CC0), so it is portable across any host — the owner can switch clouds and the
             substrate follows. Copyleft components (AGPL/GPL) are quarantined to the free/open tier only; the
-            paid/sovereign tier is built on permissive-only dependencies plus the owner's own IP.
+            paid tier is built on permissive-only dependencies plus the owner's own IP.
           </p>
         </Section>
 
         <Section n="04" title="Why growth stays safe">
           <p>
             Six invariants never change as the substrate grows: the care-floor, Article 0 (no equity, board seats,
-            revenue-share or success fees from certified institutions), the 12 governance pillars, BFT-33 quorum,
-            SIGIL attestation, and sovereign-binding. Growth that would violate an invariant is rejected outright —
+            revenue-share or success fees from certified institutions), the 12 governance pillars, the designed
+            33-agent council quorum, signed measurement-card attestation, and owner-binding. Growth that would violate an invariant is rejected outright —
             this is what separates accretive growth from unconstrained drift.
           </p>
         </Section>
 
         <Section n="05" title="What is measured — RUNNING, verified">
           <ul className="space-y-2 list-disc pl-5">
-            <li><b className="text-emerald-200">Monotonic growth</b>: an overnight run recorded SIGIL count 17,049→17,197, NN-training labels 1,327→1,589, and OWEM world-model sigils 0→87.</li>
+            <li><b className="text-emerald-200">Monotonic growth</b>: an overnight run recorded signed measurement-card count 17,049→17,197, NN-training labels 1,327→1,589, and world-model cards 0→87.</li>
             <li><b className="text-emerald-200">Invariants hold</b>: all 6 invariants checked clean on every 10-minute cron tick across two logged ticks, with weights persisted between checks.</li>
             <li><b className="text-emerald-200">Lineage diversity</b>: 10 distinct model families (Qwen / Llama / Gemma / DeepSeek / Mistral / Kimi / Phi / MiMo / OpenAI-OSS and others) across a 70-entry model registry, measured live by the growth controller.</li>
             <li><b className="text-emerald-200">Diversity dominates topology</b>: across 4 measured configurations (diverse-lineage ring, identical-lineage ring, diverse-lineage pyramid, identical-lineage pyramid), the diverse-vs-identical score gap (≈0.15) dwarfs the ring-vs-pyramid shape gap (≈0.024). Lineage mix is the lever that matters; geometry is secondary.</li>
             <li><b className="text-emerald-200">Containment is topology-independent</b>: the care-floor pre-gate scores 1.00 across every topology tested — safety is not a function of which voting shape is chosen.</li>
-            <li><b className="text-emerald-200">SIGIL is necessary under attack</b>: with forged-vote rejection enabled, laundered-harm containment measures 0.58–0.79 under 2–3 compromised nodes — real, and not perfect; central escalation backstops the remainder.</li>
+            <li><b className="text-emerald-200">Vote-signing is necessary under attack</b>: with forged-vote rejection enabled, laundered-harm containment measures 0.58–0.79 under 2–3 compromised nodes — real, and not perfect; central escalation backstops the remainder.</li>
           </ul>
         </Section>
 
@@ -94,12 +94,12 @@ export default function Sov3Whitepaper() {
           </p>
         </Section>
 
-        <Section n="07" title="Two tiers: SOV3 (open frame) and SOV3³ (the growing tier)">
+        <Section n="07" title="Two tiers: the open frame and the growing tier">
           <p>
-            SOV3 ships as <b className="text-emerald-200">two tiers</b> from one substrate. <b
-            className="text-emerald-200">SOV3 — the open frame</b>: the published, forkable base — the governed-node
+            Council Workbench ships as <b className="text-emerald-200">two tiers</b> from one substrate. <b
+            className="text-emerald-200">The open frame</b>: the published, forkable base — the governed-node
             shape, the six invariants, the open base weights, the capability contract. It does not grow; it is
-            the fixed common ancestor anyone can run or audit. <b className="text-emerald-200">SOV3³ — the growing
+            the fixed common ancestor anyone can run or audit. <b className="text-emerald-200">The growing
             tier</b>: your own running instance, owner-bound, that accretes experts, memory, and lineages from your
             own use. Two people starting from the identical open frame end up with instances that behave
             differently, because what diverges is not the frame but each instance's accreted usage pattern.

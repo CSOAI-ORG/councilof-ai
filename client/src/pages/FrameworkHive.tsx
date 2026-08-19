@@ -5,7 +5,7 @@ import { chargeSovereign } from "../lib/sovCharge";
 
 import { askSovereign } from "../lib/sovAsk";
 import AISystemNotice from "../components/AISystemNotice";
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 async function askSov(q: string): Promise<string> {
   // Route through the CSOAI-Sovereign guard (role-framed + companion-bleed rejected).
   const r = await askSovereign(q, { fallback: "" });
@@ -38,7 +38,7 @@ function Hero() {
       <div className="mx-auto max-w-6xl px-6 pt-14 pb-8 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · the framework hive</p>
         <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight text-emerald-50">Every framework. <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Everything collected.</span></h1>
-        <p className="mx-auto mt-3 max-w-2xl text-emerald-100/75">Click any framework and your Sovereign brings the whole hive together — who must comply, the obligations, penalties, sectors, cyber threats, crosswalks, and the deadline clock. Then it helps you simulate, get compliant, and get trained.</p>
+        <p className="mx-auto mt-3 max-w-2xl text-emerald-100/75">Click any framework and your Council assistant brings the whole hive together — who must comply, the obligations, penalties, sectors, cyber threats, crosswalks, and the deadline clock. Then it helps you simulate, get compliant, and get trained.</p>
       </div>
     </section>
   );
@@ -93,7 +93,7 @@ function Detail({ f }: { f: HiveFramework }) {
 
       {/* Sovereign action bar */}
       <div className="mt-6 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-4">
-        <div className="text-sm font-bold text-emerald-200">Your Sovereign — do it all here</div>
+        <div className="text-sm font-bold text-emerald-200">Your Council assistant — do it all here</div>
         {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026. */}
         <div role="status" aria-live="polite" className="mt-2 rounded-md border border-amber-400/35 bg-amber-400/10 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
           You are interacting with an AI system.
@@ -104,7 +104,7 @@ function Detail({ f }: { f: HiveFramework }) {
         </div>
         {ans && <div className="mt-3 max-h-56 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-emerald-50/90">{ans}</div>}
         <div className="mt-3 flex flex-wrap gap-2">
-          <a href={"/sov-space?demo=" + simQ} className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">▶ Run a compliance simulation</a>
+          <a href={"/council-space?demo=" + simQ} className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">▶ Run a compliance simulation</a>
           <a href="/readiness-assessment" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get compliant — 2-min check</a>
           <a href="/academy" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get trained</a>
           <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card</a>

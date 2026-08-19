@@ -17,7 +17,7 @@ const openPositions = [
     department: "Research",
     location: "Remote / London",
     type: "Full-time",
-    description: "Help develop and refine AI safety frameworks, contribute to the Byzantine Council architecture, and advance the field of AI governance."
+    description: "Help develop and refine AI safety frameworks, contribute to the Council architecture, and advance the field of AI governance."
   },
   {
     title: "Full Stack Developer",

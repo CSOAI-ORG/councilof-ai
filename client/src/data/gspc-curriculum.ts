@@ -19,7 +19,7 @@ export interface GSPCScenario {
   provisions: number; // how many of the 417 provisions this covers
   role: string; // which persona this serves
   scenario: string; // the Sov Space scenario prompt
-  expectedOutcome: string; // what the Sovereign should conclude
+  expectedOutcome: string; // what the Council assistant should conclude
   honeyReward: number; // honey points earned on completion
 }
 

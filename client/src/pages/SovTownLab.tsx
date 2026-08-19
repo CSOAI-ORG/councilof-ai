@@ -58,7 +58,7 @@ export default function SovTownLab() {
             SOV Town <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">Lab</span>
           </h1>
           <p className="mt-4 text-[14px] text-emerald-100/70 max-w-3xl">
-            Headless MicropolisJ engine running on oracle-micro-2. Every tick emits
+            Headless MicropolisJ engine. Every tick emits
             JSON state streamed to this page. This is the governance simulation
             sandbox -- not a product surface. GPL-3.0 applies to the engine.
           </p>
@@ -81,7 +81,7 @@ export default function SovTownLab() {
             </div>
           ) : (
             <p className="mt-4 text-[13px] text-emerald-100/50">
-              Awaiting engine tick from oracle-micro-2...
+              Awaiting engine tick...
             </p>
           )}
         </section>

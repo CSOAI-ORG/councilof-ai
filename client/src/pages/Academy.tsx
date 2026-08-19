@@ -20,9 +20,9 @@ const TRACKS: Track[] = [
     { t: "Industry Playbooks", href: "/playbooks" },
     { t: "Ask the Council about your system", href: "/try" },
   ]},
-  { id: "build", name: "Build on the OS", level: "Advanced", mins: 30, blurb: "Legacy bridging, sovereign towns, and the distribution model.", steps: [
+  { id: "build", name: "Build on the OS", level: "Advanced", mins: 30, blurb: "Legacy bridging, Council towns, and the distribution model.", steps: [
     { t: "Legacy Bridge", href: "/legacy" },
-    { t: "Sov Towns - the multiplication engine", href: "/towns" },
+    { t: "Council Towns - the multiplication engine", href: "/towns" },
     { t: "Services - the whole OS", href: "/services" },
   ]},
 ];

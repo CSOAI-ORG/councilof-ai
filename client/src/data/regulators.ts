@@ -7,7 +7,7 @@
 // so the read stays current. Volatile items (US executive orders, Canada AIDA)
 // are marked status "shifting".
 //
-// This is the structured spine the Sovereign acts on: each regime maps to CSOAI
+// This is the structured spine the Council assistant acts on: each regime maps to CSOAI
 // coverage (Hive slug + Layer 0 tooling) so "comply once, crosswalk everywhere".
 
 export type RegStatus = "in-force" | "phasing-in" | "voluntary" | "proposed" | "shifting";

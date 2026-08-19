@@ -1,13 +1,11 @@
-# Councilof Ai
+# Council of AI
 
-[![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
-[![EU AI Act](https://img.shields.io/badge/EU%20AI%20Act-Compliant-22c55e)](https://councilof.ai)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyPI](https://img.shields.io/badge/PyPI-Install-3775a9)](https://pypi.org/project/councilof_ai/)
 
-> Democratic AI Governance through Council of 12 AIs - councilof
+> Independent AI-governance measurement. We measure, we sign, we re-attest — everyone can check.
 
-Democratic AI Governance through Council of 12 AIs - councilof.ai
+Council of AI (CSOAI LTD, UK Companies House 16939677) is an independent measurement body for AI behaviour. We run AI systems on published, frozen instruments; issue the results as signed, offline-verifiable measurement credentials (Ed25519); and re-measure on a cadence so the evidence stays current. **Measurement, not certification** — we do not certify, sell ratings, or remediate, and we take no money from anything we rank. Verification is free and loginless.
 
 ---
 
@@ -21,51 +19,42 @@ pip install councilof_ai
 npx -y @smithery/cli@latest install councilof-ai --client claude
 ```
 
-## ✨ Features
+## 📏 What we measure
 
-- MCP protocol compliant
-- Easy installation
-- Well-documented API
-- Production-ready
-- Active maintenance
+- **13 GSPC measurement axes** — governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect
+- **Deterministic grading** on frozen instruments — no LLM-as-judge, no invented scores
+- **UNMEASURED is a first-class outcome** — gaps are reported with their n and limits, never hidden, never scored as a fail
+- **Signed credentials** — Ed25519 over SHA-256, chain-linked, time-anchored, offline-verifiable
+- **Live axis data**: `GET https://councilof.ai/api/gspc` (schema `csoai.gspc-axes/0.3`)
+
+## 🧭 Verify
+
+Every published measurement carries a public key and a verify path. Check any credential at:
+
+- **https://councilof.ai/verify** — free, no login
 
 ## 📖 Documentation
 
-- [Full Documentation](https://docs.meok.ai/councilof-ai)
-- [API Reference](https://api.meok.ai)
-- [EU AI Act Compliance Guide](https://councilof.ai/compliance)
+- [Measurement body overview](https://councilof.ai/about/)
+- [Methodology — how we measure](https://councilof.ai/methodology/)
+- [GSPC scoreboard](https://councilof.ai/gspc-scoreboard)
+- [All published measurements](https://councilof.ai/benchmarks)
+- [EU AI Act Article 50 guide](https://councilof.ai/article-50)
 
-## 🛡️ Compliance
+## ⚖️ What we never do
 
-This MCP server is built with **EU AI Act compliance** built-in:
+- ❌ Certify AI systems or issue compliance badges
+- ❌ Sell ratings, rankings position, or early sight of grades
+- ❌ Remediate or recommend fixes in exchange for fees
+- ❌ Take money in either direction from anything we rank
 
-- ✅ Article 9 — Risk Management System
-- ✅ Article 13 — Transparency & Instructions for Use
-- ✅ Article 15 — Bias Detection & Testing
-- ✅ Article 26 — FRIA Support (where applicable)
-- ✅ Article 50 — AI Content Watermarking (where applicable)
+## 🤝 Part of the Council of AI ecosystem
 
-Need help getting compliant? **[Book a free 15-min diagnostic →](https://cal.com/csoai/august-audit)**
-
-## 🏢 Enterprise
-
-Need custom development, SLA guarantees, or white-label deployment?
-
-- **Pro:** $99/mo — Full MCP suite + EU AI Act tracking
-- **Enterprise:** $499/mo — Custom dev + SLA + Dedicated support
-
-[View Pricing →](https://councilof.ai/pricing) | [Contact Sales →](mailto:sales@csoai.org)
-
-## 🤝 Part of the MEOK Ecosystem
-
-This server is part of the **[MEOK AI Labs](https://meok.ai)** ecosystem — 300+ MCP servers for sovereign AI governance.
-
-| Domain | Purpose |
-|--------|---------|
-| [councilof.ai](https://councilof.ai) | EU AI Act compliance marketplace |
-| [safetyof.ai](https://safetyof.ai) | AI safety & monitoring |
+| Surface | Purpose |
+|---------|---------|
+| [councilof.ai](https://councilof.ai) | Measurement body — signed credentials, verify, scoreboard |
+| [csoai.org](https://csoai.org) | Public site |
 | [meok.ai](https://meok.ai) | Sovereign AI platform |
-| [cobolbridge.ai](https://cobolbridge.ai) | Legacy modernization |
 
 ## 📜 License
 
@@ -74,5 +63,5 @@ MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
 ---
 
 <p align="center">
-  <sub>Built with 💜 by <a href="https://meok.ai">MEOK AI Labs</a> · UK Companies House 16939677</sub>
+  <sub>Council of AI · CSOAI LTD · UK Companies House 16939677 · We measure. We sign. We re-attest.</sub>
 </p>

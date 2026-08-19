@@ -36,7 +36,7 @@ const LAWS = [
 
 export default function GovernanceLayer() {
   useEffect(() => {
-    document.title = "Sovereign Governance Layer — measured compliance for your AI | CSOAI";
+    document.title = "Council Governance Layer — measured compliance for your AI | CSOAI";
   }, []);
 
   return (
@@ -49,7 +49,7 @@ export default function GovernanceLayer() {
             Your model keeps its brain.<br />Ours keeps it legal.
           </h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">
-            The Sovereign Governance Layer wraps your model in the duties regulators actually enforce —
+            The Council Governance Layer wraps your model in the duties regulators actually enforce —
             EU AI Act transparency and high-risk obligations, NIST AI RMF, ISO 42001 — and proves it
             with signed, per-cell evidence. Not a promise. A measurement.
           </p>

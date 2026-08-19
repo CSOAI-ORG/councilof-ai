@@ -3,7 +3,7 @@ name: Build + deploy site (prerender + fields + tour → both domains)
 on:
   push:
     branches: [master, main]
-    paths: ['client/**', 'functions/**', 'scripts/**', 'package.json', '.github/workflows/deploy.yml']
+    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch: {}
 
 concurrency: { group: site-deploy, cancel-in-progress: true }
@@ -30,7 +30,7 @@ jobs:
 
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
-          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench; do
+          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench gspc-scoreboard paper-district; do
             if [ -f "client/public/$b.html" ]; then
               cp "client/public/$b.html" "dist/client/$b.html"
               mkdir -p "dist/client/$b"
@@ -39,17 +39,12 @@ jobs:
             fi
           done
 
-      - name: Wire the AI-voice tour into every page
-        run: |
-          for f in $(find dist/client -name "*.html"); do
-            grep -q "sov-tour.js" "$f" || sed -i 's#</body>#<script defer src="/sov-tour.js"></script></body>#I' "$f"
-          done
-          echo "tour wired; sov-tour.js present: $([ -f dist/client/sov-tour.js ] && echo yes || echo NO)"
+      - name: Brand gate — block deploy on any forbidden display string (audit §6.2)
+        run: node scripts/brand-gate.mjs dist/client
 
       - name: Deploy → councilof.ai
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
-        run: npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true
+        run: npx wrangler pages deploy --branch=main --commit-dirty=true
 
-      - name: Deploy → csoai.org
-        env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
-        run: npx wrangler pages deploy dist/client --project-name=csoai-site --branch=main --commit-dirty=true
+      # csoai.org now 301s to councilof.ai (apex-redirect.yml owns that deploy).
+      # Do NOT redeploy the SPA to csoai-site — that would clobber the redirect.

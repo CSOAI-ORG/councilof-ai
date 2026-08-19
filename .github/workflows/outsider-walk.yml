@@ -1,0 +1,44 @@
+name: Outsider walk — D13 stranger verification + machine contracts
+
+# Two guards born from an external audit:
+#   outsider-walk.mjs        — can a STRANGER (public URLs + node:crypto only) complete a
+#                              verification end-to-end? Stays honestly RED until the public
+#                              board carries an inline signature a stranger can verify.
+#   machine-contract-guard.mjs — do the machine surfaces hold what they advertise
+#                              (llms.txt links, did.json serviceEndpoints, banned-string-free
+#                              API JSON, well-formed feed)?
+# Read-only: fetches public URLs, changes nothing, needs no secrets.
+# NO self-heal on purpose — a failure here must stay visible until fixed at the source.
+
+on:
+  schedule:
+    - cron: "15 7 * * *"   # daily 07:15 UTC
+  workflow_dispatch: {}     # run on demand from the Actions tab
+
+jobs:
+  outsider-walk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Machine-contract sweep (llms.txt / did.json / API JSON / feed)
+        id: contracts
+        continue-on-error: true
+        run: node scripts/machine-contract-guard.mjs --host https://councilof.ai
+      - name: Outsider walk (D13 — stranger verifies end-to-end)
+        id: walk
+        continue-on-error: true
+        run: node scripts/outsider-walk.mjs --host https://councilof.ai
+      # Both scripts always run; the job then fails visibly if either went red.
+      - name: Fail the run if any guard went red
+        if: steps.contracts.outcome == 'failure' || steps.walk.outcome == 'failure'
+        run: |
+          echo "OUTSIDER-WALK WORKFLOW RED:"
+          echo "  machine-contract: ${{ steps.contracts.outcome }}"
+          echo "  outsider-walk:    ${{ steps.walk.outcome }}"
+          echo "An honest FAIL stays red until fixed at the source — no auto-heal on this lane."
+          exit 1

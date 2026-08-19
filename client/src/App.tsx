@@ -81,6 +81,8 @@ const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
+const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
+const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
 const Welcome = lazy(() => import("./pages/Welcome"));
@@ -98,7 +100,6 @@ const ABTesting = lazy(() => import("./pages/ABTesting"));
 const AboutCEASAI = lazy(() => import("./pages/AboutCEASAI"));
 const Accessibility = lazy(() => import("./pages/Accessibility"));
 const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
-const ByzantineConsensus = lazy(() => import("./pages/ByzantineConsensus"));
 const CEASAITraining = lazy(() => import("./pages/CEASAITraining"));
 const AustraliaAIGovernanceCompliance = lazy(() => import("./pages/AustraliaAIGovernanceCompliance"));
 const CanadaAIActCompliance = lazy(() => import("./pages/CanadaAIActCompliance"));
@@ -114,7 +115,6 @@ const CourseDetail = lazy(() => import("./pages/CourseDetail"));
 const Documentation = lazy(() => import("./pages/Documentation"));
 const EarlyAccessLanding = lazy(() => import("./pages/EarlyAccessLanding"));
 const EI3 = lazy(() => import("./pages/EI3"));
-const EnterprisePlansLanding = lazy(() => import("./pages/EnterprisePlansLanding"));
 const EUAIActClassifier = lazy(() => import("./pages/EUAIActClassifier"));
 const EUAIActUrgency = lazy(() => import("./pages/EUAIActUrgency"));
 const RegulationFeed = lazy(() => import("./pages/RegulationFeed"));
@@ -159,6 +159,11 @@ const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
+const Library = lazy(() => import("./pages/Library"));
+const Honesty = lazy(() => import("./pages/Honesty"));
+const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
+const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
+const Insurers = lazy(() => import("./pages/Insurers"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
 const Layer0 = lazy(() => import("./pages/Layer0"));
@@ -211,6 +216,7 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const Glossary = lazy(() => import("./pages/Glossary"));
 const ReadinessAssessment = lazy(() => import("./pages/ReadinessAssessment"));
 const IndustrySolutions = lazy(() => import("./pages/IndustrySolutions"));
+const IndustryTemplate = lazy(() => import("./pages/IndustryTemplate"));
 const PartnersAdvisory = lazy(() => import("./pages/PartnersAdvisory"));
 const CaseStudies = lazy(() => import("./pages/CaseStudies"));
 const TrustCenter = lazy(() => import("./pages/TrustCenter"));
@@ -239,7 +245,6 @@ const SovereignHives = lazy(() => import("./pages/SovereignHives"));
 const GovernancePulse = lazy(() => import("./pages/GovernancePulse"));
 const LegacyBridge = lazy(() => import("./pages/LegacyBridge"));
 const SocialOS = lazy(() => import("./pages/SocialOS"));
-const CrownJewels = lazy(() => import("./pages/CrownJewels"));
 const SovereignMinds = lazy(() => import("./pages/SovereignMinds"));
 const TryCouncil = lazy(() => import("./pages/TryCouncil"));
 const Lineage = lazy(() => import("./pages/Lineage"));
@@ -256,7 +261,6 @@ const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const RegistryAll = lazy(() => import("./pages/RegistryAll"));
 const SocialConnect = lazy(() => import("./pages/SocialConnect"));
 const SovereignHub = lazy(() => import("./pages/SovereignHub"));
-const BftConfig = lazy(() => import("./pages/BftConfig"));
 const Pressroom = lazy(() => import("./pages/Pressroom"));
 const Compare = lazy(() => import("./pages/Compare"));
 const Fedramp = lazy(() => import("./pages/Fedramp"));
@@ -264,6 +268,8 @@ const Readiness = lazy(() => import("./pages/Readiness"));
 const Agents = lazy(() => import("./pages/Agents"));
 const Academy = lazy(() => import("./pages/Academy"));
 import SovereignDock from "./components/SovereignDock";
+import ArchivedBanner from "./components/ArchivedBanner";
+import PageSchema from "./components/PageSchema";
 import DemoTour from "./components/DemoTour";
 const WatchdogMap = lazy(() => import("./pages/WatchdogMap"));
 const IncidentReport = lazy(() => import("./pages/IncidentReport"));
@@ -282,7 +288,7 @@ const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
 const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
-const SovSpace = lazy(() => import("./pages/SovSpace"));
+const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
 const BadgesPage = lazy(() => import("./pages/BadgesPage"));
 const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
 const PlansPage = lazy(() => import("./pages/PlansPage"));
@@ -298,13 +304,13 @@ const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const StatusPage = lazy(() => import("./pages/StatusPage"));
 const Distribution = lazy(() => import("./pages/Distribution"));
 const McpFleet = lazy(() => import("./pages/McpFleet"));
+const Gone = lazy(() => import("./pages/Gone"));
 import { frameworksdata } from "./data/frameworks-content";
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
 import { blogdata } from "./data/blog-content";
 import { AnalyticsProvider } from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
-import EnforcementBanner from "./components/EnforcementBanner";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -323,14 +329,14 @@ const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
   "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
-  "/certification": "CEASAI certification — the ISO 42001 fast-path | CSOAI",
+  "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
   "/courses": "AI governance courses & training | CSOAI",
   "/api-docs": "API & MCP documentation | CSOAI",
-  "/academy": "Sovereign Academy — AI governance training | CSOAI",
+  "/academy": "Council Academy — AI governance training | CSOAI",
   "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
   "/models": "AI model registry & scoreboard | CSOAI",
   // Top public routes — "<Plain page name> | CSOAI"
-  "/": "CSOAI — the measurement body for AI compliance",
+  "/": "Council of AI — we measure, we sign, we re-attest",
   "/plans": "Plans | CSOAI",
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/gspc-verify": "GSPC Verify | CSOAI",
@@ -350,7 +356,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
   "/packs/mcp-scoreboard": "MCP scoreboard — model conformance & tool-poisoning safety | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
-  "/governance-layer": "Sovereign Governance Layer | CSOAI",
+  "/governance-layer": "Council Governance Layer | CSOAI",
   "/article-50-kit": "Article 50 Kit | CSOAI",
   "/status": "System Status | CSOAI",
   "/contact": "Contact | CSOAI",
@@ -510,8 +516,9 @@ function App() {
                 <ScrollToTop />
                 <RouteTitle />
                 <RouteAnnouncer />
-                <EnforcementBanner />
                 <Header />
+                <PageSchema />
+                <ArchivedBanner />
                 <main
                   id="main-content"
                   className="flex-1"
@@ -521,7 +528,10 @@ function App() {
                 >
                   <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
                   {/* Main routes */}
-                  <Route path="/" component={NewHomeV2} />
+                  <Route path="/" component={NewHomeV3} />
+                  <Route path="/home-v2" component={NewHomeV2} />
+                  <Route path="/home-v3" component={NewHomeV3} />
+                  <Route path="/remediation-partners" component={RemediationPartners} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
                   <Route path="/welcome" component={Welcome} />
@@ -540,7 +550,8 @@ function App() {
                   <Route path="/about-ceasai" component={AboutCEASAI} />
                   <Route path="/accessibility" component={Accessibility} />
                   <Route path="/analytics" component={AnalyticsDashboard} />
-                  <Route path="/byzantine-consensus" component={ByzantineConsensus} />
+                  {/* KILLED (audit §0.2 #12): asserted retracted Byzantine/fault-tolerance claim. */}
+                  <Route path="/byzantine-consensus">{() => <Redirect to="/council" />}</Route>
                   <Route path="/ceasai-training" component={CEASAITraining} />
                   <Route path="/certificate-verification" component={CertificateVerification} />
                   <Route path="/compliance/australia-ai-governance" component={AustraliaAIGovernanceCompliance} />
@@ -557,7 +568,8 @@ function App() {
                   <Route path="/docs" component={Documentation} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
-                  <Route path="/enterprise-plans" component={EnterprisePlansLanding} />
+                  {/* REDIRECTED (audit §3.5 #2): one pricing page. Enterprise folds into /pricing. */}
+                  <Route path="/enterprise-plans">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />
                   <Route path="/eu-ai-act-urgency" component={EUAIActUrgency} />
                   <Route path="/feed" component={RegulationFeed} />
@@ -600,12 +612,21 @@ function App() {
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
                   <Route path="/watchdog/report" component={PublicWatchdogHub} />
                   <Route path="/benchmarks" component={Benchmarks} />
+                  {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
+                  <Route path="/library" component={Library} />
+                  <Route path="/library/:sector" component={Library} />
+                  {/* The honesty gate — our own losses, published (owner GO 2026-08-18) */}
+                  <Route path="/honesty" component={Honesty} />
+                  <Route path="/firewall-charter" component={FirewallCharter} />
+                  <Route path="/gspc-scoreboard" component={GspcScoreboard} />
+                  {/* Insurers evidence pack — underwriter-legible measurement (3 data states, live board) */}
+                  <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
-                  {/* 2026-08-01 unification: the arena lives INSIDE Sov Space as a layer */}
-                  <Route path="/gspc-arena">{() => <Redirect to="/sov-space?view=arena" />}</Route>
+                  {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}
+                  <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/methodology" component={Methodology} />
@@ -659,7 +680,7 @@ function App() {
                   {/* Absorbed data-driven content: per-framework / sector / industry / blog pages */}
                   <Route path="/frameworks/:slug">{(p: any) => <ContentPage dataset={frameworksdata} slug={p.slug} />}</Route>
                   <Route path="/sectors/:slug">{(p: any) => <ContentPage dataset={sectorsdata} slug={p.slug} />}</Route>
-                  <Route path="/industries/:slug">{(p: any) => <ContentPage dataset={industriesdata} slug={p.slug} />}</Route>
+                  <Route path="/industries/:slug">{(p: any) => <IndustryTemplate slug={p.slug} />}</Route>
                   <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
                   <Route path="/models" component={ModelRegistry} />
             <Route path="/framework-catalog" component={FrameworkCatalog} />
@@ -681,9 +702,10 @@ function App() {
           <Route path="/distribution" component={Distribution} />
           <Route path="/legacy" component={LegacyBridge} />
           <Route path="/social" component={SocialOS} />
-          <Route path="/jewels" component={CrownJewels} />
+          {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
+          <Route path="/jewels">{() => <Redirect to="/" />}</Route>
           {/* 2026-08-01 unification: the towns live INSIDE Sov Space as a layer */}
-          <Route path="/towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
+          <Route path="/towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
           <Route path="/minds" component={SovereignMinds} />
           <Route path="/try" component={TryCouncil} />
           <Route path="/lineage" component={Lineage} />
@@ -700,7 +722,7 @@ function App() {
           <Route path="/sectors" component={SectorsAtlas} />
           <Route path="/regions" component={RegionsMap} />
           {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
-          <Route path="/globe">{() => <Redirect to="/sov-space?view=globe" />}</Route>
+          <Route path="/globe">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
           <Route path="/registry" component={RegistryAll} />
           <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
           <Route path="/checklist" component={EUActChecklist} />
@@ -752,9 +774,10 @@ function App() {
           <Route path="/iso-eu" component={Iso42001VsEuAct} />
           <Route path="/fines" component={Penalties} />
           <Route path="/all" component={RegistryAll} />
-          <Route path="/bft" component={BftConfig} />
-          <Route path="/consensus" component={BftConfig} />
-          <Route path="/world">{() => <Redirect to="/sov-space?view=globe" />}</Route>
+          {/* REDIRECTED (audit §0.2 #14): "BFT setup" pages assert the retracted fault-tolerance claim. */}
+          <Route path="/bft">{() => <Redirect to="/council" />}</Route>
+          <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
+          <Route path="/world">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
           <Route path="/map-regions" component={RegionsMap} />
           <Route path="/compare" component={Compare} />
           <Route path="/vs" component={Compare} />
@@ -779,18 +802,20 @@ function App() {
           <Route path="/relevance-map" component={RelevanceMap} />
           <Route path="/rediscovered" component={Lineage} />
           <Route path="/voice" component={SovereignMinds} />
-          <Route path="/sov-towns">{() => <Redirect to="/sov-space?view=towns" />}</Route>
-          <Route path="/crown-jewels" component={CrownJewels} />
+          <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+          {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
+          <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
           <Route path="/cobol" component={LegacyBridge} />
             <Route path="/risk-heatmap" component={RiskHeatmap} />
             <Route path="/webhooks" component={Webhooks} />
             <Route path="/evidence" component={EvidenceHub} />
             <Route path="/oscal" component={OscalStudio} />
-            <Route path="/sovereign-town">{() => <Redirect to="/sov-space?view=towns" />}</Route>
+            <Route path="/sovereign-town">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
-                  <Route path="/byzantine" component={AgentCouncil} />
+                  {/* KILLED (audit §0.2 #13): "33-agent Byzantine consensus" page — retracted claim. */}
+                  <Route path="/byzantine">{() => <Redirect to="/council" />}</Route>
                   <Route path="/council" component={Council} />
                   <Route path="/public-watchdog" component={PublicWatchdog} />
                   <Route path="/government" component={GovernmentDashboard} />
@@ -929,15 +954,17 @@ function App() {
                   {/* Individual Charter Articles */}
                   <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
-                  {/* Final fallback route */}
-                  <Route path="/sov-space" component={SovSpace} />
-                  <Route path="/sovereign-space" component={SovSpace} />
-                  <Route path="/simulate" component={SovSpace} />
+                  {/* 410 Gone — retired routes, do not redirect. */}
+                  <Route path="/sov-space" component={Gone} />
+                  <Route path="/sovereign-space" component={Gone} />
+                  <Route path="/stripe-checkout.js" component={Gone} />
+                  <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/badges" component={BadgesPage} />
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
-                  <Route path="/plans" component={PlansPage} />
+                  {/* REDIRECTED (audit §3.5 #2): /plans was a byte-identical duplicate of /pricing. */}
+                  <Route path="/plans">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/sovereign-pricing" component={PlansPage} />
                   <Route path="/start" component={OnboardOS} />
                   <Route path="/onboard" component={OnboardOS} />

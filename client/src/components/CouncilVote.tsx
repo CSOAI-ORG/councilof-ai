@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 // 33 nodes in a ring vote toward a supermajority quorum; a care-floor gauge holds at
 // 0.95. Pure SVG + rAF, zero deps. Re-runs when `trigger` changes.
 const N = 33;
-const QUORUM = Math.ceil((2 * N) / 3); // 22 — Byzantine 2/3
+const QUORUM = Math.ceil((2 * N) / 3); // 22 — 2/3 supermajority
 const R = 120, CX = 150, CY = 150;
 
 export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number; verdict?: string }) {
@@ -22,7 +22,7 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
     const step = () => {
       if (i >= N) { setPhase("done"); return; }
       const idx = order[i];
-      // ~85% agree, a few honest dissenters (BFT tolerates them)
+      // ~85% agree, a few honest dissenters (the vote tolerates them)
       const v = Math.random() < 0.85 ? 1 : -1;
       setVotes((prev) => { const next = prev.slice(); next[idx] = v; return next; });
       i++;

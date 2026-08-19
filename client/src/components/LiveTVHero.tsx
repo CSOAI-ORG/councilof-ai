@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
  *
  * Renders a 1920x1080 hero section that:
  * - Pulls live GSPC from sov-gateway
- * - Streams live events from the OWEM flywheel
+ * - Streams live events from the measurement flywheel
  * - Cycles through the 5 channels
  * - Falls back to a graceful 0/0/0 mock if sov-gateway is offline
  * - Connects to the SOV Town oracle state server (when reachable) for live ticks
@@ -168,7 +168,7 @@ export default function LiveTVHero() {
                 className="text-xs tracking-[4px] uppercase font-mono"
                 style={{ color: "rgba(16,185,129,0.6)" }}
               >
-                Sovereign Governance Portal
+                Council Governance Portal
               </p>
             </div>
           </div>
@@ -250,7 +250,7 @@ export default function LiveTVHero() {
               className="text-sm uppercase tracking-[3px] font-bold mb-6"
               style={{ color: "#10b981" }}
             >
-              Home GSPC — Sovereign Compliance
+              Home GSPC — Council Compliance
             </h2>
             <div className="relative" style={{ width: 280, height: 280 }}>
               <svg viewBox="0 0 200 200" style={{ width: "100%", height: "100%", transform: "rotate(-90deg)" }}>

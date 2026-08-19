@@ -4,9 +4,9 @@ import { chargeSovereign } from "../lib/sovCharge";
 // Signed AI System Card — the independent, cryptographically-signed, OFFLINE-verifiable
 // record that an AI system was governed. The primitive UK JSP 936 assurance (and the
 // Alan Turing Institute) named as missing: nobody ships a tamper-evident System Card.
-// CSOAI does. Live on the sovereign signing backend (os.meok.ai/api/systemcard + /verify).
+// CSOAI does. Live on the sovereign signing backend (/api/systemcard + /verify).
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 // Keep substrate codenames off the public UI.
 function clean(s: any): string { return typeof s === "string" ? s.replace(/defoneos/gi, "CSOAI") : String(s ?? ""); }
 
@@ -161,7 +161,7 @@ export default function SystemCard() {
             <a href="/readiness-assessment" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get compliant</a>
             <a href="/pricing" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Operator tier (defence-grade) →</a>
           </div>
-          <p className="mt-4 text-[11px] text-emerald-300/50">Demo card data is synthetic; the signing and verification are genuinely real, on the CSOAI sovereign signing backend. For a named engagement the card is issued under your own sovereign key.</p>
+          <p className="mt-4 text-[11px] text-emerald-300/50">Demo card data is synthetic; the signing and verification are genuinely real, on the CSOAI measurement signing backend. For a named engagement the card is issued under your own signing key.</p>
         </div>
       </section>
     </div>

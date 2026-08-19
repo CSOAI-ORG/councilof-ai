@@ -21,7 +21,7 @@
  *
  * THE FIX (revised 2026-08-06): emit ONLY the catch-all SPA fallback.
  *
- *     /star   /index.html   200    <- wouter boots for every path, routes or 404s in-app
+ *     /*   /index.html   200    <- wouter boots for every path, routes or 404s in-app
  *
  * A previous revision emitted one EXACT rule per route (`/about /index.html 200`, ...).
  * Cloudflare Pages canonicalizes an exact-rule `/index.html` target to `/`, so those rules
@@ -41,8 +41,9 @@ const APP = join(ROOT, "client/src/App.tsx");
 const OUT = join(ROOT, "public/_redirects");
 
 // Static asset directories served directly by Pages — must NOT be routed to the app.
-const STATIC_DIRS = ["/arena", "/benchmarks", "/sov-space", "/vendor", "/assets",
-                     "/.well-known", "/corpus-watch", "/flywheel"];
+// /sov-space is no longer a public tree: it 308s to /gspc-arena (Council Space).
+const STATIC_DIRS = ["/arena", "/benchmarks", "/vendor", "/assets",
+                     "/.well-known", "/corpus-watch", "/flywheel", "/packs"];
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
@@ -54,26 +55,29 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
 // Preserve hand-written rules that already exist — they are consolidation redirects and
 // clobbering them would break live inbound links.
 const EXISTING = [
-  "/gspc-arena     /sov-space?view=arena   308",
-  "/sovereign-town /sov-space?view=towns   308",
-  "/towns          /sov-space?view=towns   308",
+  // 17 Aug 2026: /gspc-arena is the spectator (Council Space).
+  // Do NOT 200-rewrite it to /sov-space/index.html — Pages canonicalizes that to a 308 /sov-space/ and loops with the 308s below.
+  // SPA catch-all serves /gspc-arena as /index.html. App mounts SovSpace there.
+  "/sov-space      /gspc-arena             308",
+  "/sov-space/     /gspc-arena             308",
+  "/sov-space/*    /gspc-arena             308",
+  "/sovereign-space /gspc-arena            308",
+  "/simulate       /gspc-arena             308",
+  "/sovereign-town /gspc-arena?view=towns  308",
+  "/towns          /gspc-arena?view=towns  308",
   "/globe          /globe3d.html           308",
+  // Audit 2026-08-14 kills/consolidations — edge 308s so crawlers + direct hits redirect
+  // WITHOUT booting the SPA at a killed path. Must mirror the client Redirects in App.tsx.
+  "/byzantine            /council   308",   // §0.2 #13 — retracted fault-tolerance claim
+  "/byzantine-consensus  /council   308",   // §0.2 #12 — same
+  "/bft                  /council   308",   // §0.2 #14 — "BFT setup" asserts the retracted claim
+  "/consensus            /council   308",   // §0.2 #14 — same
+  "/jewels               /          308",   // §0.2 #22 — internal strategy page was public
+  "/crown-jewels         /          308",   // §0.2 #22 — same
+  "/plans                /pricing   308",   // §3.5 #2 — duplicate of /pricing
+  "/enterprise-plans     /pricing   308",   // §3.5 #2 — fold Enterprise into one pricing page
 ];
 
-// Hashed build output. Handled by functions/assets/[[path]].ts, NOT here: Pages
-// `_redirects` supports 3xx and 200 only and SILENTLY IGNORES a 404 status (that is
-// Netlify syntax), so the rule looked right and did nothing. Excluded from the static
-// trees below so nothing rewrites it. Original note kept:
-// A MISSING chunk — never fall through to the
-// SPA catch-all, which returns index.html (200, text/html) under a .js URL. Browsers
-// then cache that HTML against the chunk's name and the app white-screens until the
-// cache expires. Pages serves existing files before consulting _redirects, so this
-// rule fires ONLY for chunks that genuinely are not in the deployment.
-// (2026-08-11: third recurrence of that incident. Structure, not vigilance.)
-// The target must NOT be named 404.html: Cloudflare Pages treats a root 404.html as the
-// site-wide not-found page, which disables the SPA catch-all and 404s every client route.
-// The target is also extensionless: Pages canonicalizes "/x.html" to "/x" with a 308, so a
-// ".html" redirect target never resolves and the rule silently does nothing.
 const HASHED_DIRS = ["/assets"];
 
 const lines = [

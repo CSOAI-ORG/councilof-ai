@@ -7,8 +7,6 @@ import { Link } from 'wouter';
 import { Github, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import { Button } from '@/components/ui/button';
-import { BuiltOnFooter } from "@/components/BuiltOnFooter";
-import { AnchoredToPanel } from "@/components/AnchoredToPanel";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -41,6 +39,11 @@ export function Footer() {
       title: 'Resources',
       links: [
         { name: 'FAQ', href: '/faq' },
+        { name: 'Library — full archive', href: '/library' },
+        { name: 'The honesty gate — our own losses', href: '/honesty' },
+        { name: 'Firewall Charter — measure, never fix', href: '/firewall-charter' },
+        { name: 'Methodology', href: '/methodology' },
+        { name: 'Verify a card', href: '/gspc-verify' },
         { name: 'AI Glossary', href: '/glossary' },
         { name: 'Readiness Assessment', href: '/readiness-assessment' },
         { name: 'Industry Solutions', href: '/industry-solutions' },
@@ -60,6 +63,9 @@ export function Footer() {
         { name: 'Technology', href: '/technology' },
         { name: 'Integrations', href: '/integrations' },
         { name: 'Pricing', href: '/pricing' },
+        { name: 'Contact', href: '/contact' },
+        { name: 'Status', href: '/status' },
+        { name: 'Remediation Partners', href: '/remediation-partners' },
         { name: 'Careers', href: '/careers' },
         { name: 'Accreditation', href: '/accreditation' },
       ],
@@ -96,7 +102,7 @@ export function Footer() {
               <Shield className="h-8 w-8" />
               <div>
                 <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
-                <p className="text-emerald-100 text-sm">Measured across 30 models, 4 Aug 2026: EU AI Act prohibited practices 0.158 mean difficulty, generic harm 0.545. Harness published — recompute it.</p>
+                <p className="text-emerald-100 text-sm">GSPC 14-slot board — 13 measured axes (12 Aug, 19 models) plus jail, containment (18 Aug, n=71, separation untested). Signed 18 Aug stamp. Harness published — recompute it.</p>
               </div>
             </div>
             <Link href="/benchmarks">
@@ -227,45 +233,32 @@ export function Footer() {
           </div>
         </div>
 
-        <BuiltOnFooter />
-
-        {/* Anchored To — live watcher timestamps pulled from D1 */}
-        <AnchoredToPanel />
-
-        {/* What We Don't Claim */}
-        <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-amber-600 mb-2">
-            What We Don&apos;t Claim
-          </h4>
-          <ul className="space-y-1 text-xs text-gray-600">
-            <li>Not a certifier · not an enforcer · no accreditation chain</li>
-            <li>Our own systems are scored on this board, no exemption</li>
-            <li>We measure. Others enforce. The distinction is the business.</li>
-          </ul>
-        </div>
-
-        {/* Refutation Ledger — prominent link */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/refutation-ledger"
-            className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-600 transition hover:bg-rose-100"
-          >
-            <span className="h-2 w-2 rounded-full bg-rose-500" />
-            9 published refutations · 4 killed our own bets
-          </Link>
-          <Link
-            href="/live-ledger"
-            className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-bold text-emerald-700 transition hover:bg-emerald-100"
-          >
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            Live D1 ledger · signed · queryable
-          </Link>
+        {/* Standards participation & memberships — only genuine, verifiable affiliations.
+            A measurement body must never overclaim a membership. DIF is a signed Contributor
+            membership; C2PA is Contributor participation with conformance in progress (matches
+            the honest status stated below). Swap these text links for official member badges only
+            once the body's logo-use guidelines are checked. */}
+        <div className="border-t border-gray-200 mt-8 pt-8">
+          <p className="text-gray-500 text-xs text-center uppercase tracking-wider mb-3">Standards participation &amp; memberships</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+            <a href="https://identity.foundation" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
+              Decentralized Identity Foundation (DIF) — Contributor member
+            </a>
+            <span className="text-gray-300" aria-hidden="true">·</span>
+            <a href="https://c2pa.org" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
+              Content Authenticity / C2PA — Contributor (conformance in progress)
+            </a>
+            <span className="text-gray-300" aria-hidden="true">·</span>
+            <a href="https://doi.org/10.5281/zenodo.21991104" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
+              Zenodo DOI 10.5281/zenodo.21991104
+            </a>
+          </div>
         </div>
 
         {/* AI Transparency & Oversight Statement (Art 50 / Art 14) */}
         <div className="border-t border-gray-200 mt-8 pt-8">
           <p className="text-gray-600 text-xs text-center max-w-4xl mx-auto mb-2">
-            This site uses AI systems, including the Sovereign assistant. Every AI surface is disclosed at
+            This site uses AI systems, including the Council assistant. Every AI surface is disclosed at
             first interaction under EU AI Act Article 50 and classified publicly on{" "}
             <Link href="/ai-transparency" className="text-emerald-700 underline">/ai-transparency</Link>.
           </p>

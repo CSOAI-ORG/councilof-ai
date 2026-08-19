@@ -73,7 +73,7 @@ const STATUS_NOTE: Record<NodeStatus, string> = {
 
 const L0_LEVELS = [
   { id: "L0-1", name: "Identity", body: "Every tool call carries a checked identity — no anonymous calls through the gate." },
-  { id: "L0-2", name: "Policy-gated", body: "Every call passes the Sovereign Gate policy check before it reaches the tool." },
+  { id: "L0-2", name: "Policy-gated", body: "Every call passes the Council Gate policy check before it reaches the tool." },
   { id: "L0-3", name: "Signed", body: "Every call is Ed25519-attestable — a record another governed agent can verify offline." },
 ];
 
@@ -104,7 +104,7 @@ export default function Layer0() {
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Layer 0 is the floor every other claim stands on:{" "}
             <strong className="text-emerald-50">
-              Ed25519 signing, the care-floor gate, a 33-agent Byzantine council, and offline
+              Ed25519 signing, the care-floor gate, a 33-agent council, and offline
               verification
             </strong>{" "}
             — and every claim made on this floor carries either a measurement or an honest

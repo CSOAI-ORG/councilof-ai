@@ -1,5 +1,5 @@
-// sovAgent — the shared "agentic" layer for the Sovereign.
-// Turns a natural-language Sovereign turn into actuator commands so the Sovereign
+// sovAgent — the shared "agentic" layer for the Council assistant.
+// Turns a natural-language Sovereign turn into actuator commands so the Council assistant
 // can DRIVE the surface (globe layers/region/threat, or launch a simulation) as it
 // speaks — not just answer. Used by both WorldGlobe (the globe) and SovSpace (the sims),
 // so ONE Sovereign is agentic across both. Pure + deterministic → unit-testable.
@@ -56,7 +56,7 @@ export function sovActions(utterance: string): SovAction[] {
   return acts;
 }
 
-// Human-readable summary of what the Sovereign is about to DO (for a status chip).
+// Human-readable summary of what the Council assistant is about to DO (for a status chip).
 export function describeActions(acts: SovAction[]): string {
   if (!acts.length) return "";
   return acts.map((a) =>

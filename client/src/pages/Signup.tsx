@@ -14,8 +14,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 const PLAN_INFO: Record<string, { label: string; blurb: string; accent: 'amber' | 'emerald' }> = {
-  operator: { label: 'Operator', blurb: 'ONE OS live agent, Watchdog console, signed attestation records and regulatory drift alerts. $249/mo.', accent: 'amber' },
-  pro: { label: 'Pro', blurb: 'Premium hosted models, EU AI Act audit, Council of AI & real-world Sov Space. From $82.50/mo.', accent: 'emerald' },
+  operator: { label: 'Operator', blurb: 'ONE OS live agent, Watchdog console, signed attestation records and regulatory drift alerts.', accent: 'amber' },
+  pro: { label: 'Pro', blurb: 'Premium hosted models, EU AI Act audit, Council of AI & real-world Council Space.', accent: 'emerald' },
   team: { label: 'Team', blurb: 'Everything in Pro per seat, SSO + SCIM, shared council & audit logs.', accent: 'emerald' },
   enterprise: { label: 'Enterprise', blurb: 'Full EU AI Act audit suite, dedicated council + defence, data residency & SLA.', accent: 'emerald' },
 };
@@ -101,7 +101,7 @@ export default function Signup() {
           </h1>
 
           <p className="text-lg text-gray-600 mb-8">
-            CSOAI is the sovereign AI governance operating system — your own Sovereign, a live
+            CSOAI is the Council AI governance operating system — your own Council assistant, a live
             governance graph, a signing council, and every framework crosswalked on one Layer 0 floor.
           </p>
 
@@ -117,7 +117,7 @@ export default function Signup() {
             <div className="flex items-start gap-3">
               <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-gray-900">Your own Sovereign</h3>
+                <h3 className="font-semibold text-gray-900">Your own Council assistant</h3>
                 <p className="text-sm text-gray-600">
                   An AI that governs with you — free open-source base, premium hosted models on Pro.
                 </p>
@@ -172,7 +172,7 @@ export default function Signup() {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h3 className="font-semibold text-blue-900 mb-2">What's Included (Free):</h3>
                 <ul className="space-y-1 text-sm text-blue-800">
-                  <li>✓ Your Sovereign on a free open-source model</li>
+                  <li>✓ Your Council assistant on a free open-source model</li>
                   <li>✓ You own and export your data</li>
                   <li>✓ Layer 0 signing</li>
                   <li>✓ Community council demos</li>

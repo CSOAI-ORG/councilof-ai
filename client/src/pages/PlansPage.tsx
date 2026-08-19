@@ -1,80 +1,125 @@
-import { useState } from "react";
-import HeroSlides from "../components/HeroSlides";
+import { useEffect } from "react";
 
-type Tier = { name: string; price: string; sub: string; tag?: string; cta: string; href: string; feats: string[]; highlight?: boolean; accent?: "amber" };
+// Free-rail posture (owner decision): the rail is free, verification is free forever.
+// CSOAI is a MEASUREMENT body — never a certification body, never a SaaS access tier.
+// Every call and every account ends in the same 3KB Ed25519-signed, timestamp-anchored
+// measurement card. Where evidence is sold, it is a signed artefact on its own page —
+// never access to the rail.
+
+// What each usage level includes — no prices, the rail is free.
+type Row = { name: string; desc: string; highlight?: boolean };
+
+const INCLUDED: Row[] = [
+  { name: "Measurement cards", desc: "Standard measurement card on every published instrument, Ed25519-signed and timestamp-anchored. Free to run." },
+  { name: "Verify any card", desc: "Recompute the published hash chain in your browser. No account, no charge — verification is free forever.", highlight: true },
+  { name: "Deep bundles", desc: "Full instrument batteries — governance, safety + provenance, full spectrum — each returned as one signed card." },
+  { name: "Re-attestation", desc: "AI changes, regulation changes. We re-measure on schedule and issue delta cards so your evidence stays current." },
+  { name: "Evidence export", desc: "Export your signed cards as JSON, CSV or Parquet. Your data is yours to own and take with you." },
+];
+
+// Capability matrix across usage levels — every column is free.
+const MATRIX: [string, string, string, string, string][] = [
+  ["Cards", "✓", "✓", "✓", "✓"],
+  ["Re-attestation", "On schedule", "On schedule", "Monthly", "Continuous"],
+  ["Credential wallet + alerts", "✓", "✓", "✓", "✓"],
+  ["All published instruments (4 control-sets)", "✓", "✓", "✓", "✓ + custom"],
+  ["Evidence export", "JSON · CSV", "JSON · CSV", "JSON · CSV", "+ Parquet"],
+  ["Seats", "Unlimited", "Unlimited", "Unlimited", "Unlimited"],
+  ["SSO / SAML, audit log", "—", "✓", "✓", "✓"],
+];
 
 export default function PlansPage() {
-  const [annual, setAnnual] = useState(true);
-  // P2-10: UK Ltd bills in GBP — GBP is the canonical price; USD is a reference
-  // display at the fixed policy rate (reviewed quarterly).
-  const [cur, setCur] = useState<"GBP" | "USD">("GBP");
-  const sym = cur === "GBP" ? "£" : "$";
-  const base = { pro: { GBP: 79, USD: 99 }, operator: { GBP: 239, USD: 299 }, team: { GBP: 119, USD: 149 } } as const;
-  const money = (n: number) => sym + (Number.isInteger(n) ? n.toLocaleString() : n.toFixed(2));
-  // Yearly = 10 × monthly ("-2mo"). Monthly-equivalent shown = total/12. Arithmetic is visible.
-  const monthlyEquiv = (k: keyof typeof base) => (base[k][cur] * 10) / 12;
-  const yearlyTotal = (k: keyof typeof base) => base[k][cur] * 10;
-  const pro = annual ? money(Math.round(monthlyEquiv("pro") * 100) / 100) : money(base.pro[cur]);
-  const proSub = annual ? `per month, billed yearly (${money(yearlyTotal("pro"))} = 10 × ${money(base.pro[cur])})` : "per month";
-  const operator = annual ? money(Math.round(monthlyEquiv("operator") * 100) / 100) : money(base.operator[cur]);
-  const operatorSub = annual ? `per month, billed yearly (${money(yearlyTotal("operator"))} = 10 × ${money(base.operator[cur])})` : "per month";
-  const team = annual ? money(Math.round(monthlyEquiv("team") * 100) / 100) : money(base.team[cur]);
-  const teamSub = annual ? "per seat / mo, billed yearly (10 × monthly)" : "per seat / mo";
-  const tiers: Tier[] = [
-    { name: "Sovereign", price: "Free", sub: "open-source, forever", tag: "Own your data", cta: "Start free", href: "/signup?plan=free", feats: ["Your Sovereign on a free open-source model", "Self-host or hosted", "You own and export your data (JSON)", "Layer 0 signing", "Community council demos"] },
-    { name: "Pro", price: pro, sub: proSub, tag: "Most popular", cta: "Go Pro", href: "/signup?plan=pro", highlight: true, feats: ["Everything in Free", "Premium hosted models", "Passport + EU AI Act audit (quota)", "Council of AI + governance", "Real-world Sov Space + UE5 preview", "PAYG credits included"] },
-    { name: "Operator", price: operator, sub: operatorSub, tag: "Full command deck", accent: "amber", cta: "Become an Operator", href: "/signup?plan=operator", feats: ["Everything in Pro", "ONE OS - live agent + humanoid tracking", "Governed-stop pathway for rogue swarms (PoC status, signed demo)", "Threat map + operator console", "Global Watchdog operator console", "Priority Layer 0 signing + support"] },
-    { name: "Team", price: team, sub: teamSub, tag: "3-seat min", cta: "Start a team", href: "/signup?plan=team", feats: ["Everything in Pro, per seat", "SSO + SCIM", "Shared council + audit logs", "Admin and roles", "Priority support"] },
-    { name: "Enterprise", price: "Custom", sub: "from ~£24k / yr", tag: "Governance-grade", cta: "Talk to us", href: "/contact", feats: ["Full EU AI Act audit suite", "Dedicated council + audit suite", "Data residency + SLA", "SAML, audit export (CSV/JSON/Parquet)", "Onboarding + success"] },
-  ];
-  const packs = [{ n: "Starter", GBP: 20, USD: 25 }, { n: "Builder", GBP: 80, USD: 100 }, { n: "Scale", GBP: 400, USD: 500 }];
-  const meters: [string, { GBP: string; USD: string }][] = [["Passport", { GBP: "£0.08", USD: "$0.10" }], ["EU AI Act audit", { GBP: "£0.20", USD: "$0.25" }], ["Council review", { GBP: "£0.08", USD: "$0.10" }], ["Governance", { GBP: "£0.40", USD: "$0.50" }], ["Sigil", { GBP: "£0.01", USD: "$0.01" }], ["Watchdog scan", { GBP: "£0.80", USD: "$1.00" }]];
+  useEffect(() => { document.title = "The rail is free — one signed card | Council of AI"; }, []);
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
-      <section className="relative overflow-hidden border-b border-emerald-500/15 mx-auto max-w-6xl px-6 pt-16 pb-8 text-center">
+      {/* Header */}
+      <section className="relative overflow-hidden border-b border-emerald-500/15 mx-auto max-w-6xl px-6 pt-16 pb-10 text-center">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
-        <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - plans</p>
-        <h1 className="relative mt-3 text-5xl sm:text-6xl font-black tracking-tight">Own your AI. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Own your data.</span></h1>
-        <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">An open-source Sovereign for everyone, a full governed stack when you need it. Transparent, EU AI Act-ready, UK-resident, MIT-licensed.</p>
-        <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-[#05140d] p-1 text-sm">
-          <button onClick={() => setAnnual(false)} className={(!annual ? "bg-emerald-500 text-[#03110b] " : "text-emerald-200 ") + "rounded-full px-4 py-1.5 font-bold"}>Monthly</button>
-          <button onClick={() => setAnnual(true)} className={(annual ? "bg-emerald-500 text-[#03110b] " : "text-emerald-200 ") + "rounded-full px-4 py-1.5 font-bold"}>Yearly -2mo</button>
-        </div>
-        <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-500/25 bg-[#05140d] p-1 text-sm" title="UK Ltd bills in GBP; USD shown for reference at the £1 = $1.25 policy rate">
-          <button onClick={() => setCur("GBP")} className={(cur === "GBP" ? "bg-emerald-500 text-[#03110b] " : "text-emerald-200 ") + "rounded-full px-3 py-1 font-bold"}>£ GBP</button>
-          <button onClick={() => setCur("USD")} className={(cur === "USD" ? "bg-emerald-500 text-[#03110b] " : "text-emerald-200 ") + "rounded-full px-3 py-1 font-bold"}>$ USD</button>
+        <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Council of AI — the rail is free</p>
+        <h1 className="relative mt-3 text-4xl sm:text-6xl font-black tracking-tight">
+          The rail is free. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Verification is free forever.</span>
+        </h1>
+        <p className="relative mt-4 mx-auto max-w-3xl text-emerald-100/80">
+          The product is the evidence. Every measurement ends in a 3KB card — Ed25519-signed,
+          timestamp-anchored, verifiable by anyone without asking us. Running it costs nothing;
+          verifying it costs nothing. Where we sell evidence, it is a signed artefact on its own
+          page — never access to the rail.
+        </p>
+        <div className="relative mt-6 flex flex-wrap justify-center gap-3">
+          <a href="/start" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Start free →</a>
+          <a href="/gspc-verify" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-bold text-emerald-100 hover:bg-white/5">Verify a card →</a>
         </div>
       </section>
 
-      <HeroSlides />
-      <section className="mx-auto max-w-6xl px-6 pb-10">
-        <div className="grid gap-5 lg:grid-cols-5 sm:grid-cols-2">
-          {tiers.map((t) => (
-            <div key={t.name} className={"flex flex-col rounded-2xl border p-5 " + (t.accent === "amber" ? "border-amber-400/50 bg-amber-500/[0.06] shadow-[0_0_40px_-14px_rgba(245,158,11,.5)]" : t.highlight ? "border-emerald-400/60 bg-emerald-500/5 shadow-[0_0_40px_-12px_rgba(16,185,129,.5)]" : "border-emerald-500/20 bg-[#05140d]")}>
-              {t.tag && <span className={"self-start rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide " + (t.accent === "amber" ? "bg-amber-400/15 text-amber-200" : "bg-emerald-500/15 text-emerald-300")}>{t.tag}</span>}
-              <div className="mt-2 text-lg font-bold">{t.name}</div>
-              <div className="mt-1 text-3xl font-black text-emerald-100">{t.price}</div>
-              <div className="text-xs text-emerald-300/75">{t.sub}</div>
-              <ul className="mt-4 flex-1 space-y-2 text-sm text-emerald-100/80">
-                {t.feats.map((f) => (<li key={f} className="flex gap-2"><span className="text-emerald-400">+</span>{f}</li>))}
-              </ul>
-              <a href={t.href} className={"mt-5 rounded-xl px-4 py-2 text-center text-sm font-bold " + (t.accent === "amber" ? "bg-amber-400 text-[#1a1206] hover:bg-amber-300" : t.highlight ? "bg-emerald-500 text-[#03110b] hover:bg-emerald-400" : "border border-emerald-400/40 text-emerald-100 hover:bg-white/5")}>{t.cta}</a>
+      {/* What you get — free */}
+      <section className="mx-auto max-w-6xl px-6 pt-14 pb-10">
+        <div>
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">What you get</p>
+          <h2 className="mt-1 text-2xl sm:text-3xl font-black">Everything on the rail — free</h2>
+          <p className="mt-1 text-sm text-emerald-100/70">No subscription, no per-seat tier, no checkout. Measurement, not access.</p>
+        </div>
+        <div className="mt-6 space-y-3">
+          {INCLUDED.map((r) => (
+            <div key={r.name} className={"flex flex-col gap-3 rounded-2xl border p-5 sm:flex-row sm:items-center sm:justify-between " + (r.highlight ? "border-emerald-400/50 bg-emerald-500/[0.06]" : "border-emerald-500/20 bg-[#05140d]")}>
+              <div className="sm:max-w-3xl">
+                <div className="text-base font-bold text-emerald-100">{r.name}</div>
+                <p className="mt-1 text-sm text-emerald-100/75">{r.desc}</p>
+              </div>
+              <div className="flex items-baseline gap-1 sm:justify-end">
+                <span className="text-2xl font-black text-emerald-300">Free</span>
+              </div>
             </div>
           ))}
         </div>
+        <p className="mt-4 rounded-xl border border-emerald-500/15 bg-black/20 px-4 py-3 text-sm text-emerald-100/70">
+          Every response IS the signed card — your auditor verifies independently of us.
+        </p>
       </section>
-      <section className="mx-auto max-w-6xl px-6 pb-16">
-        <div className="rounded-2xl border border-emerald-500/15 bg-black/20 p-5">
-          <div className="text-lg font-bold text-emerald-100">Pay as you go - credits</div>
-          <p className="mt-1 text-sm text-emerald-100/70">Top up anytime. Credits draw down at flat unit prices; your plan sets the size of the included pool. Free tier is capped with alerts so you never get a surprise bill.</p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            {packs.map((p) => (<a key={p.n} href={"/signup?credits=" + p.n.toLowerCase()} className="rounded-xl border border-emerald-400/30 bg-emerald-500/5 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/15">{p.n} - {money(p[cur])}</a>))}
-          </div>
-          <div className="mt-5 grid gap-2 sm:grid-cols-3">
-            {meters.map((m) => (<div key={m[0]} className="flex items-center justify-between rounded-lg border border-emerald-500/10 bg-[#05140d] px-3 py-2 text-sm"><span className="text-emerald-200/80">{m[0]}</span><span className="font-mono text-emerald-300">{m[1][cur]}</span></div>))}
-          </div>
+
+      {/* Capability matrix — all free */}
+      <section className="mx-auto max-w-6xl px-6 pt-6 pb-14">
+        <div>
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">Usage levels</p>
+          <h2 className="mt-1 text-2xl sm:text-3xl font-black">Same signed card at every level</h2>
+          <p className="mt-1 text-sm text-emerald-100/70">Levels differ by cadence and controls, not by price. You own your data.</p>
         </div>
-        <p className="mt-6 text-center text-xs text-emerald-300/75">Billed in GBP · USD for reference at the £1 = $1.25 policy rate (reviewed quarterly). You own your data - export or delete anytime. EU AI Act Article 50 transparent. CSOAI Ltd, UK (Companies House 16939677). MIT-licensed core.</p>
+
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-emerald-500/15 bg-black/20">
+          <table className="w-full min-w-[40rem] border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-emerald-500/20 text-left">
+                <th className="px-4 py-3 font-semibold text-emerald-200/80"></th>
+                <th className="px-4 py-3 text-center font-bold text-emerald-100">Individual</th>
+                <th className="px-4 py-3 text-center font-bold text-emerald-100">Team</th>
+                <th className="px-4 py-3 text-center font-bold text-emerald-100">Organisation</th>
+                <th className="px-4 py-3 text-center font-bold text-emerald-100">Public sector</th>
+              </tr>
+            </thead>
+            <tbody>
+              {MATRIX.map((row) => (
+                <tr key={row[0]} className="border-b border-emerald-500/10">
+                  <td className="px-4 py-3 text-emerald-100/80">{row[0]}</td>
+                  <td className="px-4 py-3 text-center text-emerald-100/90">{row[1]}</td>
+                  <td className="px-4 py-3 text-center text-emerald-100/90">{row[2]}</td>
+                  <td className="px-4 py-3 text-center text-emerald-100/90">{row[3]}</td>
+                  <td className="px-4 py-3 text-center text-emerald-100/90">{row[4]}</td>
+                </tr>
+              ))}
+              <tr>
+                <td className="px-4 py-4"></td>
+                <td className="px-4 py-4 text-center"><a href="/start" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Start free</a></td>
+                <td className="px-4 py-4 text-center"><a href="/start" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Start free</a></td>
+                <td className="px-4 py-4 text-center"><a href="/start" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Start free</a></td>
+                <td className="px-4 py-4 text-center"><a href="/contact" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Talk to us</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mt-6 text-center text-xs text-emerald-300/75">
+          Not a certification body (cards are verified measurement credentials, not certificates), not an
+          observability platform. You own your data. The rail is free; verification is free forever.
+        </p>
       </section>
     </div>
   );

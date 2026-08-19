@@ -101,7 +101,7 @@ export default function MarketingHome() {
             {/* Badge */}
             <Badge variant="outline" className="mb-6 px-4 py-1.5">
               <Zap className="h-3 w-3 mr-1.5" />
-              Byzantine Consensus for AI Safety
+              Multi-Agent Council for AI Safety
             </Badge>
 
             {/* Headline */}
@@ -114,7 +114,7 @@ export default function MarketingHome() {
             {/* Subheadline */}
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
               The first platform to implement <strong>TC260</strong>, <strong>EU AI Act</strong>, and{" "}
-              <strong>NIST AI RMF</strong> compliance with 33-agent Byzantine consensus.
+              <strong>NIST AI RMF</strong> compliance with designed 33-agent council.
             </p>
 
             {/* CTA Buttons */}
@@ -168,7 +168,7 @@ export default function MarketingHome() {
               </div>
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 to-transparent p-6">
                 <p className="text-center text-sm text-muted-foreground">
-                  <strong className="text-foreground">Byzantine Consensus in Action</strong> — Watch 33 AI agents reach agreement in real-time
+                  <strong className="text-foreground">Multi-Agent Council in Action</strong> — Watch 33 AI agents reach agreement in real-time
                 </p>
               </div>
             </div>
@@ -187,7 +187,7 @@ export default function MarketingHome() {
               Everything you need for AI governance
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From Byzantine consensus to PDCA cycles, CSOAI provides a complete governance platform.
+              From multi-agent council to PDCA cycles, CSOAI provides a complete governance platform.
             </p>
           </div>
 
@@ -206,7 +206,7 @@ export default function MarketingHome() {
                   </div>
                   <h3 className="text-xl font-bold mb-2">33-Agent Council</h3>
                   <p className="text-muted-foreground mb-4">
-                    designed multi-agent review. A 3-replica BFT vote runs live today; the full
+                    designed multi-agent review. A 3-replica multi-agent vote runs live today; the full
                     5-provider council (OpenAI, Anthropic, Google, Kimi, DeepSeek) is rolling out (beta).
                   </p>
                   <Button variant="link" className="p-0">
@@ -534,11 +534,11 @@ export default function MarketingHome() {
           <div className="space-y-6">
             <Card>
               <CardContent className="pt-6">
-                <h3 className="font-bold mb-2">What is Byzantine consensus?</h3>
+                <h3 className="font-bold mb-2">What is the multi-agent council?</h3>
                 <p className="text-muted-foreground">
-                  Byzantine consensus is a fault-tolerant decision-making algorithm that can reach agreement
-                  even when some participants (agents) are malicious or faulty. Our 33-agent system can
-                  tolerate up to 10 malicious agents while still reaching valid decisions.
+                  The council is a designed multi-agent review: a decision passes only on a supermajority
+                  (23 of 33), so no single agent decides the outcome. Effective independence is
+                  measured, not assumed.
                 </p>
               </CardContent>
             </Card>
@@ -559,7 +559,7 @@ export default function MarketingHome() {
                 <h3 className="font-bold mb-2">How does the Watchdog system work?</h3>
                 <p className="text-muted-foreground">
                   Certified Watchdog Analysts submit incident reports about AI systems. These reports are
-                  reviewed by our 33-Agent Council using Byzantine consensus. Approved reports are published on
+                  reviewed by our 33-Agent Council using multi-agent council. Approved reports are published on
                   our public transparency dashboard.
                 </p>
               </CardContent>
@@ -615,7 +615,7 @@ export default function MarketingHome() {
                 <span className="font-bold text-xl">CSOAI</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                AI governance made simple with Byzantine consensus.
+                AI governance made simple with multi-agent council.
               </p>
             </div>
 

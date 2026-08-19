@@ -60,7 +60,7 @@ export default function SocialOS() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">ONE OS · the social layer · second missing key</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Social OS</h1>
-          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Your Sovereign AI character <em>is</em> your social presence. One unified inbox across 50+ platforms, a cross-post engine, an AI content generator — and social governance (DSA, GDPR, C2PA) woven into compliance. You speak once; the world hears, on every network the user cares about.</p>
+          <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Your Council assistant AI character <em>is</em> your social presence. One unified inbox across 50+ platforms, a cross-post engine, an AI content generator — and social governance (DSA, GDPR, C2PA) woven into compliance. You speak once; the world hears, on every network the user cares about.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/enter" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Enter the OS →</a>
             <a href="/legacy" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">See the Legacy Bridge →</a>
@@ -70,7 +70,7 @@ export default function SocialOS() {
 
       <section className="max-w-6xl mx-auto px-6 py-14">
         <h2 className="text-xl font-bold text-gray-900">Priority reach — connect first</h2>
-        <p className="mt-1 text-sm text-gray-500">Free, high-reach, low-complexity platforms the Sovereign wires in first.</p>
+        <p className="mt-1 text-sm text-gray-500">Free, high-reach, low-complexity platforms the Council assistant wires in first.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {P0.map((p) => (
             <div key={p.name} className="rounded-2xl border border-gray-200 p-5">
@@ -100,7 +100,7 @@ export default function SocialOS() {
         </div>
 
         <h2 className="mt-12 text-xl font-bold text-gray-900">Social by civilization</h2>
-        <p className="mt-1 text-sm text-gray-500">The Sovereign meets each region where it already lives. Don't compete with super-apps — become a service inside them.</p>
+        <p className="mt-1 text-sm text-gray-500">The Council assistant meets each region where it already lives. Don't compete with super-apps — become a service inside them.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {CIVS.map((c) => (
             <div key={c.name} className="rounded-2xl border border-gray-200 p-5">
@@ -123,7 +123,7 @@ export default function SocialOS() {
 
         <h2 className="mt-12 text-xl font-bold text-gray-900">How it flows</h2>
         <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-          <span className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-gray-700">You · "Sovereign, post this"</span>
+          <span className="rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 font-mono text-gray-700">You · "Council, post this"</span>
           <span className="text-emerald-500 font-bold">→</span>
           <span className="rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 font-semibold text-emerald-800">Social OS · per-platform tailor + C2PA label + policy gate</span>
           <span className="text-emerald-500 font-bold">→</span>

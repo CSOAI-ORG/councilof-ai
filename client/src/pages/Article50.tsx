@@ -45,7 +45,7 @@ const CHECKLIST: { art: string; t: string; law: string; us: string; link?: { hre
     art: "Art. 50(1),(5)",
     t: "Accessibility & language",
     law: "The disclosure must meet the accessibility requirements of the European Accessibility Act (Directive (EU) 2019/882), and it must reach the person — which in practice means clear language the user can understand.",
-    us: "The notice is a real live region with role and tab order, not a tooltip; dismissing it leaves a permanent one-line marker rather than removing it. The Sovereign answers in the visitor's own language where it can, keeping statutory names in their canonical form.",
+    us: "The notice is a real live region with role and tab order, not a tooltip; dismissing it leaves a permanent one-line marker rather than removing it. The Council assistant answers in the visitor's own language where it can, keeping statutory names in their canonical form.",
     link: { href: "/ai-transparency", label: "How the notice is built →" },
   },
   {

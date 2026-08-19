@@ -3,35 +3,35 @@ import AISystemNotice from "../components/AISystemNotice";
 import { currentPersona } from "../lib/sovPersona";
 
 // DemoOS - the immersive AI-OS experience. A live Cesium globe (globe3d.html,
-// driven by postMessage) is the backdrop; the Sovereign narrates step by step
+// driven by postMessage) is the backdrop; the Council assistant narrates step by step
 // (typed + voice); live SaaS windows glide open, tile like a real desktop, and
-// close on the globe; the Sovereign is screen-aware and moves windows aside;
+// close on the globe; the Council assistant is screen-aware and moves windows aside;
 // the user can barge in by voice any time. Doubles as SOV33 training.
 
 import TrustMarquee from "../components/TrustMarquee";
 import { askSovereign } from "../lib/sovAsk";
 
-const GW = "https://os.meok.ai/api";
+const GW = "/api";
 
 type Slot = "tr" | "tl" | "br" | "c";
 type Win = { title: string; src: string; slot: Slot };
 type Step = { say: string; wins?: Win[]; fly?: { lng: number; lat: number; height: number }; layer?: { tag: string; on: boolean }; home?: boolean; full?: boolean; neutralize?: boolean; rearm?: boolean; cmd?: any };
 
 const STEPS: Step[] = [
-  { say: "Welcome. Every other AI-governance tool hands you a checklist and a dashboard. This is different - a live Sovereign operating system for AI governance, running on the real world, with cryptographic proof behind every move. I'm your Sovereign, and I'll show you everything others can't. Just watch, and interrupt me any time." },
+  { say: "Welcome. Every other AI-governance tool hands you a checklist and a dashboard. This is different - a live Council operating system for AI governance, running on the real world, with cryptographic proof behind every move. I'm your Council assistant, and I'll show you everything others can't. Just watch, and interrupt me any time." },
   { say: "First, let me see where you are.", fly: { lng: 0, lat: 20, height: 20000000 } },
   { say: "Watch - I can drop into any real place on Earth. Here's London, live, from orbit down to the street.", fly: { lng: -0.118, lat: 51.509, height: 15000 } },
-  { say: "Now up to orbit - the live view from space, every satellite and signal, mapped and governed.", wins: [{ title: "🛰 Earth from orbit - live", src: "/spacecam.html", slot: "tr" }], fly: { lng: -0.118, lat: 40, height: 22000000 }, layer: { tag: "sats", on: true } },
-  { say: "Across to New York - the OS sees the whole real world, wherever you are. Here's the public street cam, live.", wins: [{ title: "◉ Public street cam - New York (live)", src: "/livecam.html?loc=New%20York", slot: "tr" }], fly: { lng: -74.0, lat: 40.71, height: 16000 }, full: true },
-  { say: "And up to Canada - Toronto. Critical infrastructure and power, all live on the governed map - and the local public feed follows.", wins: [{ title: "◉ Public street cam - Toronto (live)", src: "/livecam.html?loc=Toronto", slot: "tr" }], fly: { lng: -79.38, lat: 43.65, height: 16000 }, layer: { tag: "plants", on: true }, full: true },
+  { say: "Now up to orbit - the instrument on a real-world globe. Fourteen measurement slots, thirteen measured, each anchored where its law was made.", wins: [{ title: "◉ Council Space — the measurement globe, live", src: "/gspc-arena", slot: "tr" }], fly: { lng: -0.118, lat: 40, height: 22000000 }, layer: { tag: "sats", on: true } },
+  { say: "Across to New York - the OS sees the whole governed world. Every dot on this globe is a measured, signed record.", wins: [{ title: "◉ Governance Graph", src: "/graph?demo=a%20hospital%20in%20Texas", slot: "tr" }], fly: { lng: -74.0, lat: 40.71, height: 16000 }, full: true },
+  { say: "And the signed event world - J-Space. Every event the estate has ever signed, embedded in hyperbolic space. Zoom forever.", wins: [{ title: "◉ J-Space — 1,201 signed events", src: "/j-space", slot: "tr" }], fly: { lng: -79.38, lat: 43.65, height: 16000 }, full: true },
   { say: "Here's the Governance Graph. Name any company, place or AI system and I map the jurisdiction and every framework that applies.", wins: [{ title: "Governance Graph", src: "/graph?demo=a%20hospital%20in%20Texas", slot: "tr" }], fly: { lng: -99, lat: 31, height: 2600000 } },
   { say: "Now the Council - and this is a first: no single model decides. A Council of AI of agents deliberates, held to a 0.95 care-floor, then seals a signed verdict that can't be captured or bribed. Describe any AI system and watch it rule.", wins: [{ title: "The Council of AI", src: "/try?demo=We%20use%20AI%20to%20screen%20job%20applicants", slot: "tr" }], fly: { lng: 4.3, lat: 50.8, height: 2600000 } },
   { say: "But here's what nobody else has: the governance floor. This is the Council Workbench. Any AI task - a policy, a risk classification, a crosswalk - becomes a signed, reproducible, council-reviewed artifact, sealed with Ed25519. It sits UNDER Claude Science, Claude Code, any agent. They generate; we make it provable.", wins: [{ title: "Council Workbench - signed, reproducible artifacts", src: "/workbench", slot: "tr" }], fly: { lng: -0.1, lat: 51.5, height: 3000000 } },
-  { say: "And it's not a dashboard - it's a whole operating system. 370+ governed tools, keyless and live, from crosswalks to cyber to attestation, all running on one Sovereign brain. An app store for AI governance. No one else ships it this way.", wins: [{ title: "The Council OS - 370+ governed tools", src: "/os", slot: "c" }], full: true },
+  { say: "And it's not a dashboard - it's a whole operating system. 370+ governed tools, keyless and live, from crosswalks to cyber to attestation, all running on one Council engine. An app store for AI governance. No one else ships it this way.", wins: [{ title: "The Council OS - 370+ governed tools", src: "/os", slot: "c" }], full: true },
   { say: "This is our public Watchdog - humans, agents, humanoids and systems report incidents, and the world heat-maps by problem layer.", wins: [{ title: "Global AI Watchdog", src: "/watchdog-map", slot: "c" }], layer: { tag: "nodes", on: true } },
-  { say: "In Council Space you run a real governance experiment - I simulate it and seal a verdict with a Layer 0 ledger hash.", wins: [{ title: "Council Space", src: "/sov-space?demo=A%20fintech%20in%20the%20EU%20deploying%20an%20AI%20credit-scoring%20model", slot: "tr" }], fly: { lng: 103.8, lat: 1.35, height: 2600000 } },
+  { say: "In Council Space you run a real governance experiment - I simulate it and seal a verdict with a Layer 0 ledger hash.", wins: [{ title: "Council Space", src: "/gspc-arena?demo=A%20fintech%20in%20the%20EU%20deploying%20an%20AI%20credit-scoring%20model", slot: "tr" }], fly: { lng: 103.8, lat: 1.35, height: 2600000 } },
   { say: "And this is Sov Town Space. Here the OS simulates real-world scenarios to actually help humanity - redirecting data, resources and decisions toward a future of abundance, not extraction. Each town learns, simulates, and compounds.", wins: [{ title: "Sov Town Space", src: "/towns", slot: "tr" }], fly: { lng: 20, lat: 5, height: 9000000 } },
-  { say: "None of this is extraction. It's built on our Sovereignty Charter and our Partnership Charter - you own your data, you stay in control, and value flows to people, not away from them.", wins: [{ title: "The Sovereign Charter", src: "/charter", slot: "tr" }], full: true },
+  { say: "None of this is extraction. It's built on our Council Charter and our Partnership Charter - you own your data, you stay in control, and value flows to people, not away from them.", wins: [{ title: "The Council Charter", src: "/charter", slot: "tr" }], full: true },
   { say: "Now - say you run a Fortune 500. Watch. I map your entire AI estate against every framework that touches you, live - credit, fraud, hiring, all of it.", wins: [{ title: "Governance Graph - your AI estate", src: "/graph?demo=a%20Fortune%20500%20bank%20using%20AI%20for%20credit%2C%20fraud%20and%20hiring", slot: "tr" }], layer: { tag: "fortune", on: true }, fly: { lng: -95, lat: 39, height: 6000000 } },
   { say: "Cybersecurity is governance too. I bring your Cyber Resilience Act, NIS2 and DORA exposure into the same OS - collected, with the deadline clock running.", wins: [{ title: "The Hive - Cyber Resilience Act", src: "/hive/cra", slot: "tr" }], layer: { tag: "cyber", on: true } },
   { say: "So sit back. You talk - I do the work: classify the systems, run the assessments, prepare the evidence. And every decision I make is signed to Layer 0, so it's auditable forever. Don't trust me - verify it.", wins: [{ title: "Signed AI System Card - auditable proof", src: "/system-card", slot: "c" }] },
@@ -39,7 +39,7 @@ const STEPS: Step[] = [
   { say: "Robotics and humanoids are coming fast - I map the R&D hubs building them, so governance is ready before they ship.", layer: { tag: "robotics", on: true }, fly: { lng: 20, lat: 30, height: 24000000 } },
   { say: "And I keep watch on AI security and the trending risks worldwide - the intel that matters, on one live map.", layer: { tag: "intel", on: true } },
   { say: "This is the AI economy itself - the compute that powers every model on earth, lit up in gold. Where compute concentrates, capability and risk concentrate. I watch it in real time and flag anything - a quake, an outage - that threatens the infrastructure your AI runs on.", layer: { tag: "compute", on: true }, fly: { lng: -40, lat: 35, height: 26000000 } },
-  { say: "And this is our own Sovereign network - nineteen signed agents, from proofof.ai to safetyof.ai, each one accountable and each one arced back to a single council. This is the ecosystem, live: one crown, many agents, all sealed to Layer 0.", layer: { tag: "network", on: true }, fly: { lng: 2, lat: 52, height: 4200000 } },
+  { say: "And this is our own Council network - nineteen signed agents, from proofof.ai to safetyof.ai, each one accountable and each one arced back to a single council. This is the ecosystem, live: one crown, many agents, all sealed to Layer 0.", layer: { tag: "network", on: true }, fly: { lng: 2, lat: 52, height: 4200000 } },
   { say: "Here's why this changes everything. The barriers that stop most teams - hiring consultants, months of manual mapping, tools that don't talk to each other - I remove them. You start free, on open source, and scale only when you need to.", wins: [{ title: "Plans - start free", src: "/pricing", slot: "tr" }], full: true },
   { say: "The benefit is simple: comply once and I crosswalk it everywhere; run it hands-free while you get on with your work; and every decision is signed to Layer 0 - provable, not promised. One OS for all of AI governance.", full: true, layer: { tag: "arcs", on: true }, fly: { lng: 0, lat: 25, height: 24000000 } },
   { say: "Here's the whole OS at a glance - the Graph, the Council and the Watchdog, all open together, tiled like a real desktop, all on one brain.", wins: [{ title: "Governance Graph", src: "/graph?demo=a%20fintech%20in%20Singapore", slot: "tl" }, { title: "The Council", src: "/try?demo=a%20facial%20recognition%20system%20in%20public", slot: "tr" }, { title: "Global Watchdog", src: "/watchdog-map", slot: "br" }], full: true },
@@ -47,31 +47,31 @@ const STEPS: Step[] = [
   { say: "Under it all, a living mesh - cross-region handoffs, so a decision made anywhere is honoured everywhere.", layer: { tag: "arcs", on: true } },
   { say: "And the agents themselves - governed swarms across every hub, each one accountable, each one signed.", layer: { tag: "swarm", on: true } },
   { say: "Every framework lives where it's made - the EU AI Act in Brussels, NIST near Washington, PIPL in Beijing. Comply once, and I crosswalk it everywhere.", full: true, fly: { lng: 116.4, lat: 39.9, height: 2600000 } },
-  { say: "Now here's why we're a generation ahead. Watch our Byzantine council rise. Thirty-three sovereign agents, spiralling into consensus - no single model decides, a fault-tolerant council does, and every vote is held to a 0.95 care-floor. This is governance that can't be captured or bribed.", cmd: { cmd: "bftSpiral" }, full: true },
+  { say: "Now here's why we're a generation ahead. Watch our designed 33-agent council rise. Thirty-three agents, spiralling into a vote - no single model decides, the council does, and every vote is held to a 0.95 care-floor. This is governance that can't be captured or bribed.", cmd: { cmd: "bftSpiral" }, full: true },
   { say: "And beneath every agent, our Rainbow Stack - defence-in-depth in seven layers. Red attestation, orange identity, yellow transport, green access, blue payment, indigo memory, violet governance. Security woven through the whole spiral, not bolted on. No one else builds it this way.", cmd: { cmd: "rainbowStack" }, full: true },
-  { say: "Now - personalisation. As you use the OS, your Sovereign learns your preferences and becomes your signed digital counterpart - carrying a signed digital ID passport via proofof.ai. And you can mint the same: digital-passported agents for your enterprise or government, each one identified, accountable and Ed25519-signed to Layer 0.", cmd: { cmd: "clearViz" }, wins: [{ title: "Your sovereign twin (design)", src: "/sovereign-twin", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
-  { say: "Now the proof. This is ONE OS for agents AND humanoids - I track every single one, live and global.", layer: { tag: "humanoids", on: true }, fly: { lng: 10, lat: 25, height: 26000000 } },
-  { say: "I map their environments by WiFi sensing, LoRa and Bluetooth mesh - consent-first, no private cameras - and every humanoid runs PDCA, simulating outcomes to pick the governed path.", full: true },
-  { say: "Here's a humanoid on the ground in London. Let me bring up the local public street cam - live - so you can watch the real world and the AI economy moving in it.", wins: [{ title: "◉ Public street cam - London (live)", src: "/livecam.html?loc=London", slot: "tr" }], layer: { tag: "humanoids", on: true }, fly: { lng: -0.118, lat: 51.509, height: 60000 } },
-  { say: "And if that humanoid plays up? I auto-confirm the scene - public and consented cameras, WiFi sensing, no facial recognition - clear it through our Rainbow Stack seven-layer AI-security defense, and stop it before any harm.", wins: [{ title: "◉ Public street cam - London (live)", src: "/livecam.html?loc=London", slot: "tr" }], layer: { tag: "cyber", on: true } },
-  { say: "Watch - a swarm turns rogue, about to ungovern. See the red cluster over London, right on the globe.", layer: { tag: "threat", on: true }, rearm: true, fly: { lng: -0.1, lat: 51.5, height: 1400000 } },
-  { say: "I see it before it happens - and I stop it, live on the map. Halt, quarantine, re-govern - watch the red turn emerald. Signed to Layer 0. Run it yourself.", wins: [{ title: "ONE OS - agents & humanoids POC", src: "/poc", slot: "c" }], neutralize: true },
-  { say: "Full transparency: the Sovereign brain and every Layer 0 protocol, checked live.", wins: [{ title: "System Status", src: "/status", slot: "tr" }], full: true, home: true },
+  { say: "Now - personalisation. As you use the OS, your Council assistant learns your preferences and becomes your signed digital counterpart - carrying a signed digital ID passport via proofof.ai. And you can mint the same: digital-passported agents for your enterprise or government, each one identified, accountable and Ed25519-signed to Layer 0.", cmd: { cmd: "clearViz" }, wins: [{ title: "Your Council twin (design)", src: "/sovereign-twin", slot: "c" }], fly: { lng: 0, lat: 15, height: 16000000 } },
+  { say: "Now the proof. This is ONE OS for agents AND models - measured, not tracked. Every score comes from the signed measurement layer, and every unmeasured cell says so.", layer: { tag: "humanoids", on: true }, fly: { lng: 10, lat: 25, height: 26000000 } },
+  { say: "Every model on the board is graded by deterministic rulers - no LLM judges another model. Wilson intervals on everything. An axis below n=30 carries no interval, and says so.", full: true },
+  { say: "Here's the model registry - thirteen measured axes, every leader model named, every score recomputable from the published harness.", wins: [{ title: "▦ Model Registry — 13 measured axes, live", src: "/models", slot: "tr" }], fly: { lng: -0.118, lat: 51.509, height: 60000 } },
+  { say: "And the arena - measured head-to-head battles. A verdict is a predicate, not an opinion: each match replays one provision against two models and the outcome is deterministically graded.", wins: [{ title: "⚔ The Arena — measured battles", src: "/gspc-arena", slot: "tr" }] },
+  { say: "Watch - the fleet measurement board updates as new runs land. Care axis at n=200 with an interval; art5 safeguards at 0.972. Every number carries its confidence interval.", layer: { tag: "threat", on: true }, rearm: true, fly: { lng: -0.1, lat: 51.5, height: 1400000 } },
+  { say: "That is the difference: we do not claim models are safe. We measure what they do, sign the evidence, and publish it - including the failures. Run it yourself.", wins: [{ title: "ONE OS - measurement POC", src: "/poc", slot: "c" }], neutralize: true },
+  { say: "Full transparency: the Council engine and every Layer 0 protocol, checked live.", wins: [{ title: "System Status", src: "/status", slot: "tr" }], full: true, home: true },
   { say: "And you don't even have to come to us - governance goes to you. One command, npx csoai-governance-mcp, drops this entire Layer 0 - signing, verification, the council, all 370+ tools - into any AI agent you already run. We are the governance layer under the whole ecosystem.", wins: [{ title: "CSOAI Governance MCP - one command", src: "/distribution", slot: "tr" }], full: true },
   { say: "Own your AI. Own your data. Start free, scale when you need. That's your OS - and I'm always right here. Ask me anything, any time.", wins: [{ title: "Plans", src: "/pricing", slot: "tr" }], home: true },
 ];
 
-const BOOT = ["Establishing governed link", "Loading Sovereign Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "Loading council design (not yet live — DR-0007)", "Care-floor engaged"];
+const BOOT = ["Establishing governed link", "Loading Council Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "Loading council design (not yet live — DR-0007)", "Care-floor engaged"];
 
 // Navigation surfaces for the OS drawer + bottom bar (end-user tool navigation).
 const NAV_GROUPS: { g: string; items: { n: string; src: string }[] }[] = [
-  { g: "Govern", items: [{ n: "Governance Graph", src: "/graph" }, { n: "The Council", src: "/try" }, { n: "Council Space", src: "/sov-space" }, { n: "Framework Hive", src: "/hive" }, { n: "Regulator Atlas", src: "/regulators" }] },
+  { g: "Govern", items: [{ n: "Governance Graph", src: "/graph" }, { n: "The Council", src: "/try" }, { n: "Council Space", src: "/gspc-arena" }, { n: "Framework Hive", src: "/hive" }, { n: "Regulator Atlas", src: "/regulators" }] },
   { g: "Protect & watch", items: [{ n: "Global Watchdog", src: "/watchdog-map" }, { n: "Cyber self-scan", src: "/scan" }, { n: "Personal Protection", src: "/protect" }] },
-  { g: "Ecosystem", items: [{ n: "Sovereign Network", src: "/network" }, { n: "The Ontology", src: "/ontology" }, { n: "Signed System Card", src: "/system-card" }, { n: "Why CSOAI", src: "/why" }, { n: "Competitor battlecards", src: "/competitors" }] },
+  { g: "Ecosystem", items: [{ n: "Council Network", src: "/network" }, { n: "The Ontology", src: "/ontology" }, { n: "Signed System Card", src: "/system-card" }, { n: "Why CSOAI", src: "/why" }, { n: "Competitor battlecards", src: "/competitors" }] },
   { g: "Build & run", items: [{ n: "Tool Commons (370+)", src: "/tool-commons" }, { n: "OSCAL Studio", src: "/oscal" }, { n: "Command Center", src: "/command-center" }, { n: "Plans & pricing", src: "/plans" }, { n: "Full OS launcher", src: "/os" }] },
 ];
 const NAV_LAYERS: { n: string; tag: string }[] = [
-  { n: "Frameworks", tag: "frameworks" }, { n: "Regulators", tag: "regulators" }, { n: "Governments", tag: "gov" }, { n: "Fortune / companies", tag: "fortune" }, { n: "Cyber / CNI", tag: "cyber" }, { n: "AI compute", tag: "compute" }, { n: "AI labs & safety", tag: "labs" }, { n: "Autonomous systems", tag: "auton" }, { n: "Sovereign network", tag: "network" }, { n: "Robotics", tag: "robotics" }, { n: "Humanoids", tag: "humanoids" }, { n: "AI-security intel", tag: "intel" }, { n: "Space & satellites", tag: "space" }, { n: "AI-critical energy", tag: "energy" }, { n: "Internet backbone", tag: "cables" }, { n: "Industries → AI", tag: "industries" }, { n: "Live aircraft", tag: "aircraft" }, { n: "Ontology", tag: "ontology" }, { n: "Cross-region mesh", tag: "arcs" },
+  { n: "Frameworks", tag: "frameworks" }, { n: "Regulators", tag: "regulators" }, { n: "Governments", tag: "gov" }, { n: "Fortune / companies", tag: "fortune" }, { n: "Cyber / CNI", tag: "cyber" }, { n: "AI compute", tag: "compute" }, { n: "AI labs & safety", tag: "labs" }, { n: "Autonomous systems", tag: "auton" }, { n: "Council network", tag: "network" }, { n: "Robotics", tag: "robotics" }, { n: "Humanoids", tag: "humanoids" }, { n: "AI-security intel", tag: "intel" }, { n: "Space & satellites", tag: "space" }, { n: "AI-critical energy", tag: "energy" }, { n: "Internet backbone", tag: "cables" }, { n: "Industries → AI", tag: "industries" }, { n: "Live aircraft", tag: "aircraft" }, { n: "Ontology", tag: "ontology" }, { n: "Cross-region mesh", tag: "arcs" },
 ];
 const NAV_SHOW: { n: string; cmd: any }[] = [
   { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ Council of AI spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◱ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
@@ -128,7 +128,7 @@ function OsWindow({ title, src, idx, onClose, innerRef }: { title: string; src: 
   );
 }
 
-// Speak-to-map: the Sovereign toggles globe data layers from natural language.
+// Speak-to-map: the Council assistant toggles globe data layers from natural language.
 const GLOBE_LAYERS: { re: RegExp; tag: string; label: string }[] = [
   { re: /ontolog|relationship|how.*relate|connect|graph of/i, tag: "ontology", label: "the governance ontology" },
   { re: /framework|regulation|\blaw\b|eu ai act|nist|iso/i, tag: "frameworks", label: "the frameworks" },
@@ -141,12 +141,12 @@ const GLOBE_LAYERS: { re: RegExp; tag: string; label: string }[] = [
   { re: /trending|news|intel|ai security/i, tag: "intel", label: "AI security and trending" },
   { re: /satellite|orbit|\bspace\b/i, tag: "sats", label: "satellites" },
   { re: /agent swarm|\bagents\b/i, tag: "swarm", label: "the agent swarm" },
-  { re: /sovereign node|\bnodes\b|civili/i, tag: "nodes", label: "the sovereign nodes" },
+  { re: /sovereign node|\bnodes\b|civili/i, tag: "nodes", label: "the council nodes" },
   { re: /compute|datacenter|data cent|\bgpu\b|ai economy|ai infrastructure/i, tag: "compute", label: "the AI compute infrastructure" },
-  { re: /sovereign network|agent.?card|our (agents|network|ecosystem)|signed agents|the ecosystem/i, tag: "network", label: "the Sovereign network" },
+  { re: /sovereign network|agent.?card|our (agents|network|ecosystem)|signed agents|the ecosystem/i, tag: "network", label: "the Council network" },
   { re: /regulator|regime|authorit|watchdog seat|regulatory/i, tag: "regulators", label: "the regulators, at their seats" },
 ];
-// Narration→globe bridge: as the Sovereign SAYS a word, the globe reacts in sync.
+// Narration→globe bridge: as the Council assistant SAYS a word, the globe reacts in sync.
 // Two kinds: place words fly the camera; concept words light up the matching layer.
 const BRIDGE_PLACE: { re: RegExp; lng: number; lat: number; h: number }[] = [
   { re: /london/i, lng: -0.118, lat: 51.509, h: 140000 },
@@ -348,7 +348,7 @@ export default function DemoOS() {
     setListening(false); say("sov", "…");
     // Route through the CSOAI-Sovereign guard: frames the role (AI governance / cyber) and
     // rejects companion-persona bleed or refusals, so the tour never goes "weird".
-    const res = await askSovereign(q, { system: "You are the CSOAI Sovereign guiding a live tour of the CSOAI AI-governance Operating System. Answer only as that governance/cybersecurity assistant — never as a personal companion, never poetic, never mention other products. Be concise and concrete about AI governance, regulation, Fortune-100/500 compliance, cyber, or what's on the globe." });
+    const res = await askSovereign(q, { system: "You are the CSOAI Council assistant guiding a live tour of the CSOAI AI-governance Operating System. Answer only as that governance/cybersecurity assistant — never as a personal companion, never poetic, never mention other products. Be concise and concrete about AI governance, regulation, Fortune-100/500 compliance, cyber, or what's on the globe." });
     setChat((c) => c.slice(0, -1).concat({ id: ++idc.current, who: "sov", t: res.text }));
     speak(res.text);
   }
@@ -365,7 +365,7 @@ export default function DemoOS() {
       {booting && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center px-6" style={{ background: "#03080f", backgroundImage: "radial-gradient(1100px 720px at 50% 40%, rgba(16,185,129,.22), transparent 68%), radial-gradient(700px 500px at 50% 42%, rgba(56,189,248,.12), transparent 70%), radial-gradient(1.6px 1.6px at 20% 30%, rgba(125,211,252,.7), transparent), radial-gradient(1.6px 1.6px at 70% 60%, rgba(167,243,208,.65), transparent), radial-gradient(1.2px 1.2px at 40% 80%, rgba(255,255,255,.5), transparent), radial-gradient(1.6px 1.6px at 85% 25%, rgba(125,211,252,.6), transparent), radial-gradient(1.2px 1.2px at 55% 15%, rgba(255,255,255,.45), transparent)" }}>
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/10 text-3xl text-emerald-300" style={{ boxShadow: "0 0 44px rgba(16,185,129,.4)" }}>{"◉"}</div>
-          <div className="font-mono text-[11px] uppercase tracking-[4px] text-emerald-300/70">CSOAI {"·"} Sovereign {"·"} Governance {"·"} Layer 0</div>
+          <div className="font-mono text-[11px] uppercase tracking-[4px] text-emerald-300/70">CSOAI {"·"} Council {"·"} Governance {"·"} Layer 0</div>
           <div className="mt-6 w-full max-w-sm space-y-1.5 font-mono text-xs">
             {BOOT.map((l, k) => (<div key={k} className={"flex items-center justify-between " + (k < bootN ? "text-emerald-200" : "text-emerald-300/25")}><span>{l}</span><span>{k < bootN ? "✓" : "…"}</span></div>))}
           </div>
@@ -383,7 +383,7 @@ export default function DemoOS() {
           <div role="status" aria-live="polite" className="mt-3 max-w-md rounded-md border border-amber-400/35 bg-amber-400/15 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
             You are interacting with an AI system.
           </div>
-          <h2 className="mt-4 text-2xl font-black text-emerald-100">Grant your Sovereign a voice</h2>
+          <h2 className="mt-4 text-2xl font-black text-emerald-100">Grant your Council assistant a voice</h2>
           <p className="mt-2 max-w-md text-sm text-emerald-100/75">Allow the mic so you can just talk to me during the tour - interrupt any time and I'll listen. Nothing is recorded or sold; on-device, consent-first.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <button onClick={allowVoice} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">🎙 Allow &amp; continue</button>
@@ -396,7 +396,7 @@ export default function DemoOS() {
       {mode === null && i === -1 && !booting && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#03080e]/55 backdrop-blur-sm px-6 text-center">
           <div className="h-12 w-12 animate-pulse rounded-full border border-emerald-300/40 bg-emerald-500/10" style={{ boxShadow: "0 0 40px rgba(16,185,129,.4)" }} />
-          <p className="mt-5 font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Your Sovereign is taking over…</p>
+          <p className="mt-5 font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Your Council assistant is taking over…</p>
           <p className="mt-2 text-sm text-emerald-100/70">🎙 Speak or tap any time to interrupt.</p>
         </div>
       )}
@@ -456,7 +456,7 @@ export default function DemoOS() {
               </div>
               {(() => { const nd = NET_DOMAINS.filter((x) => !drawerQ.trim() || (x.n + " " + x.d).toLowerCase().includes(drawerQ.trim().toLowerCase())); if (!nd.length) return null; return (
               <div className="mb-4">
-                <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Sovereign network <span className="rounded-full border border-emerald-200 px-1.5 text-[9px] text-emerald-500">{NET_DOMAINS.length} signed</span></div>
+                <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Council network <span className="rounded-full border border-emerald-200 px-1.5 text-[9px] text-emerald-500">{NET_DOMAINS.length} signed</span></div>
                 <div className="flex flex-wrap gap-1.5">
                   {nd.map((x) => (
                     <a key={x.d} href={"https://" + x.d} target="_blank" rel="noreferrer" title={x.d} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-700 hover:border-emerald-400 hover:bg-emerald-50">{x.n} <span className="text-gray-400">↗</span></a>
@@ -500,8 +500,8 @@ export default function DemoOS() {
 
 
       {mode !== null && chatMin && (
-        <button onClick={() => setChatMin(false)} title="Open the Sovereign" className="absolute right-3 top-3 z-40 flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04120c]/90 px-3 py-2 text-sm font-bold text-emerald-100 shadow-2xl backdrop-blur-xl hover:bg-[#04120c]">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">◉</span> Sovereign
+        <button onClick={() => setChatMin(false)} title="Open the Council assistant" className="absolute right-3 top-3 z-40 flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04120c]/90 px-3 py-2 text-sm font-bold text-emerald-100 shadow-2xl backdrop-blur-xl hover:bg-[#04120c]">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">◉</span> Council
           {listening && <span className="h-2 w-2 rounded-full bg-rose-400 animate-pulse" />}
         </button>
       )}
@@ -526,7 +526,7 @@ export default function DemoOS() {
           )}
           <div className="flex items-center gap-1.5 border-b border-emerald-500/15 px-3 py-1.5">
             <div className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">{"◉"}</div>
-            <div className="truncate text-[13px] font-bold text-emerald-100">Sovereign {geoCity && <span className="font-mono text-[9px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
+            <div className="truncate text-[13px] font-bold text-emerald-100">Council {geoCity && <span className="font-mono text-[9px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
             <button onClick={() => setHandsFree((h) => { const n = !h; if (n) startRec(); else stopRec(); return n; })} title={handsFree ? "Hands-free on" : "Hands-free off"} className={"ml-auto rounded-full px-1.5 py-0.5 text-[11px] " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/45 hover:bg-white/5")}>{handsFree ? "🎙⏺" : "🎙"}</button>
             <button onClick={() => setChatMin(true)} title="Collapse chat" className="rounded px-1.5 py-0.5 text-[13px] text-emerald-300/60 hover:bg-white/5">»</button>
             <button onClick={stop} title="End tour" className="rounded px-1.5 py-0.5 text-[11px] text-emerald-300/60 hover:bg-white/5">End</button>
@@ -539,7 +539,7 @@ export default function DemoOS() {
             {ending ? (
               <div className="grid grid-cols-2 gap-2">
                 <a href="/world" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Scan my area</a>
-                <a href="/sov-space" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Run a live scenario</a>
+                <a href="/gspc-arena" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Run a live scenario</a>
                 <a href="/graph" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Show governance</a>
                 <a href="/os" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
               </div>

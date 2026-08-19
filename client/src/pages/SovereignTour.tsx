@@ -61,7 +61,7 @@ const STEPS: StepConfig[] = [
     narration:
       "Every tour visitor can request a live Ed25519-signed passport. The signature is verifiable offline with the published public key.",
     dataType: "real",
-    verifyHref: "https://os.meok.ai/api",
+    verifyHref: "/api",
     verifyLabel: "Inspect mint endpoint",
     globeCommand: { cmd: "flyTo", lng: -0.12, lat: 51.5, height: 1200000, duration: 1.8 },
   },
@@ -81,7 +81,7 @@ const STEPS: StepConfig[] = [
 const CORPUS_STATE_URL = "https://raw.githubusercontent.com/CSOAI-ORG/corpus-watch/main/corpus_state.json";
 const LOCAL_CORPUS_URL = "/corpus-watch/status.json";
 const HF_LEDGER_URL = "https://csoai-csoai-measurement-ledger.hf.space/snapshot.json";
-const PASSPORT_URL = "https://os.meok.ai/api";
+const PASSPORT_URL = "/api";
 
 export default function SovereignTour() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -299,7 +299,7 @@ export default function SovereignTour() {
               <span className="text-xs text-amber-300/70">Mint endpoint</span>
             </div>
             <p className="mt-2 text-sm text-amber-100/80">Endpoint status: {data.passportError}</p>
-            <p className="mt-1 text-xs text-amber-200/60">The live mint is available when the MEOK OS API is reachable.</p>
+            <p className="mt-1 text-xs text-amber-200/60">The live mint is available when the Layer 0 API is reachable.</p>
           </div>
         );
       }

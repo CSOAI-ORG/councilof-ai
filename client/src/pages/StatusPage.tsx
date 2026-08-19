@@ -5,13 +5,13 @@ import { CANON } from "../data/canonCounters";
 // Components listed on this page. Only entries with a probe are checked live from
 // the browser; everything else is labelled honestly as not probed from this page.
 const COMPONENTS: { name: string; probe: "gateway" | "tools" | null }[] = [
-  { name: "Sovereign gateway (os.meok.ai/api/health)", probe: "gateway" },
-  { name: "Governed tool fleet (os.meok.ai/api/tools)", probe: "tools" },
-  { name: "Byzantine Council (BFT consensus)", probe: null },
-  { name: "Compliance engine (30 frameworks)", probe: null },
+  { name: "Council gateway (health probe)", probe: "gateway" },
+  { name: "Governed tool fleet (tools probe)", probe: "tools" },
+  { name: "Council (multi-agent council)", probe: null },
+  { name: "Compliance engine (4 control-sets)", probe: null },
   { name: "Layer 0 signing (Ed25519)", probe: null },
   { name: "Governance Graph (live world data)", probe: null },
-  { name: "Sigil ledger + hash-chain", probe: null },
+  { name: "Signed evidence chain + hash-chain", probe: null },
 ];
 
 const PROTO_LABEL: Record<string, string> = {
@@ -24,7 +24,7 @@ const PROTO_LABEL: Record<string, string> = {
   "/api/tools": "Tool Commons - governed MCP",
   "/api/media": "Media - governed assets",
   "/api/badge": "Badge - trust credential",
-  "/api/avatar": "Avatar - Sovereign presence",
+  "/api/avatar": "Avatar - Council presence",
   "/api/social": "Social - governed posting",
 };
 
@@ -71,7 +71,7 @@ export default function StatusPage() {
               {connected && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" />}
               <span className={"relative inline-flex h-3 w-3 rounded-full " + (connected ? "bg-emerald-400" : checked ? "bg-amber-400" : "bg-gray-500")} />
             </span>
-            <span className="text-lg font-black">{connected ? "Sovereign brain - CONNECTED" : checked ? "Sovereign brain - reachable, degraded" : "Checking the Sovereign brain..."}</span>
+            <span className="text-lg font-black">{connected ? "Council engine - CONNECTED" : checked ? "Council engine - reachable, degraded" : "Checking the Council engine..."}</span>
             {live && live.version && <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300">v{live.version}</span>}
             <span className="ml-auto font-mono text-[11px] text-emerald-300/60">CSOAI Council OS</span>
           </div>
@@ -82,7 +82,7 @@ export default function StatusPage() {
             <Stat label="OpenAI-compat" value={brain.openai_compat ? "live" : "-"} ok={!!brain.openai_compat} />
             <Stat label="Groq" value={brain.groq ? "on" : "-"} ok={!!brain.groq} />
             <Stat label="Anthropic" value={brain.anthropic ? "on" : "-"} ok={!!brain.anthropic} />
-            <Stat label="Sigil" value={(live && live.governance && live.governance.sigil) || "ed25519"} />
+            <Stat label="Ed25519" value={(live && live.governance && live.governance.sigil) || "ed25519"} />
             <Stat label="Care floor" value={live && live.governance && live.governance.care_floor != null ? String(live.governance.care_floor) : "0.95"} />
           </div>
         </div>
@@ -123,7 +123,7 @@ export default function StatusPage() {
             </div>
           );
         })}
-        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Sovereign brain that powers the CSOAI OS." : "The Sovereign brain is reached live from your browser."} Rows marked &ldquo;not probed from this page&rdquo; have no public health endpoint we can honestly check from here — we don't paint them green by default.</p>
+        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Council engine that powers the CSOAI OS." : "The Council engine is reached live from your browser."} Rows marked &ldquo;not probed from this page&rdquo; have no public health endpoint we can honestly check from here — we don't paint them green by default.</p>
       </section>
 
       <section className="mx-auto max-w-4xl px-6 pb-14 space-y-4">

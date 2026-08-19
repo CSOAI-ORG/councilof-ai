@@ -1,6 +1,7 @@
 /**
- * My Certificates Page
- * Displays all certificates earned by the user (both Watchdog Analyst and Training Courses)
+ * My Completion Records Page
+ * Displays all Council Academy completion records earned by the user
+ * (both Watchdog Analyst and Training Courses).
  */
 
 import { useState } from "react";
@@ -118,7 +119,7 @@ export default function MyCertificates() {
           <Award className="h-10 w-10 text-muted-foreground" />
           <h1 className="text-2xl font-semibold">Sign in required</h1>
           <p className="text-muted-foreground max-w-md">
-            Your certificates are available to signed-in accounts only.
+            Your completion records are available to signed-in accounts only.
           </p>
           <Button asChild><a href="/login">Sign in</a></Button>
         </div>
@@ -135,9 +136,9 @@ export default function MyCertificates() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">My Certificates</h1>
+            <h1 className="text-3xl font-bold">My Completion Records</h1>
             <p className="text-muted-foreground">
-              View and manage all your earned certifications
+              View and manage all your earned Council Academy completion records
             </p>
           </div>
         </div>
@@ -148,16 +149,16 @@ export default function MyCertificates() {
               <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
                 <Award className="h-10 w-10 text-muted-foreground" />
               </div>
-              <h3 className="text-2xl font-semibold mb-3">No Certificates Yet</h3>
+              <h3 className="text-2xl font-semibold mb-3">No Completion Records Yet</h3>
               <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Complete training courses or pass the Watchdog Analyst certification exam to earn your first certificate.
+                Complete training courses or pass the Watchdog Analyst course assessment to earn your first completion record.
               </p>
               <div className="flex gap-3 justify-center">
                 <Button onClick={() => navigate("/courses")}>
                   Browse Courses
                 </Button>
                 <Button variant="outline" onClick={() => navigate("/certification")}>
-                  Take Certification Exam
+                  Start the Course
                 </Button>
               </div>
             </CardContent>
@@ -169,7 +170,7 @@ export default function MyCertificates() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />
-                  <h2 className="text-xl font-semibold">Training Course Certificates</h2>
+                  <h2 className="text-xl font-semibold">Training Course Completion Records</h2>
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
@@ -250,7 +251,7 @@ export default function MyCertificates() {
                                 className="w-full"
                               >
                                 <ExternalLink className="h-4 w-4 mr-2" />
-                                Verify Certificate
+                                Verify Record
                               </Button>
                             </Link>
                           </div>
@@ -267,7 +268,7 @@ export default function MyCertificates() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="h-px flex-1 bg-border" />
-                  <h2 className="text-xl font-semibold">Watchdog Analyst Certifications</h2>
+                  <h2 className="text-xl font-semibold">Watchdog Analyst Completion Records</h2>
                   <div className="h-px flex-1 bg-border" />
                 </div>
 
@@ -347,7 +348,7 @@ export default function MyCertificates() {
                                   className="flex-1"
                                   onClick={() => setSelectedWatchdogCert(cert)}
                                 >
-                                  View Certificate
+                                  View Record
                                 </Button>
                                 {expired && (
                                   <Button 
@@ -375,13 +376,13 @@ export default function MyCertificates() {
         <Dialog open={!!selectedWatchdogCert} onOpenChange={() => setSelectedWatchdogCert(null)}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Watchdog Analyst Certificate</DialogTitle>
+              <DialogTitle>Watchdog Analyst Completion Record</DialogTitle>
             </DialogHeader>
             {selectedWatchdogCert && (
               <Certificate
                 certificateId={selectedWatchdogCert.certificateNumber}
-                recipientName="Certified Analyst"
-                courseName="Watchdog Analyst Certification Exam"
+                recipientName="Course Graduate"
+                courseName="Watchdog Analyst Course Assessment"
                 certificateType="Watchdog Analyst"
                 issueDate={new Date(selectedWatchdogCert.issuedAt).toISOString()}
                 verificationUrl={`/verify/${selectedWatchdogCert.certificateNumber}`}
