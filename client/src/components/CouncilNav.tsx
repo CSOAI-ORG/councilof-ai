@@ -4,10 +4,10 @@ import { Link, useLocation, useSearch } from "wouter";
 // 2026-08-01 unification: the globe, the arena and the towns are LAYERS of
 // Council Space now, not separate products; the links carry ?view=.
 const LINKS = [
-  { href: "/council-space?view=globe", label: "🌍 Globe", view: "globe" },
-  { href: "/council-space", label: "◈ Council Space", alt: "/simulate", view: "" },
-  { href: "/council-space?view=arena", label: "🏟 Arena", view: "arena" },
-  { href: "/council-space?view=towns", label: "🏘 Towns", view: "towns" },
+  { href: "/gspc-arena?view=globe", label: "🌍 Globe", view: "globe" },
+  { href: "/gspc-arena", label: "◈ Council Space", alt: "/simulate", view: "" },
+  { href: "/gspc-arena?view=arena", label: "🏟 Arena", view: "arena" },
+  { href: "/gspc-arena?view=towns", label: "🏘 Towns", view: "towns" },
   { href: "/intel", label: "⬡ Distribution Hive", view: null },
   { href: "/try", label: "▶ Live Council", view: null },
 ];

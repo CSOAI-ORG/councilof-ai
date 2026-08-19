@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { setMetaDescription } from "@/lib/utils";
 
 // Free-rail posture (owner decision): the rail is free, verification is free forever.
 // CSOAI is a MEASUREMENT body — never a certification body, never a SaaS access tier.
@@ -29,7 +30,10 @@ const MATRIX: [string, string, string, string, string][] = [
 ];
 
 export default function PlansPage() {
-  useEffect(() => { document.title = "The rail is free — one signed card | Council of AI"; }, []);
+  useEffect(() => {
+    document.title = "The rail is free — one signed card | Council of AI";
+    setMetaDescription("Council of AI plans: the measurement rail is free — one signed card, and verification is free forever. Where evidence is sold it is a signed artefact on its own page, never access to the rail.");
+  }, []);
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       {/* Header */}

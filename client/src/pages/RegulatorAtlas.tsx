@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { REGIMES, type Regime } from "../data/regulators";
+import { setMetaDescription } from "@/lib/utils";
 import { chargeSovereign } from "../lib/sovCharge";
 import AISystemNotice from "../components/AISystemNotice";
 
@@ -73,7 +74,10 @@ function RegCard({ r }: { r: Regime }) {
 
 export default function RegulatorAtlas() {
   const [kind, setKind] = useState<string>("all");
-  useEffect(() => { document.title = "The Regulator Atlas — every AI + cyber regime, tools & dates | CSOAI"; }, []);
+  useEffect(() => {
+    document.title = "The Regulator Atlas — every AI + cyber regime, tools & dates | CSOAI";
+    setMetaDescription("The Regulator Atlas: AI and cyber regulatory regimes — EU AI Act, NIS2, DORA, UK, US, TC260 and more — with the top tools and next enforcement dates for each, maintained by the Council of AI.");
+  }, []);
   const list = useMemo(() => (kind === "all" ? REGIMES : REGIMES.filter((r) => r.kind === kind)), [kind]);
 
   return (

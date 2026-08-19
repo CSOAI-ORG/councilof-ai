@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import { setMetaDescription } from "@/lib/utils";
 
 // /honesty — the honesty gate, published. Our own fine-tunes losing our own arena,
 // with every number from the live pod state (reborn_league.json, 2026-08-18).
@@ -35,6 +36,7 @@ const ARTICLE_LD = {
 export default function Honesty() {
   useEffect(() => {
     document.title = "The honesty gate — our own fine-tunes are losing our own arena | Council of AI";
+    setMetaDescription("The honesty gate: Council of AI publishes its own losses. Our fine-tunes' measured arena results, with n and confidence intervals, signed and recomputable. Live board counts: GET /api/gspc.");
   }, []);
 
   return (

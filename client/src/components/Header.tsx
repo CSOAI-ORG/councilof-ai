@@ -78,7 +78,7 @@ const navigation = [
     description: 'Training & attestation',
     submenu: [
       { name: 'Training Hub', href: '/training-hub', description: 'Gamified training on live regulations — free for everyone' },
-      { name: 'Drift Audit', href: '/drift-product', description: '£5–15k drift audit — live regulatory corpus change reports' },
+      { name: 'Drift Audit', href: '/drift-product', description: 'Drift audit — live regulatory corpus change reports' },
       { name: 'All Courses', href: '/courses', description: 'Browse our complete course catalog' },
       { name: 'Attestation Overview', href: '/certification', description: 'Attestation paths and requirements' },
       { name: 'Take Exam', href: '/certification/exam', description: 'Start your attestation exam' },

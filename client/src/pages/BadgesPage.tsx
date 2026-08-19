@@ -58,7 +58,7 @@ export default function BadgesPage() {
         <div className="rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/75">
           <b className="text-emerald-200">This is the open commons.</b> Badges are step one. Next, Council Space opens the full toolset - the MEOK open MCPs, forks, APIs and A2A protocols - as runnable cards anyone can use, with the Council assistant orchestrating and Layer 0 signing every run. Open source, made easy. MIT-licensed. Built in the open on GitHub.
           <div className="mt-4 flex flex-wrap gap-3">
-            <a href="/council-space" className="rounded-xl bg-emerald-500 px-4 py-2 font-bold text-[#03110b] hover:bg-emerald-400">Enter Council Space -&gt;</a>
+            <a href="/gspc-arena" className="rounded-xl bg-emerald-500 px-4 py-2 font-bold text-[#03110b] hover:bg-emerald-400">Enter Council Space -&gt;</a>
             <a href="/try" className="rounded-xl border border-emerald-400/40 px-4 py-2 font-semibold text-emerald-100 hover:bg-white/5">Ask the Council -&gt;</a>
           </div>
         </div>

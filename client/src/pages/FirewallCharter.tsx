@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { setMetaDescription } from "@/lib/utils";
 
 /**
  * /firewall-charter — the Measurement/Remediation Firewall Charter.
@@ -50,6 +51,7 @@ const PRINCIPLES: { title: string; body: string }[] = [
 export default function FirewallCharter() {
   useEffect(() => {
     document.title = "Measurement/Remediation Firewall Charter | Council of AI";
+    setMetaDescription("The Measurement/Remediation Firewall Charter: Council of AI (CSOAI LTD, UK 16939677) measures and signs evidence but never sells remediation on what it ranks — the conflict-of-interest firewall, in full.");
   }, []);
 
   return (

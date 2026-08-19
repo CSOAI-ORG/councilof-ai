@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
 import { SpectrumView } from "@/components/gspc/SpectrumView";
+import { setMetaDescription } from "@/lib/utils";
 
 /**
  * /methodology — how the instrument works.
@@ -46,6 +47,7 @@ const PREDICATES = [
 export default function Methodology() {
   useEffect(() => {
     document.title = "Methodology — deterministic predicates, no LLM-as-judge | CSOAI";
+    setMetaDescription("Council of AI methodology: deterministic predicates, no LLM-as-judge, gold labels, nothing quoted below n=30, every number recomputable from its rows. Corrections are published, never silently edited.");
   }, []);
 
   return (
