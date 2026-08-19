@@ -82,7 +82,7 @@ async function verifyRecord(raw: string): Promise<RecordVerdict> {
   }
   lines.push({ label: "Parse", ok: true, detail: "Valid JSON." });
 
-  const { signature, content_id, ...body } = rec as Record<string, unknown>;
+  const { signature, content_id, signature_envelope, ...body } = rec as Record<string, unknown>;
   // content_id: two envelope generations exist and both are deterministic —
   //   A (carder v0.1): sha256 over canonical record WITHOUT content_id (signature field included)
   //   B (receipt form): sha256 over canonical record without content_id AND without signature
@@ -101,6 +101,24 @@ async function verifyRecord(raw: string): Promise<RecordVerdict> {
     });
   } else {
     lines.push({ label: "content_id", ok: null, detail: "Absent — hash check not applicable." });
+  }
+
+  // signature_envelope: the signed-surfaces generation (corrections ledger,
+  // regulation feed) — content_id = sha256(canonical body minus signature_envelope).
+  // Same trust as the board: recompute here, compare to the envelope's claim.
+  if (signature_envelope && typeof signature_envelope === "object") {
+    const env = signature_envelope as { content_id?: string; kid?: string };
+    if (typeof env.content_id === "string") {
+      const cand = await sha256hex(canonical(body));
+      const ok = cand === env.content_id;
+      lines.push({
+        label: "signature_envelope",
+        ok,
+        detail: ok
+          ? `Signed-surface hash matches (${cand.slice(0, 16)}…, kid ${env.kid ?? "?"}). The feed is unedited since publication.`
+          : `MISMATCH — recomputed ${cand.slice(0, 16)}…, envelope claims ${env.content_id.slice(0, 16)}…. The feed was altered after signing.`,
+      });
+    }
   }
 
   // signature: Ed25519 over canonical(record without signature), key published in did.json
