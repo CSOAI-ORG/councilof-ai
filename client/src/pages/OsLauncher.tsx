@@ -136,7 +136,7 @@ export default function OsLauncher() {
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
               One surface for AI governance: watch governed agents live in a town, see models measured head-to-head,
-              read the 15-slot grid (13 measured), and ask the Council — a deterministic answer, grounded in what the estate
+              read the 14-slot registry (13 of 14 measured), and ask the Council — a deterministic answer, grounded in what the estate
               has actually measured.
             </p>
             <div className="mt-6 space-y-4">

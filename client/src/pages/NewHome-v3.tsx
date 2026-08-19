@@ -65,7 +65,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
   );
 }
 
-// ── 15-slot grid (13 measured + 2 honest empties) ───────────────────────────
+// ── 14-slot registry grid (13 measured + honest empty cells) ───────────────────────────
 
 // ── problem we fix ───────────────────────────────────────────────────
 function ProblemStrip() {
@@ -105,7 +105,7 @@ function ProblemStrip() {
 const USPS = [
   { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
-  { icon: Scale, title: "Honest 15-slot grid", body: "13 measured on the live board. Jail is a measured floor (empty on this stamp); slot 15 is unnamed and empty.", href: "/gspc-scoreboard" },
+  { icon: Scale, title: "Honest 14-slot registry", body: "13 measured of the 14 GSPC registry axes on the live board. The 14th slot (Human Baseline) is measured via published aggregate baselines; jail is a separate measured floor.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
   { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/city" },
   { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/method" },
@@ -164,7 +164,7 @@ function AxesGrid() {
         })}
         {[
           { axis: "gspc_jail", bench: "Jail", task: "containment / sandbox-escape gate", note: "13 Aug floor in separate stamp (not a ranking); empty on 12 Aug stamp", status: "EMPTY" },
-          { axis: "slot-15", bench: "Slot 15", task: "reserved — harness has not emitted a 15th axis", note: "reserved, no name assigned", status: "EMPTY" },
+          { axis: "human-baseline", bench: "Human Baseline", task: "measured via published aggregate human performance (no DPIA)", note: "the 14th registry slot — published aggregates, not our own collection", status: "MEASURED" },
         ].map(e => (
           <div key={e.axis} className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 p-5">
             <div className="flex items-center justify-between mb-2">
@@ -181,7 +181,7 @@ function AxesGrid() {
       </div>
       <div className="mt-8 text-center">
         <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 15 public slots, 13 measured × 19 models, 12 Aug 2026 UNSIGNED
+          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 13 measured of 14 GSPC registry axes × 19 models, 12 Aug 2026 UNSIGNED
         </a>
       </div>
     </Section>
@@ -212,7 +212,7 @@ function BuyerCards() {
 // ── industries ───────────────────────────────────────────────────────
 function IndustryGrid() {
   return (
-    <Section title="One instrument, every industry" subtitle="The same 15-slot instrument applies — 13 measured today — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
+    <Section title="One instrument, every industry" subtitle="The same 14-slot registry applies — 13 of 14 measured today — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {SEVEN_INDUSTRIES.map(i => (
           <a key={i.name} href={i.href} className="group flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-md hover:border-emerald-200 transition-all text-center">
