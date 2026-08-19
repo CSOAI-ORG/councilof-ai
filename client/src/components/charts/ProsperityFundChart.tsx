@@ -159,7 +159,7 @@ const ProjectionTooltip = ({ active, payload, label, thresholds }: TooltipProps<
               className="mr-1 mb-1"
               style={{ borderColor: threshold.color, color: threshold.color }}
             >
-              {threshold.name}: ${threshold.monthlyAmount}/mo
+              {threshold.name}: payout pending ruling
             </Badge>
           ))}
         </div>
@@ -354,7 +354,7 @@ export function ProsperityFundChart({
               style={{ backgroundColor: threshold.color }}
             />
             <span>{threshold.name}:</span>
-            <span className="font-bold">${threshold.monthlyAmount}/mo</span>
+            <span className="font-bold">payout pending ruling</span>
             <span className="text-gray-500">@ {threshold.unemploymentRate}% unemployment</span>
           </Badge>
         ))}

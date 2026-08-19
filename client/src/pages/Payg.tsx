@@ -4,15 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Coins } from "lucide-react";
 
 // PAYG (pay-per-call / x402) — the agent rail from /pricing, in detail.
-// Prices align to the Council of AI agent rail: 100 free calls/day, then $0.005 per
-// standard card, deep bundles $0.10–$0.25. Every call returns a 3KB Ed25519-signed,
+// Machine-access pricing is pending a published ruling — not yet set. 100 free
+// calls/day per key remain free. Every call returns a 3KB Ed25519-signed,
 // timestamp-anchored measurement card. CTAs point at real destinations (get a key,
 // top up), never a bounce back to /pricing.
 
+const PRICING_STATUS = "Machine-access pricing is pending a published ruling — not yet set";
+
 const TIERS = [
-  { price: "$0", unit: "", label: "Free daily", note: "100 free calls/day per key" },
-  { price: "$0.005", unit: "/card", label: "Standard card", note: "signed + timestamp-anchored", popular: true },
-  { price: "$0.10–0.25", unit: "/call", label: "Deep bundles", note: "governance · safety+provenance · full spectrum" },
+  { label: "Free daily", note: "100 free calls/day per key" },
+  { label: "Standard card", note: "signed + timestamp-anchored", popular: true },
+  { label: "Deep bundles", note: "governance · safety+provenance · full spectrum" },
 ];
 
 const INSTRUMENTS = ["Governance", "Safety", "Provenance", "Continuity", "Conformance", "Openness", "Full spectrum"];
@@ -23,10 +25,10 @@ export default function Payg() {
       <div className="text-center mb-12">
         <Badge variant="secondary" className="mb-4">Agent rail · pay-per-call · no subscription</Badge>
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-          One key. Every instrument. <span className="text-primary">$0.005 per card.</span>
+          One key. Every instrument. <span className="text-primary">Signed measurement cards.</span>
         </h1>
         <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-          100 free calls a day, then $0.005 per standard measurement card — deep bundles $0.10–$0.25.
+          100 free calls a day, then metered machine-access. {PRICING_STATUS}.
           Every call returns a 3KB Ed25519-signed, timestamp-anchored card your auditor verifies
           independently. Metered, balance never expires, no monthly seat.
         </p>
@@ -42,8 +44,8 @@ export default function Payg() {
         {TIERS.map((t) => (
           <Card key={t.label} className={`p-6 flex flex-col items-center text-center ${t.popular ? "border-primary ring-1 ring-primary" : ""}`}>
             {t.popular && <Badge className="mb-2">Most used</Badge>}
-            <div className="text-4xl font-extrabold">{t.price}<span className="text-lg font-semibold text-muted-foreground">{t.unit}</span></div>
-            <div className="text-sm font-medium mt-1">{t.label}</div>
+            <div className="text-lg font-extrabold">{t.label}</div>
+            <div className="text-xs font-medium text-muted-foreground mt-2">Pricing pending ruling</div>
             <div className="text-xs text-muted-foreground mt-1 mb-4">{t.note}</div>
             <Button asChild className="w-full">
               <a href="/start">Get a free key →</a>
@@ -58,7 +60,7 @@ export default function Payg() {
         <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
 {`export COAI_PAYG_KEY="key_xxxxxxxxxxxxxxxx"
 # 100 free calls/day per key. After that:
-#   standard card  $0.005   deep bundle  $0.10–$0.25
+#   machine-access pricing is pending a published ruling — not yet set.
 # Every call returns a 3KB Ed25519-signed measurement card.
 # When the balance hits zero, the call returns a top-up URL.`}
         </pre>
