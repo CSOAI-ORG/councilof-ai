@@ -3,24 +3,31 @@
 # Per-route exact rules to /index.html are FORBIDDEN: Pages canonicalizes them to / (308).
 
 # --- hand-written consolidation redirects (preserved) ---
-/gspc-arena     /council-space?view=arena   308
-/sovereign-town /council-space?view=towns   308
-/towns          /council-space?view=towns   308
+/sov-space      /gspc-arena             308
+/sov-space/     /gspc-arena             308
+/sov-space/*    /gspc-arena             308
+/sovereign-space /gspc-arena            308
+/simulate       /gspc-arena             308
+/sovereign-town /gspc-arena?view=towns  308
+/towns          /gspc-arena?view=towns  308
 /globe          /globe3d.html           308
-
-# naming-lock redirects (SOV3 codename -> Sovereign OS public brand)
-/sov3-model-card /sovereign-os-model-card 301
-/sov3-system-card /sovereign-os-system-card 301
-/sov3-whitepaper /sovereign-os-whitepaper 301
+/byzantine            /council   308
+/byzantine-consensus  /council   308
+/bft                  /council   308
+/consensus            /council   308
+/jewels               /          308
+/crown-jewels         /          308
+/plans                /pricing   308
+/enterprise-plans     /pricing   308
 
 # --- static asset trees: served directly, never routed to the app ---
 /arena/*  /arena/:splat  200
 /benchmarks/*  /benchmarks/:splat  200
-/sov-space/*  /sov-space/:splat  200
 /vendor/*  /vendor/:splat  200
 /.well-known/*  /.well-known/:splat  200
 /corpus-watch/*  /corpus-watch/:splat  200
 /flywheel/*  /flywheel/:splat  200
+/packs/*  /packs/:splat  200
 
-# --- SPA catch-all: boots the app for every path; wouter routes or 404s in-app ---
-/*  /index.html  200
+# --- SPA catch-all: known routes are prerendered static files (200); unknown paths get a real 404 ---
+/*  /404.html  404
