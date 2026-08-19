@@ -41,6 +41,7 @@ export function Footer() {
         { name: 'FAQ', href: '/faq' },
         { name: 'Library — full archive', href: '/library' },
         { name: 'The honesty gate — our own losses', href: '/honesty' },
+        { name: 'Firewall Charter — measure, never fix', href: '/firewall-charter' },
         { name: 'Methodology', href: '/methodology' },
         { name: 'Verify a card', href: '/gspc-verify' },
         { name: 'AI Glossary', href: '/glossary' },
