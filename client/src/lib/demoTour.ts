@@ -122,7 +122,7 @@ const A = "sov_tour_active", S = "sov_tour_step", SEEN = "sov_tour_seen";
 // Values are indexes into TOUR: 1=/os, 3=/try, 7=/watchdog-map.
 export const TOUR_TOPICS: Record<string, number> = {
   os: 1,          // the Council OS tool floor
-  measurement: 3, // the 33-agent Byzantine council rules on a real scenario
+  measurement: 3, // the designed 33-seat council cross-checks a real scenario (n_eff 1.21 of 3, measured)
   regulator: 7,   // public, cryptographic accountability
 };
 

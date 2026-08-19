@@ -1,6 +1,7 @@
 /**
- * Real-time 33-Agent Council Voting Visualization
- * Displays actual voting data from the council API
+ * Council Voting Visualization — designed 33-seat architecture, shown as a
+ * simulation (measured cross-checking today: n_eff 1.21 of 3 — see the
+ * Refutation Ledger). Never presented as a live consensus body.
  */
 
 import { useEffect, useState } from "react";
