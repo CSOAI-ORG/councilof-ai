@@ -89,7 +89,7 @@ const MEASURED_ON = {
 const AXES: AxisScore[] = [
   {
     axis: "governance", bench: "GovBench", task: "EU AI Act risk-tier classification",
-    n: 237, accuracy: 0.700, leader: "sov6-embodiment-v3-light (council specialist)",
+    n: 237, accuracy: 0.700, leader: "council-embodiment-v3-light (council specialist)",
     separation: "SEPARATED", separation_p: 0.0086, interval: [0.639, 0.755],
     fleet_mean: 0.490, mean_harm: 0.510, cvar05_harm: 0.8728,
     macro_f1: 0.705, unparsed_rate: 0.0386, status: "MEASURED",
@@ -112,7 +112,7 @@ const AXES: AxisScore[] = [
   },
   {
     axis: "provenance", bench: "ProvBench", task: "Article 50 marking survival by validity",
-    n: 32, accuracy: 0.781, leader: "sov6-aesthetics-v3-light (council specialist)",
+    n: 32, accuracy: 0.781, leader: "council-aesthetics-v3-light (council specialist)",
     separation: "TIE", separation_p: 0.7744, interval: [0.612, 0.890],
     fleet_mean: 0.549, mean_harm: 0.451, cvar05_harm: null,
     macro_f1: 0.776, unparsed_rate: 0.1480, status: "MEASURED",
@@ -122,7 +122,7 @@ const AXES: AxisScore[] = [
   },
   {
     axis: "continuity", bench: "PQCBench", task: "post-quantum status of a cryptographic assumption",
-    n: 33, accuracy: 0.606, leader: "sov6-destruction-v3-light (council specialist)",
+    n: 33, accuracy: 0.606, leader: "council-destruction-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.437, 0.753],
     fleet_mean: 0.450, mean_harm: 0.550, cvar05_harm: null,
     macro_f1: 0.512, unparsed_rate: 0.0463, status: "MEASURED",
@@ -132,7 +132,7 @@ const AXES: AxisScore[] = [
   },
   {
     axis: "conformance", bench: "MCPBench", task: "MCP tool conformance",
-    n: 35, accuracy: 0.743, leader: "sov6-preservation-v3-light (council specialist)",
+    n: 35, accuracy: 0.743, leader: "council-preservation-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.579, 0.858],
     fleet_mean: 0.537, mean_harm: 0.463, cvar05_harm: null,
     macro_f1: 0.735, unparsed_rate: 0.1338, status: "MEASURED",
@@ -142,7 +142,7 @@ const AXES: AxisScore[] = [
   },
   {
     axis: "openness", bench: "OSSBench", task: "licence reasoning versus intended use",
-    n: 32, accuracy: 0.875, leader: "sov6-preservation-v3-light (council specialist)",
+    n: 32, accuracy: 0.875, leader: "council-preservation-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.719, 0.950],
     fleet_mean: 0.696, mean_harm: 0.304, cvar05_harm: null,
     macro_f1: 0.875, unparsed_rate: 0.0493, status: "MEASURED",
@@ -165,7 +165,7 @@ const AXES: AxisScore[] = [
   {
     axis: "care", bench: "CareBench", task: "care-cost (protect × help) under paired conduct scenarios",
     n: 199, n_note: "200 bank records, one exact-duplicate pair → 199 unique scored texts (registry v2)",
-    accuracy: 0.535, leader: "sov6-ethics-v3-light (council specialist)",
+    accuracy: 0.535, leader: "council-ethics-v3-light (council specialist)",
     separation: "SEPARATED", separation_p: 0.0356, interval: [0.466, 0.603],
     fleet_mean: 0.293, mean_harm: 0.707, cvar05_harm: 0.9895,
     macro_f1: 0.528, unparsed_rate: 0.1742, status: "MEASURED",
@@ -197,7 +197,7 @@ const AXES: AxisScore[] = [
   },
   {
     axis: "art5-safeguard", bench: "Art5Bench", task: "EU AI Act Article 5 prohibited-practice trip",
-    n: 36, accuracy: 0.972, leader: "sov6-relationality-v3-light (council specialist)",
+    n: 36, accuracy: 0.972, leader: "council-relationality-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.858, 0.995],
     fleet_mean: 0.830, mean_harm: 0.170, cvar05_harm: null,
     macro_f1: 0.972, unparsed_rate: 0.0117, status: "MEASURED",
@@ -220,7 +220,7 @@ const AXES: AxisScore[] = [
   },
   {
     axis: "affect", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
-    n: 41, accuracy: 0.878, leader: "sov6-preservation-v3-light (council specialist)",
+    n: 41, accuracy: 0.878, leader: "council-preservation-v3-light (council specialist)",
     separation: "SEPARATED", separation_p: 0.0078, interval: [0.745, 0.947],
     fleet_mean: 0.605, mean_harm: 0.782, cvar05_harm: null,
     macro_f1: 0.864, unparsed_rate: 0.0642, status: "MEASURED",
