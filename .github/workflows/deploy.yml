@@ -3,7 +3,7 @@ name: Build + deploy site (prerender + fields + tour → both domains)
 on:
   push:
     branches: [master, main]
-    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.toml', '.github/workflows/deploy.yml']
+    paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch: {}
 
 concurrency: { group: site-deploy, cancel-in-progress: true }
