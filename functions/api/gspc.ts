@@ -16,7 +16,7 @@
 // promoted to the board as the 14th slot from the SIGNED living board (board_living.json,
 // csoai.gspc-living/0.1, updated 2026-08-18T03:22:16Z, Ed25519 signer 8f9a00a2…). Jail was
 // measured on a SMALLER fleet (7 models, not 19) and carries NO separation test yet —
-// reported UNTESTED, never invented. slot15 ("instrument-honesty") and human-vs-ai were
+// reported UNTESTED, never invented. instrument-honesty and human-vs-ai were
 // measured in-lane on 6 models and are served under measured_in_lane below — in the payload
 // for honesty, NOT board-quotable until the reconciliation gate opens (owner-gated).
 //
@@ -75,7 +75,7 @@ const MEASURED_ON = {
     "per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and " +
     "GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living " +
     "board; its separation is UNTESTED (no McNemar run yet) and its bank is pending publication. " +
-    "slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
+    "instrument-honesty and human-vs-ai are measured in-lane only — see measured_in_lane, not the board. The public board is 13 measured of 14 GSPC registry axes.",
   living_stamp: {
     source: "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
     updated: "2026-08-18T03:22:16Z",
@@ -272,7 +272,7 @@ const AXES: AxisScore[] = [
 // toward the board's totals.
 const MEASURED_IN_LANE: AxisScore[] = [
   {
-    axis: "slot15", bench: "Slot15-Honesty",
+    axis: "instrument-honesty", bench: "Instrument Honesty (in-lane)",
     task: "reserved-axis honesty: refuses to fabricate an instrument",
     n: 35, n_note: "6 models × 36 items; per-model n varies (9–35) where responses were unparseable",
     accuracy: 0.3333, leader: "qwen2.5:7b (base model)",
@@ -382,7 +382,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       "3 of the 13 canonical axes show a statistically separated leader (McNemar p<0.05 on discordant items): governance, care, affect. 10 are statistical ties — a point-estimate lead is not a measured advantage.",
       "Jail (slot 14) was measured on a 7-model fleet, not the 19-model board fleet; it carries NO separation test (UNTESTED) and its bank is pending publication. Do not compare its numbers against the canonical axes.",
       "jail's fleet accuracy 0.5412 is pooled across 7 models x 71 gold cells; the shown leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best recall is 0.237 — the best detector still misses 3 of 4 escapes.",
-      "measured_in_lane (slot15 instrument-honesty, human-vs-ai) is the internal 16-slot living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",
+      "measured_in_lane (instrument-honesty, human-vs-ai) is the internal living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable and never counted in totals. Public board = 13 measured of 14 GSPC registry axes.",
       "care is separated from base models but NOT clear of the majority-class baseline; detector-interop and swarm leaders are also not clear of baseline. Quote accordingly.",
       "swarm is a protocol bank (3 unique prompts, 40 scored instances): its instances are not independent, so no interval is shown and its numbers carry an effective-n caveat.",
       "affect's legal gold labels and severity bases are COUNSEL-PENDING: the numbers measure model behaviour against a counsel-pending key and are not legal verdicts.",
