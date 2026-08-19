@@ -81,7 +81,7 @@ const APP_ROUTES: Record<string, string> = {
   space: "/gspc-arena", sim: "/gspc-arena", simulation: "/gspc-arena", experiment: "/gspc-arena", sovspace: "/gspc-arena",
   tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
   status: "/status", system: "/status", os: "/os", home: "/os", grid: "/os",
-  twin: "/sovereign-twin",
+  twin: "/me",
   certification: "/academy", cert: "/academy", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
   layer0: "/trust-center", distribution: "/distribution", command: "/command-center",

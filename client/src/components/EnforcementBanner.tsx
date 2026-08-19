@@ -11,7 +11,7 @@ const PERSONAS: { who: string; hook: string; href: string }[] = [
   { who: "Developers", hook: "measure per call on the agent rail", href: "/payg" },
 ];
 // Routes where the banner would clutter the immersive experience.
-const HIDE = ["/os", "/workbench", "/world", "/globe", "/demo", "/try", "/scan", "/watchdog-map", "/council-space", "/gspc-arena", "/graph", "/council-twin", "/sovereign-twin", "/enter", "/globe3d"];
+const HIDE = ["/os", "/workbench", "/world", "/globe", "/demo", "/try", "/scan", "/watchdog-map", "/council-space", "/gspc-arena", "/graph", "/council-twin", "/me", "/enter", "/globe3d"];
 
 export default function EnforcementBanner() {
   const [loc] = useLocation();
