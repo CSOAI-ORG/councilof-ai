@@ -9,7 +9,7 @@ export const TOUR: TourStep[] = [
     path: "/",
     title: "I'm your Sovereign - not a checklist",
     usp: "A live governance brain, not compliance software",
-    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm a sovereign governance brain - 291 governed tools, the council (DESIGN-labelled until measured), and cryptographic proof behind every answer. Let me show you, live.",
+    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm an independent measurement brain - 291 governed tools, the council (DESIGN-labelled until measured), and cryptographic proof behind every answer. Let me show you, live.",
   },
   {
     path: "/os",
