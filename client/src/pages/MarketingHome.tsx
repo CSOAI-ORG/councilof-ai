@@ -403,8 +403,7 @@ export default function MarketingHome() {
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold mb-2">Free</h3>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold">$0</span>
-                    <span className="text-muted-foreground">/month</span>
+                    <span className="text-4xl font-bold">Free</span>
                   </div>
                 </div>
 
@@ -440,11 +439,10 @@ export default function MarketingHome() {
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold mb-2">Pro</h3>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold">$99</span>
-                    <span className="text-muted-foreground">/month</span>
+                    <span className="text-4xl font-bold">Free</span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1">
-                    <s>$198</s> 50% off for Founding Members
+                    Free for Founding Members
                   </p>
                 </div>
 
@@ -484,8 +482,7 @@ export default function MarketingHome() {
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold mb-2">Enterprise</h3>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold">$499</span>
-                    <span className="text-muted-foreground">/month</span>
+                    <span className="text-4xl font-bold">Free</span>
                   </div>
                 </div>
 

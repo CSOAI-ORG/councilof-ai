@@ -39,9 +39,9 @@ const contributionTiers = [
 ];
 
 const ubiThresholds = [
-  { threshold: "20%", trigger: "20% AI unemployment", amount: "$500/month", status: "pending" },
-  { threshold: "40%", trigger: "40% AI unemployment", amount: "$1,500/month", status: "pending" },
-  { threshold: "70%", trigger: "70% AI unemployment", amount: "$3,000/month", status: "pending" },
+  { threshold: "20%", trigger: "20% AI unemployment", amount: "Baseline payout — pending ruling", status: "pending" },
+  { threshold: "40%", trigger: "40% AI unemployment", amount: "Elevated payout — pending ruling", status: "pending" },
+  { threshold: "70%", trigger: "70% AI unemployment", amount: "Full payout — pending ruling", status: "pending" },
 ];
 
 const fundProjections = [
@@ -174,7 +174,7 @@ export default function ProsperityFund() {
                   <Users className="h-10 w-10 mx-auto mb-3 text-cyan-600" />
                   <p className="text-sm text-gray-600">Oversight Analysts</p>
                   <p className="text-3xl font-bold mt-2 text-gray-900">2,847</p>
-                  <p className="text-xs mt-2 text-cyan-600">Earning $50-$5K/month</p>
+                  <p className="text-xs mt-2 text-cyan-600">Oversight wage — pending ruling</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -419,7 +419,7 @@ export default function ProsperityFund() {
               },
               {
                 title: "Licensed AI Systems",
-                desc: "€10,000/year + monitoring fees",
+                desc: "Annual licence levy + monitoring fees",
                 icon: BarChart3
               },
               {
@@ -472,7 +472,7 @@ export default function ProsperityFund() {
           <h2 className="text-4xl font-bold mb-6">Universal AI Oversight Wage</h2>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
             Anyone, anywhere can participate in AI governance. Free training in 50+ languages.
-            Earn $50–$5,000/month based on your time commitment.
+            Earn an oversight wage based on your time commitment — rate pending a published ruling.
             <span className="text-emerald-300 font-semibold"> 10 million participants by 2030.</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

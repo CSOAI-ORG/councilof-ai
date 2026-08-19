@@ -29,7 +29,7 @@ export default function CouncilLicensingLanding() {
               Council Licensing
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Deploy consensus-based AI governance. License our 33-agent Council of AI for your organization's critical compliance decisions.
+              Deploy consensus-based AI governance. License the council fleet for your organization's critical compliance decisions.
             </p>
           </motion.div>
 
@@ -114,12 +114,12 @@ export default function CouncilLicensingLanding() {
             {[
               {
                 name: 'Departmental',
-                price: '$5,000',
-                period: '/month',
+                price: 'Free',
+                period: '',
                 description: 'For single departments',
                 decisions: 'Up to 100 decisions/month',
                 features: [
-                  '33-agent council',
+                  'Full council fleet',
                   'Standard expertise mix',
                   'Monthly reporting',
                   'Email support',
@@ -128,8 +128,8 @@ export default function CouncilLicensingLanding() {
               },
               {
                 name: 'Enterprise',
-                price: '$15,000',
-                period: '/month',
+                price: 'Free',
+                period: '',
                 description: 'For enterprise-wide use',
                 decisions: 'Unlimited decisions',
                 features: [

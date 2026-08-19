@@ -215,7 +215,7 @@ export default function HorusIntel() {
                 </tr>
                 <tr className="border-t border-gray-100">
                   <td className="p-3 text-gray-900">Crunchbase Pro</td>
-                  <td className="p-3 text-gray-600">$99/mo</td>
+                  <td className="p-3 text-gray-600">Paid subscription</td>
                   <td className="p-3 text-gray-600">Funding</td>
                   <td className="p-3 text-emerald-700">Includes regulatory + product intel</td>
                 </tr>
