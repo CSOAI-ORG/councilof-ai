@@ -37,6 +37,40 @@ interface RecordVerdict {
   lines: { label: string; ok: boolean | null; detail: string }[];
 }
 
+// Opt-in tally: the verify surface promises nothing is sent or logged — so the
+// public verification count only moves on an EXPLICIT click, carrying a single
+// bit. The number is a self-reported signal, never a MEASURED figure.
+function TallyOptIn({ ok }: { ok: boolean }) {
+  const [state, setState] = useState<"idle" | "sent" | "err">("idle");
+  const [tally, setTally] = useState<{ ok: number; fail: number } | null>(null);
+  useEffect(() => {
+    fetch("/api/verify-tally").then((r) => r.json()).then(setTally).catch(() => {});
+  }, []);
+  if (state === "sent")
+    return <p className="text-[12px] text-emerald-300">Counted — thank you. {tally ? `${tally.ok + (ok ? 1 : 0)} verifications self-reported so far (opt-in signal, not a measured number).` : ""}</p>;
+  return (
+    <div className="pt-2">
+      <button
+        onClick={async () => {
+          try {
+            await fetch("/api/verify-tally", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ok }) });
+            setState("sent");
+          } catch { setState("err"); }
+        }}
+        className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-[12px] text-emerald-200 hover:bg-emerald-500/10"
+      >
+        Add this run to the public tally (opt-in — sends only ✓/✗, nothing else)
+      </button>
+      {tally && (
+        <span className="ml-2 text-[11px] text-emerald-100/50">
+          {tally.ok} self-reported so far — an opt-in signal, not a measured number.
+        </span>
+      )}
+      {state === "err" && <span className="ml-2 text-[11px] text-red-300">tally endpoint unreachable — your verification still stands.</span>}
+    </div>
+  );
+}
+
 async function verifyRecord(raw: string): Promise<RecordVerdict> {
   const lines: RecordVerdict["lines"] = [];
   let rec: Record<string, unknown>;
@@ -181,6 +215,7 @@ function SingleRecordVerify() {
               </span>
             </div>
           ))}
+          <TallyOptIn ok={verdict.lines.every((l) => l.ok !== false)} />
         </div>
       )}
       <p className="mt-4 text-[12px] text-emerald-100/50">
