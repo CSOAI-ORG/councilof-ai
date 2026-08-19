@@ -6,7 +6,7 @@ import { useEffect } from "react";
 // mid-2026. Dataset + FAQPage schema for answer-engine citability.
 type Row = { region: string; law: string; status: string; tone: string; href: string };
 const ROWS: Row[] = [
-  { region: "🇪🇺 European Union", law: "EU AI Act (Reg. 2024/1689)", status: "In force — GPAI live; Art. 50 + high-risk enforceable 2 Aug 2026", tone: "amber", href: "/ai-governance" },
+  { region: "🇪🇺 European Union", law: "EU AI Act (Reg. 2024/1689)", status: "In force — GPAI + Art. 50 live 2 Aug 2026; high-risk 2 Dec 2027 (Omnibus)", tone: "amber", href: "/ai-governance" },
   { region: "🇪🇺 EU — transparency", law: "Article 50 (transparency/marking)", status: "2 Aug 2026 (legacy marking 2 Dec 2026)", tone: "amber", href: "/article-50" },
   { region: "🇪🇺 EU — finance", law: "DORA (Reg. 2022/2554)", status: "Active enforcement 2026 — RoI audits, TLPT", tone: "amber", href: "/dora" },
   { region: "🇪🇺 EU — cyber (networks)", law: "NIS2 (Dir. 2022/2555)", status: "Transposition deadline Oct 2026", tone: "amber", href: "/nis2" },

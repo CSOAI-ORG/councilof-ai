@@ -160,7 +160,7 @@ export const industries: Industry[] = [
       },
       {
         provision: "EU AI Act Art 27 — fundamental-rights impact assessment for public deployers.",
-        date: "with high-risk obligations, 2 Aug 2026",
+        date: "with high-risk obligations, 2 Dec 2027",
         live: false,
       },
       { provision: "EU AI Act Art 50 — transparency of AI-generated public communications.", date: "live 2 Aug 2026", live: true },
