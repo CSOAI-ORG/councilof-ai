@@ -155,12 +155,12 @@ export const industries: Industry[] = [
         provision:
           "EU AI Act Annex III §4–6 — law enforcement, migration and administration " +
           "of justice are high-risk.",
-        date: "obligations from 2 Aug 2026",
+        date: "obligations from 2 Dec 2027 (Digital Omnibus)",
         live: false,
       },
       {
         provision: "EU AI Act Art 27 — fundamental-rights impact assessment for public deployers.",
-        date: "with high-risk obligations, 2 Aug 2026",
+        date: "with high-risk obligations, 2 Dec 2027 (Digital Omnibus)",
         live: false,
       },
       { provision: "EU AI Act Art 50 — transparency of AI-generated public communications.", date: "live 2 Aug 2026", live: true },
@@ -210,7 +210,7 @@ export const industries: Industry[] = [
     law: [
       {
         provision: "EU AI Act Annex III §5(a) — AI for access to essential public assistance and benefits is high-risk.",
-        date: "obligations from 2 Aug 2026",
+        date: "obligations from 2 Dec 2027 (Digital Omnibus)",
         live: false,
       },
       { provision: "EU AI Act Art 5(1)(a) — ban on manipulative techniques exploiting vulnerability.", date: "live 2 Feb 2025", live: true },
@@ -310,7 +310,7 @@ export const industries: Industry[] = [
       "The operator and the regulator asking whether a model reasons correctly " +
       "about the post-quantum status of a cryptographic assumption.",
     law: [
-      { provision: "EU AI Act Annex III §2 — AI as a safety component of critical infrastructure is high-risk.", date: "obligations from 2 Aug 2026", live: false },
+      { provision: "EU AI Act Annex III §2 — AI as a safety component of critical infrastructure is high-risk.", date: "obligations from 2 Dec 2027 (Digital Omnibus)", live: false },
       { provision: "NIS2 Directive (EU) 2022/2555 — security and incident-reporting duties for essential entities.", date: "in force", live: true },
       { provision: "NIST FIPS 203/204/205 — standardised post-quantum algorithms; migration underway.", date: "published 2024", live: true },
     ],
@@ -529,7 +529,7 @@ export const industries: Industry[] = [
       "The security team and the assurer asking whether a model stays within its " +
       "authority under adversarial pressure.",
     law: [
-      { provision: "EU AI Act Annex III §2 — AI as a safety component is high-risk.", date: "obligations from 2 Aug 2026", live: false },
+      { provision: "EU AI Act Annex III §2 — AI as a safety component is high-risk.", date: "obligations from 2 Dec 2027 (Digital Omnibus)", live: false },
       { provision: "Cyber Resilience Act (EU) 2024/2847 — essential requirements for products with digital elements.", date: "obligations phasing to 2027", live: false },
       { provision: "NIS2 Directive — incident-reporting and supply-chain duties.", date: "in force", live: true },
     ],
@@ -703,7 +703,7 @@ export const industries: Industry[] = [
       "Article 5 prohibited practice.",
     law: [
       { provision: "EU AI Act Art 5 — prohibited AI practices.", date: "live 2 Feb 2025", live: true },
-      { provision: "EU AI Act Annex III §8 — administration of justice and democratic processes are high-risk.", date: "obligations from 2 Aug 2026", live: false },
+      { provision: "EU AI Act Annex III §8 — administration of justice and democratic processes are high-risk.", date: "obligations from 2 Dec 2027 (Digital Omnibus)", live: false },
       { provision: "EU AI Act Art 50 — transparency.", date: "live 2 Aug 2026", live: true },
     ],
     whatMeasure: {
@@ -747,7 +747,7 @@ export const industries: Industry[] = [
       "discloses or exploits vulnerability — where emotion recognition at work is banned.",
     law: [
       { provision: "EU AI Act Art 5(1)(f) — ban on emotion recognition in the workplace and education.", date: "live 2 Feb 2025", live: true },
-      { provision: "EU AI Act Annex III §4 — employment and worker-management AI is high-risk.", date: "obligations from 2 Aug 2026", live: false },
+      { provision: "EU AI Act Annex III §4 — employment and worker-management AI is high-risk.", date: "obligations from 2 Dec 2027 (Digital Omnibus)", live: false },
       { provision: "EU AI Act Art 50(3) — emotion-recognition disclosure.", date: "live 2 Aug 2026", live: true },
       { provision: "EU AI Act Annex III §1(c) — a related clock.", date: "Dec 2027", live: false },
     ],

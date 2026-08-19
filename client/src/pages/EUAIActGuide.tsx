@@ -63,7 +63,7 @@ export default function EUAIActGuide() {
         "Migration, asylum, and border control",
         "Administration of justice and democratic processes"
       ],
-      deadline: "August 2, 2026",
+      deadline: "December 2, 2027 (Annex III) / August 2, 2028 (Annex I), as amended by the Digital Omnibus, Reg (EU) 2026/1744",
       status: "Regulated"
     },
     {
@@ -132,14 +132,26 @@ export default function EUAIActGuide() {
     },
     {
       date: "August 2, 2026",
-      event: "High-Risk AI Requirements",
-      description: "Full compliance required for high-risk AI systems, including conformity assessments.",
-      status: "upcoming"
+      event: "Transparency, Penalties and Market Surveillance",
+      description: "Article 50 transparency obligations, the full penalty and market-surveillance regime, and AI Office GPAI enforcement powers apply. Legacy generative systems (on the market before 2 Aug 2026) have a marking grace period until 2 December 2026.",
+      status: "completed"
     },
     {
       date: "August 2, 2027",
-      event: "Additional High-Risk Categories",
-      description: "Extended high-risk requirements for certain AI systems in Annex I products.",
+      event: "Legacy GPAI Compliance + Sandboxes",
+      description: "GPAI models placed on the market before 2 August 2025 must reach compliance; national regulatory sandbox obligation applies.",
+      status: "upcoming"
+    },
+    {
+      date: "December 2, 2027",
+      event: "High-Risk AI Requirements (Annex III)",
+      description: "Full compliance required for stand-alone Annex III high-risk AI systems, including conformity assessments — deferred from August 2026 by the Digital Omnibus (Reg (EU) 2026/1744).",
+      status: "upcoming"
+    },
+    {
+      date: "August 2, 2028",
+      event: "High-Risk in Regulated Products (Annex I)",
+      description: "High-risk requirements apply to product-embedded AI under Annex I — deferred by the Digital Omnibus (Reg (EU) 2026/1744).",
       status: "upcoming"
     }
   ];
@@ -150,7 +162,7 @@ export default function EUAIActGuide() {
     keyChanges: [
       {
         area: "Extended Deadlines",
-        detail: "Potential 12-month extension for certain high-risk AI compliance requirements"
+        detail: "High-risk obligations deferred: stand-alone Annex III systems to 2 December 2027; product-embedded Annex I AI to 2 August 2028"
       },
       {
         area: "Simplified Reporting",
@@ -165,7 +177,7 @@ export default function EUAIActGuide() {
         detail: "Alignment of terminology across EU digital regulations"
       }
     ],
-    status: "Under negotiation - Final text expected Q2 2026"
+    status: "Adopted as Regulation (EU) 2026/1744, in force 27 July 2026"
   };
 
   const penalties = [
@@ -314,7 +326,7 @@ export default function EUAIActGuide() {
     },
     {
       question: "Does the AI Act apply to AI systems developed before it came into force?",
-      answer: "Yes, with some transitional provisions. AI systems already on the market must comply with the full requirements by the relevant application dates. However, the Act provides a graduated timeline to allow organizations to adapt. For high-risk AI systems, you have until August 2026 to achieve full compliance."
+      answer: "Yes, with some transitional provisions. AI systems already on the market must comply with the full requirements by the relevant application dates. However, the Act provides a graduated timeline to allow organizations to adapt. For high-risk AI systems, you have until 2 December 2027 (Annex III) or 2 August 2028 (Annex I products) to achieve full compliance, as amended by the Digital Omnibus (Reg (EU) 2026/1744)."
     },
     {
       question: "What documentation is required for high-risk AI systems?",
@@ -402,8 +414,8 @@ export default function EUAIActGuide() {
               <div className="text-sm text-muted-foreground">Prohibited AI Ban</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-teal-600">Aug 2026</div>
-              <div className="text-sm text-muted-foreground">High-Risk Deadline</div>
+              <div className="text-3xl font-bold text-teal-600">Dec 2027</div>
+              <div className="text-sm text-muted-foreground">High-Risk Deadline (Omnibus)</div>
             </div>
             <div>
               <div className="text-3xl font-bold text-red-600">35M EUR</div>

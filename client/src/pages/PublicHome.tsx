@@ -482,7 +482,8 @@ export default function PublicHome() {
               </div>
               <h3 className="font-semibold text-lg mb-2">AI Companies (B2B)</h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Achieve compliance before the August 2026 EU AI Act deadline. 
+                Achieve compliance before the EU AI Act high-risk deadlines — 2 Dec 2027
+                (Annex III) / 2 Aug 2028 (Annex I), as amended by the Digital Omnibus.
                 Avoid €35M fines with proactive governance.
               </p>
               <Link href="/">

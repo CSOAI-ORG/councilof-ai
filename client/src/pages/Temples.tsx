@@ -17,7 +17,7 @@ const TEMPLES: Temple[] = [
       { k: "High-risk", v: "Annex III: health, finance, hiring, justice, infra" },
       { k: "Obligations", v: "Art. 9-15: risk mgmt, data, logging, oversight, accuracy" },
       { k: "Transparency", v: "Art. 50: label AI + generated content (C2PA)" },
-      { k: "Deadline", v: "High-risk duties from August 2, 2026" },
+      { k: "Deadline", v: "Transparency + penalties live 2 Aug 2026; high-risk duties 2 Dec 2027 / 2 Aug 2028 (Digital Omnibus)" },
     ] },
   { id: "nist", name: "NIST AI RMF", seat: "Gaithersburg, MD · USA", coords: "39.14°N, 77.21°W", lat: 39.14, lng: -77.21, glyph: "▲", tagline: "Voluntary, function-based risk management.",
     pillars: [

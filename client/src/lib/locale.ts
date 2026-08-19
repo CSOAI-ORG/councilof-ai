@@ -13,7 +13,7 @@ export type RegionProfile = {
 
 // Region → the real AI-governance regime (ground-truth register).
 export const REGIONS: Record<string, RegionProfile> = {
-  EU: { code: "EU", label: "European Union", frameworks: ["EU AI Act", "GDPR", "DORA", "NIS2", "CRA"], note: "The EU AI Act is the binding regime — GPAI + Article 50 transparency duties apply from 2 Aug 2026; high-risk obligations from 2 Aug 2027.", globe: [9.0, 50.5] },
+  EU: { code: "EU", label: "European Union", frameworks: ["EU AI Act", "GDPR", "DORA", "NIS2", "CRA"], note: "The EU AI Act is the binding regime — Article 50 transparency duties + penalties apply from 2 Aug 2026; high-risk obligations from 2 Dec 2027 (Annex III) / 2 Aug 2028 (Annex I) under the Digital Omnibus.", globe: [9.0, 50.5] },
   UK: { code: "UK", label: "United Kingdom", frameworks: ["UK AI principles (pro-innovation)", "UK GDPR", "NIS Regulations"], note: "The UK runs a principles-based, regulator-led approach (no single AI Act yet); the AI Safety Institute leads frontier evaluation.", globe: [-1.5, 52.5] },
   US: { code: "US", label: "United States", frameworks: ["NIST AI RMF", "State AI laws (CO, TX, CA)", "Sector rules (HIPAA, FTC Act)"], note: "No single federal AI act — NIST AI RMF is the voluntary baseline; Colorado's AI Act (high-risk) and state laws are the binding edge.", globe: [-98.0, 39.5] },
   JP: { code: "JP", label: "Japan", frameworks: ["METI AI Guidelines for Business", "APPI (privacy)", "ISO/IEC 42001"], note: "Japan uses soft-law AI Guidelines for Business (METI/MIC) plus the 2025 AI Promotion Act framework — guidance-led, innovation-first.", globe: [138.0, 37.0] },

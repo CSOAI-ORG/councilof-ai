@@ -138,8 +138,8 @@ export default function GlobalAISafetyInitiative() {
               <div className="text-gray-600">AI Analysts to Train</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-purple-600">Aug 2026</div>
-              <div className="text-gray-600">EU AI Act Deadline</div>
+              <div className="text-4xl font-bold text-purple-600">Dec 2027</div>
+              <div className="text-gray-600">EU AI Act High-Risk Deadline (Omnibus)</div>
             </div>
           </div>
         </div>

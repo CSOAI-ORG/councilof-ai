@@ -9,7 +9,7 @@ const ROWS: Row[] = [
   { dim: "Issued by", nist: "NIST (US Dept of Commerce)", eu: "European Union" },
   { dim: "Approach", nist: "Outcome-based: Govern, Map, Measure, Manage", eu: "Risk-tiered: prohibited / high-risk / limited / minimal" },
   { dim: "Who it binds", nist: "Anyone who chooses to adopt it", eu: "Providers + deployers touching the EU market" },
-  { dim: "Key dates", nist: "RMF 1.0 (Jan 2023), GenAI profile (2024)", eu: "Transparency + GPAI: 2 Aug 2026; high-risk: Dec 2027" },
+  { dim: "Key dates", nist: "RMF 1.0 (Jan 2023), GenAI profile (2024)", eu: "Transparency + GPAI: 2 Aug 2026; high-risk: Dec 2027 (Annex III) / Aug 2028 (Annex I)" },
   { dim: "Penalties", nist: "None (voluntary)", eu: "Up to EUR 35m or 7% of global turnover" },
   { dim: "Evidence", nist: "Self-attested maturity", eu: "Conformity assessment + technical documentation" },
 ];

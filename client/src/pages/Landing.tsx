@@ -54,7 +54,7 @@ const features = [
 ];
 
 const frameworks = [
-  { name: "EU AI Act", articles: 113, status: "Mandatory Aug 2026" },
+  { name: "EU AI Act", articles: 113, status: "Transparency live Aug 2026; high-risk Dec 2027" },
   { name: "NIST AI RMF", articles: 72, status: "Voluntary" },
   { name: "TC260", articles: 56, status: "China Standard" },
 ];

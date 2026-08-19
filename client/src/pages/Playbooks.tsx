@@ -16,7 +16,7 @@ const PLAYS: Play[] = [
   { id: "health", name: "Healthcare", glyph: "✚", scenario: "AI that triages, diagnoses, or recommends treatment from patient data.", tier: "High-risk",
     frameworks: ["EU AI Act Annex III", "HIPAA", "MDR/IVDR", "ISO 42001", "NIST AI RMF"],
     bridges: ["hl7-fhir-bridge", "dicom-bridge"],
-    steps: ["Classify the system as High-Risk and open an Art. 9 risk file", "Bias-test across patient cohorts; document data governance (Art. 10)", "Wire human-oversight + logging via the HL7/FHIR bridge (Art. 12-14)", "Run a conformity assessment ahead of Aug 2026"],
+    steps: ["Classify the system as High-Risk and open an Art. 9 risk file", "Bias-test across patient cohorts; document data governance (Art. 10)", "Wire human-oversight + logging via the HL7/FHIR bridge (Art. 12-14)", "Run a conformity assessment ahead of the Dec 2027 high-risk deadline (Digital Omnibus)"],
     pitch: "Govern clinical AI without re-platforming the EHR — the bridge carries the attestation." },
   { id: "finance", name: "Finance", glyph: "$", scenario: "AI for credit decisions, fraud detection, or insurance pricing.", tier: "High-risk",
     frameworks: ["EU AI Act Annex III", "DORA", "NIS2", "GDPR", "NIST AI RMF"],

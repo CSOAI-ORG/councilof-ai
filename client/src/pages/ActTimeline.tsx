@@ -8,11 +8,13 @@ const EVENTS: Ev[] = [
   { iso: "2024-08-01", date: "1 Aug 2024", title: "Entry into force", desc: "The EU AI Act becomes law; the enforcement clock starts." },
   { iso: "2025-02-02", date: "2 Feb 2025", title: "Prohibited practices banned", desc: "Unacceptable-risk AI (social scoring, manipulative systems, untargeted facial scraping) is outlawed. AI-literacy duties begin." },
   { iso: "2025-08-02", date: "2 Aug 2025", title: "GPAI rules + governance start", desc: "General-purpose AI model obligations begin for new models; the AI Office and penalty framework come online." },
-  { iso: "2026-08-02", date: "2 Aug 2026", title: "Transparency + GPAI (existing) enforceable", desc: "Article 50 transparency duties apply; GPAI obligations extend to models already on the market. The headline 2026 cliff." },
-  { iso: "2027-08-02", date: "2 Aug 2027", title: "High-risk in regulated products", desc: "High-risk AI that are safety components of products already regulated under EU law (Annex I) must comply." },
-  { iso: "2027-12-31", date: "Dec 2027", title: "Annex III high-risk obligations", desc: "Full obligations for standalone high-risk systems (Annex III) - deferred to Dec 2027 by the Digital Omnibus (7 May 2026)." },
+  { iso: "2026-08-02", date: "2 Aug 2026", title: "Transparency + penalties enforceable", desc: "Article 50 transparency duties apply, alongside the full penalty/market-surveillance regime and AI Office GPAI enforcement powers. The headline 2026 cliff." },
+  { iso: "2026-12-02", date: "2 Dec 2026", title: "Legacy marking grace ends + new Art 5 bans", desc: "Machine-readable marking (Art 50(2)) becomes mandatory for generative systems placed on the market before 2 Aug 2026; new Article 5 prohibitions on NCII/CSAM generation take effect." },
+  { iso: "2027-08-02", date: "2 Aug 2027", title: "Legacy GPAI compliance + sandboxes", desc: "GPAI models placed on the market before 2 Aug 2025 must reach compliance; the national regulatory-sandbox obligation applies." },
+  { iso: "2027-12-02", date: "2 Dec 2027", title: "Annex III high-risk obligations", desc: "Full obligations for stand-alone high-risk systems (Annex III) - deferred from Aug 2026 by the Digital Omnibus (Reg (EU) 2026/1744, in force 27 July 2026)." },
+  { iso: "2028-08-02", date: "2 Aug 2028", title: "High-risk in regulated products", desc: "High-risk AI that are safety components of products already regulated under EU law (Annex I) must comply - deferred by the Digital Omnibus." },
 ];
-const todayIso = "2026-06-26";
+const todayIso = "2026-08-19";
 
 export default function ActTimeline() {
   useEffect(() => { document.title = "EU AI Act timeline - every enforcement date | CSOAI"; }, []);
@@ -20,9 +22,9 @@ export default function ActTimeline() {
     const sc = document.createElement("script");
     sc.type = "application/ld+json";
     sc.text = JSON.stringify({ "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
-      { "@type": "Question", "name": "When does the EU AI Act take effect?", "acceptedAnswer": { "@type": "Answer", "text": "The EU AI Act entered into force on 1 August 2024 and applies in phases: prohibited practices from Feb 2025, GPAI rules from Aug 2025, transparency from 2 August 2026, and high-risk obligations through 2027." } },
+      { "@type": "Question", "name": "When does the EU AI Act take effect?", "acceptedAnswer": { "@type": "Answer", "text": "The EU AI Act entered into force on 1 August 2024 and applies in phases: prohibited practices from Feb 2025, GPAI rules from Aug 2025, transparency from 2 August 2026, and high-risk obligations from 2 December 2027 (Annex III) and 2 August 2028 (Annex I), as amended by the Digital Omnibus (Reg (EU) 2026/1744)." } },
       { "@type": "Question", "name": "What is banned under the EU AI Act right now?", "acceptedAnswer": { "@type": "Answer", "text": "Since 2 February 2025, unacceptable-risk uses such as social scoring, manipulative or exploitative AI, and untargeted scraping of facial images are prohibited." } },
-      { "@type": "Question", "name": "When do high-risk AI obligations apply?", "acceptedAnswer": { "@type": "Answer", "text": "High-risk obligations phase in through 2027 - Annex I product-safety AI by August 2027 and standalone Annex III systems by December 2027 under the Digital Omnibus." } },
+      { "@type": "Question", "name": "When do high-risk AI obligations apply?", "acceptedAnswer": { "@type": "Answer", "text": "Stand-alone Annex III high-risk systems must comply by 2 December 2027 and product-embedded Annex I high-risk AI by 2 August 2028, as amended by the Digital Omnibus (Reg (EU) 2026/1744)." } },
     ] });
     document.head.appendChild(sc);
     return () => { document.head.removeChild(sc); };

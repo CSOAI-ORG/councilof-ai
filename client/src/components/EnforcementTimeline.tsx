@@ -8,8 +8,10 @@ const EM = "#10b981", TE = "#2dd4bf";
 const MILES = [
   { d: "2025-02-02", label: "Prohibited practices + AI literacy", short: "2 Feb 2025" },
   { d: "2025-08-02", label: "GPAI model obligations", short: "2 Aug 2025" },
-  { d: "2026-08-02", label: "High-risk (Annex III) + Art. 50 transparency", short: "2 Aug 2026" },
-  { d: "2027-08-02", label: "Annex I product-safety high-risk + legacy GPAI", short: "2 Aug 2027" },
+  { d: "2026-08-02", label: "Art. 50 transparency + penalties", short: "2 Aug 2026" },
+  { d: "2027-08-02", label: "Legacy GPAI compliance + sandboxes", short: "2 Aug 2027" },
+  { d: "2027-12-02", label: "High-risk (Annex III) — Digital Omnibus", short: "2 Dec 2027" },
+  { d: "2028-08-02", label: "Annex I product-safety high-risk", short: "2 Aug 2028" },
 ];
 
 export default function EnforcementTimeline({ className = "" }: { className?: string }) {
