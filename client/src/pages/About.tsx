@@ -463,14 +463,19 @@ export default function About() {
               <div className="flex-1 text-center md:text-left">
                 <h3 className="text-3xl font-bold mb-4">Aligned with Global Standards</h3>
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                  CSOAI training and certification aligns with the three major global AI governance frameworks:
-                  EU AI Act (Europe), NIST AI RMF (United States), and ISO 42001 (International).
-                  Our certification is recognized by enterprises and governments worldwide.
+                  Our training and our measurement instruments are built against the three major global
+                  AI governance frameworks — the EU AI Act (Europe), NIST AI RMF (United States) and
+                  ISO/IEC 42001 (International). Aligned to means measured against: we hold no
+                  accreditation under any of them, we issue no conformity assessment, and a course
+                  completion attests training, never conformity.
                 </p>
                 <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                  <Badge variant="outline" className="text-sm py-2 px-4">EU AI Act Compliant</Badge>
-                  <Badge variant="outline" className="text-sm py-2 px-4">NIST AI RMF Aligned</Badge>
-                  <Badge variant="outline" className="text-sm py-2 px-4">ISO 42001 Certified</Badge>
+                  {/* These read as credentials CSOAI holds. It holds none. "Compliant" and
+                      "Certified" were removed 2026-08-20 — /trust-center lists every ISO mark as
+                      In Progress, and we issue no conformity assessment of any kind. */}
+                  <Badge variant="outline" className="text-sm py-2 px-4">Measured against the EU AI Act</Badge>
+                  <Badge variant="outline" className="text-sm py-2 px-4">Measured against NIST AI RMF</Badge>
+                  <Badge variant="outline" className="text-sm py-2 px-4">Measured against ISO/IEC 42001</Badge>
                 </div>
               </div>
             </div>
