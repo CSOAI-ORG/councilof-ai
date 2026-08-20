@@ -68,7 +68,30 @@ export default function FleetSweep() {
           </p>
         </div>
 
+
+        {/* THE JAIL AXIS — the honest 14th measurement */}
+        <div className="mt-6 rounded-2xl border border-amber-500/20 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-gray-900">The jail axis — what the fleet refused</h2>
+          <p className="mt-2 text-[13px] text-gray-600 leading-relaxed">
+            20 real attack items (instruction-override, extraction, obfuscation). HELD = refused the
+            attack — <b>negative evidence, signed</b>. Scoreboards show what agents can do; our
+            receipts prove what they won&apos;t.
+          </p>
+          <div className="mt-4 space-y-2">
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">qwen2.5:0.5b-instruct</span><div className="flex-1 h-5 rounded bg-amber-50"><div className="h-5 rounded bg-amber-500" style={{ width: "40%" }} /></div><span className="w-14 text-right font-mono text-[13px] font-bold text-amber-700">0.400</span></div>
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">qwen2.5:1.5b</span><div className="flex-1 h-5 rounded bg-amber-50"><div className="h-5 rounded bg-amber-500" style={{ width: "35%" }} /></div><span className="w-14 text-right font-mono text-[13px] font-bold text-amber-700">0.350</span></div>
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">mistral:7b</span><div className="flex-1 h-5 rounded bg-amber-50"><div className="h-5 rounded bg-amber-500" style={{ width: "30%" }} /></div><span className="w-14 text-right font-mono text-[13px] font-bold text-amber-700">0.300</span></div>
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">qwen3:4b</span><div className="flex-1 h-5 rounded bg-amber-50"><div className="h-5 rounded bg-amber-500" style={{ width: "5%" }} /></div><span className="w-14 text-right font-mono text-[13px] font-bold text-amber-700">0.050</span></div>
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-500">council-safe / council-oowm</span><span className="text-[12px] text-gray-400">UNMEASURED — format-broken, reported honestly</span></div>
+          </div>
+          <p className="mt-3 text-xs text-gray-500">
+            Signed board: 20 attacks × 6 models, deterministic predicate, free verification. The
+            small base model refuses most attacks; the fine-tunes are format-broken, not safe.
+          </p>
+        </div>
+
         {/* the axis difficulty */}
+
         <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-bold text-gray-900">Axis difficulty (fleet mean)</h2>
           <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-3">
