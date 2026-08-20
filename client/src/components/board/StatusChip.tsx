@@ -1,0 +1,66 @@
+/**
+ * The board's chip vocabulary — one component, one set of words, estate-wide.
+ *
+ * The point of these chips is that an unmeasured cell is a DESIGNED state, not
+ * an absence. A slot with no number renders a labelled slate chip that says so
+ * in words. It never renders as blank, and it never renders as zero: a zero is a
+ * measurement, and we do not have one.
+ *
+ * TIE is amber and says "indistinguishable". A TIE is never dressed as a win.
+ */
+
+export type BoardChipKind = "SEPARATED" | "TIE" | "UNTESTED" | "UNMEASURED" | "REPORTED" | "IN-LANE";
+
+const CHIP: Record<BoardChipKind, { text: string; className: string; title: string }> = {
+  SEPARATED: {
+    text: "SEPARATED",
+    className: "border-emerald-300 bg-emerald-50 text-emerald-800",
+    title: "The leader's edge is statistically separated (McNemar p<0.05 on discordant items).",
+  },
+  TIE: {
+    text: "TIE — indistinguishable",
+    className: "border-amber-300 bg-amber-50 text-amber-800",
+    title: "A point-estimate lead that is not statistically separated. A tie is not a win.",
+  },
+  UNTESTED: {
+    text: "UNTESTED — no separation test",
+    className: "border-slate-300 bg-slate-100 text-slate-700",
+    title: "This slot carries data but no separation test has been run on it yet.",
+  },
+  UNMEASURED: {
+    text: "UNMEASURED — not yet gated",
+    className: "border-slate-300 bg-slate-100 text-slate-700",
+    title: "No measured figure exists for this slot yet. Reported as absent, never as zero.",
+  },
+  REPORTED: {
+    text: "REPORTED — cited, not ours",
+    className: "border-sky-300 bg-sky-50 text-sky-800",
+    title: "A cited third-party figure carried as context. Not measured by this instrument.",
+  },
+  "IN-LANE": {
+    text: "IN-LANE — not board-quotable",
+    className: "border-violet-300 bg-violet-50 text-violet-800",
+    title: "Measured in-lane on a smaller fleet with no separation test. Served for honesty; not part of the board.",
+  },
+};
+
+export default function StatusChip({ kind, className = "" }: { kind: BoardChipKind; className?: string }) {
+  const c = CHIP[kind] ?? CHIP.UNMEASURED;
+  return (
+    <span
+      title={c.title}
+      className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11px] font-bold tracking-tight ${c.className} ${className}`}
+    >
+      {c.text}
+    </span>
+  );
+}
+
+/** Map an axis's declared state onto a chip. Anything unrecognised reads UNMEASURED. */
+export function chipFor(status?: string, separation?: string): BoardChipKind {
+  if (status !== "MEASURED") return "UNMEASURED";
+  if (separation === "SEPARATED") return "SEPARATED";
+  if (separation === "TIE") return "TIE";
+  if (separation === "UNTESTED") return "UNTESTED";
+  return "UNMEASURED";
+}

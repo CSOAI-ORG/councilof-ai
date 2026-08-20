@@ -10,6 +10,13 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { DeckPage } from "@/components/scrollworld";
+import {
+  LIVING_LEDGER_HERO,
+  LIVING_LEDGER_SLIDES,
+  LIVING_LEDGER_NOT_CLAIMED,
+  LIVING_LEDGER_RELATED,
+} from "@/data/deckWorlds/livingLedger";
 
 type DecisionRecord = {
   id: string;
@@ -28,7 +35,7 @@ type Stats = {
   by_tag: { tag: string; count: number }[];
 };
 
-export default function LiveLedger() {
+function LiveLedgerTool() {
   const [records, setRecords] = useState<DecisionRecord[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -191,5 +198,35 @@ function Stat({ label, value, color }: { label: string; value: number; color: st
       <div className={`text-2xl font-black ${color}`}>{value}</div>
       <div className="text-xs uppercase tracking-wider text-slate-500">{label}</div>
     </div>
+  );
+}
+
+/**
+ * /live-ledger — UPGRADED (not duplicated): the owner's "Living Ledger" deck is now the
+ * scroll-world story that leads into the live, queryable ledger tool that already lived
+ * here. The tool below is unchanged; the story above it is the fact-checked deck.
+ * See client/src/data/deckWorlds/livingLedger.ts for the corrections log.
+ */
+export default function LiveLedger() {
+  return (
+    <DeckPage
+      title="The living ledger | Council of AI"
+      description="A certificate is out of date the day after it is printed. Council of AI measures against frozen statutory text, watches the law daily, and issues a signed delta card when a provision changes — the original is preserved, the history is append-only."
+      hero={LIVING_LEDGER_HERO}
+      slides={LIVING_LEDGER_SLIDES}
+      notClaimed={LIVING_LEDGER_NOT_CLAIMED}
+      related={LIVING_LEDGER_RELATED}
+      jsonLd={{
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: "The living ledger — measurement that stays current as the law moves",
+        publisher: { "@type": "Organization", name: "CSOAI Ltd", url: "https://councilof.ai", identifier: "UK Companies House 16939677" },
+        about: "Continuous, signed AI measurement anchored to frozen statutory provisions.",
+      }}
+    >
+      <div id="records">
+        <LiveLedgerTool />
+      </div>
+    </DeckPage>
   );
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_TAB, LOBBY_TABS, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
 import LobbyTaskRail from "./LobbyTaskRail";
 import LobbyChatBar from "./LobbyChatBar";
+import type { LobbyIntent } from "@/lib/lobbyLink";
 
 /**
  * LobbyOverlay — the full-screen glass surface of the Council Lobby.
@@ -17,6 +18,11 @@ import LobbyChatBar from "./LobbyChatBar";
  * slider in the top bar writes it; localStorage remembers it. Nothing else in the
  * component hardcodes a panel background, so the whole surface stays consistent
  * at any setting.
+ *
+ * DEEP LINKS. An optional `intent` (from useLobbyDeepLink, see
+ * client/src/lib/lobbyLink.ts) selects the pane on arrival and hands its seeded
+ * prompt to the chat bar. The bar types it and stops — the send is always the
+ * user's, so a link may choose the question but never asks it.
  */
 
 const ALPHA_KEY = "coai.lobby.alpha";
@@ -40,9 +46,16 @@ function readTab(): LobbyTabId {
   return DEFAULT_TAB;
 }
 
-export default function LobbyOverlay({ onClose }: { onClose: () => void }) {
+export default function LobbyOverlay({
+  onClose,
+  intent,
+}: {
+  onClose: () => void;
+  intent?: LobbyIntent | null;
+}) {
   const [alpha, setAlpha] = useState<number>(readAlpha);
-  const [tabId, setTabId] = useState<LobbyTabId>(readTab);
+  // An intent present at mount picks the pane; otherwise the last pane is restored.
+  const [tabId, setTabId] = useState<LobbyTabId>(() => intent?.pane ?? readTab());
   const [railOpen, setRailOpen] = useState(true);
   const [frameLoaded, setFrameLoaded] = useState(false);
 
@@ -67,6 +80,13 @@ export default function LobbyOverlay({ onClose }: { onClose: () => void }) {
   }, []);
 
   useEffect(() => { rootRef.current?.focus(); }, []);
+
+  // A later intent (an in-page CTA fired while the lobby is already open) moves
+  // the pane. `nonce` makes a repeat of the same request land again.
+  useEffect(() => {
+    if (!intent) return;
+    setTabId((cur) => { if (cur !== intent.pane) setFrameLoaded(false); return intent.pane; });
+  }, [intent?.nonce, intent?.pane]);
 
   const go = useCallback((t: LobbyTab) => {
     setTabId((cur) => { if (cur !== t.id) setFrameLoaded(false); return t.id; });
@@ -223,7 +243,12 @@ export default function LobbyOverlay({ onClose }: { onClose: () => void }) {
       </div>
 
       {/* ── chat bar ────────────────────────────────────────────────────── */}
-      <LobbyChatBar panel={panel} onNavigate={go} />
+      <LobbyChatBar
+        panel={panel}
+        onNavigate={go}
+        seedPrompt={intent?.prompt}
+        seedNonce={intent?.nonce}
+      />
     </div>
   );
 }

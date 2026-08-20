@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useLobbyDeepLink } from "@/lib/lobbyLink";
 
 /**
  * CouncilLobby — the badge, and only the badge, until someone opens it.
@@ -16,6 +17,12 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react"
  * app boots again, so the badge would otherwise stack forever; `?embed=1`
  * suppresses this trigger there. That is the ONLY thing reading the flag today —
  * no page hides its own chrome yet.
+ *
+ * DEEP LINKS. `useLobbyDeepLink()` (client/src/lib/lobbyLink.ts) surfaces an
+ * intent from `?lobby=`/`?task=`/`?ask=` on arrival, or from an in-page
+ * `openLobby()` call. An intent opens the lobby and selects a pane; its seeded
+ * prompt is TYPED into the chat bar and never sent. The params are stripped from
+ * the URL as soon as they are read, so a refresh does not re-trigger.
  */
 
 const LobbyOverlay = lazy(() => import("./LobbyOverlay"));
@@ -35,8 +42,12 @@ export default function CouncilLobby() {
   const [embedded, setEmbedded] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(false);
+  const intent = useLobbyDeepLink();
 
   useEffect(() => { setEmbedded(isEmbedded()); }, []);
+
+  // A deep link opens the lobby. It does not ask the question — the user does.
+  useEffect(() => { if (intent) setOpen(true); }, [intent]);
 
   // Return focus to the badge when the overlay closes (not on first mount).
   useEffect(() => {
@@ -70,7 +81,7 @@ export default function CouncilLobby() {
 
       {open && (
         <Suspense fallback={null}>
-          <LobbyOverlay onClose={close} />
+          <LobbyOverlay onClose={close} intent={intent} />
         </Suspense>
       )}
     </>

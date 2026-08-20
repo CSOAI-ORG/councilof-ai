@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
-import { VideoEmbed } from "@/components/home/VideoEmbed";
-import { Band, Caveat, PageHero, Panel, PanelGrid, SplitBand } from "@/components/pagekit/PageKit";
+import { DeckPage } from "@/components/scrollworld";
+import {
+  PRICING_RISK_HERO,
+  PRICING_RISK_SLIDES,
+  PRICING_RISK_NOT_CLAIMED,
+  PRICING_RISK_RELATED,
+} from "@/data/deckWorlds/pricingRisk";
 
 /**
  * /insurers — the evidence pack, underwriter-legible.
@@ -73,16 +78,24 @@ const CARD_ANATOMY = [
     body: "The board is signed. The signature covers the canonical board content (minus the signature fields themselves), so any edit after signing breaks verification.",
   },
   {
+    term: "sha256 hash chain",
+    body: "Signed record sets chain their hashes: sha256 of the canonical content, sorted keys. Recompute it locally — if a record was edited after signing, your hash will not match the stored one.",
+  },
+  {
     term: "SHA-256 hash chain",
-    body: "Signed record sets chain their hashes: sha256 of the canonical content, sorted keys. Recompute it locally — if a record was edited after signing, your hash will not match the stored one. That is what the chain gives you: tamper-evidence, checkable offline.",
+    // 2026-08-20: the trailing "(Independent Bitcoin/OpenTimestamps time-anchoring is
+    // planned, not yet live.)" was removed. We publish timestamp_authority: "none" and
+    // purged the time-anchoring overclaims; naming them even as roadmap contradicts the
+    // honesty band on this page, which states plainly that there is no such anchor.
+    body: "Record hashes are sha256-linked and Ed25519-signed, so “this content is unaltered since signing” is checkable offline against the published key. There is no independent time-stamping authority behind these cards: the anchor is the signature over the hash chain, and nothing more.",
   },
   {
     term: "did:web:csoai.org published key",
-    body: "The Ed25519 public keys are published at GET /.well-known/did.json under did:web:csoai.org. You fetch the key from the domain itself — no key exchange with us required, and no third party in the loop.",
+    body: "The Ed25519 public keys are published at GET /.well-known/did.json under did:web:csoai.org. You fetch the key from the domain itself — no key exchange with us required.",
   },
 ];
 
-export default function Insurers() {
+function InsurersEvidencePack() {
   const [board, setBoard] = useState<any>(null);
   const [boardErr, setBoardErr] = useState<string | null>(null);
   const [reported, setReported] = useState<any>(null);
@@ -102,121 +115,82 @@ export default function Insurers() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PAGE_LD) }} />
+      <div className="mx-auto max-w-5xl px-6 py-14">
+        {/* 1 — Hero */}
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
+          For insurers &amp; underwriters — verify everything, free
+        </p>
+        <h1 className="mt-3 text-4xl font-black text-gray-900">
+          Evidence an underwriter can verify
+        </h1>
+        <p className="mt-4 max-w-3xl text-lg text-gray-600">
+          We measure AI systems against the rules that govern them, sign the result, and publish
+          what we cannot measure. Every number on this page is either fetched live from a signed
+          endpoint or labelled with its third-party source and capture date — nothing is blended.
+        </p>
+        <p className="mt-3 max-w-3xl text-sm text-gray-500">
+          What this is <strong>not</strong>: not a certification, not a conformity mark, not a
+          legal determination — it is a measurement record you can recompute yourself.
+        </p>
 
-      <PageHero
-        kicker="For insurers and underwriters — verify everything, free"
-        title={<>Evidence you can price, not a promise you have to take on faith.</>}
-        lede={
-          <>
-            We measure AI systems against the rules that govern them, sign the result, and publish
-            what we could not measure. Every number below is either fetched live from a signed
-            endpoint or labelled with its third-party source and capture date. Nothing is blended.
-          </>
-        }
-        image={{ src: "/images/verifiable_evidence_card.jpg", alt: "A verifiable evidence card being examined, its signature and hash chain visible" }}
-        points={[
-          { tag: "pain", text: "AI risk submissions arrive as vendor decks: no sample sizes, no method, nothing an actuary can rerun." },
-          { tag: "benefit", text: "Per-axis failure rates with n and Wilson intervals, plus harm tails where the n supports them." },
-          { tag: "usp", text: "Verify any card offline against a key published on the domain itself. You never have to trust us." },
-        ]}
-        actions={[
-          { href: "/gspc-verify", label: "Verify a card, free" },
-          { href: "/gspc-scoreboard", label: "See the live board", tone: "ghost" },
-        ]}
-        footnote={
-          <>
-            What this is <strong>not</strong>: not a certification, not a conformity mark, not a legal
-            determination. It is a measurement record you can recompute yourself.
-          </>
-        }
-      />
-
-      <Band
-        tone="tint"
-        kicker="Three data states, never blended"
-        title={<>Measured, unmeasured, or reported by someone else.</>}
-        lede={
-          <>
-            The single most useful thing we do for an underwriting file is refuse to mix these three
-            together. Each has its own endpoint and its own honesty rule.
-          </>
-        }
-      >
-        <PanelGrid cols={3}>
-          <Panel>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-emerald-700">Measured</p>
-            <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
-              Our own signed, deterministic runs. Live at <code className="text-[13px]">GET /api/gspc</code>.
+        {/* Three data states */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-3 text-sm">
+          <div className="rounded-xl border border-emerald-600/20 bg-white p-4">
+            <p className="font-bold text-emerald-700">MEASURED</p>
+            <p className="mt-1 text-gray-600">
+              Our own signed, deterministic runs. Live at <code>GET /api/gspc</code>.
             </p>
-          </Panel>
-          <Panel>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-gray-500">Unmeasured</p>
-            <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
-              Honestly withheld, with the reason stated — insufficient n, or no separation test yet.
-              Empty cells stay empty.
+          </div>
+          <div className="rounded-xl border border-gray-300 bg-white p-4">
+            <p className="font-bold text-gray-600">UNMEASURED</p>
+            <p className="mt-1 text-gray-600">
+              Honestly withheld, with the reason stated — insufficient n, or no separation test
+              yet. Empty cells stay empty.
             </p>
-          </Panel>
-          <Panel>
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-amber-700">Reported</p>
-            <p className="mt-3 text-[15px] leading-relaxed text-gray-600">
-              Third-party figures, cited and dated — reported by the source, not measured here. Live
-              at <code className="text-[13px]">GET /api/reported</code>.
+          </div>
+          <div className="rounded-xl border border-amber-300 bg-white p-4">
+            <p className="font-bold text-amber-700">REPORTED</p>
+            <p className="mt-1 text-gray-600">
+              Third-party figures, cited and dated — reported by the source, not measured here.
+              Live at <code>GET /api/reported</code>.
             </p>
-          </Panel>
-        </PanelGrid>
-      </Band>
-
-      <SplitBand
-        kicker="What a signed card gives you"
-        title={<>About three kilobytes, and every part of it exists for you.</>}
-        lede={
-          <>
-            A measurement card is a small signed record. Each component is there so an actuary can
-            check it without trusting the issuer — which, from your side of the table, is the only
-            kind of evidence worth having.
-          </>
-        }
-        media={
-          <VideoEmbed
-            src="/videos/trust-ecosystem.mp4"
-            poster="/videos/trust-ecosystem.jpg"
-            title="How the trust ecosystem fits together"
-            className="!max-w-none"
-          />
-        }
-        mediaRight
-        actions={[{ href: "/gspc-verify", label: "Verify one now", tone: "ghost" }]}
-      />
-
-      <Band tone="tint">
-        <div className="grid gap-5 sm:grid-cols-2">
-          {CARD_ANATOMY.map((item) => (
-            <Panel key={item.term}>
-              <p className="text-lg font-black tracking-tight text-gray-900">{item.term}</p>
-              <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{item.body}</p>
-            </Panel>
-          ))}
+          </div>
         </div>
-      </Band>
 
-      <Band
-        kicker="Verify one yourself, offline"
-        title={<>A stranger with a terminal can check us.</>}
-        lede={<>No account, no key exchange, no permission, no charge — today and always.</>}
-        width="prose"
-      >
-        <ol className="list-decimal space-y-5 pl-5 text-[16px] text-gray-700">
+        {/* 2 — Card anatomy */}
+        <h2 className="mt-14 text-2xl font-bold text-gray-900">
+          What a signed measurement card gives you
+        </h2>
+        <p className="mt-2 max-w-3xl text-gray-600">
+          A measurement card is a small (~3KB) signed record. Each part exists so an actuary can
+          check it without trusting the issuer:
+        </p>
+        <ul className="mt-4 space-y-3">
+          {CARD_ANATOMY.map((item) => (
+            <li key={item.term} className="rounded-xl border border-emerald-600/15 bg-white p-4">
+              <p className="font-semibold text-gray-900">{item.term}</p>
+              <p className="mt-1 text-sm text-gray-600">{item.body}</p>
+            </li>
+          ))}
+        </ul>
+
+        {/* 3 — Verify one yourself */}
+        <h2 className="mt-14 text-2xl font-bold text-gray-900">Verify one yourself, offline</h2>
+        <p className="mt-2 max-w-3xl text-gray-600">
+          A stranger with a terminal can check us. No account, no key exchange, no permission:
+        </p>
+        <ol className="mt-4 list-decimal space-y-3 pl-5 text-gray-700">
           <li>
-            Fetch the signed board
-            <pre className="mt-2 overflow-x-auto rounded-xl bg-[#03110b] p-4 font-mono text-xs text-emerald-300">
+            Fetch the signed board —
+            <pre className="mt-1 overflow-x-auto rounded-lg bg-gray-900 p-3 text-xs text-emerald-300">
               curl https://councilof.ai/api/gspc
             </pre>
           </li>
           <li>
-            Fetch the published verification key
-            <pre className="mt-2 overflow-x-auto rounded-xl bg-[#03110b] p-4 font-mono text-xs text-emerald-300">
+            Fetch the published verification key —
+            <pre className="mt-1 overflow-x-auto rounded-lg bg-gray-900 p-3 text-xs text-emerald-300">
               curl https://councilof.ai/.well-known/did.json
             </pre>
           </li>
@@ -228,93 +202,89 @@ export default function Insurers() {
             — client-side, nothing leaves your machine.
           </li>
         </ol>
-      </Band>
+        <p className="mt-4 text-sm text-gray-500">
+          Verification is free, requires no account, and always will be.
+        </p>
 
-      <Band
-        tone="tint"
-        kicker="Loss context"
-        title={<>Why this maps onto an underwriting file.</>}
-        lede={<>Four things a measurement record gives you that a vendor questionnaire does not.</>}
-      >
-        <PanelGrid cols={2}>
-          <Panel>
-            <p className="text-lg font-black tracking-tight text-gray-900">Frequency</p>
-            <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
+        {/* 4 — Loss context */}
+        <h2 className="mt-14 text-2xl font-bold text-gray-900">Loss context</h2>
+        <p className="mt-2 max-w-3xl text-gray-600">
+          Why a measurement record maps onto an underwriting file:
+        </p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-xl border border-emerald-600/15 bg-white p-5">
+            <p className="font-bold text-gray-900">Frequency</p>
+            <p className="mt-1 text-sm text-gray-600">
               The board shows which axes a system fails, with the n behind each result. A failure
               rate with a sample size and a Wilson interval is a frequency input, not a marketing
               claim.
             </p>
-          </Panel>
-          <Panel>
-            <p className="text-lg font-black tracking-tight text-gray-900">Severity tails</p>
-            <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
-              Where n≥100, the board publishes <code className="text-[13px]">mean_harm</code> and{" "}
-              <code className="text-[13px]">cvar05_harm</code> per axis. CVaR@5% is the average harm
-              across the worst 5% of items — the tail you price, not the average day. Where n&lt;100
-              the field is honestly null.
+          </div>
+          <div className="rounded-xl border border-emerald-600/15 bg-white p-5">
+            <p className="font-bold text-gray-900">Severity tails</p>
+            <p className="mt-1 text-sm text-gray-600">
+              Where n≥100, the board publishes <code>mean_harm</code> and <code>cvar05_harm</code>{" "}
+              per axis. CVaR@5% is the average harm across the worst 5% of items — the tail an
+              underwriter prices, not the average day. Where n&lt;100 the field is honestly null.
             </p>
-          </Panel>
-          <Panel>
-            <p className="text-lg font-black tracking-tight text-gray-900">Drift</p>
-            <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
-              Regulation changes and measurements go stale. A daily reg-watch detector watches the
-              governing corpus and publishes state changes to{" "}
+          </div>
+          <div className="rounded-xl border border-emerald-600/15 bg-white p-5">
+            <p className="font-bold text-gray-900">Drift</p>
+            <p className="mt-1 text-sm text-gray-600">
+              Regulation changes; measurements go stale. A daily reg-watch detector watches the
+              governing corpus, and state changes are published to{" "}
               <a href="/api/feed.xml" className="font-semibold text-emerald-700 underline">
                 /api/feed.xml
-              </a>
-              , so re-measurement is observable rather than promised.
+              </a>{" "}
+              so re-measurement is observable, not promised.
             </p>
-          </Panel>
-          <Panel>
-            <p className="text-lg font-black tracking-tight text-gray-900">The honesty gate</p>
-            <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
+          </div>
+          <div className="rounded-xl border border-emerald-600/15 bg-white p-5">
+            <p className="font-bold text-gray-900">The honesty gate</p>
+            <p className="mt-1 text-sm text-gray-600">
               At{" "}
               <Link href="/honesty" className="font-semibold text-emerald-700 underline">
                 /honesty
               </Link>{" "}
-              we publish our own models losing our own arena. An instrument that catches its owner is
-              the instrument you can price on.
+              we publish our own models losing our own arena. An instrument that catches its owner
+              is the instrument you can price on.
             </p>
-          </Panel>
-        </PanelGrid>
-      </Band>
+          </div>
+        </div>
 
-      <Band
-        kicker="The live board — MEASURED"
-        title={<>Read straight off the wire.</>}
-        lede={
-          <>
-            Fetched live from <code className="text-[15px]">GET /api/gspc</code> — the count lives
-            there, not in this page. A <strong>TIE</strong> means the leader&apos;s edge is
-            statistically indistinguishable, and ties are never counted as wins.
-          </>
-        }
-      >
+        {/* 5 — Live board strip (MEASURED) */}
+        <h2 className="mt-14 text-2xl font-bold text-gray-900">The live board — MEASURED</h2>
+        <p className="mt-2 max-w-3xl text-sm text-gray-600">
+          Fetched live from <code>GET /api/gspc</code> (the live count lives there, not here). A{" "}
+          <strong>TIE</strong> means the leader&apos;s edge is statistically indistinguishable —
+          ties are never counted as wins.
+        </p>
+
         {boardErr && (
-          <p className="text-red-600">
+          <p className="mt-6 text-red-600">
             Board fetch failed: {boardErr} — the API at /api/gspc is the source of truth.
           </p>
         )}
-        {!board && !boardErr && <p className="text-gray-500">Loading the live board…</p>}
+        {!board && !boardErr && <p className="mt-6 text-gray-500">Loading the live board…</p>}
 
         {board && (
-          <div className="overflow-x-auto rounded-2xl border border-emerald-900/10 bg-white shadow-[0_18px_50px_-32px_rgba(4,18,12,.45)]">
+          <div className="mt-6 overflow-x-auto rounded-xl border border-emerald-600/15 bg-white shadow-sm">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50/80 text-left text-gray-600">
-                  <th className="p-4">Axis</th>
-                  <th className="p-4">n</th>
-                  <th className="p-4">Leader accuracy</th>
-                  <th className="p-4">Separation</th>
+                <tr className="border-b bg-emerald-50/60 text-left text-gray-700">
+                  <th className="p-3">Axis</th>
+                  <th className="p-3">n</th>
+                  <th className="p-3">Leader accuracy</th>
+                  <th className="p-3">Separation</th>
                 </tr>
               </thead>
               <tbody>
                 {(board.axes as Axis[]).map((a) => (
-                  <tr key={a.axis} className="border-b border-gray-100 last:border-0">
-                    <td className="p-4 font-semibold text-gray-900">{a.axis}</td>
-                    <td className="p-4 font-mono">{a.n}</td>
-                    <td className="p-4 font-mono">{(a.accuracy * 100).toFixed(1)}%</td>
-                    <td className="p-4">
+                  <tr key={a.axis} className="border-b last:border-0">
+                    <td className="p-3 font-semibold text-gray-900">{a.axis}</td>
+                    <td className="p-3 font-mono">{a.n}</td>
+                    <td className="p-3 font-mono">{(a.accuracy * 100).toFixed(1)}%</td>
+                    <td className="p-3">
                       <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
                         {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
                       </span>
@@ -325,89 +295,113 @@ export default function Insurers() {
             </table>
           </div>
         )}
-        <p className="mt-4 text-[13px] text-gray-500">
+        <p className="mt-3 text-xs text-gray-500">
           Full per-axis detail — Wilson intervals, fleet means, harm tails, the signature:{" "}
           <Link href="/gspc-scoreboard" className="font-semibold text-emerald-700 underline">
             /gspc-scoreboard
           </Link>{" "}
           and <code>GET /api/gspc</code>.
         </p>
-      </Band>
 
-      <Band
-        tone="tint"
-        kicker="REPORTED — third-party context, never blended"
-        title={<>Other people&apos;s figures, kept at arm&apos;s length.</>}
-        lede={
-          <>
-            Figures published by others, cited with their capture date. Each entry is{" "}
-            <strong>reported by the source, not measured here</strong> — unsigned, and it never enters
-            the board.
-          </>
-        }
-      >
+        {/* 6 — REPORTED */}
+        <h2 className="mt-14 text-2xl font-bold text-gray-900">
+          REPORTED — third-party context, never blended
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm text-gray-600">
+          Figures published by others, cited with their capture date. Each entry is{" "}
+          <strong>reported by the source, not measured here</strong> — unsigned, and never enters
+          the board.
+        </p>
+
         {reportedErr && (
-          <p className="text-red-600">
+          <p className="mt-6 text-red-600">
             REPORTED fetch failed: {reportedErr} — the API at /api/reported is the source of truth.
           </p>
         )}
-        {!reported && !reportedErr && <p className="text-gray-500">Loading REPORTED entries…</p>}
+        {!reported && !reportedErr && (
+          <p className="mt-6 text-gray-500">Loading REPORTED entries…</p>
+        )}
 
         {reported && (
-          <ul className="space-y-3">
+          <ul className="mt-6 space-y-3">
             {(reported.entries as ReportedEntry[]).map((e) => (
-              <li key={e.id} className="rounded-2xl border border-amber-300/60 bg-amber-50/50 p-5">
-                <p className="text-[15px] font-bold text-gray-900">{e.claim}</p>
-                <p className="mt-2 text-xs text-gray-600">
+              <li key={e.id} className="rounded-xl border border-amber-300/60 bg-amber-50/40 p-4">
+                <p className="text-sm font-semibold text-gray-900">{e.claim}</p>
+                <p className="mt-1 text-xs text-gray-600">
                   Source:{" "}
                   <a href={e.source_url} className="font-semibold text-emerald-700 underline" rel="noopener noreferrer">
                     {e.source}
                   </a>{" "}
                   · source date {e.as_of} · captured {e.captured_at}
                 </p>
-                <p className="mt-1 text-xs font-bold text-amber-800">
+                <p className="mt-1 text-xs font-semibold text-amber-800">
                   Reported by the source, not measured here.
                 </p>
               </li>
             ))}
           </ul>
         )}
-      </Band>
 
-      <Band tone="deep" width="prose">
-        <div className="space-y-6">
-          <div className="grid gap-3 sm:grid-cols-2">
-            {[
-              { href: "/gspc-scoreboard", label: "The full live board" },
-              { href: "/gspc-verify", label: "Verify a card — free, in your browser" },
-              { href: "/firewall-charter", label: "The measurement/remediation firewall" },
-              { href: "mailto:nicholas@csoai.org", label: "Talk to us about an evidence pack" },
-            ].map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="rounded-2xl border border-emerald-600/20 bg-white p-5 text-[15px] font-bold text-emerald-800 transition-colors hover:bg-emerald-50"
-              >
-                {l.label} →
-              </a>
-            ))}
-          </div>
-          <Caveat title="The register">
-            <p>
-              Measurement, not certification. CSOAI Ltd · UK Companies House 16939677 ·{" "}
-              <a href="mailto:nicholas@csoai.org" className="underline">
-                nicholas@csoai.org
-              </a>
-              .
-            </p>
-            <p>
-              Every MEASURED number on this page is recomputable from{" "}
-              <code>GET /api/gspc</code>; every REPORTED figure carries its source and capture date;
-              and what we cannot measure is withheld and says so.
-            </p>
-          </Caveat>
+        {/* 7 — Footer CTA row */}
+        <div className="mt-14 grid gap-4 sm:grid-cols-4 text-sm">
+          <Link
+            href="/gspc-scoreboard"
+            className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50"
+          >
+            The full live board →
+          </Link>
+          <Link
+            href="/gspc-verify"
+            className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50"
+          >
+            Verify a card — free, in your browser →
+          </Link>
+          <Link
+            href="/firewall-charter"
+            className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50"
+          >
+            The measurement/remediation firewall →
+          </Link>
+          <a
+            href="mailto:nicholas@csoai.org"
+            className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50"
+          >
+            Talk to us about an evidence pack →
+          </a>
         </div>
-      </Band>
+
+        <p className="mt-10 text-xs text-gray-500">
+          Measurement, not certification. CSOAI Ltd · UK Companies House 16939677 ·{" "}
+          <a href="mailto:nicholas@csoai.org" className="underline">
+            nicholas@csoai.org
+          </a>
+          . Every MEASURED number on this page is recomputable from <code>GET /api/gspc</code>;
+          every REPORTED figure carries its source and capture date; what we cannot measure is
+          withheld and says so.
+        </p>
+      </div>
     </div>
+  );
+}
+
+/**
+ * /insurers — UPGRADED (not duplicated): the owner's "Pricing AI Risk" deck becomes the
+ * scroll-world story that leads into the underwriter evidence pack already on this route.
+ * The evidence pack below is unchanged. See client/src/data/deckWorlds/pricingRisk.ts for
+ * the corrections log (market sizing, carrier capacity and US-state figures were dropped;
+ * GSPC's "Privacy" was corrected to "Provenance").
+ */
+export default function Insurers() {
+  return (
+    <DeckPage
+      title="Pricing AI risk | Council of AI"
+      description="Signed, deterministic AI measurement an underwriter can verify offline: per-axis results with n and Wilson intervals, Ed25519 signatures over a SHA-256 hash chain, and an honest register of what is not measured. Measurement, not certification."
+      hero={PRICING_RISK_HERO}
+      slides={PRICING_RISK_SLIDES}
+      notClaimed={PRICING_RISK_NOT_CLAIMED}
+      related={PRICING_RISK_RELATED}
+    >
+      <InsurersEvidencePack />
+    </DeckPage>
   );
 }
