@@ -125,7 +125,7 @@ export default function EarlyAccessLanding() {
               {
                 icon: <Users className="h-8 w-8" />,
                 title: 'Council Training',
-                description: 'Learn from 33-agent consensus model. Master multi-stakeholder decision making in AI governance.'
+                description: 'Learn from the designed council consensus model. Master multi-stakeholder decision making in AI governance.'
               },
               {
                 icon: <Zap className="h-8 w-8" />,

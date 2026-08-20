@@ -269,7 +269,6 @@ const Fedramp = lazy(() => import("./pages/Fedramp"));
 const Readiness = lazy(() => import("./pages/Readiness"));
 const Agents = lazy(() => import("./pages/Agents"));
 const Academy = lazy(() => import("./pages/Academy"));
-import SovereignDock from "./components/SovereignDock";
 import ArchivedBanner from "./components/ArchivedBanner";
 import PageSchema from "./components/PageSchema";
 import DemoTour from "./components/DemoTour";
@@ -1002,7 +1001,6 @@ function App() {
                 </main>
                 <Footer />
                 <Suspense fallback={null}><CouncilConsole /></Suspense>
-                <SovereignDock />
                 <DemoTour />
                 <CookieConsent />
               </div>

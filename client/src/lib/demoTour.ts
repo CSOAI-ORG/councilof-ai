@@ -1,4 +1,4 @@
-// demoTour - the Sovereign's guided, self-driving walkthrough of the whole OS.
+// demoTour - the Council assistant's guided, self-driving walkthrough of the whole OS.
 // Every step leads with a CSOAI USP - what we do that no compliance-SaaS does -
 // then auto-runs the live feature so the user watches it happen, not hears about it.
 
@@ -7,15 +7,15 @@ export type TourStep = { path: string; title: string; say: string; demo?: string
 export const TOUR: TourStep[] = [
   {
     path: "/",
-    title: "I'm your Sovereign - not a checklist",
+    title: "I'm your Council assistant - not a checklist",
     usp: "A live governance brain, not compliance software",
-    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm an independent measurement brain - 291 governed tools, the council (DESIGN-labelled until measured), and cryptographic proof behind every answer. Let me show you, live.",
+    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm a Council governance brain - 291 governed tools, the council (DESIGN-labelled until measured), and cryptographic proof behind every answer. Let me show you, live.",
   },
   {
     path: "/os",
     title: "The Council OS - 291 governed tools",
     usp: "An operating system for AI governance, not a dashboard",
-    say: "This is the OS. Every capability - crosswalks, risk, cyber, attestation - is a live tool running on the Sovereign brain, keyless and on-demand. Nobody else ships governance as a working operating system. Open any tile and it just runs.",
+    say: "This is the OS. Every capability - crosswalks, risk, cyber, attestation - is a live tool running on the Council engine, keyless and on-demand. Nobody else ships governance as a working operating system. Open any tile and it just runs.",
     tip: "Click any tool - it opens live in a window.",
   },
   {
@@ -28,9 +28,9 @@ export const TOUR: TourStep[] = [
   },
   {
     path: "/try",
-    title: "A designed 33-agent council rules (design; measured n_eff 1.21 of 3)",
-    usp: "Fault-tolerant consensus, not one model's opinion",
-    say: "Describe an AI system and a designed 33-agent council reviews it against a 0.95 care-floor - then a signed verdict is sealed (council is a design; live independence measured n_eff 1.21 of 3). Not one AI guessing: a council that can't be captured by any single node. Watch: screening job applicants with AI.",
+    title: "The designed council rules",
+    usp: "Multi-agent council review, not one model's opinion",
+    say: "Describe an AI system and the designed multi-provider council reviews it against a 0.95 care-floor - then a signed verdict is sealed (council is a design; live independence measured n_eff 1.21 of 3). Not one AI guessing: a council that can't be captured by any single node. Watch: screening job applicants with AI.",
     demo: "We use AI to screen job applicants",
     tip: "Ask a compliance question - the Council rules on it.",
   },
@@ -69,7 +69,7 @@ export const TOUR: TourStep[] = [
     path: "/status",
     title: "Total transparency",
     usp: "The most transparent system you run",
-    say: "The Sovereign brain and every Layer 0 protocol, checked live in front of you. An AI-governance company should be the most transparent system you run - so we show you everything, always.",
+    say: "The Council engine and every Layer 0 protocol, checked live in front of you. An AI-governance company should be the most transparent system you run - so we show you everything, always.",
   },
   {
     path: "/pricing",
@@ -122,7 +122,7 @@ const A = "sov_tour_active", S = "sov_tour_step", SEEN = "sov_tour_seen";
 // Values are indexes into TOUR: 1=/os, 3=/try, 7=/watchdog-map.
 export const TOUR_TOPICS: Record<string, number> = {
   os: 1,          // the Council OS tool floor
-  measurement: 3, // the designed 33-seat council cross-checks a real scenario (n_eff 1.21 of 3, measured)
+  measurement: 3, // the designed council rules on a real scenario
   regulator: 7,   // public, cryptographic accountability
 };
 

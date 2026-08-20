@@ -6,54 +6,48 @@
 import { Link } from 'wouter';
 import { Github, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
+import FooterVerifyStrip from './FooterVerifyStrip';
 import { Button } from '@/components/ui/button';
+
+interface FooterLink {
+  name: string;
+  href: string;
+  /** Plain <a> (new tab) instead of a wouter route — for machine surfaces, static files and mailto. */
+  external?: boolean;
+}
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const footerSections = [
+  const footerSections: { title: string; links: FooterLink[] }[] = [
     {
-      title: 'Platform',
+      title: 'Product',
       links: [
         { name: 'Training Courses', href: '/training' },
         { name: 'Attestation', href: '/certification' },
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
-        { name: 'API Documentation', href: '/api-docs' },
-      ],
-    },
-    {
-      title: 'Frameworks',
-      links: [
         { name: 'Global AI Regulation Tracker', href: '/global-ai-regulation' },
         { name: 'Framework Crosswalk (13×8)', href: '/crosswalk' },
-        { name: 'Article 50 — transparency', href: '/ai-transparency' },
-        { name: 'Agent Governance', href: '/agent-governance' },
-        { name: 'DORA (financial services)', href: '/dora' },
-        { name: 'EU AI Act', href: '/frameworks/eu-ai-act' },
-        { name: 'NIST AI RMF', href: '/frameworks/nist' },
-        { name: 'ISO 42001', href: '/guides/iso-42001' },
+        { name: 'Library — full archive', href: '/library' },
+        { name: 'AI Glossary', href: '/glossary' },
+        { name: 'Blog', href: '/blog' },
+        { name: 'FAQ', href: '/faq' },
       ],
     },
     {
-      title: 'Resources',
+      title: 'Evidence & APIs',
       links: [
-        { name: 'FAQ', href: '/faq' },
-        { name: 'Library — full archive', href: '/library' },
+        { name: 'GSPC board — live JSON', href: '/api/gspc', external: true },
+        { name: 'Regulation feed — live JSON', href: '/api/regulation', external: true },
+        { name: 'Corrections feed — live JSON', href: '/api/corrections', external: true },
+        { name: 'Verify a card', href: '/gspc-verify' },
+        { name: 'llms.txt — for answer engines', href: '/llms.txt', external: true },
+        { name: 'did:web trust root (did.json)', href: '/.well-known/did.json', external: true },
+        { name: 'API Documentation', href: '/api-docs' },
+        { name: 'Methodology', href: '/methodology' },
         { name: 'The honesty gate — our own losses', href: '/honesty' },
         { name: 'Firewall Charter — measure, never fix', href: '/firewall-charter' },
-        { name: 'Methodology', href: '/methodology' },
-        { name: 'Verify a card', href: '/gspc-verify' },
-        { name: 'AI Glossary', href: '/glossary' },
-        { name: 'Readiness Assessment', href: '/readiness-assessment' },
-        { name: 'Industry Solutions', href: '/industry-solutions' },
-        { name: 'Partners & Advisory', href: '/partners' },
-        { name: 'Case Studies', href: '/case-studies' },
-        { name: 'Trust Center', href: '/trust-center' },
-        { name: 'Global AI Regulation Map', href: '/global-ai-regulation' },
-        { name: 'Why CSOAI', href: '/compare' },
-        { name: 'ROI Calculator', href: '/roi-calculator' },
-        { name: 'Blog', href: '/blog' },
       ],
     },
     {
@@ -62,12 +56,13 @@ export function Footer() {
         { name: 'About Us', href: '/about' },
         { name: 'Technology', href: '/technology' },
         { name: 'Integrations', href: '/integrations' },
-        { name: 'Pricing', href: '/pricing' },
-        { name: 'Contact', href: '/contact' },
+        { name: 'Partners & Advisory', href: '/partners' },
+        { name: 'Trust Center', href: '/trust-center' },
+        { name: 'Case Studies', href: '/case-studies' },
         { name: 'Status', href: '/status' },
-        { name: 'Remediation Partners', href: '/remediation-partners' },
         { name: 'Careers', href: '/careers' },
         { name: 'Accreditation', href: '/accreditation' },
+        { name: 'Contact', href: '/contact' },
       ],
     },
     {
@@ -82,6 +77,16 @@ export function Footer() {
         { name: 'Insurance Certificate (on request)', href: 'mailto:nicholas@csoai.org?subject=Certificate%20of%20Insurance%20request', external: true },
       ],
     },
+  ];
+
+  // Framework deep links, kept as a compact row so the column grid stays four-wide.
+  const frameworkLinks: FooterLink[] = [
+    { name: 'EU AI Act', href: '/frameworks/eu-ai-act' },
+    { name: 'Article 50 — transparency', href: '/ai-transparency' },
+    { name: 'NIST AI RMF', href: '/frameworks/nist' },
+    { name: 'ISO 42001', href: '/guides/iso-42001' },
+    { name: 'DORA', href: '/dora' },
+    { name: 'Agent Governance', href: '/agent-governance' },
   ];
 
   const socialLinks = [
@@ -163,8 +168,11 @@ export function Footer() {
               </svg>
               <span className="text-2xl font-bold">CSOAI</span>
             </Link>
-            <p className="text-gray-600 text-sm mb-4">
+            <p className="text-gray-600 text-sm mb-2">
               Building the future of AI safety through independent training, signed attestation, and transparent measurement.
+            </p>
+            <p className="text-gray-600 text-sm mb-4 font-medium">
+              Measurement, not certification — every published finding links to a signed, recomputable record.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
@@ -189,7 +197,7 @@ export function Footer() {
                 {section.title}
               </h3>
               <ul className="space-y-3">
-                {section.links.map((link: any) => (
+                {section.links.map((link) => (
                   <li key={link.name}>
                     {link.external ? (
                       <a
@@ -212,6 +220,22 @@ export function Footer() {
           ))}
         </div>
 
+        {/* Compact frameworks row — deep links kept out of the four-column grid */}
+        <div className="border-t border-gray-200 pt-6 mb-8">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+            <span className="text-gray-500 text-xs uppercase tracking-wider">Frameworks</span>
+            {frameworkLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-gray-600 hover:text-emerald-700 transition-colors"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {/* Bottom Bar */}
         <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-600 text-sm mb-4 md:mb-0">
@@ -232,6 +256,9 @@ export function Footer() {
             </Link>
           </div>
         </div>
+
+        {/* Find us / verify us — chips for every probed-live platform presence */}
+        <FooterVerifyStrip />
 
         {/* Standards participation & memberships — only genuine, verifiable affiliations.
             A measurement body must never overclaim a membership. DIF is a signed Contributor
@@ -277,7 +304,7 @@ export function Footer() {
             Our only incentive is public safety and workforce development.
           </p>
           <p className="text-gray-600 text-xs text-center">
-            Council of AI · CSOAI LTD, a UK registered company (Companies House 16939677, London) with Professional Indemnity Insurance up to £5,000,000 (Policy: CHPR5355800XB). Contact: nicholas@csoai.org.
+            Council of AI — CSOAI Ltd, UK Companies House 16939677, London. Professional Indemnity Insurance up to £5,000,000 (Policy: CHPR5355800XB). Contact: nicholas@csoai.org.
           </p>
         </div>
       </div>

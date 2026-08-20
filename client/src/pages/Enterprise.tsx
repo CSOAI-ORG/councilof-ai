@@ -45,7 +45,7 @@ const faqData = [
   },
   {
     question: "How does automated assessment work?",
-    answer: "Our designed 33-agent Council of AI draws on 12 different AI providers to independently evaluate your AI systems against the selected frameworks — no single-vendor conflict of interest. It is a designed council; its measured performance is published openly on our public Refutation Ledger."
+    answer: "Our designed multi-provider Council of AI draws on 12 different AI providers to independently evaluate your AI systems against the selected frameworks — no single-vendor conflict of interest. It is a designed council; its measured performance is published openly on our public Refutation Ledger."
   },
   {
     question: "Is my data secure?",
@@ -252,7 +252,7 @@ export default function Enterprise() {
                 <Zap className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Automated Assessment</h3>
                 <p className="text-sm text-gray-600">
-                  A designed 33-agent Council of AI evaluates your systems against selected compliance frameworks.
+                  A designed multi-provider Council of AI evaluates your systems against selected compliance frameworks.
                 </p>
               </Card>
             </div>
@@ -622,7 +622,7 @@ export default function Enterprise() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                  <span>Designed 33-Agent Council assessments</span>
+                  <span>Designed Council multi-provider assessments</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
