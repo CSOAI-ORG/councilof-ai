@@ -188,7 +188,20 @@ export default function Benchmarks() {
                 <Database className="mr-2 h-4 w-4" /> All data and tooling
               </a>
             </Button>
+            <Button asChild variant="outline">
+              <Link href="/benchmark-index">
+                <Scale className="mr-2 h-4 w-4" /> Meta-benchmark index — what others report
+              </Link>
+            </Button>
           </div>
+          <p className="mt-3 max-w-3xl text-sm text-gray-600 dark:text-gray-400">
+            Comparing us to the wider field? The{" "}
+            <Link href="/benchmark-index" className="font-semibold text-emerald-700 underline dark:text-emerald-400">
+              meta-benchmark index
+            </Link>{" "}
+            lists what SWE-bench, HELM, METR, LMArena and others report — each cited, dated and
+            kept strictly separate from the numbers on this page.
+          </p>
           <div className="mt-8 max-w-xl">
             <SovCard compact />
           </div>

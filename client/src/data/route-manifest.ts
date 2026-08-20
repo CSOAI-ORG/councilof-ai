@@ -193,6 +193,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Competitors"
  },
  {
+  "path": "/benchmark-index",
+  "comp": "BenchmarkIndex",
+  "title": "Benchmark Index"
+ },
+ {
   "path": "/benchmarks",
   "comp": "Benchmarks",
   "title": "Benchmarks"

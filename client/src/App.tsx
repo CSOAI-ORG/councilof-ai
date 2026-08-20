@@ -152,6 +152,7 @@ const PublicWatchdogHub = lazy(() => import("./pages/PublicWatchdogHub"));
 const WatchdogHelpProtectHumanity = lazy(() => import("./pages/WatchdogHelpProtectHumanity"));
 const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport"));
 const Benchmarks = lazy(() => import("./pages/Benchmarks"));
+const BenchmarkIndex = lazy(() => import("./pages/BenchmarkIndex"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
@@ -350,6 +351,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/live-ledger": "Live Ledger | CSOAI",
   "/instrument": "The Instrument | CSOAI",
   "/benchmarks": "Benchmarks | CSOAI",
+  "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
   "/provenance-finding": "Provenance Finding | CSOAI",
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
@@ -618,6 +620,8 @@ function App() {
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
                   <Route path="/watchdog/report" component={PublicWatchdogHub} />
                   <Route path="/benchmarks" component={Benchmarks} />
+                  {/* Meta-benchmark index — REPORTED (others, cited) beside MEASURED (ours, signed); never fused */}
+                  <Route path="/benchmark-index" component={BenchmarkIndex} />
                   {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />

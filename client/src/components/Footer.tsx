@@ -48,6 +48,7 @@ export function Footer() {
         { name: 'API Documentation', href: '/api-docs' },
         { name: 'Methodology', href: '/methodology' },
         { name: 'The honesty gate — our own losses', href: '/honesty' },
+        { name: 'Meta-benchmark index — other benchmarks, cited', href: '/benchmark-index' },
         { name: 'Firewall Charter — measure, never fix', href: '/firewall-charter' },
       ],
     },

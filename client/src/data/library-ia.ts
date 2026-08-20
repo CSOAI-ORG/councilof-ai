@@ -17,7 +17,7 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 export const PRIMARY_PATHS = new Set<string>([
   "/",
   // Measure
-  "/gspc-scoreboard", "/benchmarks", "/gspc-arena", "/gspc-verify", "/assess",
+  "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
   "/methodology", "/instrument",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
