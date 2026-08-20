@@ -34,7 +34,7 @@ export const BATTLECARDS: Battlecard[] = [
       "Closed SaaS, per-seat pricing (~$10k–50k+/yr) — prices out most SMBs.",
       "Security-first DNA; AI-governance depth is bolted on, not native.",
     ],
-    wedge: "CSOAI is AI-governance-native and open-source: we cover the EU AI Act documentation/classification duties Vanta's infra-evidence model can't, the designed 33-agent council reasons rather than checklists, and the open core + free tier reaches the SMBs Vanta's pricing excludes. Every verdict is Ed25519-signed, not just evidence-collected.",
+    wedge: "CSOAI is AI-governance-native and open-source: we cover the EU AI Act documentation/classification duties Vanta's infra-evidence model can't, the designed council reasons rather than checklists, and the open core + free tier reaches the SMBs Vanta's pricing excludes. Every verdict is Ed25519-signed, not just evidence-collected.",
     sources: [
       { label: "Vanta $150M Series D (BusinessWire, Jul 2025)", url: "https://www.businesswire.com/news/home/20250723901336/en/" },
       { label: "Vanta hits $300M ARR (Fortune, Apr 2026)", url: "https://fortune.com/2026/04/29/exclusive-vanta-arr-300-million-sequoia-shadow-ai-claude-cursor/" },
@@ -58,7 +58,7 @@ export const BATTLECARDS: Battlecard[] = [
       "US-headquartered / CLOUD Act exposure raised as a concern for EU-sovereignty buyers.",
       "Closed platform; governance you can't fork or self-host.",
     ],
-    wedge: "CSOAI matches the framework depth (EU AI Act, NIST, ISO 42001 crosswalked in the Hive) but delivers it open-source, self-hostable, and sovereignty-first — plus a designed 33-agent council and Layer 0 signing. Free training + certification and a fair PAYG tier open it to the 99% Credo's price point can't serve.",
+    wedge: "CSOAI matches the framework depth (EU AI Act, NIST, ISO 42001 crosswalked in the Hive) but delivers it open-source, self-hostable, and sovereignty-first — plus the designed multi-provider council and Layer 0 signing. Free training + certification and a fair PAYG tier open it to the 99% Credo's price point can't serve.",
     sources: [
       { label: "Credo AI — Fast Company 2026 + product", url: "https://www.credo.ai/" },
       { label: "Credo AI EU / CLOUD Act sovereignty concern (sota.io, 2026)", url: "https://sota.io/blog/credo-ai-eu-alternative-gdpr-cloud-act-ai-governance-2026" },
