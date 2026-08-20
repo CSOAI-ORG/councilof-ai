@@ -1,167 +1,221 @@
-import { useEffect, useRef, useState } from "react";
 import { VideoEmbed } from "./VideoEmbed";
 
 /**
- * StoryWorld — 10-slide sticky scroll hero for councilof.ai.
- * Slide 1 H1 is locked. No sov-* names. No invented scores.
- * Each slide: kicker · title · body · bullet points · infographic (inline SVG, no deps).
- * Background: 3D scroll-world (perspective grid floor + orbit ring + depth orbs) driven
- * by scroll progress. prefers-reduced-motion: stacked sections, no pin, no FX.
+ * StoryWorld — the councilof.ai homepage as an EPIC but ROBUST scroll-world.
+ *
+ * Cinematic: heavy sections are full-bleed, full-height claymation-arena image bands
+ * with a readable scrim and content overlaid in white. Light sections breathe between
+ * them (video, a clear image, or an infographic on a clean ground).
+ *
+ * ROBUST: this is a plain, normal document scroll. Every section is a static <section>
+ * in flow — no pin, no sticky, no opacity-toggle slides, no 3D perspective. (The old
+ * pinned/opacity-slide renderer was buggy on desktop — slide 1 vanished on scroll — and
+ * has been removed entirely.) Nothing can disappear.
+ *
+ * Hero H1 is locked. No sov-* names. No invented scores. Doctrine: measurement, not
+ * certification; "13 measured of 14"; jail is a floor with separation untested; ties are ties.
  */
 
-type Tone = "light" | "ink" | "ring" | "board";
+type Point = { tag: "pain" | "benefit" | "usp"; text: string };
 
 type Slide = {
   kicker: string;
   title?: string;
   body: string;
-  points?: string[];
+  points?: Point[];
   href?: string;
   cta?: string;
-  tone: Tone;
   video?: { src: string; poster: string; title: string };
+  /** full-bleed background image → makes the section a heavy cinematic band */
+  bg?: { src: string; alt: string };
+  /** a clear, in-flow image shown in a light section's media column */
+  image?: { src: string; alt: string };
+  /** inline-SVG infographic index for light sections that have no media */
+  figure?: number;
 };
 
 export const STORY: Slide[] = [
   {
+    // 01 HERO — H1 is locked. Hero video sits above the headline, over the arena.
     kicker: "Council of AI — the independent measurement body for AI behaviour",
-    body: "We measure how your AI behaves on our own published instruments and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and hash-chained. Then we measure again. Not certification. Not another dashboard.",
-    points: [
-      "Published instruments — frozen items, public scoring code",
-      "Ed25519-signed 3KB card, hash-chained",
-      "Re-attested on a cadence — history is append-only",
-      "Verification is free forever — no login, no fee",
-    ],
-    tone: "light",
+    body: "We measure how your AI actually behaves on published, frozen tests, then hand you a signed result you can re-check yourself — a small card, not a slide deck. When your model or the law changes, we measure again. That is measurement, not certification.",
+    bg: { src: "/images/coliseum_hero_arena.jpg", alt: "Clay figures and green verification seals gathered in a marble arena" },
   },
   {
-    kicker: "02  The lie",
-    title: "A PDF you cannot recompute.",
-    body: "Vendors sell a claim. The evidence is a slide, a badge, or a private report. You cannot run the same test. You cannot see what was left unmeasured. Six months later the model has changed and the PDF has not.",
+    // 02 The problem — light, breathes
+    kicker: "The problem",
+    title: "The “trust us” PDF",
+    body: "Most AI assurance is a claim on a slide — a badge, a private report, a number with no test behind it. You can’t run it, you can’t see what was skipped, and the moment the model updates the paperwork is already out of date.",
     points: [
-      "A static PDF cannot be recomputed — a signed card can",
-      "No n, no confidence interval, no unmeasured cells shown",
-      "The model updates; the badge doesn't",
-      "Evidence should outlive the vendor who sold it",
+      { tag: "pain", text: "You get a badge, not a test you can run" },
+      { tag: "pain", text: "No sample size, no interval, no list of what was skipped" },
+      { tag: "benefit", text: "Evidence built to outlive the vendor that sold it" },
+      { tag: "usp", text: "We publish the test and the scoring code — recompute it yourself" },
     ],
-    tone: "ink",
+    figure: 1,
   },
   {
-    kicker: "03  The atom",
-    title: "A 3KB signed card.",
-    body: "We run the system on frozen, published instruments. We sign the result. You keep the card. Anyone can recompute the hash chain in their own browser. The signing key is public.",
+    // 03 Your proof — heavy, the vault + 3KB credential
+    kicker: "Your proof",
+    title: "One small card, signed and yours",
+    body: "We run your system on frozen, published tests, sign the result, and give you the card — about 3KB of scores, sample sizes, intervals, hashes and a signature. Anyone can recompute it in their own browser, and the signing key is public.",
     points: [
-      "~3KB: scores, n, intervals, hashes, signature",
-      "Recompute the hash chain in your own browser",
-      "Signing key published — anyone can check it",
-      "Anchored to an independent timestamp",
+      { tag: "pain", text: "Reports sit on someone else’s server and can quietly change" },
+      { tag: "benefit", text: "You hold a ~3KB card — recheck the hash chain in any browser" },
+      { tag: "benefit", text: "Scores, sample size and intervals all travel with it" },
+      { tag: "usp", text: "Public signing key — anyone verifies without asking us" },
     ],
     href: "/gspc-verify",
     cta: "Verify a card",
-    tone: "light",
-    video: { src: "/videos/csoai-architecture.mp4", poster: "/videos/csoai-architecture.jpg", title: "How Council of AI is built — the architecture" },
+    bg: { src: "/images/secure_evidence_vault.jpg", alt: "Clay figures holding a glowing 3KB credential card before a vault door" },
   },
   {
-    kicker: "04  Honest grid",
-    title: "13 measured of 14 — including the axis that catches us.",
-    body: "Empty cells stay empty. No invented scores. 13 measured axes across 19 models; jail (escape detection, the 14th slot) measured 18 Aug on a smaller fleet, separation untested — it caught our own fine-tune missing every escape, and we published that.",
+    // 04 The honest board — light, proving-ground video
+    kicker: "The honest board",
+    title: "13 measured of 14 — including the one that catches us",
+    body: "Our board shows 13 measured axes across 19 models. The 14th — jail, whether a model can be talked out of its guardrails — is a measured floor on a smaller fleet with separation still untested, and we say so. It caught our own fine-tune missing every escape, and we published that.",
     points: [
-      "13 measured axes across 19 models",
-      "Slot 14 — jail: smaller fleet, separation untested, stated",
-      "It caught our own fine-tune — and we published it",
-      "Ties are ties, never counted as wins",
+      { tag: "pain", text: "Scorecards quietly hide the tests a model fails" },
+      { tag: "benefit", text: "Empty cells stay empty — you see exactly what’s measured" },
+      { tag: "benefit", text: "Jail is a floor, “separation untested” stated in plain sight" },
+      { tag: "usp", text: "It caught our own fine-tune — and we published it" },
     ],
     href: "/gspc-scoreboard",
     cta: "Open the board",
-    tone: "board",
     video: { src: "/videos/proving-ground.mp4", poster: "/videos/proving-ground.jpg", title: "The Proving Ground — how we test containment" },
   },
   {
-    kicker: "05  Council Space",
-    title: "AI versus AI. Night coverage.",
-    body: "Models compete on frozen provisions. Each match is two subjects and one instrument. The verdict is a predicate, not a preference vote. Every round can become a signed card.",
+    // 05 Council Space — heavy, AI vs AI
+    kicker: "Council Space",
+    title: "AI versus AI, all night",
+    body: "Models face the same frozen tests, head to head. Each match is two systems and one instrument, and the verdict is a fixed rule — never one AI grading another. Any round can become a signed card.",
     points: [
-      "Two subjects, one frozen instrument per match",
-      "Deterministic predicates — never an LLM judging an LLM",
-      "Every round can become a signed card",
-      "The public feed grows all night",
+      { tag: "pain", text: "Leaderboards run on vibes and vote-brigading" },
+      { tag: "benefit", text: "Every match is a fixed pass/fail rule you can audit" },
+      { tag: "benefit", text: "Ties are ties — never counted as a win" },
+      { tag: "usp", text: "No model ever judges another — grading is deterministic" },
     ],
     href: "/gspc-arena",
     cta: "Watch Council Space",
-    tone: "ink",
+    bg: { src: "/images/coliseum_swarm_clash.jpg", alt: "A swarm of green shards clashing with clay scientists raising shields" },
   },
   {
-    kicker: "06  Colosseum",
-    title: "Human versus AI. Day surprise.",
-    body: "Three play modes: CITIZEN, MAYOR, RED. A human walks in. The system is measured live. Signed versus unsigned is a promotion gate — unsigned stays practice.",
+    // 06 Colosseum — heavy, Human vs AI
+    kicker: "Colosseum",
+    title: "You versus the AI",
+    body: "Step in and probe a system live in three modes — Citizen, Mayor, Red. Signed runs count; practice runs stay practice and are never quoted.",
     points: [
-      "Three modes: CITIZEN · MAYOR · RED",
-      "Humans probe the system live",
-      "Signed vs unsigned is a promotion gate",
-      "Unsigned stays practice — never quoted",
+      { tag: "pain", text: "You never get to stress-test the AI yourself" },
+      { tag: "benefit", text: "Three hands-on modes to push a system live" },
+      { tag: "usp", text: "Only measured runs are ever quoted — practice stays practice" },
     ],
     href: "/gspc-arena",
     cta: "Enter the colosseum",
-    tone: "ring",
+    bg: { src: "/images/coliseum_logic_duel.jpg", alt: "A human and an AI facing each other across a chessboard in the arena" },
   },
   {
-    kicker: "07  The board",
-    title: "13 × 19. Live from the API.",
-    body: "Every cell is live from the GSPC API. Empty cells stay empty. n on every row, confidence intervals where the n is honest. Nobody edits yesterday.",
+    // 07 The live board — light, architecture video
+    kicker: "The live board",
+    title: "The whole board, live from the API",
+    body: "Every cell is pulled live from our public API. Empty cells stay empty, every row shows its sample size, and nobody edits yesterday’s numbers.",
     points: [
-      "Every cell live from GET /api/gspc",
-      "n on every row; CI where the n is honest",
-      "UNMEASURED shown as UNMEASURED — never a zero",
-      "Nobody edits yesterday",
+      { tag: "pain", text: "Marketing dashboards refresh silently and rewrite history" },
+      { tag: "benefit", text: "A 13 × 19 grid, live, with a sample size on every row" },
+      { tag: "usp", text: "One signed source feeds people, agents and answer engines" },
     ],
     href: "/gspc-scoreboard",
     cta: "Read the scoreboard",
-    tone: "board",
+    video: { src: "/videos/csoai-architecture.mp4", poster: "/videos/csoai-architecture.jpg", title: "How Council of AI is built — the architecture" },
   },
   {
-    kicker: "08  Council City",
-    title: "The living layer.",
-    body: "Cities, towns, sims, clans. Signed events feed the visual mind. The public face is Council City — a place you can walk, not a marketing page.",
+    // 08 Council City — heavy, living layer
+    kicker: "Council City",
+    title: "A place you can walk, not a pitch",
+    body: "Signed results feed a living layer — cities, towns and sims you can explore. Every scene traces back to a real receipt, so learning how the system behaves is something you do, not something you’re told.",
     points: [
-      "Signed events feed the visual layer",
-      "Cities, towns, sims — a world you can walk",
-      "Every scene traces back to a receipt",
+      { tag: "pain", text: "Governance sites are walls of text nobody reads" },
+      { tag: "benefit", text: "Explore how AI behaves through a world, not a whitepaper" },
+      { tag: "usp", text: "Every scene traces back to a signed event — nothing is decorative" },
     ],
     href: "/gspc-arena?view=towns",
     cta: "Enter the city",
-    tone: "light",
+    bg: { src: "/images/literacy_training_arena.jpg", alt: "People learning how AI behaves inside a training arena" },
   },
   {
-    kicker: "09  Recurrency for AI compliance",
-    title: "A new record. Never an edit.",
-    body: "AI changes. Law changes. We measure again and issue a delta card. The old card stays. History is append-only. In aviation, a qualification you never revisit is a qualification you can't trust — AI is no different.",
+    // 09 Always current — light split, liveness image + living-law video
+    kicker: "Always current",
+    title: "The day it’s stamped, a static certificate starts going stale",
+    body: "So we watch the law itself. Our corpus-watch tracks EUR-Lex and legislation.gov.uk by hash, day after day. When a provision actually changes, we re-measure and issue a fresh delta card — the old one stays, history is append-only, never quietly edited.",
     points: [
-      "AI changes; law changes; we measure again",
-      "A delta card is issued — the old card stays",
-      "Append-only history; frozen is anchored",
-      "Corrections are published, never silently edited",
+      { tag: "pain", text: "A one-time stamp goes stale the moment the law moves" },
+      { tag: "benefit", text: "We watch the law daily and re-measure when it changes" },
+      { tag: "benefit", text: "A fresh delta card each time — old cards preserved" },
+      { tag: "usp", text: "Append-only history, corrections published — never a silent edit" },
     ],
     href: "/assess",
     cta: "Get measured",
-    tone: "ink",
+    image: { src: "/images/liveness_drift_engine.jpg", alt: "An hourglass weighing a stale certification seal against a re-attested current seal, fed by EUR-Lex and legislation.gov.uk ribbons" },
+    video: { src: "/videos/living-law.mp4", poster: "/videos/living-law.jpg", title: "Living law — why a measurement is never final" },
   },
   {
-    kicker: "10  Anyone can check",
-    title: "No login. No fee to verify.",
-    body: "Verification stays free and loginless. We take no money from anything we rank. Measurement credential — never a certification badge.",
+    // 10 Human oversight — heavy, humans directing AI
+    kicker: "Human oversight",
+    title: "Humans stay in the loop",
+    body: "Measurement isn’t a black box you’re asked to trust. People set the tests, read the results, and can challenge any card — the system is steered by humans, not hidden behind them.",
     points: [
-      "No login, no fee — verification free forever",
-      "No money from anything we rank",
-      "Measurement credential — never a certification",
-      "Check the board, the card and the key yourself",
+      { tag: "pain", text: "AI assurance you’re simply told to take on faith" },
+      { tag: "benefit", text: "People set the tests and can challenge any result" },
+      { tag: "usp", text: "Every judgement is a fixed rule a human can inspect — never a hidden model" },
+    ],
+    href: "/gspc-scoreboard",
+    cta: "See how it’s judged",
+    bg: { src: "/images/coliseum_humans_vs_humanoids.jpg", alt: "Humans directing AI figures with beams of light, keeping oversight" },
+  },
+  {
+    // 11 Who it's for — light, trust-ecosystem video
+    kicker: "Who it’s for",
+    title: "One signed measurement, four fronts",
+    body: "Insurers pricing AI risk, regulators checking behaviour against the law, teams proving a model before they ship, developers measuring per call — the same signed card serves them all.",
+    points: [
+      { tag: "pain", text: "Everyone re-runs their own half-trusted checks" },
+      { tag: "benefit", text: "One signed result every side can rely on" },
+      { tag: "usp", text: "Independent of all of them — we take no money from anything we rank" },
+    ],
+    href: "/start",
+    cta: "Prove your AI",
+    video: { src: "/videos/trust-ecosystem.mp4", poster: "/videos/trust-ecosystem.jpg", title: "The trust ecosystem — who Council of AI serves" },
+  },
+  {
+    // 12 Anyone can check — heavy, the signed card in hand
+    kicker: "Anyone can check",
+    title: "Free to check. No login, ever.",
+    body: "Verifying a card is free forever — no account, no fee — and we take no money from anything we rank. Recompute the hash chain, check the public key, read the board: the proof is yours to hold, not ours to gatekeep.",
+    points: [
+      { tag: "pain", text: "Assurance is usually paywalled and closed to the public" },
+      { tag: "benefit", text: "Check any card in your own browser — free, no login" },
+      { tag: "usp", text: "We take no money from anything we rank" },
     ],
     href: "/gspc-verify",
     cta: "Check a card now",
-    tone: "light",
+    bg: { src: "/images/verifiable_evidence_card.jpg", alt: "Hands holding a signed evidence card reading verified: true" },
+  },
+  {
+    // 13 Public watchdog — heavy, report what looks wrong
+    kicker: "Open to everyone",
+    title: "See something wrong? Report it.",
+    body: "When an AI behaves badly in the real world, anyone can flag it. Reports feed the public watchdog, and what we act on is measured and signed like everything else — no closed inbox, no quiet dismissal.",
+    points: [
+      { tag: "pain", text: "Harms get buried in a vendor’s private support queue" },
+      { tag: "benefit", text: "A public place to report AI behaviour that looks wrong" },
+      { tag: "usp", text: "What we act on is measured and signed — in the open" },
+    ],
+    href: "/watchdog",
+    cta: "Open the watchdog",
+    bg: { src: "/images/public_watchdog_intake.jpg", alt: "The public watchdog reporting funnel, open to everyone" },
   },
 ];
 
-// The four doors, folded into the hero (the old top banner is gone).
+// The four doors, folded into the hero.
 const PERSONAS: { who: string; hook: string; href: string }[] = [
   { who: "Insurers", hook: "price AI risk on signed evidence", href: "/industries/insurance" },
   { who: "Regulators", hook: "check behaviour against the law", href: "/regulators" },
@@ -172,16 +226,16 @@ const PERSONAS: { who: string; hook: string; href: string }[] = [
 function HeroActions() {
   return (
     <>
-      <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <a
           href="/gspc-verify"
-          className="inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-md transition-colors hover:bg-emerald-400"
+          className="inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
         >
           Verify a card — free
         </a>
         <a
           href="/gspc-scoreboard"
-          className="inline-flex items-center rounded-xl border-2 border-emerald-500/40 px-6 py-3 text-base font-extrabold text-emerald-700 transition-colors hover:bg-emerald-50"
+          className="inline-flex items-center rounded-xl border-2 border-white/40 bg-white/5 px-6 py-3 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
         >
           Open the live board
         </a>
@@ -192,9 +246,9 @@ function HeroActions() {
             key={p.who}
             href={p.href}
             title={p.hook}
-            className="inline-flex items-center gap-1 rounded-full border border-emerald-600/25 bg-white/70 px-3 py-1 text-[13px] font-semibold text-emerald-800 transition hover:border-emerald-500 hover:bg-emerald-50"
+            className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[13px] font-semibold text-white backdrop-blur-sm transition hover:border-emerald-300 hover:bg-white/20"
           >
-            {p.who} <span aria-hidden className="text-emerald-500">→</span>
+            {p.who} <span aria-hidden className="text-emerald-300">→</span>
           </a>
         ))}
       </div>
@@ -202,413 +256,211 @@ function HeroActions() {
   );
 }
 
-/* ————— per-slide bullet list ————— */
-function Points({ points, dark }: { points: string[]; dark: boolean }) {
+/* ————— benefit-led bullets: PAIN · BENEFIT · USP ————— */
+const TAG_LABEL: Record<Point["tag"], string> = { pain: "Pain", benefit: "You get", usp: "Only here" };
+const TAG_LIGHT: Record<Point["tag"], string> = {
+  pain: "bg-rose-50 text-rose-600 ring-1 ring-rose-100",
+  benefit: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100",
+  usp: "bg-amber-50 text-amber-700 ring-1 ring-amber-100",
+};
+const TAG_DARK: Record<Point["tag"], string> = {
+  pain: "bg-rose-500/20 text-rose-100 ring-1 ring-rose-300/30",
+  benefit: "bg-emerald-500/20 text-emerald-100 ring-1 ring-emerald-300/30",
+  usp: "bg-amber-500/25 text-amber-50 ring-1 ring-amber-300/40",
+};
+
+function Points({ points, dark, center }: { points: Point[]; dark?: boolean; center?: boolean }) {
   return (
-    <ul className="mx-auto mt-5 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-1.5 text-left sm:grid-cols-2">
+    <ul className={`mt-6 flex w-full max-w-xl flex-col gap-2.5 ${center ? "mx-auto text-left" : ""}`}>
       {points.map((pt) => (
-        <li key={pt} className={`flex items-start gap-2 text-[13px] leading-snug ${dark ? "text-emerald-100/80" : "text-gray-600"}`}>
-          <svg viewBox="0 0 16 16" className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${dark ? "text-emerald-300" : "text-emerald-500"}`} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 8.5l3.5 3.5L13 4.5" />
-          </svg>
-          {pt}
+        <li key={pt.text} className="flex items-start gap-3">
+          <span className={`mt-0.5 inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${dark ? TAG_DARK[pt.tag] : TAG_LIGHT[pt.tag]}`}>
+            {TAG_LABEL[pt.tag]}
+          </span>
+          <span className={`text-[15px] leading-snug ${dark ? "text-white/90" : "text-gray-700"}`}>{pt.text}</span>
         </li>
       ))}
     </ul>
   );
 }
 
-/* ————— per-slide infographic (inline SVG, tone-aware, no deps) ————— */
-function Infographic({ index, dark }: { index: number; dark: boolean }) {
-  const ink = dark ? "#a7f3d0" : "#059669";
-  const dim = dark ? "rgba(167,243,208,0.35)" : "rgba(5,150,105,0.35)";
-  const bad = dark ? "#fca5a5" : "#ef4444";
-  const amber = "#f59e0b";
+/* ————— per-section infographic (inline SVG, no deps) for light media-less sections ————— */
+function Infographic({ index }: { index: number }) {
+  const ink = "#059669";
+  const dim = "rgba(5,150,105,0.35)";
+  const bad = "#ef4444";
   const common = { fill: "none", stroke: ink, strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-
-  switch (index) {
-    case 0: // measure → sign → re-attest → check loop
-      return (
-        <svg viewBox="0 0 320 90" className="h-20 w-auto sm:h-24" aria-hidden>
-          {["Measure", "Sign", "Re-attest", "Check"].map((label, k) => (
-            <g key={label} transform={`translate(${18 + k * 78},14)`}>
-              <rect width="62" height="40" rx="10" {...common} fill={dark ? "rgba(16,185,129,0.08)" : "rgba(16,185,129,0.06)"} />
-              <text x="31" y="25" textAnchor="middle" fontSize="11" fontWeight="700" fill={ink}>{label}</text>
-              {k < 3 && <path d={`M66 20 h8 m-3 -4 l4 4 l-4 4`} {...common} />}
-            </g>
-          ))}
-          <path d="M290 60 q10 22 -130 22 q-140 0 -130 -22" {...common} stroke={dim} strokeDasharray="3 4" />
-          <text x="160" y="88" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">append-only · forever checkable</text>
-        </svg>
-      );
-    case 1: // PDF (dead) vs signed card (live)
-      return (
-        <svg viewBox="0 0 300 96" className="h-20 w-auto sm:h-24" aria-hidden>
-          <g transform="translate(30,10)">
-            <rect width="70" height="76" rx="6" {...common} stroke={bad} opacity="0.8" />
-            {[16, 28, 40, 52].map((y) => <line key={y} x1="10" x2="60" y1={y} y2={y} stroke={bad} strokeWidth="1.2" opacity="0.4" />)}
-            <line x1="8" y1="8" x2="62" y2="68" stroke={bad} strokeWidth="2" />
-            <text x="35" y="92" textAnchor="middle" fontSize="9" fill={bad} fontWeight="700">static PDF</text>
-          </g>
-          <text x="150" y="52" textAnchor="middle" fontSize="13" fontWeight="800" fill={ink}>vs</text>
-          <g transform="translate(200,10)">
-            <rect width="70" height="76" rx="6" {...common} fill={dark ? "rgba(16,185,129,0.08)" : "rgba(16,185,129,0.06)"} />
-            {[16, 28, 40].map((y) => <line key={y} x1="10" x2="60" y1={y} y2={y} stroke={ink} strokeWidth="1.2" opacity="0.5" />)}
-            <path d="M14 60 l6 6 l12 -12" {...common} strokeWidth="2.2" />
-            <text x="44" y="66" fontSize="8.5" fill={ink} fontWeight="700">signed</text>
-            <text x="35" y="92" textAnchor="middle" fontSize="9" fill={ink} fontWeight="700">3KB card</text>
-          </g>
-        </svg>
-      );
-    case 2: // card anatomy
-      return (
-        <svg viewBox="0 0 300 96" className="h-20 w-auto sm:h-24" aria-hidden>
-          <rect x="90" y="6" width="120" height="84" rx="10" {...common} fill={dark ? "rgba(16,185,129,0.07)" : "rgba(16,185,129,0.05)"} />
-          {[
-            ["scores + n + CI", 26],
-            ["sha-256 hash chain", 44],
-            ["Ed25519 signature", 62],
-            ["timestamp anchor", 80],
-          ].map(([label, y]) => (
-            <g key={label as string}>
-              <circle cx="104" cy={(y as number) - 4} r="2.4" fill={ink} />
-              <text x="114" y={y as number} fontSize="9.5" fill={ink} fontWeight="600">{label}</text>
-            </g>
-          ))}
-          <text x="150" y="18" textAnchor="middle" fontSize="9" fill={dim} fontWeight="700">~3KB · yours to keep</text>
-        </svg>
-      );
-    case 3: // 14-slot honest grid
-      return (
-        <svg viewBox="0 0 300 78" className="h-20 w-auto sm:h-24" aria-hidden>
-          {Array.from({ length: 14 }).map((_, k) => {
-            const x = 22 + (k % 7) * 38, y = k < 7 ? 10 : 42;
-            const jail = k === 13;
-            return (
-              <g key={k}>
-                <rect x={x} y={y} width="30" height="24" rx="5" {...common}
-                  stroke={jail ? amber : ink}
-                  fill={jail ? "rgba(245,158,11,0.12)" : dark ? "rgba(16,185,129,0.10)" : "rgba(16,185,129,0.08)"} />
-                {!jail && <path d={`M${x + 8} ${y + 13} l5 5 l9 -10`} {...common} strokeWidth="2" />}
-                {jail && <text x={x + 15} y={y + 16} textAnchor="middle" fontSize="8.5" fontWeight="800" fill={amber}>jail</text>}
-              </g>
-            );
-          })}
-          <text x="150" y="76" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">13 measured · slot 14 stated honestly</text>
-        </svg>
-      );
-    case 4: // AI vs AI predicate
-      return (
-        <svg viewBox="0 0 300 90" className="h-20 w-auto sm:h-24" aria-hidden>
-          <circle cx="70" cy="38" r="20" {...common} />
-          <text x="70" y="42" textAnchor="middle" fontSize="10" fontWeight="800" fill={ink}>AI</text>
-          <circle cx="230" cy="38" r="20" {...common} />
-          <text x="230" y="42" textAnchor="middle" fontSize="10" fontWeight="800" fill={ink}>AI</text>
-          <rect x="120" y="20" width="60" height="36" rx="8" {...common} fill={dark ? "rgba(16,185,129,0.08)" : "rgba(16,185,129,0.06)"} />
-          <text x="150" y="35" textAnchor="middle" fontSize="8.5" fontWeight="700" fill={ink}>frozen</text>
-          <text x="150" y="47" textAnchor="middle" fontSize="8.5" fontWeight="700" fill={ink}>instrument</text>
-          <path d="M92 38 h26 m64 0 h26" {...common} strokeDasharray="3 3" />
-          <text x="150" y="80" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">verdict = deterministic predicate → signed card</text>
-        </svg>
-      );
-    case 5: // human vs AI, 3 modes
-      return (
-        <svg viewBox="0 0 300 92" className="h-20 w-auto sm:h-24" aria-hidden>
-          <g {...common}>
-            <circle cx="70" cy="26" r="9" />
-            <path d="M70 35 v18 m0 -14 l-11 9 m11 -9 l11 9 m-11 5 l-8 12 m8 -12 l8 12" />
-          </g>
-          <text x="150" y="45" textAnchor="middle" fontSize="13" fontWeight="800" fill={amber}>vs</text>
-          <g {...common}>
-            <rect x="212" y="18" width="36" height="28" rx="6" />
-            <circle cx="224" cy="32" r="2.4" fill={ink} stroke="none" />
-            <circle cx="236" cy="32" r="2.4" fill={ink} stroke="none" />
-            <path d="M222 52 h16 m-8 -6 v6" />
-          </g>
-          {["CITIZEN", "MAYOR", "RED"].map((m, k) => (
-            <g key={m} transform={`translate(${72 + k * 56},66)`}>
-              <rect width="52" height="18" rx="9" {...common} stroke={m === "RED" ? bad : ink} />
-              <text x="26" y="12.5" textAnchor="middle" fontSize="8.5" fontWeight="800" fill={m === "RED" ? bad : ink}>{m}</text>
-            </g>
-          ))}
-        </svg>
-      );
-    case 6: // 13×19 board
-      return (
-        <svg viewBox="0 0 300 84" className="h-20 w-auto sm:h-24" aria-hidden>
-          {Array.from({ length: 13 }).map((_, c) =>
-            Array.from({ length: 6 }).map((_, r) => {
-              const empty = (c * 7 + r * 3) % 11 === 0;
-              return (
-                <rect key={`${c}-${r}`} x={30 + c * 19} y={8 + r * 11} width="15" height="8" rx="2"
-                  fill={empty ? "transparent" : dark ? "rgba(52,211,153,0.55)" : "rgba(16,185,129,0.5)"}
-                  stroke={empty ? dim : "none"} strokeWidth="0.8" />
-              );
-            })
-          )}
-          <text x="150" y="82" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">13 axes × 19 models · empty cells stay empty</text>
-        </svg>
-      );
-    case 7: // city skyline
-      return (
-        <svg viewBox="0 0 300 84" className="h-20 w-auto sm:h-24" aria-hidden>
-          {[
-            [40, 34, 22], [70, 20, 30], [100, 40, 18], [128, 14, 34], [160, 30, 24], [190, 22, 30], [222, 38, 20], [248, 26, 26],
-          ].map(([x, y, w], k) => (
-            <g key={k}>
-              <rect x={x} y={y + 8} width={w} height={64 - y} rx="2" {...common} fill={dark ? "rgba(16,185,129,0.08)" : "rgba(16,185,129,0.06)"} />
-              {Array.from({ length: 3 }).map((_, wk) => (
-                <rect key={wk} x={(x as number) + 4 + wk * 6} y={y + 14} width="3" height="3" fill={ink} opacity="0.6" />
-              ))}
-            </g>
-          ))}
-          <text x="150" y="82" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">every scene traces back to a signed event</text>
-        </svg>
-      );
-    case 8: // append-only timeline
-      return (
-        <svg viewBox="0 0 300 84" className="h-20 w-auto sm:h-24" aria-hidden>
-          <line x1="24" y1="42" x2="276" y2="42" stroke={dim} strokeWidth="1.4" />
-          {[0, 1, 2, 3].map((k) => (
-            <g key={k} transform={`translate(${44 + k * 64},22)`}>
-              <rect width="40" height="40" rx="7" {...common} fill={dark ? "rgba(16,185,129,0.08)" : "rgba(16,185,129,0.06)"} />
-              <text x="20" y="18" textAnchor="middle" fontSize="8" fontWeight="800" fill={ink}>{k === 3 ? "vΔ" : `v${k + 1}`}</text>
-              <path d="M12 28 l6 6 l12 -12" {...common} strokeWidth="1.8" transform="scale(0.8) translate(5,4)" />
-            </g>
-          ))}
-          <text x="150" y="80" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">new cards append · old cards never edited</text>
-        </svg>
-      );
-    default: // 9: free verify shield
-      return (
-        <svg viewBox="0 0 300 92" className="h-20 w-auto sm:h-24" aria-hidden>
-          <path d="M150 10 l34 12 v22 c0 20 -14 32 -34 38 c-20 -6 -34 -18 -34 -38 v-22 z" {...common} fill={dark ? "rgba(16,185,129,0.08)" : "rgba(16,185,129,0.06)"} />
-          <path d="M136 46 l10 10 l20 -22" {...common} strokeWidth="2.6" />
-          <text x="150" y="90" textAnchor="middle" fontSize="9.5" fill={ink} fontWeight="700">free · loginless · no money from anything we rank</text>
-        </svg>
-      );
+  if (index === 1) {
+    // PDF (dead) vs signed card (live)
+    return (
+      <svg viewBox="0 0 300 96" className="h-24 w-auto sm:h-28" aria-hidden>
+        <g transform="translate(30,10)">
+          <rect width="70" height="76" rx="6" {...common} stroke={bad} opacity="0.8" />
+          {[16, 28, 40, 52].map((y) => <line key={y} x1="10" x2="60" y1={y} y2={y} stroke={bad} strokeWidth="1.2" opacity="0.4" />)}
+          <line x1="8" y1="8" x2="62" y2="68" stroke={bad} strokeWidth="2" />
+          <text x="35" y="92" textAnchor="middle" fontSize="9" fill={bad} fontWeight="700">static PDF</text>
+        </g>
+        <text x="150" y="52" textAnchor="middle" fontSize="13" fontWeight="800" fill={ink}>vs</text>
+        <g transform="translate(200,10)">
+          <rect width="70" height="76" rx="6" {...common} fill="rgba(16,185,129,0.06)" />
+          {[16, 28, 40].map((y) => <line key={y} x1="10" x2="60" y1={y} y2={y} stroke={ink} strokeWidth="1.2" opacity="0.5" />)}
+          <path d="M14 60 l6 6 l12 -12" {...common} strokeWidth="2.2" />
+          <text x="44" y="66" fontSize="8.5" fill={ink} fontWeight="700">signed</text>
+          <text x="35" y="92" textAnchor="middle" fontSize="9" fill={ink} fontWeight="700">3KB card</text>
+        </g>
+      </svg>
+    );
   }
-}
-
-/* ————— 3D scroll-world background ————— */
-function WorldFX({ p, dark }: { p: number; dark: boolean }) {
-  const gridColor = dark ? "rgba(110,231,183,0.5)" : "rgba(5,150,105,0.45)";
+  // default: measure → sign → re-attest → check loop
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" style={{ perspective: "900px" }} aria-hidden>
-      {/* receding grid floor — rides the scroll */}
-      <div
-        className="absolute inset-x-[-25%] bottom-[-14%] h-[58%] opacity-[0.13]"
-        style={{
-          transformOrigin: "center bottom",
-          transform: `rotateX(63deg) translateY(${(p * 96) % 48}px)`,
-          backgroundImage: `linear-gradient(to right, ${gridColor} 1px, transparent 1px), linear-gradient(to top, ${gridColor} 1px, transparent 1px)`,
-          backgroundSize: "48px 48px",
-          WebkitMaskImage: "linear-gradient(to top, black 30%, transparent 95%)",
-          maskImage: "linear-gradient(to top, black 30%, transparent 95%)",
-        }}
-      />
-      {/* slow orbit ring */}
-      <div
-        className="absolute left-1/2 top-1/2 h-[74vmin] w-[74vmin] rounded-full border"
-        style={{
-          borderColor: dark ? "rgba(110,231,183,0.14)" : "rgba(5,150,105,0.14)",
-          transform: `translate(-50%,-50%) rotateX(${58 + p * 14}deg) rotateZ(${p * 160}deg)`,
-        }}
-      />
-      <div
-        className="absolute left-1/2 top-1/2 h-[52vmin] w-[52vmin] rounded-full border border-dashed"
-        style={{
-          borderColor: dark ? "rgba(110,231,183,0.10)" : "rgba(5,150,105,0.10)",
-          transform: `translate(-50%,-50%) rotateX(${58 + p * 14}deg) rotateZ(${-p * 220}deg)`,
-        }}
-      />
-      {/* depth orbs at three parallax rates */}
-      <div className="absolute -left-24 top-10 h-80 w-80 rounded-full bg-emerald-400/20 blur-3xl"
-        style={{ transform: `translate3d(${p * 90}px, ${p * 46}px, 0) scale(${1 + p * 0.15})` }} />
-      <div className="absolute -right-16 bottom-10 h-96 w-96 rounded-full bg-amber-400/10 blur-3xl"
-        style={{ transform: `translate3d(${-p * 70}px, ${-p * 34}px, 0)` }} />
-      <div className="absolute left-1/3 top-1/4 h-40 w-40 rounded-full bg-teal-300/10 blur-2xl"
-        style={{ transform: `translate3d(${p * 140}px, ${-p * 60}px, 0)` }} />
-    </div>
+    <svg viewBox="0 0 320 90" className="h-24 w-auto sm:h-28" aria-hidden>
+      {["Measure", "Sign", "Re-attest", "Check"].map((label, k) => (
+        <g key={label} transform={`translate(${18 + k * 78},14)`}>
+          <rect width="62" height="40" rx="10" {...common} fill="rgba(16,185,129,0.06)" />
+          <text x="31" y="25" textAnchor="middle" fontSize="11" fontWeight="700" fill={ink}>{label}</text>
+          {k < 3 && <path d={`M66 20 h8 m-3 -4 l4 4 l-4 4`} {...common} />}
+        </g>
+      ))}
+      <path d="M290 60 q10 22 -130 22 q-140 0 -130 -22" {...common} stroke={dim} strokeDasharray="3 4" />
+      <text x="160" y="88" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">append-only · forever checkable</text>
+    </svg>
   );
 }
 
-const TONE: Record<Tone, string> = {
-  light: "bg-gradient-to-b from-emerald-50 via-white to-white text-gray-900",
-  ink: "bg-[#06140f] text-emerald-50",
-  ring: "bg-gradient-to-b from-[#1a1206] via-[#0d0a06] to-black text-amber-50",
-  board: "bg-[#07130e] text-emerald-50",
-};
-
-function SlideFace({ slide, index, active }: { slide: Slide; index: number; active: boolean }) {
-  const dark = slide.tone !== "light";
+function Cta({ slide }: { slide: Slide }) {
+  if (!slide.href || !slide.cta) return null;
   return (
-    <div
-      className={`absolute inset-0 flex flex-col items-center justify-center px-6 text-center transition-opacity duration-500 ${
-        active ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
-      aria-hidden={!active}
+    <a
+      href={slide.href}
+      className="mt-7 inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
     >
-      <div className="hidden sm:block">
-        <Infographic index={index} dark={dark} />
-      </div>
-      <span className={`mt-3 text-xs font-bold uppercase tracking-[0.22em] ${
-        slide.tone === "light" ? "text-emerald-600" : "text-emerald-300/80"
-      }`}>
-        {slide.kicker}
-      </span>
-      {index === 0 ? (
-        <>
-          <VideoEmbed
-            src="/videos/council-of-ai.mp4"
-            poster="/videos/council-of-ai.jpg"
-            title="What Council of AI does — a 2-minute look"
-            className="mt-6"
-          />
-          <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.08] sm:text-5xl lg:text-6xl">
-            See how your AI behaves.<br />
-            Get proof you can trust.<br />
-            Kept current as the rules change.<br />
-            <span className="text-emerald-500">Anyone can check — free.</span>
-          </h1>
-        </>
-      ) : (
-        <h2 className="mt-4 max-w-4xl text-4xl font-black leading-[1.08] sm:text-5xl lg:text-6xl">
-          {slide.title}
-        </h2>
-      )}
-      <p className={`mt-4 max-w-2xl text-base leading-relaxed sm:text-lg ${
-        slide.tone === "light" ? "text-gray-500" : "text-emerald-100/75"
-      }`}>
-        {slide.body}
-      </p>
-      {slide.points && <Points points={slide.points} dark={dark} />}
-      {slide.video && (
-        <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8" />
-      )}
-      {index === 0 && <HeroActions />}
-      {slide.href && slide.cta && (
-        <a
-          href={slide.href}
-          className={`mt-6 inline-flex items-center rounded-xl px-6 py-3 text-base font-extrabold shadow-md transition-colors ${
-            slide.tone === "ring"
-              ? "bg-amber-400 text-gray-900 hover:bg-amber-300"
-              : "bg-emerald-500 text-white hover:bg-emerald-400"
-          }`}
-        >
-          {slide.cta}
-        </a>
-      )}
-    </div>
+      {slide.cta}
+    </a>
   );
 }
 
-function Stacked() {
+/* ————— HERO — full-bleed arena, hero video, locked H1 ————— */
+function HeroSection({ slide }: { slide: Slide }) {
   return (
-    <div>
-      {STORY.map((slide, i) => {
-        const dark = slide.tone !== "light";
-        return (
-          <section key={slide.kicker} className={`relative min-h-[80vh] ${TONE[slide.tone]}`}>
-            <div className="relative mx-auto flex min-h-[80vh] max-w-5xl flex-col items-center justify-center px-6 py-24 text-center">
-              <div className="hidden sm:block">
-                <Infographic index={i} dark={dark} />
-              </div>
-              <span className={`mt-3 text-xs font-bold uppercase tracking-[0.22em] ${
-                slide.tone === "light" ? "text-emerald-600" : "text-emerald-300/80"
-              }`}>{slide.kicker}</span>
-              {i === 0 ? (
-                <>
-                  <VideoEmbed
-                    src="/videos/council-of-ai.mp4"
-                    poster="/videos/council-of-ai.jpg"
-                    title="What Council of AI does — a 2-minute look"
-                    className="mt-6"
-                  />
-                  <h1 className="mt-6 text-4xl font-black leading-[1.08] sm:text-5xl">
-                    See how your AI behaves.<br />Get proof you can trust.<br />Kept current as the rules change.<br />
-                    <span className="text-emerald-500">Anyone can check — free.</span>
-                  </h1>
-                </>
-              ) : (
-                <h2 className="mt-4 text-4xl font-black leading-[1.08] sm:text-5xl">{slide.title}</h2>
-              )}
-              <p className={`mt-4 max-w-2xl text-lg ${slide.tone === "light" ? "text-gray-500" : "text-emerald-100/75"}`}>{slide.body}</p>
-              {slide.points && <Points points={slide.points} dark={dark} />}
-              {slide.video && (
-                <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8" />
-              )}
-              {i === 0 && <HeroActions />}
-              {slide.href && slide.cta && (
-                <a href={slide.href} className="mt-6 inline-flex rounded-xl bg-emerald-500 px-6 py-3 font-extrabold text-white">{slide.cta}</a>
-              )}
-            </div>
-          </section>
-        );
-      })}
-    </div>
+    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden">
+      {slide.bg && (
+        <img src={slide.bg.src} alt={slide.bg.alt} className="absolute inset-0 h-full w-full object-cover" />
+      )}
+      <div className="absolute inset-0 bg-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
+      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 py-24 text-center">
+        <span className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">{slide.kicker}</span>
+        <VideoEmbed
+          src="/videos/council-of-ai.mp4"
+          poster="/videos/council-of-ai.jpg"
+          title="What Council of AI does — a 2-minute look"
+          className="mt-6"
+        />
+        <h1 className="mt-8 max-w-4xl text-4xl font-black leading-[1.08] text-white drop-shadow-lg sm:text-5xl lg:text-6xl">
+          See how your AI behaves.<br />
+          Get proof you can trust.<br />
+          Kept current as the rules change.<br />
+          <span className="text-emerald-300">Anyone can check — free.</span>
+        </h1>
+        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85">{slide.body}</p>
+        <HeroActions />
+      </div>
+    </section>
+  );
+}
+
+/* ————— HEAVY — full-bleed image band, content overlaid ————— */
+function HeavySection({ slide, contentRight }: { slide: Slide; contentRight: boolean }) {
+  const scrim = contentRight
+    ? "bg-gradient-to-l from-black/85 via-black/55 to-black/20"
+    : "bg-gradient-to-r from-black/85 via-black/55 to-black/20";
+  return (
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden">
+      {slide.bg && (
+        <img src={slide.bg.src} alt={slide.bg.alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+      )}
+      <div className={`absolute inset-0 ${scrim}`} />
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24">
+        <div className={`max-w-xl ${contentRight ? "ml-auto text-left" : "text-left"}`}>
+          <span className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">{slide.kicker}</span>
+          <h2 className="mt-3 text-3xl font-black leading-[1.1] text-white drop-shadow-md sm:text-4xl lg:text-5xl">{slide.title}</h2>
+          <p className="mt-4 text-lg leading-relaxed text-white/85">{slide.body}</p>
+          {slide.points && <Points points={slide.points} dark />}
+          {slide.video && (
+            <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8 !mx-0" />
+          )}
+          <Cta slide={slide} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ————— LIGHT — breathing band: image and/or video (split) or infographic (centered) ————— */
+function LightSection({ slide, index, mediaRight }: { slide: Slide; index: number; mediaRight: boolean }) {
+  const bg = index % 2 === 0 ? "bg-gray-50" : "bg-white";
+  const hasMedia = Boolean(slide.image || slide.video);
+  if (hasMedia) {
+    return (
+      <section className={`relative ${bg}`}>
+        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-20 sm:py-24 lg:grid-cols-2 lg:gap-16">
+          <div className={mediaRight ? "lg:order-1" : "lg:order-2"}>
+            <span className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">{slide.kicker}</span>
+            <h2 className="mt-3 text-3xl font-black leading-[1.1] text-gray-900 sm:text-4xl">{slide.title}</h2>
+            <p className="mt-4 max-w-xl text-lg leading-relaxed text-gray-600">{slide.body}</p>
+            {slide.points && <Points points={slide.points} />}
+            <Cta slide={slide} />
+          </div>
+          <div className={`flex flex-col gap-6 ${mediaRight ? "lg:order-2" : "lg:order-1"}`}>
+            {slide.image && (
+              <img
+                src={slide.image.src}
+                alt={slide.image.alt}
+                loading="lazy"
+                className="w-full rounded-2xl object-cover shadow-xl ring-1 ring-black/10"
+              />
+            )}
+            {slide.video && (
+              <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="!max-w-none" />
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+  // media-less light section — centered with an infographic
+  return (
+    <section className={`relative ${bg}`}>
+      <div className="mx-auto flex max-w-3xl flex-col items-center px-6 py-20 text-center sm:py-24">
+        <div className="hidden sm:block">
+          <Infographic index={slide.figure ?? index} />
+        </div>
+        <span className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">{slide.kicker}</span>
+        <h2 className="mt-3 max-w-3xl text-3xl font-black leading-[1.1] text-gray-900 sm:text-4xl">{slide.title}</h2>
+        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">{slide.body}</p>
+        {slide.points && <Points points={slide.points} center />}
+        <Cta slide={slide} />
+      </div>
+    </section>
   );
 }
 
 export default function StoryWorld() {
-  const pin = useRef<HTMLDivElement>(null);
-  const [i, setI] = useState(0);
-  const [p, setP] = useState(0);
-  const [reduce, setReduce] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const apply = () => setReduce(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
-
-  useEffect(() => {
-    if (reduce) return;
-    const onScroll = () => {
-      const el = pin.current;
-      if (!el) return;
-      const total = el.offsetHeight - window.innerHeight;
-      if (total <= 0) return;
-      const raw = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
-      setP(raw);
-      setI(Math.min(STORY.length - 1, Math.floor(raw * STORY.length * 0.999)));
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [reduce]);
-
-  if (reduce) return <Stacked />;
-
-  const slide = STORY[i];
-  const dark = slide.tone !== "light";
-
+  let heavyCount = 0;
+  let lightMediaCount = 0;
   return (
-    <div ref={pin} className="relative" style={{ height: `${STORY.length * 100}vh` }}>
-      <div className={`sticky top-0 h-screen overflow-hidden ${TONE[slide.tone]}`}>
-        <WorldFX p={p} dark={dark} />
-        {STORY.map((s, idx) => (
-          <SlideFace key={s.kicker} slide={s} index={idx} active={idx === i} />
-        ))}
-        <div className="absolute right-5 top-1/2 hidden -translate-y-1/2 flex-col gap-2 sm:flex" aria-hidden>
-          {STORY.map((s, idx) => (
-            <span
-              key={s.kicker}
-              className={`h-2 w-2 rounded-full ${idx === i ? "bg-emerald-400 scale-125" : "bg-white/30"}`}
-            />
-          ))}
-        </div>
-        <div className="absolute bottom-6 left-0 right-0 px-8">
-          <div className="mx-auto h-px max-w-xl bg-white/10">
-            <div className="h-px bg-emerald-400" style={{ width: `${((i + 1) / STORY.length) * 100}%` }} />
-          </div>
-          <p className="mt-2 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-300/70">
-            {String(i + 1).padStart(2, "0")} / {String(STORY.length).padStart(2, "0")}  ·  scroll the world
-          </p>
-        </div>
-      </div>
+    <div>
+      {STORY.map((slide, i) => {
+        if (i === 0) return <HeroSection key={slide.kicker} slide={slide} />;
+        if (slide.bg) {
+          const contentRight = heavyCount % 2 === 1; // alternate the overlaid column
+          heavyCount += 1;
+          return <HeavySection key={slide.kicker} slide={slide} contentRight={contentRight} />;
+        }
+        const mediaRight = lightMediaCount % 2 === 0; // alternate media side
+        if (slide.image || slide.video) lightMediaCount += 1;
+        return <LightSection key={slide.kicker} slide={slide} index={i} mediaRight={mediaRight} />;
+      })}
     </div>
   );
 }
