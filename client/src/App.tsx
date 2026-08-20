@@ -153,6 +153,7 @@ const WatchdogHelpProtectHumanity = lazy(() => import("./pages/WatchdogHelpProte
 const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport"));
 const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const BenchmarkIndex = lazy(() => import("./pages/BenchmarkIndex"));
+const BenchmarkQuality = lazy(() => import("./pages/BenchmarkQuality"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
@@ -363,6 +364,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/instrument": "The Instrument | CSOAI",
   "/benchmarks": "Benchmarks | CSOAI",
   "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
+  "/benchmark-quality": "Benchmark-quality register — deterministic predicates on third-party AI benchmarks | Council of AI",
   "/provenance-finding": "Provenance Finding | CSOAI",
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
@@ -633,6 +635,8 @@ function App() {
                   <Route path="/benchmarks" component={Benchmarks} />
                   {/* Meta-benchmark index — REPORTED (others, cited) beside MEASURED (ours, signed); never fused */}
                   <Route path="/benchmark-index" component={BenchmarkIndex} />
+                  {/* Benchmark-quality register — deterministic predicates on OTHER benchmarks; our own boards are firewalled out in code */}
+                  <Route path="/benchmark-quality" component={BenchmarkQuality} />
                   {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />
