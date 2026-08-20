@@ -957,7 +957,7 @@ function App() {
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
-                  <Route path="/verify" component={Article50Pack} />
+                  <Route path="/verify">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
