@@ -75,8 +75,8 @@ const CARD_ANATOMY = [
     body: "Signed record sets chain their hashes: sha256 of the canonical content, sorted keys. Recompute it locally — if a record was edited after signing, your hash will not match the stored one.",
   },
   {
-    term: "OpenTimestamps anchor",
-    body: "Record hashes are anchored via OpenTimestamps, so “this result existed by this date” is checkable against the Bitcoin timestamp chain, not against our word.",
+    term: "SHA-256 hash chain",
+    body: "Record hashes are sha256-linked and Ed25519-signed, so “this content is unaltered since signing” is checkable offline against the published key. (Independent Bitcoin/OpenTimestamps time-anchoring is planned, not yet live.)",
   },
   {
     term: "did:web:csoai.org published key",

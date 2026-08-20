@@ -66,7 +66,7 @@ export interface Industry {
 
 // Shared artefact language — the same signed 3KB card ships from every bank.
 export const ARTEFACT_CARD =
-  "A signed 3KB result card (Ed25519 signature + OpenTimestamps anchor). It " +
+  "A signed 3KB result card (Ed25519 signature + SHA-256 hash-chain). It " +
   "records the bench, the exact model, the frozen split hash, n, the score with " +
   "its interval, and the run date — so anyone can recompute the number from the " +
   "public harness and check the signature offline. The card proves a measurement " +

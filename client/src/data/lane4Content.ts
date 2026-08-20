@@ -131,7 +131,7 @@ export const LANE4: Record<string, Lane4Page> = {
     spotStats: [
       { value: "17.14%", label: "watermark durability — present-but-invalid markings scored DESTROYED, not SURVIVES", evidence: "measured" },
       { value: "18 / 105", label: "marking checks that survived across the corpus and its transforms", evidence: "measured" },
-      { value: "signed", label: "every manifest verdict is Ed25519-signed and OpenTimestamps-anchored, verifiable offline", evidence: "measured" },
+      { value: "signed", label: "every manifest verdict is Ed25519-signed and SHA-256 hash-chained, verifiable offline", evidence: "measured" },
     ],
     spotSource: "ProvBench manifest-survival corpus (results/provbench.json), 2026-08",
   },

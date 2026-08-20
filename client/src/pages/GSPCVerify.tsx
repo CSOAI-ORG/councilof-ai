@@ -341,13 +341,15 @@ export default function GSPCVerify() {
               This button recomputes the <strong className="text-emerald-50">sha256 hash
               chain</strong> — tamper-evidence, not authorship. Authorship is carried by the
               signed card: a <strong className="text-emerald-50">~3KB</strong> measurement card
-              signed with <strong className="text-emerald-50">Ed25519</strong> and anchored with{" "}
-              <strong className="text-emerald-50">OpenTimestamps</strong>, verifiable offline
+              signed with <strong className="text-emerald-50">Ed25519</strong> and{" "}
+              <strong className="text-emerald-50">SHA-256 hash-chained</strong>, verifiable offline
               against the published key <code className="text-emerald-300">f4b4278d…</code>{" "}
-              (<code className="text-emerald-300">did:web:csoai.org</code>). The post-quantum
-              ML-DSA-65 (FIPS-204) signer is <strong className="text-emerald-50">built, not
-              shipped</strong>; the label will name it in the same commit it ships — never ahead
-              of it.
+              (<code className="text-emerald-300">did:web:csoai.org</code>).{" "}
+              <strong className="text-emerald-50">OpenTimestamps (Bitcoin) anchoring is roadmap,
+              not yet shipped</strong> — the label will name it in the commit it ships, as with
+              ML-DSA-65. The post-quantum ML-DSA-65 (FIPS-204) signer is likewise{" "}
+              <strong className="text-emerald-50">built, not shipped</strong>; the label will name
+              it in the same commit it ships — never ahead of it.
             </li>
             <li>
               It does not contact a server. Verification is local; you bring the records and

@@ -161,9 +161,10 @@ export default function SovereignTown() {
           </div>
           {/* Cited source — Red Hat's "Source: …" credibility move */}
           <p className="mt-6 text-sm text-emerald-100/70 max-w-2xl">
-            Source: Council Town hash-chained Ed25519 ledger, externally committed to{" "}
-            <span className="font-semibold text-emerald-200">Bitcoin block 954857</span>. Independently
-            verifiable &mdash; no trust in CSOAI required.
+            Source: Council Town hash-chained Ed25519 ledger. External{" "}
+            <span className="font-semibold text-emerald-200">Bitcoin/OpenTimestamps anchoring is
+            planned, not yet live</span> &mdash; today the ledger is verifiable offline against the
+            published key.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <a
@@ -232,13 +233,14 @@ export default function SovereignTown() {
       {/* Why we anchor — trust narrative */}
       <section className="bg-gray-50 border-y border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-16">
-          <h2 className="text-2xl font-bold text-gray-900">Why we anchor to Bitcoin</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Why we hash-chain the ledger</h2>
           <p className="mt-4 max-w-3xl text-gray-700 leading-relaxed">
             A governance record is only worth what it cannot be quietly rewritten. Every Council
-            Town episode is signed with an Ed25519 key and its hash is committed to the Bitcoin
-            blockchain &mdash; so the record of what an AI did, and whether it was governed, becomes as
-            tamper-evident as the chain itself. This is digital autonomy for AI oversight: control and
-            protect critical decisions without asking anyone to take our word for it.
+            Town episode is signed with an Ed25519 key and its hash is SHA-256-linked into a
+            tamper-evident chain &mdash; so the record of what an AI did, and whether it was governed,
+            is checkable offline against the published key. External Bitcoin/OpenTimestamps
+            time-anchoring is planned, not yet live. This is digital autonomy for AI oversight:
+            control and protect critical decisions without asking anyone to take our word for it.
           </p>
         </div>
       </section>

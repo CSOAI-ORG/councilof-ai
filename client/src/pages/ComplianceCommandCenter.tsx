@@ -71,7 +71,7 @@ export default function ComplianceCommandCenter() {
       `Models monitored: ${totalModels} (High ${MODEL_RISK[0].n} / Limited ${MODEL_RISK[1].n} / Minimal ${MODEL_RISK[2].n})`,
       `Signed governance episodes: ${ep.toLocaleString()}`,
       `Governed violations: 0  |  Ungoverned (counterfactual): ${ung.toLocaleString()}`,
-      "External anchor: Bitcoin block 954857 (Ed25519-signed, independently verifiable)",
+      "Ledger: Ed25519-signed, SHA-256 hash-chained (external Bitcoin/OpenTimestamps anchoring is planned, not yet live)",
       "",
       "Framework coverage:",
       ...FRAMEWORK_COVERAGE.map((f) => `  - ${f.name}: ${f.pct}%`),
@@ -145,7 +145,7 @@ export default function ComplianceCommandCenter() {
               <div className="text-xs font-semibold uppercase tracking-wide text-amber-700">Council Town moat</div>
               <div className="mt-2 text-3xl font-extrabold text-amber-700">{fmt(ung)}+</div>
               <div className="text-xs text-amber-700/80">ungoverned crimes prevented (counterfactual)</div>
-              <div className="mt-2 text-xs text-gray-500">Anchored to Bitcoin block 954857</div>
+              <div className="mt-2 text-xs text-gray-500">Ed25519-signed, SHA-256 hash-chained ledger (Bitcoin/OpenTimestamps anchoring planned)</div>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-white p-5">
               <h3 className="text-sm font-bold text-gray-900">Recent activity</h3>
