@@ -106,11 +106,12 @@ export default function Dorado() {
           )}
         </RailCard>
 
-        {/* RAIL 3 — Market */}
-        <RailCard title="③ Live market — the indices the builders price" accent="border-amber-500/25">
+        {/* RAIL 3 — Market (AI-theme pair — the sharper East-vs-West) */}
+        <RailCard title="③ Live AI-theme market — East vs West builders" accent="border-amber-500/25">
           {mkt?.rows?.length ? (
             <>
               <p className="text-[10px] text-emerald-100/40">as of {mkt.as_of} · yfinance live pull</p>
+              <p className="text-[10px] text-emerald-100/40">AI-specific indices — West AI ETFs vs East China-AI/tech. KCAI excluded (not an AI index). Divergence is the signal.</p>
               {mkt.rows.map((r) => (
                 <div key={r.symbol ?? r.index} className="flex justify-between text-[13px]">
                   <span className="text-emerald-100/80">
