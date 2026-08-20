@@ -6,14 +6,14 @@ import { Check, Zap, Coins } from "lucide-react";
 // PAYG (pay-per-call / x402) — the agent rail from /pricing, in detail.
 // Machine-access pricing is pending a published ruling — not yet set. 100 free
 // calls/day per key remain free. Every call returns a 3KB Ed25519-signed,
-// timestamp-anchored measurement card. CTAs point at real destinations (get a key,
+// hash-chained measurement card. CTAs point at real destinations (get a key,
 // top up), never a bounce back to /pricing.
 
 const PRICING_STATUS = "Machine-access pricing is pending a published ruling — not yet set";
 
 const TIERS = [
   { label: "Free daily", note: "100 free calls/day per key" },
-  { label: "Standard card", note: "signed + timestamp-anchored", popular: true },
+  { label: "Standard card", note: "signed + hash-chained", popular: true },
   { label: "Deep bundles", note: "governance · safety+provenance · full spectrum" },
 ];
 
@@ -29,7 +29,7 @@ export default function Payg() {
         </h1>
         <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
           100 free calls a day, then metered machine-access. {PRICING_STATUS}.
-          Every call returns a 3KB Ed25519-signed, timestamp-anchored card your auditor verifies
+          Every call returns a 3KB Ed25519-signed, hash-chained card your auditor verifies
           independently. Metered, balance never expires, no monthly seat.
         </p>
         <div className="mt-5 flex flex-wrap justify-center gap-2">

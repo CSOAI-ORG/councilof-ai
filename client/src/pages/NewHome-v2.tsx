@@ -210,11 +210,11 @@ const getFrameworkGuideUrl = (id: string): string => {
 const faqs = [
   {
     question: "What is Council of AI?",
-    answer: "An independent AI measurement company — the independent measurement body for AI behaviour. We measure how an AI system behaves on our own published instruments, issue the result as an Ed25519-signed, timestamp-anchored 3KB measurement card, and re-attest it over time. Not a certification body; not an observability tool.",
+    answer: "An independent AI measurement company — the independent measurement body for AI behaviour. We measure how an AI system behaves on our own published instruments, issue the result as an Ed25519-signed, hash-chained 3KB measurement card, and re-attest it over time. Not a certification body; not an observability tool.",
   },
   {
     question: "What do I actually get?",
-    answer: "A verified measurement credential: a 3KB card stating what was measured, on which frozen instrument, and the score. Ed25519-signed and timestamp-anchored — anyone (customer, auditor, regulator) can verify it independently without asking us.",
+    answer: "A verified measurement credential: a 3KB card stating what was measured, on which frozen instrument, and the score. Ed25519-signed and hash-chained — anyone (customer, auditor, regulator) can verify it independently without asking us.",
   },
   {
     question: "Is a measurement card a certificate?",
@@ -230,7 +230,7 @@ const faqs = [
   },
   {
     question: "Why trust Council of AI as referee?",
-    answer: "You don't have to — you can check. Instruments frozen and published, every card signed and timestamp-anchored, every failed measurement in a public ledger, re-attestation showing whether a score still holds.",
+    answer: "You don't have to — you can check. Instruments frozen and published, every card signed and hash-chained, every failed measurement in a public ledger, re-attestation showing whether a score still holds.",
   },
 ];
 
@@ -298,7 +298,7 @@ export default function NewHomeV2() {
               >
                 Council of AI measures how your AI behaves on our own published instruments and issues
                 the result as a verified measurement credential: a 3KB card, Ed25519-signed and
-                timestamp-anchored, that anyone can verify without asking us. Then we measure again — so
+                hash-chained, that anyone can verify without asking us. Then we measure again — so
                 the evidence stays current. Not certification. Not another observability dashboard.
               </motion.p>
 
@@ -1545,7 +1545,7 @@ export default function NewHomeV2() {
               },
               {
                 title: "Global Regulation Tracker",
-                description: "Track AI governance frameworks across 40+ nations in real-time. Filter by region, status, and framework type.",
+                description: "Track AI governance frameworks across 30+ jurisdictions in real-time. Filter by region, status, and framework type.",
                 href: "/global-regulations",
                 icon: Globe2,
                 color: "bg-emerald-500",

@@ -4,12 +4,12 @@ import { setMetaDescription } from "@/lib/utils";
 // /start (and /onboard) — first-card-free activation (audit §3.5 #3).
 // No persona triage, no assistant setup, no price gate. One clear path: describe
 // your AI, we measure it on a frozen published instrument, you get a 3KB
-// Ed25519-signed, timestamp-anchored measurement card — the first one free.
+// Ed25519-signed, hash-chained measurement card — the first one free.
 
 const STEPS: { n: string; t: string; d: string }[] = [
   { n: "1", t: "Describe your AI", d: "One short form — what the system is and what it does. No account, no card details." },
   { n: "2", t: "We measure it", d: "Your system is graded on our own frozen, published instruments. Deterministic scoring, no model in the verdict path." },
-  { n: "3", t: "Get your signed card", d: "A 3KB measurement card, Ed25519-signed and timestamp-anchored. Verify it yourself — no need to ask us." },
+  { n: "3", t: "Get your signed card", d: "A 3KB measurement card, Ed25519-signed and hash-chained. Verify it yourself — no need to ask us." },
 ];
 
 export default function OnboardOS() {
@@ -28,7 +28,7 @@ export default function OnboardOS() {
         </h1>
         <p className="relative mt-4 mx-auto max-w-2xl text-emerald-100/80">
           Describe your AI system and we measure how it behaves on our own published instruments. You get a
-          3KB card — Ed25519-signed and timestamp-anchored — that anyone can verify without asking us. The
+          3KB card — Ed25519-signed and hash-chained — that anyone can verify without asking us. The
           first card is free. No account, no card details, no price gate.
         </p>
         <div className="relative mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">

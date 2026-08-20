@@ -23,10 +23,10 @@ type Slide = {
 export const STORY: Slide[] = [
   {
     kicker: "Council of AI — the independent measurement body for AI behaviour",
-    body: "We measure how your AI behaves on our own published instruments and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored. Then we measure again. Not certification. Not another dashboard.",
+    body: "We measure how your AI behaves on our own published instruments and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and hash-chained. Then we measure again. Not certification. Not another dashboard.",
     points: [
       "Published instruments — frozen items, public scoring code",
-      "Ed25519-signed 3KB card, timestamp-anchored",
+      "Ed25519-signed 3KB card, hash-chained",
       "Re-attested on a cadence — history is append-only",
       "Verification is free forever — no login, no fee",
     ],
