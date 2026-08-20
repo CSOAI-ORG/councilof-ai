@@ -1,4 +1,5 @@
-// /api/cross — the Dorado divergence layer.
+// /api/cross — the divergence layer (internal codename: dorado; NOT a public name —
+// "Dorado" (the internal codename) is trademark-occupied across storage/fintech/genomics, kept internal only).
 //
 // Composes three feeds nobody else cross-references into one map: what regulation
 // REQUIRES (/api/regulation), what AI actually DOES (/api/gspc, MEASURED), and what
@@ -68,17 +69,17 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
 
   return new Response(JSON.stringify({
     schema: "csoai.cross/0.1",
-    what: "The Dorado divergence layer: regulation (what is required) × measured AI (what models do) × human baseline (what humans do), composed. Deterministic join; no new claim added.",
+    what: "The divergence layer. NOT one fused gap number — regulation and a bond price are not commensurable on one scale. Conformance to the in-force provision is the deterministic axis; the measured-AI result and the human baseline are reported ALONGSIDE as context, each labelled by data state. It composes; it does not fuse.",
     legs: {
       regulation: { source: "/api/regulation", state: "statement of law, cited", present: !!reg },
       measured_ai: { source: "/api/gspc", state: "MEASURED (signed board)", present: !!board },
-      human_baseline: { source: "/api/reported", state: "REPORTED (cited third-party)", present: !!rep, note: "CAPABILITY-LEVEL baselines (ARC-AGI/GAIA/GPQA), not yet per-axis — stated, not hidden" },
+      human_baseline: { source: "/api/reported", state: "REPORTED (cited third-party)", present: !!rep, note: "CAPABILITY-LEVEL baselines (ARC-AGI/GAIA/GPQA), not yet per-axis — stated, not hidden. REPORTED context only: human labels carry inherent noise (literature ~63.5% mean agreement), so the human leg is never deterministically SCORED — it is reported with its source, never fused into a measured cell." },
       market_data: { state: "NOT PRESENT — a live index/market leg would be a fourth REPORTED leg contingent on a real cited source; it is not fabricated here" },
     },
     east_west: "Jurisdictional divergence (EU · US states · China · Korea · Japan · Australia) lives in /api/regulation — the same measured-AI number carries different obligations and penalties across regimes.",
     human_baselines_sample: (rep?.entries ?? rep?.reported ?? []).slice(0, 5),
     rows,
-    honest_gate: "This UNSIGNED cross composes live feeds. The SIGNED Dorado receipt rides the board site-attestation (#board-attestation-1): once /api/gspc carries a verifiable signature, the cross can too.",
+    honest_gate: "This UNSIGNED cross composes live feeds. The SIGNED divergence-layer receipt rides the board site-attestation (#board-attestation-1): once /api/gspc carries a verifiable signature, the cross can too.",
     license: "CC-BY-4.0",
     publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   }, null, 2), {
