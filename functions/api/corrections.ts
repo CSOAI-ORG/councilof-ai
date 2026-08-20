@@ -92,9 +92,25 @@ const LEDGER = {
       fix: "Flagged for the owner to set private — the platform gates dataset visibility behind the account login.",
       status: "OPEN",
     },
+    {
+      id: "C-2026-0820-01",
+      date: "2026-08-20",
+      what_was_wrong: "Multiple live public surfaces (index.html JSON-LD, GSPCVerify, Insurers, AgentRegistry, Methodology, Agents, ProvBench, measure.html, and the provbench pack) stated measurement cards are 'anchored with OpenTimestamps' / RFC-3161 / 'Bitcoin block 954857, independently verifiable' as a present capability. The only anchor implemented is Ed25519 + SHA-256 hash-chain; verify.ts checks no timestamp proof and no .ots/Rekor artifact exists.",
+      how_caught: "Internal honesty audit of anchoring claims vs implementation.",
+      fix: "OTS/RFC-3161/Bitcoin claims demoted to roadmap wording across all surfaces; provbench pack corrected; the ML-DSA 'built, not shipped' discipline applied to OpenTimestamps.",
+      status: "FIXED",
+    },
   ],
-};
 
+  signature: {
+    id: "7ab3790f0dfc9cf5aa09d2c10e29ff9c423156f99f3a9cddae88d31cf865aa19",
+    signer: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+    signature: "17cdc706d6c17525f33448ff1d6c67521a0974307097532a3d38e1fdc684fa5c6b138ab9308e2cd5e5a5c715d8ef3a92ecd37f751593580d880ee07e01241f06",
+    sig_input: "sha256(canonical LEDGER minus signature fields, sort_keys)",
+    key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
+    note: "SIGNED 2026-08-19 — verify by recomputing canonical JSON and checking Ed25519 against the published did.json. The corrections ledger is the honesty gate made citable: the same body that publishes the number publishes when the number was wrong.",
+  },
+};
 export const onRequestGet: PagesFunction = async () => {
   return new Response(JSON.stringify(LEDGER, null, 2), {
     headers: {
