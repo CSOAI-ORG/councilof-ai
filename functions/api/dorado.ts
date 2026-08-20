@@ -50,6 +50,22 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
       instruments: "19 instruments, verified + signed (estate-chain-1 envelope)",
       high_risk: "EU AI Act Annex III: 2 Dec 2027 (Digital Omnibus Reg (EU) 2026/1744)",
     },
+    // INSURER-DEFENSIBILITY (2026-08-20 research, cited):
+    // - Parametric adoption limited by basis risk + product complexity (BIS FSI-IAIS
+    //   Insights No 62) → triggers must be pre-disclosed, transparent, official closes.
+    // - Descartes Underwriting wrote parametric cover to $140M for data centers —
+    //   insurers already buy parametric on AI infrastructure; this extends to AI
+    //   regulation risk.
+    // - Academic: NO significant market reaction to the EU AI Act's introduction →
+    //   markets don't price AI regulation → the paired instrument is novel.
+    // - The market rail is a signed surface: RFC 3161 timestamps (FreeTSA) + point-in-
+    //   time snapshots on the Ed25519 h3k cards, so no look-ahead bias is possible.
+    insurer_defensibility: {
+      basis_risk: "triggers use third-party official index closes (HSI/CSI/Nasdaq/AIQ official values), not our computed values — like a weather station in parametric weather cover",
+      double_trigger: "payout when (a) signed regulation-adherence divergence exceeds X AND (b) East-AI-index relative drawdown vs West exceeds Y — formula pre-disclosed",
+      timestamping: "RFC 3161 (FreeTSA) + point-in-time snapshots on signed cards — audit-standard, no look-ahead bias",
+      citations: ["BIS FSI-IAIS Insights No 62 (basis risk)", "Descartes Underwriting $140M data-center parametric", "Do Investors Trust in AI Investments of European Companies? (no EU AI Act market reaction)", "qu3ry.net credentialed trigger observations"],
+    },
     // RAIL 3: LIVE MARKET (the index the AI companies trade on — live pull, timestamped)
     market: marketRows
       ? { as_of: marketSnapshot?.as_of ?? ts, source: "yfinance live pull (Yahoo Finance)", rows: marketRows }
