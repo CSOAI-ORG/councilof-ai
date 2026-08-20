@@ -166,6 +166,12 @@ const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const Insurers = lazy(() => import("./pages/Insurers"));
+// Deck scroll-worlds — owner decks fact-checked into shared-module scroll-world pages
+const Coliseum = lazy(() => import("./pages/Coliseum"));
+const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
+const VerifiableTrust = lazy(() => import("./pages/VerifiableTrust"));
+const EvidenceRail = lazy(() => import("./pages/EvidenceRail"));
+const Metrology = lazy(() => import("./pages/Metrology"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
 const Layer0 = lazy(() => import("./pages/Layer0"));
@@ -349,6 +355,11 @@ const ROUTE_TITLES: Record<string, string> = {
   "/refutation-ledger": "Refutation Ledger | CSOAI",
   "/dispute": "Appeals & dispute resolution | Council of AI",
   "/live-ledger": "Live Ledger | CSOAI",
+  "/coliseum": "The Coliseum of AI | Council of AI",
+  "/open-source": "The open-source framework | Council of AI",
+  "/verifiable-trust": "The science of verifiable trust | Council of AI",
+  "/evidence-rail": "The independent evidence rail | Council of AI",
+  "/metrology": "The metrology apparatus | Council of AI",
   "/instrument": "The Instrument | CSOAI",
   "/benchmarks": "Benchmarks | CSOAI",
   "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
@@ -636,6 +647,12 @@ function App() {
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
+                  {/* Deck scroll-worlds — see client/src/data/deckWorlds/* for each deck's corrections log */}
+                  <Route path="/coliseum" component={Coliseum} />
+                  <Route path="/open-source" component={OpenSourceFramework} />
+                  <Route path="/verifiable-trust" component={VerifiableTrust} />
+                  <Route path="/evidence-rail" component={EvidenceRail} />
+                  <Route path="/metrology" component={Metrology} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
                   {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}
                   <Route path="/gspc-arena" component={CouncilSpace} />

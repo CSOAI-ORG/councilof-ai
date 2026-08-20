@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { VideoEmbed } from "./VideoEmbed";
+import { useEffect, useState } from "react";
+import { ScrollWorld, usePrefersReducedMotion, type Slide } from "@/components/scrollworld";
 
 /**
  * StoryWorld — the councilof.ai homepage as an EPIC but ROBUST scroll-world.
@@ -16,24 +16,6 @@ import { VideoEmbed } from "./VideoEmbed";
  * Hero H1 is locked. No sov-* names. No invented scores. Doctrine: measurement, not
  * certification; "13 measured of 14"; jail is a floor with separation untested; ties are ties.
  */
-
-type Point = { tag: "pain" | "benefit" | "usp"; text: string };
-
-type Slide = {
-  kicker: string;
-  title?: string;
-  body: string;
-  points?: Point[];
-  href?: string;
-  cta?: string;
-  video?: { src: string; poster: string; title: string };
-  /** full-bleed background image → makes the section a heavy cinematic band */
-  bg?: { src: string; alt: string };
-  /** a clear, in-flow image shown in a light section's media column */
-  image?: { src: string; alt: string };
-  /** inline-SVG infographic index for light sections that have no media */
-  figure?: number;
-};
 
 export const STORY: Slide[] = [
   {
@@ -260,34 +242,6 @@ function HeroActions() {
   );
 }
 
-/* ————— benefit-led bullets: PAIN · BENEFIT · USP ————— */
-const TAG_LABEL: Record<Point["tag"], string> = { pain: "Pain", benefit: "You get", usp: "Only here" };
-const TAG_LIGHT: Record<Point["tag"], string> = {
-  pain: "bg-rose-50 text-rose-600 ring-1 ring-rose-100",
-  benefit: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100",
-  usp: "bg-amber-50 text-amber-700 ring-1 ring-amber-100",
-};
-const TAG_DARK: Record<Point["tag"], string> = {
-  pain: "bg-rose-500/20 text-rose-100 ring-1 ring-rose-300/30",
-  benefit: "bg-emerald-500/20 text-emerald-100 ring-1 ring-emerald-300/30",
-  usp: "bg-amber-500/25 text-amber-50 ring-1 ring-amber-300/40",
-};
-
-function Points({ points, dark, center }: { points: Point[]; dark?: boolean; center?: boolean }) {
-  return (
-    <ul className={`mt-6 flex w-full max-w-xl flex-col gap-2.5 ${center ? "mx-auto text-left" : ""}`}>
-      {points.map((pt) => (
-        <li key={pt.text} className="flex items-start gap-3">
-          <span className={`mt-0.5 inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${dark ? TAG_DARK[pt.tag] : TAG_LIGHT[pt.tag]}`}>
-            {TAG_LABEL[pt.tag]}
-          </span>
-          <span className={`text-[15px] leading-snug ${dark ? "text-white/90" : "text-gray-700"}`}>{pt.text}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 /* ————— per-section infographic (inline SVG, no deps) for light media-less sections ————— */
 function Infographic({ index }: { index: number }) {
   const ink = "#059669";
@@ -331,19 +285,6 @@ function Infographic({ index }: { index: number }) {
   );
 }
 
-function Cta({ slide }: { slide: Slide }) {
-  if (!slide.href || !slide.cta) return null;
-  return (
-    <a
-      href={slide.href}
-      className="mt-7 inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
-    >
-      {slide.cta}
-    </a>
-  );
-}
-
-
 /* ————— motion helpers — all animate opacity/transform ONLY; content never leaves the flow ————— */
 const HERO_REEL: { src: string; alt: string }[] = [
   { src: "/images/coliseum_hero_arena.jpg", alt: "Clay figures and green verification seals gathered in a marble arena" },
@@ -354,70 +295,6 @@ const HERO_REEL: { src: string; alt: string }[] = [
   { src: "/images/coliseum_humans_vs_humanoids.jpg", alt: "People directing AI figures with beams of light, keeping oversight" },
   { src: "/images/verifiable_evidence_card.jpg", alt: "Hands holding a signed evidence card reading verified: true" },
 ];
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const on = () => setReduced(mq.matches);
-    mq.addEventListener?.("change", on);
-    return () => mq.removeEventListener?.("change", on);
-  }, []);
-  return reduced;
-}
-
-/** Fade + rise the first time a block scrolls into view. */
-function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") { setShown(true); return; }
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => { if (e.isIntersecting) { setShown(true); io.disconnect(); } }),
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return (
-    <div
-      ref={ref}
-      className={`${className} transition-all duration-[900ms] ease-out ${shown ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/** Scroll-world parallax: drifts the BACKGROUND layer only. */
-function useParallax(strength = 14) {
-  const ref = useRef<HTMLImageElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let raf = 0;
-    const tick = () => {
-      raf = 0;
-      const r = el.getBoundingClientRect();
-      const p = (r.top + r.height / 2 - window.innerHeight / 2) / (window.innerHeight || 1);
-      el.style.transform = `translate3d(0, ${(-p * strength).toFixed(2)}%, 0) scale(1.16)`;
-    };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick); };
-    tick();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [strength]);
-  return ref;
-}
 
 /* ————— HERO — cinematic Ken-Burns reel through the branded world ————— */
 function HeroSection({ slide }: { slide: Slide }) {
@@ -476,113 +353,12 @@ function HeroSection({ slide }: { slide: Slide }) {
   );
 }
 
-/* ————— HEAVY — full-bleed image band, content overlaid ————— */
-function HeavySection({ slide, contentRight }: { slide: Slide; contentRight: boolean }) {
-  const bgRef = useParallax(16);
-  // The claymation world is BRIGHT — no dark scrim over it. Type sits on a frosted
-  // white panel over the image's open space, so the art stays vivid and the words
-  // stay legible whatever is behind them.
-  const wash = contentRight
-    ? "bg-gradient-to-l from-white/70 via-white/25 to-transparent"
-    : "bg-gradient-to-r from-white/70 via-white/25 to-transparent";
-  return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-white">
-      {slide.bg && (
-        <img
-          ref={bgRef}
-          src={slide.bg.src}
-          alt={slide.bg.alt}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover will-change-transform"
-        />
-      )}
-      <div className={`absolute inset-0 ${wash}`} />
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24">
-        <Reveal className={`max-w-xl ${contentRight ? "ml-auto" : ""}`}>
-          <div className="rounded-3xl border border-white/70 bg-white/80 p-8 text-left shadow-[0_24px_70px_-30px_rgba(4,18,12,.55)] backdrop-blur-md sm:p-10">
-            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-700">{slide.kicker}</span>
-            <h2 className="mt-3 text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl lg:text-[3.4rem]">
-              {slide.title}
-            </h2>
-            <p className="mt-5 text-lg font-medium leading-relaxed text-gray-700 sm:text-xl">{slide.body}</p>
-            {slide.points && <Points points={slide.points} />}
-            {slide.video && (
-              <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8 !mx-0" />
-            )}
-            <Cta slide={slide} />
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ————— LIGHT — breathing band: image and/or video (split) or infographic (centered) ————— */
-function LightSection({ slide, index, mediaRight }: { slide: Slide; index: number; mediaRight: boolean }) {
-  const bg = index % 2 === 0 ? "bg-gray-50" : "bg-white";
-  const hasMedia = Boolean(slide.image || slide.video);
-  if (hasMedia) {
-    return (
-      <section className={`relative ${bg}`}>
-        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-20 sm:py-24 lg:grid-cols-2 lg:gap-16">
-          <Reveal className={mediaRight ? "lg:order-1" : "lg:order-2"}>
-            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-600">{slide.kicker}</span>
-            <h2 className="mt-3 text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl">{slide.title}</h2>
-            <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-gray-600 sm:text-xl">{slide.body}</p>
-            {slide.points && <Points points={slide.points} />}
-            <Cta slide={slide} />
-          </Reveal>
-          <Reveal delay={120} className={`flex flex-col gap-6 ${mediaRight ? "lg:order-2" : "lg:order-1"}`}>
-            {slide.image && (
-              <img
-                src={slide.image.src}
-                alt={slide.image.alt}
-                loading="lazy"
-                className="w-full rounded-2xl object-cover shadow-xl ring-1 ring-black/10"
-              />
-            )}
-            {slide.video && (
-              <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="!max-w-none" />
-            )}
-          </Reveal>
-        </div>
-      </section>
-    );
-  }
-  // media-less light section — centered with an infographic
-  return (
-    <section className={`relative ${bg}`}>
-      <div className="mx-auto flex max-w-3xl flex-col items-center px-6 py-20 text-center sm:py-24">
-        <div className="hidden sm:block">
-          <Infographic index={slide.figure ?? index} />
-        </div>
-        <span className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">{slide.kicker}</span>
-        <h2 className="mt-3 max-w-3xl text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl">{slide.title}</h2>
-        <p className="mt-5 max-w-2xl text-lg font-medium leading-relaxed text-gray-600 sm:text-xl">{slide.body}</p>
-        {slide.points && <Points points={slide.points} center />}
-        <Cta slide={slide} />
-      </div>
-    </section>
-  );
-}
-
 export default function StoryWorld() {
-  let heavyCount = 0;
-  let lightMediaCount = 0;
   return (
-    <div>
-      {STORY.map((slide, i) => {
-        if (i === 0) return <HeroSection key={slide.kicker} slide={slide} />;
-        if (slide.bg) {
-          const contentRight = heavyCount % 2 === 1; // alternate the overlaid column
-          heavyCount += 1;
-          return <HeavySection key={slide.kicker} slide={slide} contentRight={contentRight} />;
-        }
-        const mediaRight = lightMediaCount % 2 === 0; // alternate media side
-        if (slide.image || slide.video) lightMediaCount += 1;
-        return <LightSection key={slide.kicker} slide={slide} index={i} mediaRight={mediaRight} />;
-      })}
-    </div>
+    <ScrollWorld
+      slides={STORY}
+      renderHero={(slide) => <HeroSection slide={slide} />}
+      renderFigure={(index) => <Infographic index={index} />}
+    />
   );
 }
