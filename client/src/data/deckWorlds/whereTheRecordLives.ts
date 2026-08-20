@@ -20,8 +20,8 @@ import type { Slide } from "@/components/scrollworld";
  *     which is the actual, smaller claim, and it is the one this page makes.
  *  2. Deck subtitle "Censorship-Resistant Distribution & Verification Architecture"
  *     and slide 4 "three architectural pillars ensuring COMPLETE censorship
- *     resistance" — DROPPED. This is the same claim family as the fault-tolerance
- *     claim already retracted in DR-0007, where the measured effective independence
+ *     resistance" — DROPPED. This is the same claim family as the
+ *     durability claim already retracted in DR-0007, where the measured effective independence
  *     was 1.21 against three nominal legs. We do not get to re-make it with different
  *     nouns. Redundancy is described; resistance is not asserted.
  *  3. Deck slide 4 "SWHID & DOI: The Immutable Anchor" — SWHID DROPPED ENTIRELY. There
@@ -82,7 +82,7 @@ export const RECORD_SLIDES: Slide[] = [
     kicker: "The honest limit",
     title: "This is redundancy. It is not indestructibility.",
     body:
-      "Copies on several hosts are harder to remove than one copy. That is the whole claim, and it is worth having. It is not the same as being censorship-proof: every host here has terms, a jurisdiction and an off switch, and a determined actor with legal reach could pressure several of them. We have made that mistake in public before — we published a fault-tolerance claim, measured the effective independence at 1.21 against three nominal legs, and retracted it. We are not going to re-make it with different nouns.",
+      "Copies on several hosts are harder to remove than one copy. That is the whole claim, and it is worth having. It is not the same as being censorship-proof: every host here has terms, a jurisdiction and an off switch, and a determined actor with legal reach could pressure several of them. We have made that mistake in public before — we published a claim that three nominally independent legs would survive each other's failure, measured the effective independence at 1.21 against those three legs, and withdrew it in DR-0007. We are not going to re-make it with different nouns.",
     points: [
       { tag: "pain", text: "Every mirror has terms, a jurisdiction, and an off switch" },
       { tag: "pain", text: "Independent hosts are not independent failure modes — we measured that once and were wrong" },
@@ -97,7 +97,7 @@ export const RECORD_SLIDES: Slide[] = [
 export const RECORD_NOT_CLAIMED = [
   "We do not claim the record is indestructible. It is mirrored. Those are different words and the difference matters.",
   "We do not claim censorship resistance. Every host we publish to has terms of service, a jurisdiction and the ability to remove content, and an actor with enough legal reach could pressure more than one of them.",
-  "We do not claim independent hosts give independent failure modes. We published a fault-tolerance claim once, measured the effective independence at 1.21 against three nominal legs, and retracted it. That retraction stands and this page is bound by it.",
+  "We do not claim independent hosts give independent failure modes. We published a claim of exactly that shape once, measured the effective independence at 1.21 against three nominal legs, and withdrew it in DR-0007. That retraction stands and this page is bound by it.",
   "We do not have a Software Heritage identifier. The source deck listed SWHID as one of three pillars; there is no SWHID anywhere in this codebase, so it is not on this page.",
   "We do not describe the DOI as immutable. It is an archival identifier administered by someone else, which is the useful property — not permanence we can promise on their behalf.",
   "We do not claim the mirrors are complete or continuously monitored. Each link on this page returned HTTP 200 when the page was written; that is a check, not a guarantee, and there is no uptime claim attached to it.",
@@ -105,7 +105,7 @@ export const RECORD_NOT_CLAIMED = [
 
 export const RECORD_RELATED = [
   { href: "/gspc-verify", label: "Verify a card", what: "Client-side verification — no account, no server call." },
-  { href: "/honesty", label: "The honesty gate", what: "Our own errors, including the retracted fault-tolerance claim." },
+  { href: "/honesty", label: "The honesty gate", what: "Our own errors, including the claim withdrawn in DR-0007." },
   { href: "/statute-to-predicate", label: "From statute to predicate", what: "What is inside the record before it is signed." },
   { href: "/trust-center", label: "Trust center", what: "The real hosting posture, without borrowed multi-region claims." },
 ];
