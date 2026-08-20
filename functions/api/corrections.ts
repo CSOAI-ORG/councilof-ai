@@ -12,6 +12,16 @@
 // and not a claim about anyone else. New entries are appended in place; the
 // array is never reordered or trimmed.
 //
+// REDACTION RULE: this ledger is itself a machine surface, so it obeys the
+// no-banned-vocabulary invariant the machine-contract guard enforces on every
+// public JSON surface. When a correction is ABOUT a leaked internal identifier
+// or brand token, describe the token — do NOT reproduce it literally. Printing
+// the specialist-id prefix or the brand token here would re-leak the exact
+// string the correction says was removed (and a crawler would still find it
+// live on /api/corrections — even a source comment is best kept clean). The
+// fact is preserved; only the toxic token is abstracted. Do not "restore" the
+// literal strings in the name of candour — the abstraction IS the honest form.
+//
 // CC-BY-4.0. Council of AI (CSOAI Ltd, UK Companies House 16939677).
 
 const LEDGER = {
@@ -31,7 +41,7 @@ const LEDGER = {
     {
       id: "C-2026-0819-02",
       date: "2026-08-19",
-      what_was_wrong: "The public board API payload carried internal specialist identifiers (sov6-*) \u2014 a banned-vocabulary string inside a machine contract, not just a human page.",
+      what_was_wrong: "The public board API payload carried internal specialist identifiers \u2014 an internal specialist-id prefix \u2014 a banned-vocabulary string inside a machine contract, not just a human page. (The prefix itself is redacted here: naming it would re-leak the string this entry records as removed.)",
       how_caught: "K3 lane curl sweep of machine surfaces.",
       fix: "Renamed to council-* public names in /api/gspc; a machine-contract guard now sweeps API payloads for banned strings on every deploy.",
       status: "FIXED",
@@ -71,9 +81,9 @@ const LEDGER = {
     {
       id: "C-2026-0819-07",
       date: "2026-08-19",
-      what_was_wrong: "A banned brand string shipped live on /library as 'CEASAITraining' because a word-boundary regex (\\bCEASAI\\b) missed the CamelCase concatenation. Two priced strings ($0.005/card, a per-hour range) also shipped, against the no-pricing rule.",
+      what_was_wrong: "A banned brand token shipped live on /library as a CamelCase concatenation of the token with 'Training', because a word-boundary regex anchored on the bare token missed the concatenation. Two priced strings ($0.005/card, a per-hour range) also shipped, against the no-pricing rule. (The token itself is redacted here for the same reason as C-2026-0819-02.)",
       how_caught: "A full front-end QA sweep.",
-      fix: "The brand gate's CEASAI pattern dropped its trailing boundary; a pricing-leak pattern was added so a currency amount bound to a subscription or per-unit cadence is now a hard build-fail.",
+      fix: "The brand gate's pattern for that token dropped its trailing word boundary so CamelCase concatenations are caught; a pricing-leak pattern was added so a currency amount bound to a subscription or per-unit cadence is now a hard build-fail.",
       status: "FIXED",
     },
     {
@@ -133,12 +143,12 @@ const LEDGER = {
     },
   ],
   signature: {
-    id: "7513e6f48b2b9f1d0ae960ceff2986fe18ce9fc99f0d1bdc8118c5738137d0d5",
+    id: "20ef8ec498e0d2baa74f8de94e075796fde5f0b29c2fe22d680ede3cc6585c6f",
     signer: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
-    signature: "09ef5b1f243b3f6bf9219b5eaad13930b4f96311faded656db1cfc4329da843c5b16394adee624670756f9b2164017575a8e54f23fe6117bd1eca48cfae64606",
-    sig_input: "sha256(canonical LEDGER minus signature fields, sort_keys)",
+    signature: "2b7deab1a567fd94f2e89f8de5759cbc77228572a259bed6f5326b448190200c46e4ecb9532aa437534f4a1ddffcdbd79f92e2d5233034fa0f1bfca3cb477200",
+    sig_input: "sha256(Python json.dumps(canonical LEDGER minus signature fields, sort_keys=True, separators=(',',':')) — ensure_ascii escapes non-ASCII as \\uXXXX)",
     key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
-    note: "SIGNED 2026-08-20 - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit.",
+    note: "SIGNED 2026-08-20 (re-issue: 14th entry redaction) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit.",
   },
 };
 
@@ -146,8 +156,25 @@ const LEDGER = {
 // does not match the embedded signature's id, serve with a VISIBLE flag rather
 // than silently serving a broken signature. Doctrine: a stale signature is a
 // published defect, never a silent edit.
+// NOTE: the canonical MUST match the off-chain signer exactly. The estate signs
+// with Python json.dumps(body, sort_keys=True, separators=(",",":")) — recursive
+// key sort, compact separators, and ensure_ascii=True (every non-ASCII char as
+// \uXXXX). (An earlier version used an array-replacer JSON.stringify which emits
+// a top-level-only key whitelist and serializes every nested entry as {} — a
+// hash no signer could ever reproduce, so the guard flagged VALID ledgers as
+// STALE forever. Fix: reproduce the signer's canonical byte-for-byte.)
 function canonJson(obj: unknown): string {
-  return JSON.stringify(obj, Object.keys(obj as object).sort(), 2);
+  const j = (o: unknown): string => {
+    if (Array.isArray(o)) return "[" + o.map(j).join(",") + "]";
+    if (o !== null && typeof o === "object") {
+      const r: Record<string, unknown> = {};
+      for (const k of Object.keys(o as Record<string, unknown>).sort()) r[k] = (o as Record<string, unknown>)[k];
+      return "{" + Object.keys(r).map((k) => JSON.stringify(k) + ":" + j(r[k])).join(",") + "}";
+    }
+    return JSON.stringify(o);
+  };
+  // ensure_ascii=True: escape every non-ASCII char as \uXXXX (4-digit lowercase hex)
+  return j(obj).replace(/[\u0080-\uffff]/g, (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
 }
 
 async function sha256Hex(s: string): Promise<string> {
