@@ -8,7 +8,7 @@ const LAYERS: Layer[] = [
   { name: "Voice + Cognition", what: "Your Council assistant companion - it understands, navigates, and acts with you across the OS.", status: "Live demo", href: "/minds", glyph: "VOX" },
   { name: "Social Character + Avatar", what: "Your AI character with your avatar, governing and posting across 12 platforms.", status: "Configurable", href: "/connect", glyph: "AVA" },
   { name: "Compliance Passport", what: "Your Ed25519-signed governance identity - provable, portable, never deniable.", status: "Live", href: "/readiness", glyph: "PASS" },
-  { name: "Your Council Setup", what: "Choose how much designed multi-agent review your decisions run on - 5, 12, or 33.", status: "Live", href: "/bft", glyph: "33" },
+  { name: "Your Council Setup", what: "Choose how much designed multi-agent review your decisions run on - 5, 12, or 33.", status: "Live", href: "/council", glyph: "33" },
 ];
 export default function SovereignHub() {
   useEffect(() => { document.title = "Your Council assistant - one identity across the OS | CSOAI"; }, []);
