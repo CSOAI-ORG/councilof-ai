@@ -79,7 +79,7 @@ function buildComponentDefinition() {
           type: "service",
           title: "CSOAI Council Gate",
           description:
-            "Layer 0 enforcement point through which every governed AI action passes; Ed25519-signed and externally anchored to Bitcoin.",
+            "Layer 0 enforcement point through which every governed AI action passes; Ed25519-signed and SHA-256 hash-chained (external Bitcoin/OpenTimestamps anchoring is planned, not yet live).",
           "control-implementations": sources.map((fw) => ({
             uuid: uuid(),
             source: fw,
@@ -119,7 +119,7 @@ function buildAssessmentResults() {
             { name: "governed-crimes", value: "0" },
             { name: "ungoverned-crimes", value: "121043036" },
             { name: "signed-episodes", value: "1446621120" },
-            { name: "anchor", value: "bitcoin-block-954857" },
+            { name: "anchor", value: "planned (external Bitcoin/OpenTimestamps anchoring not yet live)" },
           ],
           findings: [
             {

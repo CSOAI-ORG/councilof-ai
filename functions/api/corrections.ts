@@ -92,6 +92,14 @@ const LEDGER = {
       fix: "Flagged for the owner to set private — the platform gates dataset visibility behind the account login.",
       status: "OPEN",
     },
+    {
+      id: "C-2026-0820-01",
+      date: "2026-08-20",
+      what_was_wrong: "Multiple live public surfaces (index.html JSON-LD, GSPCVerify, Insurers, AgentRegistry, Methodology, Agents, ProvBench, measure.html, and the provbench pack) stated measurement cards are 'anchored with OpenTimestamps' / RFC-3161 / 'Bitcoin block 954857, independently verifiable' as a present capability. The only anchor implemented is Ed25519 + SHA-256 hash-chain; verify.ts checks no timestamp proof and no .ots/Rekor artifact exists.",
+      how_caught: "Internal honesty audit of anchoring claims vs implementation.",
+      fix: "OTS/RFC-3161/Bitcoin claims demoted to roadmap wording across all surfaces; provbench pack corrected; the ML-DSA 'built, not shipped' discipline applied to OpenTimestamps.",
+      status: "FIXED",
+    },
   ],
 };
 

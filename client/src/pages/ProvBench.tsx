@@ -221,7 +221,8 @@ export default function ProvBench() {
           <h2 className="text-2xl font-bold text-emerald-100">The harness</h2>
           <p className="mt-2 text-[13px] text-emerald-300/70 leading-relaxed">
             Open, deterministic, reproducible. C2PA marking, Ed25519 signing,
-            OpenTimestamps anchoring. The harness lives at{" "}
+            SHA-256 hash-chained (OpenTimestamps anchoring is roadmap, not yet wired).
+            The harness lives at{" "}
             <code className="font-mono text-emerald-400">csoai-static-deploy2/provbench.py</code>.
             Same code, same seed, same outcome on every run — the binding is a
             cryptographic hash over asset bytes, so re-running any cell reproduces
