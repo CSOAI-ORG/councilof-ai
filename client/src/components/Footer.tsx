@@ -292,7 +292,7 @@ export function Footer() {
           <p className="text-gray-500 text-xs text-center uppercase tracking-wider mb-3">Standards participation &amp; memberships</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
             <a href="https://identity.foundation" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
-              Decentralized Identity Foundation (DIF) — Contributor member
+              Decentralized Identity Foundation (DIF) — participant
             </a>
             <span className="text-gray-300" aria-hidden="true">·</span>
             <a href="https://c2pa.org" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
@@ -327,7 +327,7 @@ export function Footer() {
             Our only incentive is public safety and workforce development.
           </p>
           <p className="text-gray-600 text-xs text-center">
-            Council of AI — CSOAI Ltd, UK Companies House 16939677, London. Professional Indemnity Insurance up to £5,000,000 (Policy: CHPR5355800XB). Contact: nicholas@csoai.org.
+            Council of AI — CSOAI Ltd, UK Companies House 16939677, London. Professional Indemnity Insurance up to £5,000,000 (policy number on request). Contact: nicholas@csoai.org.
           </p>
         </div>
       </div>
