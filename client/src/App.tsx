@@ -164,6 +164,7 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
+const FleetSweep = lazy(() => import("./pages/FleetSweep"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
@@ -630,6 +631,7 @@ function App() {
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
+                  <Route path="/fleet-sweep" component={FleetSweep} />
                   {/* Insurers evidence pack — underwriter-legible measurement (3 data states, live board) */}
                   <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
