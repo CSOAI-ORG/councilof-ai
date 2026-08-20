@@ -26,21 +26,43 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      const err = this.state.error;
+      // Diagnostic block: name + message + first stack frames + browser + route.
+      // On mobile (esp. iOS Safari) the reproduction is device-specific, so surface
+      // the real error in a copyable form — one screenshot pinpoints the throwing line.
+      const diag = [
+        `${err?.name || 'Error'}: ${err?.message || 'unknown'}`,
+        (err?.stack || '').split('\n').slice(1, 4).map((l) => l.trim()).join('\n'),
+        `at ${typeof location !== 'undefined' ? location.pathname : '?'}`,
+        `ua ${typeof navigator !== 'undefined' ? navigator.userAgent : '?'}`,
+      ].filter(Boolean).join('\n');
       return (
         <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="text-center p-8 max-w-md">
+          <div className="text-center p-8 max-w-lg">
             <div className="text-6xl mb-4">⚠️</div>
             <h1 className="text-2xl font-bold mb-2">Something went wrong</h1>
             <p className="text-muted-foreground mb-4">
-              {this.state.error?.message || 'An unexpected error occurred'}
+              {err?.message || 'An unexpected error occurred'}
+            </p>
+            <pre className="text-left text-xs bg-muted/50 rounded-md p-3 mb-4 overflow-auto max-h-56 whitespace-pre-wrap select-all">
+              {diag}
+            </pre>
+            <p className="text-xs text-muted-foreground mb-4">
+              Screenshot this box (or tap to select) and send it — it names the exact failing code.
             </p>
             <Button
               onClick={() => {
+                // Reload from the home route, not the failing one, so a broken
+                // sub-page doesn't loop the user straight back into the same throw.
                 this.setState({ hasError: false, error: null });
-                window.location.reload();
+                if (typeof location !== 'undefined' && location.pathname !== '/') {
+                  location.assign('/');
+                } else {
+                  location.reload();
+                }
               }}
             >
-              Reload Page
+              Back to safety
             </Button>
           </div>
         </div>
