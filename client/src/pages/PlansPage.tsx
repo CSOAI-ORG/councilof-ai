@@ -3,7 +3,7 @@ import { setMetaDescription } from "@/lib/utils";
 
 // Free-rail posture (owner decision): the rail is free, verification is free forever.
 // CSOAI is a MEASUREMENT body — never a certification body, never a SaaS access tier.
-// Every call and every account ends in the same 3KB Ed25519-signed, timestamp-anchored
+// Every call and every account ends in the same 3KB Ed25519-signed, hash-chained
 // measurement card. Where evidence is sold, it is a signed artefact on its own page —
 // never access to the rail.
 
@@ -11,7 +11,7 @@ import { setMetaDescription } from "@/lib/utils";
 type Row = { name: string; desc: string; highlight?: boolean };
 
 const INCLUDED: Row[] = [
-  { name: "Measurement cards", desc: "Standard measurement card on every published instrument, Ed25519-signed and timestamp-anchored. Free to run." },
+  { name: "Measurement cards", desc: "Standard measurement card on every published instrument, Ed25519-signed and hash-chained. Free to run." },
   { name: "Verify any card", desc: "Recompute the published hash chain in your browser. No account, no charge — verification is free forever.", highlight: true },
   { name: "Deep bundles", desc: "Full instrument batteries — governance, safety + provenance, full spectrum — each returned as one signed card." },
   { name: "Re-attestation", desc: "AI changes, regulation changes. We re-measure on schedule and issue delta cards so your evidence stays current." },
@@ -45,7 +45,7 @@ export default function PlansPage() {
         </h1>
         <p className="relative mt-4 mx-auto max-w-3xl text-emerald-100/80">
           The product is the evidence. Every measurement ends in a 3KB card — Ed25519-signed,
-          timestamp-anchored, verifiable by anyone without asking us. Running it costs nothing;
+          hash-chained, verifiable by anyone without asking us. Running it costs nothing;
           verifying it costs nothing. Where we sell evidence, it is a signed artefact on its own
           page — never access to the rail.
         </p>

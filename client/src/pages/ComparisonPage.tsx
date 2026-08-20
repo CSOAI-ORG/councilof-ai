@@ -358,7 +358,7 @@ const uniqueAdvantages = [
     icon: Globe,
     title: "Global-First Design",
     description:
-      "Built from day one to serve 40+ nations with their unique regulatory requirements. Not retrofitted compliance, but native multi-jurisdiction support.",
+      "Built from day one to serve 30+ jurisdictions with their unique regulatory requirements. Not retrofitted compliance, but native multi-jurisdiction support.",
   },
   {
     icon: Lightbulb,
@@ -861,7 +861,7 @@ export default function ComparisonPage() {
               },
               {
                 q: "How is CSOAI different from hiring consultants?",
-                a: "Consultants provide one-time advice. CSOAI provides continuous, real-time monitoring and compliance automation across all 40+ nations—at a fraction of consulting costs.",
+                a: "Consultants provide one-time advice. CSOAI provides continuous, real-time monitoring and compliance automation across 30+ jurisdictions—at a fraction of consulting costs.",
               },
               {
                 q: "Is the Council approach proven?",

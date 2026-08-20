@@ -10,7 +10,7 @@ const DOCS_ARTICLE_SCHEMA = {
   '@type': 'TechArticle',
   headline: 'CSOAI Technical Documentation',
   description:
-    'Architecture, API references and integration guides for the CSOAI platform — the 33-agent Council of AI, SOAI-PDCA framework and Watchdog incident reporting.',
+    'Architecture, API references and integration guides for the CSOAI platform — the designed 33-agent Council of AI, SOAI-PDCA framework and Watchdog incident reporting.',
   author: { '@type': 'Organization', name: 'CSOAI' },
   publisher: { '@type': 'Organization', name: 'CSOAI', url: 'https://csoai.org' },
   url: 'https://csoai.org/docs',

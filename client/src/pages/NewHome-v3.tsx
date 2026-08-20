@@ -319,7 +319,7 @@ export default function NewHomeV3() {
           <FaqBlock
             title="Questions people ask"
             items={[
-              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks on the GSPC board — 13 measured of 14, plus jail (containment) as a measured floor — and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and timestamp-anchored. Live axis and model counts come from GET /api/gspc. Anyone can verify a card without asking us." },
+              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks on the GSPC board — 13 measured of 14, plus jail (containment) as a measured floor — and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and hash-chained. Live axis and model counts come from GET /api/gspc. Anyone can verify a card without asking us." },
               { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
               { q: "What does a measurement card cost?", a: "The rail is free. Verification is free forever — running and verifying your measurement cards costs nothing. Where we sell evidence, it is a signed artefact on its own page, never access to the rail." },
               { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },

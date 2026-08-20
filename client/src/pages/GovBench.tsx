@@ -79,8 +79,33 @@ const REFUTED = [
   },
 ];
 
+const DATASET_LD = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  name: "GovBench — open AI governance benchmark",
+  description:
+    "A deterministic AI governance benchmark that publishes its own limits: per-item rows, cluster-robust intervals, and negative/retracted results stated as plainly as positive ones. Every published number traces to an artefact on Hugging Face.",
+  license: "https://www.apache.org/licenses/LICENSE-2.0",
+  creator: { "@type": "Organization", name: "Council of AI", legalName: "CSOAI Ltd", url: "https://councilof.ai/" },
+  isAccessibleForFree: true,
+  url: "https://councilof.ai/govbench",
+  sameAs: [HF, HF_ITEMS],
+  distribution: [
+    { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: HF },
+    { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: HF_ITEMS },
+  ],
+};
+
 export default function GovBench() {
-  useEffect(() => { document.title = "GovBench — an AI governance benchmark that publishes its own limits | CSOAI"; }, []);
+  useEffect(() => {
+    document.title = "GovBench — an AI governance benchmark that publishes its own limits | CSOAI";
+    const sc = document.createElement("script");
+    sc.type = "application/ld+json";
+    sc.setAttribute("data-page-schema", "dataset");
+    sc.text = JSON.stringify(DATASET_LD);
+    document.head.appendChild(sc);
+    return () => { try { document.head.removeChild(sc); } catch { /* gone */ } };
+  }, []);
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Hero */}
