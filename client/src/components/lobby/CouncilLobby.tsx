@@ -18,6 +18,10 @@ import { useLobbyDeepLink } from "@/lib/lobbyLink";
  * suppresses this trigger there. That is the ONLY thing reading the flag today —
  * no page hides its own chrome yet.
  *
+ * The overlay owns its own window state (open / minimised / expanded); this file
+ * only owns the badge and the mount. Minimising does NOT unmount the overlay —
+ * that is exactly how the pane and the chat thread survive a minimise.
+ *
  * DEEP LINKS. `useLobbyDeepLink()` (client/src/lib/lobbyLink.ts) surfaces an
  * intent from `?lobby=`/`?task=`/`?ask=` on arrival, or from an in-page
  * `openLobby()` call. An intent opens the lobby and selects a pane; its seeded
@@ -67,7 +71,7 @@ export default function CouncilLobby() {
         aria-label="Open the Council Lobby"
         aria-expanded={open}
         title="Council Lobby — every live surface in one place"
-        className="fixed bottom-20 right-5 z-[70] flex h-12 w-12 items-center justify-center rounded-full bg-emerald-800 text-emerald-50 shadow-lg ring-1 ring-emerald-300/30 transition hover:scale-105 hover:bg-emerald-700"
+        className="fixed bottom-20 right-5 z-[70] flex h-12 w-12 items-center justify-center rounded-full bg-emerald-800 text-emerald-50 shadow-lg ring-1 ring-emerald-300/30 transition hover:bg-emerald-700 motion-safe:hover:scale-105 motion-reduce:transition-none outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2"
       >
         <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.7"
           strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

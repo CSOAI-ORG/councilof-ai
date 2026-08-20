@@ -1,11 +1,15 @@
 /**
  * The Council Lobby's centre-pane destinations.
  *
- * Every entry points at a REAL route this app already serves. The lobby does not
+ * Most entries point at a REAL route this app already serves. The lobby does not
  * reimplement any page — it frames the live one, so a page can never drift from
  * its lobby copy. `?embed=1` is appended by the centre pane; pages may later read
  * that flag to drop their own header/footer while inside the lobby. Nothing reads
  * it yet, so today a framed page still carries its own chrome.
+ *
+ * ONE entry is `kind: "local"` — the Council OS local-play gallery, which has no
+ * route because none of it is deployed. It renders in the centre pane from
+ * play.ts and says so on its face.
  */
 
 export type LobbyTabId =
@@ -15,15 +19,20 @@ export type LobbyTabId =
   | "space"
   | "measured"
   | "watchdog"
-  | "academy";
+  | "academy"
+  | "play";
 
 export type LobbyTab = {
   id: LobbyTabId;
   label: string;
   /** One honest line about what the pane actually shows. */
   blurb: string;
-  /** Same-origin route framed in the centre pane. */
+  /** Same-origin route framed in the centre pane. Empty for `kind: "local"`. */
   path: string;
+  /** "route" frames a live page; "local" renders in-lobby content. */
+  kind?: "route" | "local";
+  /** Gold accent — reserved for the local-play surface, never for measurement. */
+  accent?: "emerald" | "gold";
   /** Deterministic phrases that switch to this tab from the chat bar. */
   cues: RegExp;
 };
@@ -77,6 +86,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "Council Academy — training. Course completion attests training, not conformity.",
     path: "/academy",
     cues: /\b(academy|course|training|learn|teach)\b/i,
+  },
+  {
+    id: "play",
+    label: "Council OS — local play",
+    blurb: "The arenas, with honest playable / in-build states. Nothing here is deployed.",
+    path: "",
+    kind: "local",
+    accent: "gold",
+    cues: /\b(play|game|games|local play|duel|coliseum|council os)\b/i,
   },
 ];
 

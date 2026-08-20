@@ -1,264 +1,317 @@
-import { useEffect, useRef, useState } from "react";
-import { LOBBY_TABS, matchTab, type LobbyTab } from "./tabs";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { LOBBY_TABS, type LobbyTab } from "./tabs";
+import { AUDIENCES, DEFAULT_AUDIENCE, asksFor } from "./asks";
+import { FOCUS, MEASURE, PRIMARY, SP, SURFACE_LIFTED, TYPE, TONE, panelStyle } from "./glass";
+import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
 
 /**
- * LobbyChatBar — the persistent chat bar across the foot of the Council Lobby.
+ * LobbyChatBar — the chat bar across the foot of the Council Lobby.
  *
- * DETERMINISTIC FIRST. Two lanes, and the pill on every answer says which one
- * produced it:
+ * WHAT CHANGED AND WHY. It used to run the full width of the overlay, which made
+ * a 2000px-wide input nobody could see the edges of. It is now CENTRED and
+ * constrained to max-w-3xl, lifted off the ground with real elevation, given a
+ * generous padding step from the spacing scale, and given a focused state you
+ * can actually see (a two-ring emerald treatment on the field itself, not just
+ * the browser default).
  *
- *   1. A local, deterministic command lane. "Show the board", "verify a card" —
- *      these switch the centre pane. No network, no model, labelled `deterministic`.
- *   2. POST /api/chat (functions/api/chat.ts), which answers from the estate's
- *      published measurements or refuses. We render its `answer`, `state` and
- *      `signature` verbatim, using the same STATE_LABEL contract as
- *      client/src/components/os/CouncilChat.tsx.
+ * IT IS NEVER EMPTY. Directly above the field sit the audience chips (AUDIENCES)
+ * and the suggested questions for the pane you are looking at
+ * (asksFor(path, audience)). Opening the lobby therefore always shows something
+ * to ask, cut to who you say you are.
  *
- * On a non-200 or a network failure we fall back to a short deterministic help
- * message that is EXPLICITLY labelled deterministic. We never dress a local
- * string up as a live answer, and this bar never writes a compliance verdict —
- * it is a wire. Verdicts come from the signed APIs.
+ * THE CONSENT LOCK IS BINDING, AND IT IS ENFORCED HERE. Selecting a suggested
+ * question — by click or by Enter — PRE-FILLS the field and FOCUSES it. It does
+ * not send. A seeded prompt from a deep link behaves identically. The send is
+ * always a deliberate act by the person reading. There is no code path in this
+ * file that calls send() from anything other than the Ask button or the Enter
+ * key inside the field itself.
  *
- * SEEDED PROMPTS (deep links). `seedPrompt` arrives from a CTA elsewhere on the
- * site (see client/src/lib/lobbyLink.ts). It is TYPED into the input and the
- * input is focused — that is all. Nothing is sent, no lane has run, and the
- * notice above the input says so, so a seeded question can never be mistaken for
- * an answer that a model has already given. The send stays the user's.
+ * DETERMINISTIC FIRST. The two lanes and the honest state pills live in
+ * useLobbyChat.ts; this file only renders them. A failure says so plainly and is
+ * labelled `deterministic`, so a local help string can never be read as an answer.
  */
 
-type Turn = {
-  role: "user" | "council";
-  text: string;
-  state?: string;
-  signature?: string;
-};
-
-/** Copied from client/src/components/os/CouncilChat.tsx — one label vocabulary estate-wide. */
-const STATE_LABEL: Record<string, string> = {
-  live: "council · live specialist",
-  grounded: "grounded in published measurement",
-  ungrounded: "refused — no grounding available",
-  unreachable: "endpoint unreachable",
-  deterministic: "deterministic · local, no model",
-};
-
 const STATE_TONE: Record<string, string> = {
-  live: "border-emerald-300/40 text-emerald-100",
-  grounded: "border-emerald-300/40 text-emerald-100",
-  ungrounded: "border-amber-300/40 text-amber-100",
-  unreachable: "border-rose-300/40 text-rose-100",
-  deterministic: "border-sky-300/40 text-sky-100",
+  live: TONE.ok,
+  grounded: TONE.ok,
+  ungrounded: TONE.running,
+  unreachable: TONE.failed,
+  deterministic: "border-sky-700/30 bg-sky-50 text-sky-900",
 };
 
-const SUGGESTIONS = [
-  "Show the live board",
-  "Verify a card",
-  "How many axes are measured?",
-  "Is workplace emotion inference prohibited?",
-];
+const AUDIENCE_KEY = "coai.lobby.audience";
 
-/** The offline help text. Deterministic, and it says so on its face. */
-function offlineHelp(reason: string): string {
-  return (
-    `The Council endpoint did not answer — ${reason}. This reply is a local, deterministic ` +
-    `help message, not an answer to your question: no measurement was read and none is implied.\n\n` +
-    `What still works right now, with no network: say "show the board", "verify a card", ` +
-    `"open Council Space", "get measured", "open the Academy" — each switches the pane on the ` +
-    `left of this lobby. The pages themselves fetch their own live data and will tell you if ` +
-    `they cannot reach it either.`
-  );
+function readAudience(): string {
+  try {
+    const v = localStorage.getItem(AUDIENCE_KEY);
+    if (v && AUDIENCES.some((a) => a.id === v)) return v;
+  } catch { /* private mode — the default is fine */ }
+  return DEFAULT_AUDIENCE;
 }
 
 export default function LobbyChatBar({
-  panel,
+  chat,
   onNavigate,
+  paneLabel,
+  panePath,
   seedPrompt,
   seedNonce,
 }: {
-  panel: React.CSSProperties;
+  chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
+  paneLabel: string;
+  /** The route the centre pane is showing — what the suggestions are cut to. */
+  panePath: string;
   /** Pre-filled by a deep link. Typed, never sent. */
   seedPrompt?: string;
   /** Changes on every fresh intent, so the same seed can be re-applied. */
   seedNonce?: number;
 }) {
-  const [turns, setTurns] = useState<Turn[]>([]);
   const [q, setQ] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [audience, setAudience] = useState<string>(readAudience);
   const [seeded, setSeeded] = useState(false);
-  const endRef = useRef<HTMLDivElement>(null);
+  const [logOpen, setLogOpen] = useState(true);
+  /** The prompt block is open until the reader has a thread of their own. */
+  const [promptsOpen, setPromptsOpen] = useState(true);
+  const [noteOpen, setNoteOpen] = useState(false);
+  /** Fold the prompt block away ONCE, when the reader gets their first reply. It
+   *  is open on arrival — the lobby must never open on an empty box — and the
+   *  "Asks" button brings it back at any time. */
+  const folded = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
 
-  // Type the seeded prompt and focus the input. THAT IS THE WHOLE ACTION — the
-  // consent lock holds: the deep link chose the question, the user sends it.
+  const turns = chat.active?.turns ?? [];
+  const suggestions = useMemo(
+    () => asksFor(panePath || "/", audience),
+    [panePath, audience],
+  );
+
   useEffect(() => {
-    const seed = seedPrompt?.trim();
-    if (!seed) return;
-    setQ(seed);
-    setSeeded(true);
-    requestAnimationFrame(() => {
+    try { localStorage.setItem(AUDIENCE_KEY, audience); } catch { /* ignore */ }
+  }, [audience]);
+
+  /**
+   * Fill the field and focus it. THAT IS THE WHOLE ACTION — used by the seeded
+   * deep link and by every suggestion chip alike. Nothing here sends.
+   */
+  function prefill(text: string, fromLink: boolean) {
+    setQ(text);
+    setSeeded(fromLink);
+    // setTimeout, not rAF — focus must land even in a background tab.
+    setTimeout(() => {
       const el = inputRef.current;
       if (!el) return;
       el.focus();
-      el.setSelectionRange(seed.length, seed.length);
-    });
+      el.setSelectionRange(text.length, text.length);
+    }, 0);
+  }
+
+  useEffect(() => {
+    const seed = seedPrompt?.trim();
+    if (!seed) return;
+    prefill(seed, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seedNonce, seedPrompt]);
 
   useEffect(() => {
-    if (open) requestAnimationFrame(() => endRef.current?.scrollIntoView({ behavior: "smooth" }));
-  }, [turns, open]);
+    if (turns.length > 0 && !folded.current) { folded.current = true; setPromptsOpen(false); }
+  }, [turns.length]);
 
-  const push = (t: Turn) => setTurns((p) => [...p, t]);
+  useEffect(() => {
+    if (logOpen && turns.length) {
+      requestAnimationFrame(() => endRef.current?.scrollIntoView({ block: "end" }));
+    }
+  }, [turns.length, logOpen]);
 
-  async function send(text?: string) {
-    const question = (text ?? q).trim();
-    if (!question || busy) return;
+  function submit() {
+    const text = q.trim();
+    if (!text || chat.busy) return;
     setQ("");
     setSeeded(false);
-    setOpen(true);
-    push({ role: "user", text: question });
-
-    // Lane 1 — deterministic command. Answered locally, labelled locally.
-    const tab = matchTab(question);
-    if (tab) {
-      onNavigate(tab);
-      push({
-        role: "council",
-        text: `Opened “${tab.label}” in the centre pane — ${tab.blurb}\n\nThat was a local pane switch, not a measurement. Whatever the page shows, it fetched itself.`,
-        state: "deterministic",
-        signature: `local command · ${tab.path}`,
-      });
-      return;
-    }
-
-    // Lane 2 — the estate's honest endpoint.
-    setBusy(true);
-    try {
-      const r = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [{ role: "user", content: question }] }),
-      });
-      if (!r.ok) {
-        push({ role: "council", text: offlineHelp("HTTP " + r.status), state: "deterministic", signature: "local fallback · no measurement read" });
-        return;
-      }
-      const j: any = await r.json();
-      const answer = j?.answer ?? j?.reply;
-      if (typeof answer !== "string" || !answer.trim()) {
-        push({ role: "council", text: offlineHelp("it returned an empty answer"), state: "deterministic", signature: "local fallback · no measurement read" });
-        return;
-      }
-      push({ role: "council", text: answer, state: j.state, signature: j.signature });
-    } catch (e: any) {
-      push({
-        role: "council",
-        text: offlineHelp(String(e?.message ?? e)),
-        state: "deterministic",
-        signature: "local fallback · no measurement read",
-      });
-    } finally {
-      setBusy(false);
-    }
+    setLogOpen(true);
+    void chat.send(text, onNavigate);
   }
 
   return (
-    <div className="rounded-2xl border border-emerald-300/20" style={panel}>
-      {open && turns.length > 0 && (
-        <div className="max-h-[26vh] space-y-2.5 overflow-y-auto border-b border-white/10 px-4 py-3">
+    <div className={`mx-auto flex w-full max-w-3xl shrink-0 flex-col ${SURFACE_LIFTED}`} style={panelStyle}>
+      {/* ── the thread ──────────────────────────────────────────────────── */}
+      {logOpen && turns.length > 0 && (
+        <div
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions text"
+          aria-label="Council Lobby conversation"
+          className="max-h-[20vh] space-y-3 overflow-y-auto border-b border-slate-900/10 px-5 py-4"
+        >
           {turns.map((t, i) => (
-            <div key={i} className={t.role === "user" ? "ml-auto max-w-[80%]" : "max-w-[92%]"}>
+            <div key={i} className={t.role === "user" ? "ml-auto max-w-[85%]" : "max-w-[95%]"}>
+              <p className="sr-only">{t.role === "user" ? "You asked:" : "The Council replied:"}</p>
               <div
                 className={
-                  "whitespace-pre-wrap rounded-xl px-3 py-2 text-[12.5px] leading-relaxed " +
+                  "whitespace-pre-wrap rounded-xl px-4 py-2.5 text-[13px] leading-relaxed " +
                   (t.role === "user"
-                    ? "bg-emerald-500/85 text-white"
-                    : "border border-white/10 bg-black/25 text-emerald-50/90")
+                    ? "bg-emerald-700 text-white"
+                    : "border border-slate-900/10 bg-slate-50 text-slate-800")
                 }
               >
                 {t.text}
               </div>
               {t.role === "council" && (t.state || t.signature) && (
-                <div className="mt-1 flex flex-wrap items-center gap-2 text-[10px]">
+                <div className="mt-1.5 flex flex-wrap items-center gap-2">
                   {t.state && (
                     <span
-                      className={
-                        "rounded-full border bg-black/20 px-2 py-0.5 font-mono uppercase tracking-wide " +
-                        (STATE_TONE[t.state] ?? "border-white/20 text-emerald-100/70")
-                      }
+                      className={`rounded-full border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide ${
+                        STATE_TONE[t.state] ?? TONE.idle
+                      }`}
                     >
                       {STATE_LABEL[t.state] ?? t.state}
                     </span>
                   )}
-                  {t.signature && <span className="font-mono text-emerald-200/45">{t.signature}</span>}
+                  {t.signature && (
+                    <span className="font-mono text-[10px] text-slate-600">{t.signature}</span>
+                  )}
                 </div>
               )}
             </div>
           ))}
-          {busy && <div className="text-[11px] text-emerald-200/50">Council answering…</div>}
+          {chat.busy && (
+            <p className={TYPE.fine} role="status">Council answering…</p>
+          )}
           <div ref={endRef} />
         </div>
       )}
 
-      <div className="px-4 py-3">
+      <div className={`${SP.card} space-y-3`}>
         {seeded && (
           <p
             role="status"
-            className="mb-2 rounded-lg border border-sky-300/25 bg-sky-400/10 px-3 py-1.5 text-[11px] leading-relaxed text-sky-100/85"
+            className="rounded-xl border border-sky-700/25 bg-sky-50 px-4 py-2.5 text-[12px] leading-relaxed text-sky-900"
           >
             <strong className="font-bold">Nothing has been asked yet.</strong> That link filled the
             box below with a suggested question — no lane has run, no measurement has been read and
             no model has answered. Edit it, or press Ask to send it yourself.
           </p>
         )}
+
+        {/* ── audience chips + suggested questions ───────────────────── */}
+        {promptsOpen && (
+          <div id="coai-lobby-asks" className="space-y-2">
+            <div className="flex items-center gap-x-2">
+              <span id="coai-lobby-audience-h" className={`${TYPE.section} shrink-0`}>Asking as</span>
+              <span role="group" aria-labelledby="coai-lobby-audience-h" className="flex min-w-0 flex-1 gap-1.5 overflow-x-auto pb-0.5">
+                {AUDIENCES.map((a) => {
+                  const on = a.id === audience;
+                  return (
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => setAudience(a.id)}
+                      aria-pressed={on}
+                      title={a.who}
+                      className={
+                        `shrink-0 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold transition ` +
+                        `motion-reduce:transition-none ${FOCUS} ` +
+                        (on
+                          ? "border-emerald-700/40 bg-emerald-100 text-emerald-900"
+                          : "border-slate-900/12 bg-white/80 text-slate-600 hover:border-slate-900/25 hover:text-slate-900")
+                      }
+                    >
+                      {a.label}
+                    </button>
+                  );
+                })}
+              </span>
+            </div>
+
+            <div>
+              <div className="flex flex-wrap items-baseline gap-x-2">
+                <span id="coai-lobby-asks-h" className={TYPE.section}>Suggested for “{paneLabel}”</span>
+                <span className={TYPE.fine}>— selecting one fills the box, it never sends</span>
+              </div>
+              <ul aria-labelledby="coai-lobby-asks-h" className="mt-1.5 max-h-[4.75rem] space-y-1 overflow-y-auto pr-1">
+                {suggestions.map((s) => (
+                  <li key={s}>
+                    <button
+                      type="button"
+                      onClick={() => prefill(s, false)}
+                      className={`w-full truncate rounded-lg border border-slate-900/12 bg-white/80 px-3 py-1 text-left text-[11.5px] text-slate-700 transition hover:border-emerald-700/40 hover:bg-white hover:text-slate-900 motion-reduce:transition-none ${FOCUS}`}
+                      title={s}
+                    >
+                      {s}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {/* ── the field ────────────────────────────────────────────────── */}
         <div className="flex gap-2">
           <input
             ref={inputRef}
             value={q}
             onChange={(e) => { setQ(e.target.value); setSeeded(false); }}
-            onKeyDown={(e) => { if (e.key === "Enter") void send(); }}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submit(); } }}
             aria-label="Ask the Council, or name a pane to open"
+            aria-describedby="coai-lobby-chat-note"
             placeholder='Ask the Council — or say "show the board"'
-            className="flex-1 rounded-xl border border-emerald-300/25 bg-black/25 px-4 py-2.5 text-[13px] text-emerald-50 placeholder-emerald-200/40 focus:border-emerald-300/60 focus:outline-none"
+            className="min-w-0 flex-1 rounded-xl border border-slate-900/15 bg-white px-4 py-2.5 text-[13.5px] text-slate-900 placeholder-slate-500 shadow-inner transition outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/30 motion-reduce:transition-none"
           />
           <button
-            onClick={() => void send()}
-            disabled={busy}
-            className="rounded-xl bg-emerald-500 px-5 py-2.5 text-[13px] font-bold text-white transition hover:bg-emerald-400 disabled:opacity-50"
+            type="button"
+            onClick={submit}
+            disabled={chat.busy || !q.trim()}
+            className={`${PRIMARY} shrink-0 px-6 py-2.5 text-[13.5px]`}
           >
-            {busy ? "…" : "Ask"}
+            {chat.busy ? "…" : "Ask"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setPromptsOpen((o) => !o)}
+            aria-expanded={promptsOpen}
+            aria-controls="coai-lobby-asks"
+            aria-label={promptsOpen ? "Hide the suggested questions" : "Show the suggested questions"}
+            className={`shrink-0 rounded-xl border border-slate-900/12 bg-white/80 px-3.5 text-[12px] font-semibold text-slate-700 transition hover:bg-white motion-reduce:transition-none ${FOCUS}`}
+          >
+            {promptsOpen ? "Hide asks" : "Asks"}
           </button>
           {turns.length > 0 && (
             <button
-              onClick={() => setOpen((o) => !o)}
-              aria-expanded={open}
-              className="rounded-xl border border-emerald-300/25 px-3 text-[12px] text-emerald-100/80 transition hover:bg-white/10"
+              type="button"
+              onClick={() => setLogOpen((o) => !o)}
+              aria-expanded={logOpen}
+              aria-label={logOpen ? "Hide the conversation" : "Show the conversation"}
+              className={`shrink-0 rounded-xl border border-slate-900/12 bg-white/80 px-3.5 text-[12px] font-semibold text-slate-700 transition hover:bg-white motion-reduce:transition-none ${FOCUS}`}
             >
-              {open ? "Hide" : "Show"}
+              {logOpen ? "Hide" : "Show"}
             </button>
           )}
         </div>
 
-        {turns.length === 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {SUGGESTIONS.map((s) => (
-              <button
-                key={s}
-                onClick={() => void send(s)}
-                className="rounded-full border border-emerald-300/20 bg-black/20 px-2.5 py-1 text-[11px] text-emerald-100/75 transition hover:border-emerald-300/50 hover:text-emerald-50"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <p className="mt-2 text-[10px] leading-relaxed text-emerald-100/40">
-          This bar is a wire, not a judge. It answers from what the estate has published and refuses
-          rather than improvise; it never issues a compliance verdict. Pane commands (
-          {LOBBY_TABS.map((t) => t.label).join(", ")}) are handled locally with no model at all.
+        <p id="coai-lobby-chat-note" className={TYPE.fine}>
+          A wire, not a judge: it answers from what the estate has published, or it refuses. It never
+          issues a compliance verdict.{" "}
+          <button
+            type="button"
+            onClick={() => setNoteOpen((o) => !o)}
+            aria-expanded={noteOpen}
+            aria-controls="coai-lobby-chat-lanes"
+            className={`rounded font-semibold text-emerald-800 underline underline-offset-2 ${FOCUS}`}
+          >
+            {noteOpen ? "Hide the two lanes" : "How it answers"}
+          </button>
         </p>
+        {noteOpen && (
+          <p id="coai-lobby-chat-lanes" className={`${MEASURE} ${TYPE.fine}`}>
+            Two lanes, and the pill on every answer says which one produced it. Pane commands —{" "}
+            {LOBBY_TABS.map((t) => t.label).join(", ")} — are matched locally and switch the centre
+            pane with no network and no model. Everything else goes to the published-measurement
+            endpoint; if that endpoint fails, the reply you get is a local help message explicitly
+            labelled <em>deterministic</em>, never an answer dressed up as one.
+          </p>
+        )}
       </div>
     </div>
   );

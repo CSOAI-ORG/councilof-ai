@@ -1,0 +1,115 @@
+import { useRef, useState } from "react";
+import { FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
+import LobbyReports from "./LobbyReports";
+import LobbyTaskRail from "./LobbyTaskRail";
+import LobbyChats from "./LobbyChats";
+import type { LobbyChat } from "./useLobbyChat";
+
+/**
+ * LobbySideRail — the RIGHT rail, with three switchable sections.
+ *
+ *   Reports  the signed / public artefacts, with honest live-or-failed states
+ *   Tasks    the running checks (the fetches this lobby makes on your behalf)
+ *   Chats    this session's threads, in memory, and the rail says so
+ *
+ * Same ARIA contract as the left rail, horizontal this time: role="tablist"
+ * aria-orientation="horizontal", roving tabindex so the switcher is a single Tab
+ * stop, ←/→ to move, Home/End to jump. The rail itself is collapsible from the
+ * header; when it is hidden nothing here is mounted, so the fetches stop too.
+ */
+
+type SectionId = "reports" | "tasks" | "chats";
+
+const SECTIONS: { id: SectionId; label: string; hint: string }[] = [
+  { id: "reports", label: "Reports", hint: "Signed and public artefacts" },
+  { id: "tasks", label: "Tasks", hint: "Checks running right now" },
+  { id: "chats", label: "Chats", hint: "Threads in this session" },
+];
+
+const domId = (id: SectionId) => `coai-lobby-section-${id}`;
+const PANEL = "coai-lobby-section-panel";
+
+export default function LobbySideRail({ chat }: { chat: LobbyChat }) {
+  const [section, setSection] = useState<SectionId>("reports");
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const move = (to: number) => {
+    const i = ((to % SECTIONS.length) + SECTIONS.length) % SECTIONS.length;
+    const next = SECTIONS[i];
+    setSection(next.id);
+    setTimeout(() => {
+      listRef.current?.querySelector<HTMLButtonElement>(`#${domId(next.id)}`)?.focus();
+    }, 0);
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const at = SECTIONS.findIndex((s) => s.id === section);
+    switch (e.key) {
+      case "ArrowRight": case "ArrowDown": e.preventDefault(); move(at + 1); break;
+      case "ArrowLeft": case "ArrowUp": e.preventDefault(); move(at - 1); break;
+      case "Home": e.preventDefault(); move(0); break;
+      case "End": e.preventDefault(); move(SECTIONS.length - 1); break;
+      default: break;
+    }
+  };
+
+  const current = SECTIONS.find((s) => s.id === section)!;
+
+  return (
+    <aside
+      aria-label="Council Lobby side rail"
+      className={`${SURFACE} ${SP.rail} flex h-full w-full flex-col`}
+      style={panelStyle}
+    >
+      <div
+        ref={listRef}
+        role="tablist"
+        aria-orientation="horizontal"
+        aria-label="Side rail sections"
+        onKeyDown={onKeyDown}
+        className="mb-4 flex gap-1 rounded-xl bg-slate-900/5 p-1"
+      >
+        {SECTIONS.map((s) => {
+          const on = s.id === section;
+          return (
+            <button
+              key={s.id}
+              id={domId(s.id)}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              aria-controls={PANEL}
+              tabIndex={on ? 0 : -1}
+              title={s.hint}
+              onClick={() => setSection(s.id)}
+              className={
+                `flex-1 rounded-lg px-3 py-1.5 text-[12px] font-semibold transition ` +
+                `motion-reduce:transition-none ${FOCUS} ` +
+                (on ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900")
+              }
+            >
+              {s.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div
+        id={PANEL}
+        role="tabpanel"
+        aria-labelledby={domId(section)}
+        tabIndex={0}
+        className={`min-h-0 flex-1 ${FOCUS}`}
+      >
+        <p className="sr-only">{current.hint}</p>
+        {section === "reports" && <LobbyReports />}
+        {section === "tasks" && <LobbyTaskRail />}
+        {section === "chats" && <LobbyChats chat={chat} />}
+      </div>
+
+      <p className={`pt-4 ${TYPE.fine}`}>
+        <span className="font-semibold text-slate-600">← →</span> move between sections.
+      </p>
+    </aside>
+  );
+}
