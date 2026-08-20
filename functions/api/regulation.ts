@@ -15,7 +15,18 @@ const FEED = {
   license: "CC-BY-4.0",
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections_policy: "appended, never edited — a wrong date here is a published correction, not a silent fix",
+  version_pin_policy: "every deadline pins to its consolidated-text version; when a provision is amended (e.g. the 2025 Digital Omnibus), the receipt re-attests against the NEW versioned text — the old signature breaks, the correction is published, never silently edited. This is the 'pinned + re-attest' discipline an underwriting input requires (insurer-evidence research, 2026-08-20).",
   headline_correction: "The EU AI Act's high-risk obligations did NOT take effect 2 August 2026: the Digital Omnibus (Reg (EU) 2026/1744, in force 27 July 2026) deferred stand-alone Annex III high-risk to 2 December 2027 and product-embedded Annex I high-risk to 2 August 2028.",
+  // Version pins (insurer-evidence research, 2026-08-20): each instrument pins to its
+  // consolidated-text version. A receipt cites these — a provision change re-attests.
+  versions: {
+    "EU AI Act": "Reg (EU) 2024/1689 as amended by Digital Omnibus Reg (EU) 2026/1744 (in force 2026-07-27)",
+    "EU Cyber Resilience Act": "Reg (EU) 2024/2847 (consolidated 2026-07)",
+    "California SB 53": "Ch. 138, Statutes of 2025 (signed 2025-09-29)",
+    "Illinois SB 315": "Public Act 104-0538 (signed 2026-07-06)",
+    "New York RAISE Act": "S6953B/A6453B as amended 2026-03-27",
+    "China GB 45438-2025": "GB 45438-2025 (published 2025-03-14, in force 2025-09-01)",
+  },
   deadlines: [
     { date: "2025-02-02", instrument: "EU AI Act", what: "Article 5 prohibited practices + Article 4 AI literacy duties in force", basis: "Reg (EU) 2024/1689 Art 113", status: "IN_FORCE", penalty_exposure: "up to €35,000,000 or 7% of worldwide annual turnover (EU AI Act Art 99(3))" },
     { date: "2025-08-02", instrument: "EU AI Act", what: "GPAI model provider obligations (Arts 53–55) + governance rules in force", basis: "Reg (EU) 2024/1689 Art 113", status: "IN_FORCE", penalty_exposure: "up to €15,000,000 or 3% of worldwide annual turnover (EU AI Act Art 99(4))" },
