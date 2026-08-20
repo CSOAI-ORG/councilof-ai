@@ -173,6 +173,8 @@ const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
 const VerifiableTrust = lazy(() => import("./pages/VerifiableTrust"));
 const EvidenceRail = lazy(() => import("./pages/EvidenceRail"));
 const Metrology = lazy(() => import("./pages/Metrology"));
+const AccountabilityLoop = lazy(() => import("./pages/AccountabilityLoop"));
+const WhereTheRecordLives = lazy(() => import("./pages/WhereTheRecordLives"));
 const StatuteToPredicate = lazy(() => import("./pages/StatuteToPredicate"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
@@ -362,6 +364,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/verifiable-trust": "The science of verifiable trust | Council of AI",
   "/evidence-rail": "The independent evidence rail | Council of AI",
   "/metrology": "The metrology apparatus | Council of AI",
+  "/accountability-loop": "The accountability loop — from a public report to a complaint a regulator can open | Council of AI",
+  "/where-the-record-lives": "Where the record lives — mirrored, not indestructible | Council of AI",
   "/statute-to-predicate": "From statute to predicate — how a law becomes a test | Council of AI",
   "/instrument": "The Instrument | CSOAI",
   "/benchmarks": "Benchmarks | CSOAI",
@@ -657,6 +661,8 @@ function App() {
                   <Route path="/verifiable-trust" component={VerifiableTrust} />
                   <Route path="/evidence-rail" component={EvidenceRail} />
                   <Route path="/metrology" component={Metrology} />
+                  <Route path="/accountability-loop" component={AccountabilityLoop} />
+                  <Route path="/where-the-record-lives" component={WhereTheRecordLives} />
                   <Route path="/statute-to-predicate" component={StatuteToPredicate} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
                   {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}
