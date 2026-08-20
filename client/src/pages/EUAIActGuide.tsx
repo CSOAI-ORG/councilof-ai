@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { VideoEmbed } from "@/components/home/VideoEmbed";
+import { PageHero, SplitBand } from "@/components/pagekit/PageKit";
 import {
   Accordion,
   AccordionContent,
@@ -352,54 +354,58 @@ export default function EUAIActGuide() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 via-teal-500/10 to-teal-500/10" />
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
-        <div className="container max-w-7xl mx-auto px-6 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center space-y-6 max-w-4xl mx-auto"
-          >
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Badge variant="outline" className="text-sm px-4 py-2 bg-emerald-500/10 border-emerald-500/30">
-                <Globe className="h-4 w-4 mr-2" />
-                European Union Regulation 2024/1689
-              </Badge>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
-              The Complete Guide to the
-              <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"> EU AI Act</span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              The first comprehensive AI regulation. Understand the risk-based framework,
-              compliance requirements, key deadlines, and penalties. Everything you need to prepare
-              your organization for full compliance.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center pt-4">
-              <Link href="/courses">
-                <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700">
-                  <GraduationCap className="mr-2 h-5 w-5" />
-                  Start EU AI Act Training
-                </Button>
-              </Link>
-              <Link href="/compliance">
-                <Button size="lg" variant="outline">
-                  <BarChart3 className="mr-2 h-5 w-5" />
-                  Check Your Compliance
-                </Button>
-              </Link>
-              <Button size="lg" variant="ghost" asChild>
-                <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689" target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="mr-2 h-5 w-5" />
-                  Official Text
-                </a>
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <PageHero
+        kicker="Regulation (EU) 2024/1689 · as amended by the Digital Omnibus"
+        title={<>The EU AI Act, without the guesswork.</>}
+        lede={
+          <>
+            The first comprehensive AI regulation, explained the way you actually need it: which tier
+            you are in, what that obliges you to do, when each duty bites, and what happens if it is
+            missed. Written against the statute, and kept current as the statute moves.
+          </>
+        }
+        image={{ src: "/images/liveness_drift_engine.jpg", alt: "The liveness and drift engine, watching the law change and re-attesting against it" }}
+        points={[
+          { tag: "pain", text: "The Act runs to hundreds of pages and the deadlines keep moving — most summaries went stale months ago." },
+          { tag: "benefit", text: "Tier, duties, dates and penalties in one place, with the Digital Omnibus amendments folded in." },
+          { tag: "usp", text: "We measure systems against these provisions, so this guide is maintained by the thing that uses it." },
+        ]}
+        actions={[
+          { href: "/assess", label: "Find your risk tier — free" },
+          { href: "/ai-act-timeline", label: "See the deadlines", tone: "ghost" },
+          { href: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689", label: "Read the official text", tone: "ghost", external: true },
+        ]}
+        footnote={
+          <>
+            This is a guide, not legal advice, and Council of AI is a measurement body — it issues no
+            conformity mark and certifies nothing. Always check the official text before you rely on
+            a specific date.
+          </>
+        }
+      />
+
+      <SplitBand
+        tone="tint"
+        kicker="The law is a moving target"
+        title={<>Living law, and what that means for you.</>}
+        lede={
+          <>
+            Provisions change, deadlines shift, and a measurement taken against last year&apos;s text
+            quietly stops meaning anything. The corpus is watched daily and state changes are
+            published, so re-measurement is observable rather than promised.
+          </>
+        }
+        media={
+          <VideoEmbed
+            src="/videos/living-law.mp4"
+            poster="/videos/living-law.jpg"
+            title="Living law — measuring against a statute that keeps moving"
+            className="!max-w-none"
+          />
+        }
+        mediaRight
+        actions={[{ href: "/regulation-tracker", label: "Open the regulation tracker", tone: "ghost" }]}
+      />
 
       {/* Quick Stats Bar */}
       <section className="border-y bg-muted/30">

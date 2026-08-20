@@ -7,6 +7,9 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { VideoEmbed } from "@/components/home/VideoEmbed";
+import { Band, MediaHero, Panel } from "@/components/pagekit/PageKit";
+import { BoardCount, BoardCountStat } from "@/components/pagekit/useBoardCount";
 
 // Animated counter component
 function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
@@ -56,26 +59,27 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
   );
 }
 
-// Hero stats bar component
+// Hero stats bar. The board count is NEVER typed here — it is read live from
+// GET /api/gspc by <BoardCountStat/>. Every other figure carries its own source.
+// qa-sweep 2026-08-19: unverified counters removed ("10,000+ analysts",
+// "40+ nations" had no source endpoint).
 function HeroStatsBar() {
-  // qa-sweep 2026-08-19: unverified counters removed ("10,000+ analysts", "33 agents",
-  // "40+ nations" had no source endpoint). Only numbers with a published source remain;
-  // board counts defer to GET /api/gspc.
   const stats = [
-    { label: "Measured axes of 14 — live: /api/gspc", value: 13, suffix: "" },
-    { label: "Frozen provisions in the bank", value: 417, suffix: "" },
-    { label: "Global frameworks (evidenced control set)", value: 4, suffix: "" },
-    { label: "Public signing key — verify offline", value: 1, suffix: "" },
+    { label: "Frozen provisions in the measurement bank", value: 417, suffix: "", source: "The published provision bank" },
+    { label: "Global frameworks (evidenced control set)", value: 4, suffix: "", source: "Crosswalked control sets" },
+    { label: "Public signing key — verify offline", value: 1, suffix: "", source: "did:web:csoai.org" },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-12 border-t border-white/20">
+    <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <BoardCountStat />
       {stats.map((stat) => (
-        <div key={stat.label} className="text-center">
-          <div className="text-3xl md:text-4xl font-bold text-emerald-300 mb-2">
+        <div key={stat.label} className="rounded-2xl border border-emerald-900/10 bg-white p-6">
+          <div className="text-3xl font-black tracking-tight text-emerald-700 sm:text-4xl">
             <AnimatedCounter target={stat.value} suffix={stat.suffix} />
           </div>
-          <p className="text-sm md:text-base text-gray-300">{stat.label}</p>
+          <p className="mt-2 text-sm font-bold text-gray-900">{stat.label}</p>
+          <p className="mt-1 text-[12px] leading-snug text-gray-500">{stat.source}</p>
         </div>
       ))}
     </div>
@@ -104,25 +108,44 @@ export default function About() {
   }, []);
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - Origin Story */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
-        <div className="container max-w-4xl">
-          <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Our Story</Badge>
-          <h1 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
-            We're Building the Future of AI Safety—One Analyst at a Time
-          </h1>
-          <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            In 2024, as artificial intelligence began transforming every industry, a critical question emerged:
-            <span className="text-emerald-300 font-semibold"> Who watches the watchmen?</span> Governments scrambled to regulate.
-            Companies rushed to comply. But one thing was missing: <span className="font-semibold">trained professionals who could actually monitor AI systems for safety.</span>
-          </p>
-          <p className="text-xl text-gray-300 leading-relaxed">
-            That's when CSOAI was born—not as another AI company, but as <span className="text-emerald-300 font-semibold">the solution to two problems at once</span>:
-            protecting humanity from AI risks while creating thousands of meaningful jobs for people displaced by automation.
-          </p>
-          <HeroStatsBar />
-        </div>
-      </div>
+      <MediaHero
+        kicker="Council of AI · CSOAI Ltd · UK company 16939677"
+        title={<>An instrument, not an authority.</>}
+        lede={
+          <>
+            Everyone regulating AI needs the same thing and almost nobody has it: a way to find out
+            what a system actually does, that does not depend on trusting whoever built it. We built
+            that instrument, we sign what it produces, and we publish what it still cannot measure.
+          </>
+        }
+        points={[
+          { tag: "pain", text: "AI assurance today is a vendor telling you it is fine, in a document nobody can check." },
+          { tag: "benefit", text: "Signed, deterministic measurement against the actual statute — recomputable by anyone, free." },
+          { tag: "usp", text: "We publish our own failures. The honesty gate exists so you can see the instrument catching us." },
+        ]}
+        actions={[
+          { href: "/gspc-scoreboard", label: "See the live board" },
+          { href: "/honesty", label: "See where we fail", tone: "ghost" },
+        ]}
+        media={
+          <VideoEmbed
+            src="/videos/council-of-ai.mp4"
+            poster="/videos/council-of-ai.jpg"
+            title="What the Council of AI is"
+            className="!max-w-none"
+          />
+        }
+        footnote={
+          <>
+            Measurement, not certification. Council of AI is not a certification body, not an
+            accreditation body and not a notified body. It issues no conformity mark.
+          </>
+        }
+      />
+
+      <Band tone="tint" kicker="Where the numbers come from" title={<>Every figure here has a source or it is not here.</>} lede={<>The board count is read live off the wire on every page load. Nothing about it is typed into this page.</>}>
+        <HeroStatsBar />
+      </Band>
 
       {/* The Problem We're Solving */}
       <div className="bg-white py-20">
@@ -392,10 +415,12 @@ export default function About() {
                 no source endpoint. Board counts defer to GET /api/gspc. */}
             <Card className="p-8 text-center bg-gradient-to-br from-emerald-50 to-white border-emerald-200">
               <BarChart2 className="h-8 w-8 text-emerald-600 mx-auto mb-4" />
-              <div className="text-4xl font-bold text-emerald-600 mb-2">
-                13 of 14
+              <div className="text-2xl font-black text-emerald-700 mb-2">
+                <BoardCount />
               </div>
-              <p className="text-gray-600 font-semibold">Measured axes on the GSPC board — live: /api/gspc</p>
+              <p className="text-gray-600 font-semibold">
+                Measured axes on the GSPC board — read live from GET /api/gspc, never typed here
+              </p>
             </Card>
 
             <Card className="p-8 text-center bg-gradient-to-br from-purple-50 to-white border-purple-200">

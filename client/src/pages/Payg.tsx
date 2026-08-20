@@ -1,95 +1,184 @@
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Check, Zap, Coins } from "lucide-react";
+import { useEffect } from "react";
+import { setMetaDescription } from "@/lib/utils";
+import { VideoEmbed } from "@/components/home/VideoEmbed";
+import { Band, Caveat, MediaHero, Panel, PanelGrid } from "@/components/pagekit/PageKit";
 
-// PAYG (pay-per-call / x402) — the agent rail from /pricing, in detail.
+// /payg — the agent rail (pay-per-call / x402), in detail.
 // Machine-access pricing is pending a published ruling — not yet set. 100 free
-// calls/day per key remain free. Every call returns a 3KB Ed25519-signed,
+// calls/day per key remain free. Every call returns a ~3KB Ed25519-signed,
 // hash-chained measurement card. CTAs point at real destinations (get a key,
 // top up), never a bounce back to /pricing.
+//
+// Design: the homepage scroll-world language via components/pagekit/PageKit.
 
 const PRICING_STATUS = "Machine-access pricing is pending a published ruling — not yet set";
 
-const TIERS = [
-  { label: "Free daily", note: "100 free calls/day per key" },
-  { label: "Standard card", note: "signed + hash-chained", popular: true },
-  { label: "Deep bundles", note: "governance · safety+provenance · full spectrum" },
+const INSTRUMENTS = [
+  "Governance",
+  "Safety",
+  "Provenance",
+  "Continuity",
+  "Conformance",
+  "Openness",
+  "Full spectrum",
 ];
 
-const INSTRUMENTS = ["Governance", "Safety", "Provenance", "Continuity", "Conformance", "Openness", "Full spectrum"];
+const WHY = [
+  {
+    h: "One key, every instrument",
+    b: "The same token works across every published instrument, on every machine, and in CI. No per-instrument onboarding, no separate contract for each axis.",
+  },
+  {
+    h: "Nothing expires",
+    b: "A balance is a balance. It does not lapse at the end of a month, and there is no seat to renew for a colleague who left.",
+  },
+  {
+    h: "100 free cards a day",
+    b: "Per key, every day, before anything is metered. Enough to wire the rail into a build and see real signed output before you decide anything.",
+  },
+  {
+    h: "Your auditor checks it, not us",
+    b: "Every call returns a ~3KB Ed25519-signed, hash-chained card. It verifies offline against the published signer — so the evidence does not depend on us still being here.",
+  },
+];
 
 export default function Payg() {
+  useEffect(() => {
+    document.title = "Pay as you go — one key, signed measurement cards | Council of AI";
+    setMetaDescription("The Council of AI agent rail: one key across every published instrument, 100 free calls a day, and a ~3KB Ed25519-signed measurement card on every call that your auditor verifies independently.");
+  }, []);
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-16">
-      <div className="text-center mb-12">
-        <Badge variant="secondary" className="mb-4">Agent rail · pay-per-call · no subscription</Badge>
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-          One key. Every instrument. <span className="text-primary">Signed measurement cards.</span>
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-          100 free calls a day, then metered machine-access. {PRICING_STATUS}.
-          Every call returns a 3KB Ed25519-signed, hash-chained card your auditor verifies
-          independently. Metered, balance never expires, no monthly seat.
-        </p>
-        <div className="mt-5 flex flex-wrap justify-center gap-2">
+    <div className="min-h-screen bg-white">
+      <MediaHero
+        kicker="Agent rail · pay-per-call · no subscription"
+        title={
+          <>
+            One key. Every instrument.
+            <br />
+            A signed card on every call.
+          </>
+        }
+        lede={
+          <>
+            Wire measurement into the thing you are already building. A hundred free calls a day per
+            key, then metered machine access — and every single call comes back as a small signed
+            card your auditor can check without asking us anything.
+          </>
+        }
+        points={[
+          { tag: "pain", text: "Assurance is normally sold as an annual seat contract you sign before you know whether it works." },
+          { tag: "benefit", text: "Start on the free daily allowance, in a build, today — no sales call, no seat, no lock-in." },
+          { tag: "usp", text: "Every call returns a ~3KB Ed25519-signed, hash-chained card that verifies offline against did:web:csoai.org." },
+        ]}
+        actions={[
+          { href: "/start", label: "Get a free key" },
+          { href: "/api-docs", label: "Read the API docs", tone: "ghost" },
+        ]}
+        media={
+          <VideoEmbed
+            src="/videos/csoai-architecture.mp4"
+            poster="/videos/csoai-architecture.jpg"
+            title="How the measurement rail is put together"
+            className="!max-w-none"
+          />
+        }
+        footnote={<>{PRICING_STATUS}. Verification of any signed card is free forever, for everyone.</>}
+      />
+
+      <Band
+        tone="tint"
+        kicker="What one key reaches"
+        title={<>Every published instrument, behind one token.</>}
+        lede={
+          <>
+            Call a single axis or the full spectrum. The card that comes back is the same shape either
+            way, so whatever you build against it keeps working as the board grows.
+          </>
+        }
+      >
+        <div className="flex flex-wrap gap-2.5">
           {INSTRUMENTS.map((m) => (
-            <Badge key={m} variant="outline">{m}</Badge>
+            <span
+              key={m}
+              className="rounded-full border border-emerald-600/25 bg-white px-4 py-2 text-sm font-bold text-emerald-800"
+            >
+              {m}
+            </span>
           ))}
         </div>
-      </div>
-
-      {/* Price tiers */}
-      <div className="grid md:grid-cols-3 gap-4 mb-14">
-        {TIERS.map((t) => (
-          <Card key={t.label} className={`p-6 flex flex-col items-center text-center ${t.popular ? "border-primary ring-1 ring-primary" : ""}`}>
-            {t.popular && <Badge className="mb-2">Most used</Badge>}
-            <div className="text-lg font-extrabold">{t.label}</div>
-            <div className="text-xs font-medium text-muted-foreground mt-2">Pricing pending ruling</div>
-            <div className="text-xs text-muted-foreground mt-1 mb-4">{t.note}</div>
-            <Button asChild className="w-full">
-              <a href="/start">Get a free key →</a>
-            </Button>
-          </Card>
-        ))}
-      </div>
-
-      {/* Setup */}
-      <Card className="p-6 mb-10">
-        <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> Setup in 30 seconds</h2>
-        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+        <div className="mt-8 overflow-hidden rounded-3xl bg-[#03110b] p-6 shadow-[0_28px_70px_-40px_rgba(4,18,12,.8)] sm:p-8">
+          <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-300/80">
+            Setup, in about thirty seconds
+          </p>
+          <pre className="mt-4 overflow-x-auto font-mono text-[13px] leading-relaxed text-emerald-100/90">
 {`export COAI_PAYG_KEY="key_xxxxxxxxxxxxxxxx"
+
 # 100 free calls/day per key. After that:
 #   machine-access pricing is pending a published ruling — not yet set.
-# Every call returns a 3KB Ed25519-signed measurement card.
+# Every call returns a ~3KB Ed25519-signed measurement card.
 # When the balance hits zero, the call returns a top-up URL.`}
-        </pre>
-      </Card>
+          </pre>
+        </div>
+      </Band>
 
-      {/* Why PAYG */}
-      <div className="grid md:grid-cols-2 gap-4">
-        <Card className="p-6">
-          <h3 className="font-bold mb-3 flex items-center gap-2"><Check className="h-5 w-5 text-primary" /> Why pay-per-call</h3>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>• One key across every published instrument</li>
-            <li>• Same token across machines and CI</li>
-            <li>• Balance never expires; top up any time</li>
-            <li>• 100 free cards a day before you pay a cent</li>
-          </ul>
-        </Card>
-        <Card className="p-6">
-          <h3 className="font-bold mb-3 flex items-center gap-2"><Coins className="h-5 w-5 text-primary" /> Two ways to pay</h3>
-          <p className="text-sm text-muted-foreground">
-            Top up with <strong>card</strong> or <strong>USDC on Base</strong> via x402 for
-            agent-to-agent payments. Every call is metered and the result is Ed25519-signed —
-            so your auditor verifies the card independently of us.
+      <Band
+        kicker="Why pay-per-call"
+        title={<>Because you should be able to stop.</>}
+        lede={
+          <>
+            A metered rail is the honest shape for measurement: you pay for the measurements you took,
+            you can leave whenever, and the evidence you already hold keeps verifying either way.
+          </>
+        }
+        actions={[
+          { href: "/start", label: "Get a free key" },
+          { href: "/firewall-charter", label: "Read the Firewall Charter", tone: "ghost" },
+        ]}
+      >
+        <PanelGrid cols={2}>
+          {WHY.map((w) => (
+            <Panel key={w.h}>
+              <h3 className="text-lg font-black tracking-tight text-gray-900">{w.h}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-gray-600">{w.b}</p>
+            </Panel>
+          ))}
+        </PanelGrid>
+      </Band>
+
+      <Band tone="deep" width="prose">
+        <div className="space-y-6">
+          <Panel>
+            <h3 className="text-lg font-black tracking-tight text-gray-900">Two ways to top up</h3>
+            <p className="mt-2 text-[15px] leading-relaxed text-gray-600">
+              Card, or USDC on Base via x402 for agent-to-agent payments. Every call is metered and
+              every result is Ed25519-signed, so your auditor verifies the card independently of us.
+            </p>
+          </Panel>
+          <Caveat title="What paying does not buy">
+            <p>
+              Payment buys machine access to the instruments. It does not buy a score, a placement, a
+              faster queue, or a favourable reading. Nobody we measure or rank pays us for
+              measurement — that is written down in the{" "}
+              <a href="/firewall-charter" className="font-semibold underline">
+                Firewall Charter
+              </a>
+              , and no payment metadata ever reaches the measurement or signing path.
+            </p>
+            <p>
+              This is measurement, not certification. A card records what a system did on a published
+              test. It is not a conformity mark, an accreditation, or an approval.
+            </p>
+          </Caveat>
+          <p className="text-[15px] leading-relaxed text-gray-600">
+            Prefer a fixed plan for a human team?{" "}
+            <a href="/pricing" className="font-semibold text-emerald-700 underline">
+              See the Council rail
+            </a>
+            .
           </p>
-        </Card>
-      </div>
-
-      <p className="text-center text-sm text-muted-foreground mt-10">
-        Prefer a fixed monthly plan for humans? See the <a href="/pricing" className="underline">Council rail →</a>
-      </p>
+        </div>
+      </Band>
     </div>
   );
 }
