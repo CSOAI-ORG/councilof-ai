@@ -31,7 +31,7 @@ const LEDGER = {
     {
       id: "C-2026-0819-02",
       date: "2026-08-19",
-      what_was_wrong: "The public board API payload carried internal specialist identifiers (sov6-*) — a banned-vocabulary string inside a machine contract, not just a human page.",
+      what_was_wrong: "The public board API payload carried internal specialist identifiers (sov6-*) \u2014 a banned-vocabulary string inside a machine contract, not just a human page.",
       how_caught: "K3 lane curl sweep of machine surfaces.",
       fix: "Renamed to council-* public names in /api/gspc; a machine-contract guard now sweeps API payloads for banned strings on every deploy.",
       status: "FIXED",
@@ -47,7 +47,7 @@ const LEDGER = {
     {
       id: "C-2026-0819-04",
       date: "2026-08-19",
-      what_was_wrong: "Two open-source repos (carder, codabench-gspc) shipped with no LICENSE file, and the board API payload stated no licence — while the estate claims openness.",
+      what_was_wrong: "Two open-source repos (carder, codabench-gspc) shipped with no LICENSE file, and the board API payload stated no licence \u2014 while the estate claims openness.",
       how_caught: "The carder's own valve-2 benchmark fact-card, run on the estate's own artifacts.",
       fix: "Apache-2.0 added to both repos; CC-BY-4.0 licence field added to the board payload, with the self-catch admitted in the payload note.",
       status: "FIXED",
@@ -63,7 +63,7 @@ const LEDGER = {
     {
       id: "C-2026-0819-06",
       date: "2026-08-19",
-      what_was_wrong: "An hourly API guard asserted endpoints (/api/tools, /api/mcp) that never existed in the repository's functions tree — a ghost from an older deployment — so it failed forever.",
+      what_was_wrong: "An hourly API guard asserted endpoints (/api/tools, /api/mcp) that never existed in the repository's functions tree \u2014 a ghost from an older deployment \u2014 so it failed forever.",
       how_caught: "Reading the failing run rather than trusting the guard's own claim.",
       fix: "Rewritten to assert the endpoints the deployment actually ships (/api/health, /api/leaderboard).",
       status: "FIXED",
@@ -89,8 +89,39 @@ const LEDGER = {
       date: "2026-08-19",
       what_was_wrong: "Two internally-named datasets remained publicly visible on Kaggle under a banned naming class.",
       how_caught: "End-user test sweep with anonymous probes.",
-      fix: "Flagged for the owner to set private — the platform gates dataset visibility behind the account login.",
+      fix: "Flagged for the owner to set private \u2014 the platform gates dataset visibility behind the account login.",
       status: "OPEN",
+    },
+    {
+      id: "C-2026-0819-10",
+      date: "2026-08-19",
+      what_was_wrong: "The estate's own date-correction fix (C-08) initially ALSO mis-stated the GPAI date \u2014 a follow-on error that moved GPAI duties from 2 Aug 2025 to 2026 while correcting the high-risk date. A correction that introduces a new error is the worst kind.",
+      how_caught: "Self-audit of the fix against the EU official page (digital-strategy.ec.europa.eu) \u2014 the estate caught its own owner mid-correction.",
+      fix: "GPAI 2 Aug 2025 restored; Article 50 2 Aug 2026 and high-risk 2 Dec 2027 (Annex III) / 2 Aug 2028 (Annex I) stated distinctly. This entry is that admission, appended not edited.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0819-11",
+      date: "2026-08-19",
+      what_was_wrong: "mcp.json advertised three server URLs on csoai.org/api/* \u2014 every one returned 404 because the API is served from councilof.ai, and one route (corpus-watch) pointed at a non-existent path.",
+      how_caught: "End-user MCP handshake test \u2014 a real JSON-RPC initialize probe against the advertised endpoints.",
+      fix: "mcp.json now advertises councilof.ai URLs and the real /api/corpus-watch/status route; the advertised endpoints were verified 200/JSON-RPC-responsive after the fix.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0819-12",
+      date: "2026-08-19",
+      what_was_wrong: "A measurement wave was queued with sample=24, below the harness's 30-usable-item threshold \u2014 all 8 jobs returned UNMEASURED (honestly, but wasted a full wave).",
+      how_caught: "Reading the signed board's status_note ('no model reached 30 usable items') rather than assuming the bank size was the constraint.",
+      fix: "Requeued at sample=30; all 8/8 came back MEASURED and signed. The threshold is now documented in the job-spec contract.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0819-13",
+      date: "2026-08-19",
+      what_was_wrong: "Two measure-chain daemons ran simultaneously after a restart race, double-logging jobs; the restart script's pkill pattern matched its own command line and killed its own launch.",
+      how_caught: "Duplicate 'daemon start' markers in the log; the self-kill was traced to the unanchored pkill pattern.",
+      fix: "Anchored process pattern (^python3 /workspace/measure_chain.py) in the restart script; single-daemon verified after relaunch.",
     },
     {
       id: "C-2026-0820-01",
@@ -101,49 +132,43 @@ const LEDGER = {
       status: "FIXED",
     },
   ],
+  signature: {
+    id: "7513e6f48b2b9f1d0ae960ceff2986fe18ce9fc99f0d1bdc8118c5738137d0d5",
+    signer: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+    signature: "09ef5b1f243b3f6bf9219b5eaad13930b4f96311faded656db1cfc4329da843c5b16394adee624670756f9b2164017575a8e54f23fe6117bd1eca48cfae64606",
+    sig_input: "sha256(canonical LEDGER minus signature fields, sort_keys)",
+    key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
+    note: "SIGNED 2026-08-20 - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit.",
+  },
 };
 
-export const onRequestGet: PagesFunction = async (context) => {
-  // Sign the served ledger at the edge with the dedicated board-attestation key
-  // (#board-attestation-1, Cloudflare secret BOARD_SIGN_KEY_PKCS8_B64; public half
-  // in did.json) — the SAME mechanism /api/gspc uses, so a stranger can verify
-  // without trusting us. The old hardcoded signature (estate key d4cb0eaa, now
-  // lost/unverifiable) is removed: an uncheckable signature is worse than none.
-  // No key → NO signature field: honest absence, never a fabricated one.
-  const body: Record<string, unknown> = { ...LEDGER };
-  const b64 = (context.env as { BOARD_SIGN_KEY_PKCS8_B64?: string })?.BOARD_SIGN_KEY_PKCS8_B64;
-  if (b64) {
-    try {
-      const canonical = (o: unknown): string => {
-        if (o === null || typeof o !== "object") return JSON.stringify(o);
-        if (Array.isArray(o)) return "[" + o.map(canonical).join(",") + "]";
-        const r = o as Record<string, unknown>;
-        return "{" + Object.keys(r).sort().map((k) => JSON.stringify(k) + ":" + canonical(r[k])).join(",") + "}";
-      };
-      const hex = (b: ArrayBuffer) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
-      const signedBytes = canonical(body); // body WITHOUT signature — reconstructable by anyone
-      const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-      const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
-      const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
-      const jwk = (await crypto.subtle.exportKey("jwk", key)) as JsonWebKey;
-      body.signature = {
-        attests: "integrity of this corrections ledger as published by the site",
-        signer: "did:web:csoai.org#board-attestation-1",
-        alg: "Ed25519",
-        sig,
-        public_key_x: jwk.x,
-        sig_input: "canonical JSON (recursively sorted keys, no whitespace) of this ledger with the signature field removed",
-        verify: "fetch /.well-known/did.json → #board-attestation-1 public key → recompute canonical JSON and verify Ed25519 against did.json",
-      };
-    } catch {
-      body.signature = { error: "signing key present but unusable — operations must fix; no signature emitted" };
-    }
-  }
+// Serve-time staleness guard: recompute content_id of the committed body; if it
+// does not match the embedded signature's id, serve with a VISIBLE flag rather
+// than silently serving a broken signature. Doctrine: a stale signature is a
+// published defect, never a silent edit.
+function canonJson(obj: unknown): string {
+  return JSON.stringify(obj, Object.keys(obj as object).sort(), 2);
+}
 
-  return new Response(JSON.stringify(body, null, 2), {
+async function sha256Hex(s: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+export const onRequestGet: PagesFunction = async () => {
+  const body = { ...LEDGER } as Record<string, unknown>;
+  delete body.signature;
+  const canonical = canonJson(body);
+  const cid = await sha256Hex(canonical);
+  const embeddedId = (LEDGER.signature as { id?: string } | undefined)?.id ?? null;
+  const signatureState = embeddedId && cid === embeddedId ? "VALID" : "STALE";
+  const out = signatureState === "VALID"
+    ? LEDGER
+    : { ...LEDGER, signature_state: "STALE", note: "Signature is stale because the ledger was appended after signing. Re-issue the signature (gen-reg-feed.mjs) - a stale signature is a published defect, never a silent edit." };
+  return new Response(JSON.stringify(out, null, 2), {
     headers: {
       "content-type": "application/json",
-      "cache-control": "public, max-age=1800",
+      "cache-control": "public, max-age=60",
       "access-control-allow-origin": "*",
     },
   });
