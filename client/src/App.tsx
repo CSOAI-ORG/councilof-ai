@@ -124,6 +124,7 @@ const CanadaAIAct = lazy(() => import("./pages/CanadaAIAct"));
 const UKAIBill = lazy(() => import("./pages/UKAIBill"));
 const GlobalAISafetyInitiative = lazy(() => import("./pages/GlobalAISafetyInitiative"));
 const GovBench = lazy(() => import("./pages/GovBench"));
+const Dorado = lazy(() => import("./pages/Dorado"));
 const DriftProduct = lazy(() => import("./pages/DriftProduct"));
 const GovernmentLinks = lazy(() => import("./pages/GovernmentLinks"));
 const GovernmentPortal = lazy(() => import("./pages/GovernmentPortal"));
@@ -618,6 +619,8 @@ function App() {
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
                   <Route path="/watchdog/report" component={PublicWatchdogHub} />
                   <Route path="/benchmarks" component={Benchmarks} />
+                  <Route path="/council-ledger" component={Dorado} />
+                  <Route path="/dorado" component={Dorado} />
                   {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />

@@ -30,8 +30,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     | undefined;
   const marketRows = Array.isArray(marketSnapshot?.rows) ? marketSnapshot.rows : null;
   return Response.json({
-    schema: "csoai.dorado-bench/0.1",
-    name: "Dorado Bench — East vs West",
+    schema: "csoai.council-ledger/0.1",
+    name: "Council Ledger — signed provision-conformance receipts, East vs West context",
     ts,
     register: "measurement, not certification — displayed side by side, never blended",
     // RAIL 1: EAST-vs-WEST AI regulation-adherence (MEASURED, signed chain)
@@ -67,11 +67,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
       entries: ["arc-agi-3-human-gap", "gaia-human-gap", "gpqa-diamond-expertise-gap", "human-or-not-detection", "colonoscopy-deskilling"],
       note: "published human aggregates, REPORTED state with attribution — never blended into MEASURED cells",
     },
-    // The pairing (displayed, never asserted as causation)
+    // The pairing (displayed, never fused — per the provision-conformance reframe)
     the_pairing: {
-      claim: "AI regulation-adherence on the bench is displayed beside the market the builders price — a lead-indicator hypothesis, shown not proven",
-      caveat: "correlation is not causation; the market rail is timestamped live data, the bench rail is the signed CX-3 run; re-run cadence documented in /api/regulation",
-      limitations: ["no causation claimed", "bench n=38 is above floor but modest", "market is live snapshot, not historical series"],
+      claim: "A signed provision-conformance receipt for a defined task, with market state and human baseline reported ALONGSIDE as adjacent axes — never fused into one number",
+      caveat: "regulation states what is permitted; market data states what is priced. They are not commensurable on one scale — so conformance is measured deterministically and market/human context is reported beside it, with confidence intervals",
+      limitations: ["deterministic predicates confined to the provision-conformance axis", "human and market rails are REPORTED context with CIs, not deterministically scored", "no causation claimed between rails"],
     },
     signature_envelope: {
       schema: "csoai.signed-surface/0.1",
