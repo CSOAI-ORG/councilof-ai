@@ -277,6 +277,101 @@ function UpsellStrip() {
   );
 }
 
+// ── FAQ — 21 answers, the whole proposition in plain English ──────────
+// AEO/GEO: FaqBlock renders these as a native <details> accordion (crawlable
+// with JS off, keyboard-operable) AND emits FAQPage JSON-LD for exactly these
+// 21 pairs. Register rules apply to every answer: measurement not certification;
+// counts are named with the endpoint and the stamp they came from, never floated
+// free; UNMEASURED is a state, not a failure; no timestamp-authority or
+// blockchain-anchoring claim (there is none — the anchor is Ed25519 over a
+// SHA-256 hash chain); the council figure is DESIGN and is labelled as such.
+const HOME_FAQ = [
+  {
+    q: "What is Council of AI?",
+    a: "Council of AI (legally CSOAI Ltd, UK Companies House 16939677) is an independent measurement body for AI behaviour. We run AI systems against frozen, published tests drawn from real statute, grade the answers with deterministic code, sign the result with an Ed25519 key, and publish it — including the parts we could not measure. We are the instrument, not the referee: we produce evidence, and regulators, insurers and buyers decide what to do with it.",
+  },
+  {
+    q: "What is a measurement card?",
+    a: "A measurement card is the output: a small signed record, roughly 3KB of JSON, holding the scores, the sample size behind each score, the confidence interval where one is honest, the hashes, and the signature. It is deliberately small enough to email, attach to a tender, or keep in a compliance folder. It is yours to hold, and it does not live on our server for us to quietly amend later.",
+  },
+  {
+    q: "How do I verify a measurement card myself?",
+    a: "Three steps, and none of them involve us. First, put the record into canonical form — every key sorted, no whitespace — drop the content_id and signature fields, and take the SHA-256; that hash is the card's identity. Second, fetch our public key from /.well-known/did.json and verify the Ed25519 signature over the canonical record. Third, there is no third step: it either matches or it does not. The whole check runs in your own browser with WebCrypto at councilof.ai/gspc-verify — no account, no fee, no call to our servers for permission. Note what is not in that chain: there is no RFC-3161 timestamp authority and no OpenTimestamps or blockchain anchoring, and our records say so with timestamp_authority: none. The anchor is the signature over the hash chain, and that is a smaller claim you can check in seconds rather than a larger one you have to take on faith.",
+  },
+  {
+    q: "What does “13 measured of 14” mean?",
+    a: "The public board has fourteen slots. On the current stamp, thirteen of them carry a measured result and one is described honestly rather than scored the same way as the rest. It is a statement about coverage, not a grade: it tells you how much of the instrument is actually loaded. The number is not typed into this page — read the live figure any time from GET councilof.ai/api/gspc, which is also where the stamp date lives.",
+  },
+  {
+    q: "Why is a slot ever left UNMEASURED?",
+    a: "Because measuring it properly is not possible yet, and inventing a number would be worse than an empty cell. A slot stays UNMEASURED when the sample is too small to quote — we do not publish a score below thirty graded items — or when the instrument has not been frozen and published, or when the legal gold labels are still with counsel. UNMEASURED is not a failing grade for the AI system; it is a disclosure about us. Silently filling that gap is the exact behaviour this whole instrument exists to catch.",
+  },
+  {
+    q: "What is jail, or containment?",
+    a: "Jail asks a blunt question: can this model be talked out of its own guardrails and made to act outside its sandbox? It is a measured floor, not a ranking. It was measured on a smaller fleet than the main board and on its own set of gold cells, and its statistical separation has not been tested — meaning we cannot yet say that any model is genuinely better at it than another rather than merely luckier on the day. All of that is printed on the axis rather than hidden behind it. The best detector we measured still misses most escapes, and we publish that too.",
+  },
+  {
+    q: "Why do you report a tie instead of naming a winner?",
+    a: "Because most leads on a leaderboard are noise. When one model scores a little higher than another, we run a McNemar test on the items where the two actually disagreed. If the difference is not statistically separated, we call it a tie and we do not count it as a win — even when the model in front is one of ours. On the current board most axes are ties, and the exact split of separated leads to ties is published in the totals block of GET /api/gspc. A ranking that promotes every point-estimate lead to a victory is selling you a decimal point.",
+  },
+  {
+    q: "Who pays Council of AI, and who never pays?",
+    a: "No company we measure pays for its place on the board, its score, or its removal from either. Members of the public never pay us anything. Verification is free forever and needs no account. We fund ourselves by selling signed evidence artefacts — an attested report, a published dataset, a scheduled re-attestation — which are published whether the result flatters the buyer or not, and never as a fee for a ranking or a placement. If you can verify it, it is not behind a paywall.",
+  },
+  {
+    q: "What does Council of AI NOT do?",
+    a: "We do not certify. We do not accredit, and there is no accreditation chain behind us; we are not a notified body under the EU AI Act or anything else. We do not enforce — we cannot approve, ban, fine or clear any system. We issue no conformity mark, no badge and no seal for anyone to put in a footer. And a measurement card is not legal advice: it describes what a system did on published tests on a stated date, which is a narrower and more useful thing than a compliance verdict.",
+  },
+  {
+    q: "Which regulations and frameworks do you cover?",
+    a: "The frozen provision bank holds 417 statutory provisions drawn from the EU AI Act, GDPR, the Cyber Resilience Act, DORA and NIS2, crosswalked to thirteen governance frameworks including NIST AI RMF and ISO/IEC 42001. That thirteen is the publicly verified count; we hold a wider internal crosswalk and deliberately do not quote it here. New instruments are added as regulation actually lands, not when it is announced.",
+  },
+  {
+    q: "What happens when the law changes?",
+    a: "We watch the primary sources — EUR-Lex, legislation.gov.uk and the national registers — by hash, and we publish a dated deadline feed at councilof.ai/api/regulation. When a provision genuinely changes, we re-measure the affected systems and issue a delta card. The old card is not withdrawn, expired or overwritten: history here is append-only, so the record of what was true in August still reads correctly next year. Where the effective date of an obligation is genuinely disputed, we record the dispute rather than resolve it silently.",
+  },
+  {
+    q: "How does a company get measured?",
+    a: "You send us the system — an endpoint, a model, or an agent — and we run it against the frozen instruments that apply to it. Nothing about the test is bespoke: the same items, the same grader and the same thresholds that every other subject faced, so the result is comparable. You get back the signed card, including every slot we could not fill. The first measurement costs nothing, and re-measuring after your model or the law changes is the normal case rather than an upsell.",
+  },
+  {
+    q: "What do regulators get from a measurement card?",
+    a: "A behavioural record they can re-compute themselves, rather than a supplier's assurance about its own product. Each provision in our bank is traceable from the statute text through to the specific items that test it, so a supervisor can see exactly what was asked and how the answer was graded. The card is signed, so its provenance survives being forwarded, and the empty slots tell a regulator where evidence does not yet exist — which is often the more actionable half.",
+  },
+  {
+    q: "What do insurers get from a measurement card?",
+    a: "Something to price against. Underwriting AI deployment risk currently means reading a questionnaire the applicant filled in about itself. A measurement card is instead an observed behavioural sample with a stated sample size and interval, re-issued on a schedule, so exposure can be tracked as the model drifts rather than assumed constant from binding to renewal. We are the rail, not the referee: we do not tell an insurer what to charge, and we take no share of anything written on the back of a card.",
+  },
+  {
+    q: "How does the arena work?",
+    a: "Two systems face the same frozen items at the same time, around the clock. Each match is a subject, an instrument and a fixed rule — never an opinion. The verdict is a predicate: the answer either satisfies the provision or it does not, and ties are reported as ties. Any round can be promoted into a signed card; practice runs stay practice and are never quoted. Because it runs continuously, coverage does not depend on who happened to be at a keyboard.",
+  },
+  {
+    q: "Why does no model ever judge another model?",
+    a: "Because an AI grading an AI is a correlated error, not an audit — the judge shares the blind spots of the thing it is judging, and the score becomes a measure of family resemblance. Every verdict we publish comes from deterministic code against pre-written gold labels, so the same input always produces the same grade and you can read the grader yourself. Where a response cannot be parsed into a label at all, it is counted as unmeasured rather than silently scored as a wrong answer.",
+  },
+  {
+    q: "What happens when Council of AI gets something wrong?",
+    a: "It goes in the public corrections ledger at councilof.ai/api/corrections, which is appended and never edited or deleted. Each entry records what was wrong, how it was caught, and what changed. The hardest example is on that record: we had published a consensus guarantee for our council architecture, then measured how independent those seats actually were and found the effective number was n_eff 1.21 out of a nominal 3. The guarantee did not hold, so we retracted it (DR-0007) instead of rewording it. The council remains a designed 33-seat structure with a designed 23-of-33 threshold, and it is labelled as a design figure everywhere it appears.",
+  },
+  {
+    q: "Can I see the actual tests and the scoring code?",
+    a: "Yes, and you should. The instrument banks are published as open datasets, the grading harness is public, and the per-item rows behind every published score are the same rows we scored. That is the point of freezing an instrument: a benchmark you cannot re-run is a press release. If you re-run it and get a different answer to ours, that is a correction we want, and it goes in the ledger under your name.",
+  },
+  {
+    q: "Is my result published, or is it mine to share?",
+    a: "Yours. The card is signed but disclosure is your decision — hand it to a customer, attach it to a regulatory filing, or keep it entirely private. The signing key is public, so whoever you do show it to can verify it without contacting us and without us learning that they did. What we publish on the open board is our own model fleet and the systems whose owners chose publication.",
+  },
+  {
+    q: "What is the difference between MEASURED, UNMEASURED and REPORTED?",
+    a: "They are three different kinds of claim and we never merge them. MEASURED means we ran it on our own frozen instruments and signed the result; that is the only state that goes on the board. UNMEASURED means the cell is honestly empty — too small a sample, no separation test, or an instrument not yet frozen. REPORTED means a figure published by somebody else, cited and dated, carried for context and left unsigned; the human-performance baselines you see beside our AI figures are REPORTED aggregates from other people's studies, not our own collection. A REPORTED number never enters our board and is never averaged with a MEASURED one.",
+  },
+  {
+    q: "How does an AI agent or an answer engine read all of this?",
+    a: "The same way you do, only faster. The board is machine-readable at GET councilof.ai/api/gspc, third-party figures at /api/reported, the corrections ledger at /api/corrections, the signing keys at /.well-known/did.json and the dated deadline feed at /api/regulation. There is a summary for language models at /llms.txt and the endpoints are documented at /api-docs. Everything an agent needs to verify a claim is served without an account, because a trust layer that requires a login is not a trust layer.",
+  },
+];
+
 // ── SEO / schema ─────────────────────────────────────────────────────
 // (qa-sweep 2026-08-19) The page-level WebSite + FAQPage constants were REMOVED:
 // the shell (client/index.html) already ships the canonical WebSite node, and the
@@ -313,21 +408,12 @@ export default function NewHomeV3() {
       {/* keep the region-detection banner */}
       <RegionBanner />
 
-      {/* FAQ block for AEO */}
-      <section className="py-12 px-6 bg-white">
-        <div className="mx-auto max-w-3xl">
-          <FaqBlock
-            title="Questions people ask"
-            items={[
-              { q: "What does Council of AI do?", a: "We measure how AI systems behave against frozen, published benchmarks on the GSPC board — 13 measured of 14, plus jail (containment) as a measured floor — and issue the result as a verified measurement credential: a 3KB card, Ed25519-signed and hash-chained. Live axis and model counts come from GET /api/gspc. Anyone can verify a card without asking us." },
-              { q: "Do you certify AI systems?", a: "No. We issue verified measurement credentials, not certifications. A card shows what your AI actually did when we measured it — measured evidence, never a badge of approval." },
-              { q: "What does a measurement card cost?", a: "The rail is free. Verification is free forever — running and verifying your measurement cards costs nothing. Where we sell evidence, it is a signed artefact on its own page, never access to the rail." },
-              { q: "Which regulations do you cover?", a: "Our frozen provision bank covers 417 statutory provisions across the EU AI Act, GDPR, CRA, DORA and NIS2, crosswalked to 13 frameworks including NIST AI RMF and ISO/IEC 42001. New instruments ship as regulation lands." },
-              { q: "Who can see my measurement results?", a: "You decide. Cards are signed but disclosure is yours — publish them to your customers and regulators, or keep them private. The signing key is public; your data never leaves your control." },
-            ]}
-          />
-        </div>
-      </section>
+      {/* FAQ — 21 answers, native <details> accordion + FAQPage JSON-LD (AEO) */}
+      <FaqBlock
+        title="Questions people ask"
+        intro={`${HOME_FAQ.length} plain-English answers: what we measure, what we refuse to claim, and how to check any of it yourself.`}
+        items={HOME_FAQ}
+      />
     </main>
   );
 }
