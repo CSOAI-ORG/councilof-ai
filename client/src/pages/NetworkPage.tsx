@@ -10,7 +10,7 @@ const GW = "/api";
 type Agent = { domain: string; role: string; blurb: string; group: "core" | "governance" | "protection" | "applied" };
 const CROWN: Agent = { domain: "csoai.org", role: "the standards crown", blurb: "The Charter, the frameworks and the council that every agent below answers to.", group: "core" };
 const AGENTS: Agent[] = [
-  { domain: "councilof.ai", role: "the Council of AI", blurb: "A designed 33-agent Council of AI; its measured status is published on the public Refutation Ledger.", group: "core" },
+  { domain: "councilof.ai", role: "the Council of AI", blurb: "The Council's designed multi-provider oversight; its measured status is published on the public Refutation Ledger.", group: "core" },
   { domain: "meok.ai", role: "the reasoning brain", blurb: "The reasoning substrate — routes any model, left-brain / right-brain, on your terms.", group: "core" },
   { domain: "proofof.ai", role: "deepfake & identity proof", blurb: "Sign what's really you; a deepfake carries no seal and fails verification.", group: "protection" },
   { domain: "safetyof.ai", role: "AI safety", blurb: "Safety evaluation and harm monitoring across the AI estate.", group: "governance" },
