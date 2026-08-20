@@ -103,12 +103,12 @@ const LEDGER = {
   ],
 
   signature: {
-    id: "7ab3790f0dfc9cf5aa09d2c10e29ff9c423156f99f3a9cddae88d31cf865aa19",
+    id: "adc7222ffbeb860c9646cd364ba8443793c2b574d5153a466a703fc18b7703c1",
     signer: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
-    signature: "17cdc706d6c17525f33448ff1d6c67521a0974307097532a3d38e1fdc684fa5c6b138ab9308e2cd5e5a5c715d8ef3a92ecd37f751593580d880ee07e01241f06",
+    signature: "6b28c13d7fc792973991d75a8b2867c03a36a230047828e3092c630e277e3489bd7e57ca5c3c0d4c0ad788c595f0c94a5986b40234384450172c94e23fe2870a",
     sig_input: "sha256(canonical LEDGER minus signature fields, sort_keys)",
     key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
-    note: "SIGNED 2026-08-19 — verify by recomputing canonical JSON and checking Ed25519 against the published did.json. The corrections ledger is the honesty gate made citable: the same body that publishes the number publishes when the number was wrong.",
+    note: "SIGNED 2026-08-20 (re-issued on the 10th entry, C-2026-0820-01) - verify by recomputing canonical JSON and checking Ed25519 against the published did.json. Every append re-issues the signature.",
   },
 };
 export const onRequestGet: PagesFunction = async () => {
