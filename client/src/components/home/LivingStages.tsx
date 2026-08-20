@@ -1,5 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "wouter";
+import { RotatingHighlight } from "../type/RotatingHighlight";
+import { SECTION_TITLES } from "../type/sectionTitles";
+import LiveLeaderboard from "../board/LiveLeaderboard";
 
 /**
  * LivingStages — the lower homepage. Six image-backed bands that answer the
@@ -243,12 +246,15 @@ function Body({ children }: { children: ReactNode }) {
 function Independence() {
   return (
     <HeavyBand
-      image="/images/secure_evidence_vault.jpg"
+      image="/images/detail/evidence_vault_detail.jpg"
+      objectPosition="72% 50%"
       alt="Clay figures gathered around a vault door holding a glowing 3KB credential card"
       panelSide="left"
     >
       <Kicker>How we are funded</Kicker>
-      <Heading>Nobody on the board pays us.</Heading>
+      <Heading>
+        <RotatingHighlight {...SECTION_TITLES.independence} />
+      </Heading>
       <Body>
         The obvious question about any body that scores AI is: who is writing the cheque? Here is the
         whole answer. No company we measure pays for its place, its score, or its removal. Members of
@@ -286,7 +292,9 @@ function Boundary() {
       caption="Cropped to the statutory-crosswalk panel: the law on the left, the measured axes it maps to on the right. Nothing in this frame issues a verdict."
     >
       <Kicker>The boundary</Kicker>
-      <Heading>What we do not do.</Heading>
+      <Heading>
+        <RotatingHighlight {...SECTION_TITLES.boundary} />
+      </Heading>
       <Body>
         The limits are the brand. We are a measurement body and nothing else, and saying so plainly is
         more useful to you than any badge would be. Read the four lines below as hard exclusions, not
@@ -403,7 +411,9 @@ function OwnErrors() {
       caption="Cropped to the honest half of the journey: report, provision mapping, deterministic sandbox test. Verdicts come from code, never from one model judging another."
     >
       <Kicker>Self-correction</Kicker>
-      <Heading>We publish our own mistakes.</Heading>
+      <Heading>
+        <RotatingHighlight {...SECTION_TITLES.corrections} />
+      </Heading>
       <Body>
         Anyone can be right on a good day. What you should judge a measurement body on is what it does
         on a bad one. We keep a public corrections ledger at{" "}
@@ -454,12 +464,15 @@ function LivingLaw() {
 
   return (
     <HeavyBand
-      image="/images/liveness_drift_engine.jpg"
+      image="/images/detail/liveness_drift_detail.jpg"
+      objectPosition="28% 50%"
       alt="An hourglass weighing a stale seal against a re-attested current seal, fed by EUR-Lex and legislation.gov.uk ribbons"
       panelSide="right"
     >
       <Kicker>Living law</Kicker>
-      <Heading>The law keeps moving. So does the measurement.</Heading>
+      <Heading>
+        <RotatingHighlight {...SECTION_TITLES.living} />
+      </Heading>
       <Body>
         A one-off assessment starts going stale the day it is stamped, because the statute underneath
         it does not hold still. We track the primary sources — EUR-Lex, legislation.gov.uk and the
@@ -518,12 +531,15 @@ function LiveBoard() {
 
   return (
     <HeavyBand
-      image="/images/coliseum_hero_arena.jpg"
+      image="/images/detail/board_arena_detail.jpg"
+      objectPosition="72% 50%"
       alt="Clay figures and AI forms facing each other across a bright marble arena under green light"
       panelSide="left"
     >
       <Kicker>The board{stamp ? ` · stamped ${stamp}` : ""}</Kicker>
-      <Heading>The board, as it actually stands.</Heading>
+      <Heading>
+        <RotatingHighlight {...SECTION_TITLES.board} />
+      </Heading>
       <Body>
         A filled cell is a measurement. A dash is honest emptiness. Every count in this section is read
         live from <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/gspc</code> — we
@@ -610,6 +626,8 @@ export default function LivingStages() {
       <OwnErrors />
       <LivingLaw />
       <LiveBoard />
+      {/* the board as a grid, read live from /api/gspc — the section above says what it means */}
+      <LiveLeaderboard className="bg-white py-16 sm:py-24" />
     </div>
   );
 }

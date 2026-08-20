@@ -289,9 +289,7 @@ function Infographic({ index }: { index: number }) {
 const HERO_REEL: { src: string; alt: string }[] = [
   { src: "/images/coliseum_hero_arena.jpg", alt: "Clay figures and green verification seals gathered in a marble arena" },
   { src: "/images/coliseum_swarm_clash.jpg", alt: "A swarm of green shards meeting clay scientists raising shields" },
-  { src: "/images/secure_evidence_vault.jpg", alt: "Clay figures holding a glowing 3KB credential card before a vault door" },
   { src: "/images/coliseum_logic_duel.jpg", alt: "A human and an AI facing each other across a chessboard" },
-  { src: "/images/liveness_drift_engine.jpg", alt: "An hourglass weighing a stale certification against a re-attested current seal" },
   { src: "/images/coliseum_humans_vs_humanoids.jpg", alt: "People directing AI figures with beams of light, keeping oversight" },
   { src: "/images/verifiable_evidence_card.jpg", alt: "Hands holding a signed evidence card reading verified: true" },
 ];
