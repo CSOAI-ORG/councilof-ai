@@ -43,6 +43,15 @@ const FEED = {
   underwriting_note: "Each deadline carries penalty_exposure — the maximum statutory fine and its basis. This turns the calendar into an underwriting-input table: a mandated obligation + a date + a priced downside is the shape of an insurable trigger. CSOAI does not underwrite and bears no risk; this is the neutral substrate an insurer prices on.",
   penalty_tiers_eu_ai_act: { prohibited_practices: "up to €35,000,000 or 7% of worldwide annual turnover (Art 99(3))", most_obligations_incl_art50_and_gpai: "up to €15,000,000 or 3% (Art 99(4))", incorrect_or_misleading_info: "up to €7,500,000 or 1% (Art 99(5))" },
   demand_creating: ["Illinois SB 315 §10(d) audit mandate", "NY RAISE", "California SB 53", "EU CRA Article 14"],
+
+  signature: {
+    id: "8f2702f8fbf016133594093572b6cdfe73ab90de4f3bbe788ffc323965f32f76",
+    signer: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+    signature: "6c02e9a802d39e1adefb538f82985402c5138a72ad7486b17880f55e3e426fafb4a4ec564834c1ca16695ee73c9ffab3a8e3a881f37b1310dd6705c0a5f09e03",
+    sig_input: "sha256(canonical FEED minus signature fields, sort_keys)",
+    key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
+    note: "SIGNED 2026-08-19 — verify by recomputing canonical JSON and checking Ed25519 against the published did.json. A wrong date here is a corrections-ledger event, never a silent edit.",
+  },
 };
 
 export const onRequestGet: PagesFunction = async () => {
