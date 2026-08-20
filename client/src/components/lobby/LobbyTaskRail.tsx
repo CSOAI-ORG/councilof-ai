@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
+import { DOT, FOCUS, SP, TONE, TYPE, insetStyle } from "./glass";
 
 /**
- * LobbyTaskRail — the right rail of the Council Lobby.
+ * LobbyTaskRail — the "Tasks" section of the right rail: the running checks.
  *
  * Each row is a real fetch against a real public endpoint, rendered as a step
  * with a state: running -> ok | failed. HONESTY CONTRACT: a failed fetch says
  * FAILED and shows why. There is no cached fallback, no placeholder number and
- * no hardcoded axis count anywhere in this file — every figure below is read
- * out of the response body at the moment it arrives, or it is not shown at all.
+ * no hardcoded axis count anywhere in this file — every figure below is read out
+ * of the response body at the moment it arrives, or it is not shown at all.
+ *
+ * The state is carried by a WORD as well as a colour ("ok", "failed",
+ * "running"), because colour alone is not a state anyone can read aloud.
  */
 
 type StepState = "idle" | "running" | "ok" | "failed";
@@ -23,26 +27,28 @@ type Step = {
   reason?: string;
 };
 
+/**
+ * Read a date STRING out of a body, or nothing.
+ *
+ * /api/gspc ships `measured_on` as an OBJECT ({model, endpoint, date, …}), so
+ * the obvious `${j.measured_on}` renders the literal text "[object Object]" —
+ * which is what the previous rail shipped. Anything that is not a string is
+ * treated as absent: an unreadable stamp is no stamp, never a rendered object.
+ */
+function stampOf(j: any): string | null {
+  const m = j?.measured_on;
+  if (typeof m === "string") return m;
+  if (m && typeof m === "object" && typeof m.date === "string") return m.date;
+  if (typeof j?.date === "string") return j.date;
+  return null;
+}
+
 const INITIAL: Step[] = [
   { id: "gspc", label: "Board coverage", endpoint: "/api/gspc", state: "idle" },
   { id: "arena", label: "Arena feed", endpoint: "/api/arena/rounds.jsonl", state: "idle" },
 ];
 
-const DOT: Record<StepState, string> = {
-  idle: "bg-white/25",
-  running: "bg-amber-300 animate-pulse",
-  ok: "bg-emerald-300",
-  failed: "bg-rose-400",
-};
-
-const BADGE: Record<StepState, string> = {
-  idle: "queued",
-  running: "running",
-  ok: "ok",
-  failed: "failed",
-};
-
-export default function LobbyTaskRail({ panel }: { panel: React.CSSProperties }) {
+export default function LobbyTaskRail() {
   const [steps, setSteps] = useState<Step[]>(INITIAL);
   const [ranAt, setRanAt] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -52,7 +58,7 @@ export default function LobbyTaskRail({ panel }: { panel: React.CSSProperties })
 
   const run = useCallback(async () => {
     setBusy(true);
-    setSteps(INITIAL.map((s) => ({ ...s, state: "running" })));
+    setSteps(INITIAL.map((s) => ({ ...s, state: "running" as StepState })));
 
     // --- Board coverage: live axis count + the stamp the API itself publishes.
     try {
@@ -68,7 +74,7 @@ export default function LobbyTaskRail({ panel }: { panel: React.CSSProperties })
       if (typeof t.measured_axes === "number" && typeof t.public_count !== "string")
         bits.push(`${t.measured_axes} measured`);
       if (typeof t.items === "number") bits.push(`${t.items.toLocaleString()} items`);
-      const stamp = j?.measured_on ?? j?.date ?? null;
+      const stamp = stampOf(j);
       if (!bits.length && !stamp) throw new Error("response carried no totals to report");
       set("gspc", {
         state: "ok",
@@ -115,57 +121,51 @@ export default function LobbyTaskRail({ panel }: { panel: React.CSSProperties })
   useEffect(() => { void run(); }, [run]);
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-emerald-300/20 p-3" style={panel}>
-      <div className="flex items-center gap-2">
-        <h3 className="text-[11px] font-bold uppercase tracking-[1.4px] text-emerald-100/90">Live status</h3>
+    <div className="flex h-full flex-col">
+      <div className="mb-3 flex items-center gap-3">
+        <h3 className={TYPE.section}>Running checks</h3>
         <button
+          type="button"
           onClick={() => void run()}
           disabled={busy}
-          className="ml-auto rounded-full border border-emerald-300/30 px-2 py-0.5 text-[10px] font-semibold text-emerald-100/80 transition hover:bg-white/10 disabled:opacity-40"
+          className={`ml-auto rounded-lg border border-slate-900/10 bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-slate-700 transition hover:bg-white disabled:opacity-40 motion-reduce:transition-none ${FOCUS}`}
         >
           {busy ? "running…" : "re-run"}
         </button>
       </div>
 
-      <ol className="mt-3 space-y-2.5">
+      <ol className={`${SP.stackTight} overflow-y-auto`}>
         {steps.map((s) => (
-          <li key={s.id} className="rounded-xl border border-white/10 bg-black/15 p-2.5">
+          <li key={s.id} className={`${SP.card} rounded-xl border border-slate-900/10`} style={insetStyle}>
             <div className="flex items-center gap-2">
-              <span className={"h-1.5 w-1.5 shrink-0 rounded-full " + DOT[s.state]} aria-hidden="true" />
-              <span className="text-[12px] font-semibold text-emerald-50">{s.label}</span>
+              <span className={`h-2 w-2 shrink-0 rounded-full ${DOT[s.state]}`} aria-hidden="true" />
+              <span className="text-[12.5px] font-semibold text-slate-900">{s.label}</span>
               <span
-                className={
-                  "ml-auto rounded-full px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wide " +
-                  (s.state === "ok"
-                    ? "bg-emerald-400/15 text-emerald-200"
-                    : s.state === "failed"
-                      ? "bg-rose-400/15 text-rose-200"
-                      : "bg-white/10 text-emerald-100/70")
-                }
+                className={`ml-auto rounded-full border px-2 py-0.5 font-mono text-[9.5px] uppercase tracking-wide ${
+                  s.state === "ok" ? TONE.ok : s.state === "failed" ? TONE.failed : s.state === "running" ? TONE.running : TONE.idle
+                }`}
               >
-                {BADGE[s.state]}
+                {s.state}
               </span>
             </div>
-            <code className="mt-1 block font-mono text-[9.5px] text-emerald-200/50">{s.endpoint}</code>
+            <code className={`mt-1.5 block ${TYPE.mono}`}>{s.endpoint}</code>
             {s.state === "ok" && s.detail && (
-              <p className="mt-1.5 whitespace-pre-line text-[11px] leading-snug text-emerald-50/85">{s.detail}</p>
+              <p className="mt-2 whitespace-pre-line text-[11.5px] leading-snug text-slate-800">{s.detail}</p>
             )}
             {s.state === "failed" && (
-              <p className="mt-1.5 text-[11px] leading-snug text-rose-200/90">
+              <p className="mt-2 text-[11.5px] leading-snug text-rose-800">
                 {s.reason}
-                <span className="mt-0.5 block text-rose-200/60">
-                  No value is shown in its place.
-                </span>
+                <span className="mt-0.5 block text-rose-800">No value is shown in its place.</span>
               </p>
             )}
           </li>
         ))}
       </ol>
 
-      <p className="mt-auto pt-3 text-[10px] leading-relaxed text-emerald-100/45">
+      <p className={`mt-auto pt-4 ${TYPE.fine}`}>
         Every figure here is read from the response body at fetch time. Nothing on this rail is
         stored in the page. Measurement, not certification.
-        {ranAt && <span className="mt-1 block font-mono text-emerald-200/40">last run {ranAt}</span>}
+        {ranAt && <span className="mt-1 block font-mono text-[10px] text-slate-600">last run {ranAt}</span>}
       </p>
     </div>
   );

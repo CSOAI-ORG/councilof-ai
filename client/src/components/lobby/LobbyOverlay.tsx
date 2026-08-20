@@ -1,41 +1,66 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DEFAULT_TAB, LOBBY_TABS, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
-import LobbyTaskRail from "./LobbyTaskRail";
+import LobbyHeader, { ColiseumGlyph } from "./LobbyHeader";
+import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
+import LobbySideRail from "./LobbySideRail";
 import LobbyChatBar from "./LobbyChatBar";
+import LobbyPlay from "./LobbyPlay";
+import { useLobbyChat } from "./useLobbyChat";
+import { useFocusTrap } from "./useFocusTrap";
+import {
+  ALPHA_DEFAULT, ALPHA_MAX, ALPHA_MIN, FOCUS, SP, SURFACE_LIFTED, TYPE,
+  panelStyle, scrimStyle,
+} from "./glass";
 import type { LobbyIntent } from "@/lib/lobbyLink";
 
 /**
- * LobbyOverlay — the full-screen glass surface of the Council Lobby.
+ * LobbyOverlay — the Council Lobby as a WHITE GLASS-OS workspace.
  *
- * Three rails and a bar:
- *   left    tab list, one entry per live surface
- *   centre  that surface, framed live from its own route (never re-implemented)
- *   right   collapsible task rail: real fetches, honest states
- *   foot    the persistent chat bar
+ * THE GROUND IS WHITE. A near-opaque white scrim + backdrop blur washes the page
+ * out behind the lobby; the panels are translucent white on top of that, edged
+ * with a hairline and lifted with a soft shadow. Emerald is the accent on every
+ * measurement surface; gold is reserved for the local-play gallery, so the two
+ * can never be confused. All of it — scrim and panels alike — is driven by the
+ * single `--lobby-alpha` custom property the transparency slider writes, exactly
+ * as before; it now targets the white ground instead of the old dark one. See
+ * glass.ts for the floor that keeps text above WCAG AA at every setting.
  *
- * TRANSPARENCY. One number, `alpha` (0.30 – 1.00), drives every panel background
- * through the CSS custom property `--lobby-alpha` set on the overlay root. The
- * slider in the top bar writes it; localStorage remembers it. Nothing else in the
- * component hardcodes a panel background, so the whole surface stays consistent
- * at any setting.
+ * THE LAYOUT.
+ *   header   full width, at the very top — the mark, the name, transparency and
+ *            the window controls. NOT inside the centre pane.
+ *   left     the pane / destination list (a real vertical tablist)
+ *   centre   the active pane: a framed live route, or the local-play gallery
+ *   right    a switchable rail — Reports · Tasks · Chats — collapsible
+ *   foot     the chat bar, centred and constrained to max-w-3xl
  *
- * DEEP LINKS. An optional `intent` (from useLobbyDeepLink, see
- * client/src/lib/lobbyLink.ts) selects the pane on arrival and hands its seeded
- * prompt to the chat bar. The bar types it and stops — the send is always the
- * user's, so a link may choose the question but never asks it.
+ * WINDOW STATE. close / minimise / expand-restore.
+ *   Esc closes and focus returns to the badge (see CouncilLobby).
+ *   Cmd/Ctrl + . minimises to a docked bar. MINIMISING KEEPS THE SESSION: this
+ *   component stays mounted, so the open pane, the alpha, the audience and the
+ *   entire chat thread survive untouched. Only the presentation collapses.
+ *   Expand/restore switches between a comfortable inset window and full bleed.
+ *
+ * ACCESSIBILITY. role="dialog" + aria-modal + aria-labelledby on the header
+ * title; a focus trap with sentinels either side (the centre pane is an iframe,
+ * so a keydown-only trap would leak); focus moves to the selected pane tab on
+ * open and back to the trigger on close; both rails are proper tablists with
+ * roving tabindex and arrow-key navigation; the chat log is an aria-live region;
+ * every state is carried by a word, not only by a colour; all motion is behind
+ * `motion-safe`. While minimised the surface is no longer modal — aria-modal is
+ * dropped, the trap is off and the page scrolls again, which is the honest
+ * description of a docked window.
  */
 
 const ALPHA_KEY = "coai.lobby.alpha";
 const TAB_KEY = "coai.lobby.tab";
-const ALPHA_MIN = 0.3;
-const ALPHA_MAX = 1;
+const TITLE_ID = "coai-lobby-title";
 
 function readAlpha(): number {
   try {
     const v = Number(localStorage.getItem(ALPHA_KEY));
     if (Number.isFinite(v) && v >= ALPHA_MIN && v <= ALPHA_MAX) return v;
   } catch { /* private mode / storage disabled — the default is fine */ }
-  return 0.82;
+  return ALPHA_DEFAULT;
 }
 
 function readTab(): LobbyTabId {
@@ -44,6 +69,11 @@ function readTab(): LobbyTabId {
     if (v && LOBBY_TABS.some((t) => t.id === v)) return v as LobbyTabId;
   } catch { /* ignore */ }
   return DEFAULT_TAB;
+}
+
+/** Tabbable guard that bounces focus back into the dialog. See useFocusTrap. */
+function FocusSentinel({ onFocus }: { onFocus: () => void }) {
+  return <div data-focus-sentinel tabIndex={0} aria-hidden="true" onFocus={onFocus} className="sr-only" />;
 }
 
 export default function LobbyOverlay({
@@ -57,228 +87,283 @@ export default function LobbyOverlay({
   // An intent present at mount picks the pane; otherwise the last pane is restored.
   const [tabId, setTabId] = useState<LobbyTabId>(() => intent?.pane ?? readTab());
   const [railOpen, setRailOpen] = useState(true);
+  const [size, setSize] = useState<"comfortable" | "full">("comfortable");
+  const [minimised, setMinimised] = useState(false);
   const [frameLoaded, setFrameLoaded] = useState(false);
+  /** Set when a play card opens a route that is not itself a pane. */
+  const [override, setOverride] = useState<{ path: string; label: string } | null>(null);
 
   const rootRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  const chat = useLobbyChat();
   const tab = tabById(tabId);
+  const modal = !minimised;
+  const focusEdge = useFocusTrap(rootRef, modal);
 
   useEffect(() => { try { localStorage.setItem(ALPHA_KEY, String(alpha)); } catch { /* ignore */ } }, [alpha]);
   useEffect(() => { try { localStorage.setItem(TAB_KEY, tabId); } catch { /* ignore */ } }, [tabId]);
 
-  // Esc closes. The trigger re-focuses itself on unmount (see CouncilLobby).
+  const minimise = useCallback(() => setMinimised(true), []);
+
+  // Esc closes; Cmd/Ctrl + . minimises. Both are printed in the header.
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "." && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setMinimised((m) => !m); }
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  // The page behind must not scroll while the lobby is over it.
+  // The page behind must not scroll while the lobby is OVER it. Minimised, the
+  // lobby is a docked bar, not a modal — so the page gets its scroll back.
   useEffect(() => {
+    if (minimised) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = prev; };
-  }, []);
+  }, [minimised]);
 
-  useEffect(() => { rootRef.current?.focus(); }, []);
+  // Focus lands on the selected pane tab when the lobby opens or is restored —
+  // a sensible first control, and it announces the tablist.
+  //
+  // EXCEPT when a deep link seeded a question: the chat bar is then the thing
+  // the reader was sent here for, so it takes the focus (and the bar puts the
+  // caret at the end of the seeded text). Whoever wins that race would otherwise
+  // decide it, which is not a contract.
+  useEffect(() => {
+    if (minimised) return;
+    if (intent?.prompt?.trim()) return;
+    // setTimeout, not requestAnimationFrame: rAF is throttled to zero in a
+    // background or non-compositing tab, and focus placement must not depend on
+    // the tab being painted.
+    const t = setTimeout(() => {
+      const el = document.getElementById(tabDomId(tabId)) as HTMLButtonElement | null;
+      (el ?? rootRef.current)?.focus();
+    }, 0);
+    return () => clearTimeout(t);
+    // Only on open / restore, not on every pane change (the rail moves focus itself).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [minimised]);
 
   // A later intent (an in-page CTA fired while the lobby is already open) moves
   // the pane. `nonce` makes a repeat of the same request land again.
   useEffect(() => {
     if (!intent) return;
+    setMinimised(false);
+    setOverride(null);
     setTabId((cur) => { if (cur !== intent.pane) setFrameLoaded(false); return intent.pane; });
   }, [intent?.nonce, intent?.pane]);
 
   const go = useCallback((t: LobbyTab) => {
+    setOverride(null);
     setTabId((cur) => { if (cur !== t.id) setFrameLoaded(false); return t.id; });
   }, []);
 
-  /** Every panel in the lobby reads its ground from this one variable. */
-  const panel = useMemo<React.CSSProperties>(
-    () => ({ background: "rgba(4, 34, 26, var(--lobby-alpha))" }),
-    [],
-  );
+  const openRoute = useCallback((path: string, label: string) => {
+    setFrameLoaded(false);
+    setOverride({ path, label });
+  }, []);
 
+  // The framed page is same-origin, so Esc pressed INSIDE it can still close the
+  // lobby. Without this, focus in the frame would swallow the shortcut.
+  const onFrameLoad = useCallback(() => {
+    setFrameLoaded(true);
+    try {
+      const doc = frameRef.current?.contentDocument;
+      doc?.addEventListener("keydown", (e: any) => { if (e.key === "Escape") onClose(); });
+    } catch { /* cross-origin or blocked — the outer Esc still works */ }
+  }, [onClose]);
+
+  const localPane = !override && tab.kind === "local";
+  const panePath = override?.path ?? tab.path;
+  const paneLabel = override ? override.label : tab.label;
   // `?embed=1` is a hint for the framed page, not a contract it honours yet.
-  const src = tab.path + (tab.path.includes("?") ? "&" : "?") + "embed=1";
+  const src = panePath ? panePath + (panePath.includes("?") ? "&" : "?") + "embed=1" : "";
 
-  return (
-    <div
-      ref={rootRef}
-      tabIndex={-1}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Council Lobby"
-      className="fixed inset-0 z-[80] flex flex-col gap-2 p-2 outline-none backdrop-blur-xl sm:gap-3 sm:p-3"
-      style={{
-        // The slider drives this; every panel inherits it.
-        ["--lobby-alpha" as any]: String(alpha),
-        background: `rgba(2, 20, 15, ${(0.35 + alpha * 0.5).toFixed(3)})`,
-      }}
-    >
-      {/* ── top bar ─────────────────────────────────────────────────────── */}
-      <header
-        className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border border-emerald-300/20 px-3 py-2"
-        style={panel}
+  // ── docked (minimised) ───────────────────────────────────────────────────
+  if (minimised) {
+    return (
+      <div
+        role="dialog"
+        aria-label="Council Lobby, minimised"
+        className={`fixed bottom-5 left-1/2 z-[80] w-[min(30rem,calc(100vw-2.5rem))] -translate-x-1/2 ${SURFACE_LIFTED} ${SP.row} flex items-center gap-3 bg-white/95 backdrop-blur-xl`}
       >
-        <ColiseumGlyph className="h-6 w-6 shrink-0 text-emerald-300" />
-        <div className="min-w-0">
-          <div className="text-[13px] font-bold leading-tight text-emerald-50">Council Lobby</div>
-          <div className="truncate text-[10px] leading-tight text-emerald-100/55">
-            Measurement, not certification — every pane is the live page, framed.
-          </div>
-        </div>
-
-        <label className="ml-auto flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[1.2px] text-emerald-100/70">
-          <span className="hidden sm:inline">Transparency</span>
-          <input
-            type="range"
-            min={ALPHA_MIN}
-            max={ALPHA_MAX}
-            step={0.02}
-            value={alpha}
-            onChange={(e) => setAlpha(Number(e.target.value))}
-            aria-label="Panel transparency"
-            className="h-1 w-24 cursor-pointer accent-emerald-400 sm:w-36"
-          />
-          <span className="w-9 font-mono tabular-nums text-emerald-200/70">{alpha.toFixed(2)}</span>
-        </label>
-
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-white" aria-hidden="true">
+          <ColiseumGlyph className="h-4.5 w-4.5" />
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[13px] font-semibold leading-tight text-slate-900">
+            Council Lobby — minimised
+          </span>
+          <span className={`block ${TYPE.fine}`}>
+            {paneLabel} · {chat.turnCount} message{chat.turnCount === 1 ? "" : "s"} kept ·{" "}
+            {chat.threads.length} thread{chat.threads.length === 1 ? "" : "s"}
+          </span>
+        </span>
         <button
-          onClick={() => setRailOpen((v) => !v)}
-          aria-expanded={railOpen}
-          className="rounded-full border border-emerald-300/25 px-2.5 py-1 text-[10px] font-semibold text-emerald-100/80 transition hover:bg-white/10"
+          type="button"
+          onClick={() => setMinimised(false)}
+          aria-label="Restore the Council Lobby"
+          className={`ml-auto shrink-0 rounded-xl bg-emerald-700 px-3.5 py-2 text-[12px] font-semibold text-white transition hover:bg-emerald-800 motion-reduce:transition-none ${FOCUS}`}
         >
-          {railOpen ? "Hide tasks" : "Show tasks"}
+          Restore
         </button>
-
         <button
+          type="button"
           onClick={onClose}
           aria-label="Close the Council Lobby"
-          className="rounded-full border border-emerald-300/25 px-2.5 py-1 text-[12px] font-bold leading-none text-emerald-100/80 transition hover:bg-white/10"
+          className={`shrink-0 rounded-xl border border-slate-900/12 px-3 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
         >
-          ✕
+          Close
         </button>
-      </header>
-
-      {/* ── three rails ─────────────────────────────────────────────────── */}
-      <div className="flex min-h-0 flex-1 gap-2 sm:gap-3">
-        {/* left */}
-        <nav
-          aria-label="Council Lobby sections"
-          className="hidden w-40 shrink-0 flex-col rounded-2xl border border-emerald-300/20 p-2 sm:flex lg:w-48"
-          style={panel}
-        >
-          <div role="tablist" aria-orientation="vertical" className="space-y-1">
-            {LOBBY_TABS.map((t) => (
-              <button
-                key={t.id}
-                role="tab"
-                aria-selected={t.id === tabId}
-                onClick={() => go(t)}
-                className={
-                  "w-full rounded-xl px-3 py-2 text-left text-[12.5px] font-semibold transition " +
-                  (t.id === tabId
-                    ? "bg-emerald-400/20 text-emerald-50 ring-1 ring-emerald-300/40"
-                    : "text-emerald-100/70 hover:bg-white/10 hover:text-emerald-50")
-                }
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-          <p className="mt-auto pt-3 text-[10px] leading-relaxed text-emerald-100/40">
-            Each pane frames the real route. Nothing here is a copy of a page, so nothing here can
-            drift from one.
-          </p>
-        </nav>
-
-        {/* centre */}
-        <main className="relative min-w-0 flex-1 overflow-hidden rounded-2xl border border-emerald-300/20" style={panel}>
-          <div className="flex items-center gap-2 border-b border-white/10 px-3 py-1.5">
-            <span className="text-[11px] font-bold text-emerald-50">{tab.label}</span>
-            <span className="hidden truncate text-[10px] text-emerald-100/50 md:inline">{tab.blurb}</span>
-            <a
-              href={tab.path}
-              className="ml-auto shrink-0 font-mono text-[10px] text-emerald-200/60 underline-offset-2 hover:text-emerald-100 hover:underline"
-            >
-              {tab.path} ↗
-            </a>
-          </div>
-
-          {/* mobile tab strip — the left rail is hidden under sm */}
-          <div className="flex gap-1 overflow-x-auto border-b border-white/10 px-2 py-1.5 sm:hidden">
-            {LOBBY_TABS.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => go(t)}
-                aria-current={t.id === tabId}
-                className={
-                  "shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold " +
-                  (t.id === tabId ? "bg-emerald-400/25 text-emerald-50" : "text-emerald-100/65")
-                }
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="relative h-[calc(100%-2.25rem)] sm:h-[calc(100%-2.25rem)]">
-            {!frameLoaded && <FrameSkeleton />}
-            <iframe
-              key={tab.id}
-              src={src}
-              title={`${tab.label} — ${tab.path}`}
-              onLoad={() => setFrameLoaded(true)}
-              className="h-full w-full border-0 bg-white/95"
-            />
-          </div>
-        </main>
-
-        {/* right */}
-        {railOpen && (
-          <aside className="hidden w-56 shrink-0 lg:block">
-            <LobbyTaskRail panel={panel} />
-          </aside>
-        )}
       </div>
+    );
+  }
 
-      {/* ── chat bar ────────────────────────────────────────────────────── */}
-      <LobbyChatBar
-        panel={panel}
-        onNavigate={go}
-        seedPrompt={intent?.prompt}
-        seedNonce={intent?.nonce}
-      />
-    </div>
+  // ── the workspace ────────────────────────────────────────────────────────
+  return (
+    <>
+      <FocusSentinel onFocus={() => focusEdge("last")} />
+      <div
+        ref={rootRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={TITLE_ID}
+        className={
+          `fixed z-[80] flex flex-col ${SP.shell} outline-none backdrop-blur-2xl ` +
+          (size === "full" ? "inset-0" : "inset-2 rounded-3xl sm:inset-4")
+        }
+        style={{
+          // The slider drives this; every panel inherits it.
+          ["--lobby-alpha" as any]: String(alpha),
+          ...scrimStyle(alpha),
+        }}
+      >
+        <LobbyHeader
+          titleId={TITLE_ID}
+          alpha={alpha}
+          onAlpha={setAlpha}
+          size={size}
+          onToggleSize={() => setSize((s) => (s === "full" ? "comfortable" : "full"))}
+          onMinimise={minimise}
+          onClose={onClose}
+          railOpen={railOpen}
+          onToggleRail={() => setRailOpen((v) => !v)}
+        />
+
+        {/* ── three rails ───────────────────────────────────────────────── */}
+        <div className="flex min-h-0 flex-1 gap-4">
+          <LobbyPaneRail tabId={tabId} onSelect={go} />
+
+          <main
+            id={PANEL_ID}
+            role="tabpanel"
+            aria-labelledby={tabDomId(tabId)}
+            className="relative flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-white/60 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_32px_-14px_rgba(15,23,42,0.28)] ring-1 ring-slate-900/5"
+            style={panelStyle}
+          >
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-slate-900/10 px-5 py-2.5">
+              <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
+              <span className={`hidden truncate md:inline ${TYPE.fine}`}>
+                {override ? "Opened from the local-play gallery — a page to read." : tab.blurb}
+              </span>
+              {panePath && (
+                <a
+                  href={panePath}
+                  className={`ml-auto shrink-0 rounded font-mono text-[11px] text-emerald-800 underline-offset-2 hover:underline ${FOCUS}`}
+                >
+                  {panePath} ↗
+                </a>
+              )}
+              {override && (
+                <button
+                  type="button"
+                  onClick={() => { setOverride(null); setFrameLoaded(false); }}
+                  className={`shrink-0 rounded-lg border border-slate-900/10 px-2.5 py-1 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
+                >
+                  Back to {tab.label}
+                </button>
+              )}
+            </div>
+
+            {/* mobile pane strip — the left rail is hidden under sm */}
+            <div className="flex gap-1.5 overflow-x-auto border-b border-slate-900/10 px-4 py-2 sm:hidden">
+              {LOBBY_TABS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => go(t)}
+                  aria-current={t.id === tabId && !override}
+                  className={
+                    `shrink-0 rounded-full px-3 py-1 text-[11.5px] font-semibold transition ` +
+                    `motion-reduce:transition-none ${FOCUS} ` +
+                    (t.id === tabId && !override
+                      ? t.accent === "gold" ? "bg-amber-100 text-amber-900" : "bg-emerald-100 text-emerald-900"
+                      : "text-slate-600")
+                  }
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="relative min-h-0 flex-1">
+              {localPane ? (
+                <LobbyPlay onOpenRoute={openRoute} />
+              ) : (
+                <>
+                  {!frameLoaded && <FrameSkeleton />}
+                  <iframe
+                    ref={frameRef}
+                    key={src}
+                    src={src}
+                    title={`${paneLabel} — ${panePath}`}
+                    onLoad={onFrameLoad}
+                    className="h-full w-full border-0 bg-white"
+                  />
+                </>
+              )}
+            </div>
+          </main>
+
+          {railOpen && (
+            <div className="hidden w-72 shrink-0 lg:block xl:w-80">
+              <LobbySideRail chat={chat} />
+            </div>
+          )}
+        </div>
+
+        {/* ── chat bar ──────────────────────────────────────────────────── */}
+        <LobbyChatBar
+          chat={chat}
+          onNavigate={go}
+          paneLabel={paneLabel}
+          panePath={panePath || "/"}
+          seedPrompt={intent?.prompt}
+          seedNonce={intent?.nonce}
+        />
+      </div>
+      <FocusSentinel onFocus={() => focusEdge("first")} />
+    </>
   );
 }
 
 function FrameSkeleton() {
   return (
-    <div className="absolute inset-0 z-10 animate-pulse space-y-3 bg-emerald-950/40 p-6" aria-hidden="true">
-      <div className="h-6 w-1/3 rounded bg-white/10" />
-      <div className="h-3 w-2/3 rounded bg-white/10" />
-      <div className="h-3 w-1/2 rounded bg-white/10" />
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        <div className="h-24 rounded-xl bg-white/10" />
-        <div className="h-24 rounded-xl bg-white/10" />
-        <div className="h-24 rounded-xl bg-white/10" />
-        <div className="h-24 rounded-xl bg-white/10" />
+    <div className="absolute inset-0 z-10 space-y-4 bg-white p-8 motion-safe:animate-pulse" aria-hidden="true">
+      <div className="h-7 w-1/3 rounded bg-slate-900/10" />
+      <div className="h-3.5 w-2/3 rounded bg-slate-900/10" />
+      <div className="h-3.5 w-1/2 rounded bg-slate-900/10" />
+      <div className="mt-8 grid grid-cols-2 gap-4">
+        <div className="h-28 rounded-xl bg-slate-900/10" />
+        <div className="h-28 rounded-xl bg-slate-900/10" />
+        <div className="h-28 rounded-xl bg-slate-900/10" />
+        <div className="h-28 rounded-xl bg-slate-900/10" />
       </div>
     </div>
   );
 }
 
-/** Columns under an arch — the lobby's mark. */
-export function ColiseumGlyph({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.7"
-      strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M3 9a9 5 0 0 1 18 0" />
-      <path d="M3 9v9" /><path d="M21 9v9" />
-      <path d="M7.5 9.6v8.4" /><path d="M12 9.9v8.1" /><path d="M16.5 9.6v8.4" />
-      <path d="M2.5 18h19" />
-      <path d="M9.6 18v-3.2a2.4 2.4 0 0 1 4.8 0V18" />
-    </svg>
-  );
-}
+export { ColiseumGlyph };
