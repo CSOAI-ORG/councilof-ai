@@ -40,73 +40,26 @@ import {
 import { toast } from "sonner";
 
 // Mock data for reports
-const mockReports = [
-  {
-    id: 1,
-    title: "ChatGPT hallucinating medical advice",
-    description: "AI provided incorrect medical diagnosis that could harm patients",
-    severity: "critical",
-    aiSystem: "ChatGPT-4",
-    reporter: "Anonymous",
-    region: "United States",
-    date: "2025-12-26",
-    views: 1243,
-    status: "verified",
-    category: "Healthcare",
-  },
-  {
-    id: 2,
-    title: "Facial recognition bias in hiring",
-    description: "AI system showing racial bias in resume screening",
-    severity: "high",
-    aiSystem: "HireBot Pro",
-    reporter: "Anonymous",
-    region: "Europe",
-    date: "2025-12-25",
-    views: 856,
-    status: "investigating",
-    category: "Employment",
-  },
-  {
-    id: 3,
-    title: "Autonomous vehicle near-miss",
-    description: "Self-driving car failed to detect pedestrian in low light",
-    severity: "critical",
-    aiSystem: "Tesla FSD v12",
-    reporter: "Anonymous",
-    region: "United States",
-    date: "2025-12-24",
-    views: 2156,
-    status: "verified",
-    category: "Transportation",
-  },
-  {
-    id: 4,
-    title: "Financial AI recommending risky investments",
-    description: "Robo-advisor algorithm recommending unsuitable investments for retirees",
-    severity: "high",
-    aiSystem: "WealthBot",
-    reporter: "Anonymous",
-    region: "Asia",
-    date: "2025-12-23",
-    views: 654,
-    status: "verified",
-    category: "Finance",
-  },
-  {
-    id: 5,
-    title: "Content moderation AI censoring legitimate speech",
-    description: "Social media AI incorrectly flagging political discourse as hate speech",
-    severity: "medium",
-    aiSystem: "ContentGuard",
-    reporter: "Anonymous",
-    region: "Global",
-    date: "2025-12-22",
-    views: 1089,
-    status: "investigating",
-    category: "Content Moderation",
-  },
-];
+/**
+ * NO PUBLIC INCIDENT RECORD IS PUBLISHED HERE.
+ *
+ * This array previously held five fabricated incidents — including CRITICAL reports
+ * marked "verified", with invented view counts, attributed by name to ChatGPT-4 and
+ * Tesla FSD v12 — rendered on /watchdog/report and /watchdog-hub as a "Global AI
+ * Safety Incident Database". They were demo fixtures presented as genuine records
+ * about identifiable companies. That is the exact harm this project's own watchdog
+ * doctrine exists to prevent: an allegation must never be published before the
+ * subject has been notified and given a right of reply.
+ *
+ * It stays EMPTY until there is a real, notified, right-of-reply-respecting intake
+ * behind it. An empty register is honest; a populated fake one is not. If you are
+ * adding records here, they must come from a live source, not a literal.
+ */
+type WatchdogReport = {
+  id: number; title: string; description: string; severity: string; aiSystem: string;
+  reporter: string; region: string; date: string; views: number; status: string; category: string;
+};
+const mockReports: WatchdogReport[] = [];
 
 export default function PublicWatchdogHub() {
   const [reports, setReports] = useState(mockReports);
@@ -387,9 +340,24 @@ export default function PublicWatchdogHub() {
               </motion.div>
             ))
           ) : (
-            <Card className="text-center py-12">
-              <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No incidents found matching your filters.</p>
+            <Card className="px-6 py-12 text-center">
+              <AlertCircle className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+              <p className="mx-auto max-w-2xl text-base font-semibold text-slate-900">
+                No public incident record is published here.
+              </p>
+              <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                We do not publish allegations about a named system before its provider has been
+                notified and given a right of reply. Until that intake exists, this register stays
+                empty rather than being filled with examples — an empty register is honest, a
+                populated illustrative one is not.
+              </p>
+              <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                What we do publish today is our own measurement, with its limits attached:
+                the signed board at{" "}
+                <Link href="/gspc-scoreboard" className="font-semibold text-emerald-700 underline">the live board</Link>,
+                and our own errors at{" "}
+                <Link href="/honesty" className="font-semibold text-emerald-700 underline">the honesty gate</Link>.
+              </p>
             </Card>
           )}
         </div>
