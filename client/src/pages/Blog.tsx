@@ -34,8 +34,8 @@ const blogPosts = [
   },
   {
     id: 2,
-    title: "Introducing the 33-Agent Council: How AI Governs AI",
-    excerpt: "Learn how our multi-agent council system provides transparent, balanced decisions on AI safety incidents.",
+    title: "The designed 33-agent Council: how the review is meant to work",
+    excerpt: "How the multi-agent council design is meant to reach transparent, balanced decisions — and what measurement later said about it (see the Refutation Ledger).",
     category: "Product",
     author: "CSOAI Team",
     date: "Dec 15, 2024",

@@ -286,18 +286,18 @@ const activeIncidents = {
   ],
 };
 
-const byzantineCouncilFeatures = [
+const councilDesignFeatures = [
   {
     title: "Automated Compliance Monitoring",
-    description: "33 independent AI agents continuously monitor all registered systems for compliance violations across all major frameworks.",
+    description: "The design calls for 33 agents to monitor registered systems for compliance drift across the mapped frameworks. Independence between agents is measured, not assumed.",
     icon: Eye,
     stats: "Continuous monitoring once a registry is connected",
   },
   {
     title: "Consensus-Based Decisions",
-    description: "designed multi-agent review ensures no single point of failure. Requires supermajority (22/33) for enforcement actions.",
+    description: "The designed multi-agent review requires a 23-of-33 supermajority. It is intended to remove a single point of failure; that property is measured, not claimed.",
     icon: Users,
-    stats: "Supermajority (22/33) required for enforcement",
+    stats: "Supermajority (23 of 33) required by design",
   },
   {
     title: "Real-Time Alert System",
@@ -980,13 +980,15 @@ export default function GovernmentDashboard() {
               AI-Powered Regulatory Support
             </h2>
             <p className="text-lg text-emerald-100 max-w-3xl mx-auto">
-              Our 33-agent Council of AI provides automated, tamper-proof compliance monitoring
-              that supports regulatory decision-making with unprecedented accuracy and speed.
+              The designed 33-agent Council of AI is intended to support regulatory
+              decision-making with signed, replayable records. It is a design, not a measured
+              live pipeline — effective independence is measured, not assumed, and the current
+              status is published on the Refutation Ledger.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {byzantineCouncilFeatures.map((feature, index) => {
+            {councilDesignFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
                 <motion.div
@@ -1015,7 +1017,7 @@ export default function GovernmentDashboard() {
                 Recent Council Actions
               </CardTitle>
               <CardDescription className="text-emerald-200">
-                Enforcement decisions by the 33-agent Council of AI
+                Decisions routed through the designed 33-agent Council of AI
               </CardDescription>
             </CardHeader>
             <CardContent>

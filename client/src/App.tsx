@@ -18,6 +18,7 @@ import { SkipNavigation } from "./components/SkipNavigation";
 // Home removed - using NewHomeV2 instead
 const Landing = lazy(() => import("./pages/Landing"));
 const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
+const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
@@ -1000,6 +1001,7 @@ function App() {
                 </main>
                 <Footer />
                 <Suspense fallback={null}><CouncilConsole /></Suspense>
+                <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />
               </div>

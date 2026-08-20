@@ -11,11 +11,28 @@
 import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 
 /** The lean current experience — kept in primary nav, never shown an "archived" banner. */
+// Kept in lockstep with the six master-nav groups in components/Header.tsx
+// (Measure · Regulation · Solutions · Evidence · Academy · Company) plus the
+// always-current surfaces the footer needs. A path here renders NO archive banner.
 export const PRIMARY_PATHS = new Set<string>([
-  "/", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/methodology", "/api-docs",
-  "/article-50", "/ai-act-faq", "/academy", "/about", "/pricing", "/contact",
-  "/blog", "/refutation-ledger", "/regulators", "/industries", "/os", "/system-card",
-  "/trust-center", "/status", "/measure", "/faq", "/library", "/honesty",
+  "/",
+  // Measure
+  "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
+  "/methodology", "/instrument",
+  // Regulation
+  "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
+  "/regulation-tracker", "/regulators", "/crosswalk", "/ai-act-faq",
+  // Solutions
+  "/enterprise", "/insurers", "/government", "/industries", "/payg", "/integrations",
+  // Evidence
+  "/honesty", "/refutation-ledger", "/firewall-charter", "/api-docs", "/status",
+  "/system-card",
+  // Academy
+  "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",
+  // Company
+  "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
+  // Current product surfaces reachable off-nav (not superseded, so not archived)
+  "/os", "/faq",
 ]);
 
 export interface Sector {
@@ -75,9 +92,22 @@ export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
   "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/how-it-works": { path: "/methodology", label: "Methodology" },
-  "/roi-calculator": { path: "/pricing", label: "Pricing" },
+  "/roi-calculator": { path: "/payg", label: "Pay as you go" },
   "/compare": { path: "/about", label: "About" },
   "/our-difference": { path: "/about", label: "About" },
+  // Added by the site-alignment pass 2026-08-20 — each of these had a current
+  // equivalent in the new six-group nav but no forward link.
+  "/pricing": { path: "/payg", label: "Pay as you go" },
+  "/global-ai-regulation": { path: "/regulation-tracker", label: "the regulation tracker" },
+  "/global-regulations": { path: "/regulation-tracker", label: "the regulation tracker" },
+  "/training-hub": { path: "/academy", label: "Council Academy" },
+  "/assessment": { path: "/assess", label: "a signed assessment" },
+  "/eu-ai-act-checklist": { path: "/checklist", label: "the readiness checklist" },
+  "/foundation-models": { path: "/gpai", label: "GPAI model duties" },
+  "/eu-ai-act-timeline": { path: "/ai-act-timeline", label: "the AI Act timeline" },
+  "/certification/exam": { path: "/academy", label: "Council Academy" },
+  "/ceasai-training": { path: "/academy", label: "Council Academy" },
+  "/scoreboard": { path: "/gspc-scoreboard", label: "the GSPC board" },
 };
 
 /** The current primary page that supersedes an archived one, if any. */

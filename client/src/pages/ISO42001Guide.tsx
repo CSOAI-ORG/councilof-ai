@@ -776,7 +776,7 @@ export default function ISO42001Guide() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <Badge variant="secondary" className="text-sm mb-4">Why Get Certified?</Badge>
+            <Badge variant="secondary" className="text-sm mb-4">Why organisations certify</Badge>
             <h2 className="text-4xl font-bold mb-4">Benefits of ISO 42001 Certification</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Certification provides tangible benefits for your organization and stakeholders.
@@ -923,11 +923,13 @@ export default function ISO42001Guide() {
             className="text-center mb-12"
           >
             <Badge className="text-sm mb-4 bg-green-500/10 text-green-600 border-green-500/30">
-              Your Certification Partner
+              Evidence for your certification body
             </Badge>
             <h2 className="text-4xl font-bold mb-4">How CSOAI Aligns with ISO 42001</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Our platform provides comprehensive tools to implement and maintain your AIMS.
+              We are not a certification body and cannot certify you to ISO 42001 — only an accredited
+              certification body can. What we produce is signed, provision-anchored measurement you can
+              put in front of that body as evidence for your AIMS.
             </p>
           </motion.div>
 
@@ -975,8 +977,9 @@ export default function ISO42001Guide() {
               Prepare for ISO 42001 Certification
             </h2>
             <p className="text-xl text-purple-100 max-w-3xl mx-auto">
-              Our comprehensive training program covers all ISO 42001 requirements, from AIMS
-              implementation to audit preparation. Earn your certification and lead AI governance.
+              Our free training covers all ISO 42001 requirements, from AIMS implementation to audit
+              preparation. Completion produces a signed training record; the ISO 42001 certificate
+              itself is issued by an accredited certification body, never by us.
             </p>
             <div className="flex flex-wrap gap-4 justify-center pt-4">
               <Link href="/courses">

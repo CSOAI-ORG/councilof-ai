@@ -228,7 +228,7 @@ export default function Watchdog() {
               <h3 className="text-2xl font-bold mb-4">Write Safety Reports</h3>
               <p className="text-gray-600 leading-relaxed">
                 Document your findings in clear, actionable reports. Recommend approval, rejection, or 
-                improvements. Your reports go to the 33-Agent Council for final determination.
+                improvements. Your reports are routed to the designed 33-agent Council for review.
               </p>
             </Card>
           </div>

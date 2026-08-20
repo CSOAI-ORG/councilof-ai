@@ -172,7 +172,7 @@ const FLYWHEELS: FlywheelPlanet[] = [
     metric: "83 verified entries · 87KB", last_run_iso: "2026-07-30T05:00:00Z" },
   { id: "production-ready", name: "production_ready", axis: "care", phase: "honey",
     description: "signed care_cost evidence pack for marketing",
-    metric: "Ed25519 sigil · care_score=0.7891", last_run_iso: "2026-07-30T12:00:00Z" },
+    metric: "Ed25519 signature · care_score=0.7891", last_run_iso: "2026-07-30T12:00:00Z" },
 ];
 
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
@@ -812,7 +812,7 @@ export default function CouncilSpace() {
               <strong className="text-sky-200">The metaphor:</strong> the Council estate is a galaxy. The HIVE is the central star — water, the pinned facts that ground everything. C-space orbits it — milk, the local deliberation the council does. J-space is the next shell — honey, the signed decisions in the D1 ledger. Each flywheel is its own planet, orbiting on its own radius; its <em>phase</em> shows where it sits in the water→milk→honey flow. The outer halo is the unbounded working memory — the infinite drawing.
             </p>
             <p className="mt-2">
-              So front-end and back-end sovereigns operate across all the data <em>living</em>, not frozen — the same way the flywheels keep running while the user looks at any layer. Click a planet, hover for its phase and last-run time, then jump to the J-space timeline below for the signed events it produced.
+              So the front-end and back-end services operate across all the data <em>living</em>, not frozen — the same way the flywheels keep running while the user looks at any layer. Click a planet, hover for its phase and last-run time, then jump to the J-space timeline below for the signed events it produced.
             </p>
           </div>
         </div>

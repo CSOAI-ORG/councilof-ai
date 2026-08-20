@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { VideoEmbed } from "./VideoEmbed";
 
 /**
@@ -367,7 +368,7 @@ function usePrefersReducedMotion() {
 }
 
 /** Fade + rise the first time a block scrolls into view. */
-function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
   useEffect(() => {
