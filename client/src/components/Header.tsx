@@ -5,7 +5,7 @@
 
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Shield, GraduationCap, Award, Eye, Building2, Landmark, FileText, Globe2, HelpCircle, BookMarked, ClipboardCheck, Factory, Handshake, ShieldCheck, BarChart2, AlertTriangle } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, GraduationCap, Award, Building2, Landmark, Globe2, BookMarked, ShieldCheck, BarChart2 } from 'lucide-react';
 import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -19,110 +19,110 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
 
-// Navigation structure with icons
-const navigation = [
+// ---------------------------------------------------------------------------
+// MASTER NAVIGATION — the lean canonical IA (site-alignment pass, 2026-08-20).
+//
+// Six groups only. The primary nav points at CURRENT pages exclusively; everything
+// else stays reachable through the footer Library (/library), where it is dated,
+// sector-organized and marked with the ArchivedBanner. "Library, don't delete."
+//
+// Every route below was verified against App.tsx before being linked. Items flagged
+// `external` are machine surfaces (live JSON, did:web) — they open in a new tab and
+// are deliberately in the nav because the site serves agents (A2A) as well as humans.
+// ---------------------------------------------------------------------------
+
+interface NavItem { name: string; href: string; description: string; external?: boolean }
+interface NavGroup { name: string; href: string; icon: typeof Globe2; description: string; submenu: NavItem[] }
+
+const navigation: NavGroup[] = [
   {
-    name: "Council OS",
-    href: "/gspc-arena",
-    icon: Globe2,
-    description: "Your AI OS",
+    name: 'Measure',
+    href: '/gspc-scoreboard',
+    icon: BarChart2,
+    description: 'The instrument and its board',
     submenu: [
-      { name: "Council Space", href: "/gspc-arena", description: "Simulate and govern in real time" },
-      { name: "Governance Graph", href: "/graph", description: "The governed Google" },
-      { name: "Your Council assistant Twin (Design)", href: "/me", description: "Personalisation surface — illustrative, not a claim" },
-      { name: "Real-World Globe", href: "/world-3d", description: "Photorealistic 3D Earth" },
-      { name: "Start free", href: "/start", description: "Build your own AI" },
-      { name: "Plans and Pricing", href: "/pricing", description: "Free to Enterprise" },
-      { name: "System Status", href: "/status", description: "Live transparency" },
+      { name: 'The GSPC board', href: '/gspc-scoreboard', description: '13 measured of 14 axes, plus jail — every cell with its n' },
+      { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
+      { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head, deterministic grading, no model judging another' },
+      { name: 'Verify a signed card', href: '/gspc-verify', description: 'Check any Ed25519-signed record offline against the published key' },
+      { name: 'Free signed assessment', href: '/assess', description: 'Measure your own system and get a signed record back' },
+      { name: 'Methodology', href: '/methodology', description: 'Gold labels, n≥30, and how to recompute every number yourself' },
+      { name: 'The GSPC instrument', href: '/instrument', description: 'Four deterministic lenses over frozen provisions — no model in the verdict' },
     ],
   },
   {
-    name: "Ledger",
-    href: "/refutation-ledger",
-    icon: BookOpen,
-    description: "The moat, visible",
+    name: 'Regulation',
+    href: '/eu-ai-act',
+    icon: Landmark,
+    description: 'The statute we measure against',
     submenu: [
-      { name: "The Refutation Ledger", href: "/refutation-ledger", description: "8 experiments that killed our own theses — published, with artefacts" },
-      { name: "Live Ledger (signed)", href: "/live-ledger", description: "Live D1 queryable decision_records — signed, with supersession trail" },
-      { name: "The GSPC Instrument", href: "/instrument", description: "Four deterministic lenses over 417 frozen provisions — no model in the verdict" },
-      { name: "Measured Results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
-      { name: "Scoreboard", href: "/gspc-scoreboard", description: "13 measured of 14 — every measured cell with n and 95% CI where honest" },
-      { name: "AI Act Benchmark", href: "/ai-act-benchmark", description: "170/170 held-out scenarios against the EU benchmark — with CIs and caveats" },
-      { name: "ProvBench", href: "/provbench", description: "Does C2PA provenance survive real-world transforms? 20 assets × 11 transforms" },
+      { name: 'EU AI Act — the guide', href: '/eu-ai-act', description: 'The whole Act, phased, with the Digital Omnibus amendments' },
+      { name: 'Article 50 — transparency', href: '/article-50', description: 'Live since 2 Aug 2026; marking grace ends 2 Dec 2026' },
+      { name: 'Dates and deadlines', href: '/ai-act-timeline', description: 'What applies when — Annex III deferred to 2 Dec 2027' },
+      { name: 'GPAI model duties', href: '/gpai', description: 'Documentation, training-data summary, copyright' },
+      { name: 'Readiness checklist', href: '/checklist', description: 'Work through the duties that are actually in force' },
+      { name: 'Global regulation tracker', href: '/regulation-tracker', description: 'Every AI regime worldwide, with its current dates' },
+      { name: 'Regulator atlas', href: '/regulators', description: 'Who supervises what, jurisdiction by jurisdiction' },
+      { name: 'Framework crosswalk', href: '/crosswalk', description: 'Map existing ISO 42001 / NIST controls onto Act duties' },
+      { name: 'Regulation feed — live JSON', href: '/api/regulation', description: 'The machine-readable corpus feed', external: true },
     ],
-  },
-  {
-    name: 'Explore',
-    href: '/os',
-    icon: Globe2,
-    description: 'The agentic governance OS',
-    submenu: [
-      { name: 'Try the Council', href: '/try', description: '30-second demo: 5 agents reach consensus on your question' },
-      { name: 'The Regulator Atlas', href: '/regulators', description: 'Every AI + cyber regime — top tools & next dates' },
-      { name: 'Cyber self-scan', href: '/scan', description: 'Scan your own systems with open-source tools; the Council assistant helps fix them' },
-      { name: 'Why CSOAI vs the rest', href: '/why', description: 'What we do that Vanta/Credo/OneTrust don\'t' },
-      { name: 'The Council Globe', href: '/globe', description: 'AI governance, layered on the world' },
-      { name: 'AI governance: the guide', href: '/ai-governance', description: 'The complete map — start here' },
-      { name: 'Global regulation tracker', href: '/global-ai-regulation', description: 'Every AI regime worldwide, current' },
-      { name: 'Framework crosswalk', href: '/crosswalk', description: '13 frameworks × 8 controls — comply once' },
-      { name: 'Free AI assessment', href: '/assess', description: 'Signed readiness assessment — see your gaps in minutes' },
-      { name: 'How It Works', href: '/how', description: 'From question to signed verdict in 5 steps' },
-      { name: 'Open the full launcher', href: '/os', description: 'Every app on one grid' },
-      { name: 'Browse the full Library →', href: '/library', description: 'The complete, sector-organized archive of everything we publish' },
-    ]
-  },
-  {
-    name: 'Learn',
-    href: '/courses',
-    icon: GraduationCap,
-    description: 'Training & attestation',
-    submenu: [
-      { name: 'Training Hub', href: '/training-hub', description: 'Gamified training on live regulations — free for everyone' },
-      { name: 'Drift Audit', href: '/drift-product', description: 'Drift audit — live regulatory corpus change reports' },
-      { name: 'All Courses', href: '/courses', description: 'Browse our complete course catalog' },
-      { name: 'Attestation Overview', href: '/certification', description: 'Attestation paths and requirements' },
-      { name: 'Take Exam', href: '/certification/exam', description: 'Start your attestation exam' },
-      { name: 'Verify Record', href: '/verify-certificate', description: 'Verify any CSOAI attestation record' },
-    ]
   },
   {
     name: 'Solutions',
     href: '/enterprise',
     icon: Building2,
-    description: 'Enterprise & government',
+    description: 'Who the measurement is for',
     submenu: [
-      { name: 'Enterprise Overview', href: '/enterprise', description: 'Enterprise solutions overview' },
-      { name: 'Industry Solutions', href: '/industry-solutions', description: 'Sector-specific governance' },
-      { name: 'Government Dashboard', href: '/government', description: 'Real-time compliance monitoring' },
-      { name: 'Measurement Council', href: '/agent-council', description: 'Multi-provider scoring, published harness' },
-      { name: 'Pricing', href: '/pricing', description: 'Plans and pricing' },
-      { name: 'API Access', href: '/api-docs', description: 'Developer resources' },
-    ]
+      { name: 'Enterprise', href: '/enterprise', description: 'Measure a portfolio of systems against the duties that bind them' },
+      { name: 'Insurers and underwriters', href: '/insurers', description: 'Signed evidence a risk model can actually price' },
+      { name: 'Government and regulators', href: '/government', description: 'Independent measurement, published method, no conformity mark' },
+      { name: 'Industries', href: '/industries', description: 'Sector-by-sector: what applies to you and when' },
+      { name: 'Pay as you go', href: '/payg', description: 'Per-measurement access — no tiers, no lock-in' },
+      { name: 'Integrations', href: '/integrations', description: 'Wire the measurement into the tools you already run' },
+    ],
   },
   {
-    name: 'Watchdog',
-    href: '/public-watchdog',
-    icon: Eye,
-    description: 'Monitor AI incidents',
+    name: 'Evidence',
+    href: '/honesty',
+    icon: ShieldCheck,
+    description: 'Our receipts, including the losses',
     submenu: [
-      { name: 'Public Watchdog', href: '/public-watchdog', description: 'Crowdsourced AI incident monitoring' },
-      { name: 'Report Incident', href: '/watchdog', description: 'Submit AI safety incident' },
-      { name: 'Leaderboard', href: '/leaderboard', description: 'Top performing analysts' },
-    ]
+      { name: 'The honesty gate', href: '/honesty', description: 'What we cannot yet measure, published rather than hidden' },
+      { name: 'Refutation Ledger', href: '/refutation-ledger', description: 'Experiments that killed our own theses — with artefacts' },
+      { name: 'Firewall Charter', href: '/firewall-charter', description: 'We measure; we never fix what we measure' },
+      { name: 'Corrections — live JSON', href: '/api/corrections', description: 'Corrections published, never silently edited', external: true },
+      { name: 'GSPC board — live JSON', href: '/api/gspc', description: 'The board as an agent reads it', external: true },
+      { name: 'did:web trust root', href: '/.well-known/did.json', description: 'The published signer — verify a card without us', external: true },
+      { name: 'API documentation', href: '/api-docs', description: 'Everything above, documented for agents' },
+      { name: 'System status', href: '/status', description: 'What is up, what is degraded' },
+    ],
+  },
+  {
+    name: 'Academy',
+    href: '/academy',
+    icon: GraduationCap,
+    description: 'Training — not conformity',
+    submenu: [
+      { name: 'Council Academy', href: '/academy', description: 'Learn the statute and the method' },
+      { name: 'All courses', href: '/courses', description: 'The full catalogue, free' },
+      { name: 'Training overview', href: '/training', description: 'How the free training rail works, and what a record does and does not say' },
+      { name: 'Verify a training record', href: '/verify-certificate', description: 'Check a completion record against the published signer' },
+      { name: 'What a course attests', href: '/accreditation', description: 'Course completion attests training, not conformity' },
+    ],
   },
   {
     name: 'Company',
-    href: '/charter',
+    href: '/about',
     icon: BookMarked,
-    description: 'Charter, knowledge & trust',
+    description: 'Council of AI — CSOAI Ltd',
     submenu: [
-      { name: 'The Library — full archive', href: '/library', description: "Every page we've published, dated and organized by sector" },
-      { name: 'Partnership Charter', href: '/charter', description: '52 Articles defining AI safety governance' },
-      { name: 'FAQ', href: '/faq', description: 'Frequently asked questions' },
-      { name: 'Trust Center', href: '/trust-center', description: 'Security & compliance info' },
-      { name: 'Technology', href: '/technology', description: 'Our architecture & measurement stack' },
-      { name: 'Blog', href: '/blog', description: 'Latest news & insights' },
-    ]
+      { name: 'About', href: '/about', description: 'An independent measurement instrument, and what that excludes' },
+      { name: 'The Library — full archive', href: '/library', description: "Everything we have published, dated and organized by sector" },
+      { name: 'Blog', href: '/blog', description: 'Findings, corrections and notes' },
+      { name: 'Trust Center', href: '/trust-center', description: 'Security posture — and the certifications we have NOT been awarded' },
+      { name: 'Contact', href: '/contact', description: 'CSOAI Ltd, UK company 16939677' },
+      { name: 'Legal and disclaimers', href: '/disclaimers', description: 'What this measurement is not' },
+    ],
   },
 ];
 
@@ -272,6 +272,8 @@ export function Header() {
                             <a
                               key={subItem.name}
                               href={subItem.href}
+                              target={subItem.external ? '_blank' : undefined}
+                              rel={subItem.external ? 'noreferrer' : undefined}
                               className="block px-4 py-2.5 hover:bg-gray-50 transition-colors group"
                               onClick={() => setActiveDropdown(null)}
                             >
@@ -315,7 +317,7 @@ export function Header() {
 
             {/* One primary CTA — the free verify tool (the top-of-funnel) */}
             <a
-              href="/verify"
+              href="/gspc-verify"
               className="hidden xl:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
             >
               Verify a card
@@ -437,10 +439,13 @@ export function Header() {
                       <a
                         key={subItem.name}
                         href={subItem.href}
+                        target={subItem.external ? '_blank' : undefined}
+                        rel={subItem.external ? 'noreferrer' : undefined}
                         className="block px-4 py-2 text-sm text-gray-600 hover:text-emerald-700"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {subItem.name}
+                        {subItem.external && <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400">JSON</span>}
                       </a>
                     ))}
                   </div>
@@ -448,8 +453,11 @@ export function Header() {
               ))}
 
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
-                <a href="/os" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white">⊡ AI OS</Button>
+                <a href="/gspc-verify" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold">Verify a card</Button>
+                </a>
+                <a href="/library" className="block" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full">Browse the full Library</Button>
                 </a>
                 {user ? (
                   <>

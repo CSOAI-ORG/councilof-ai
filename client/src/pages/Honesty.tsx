@@ -18,7 +18,7 @@ const LADDER = [
   { model: "mistral:7b", kind: "base model", elo: 1252.4, games: 639, note: "base" },
   { model: "council-safe", kind: "our fine-tune", elo: 1124.6, games: 533, note: "−202 vs leader" },
   { model: "qwen2.5:0.5b", kind: "base model", elo: 1113.0, games: 730, note: "tiny base" },
-  { model: "council-oowm", kind: "our fine-tune", elo: 1015.8, games: 496, note: "dead last, −311 vs leader" },
+  { model: "council-inhouse-ft", kind: "our fine-tune", elo: 1015.8, games: 496, note: "dead last, −311 vs leader" },
 ];
 
 const ARTICLE_LD = {
@@ -56,7 +56,7 @@ export default function Honesty() {
 
         <h2 className="mt-10 text-xl font-bold">The verdict, plainly</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
-          Our two council fine-tunes — <strong>council-oowm</strong> and <strong>council-safe</strong> —
+          Our two council fine-tunes — <strong>council-inhouse-ft</strong> and <strong>council-safe</strong> —
           are <strong>losing to base models in our own arena</strong>, on our own GPU, with our
           own Elo ladder. We trained them. We measure them. They lose. We publish it.
         </p>
@@ -158,7 +158,7 @@ export default function Honesty() {
           <Link href="/gspc-arena" className="text-emerald-700 underline">
             jail
           </Link>{" "}
-          (council-oowm detected zero escapes) and human-vs-ai (council-safe aligned 0.25) — published
+          (council-inhouse-ft detected zero escapes) and human-vs-ai (council-safe aligned 0.25) — published
           on the live board, not hidden.
         </p>
 

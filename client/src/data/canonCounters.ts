@@ -87,10 +87,10 @@ export const CANON = {
     measuredAt: "2026-08-01",
     note: "DESIGN figure — never render as measured. Measured status lives on /refutation-ledger.",
   },
-  /** BFT quorum — 23/33 ≈ 70%, by design (DEFONEOS compartment: quorum 23/33). */
+  /** Council quorum — 23/33 ≈ 70%, by DESIGN only. The fault-tolerance guarantee was retracted (DR-0007, n_eff 1.21 vs 3 nominal legs); never render as a measured property. */
   councilConsensus: {
     value: 23,
-    source: "council quorum design (23/33 = 70%)",
+    source: "council quorum, design figure only (23/33 = 70%) — guarantee retracted per DR-0007",
     measuredAt: "2026-08-01",
     note: "DESIGN figure — same labelling rule as councilAgents.",
   },

@@ -362,11 +362,11 @@ interface PartnerCertification {
 
 const certifications: PartnerCertification[] = [
   {
-    level: 'Certified Partner',
-    description: 'Foundational partnership with CSOAI certification',
+    level: 'Registered Partner',
+    description: 'Foundational partnership, recorded in the partner register',
     icon: <CheckCircle2 className="w-6 h-6" />,
     benefits: [
-      'CSOAI Partner badge and certification',
+      'CSOAI Partner badge and a signed partner record',
       'Training and enablement program',
       'Co-marketing opportunities',
       'Partner portal and resources',
@@ -780,7 +780,7 @@ const PartnersAdvisory: React.FC = () => {
                 description:
                   'Deliver CSOAI-powered AI governance services to your clients. Scale your expertise.',
                 requirements: [
-                  'CSOAI certification',
+                  'Completed CSOAI training (a signed training record, not a certification)',
                   'Service delivery capability',
                   'Client references',
                   'Revenue sharing agreement',
@@ -872,7 +872,7 @@ const PartnersAdvisory: React.FC = () => {
       <section className="bg-white px-4 py-12 sm:px-6 lg:px-8 border-t border-slate-200">
         <div className="mx-auto max-w-4xl">
           <p className="text-center text-sm text-slate-600 mb-8">
-            CSOAI's partner network spans 40+ countries, 8 major industries, and encompasses consulting firms, technology leaders, academic institutions, and government organizations.
+            The partner programme is open to consulting firms, technology providers, academic institutions and government bodies. We publish no partner count or country total until there is a register to point at.
           </p>
           <div className="grid md:grid-cols-4 gap-6 text-center">
             {[

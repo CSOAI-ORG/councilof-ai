@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
+import { DeckPage } from "@/components/scrollworld";
+import {
+  PRICING_RISK_HERO,
+  PRICING_RISK_SLIDES,
+  PRICING_RISK_NOT_CLAIMED,
+  PRICING_RISK_RELATED,
+} from "@/data/deckWorlds/pricingRisk";
 
 /**
  * /insurers — the evidence pack, underwriter-legible.
@@ -76,7 +83,11 @@ const CARD_ANATOMY = [
   },
   {
     term: "SHA-256 hash chain",
-    body: "Record hashes are sha256-linked and Ed25519-signed, so “this content is unaltered since signing” is checkable offline against the published key. (Independent Bitcoin/OpenTimestamps time-anchoring is planned, not yet live.)",
+    // 2026-08-20: the trailing "(Independent Bitcoin/OpenTimestamps time-anchoring is
+    // planned, not yet live.)" was removed. We publish timestamp_authority: "none" and
+    // purged the time-anchoring overclaims; naming them even as roadmap contradicts the
+    // honesty band on this page, which states plainly that there is no such anchor.
+    body: "Record hashes are sha256-linked and Ed25519-signed, so “this content is unaltered since signing” is checkable offline against the published key. There is no independent time-stamping authority behind these cards: the anchor is the signature over the hash chain, and nothing more.",
   },
   {
     term: "did:web:csoai.org published key",
@@ -84,7 +95,7 @@ const CARD_ANATOMY = [
   },
 ];
 
-export default function Insurers() {
+function InsurersEvidencePack() {
   const [board, setBoard] = useState<any>(null);
   const [boardErr, setBoardErr] = useState<string | null>(null);
   const [reported, setReported] = useState<any>(null);
@@ -370,5 +381,27 @@ export default function Insurers() {
         </p>
       </div>
     </div>
+  );
+}
+
+/**
+ * /insurers — UPGRADED (not duplicated): the owner's "Pricing AI Risk" deck becomes the
+ * scroll-world story that leads into the underwriter evidence pack already on this route.
+ * The evidence pack below is unchanged. See client/src/data/deckWorlds/pricingRisk.ts for
+ * the corrections log (market sizing, carrier capacity and US-state figures were dropped;
+ * GSPC's "Privacy" was corrected to "Provenance").
+ */
+export default function Insurers() {
+  return (
+    <DeckPage
+      title="Pricing AI risk | Council of AI"
+      description="Signed, deterministic AI measurement an underwriter can verify offline: per-axis results with n and Wilson intervals, Ed25519 signatures over a SHA-256 hash chain, and an honest register of what is not measured. Measurement, not certification."
+      hero={PRICING_RISK_HERO}
+      slides={PRICING_RISK_SLIDES}
+      notClaimed={PRICING_RISK_NOT_CLAIMED}
+      related={PRICING_RISK_RELATED}
+    >
+      <InsurersEvidencePack />
+    </DeckPage>
   );
 }

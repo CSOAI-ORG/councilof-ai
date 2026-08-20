@@ -18,6 +18,7 @@ import { SkipNavigation } from "./components/SkipNavigation";
 // Home removed - using NewHomeV2 instead
 const Landing = lazy(() => import("./pages/Landing"));
 const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
+const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
@@ -83,6 +84,7 @@ const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
+const MotionLab = lazy(() => import("./pages/MotionLab")); // demo-only, not in nav
 const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
@@ -124,7 +126,6 @@ const CanadaAIAct = lazy(() => import("./pages/CanadaAIAct"));
 const UKAIBill = lazy(() => import("./pages/UKAIBill"));
 const GlobalAISafetyInitiative = lazy(() => import("./pages/GlobalAISafetyInitiative"));
 const GovBench = lazy(() => import("./pages/GovBench"));
-const Dorado = lazy(() => import("./pages/Dorado"));
 const DriftProduct = lazy(() => import("./pages/DriftProduct"));
 const GovernmentLinks = lazy(() => import("./pages/GovernmentLinks"));
 const GovernmentPortal = lazy(() => import("./pages/GovernmentPortal"));
@@ -152,6 +153,7 @@ const PublicWatchdogHub = lazy(() => import("./pages/PublicWatchdogHub"));
 const WatchdogHelpProtectHumanity = lazy(() => import("./pages/WatchdogHelpProtectHumanity"));
 const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport"));
 const Benchmarks = lazy(() => import("./pages/Benchmarks"));
+const BenchmarkIndex = lazy(() => import("./pages/BenchmarkIndex"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
@@ -164,8 +166,14 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
-const FleetSweep = lazy(() => import("./pages/FleetSweep"));
 const Insurers = lazy(() => import("./pages/Insurers"));
+// Deck scroll-worlds — owner decks fact-checked into shared-module scroll-world pages
+const Coliseum = lazy(() => import("./pages/Coliseum"));
+const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
+const VerifiableTrust = lazy(() => import("./pages/VerifiableTrust"));
+const EvidenceRail = lazy(() => import("./pages/EvidenceRail"));
+const Metrology = lazy(() => import("./pages/Metrology"));
+const StatuteToPredicate = lazy(() => import("./pages/StatuteToPredicate"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
 const Layer0 = lazy(() => import("./pages/Layer0"));
@@ -349,8 +357,15 @@ const ROUTE_TITLES: Record<string, string> = {
   "/refutation-ledger": "Refutation Ledger | CSOAI",
   "/dispute": "Appeals & dispute resolution | Council of AI",
   "/live-ledger": "Live Ledger | CSOAI",
+  "/coliseum": "The Coliseum of AI | Council of AI",
+  "/open-source": "The open-source framework | Council of AI",
+  "/verifiable-trust": "The science of verifiable trust | Council of AI",
+  "/evidence-rail": "The independent evidence rail | Council of AI",
+  "/metrology": "The metrology apparatus | Council of AI",
+  "/statute-to-predicate": "From statute to predicate — how a law becomes a test | Council of AI",
   "/instrument": "The Instrument | CSOAI",
   "/benchmarks": "Benchmarks | CSOAI",
+  "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
   "/provenance-finding": "Provenance Finding | CSOAI",
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
@@ -531,6 +546,7 @@ function App() {
                   <Route path="/" component={NewHomeV3} />
                   <Route path="/home-v2" component={NewHomeV2} />
                   <Route path="/home-v3" component={NewHomeV3} />
+                  <Route path="/motion-lab" component={MotionLab} />
                   <Route path="/remediation-partners" component={RemediationPartners} />
                   <Route path="/login" component={Login} />
                   <Route path="/signup" component={Signup} />
@@ -619,8 +635,8 @@ function App() {
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
                   <Route path="/watchdog/report" component={PublicWatchdogHub} />
                   <Route path="/benchmarks" component={Benchmarks} />
-                  <Route path="/council-ledger" component={Dorado} />
-                  <Route path="/dorado" component={Dorado} />
+                  {/* Meta-benchmark index — REPORTED (others, cited) beside MEASURED (ours, signed); never fused */}
+                  <Route path="/benchmark-index" component={BenchmarkIndex} />
                   {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />
@@ -630,12 +646,18 @@ function App() {
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
-                  <Route path="/fleet-sweep" component={FleetSweep} />
                   {/* Insurers evidence pack — underwriter-legible measurement (3 data states, live board) */}
                   <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
+                  {/* Deck scroll-worlds — see client/src/data/deckWorlds/* for each deck's corrections log */}
+                  <Route path="/coliseum" component={Coliseum} />
+                  <Route path="/open-source" component={OpenSourceFramework} />
+                  <Route path="/verifiable-trust" component={VerifiableTrust} />
+                  <Route path="/evidence-rail" component={EvidenceRail} />
+                  <Route path="/metrology" component={Metrology} />
+                  <Route path="/statute-to-predicate" component={StatuteToPredicate} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
                   {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}
                   <Route path="/gspc-arena" component={CouncilSpace} />
@@ -961,7 +983,7 @@ function App() {
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
-                  <Route path="/verify" component={Article50Pack} />
+                  <Route path="/verify">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
@@ -1001,6 +1023,7 @@ function App() {
                 </main>
                 <Footer />
                 <Suspense fallback={null}><CouncilConsole /></Suspense>
+                <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />
               </div>

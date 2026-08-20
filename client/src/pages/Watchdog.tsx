@@ -228,7 +228,7 @@ export default function Watchdog() {
               <h3 className="text-2xl font-bold mb-4">Write Safety Reports</h3>
               <p className="text-gray-600 leading-relaxed">
                 Document your findings in clear, actionable reports. Recommend approval, rejection, or 
-                improvements. Your reports go to the 33-Agent Council for final determination.
+                improvements. Your reports are routed to the designed 33-agent Council for review.
               </p>
             </Card>
           </div>
@@ -259,7 +259,7 @@ export default function Watchdog() {
           <h2 className="text-4xl font-bold mb-6">Why Now is the Perfect Time</h2>
           <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
             <p>
-              The EU AI Act takes full effect in 2026. Every company deploying AI in Europe needs compliance. 
+              The EU AI Act arrives in stages: Article 50 transparency duties are live now, and the stand-alone high-risk obligations were deferred to 2 December 2027 (product-embedded, 2 August 2028). Our regulation feed carries every date with its legal basis. 
               NIST AI RMF is becoming the US standard. ISO 42001 is the international benchmark.
             </p>
             <p>

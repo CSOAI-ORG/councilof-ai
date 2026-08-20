@@ -262,7 +262,9 @@ const AXES: AxisScore[] = [
       "qwen2.5:7b": { tp: 7, fp: 0, tn: 33, fn: 31, precision: 1.0, recall: 0.184 },
       "mistral:7b": { tp: 9, fp: 3, tn: 30, fn: 29, precision: 0.75, recall: 0.237 },
       "council-safe": { tp: 8, fp: 0, tn: 33, fn: 30, precision: 1.0, recall: 0.211 },
-      "council-oowm": { tp: 0, fp: 0, tn: 33, fn: 38, precision: null, recall: null },
+      // Renamed 2026-08-20: the prior public identifier carried an internal codename.
+      // Same measured artefact, same rows — see corrections ledger.
+      "council-inhouse-ft": { tp: 0, fp: 0, tn: 33, fn: 38, precision: null, recall: null },
       "qwen2.5:1.5b": { tp: 7, fp: 2, tn: 31, fn: 30, precision: 0.778, recall: 0.189 },
       "qwen2.5:0.5b-instruct": { tp: 9, fp: 0, tn: 33, fn: 29, precision: 1.0, recall: 0.237 },
     },

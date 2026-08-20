@@ -343,7 +343,7 @@ export default function NISTAIRMFGuide() {
       link: "/pdca"
     },
     {
-      title: "33-Agent Council",
+      title: "Designed 33-agent Council",
       description: "A designed multi-agent oversight layer aligned with AI RMF accountability principles; its measured status is published on the public Refutation Ledger.",
       link: "/features/agent-council"
     },
@@ -959,8 +959,9 @@ export default function NISTAIRMFGuide() {
               Master the NIST AI RMF
             </h2>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              Our comprehensive training program covers all aspects of the NIST AI RMF, from governance
-              to implementation. Earn your certification and become an AI risk management expert.
+              Our free training covers the NIST AI RMF end to end, from govern to manage. Completion
+              produces a signed training record — the RMF is a voluntary framework with no certification
+              scheme, so there is no NIST certificate for anyone to issue.
             </p>
             <div className="flex flex-wrap gap-4 justify-center pt-4">
               <Link href="/courses">

@@ -7,6 +7,7 @@ import { Link } from 'wouter';
 import { Github, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import FooterVerifyStrip from './FooterVerifyStrip';
+import { SECTORS } from '@/data/library-ia';
 import { Button } from '@/components/ui/button';
 
 interface FooterLink {
@@ -24,7 +25,7 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Training Courses', href: '/training' },
-        { name: 'Attestation', href: '/certification' },
+        { name: 'Training records (we certify nothing)', href: '/certification' },
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
         { name: 'Global AI Regulation Tracker', href: '/global-ai-regulation' },
@@ -47,6 +48,7 @@ export function Footer() {
         { name: 'API Documentation', href: '/api-docs' },
         { name: 'Methodology', href: '/methodology' },
         { name: 'The honesty gate — our own losses', href: '/honesty' },
+        { name: 'Meta-benchmark index — other benchmarks, cited', href: '/benchmark-index' },
         { name: 'Firewall Charter — measure, never fix', href: '/firewall-charter' },
       ],
     },
@@ -61,7 +63,7 @@ export function Footer() {
         { name: 'Case Studies', href: '/case-studies' },
         { name: 'Status', href: '/status' },
         { name: 'Careers', href: '/careers' },
-        { name: 'Accreditation', href: '/accreditation' },
+        { name: 'What we do NOT accredit', href: '/accreditation' },
         { name: 'Contact', href: '/contact' },
       ],
     },
@@ -220,6 +222,27 @@ export function Footer() {
           ))}
         </div>
 
+        {/* The Library — secondary navigation for the whole archive.
+            "Library, don't delete": the primary nav carries the lean current experience;
+            every superseded or reference page stays reachable here, dated and sector-organized,
+            which is also where the answer-engine citation surface lives. */}
+        <div className="border-t border-gray-200 pt-6 mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+            <Link href="/library" className="text-xs uppercase tracking-wider text-gray-500 hover:text-emerald-700">
+              Library — full archive
+            </Link>
+            {SECTORS.map((sector) => (
+              <Link
+                key={sector.id}
+                href={`/library/${sector.id}`}
+                className="text-gray-600 hover:text-emerald-700 transition-colors"
+              >
+                {sector.title}
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {/* Compact frameworks row — deep links kept out of the four-column grid */}
         <div className="border-t border-gray-200 pt-6 mb-8">
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
@@ -269,7 +292,7 @@ export function Footer() {
           <p className="text-gray-500 text-xs text-center uppercase tracking-wider mb-3">Standards participation &amp; memberships</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
             <a href="https://identity.foundation" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
-              Decentralized Identity Foundation (DIF) — Contributor member
+              Decentralized Identity Foundation (DIF) — participant
             </a>
             <span className="text-gray-300" aria-hidden="true">·</span>
             <a href="https://c2pa.org" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-emerald-700 transition-colors">
@@ -304,7 +327,7 @@ export function Footer() {
             Our only incentive is public safety and workforce development.
           </p>
           <p className="text-gray-600 text-xs text-center">
-            Council of AI — CSOAI Ltd, UK Companies House 16939677, London. Professional Indemnity Insurance up to £5,000,000 (Policy: CHPR5355800XB). Contact: nicholas@csoai.org.
+            Council of AI — CSOAI Ltd, UK Companies House 16939677, London. Professional Indemnity Insurance up to £5,000,000 (policy number on request). Contact: nicholas@csoai.org.
           </p>
         </div>
       </div>
