@@ -12,7 +12,7 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 
 /** The lean current experience — kept in primary nav, never shown an "archived" banner. */
 export const PRIMARY_PATHS = new Set<string>([
-  "/", "/benchmarks", "/gspc-arena", "/gspc-verify", "/methodology", "/api-docs",
+  "/", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/methodology", "/api-docs",
   "/article-50", "/ai-act-faq", "/academy", "/about", "/pricing", "/contact",
   "/blog", "/refutation-ledger", "/regulators", "/industries", "/os", "/system-card",
   "/trust-center", "/status", "/measure", "/faq", "/library", "/honesty",
