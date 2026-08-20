@@ -324,7 +324,7 @@ export default function RegulatoryAuthority() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Dominance & Global Standard</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Global Standard <span className="text-sm font-normal text-gray-500">— target, not achieved</span></h3>
                   <ul className="space-y-2 text-gray-700">
                     <li>▹ 60-80% market penetration</li>
                     <li>▹ 20,000+ analysts worldwide</li>

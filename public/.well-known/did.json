@@ -41,11 +41,24 @@
         "kid": "csoai-board-attestation-1",
         "use": "sig"
       }
+    },
+    {
+      "id": "did:web:csoai.org#card-attestation-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg",
+        "kid": "csoai-card-attestation-1",
+        "use": "sig"
+      }
     }
   ],
   "assertionMethod": [
     "did:web:csoai.org#site-release-1",
-    "did:web:csoai.org#estate-chain-1"
+    "did:web:csoai.org#estate-chain-1",
+    "did:web:csoai.org#card-attestation-1"
   ],
   "authentication": [
     "did:web:csoai.org#site-release-1"
@@ -59,7 +72,7 @@
   ],
   "_serviceNote": "The MCP measurement-server endpoint was removed 2026-08-19: its worker returned 404 and a DID document must not advertise dead services. It returns in the same commit that redeploys it.",
   "_keyContinuity": {
-    "note": "Two signing identities per KEY-CONTINUITY.md (binding estate note, 2026-08-16). #site-release-1 signs site deploys, release cards and agent cards (keystone-held). #estate-chain-1 signs fleet board chains and measurement cards (pod-held). Public verify surfaces label which key signed each artifact. Ed25519 today; ML-DSA-65 is roadmap, not present.",
+    "note": "Two signing identities per KEY-CONTINUITY.md (binding estate note, 2026-08-16). #site-release-1 signs site deploys, release cards and agent cards (keystone-held). #estate-chain-1 signs fleet board chains and measurement cards (pod-held). Public verify surfaces label which key signed each artifact. Ed25519 today; ML-DSA-65 is roadmap, not present. #card-attestation-1 (added 2026-08-20) signs the mine's measurement-card generation (d4cb0eaa, Mac-held estate key) - the cards' actual signer, published so the 335-card chain verifies against the trust root.",
     "superseded": [
       {
         "x": "9LQnjdwhbC8GCyc6_P2e8AhWOZNzsjsJd5T-cvs2w0I",

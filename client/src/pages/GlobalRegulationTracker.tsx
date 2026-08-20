@@ -1,6 +1,6 @@
 /**
  * Global AI Regulation Tracker
- * Real-time tracking of AI governance frameworks across 40+ nations
+ * Real-time tracking of AI governance frameworks across 30+ jurisdictions
  * A comprehensive, data-rich resource tracking enacted laws, proposed bills, and international standards
  */
 
@@ -977,7 +977,7 @@ export default function GlobalRegulationTracker() {
               <span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent"> Tracker</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Real-time tracking of AI governance frameworks across 40+ nations. Stay informed on enforced laws,
+              Real-time tracking of AI governance frameworks across 30+ jurisdictions. Stay informed on enforced laws,
               proposed legislation, voluntary guidelines, and international standards shaping global AI regulation.
             </p>
             <div className="flex flex-wrap gap-4 justify-center pt-4">

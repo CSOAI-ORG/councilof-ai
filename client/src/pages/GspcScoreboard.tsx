@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { setMetaDescription } from "@/lib/utils";
+import { gspcDatasetLd } from "@/lib/datasetSchema";
 
 /**
  * /gspc-scoreboard — the live board, honestly displayed (NEXT-100 #2).
@@ -22,18 +23,11 @@ interface Axis {
   status: string;
 }
 
-const DATASET_LD = {
-  "@context": "https://schema.org",
-  "@type": "Dataset",
-  name: "GSPC 14-slot board — live AI measurement results",
-  description:
-    "Deterministic per-axis AI measurement results: n, leader accuracy, Wilson intervals, separation verdicts (McNemar-primary; ties stated as ties). 13 measured of 14 slots; live item count in the API.",
-  url: "https://councilof.ai/gspc-scoreboard",
-  distribution: [{ "@type": "DataDownload", encodingFormat: "application/json", contentUrl: "https://councilof.ai/api/gspc" }],
-  license: "https://creativecommons.org/licenses/by/4.0/",
-  creator: { "@type": "Organization", name: "Council of AI (CSOAI Ltd)", url: "https://councilof.ai", identifier: "UK Companies House 16939677" },
-  isAccessibleForFree: true,
-};
+// The board Dataset + a hasPart catalog of all 13 published per-axis banks, so
+// Hugging Face Dataset-Search and answer engines can index each bank (real HF
+// URLs, CC-BY-4.0, the resolving concept DOI) from this one crawlable page.
+// Derived from the axis registry — see client/src/lib/datasetSchema.ts.
+const DATASET_LD = gspcDatasetLd();
 
 const CHIP: Record<string, string> = {
   SEPARATED: "bg-emerald-100 text-emerald-800 border-emerald-300",

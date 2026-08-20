@@ -252,7 +252,7 @@ export default function Enterprise() {
                 <Zap className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Automated Assessment</h3>
                 <p className="text-sm text-gray-600">
-                  The designed 33-agent Council of AI reviews your systems against selected compliance frameworks (design; live independence measured at n_eff 1.21 of 3).
+                  A designed 33-agent Council of AI evaluates your systems against selected compliance frameworks.
                 </p>
               </Card>
             </div>
@@ -622,7 +622,7 @@ export default function Enterprise() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                  <span>33-Agent Council assessments</span>
+                  <span>Designed 33-Agent Council assessments</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />

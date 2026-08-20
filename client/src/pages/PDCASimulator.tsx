@@ -228,7 +228,7 @@ export default function PDCASimulator() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Interactive PDCA Cycle Simulator</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Walk through a complete SOAI-PDCA cycle with a fictional AI system and see how the
-            33-Agent Council provides recommendations at each phase.
+            designed 33-Agent Council provides recommendations at each phase.
           </p>
         </div>
 

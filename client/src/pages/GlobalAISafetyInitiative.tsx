@@ -70,7 +70,7 @@ const REGIONS = {
 };
 
 export default function GlobalAISafetyInitiative() {
-  useEffect(() => { document.title = "GlobalAISafetyInitiative | CSOAI"; }, []);
+  useEffect(() => { document.title = "Global AI Safety Initiative | Council of AI"; }, []);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedTier, setSelectedTier] = useState("");
   const [formData, setFormData] = useState({
@@ -104,8 +104,9 @@ export default function GlobalAISafetyInitiative() {
               </span>
             </h1>
             <p className="mb-8 text-xl text-gray-600">
-              118 countries lack AI safety frameworks. We're changing that with white-label solutions 
-              that empower governments to protect their citizens and lead in responsible AI.
+              The UN's 2024 report <em>Governing AI for Humanity</em> found 118 countries were party to
+              none of the major international AI governance initiatives. We help governments close that
+              gap with measurement tools and training — not a conformity mark.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
@@ -121,25 +122,24 @@ export default function GlobalAISafetyInitiative() {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section — every figure sourced */}
       <section className="border-y bg-white py-12">
         <div className="container">
-          <div className="grid gap-8 md:grid-cols-4">
+          <div className="grid gap-8 md:grid-cols-3">
             <div className="text-center">
               <div className="text-4xl font-bold text-emerald-600">118</div>
-              <div className="text-gray-600">Countries Without AI Governance</div>
+              <div className="text-gray-600">Countries party to none of the major AI governance initiatives</div>
+              <div className="mt-1 text-xs text-gray-400">UN, <em>Governing AI for Humanity</em>, 2024</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-amber-600">£1B</div>
-              <div className="text-gray-600">Training Giveaway Value</div>
+              <div className="text-4xl font-bold text-blue-600">7</div>
+              <div className="text-gray-600">Countries party to all of them</div>
+              <div className="mt-1 text-xs text-gray-400">UN, <em>Governing AI for Humanity</em>, 2024</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600">500,250</div>
-              <div className="text-gray-600">AI Analysts to Train</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-purple-600">Dec 2027</div>
-              <div className="text-gray-600">EU AI Act High-Risk Deadline (Omnibus)</div>
+              <div className="text-4xl font-bold text-purple-600">Aug 2026</div>
+              <div className="text-gray-600">EU AI Act high-risk (Annex III) obligations apply</div>
+              <div className="mt-1 text-xs text-gray-400">Regulation (EU) 2024/1689, Art. 113</div>
             </div>
           </div>
         </div>
@@ -279,7 +279,7 @@ export default function GlobalAISafetyInitiative() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>Designed 33-agent Council of AI deployment</span>
+                    <span>Designed 33-agent Council of AI access</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
@@ -424,38 +424,23 @@ export default function GlobalAISafetyInitiative() {
         </div>
       </section>
 
-      {/* £1 Billion Giveaway Section */}
-      <section className="bg-gradient-to-r from-amber-500 to-orange-500 py-20 text-white">
+      {/* Free training rail — no fabricated totals */}
+      <section className="bg-gradient-to-r from-emerald-600 to-teal-600 py-20 text-white">
         <div className="container">
           <div className="mx-auto max-w-4xl text-center">
             <Badge className="mb-6 bg-white/20 text-white hover:bg-white/20">
-              <Award className="mr-2 h-4 w-4" />
-              £1 Billion Training Giveaway
+              <GraduationCap className="mr-2 h-4 w-4" />
+              Free Training Rail
             </Badge>
             <h2 className="mb-6 text-4xl font-bold">
-              Creating 500,250 AI Safety Analysts Worldwide
+              Training and verification are free
             </h2>
             <p className="mb-8 text-xl text-white/90">
-              Training and attestation are free — verification is free forever. Our £1 billion giveaway
-              represents the value of free training we are putting into the world to attest over half a million
-              AI Safety Analysts globally. This creates immediate capacity for nations to implement
-              AI governance frameworks.
+              Government officials can complete Council Academy training and receive a measurement
+              credential at no cost, and signed measurement results stay free to verify. The credential
+              attests training completion — it is not a conformity mark or certification.
             </p>
-            <div className="grid gap-6 md:grid-cols-3 mb-8">
-              <div className="rounded-lg bg-white/10 p-6">
-                <div className="text-3xl font-bold">£1,000,000,000</div>
-                <div className="text-white/80">Total Training Value</div>
-              </div>
-              <div className="rounded-lg bg-white/10 p-6">
-                <div className="text-3xl font-bold">500,250</div>
-                <div className="text-white/80">Analysts to Train</div>
-              </div>
-              <div className="rounded-lg bg-white/10 p-6">
-                <div className="text-3xl font-bold">118</div>
-                <div className="text-white/80">Countries Served</div>
-              </div>
-            </div>
-            <Button size="lg" variant="secondary" className="bg-white text-amber-600 hover:bg-gray-100">
+            <Button size="lg" variant="secondary" className="bg-white text-emerald-700 hover:bg-gray-100">
               Apply for Free Training
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

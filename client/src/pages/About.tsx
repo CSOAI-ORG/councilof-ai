@@ -234,10 +234,11 @@ export default function About() {
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Global Reach</Badge>
-            <h2 className="text-4xl font-bold mb-6">Our Global Presence</h2>
+            <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Global Coverage</Badge>
+            <h2 className="text-4xl font-bold mb-6">Our Global Coverage</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              Operating across 40+ nations to bring AI safety expertise to every corner of the world.
+              Our framework crosswalks and measurement span 30+ jurisdictions — from the EU AI Act to
+              national governance regimes worldwide.
             </p>
           </div>
 
@@ -247,7 +248,7 @@ export default function About() {
                 <MapPin className="h-6 w-6 text-blue-600" />
                 <h3 className="text-2xl font-bold text-blue-900">North America</h3>
               </div>
-              <p className="text-gray-700">Leading AI safety training across the United States and Canada with thousands of active analysts.</p>
+              <p className="text-gray-700">US and Canada framework coverage — NIST AI RMF, federal guidance, and state AI laws crosswalked to the Charter.</p>
             </Card>
 
             <Card className="p-8 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
@@ -263,7 +264,7 @@ export default function About() {
                 <MapPin className="h-6 w-6 text-amber-600" />
                 <h3 className="text-2xl font-bold text-amber-900">Asia-Pacific</h3>
               </div>
-              <p className="text-gray-700">Rapidly growing training ecosystem covering China, Japan, India, Australia, and Southeast Asia.</p>
+              <p className="text-gray-700">Framework coverage across China (TC260), Japan, India, Australia, and Southeast Asia.</p>
             </Card>
 
             <Card className="p-8 bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
@@ -271,7 +272,7 @@ export default function About() {
                 <MapPin className="h-6 w-6 text-rose-600" />
                 <h3 className="text-2xl font-bold text-rose-900">Middle East & Africa</h3>
               </div>
-              <p className="text-gray-700">Expanding presence bringing AI safety training to emerging markets and developing nations.</p>
+              <p className="text-gray-700">Framework tracking for emerging AI-governance regimes across the Middle East and Africa.</p>
             </Card>
           </div>
         </div>
@@ -360,8 +361,8 @@ export default function About() {
                   <h3 className="text-2xl font-bold mb-4">💼 Job Creation: Not Just Compliance</h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
                     Every other AI safety organization focuses on regulation. We focus on <strong>people</strong>.
-                    We're training 10,000+ analysts in the next 2 years. Not certificates — careers.
-                    Real jobs. Real income. Real impact.
+                    We're building a new profession — the AI Safety Analyst — through free Council Academy
+                    training. Not certificates — careers. Real jobs. Real income. Real impact.
                   </p>
                   <p className="text-sm text-gray-500">
                     <strong>Why it matters:</strong> AI will displace millions of workers. We're creating a new profession

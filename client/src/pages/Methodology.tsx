@@ -196,8 +196,9 @@ export default function Methodology() {
             <li>
               Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
               tamper-evidence; authorship is carried by the ~3KB card, signed with Ed25519 and
-              anchored with OpenTimestamps (published key f4b4278d…, did:web:csoai.org). The
-              post-quantum ML-DSA-65 (FIPS-204) signer is built, not shipped.
+              SHA-256 hash-chained (published key f4b4278d…, did:web:csoai.org) (OpenTimestamps
+              anchoring is roadmap, not yet wired). The post-quantum ML-DSA-65 (FIPS-204) signer
+              is built, not shipped.
             </li>
           </ul>
         </section>
