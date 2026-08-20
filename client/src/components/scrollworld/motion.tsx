@@ -57,8 +57,15 @@ export function useParallax(strength = 14) {
     let raf = 0;
     const tick = () => {
       raf = 0;
+      const vh = window.innerHeight || 0;
       const r = el.getBoundingClientRect();
-      const p = (r.top + r.height / 2 - window.innerHeight / 2) / (window.innerHeight || 1);
+      // The rect already carries the transform written last frame, so on a zero-height
+      // viewport (or a zero rect) the feedback runs away — a sibling copy of this hook
+      // was measured at translateY ~287,000px. Bail on the degenerate case, and clamp
+      // the ratio so a pathological rect can never drive an unbounded offset.
+      if (!vh || !r.height) return;
+      const raw = (r.top + r.height / 2 - vh / 2) / vh;
+      const p = Math.max(-2, Math.min(2, raw));
       el.style.transform = `translate3d(0, ${(-p * strength).toFixed(2)}%, 0) scale(1.16)`;
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick); };

@@ -259,7 +259,7 @@ export default function Watchdog() {
           <h2 className="text-4xl font-bold mb-6">Why Now is the Perfect Time</h2>
           <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
             <p>
-              The EU AI Act takes full effect in 2026. Every company deploying AI in Europe needs compliance. 
+              The EU AI Act arrives in stages: Article 50 transparency duties are live now, and the stand-alone high-risk obligations were deferred to 2 December 2027 (product-embedded, 2 August 2028). Our regulation feed carries every date with its legal basis. 
               NIST AI RMF is becoming the US standard. ISO 42001 is the international benchmark.
             </p>
             <p>
