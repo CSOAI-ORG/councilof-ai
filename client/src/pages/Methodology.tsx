@@ -195,8 +195,9 @@ export default function Methodology() {
             <li>Not LLM-as-judge. Every verdict is a deterministic predicate.</li>
             <li>
               Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
-              tamper-evidence; authorship is carried by the ~3KB card, signed with Ed25519 and
-              anchored with OpenTimestamps (published key f4b4278d…, did:web:csoai.org). The
+              tamper-evidence; authorship is carried by the ~3KB card, signed with Ed25519
+              (published key f4b4278d…, did:web:csoai.org). OpenTimestamps / RFC-3161 anchoring
+              is on the roadmap, not yet wired (no OTS attestation exists for this chain). The
               post-quantum ML-DSA-65 (FIPS-204) signer is built, not shipped.
             </li>
           </ul>

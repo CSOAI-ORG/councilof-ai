@@ -39,11 +39,12 @@ export const CHAIN_STATUS: ChainStatus = {
   chain_valid: true,
   chain_length: 11,
   hash_algorithm: "sha256",
-  signature_algorithm: "Ed25519 + OpenTimestamps",
-  note: "Records are sha256 hash-linked for tamper-evidence and signed with Ed25519, " +
-    "anchored with OpenTimestamps — a ~3KB card verifiable offline against the published " +
-    "key f4b4278d… (did:web:csoai.org). The post-quantum ML-DSA-65 (FIPS-204) signer is " +
-    "built, not shipped; the label will name it in the same commit it ships.",
+  signature_algorithm: "Ed25519 (SHA-256 hash-linked)",
+  note: "Records are sha256 hash-linked for tamper-evidence and signed with Ed25519 — a ~3KB card " +
+    "verifiable offline against the published key f4b4278d… (did:web:csoai.org). OpenTimestamps / " +
+    "RFC-3161 anchoring is on the roadmap, not yet wired (no OTS attestation exists for this chain). " +
+    "The post-quantum ML-DSA-65 (FIPS-204) signer is built, not shipped; the label will name it in " +
+    "the same commit it ships.",
   last_record: {
     id: "DR-0034",
     published_at: "2026-07-31",
