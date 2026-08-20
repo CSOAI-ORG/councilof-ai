@@ -18,6 +18,12 @@ import { LOBBY_TABS, matchTab, type LobbyTab } from "./tabs";
  * message that is EXPLICITLY labelled deterministic. We never dress a local
  * string up as a live answer, and this bar never writes a compliance verdict —
  * it is a wire. Verdicts come from the signed APIs.
+ *
+ * SEEDED PROMPTS (deep links). `seedPrompt` arrives from a CTA elsewhere on the
+ * site (see client/src/lib/lobbyLink.ts). It is TYPED into the input and the
+ * input is focused — that is all. Nothing is sent, no lane has run, and the
+ * notice above the input says so, so a seeded question can never be mistaken for
+ * an answer that a model has already given. The send stays the user's.
  */
 
 type Turn = {
@@ -66,15 +72,38 @@ function offlineHelp(reason: string): string {
 export default function LobbyChatBar({
   panel,
   onNavigate,
+  seedPrompt,
+  seedNonce,
 }: {
   panel: React.CSSProperties;
   onNavigate: (tab: LobbyTab) => void;
+  /** Pre-filled by a deep link. Typed, never sent. */
+  seedPrompt?: string;
+  /** Changes on every fresh intent, so the same seed can be re-applied. */
+  seedNonce?: number;
 }) {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
   const [open, setOpen] = useState(false);
+  const [seeded, setSeeded] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Type the seeded prompt and focus the input. THAT IS THE WHOLE ACTION — the
+  // consent lock holds: the deep link chose the question, the user sends it.
+  useEffect(() => {
+    const seed = seedPrompt?.trim();
+    if (!seed) return;
+    setQ(seed);
+    setSeeded(true);
+    requestAnimationFrame(() => {
+      const el = inputRef.current;
+      if (!el) return;
+      el.focus();
+      el.setSelectionRange(seed.length, seed.length);
+    });
+  }, [seedNonce, seedPrompt]);
 
   useEffect(() => {
     if (open) requestAnimationFrame(() => endRef.current?.scrollIntoView({ behavior: "smooth" }));
@@ -86,6 +115,7 @@ export default function LobbyChatBar({
     const question = (text ?? q).trim();
     if (!question || busy) return;
     setQ("");
+    setSeeded(false);
     setOpen(true);
     push({ role: "user", text: question });
 
@@ -172,10 +202,21 @@ export default function LobbyChatBar({
       )}
 
       <div className="px-4 py-3">
+        {seeded && (
+          <p
+            role="status"
+            className="mb-2 rounded-lg border border-sky-300/25 bg-sky-400/10 px-3 py-1.5 text-[11px] leading-relaxed text-sky-100/85"
+          >
+            <strong className="font-bold">Nothing has been asked yet.</strong> That link filled the
+            box below with a suggested question — no lane has run, no measurement has been read and
+            no model has answered. Edit it, or press Ask to send it yourself.
+          </p>
+        )}
         <div className="flex gap-2">
           <input
+            ref={inputRef}
             value={q}
-            onChange={(e) => setQ(e.target.value)}
+            onChange={(e) => { setQ(e.target.value); setSeeded(false); }}
             onKeyDown={(e) => { if (e.key === "Enter") void send(); }}
             aria-label="Ask the Council, or name a pane to open"
             placeholder='Ask the Council — or say "show the board"'
