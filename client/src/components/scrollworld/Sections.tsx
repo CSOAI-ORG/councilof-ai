@@ -14,26 +14,41 @@ export function HeavySection({ slide, contentRight }: { slide: Slide; contentRig
     ? "bg-gradient-to-l from-white/70 via-white/25 to-transparent"
     : "bg-gradient-to-r from-white/70 via-white/25 to-transparent";
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-white">
+    <section className="relative flex flex-col justify-center overflow-hidden bg-white lg:min-h-[100svh] lg:flex-row lg:items-center">
+      {/* MOBILE: the art is a 16:9 banner in normal flow. Landscape plates cropped
+          into a ~1:3 portrait viewport showed a useless vertical sliver — the real
+          cause of "images look broken on mobile". Composition is preserved here. */}
       {slide.bg && (
         <img
-          ref={bgRef}
           src={slide.bg.src}
           alt={slide.bg.alt}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover will-change-transform"
+          sizes="(max-width: 1023px) 100vw, 100vw"
+          className="aspect-[16/9] w-full object-cover lg:hidden"
         />
       )}
-      <div className={`absolute inset-0 ${wash}`} />
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24">
+      {/* DESKTOP: unchanged full-bleed cover with parallax. */}
+      {slide.bg && (
+        <img
+          ref={bgRef}
+          src={slide.bg.src}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 hidden h-full w-full object-cover will-change-transform lg:block"
+        />
+      )}
+      <div className={`absolute inset-0 hidden lg:block ${wash}`} />
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-5 py-12 sm:px-6 sm:py-16 lg:py-24">
         <Reveal className={`max-w-xl ${contentRight ? "ml-auto" : ""}`}>
-          <div className="rounded-3xl border border-white/70 bg-white/80 p-8 text-left shadow-[0_24px_70px_-30px_rgba(4,18,12,.55)] backdrop-blur-md sm:p-10">
+          <div className="rounded-3xl text-left lg:border lg:border-white/70 lg:bg-white/80 lg:p-10 lg:shadow-[0_24px_70px_-30px_rgba(4,18,12,.55)] lg:backdrop-blur-md">
             <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-700">{slide.kicker}</span>
-            <h2 className="mt-3 text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl lg:text-[3.4rem]">
+            <h2 className="mt-3 text-[1.9rem] font-black leading-[1.06] tracking-tight text-gray-900 sm:text-4xl md:text-5xl lg:text-[3.4rem]">
               {slide.title}
             </h2>
-            <p className="mt-5 text-lg font-medium leading-relaxed text-gray-700 sm:text-xl">{slide.body}</p>
+            <p className="mt-4 text-base font-medium leading-relaxed text-gray-700 sm:mt-5 sm:text-lg lg:text-xl">{slide.body}</p>
             {slide.points && <Points points={slide.points} />}
             {slide.video && (
               <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8 !mx-0" />
