@@ -346,13 +346,13 @@ function Cta({ slide }: { slide: Slide }) {
 
 /* ————— motion helpers — all animate opacity/transform ONLY; content never leaves the flow ————— */
 const HERO_REEL: { src: string; alt: string }[] = [
+  // Text-free arena plates ONLY. The diagram images (liveness engine, evidence card,
+  // watchdog funnel, credential vault) carry their own baked-in labels, which collide
+  // with the headline when used as a backdrop — they belong to sections, not the hero.
   { src: "/images/coliseum_hero_arena.jpg", alt: "Clay figures and green verification seals gathered in a marble arena" },
   { src: "/images/coliseum_swarm_clash.jpg", alt: "A swarm of green shards meeting clay scientists raising shields" },
-  { src: "/images/secure_evidence_vault.jpg", alt: "Clay figures holding a glowing 3KB credential card before a vault door" },
   { src: "/images/coliseum_logic_duel.jpg", alt: "A human and an AI facing each other across a chessboard" },
-  { src: "/images/liveness_drift_engine.jpg", alt: "An hourglass weighing a stale certification against a re-attested current seal" },
   { src: "/images/coliseum_humans_vs_humanoids.jpg", alt: "People directing AI figures with beams of light, keeping oversight" },
-  { src: "/images/verifiable_evidence_card.jpg", alt: "Hands holding a signed evidence card reading verified: true" },
 ];
 
 function usePrefersReducedMotion() {
@@ -448,18 +448,19 @@ function HeroSection({ slide }: { slide: Slide }) {
         />
       ))}
       {/* lighter scrim — the world stays visible; type carries its own shadow */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/15 to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/65" />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 62% 50% at 50% 46%, rgba(0,0,0,.52) 0%, rgba(0,0,0,.28) 45%, transparent 78%)" }} />
       <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-6 py-24 text-center">
         <span className="rounded-full border border-emerald-300/30 bg-black/25 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-200 backdrop-blur-sm">
           {slide.kicker}
         </span>
-        <h1 className="mt-8 max-w-5xl text-5xl font-black leading-[1.02] tracking-tight text-white [text-shadow:0_4px_28px_rgba(0,0,0,.6)] sm:text-6xl lg:text-7xl">
+        <h1 className="mt-8 max-w-[22ch] text-[2.6rem] font-black leading-[1.05] tracking-tight text-white [text-shadow:0_3px_22px_rgba(0,0,0,.85)] sm:text-6xl lg:text-7xl">
           See how your AI behaves.<br />
           Get proof you can trust.<br />
           Kept current as the rules change.<br />
           <span className="text-emerald-300">Anyone can check — free.</span>
         </h1>
-        <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-white/90 [text-shadow:0_2px_14px_rgba(0,0,0,.65)] sm:text-xl">
+        <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-white [text-shadow:0_2px_16px_rgba(0,0,0,.9)] sm:text-xl">
           {slide.body}
         </p>
         <HeroActions />
