@@ -51,7 +51,7 @@ interface GameDef {
 
 const GAMES: GameDef[] = [
   {
-    id: "sovereign-city",
+    id: "council-city",
     name: "Council City",
     tagline: "Build. Govern. Survive regulation changes.",
     description: "Age of Empires meets AI governance. Build your city where every building is an AI system. Manage Honey (knowledge), Trust (compliance), and Power (influence). When regulations change, your buildings need re-governance or they crumble.",
@@ -345,19 +345,18 @@ function GameCard({ game, index }: { game: GameDef; index: number }) {
           <div className="flex items-center justify-between pt-3 border-t border-slate-800">
             <div className="flex items-center gap-1.5 text-xs text-gray-500">
               <Users className="h-3.5 w-3.5" />
-              {game.players} players
+              Design concept
             </div>
-            <Link href={game.route}>
-              <Button
-                size="sm"
-                className="group/btn"
-                style={{ backgroundColor: game.color }}
-              >
-                <Play className="h-3.5 w-3.5 mr-1.5" />
-                Play
-                <ArrowRight className="h-3.5 w-3.5 ml-1.5 opacity-0 group-hover/btn:opacity-100 transition" />
-              </Button>
-            </Link>
+            <Button
+              size="sm"
+              disabled
+              className="group/btn opacity-60 cursor-not-allowed"
+              style={{ backgroundColor: game.color }}
+              title="Not built yet — this is a design concept, not a shipped game"
+            >
+              <Play className="h-3.5 w-3.5 mr-1.5" />
+              Not built yet
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -609,10 +608,10 @@ export default function TrainingHub() {
                 Enter Council Space
               </Button>
             </Link>
-            <Link href="/ai-hunter">
+            <Link href="/courses">
               <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold rounded-xl">
                 <MapPin className="mr-2 h-5 w-5" />
-                Try AI Hunter
+                Browse the courses that exist
               </Button>
             </Link>
           </div>

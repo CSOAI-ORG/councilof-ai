@@ -69,7 +69,7 @@ export default function Certificate({
         {/* Verification Badge */}
         <div className="flex justify-center items-center gap-2 text-green-400">
           <CheckCircle className="h-5 w-5" />
-          <span className="text-sm">Blockchain Verified</span>
+          <span className="text-sm">Ed25519-signed · SHA-256 hash-chained</span>
         </div>
 
         {/* Footer */}

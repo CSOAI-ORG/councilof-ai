@@ -49,7 +49,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Every vote is recorded on blockchain for permanent verification
+                  Every vote is Ed25519-signed and SHA-256 hash-chained, so the record is checkable offline
                 </p>
               </CardContent>
             </Card>
@@ -118,7 +118,7 @@ export default function CouncilDetail() {
               <div>
                 <h3 className="text-2xl font-bold mb-4">Decision & Escalation</h3>
                 <p className="text-gray-600 text-lg">
-                  If consensus is reached (≥23 agree), the report is approved and published. If consensus fails (&lt;23 agree), the case is escalated to senior human analysts for additional review. All votes are recorded on blockchain for permanent auditability.
+                  If consensus is reached (≥23 agree), the report is approved and published. If consensus fails (&lt;23 agree), the case is escalated to senior human analysts for additional review. All votes are Ed25519-signed and SHA-256 hash-chained, so the record is verifiable offline against the published signer.
                 </p>
               </div>
             </div>
@@ -175,7 +175,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Every vote is recorded on blockchain with timestamps and agent IDs. Enterprises, regulators, and the public can verify that decisions were made fairly without backdoor influence or corruption.
+                  Every vote is Ed25519-signed and SHA-256 hash-chained with its agent ID. Enterprises, regulators and the public can check that the record is unaltered since signing. Independent external time-anchoring is planned, not yet live — so the chain proves integrity, not the wall-clock time of signing.
                 </p>
               </CardContent>
             </Card>

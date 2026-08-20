@@ -51,11 +51,11 @@ export default function Technology() {
       id: 'analysis-engine',
       title: 'Analysis Engine',
       icon: Brain,
-      description: '33-agent Council of AI processes in parallel',
+      description: 'The designed 33-agent Council of AI reviews in parallel',
       details: [
         'Distributed processing across multiple nodes',
         'designed multi-agent review algorithm',
-        '22/33 threshold for compliance decisions',
+        '23-of-33 supermajority threshold, by design',
         'Sub-100ms response time for standard audits',
         'Horizontal scaling for variable loads'
       ]
@@ -114,7 +114,7 @@ export default function Technology() {
             The Technology Behind <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Trustworthy AI Governance</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-            Built on designed multi-agent review architecture, CSOAI's 33-agent council delivers bulletproof compliance verification across any AI system.
+            Built on a designed multi-agent review architecture. The 33-agent council is a design (Charter Art. 11), not a measured live pipeline — its effective independence is measured, not assumed, and published on the Refutation Ledger.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pricing">
@@ -139,7 +139,7 @@ export default function Technology() {
             <p className="text-blue-200 text-lg">Signed, checkable multi-perspective review — measurement, not certification</p>
           </div>
 
-          {/* Byzantine Explanation Card */}
+          {/* Designed-council explanation card */}
           <div className="bg-gradient-to-br from-blue-900/50 to-slate-900/50 border border-blue-700/50 rounded-xl p-8 mb-12">
             <div className="grid md:grid-cols-3 gap-8">
               <div className="flex flex-col items-center text-center">
@@ -163,7 +163,7 @@ export default function Technology() {
                   <CheckCircle className="text-blue-400" size={32} />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Consensus Mechanism</h3>
-                <p className="text-blue-200">22 out of 33 agents must agree for a compliance decision</p>
+                <p className="text-blue-200">23 of 33 agents must agree for a compliance decision</p>
               </div>
             </div>
           </div>
@@ -263,7 +263,7 @@ export default function Technology() {
                 <Brain className="text-blue-400 flex-shrink-0" size={28} />
                 <div>
                   <h4 className="font-bold text-white">Analysis Engine</h4>
-                  <p className="text-sm text-blue-200">33-agent Council of AI (22/33 consensus)</p>
+                  <p className="text-sm text-blue-200">Designed 33-agent Council of AI (23-of-33 supermajority)</p>
                 </div>
               </div>
 

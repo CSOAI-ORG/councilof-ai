@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 
-// SovereignAcademy — learning as an immersive journey inside the OS, not a manual.
-// The Sovereign guides you path by path (Foundations -> Your Jurisdiction -> Apply
-// -> Certify); every module flows straight into the real tool. Learn by living it.
+// Council Academy — learning as an immersive journey inside the OS, not a manual.
+// The guide walks you path by path (Foundations -> Your Jurisdiction -> Apply
+// -> Attest); every module flows straight into the real tool. Learn by living it.
+// NB: the fourth path attests TRAINING, never conformity — Council of AI certifies nothing.
 
 type Mod = { name: string; href: string };
 type Path = { n: number; title: string; blurb: string; ring: string; chip: string; modules: Mod[] };
@@ -24,8 +25,8 @@ const PATHS: Path[] = [
     { name: "Readiness Assessment (free)", href: "/readiness-assessment" },
     { name: "Policy Generator", href: "/policy-generator" },
   ] },
-  { n: 4, title: "Certify", blurb: "Prove it — earn a Watchdog Certificate.", ring: "border-violet-300", chip: "bg-violet-100 text-violet-800", modules: [
-    { name: "Certification path", href: "/certification" },
+  { n: 4, title: "Attest", blurb: "Finish a course and get a signed training record. It attests training, not conformity — we certify nothing.", ring: "border-violet-300", chip: "bg-violet-100 text-violet-800", modules: [
+    { name: "Training records — how they work", href: "/certification" },
     { name: "Full course catalog", href: "/courses" },
   ] },
 ];
