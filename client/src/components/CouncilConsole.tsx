@@ -148,9 +148,11 @@ export default function CouncilConsole() {
   return (
     <>
       {!open && (
-        <button onClick={() => setOpen(true)} aria-label="Open the Council Console"
-          className="fixed bottom-5 right-5 z-[70] flex items-center gap-2 rounded-full bg-emerald-700 px-4 py-2.5 text-sm font-bold text-white shadow-lg hover:bg-emerald-600">
-          ⬢ Ask the Council
+        <button onClick={() => setOpen(true)} aria-label="Open the Council Console" title="Ask the Council"
+          className="fixed bottom-5 right-5 z-[70] flex h-12 w-12 items-center justify-center rounded-full bg-emerald-700 text-white shadow-lg transition hover:bg-emerald-600 hover:scale-105">
+          <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+          </svg>
         </button>
       )}
       {open && (
