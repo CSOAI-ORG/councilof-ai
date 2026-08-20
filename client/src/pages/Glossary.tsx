@@ -157,7 +157,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "designed multi-agent review",
     definition:
-      "A distributed computing concept where a system continues to function correctly even if some nodes (agents) provide incorrect or malicious information. Used in CSOAI's 33-Agent Council for robust decision-making.",
+      "A distributed-computing property: a system keeps working correctly even when some nodes give wrong or malicious answers. The Council of AI was DESIGNED around this idea, but the claim was retracted on 2026-07-29 — measurement put effective independence at n_eff about 1.21 of 3, so the property is not demonstrated. See the Refutation Ledger.",
     category: "Technical",
     relatedTerms: ["Consensus", "Distributed Systems", "Robustness"],
   },
@@ -188,9 +188,9 @@ const glossaryTerms: GlossaryTerm[] = [
 
   // C
   {
-    term: "Certification",
+    term: "Certification (and why we do not issue one)",
     definition:
-      "Formal recognition by CSOAI that an individual, organization, or AI system meets established standards for AI governance, safety, compliance, or performance. CSOAI certifications include CAGP, CASA, CEAAS, and CWA.",
+      "Formal third-party attestation that a system or person conforms to a standard, issued by a body designated or accredited for it. Council of AI is NOT such a body: we measure and sign the result, we issue no conformity mark, and we accredit nobody. What we issue is a signed measurement record or a signed training record — neither is a certification.",
     category: "Compliance",
     relatedTerms: ["Conformity Assessment", "Training", "Standards"],
   },
@@ -235,7 +235,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "CSOAI's governance body and the conceptual foundation of the Council of Safety for AI. Represents the collective expertise and consensus-driven approach to AI governance across 33 specialized agent perspectives.",
     category: "Governance",
-    relatedTerms: ["CSOAI", "Governance", "33-Agent Council"],
+    relatedTerms: ["CSOAI", "Governance", "Designed 33-agent Council"],
   },
 
   // D
@@ -1326,11 +1326,12 @@ export default function Glossary() {
                   <Layers className="h-6 w-6 text-white" />
                 </div>
                 <h3 className="font-semibold text-gray-900 text-lg">
-                  Get Certified
+                  Train with the Academy
                 </h3>
               </div>
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                Earn internationally recognized certifications in AI governance, safety, and compliance.
+                Free courses in AI governance, safety and compliance. Completion produces a signed
+                training record — it attests training, not conformity.
               </p>
               <Button variant="outline" size="sm" className="hover:bg-purple-50 hover:text-purple-700">
                 View Certifications

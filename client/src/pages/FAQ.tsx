@@ -53,7 +53,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "How is CSOAI different from other AI governance platforms?",
     answer:
-      "CSOAI uniquely combines automated governance tools with human expertise through our Watchdog analyst network. Unlike competitors like Credo AI, Holistic AI, or OneTrust, we focus on solving two problems simultaneously: ensuring AI safety AND creating jobs for workers displaced by automation. Our 33-agent Council of AI provides unprecedented consensus-driven decision-making.",
+      "CSOAI uniquely combines automated governance tools with human expertise through our Watchdog analyst network. Unlike competitors like Credo AI, Holistic AI, or OneTrust, we focus on solving two problems simultaneously: ensuring AI safety AND creating jobs for workers displaced by automation. The designed 33-agent Council of AI is our consensus-review design; its effective independence is measured, not assumed, and published on the Refutation Ledger.",
     tags: ["comparison", "differentiation"],
   },
   {
@@ -65,9 +65,9 @@ const faqData: FAQItem[] = [
   },
   {
     category: "GENERAL",
-    question: "What is the 33-Agent Council?",
+    question: "What is the designed 33-agent Council?",
     answer:
-      "A designed 33-agent council: 33 specialized agents representing different governance perspectives vote on decisions (risk classification, compliance status), with a 23-of-33 threshold. The design intent is that no single agent decides an outcome — but effective independence is measured, not assumed, and we do not claim guaranteed fault tolerance.",
+      "A designed 33-agent council: 33 specialized agents representing different governance perspectives vote on decisions (risk classification, compliance status), with a 23-of-33 threshold. The design intent is that no single agent decides an outcome — but effective independence is measured, not assumed: guaranteed fault tolerance is unproven, and we do not claim it.",
     tags: ["technology", "council"],
   },
   {
@@ -79,9 +79,9 @@ const faqData: FAQItem[] = [
   },
   {
     category: "GENERAL",
-    question: "How many nations does CSOAI cover?",
+    question: "Which jurisdictions does the regulation corpus cover?",
     answer:
-      "CSOAI provides governance tools and frameworks for AI systems in 150+ countries. We support compliance with regulations across major jurisdictions including the EU, North America, Asia-Pacific, and emerging markets. Our multi-jurisdictional approach helps organizations navigate complex, overlapping regulatory requirements.",
+      "We track the regimes listed in the live regulation feed — read the current, dated list at GET /api/regulation or on the regulation tracker; it is the only count we will stand behind. We do not claim a country total: an entry in the corpus means we track the text, not that we have measured every system in that jurisdiction.",
     tags: ["global", "jurisdiction"],
   },
   {
@@ -176,7 +176,7 @@ const faqData: FAQItem[] = [
     category: "COMPLIANCE & REGULATIONS",
     question: "Which AI regulations does CSOAI cover?",
     answer:
-      "CSOAI provides guidance and compliance tools for major AI regulations including: EU AI Act, NIST AI Risk Management Framework, ISO 42001, Canada's AIAODA, UK AI Bill, China's TC260 framework, Singapore's AI Governance Framework, and emerging regulations in 150+ countries. We continuously update our platform as new regulations are introduced.",
+      "The corpus covers the EU AI Act, the NIST AI Risk Management Framework, ISO/IEC 42001, Canada's AIDA, the UK approach, China's TC260 framework and Singapore's AI Governance Framework, among others. The live, dated list is at GET /api/regulation — read it there rather than trusting a number on this page.",
     tags: ["compliance", "regulations"],
   },
   {
@@ -232,7 +232,7 @@ const faqData: FAQItem[] = [
     category: "COMPLIANCE & REGULATIONS",
     question: "What is the timeline for EU AI Act enforcement?",
     answer:
-      "The EU AI Act has a phased enforcement timeline: (1) Prohibited practices restrictions took effect immediately, (2) Transparency and documentation requirements began in August 2024, (3) High-risk system requirements take full effect by 2025, (4) Full compliance is required by 2026. Organizations should begin compliance efforts immediately to meet these deadlines.",
+      "The EU AI Act applies in phases. It entered into force 1 August 2024; prohibited practices from 2 February 2025; GPAI model duties from 2 August 2025; Article 50 transparency and the penalty regime from 2 August 2026, with a marking grace period for existing synthetic content until 2 December 2026. The Digital Omnibus (Reg (EU) 2026/1744) deferred stand-alone Annex III high-risk obligations to 2 December 2027 and Annex I (product-embedded) high-risk to 2 August 2028.",
     tags: ["eu-ai-act", "timeline"],
   },
   {
@@ -274,16 +274,16 @@ const faqData: FAQItem[] = [
   },
   {
     category: "TRAINING & CERTIFICATION",
-    question: "Are CSOAI certifications internationally recognized?",
+    question: "Is a Council of AI training record a recognised certification?",
     answer:
-      "CSOAI certifications are recognized across 150+ countries where we operate. They're valued by enterprises, governments, and regulatory bodies as evidence of AI governance expertise. We're working toward formal accreditation with major professional bodies and educational authorities to enhance recognition.",
+      "No — and we do not claim it is. Council of AI is a measurement body, not a certification or accreditation body: we hold no accreditation and we accredit nobody. What a completed course produces is a signed training record — evidence that a named person completed a named course on a named date, verifiable against our published signer. It attests training, not conformity. Any conformity assessment your regulator requires must come from a body actually designated for it.",
     tags: ["certification", "recognition"],
   },
   {
     category: "TRAINING & CERTIFICATION",
     question: "Can I earn CPD/CPE credits?",
     answer:
-      "Yes, CSOAI courses and certifications are accredited for continuing professional development (CPD) and continuing professional education (CPE) credits in many jurisdictions. The number of credits varies by course and professional body. Check with your professional organization or certification body to confirm eligibility for specific credits.",
+      "We make no CPD/CPE accreditation claim — we hold no such accreditation. Course completion produces a signed, verifiable training record; some professional bodies accept self-certified learning hours evidenced that way, but only your own body can tell you whether it counts. Ask them, not us.",
     tags: ["certification", "cpd", "credits"],
   },
   {
@@ -297,7 +297,7 @@ const faqData: FAQItem[] = [
     category: "TRAINING & CERTIFICATION",
     question: "How do I verify a certificate?",
     answer:
-      "All CSOAI certificates are digitally verifiable. Recipients get a unique certificate URL they can share with employers. Employers can verify authenticity through our public verification portal without needing to contact CSOAI directly. This ensures certificates cannot be counterfeited while maintaining privacy.",
+      "Every training record is Ed25519-signed and independently checkable. Recipients get a record URL to share; anyone can verify it against the published signer (did:web:csoai.org) through the public verification page, without contacting us. Verification proves the record is unaltered since signing — it does not assert conformity with any regulation.",
     tags: ["certification", "verification"],
   },
 
@@ -401,7 +401,7 @@ const faqData: FAQItem[] = [
     category: "TECHNICAL",
     question: "How does the designed 33-agent council work?",
     answer:
-      "The 33-Agent Council is a designed multi-agent vote where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). Decisions require approval from at least 23 agents (67%). The design intent is that no single agent decides an outcome; effective independence is measured, not assumed — we do not claim guaranteed fault tolerance.",
+      "The 33-Agent Council is a designed multi-agent vote where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). Decisions require approval from at least 23 agents (67%). The design intent is that no single agent decides an outcome; effective independence is measured, not assumed — guaranteed fault tolerance is unproven, and we do not claim it.",
     tags: ["technical", "council"],
   },
   {

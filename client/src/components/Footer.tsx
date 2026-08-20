@@ -7,6 +7,7 @@ import { Link } from 'wouter';
 import { Github, Linkedin, Mail, Shield, ArrowRight } from 'lucide-react';
 import NewsletterSignup from './NewsletterSignup';
 import FooterVerifyStrip from './FooterVerifyStrip';
+import { SECTORS } from '@/data/library-ia';
 import { Button } from '@/components/ui/button';
 
 interface FooterLink {
@@ -24,7 +25,7 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Training Courses', href: '/training' },
-        { name: 'Attestation', href: '/certification' },
+        { name: 'Training records (we certify nothing)', href: '/certification' },
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
         { name: 'Global AI Regulation Tracker', href: '/global-ai-regulation' },
@@ -61,7 +62,7 @@ export function Footer() {
         { name: 'Case Studies', href: '/case-studies' },
         { name: 'Status', href: '/status' },
         { name: 'Careers', href: '/careers' },
-        { name: 'Accreditation', href: '/accreditation' },
+        { name: 'What we do NOT accredit', href: '/accreditation' },
         { name: 'Contact', href: '/contact' },
       ],
     },
@@ -218,6 +219,27 @@ export function Footer() {
               </ul>
             </div>
           ))}
+        </div>
+
+        {/* The Library — secondary navigation for the whole archive.
+            "Library, don't delete": the primary nav carries the lean current experience;
+            every superseded or reference page stays reachable here, dated and sector-organized,
+            which is also where the answer-engine citation surface lives. */}
+        <div className="border-t border-gray-200 pt-6 mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
+            <Link href="/library" className="text-xs uppercase tracking-wider text-gray-500 hover:text-emerald-700">
+              Library — full archive
+            </Link>
+            {SECTORS.map((sector) => (
+              <Link
+                key={sector.id}
+                href={`/library/${sector.id}`}
+                className="text-gray-600 hover:text-emerald-700 transition-colors"
+              >
+                {sector.title}
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* Compact frameworks row — deep links kept out of the four-column grid */}

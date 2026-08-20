@@ -51,7 +51,7 @@ curl "https://councilof.ai/api/gspc?axis=nope"
 with urllib.request.urlopen("https://councilof.ai/api/gspc") as r:
     board = json.load(r)
 
-print(board["schema"])            # csoai.gspc-axes/0.3
+print(board["schema"])            # csoai.gspc-axes/0.5
 print(board["doi"])               # 10.5281/zenodo.21991104
 print(board["totals"]["axes"], "axes")
 print(board["totals"]["separated_leads"], "separated,",
@@ -66,7 +66,7 @@ for a in board["axes"]:
   const javascriptExample = `// Browser or Node — no key, CORS is open.
 const board = await fetch("https://councilof.ai/api/gspc").then((r) => r.json());
 
-console.log(board.schema);        // "csoai.gspc-axes/0.3"
+console.log(board.schema);        // "csoai.gspc-axes/0.5"
 console.log(board.totals);        // { axes, measured_axes, items, separated_leads, ties, ... }
 
 // One axis:
@@ -75,7 +75,7 @@ const gov = await fetch("https://councilof.ai/api/gspc?axis=governance")
 console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
 
   const responseExample = `{
-  "schema": "csoai.gspc-axes/0.3",
+  "schema": "csoai.gspc-axes/0.5",
   "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
   "doi": "10.5281/zenodo.21991104",
   "measured_on": {
@@ -85,10 +85,11 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
   },
   "totals": {
     "axes": 14,
-    "measured_axes": 14,
-    "items": 890,
-    "separated_leads": 3,
-    "ties": 10,
+    "measured_axes": 13,
+    "quotable_axes": 14,
+    "items": 887,
+    "separated_leads": 4,
+    "ties": 9,
     "untested_separations": 1
   },
   "axes": [
@@ -119,7 +120,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
     { f: "issuer", d: "CSOAI Ltd (GB, Companies House 16939677)." },
     { f: "doi", d: "10.5281/zenodo.21991104 — the citable dataset record (13 canonical axes)." },
     { f: "totals.axes / measured_axes", d: "The 14-slot board: 13 canonical axes (same fleet, rows and grader) + jail (slot 14; smaller fleet, stated on the axis)." },
-    { f: "totals.separated_leads / ties", d: "3 separated (McNemar p<0.05 on discordant items), 10 ties, 1 untested (jail has no separation test yet). A TIE is not a win." },
+    { f: "totals.separated_leads / ties", d: "4 separated (McNemar p<0.05 on discordant items), 9 ties, 1 untested (jail has no separation test yet). A TIE is not a win. These counts move — read them from the live payload, not from this page." },
     { f: "totals.items", d: "Sum of per-axis n across the selection (890 across the 14-slot board)." },
     { f: "axes[].n / accuracy / interval", d: "Per-axis item count, the LEADER's accuracy, and its Wilson 95% CI where n is honestly independent." },
     { f: "axes[].separation / separation_p", d: "SEPARATED, TIE or UNTESTED, with the McNemar exact p on discordant pairs vs the best base model where the test has run." },
@@ -268,7 +269,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Code className="w-5 h-5" />
-                Response shape (schema csoai.gspc-axes/0.3)
+                Response shape (schema csoai.gspc-axes/0.5)
               </CardTitle>
             </CardHeader>
             <CardContent>
