@@ -44,6 +44,7 @@ export const STORY: Slide[] = [
   {
     // 02 The problem — light, breathes
     kicker: "The problem",
+    video: { src: "/videos/council-of-ai.mp4", poster: "/videos/council-of-ai.jpg", title: "What Council of AI does — a 2-minute look" },
     title: "The “trust us” PDF",
     body: "Most AI assurance is a claim on a slide — a badge, a private report, a number with no test behind it. You can’t run it, you can’t see what was skipped, and the moment the model updates the paperwork is already out of date.",
     points: [
@@ -87,13 +88,14 @@ export const STORY: Slide[] = [
   {
     // 05 Council Space — heavy, AI vs AI
     kicker: "Council Space",
-    title: "AI versus AI, all night",
+    title: "AI versus AI, 24/7",
     body: "Models face the same frozen tests, head to head. Each match is two systems and one instrument, and the verdict is a fixed rule — never one AI grading another. Any round can become a signed card.",
     points: [
       { tag: "pain", text: "Leaderboards run on vibes and vote-brigading" },
       { tag: "benefit", text: "Every match is a fixed pass/fail rule you can audit" },
       { tag: "benefit", text: "Ties are ties — never counted as a win" },
       { tag: "usp", text: "No model ever judges another — grading is deterministic" },
+      { tag: "usp", text: "Runs 24/7, so coverage never depends on who is awake" },
     ],
     href: "/gspc-arena",
     cta: "Watch Council Space",
@@ -111,7 +113,7 @@ export const STORY: Slide[] = [
     ],
     href: "/gspc-arena",
     cta: "Enter the colosseum",
-    bg: { src: "/images/coliseum_logic_duel.jpg", alt: "A human and an AI facing each other across a chessboard in the arena" },
+    image: { src: "/images/coliseum_logic_duel.jpg", alt: "A human and an AI facing each other across a chessboard in the arena" },
   },
   {
     // 07 The live board — light, architecture video
@@ -166,6 +168,7 @@ export const STORY: Slide[] = [
       { tag: "pain", text: "AI assurance you’re simply told to take on faith" },
       { tag: "benefit", text: "People set the tests and can challenge any result" },
       { tag: "usp", text: "Every judgement is a fixed rule a human can inspect — never a hidden model" },
+      { tag: "usp", text: "AI is measured against a published human baseline — not just against other AI" },
     ],
     href: "/gspc-scoreboard",
     cta: "See how it’s judged",
@@ -211,7 +214,7 @@ export const STORY: Slide[] = [
     ],
     href: "/watchdog",
     cta: "Open the watchdog",
-    bg: { src: "/images/public_watchdog_intake.jpg", alt: "The public watchdog reporting funnel, open to everyone" },
+    image: { src: "/images/public_watchdog_intake.jpg", alt: "The public watchdog reporting funnel, open to everyone" },
   },
 ];
 
@@ -339,31 +342,134 @@ function Cta({ slide }: { slide: Slide }) {
   );
 }
 
-/* ————— HERO — full-bleed arena, hero video, locked H1 ————— */
-function HeroSection({ slide }: { slide: Slide }) {
+
+/* ————— motion helpers — all animate opacity/transform ONLY; content never leaves the flow ————— */
+const HERO_REEL: { src: string; alt: string }[] = [
+  { src: "/images/coliseum_hero_arena.jpg", alt: "Clay figures and green verification seals gathered in a marble arena" },
+  { src: "/images/coliseum_swarm_clash.jpg", alt: "A swarm of green shards meeting clay scientists raising shields" },
+  { src: "/images/secure_evidence_vault.jpg", alt: "Clay figures holding a glowing 3KB credential card before a vault door" },
+  { src: "/images/coliseum_logic_duel.jpg", alt: "A human and an AI facing each other across a chessboard" },
+  { src: "/images/liveness_drift_engine.jpg", alt: "An hourglass weighing a stale certification against a re-attested current seal" },
+  { src: "/images/coliseum_humans_vs_humanoids.jpg", alt: "People directing AI figures with beams of light, keeping oversight" },
+  { src: "/images/verifiable_evidence_card.jpg", alt: "Hands holding a signed evidence card reading verified: true" },
+];
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const on = () => setReduced(mq.matches);
+    mq.addEventListener?.("change", on);
+    return () => mq.removeEventListener?.("change", on);
+  }, []);
+  return reduced;
+}
+
+/** Fade + rise the first time a block scrolls into view. */
+function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") { setShown(true); return; }
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) { setShown(true); io.disconnect(); } }),
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
-    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden">
-      {slide.bg && (
-        <img src={slide.bg.src} alt={slide.bg.alt} className="absolute inset-0 h-full w-full object-cover" />
-      )}
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 py-24 text-center">
-        <span className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">{slide.kicker}</span>
-        <VideoEmbed
-          src="/videos/council-of-ai.mp4"
-          poster="/videos/council-of-ai.jpg"
-          title="What Council of AI does — a 2-minute look"
-          className="mt-6"
+    <div
+      ref={ref}
+      className={`${className} transition-all duration-[900ms] ease-out ${shown ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/** Scroll-world parallax: drifts the BACKGROUND layer only. */
+function useParallax(strength = 14) {
+  const ref = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const tick = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const p = (r.top + r.height / 2 - window.innerHeight / 2) / (window.innerHeight || 1);
+      el.style.transform = `translate3d(0, ${(-p * strength).toFixed(2)}%, 0) scale(1.16)`;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    tick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [strength]);
+  return ref;
+}
+
+/* ————— HERO — cinematic Ken-Burns reel through the branded world ————— */
+function HeroSection({ slide }: { slide: Slide }) {
+  const reduced = usePrefersReducedMotion();
+  const [shot, setShot] = useState(0);
+  useEffect(() => {
+    if (reduced) return;
+    const t = window.setInterval(() => setShot((n) => (n + 1) % HERO_REEL.length), 3800);
+    return () => window.clearInterval(t);
+  }, [reduced]);
+  return (
+    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#05130d]">
+      <style>{`@keyframes coaiKenBurns{from{transform:scale(1.03) translate3d(0,0,0)}to{transform:scale(1.16) translate3d(0,-1.8%,0)}}`}</style>
+      {HERO_REEL.map((img, n) => (
+        <img
+          key={img.src}
+          src={img.src}
+          alt={n === 0 ? img.alt : ""}
+          aria-hidden={n !== 0}
+          loading={n === 0 ? "eager" : "lazy"}
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[1500ms] ease-in-out"
+          style={{
+            opacity: n === shot ? 1 : 0,
+            animation: !reduced && n === shot ? "coaiKenBurns 5.6s ease-out forwards" : undefined,
+            transform: reduced ? "scale(1.03)" : undefined,
+          }}
         />
-        <h1 className="mt-8 max-w-4xl text-4xl font-black leading-[1.08] text-white drop-shadow-lg sm:text-5xl lg:text-6xl">
+      ))}
+      {/* lighter scrim — the world stays visible; type carries its own shadow */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/15 to-black/60" />
+      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-6 py-24 text-center">
+        <span className="rounded-full border border-emerald-300/30 bg-black/25 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-200 backdrop-blur-sm">
+          {slide.kicker}
+        </span>
+        <h1 className="mt-8 max-w-5xl text-5xl font-black leading-[1.02] tracking-tight text-white [text-shadow:0_4px_28px_rgba(0,0,0,.6)] sm:text-6xl lg:text-7xl">
           See how your AI behaves.<br />
           Get proof you can trust.<br />
           Kept current as the rules change.<br />
           <span className="text-emerald-300">Anyone can check — free.</span>
         </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85">{slide.body}</p>
+        <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-white/90 [text-shadow:0_2px_14px_rgba(0,0,0,.65)] sm:text-xl">
+          {slide.body}
+        </p>
         <HeroActions />
+        <div className="mt-10 flex items-center gap-2" aria-hidden>
+          {HERO_REEL.map((img, n) => (
+            <span
+              key={img.src}
+              className={`h-1.5 rounded-full transition-all duration-500 ${n === shot ? "w-8 bg-emerald-300" : "w-1.5 bg-white/40"}`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -371,26 +477,41 @@ function HeroSection({ slide }: { slide: Slide }) {
 
 /* ————— HEAVY — full-bleed image band, content overlaid ————— */
 function HeavySection({ slide, contentRight }: { slide: Slide; contentRight: boolean }) {
-  const scrim = contentRight
-    ? "bg-gradient-to-l from-black/85 via-black/55 to-black/20"
-    : "bg-gradient-to-r from-black/85 via-black/55 to-black/20";
+  const bgRef = useParallax(16);
+  // The claymation world is BRIGHT — no dark scrim over it. Type sits on a frosted
+  // white panel over the image's open space, so the art stays vivid and the words
+  // stay legible whatever is behind them.
+  const wash = contentRight
+    ? "bg-gradient-to-l from-white/70 via-white/25 to-transparent"
+    : "bg-gradient-to-r from-white/70 via-white/25 to-transparent";
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden">
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-white">
       {slide.bg && (
-        <img src={slide.bg.src} alt={slide.bg.alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+        <img
+          ref={bgRef}
+          src={slide.bg.src}
+          alt={slide.bg.alt}
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover will-change-transform"
+        />
       )}
-      <div className={`absolute inset-0 ${scrim}`} />
+      <div className={`absolute inset-0 ${wash}`} />
       <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24">
-        <div className={`max-w-xl ${contentRight ? "ml-auto text-left" : "text-left"}`}>
-          <span className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-300">{slide.kicker}</span>
-          <h2 className="mt-3 text-3xl font-black leading-[1.1] text-white drop-shadow-md sm:text-4xl lg:text-5xl">{slide.title}</h2>
-          <p className="mt-4 text-lg leading-relaxed text-white/85">{slide.body}</p>
-          {slide.points && <Points points={slide.points} dark />}
-          {slide.video && (
-            <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8 !mx-0" />
-          )}
-          <Cta slide={slide} />
-        </div>
+        <Reveal className={`max-w-xl ${contentRight ? "ml-auto" : ""}`}>
+          <div className="rounded-3xl border border-white/70 bg-white/80 p-8 text-left shadow-[0_24px_70px_-30px_rgba(4,18,12,.55)] backdrop-blur-md sm:p-10">
+            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-700">{slide.kicker}</span>
+            <h2 className="mt-3 text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl lg:text-[3.4rem]">
+              {slide.title}
+            </h2>
+            <p className="mt-5 text-lg font-medium leading-relaxed text-gray-700 sm:text-xl">{slide.body}</p>
+            {slide.points && <Points points={slide.points} />}
+            {slide.video && (
+              <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8 !mx-0" />
+            )}
+            <Cta slide={slide} />
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -404,14 +525,14 @@ function LightSection({ slide, index, mediaRight }: { slide: Slide; index: numbe
     return (
       <section className={`relative ${bg}`}>
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-20 sm:py-24 lg:grid-cols-2 lg:gap-16">
-          <div className={mediaRight ? "lg:order-1" : "lg:order-2"}>
-            <span className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">{slide.kicker}</span>
-            <h2 className="mt-3 text-3xl font-black leading-[1.1] text-gray-900 sm:text-4xl">{slide.title}</h2>
-            <p className="mt-4 max-w-xl text-lg leading-relaxed text-gray-600">{slide.body}</p>
+          <Reveal className={mediaRight ? "lg:order-1" : "lg:order-2"}>
+            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-600">{slide.kicker}</span>
+            <h2 className="mt-3 text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl">{slide.title}</h2>
+            <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-gray-600 sm:text-xl">{slide.body}</p>
             {slide.points && <Points points={slide.points} />}
             <Cta slide={slide} />
-          </div>
-          <div className={`flex flex-col gap-6 ${mediaRight ? "lg:order-2" : "lg:order-1"}`}>
+          </Reveal>
+          <Reveal delay={120} className={`flex flex-col gap-6 ${mediaRight ? "lg:order-2" : "lg:order-1"}`}>
             {slide.image && (
               <img
                 src={slide.image.src}
@@ -423,7 +544,7 @@ function LightSection({ slide, index, mediaRight }: { slide: Slide; index: numbe
             {slide.video && (
               <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="!max-w-none" />
             )}
-          </div>
+          </Reveal>
         </div>
       </section>
     );
@@ -436,8 +557,8 @@ function LightSection({ slide, index, mediaRight }: { slide: Slide; index: numbe
           <Infographic index={slide.figure ?? index} />
         </div>
         <span className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">{slide.kicker}</span>
-        <h2 className="mt-3 max-w-3xl text-3xl font-black leading-[1.1] text-gray-900 sm:text-4xl">{slide.title}</h2>
-        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">{slide.body}</p>
+        <h2 className="mt-3 max-w-3xl text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl">{slide.title}</h2>
+        <p className="mt-5 max-w-2xl text-lg font-medium leading-relaxed text-gray-600 sm:text-xl">{slide.body}</p>
         {slide.points && <Points points={slide.points} center />}
         <Cta slide={slide} />
       </div>
