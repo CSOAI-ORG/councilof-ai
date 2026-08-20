@@ -12,6 +12,16 @@
 // and not a claim about anyone else. New entries are appended in place; the
 // array is never reordered or trimmed.
 //
+// REDACTION RULE: this ledger is itself a machine surface, so it obeys the
+// no-banned-vocabulary invariant the machine-contract guard enforces on every
+// public JSON surface. When a correction is ABOUT a leaked internal identifier
+// or brand token, describe the token — do NOT reproduce it literally. Printing
+// the specialist-id prefix or the brand token here would re-leak the exact
+// string the correction says was removed (and a crawler would still find it
+// live on /api/corrections — even a source comment is best kept clean). The
+// fact is preserved; only the toxic token is abstracted. Do not "restore" the
+// literal strings in the name of candour — the abstraction IS the honest form.
+//
 // CC-BY-4.0. Council of AI (CSOAI Ltd, UK Companies House 16939677).
 
 const LEDGER = {
@@ -31,7 +41,7 @@ const LEDGER = {
     {
       id: "C-2026-0819-02",
       date: "2026-08-19",
-      what_was_wrong: "The public board API payload carried internal specialist identifiers (sov6-*) — a banned-vocabulary string inside a machine contract, not just a human page.",
+      what_was_wrong: "The public board API payload carried internal specialist identifiers — an internal specialist-id prefix — a banned-vocabulary string inside a machine contract, not just a human page. (The prefix itself is redacted here: naming it would re-leak the string this entry records as removed.)",
       how_caught: "K3 lane curl sweep of machine surfaces.",
       fix: "Renamed to council-* public names in /api/gspc; a machine-contract guard now sweeps API payloads for banned strings on every deploy.",
       status: "FIXED",
@@ -71,9 +81,9 @@ const LEDGER = {
     {
       id: "C-2026-0819-07",
       date: "2026-08-19",
-      what_was_wrong: "A banned brand string shipped live on /library as 'CEASAITraining' because a word-boundary regex (\\bCEASAI\\b) missed the CamelCase concatenation. Two priced strings ($0.005/card, a per-hour range) also shipped, against the no-pricing rule.",
+      what_was_wrong: "A banned brand token shipped live on /library as a CamelCase concatenation of the token with 'Training', because a word-boundary regex anchored on the bare token missed the concatenation. Two priced strings ($0.005/card, a per-hour range) also shipped, against the no-pricing rule. (The token itself is redacted here for the same reason as C-2026-0819-02.)",
       how_caught: "A full front-end QA sweep.",
-      fix: "The brand gate's CEASAI pattern dropped its trailing boundary; a pricing-leak pattern was added so a currency amount bound to a subscription or per-unit cadence is now a hard build-fail.",
+      fix: "The brand gate's pattern for that token dropped its trailing word boundary so CamelCase concatenations are caught; a pricing-leak pattern was added so a currency amount bound to a subscription or per-unit cadence is now a hard build-fail.",
       status: "FIXED",
     },
     {
