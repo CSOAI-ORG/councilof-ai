@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { VideoEmbed } from "./VideoEmbed";
 
 /**
  * StoryWorld — 10-slide sticky scroll hero for councilof.ai.
@@ -18,6 +19,7 @@ type Slide = {
   href?: string;
   cta?: string;
   tone: Tone;
+  video?: { src: string; poster: string; title: string };
 };
 
 export const STORY: Slide[] = [
@@ -57,6 +59,7 @@ export const STORY: Slide[] = [
     href: "/gspc-verify",
     cta: "Verify a card",
     tone: "light",
+    video: { src: "/videos/csoai-architecture.mp4", poster: "/videos/csoai-architecture.jpg", title: "How Council of AI is built — the architecture" },
   },
   {
     kicker: "04  Honest grid",
@@ -71,6 +74,7 @@ export const STORY: Slide[] = [
     href: "/gspc-scoreboard",
     cta: "Open the board",
     tone: "board",
+    video: { src: "/videos/proving-ground.mp4", poster: "/videos/proving-ground.jpg", title: "The Proving Ground — how we test containment" },
   },
   {
     kicker: "05  Council Space",
@@ -454,12 +458,20 @@ function SlideFace({ slide, index, active }: { slide: Slide; index: number; acti
         {slide.kicker}
       </span>
       {index === 0 ? (
-        <h1 className="mt-4 max-w-4xl text-4xl font-black leading-[1.08] sm:text-5xl lg:text-6xl">
-          We measure.<br />
-          We sign.<br />
-          We re-attest.<br />
-          <span className="text-emerald-500">Everyone can check.</span>
-        </h1>
+        <>
+          <VideoEmbed
+            src="/videos/council-of-ai.mp4"
+            poster="/videos/council-of-ai.jpg"
+            title="What Council of AI does — a 2-minute look"
+            className="mt-6"
+          />
+          <h1 className="mt-6 max-w-4xl text-4xl font-black leading-[1.08] sm:text-5xl lg:text-6xl">
+            See how your AI behaves.<br />
+            Get proof you can trust.<br />
+            Kept current as the rules change.<br />
+            <span className="text-emerald-500">Anyone can check — free.</span>
+          </h1>
+        </>
       ) : (
         <h2 className="mt-4 max-w-4xl text-4xl font-black leading-[1.08] sm:text-5xl lg:text-6xl">
           {slide.title}
@@ -471,6 +483,9 @@ function SlideFace({ slide, index, active }: { slide: Slide; index: number; acti
         {slide.body}
       </p>
       {slide.points && <Points points={slide.points} dark={dark} />}
+      {slide.video && (
+        <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8" />
+      )}
       {index === 0 && <HeroActions />}
       {slide.href && slide.cta && (
         <a
@@ -503,15 +518,26 @@ function Stacked() {
                 slide.tone === "light" ? "text-emerald-600" : "text-emerald-300/80"
               }`}>{slide.kicker}</span>
               {i === 0 ? (
-                <h1 className="mt-4 text-4xl font-black leading-[1.08] sm:text-5xl">
-                  We measure.<br />We sign.<br />We re-attest.<br />
-                  <span className="text-emerald-500">Everyone can check.</span>
-                </h1>
+                <>
+                  <VideoEmbed
+                    src="/videos/council-of-ai.mp4"
+                    poster="/videos/council-of-ai.jpg"
+                    title="What Council of AI does — a 2-minute look"
+                    className="mt-6"
+                  />
+                  <h1 className="mt-6 text-4xl font-black leading-[1.08] sm:text-5xl">
+                    See how your AI behaves.<br />Get proof you can trust.<br />Kept current as the rules change.<br />
+                    <span className="text-emerald-500">Anyone can check — free.</span>
+                  </h1>
+                </>
               ) : (
                 <h2 className="mt-4 text-4xl font-black leading-[1.08] sm:text-5xl">{slide.title}</h2>
               )}
               <p className={`mt-4 max-w-2xl text-lg ${slide.tone === "light" ? "text-gray-500" : "text-emerald-100/75"}`}>{slide.body}</p>
               {slide.points && <Points points={slide.points} dark={dark} />}
+              {slide.video && (
+                <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8" />
+              )}
               {i === 0 && <HeroActions />}
               {slide.href && slide.cta && (
                 <a href={slide.href} className="mt-6 inline-flex rounded-xl bg-emerald-500 px-6 py-3 font-extrabold text-white">{slide.cta}</a>
