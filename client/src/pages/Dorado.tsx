@@ -24,7 +24,7 @@ interface DoradoData {
     separation?: string;
     quotable_gate?: string;
   };
-  market?: { as_of?: string; rows?: { index: string; side: string; last: number | null; chg_1d?: number; chg_30d?: number }[] };
+  market?: { as_of?: string; rows?: { index: string; symbol?: string; side: string; last: number | null; chg_1d?: number; chg_30d?: number }[] };
   human?: { entries?: string[] };
   regulation?: { instruments?: string };
   the_pairing?: { claim?: string; caveat?: string };
