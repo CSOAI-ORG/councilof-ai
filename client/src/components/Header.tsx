@@ -173,36 +173,22 @@ export function Header() {
             href="/"
             className="flex items-center gap-3 hover:opacity-90 transition-opacity"
           >
-            {/* Shield Logo */}
+            {/* Institutional mark — flat green shield, white field, measurement temple.
+                Flat by design: a gradient shield reads as a software product, a flat one
+                reads as a standards body. Same geometry as /csoai-icon.svg so the header,
+                the favicon and the schema.org logo cannot drift apart. */}
             <div className="relative w-10 h-10">
-              <svg viewBox="0 0 100 100" className="w-full h-full">
-                <defs>
-                  <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#10b981"/>
-                    <stop offset="100%" stopColor="#047857"/>
-                  </linearGradient>
-                </defs>
-                {/* Shield */}
-                <path
-                  d="M50 5 L90 20 L90 50 C90 75 50 95 50 95 C50 95 10 75 10 50 L10 20 Z"
-                  fill="url(#shieldGradient)"
-                />
-                {/* Circuit lines */}
-                <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
-                  <line x1="25" y1="30" x2="25" y2="70"/>
-                  <line x1="25" y1="40" x2="40" y2="40"/>
-                  <line x1="25" y1="55" x2="35" y2="55"/>
-                  <circle cx="25" cy="30" r="4" fill="#fff"/>
-                  <circle cx="40" cy="40" r="4" fill="#fff"/>
-                  <circle cx="35" cy="55" r="4" fill="#fff"/>
-                  <circle cx="25" cy="70" r="4" fill="#fff"/>
-                </g>
-                {/* Brain curves */}
-                <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
-                  <path d="M55 35 Q70 30 72 45 Q82 45 78 58 Q85 65 70 72 Q65 80 55 72"/>
-                  <circle cx="62" cy="45" r="5" fill="#fff"/>
-                  <circle cx="72" cy="60" r="5" fill="#fff"/>
-                </g>
+              <svg viewBox="0 0 100 100" className="w-full h-full" role="img" aria-label="Council of AI">
+                <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
+                <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
+                <rect x="26" y="66" width="48" height="6" fill="#04624a"/>
+                <rect x="30" y="61" width="40" height="4" fill="#04624a"/>
+                <rect x="33" y="38" width="6" height="22" fill="#04624a"/>
+                <rect x="44" y="38" width="6" height="22" fill="#04624a"/>
+                <rect x="55" y="38" width="6" height="22" fill="#04624a"/>
+                <rect x="66" y="38" width="6" height="22" fill="#04624a"/>
+                <rect x="28" y="33" width="44" height="5" fill="#04624a"/>
+                <path d="M50 20 L75 32 H25 Z" fill="#04624a"/>
               </svg>
             </div>
             <span className="text-xl 2xl:text-2xl font-bold text-emerald-700 tracking-tight whitespace-nowrap">CSOAI</span>
