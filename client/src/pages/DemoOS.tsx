@@ -83,7 +83,7 @@ const NET_DOMAINS: { d: string; n: string }[] = [
   { d: "dataprivacyof.ai", n: "Data privacy" }, { d: "careshield.ai", n: "CareShield" },
 ];
 const BOTTOM_NAV: { n: string; src: string; g: string }[] = [
-  { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "👁" }, { n: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "�: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "🗺" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
+  { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "👁" }, { n: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "🗺" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
 ];
 
 function slotStyle(slot: Slot, solo: boolean): any {
@@ -510,7 +510,7 @@ export default function DemoOS() {
                 <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
                 {wins.length > 1 ? (
                   <div className="ml-1 flex flex-1 gap-1 overflow-x-auto">
-                    {wins.map((w, k) => (<button key={k} onClick={() => { setWinTab(k); setWinMin(false); }} className={"whitespace-nowrap rounded-md px-2 py-0.5 text-[10px] font-bold " + (winTab === k ? "bg-emerald-500/25 text-emerald-100" : "text-emerald-300/60 hover:bg-white/5")}>{w.title.replace(/^[◉🛰]\s*/, "").slice(0, 16)}</button>))}
+                    {wins.map((w, k) => (<button key={k} onClick={() => { setWinTab(k); setWinMin(false); }} className={"whitespace-nowrap rounded-md px-2 py-0.5 text-[10px] font-bold " + (winTab === k ? "bg-emerald-500/25 text-emerald-100" : "text-emerald-300/60 hover:bg-white/5")}>{w.title.replace(/^[◉� hover:bg-white/5")}>{w.title.replace(/^[◉🛰]\s*/, "").slice(0, 16)}</button>))}
                   </div>
                 ) : (<span className="ml-1 flex-1 truncate text-xs font-bold text-emerald-100">{wins[0].title}</span>)}
                 <button onClick={() => setWinMin((m) => !m)} title={winMin ? "Restore" : "Minimize"} className="rounded px-1.5 text-emerald-300/70 hover:bg-white/5">{winMin ? "▢" : "—"}</button>
@@ -540,7 +540,7 @@ export default function DemoOS() {
                 <a href="/os" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
               </div>
             ) : !paused ? (
-              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "🎙 Just speak - I'm listening" : "�25")}>{listening ? "Listening…" : (handsFree ? "🎙 Just speak - I'm listening" : "🎙 Interrupt & ask")}</button>
+              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "� "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "🎙 Just speak - I'm listening" : "🎙 Interrupt & ask")}</button>
             ) : (
               <button onClick={resume} className="w-full rounded-xl bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Resume tour ▶</button>
             )}
