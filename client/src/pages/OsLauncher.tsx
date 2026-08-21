@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ARENA_SUBJECTS, ARENA_MATCHES, ARENA_PROVISIONS } from "@/data/arena";
-import CouncilChat from "@/components/os/CouncilChat";
 import GameBar from "@/components/os/GameBar";
 import AxisPanel from "@/components/os/AxisPanel";
+import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 
 /**
- * OsLauncher — councilof.ai's unified "AI OS" hub (route /os).
+ * OsLauncher — crawlable /os page. The operable OS is the Council OS overlay
+ * (Enter Council OS). This page keeps the town / arena / axes for readers and
+ * crawlers; it no longer hosts a second chat.
  *
  * One clean surface, four real zones, all in one:
  *   1. Council chat   — the deterministic AI bar (posts to /api/chat).
@@ -140,10 +142,14 @@ export default function OsLauncher() {
               has actually measured.
             </p>
             <div className="mt-6 space-y-4">
+              <a
+                href={lobbyHref({ pane: "home" })}
+                onClick={(e) => { e.preventDefault(); openLobby({ pane: "home" }); }}
+                className="inline-flex rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700"
+              >
+                Enter Council OS
+              </a>
               <GameBar />
-              <div id="council-chat">
-                <CouncilChat />
-              </div>
             </div>
           </section>
 

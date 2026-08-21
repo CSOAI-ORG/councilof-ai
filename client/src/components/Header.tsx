@@ -10,6 +10,7 @@ import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { isEmbedded } from '@/lib/embed';
+import { lobbyHref, openLobby } from '@/lib/lobbyLink';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -303,6 +304,13 @@ export function Header() {
             >
               <Search className="h-5 w-5" />
             </button>
+            <a
+              href={lobbyHref({ pane: 'home' })}
+              onClick={(e) => { e.preventDefault(); openLobby({ pane: 'home' }); }}
+              className="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800"
+            >
+              Council OS
+            </a>
 
             {/* "Verify a card" removed from the header 2026-08-21 (owner call): the
                 verify path is already the primary CTA in the hero and in three bands
@@ -406,6 +414,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
+              </a>
+              <a
+                href={lobbyHref({ pane: 'home' })}
+                className="block px-4 py-3 rounded-lg font-medium text-emerald-800 bg-emerald-50"
+                onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); openLobby({ pane: 'home' }); }}
+              >
+                Council OS
               </a>
 
               {navigation.map((item) => (
