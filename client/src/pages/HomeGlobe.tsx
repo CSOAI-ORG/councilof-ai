@@ -8,8 +8,7 @@ import WorldGlobe from "./WorldGlobe";
  *
  * One product, understood in ten seconds: what is this (the measurement body),
  * what have they measured (the finding + leaderboard), what do I do (free check).
- * The Sovereign engine is credited once, at the bottom, linking to meok.ai —
- * present as the back-end entity without being over-promoted.
+ * The measurement engine is credited once, at the bottom, linking to councilof.ai.
  *
  * Register rules (COPY_POLISH_CSOAI.md): numbers beat adjectives; no internal
  * codenames; every claim links to its signed record.
@@ -97,8 +96,8 @@ export default function HomeGlobe() {
           </div>
         ))}
         <p className="mt-1 text-center text-[11px] text-gray-400">
-          Runs on the Council assistant engine →{" "}
-          <a href="https://meok.ai" className="underline hover:text-gray-200 pointer-events-auto">meok.ai</a>
+          Runs on the Council measurement engine →{" "}
+          <a href="https://councilof.ai" className="underline hover:text-gray-200 pointer-events-auto">councilof.ai</a>
         </p>
       </div>
     </div>

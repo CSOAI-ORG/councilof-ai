@@ -283,8 +283,8 @@ export default function HorusIntel() {
                 </a>
               </Button>
               <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50" asChild>
-                <a href="mailto:intel@meok.ai">
-                  Contact Sales
+                <a href="mailto:nicholas@csoai.org">
+                  Contact
                 </a>
               </Button>
             </div>

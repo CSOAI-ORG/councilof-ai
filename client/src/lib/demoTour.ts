@@ -9,11 +9,11 @@ export const TOUR: TourStep[] = [
     path: "/",
     title: "I'm your Council assistant - not a checklist",
     usp: "A live governance brain, not compliance software",
-    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm a Council governance brain - 291 governed tools, the council (DESIGN-labelled until measured), and cryptographic proof behind every answer. Let me show you, live.",
+    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm a Council measurement brain — signed cards, the living board, and cryptographic proof behind every answer. Let me show you, live.",
   },
   {
     path: "/os",
-    title: "The Council OS - 291 governed tools",
+    title: "The Council OS — signed measurement tools",
     usp: "An operating system for AI governance, not a dashboard",
     say: "This is the OS. Every capability - crosswalks, risk, cyber, attestation - is a live tool running on the Council engine, keyless and on-demand. Nobody else ships governance as a working operating system. Open any tile and it just runs.",
     tip: "Click any tool - it opens live in a window.",
