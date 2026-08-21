@@ -28,8 +28,8 @@ export default function FaqBlock({
   intro,
   items,
   className = "",
-  /** How many entries start expanded. The rest are one keystroke away. */
-  openCount = 2,
+  /** How many entries start expanded. One, so 21 rows read as a table not a wall. */
+  openCount = 1,
 }: {
   title?: string;
   intro?: string;
@@ -48,21 +48,21 @@ export default function FaqBlock({
   };
 
   return (
-    <section className={`bg-slate-50 py-20 ${className}`}>
+    <section className={`bg-slate-50 py-14 sm:py-16 ${className}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldSafe(jsonLd) }}
       />
-      <div className="mx-auto w-full max-w-3xl px-6">
-        <div className="mb-10 text-center">
+      <div className="mx-auto w-full max-w-4xl px-6">
+        <div className="mb-7 text-center">
           <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700">
             FAQ
           </span>
-          <h2 className="mt-4 text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="mt-3 text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
             {title}
           </h2>
           {intro ? (
-            <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">{intro}</p>
+            <p className="mx-auto mt-3 max-w-2xl text-[15px] leading-relaxed text-gray-500">{intro}</p>
           ) : null}
         </div>
 
@@ -74,18 +74,18 @@ export default function FaqBlock({
               className="group open:bg-emerald-50/40"
             >
               <summary
-                className="flex cursor-pointer list-none items-start gap-4 px-5 py-4 outline-none transition-colors hover:bg-emerald-50/60 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-inset sm:px-7 sm:py-5 [&::-webkit-details-marker]:hidden"
+                className="flex cursor-pointer list-none items-center gap-3 px-4 py-2.5 outline-none transition-colors hover:bg-emerald-50/60 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-inset sm:px-5 sm:py-3 [&::-webkit-details-marker]:hidden"
               >
-                <h3 className="flex-1 text-base font-bold leading-snug text-gray-900 sm:text-lg">
+                <h3 className="flex-1 text-[14px] font-semibold leading-snug text-gray-900 sm:text-[15px]">
                   {i.q}
                 </h3>
                 <ChevronDown
                   aria-hidden="true"
-                  className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600 transition-transform duration-200 group-open:rotate-180"
+                  className="h-4 w-4 shrink-0 text-emerald-600 transition-transform duration-200 group-open:rotate-180"
                 />
               </summary>
-              <div className="px-5 pb-5 sm:px-7 sm:pb-6">
-                <p className="max-w-none border-l-2 border-emerald-400 pl-4 text-[15px] leading-relaxed text-gray-600">
+              <div className="px-4 pb-4 sm:px-5 sm:pb-4">
+                <p className="max-w-none border-l-2 border-emerald-400 pl-3 text-[13.5px] leading-relaxed text-gray-600">
                   {i.a}
                 </p>
               </div>

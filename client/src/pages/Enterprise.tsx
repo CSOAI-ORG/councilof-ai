@@ -53,7 +53,7 @@ const faqData = [
   },
   {
     question: "Can I use CSOAI for ISO 42001 certification?",
-    answer: "Yes. CSOAI provides complete ISO 42001 certification support including gap analysis, documentation templates, control implementation guidance, and audit preparation. Our platform generates certification-ready documentation that auditors accept."
+    answer: "Yes. CSOAI provides complete ISO 42001 certification support including gap analysis, documentation templates, control implementation guidance, and audit preparation. Our platform generates documentation to support that work. We are not a certification body and we do not speak for any auditor."
   },
   {
     question: "What happens if we fail compliance?",
@@ -153,12 +153,12 @@ export default function Enterprise() {
                   <div className="text-sm text-gray-300">Frameworks Supported</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="text-3xl font-bold text-emerald-400">33</div>
-                  <div className="text-sm text-gray-300">AI Agents in Council</div>
+                  <div className="text-3xl font-bold text-emerald-400">14</div>
+                  <div className="text-sm text-gray-300">Board slots, 13 measured</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="text-3xl font-bold text-emerald-400">87%</div>
-                  <div className="text-sm text-gray-300">Cost Reduction</div>
+                  <div className="text-3xl font-bold text-emerald-400">Free</div>
+                  <div className="text-sm text-gray-300">Verification, no account</div>
                 </div>
               </div>
 
@@ -732,116 +732,39 @@ export default function Enterprise() {
         </div>
       </div>
 
-      {/* Case Studies Section */}
-      <div className="container py-20 max-w-6xl">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Case Studies</Badge>
-          <h2 className="text-4xl font-bold mb-4">Trusted by Leading Enterprises</h2>
-          <p className="text-xl text-gray-600">
-            See how organizations across industries achieve AI compliance with CSOAI.
+      {/* Case Studies Section — deliberately empty.
+          Three cards previously stood here: "Global Bank Achieves EU AI Act Compliance",
+          "MedTech Startup Earns ISO 42001" ($135K saved, 3 months to certification) and
+          "SaaS Platform Scales AI 10x". There are no such customers and no such
+          engagements. They were invented outcomes presented as real results, each with a
+          "Read Case Study" button that went nowhere. Do not restore them, and do not add
+          a card here that is not a real, named, consenting customer. */}
+      <div className="container py-20 max-w-4xl">
+        <div className="text-center">
+          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Case studies</Badge>
+          <h2 className="text-4xl font-bold mb-4">We have not published any customer case studies.</h2>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            When we have a customer willing to be named and to have the numbers checked, their
+            story will appear here with figures anyone can verify. Until then this section stays
+            empty, because an invented case study is worth less than no case study — and a body
+            that measures other people's claims does not get to make up its own.
           </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Financial Services Case Study */}
-          <Card className="p-8 border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-emerald-100 rounded-xl">
-                <Building2 className="h-8 w-8 text-emerald-600" />
-              </div>
-              <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">Financial Services</Badge>
-            </div>
-            <h3 className="text-xl font-bold mb-3">Global Bank Achieves EU AI Act Compliance</h3>
-            <p className="text-gray-600 mb-4">
-              Fortune 500 bank with 47 AI systems reduced compliance costs by 74% while achieving full regulatory compliance.
-            </p>
-            <div className="flex justify-between text-center pt-4 border-t border-gray-100">
-              <div>
-                <div className="text-2xl font-bold text-emerald-600">$2.3M</div>
-                <div className="text-xs text-gray-500">Annual Savings</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-emerald-600">6 weeks</div>
-                <div className="text-xs text-gray-500">Faster Reviews</div>
-              </div>
-            </div>
-            <Button variant="link" className="mt-4 p-0 text-emerald-600">
-              Read Case Study
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
-          </Card>
-
-          {/* Healthcare Case Study */}
-          <Card className="p-8 border-2 border-blue-100 hover:border-blue-300 transition-colors">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-blue-100 rounded-xl">
-                <Zap className="h-8 w-8 text-blue-600" />
-              </div>
-              <Badge className="bg-blue-50 text-blue-700 border-blue-200">Healthcare Tech</Badge>
-            </div>
-            <h3 className="text-xl font-bold mb-3">MedTech Startup Earns ISO 42001</h3>
-            <p className="text-gray-600 mb-4">
-              Medical AI startup achieved ISO 42001 certification in 3 months—6 months faster than traditional consulting.
-            </p>
-            <div className="flex justify-between text-center pt-4 border-t border-gray-100">
-              <div>
-                <div className="text-2xl font-bold text-blue-600">$135K</div>
-                <div className="text-xs text-gray-500">Consulting Saved</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-blue-600">3 months</div>
-                <div className="text-xs text-gray-500">To Certification</div>
-              </div>
-            </div>
-            <Button variant="link" className="mt-4 p-0 text-blue-600">
-              Read Case Study
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
-          </Card>
-
-          {/* SaaS Case Study */}
-          <Card className="p-8 border-2 border-purple-100 hover:border-purple-300 transition-colors">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-3 bg-purple-100 rounded-xl">
-                <Users className="h-8 w-8 text-purple-600" />
-              </div>
-              <Badge className="bg-purple-50 text-purple-700 border-purple-200">Enterprise SaaS</Badge>
-            </div>
-            <h3 className="text-xl font-bold mb-3">SaaS Platform Scales AI 10x</h3>
-            <p className="text-gray-600 mb-4">
-              B2B SaaS company scaled from 5 to 50 AI features with automated compliance checks via API integration.
-            </p>
-            <div className="flex justify-between text-center pt-4 border-t border-gray-100">
-              <div>
-                <div className="text-2xl font-bold text-purple-600">10x</div>
-                <div className="text-xs text-gray-500">AI Features</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-purple-600">2 hours</div>
-                <div className="text-xs text-gray-500">Per Assessment</div>
-              </div>
-            </div>
-            <Button variant="link" className="mt-4 p-0 text-purple-600">
-              Read Case Study
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
-          </Card>
-        </div>
-
-        {/* More Case Studies Coming */}
-        <Card className="mt-8 p-8 bg-slate-50 border-2 border-dashed border-slate-300 text-center">
-          <BookOpen className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-          <h3 className="text-xl font-bold mb-2 text-slate-700">More Case Studies Coming Soon</h3>
-          <p className="text-gray-600 mb-4">
-            We're documenting success stories from retail, manufacturing, government, and more sectors.
+          <p className="mt-6 text-lg text-gray-600 leading-relaxed">
+            What we can show you instead is our own work, including where it goes badly:
+            the signed board, the method behind it, and our published errors.
           </p>
-          <Link href="/enterprise-onboarding">
-            <Button variant="outline">
-              Become a Case Study
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </Card>
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/gspc-scoreboard">
+              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                The live board
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/honesty">
+              <Button variant="outline">Our own errors</Button>
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* FAQ Section */}
@@ -911,7 +834,7 @@ export default function Enterprise() {
             Secure Your AI Compliance Today
           </h2>
           <p className="text-xl text-gray-300 mb-8 leading-relaxed max-w-2xl mx-auto">
-            Don't wait for regulatory deadlines. Join hundreds of enterprises using CSOAI to stay ahead of AI governance requirements while reducing costs by up to 87%.
+            Measure your system against the frozen instruments the law actually cites, and keep a signed record you can hand to a regulator, an insurer or a buyer. Verification is free and needs no account.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">

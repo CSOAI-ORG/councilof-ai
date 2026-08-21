@@ -154,6 +154,7 @@ const WatchdogHelpProtectHumanity = lazy(() => import("./pages/WatchdogHelpProte
 const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport"));
 const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const BenchmarkIndex = lazy(() => import("./pages/BenchmarkIndex"));
+const BenchmarkQuality = lazy(() => import("./pages/BenchmarkQuality"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
@@ -173,6 +174,8 @@ const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
 const VerifiableTrust = lazy(() => import("./pages/VerifiableTrust"));
 const EvidenceRail = lazy(() => import("./pages/EvidenceRail"));
 const Metrology = lazy(() => import("./pages/Metrology"));
+const AccountabilityLoop = lazy(() => import("./pages/AccountabilityLoop"));
+const WhereTheRecordLives = lazy(() => import("./pages/WhereTheRecordLives"));
 const StatuteToPredicate = lazy(() => import("./pages/StatuteToPredicate"));
 const AiActBenchmark = lazy(() => import("./pages/AiActBenchmark"));
 const ProvBench = lazy(() => import("./pages/ProvBench"));
@@ -362,10 +365,13 @@ const ROUTE_TITLES: Record<string, string> = {
   "/verifiable-trust": "The science of verifiable trust | Council of AI",
   "/evidence-rail": "The independent evidence rail | Council of AI",
   "/metrology": "The metrology apparatus | Council of AI",
+  "/accountability-loop": "The accountability loop — from a public report to a complaint a regulator can open | Council of AI",
+  "/where-the-record-lives": "Where the record lives — mirrored, not indestructible | Council of AI",
   "/statute-to-predicate": "From statute to predicate — how a law becomes a test | Council of AI",
   "/instrument": "The Instrument | CSOAI",
   "/benchmarks": "Benchmarks | CSOAI",
   "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
+  "/benchmark-quality": "Benchmark-quality register — deterministic predicates on third-party AI benchmarks | Council of AI",
   "/provenance-finding": "Provenance Finding | CSOAI",
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
@@ -637,6 +643,8 @@ function App() {
                   <Route path="/benchmarks" component={Benchmarks} />
                   {/* Meta-benchmark index — REPORTED (others, cited) beside MEASURED (ours, signed); never fused */}
                   <Route path="/benchmark-index" component={BenchmarkIndex} />
+                  {/* Benchmark-quality register — deterministic predicates on OTHER benchmarks; our own boards are firewalled out in code */}
+                  <Route path="/benchmark-quality" component={BenchmarkQuality} />
                   {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />
@@ -657,6 +665,8 @@ function App() {
                   <Route path="/verifiable-trust" component={VerifiableTrust} />
                   <Route path="/evidence-rail" component={EvidenceRail} />
                   <Route path="/metrology" component={Metrology} />
+                  <Route path="/accountability-loop" component={AccountabilityLoop} />
+                  <Route path="/where-the-record-lives" component={WhereTheRecordLives} />
                   <Route path="/statute-to-predicate" component={StatuteToPredicate} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
                   {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}

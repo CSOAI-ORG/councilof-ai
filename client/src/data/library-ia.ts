@@ -18,7 +18,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/",
   // Measure
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
-  "/methodology", "/instrument", "/statute-to-predicate",
+  "/methodology", "/instrument", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/crosswalk", "/ai-act-faq",
