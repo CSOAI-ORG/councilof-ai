@@ -1,8 +1,10 @@
-# csoai.org → councilof.ai 301 redirect
-# Deployed to Pages project csoai-site (production) — owns csoai.org + www.csoai.org
-# Worker routes (/mcp, /verify, /.well-known) take precedence at CF edge level
-# and are unaffected by this Pages redirect.
-
-/mcp           https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp   301
-/mcp/:splat    https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp/:splat  301
-/*             https://councilof.ai/:splat                                301
+# DO NOT deploy this directory to Pages project csoai-site.
+# Official apex deployer: .github/workflows/csoai-site-deploy.yml
+# (source: CSOAI-ORG/csoai-static-deploy2 main).
+#
+# Retired on purpose:
+# - 2026-08-10 wildcard 301 of csoai.org → councilof.ai (SEO/AEO hazard; dropped 2026-08-12)
+# - /mcp → csoai-gspc-mcp.nicholastempleman.workers.dev (GET 404; removed from the DID)
+#
+# If you need a first-party MCP endpoint, add it in the same commit that
+# republishes the service on did:web:csoai.org.
