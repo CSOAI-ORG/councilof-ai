@@ -86,7 +86,8 @@ const EXISTING = [
   "/gspc                   /gspc-scoreboard             308",
   "/scoreboard             /gspc-scoreboard             308",
   "/lobby                  /?lobby=home                 308",
-  "/console                /os                          308",
+  "/console                /?lobby=home                 308",
+  "/council-os             /?lobby=home                 308",
   "/library/measurement    /library/axes                308",
 ];
 

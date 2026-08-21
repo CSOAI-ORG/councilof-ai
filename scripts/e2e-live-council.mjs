@@ -27,7 +27,8 @@ const ALIASES = [
   ["/gspc", "/gspc-scoreboard"],
   ["/scoreboard", "/gspc-scoreboard"],
   ["/lobby", "/?lobby=home"],
-  ["/console", "/os"],
+  ["/console", "/?lobby=home"],
+  ["/council-os", "/?lobby=home"],
   ["/library/measurement", "/library/axes"],
 ];
 
