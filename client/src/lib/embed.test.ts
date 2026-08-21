@@ -42,6 +42,7 @@ describe("tabForPath", () => {
   it("returns null for a page that is not a pane", () => {
     expect(tabForPath("/methodology")).toBeNull();
     expect(tabForPath("/")).toBeNull();
+    expect(tabForPath("/os")).toBeNull();
   });
 });
 
