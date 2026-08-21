@@ -1,23 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <defs>
-    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#10b981"/>
-      <stop offset="100%" stop-color="#047857"/>
-    </linearGradient>
-  </defs>
-  <path d="M50 5 L90 20 L90 50 C90 75 50 95 50 95 C50 95 10 75 10 50 L10 20 Z" fill="url(#shieldGradient)"/>
-  <g stroke="#fff" stroke-width="3" fill="none" opacity="0.9">
-    <line x1="25" y1="30" x2="25" y2="70"/>
-    <line x1="25" y1="40" x2="40" y2="40"/>
-    <line x1="25" y1="55" x2="35" y2="55"/>
-    <circle cx="25" cy="30" r="4" fill="#fff"/>
-    <circle cx="40" cy="40" r="4" fill="#fff"/>
-    <circle cx="35" cy="55" r="4" fill="#fff"/>
-    <circle cx="25" cy="70" r="4" fill="#fff"/>
-  </g>
-  <g stroke="#fff" stroke-width="3" fill="none" opacity="0.9">
-    <path d="M55 35 Q70 30 72 45 Q82 45 78 58 Q85 65 70 72 Q65 80 55 72"/>
-    <circle cx="62" cy="45" r="5" fill="#fff"/>
-    <circle cx="72" cy="60" r="5" fill="#fff"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Council of AI">
+  <title>Council of AI</title>
+  <!-- Institutional mark: flat green shield, white inner field, measurement temple.
+       Flat by design — no gradient. A gradient shield reads as a software product;
+       a flat one reads as a standards body, which is what this is.
+       Geometry is tuned to stay legible at 16px favicon size: four columns, not six;
+       3px minimum stroke; the pediment is a solid triangle, never an outline. -->
+  <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
+  <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
+  <!-- stylobate -->
+  <rect x="26" y="66" width="48" height="6" fill="#04624a"/>
+  <rect x="30" y="61" width="40" height="4" fill="#04624a"/>
+  <!-- columns -->
+  <rect x="33" y="38" width="6" height="22" fill="#04624a"/>
+  <rect x="44" y="38" width="6" height="22" fill="#04624a"/>
+  <rect x="55" y="38" width="6" height="22" fill="#04624a"/>
+  <rect x="66" y="38" width="6" height="22" fill="#04624a"/>
+  <!-- architrave + pediment -->
+  <rect x="28" y="33" width="44" height="5" fill="#04624a"/>
+  <path d="M50 20 L75 32 H25 Z" fill="#04624a"/>
 </svg>
