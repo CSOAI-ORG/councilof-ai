@@ -74,17 +74,13 @@ const NAV_LAYERS: { n: string; tag: string }[] = [
   { n: "Frameworks", tag: "frameworks" }, { n: "Regulators", tag: "regulators" }, { n: "Governments", tag: "gov" }, { n: "Fortune / companies", tag: "fortune" }, { n: "Cyber / CNI", tag: "cyber" }, { n: "AI compute", tag: "compute" }, { n: "AI labs & safety", tag: "labs" }, { n: "Autonomous systems", tag: "auton" }, { n: "Council network", tag: "network" }, { n: "Robotics", tag: "robotics" }, { n: "Humanoids", tag: "humanoids" }, { n: "AI-security intel", tag: "intel" }, { n: "Space & satellites", tag: "space" }, { n: "AI-critical energy", tag: "energy" }, { n: "Internet backbone", tag: "cables" }, { n: "Industries → AI", tag: "industries" }, { n: "Live aircraft", tag: "aircraft" }, { n: "Ontology", tag: "ontology" }, { n: "Cross-region mesh", tag: "arcs" },
 ];
 const NAV_SHOW: { n: string; cmd: any }[] = [
-  { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ Council of AI spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◱ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
+  { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ Council of AI spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◧ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
 ];
 // Sovereign Network directory — signed agent domains, opened in a new tab.
 const NET_DOMAINS: { d: string; n: string }[] = [
   { d: "councilof.ai", n: "Council" }, { d: "csoai.org", n: "CSOAI" }, { d: "proofof.ai", n: "Proof-of" },
   { d: "safetyof.ai", n: "Safety-of" }, { d: "accountabilityof.ai", n: "Accountability" }, { d: "ethicalgovernanceof.ai", n: "Ethical gov" },
-  { d: "dataprivacyof.ai", n: "Data privacy" }, { d: "careshield.ai", n: "CareShield" }, { d: "meok.ai", n: "MEOK brain" },
-  { d: "wowmcp.ai", n: "WOW MCP" }, { d: "diyhelp.ai", n: "DIY Help" }, { d: "grabhire.ai", n: "GrabHire" },
-  { d: "planthire.ai", n: "PlantHire" }, { d: "muckaway.ai", n: "Muckaway" }, { d: "optimobile.ai", n: "Optimobile" },
-  { d: "cobolbridge.ai", n: "COBOL Bridge" }, { d: "pokerhud.ai", n: "PokerHUD" }, { d: "fishkeeper.ai", n: "Fishkeeper" },
-  { d: "koikeeper.ai", n: "Koikeeper" }, { d: "templeman-opticians.com", n: "Templeman" },
+  { d: "dataprivacyof.ai", n: "Data privacy" }, { d: "careshield.ai", n: "CareShield" },
 ];
 const BOTTOM_NAV: { n: string; src: string; g: string }[] = [
   { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "👁" }, { n: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "🗺" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
@@ -264,7 +260,7 @@ export default function DemoOS() {
     const id = ++idc.current; setChat((c) => c.concat({ id, who: "sov", t: "" }));
     const words = text.split(" "); let k = 0;
     if (typeT.current) clearInterval(typeT.current);
-    typeT.current = setInterval(() => { k++; const done = k >= words.length; const part = words.slice(0, k).join(" ") + (done ? "" : " ▍"); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (done && typeT.current) clearInterval(typeT.current); }, 85);
+    typeT.current = setInterval(() => { k++; const done = k >= words.length; const part = words.slice(0, k).join(" ") + (done ? "" : " ▽"); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (done && typeT.current) clearInterval(typeT.current); }, 85);
     speak(text);
     scheduleBridge(text, words);
   }
