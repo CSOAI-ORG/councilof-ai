@@ -60,7 +60,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
   );
 }
 
-// ── 15-slot grid (13 measured + 2 honest empties) ───────────────────────────
+// ── 14-slot grid (13 measured of 14 + jail floor) ───────────────────────────
 
 // ── problem we fix ───────────────────────────────────────────────────
 function ProblemStrip() {
@@ -207,7 +207,7 @@ function BuyerCards() {
 // ── industries ───────────────────────────────────────────────────────
 function IndustryGrid() {
   return (
-    <Section title="One instrument, every industry" subtitle="The same 15-slot instrument applies — 13 measured today — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
+    <Section title="One instrument, every industry" subtitle="The same 14-slot instrument applies — 13 measured of 14 today — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {SEVEN_INDUSTRIES.map(i => (
           <a key={i.name} href={i.href} className="group flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-md hover:border-emerald-200 transition-all text-center">
