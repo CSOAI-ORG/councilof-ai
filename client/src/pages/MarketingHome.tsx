@@ -146,7 +146,7 @@ export default function MarketingHome() {
             </div>
           </motion.div>
 
-          {/* Live 33-Agent Council Visualization */}
+          {/* Designed 33-agent council — structure, not a fault-tolerance guarantee */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -192,7 +192,7 @@ export default function MarketingHome() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Feature 1: 33-Agent Council */}
+            {/* Feature 1: the designed council structure */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -204,7 +204,7 @@ export default function MarketingHome() {
                   <div className="mb-4">
                     <div className="h-16 w-16 bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-lg" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">33-Agent Council</h3>
+                  <h3 className="text-xl font-bold mb-2">Designed 33-agent council</h3>
                   <p className="text-muted-foreground mb-4">
                     designed multi-agent review. A 3-replica multi-agent vote runs live today; the full
                     5-provider council (OpenAI, Anthropic, Google, Kimi, DeepSeek) is rolling out (beta).
@@ -556,7 +556,7 @@ export default function MarketingHome() {
                 <h3 className="font-bold mb-2">How does the Watchdog system work?</h3>
                 <p className="text-muted-foreground">
                   Certified Watchdog Analysts submit incident reports about AI systems. These reports are
-                  reviewed by our 33-Agent Council using multi-agent council. Approved reports are published on
+                  reviewed against published measurement harnesses with deterministic grading. Approved reports are published on
                   our public transparency dashboard.
                 </p>
               </CardContent>
