@@ -18,7 +18,7 @@ import {
   Eye, FileCheck, RefreshCw, Ban, Landmark, Scale,
 } from "lucide-react";
 
-// ── data ────────────────────────────────────────────────────────────────
+// ── data ────────────────────────────────────────────────────────────────────
 const FOUR_BUYERS = [
   { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. The living GSPC board is signed; empty cells stay empty. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
@@ -47,7 +47,7 @@ const RECENT: Post[] = [
   { title: "NIS2 Compliance for Critical Infrastructure Operators", date: "2026-06-17", desc: "NIS2 expanded scope reaches energy, transport, health and digital infrastructure. Every AI in that chain is in scope.", href: "/blog/nis2-compliance-critical-infrastructure" },
 ];
 
-// ── sections ─────────────────────────────────────────────────────────
+// ── sections ─────────────────────────────────────────────────────────────
 function Section({ id, title, subtitle, children, bg }: { id?: string; title?: string; subtitle?: string; children: ReactNode; bg?: string }) {
   return (
     <section id={id} className={`py-20 px-6 ${bg ?? ""}`}>
@@ -60,9 +60,9 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
   );
 }
 
-// ── living GSPC grid (honest empties stay empty) ─────────────────────────
+// ── living GSPC grid (honest empties stay empty) ───────────────────────────
 
-// ── problem we fix ───────────────────────────────────────
+// ── problem we fix ───────────────────────────────────────────────────
 function ProblemStrip() {
   return (
     <Section
@@ -183,7 +183,7 @@ function AxesGrid() {
   );
 }
 
-// ── demographics ───────────────────────────────────
+// ── demographics ─────────────────────────────────────────────────────
 function BuyerCards() {
   return (
     <Section title="Built for the people who get audited" subtitle="One instrument, four audiences. Pick your path — every CTA leads to the same measurement, signed." bg="bg-gray-50">
@@ -204,7 +204,7 @@ function BuyerCards() {
   );
 }
 
-// ── industries ─────────────────────────────────────
+// ── industries ───────────────────────────────────────────────────────
 function IndustryGrid() {
   return (
     <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
@@ -229,7 +229,7 @@ function IndustryGrid() {
   );
 }
 
-// ── blog strip ───────────────────────────────────
+// ── blog strip ───────────────────────────────────────────────────────
 function BlogStrip() {
   return (
     <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." bg="bg-white">
@@ -252,7 +252,7 @@ function BlogStrip() {
   );
 }
 
-// ── upsells ────────────────────────────────────
+// ── upsells ──────────────────────────────────────────────────────────
 
 // ── FAQ — 21 answers, the whole proposition in plain English ──────────
 // AEO/GEO: FaqBlock renders these as a native <details> accordion (crawlable
@@ -349,7 +349,7 @@ const HOME_FAQ = [
   },
 ];
 
-// ── SEO / schema ─────────────────────────────────
+// ── SEO / schema ─────────────────────────────────────────────────────
 // (qa-sweep 2026-08-19) The page-level WebSite + FAQPage constants were REMOVED:
 // the shell (client/index.html) already ships the canonical WebSite node, and the
 // FaqBlock below emits the FAQPage node for exactly the FAQ this page renders —
@@ -358,7 +358,7 @@ const HOME_FAQ = [
 // node also asserted a SearchAction the shell audit (2026-08-14) had already
 // declined to claim until /search?q= is verified.
 
-// ── export ─────────────────────────────────────
+// ── export ───────────────────────────────────────────────────────────
 export default function NewHomeV3() {
   return (
     <main>
