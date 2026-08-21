@@ -4,7 +4,7 @@ import { useEffect } from "react";
 // and a single CTA. Built for journalists, partners, and demo sharing.
 const FACTS = [
   { k: "What it is", v: "An independent AI-measurement body. We measure AI systems against statute, sign the result, and publish what cannot be measured." },
-  { k: "The Council", v: "Designed multi-provider review. Live independence is published on the Refutation Ledger — design, not a live Byzantine claim." },
+  { k: "The Council", v: "Designed multi-provider review. Live independence is published on the Refutation Ledger — a designed council, not a live claim." },
   { k: "Coverage", v: "Statute-anchored instruments. Slot counts, dates and sample sizes live at GET councilof.ai/api/gspc — we do not type them here." },
   { k: "The lineage", v: "Governance rediscovered from 4,000 years of human history - Athens to Bitcoin to AI." },
   { k: "The proof", v: "Ed25519-signed measurement cards. Verify is free and loginless at councilof.ai/gspc-verify." },
