@@ -47,12 +47,19 @@ export default function EnterpriseTrust() {
             <span className="text-amber-300/80 font-normal">· application submitted</span>
           </a>
         </div>
-        <p className="mt-5 text-center text-sm font-semibold text-emerald-100/90">Governance shouldn't cost more than the AI it governs. Open-source core · free to start · own your data · <span className="text-emerald-300">no per-seat rent.</span></p>
-        <div className="mt-4 flex flex-wrap justify-center gap-2">
-          <a href="/assess" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">Get your free signed assessment →</a>
-          <a href="/pricing" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">See pricing →</a>
+        {/* One CTA, not two, and the honesty line folded into it. This band previously
+            stacked five rows — signals, memberships, a pricing slogan, a CTA pair and a
+            disclaimer — directly under UpsellStrip's three cards, which repeated the same
+            two links again. UpsellStrip is gone and this is one row. */}
+        <div className="mt-7 flex flex-col items-center gap-3">
+          <a href="/assess" className="rounded-xl bg-emerald-500 px-7 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">
+            Get your first signed measurement — free →
+          </a>
+          <p className="max-w-2xl text-center text-[11px] leading-relaxed text-emerald-100/60">
+            We show what is verifiable, not badges we do not hold. We are not certified to
+            SOC 2 or ISO/IEC 42001 and we do not claim to be. <a href="/pricing" className="underline hover:text-emerald-200">Pricing</a>.
+          </p>
         </div>
-        <p className="mt-2 text-center text-[11px] text-emerald-100/60">Honest by design: we show what's true and verifiable, not badges we don't hold. Formal certifications (e.g. SOC 2, ISO 42001) are pursued as the platform matures.</p>
       </div>
     </section>
   );

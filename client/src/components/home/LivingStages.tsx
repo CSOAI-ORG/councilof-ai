@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { RotatingHighlight } from "../type/RotatingHighlight";
 import { SECTION_TITLES } from "../type/sectionTitles";
 import LiveLeaderboard from "../board/LiveLeaderboard";
+import { VideoEmbed } from "@/components/scrollworld";
 
 /**
  * LivingStages — the lower homepage. Six image-backed bands that answer the
@@ -152,7 +153,7 @@ function HeavyBand({
       ? "bg-gradient-to-l from-white/75 via-white/25 to-transparent"
       : "bg-gradient-to-r from-white/75 via-white/25 to-transparent";
   return (
-    <section className="relative flex min-h-[85svh] items-center overflow-hidden bg-white">
+    <section className="relative flex min-h-[68svh] items-center overflow-hidden bg-white">
       <img
         src={image}
         alt={alt}
@@ -198,13 +199,18 @@ function Figure({ src, alt, caption, className = "" }: { src: string; alt: strin
 function SplitBand({
   image,
   alt,
+  video,
+  poster,
   mediaSide = "right",
   tint = "bg-white",
   caption,
   children,
 }: {
-  image: string;
+  image?: string;
   alt: string;
+  /** when set, the media column plays a branded clip instead of showing a still */
+  video?: string;
+  poster?: string;
   mediaSide?: "left" | "right";
   tint?: string;
   caption?: string;
@@ -214,12 +220,22 @@ function SplitBand({
     <section className={`relative ${tint}`}>
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-20 sm:py-24 lg:grid-cols-2 lg:gap-16">
         <div className={mediaSide === "right" ? "lg:order-1" : "lg:order-2"}>{children}</div>
-        <Figure
-          src={image}
-          alt={alt}
-          caption={caption}
-          className={mediaSide === "right" ? "lg:order-2" : "lg:order-1"}
-        />
+        {video ? (
+          <VideoEmbed
+            src={video}
+            poster={poster ?? ""}
+            title={alt}
+            caption={caption}
+            className={mediaSide === "right" ? "lg:order-2" : "lg:order-1"}
+          />
+        ) : (
+          <Figure
+            src={image!}
+            alt={alt}
+            caption={caption}
+            className={mediaSide === "right" ? "lg:order-2" : "lg:order-1"}
+          />
+        )}
       </div>
     </section>
   );
@@ -246,9 +262,9 @@ function Body({ children }: { children: ReactNode }) {
 function Independence() {
   return (
     <HeavyBand
-      image="/images/detail/evidence_vault_detail.jpg"
+      image="/images/band/anchor.png"
       objectPosition="72% 50%"
-      alt="Clay figures gathered around a vault door holding a glowing 3KB credential card"
+      alt="A pale sphere held inside thin orbital rings studded with green markers"
       panelSide="left"
     >
       <Kicker>How we are funded</Kicker>
@@ -285,11 +301,12 @@ function Independence() {
 function Boundary() {
   return (
     <SplitBand
-      image="/images/infographics/crop/law-to-axes.jpg"
-      alt="A puzzle board of frozen statutory provisions — EU AI Act, GDPR, CRA, DORA, NIS2 and US state law — locking into the Governance, Safety, Provenance and Continuity axes"
+      video="/videos/council-of-ai.mp4"
+      poster="/videos/council-of-ai.jpg"
+      alt="What the Council of AI is, and the line it does not cross"
       mediaSide="right"
       tint="bg-gray-50"
-      caption="Cropped to the statutory-crosswalk panel: the law on the left, the measured axes it maps to on the right. Nothing in this frame issues a verdict."
+      caption="Two minutes on what we measure and what we refuse to claim. Nothing in it issues a verdict."
     >
       <Kicker>The boundary</Kicker>
       <Heading>
@@ -382,10 +399,13 @@ function VerifyYourself() {
             ))}
           </ol>
 
-          <Figure
-            src="/images/infographics/crop/measure-sign-pipeline.jpg"
-            alt="The pipeline that produces a card: model output, deterministic grading against frozen provisions, then canonical Ed25519 signing"
-            caption="How the card is made before you ever check it — deterministic grading, then canonical signing. Cropped to the panels that match what we actually publish."
+          {/* The pipeline explained in motion rather than a cropped panel. */}
+          <VideoEmbed
+            src="/videos/csoai-architecture.mp4"
+            poster="/videos/csoai-architecture.jpg"
+            title="How a card is made: grading against frozen provisions, then canonical signing"
+            caption="How the card is made before you ever check it — deterministic grading, then canonical Ed25519 signing."
+            className="mt-10"
           />
         </div>
 
@@ -464,9 +484,9 @@ function LivingLaw() {
 
   return (
     <HeavyBand
-      image="/images/detail/liveness_drift_detail.jpg"
+      image="/images/band/clock.png"
       objectPosition="28% 50%"
-      alt="An hourglass weighing a stale seal against a re-attested current seal, fed by EUR-Lex and legislation.gov.uk ribbons"
+      alt="A plain white clock face with a single green hand"
       panelSide="right"
     >
       <Kicker>Living law</Kicker>
@@ -531,9 +551,9 @@ function LiveBoard() {
 
   return (
     <HeavyBand
-      image="/images/detail/board_arena_detail.jpg"
+      image="/images/band/hardened.png"
       objectPosition="72% 50%"
-      alt="Clay figures and AI forms facing each other across a bright marble arena under green light"
+      alt="A field of pale solids linked by a lattice of green light"
       panelSide="left"
     >
       <Kicker>The board{stamp ? ` · stamped ${stamp}` : ""}</Kicker>
