@@ -5,6 +5,7 @@ import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
 import LobbySideRail from "./LobbySideRail";
 import LobbyChatBar from "./LobbyChatBar";
 import LobbyPlay from "./LobbyPlay";
+import LobbyHome from "./LobbyHome";
 import { useLobbyChat } from "./useLobbyChat";
 import { useFocusTrap } from "./useFocusTrap";
 import {
@@ -54,6 +55,7 @@ import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
 
 const ALPHA_KEY = "coai.lobby.alpha";
 const TAB_KEY = "coai.lobby.tab";
+const SIZE_KEY = "coai.lobby.size";
 const TITLE_ID = "coai-lobby-title";
 
 function readAlpha(): number {
@@ -72,6 +74,14 @@ function readTab(): LobbyTabId {
   return DEFAULT_TAB;
 }
 
+function readSize(): "comfortable" | "full" {
+  try {
+    const v = localStorage.getItem(SIZE_KEY);
+    if (v === "comfortable" || v === "full") return v;
+  } catch { /* ignore */ }
+  return "full";
+}
+
 /** Tabbable guard that bounces focus back into the dialog. See useFocusTrap. */
 function FocusSentinel({ onFocus }: { onFocus: () => void }) {
   return <div data-focus-sentinel tabIndex={0} aria-hidden="true" onFocus={onFocus} className="sr-only" />;
@@ -88,7 +98,7 @@ export default function LobbyOverlay({
   // An intent present at mount picks the pane; otherwise the last pane is restored.
   const [tabId, setTabId] = useState<LobbyTabId>(() => intent?.pane ?? readTab());
   const [railOpen, setRailOpen] = useState(true);
-  const [size, setSize] = useState<"comfortable" | "full">("comfortable");
+  const [size, setSize] = useState<"comfortable" | "full">(readSize);
   const [minimised, setMinimised] = useState(false);
   const [frameLoaded, setFrameLoaded] = useState(false);
   /** Set when a play card opens a route that is not itself a pane. */
@@ -109,6 +119,7 @@ export default function LobbyOverlay({
 
   useEffect(() => { try { localStorage.setItem(ALPHA_KEY, String(alpha)); } catch { /* ignore */ } }, [alpha]);
   useEffect(() => { try { localStorage.setItem(TAB_KEY, tabId); } catch { /* ignore */ } }, [tabId]);
+  useEffect(() => { try { localStorage.setItem(SIZE_KEY, size); } catch { /* ignore */ } }, [size]);
 
   const minimise = useCallback(() => setMinimised(true), []);
 
@@ -221,7 +232,7 @@ export default function LobbyOverlay({
     return (
       <div
         role="dialog"
-        aria-label="Council Lobby, minimised"
+        aria-label="Council OS, minimised"
         className={`fixed bottom-5 left-1/2 z-[80] w-[min(30rem,calc(100vw-2.5rem))] -translate-x-1/2 ${SURFACE_LIFTED} ${SP.row} flex items-center gap-3 bg-white/95 backdrop-blur-xl`}
       >
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-white" aria-hidden="true">
@@ -229,7 +240,7 @@ export default function LobbyOverlay({
         </span>
         <span className="min-w-0">
           <span className="block text-[13px] font-semibold leading-tight text-slate-900">
-            Council Lobby — minimised
+            Council OS — minimised
           </span>
           <span className={`block ${TYPE.fine}`}>
             {paneLabel} · {chat.turnCount} message{chat.turnCount === 1 ? "" : "s"} kept ·{" "}
@@ -239,7 +250,7 @@ export default function LobbyOverlay({
         <button
           type="button"
           onClick={() => setMinimised(false)}
-          aria-label="Restore the Council Lobby"
+          aria-label="Restore Council OS"
           className={`ml-auto shrink-0 rounded-xl bg-emerald-700 px-3.5 py-2 text-[12px] font-semibold text-white transition hover:bg-emerald-800 motion-reduce:transition-none ${FOCUS}`}
         >
           Restore
@@ -247,7 +258,7 @@ export default function LobbyOverlay({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close the Council Lobby"
+          aria-label="Close Council OS"
           className={`shrink-0 rounded-xl border border-slate-900/12 px-3 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
         >
           Close
@@ -302,7 +313,7 @@ export default function LobbyOverlay({
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-slate-900/10 px-5 py-2.5">
               <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
               <span className={`hidden truncate md:inline ${TYPE.fine}`}>
-                {override ? "Opened in this pane — navigation stays inside the lobby." : tab.blurb}
+                {override ? "Opened in this pane — navigation stays inside the OS." : tab.blurb}
               </span>
               {panePath && (
                 <span
@@ -345,7 +356,9 @@ export default function LobbyOverlay({
             </div>
 
             <div className="relative min-h-0 flex-1">
-              {localPane ? (
+              {localPane && tab.id === "home" ? (
+                <LobbyHome onSelect={go} onOpenRoute={openRoute} />
+              ) : localPane ? (
                 <LobbyPlay onOpenRoute={openRoute} />
               ) : (
                 <>

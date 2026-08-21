@@ -49,17 +49,17 @@ export default function LobbyPaneRail({
 
   return (
     <nav
-      aria-label="Council Lobby destinations"
+      aria-label="Council OS destinations"
       className={`${SURFACE} ${SP.rail} hidden w-52 shrink-0 flex-col sm:flex lg:w-60`}
       style={panelStyle}
     >
-      <h2 className={`${TYPE.section} mb-3 shrink-0 px-1`}>Destinations</h2>
+      <h2 className={`${TYPE.section} mb-3 shrink-0 px-1`}>Council OS</h2>
 
       <div
         ref={listRef}
         role="tablist"
         aria-orientation="vertical"
-        aria-label="Council Lobby destinations"
+        aria-label="Council OS destinations"
         onKeyDown={onKeyDown}
         className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto"
       >

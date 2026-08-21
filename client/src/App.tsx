@@ -17,7 +17,6 @@ import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 // Home removed - using NewHomeV2 instead
 const Landing = lazy(() => import("./pages/Landing"));
-const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
@@ -497,7 +496,8 @@ function App() {
   }
 
   // Immersive full-bleed routes — the live demo takes over the whole screen (no header/footer).
-  if (location === '/sov-os' || location === '/council-os') {
+  // Dockview lab only. /council-os is the public OS name — it 308s to the overlay.
+  if (location === '/sov-os') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="dark">
@@ -999,7 +999,8 @@ function App() {
                   <Route path="/gspc">{() => <Redirect to="/gspc-scoreboard" />}</Route>
                   <Route path="/scoreboard">{() => <Redirect to="/gspc-scoreboard" />}</Route>
                   <Route path="/lobby">{() => <Redirect to="/?lobby=home" />}</Route>
-                  <Route path="/console">{() => <Redirect to="/os" />}</Route>
+                  <Route path="/console">{() => <Redirect to="/?lobby=home" />}</Route>
+                  <Route path="/council-os">{() => <Redirect to="/?lobby=home" />}</Route>
                   <Route path="/library/measurement">{() => <Redirect to="/library/axes" />}</Route>
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
@@ -1039,7 +1040,6 @@ function App() {
                   </Switch></Suspense>
                 </main>
                 <Footer />
-                <Suspense fallback={null}><CouncilConsole /></Suspense>
                 <ErrorBoundary fallback={null}>
                   <Suspense fallback={null}><CouncilLobby /></Suspense>
                 </ErrorBoundary>
