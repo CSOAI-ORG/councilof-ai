@@ -37,7 +37,7 @@ const NAV: NavGroup[] = [
   {
     label: "Measure",
     items: [
-      { name: "GSPC axes", href: "#axes", note: "living board \u00b7 counts from /api/gspc" },
+      { name: "GSPC axes", href: "#axes", note: "living board · counts from /api/gspc" },
       { name: "Benchmarks", href: "/benchmarks", note: "every result" },
       { name: "Verify a card", href: "/gspc-verify", note: "offline check" },
       { name: "Methodology", href: "/methodology", note: "how we grade" },
@@ -153,7 +153,7 @@ export default function OsLauncher() {
               <div className="grid gap-6 p-6 md:grid-cols-[1.3fr_1fr] md:p-8">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-600">Center stage \u00b7 the game</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-600">Center stage · the game</span>
                     <span className="rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-emerald-700">
                       Client live
                     </span>
@@ -189,7 +189,7 @@ export default function OsLauncher() {
                 {/* Deployed client — honest backend-state panel */}
                 <div className="flex flex-col justify-center rounded-xl border border-emerald-200 bg-white/80 p-6 text-center">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">🏛</div>
-                  <div className="mt-3 text-sm font-semibold text-slate-900">Client deployed \u00b7 world owner-gated</div>
+                  <div className="mt-3 text-sm font-semibold text-slate-900">Client deployed · world owner-gated</div>
                   <p className="mt-1 text-[12px] leading-relaxed text-slate-500">
                     The town UI renders live. The agent world starts once the Convex backend login is completed
                     (one owner action) — then the clans walk, deliberate and get measured.
