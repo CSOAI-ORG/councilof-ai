@@ -12,6 +12,7 @@ import {
   panelStyle, scrimStyle,
 } from "./glass";
 import type { LobbyIntent } from "@/lib/lobbyLink";
+import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
 
 /**
  * LobbyOverlay — the Council Lobby as a WHITE GLASS-OS workspace.
@@ -92,6 +93,12 @@ export default function LobbyOverlay({
   const [frameLoaded, setFrameLoaded] = useState(false);
   /** Set when a play card opens a route that is not itself a pane. */
   const [override, setOverride] = useState<{ path: string; label: string } | null>(null);
+  /** Actual path showing in the iframe — follows in-pane navigation. */
+  const [framePath, setFramePath] = useState<string>(() => intent ? tabById(intent.pane).path : tabById(readTab()).path);
+  const [frameSrc, setFrameSrc] = useState<string>(() => {
+    const path = intent ? tabById(intent.pane).path : tabById(readTab()).path;
+    return path ? withEmbed(path) : "";
+  });
 
   const rootRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
@@ -146,23 +153,53 @@ export default function LobbyOverlay({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minimised]);
 
+  const loadPane = useCallback((path: string) => {
+    setFrameLoaded(false);
+    setFramePath(path);
+    setFrameSrc(path ? withEmbed(path) : "");
+  }, []);
+
   // A later intent (an in-page CTA fired while the lobby is already open) moves
   // the pane. `nonce` makes a repeat of the same request land again.
   useEffect(() => {
     if (!intent) return;
     setMinimised(false);
     setOverride(null);
-    setTabId((cur) => { if (cur !== intent.pane) setFrameLoaded(false); return intent.pane; });
-  }, [intent?.nonce, intent?.pane]);
+    const next = tabById(intent.pane);
+    setTabId(intent.pane);
+    if (next.kind !== "local" && next.path) loadPane(next.path);
+  }, [intent?.nonce, intent?.pane, loadPane]);
 
   const go = useCallback((t: LobbyTab) => {
     setOverride(null);
-    setTabId((cur) => { if (cur !== t.id) setFrameLoaded(false); return t.id; });
-  }, []);
+    setTabId(t.id);
+    if (t.kind !== "local" && t.path) loadPane(t.path);
+  }, [loadPane]);
 
   const openRoute = useCallback((path: string, label: string) => {
-    setFrameLoaded(false);
     setOverride({ path, label });
+    loadPane(path);
+  }, [loadPane]);
+
+  // In-pane clicks stay in the iframe and post `coai:embed-nav`. Follow the
+  // path in the rail without remounting the frame (that would flash and lose
+  // scroll). Lobby-chrome navigation still remounts via loadPane().
+  useEffect(() => {
+    const onMsg = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin) return;
+      if (!isEmbedNav(e.data)) return;
+      const path = e.data.path;
+      const matched = tabForPath(path);
+      setFramePath(path);
+      if (matched) {
+        setTabId(matched.id);
+        setOverride(null);
+      } else {
+        setOverride({ path, label: e.data.title || path });
+      }
+    };
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
   }, []);
 
   // The framed page is same-origin, so Esc pressed INSIDE it can still close the
@@ -176,10 +213,8 @@ export default function LobbyOverlay({
   }, [onClose]);
 
   const localPane = !override && tab.kind === "local";
-  const panePath = override?.path ?? tab.path;
+  const panePath = framePath || override?.path || tab.path;
   const paneLabel = override ? override.label : tab.label;
-  // `?embed=1` is a hint for the framed page, not a contract it honours yet.
-  const src = panePath ? panePath + (panePath.includes("?") ? "&" : "?") + "embed=1" : "";
 
   // ── docked (minimised) ───────────────────────────────────────────────────
   if (minimised) {
@@ -221,7 +256,7 @@ export default function LobbyOverlay({
     );
   }
 
-  // ── the workspace ────────────────────────────────────────────────────────
+  // ── the workspace ────────────────────────────────────────────────────
   return (
     <>
       <FocusSentinel onFocus={() => focusEdge("last")} />
@@ -267,20 +302,20 @@ export default function LobbyOverlay({
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-slate-900/10 px-5 py-2.5">
               <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
               <span className={`hidden truncate md:inline ${TYPE.fine}`}>
-                {override ? "Opened from the local-play gallery — a page to read." : tab.blurb}
+                {override ? "Opened in this pane — navigation stays inside the lobby." : tab.blurb}
               </span>
               {panePath && (
-                <a
-                  href={panePath}
-                  className={`ml-auto shrink-0 rounded font-mono text-[11px] text-emerald-800 underline-offset-2 hover:underline ${FOCUS}`}
+                <span
+                  className="ml-auto shrink-0 rounded font-mono text-[11px] text-slate-500"
+                  title="This page is open in the lobby pane — navigation stays here"
                 >
-                  {panePath} ↗
-                </a>
+                  {panePath}
+                </span>
               )}
               {override && (
                 <button
                   type="button"
-                  onClick={() => { setOverride(null); setFrameLoaded(false); }}
+                  onClick={() => { setOverride(null); if (tab.path) loadPane(tab.path); }}
                   className={`shrink-0 rounded-lg border border-slate-900/10 px-2.5 py-1 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
                 >
                   Back to {tab.label}
@@ -317,8 +352,8 @@ export default function LobbyOverlay({
                   {!frameLoaded && <FrameSkeleton />}
                   <iframe
                     ref={frameRef}
-                    key={src}
-                    src={src}
+                    key={frameSrc}
+                    src={frameSrc}
                     title={`${paneLabel} — ${panePath}`}
                     onLoad={onFrameLoad}
                     className="h-full w-full border-0 bg-white"
@@ -335,7 +370,7 @@ export default function LobbyOverlay({
           )}
         </div>
 
-        {/* ── chat bar ──────────────────────────────────────────────────── */}
+        {/* ── chat bar ────────────────────────────────────────────────── */}
         <LobbyChatBar
           chat={chat}
           onNavigate={go}
