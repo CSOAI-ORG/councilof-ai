@@ -158,8 +158,8 @@ function AxesGrid() {
           );
         })}
         {[
-          { axis: "gspc_jail", bench: "Jail", task: "containment / sandbox-escape gate", note: "13 Aug floor in separate stamp (not a ranking); empty on 12 Aug stamp", status: "EMPTY" },
-          { axis: "slot-15", bench: "Slot 15", task: "reserved — harness has not emitted a 15th axis", note: "reserved, no name assigned", status: "EMPTY" },
+          { axis: "gspc_jail", bench: "Jail", task: "containment / sandbox-escape gate", note: "13 Aug floor in separate stamp (not a ranking); empty on 12 Aug stamp", status: "UNMEASURED" },
+          { axis: "slot-15", bench: "Slot 15", task: "reserved — harness has not emitted a 15th axis", note: "reserved, no name assigned — honestly unmeasured, never invented", status: "UNMEASURED" },
         ].map(e => (
           <div key={e.axis} className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 p-5">
             <div className="flex items-center justify-between mb-2">
