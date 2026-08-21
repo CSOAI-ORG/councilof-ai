@@ -60,28 +60,3 @@ const STEPS: Step[] = [
   { say: "And you don't even have to come to us - governance goes to you. One command, npx csoai-governance-mcp, drops this entire Layer 0 - signing, verification, the council, all 370+ tools - into any AI agent you already run. We are the governance layer under the whole ecosystem.", wins: [{ title: "CSOAI Governance MCP - one command", src: "/distribution", slot: "tr" }], full: true },
   { say: "Own your AI. Own your data. Start free, scale when you need. That's your OS - and I'm always right here. Ask me anything, any time.", wins: [{ title: "Plans", src: "/pricing", slot: "tr" }], home: true },
 ];
-
-const BOOT = ["Establishing governed link", "Loading Council Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "Loading council design (not yet live — DR-0007)", "Care-floor engaged"];
-
-// Navigation surfaces for the OS drawer + bottom bar (end-user tool navigation).
-const NAV_GROUPS: { g: string; items: { n: string; src: string }[] }[] = [
-  { g: "Govern", items: [{ n: "Governance Graph", src: "/graph" }, { n: "The Council", src: "/try" }, { n: "Council Space", src: "/gspc-arena" }, { n: "Framework Hive", src: "/hive" }, { n: "Regulator Atlas", src: "/regulators" }] },
-  { g: "Protect & watch", items: [{ n: "Global Watchdog", src: "/watchdog-map" }, { n: "Cyber self-scan", src: "/scan" }, { n: "Personal Protection", src: "/protect" }] },
-  { g: "Ecosystem", items: [{ n: "Council Network", src: "/network" }, { n: "The Ontology", src: "/ontology" }, { n: "Signed System Card", src: "/system-card" }, { n: "Why CSOAI", src: "/why" }, { n: "Competitor battlecards", src: "/competitors" }] },
-  { g: "Build & run", items: [{ n: "Tool Commons (370+)", src: "/tool-commons" }, { n: "OSCAL Studio", src: "/oscal" }, { n: "Command Center", src: "/command-center" }, { n: "Plans & pricing", src: "/plans" }, { n: "Full OS launcher", src: "/os" }] },
-];
-const NAV_LAYERS: { n: string; tag: string }[] = [
-  { n: "Frameworks", tag: "frameworks" }, { n: "Regulators", tag: "regulators" }, { n: "Governments", tag: "gov" }, { n: "Fortune / companies", tag: "fortune" }, { n: "Cyber / CNI", tag: "cyber" }, { n: "AI compute", tag: "compute" }, { n: "AI labs & safety", tag: "labs" }, { n: "Autonomous systems", tag: "auton" }, { n: "Council network", tag: "network" }, { n: "Robotics", tag: "robotics" }, { n: "Humanoids", tag: "humanoids" }, { n: "AI-security intel", tag: "intel" }, { n: "Space & satellites", tag: "space" }, { n: "AI-critical energy", tag: "energy" }, { n: "Internet backbone", tag: "cables" }, { n: "Industries → AI", tag: "industries" }, { n: "Live aircraft", tag: "aircraft" }, { n: "Ontology", tag: "ontology" }, { n: "Cross-region mesh", tag: "arcs" },
-];
-const NAV_SHOW: { n: string; cmd: any }[] = [
-  { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ Council of AI spiral", cmd: { cmd: "bftSpiral" } }, { n: "\\u{1F308} Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◱ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
-];
-// Sovereign Network directory — signed agent domains, opened in a new tab.
-const NET_DOMAINS: { d: string; n: string }[] = [
-  { d: "councilof.ai", n: "Council" }, { d: "csoai.org", n: "CSOAI" }, { d: "proofof.ai", n: "Proof-of" },
-  { d: "safetyof.ai", n: "Safety-of" }, { d: "accountabilityof.ai", n: "Accountability" }, { d: "ethicalgovernanceof.ai", n: "Ethical gov" },
-  { d: "dataprivacyof.ai", n: "Data privacy" }, { d: "careshield.ai", n: "CareShield" },
-];
-const BOTTOM_NAV: { n: string; src: string; g: string }[] = [
-  { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "\\u{1F441}" }, { n: "Scan", src: "/scan", g: "\\u{1F6F0}" }, { n: "Atlas", src: "/regulators", g: "\\u{1F5FA}" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
-];
