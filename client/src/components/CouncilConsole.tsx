@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
+import { isEmbedded } from "@/lib/embed";
 
 /**
  * CouncilConsole — the living-harness hero, stuck on every page.
@@ -104,6 +105,8 @@ export default function CouncilConsole() {
   const [, navigate] = useLocation();
   const endRef = useRef<HTMLDivElement>(null);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+
+  if (isEmbedded()) return null;
 
   const say = (m: Msg) => setMsgs((p) => [...p, m]);
 
