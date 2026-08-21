@@ -2,13 +2,11 @@
 // G2 badges (CSOAI doesn't hold those). Only real, verifiable signals: Ed25519
 // signing, framework ALIGNMENT (not certification), open source, coordinated vuln
 // disclosure, the BFT care-floor, and the real UK company registration.
-import { CANON } from "../data/canonCounters";
-
 const SIGNALS: { icon: string; label: string; sub: string; href?: string }[] = [
   { icon: "✶", label: "Ed25519 · Layer 0", sub: "Every decision cryptographically signed", href: "/workbench" },
-  { icon: "⚖", label: "Multi-provider measurement", sub: "19 models measured, no single vendor grades itself", href: "/benchmarks" },
+  { icon: "⚖", label: "Multi-provider measurement", sub: "No single vendor grades itself. Fleet size is live on GET /api/gspc.", href: "/benchmarks" },
   { icon: "◫", label: "Aligned to 13 frameworks", sub: "EU AI Act · NIST · ISO 42001 · DORA · NIS2", href: "/crosswalk" },
-  { icon: "◍", label: "Open source · MIT", sub: `${CANON.MCP_SERVERS.value} governed MCP servers, inspectable`, href: "/tool-commons" },
+  { icon: "◍", label: "Open source · MIT", sub: "Open measurement tooling, inspectable", href: "/tool-commons" },
   { icon: "🛡", label: "Coordinated disclosure", sub: "Published security.txt + CVD policy", href: "/vulnerability-disclosure" },
   { icon: "🏛", label: "CSOAI Ltd · UK", sub: "Companies House 16939677", href: "/about" },
 ];

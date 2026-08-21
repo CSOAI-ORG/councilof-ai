@@ -109,7 +109,7 @@ export function Footer() {
               <Shield className="h-8 w-8" />
               <div>
                 <h3 className="font-bold text-lg">Models refuse generic harm. They do not refuse the regulated practices.</h3>
-                <p className="text-emerald-100 text-sm">GSPC board — 13 measured of 14, plus jail/containment (18 Aug stamp, n=71, separation untested). Signed stamp; live axis and model counts at /api/gspc. Harness published — recompute it.</p>
+                <p className="text-emerald-100 text-sm">The living GSPC board is signed. Empty cells stay empty. Live axis and model counts at GET /api/gspc. Harness published — recompute it.</p>
               </div>
             </div>
             <Link href="/benchmarks">
