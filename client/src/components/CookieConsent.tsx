@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { isEmbedded } from "@/lib/embed";
 
 // CookieConsent — a persistent (localStorage, not per-session) GDPR consent
 // banner. CSOAI's analytics are memory-only (no third-party cookies, no
@@ -29,7 +30,7 @@ export default function CookieConsent() {
     setVisible(false);
   }
 
-  if (!visible) return null;
+  if (isEmbedded() || !visible) return null;
 
   return (
     <div

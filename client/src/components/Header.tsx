@@ -9,6 +9,7 @@ import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Sear
 import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { isEmbedded } from '@/lib/embed';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -163,6 +164,8 @@ export function Header() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  if (isEmbedded()) return null;
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">

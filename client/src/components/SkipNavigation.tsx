@@ -6,6 +6,7 @@
 
 import { useState, useCallback } from 'react';
 import { navigateToSkipTarget, type SkipLink } from '@/lib/accessibility';
+import { isEmbedded } from '@/lib/embed';
 
 interface SkipNavigationProps {
   /**
@@ -37,6 +38,8 @@ export function SkipNavigation({ links = defaultLinks, className = '' }: SkipNav
       navigateToSkipTarget(targetId);
     }
   }, []);
+
+  if (isEmbedded()) return null;
 
   return (
     <div
