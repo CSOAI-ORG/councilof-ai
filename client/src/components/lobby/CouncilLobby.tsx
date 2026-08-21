@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { isEmbedded } from "@/lib/embed";
 import { useLobbyDeepLink } from "@/lib/lobbyLink";
 
 /**
@@ -14,9 +15,9 @@ import { useLobbyDeepLink } from "@/lib/lobbyLink";
  * and nothing else.
  *
  * The lobby frames real routes in same-origin iframes. Inside such a frame the
- * app boots again, so the badge would otherwise stack forever; `?embed=1`
- * suppresses this trigger there. That is the ONLY thing reading the flag today —
- * no page hides its own chrome yet.
+ * app boots again, so the badge would otherwise stack forever. `isEmbedded()`
+ * suppresses this trigger there; App.tsx also drops header, footer, cookie
+ * banner and this badge when the same flag is set.
  *
  * The overlay owns its own window state (open / minimised / expanded); this file
  * only owns the badge and the mount. Minimising does NOT unmount the overlay —
@@ -30,16 +31,6 @@ import { useLobbyDeepLink } from "@/lib/lobbyLink";
  */
 
 const LobbyOverlay = lazy(() => import("./LobbyOverlay"));
-
-function isEmbedded(): boolean {
-  try {
-    if (new URLSearchParams(window.location.search).get("embed") === "1") return true;
-    return window.self !== window.top;
-  } catch {
-    // Cross-origin frame access threw — treat as embedded and stay quiet.
-    return true;
-  }
-}
 
 export default function CouncilLobby() {
   const [open, setOpen] = useState(false);
