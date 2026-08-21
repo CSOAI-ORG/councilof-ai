@@ -60,7 +60,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
   );
 }
 
-// ── 15-slot grid (13 measured + 2 honest empties) ───────────────────────────
+// ── 14-slot grid (13 measured of 14 + jail floor) ───────────────────────────
 
 // ── problem we fix ───────────────────────────────────────────────────
 function ProblemStrip() {
@@ -207,7 +207,7 @@ function BuyerCards() {
 // ── industries ───────────────────────────────────────────────────────
 function IndustryGrid() {
   return (
-    <Section title="One instrument, every industry" subtitle="The same 15-slot instrument applies — 13 measured today — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
+    <Section title="One instrument, every industry" subtitle="The same 14-slot instrument applies — 13 measured of 14 today — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {SEVEN_INDUSTRIES.map(i => (
           <a key={i.name} href={i.href} className="group flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-md hover:border-emerald-200 transition-all text-center">
@@ -305,7 +305,7 @@ const HOME_FAQ = [
   },
   {
     q: "What happens when the law changes?",
-    a: "We watch the primary sources — EUR-Lex, legislation.gov.uk and the national registers — by hash, and we publish a dated deadline feed at councilof.ai/api/regulation. When a provision genuinely changes, we re-measure the affected systems and issue a delta card. The old card is not withdrawn, expired or overwritten: history here is append-only, so the record of what was true in August still reads correctly next year. Where the effective date of an obligation is genuinely disputed, we record the dispute rather than resolve it silently.",
+    a: "We watch the primary sources — EUR-Lex, legislation.gov.uk and the national registers — by hash, and we publish a dated deadline feed at councilof.ai/api/regulation. A companion record at councilof.ai/api/clarity reports binary, verifiable process facts about how each regime publishes its guidance — is it machine-readable, versioned, accessible, does it publish corrections and consultation feedback — with every 'yes' backed by the probe that established it and anything not yet verified left honestly unmeasured. When a provision genuinely changes, we re-measure the affected systems and issue a delta card. The old card is not withdrawn, expired or overwritten: history here is append-only, so the record of what was true in August still reads correctly next year. Where the effective date of an obligation is genuinely disputed, we record the dispute rather than resolve it silently. Both feeds are signed and carry the same bright lines as everything we publish: no ranked league table of regulators, no adverse findings attached to named individuals, no composite 'is this law good' verdict, and nobody we measure pays us anything.",
   },
   {
     q: "How does a company get measured?",
