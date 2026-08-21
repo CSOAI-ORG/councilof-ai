@@ -28,8 +28,8 @@ export const STORY: Slide[] = [
     // 02 The problem — light, breathes
     kicker: "The problem",
     video: { src: "/videos/council-of-ai.mp4", poster: "/videos/council-of-ai.jpg", title: "What Council of AI does — a 2-minute look" },
-    title: "The \u201ctrust us\u201d PDF",
-    body: "Most AI assurance is a claim on a slide — a badge, a private report, a number with no test behind it. You can\u2019t run it, you can\u2019t see what was skipped, and the moment the model updates the paperwork is already out of date.",
+    title: "The “trust us” PDF",
+    body: "Most AI assurance is a claim on a slide — a badge, a private report, a number with no test behind it. You can’t run it, you can’t see what was skipped, and the moment the model updates the paperwork is already out of date.",
     points: [
       { tag: "pain", text: "You get a badge, not a test you can run" },
       { tag: "pain", text: "No sample size, no interval, no list of what was skipped" },
@@ -44,7 +44,7 @@ export const STORY: Slide[] = [
     title: "One small card, signed and yours",
     body: "We run your system on frozen, published tests, sign the result, and give you the card — about 3KB of scores, sample sizes, intervals, hashes and a signature. Anyone can recompute it in their own browser, and the signing key is public.",
     points: [
-      { tag: "pain", text: "Reports sit on someone else\u2019s server and can quietly change" },
+      { tag: "pain", text: "Reports sit on someone else’s server and can quietly change" },
       { tag: "benefit", text: "You hold a ~3KB card — recheck the hash chain in any browser" },
       { tag: "benefit", text: "Scores, sample size and intervals all travel with it" },
       { tag: "usp", text: "Public signing key — anyone verifies without asking us" },
@@ -60,8 +60,8 @@ export const STORY: Slide[] = [
     body: "The public board is signed and honest: empty cells stay empty, ties stay ties. Jail — whether a model can be talked out of its guardrails — is a measured floor when the stamp says so, and we say so. It caught our own fine-tune missing every escape, and we published that. Live counts: GET /api/gspc.",
     points: [
       { tag: "pain", text: "Scorecards quietly hide the tests a model fails" },
-      { tag: "benefit", text: "Empty cells stay empty — you see exactly what\u2019s measured" },
-      { tag: "benefit", text: "Jail is a floor, \u201cseparation untested\u201d stated in plain sight" },
+      { tag: "benefit", text: "Empty cells stay empty — you see exactly what’s measured" },
+      { tag: "benefit", text: "Jail is a floor, “separation untested” stated in plain sight" },
       { tag: "usp", text: "It caught our own fine-tune — and we published it" },
     ],
     href: "/gspc-scoreboard",
@@ -102,7 +102,7 @@ export const STORY: Slide[] = [
     // 07 The live board — light, architecture video
     kicker: "The live board",
     title: "The whole board, live from the API",
-    body: "Every cell is pulled live from our public API. Empty cells stay empty, every row shows its sample size, and nobody edits yesterday\u2019s numbers.",
+    body: "Every cell is pulled live from our public API. Empty cells stay empty, every row shows its sample size, and nobody edits yesterday’s numbers.",
     points: [
       { tag: "pain", text: "Marketing dashboards refresh silently and rewrite history" },
       { tag: "benefit", text: "A living grid, live from GET /api/gspc, with a sample size on every row" },
@@ -116,7 +116,7 @@ export const STORY: Slide[] = [
     // 08 Council City — heavy, living layer
     kicker: "Council City",
     title: "A place you can walk, not a pitch",
-    body: "Signed results feed a living layer — cities, towns and sims you can explore. Every scene traces back to a real receipt, so learning how the system behaves is something you do, not something you\u2019re told.",
+    body: "Signed results feed a living layer — cities, towns and sims you can explore. Every scene traces back to a real receipt, so learning how the system behaves is something you do, not something you’re told.",
     points: [
       { tag: "pain", text: "Governance sites are walls of text nobody reads" },
       { tag: "benefit", text: "Explore how AI behaves through a world, not a whitepaper" },
@@ -129,7 +129,7 @@ export const STORY: Slide[] = [
   {
     // 09 Always current — light split, liveness image + living-law video
     kicker: "Always current",
-    title: "The day it\u2019s stamped, a static certificate starts going stale",
+    title: "The day it’s stamped, a static certificate starts going stale",
     body: "So we watch the law itself. Our corpus-watch tracks EUR-Lex and legislation.gov.uk by hash, day after day. When a provision actually changes, we re-measure and issue a fresh delta card — the old one stays, history is append-only, never quietly edited.",
     points: [
       { tag: "pain", text: "A one-time stamp goes stale the moment the law moves" },
@@ -146,20 +146,20 @@ export const STORY: Slide[] = [
     // 10 Human oversight — heavy, humans directing AI
     kicker: "Human oversight",
     title: "Humans stay in the loop",
-    body: "Measurement isn\u2019t a black box you\u2019re asked to trust. People set the tests, read the results, and can challenge any card — the system is steered by humans, not hidden behind them.",
+    body: "Measurement isn’t a black box you’re asked to trust. People set the tests, read the results, and can challenge any card — the system is steered by humans, not hidden behind them.",
     points: [
-      { tag: "pain", text: "AI assurance you\u2019re simply told to take on faith" },
+      { tag: "pain", text: "AI assurance you’re simply told to take on faith" },
       { tag: "benefit", text: "People set the tests and can challenge any result" },
       { tag: "usp", text: "Every judgement is a fixed rule a human can inspect — never a hidden model" },
       { tag: "usp", text: "AI is measured against a published human baseline — not just against other AI" },
     ],
     href: "/gspc-scoreboard",
-    cta: "See how it\u2019s judged",
+    cta: "See how it’s judged",
     bg: { src: "/images/coliseum_humans_vs_humanoids.jpg", alt: "Humans directing AI figures with beams of light, keeping oversight" },
   },
   {
     // 11 Who it's for — light, trust-ecosystem video
-    kicker: "Who it\u2019s for",
+    kicker: "Who it’s for",
     title: "One signed measurement, four fronts",
     body: "Insurers pricing AI risk, regulators checking behaviour against the law, teams proving a model before they ship, developers measuring per call — the same signed card serves them all.",
     points: [
@@ -191,7 +191,7 @@ export const STORY: Slide[] = [
     title: "See something wrong? Report it.",
     body: "When an AI behaves badly in the real world, anyone can flag it. Reports feed the public watchdog, and what we act on is measured and signed like everything else — no closed inbox, no quiet dismissal.",
     points: [
-      { tag: "pain", text: "Harms get buried in a vendor\u2019s private support queue" },
+      { tag: "pain", text: "Harms get buried in a vendor’s private support queue" },
       { tag: "benefit", text: "A public place to report AI behaviour that looks wrong" },
       { tag: "usp", text: "What we act on is measured and signed — in the open" },
     ],
@@ -234,7 +234,7 @@ function HeroActions() {
             title={p.hook}
             className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[13px] font-semibold text-white backdrop-blur-sm transition hover:border-emerald-300 hover:bg-white/20"
           >
-            {p.who} <span aria-hidden className="text-emerald-300">\u2192</span>
+            {p.who} <span aria-hidden className="text-emerald-300">→</span>
           </a>
         ))}
       </div>
@@ -280,7 +280,7 @@ function Infographic({ index }: { index: number }) {
         </g>
       ))}
       <path d="M290 60 q10 22 -130 22 q-140 0 -130 -22" {...common} stroke={dim} strokeDasharray="3 4" />
-      <text x="160" y="88" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">append-only \u00b7 forever checkable</text>
+      <text x="160" y="88" textAnchor="middle" fontSize="9" fill={dim} fontWeight="600">append-only · forever checkable</text>
     </svg>
   );
 }
