@@ -74,7 +74,7 @@ const NAV_LAYERS: { n: string; tag: string }[] = [
   { n: "Frameworks", tag: "frameworks" }, { n: "Regulators", tag: "regulators" }, { n: "Governments", tag: "gov" }, { n: "Fortune / companies", tag: "fortune" }, { n: "Cyber / CNI", tag: "cyber" }, { n: "AI compute", tag: "compute" }, { n: "AI labs & safety", tag: "labs" }, { n: "Autonomous systems", tag: "auton" }, { n: "Council network", tag: "network" }, { n: "Robotics", tag: "robotics" }, { n: "Humanoids", tag: "humanoids" }, { n: "AI-security intel", tag: "intel" }, { n: "Space & satellites", tag: "space" }, { n: "AI-critical energy", tag: "energy" }, { n: "Internet backbone", tag: "cables" }, { n: "Industries → AI", tag: "industries" }, { n: "Live aircraft", tag: "aircraft" }, { n: "Ontology", tag: "ontology" }, { n: "Cross-region mesh", tag: "arcs" },
 ];
 const NAV_SHOW: { n: string; cmd: any }[] = [
-  { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ Council of AI spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◧ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
+  { n: "✨ Light it up", cmd: { cmd: "lightup" } }, { n: "⚖ Council of AI spiral", cmd: { cmd: "bftSpiral" } }, { n: "🌈 Rainbow Stack", cmd: { cmd: "rainbowStack" } }, { n: "◱ Clear 3D", cmd: { cmd: "clearViz" } }, { n: "⌂ Home view", cmd: { cmd: "home", duration: 2.2 } },
 ];
 // Sovereign Network directory — signed agent domains, opened in a new tab.
 const NET_DOMAINS: { d: string; n: string }[] = [
@@ -83,7 +83,7 @@ const NET_DOMAINS: { d: string; n: string }[] = [
   { d: "dataprivacyof.ai", n: "Data privacy" }, { d: "careshield.ai", n: "CareShield" },
 ];
 const BOTTOM_NAV: { n: string; src: string; g: string }[] = [
-  { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "👁" }, { n: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "🗺" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
+  { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "👁" }, { n: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "�: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "🗺" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
 ];
 
 function slotStyle(slot: Slot, solo: boolean): any {
@@ -260,7 +260,7 @@ export default function DemoOS() {
     const id = ++idc.current; setChat((c) => c.concat({ id, who: "sov", t: "" }));
     const words = text.split(" "); let k = 0;
     if (typeT.current) clearInterval(typeT.current);
-    typeT.current = setInterval(() => { k++; const done = k >= words.length; const part = words.slice(0, k).join(" ") + (done ? "" : " ▽"); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (done && typeT.current) clearInterval(typeT.current); }, 85);
+    typeT.current = setInterval(() => { k++; const done = k >= words.length; const part = words.slice(0, k).join(" ") + (done ? "" : " ▍"); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (done && typeT.current) clearInterval(typeT.current); }, 85);
     speak(text);
     scheduleBridge(text, words);
   }
@@ -540,7 +540,7 @@ export default function DemoOS() {
                 <a href="/os" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
               </div>
             ) : !paused ? (
-              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "🎙 Just speak - I'm listening" : "🎙 Interrupt & ask")}</button>
+              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "🎙 Just speak - I'm listening" : "�25")}>{listening ? "Listening…" : (handsFree ? "🎙 Just speak - I'm listening" : "🎙 Interrupt & ask")}</button>
             ) : (
               <button onClick={resume} className="w-full rounded-xl bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Resume tour ▶</button>
             )}
