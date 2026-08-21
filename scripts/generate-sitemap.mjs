@@ -41,6 +41,7 @@ const PRIORITY = new Map([
   ["/article-50", P_HIGH],
   ["/benchmarks", P_HIGH],
   ["/benchmark-index", P_HIGH],
+  ["/benchmark-quality", P_HIGH],
   ["/provenance-finding", P_HIGH],
   ["/enterprise", P_HIGH],
   ["/government", P_HIGH],
