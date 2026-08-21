@@ -49,7 +49,7 @@ export default function Standards() {
       status: "Active Development",
       date: "2025-01-15",
       description: "Western equivalent to China's TC260, establishing comprehensive AI safety governance through multi-agent council and public watchdog oversight.",
-      coverage: ["33-Agent Council", "Watchdog System", "PDCA Cycles", "Compliance Scoring", "Public Transparency"],
+      coverage: ["Measurement harnesses", "Watchdog System", "PDCA Cycles", "Compliance Scoring", "Public Transparency"],
       pdfUrl: "/docs/coai-framework-v1.pdf",
       externalUrl: null,
     },
@@ -215,7 +215,7 @@ export default function Standards() {
                   <td className="text-center p-3">❌ Centralized</td>
                   <td className="text-center p-3">❌ No Governance</td>
                   <td className="text-center p-3">❌ Org-Level Only</td>
-                  <td className="text-center p-3">✅ 33-Agent Council</td>
+                  <td className="text-center p-3">✅ Measurement harnesses</td>
                 </tr>
               </tbody>
             </table>
