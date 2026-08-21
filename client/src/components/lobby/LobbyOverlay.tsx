@@ -227,7 +227,7 @@ export default function LobbyOverlay({
   const panePath = framePath || override?.path || tab.path;
   const paneLabel = override ? override.label : tab.label;
 
-  // ── docked (minimised) ───────────────────────────────────────────────────────────
+  // ── docked (minimised) ───────────────────────────────────────────────────
   if (minimised) {
     return (
       <div
@@ -267,7 +267,7 @@ export default function LobbyOverlay({
     );
   }
 
-  // ── the workspace ──────────────────────────────────────────────────────────
+  // ── the workspace ────────────────────────────────────────────────────
   return (
     <>
       <FocusSentinel onFocus={() => focusEdge("last")} />
