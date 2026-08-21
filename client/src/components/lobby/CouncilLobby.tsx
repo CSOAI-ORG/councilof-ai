@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { isEmbedded } from "@/lib/embed";
+import { isEmbedded, useEmbedNavigation } from "@/lib/embed";
 import { useLobbyDeepLink } from "@/lib/lobbyLink";
 
 /**
@@ -16,8 +16,8 @@ import { useLobbyDeepLink } from "@/lib/lobbyLink";
  *
  * The lobby frames real routes in same-origin iframes. Inside such a frame the
  * app boots again, so the badge would otherwise stack forever. `isEmbedded()`
- * suppresses this trigger there; App.tsx also drops header, footer, cookie
- * banner and this badge when the same flag is set.
+ * suppresses this trigger there. Header, footer, cookie banner and the
+ * console hide themselves via the same `isEmbedded()` check.
  *
  * The overlay owns its own window state (open / minimised / expanded); this file
  * only owns the badge and the mount. Minimising does NOT unmount the overlay —
@@ -33,6 +33,7 @@ import { useLobbyDeepLink } from "@/lib/lobbyLink";
 const LobbyOverlay = lazy(() => import("./LobbyOverlay"));
 
 export default function CouncilLobby() {
+  useEmbedNavigation();
   const [open, setOpen] = useState(false);
   const [embedded, setEmbedded] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
