@@ -96,8 +96,8 @@ const lines = [
   ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map((d) => `${d}/*  ${d}/:splat  200`),
 
   "",
-  "# --- SPA catch-all: boots the app for every path; wouter routes or 404s in-app ---",
-  "/*  /index.html  200",
+  "# --- SPA catch-all: known routes are prerendered static files (200); unknown paths get a real 404 ---",
+  "/*  /404.html  404",
   "",
 ];
 
