@@ -50,7 +50,7 @@ export default function AgentGovernance() {
           <ul className="mt-2 space-y-1.5 text-sm text-emerald-100/80">
             <li>▸ <b>Signed agent cards (A2A):</b> every agent identified, purpose-bound and Ed25519-signed — discoverable at <code className="text-emerald-300">/.well-known/agent-card.json</code>.</li>
             <li>▸ <b>council review:</b> designed so no single model approves an agent action — a designed supermajority quorum. Measured status (n_eff 1.21 of 3) is published on the <a href="/refutation-ledger" className="underline text-emerald-300">Refutation Ledger</a> — design, not yet a live claim.</li>
-            <li>▸ <b>291 governed MCP servers:</b> agents call tools through a governed layer, every call sealable to Layer 0.</li>
+            <li>▸ <b>Signed measurement tools:</b> agents call the board and verify path through a governed layer, every call sealable to Layer 0.</li>
             <li>▸ <b>Verifiable, not asserted:</b> competitors document controls; CSOAI produces signed, reproducible proof.</li>
           </ul>
           <div className="mt-4 flex flex-wrap gap-2">
