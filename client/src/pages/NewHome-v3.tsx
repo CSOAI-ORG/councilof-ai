@@ -1,6 +1,6 @@
 /**
  * NewHome-v3 — councilof.ai Homepage
- * Structure: scroll-world hero → 15 honest slots (13 measured) → industries → demographics →
+ * Structure: scroll-world hero → living GSPC slots → industries → demographics →
  *   arena→ blog → upsells → enterprise trust
  * White/green palette. AEO-optimised: answer-first blocks, FAQPage schema,
  * H1 in raw HTML. Every section explains what we do for which end-user.
@@ -18,12 +18,12 @@ import {
   Eye, FileCheck, RefreshCw, Ban, Landmark, Scale,
 } from "lucide-react";
 
-// ── data ────────────────────────────────────────────────────────────────────
+// ── data ────────────────────────────────────────────────────────────────
 const FOUR_BUYERS = [
-  { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. A 14-slot board: 13 measured axes across 19 models, plus jail (containment, 18 Aug, smaller fleet). Signed stamp. Verify at GET councilof.ai/api/gspc." },
+  { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. The living GSPC board is signed; empty cells stay empty. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
-  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. 13 measured of 14 — including the axis that catches our own models." },
-  { icon: Zap, who: "Developers", tagline: "Measure per call on the agent rail", cta: "Explore the MCP fleet", href: "/mcp-fleet", desc: "291 governed MCP servers. Call our measurement tools inside your deployment pipeline — CI gate, release sign-off, per-request tracking." },
+  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. The board includes the axis that catches our own models." },
+  { icon: Zap, who: "Developers", tagline: "Measure per call on the agent rail", cta: "Verify a card", href: "/gspc-verify", desc: "Call the signed measurement tools from CI: gate a release, re-check a card, track a run. Counts stay on GET /api/gspc." },
 ];
 
 const SEVEN_INDUSTRIES = [
@@ -47,7 +47,7 @@ const RECENT: Post[] = [
   { title: "NIS2 Compliance for Critical Infrastructure Operators", date: "2026-06-17", desc: "NIS2 expanded scope reaches energy, transport, health and digital infrastructure. Every AI in that chain is in scope.", href: "/blog/nis2-compliance-critical-infrastructure" },
 ];
 
-// ── sections ─────────────────────────────────────────────────────────────
+// ── sections ─────────────────────────────────────────────────────────
 function Section({ id, title, subtitle, children, bg }: { id?: string; title?: string; subtitle?: string; children: ReactNode; bg?: string }) {
   return (
     <section id={id} className={`py-20 px-6 ${bg ?? ""}`}>
@@ -60,9 +60,9 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
   );
 }
 
-// ── 14-slot grid (13 measured of 14 + jail floor) ───────────────────────────
+// ── living GSPC grid (honest empties stay empty) ─────────────────────────
 
-// ── problem we fix ───────────────────────────────────────────────────
+// ── problem we fix ───────────────────────────────────────
 function ProblemStrip() {
   return (
     <Section
@@ -100,7 +100,7 @@ function ProblemStrip() {
 const USPS = [
   { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
-  { icon: Scale, title: "Honest board: 13 measured of 14", body: "13 measured of 14 on the live GSPC board. Jail is a measured floor (empty on this stamp). Live counts: GET /api/gspc.", href: "/gspc-scoreboard" },
+  { icon: Scale, title: "Honest living board", body: "Empty cells stay empty. Jail is a measured floor when the stamp says so. Live counts: GET /api/gspc.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
   { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/gspc-arena?view=towns" },
   { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/methodology" },
@@ -131,7 +131,7 @@ function UspGrid() {
 
 function AxesGrid() {
   return (
-    <Section title="The GSPC measurement slots" subtitle="GSPC (Governance · Safety · Provenance · Continuity), a 14-slot board: 13 measured axes (12 Aug, 19 models) + jail, containment (18 Aug, 7 models, separation untested). Signed 18 Aug stamp." bg="bg-white">
+    <Section title="The GSPC measurement slots" subtitle="GSPC (Governance · Safety · Provenance · Continuity). Slot counts, dates and sample sizes are live on GET /api/gspc — we do not type them into this page." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {AXES.map(a => {
           const q = quotable(a);
@@ -176,14 +176,14 @@ function AxesGrid() {
       </div>
       <div className="mt-8 text-center">
         <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open full scoreboard — 15 public slots, 13 measured × 19 models, 12 Aug 2026 UNSIGNED
+          <BarChart3 className="w-4 h-4" /> Open the live scoreboard — counts from GET /api/gspc
         </a>
       </div>
     </Section>
   );
 }
 
-// ── demographics ─────────────────────────────────────────────────────
+// ── demographics ───────────────────────────────────
 function BuyerCards() {
   return (
     <Section title="Built for the people who get audited" subtitle="One instrument, four audiences. Pick your path — every CTA leads to the same measurement, signed." bg="bg-gray-50">
@@ -204,10 +204,10 @@ function BuyerCards() {
   );
 }
 
-// ── industries ───────────────────────────────────────────────────────
+// ── industries ─────────────────────────────────────
 function IndustryGrid() {
   return (
-    <Section title="One instrument, every industry" subtitle="The same 14-slot instrument applies — 13 measured of 14 today — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
+    <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {SEVEN_INDUSTRIES.map(i => (
           <a key={i.name} href={i.href} className="group flex flex-col items-center rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-md hover:border-emerald-200 transition-all text-center">
@@ -229,7 +229,7 @@ function IndustryGrid() {
   );
 }
 
-// ── blog strip ───────────────────────────────────────────────────────
+// ── blog strip ───────────────────────────────────
 function BlogStrip() {
   return (
     <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." bg="bg-white">
@@ -252,7 +252,7 @@ function BlogStrip() {
   );
 }
 
-// ── upsells ──────────────────────────────────────────────────────────
+// ── upsells ────────────────────────────────────
 
 // ── FAQ — 21 answers, the whole proposition in plain English ──────────
 // AEO/GEO: FaqBlock renders these as a native <details> accordion (crawlable
@@ -276,8 +276,8 @@ const HOME_FAQ = [
     a: "Three steps, and none of them involve us. First, put the record into canonical form — every key sorted, no whitespace — drop the content_id and signature fields, and take the SHA-256; that hash is the card's identity. Second, fetch our public key from /.well-known/did.json and verify the Ed25519 signature over the canonical record. Third, there is no third step: it either matches or it does not. The whole check runs in your own browser with WebCrypto at councilof.ai/gspc-verify — no account, no fee, no call to our servers for permission. Note what is not in that chain: there is no RFC-3161 timestamp authority and no OpenTimestamps or blockchain anchoring, and our records say so with timestamp_authority: none. The anchor is the signature over the hash chain, and that is a smaller claim you can check in seconds rather than a larger one you have to take on faith.",
   },
   {
-    q: "What does “13 measured of 14” mean?",
-    a: "The public board has fourteen slots. On the current stamp, thirteen of them carry a measured result and one is described honestly rather than scored the same way as the rest. It is a statement about coverage, not a grade: it tells you how much of the instrument is actually loaded. The number is not typed into this page — read the live figure any time from GET councilof.ai/api/gspc, which is also where the stamp date lives.",
+    q: "What does a “measured of N” figure on the board mean?",
+    a: "It is a coverage statement, not a grade: how many slots on the current stamp carry a measured result, versus how many are described honestly or left empty. We do not type that fraction into this page — read totals.public_count from GET councilof.ai/api/gspc, which is also where the stamp date lives.",
   },
   {
     q: "Why is a slot ever left UNMEASURED?",
@@ -349,7 +349,7 @@ const HOME_FAQ = [
   },
 ];
 
-// ── SEO / schema ─────────────────────────────────────────────────────
+// ── SEO / schema ─────────────────────────────────
 // (qa-sweep 2026-08-19) The page-level WebSite + FAQPage constants were REMOVED:
 // the shell (client/index.html) already ships the canonical WebSite node, and the
 // FaqBlock below emits the FAQPage node for exactly the FAQ this page renders —
@@ -358,7 +358,7 @@ const HOME_FAQ = [
 // node also asserted a SearchAction the shell audit (2026-08-14) had already
 // declined to claim until /search?q= is verified.
 
-// ── export ───────────────────────────────────────────────────────────
+// ── export ─────────────────────────────────────
 export default function NewHomeV3() {
   return (
     <main>
