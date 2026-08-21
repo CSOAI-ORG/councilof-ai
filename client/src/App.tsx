@@ -17,7 +17,6 @@ import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 // Home removed - using NewHomeV2 instead
 const Landing = lazy(() => import("./pages/Landing"));
-const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
@@ -1039,7 +1038,6 @@ function App() {
                   </Switch></Suspense>
                 </main>
                 <Footer />
-                <Suspense fallback={null}><CouncilConsole /></Suspense>
                 <ErrorBoundary fallback={null}>
                   <Suspense fallback={null}><CouncilLobby /></Suspense>
                 </ErrorBoundary>
