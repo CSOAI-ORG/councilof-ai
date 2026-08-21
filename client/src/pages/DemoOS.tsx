@@ -80,11 +80,7 @@ const NAV_SHOW: { n: string; cmd: any }[] = [
 const NET_DOMAINS: { d: string; n: string }[] = [
   { d: "councilof.ai", n: "Council" }, { d: "csoai.org", n: "CSOAI" }, { d: "proofof.ai", n: "Proof-of" },
   { d: "safetyof.ai", n: "Safety-of" }, { d: "accountabilityof.ai", n: "Accountability" }, { d: "ethicalgovernanceof.ai", n: "Ethical gov" },
-  { d: "dataprivacyof.ai", n: "Data privacy" }, { d: "careshield.ai", n: "CareShield" }, { d: "meok.ai", n: "MEOK brain" },
-  { d: "wowmcp.ai", n: "WOW MCP" }, { d: "diyhelp.ai", n: "DIY Help" }, { d: "grabhire.ai", n: "GrabHire" },
-  { d: "planthire.ai", n: "PlantHire" }, { d: "muckaway.ai", n: "Muckaway" }, { d: "optimobile.ai", n: "Optimobile" },
-  { d: "cobolbridge.ai", n: "COBOL Bridge" }, { d: "pokerhud.ai", n: "PokerHUD" }, { d: "fishkeeper.ai", n: "Fishkeeper" },
-  { d: "koikeeper.ai", n: "Koikeeper" }, { d: "templeman-opticians.com", n: "Templeman" },
+  { d: "dataprivacyof.ai", n: "Data privacy" }, { d: "careshield.ai", n: "CareShield" },
 ];
 const BOTTOM_NAV: { n: string; src: string; g: string }[] = [
   { n: "Graph", src: "/graph", g: "◎" }, { n: "Council", src: "/try", g: "⚖" }, { n: "Hive", src: "/hive", g: "⬡" }, { n: "Watchdog", src: "/watchdog-map", g: "👁" }, { n: "Scan", src: "/scan", g: "🛰" }, { n: "Atlas", src: "/regulators", g: "🗺" }, { n: "Network", src: "/network", g: "◇" }, { n: "OS", src: "/os", g: "⊞" },
