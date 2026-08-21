@@ -72,6 +72,29 @@
       "inLanguage": "en"
     }
     </script>
+    <!-- Dataset JSON-LD (2026-08-21): the GSPC board is a published, citable dataset —
+         DOI resolves, HF banks exist under the csoai org (CC-BY-4.0). Shell-level so every
+         route inherits a machine-citable reference to the measurement corpus. Values are
+         verified: DOI = GET /api/gspc's citable identifier; license = the HF license field. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Dataset",
+      "name": "GSPC — Global Sovereign AI Provision & Compliance measurement board",
+      "description": "Deterministic 16-axis AI governance measurement against a frozen, published 417-provision corpus. Every number is recomputable from its published rows; no model judges another.",
+      "url": "https://councilof.ai/api/gspc",
+      "identifier": "10.5281/zenodo.21991104",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "isAccessibleForFree": true,
+      "creator": {"@id": "https://councilof.ai/#org"},
+      "publisher": {"@id": "https://councilof.ai/#org"},
+      "distribution": {
+        "@type": "DataDownload",
+        "contentUrl": "https://huggingface.co/datasets/csoai",
+        "encodingFormat": "application/json"
+      }
+    }
+    </script>
     <!-- FAQPage JSON-LD removed from the shell (qa-sweep 2026-08-19): the shell ships on EVERY
          route, so this block (a) duplicated the page-level FAQPage nodes on pages that render a
          visible FAQ (home carried 3 FAQPage nodes), (b) claimed FAQ content on hundreds of pages
