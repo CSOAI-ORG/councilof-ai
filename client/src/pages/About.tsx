@@ -56,24 +56,53 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
   );
 }
 
+function LiveBoardCount() {
+  const [label, setLabel] = useState("…");
+  useEffect(() => {
+    fetch("/api/gspc")
+      .then((r) => r.json())
+      .then((d) => {
+        const count = d?.totals?.public_count;
+        setLabel(typeof count === "string" && count.trim() ? count : "see /api/gspc");
+      })
+      .catch(() => setLabel("see /api/gspc"));
+  }, []);
+  return (
+    <>
+      <div className="text-2xl font-bold text-emerald-600 mb-2 leading-snug">{label}</div>
+      <p className="text-gray-600 font-semibold">Living GSPC board — counts from GET /api/gspc</p>
+    </>
+  );
+}
+
 // Hero stats bar component
 function HeroStatsBar() {
   // qa-sweep 2026-08-19: unverified counters removed ("10,000+ analysts", "33 agents",
   // "40+ nations" had no source endpoint). Only numbers with a published source remain;
   // board counts defer to GET /api/gspc.
+  const [boardCount, setBoardCount] = useState("…");
+  useEffect(() => {
+    fetch("/api/gspc")
+      .then((r) => r.json())
+      .then((d) => {
+        const count = d?.totals?.public_count;
+        setBoardCount(typeof count === "string" && count.trim() ? count : "GET /api/gspc");
+      })
+      .catch(() => setBoardCount("GET /api/gspc"));
+  }, []);
   const stats = [
-    { label: "Measured axes of 14 — live: /api/gspc", value: 13, suffix: "" },
-    { label: "Frozen provisions in the bank", value: 417, suffix: "" },
-    { label: "Global frameworks (evidenced control set)", value: 4, suffix: "" },
-    { label: "Public signing key — verify offline", value: 1, suffix: "" },
+    { label: "Living GSPC board", value: boardCount },
+    { label: "Frozen provisions in the bank", value: "417" },
+    { label: "Global frameworks (evidenced control set)", value: "4" },
+    { label: "Public signing key — verify offline", value: "1" },
   ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-12 border-t border-white/20">
       {stats.map((stat) => (
         <div key={stat.label} className="text-center">
-          <div className="text-3xl md:text-4xl font-bold text-emerald-300 mb-2">
-            <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+          <div className="text-lg md:text-xl font-bold text-emerald-300 mb-2 leading-snug">
+            {stat.value}
           </div>
           <p className="text-sm md:text-base text-gray-300">{stat.label}</p>
         </div>
@@ -392,10 +421,7 @@ export default function About() {
                 no source endpoint. Board counts defer to GET /api/gspc. */}
             <Card className="p-8 text-center bg-gradient-to-br from-emerald-50 to-white border-emerald-200">
               <BarChart2 className="h-8 w-8 text-emerald-600 mx-auto mb-4" />
-              <div className="text-4xl font-bold text-emerald-600 mb-2">
-                13 of 14
-              </div>
-              <p className="text-gray-600 font-semibold">Measured axes on the GSPC board — live: /api/gspc</p>
+              <LiveBoardCount />
             </Card>
 
             <Card className="p-8 text-center bg-gradient-to-br from-purple-50 to-white border-purple-200">
