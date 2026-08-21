@@ -301,13 +301,10 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* One primary CTA — the free verify tool (the top-of-funnel) */}
-            <a
-              href="/gspc-verify"
-              className="hidden xl:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-sm transition-all"
-            >
-              Verify a card
-            </a>
+            {/* "Verify a card" removed from the header 2026-08-21 (owner call): the
+                verify path is already the primary CTA in the hero and in three bands
+                below it, so a fourth copy in the chrome was competing with the nav,
+                not helping. The route is unchanged and still linked from Measure. */}
 
             {user ? (
               <>
@@ -439,9 +436,6 @@ export function Header() {
               ))}
 
               <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
-                <a href="/gspc-verify" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold">Verify a card</Button>
-                </a>
                 <a href="/library" className="block" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full">Browse the full Library</Button>
                 </a>

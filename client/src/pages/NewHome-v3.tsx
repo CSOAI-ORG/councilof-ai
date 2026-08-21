@@ -36,11 +36,6 @@ const SEVEN_INDUSTRIES = [
   { name: "Energy", tag: "Grid control, smart metering", img: "⚡", href: "/industries/energy" },
 ];
 
-const THREE_UPS = [
-  { icon: Shield, title: "Get measured", sub: "Send us your AI system. We run it against our frozen instruments and return a 3KB signed card. Free first measurement.", href: "/assess", btn: "Start — free" },
-  { icon: CheckCircle, title: "Verify any card", sub: "Recompute the published hash chain in your browser. No account. The verify runs on your machine, not ours.", href: "/gspc-verify", btn: "Verify now" },
-  { icon: TrendingUp, title: "Re-attest on schedule", sub: "AI changes. Regulation changes. We re-measure on schedule and issue delta cards. Your compliance evidence stays current, not stale — the rail is free.", href: "/pricing", btn: "How it works" },
-];
 
 interface Post { title: string; date: string; desc: string; href: string; }
 const RECENT: Post[] = [
@@ -258,24 +253,6 @@ function BlogStrip() {
 }
 
 // ── upsells ──────────────────────────────────────────────────────────
-function UpsellStrip() {
-  return (
-    <Section title="Next steps — pick one" subtitle="Three follow-throughs from wherever you are on the journey." bg="bg-gray-50">
-      <div className="grid gap-6 sm:grid-cols-3">
-        {THREE_UPS.map(u => (
-          <a key={u.title} href={u.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-lg hover:border-emerald-200 transition-all text-center">
-            <u.icon className="w-8 h-8 text-emerald-500 mx-auto mb-3" />
-            <h3 className="text-lg font-extrabold text-gray-900">{u.title}</h3>
-            <p className="mt-2 text-sm text-gray-500 flex-1">{u.sub}</p>
-            <span className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-extrabold text-white hover:bg-emerald-400 transition-colors">
-              {u.btn} <ChevronRight className="w-3 h-3" />
-            </span>
-          </a>
-        ))}
-      </div>
-    </Section>
-  );
-}
 
 // ── FAQ — 21 answers, the whole proposition in plain English ──────────
 // AEO/GEO: FaqBlock renders these as a native <details> accordion (crawlable
@@ -400,8 +377,6 @@ export default function NewHomeV3() {
       <LivingStages />
       <div className="border-b border-gray-100" />
       <BlogStrip />
-      <div className="border-b border-gray-100" />
-      <UpsellStrip />
 
       {/* existing trust strip with C2PA/OIN/LOT badges */}
       <EnterpriseTrust />
