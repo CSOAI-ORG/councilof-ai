@@ -36,7 +36,7 @@ export default function CookieConsent() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed bottom-3 left-3 z-40 w-[248px] max-w-[calc(100vw-1.5rem)] rounded-xl border border-emerald-500/25 bg-white/97 backdrop-blur px-3 py-2.5 text-slate-700 shadow-[0_8px-24px_-8px_rgba(0,0,0,0.18)]"
+      className="fixed bottom-3 left-3 z-40 w-[248px] max-w-[calc(100vw-1.5rem)] rounded-xl border border-emerald-500/25 bg-white/97 backdrop-blur px-3 py-2.5 text-slate-700 shadow-[0_8px_24px_-8px_rgba(0,0,0,0.18)]"
     >
       <p className="text-[11px] leading-snug text-slate-500">
         Essential cookies only by default; anonymous analytics need consent.{" "}
