@@ -80,6 +80,14 @@ const EXISTING = [
   "/council-space  /gspc-arena             308",  // Council Space's own console/nav linked it
   "/city           /gspc-arena?view=towns  308",  // home "Council City" CTA target
   "/method         /methodology            308",  // home USP cards linked /method
+  // qa-sweep 2026-08-21: guessed / inbound aliases 404'd (catch-all is honest 404.html).
+  "/legal                  /disclaimers                 308",
+  "/vulnerability          /vulnerability-disclosure    308",
+  "/gspc                   /gspc-scoreboard             308",
+  "/scoreboard             /gspc-scoreboard             308",
+  "/lobby                  /?lobby=home                 308",
+  "/console                /os                          308",
+  "/library/measurement    /library/axes                308",
 ];
 
 const HASHED_DIRS = ["/assets"];

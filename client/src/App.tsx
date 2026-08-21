@@ -994,6 +994,13 @@ function App() {
                   <Route path="/article-50" component={Article50} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
                   <Route path="/verify">{() => <Redirect to="/gspc-verify" />}</Route>
+                  <Route path="/legal">{() => <Redirect to="/disclaimers" />}</Route>
+                  <Route path="/vulnerability">{() => <Redirect to="/vulnerability-disclosure" />}</Route>
+                  <Route path="/gspc">{() => <Redirect to="/gspc-scoreboard" />}</Route>
+                  <Route path="/scoreboard">{() => <Redirect to="/gspc-scoreboard" />}</Route>
+                  <Route path="/lobby">{() => <Redirect to="/?lobby=home" />}</Route>
+                  <Route path="/console">{() => <Redirect to="/os" />}</Route>
+                  <Route path="/library/measurement">{() => <Redirect to="/library/axes" />}</Route>
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
@@ -1033,7 +1040,9 @@ function App() {
                 </main>
                 <Footer />
                 <Suspense fallback={null}><CouncilConsole /></Suspense>
-                <Suspense fallback={null}><CouncilLobby /></Suspense>
+                <ErrorBoundary fallback={null}>
+                  <Suspense fallback={null}><CouncilLobby /></Suspense>
+                </ErrorBoundary>
                 <DemoTour />
                 <CookieConsent />
               </div>

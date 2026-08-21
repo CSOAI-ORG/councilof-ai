@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Council Scoreboard — 13 axes × 19 models</title>
-<meta name="description" content="13 measured axes. Jail is a measured floor (empty on this stamp); slot 15 is unnamed and empty. Every cell shows n, accuracy and 95% confidence interval. A cell shows a number only if quotable (usable n≥30).">
+<title>The GSPC board — live | Council of AI</title>
+<meta name="description" content="The living GSPC board. Every measured cell shows n, accuracy and a 95% CI where honest. Empty cells stay empty. Counts from GET /api/gspc. Measurement, not certification.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Council of AI">
-<meta property="og:title" content="Council Scoreboard — 13 axes × 19 models">
-<meta property="og:description" content="Every cell: n, accuracy, 95% CI. 19 models. Empty cells shown honestly. Measurement, not certification.">
+<meta property="og:title" content="The GSPC board — live | Council of AI">
+<meta property="og:description" content="Every cell: n, accuracy, 95% CI. Empty cells shown honestly. Counts from GET /api/gspc. Measurement, not certification.">
 <meta property="og:url" content="https://councilof.ai/gspc-scoreboard">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Council Scoreboard — 13 axes × 19 models">
-<meta name="twitter:description" content="n per cell, 95% CIs, quotable thresholds. Measurement, not certification.">
+<meta name="twitter:title" content="The GSPC board — live | Council of AI">
+<meta name="twitter:description" content="n per cell, 95% CIs, quotable thresholds. Counts from GET /api/gspc. Measurement, not certification.">
 <style>
 :root { --accent:#5a9; --bg:#0d0f12; --card:#15181d; --line:#232830; }
 * { box-sizing:border-box; }
@@ -45,7 +45,7 @@ a { color:var(--accent); }
 </head>
 <body>
 <div class="wrap">
-<h1>Council Scoreboard — 13 axes × 19 models</h1>
+<h1 id="board-title">The GSPC board</h1>
 <p class="disc">Live from the GSPC API. Each row shows the axis leader's
 accuracy and 95% confidence interval at its measured n. A cell shows a number
 <strong>only if quotable</strong> (usable n ≥ 30); a dash means not quotable.
@@ -58,8 +58,7 @@ another. Every row is reproducible from the board records.</p>
 </div>
 
 <div class="floor-note" id="floor-note" style="display:none;">
-<strong>Jail floor:</strong> Measured floor (empty on this stamp) — not a scored axis. <br>
-<strong>Slot 15:</strong> Unnamed and empty.
+Empty cells stay empty. Jail is a measured floor when the stamp publishes one — never a hidden score.
 </div>
 
 <div class="legend" id="legend" style="display:none;">
@@ -76,7 +75,7 @@ Cells: accuracy / (n, 95% CI). <span class="sep">SEPARATED</span> = McNemar p&lt
   const floorNote = document.getElementById('floor-note');
   
   try {
-    const res = await fetch('https://councilof.ai/api/gspc');
+    const res = await fetch('/api/gspc');
     if (!res.ok) throw new Error('API returned ' + res.status);
     const data = await res.json();
     
@@ -84,9 +83,13 @@ Cells: accuracy / (n, 95% CI). <span class="sep">SEPARATED</span> = McNemar p&lt
     const axes = data.axes || [];
     const totals = data.totals || {};
     
-    stampInfo.innerHTML = 'Stamp: <strong>' + date + '</strong> · ' + 
-      totals.measured_axes + ' measured axes · ' + 
-      totals.items + ' items · ' + 
+    const publicCount = totals.public_count || 'counts from GET /api/gspc';
+    document.title = 'The GSPC board — ' + publicCount + ' | Council of AI';
+    const titleEl = document.getElementById('board-title');
+    if (titleEl) titleEl.textContent = 'The GSPC board';
+    stampInfo.innerHTML = 'Stamp: <strong>' + date + '</strong> · ' +
+      publicCount + ' · ' +
+      (totals.items != null ? totals.items + ' items · ' : '') +
       (data.signed ? 'SIGNED' : 'UNSIGNED');
     
     if (axes.length === 0) {
@@ -162,6 +165,18 @@ certification. Honest: a quotable cell means usable n≥30 with a computed inter
 <a href="/benchmarks">All benchmarks</a> · 
 <a href="/models">Model registry</a> · 
 <a href="/os">Council OS</a></div>
+<script>
+(function () {
+  try {
+    if (window.self === window.top) return;
+    document.querySelectorAll('a[href^="/"]').forEach(function (a) {
+      var u = new URL(a.getAttribute('href'), location.origin);
+      u.searchParams.set('embed', '1');
+      a.setAttribute('href', u.pathname + u.search + u.hash);
+    });
+  } catch (e) { /* framed or blocked — links still work */ }
+})();
+</script>
 </div>
 </body>
 </html>

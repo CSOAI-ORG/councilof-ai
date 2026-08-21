@@ -40,11 +40,17 @@ export default function GspcScoreboard() {
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "The GSPC board — 13 measured of 14, live | Council of AI";
-    setMetaDescription("The live GSPC board — 13 measured of 14, every measured cell with n and 95% CI where honest. UNMEASURED is reported, never hidden. Counts and stamps come from GET /api/gspc.");
+    document.title = "The GSPC board — live | Council of AI";
+    setMetaDescription("The live GSPC board. Every measured cell has n and a 95% CI where honest. UNMEASURED is reported, never hidden. Counts and stamps come from GET /api/gspc.");
     fetch("/api/gspc")
       .then((r) => r.json())
-      .then(setData)
+      .then((d) => {
+        setData(d);
+        const count = d?.totals?.public_count;
+        if (typeof count === "string" && count.trim()) {
+          document.title = `The GSPC board — ${count} | Council of AI`;
+        }
+      })
       .catch((e) => setErr(String(e)));
   }, []);
 
@@ -57,7 +63,7 @@ export default function GspcScoreboard() {
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
-          {data?.totals?.public_count ?? "13 measured of 14 quotable"} · deterministic grading on
+          {data?.totals?.public_count ?? "Counts from GET /api/gspc"} · deterministic grading on
           frozen, published splits · a <strong>TIE</strong> means the leader&apos;s edge is{" "}
           <strong>statistically indistinguishable</strong> (McNemar p≥0.05) — ties are never counted
           as wins. Empty cells stay empty.
@@ -125,9 +131,9 @@ export default function GspcScoreboard() {
 
         <p className="mt-8 text-xs text-gray-500">
           Measurement, not certification. Leaders shown are point estimates (swarm quotes its 95%
-          lower bound); only SEPARATED leads (4 of 14 slots — swarm ungated 19 Aug 2026) are
-          statistically real. Jail (slot 14) was measured on a smaller
-          fleet with no separation test — stated, never hidden. Full per-axis notes, fleet means,
+          lower bound); only SEPARATED leads are statistically real — the live count is
+          totals.separated_leads on GET /api/gspc. Jail is a measured floor when the stamp
+          publishes one, never a hidden score. Full per-axis notes, fleet means,
           harm tails and the signed living stamp: <code>GET /api/gspc</code>.
         </p>
       </div>

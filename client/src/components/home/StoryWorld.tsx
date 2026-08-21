@@ -105,7 +105,7 @@ export const STORY: Slide[] = [
     body: "Every cell is pulled live from our public API. Empty cells stay empty, every row shows its sample size, and nobody edits yesterday’s numbers.",
     points: [
       { tag: "pain", text: "Marketing dashboards refresh silently and rewrite history" },
-      { tag: "benefit", text: "A 13 × 19 grid, live, with a sample size on every row" },
+      { tag: "benefit", text: "A living grid, live from GET /api/gspc, with a sample size on every row" },
       { tag: "usp", text: "One signed source feeds people, agents and answer engines" },
     ],
     href: "/gspc-scoreboard",

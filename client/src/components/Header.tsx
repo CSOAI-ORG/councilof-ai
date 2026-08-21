@@ -42,7 +42,7 @@ const navigation: NavGroup[] = [
     icon: BarChart2,
     description: 'The instrument and its board',
     submenu: [
-      { name: 'The GSPC board', href: '/gspc-scoreboard', description: '13 measured of 14 axes, plus jail — every cell with its n' },
+      { name: 'The GSPC board', href: '/gspc-scoreboard', description: 'The living board — measured axes, empty cells empty. Counts from GET /api/gspc' },
       { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
       { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head, deterministic grading, no model judging another' },
       { name: 'Verify a signed card', href: '/gspc-verify', description: 'Check any Ed25519-signed record offline against the published key' },

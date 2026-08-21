@@ -16,7 +16,7 @@ import AxisPanel from "@/components/os/AxisPanel";
  *                       is the real Arena + Demo.
  *   3. The Arena      — measured head-to-head model battles, deterministically
  *                       graded, summarised from @/data/arena.
- *   4. The GSPC axes  — the 13 governance axes from lib/gspcAxes.ts, MEASURED-
+ *   4. The GSPC axes  — the living board from lib/gspcAxes.ts, MEASURED-
  *                       only scores via the quotable() guard.
  *
  * Brand: white background, emerald (#10b981) accent. Real data only — no
@@ -37,7 +37,7 @@ const NAV: NavGroup[] = [
   {
     label: "Measure",
     items: [
-      { name: "GSPC axes", href: "#axes", note: "14 slots · 13 measured · jail" },
+      { name: "GSPC axes", href: "#axes", note: "living board · counts from /api/gspc" },
       { name: "Benchmarks", href: "/benchmarks", note: "every result" },
       { name: "Verify a card", href: "/gspc-verify", note: "offline check" },
       { name: "Methodology", href: "/methodology", note: "how we grade" },
@@ -136,7 +136,7 @@ export default function OsLauncher() {
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
               One surface for AI governance: watch governed agents live in a town, see models measured head-to-head,
-              read the 14-slot grid (13 measured of 14, plus jail), and ask the Council — a deterministic answer, grounded in what the estate
+              read the living GSPC board (counts from GET /api/gspc; empty cells stay empty), and ask the Council — a deterministic answer, grounded in what the estate
               has actually measured.
             </p>
             <div className="mt-6 space-y-4">
