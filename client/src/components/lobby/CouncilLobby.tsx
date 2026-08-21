@@ -1,6 +1,8 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { isEmbedded, useEmbedNavigation } from "@/lib/embed";
 import { useLobbyDeepLink } from "@/lib/lobbyLink";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import LobbyOverlay from "./LobbyOverlay";
 
 /**
  * CouncilLobby — the badge, and only the badge, until someone opens it.
@@ -10,9 +12,12 @@ import { useLobbyDeepLink } from "@/lib/lobbyLink";
  * `bottom-5 right-5`) so the two form one vertical pair in the bottom-right
  * cluster. It does not replace the bubble and it is not a third floater.
  *
- * PERF: the overlay — three rails, the task rail's fetches, the chat bar — is a
- * separate lazy chunk. Until the badge is clicked the page pays for this file
- * and nothing else.
+ * The overlay used to be a second lazy chunk. A mid-deploy hash miss (or a
+ * browser caching a failed dynamic import) then threw through the app
+ * ErrorBoundary and replaced the whole site with "Something went wrong" —
+ * including /assess, /watchdog and /gspc-verify after one badge click. The
+ * overlay ships with this module now; a local boundary keeps a lobby fault
+ * on the badge.
  *
  * The lobby frames real routes in same-origin iframes. Inside such a frame the
  * app boots again, so the badge would otherwise stack forever. `isEmbedded()`
@@ -29,8 +34,6 @@ import { useLobbyDeepLink } from "@/lib/lobbyLink";
  * prompt is TYPED into the chat bar and never sent. The params are stripped from
  * the URL as soon as they are read, so a refresh does not re-trigger.
  */
-
-const LobbyOverlay = lazy(() => import("./LobbyOverlay"));
 
 export default function CouncilLobby() {
   useEmbedNavigation();
@@ -76,9 +79,27 @@ export default function CouncilLobby() {
       </button>
 
       {open && (
-        <Suspense fallback={null}>
+        <ErrorBoundary
+          fallback={
+            <div
+              role="alertdialog"
+              aria-label="Council Lobby failed to open"
+              className="fixed inset-4 z-[80] flex max-h-[16rem] flex-col items-start justify-center gap-3 rounded-2xl border border-rose-200 bg-white p-6 shadow-xl sm:left-auto sm:right-5 sm:top-auto sm:bottom-24 sm:w-[22rem]"
+            >
+              <p className="text-sm font-semibold text-slate-900">The Council Lobby did not open.</p>
+              <p className="text-xs text-slate-600">The rest of the site is still here. Refresh, or use the pages in the header.</p>
+              <button
+                type="button"
+                onClick={close}
+                className="rounded-lg bg-emerald-800 px-3 py-1.5 text-xs font-semibold text-white"
+              >
+                Dismiss
+              </button>
+            </div>
+          }
+        >
           <LobbyOverlay onClose={close} intent={intent} />
-        </Suspense>
+        </ErrorBoundary>
       )}
     </>
   );

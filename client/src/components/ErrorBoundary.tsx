@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 
 interface Props {
   children: ReactNode;
+  /** When set, a child throw stays local — the rest of the app keeps working. */
+  fallback?: ReactNode;
 }
 
 interface State {
@@ -26,6 +28,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      if (this.props.fallback !== undefined) return this.props.fallback;
       const err = this.state.error;
       // Diagnostic block: name + message + first stack frames + browser + route.
       // On mobile (esp. iOS Safari) the reproduction is device-specific, so surface
