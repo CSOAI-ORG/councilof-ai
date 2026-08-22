@@ -90,7 +90,63 @@ export default function FleetSweep() {
           </p>
         </div>
 
+
+        {/* THE REFEREE LEAGUE — live Elo, Muse-refereed */}
+        <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-gray-900">The referee league (live)</h2>
+          <p className="mt-2 text-[13px] text-gray-600 leading-relaxed">
+            Muse Glimmer referees every duel — deterministic predicate, never a vote. Elo is a
+            diagnostic of head-to-head performance, never an axis score.
+          </p>
+          <div className="mt-4 space-y-2">
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">qwen3:4b</span><div className="flex-1 h-5 rounded bg-emerald-50"><div className="h-5 rounded bg-emerald-500" style={{ width: "100%" }} /></div><span className="w-16 text-right font-mono text-[13px] font-bold text-emerald-700">1509</span></div>
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">qwen2.5:7b</span><div className="flex-1 h-5 rounded bg-emerald-50"><div className="h-5 rounded bg-emerald-500" style={{ width: "91%" }} /></div><span className="w-16 text-right font-mono text-[13px] font-bold text-emerald-700">1380</span></div>
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">mistral:7b</span><div className="flex-1 h-5 rounded bg-emerald-50"><div className="h-5 rounded bg-emerald-500" style={{ width: "91%" }} /></div><span className="w-16 text-right font-mono text-[13px] font-bold text-emerald-700">1375</span></div>
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">deepseek-r1:7b</span><div className="flex-1 h-5 rounded bg-emerald-50"><div className="h-5 rounded bg-emerald-500" style={{ width: "90%" }} /></div><span className="w-16 text-right font-mono text-[13px] font-bold text-emerald-700">1359</span></div>
+            <div className="flex items-center gap-3"><span className="w-56 truncate font-mono text-[13px] text-gray-700">qwen3:8b</span><div className="flex-1 h-5 rounded bg-emerald-50"><div className="h-5 rounded bg-emerald-500" style={{ width: "88%" }} /></div><span className="w-16 text-right font-mono text-[13px] font-bold text-emerald-700">1329</span></div>
+          </div>
+          <p className="mt-3 text-xs text-gray-500">
+            Live rounds: the arena measures continuously; every duel is signed. Elo is diagnostic
+            only — the axis scores above are the instrument.
+          </p>
+        </div>
+
+
+        {/* THE GOLD BANK — the frozen, measured jail cells */}
+        <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-gray-900">The jail gold bank (71 frozen cells)</h2>
+          <p className="mt-2 text-[13px] text-gray-600 leading-relaxed">
+            A frozen, measured gold set — the honest detector metrics. Frozen means the items never
+            change; measured means every cell is a real verdict, not a guess.
+          </p>
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-center">
+              <div className="text-2xl font-black text-gray-900">71</div>
+              <div className="text-[11px] uppercase tracking-wide text-gray-500">frozen cells</div>
+            </div>
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-center">
+              <div className="text-2xl font-black text-gray-900">0.54</div>
+              <div className="text-[11px] uppercase tracking-wide text-gray-500">fleet pooled acc</div>
+            </div>
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-center">
+              <div className="text-2xl font-black text-gray-900">1.0</div>
+              <div className="text-[11px] uppercase tracking-wide text-gray-500">best precision</div>
+            </div>
+            <div className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-center">
+              <div className="text-2xl font-black text-amber-600">0.24</div>
+              <div className="text-[11px] uppercase tracking-wide text-gray-500">best recall</div>
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-gray-500">
+            Best zero-FP detector: qwen2.5:0.5b-instruct (precision 1.0, recall 0.237). Our own
+            council-oowm detected zero escapes (tp=0) — published, not hidden. Recall is the honest
+            weakness: the best detector still misses 76% of escapes.
+          </p>
+        </div>
+
         {/* the axis difficulty */}
+
+
 
         <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-bold text-gray-900">Axis difficulty (fleet mean)</h2>
