@@ -94,6 +94,9 @@ const EXISTING = [
   "/verify                 /gspc-verify/                308",
   "/verify/                /gspc-verify/                308",
   "/gspc-verify            /gspc-verify/                308",
+  // Clean arena path — Pages Functions rounds.js did not bind in prod (catch-all 404).
+  // Rewrite to the live .jsonl handler (same KV source).
+  "/api/arena/rounds       /api/arena/rounds.jsonl      200",
 ];
 
 const HASHED_DIRS = ["/assets"];
