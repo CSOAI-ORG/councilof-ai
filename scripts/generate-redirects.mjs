@@ -98,10 +98,6 @@ const EXISTING = [
   "/developers             /gspc-verify                 308",
   "/colosseum              /coliseum                    308",
   "/for                    /for/enterprise              308",
-  "/vs/vanta               /vs/vanta/                   308",
-  "/vs/drata               /vs/drata/                   308",
-  "/vs/credo-ai            /vs/credo-ai/                308",
-  "/vs/onetrust            /vs/onetrust/                308",
 ];
 
 const HASHED_DIRS = ["/assets"];
