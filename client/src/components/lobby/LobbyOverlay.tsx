@@ -20,6 +20,10 @@ import {
   LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
 } from "./rails";
 
+/**
+ * LobbyOverlay — the Council Lobby as a WHITE GLASS-OS workspace.
+ */
+
 const ALPHA_KEY = "coai.lobby.alpha";
 const TAB_KEY = "coai.lobby.tab";
 const SIZE_KEY = "coai.lobby.size";
@@ -29,7 +33,7 @@ function readAlpha(): number {
   try {
     const v = Number(localStorage.getItem(ALPHA_KEY));
     if (Number.isFinite(v) && v >= ALPHA_MIN && v <= ALPHA_MAX) return v;
-  } catch {}
+  } catch { /* private mode / storage disabled — the default is fine */ }
   return ALPHA_DEFAULT;
 }
 
@@ -37,7 +41,7 @@ function readTab(): LobbyTabId {
   try {
     const v = localStorage.getItem(TAB_KEY);
     if (v && LOBBY_TABS.some((t) => t.id === v)) return v as LobbyTabId;
-  } catch {}
+  } catch { /* ignore */ }
   return DEFAULT_TAB;
 }
 
@@ -45,7 +49,7 @@ function readSize(): "comfortable" | "full" {
   try {
     const v = localStorage.getItem(SIZE_KEY);
     if (v === "comfortable" || v === "full") return v;
-  } catch {}
+  } catch { /* ignore */ }
   return "full";
 }
 
@@ -74,9 +78,9 @@ export default function LobbyOverlay({ onClose, intent }: { onClose: () => void;
   const tab = tabById(tabId);
   const modal = !minimised;
   const focusEdge = useFocusTrap(rootRef, modal);
-  useEffect(() => { try { localStorage.setItem(ALPHA_KEY, String(alpha)); } catch {} }, [alpha]);
-  useEffect(() => { try { localStorage.setItem(TAB_KEY, tabId); } catch {} }, [tabId]);
-  useEffect(() => { try { localStorage.setItem(SIZE_KEY, size); } catch {} }, [size]);
+  useEffect(() => { try { localStorage.setItem(ALPHA_KEY, String(alpha)); } catch { /* ignore */ } }, [alpha]);
+  useEffect(() => { try { localStorage.setItem(TAB_KEY, tabId); } catch { /* ignore */ } }, [tabId]);
+  useEffect(() => { try { localStorage.setItem(SIZE_KEY, size); } catch { /* ignore */ } }, [size]);
   useEffect(() => { writeOpen(LEFT_KEY, leftOpen); }, [leftOpen]);
   useEffect(() => { writeOpen(RIGHT_KEY, rightOpen); }, [rightOpen]);
   const minimise = useCallback(() => setMinimised(true), []);
@@ -148,7 +152,7 @@ export default function LobbyOverlay({ onClose, intent }: { onClose: () => void;
     try {
       const doc = frameRef.current?.contentDocument;
       doc?.addEventListener("keydown", (e: any) => { if (e.key === "Escape") onClose(); });
-    } catch {}
+    } catch { /* cross-origin or blocked — the outer Esc still works */ }
   }, [onClose]);
   const localPane = !override && tab.kind === "local";
   const nativePane = !override && tab.kind === "native";
@@ -163,10 +167,7 @@ export default function LobbyOverlay({ onClose, intent }: { onClose: () => void;
     return (
       <div role="dialog" aria-label="Council OS, minimised" className={`fixed bottom-5 left-1/2 z-[80] w-[min(30rem,calc(100vw-2.5rem))] -translate-x-1/2 ${SURFACE_LIFTED} ${SP.row} flex items-center gap-3 bg-white/95 backdrop-blur-xl`}>
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-white" aria-hidden="true"><ColiseumGlyph className="h-4.5 w-4.5" /></span>
-        <span className="min-w-0">
-          <span className="block text-[13px] font-semibold leading-tight text-slate-900">Council OS — minimised</span>
-          <span className={`block ${TYPE.fine}`}>{paneLabel} · {chat.turnCount} message{chat.turnCount === 1 ? "" : "s"} kept · {chat.threads.length} thread{chat.threads.length === 1 ? "" : "s"}</span>
-        </span>
+        <span className="min-w-0"><span className="block text-[13px] font-semibold leading-tight text-slate-900">Council OS — minimised</span><span className={`block ${TYPE.fine}`}>{paneLabel} · {chat.turnCount} message{chat.turnCount === 1 ? "" : "s"} kept · {chat.threads.length} thread{chat.threads.length === 1 ? "" : "s"}</span></span>
         <button type="button" onClick={() => setMinimised(false)} aria-label="Restore Council OS" className={`ml-auto shrink-0 rounded-xl bg-emerald-700 px-3.5 py-2 text-[12px] font-semibold text-white transition hover:bg-emerald-800 motion-reduce:transition-none ${FOCUS}`}>Restore</button>
         <button type="button" onClick={onClose} aria-label="Close Council OS" className={`shrink-0 rounded-xl border border-slate-900/12 px-3 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}>Close</button>
       </div>
@@ -187,13 +188,11 @@ export default function LobbyOverlay({ onClose, intent }: { onClose: () => void;
               {override && <button type="button" onClick={() => { setOverride(null); if (tab.path) loadPane(tab.path); }} className={`shrink-0 rounded-lg border border-slate-900/10 px-2.5 py-1 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}>Back to {tab.label}</button>}
             </div>
             <div className="flex gap-1.5 overflow-x-auto border-b border-slate-900/10 px-4 py-2 sm:hidden">
-              {LOBBY_TABS.map((t) => (
-                <button key={t.id} type="button" onClick={() => go(t)} aria-current={t.id === tabId && !override} className={`shrink-0 rounded-full px-3 py-1 text-[11.5px] font-semibold transition motion-reduce:transition-none ${FOCUS} ` + (t.id === tabId && !override ? (t.accent === "gold" ? "bg-amber-100 text-amber-900" : "bg-emerald-100 text-emerald-900") : "text-slate-600")}>{t.label}</button>
-              ))}
+              {LOBBY_TABS.map((t) => (<button key={t.id} type="button" onClick={() => go(t)} aria-current={t.id === tabId && !override} className={`shrink-0 rounded-full px-3 py-1 text-[11.5px] font-semibold transition motion-reduce:transition-none ${FOCUS} ` + (t.id === tabId && !override ? (t.accent === "gold" ? "bg-amber-100 text-amber-900" : "bg-emerald-100 text-emerald-900") : "text-slate-600")}>{t.label}</button>))}
             </div>
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div className={`relative min-h-0 overflow-hidden ${chatActive ? "flex-[0_1_40%]" : "flex-1"}`}>
-                {localPane && tab.id === "home" ? <LobbyHome onSelect={go} onOpenRoute={openRoute} /> : localPane ? <LobbyPlay onOpenRoute={openRoute} /> : nativePane && tab.id === "board" ? <LobbyBoardPane /> : (<><FrameSkeleton /><iframe ref={frameRef} key={frameSrc} src={frameSrc} title={`${paneLabel} — ${panePath}`} onLoad={onFrameLoad} className="h-full w-full border-0 bg-white" /></>)}
+                {localPane && tab.id === "home" ? <LobbyHome onSelect={go} onOpenRoute={openRoute} /> : localPane ? <LobbyPlay onOpenRoute={openRoute} /> : nativePane && tab.id === "board" ? <LobbyBoardPane /> : (<>{!frameLoaded && <FrameSkeleton />}<iframe ref={frameRef} key={frameSrc} src={frameSrc} title={`${paneLabel} — ${panePath}`} onLoad={onFrameLoad} className="h-full w-full border-0 bg-white" /></>)}
               </div>
               {chatActive && <LobbyThread chat={chat} endRef={threadEndRef} />}
             </div>
@@ -208,28 +207,11 @@ export default function LobbyOverlay({ onClose, intent }: { onClose: () => void;
 }
 
 function RailRestore({ className, label, text, onClick }: { className?: string; label: string; text: string; onClick: () => void }) {
-  return (
-    <button type="button" onClick={onClick} aria-label={label} className={`${SURFACE} ${FOCUS} w-11 shrink-0 flex-col items-center justify-center gap-2 bg-white/80 text-[11px] font-semibold text-slate-700 transition hover:bg-white motion-reduce:transition-none ${className ?? ""}`} style={panelStyle}>
-      <span aria-hidden="true" className="text-[16px] leading-none text-slate-500">+</span>
-      <span className="[writing-mode:vertical-rl] rotate-180 tracking-wide">{text}</span>
-    </button>
-  );
+  return (<button type="button" onClick={onClick} aria-label={label} className={`${SURFACE} ${FOCUS} w-11 shrink-0 flex-col items-center justify-center gap-2 bg-white/80 text-[11px] font-semibold text-slate-700 transition hover:bg-white motion-reduce:transition-none ${className ?? ""}`} style={panelStyle}><span aria-hidden="true" className="text-[16px] leading-none text-slate-500">+</span><span className="[writing-mode:vertical-rl] rotate-180 tracking-wide">{text}</span></button>);
 }
 
 function FrameSkeleton() {
-  return (
-    <div className="absolute inset-0 z-10 space-y-4 bg-white p-8 motion-safe:animate-pulse" aria-hidden="true">
-      <div className="h-7 w-1/3 rounded bg-slate-900/10" />
-      <div className="h-3.5 w-2/3 rounded bg-slate-900/10" />
-      <div className="h-3.5 w-1/2 rounded bg-slate-900/10" />
-      <div className="mt-8 grid grid-cols-2 gap-4">
-        <div className="h-28 rounded-xl bg-slate-900/10" />
-        <div className="h-28 rounded-xl bg-slate-900/10" />
-        <div className="h-28 rounded-xl bg-slate-900/10" />
-        <div className="h-28 rounded-xl bg-slate-900/10" />
-      </div>
-    </div>
-  );
+  return (<div className="absolute inset-0 z-10 space-y-4 bg-white p-8 motion-safe:animate-pulse" aria-hidden="true"><div className="h-7 w-1/3 rounded bg-slate-900/10" /><div className="h-3.5 w-2/3 rounded bg-slate-900/10" /><div className="h-3.5 w-1/2 rounded bg-slate-900/10" /><div className="mt-8 grid grid-cols-2 gap-4"><div className="h-28 rounded-xl bg-slate-900/10" /><div className="h-28 rounded-xl bg-slate-900/10" /><div className="h-28 rounded-xl bg-slate-900/10" /><div className="h-28 rounded-xl bg-slate-900/10" /></div></div>);
 }
 
 export { ColiseumGlyph };
