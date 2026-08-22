@@ -118,7 +118,7 @@ const PERSONAS: Record<string, Persona> = {
   },
   enterprise: {
     key: "enterprise", eyebrow: "CSOAI - for enterprises",
-    h1: "Comply once. Evidence everywhere.",
+    h1: "Measure once. Show the signed card.",
     intro: "You face overlapping AI regimes across regions and business units. CSOAI maps one signed control set across all of them - so you stop rebuilding the same evidence for every framework.",
     links: [
       { href: "/industries", label: "Industry solutions", note: "Your sector, mapped" },

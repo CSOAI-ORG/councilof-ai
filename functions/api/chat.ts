@@ -161,6 +161,55 @@ why(k) +
     );
   }
 
+  // 1h. Endpoints / published bank.
+  if (/\b(endpoint|what shape|published bank|items live|reproduce)\b/i.test(q)) {
+    return (
+      `The living board is GET /api/gspc (JSON). Corrections: GET /api/corrections. ` +
+      `Regulation feed: GET /api/regulation. Keys: https://csoai.org/.well-known/did.json.\n\n` +
+      `Axis banks that are public are named on the board payload as dataset slugs ` +
+      `(Hugging Face). This reply will not invent a slug — read the axis object.\n\n` +
+      `_Grounded in the published API, not by a model._`
+    );
+  }
+
+  // 1i. Assessment scope.
+  if (/\b(assessment actually run|explicitly not (claim|say)|get (my system )?measured|would it take to have)\b/i.test(q)) {
+    return (
+      `An assessment records a description against published rules and returns a signed ` +
+      `measurement. It does not say the system is lawful, certified, or safe to deploy.\n\n` +
+      `Start at /assess. Recompute the card at /gspc-verify. Counts stay on GET /api/gspc.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 1j. Regulation feed / obligations.
+  if (/\b(regulation feed|in force today|deferred|obligations land next|penalty exposure)\b/i.test(q)) {
+    return (
+      `The dated obligation feed is GET /api/regulation. What is in force versus deferred ` +
+      `is on that payload. This reply will not type a deadline from memory.\n\n` +
+      `_Grounded in the published feed, not by a model._`
+    );
+  }
+
+  // 1k. Separation / unparsed / licence.
+  if (/\b(mcnemar|statistical separation|what counts as a tie|unparseable|not dropped|licence|license)\b/i.test(q)) {
+    return (
+      `A point lead is a TIE unless a McNemar test on the disagreed items separates it. ` +
+      `Unparsed answers are counted incorrect, never dropped. Board data is CC-BY-4.0 — ` +
+      `attribute Council of AI, CSOAI Ltd 16939677, councilof.ai. See totals.license on GET /api/gspc.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 1l. Watchdog / academy.
+  if (/\b(incident after it is reported|who sees it|academy attest)\b/i.test(q)) {
+    return (
+      `A Watchdog report is triaged on /watchdog. Completing Academy attests training, ` +
+      `not conformity — a course is not a measurement and not a certificate of a system.\n\n` +
+      `_Grounded in the published surfaces, not by a model._`
+    );
+  }
+
   // 1g. Minimum n / researcher floor.
   if (/\b(minimum n|usable n|quotable figure|below it|n\s*[≥>=]{0,2}\s*30)\b/i.test(q)) {
     return (

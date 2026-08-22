@@ -120,7 +120,7 @@ for (const host of hosts) {
 }
 
 console.log("");
- if (fails.length) {
+if (fails.length) {
   console.error(`ASSERT-PRERENDER [${label}]: FAIL — ${fails.length} check(s).`);
   console.error("Most likely: Pages Git auto-build or a Mac `wrangler pages deploy` overwrote production.");
   console.error("See DEPLOY-LOCK.md.");

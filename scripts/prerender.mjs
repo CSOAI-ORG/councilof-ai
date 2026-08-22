@@ -96,6 +96,8 @@ function discover() {
     "/industries/transportation", "/industries/retail", "/industries/education",
     "/industries/energy", "/industries/government", "/industries/legal",
     "/library/axes",
+    "/verify", "/os", "/assess", "/academy", "/compare", "/layer0",
+    "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",
   ];
   for (const p of MUST) found.add(p);
   return [...found].filter(p => !p.includes(":") && !p.includes("*")).sort();
