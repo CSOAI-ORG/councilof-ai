@@ -33,8 +33,9 @@ export default function LobbyHome({
       </h2>
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>
         This is the Council OS — not a second site. Each tile opens the real page
-        in this pane. The bar at the foot asks the published estate; it does not
-        invent. Empty cells stay empty. Counts come from GET /api/gspc.
+        in this pane. The ask bar under it reads the published estate; it does
+        not invent. Empty cells stay empty. Counts come from GET /api/gspc.
+        Hide the sidebars when you want this column alone.
       </p>
 
       <h3 className={`${TYPE.section} mt-8 mb-3`}>Live surfaces</h3>
