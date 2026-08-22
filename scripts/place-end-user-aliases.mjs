@@ -2,47 +2,55 @@
 /**
  * place-end-user-aliases.mjs
  *
- * Cloudflare Pages + the honest `/* → /404.html 404` catch-all means a cold
- * load 404s unless a real file exists at that path. Dynamic routes
- * (`/for/:persona`, `/industries/:slug`, `/vs/:vendor`) and short aliases
- * (`/gspc`, `/console`) are never discovered by prerender, so every
- * demographic landing on the homepage currently 404s for a stranger.
+ * Cloudflare Pages pretty-URLs: `foo.html` is /foo; `foo/index.html` is /foo/.
+ * The honest 404 catch-all (or a thin Vite overwrite) 404s any path that has
+ * neither file. Demographic landings, verify, and OS aliases are those paths.
  *
- * After prerender:
- *   1. Delete leftover public/*.html that steal pretty URLs (gspc-scoreboard.html
- *      is served at /gspc-scoreboard and hides the living React board).
- *   2. Place index.html (and, where CF pretty-URLs need it, foo.html) so
- *      /gspc, /console, /for/regulator, /industries/insurance, /vs/vanta
- *      return 200. The SPA then hydrates to the real route.
- *   3. Copy public/.well-known/scitt.json into dist so RFC 9943 presence
- *      cannot vanish from a partial upload.
+ * After prerender this script:
+ *   1. Overwrites leftover gspc-scoreboard.html with the LIVING board
+ *      (never the 8KB static table).
+ *   2. Writes path.html + path/index.html for every stranger URL we already
+ *      send people to, so unsuffixed and slashed both 200.
+ *   3. Copies public/.well-known/scitt.json into dist.
  *
  *   node scripts/place-end-user-aliases.mjs [dist/client]
  */
-import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const DIST = join(ROOT, process.argv[2] || "dist/client");
+const SELF = fileURLToPath(import.meta.url);
+const isMain = process.argv[1] && SELF === process.argv[1];
+
+export const PERSONAS = ["sec-filer", "finance", "healthcare", "regulator", "startup", "enterprise"];
+export const VENDORS = ["vanta", "drata", "credo-ai", "credo", "onetrust"];
+export const INDUSTRIES = [
+  "insurance", "government", "care", "defence", "critical-infrastructure", "media",
+  "agent-rails", "open-source", "multi-agent-commerce", "security", "machinery",
+  "humanoid", "xr", "legal", "emotion-ai",
+  "health", "healthcare", "finance", "transport", "transportation", "retail",
+  "education", "energy", "cybersecurity", "home", "logistics", "manufacturing",
+  "mining", "telecoms",
+];
+
+/** Public routes a stranger types or a homepage tile opens. */
+export const STRANGER_DIRS = [
+  "os", "gspc", "gspc-scoreboard", "scoreboard", "gspc-verify", "verify",
+  "gspc-arena", "assess", "watchdog", "academy", "console", "council-os",
+  "lobby", "compare", "vs", "layer0", "trust-center", "network", "distribution",
+  "intel", "hive", "methodology", "honesty", "insurers", "regulators",
+  "industries", "enterprise", "library", "library/axes", "library/measurement",
+  "privacy-policy", "disclaimers", "legal", "system-card",
+];
+
+function run(distArg = process.argv[2] || "dist/client") {
+const DIST = distArg.startsWith("/") ? distArg : join(ROOT, distArg);
 
 if (!existsSync(DIST)) {
   console.error(`[aliases] no ${DIST} — run the client build + prerender first`);
   process.exit(1);
 }
-
-const PERSONAS = ["sec-filer", "finance", "healthcare", "regulator", "startup", "enterprise"];
-const VENDORS = ["vanta", "drata", "credo-ai", "credo", "onetrust"];
-const INDUSTRIES = [
-  // canonical 15 from client/src/data/industries.ts
-  "insurance", "government", "care", "defence", "critical-infrastructure", "media",
-  "agent-rails", "open-source", "multi-agent-commerce", "security", "machinery",
-  "humanoid", "xr", "legal", "emotion-ai",
-  // homepage + legacy content slugs (IndustryTemplate falls back)
-  "health", "healthcare", "finance", "transport", "transportation", "retail",
-  "education", "energy", "cybersecurity", "home", "logistics", "manufacturing",
-  "mining", "telecoms",
-];
 
 function pick(...rels) {
   for (const rel of rels) {
@@ -59,67 +67,61 @@ function place(destRel, srcRel, { overwrite = false } = {}) {
     console.warn(`[aliases] skip ${destRel} — missing ${srcRel}`);
     return false;
   }
+  if (src === dest) return false;
   if (existsSync(dest) && !overwrite) return false;
   mkdirSync(dirname(dest), { recursive: true });
   cpSync(src, dest);
   return true;
 }
 
-for (const f of ["gspc-scoreboard.html"]) {
-  const p = join(DIST, f);
-  if (existsSync(p)) {
-    rmSync(p);
-    console.log(`[aliases] removed ${f} (was stealing the living board)`);
-  }
+/** `for/regulator` → for/regulator.html (/for/regulator) + for/regulator/index.html (/for/regulator/). */
+function pretty(path, src, overwrite = true) {
+  let n = 0;
+  if (place(`${path}.html`, src, { overwrite })) n += 1;
+  if (place(`${path}/index.html`, src, { overwrite })) n += 1;
+  return n;
 }
 
 const home = pick("index.html");
 const board = pick("gspc-scoreboard/index.html", "index.html");
+const verify = pick("gspc-verify/index.html", "index.html");
 const compare = pick("compare/index.html", "index.html");
 const disclaimers = pick("disclaimers/index.html", "index.html");
 const industriesHub = pick("industries/index.html", "index.html");
 const library = pick("library/index.html", "index.html");
+const os = pick("os/index.html", "index.html");
 
 if (!home || !board) {
   console.error("[aliases] dist is missing index.html — nothing to place");
   process.exit(1);
 }
 
-// CF Pages serves foo.html at /foo (no slash). Directory foo/index.html is /foo/.
-// Always overwrite the .html pretty-URL so a leftover static table cannot return.
-const forced = [
-  ["gspc.html", board],
-  ["gspc/index.html", board],
-  ["scoreboard.html", board],
-  ["scoreboard/index.html", board],
-  ["console.html", home],
-  ["console/index.html", home],
-  ["council-os.html", home],
-  ["council-os/index.html", home],
-  ["lobby.html", home],
-  ["lobby/index.html", home],
-  ["legal.html", disclaimers],
-  ["legal/index.html", disclaimers],
-  ["vs.html", compare],
-  ["vs/index.html", compare],
-];
-
+// Living board owns the pretty URL. Do not delete the file — replace it.
 let n = 0;
-for (const [dest, src] of forced) {
-  if (place(dest, src, { overwrite: true })) n += 1;
+n += pretty("gspc", board);
+n += pretty("gspc-scoreboard", board);
+n += pretty("scoreboard", board);
+n += pretty("gspc-verify", verify);
+n += pretty("verify", verify);
+n += pretty("console", home);
+n += pretty("council-os", home);
+n += pretty("lobby", home);
+n += pretty("legal", disclaimers);
+n += pretty("os", os);
+n += pretty("vs", compare);
+
+const fromDir = (dir, fallback) => pick(`${dir}/index.html`, fallback);
+
+for (const dir of STRANGER_DIRS) {
+  const src = fromDir(dir, home);
+  if (src) n += pretty(dir, src, false);
 }
 
-for (const slug of VENDORS) {
-  if (place(`vs/${slug}/index.html`, compare)) n += 1;
-}
-for (const p of PERSONAS) {
-  if (place(`for/${p}/index.html`, home)) n += 1;
-}
-for (const s of INDUSTRIES) {
-  if (place(`industries/${s}/index.html`, industriesHub)) n += 1;
-}
-if (place("library/axes/index.html", library)) n += 1;
-if (place("library/measurement/index.html", library)) n += 1;
+for (const slug of VENDORS) n += pretty(`vs/${slug}`, compare);
+for (const p of PERSONAS) n += pretty(`for/${p}`, home);
+for (const s of INDUSTRIES) n += pretty(`industries/${s}`, industriesHub);
+n += pretty("library/axes", library);
+n += pretty("library/measurement", library);
 
 const scittSrc = join(ROOT, "public/.well-known/scitt.json");
 const scittDest = join(DIST, ".well-known/scitt.json");
@@ -127,8 +129,25 @@ if (existsSync(scittSrc)) {
   mkdirSync(join(DIST, ".well-known"), { recursive: true });
   cpSync(scittSrc, scittDest);
   console.log("[aliases] placed .well-known/scitt.json");
-} else {
-  console.warn("[aliases] public/.well-known/scitt.json missing");
 }
 
+// Drop any leftover static bench HTML that is not a named standalone.
+try {
+  for (const f of readdirSync(DIST)) {
+    if (f === "gspc-scoreboard.html" && board) {
+      const st = statSync(join(DIST, f));
+      if (st.size < 20000) {
+        rmSync(join(DIST, f));
+        place("gspc-scoreboard.html", board, { overwrite: true });
+        console.log("[aliases] replaced thin gspc-scoreboard.html with living board");
+      }
+    }
+  }
+} catch { /* dist listing is best-effort */ }
+
 console.log(`[aliases] placed ${n} end-user alias pages under ${DIST}`);
+}
+
+if (isMain) run();
+
+export { run };
