@@ -33,6 +33,8 @@ const PAGES = [
   "/gspc",
   "/gspc-scoreboard/",
   "/gspc-verify/",
+  "/verify",
+  "/os",
   "/gspc-arena/",
   "/assess/",
   "/watchdog/",

@@ -92,6 +92,31 @@ for (const host of hosts) {
   } else {
     pass(`${host}/gspc-scoreboard ${board.bytes} bytes (living board)`);
   }
+
+  // Unsuffixed stranger URLs a demographic types. 404 here means the alias
+  // pack did not land on this host (or a Vite overwrite wiped it).
+  for (const path of ["/gspc", "/verify", "/console", "/for/regulator", "/vs/vanta"]) {
+    const r = await get(host + path);
+    if (r.error) fail(`${host}${path} fetch failed: ${r.error}`);
+    else if (r.status >= 400 || /404 — Not found/i.test(r.body)) fail(`${host}${path} HTTP ${r.status || "404"}`);
+    else pass(`${host}${path} HTTP ${r.status}`);
+  }
+
+  try {
+    const chat = await fetch(host + "/api/chat", {
+      method: "POST",
+      headers: { "content-type": "application/json", "user-agent": UA },
+      body: JSON.stringify({ messages: [{ role: "user", content: "In plain words, what does the Council of AI actually measure?" }] }),
+    });
+    const j = await chat.json();
+    if (j.state === "ungrounded" || /I won't answer this one/i.test(String(j.answer || ""))) {
+      fail(`${host}/api/chat refused the public suggested ask`);
+    } else {
+      pass(`${host}/api/chat grounded (${j.state})`);
+    }
+  } catch (e) {
+    fail(`${host}/api/chat ${String(e).slice(0, 80)}`);
+  }
 }
 
 console.log("");
