@@ -27,10 +27,10 @@ export type LobbyTab = {
   label: string;
   /** One honest line about what the pane actually shows. */
   blurb: string;
-  /** Same-origin route framed in the centre pane. Empty for `kind: "local"`. */
+  /** Same-origin route framed in the centre pane. Empty for `kind: "local"` / `native`. */
   path: string;
-  /** "route" frames a live page; "local" renders in-lobby content. */
-  kind?: "route" | "local";
+  /** "route" frames a live page; "local" renders in-lobby content; "native" is in-process. */
+  kind?: "route" | "local" | "native";
   /** Gold accent — reserved for the local-play surface, never for measurement. */
   accent?: "emerald" | "gold";
   /** Deterministic phrases that switch to this tab from the chat bar. */
@@ -51,6 +51,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     label: "Live board",
     blurb: "The living GSPC board — every published axis, and in-lane beside it.",
     path: "/gspc-scoreboard",
+    kind: "native",
     cues: /\b(board|scoreboard|score|axes|axis|gspc|leaderboard)\b/i,
   },
   {
