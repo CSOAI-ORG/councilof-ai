@@ -178,7 +178,7 @@ export default function ModelRegistry() {
                 {isMeasured ? (
                   <div className="mt-3 space-y-1.5">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold tabular-nums text-slate-100">{a.accuracy.toFixed(3)}</span>
+                      <span className="text-2xl font-bold tabular-nums text-slate-100">{a.accuracy?.toFixed(3) ?? "—"}</span>
                       <span className="text-[11px] text-slate-500">accuracy</span>
                     </div>
                     {hasInterval && (
@@ -191,14 +191,14 @@ export default function ModelRegistry() {
                         best: <span className="font-medium text-emerald-300">{a.leader}</span>
                       </div>
                     )}
-                    {a.separation === "SEPARATED" && a.separation_p !== null && (
+                    {a.separation === "SEPARATED" && a.separation_p != null && (
                       <div className="text-[10px] text-slate-600">
-                        leader separation p={a.separation_p.toFixed(4)} {a.separation_p < 0.05 ? "(significant)" : ""}
+                        leader separation p={a.separation_p?.toFixed(4) ?? "—"} {a.separation_p < 0.05 ? "(significant)" : ""}
                       </div>
                     )}
-                    {a.fleet_mean !== null && (
+                    {a.fleet_mean != null && (
                       <div className="text-[10px] text-slate-600">
-                        fleet mean {a.fleet_mean.toFixed(3)} · macro F1 {a.macro_f1?.toFixed(3) ?? "—"}
+                        fleet mean {a.fleet_mean?.toFixed(3) ?? "—"} · macro F1 {a.macro_f1?.toFixed(3) ?? "—"}
                       </div>
                     )}
                   </div>
