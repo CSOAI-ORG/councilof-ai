@@ -141,14 +141,22 @@ const LEDGER = {
       fix: "OTS/RFC-3161/Bitcoin claims demoted to roadmap wording across all surfaces; provbench pack corrected; the ML-DSA 'built, not shipped' discipline applied to OpenTimestamps.",
       status: "FIXED",
     },
+    {
+      id: "C-2026-0822-01",
+      date: "2026-08-22",
+      what_was_wrong: "The homepage industry grid still said '15-slot instrument' while the scoreboard, API and canon say '14-slot board, 13 measured of 14' (16 GSPC axes, 13 quotable + jail floor per the GSPC ruling). A crawler reading the grid would see 15 slots — the exact internal-count inconsistency the count-gating canon exists to prevent.",
+      how_caught: "Text audit of live surfaces against canon (machine-contract style sweep of the homepage and fleet-sweep pages).",
+      fix: "Killed both stale 15-slot references in NewHome-v3 (section comment + industry-grid subtitle) to '14-slot / 13 measured of 14'; verified 0 x '15-slot' remains. (PR #284.)",
+      status: "FIXED",
+    },
   ],
   signature: {
-    id: "20ef8ec498e0d2baa74f8de94e075796fde5f0b29c2fe22d680ede3cc6585c6f",
+    id: "aa7a8211d3671330e0dcacf1a719125f9cb09dd4ba80272fc1fac617e652f367",
     signer: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
-    signature: "2b7deab1a567fd94f2e89f8de5759cbc77228572a259bed6f5326b448190200c46e4ecb9532aa437534f4a1ddffcdbd79f92e2d5233034fa0f1bfca3cb477200",
+    signature: "dff4ab2c4e1c8d80c9022330343f43145af4673a0a214cf24c9e2964d204f917aa8bdcbf6bc76fec8db0ff828524f057078e087fa53d4281b448bbce44e5ac00",
     sig_input: "sha256(Python json.dumps(canonical LEDGER minus signature fields, sort_keys=True, separators=(',',':')) — ensure_ascii escapes non-ASCII as \\uXXXX)",
     key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
-    note: "SIGNED 2026-08-20 (re-issue: 14th entry redaction) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit.",
+    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit.",
   },
 };
 
