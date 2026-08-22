@@ -90,16 +90,16 @@ const EXISTING = [
   "/council-os             /?lobby=home                 308",
   "/library/measurement    /library/axes                308",
   // Klingler/DID stranger-walk + persona cold loads (2026-08-22).
-  // Prefer trailing-slash targets: prerender writes route/index.html, and bare
-  // paths 404 until the SPA catch-all is live on the edge.
+  // Do NOT redirect /gspc-verify ↔ /gspc-verify/ — Pages trailing-slash
+  // normalization fights that and creates a 308 loop (measured live).
+  // Only alias /verify → trailing-slash verify surface when prerender exists.
   "/verify                 /gspc-verify/                308",
   "/verify/                /gspc-verify/                308",
-  "/gspc-verify            /gspc-verify/                308",
   "/api/arena/rounds       /api/arena/rounds.jsonl      200",
-  "/enterprises            /enterprise                  308",
+  "/enterprises            /enterprise/                 308",
   "/developers             /gspc-verify/                308",
-  "/colosseum              /coliseum                    308",
-  "/for                    /for/enterprise              308",
+  "/colosseum              /coliseum/                   308",
+  "/for                    /for/enterprise/             308",
 ];
 
 const HASHED_DIRS = ["/assets"];
@@ -117,6 +117,7 @@ const lines = [
 
   "",
   "# --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---",
+  "# canary-2026-08-22-7fb8: if /zzz-spa-test-7fb8 is still honest-404, this file did not reach the edge",
   "/*  /index.html  200",
   "",
 ];
