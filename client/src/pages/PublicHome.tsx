@@ -72,7 +72,7 @@ export default function PublicHome() {
             
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               The first open-source AI safety governance platform for the West. 
-              Multi-framework compliance, a designed 33-agent Council of AI, 
+              Multi-framework measurement, a designed 33-agent Council of AI, 
               and public accountability through The Watchdog program.
             </p>
 
@@ -258,7 +258,7 @@ export default function PublicHome() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Multi-Framework</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Unified compliance across EU AI Act, NIST AI RMF, and TC260. 
+                  Unified measurement across EU AI Act, NIST AI RMF, and TC260 crosswalk. 
                   One assessment, multiple frameworks.
                 </p>
                 <Link href="/compliance" className="text-sm text-primary flex items-center gap-1 hover:underline">
@@ -379,8 +379,7 @@ export default function PublicHome() {
             </div>
             <h2 className="text-3xl font-bold mb-4">Our Mission: AI Safety for Humanity</h2>
             <p className="text-muted-foreground max-w-3xl mx-auto">
-              We're building the Western equivalent of China's TC260 - a comprehensive AI safety governance 
-              framework that protects both businesses and citizens. This is bigger than any one company.
+              We publish measurement harnesses crosswalked to China's TC260 and other frameworks — evidence, not equivalence claims. This is bigger than any one company.
             </p>
           </div>
 

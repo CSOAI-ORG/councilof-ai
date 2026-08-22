@@ -5,6 +5,10 @@ on:
     branches: [master, main]
     paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch: {}
+  # Re-stamp production when Pages Git auto-build keeps clobbering the apex alias
+  # between pushes. Full gated build — not a probe-only job.
+  schedule:
+    - cron: '20 */3 * * *'
 
 # Queue, don't cancel: rapid successive pushes were cancelling the in-flight
 # prerender deploy mid-run, leaving the production alias on a thin Vite shell
@@ -103,6 +107,29 @@ jobs:
           npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=production --commit-dirty=true
           sleep 30
           node scripts/assert-prerender-live.mjs --label anti-clobber \
+            --host https://councilof.ai \
+            --also https://councilof-ai.pages.dev
+
+      # Clobber has also landed after the first recheck went green. One more
+      # window; rewrite again if a second writer wins the alias later.
+      - name: Confirm gated tree still holds
+        env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
+        run: |
+          set -euo pipefail
+          echo "waiting 90s to confirm the gated tree stuck..."
+          sleep 90
+          if node scripts/assert-prerender-live.mjs --label hold \
+            --host https://councilof.ai \
+            --also https://councilof-ai.pages.dev; then
+            echo "hold: production still fat"
+            exit 0
+          fi
+          echo "hold lost — rewriting master/main/production"
+          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true
+          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true
+          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=production --commit-dirty=true
+          sleep 25
+          node scripts/assert-prerender-live.mjs --label hold-heal \
             --host https://councilof.ai \
             --also https://councilof-ai.pages.dev
 

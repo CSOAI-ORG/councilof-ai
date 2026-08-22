@@ -10,6 +10,10 @@
  * TWO entries are `kind: "local"`: Home is the native Council OS desktop
  * (LobbyHome) — it must not iframe /os, or the OS nests inside itself. Play
  * is the gold local-play gallery from play.ts; nothing there is deployed.
+ *
+ * Software (DSH) is the signed-in dashboard at /dashboard. The same tab
+ * ids and labels are the dashboard sidebar. When /dashboard is framed here
+ * it drops its own rail so we do not get two tab lists.
  */
 
 export type LobbyTabId =
@@ -20,6 +24,7 @@ export type LobbyTabId =
   | "measured"
   | "watchdog"
   | "academy"
+  | "software"
   | "play";
 
 export type LobbyTab = {
@@ -91,6 +96,13 @@ export const LOBBY_TABS: LobbyTab[] = [
     cues: /\b(academy|course|training|learn|teach)\b/i,
   },
   {
+    id: "software",
+    label: "Software",
+    blurb: "Signed-in dashboard (DSH) — the same destinations as this rail.",
+    path: "/dashboard",
+    cues: /\b(dashboard|software|dsh|signed[- ]in)\b/i,
+  },
+  {
     id: "play",
     label: "Council OS — local play",
     blurb: "The arenas, with honest playable / in-build states. Nothing here is deployed.",
@@ -115,3 +127,8 @@ export function matchTab(text: string): LobbyTab | null {
   if (!/\b(show|open|go|take me|switch|jump|load|view|bring up|let me)\b/i.test(t)) return null;
   return LOBBY_TABS.find((tab) => tab.cues.test(t)) ?? null;
 }
+
+/** Dashboard sidebar: same destinations as OS, minus Play, Home, and Software (this surface). */
+export const DASHBOARD_TABS: LobbyTab[] = LOBBY_TABS.filter(
+  (t) => t.kind === "route" && t.id !== "play" && t.id !== "software",
+);

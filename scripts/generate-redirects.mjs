@@ -102,6 +102,15 @@ const EXISTING = [
   "/for                    /for/enterprise/             308",
 ];
 
+/** Persona gauntlet bare paths → trailing-slash prerender (production still on honest-404 catch-all). */
+const PERSONA_SLASH = [
+  "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
+  "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
+];
+const PERSONA_FOR_SLASH = [
+  "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
+];
+
 const HASHED_DIRS = ["/assets"];
 
 const lines = [
@@ -111,6 +120,10 @@ const lines = [
   "",
   "# --- hand-written consolidation redirects (preserved) ---",
   ...EXISTING,
+  "",
+  "# --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---",
+  ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
+  ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
   "",
   "# --- static asset trees: served directly, never routed to the app ---",
   ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map((d) => `${d}/*  ${d}/:splat  200`),

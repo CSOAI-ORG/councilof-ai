@@ -17,6 +17,7 @@ import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 // Home removed - using NewHomeV2 instead
 const Landing = lazy(() => import("./pages/Landing"));
+const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
@@ -496,8 +497,7 @@ function App() {
   }
 
   // Immersive full-bleed routes — the live demo takes over the whole screen (no header/footer).
-  // Dockview lab only. /council-os is the public OS name — it 308s to the overlay.
-  if (location === '/sov-os') {
+  if (location === '/sov-os' || location === '/council-os') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="dark">
@@ -993,15 +993,8 @@ function App() {
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
-                  <Route path="/verify">{() => <Redirect to="/gspc-verify" />}</Route>
-                  <Route path="/legal">{() => <Redirect to="/disclaimers" />}</Route>
-                  <Route path="/vulnerability">{() => <Redirect to="/vulnerability-disclosure" />}</Route>
-                  <Route path="/gspc">{() => <Redirect to="/gspc-scoreboard" />}</Route>
-                  <Route path="/scoreboard">{() => <Redirect to="/gspc-scoreboard" />}</Route>
-                  <Route path="/lobby">{() => <Redirect to="/?lobby=home" />}</Route>
-                  <Route path="/console">{() => <Redirect to="/?lobby=home" />}</Route>
-                  <Route path="/council-os">{() => <Redirect to="/?lobby=home" />}</Route>
-                  <Route path="/library/measurement">{() => <Redirect to="/library/axes" />}</Route>
+                  {/* /verify now 308s to /gspc-verify at the edge (generate-redirects.mjs) —
+                      the client <Redirect> here caused the bare↔slash loop on cold loads. */}
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
@@ -1040,9 +1033,8 @@ function App() {
                   </Switch></Suspense>
                 </main>
                 <Footer />
-                <ErrorBoundary fallback={null}>
-                  <Suspense fallback={null}><CouncilLobby /></Suspense>
-                </ErrorBoundary>
+                <Suspense fallback={null}><CouncilConsole /></Suspense>
+                <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />
               </div>

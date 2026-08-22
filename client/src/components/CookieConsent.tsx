@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { isEmbedded } from "@/lib/embed";
+import { useSiteChromeHidden } from "@/lib/osChrome";
 
 // CookieConsent — a persistent (localStorage, not per-session) GDPR consent
 // banner. CSOAI's analytics are memory-only (no third-party cookies, no
@@ -15,6 +15,7 @@ export function hasAnalyticsConsent(): boolean {
 }
 
 export default function CookieConsent() {
+  const hideChrome = useSiteChromeHidden();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function CookieConsent() {
     setVisible(false);
   }
 
-  if (isEmbedded() || !visible) return null;
+  if (hideChrome || !visible) return null;
 
   return (
     <div

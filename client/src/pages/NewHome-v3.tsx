@@ -21,11 +21,11 @@ import {
   Eye, FileCheck, RefreshCw, Ban, Landmark, Scale,
 } from "lucide-react";
 
-// ── data ───────────────────────────────────────────────────────────
+// ── data ───────────────────────────────────────────────────────
 const FOUR_BUYERS = [
   { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. The living GSPC board is signed; empty cells stay empty. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
-  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get your first card — free", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. The board includes the axis that catches our own models." },
+  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get measured", href: "/enterprise", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. The board includes the axis that catches our own models." },
   { icon: Zap, who: "Developers", tagline: "Measure per call on the agent rail", cta: "Verify a card", href: "/gspc-verify", desc: "Call the signed measurement tools from CI: gate a release, re-check a card, track a run. Counts stay on GET /api/gspc." },
 ];
 
@@ -50,7 +50,7 @@ const RECENT: Post[] = [
   { title: "NIS2 Compliance for Critical Infrastructure Operators", date: "2026-06-17", desc: "NIS2 expanded scope reaches energy, transport, health and digital infrastructure. Every AI in that chain is in scope.", href: "/blog/nis2-compliance-critical-infrastructure" },
 ];
 
-// ── sections ─────────────────────────────────────────────────────
+// ── sections ───────────────────────────────────────────────────
 function Section({ id, title, subtitle, children, bg }: { id?: string; title?: string; subtitle?: string; children: ReactNode; bg?: string }) {
   return (
     <section id={id} className={`py-20 px-6 ${bg ?? ""}`}>
@@ -65,7 +65,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
 
 // ── living GSPC grid (honest empties stay empty) ─────────────────────────
 
-// ── problem we fix ───────────────────────────────────────
+// ── problem we fix ─────────────────────────────────────
 function ProblemStrip() {
   return (
     <Section
@@ -101,7 +101,7 @@ function ProblemStrip() {
 }
 
 const USPS = [
-  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. First card is free. Verify stays free and loginless.", href: "/assess" },
+  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. Verify stays free and loginless. A grade is never sold.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
   { icon: Scale, title: "Honest living board", body: "Empty cells stay empty. Jail is a measured floor when the stamp says so. Live counts: GET /api/gspc.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
@@ -255,7 +255,7 @@ function IndustryGrid() {
   );
 }
 
-// ── blog strip ─────────────────────────────────
+// ── blog strip ───────────────────────────────
 function BlogStrip() {
   return (
     <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." bg="bg-white">
@@ -375,7 +375,7 @@ const HOME_FAQ = [
   },
 ];
 
-// ── SEO / schema ───────────────────────────
+// ── SEO / schema ─────────────────────────
 // (qa-sweep 2026-08-19) The page-level WebSite + FAQPage constants were REMOVED:
 // the shell (client/index.html) already ships the canonical WebSite node, and the
 // FaqBlock below emits the FAQPage node for exactly the FAQ this page renders —
