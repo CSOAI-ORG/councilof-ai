@@ -48,7 +48,7 @@ export default function Standards() {
       version: "v1.0",
       status: "Active Development",
       date: "2025-01-15",
-      description: "Western equivalent to China's TC260, establishing comprehensive AI safety governance through multi-agent council and public watchdog oversight.",
+      description: "Measurement harnesses crosswalked to China's TC260 and peer frameworks, with multi-agent council review and public watchdog oversight.",
       coverage: ["Measurement harnesses", "Watchdog System", "PDCA Cycles", "Compliance Scoring", "Public Transparency"],
       pdfUrl: "/docs/coai-framework-v1.pdf",
       externalUrl: null,
@@ -71,9 +71,9 @@ export default function Standards() {
             <Badge className="mb-4 bg-white/20 text-white border-white/30">Standards & Frameworks</Badge>
             <h1 className="text-4xl font-bold mb-4">AI Governance Standards</h1>
             <p className="text-xl text-blue-100">
-              Comprehensive implementation guides for global AI safety and compliance frameworks.
-              CSOAI provides Western-adapted standards equivalent to China's TC260, ensuring your AI systems
-              meet international regulatory requirements.
+              Implementation guides for global AI safety and compliance frameworks.
+              CSOAI publishes measurement harnesses crosswalked to China's TC260 and peer standards —
+              evidence you can verify, not equivalence claims.
             </p>
           </div>
         </div>
