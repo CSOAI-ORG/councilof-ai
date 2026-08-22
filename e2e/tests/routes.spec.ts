@@ -17,7 +17,7 @@ const ROUTES = [
   '/jobs', '/licensing-agreement', '/login',
   '/maternal-covenant', '/membership-agreement', '/pricing',
   '/privacy-policy', '/prosperity-fund',
-  '/regulator-dashboard', '/signup', '/sla', '/soai-pdca',
+  '/regulator', '/signup', '/sla', '/soai-pdca',
   '/standards', '/terms-of-service', '/training',
   '/transparency', '/watchdog', '/workbench',
 ];
@@ -25,7 +25,7 @@ const ROUTES = [
 // Routes that require auth (may redirect to login)
 const AUTH_ROUTES = [
   '/agent-council', '/api-docs', '/government-dashboard',
-  '/regulator-dashboard', '/workbench',
+  '/regulator', '/workbench',
 ];
 
 // ─── 1. ROUTE AVAILABILITY ───
@@ -55,27 +55,30 @@ test.describe('Homepage', () => {
   });
 
   test('has correct title', async ({ page }) => {
-    await expect(page).toHaveTitle(/CSOAI/i);
+    // Council OS redesign: title is now "Council of AI — we measure, we sign,
+    // we re-attest" (no longer "CSOAI").
+    await expect(page).toHaveTitle(/Council of AI/i);
   });
 
   test('hero section renders', async ({ page }) => {
-    // Post-2026-08-01 cleanup (TUI-3 polish): the hero was reduced from 12+ elements
-    // to 5 (SovereignConsole + headline + sub-headline + 2 CTAs + scale indicators).
-    // The previous "Unifying the World / Response to AI" copy was deliberately
-    // removed. Assert the current headline "Measured, not modelled." and the
-    // sub-headline kicker instead. The kicker text appears twice (in the hero
-    // and in the repeat copy) so we use .first() to disambiguate.
-    await expect(page.locator('h1').first()).toContainText(/Measured/);
-    await expect(page.locator('h1').first()).toContainText(/modelled/);
-    await expect(page.locator('text=Describe an AI system').first()).toBeVisible();
+    // Council OS redesign: the hero is now a single h1 — "See how your AI
+    // behaves. / Get proof you can trust. / Kept current as the rules change.
+    // / Anyone can check — free." — with the "Verify a card" CTA. The previous
+    // "Measured, not modelled." copy and "Describe an AI system" kicker were
+    // removed. "Verify a card" appears multiple times (hero + body + footer),
+    // so we use .first() to disambiguate.
+    await expect(page.locator('h1').first()).toContainText(/See how your AI behaves/);
+    await expect(page.locator('h1').first()).toContainText(/Get proof you can trust/);
+    await expect(page.locator('text=Verify a card').first()).toBeVisible();
   });
 
   test('EU AI Act countdown shows next milestone (not all zeros)', async ({ page }) => {
-    // The pre-2026-08-01 hero carried a "High-Risk AI Obligations Begin" countdown
-    // chip alongside a "fully enforced" fallback message. Both were removed in the
-    // hero cleanup (TUI-3). The SovereignConsole component now surfaces live
-    // regulatory state instead — assert that current surface is present.
-    await expect(page.getByText(/Sovereign/i).first()).toBeVisible();
+    // The pre-redesign hero carried a "High-Risk AI Obligations Begin" countdown
+    // chip and, after the 2026-08-01 cleanup, the SovereignConsole. Both are
+    // gone in the Council OS redesign ("Sovereign" no longer appears anywhere on
+    // the homepage). The Honest Board — "13 measured of 14" — is now the live
+    // regulatory/measurement-state surface; assert that instead.
+    await expect(page.getByText(/13 measured of 14/i).first()).toBeVisible();
   });
 
   test('CTA banners render', async ({ page }) => {
@@ -86,12 +89,11 @@ test.describe('Homepage', () => {
   });
 
   test('navigation bar has all sections', async ({ page }) => {
-    // The pre-2026-08-01 nav had ~70 sub-items including Charter, Training,
-    // Certification, SOAI-PDCA, Enterprise, Government. The cleanup trimmed
-    // it to ~45 items with a cleaner top-level (per project memory:
-    // 2026-08-01 hero cleanup). Current top-level nav items: Home, Sovereign OS,
-    // Ledger, Explore, Learn, Solutions, Watchdog, Company.
-    const navItems = ['Home', 'Sovereign OS', 'Ledger', 'Explore', 'Learn', 'Solutions', 'Watchdog', 'Company'];
+    // The pre-2026-08-01 nav had ~70 sub-items; the 2026-08-01 cleanup trimmed
+    // it to ~45 items, and the Council OS redesign further trimmed the top
+    // level. Current top-level nav items: Home, Measure, Regulation, Solutions,
+    // Evidence, Academy, Company (plus Sign In / Start free).
+    const navItems = ['Home', 'Measure', 'Regulation', 'Solutions', 'Evidence', 'Academy', 'Company'];
     for (const item of navItems) {
       await expect(page.locator(`nav >> text=${item}`).first()).toBeVisible();
     }
