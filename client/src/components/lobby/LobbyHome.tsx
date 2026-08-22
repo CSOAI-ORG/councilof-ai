@@ -1,14 +1,13 @@
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
 import { LOBBY_TABS, type LobbyTab } from "./tabs";
+import LivingBoard from "./LivingBoard";
 
 /**
  * LobbyHome — the Council OS desktop.
  *
- * This used to iframe /os, which meant an OS inside an OS: a second chat,
- * a second sidebar, and a page that thought it was the launcher. Home is
- * now a native pane. Tiles switch the real destinations. Two extra tiles
- * open crawlable pages in this pane (methodology, honesty) — they are not
- * a second product, they are the receipts.
+ * Living board first (every published axis from GET /api/gspc, in-lane kept
+ * separate). Tiles then switch the real destinations. Two extra tiles open
+ * crawlable receipts in this pane.
  */
 
 const DESKTOP = LOBBY_TABS.filter((t) => t.id !== "home");
@@ -25,20 +24,28 @@ export default function LobbyHome({
   onSelect: (t: LobbyTab) => void;
   onOpenRoute: (path: string, label: string) => void;
 }) {
+  const openBoard = () => {
+    const board = LOBBY_TABS.find((t) => t.id === "board");
+    if (board) onSelect(board);
+  };
+
   return (
     <section aria-labelledby="coai-os-home-h" className={`${SP.panel} h-full overflow-y-auto`}>
       <p className={TYPE.section}>Council OS</p>
-      <h2 id="coai-os-home-h" className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
-        One workspace. The live surfaces. The ask bar.
+      <h2 id="coai-os-home-h" className="mt-1 text-[26px] font-semibold tracking-tight text-slate-900">
+        Measure. Sign. Check.
       </h2>
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>
-        This is the Council OS — not a second site. Each tile opens the real page
-        in this pane. The ask bar under it reads the published estate; it does
-        not invent. Empty cells stay empty. Counts come from GET /api/gspc.
-        Hide the sidebars when you want this column alone.
+        One workspace. The living board is below — every axis the API publishes,
+        nothing invented. Ask underneath. Hide the sidebars when you want this
+        column alone.
       </p>
 
-      <h3 className={`${TYPE.section} mt-8 mb-3`}>Live surfaces</h3>
+      <div className="mt-8">
+        <LivingBoard onOpenBoard={openBoard} />
+      </div>
+
+      <h3 className={`${TYPE.section} mt-2 mb-3`}>Live surfaces</h3>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {DESKTOP.map((t) => {
           const gold = t.accent === "gold";
