@@ -25,6 +25,7 @@ export default function LivingBoard({
   embedded,
 }: {
   onOpenBoard: () => void;
+  /** When true, hide the “open full board” CTA — already inside the board pane. */
   embedded?: boolean;
 }) {
   const [state, setState] = useState(EMPTY);
