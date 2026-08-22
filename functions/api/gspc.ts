@@ -347,7 +347,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     schema: "csoai.gspc-axes/0.5",
     issuer: "CSOAI Ltd (GB, Companies House 16939677)",
     doi: "10.5281/zenodo.21991104",
-    doi_note: "GSPC Methodology and the 417-Provision Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
+    doi_note: "GSPC Methodology and the Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
     measured_on: MEASURED_ON,
     note:
       "Measurement, not certification. Every score is a measured run on a published, " +
