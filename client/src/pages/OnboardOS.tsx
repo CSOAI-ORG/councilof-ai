@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { setMetaDescription } from "@/lib/utils";
 
-// /start (and /onboard) — first-card-free activation (audit §3.5 #3).
+// /start (and /onboard) — measure-and-verify activation.
 // No persona triage, no assistant setup, no price gate. One clear path: describe
 // your AI, we measure it on a frozen published instrument, you get a 3KB
-// Ed25519-signed, hash-chained measurement card — the first one free.
+// Ed25519-signed, hash-chained measurement card. Verify stays free.
 
 const STEPS: { n: string; t: string; d: string }[] = [
   { n: "1", t: "Describe your AI", d: "One short form — what the system is and what it does. No account, no card details." },
@@ -14,8 +14,8 @@ const STEPS: { n: string; t: string; d: string }[] = [
 
 export default function OnboardOS() {
   useEffect(() => {
-    document.title = "Get your first measurement card — free | Council of AI";
-    setMetaDescription("Get your first Ed25519-signed AI measurement card free from the Council of AI (CSOAI LTD, UK 16939677). Measure against the GSPC board in minutes — measurement, not certification.");
+    document.title = "Get a signed measurement card | Council of AI";
+    setMetaDescription("Get an Ed25519-signed AI measurement card from the Council of AI (CSOAI LTD, UK 16939677). Measure against the GSPC board. Verify stays free. Measurement, not certification.");
   }, []);
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -23,17 +23,17 @@ export default function OnboardOS() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Council of AI — start here</p>
         <h1 className="relative mt-3 text-4xl sm:text-6xl font-black tracking-tight">
-          Get your first signed<br />
-          <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">measurement card — free.</span>
+          Get a signed<br />
+          <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">measurement card.</span>
         </h1>
         <p className="relative mt-4 mx-auto max-w-2xl text-emerald-100/80">
           Describe your AI system and we measure how it behaves on our own published instruments. You get a
-          3KB card — Ed25519-signed and hash-chained — that anyone can verify without asking us. The
-          first card is free. No account, no card details, no price gate.
+          3KB card — Ed25519-signed and hash-chained — that anyone can verify without asking us.
+          Verify stays free. No account, no card details, no price gate. A grade is never sold.
         </p>
         <div className="relative mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
           <a href="/assess" className="rounded-xl bg-emerald-500 px-7 py-3.5 text-base font-bold text-[#03110b] hover:bg-emerald-400">
-            Run my free measurement →
+            Get measured →
           </a>
           <a href="/gspc-verify" className="rounded-xl border border-emerald-400/40 px-7 py-3.5 text-base font-bold text-emerald-100 hover:bg-white/5">
             Verify a card
@@ -53,9 +53,8 @@ export default function OnboardOS() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/75">
-          Council of AI is a measurement body — we measure and sign, we do not certify. After your first
-          free card you can keep measuring on the pay-as-you-go agent rail (with a free daily allowance) or on a
-          monthly Council plan. <a href="/pricing" className="font-semibold text-emerald-300 underline hover:text-emerald-200">See pricing →</a>
+          Council of AI is a measurement body — we measure and sign, we do not certify. Verify stays free
+          and loginless. A grade is never sold. <a href="/gspc-verify" className="font-semibold text-emerald-300 underline hover:text-emerald-200">Verify a card →</a>
         </div>
       </section>
     </div>

@@ -50,8 +50,13 @@ const RULES = [
   },
   {
     id: "framework_overclaim",
-    pattern: /\b30\s+(?:regulatory\s+)?frameworks\b/i,
-    why: '"30 frameworks" is unevidenced. Say the evidenced control-set count (4) or "crosswalked provisions".',
+    pattern: /\b30\s+(?:regulatory\s+)?frameworks\b|\b26\s+frameworks\b|1,686\s+controls/i,
+    why: '"30/26 frameworks" and "1,686 controls" are unevidenced. Live counts live at GET /api/gspc.',
+  },
+  {
+    id: "first_card_price_imply",
+    pattern: /first card.{0,24}free/i,
+    why: 'Implies later cards are sold. HO.2: a grade is never sold. Say verify stays free.',
   },
   {
     id: "pricing_leak",
@@ -60,7 +65,7 @@ const RULES = [
     // and were caught only by the manual qa-sweep 2026-08-19. This makes it a hard build-fail:
     // a currency amount bound to a per-unit or subscription cadence is OUR pricing (distinct from
     // regulation PENALTY amounts, which read "€35M or 7%", never "/mo" or "/card").
-    pattern: /(?:£|\$|€)\s?\d[\d,.]*\s?(?:[-–]\s?(?:£|\$|€)?\s?\d[\d,.]*\s?)?(?:\/|\bper\s)(?:mo\b|month|year|yr\b|card|hr\b|hour|seat|user|assessment|report|query|call|run)/i,
+    pattern: /(?:£|\$|€)\s?\d[\d,.]*\s?(?:[-–]\s?(?:£|\$|€)?\s?\d[\d,.]*)?(?:\/|\bper\s)(?:mo\b|month|year|yr\b|card|hr\b|hour|seat|user|assessment|report|query|call|run)/i,
     // A page may DISCLOSE the no-pricing rule ("we never charge £/$ per anything") near the hit.
     nearAllow: /free\s+forever|never\s+(?:sold|charge|priced)|no\s+pricing|not\s+for\s+sale|a\s+grade\s+is\s+never/i,
     why: 'HO.2: no pricing on public surfaces — verification is free forever, a grade is never sold. Remove the amount.',

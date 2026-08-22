@@ -67,11 +67,12 @@ export default function AssessTool() {
       <div className="max-w-3xl mx-auto px-4 py-10">
         <div className="flex items-center gap-3 mb-2">
           <ShieldCheck className="h-7 w-7 text-emerald-600" />
-          <h1 className="text-3xl font-black tracking-tight">Free AI Risk Check</h1>
+          <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
         <p className="text-muted-foreground mb-8">
-          EU AI Act risk classification with a cryptographically <strong>signed</strong> result you can verify
-          independently. No signup. Takes ~2 minutes.
+          Describe the system. We run it against published rules and return an Ed25519-signed
+          record you can recompute. This is a measurement, not a conformity assessment and not
+          a certification. No signup.
         </p>
 
         <Card className="mb-6">
@@ -90,7 +91,7 @@ export default function AssessTool() {
                 onChange={(e) => setForm({ ...form, logging: e.target.checked })} /> Logging / record-keeping</label>
             </div>
             <Button onClick={run} disabled={loading || (!form.system && !form.purpose)} className="w-full">
-              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Assessing…</> : "Run signed assessment"}
+              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Measuring…</> : "Run signed measurement"}
             </Button>
             {error && <p className="text-sm text-red-600 flex items-center gap-2"><AlertTriangle className="h-4 w-4" />{error}</p>}
           </CardContent>
@@ -127,8 +128,8 @@ export default function AssessTool() {
                 </div>
                 <p className="text-xs text-muted-foreground">
                   This result is Ed25519-signed. Anyone can verify it against the public key at
-                  <code className="mx-1">{API_BASE}/api/assess/key</code>. This is an indicative assessment,
-                  not a legal certification.
+                  <code className="mx-1">{API_BASE || ""}/api/assess/key</code>. It records a measurement
+                  against published rules. It does not say the system is lawful or certified.
                 </p>
 
                 {leadSent ? (

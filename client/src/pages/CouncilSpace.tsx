@@ -714,7 +714,7 @@ export default function CouncilSpace() {
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="grid gap-4 sm:grid-cols-3">
           <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Ask the live Council</div><p className="mt-1 text-sm text-emerald-100/70">Take a real question to the the council and get a verdict.</p></a>
-          <a href="/certification" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Training and Certification</div><p className="mt-1 text-sm text-emerald-100/70">Learn the framework and earn your verifiable Council credential.</p></a>
+          <a href="/academy" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Training, not certification</div><p className="mt-1 text-sm text-emerald-100/70">Learn the living board. Completion attests training, not conformity.</p></a>
           <a href="/charter" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">The Council Charter</div><p className="mt-1 text-sm text-emerald-100/70">The constitution the OS is governed by - read and align.</p></a>
         </div>
       </section>

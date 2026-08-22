@@ -87,7 +87,7 @@ async function get(path) {
   return { status: res.status, html, text: visibleText(html), key: canonical(html) };
 }
 
-function evaluate(pages, absent, sec = null) {
+function evaluate(pages, absent, sec = null, scitt = null) {
   const failures = [];
 
   // 1. DISTINCTNESS
@@ -169,6 +169,24 @@ function evaluate(pages, absent, sec = null) {
       `${ABSENT_URL} returned HTTP 200. A catch-all that answers 200 for every path tells ` +
       `crawlers that every URL in the 350-entry sitemap is a real page. Serve a real 404.`);
   }
+
+  // 6. SCITT PROFILE SURFACE — /.well-known/scitt.json must serve JSON (the
+  // RFC 9943 statement mapping is itself a machine contract; a soft-404 or
+  // stale document silently breaks agent discovery of the signed surfaces).
+  if (scitt !== null) {
+    if (scitt.status !== 200) {
+      failures.push(`/.well-known/scitt.json: HTTP ${scitt.status}`);
+    } else {
+      try {
+        const j = JSON.parse(scitt.html);
+        if (!Array.isArray(j.statements) || !Array.isArray(j.trust_anchor?.signing_keys)) {
+          failures.push("/.well-known/scitt.json: missing statements[] / trust_anchor.signing_keys[]");
+        }
+      } catch {
+        failures.push("/.well-known/scitt.json: not valid JSON");
+      }
+    }
+  }
   return failures;
 }
 
@@ -188,11 +206,13 @@ async function selftest() {
                      {status: 200, html: "Contact: mailto:x@y\nExpires: 2030-01-01T00:00:00Z\n"}],
     ["canonical",    [["/pricing", mk(rich + '<link rel="canonical" href="https://csoai.org"/>')]],
                      mk("", 404), /canonical points at/],
+    ["scitt surface", [["/a", mk(rich)]], mk("", 404), /scitt.json/,
+                     null, {status: 200, html: "not json"}],
   ];
   let ok = true;
   console.log("SELFTEST — each rule must fire on a seeded violation:");
-  for (const [name, pages, absent, want, sec] of cases) {
-    const fs = evaluate(pages, absent, sec ?? null);
+  for (const [name, pages, absent, want, sec, scitt] of cases) {
+    const fs = evaluate(pages, absent, sec ?? null, scitt ?? null);
     const fired = fs.some((f) => want.test(f));
     ok &&= fired;
     console.log(`  ${fired ? "OK  " : "FAIL"} ${name}`);
@@ -228,7 +248,8 @@ async function main() {
   console.log(`  ${String(absent.status).padEnd(4)} ${String(absent.text.length).padStart(6)} chars  ${ABSENT_URL} (should be 404)\n`);
 
   const sec = await get("/.well-known/security.txt").catch(() => null);
-  const failures = evaluate(pages, absent, sec);
+  const scitt = await get("/.well-known/scitt.json").catch(() => null);
+  const failures = evaluate(pages, absent, sec, scitt);
   if (failures.length) {
     console.log("CRAWLER-VIEW GATE: FAIL");
     for (const f of failures) console.log(" - " + f);

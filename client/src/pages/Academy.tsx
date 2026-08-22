@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 // learn from and share. Each track is a short, sharable path through the live OS.
 type Track = { id: string; name: string; level: string; mins: number; blurb: string; steps: { t: string; href: string }[] };
 const TRACKS: Track[] = [
+  { id: "board", name: "Read the living board", level: "Beginner", mins: 15, blurb: "What is measured, what is empty, how to check a card. Completion attests training, not conformity.", steps: [
+    { t: "Open Council OS", href: "/?lobby=home" },
+    { t: "The living board — empty cells stay empty", href: "/gspc-scoreboard" },
+    { t: "Verify a card in your browser", href: "/gspc-verify" },
+    { t: "Ask as the reader you are", href: "/?lobby=home&ask=" + encodeURIComponent("In plain words, what does the Council of AI actually measure?") },
+  ]},
   { id: "found", name: "Foundations of AI Governance", level: "Beginner", mins: 20, blurb: "Why governance, where it comes from, and how the OS decides.", steps: [
     { t: "Rediscovered, Not Invented - 4,000 years", href: "/lineage" },
     { t: "The Hive - how consensus works", href: "/hive" },
@@ -28,8 +34,8 @@ const TRACKS: Track[] = [
 ];
 
 export default function Academy() {
-  useEffect(() => { document.title = "CSOAI Academy - learn + demo the governance OS"; }, []);
-  const [t, setT] = useState("found");
+  useEffect(() => { document.title = "CSOAI Academy — learn the living board"; }, []);
+  const [t, setT] = useState("board");
   const track = TRACKS.find((x) => x.id === t) || TRACKS[0];
   return (
     <div className="min-h-screen bg-white">
@@ -37,8 +43,8 @@ export default function Academy() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - academy</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Learn the OS in an afternoon</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Short, shareable tracks that walk you through the live OS - perfect for onboarding, demos, and distribution. Pick a track, follow the steps, send the link.</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Learn the board in an afternoon</h1>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Short tracks through the live site. Course completion attests training, not conformity. Pick a track, follow the steps, send the link.</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-10 grid gap-8 lg:grid-cols-[300px_1fr] items-start">
@@ -66,7 +72,7 @@ export default function Academy() {
             ))}
           </ol>
           <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
-            Share this track as a demo: send the first link and let them walk the OS themselves. Every step is live.
+            Share this track: send the first link. Every step is a live page. Completing it does not certify a system.
           </div>
         </div>
       </section>

@@ -81,7 +81,7 @@ test.describe('Homepage', () => {
   test('CTA banners render', async ({ page }) => {
     // The previous "Now Live" / "100% Free Training" banners were removed in the
     // 2026-08-01 hero cleanup (TUI-3). Assert the two focused CTAs that replaced them.
-    await expect(page.locator('text=Free AI Risk Check')).toBeVisible();
+    await expect(page.locator('text=Get measured')).toBeVisible();
     await expect(page.locator('text=Try Sov Space')).toBeVisible();
   });
 

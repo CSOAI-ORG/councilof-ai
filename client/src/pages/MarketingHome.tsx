@@ -113,8 +113,8 @@ export default function MarketingHome() {
 
             {/* Subheadline */}
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-              The first platform to implement <strong>TC260</strong>, <strong>EU AI Act</strong>, and{" "}
-              <strong>NIST AI RMF</strong> compliance with designed 33-agent council.
+              The first platform to implement <strong>EU AI Act</strong>,{" "}
+              <strong>NIST AI RMF</strong>, and ISO/IEC 42001 measurement with a designed 33-agent council.
             </p>
 
             {/* CTA Buttons */}
@@ -141,7 +141,7 @@ export default function MarketingHome() {
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-green-500" />
-                <span>100% TC260 Compliant</span>
+                <span>Crosswalked to TC260 controls</span>
               </div>
             </div>
           </motion.div>
@@ -279,7 +279,7 @@ export default function MarketingHome() {
                   <Shield className="h-16 w-16 text-primary mb-4" />
                   <h3 className="text-xl font-bold mb-2">Multi-Framework Compliance</h3>
                   <p className="text-muted-foreground mb-4">
-                    Support for TC260, EU AI Act, NIST AI RMF. Automated assessments, gap analysis, and
+                    Support for EU AI Act, NIST AI RMF, and TC260 crosswalk. Automated assessments, gap analysis, and
                     compliance scorecards with PDF export.
                   </p>
                   <Button variant="link" className="p-0">
@@ -542,9 +542,9 @@ export default function MarketingHome() {
 
             <Card>
               <CardContent className="pt-6">
-                <h3 className="font-bold mb-2">Is CSOAI compliant with TC260?</h3>
+                <h3 className="font-bold mb-2">Does CSOAI cover TC260?</h3>
                 <p className="text-muted-foreground">
-                  Yes, CSOAI implements all requirements of China's TC260 AI Safety Governance Framework,
+                  CSOAI crosswalks measured controls to China's TC260 AI Safety Governance Framework,
                   including continuous monitoring (PDCA), ethical review (Council), incident reporting
                   (Watchdog), and transparency (public dashboard).
                 </p>
