@@ -24,7 +24,7 @@ type Lens = "csoai" | "defoneos" | "meok";
 const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: string; preset: string; tour: string; routes: { label: string; href: string; tour?: boolean }[] }> = {
   csoai: {
     title: "Measurement Lens",
-    subtitle: "417 provisions · 4 axes · deterministic",
+    subtitle: "Frozen corpus · 4 axes · deterministic",
     color: "#10b981",
     preset: "EU_Brussels_50_85_4_35",
     tour: "measurement",
