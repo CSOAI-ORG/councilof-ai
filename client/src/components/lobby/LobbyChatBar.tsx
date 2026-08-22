@@ -146,7 +146,7 @@ export default function LobbyChatBar({
           {turns.map((t, i) => (
             <div key={i} className={`${MEASURE_CHAT} ${t.role === "user" ? "ml-auto" : ""}`}>
               <p className="sr-only">{t.role === "user" ? "You asked:" : "The Council replied:"}</p>
-              <p className={`mb-1 ${TYPE.section} ${t.role === "user" ? "text-right" : ""`}>
+              <p className={`mb-1 ${TYPE.section} ${t.role === "user" ? "text-right" : ""}`}>
                 {t.role === "user" ? "You" : "Council"}
               </p>
               <div
