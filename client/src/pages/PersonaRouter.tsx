@@ -89,7 +89,7 @@ const PERSONAS: Record<string, Persona> = {
     slides: [
       { tag: "independent", title: "No single-vendor dependency", body: "Open-source core, offline-verifiable signatures - assurance that does not rest on trusting one commercial vendor." },
       { tag: "verifiable", title: "Publish proof, not promises", body: "Every governed action is Ed25519-signed and checkable in a browser - the assurance baseline can be independently verified." },
-      { tag: "mapped", title: "26 frameworks, one crosswalk", body: "1,686 controls mapped across the EU AI Act, NIST, ISO 42001 and more - a shared reference for cross-border assurance." },
+      { tag: "mapped", title: "Crosswalked provisions, published as measured", body: "EU AI Act, NIST AI RMF, ISO 42001 and the dated regulation feed — a shared reference you can recompute. We do not type a framework count into this page." },
     ],
     faqs: [
       { q: "How is CSOAI independent?", a: "The core is open-source and its governance signatures are offline-verifiable, so assurance does not depend on trusting a single commercial vendor." },
@@ -101,15 +101,15 @@ const PERSONAS: Record<string, Persona> = {
     h1: "Enterprise-grade AI governance without a GRC team",
     intro: "Your enterprise buyers ask for AI governance you do not have staff to run. CSOAI gives you a signed System Card and a mapped control set - fast, open-source, and honest.",
     links: [
-      { href: "/start", label: "Get started", note: "Stand up governance fast" },
-      { href: "/system-card", label: "Signed System Card", note: "The artifact buyers want" },
-      { href: "/pricing", label: "Pricing", note: "Free core, pay as you grow" },
-      { href: "/compare", label: "Honest vs the incumbents", note: "Cheaper + transparent" },
+      { href: "/assess", label: "Get measured", note: "What the run attests — and does not" },
+      { href: "/system-card", label: "Signed System Card", note: "The artifact buyers can recompute" },
+      { href: "/gspc-verify", label: "Verify a card", note: "No account. Free forever." },
+      { href: "/compare", label: "Honest vs the incumbents", note: "Measurement vs GRC" },
     ],
     slides: [
       { tag: "unblock sales", title: "Answer the security questionnaire", body: "A signed System Card is the artifact enterprise buyers ask for - hand it over instead of stalling the deal." },
       { tag: "no GRC team", title: "Governance without headcount", body: "Open-source core + a mapped control set means you evidence governance without hiring a compliance function." },
-      { tag: "honest", title: "3-30x cheaper, transparent", body: "No opaque enterprise pricing. Free core, pay as you scale, and honest about what we do vs Vanta and Drata." },
+      { tag: "honest", title: "Verify without an account", body: "A grade is never sold. Recompute a card at /gspc-verify. Honest about what we do versus Vanta and Drata." },
     ],
     faqs: [
       { q: "We have no compliance team - can we still use CSOAI?", a: "Yes. The open-source core plus a mapped control set lets a small team produce a signed System Card without a dedicated GRC function." },
@@ -122,17 +122,17 @@ const PERSONAS: Record<string, Persona> = {
     intro: "You face overlapping AI regimes across regions and business units. CSOAI maps one signed control set across all of them - so you stop rebuilding the same evidence for every framework.",
     links: [
       { href: "/industries", label: "Industry solutions", note: "Your sector, mapped" },
-      { href: "/crosswalk", label: "The crosswalk", note: "26 frameworks, one map" },
+      { href: "/methodology", label: "The method", note: "Deterministic grading, published n" },
       { href: "/system-card", label: "Signed System Card", note: "Per AI system" },
-      { href: "/pricing", label: "Pricing", note: "Enterprise + PAYG" },
+      { href: "/gspc-scoreboard", label: "Living board", note: "Empty cells stay empty" },
     ],
     slides: [
-      { tag: "overlap", title: "One control set, every regime", body: "EU AI Act, NIST, ISO 42001, DORA, NIS2 - 1,686 controls mapped once, so you do not rebuild evidence per framework." },
+      { tag: "overlap", title: "One measurement, many regimes", body: "EU AI Act, NIST, ISO 42001, DORA, NIS2 — measure once, show the signed card. We do not type a control-set count into this page." },
       { tag: "signed", title: "Evidence that verifies itself", body: "Every governed action is Ed25519-signed and offline-verifiable - defensible in front of auditors and regulators." },
       { tag: "honest", title: "Independent + transparent", body: "No vendor lock-in, open-source core, and honest positioning vs Vanta, Drata, Credo AI, and OneTrust." },
     ],
     faqs: [
-      { q: "How does CSOAI handle overlapping frameworks?", a: "It maps 1,686 controls across 26 frameworks into one crosswalk, so a single evidenced control set satisfies multiple regimes." },
+      { q: "How does CSOAI handle overlapping frameworks?", a: "We measure against frozen provisions and publish the card. Overlapping regimes can reuse the same signed evidence. We do not claim a single control set satisfies every regime by itself — regulators decide conformity." },
       { q: "Is CSOAI locked to one vendor?", a: "No - the core is open-source and signatures are offline-verifiable, avoiding single-vendor dependency." },
     ],
   },
