@@ -14,6 +14,7 @@ import {
 } from "./glass";
 import type { LobbyIntent } from "@/lib/lobbyLink";
 import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
+import { setOsOpen } from "@/lib/osChrome";
 import {
   LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
 } from "./rails";
@@ -127,6 +128,13 @@ export default function LobbyOverlay({
   useEffect(() => { try { localStorage.setItem(SIZE_KEY, size); } catch { /* ignore */ } }, [size]);
   useEffect(() => { writeOpen(LEFT_KEY, leftOpen); }, [leftOpen]);
   useEffect(() => { writeOpen(RIGHT_KEY, rightOpen); }, [rightOpen]);
+
+  // Hide marketing Header/Footer while the workspace covers the page.
+  // Minimising (or unmounting) returns the public site chrome.
+  useEffect(() => {
+    setOsOpen(!minimised);
+    return () => setOsOpen(false);
+  }, [minimised]);
 
   const minimise = useCallback(() => setMinimised(true), []);
 

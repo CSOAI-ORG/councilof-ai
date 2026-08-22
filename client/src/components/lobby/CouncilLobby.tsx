@@ -21,7 +21,7 @@ import LobbyOverlay from "./LobbyOverlay";
  * The lobby frames real routes in same-origin iframes. Inside such a frame the
  * app boots again, so the badge would otherwise stack forever. `isEmbedded()`
  * suppresses this trigger there. Header, footer, cookie banner and the
- * console hide themselves via the same `isEmbedded()` check.
+ * skip links hide via `useSiteChromeHidden()` (embed or OS open).
  *
  * The overlay owns its own window state (open / minimised / expanded); this file
  * only owns the badge and the mount. Minimising does NOT unmount the overlay —

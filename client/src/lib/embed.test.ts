@@ -28,6 +28,7 @@ describe("tabForPath", () => {
   it("matches a lobby pane exactly", () => {
     expect(tabForPath("/gspc-scoreboard")?.id).toBe("board");
     expect(tabForPath("/assess")?.id).toBe("measured");
+    expect(tabForPath("/dashboard")?.id).toBe("software");
   });
 
   it("matches a nested path under a pane", () => {
@@ -41,7 +42,7 @@ describe("tabForPath", () => {
 
   it("returns null for a page that is not a pane", () => {
     expect(tabForPath("/methodology")).toBeNull();
-    expect(tabForPath("/")).toBeNull();
+    expect(tabForPath("/" )).toBeNull();
     expect(tabForPath("/os")).toBeNull();
   });
 });

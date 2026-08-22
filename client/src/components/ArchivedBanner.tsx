@@ -1,6 +1,6 @@
 import { useLocation, Link } from "wouter";
 import { isLibraried, classify, replacementFor, PRIMARY_PATHS } from "../data/library-ia";
-import { isEmbedded } from "@/lib/embed";
+import { useSiteChromeHidden } from "@/lib/osChrome";
 
 // ArchivedBanner — mounted once globally. On any LIBRARIED (non-primary) page it shows a slim,
 // honest "archived / reference" strip that (a) tells the reader this is an archive page, (b)
@@ -8,9 +8,10 @@ import { isEmbedded } from "@/lib/embed";
 // Nothing is deleted — this is the gov.uk pattern: the page stays for SEO/AEO, marked as archive.
 // Primary pages (PRIMARY_PATHS) render nothing.
 export default function ArchivedBanner() {
+  const hideChrome = useSiteChromeHidden();
   const [loc] = useLocation();
   const path = (loc || "/").replace(/\/$/, "") || "/";
-  if (isEmbedded() || !isLibraried(path)) return null;
+  if (hideChrome || !isLibraried(path)) return null;
 
   const sector = classify(path);
   const repl = replacementFor(path);
