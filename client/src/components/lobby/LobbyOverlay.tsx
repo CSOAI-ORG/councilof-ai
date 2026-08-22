@@ -3,7 +3,9 @@ import { DEFAULT_TAB, LOBBY_TABS, tabById, type LobbyTab, type LobbyTabId } from
 import LobbyHeader, { ColiseumGlyph } from "./LobbyHeader";
 import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
 import LobbySideRail from "./LobbySideRail";
-import LobbyChatBar from "./LobbyChatBar";
+import LobbyComposer from "./LobbyComposer";
+import LobbyThread from "./LobbyThread";
+import LobbyBoardPane from "./LobbyBoardPane";
 import LobbyPlay from "./LobbyPlay";
 import LobbyHome from "./LobbyHome";
 import { useLobbyChat } from "./useLobbyChat";
@@ -117,6 +119,7 @@ export default function LobbyOverlay({
 
   const rootRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
+  const threadEndRef = useRef<HTMLDivElement>(null);
   const chat = useLobbyChat();
   const tab = tabById(tabId);
   const modal = !minimised;
@@ -189,13 +192,14 @@ export default function LobbyOverlay({
     setOverride(null);
     const next = tabById(intent.pane);
     setTabId(intent.pane);
-    if (next.kind !== "local" && next.path) loadPane(next.path);
+    if (next.kind !== "local" && next.kind !== "native" && next.path) loadPane(next.path);
   }, [intent?.nonce, intent?.pane, loadPane]);
 
   const go = useCallback((t: LobbyTab) => {
     setOverride(null);
     setTabId(t.id);
-    if (t.kind !== "local" && t.path) loadPane(t.path);
+    if (t.kind === "local" || t.kind === "native") return;
+    if (t.path) loadPane(t.path);
   }, [loadPane]);
 
   const openRoute = useCallback((path: string, label: string) => {
@@ -235,8 +239,15 @@ export default function LobbyOverlay({
   }, [onClose]);
 
   const localPane = !override && tab.kind === "local";
+  const nativePane = !override && tab.kind === "native";
   const panePath = framePath || override?.path || tab.path;
   const paneLabel = override ? override.label : tab.label;
+  const chatActive = chat.turnCount > 0;
+
+  useEffect(() => {
+    if (!chatActive) return;
+    requestAnimationFrame(() => threadEndRef.current?.scrollIntoView({ block: "end" }));
+  }, [chat.turnCount, chatActive]);
 
   // ── docked (minimised) ───────────────────────────────────────────────────
   if (minimised) {
@@ -378,27 +389,37 @@ export default function LobbyOverlay({
               ))}
             </div>
 
-            <div className="relative min-h-0 flex-1">
-              {localPane && tab.id === "home" ? (
-                <LobbyHome onSelect={go} onOpenRoute={openRoute} />
-              ) : localPane ? (
-                <LobbyPlay onOpenRoute={openRoute} />
-              ) : (
-                <>
-                  {!frameLoaded && <FrameSkeleton />}
-                  <iframe
-                    ref={frameRef}
-                    key={frameSrc}
-                    src={frameSrc}
-                    title={`${paneLabel} — ${panePath}`}
-                    onLoad={onFrameLoad}
-                    className="h-full w-full border-0 bg-white"
-                  />
-                </>
-              )}
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+              <div
+                className={
+                  `relative min-h-0 overflow-hidden ${chatActive ? "flex-[0_1_40%]" : "flex-1"}`
+                }
+              >
+                {localPane && tab.id === "home" ? (
+                  <LobbyHome onSelect={go} onOpenRoute={openRoute} />
+                ) : localPane ? (
+                  <LobbyPlay onOpenRoute={openRoute} />
+                ) : nativePane && tab.id === "board" ? (
+                  <LobbyBoardPane />
+                ) : (
+                  <>
+                    {!frameLoaded && <FrameSkeleton />}
+                    <iframe
+                      ref={frameRef}
+                      key={frameSrc}
+                      src={frameSrc}
+                      title={`${paneLabel} — ${panePath}`}
+                      onLoad={onFrameLoad}
+                      className="h-full w-full border-0 bg-white"
+                    />
+                  </>
+                )}
+              </div>
+
+              {chatActive && <LobbyThread chat={chat} endRef={threadEndRef} />}
             </div>
 
-            <LobbyChatBar
+            <LobbyComposer
               chat={chat}
               onNavigate={go}
               paneLabel={paneLabel}
