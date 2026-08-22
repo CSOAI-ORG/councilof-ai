@@ -87,10 +87,15 @@ async function get(path) {
   // build failure. Use "manual" and classify the 3xx chain ourselves so a loop or an
   // asymmetric 308 is reported as a CLEAN status failure, never a crash.
   const res = await fetch(HOST + path, { headers: { "User-Agent": UA }, redirect: "manual" });
-  // A 3xx that points back at itself (or bounces we can see) is a loop — surface it.
+  // Note (2026-08-22 JEEVES audit): a bare→slash redirect (/pricing → /pricing/) is the
+  // NORMAL trailing-slash canonicalization (Pages serves dist/<route>/index.html at the
+  // slashed path). It is NOT a loop: a loop is when the redirect target redirects BACK.
+  // The old check flagged path + "/" as a loop, which false-failed every PR whenever the
+  // live site served the SPA catch-all. Only a self-bounce is a loop.
+  // A 3xx that points back at the ORIGINAL path exactly (not the slash-form) is a loop.
   if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
     const loc = res.headers.get("location");
-    if (loc === path || loc === path + "/" || loc === path.replace(/\/$/, "")) {
+    if (loc === path) {
       return { status: res.status, html: "", text: "", key: "", loop: true, location: loc };
     }
   }
