@@ -120,6 +120,11 @@ try {
 
 try {
   const { text: home } = await fetchText("/");
+  if (home.length < 20000) {
+    fail("homepage is prerendered (not a thin Vite shell)", `${home.length} bytes`);
+  } else {
+    pass("homepage is prerendered", `${home.length} bytes`);
+  }
   const lobbyAsset = (home.match(/assets\/CouncilLobby[^"'\s]+/) || [])[0];
   if (!lobbyAsset) {
     fail("homepage references CouncilLobby chunk");
