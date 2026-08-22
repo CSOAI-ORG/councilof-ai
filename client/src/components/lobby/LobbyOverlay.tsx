@@ -14,6 +14,7 @@ import {
 } from "./glass";
 import type { LobbyIntent } from "@/lib/lobbyLink";
 import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
+import { setOsOpen } from "@/lib/osChrome";
 import {
   LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
 } from "./rails";
@@ -128,6 +129,13 @@ export default function LobbyOverlay({
   useEffect(() => { writeOpen(LEFT_KEY, leftOpen); }, [leftOpen]);
   useEffect(() => { writeOpen(RIGHT_KEY, rightOpen); }, [rightOpen]);
 
+  // Hide marketing Header/Footer while the workspace covers the page.
+  // Minimising (or unmounting) returns the public site chrome.
+  useEffect(() => {
+    setOsOpen(!minimised);
+    return () => setOsOpen(false);
+  }, [minimised]);
+
   const minimise = useCallback(() => setMinimised(true), []);
 
   // Esc closes; Cmd/Ctrl + . minimises. Both are printed in the header.
@@ -238,7 +246,7 @@ export default function LobbyOverlay({
   const panePath = framePath || override?.path || tab.path;
   const paneLabel = override ? override.label : tab.label;
 
-  // ── docked (minimised) ───────────────────────────────────────────────────
+  // ── docked (minimised) ─────────────────────────────────────
   if (minimised) {
     return (
       <div
@@ -278,7 +286,7 @@ export default function LobbyOverlay({
     );
   }
 
-  // ── the workspace ────────────────────────────────────────────────────
+  // ── the workspace ────────────────────────────────────
   return (
     <>
       <FocusSentinel onFocus={() => focusEdge("last")} />

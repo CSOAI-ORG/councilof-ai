@@ -9,7 +9,7 @@ import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Sear
 import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { isEmbedded } from '@/lib/embed';
+import { useSiteChromeHidden } from '@/lib/osChrome';
 import { lobbyHref, openLobby } from '@/lib/lobbyLink';
 import {
   DropdownMenu,
@@ -136,6 +136,7 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hideChrome = useSiteChromeHidden();
 
   const isActive = (href: string) => {
     if (href === '/') return location === '/';
@@ -166,7 +167,7 @@ export function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  if (isEmbedded()) return null;
+  if (hideChrome) return null;
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
