@@ -6,7 +6,7 @@
 
 import { useState, useCallback } from 'react';
 import { navigateToSkipTarget, type SkipLink } from '@/lib/accessibility';
-import { isEmbedded } from '@/lib/embed';
+import { useSiteChromeHidden } from '@/lib/osChrome';
 
 interface SkipNavigationProps {
   /**
@@ -25,6 +25,7 @@ const defaultLinks: SkipLink[] = [
 ];
 
 export function SkipNavigation({ links = defaultLinks, className = '' }: SkipNavigationProps) {
+  const hideChrome = useSiteChromeHidden();
   const [focusedLinkId, setFocusedLinkId] = useState<string | null>(null);
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -39,7 +40,7 @@ export function SkipNavigation({ links = defaultLinks, className = '' }: SkipNav
     }
   }, []);
 
-  if (isEmbedded()) return null;
+  if (hideChrome) return null;
 
   return (
     <div
