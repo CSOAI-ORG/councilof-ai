@@ -37,11 +37,13 @@ export const AUDIENCES: Audience[] = [
   { id: "board", label: "Board & exec", who: "Accountable officers." },
   { id: "researcher", label: "Researcher", who: "Reading the method and the n." },
   { id: "press", label: "Press", who: "Checking a claim before quoting it." },
+  { id: "insurer", label: "Insurer", who: "Underwriting AI deployment risk." },
+  { id: "regulator", label: "Regulator", who: "Checking behaviour against the law." },
 ];
 
 export const DEFAULT_AUDIENCE = "public";
 
-/** Base questions per audience — asked anywhere on the site. 4 × 7 = 28. */
+/** Base questions per audience — asked anywhere on the site. */
 const BY_AUDIENCE: Record<string, string[]> = {
   public: [
     "In plain words, what does the Council of AI actually measure?",
@@ -84,6 +86,18 @@ const BY_AUDIENCE: Record<string, string[]> = {
     "What was the most recent published correction, and what caused it?",
     "What does the Council explicitly not claim about the systems it measures?",
     "Who publishes these numbers, and what is the legal entity behind them?",
+  ],
+  insurer: [
+    "What can an underwriter rely on in a signed measurement card?",
+    "Which figures on the board are safe to quote today, and which are not?",
+    "What does a completed assessment explicitly NOT say about a system?",
+    "Where is the corrections ledger, and what has the Council got wrong so far?",
+  ],
+  regulator: [
+    "Which figures on the board are safe to quote today, and which are not?",
+    "What does the Council refuse to state an opinion on, and why?",
+    "How would I check a published card myself, without a CSOAI account?",
+    "What is the difference between measuring a system and certifying it?",
   ],
 };
 
@@ -129,6 +143,27 @@ const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
   {
     test: /^\/academy/,
     asks: ["What does Council Academy attest on completion, and what does it explicitly not attest?"],
+  },
+  {
+    test: /^\/(compare|vs)/,
+    asks: [
+      "What can I rely on in a published measurement, and what is explicitly out of scope?",
+      "What is the difference between measuring a system and certifying it?",
+    ],
+  },
+  {
+    test: /^\/(trust-center|layer0|network|distribution|hive|intel)/,
+    asks: [
+      "How is a measurement card signed, and how do I verify one without trusting you?",
+      "Who publishes these numbers, and what is the legal entity behind them?",
+    ],
+  },
+  {
+    test: /^\/(for\/|insurers|regulators|industries|enterprise)/,
+    asks: [
+      "What is the one-paragraph summary of what is measured and what is not?",
+      "What would it take to have our system measured, and what would the result actually say?",
+    ],
   },
 ];
 

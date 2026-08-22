@@ -83,6 +83,21 @@ function discover() {
     if (!/\.(js|css|png|svg|jpg|json|ico|woff2?|txt|xml)$/i.test(p) && !p.startsWith("/assets/"))
       found.add(p);
   }
+  // Dynamic and alias paths the homepage / lobby send strangers to. Heuristic
+  // discovery never sees /for/:persona or /industries/:slug, so those cold-load
+  // 404 against the honest catch-all. Force them into the snapshot queue.
+  const MUST = [
+    "/gspc", "/scoreboard", "/console", "/council-os", "/lobby", "/legal",
+    "/vs", "/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust",
+    "/for/regulator", "/for/enterprise", "/for/finance", "/for/healthcare",
+    "/for/startup", "/for/sec-filer",
+    "/industries/insurance", "/industries/finance", "/industries/healthcare",
+    "/industries/health", "/industries/care", "/industries/transport",
+    "/industries/transportation", "/industries/retail", "/industries/education",
+    "/industries/energy", "/industries/government", "/industries/legal",
+    "/library/axes",
+  ];
+  for (const p of MUST) found.add(p);
   return [...found].filter(p => !p.includes(":") && !p.includes("*")).sort();
 }
 

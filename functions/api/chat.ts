@@ -84,6 +84,92 @@ why(k) +
   }
 
   const axes = await loadAxes(origin);
+  const axisNames = axes.map((a: any) => String(a.axis)).filter(Boolean);
+
+  // 1b. Who we are / measure vs certify — the questions the lobby actually suggests.
+  if (
+    /\b(in plain words|actually measure|what (do|does) (the )?(council|csoai|this (estate|body|site)))\b/i.test(q) ||
+    (/\bcertif/i.test(q) && /\bmeasur/i.test(q)) ||
+    /\bdifference between measur/i.test(q) ||
+    /\bone-paragraph summary\b/i.test(q)
+  ) {
+    const list = axisNames.length
+      ? `This stamp's board axes, from GET /api/gspc: ${axisNames.join(", ")}.`
+      : "Read the living board at GET /api/gspc — this process could not load it just now.";
+    return (
+      `The Council of AI measures published behaviour against frozen rules, signs the ` +
+      `result with Ed25519, and publishes what it cannot measure.\n\n` +
+      `It does not certify, approve, or remediate. A grade is never sold. Anyone can ` +
+      `recompute a card at /gspc-verify with no account.\n\n` +
+      `${list}\n\n` +
+      `Counts and stamps live on the API. This reply does not type a slot number.\n\n` +
+      `_Grounded in the published board, not by a model._`
+    );
+  }
+
+  // 1c. Empty cells / no number.
+  if (/\b(no number|empty cell|carry no number|without a (number|score)|unmeasured axis|axis is published with no)\b/i.test(q)) {
+    return (
+      `An axis with no number is not a missing graphic. It is a published cell that ` +
+      `has not earned a quotable figure on this stamp — UNMEASURED, below the usable-n ` +
+      `floor, or still in-lane beside the board.\n\n` +
+      `Empty cells stay empty. We do not invent a score to fill them. ` +
+      `In-lane rows (instrument-honesty, human-vs-ai) sit beside the board and are ` +
+      `not counted in totals.public_count.\n\n` +
+      `Read the cells from GET /api/gspc.\n\n` +
+      `_Grounded in the published board, not by a model._`
+    );
+  }
+
+  // 1d. Verify a card.
+  if (
+    (/\b(verif|recompute|ed25519|public key|without (trusting|a csoai account))\b/i.test(q) &&
+      /\b(card|hash|sign|key|did|check)\b/i.test(q)) ||
+    /\bcheck a (published )?card\b/i.test(q)
+  ) {
+    return (
+      `A measurement card is a canonical JSON record plus an Ed25519 signature.\n\n` +
+      `1. Drop content_id and signature, sort keys, SHA-256 the bytes — that hash is the card.\n` +
+      `2. Fetch the public key from https://csoai.org/.well-known/did.json (did:web:csoai.org).\n` +
+      `3. Check the signature in your own browser at /gspc-verify. No account, no fee.\n\n` +
+      `If the hash or the signature fails, the card is not ours. We do not have a third step.\n\n` +
+      `_Grounded in the published verify path, not by a model._`
+    );
+  }
+
+  // 1e. Legal entity / who publishes.
+  if (/\b(legal entity|who publishes|behind them|csoai ltd|companies house|nicholas templeman)\b/i.test(q)) {
+    return (
+      `The publisher is **CSOAI Ltd**, UK company **16939677**. Trading as Council of AI. ` +
+      `Site: councilof.ai. Founder: Nicholas Templeman.\n\n` +
+      `The signing identity is **did:web:csoai.org**. Keys live on the static apex ` +
+      `https://csoai.org/.well-known/did.json — not on this SPA.\n\n` +
+      `_Grounded in the published legal pages, not by a model._`
+    );
+  }
+
+  // 1f. Corrections / what we refuse.
+  if (/\b(correction|got wrong|refuse to (state|opine)|not claim|out of scope|rely on in a (published|signed)|underwriter|what can i rely on)\b/i.test(q)) {
+    return (
+      `A published measurement says: this system, this frozen bank, this n, this score, ` +
+      `this signature. It does not say the system is lawful, safe to deploy, or certified.\n\n` +
+      `The Council will not invent a missing instrument, will not fill an empty cell, ` +
+      `and will not give a legal opinion. Regulators and notified bodies decide conformity.\n\n` +
+      `When we get a number wrong it lands on GET /api/corrections. Read that feed — ` +
+      `this reply will not summarise it from memory.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 1g. Minimum n / researcher floor.
+  if (/\b(minimum n|usable n|quotable figure|below it|n\s*[≥>=]{0,2}\s*30)\b/i.test(q)) {
+    return (
+      `Nothing is quoted below usable n ≥ 30 (n × (1 − unparsed rate)). Under that floor ` +
+      `the axis carries no interval and says so. Unparsed answers are counted incorrect, ` +
+      `never dropped. Ties stay ties — a point lead without McNemar separation is not a win.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
 
   // 2. A named axis.
   const hit = axes.find((a: any) =>
@@ -109,7 +195,7 @@ why(k) +
   }
 
   // 3. The board as a whole.
-  if (/\b(board|axes|axis|coverage|measured|how many|overview|status)\b/.test(t) && axes.length) {
+  if (/\b(board|axes|axis|coverage|measured|how many|overview|status|walk me through)\b/.test(t) && axes.length) {
     const m = axes.filter((a: any) => a.status === "MEASURED" && a.n > 0);
     const withCI = m.filter((a: any) => a.n * (1 - (a.unparsed_rate ?? 0)) >= 30);
     return `The GSPC suite is **${axes.length} axes**. **${m.length}** are MEASURED; ` +
@@ -139,7 +225,7 @@ why(k) +
   }
 
   // 5. Method questions.
-  if (/\b(method|how do you|unparsed|interval|wilson|grader|judge|canary|n *[≥>=]* *30)\b/.test(t)) {
+  if (/\b(method|how do you|unparsed|interval|wilson|grader|judge|canary|n *[>=≥]* *30)\b/.test(t)) {
     return `The rules every board here runs on:\n\n` +
       `· **Unparsed counted incorrect** — an answer we cannot read is a wrong answer, never a dropped row.\n` +
       `· **No model judges another model** — every grader is deterministic; there is no LLM jury.\n` +
@@ -206,13 +292,18 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const g = await grounded(question, origin);
   if (g) return reply(g, "grounded in published measurement · deterministic · recomputable", "grounded");
 
+  let named = "";
+  try {
+    const live = await loadAxes(origin);
+    if (live.length) named = live.map((a: any) => a.axis).filter(Boolean).join(", ");
+  } catch { /* refuse text falls back */ }
+  const axisHint = named || "the axes published on GET /api/gspc";
+
   return reply(
-    "I can answer from what this estate has actually measured — ask about one of the twelve GSPC axes " +
-    "(governance, safety, provenance, continuity, conformance, openness, care, swarm, cross-reality, " +
-    "art5-safeguard, detector-interop, machinery-conformity), whether a practice is prohibited under " +
-    "EU AI Act Article 5, the Council City arena runs, or the measurement method itself.\n\n" +
-    "I won't answer this one, because I would be improvising rather than grounding. The tuned " +
-    "specialist that handles open-ended questions is not connected yet.",
+    "I can answer from what this estate has actually measured — ask about a named board axis " +
+    `(${axisHint}), whether a practice is prohibited under EU AI Act Article 5, ` +
+    "Council Space rounds, or the measurement method.\n\n" +
+    "I will not invent a number or a legal opinion. The living board is GET /api/gspc.",
     "refused — no grounding available", "ungrounded",
   );
 };
