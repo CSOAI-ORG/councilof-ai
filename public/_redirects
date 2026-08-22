@@ -30,9 +30,13 @@
 /console                /?lobby=home                 308
 /council-os             /?lobby=home                 308
 /library/measurement    /library/axes                308
-/verify                 /gspc-verify/                308
-/verify/                /gspc-verify/                308
-/gspc-verify            /gspc-verify/                308
+/verify                 /gspc-verify                 308
+/verify/                /gspc-verify                 308
+/gspc-verify/           /gspc-verify                 308
+/enterprises            /enterprise                  308
+/developers             /gspc-verify                 308
+/colosseum              /coliseum                    308
+/for                    /for/enterprise              308
 
 # --- static asset trees: served directly, never routed to the app ---
 /arena/*  /arena/:splat  200
@@ -43,5 +47,7 @@
 /flywheel/*  /flywheel/:splat  200
 /packs/*  /packs/:splat  200
 
-# --- SPA catch-all: known routes are prerendered static files (200); unknown paths get a real 404 ---
-/*  /404.html  404
+# --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---
+# Restored 2026-08-22: /* /404.html 404 broke cold loads of every non-prerendered route
+# while production was shipping a thin Vite shell without per-route HTML.
+/*  /index.html  200

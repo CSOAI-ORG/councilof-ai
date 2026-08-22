@@ -19,9 +19,16 @@
  * like /provenance-finding must receive index.html or the app never boots. A blanket 404 breaks
  * every deep link on the site.
  *
- * THE FIX (revised 2026-08-06): emit ONLY the catch-all SPA fallback.
+ * THE FIX (revised 2026-08-06, restored 2026-08-22 after production regression):
  *
  *     /*   /index.html   200    <- wouter boots for every path, routes or 404s in-app
+ *
+ * Production 2026-08-22 measured: homepage is a thin Vite shell (~7KB) WITHOUT prerendered
+ * per-route HTML, while catch-all was `/* /404.html 404`. Persona gauntlet FAILED 5/8:
+ * /pricing, /honesty, /library, /regulators, /start all returned hard 404 on cold load.
+ * In-app NotFound remains the honest unknown-path surface; the edge must hand the SPA the
+ * shell so known routes can mount. Prerendered HTML still wins when present (exact file
+ * match before catch-all).
  *
  * A previous revision emitted one EXACT rule per route (`/about /index.html 200`, ...).
  * Cloudflare Pages canonicalizes an exact-rule `/index.html` target to `/`, so those rules
@@ -91,9 +98,14 @@ const EXISTING = [
   "/library/measurement    /library/axes                308",
   // Klingler/DID stranger-walk 2026-08-22: bare /verify 404s (prerender is /verify/index.html only;
   // catch-all /* → 404.html). DID serviceEndpoint is https://councilof.ai/verify (no slash).
-  "/verify                 /gspc-verify/                308",
-  "/verify/                /gspc-verify/                308",
-  "/gspc-verify            /gspc-verify/                308",
+  "/verify                 /gspc-verify                 308",
+  "/verify/                /gspc-verify                 308",
+  "/gspc-verify/           /gspc-verify                 308",
+  // End-user testing 2026-08-22: homepage CTAs and colloquial aliases that 404'd cold.
+  "/enterprises            /enterprise                  308",
+  "/developers             /gspc-verify                 308",
+  "/colosseum              /coliseum                    308",
+  "/for                    /for/enterprise              308",
 ];
 
 const HASHED_DIRS = ["/assets"];
@@ -110,8 +122,10 @@ const lines = [
   ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map((d) => `${d}/*  ${d}/:splat  200`),
 
   "",
-  "# --- SPA catch-all: known routes are prerendered static files (200); unknown paths get a real 404 ---",
-  "/*  /404.html  404",
+  "# --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---",
+  "# Restored 2026-08-22: /* /404.html 404 broke cold loads of every non-prerendered route",
+  "# while production was shipping a thin Vite shell without per-route HTML.",
+  "/*  /index.html  200",
   "",
 ];
 
