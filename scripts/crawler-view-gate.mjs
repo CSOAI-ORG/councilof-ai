@@ -82,9 +82,29 @@ function canonical(html) {
 }
 
 async function get(path) {
-  const res = await fetch(HOST + path, { headers: { "User-Agent": UA }, redirect: "follow" });
-  const html = await res.text();
-  return { status: res.status, html, text: visibleText(html), key: canonical(html) };
+  // Loop-safe fetch (2026-08-22): `redirect:"follow"` on a bare↔slash redirect loop
+  // throws TypeError (max-redirect) which the post-upload assert turns into a generic
+  // build failure. Use "manual" and classify the 3xx chain ourselves so a loop or an
+  // asymmetric 308 is reported as a CLEAN status failure, never a crash.
+  const res = await fetch(HOST + path, { headers: { "User-Agent": UA }, redirect: "manual" });
+  // A 3xx that points back at itself (or bounces we can see) is a loop — surface it.
+  if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
+    const loc = res.headers.get("location");
+    if (loc === path || loc === path + "/" || loc === path.replace(/\/$/, "")) {
+      return { status: res.status, html: "", text: "", key: "", loop: true, location: loc };
+    }
+  }
+  // Still following one redirect is fine (thin link), but bound it: re-request the
+  // resolved target once so the final document is what we measure, not a 30x body.
+  let html = "";
+  if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
+    const target = new URL(res.headers.get("location"), HOST).toString();
+    const final = await fetch(target, { headers: { "User-Agent": UA }, redirect: "error" });
+    html = await final.text();
+    return { status: final.status, html, text: visibleText(html), key: canonical(html) };
+  }
+  html = await res.text();
+  return { status: res.status, html, text: visibleText(html), key: canonical(html), loop: false };
 }
 
 function evaluate(pages, absent, sec = null, scitt = null) {
@@ -107,6 +127,7 @@ function evaluate(pages, absent, sec = null, scitt = null) {
 
   // 2. SUBSTANCE
   for (const [route, p] of pages) {
+    if (p.loop) { failures.push(`${route}: REDIRECT LOOP (HTTP ${p.status} -> ${p.location ?? "self"}) — bare↔slash fight, must be a clean 200 or a single canonical redirect`); continue; }
     if (p.status !== 200) { failures.push(`${route}: HTTP ${p.status} to a crawler UA`); continue; }
     if (p.text.length < MIN_TEXT_CHARS) {
       failures.push(
