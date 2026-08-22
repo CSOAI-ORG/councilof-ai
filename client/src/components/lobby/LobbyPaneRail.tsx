@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { LOBBY_TABS, type LobbyTab, type LobbyTabId } from "./tabs";
-import { FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
+import { CONTROL, FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
 
 /**
  * LobbyPaneRail — the LEFT rail: the pane / destination list.
@@ -19,9 +19,11 @@ export const tabDomId = (id: LobbyTabId) => `coai-lobby-tab-${id}`;
 export default function LobbyPaneRail({
   tabId,
   onSelect,
+  onMinimise,
 }: {
   tabId: LobbyTabId;
   onSelect: (t: LobbyTab) => void;
+  onMinimise?: () => void;
 }) {
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -49,17 +51,29 @@ export default function LobbyPaneRail({
 
   return (
     <nav
-      aria-label="Council Lobby destinations"
+      aria-label="Council OS destinations"
       className={`${SURFACE} ${SP.rail} hidden w-52 shrink-0 flex-col sm:flex lg:w-60`}
       style={panelStyle}
     >
-      <h2 className={`${TYPE.section} mb-3 shrink-0 px-1`}>Destinations</h2>
+      <div className="mb-3 flex shrink-0 items-center justify-between gap-2 px-1">
+        <h2 className={TYPE.section}>Destinations</h2>
+        {onMinimise && (
+          <button
+            type="button"
+            onClick={onMinimise}
+            aria-label="Hide the destinations pane"
+            className={`${CONTROL} ${SP.chip} text-[11px] font-semibold`}
+          >
+            Hide
+          </button>
+        )}
+      </div>
 
       <div
         ref={listRef}
         role="tablist"
         aria-orientation="vertical"
-        aria-label="Council Lobby destinations"
+        aria-label="Council OS destinations"
         onKeyDown={onKeyDown}
         className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto"
       >

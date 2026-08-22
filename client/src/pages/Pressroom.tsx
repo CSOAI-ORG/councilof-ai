@@ -3,16 +3,16 @@ import { useEffect } from "react";
 // Pressroom - press one-pager + boilerplate for distribution. Quotable facts, the story,
 // and a single CTA. Built for journalists, partners, and demo sharing.
 const FACTS = [
-  { k: "What it is", v: "An agentic AI-governance operating system - the Council of AI decides, the OS proves it." },
-  { k: "The Council", v: "Five independent AI agents reach designed multi-agent review on every major decision." },
-  { k: "Coverage", v: "13+ frameworks (EU AI Act, NIST AI RMF, ISO 42001, and more) across 47 industries." },
+  { k: "What it is", v: "An independent AI-measurement body. We measure AI systems against statute, sign the result, and publish what cannot be measured." },
+  { k: "The Council", v: "Designed multi-provider review. Live independence is published on the Refutation Ledger — a designed council, not a live claim." },
+  { k: "Coverage", v: "Statute-anchored instruments. Slot counts, dates and sample sizes live at GET councilof.ai/api/gspc — we do not type them here." },
   { k: "The lineage", v: "Governance rediscovered from 4,000 years of human history - Athens to Bitcoin to AI." },
-  { k: "The proof", v: "Every verdict is Ed25519-signed, replayable, and permanently logged." },
+  { k: "The proof", v: "Ed25519-signed measurement cards. Verify is free and loginless at councilof.ai/gspc-verify." },
 ];
 const QUOTES = [
   "We did not invent AI governance. We rediscovered it - and built it in digital form.",
   "No single agent can decide. That is the point.",
-  "Ask it any governance question and watch five minds reach consensus in thirty seconds.",
+  "Measurement, not certification. Empty cells stay empty.",
 ];
 
 export default function Pressroom() {
@@ -24,7 +24,7 @@ export default function Pressroom() {
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - pressroom</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Press & media kit</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Everything you need to write about CSOAI - the facts, the story, and the quotes. Reach the live OS at csoai-v2-app.vercel.app.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Everything you need to write about CSOAI - the facts, the story, and the quotes. The live site is councilof.ai.</p>
         </div>
       </section>
       <section className="max-w-5xl mx-auto px-6 py-12">
@@ -44,7 +44,7 @@ export default function Pressroom() {
           ))}
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Boilerplate</h2>
-        <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">CSOAI (Council for the Safety of AI) builds the operating system for AI governance. Its designed multi-agent review Council of five independent agents reaches consensus across 13+ regulatory frameworks and 47 industries, proving every decision with cryptographic signatures. Rediscovered from 4,000 years of governance and built for the agentic era, CSOAI turns compliance from a checklist into a living system.</p>
+        <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">Council of AI (CSOAI Ltd, UK Companies House 16939677) is an independent measurement body for AI behaviour. We run systems against frozen, published tests drawn from statute, sign the result, and publish the parts we could not measure. We do not certify, remediate, or sell a grade. Verify stays free at councilof.ai/gspc-verify. Live board counts are at GET councilof.ai/api/gspc.</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See the Council live -&gt;</a>
           <a href="/lineage" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The story -&gt;</a>

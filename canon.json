@@ -1,7 +1,8 @@
 {
   "_comment": "Single source of truth for councilof.ai's ruled public invariants. The drift-guard asserts the LIVE site matches these. When a ruling changes a value (e.g. GR.2 moves the axis count), change it HERE in one place and the guard follows. Do not hand-edit the live site to a value that contradicts this file.",
-  "ruling": "SITTING 1 · 2026-08-18 · GSPC 14-slot board, 13 measured of 14",
+  "ruling": "SITTING 1 \u00b7 2026-08-18 \u00b7 GSPC 14-slot board, 13 measured of 14",
   "title_contains": "Council of AI",
+  "min_homepage_bytes": 20000,
   "api": {
     "path": "/api/gspc",
     "schema": "csoai.gspc-axes/0.5",

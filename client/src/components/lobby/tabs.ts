@@ -3,13 +3,13 @@
  *
  * Most entries point at a REAL route this app already serves. The lobby does not
  * reimplement any page — it frames the live one, so a page can never drift from
- * its lobby copy. `?embed=1` is appended by the centre pane; pages may later read
- * that flag to drop their own header/footer while inside the lobby. Nothing reads
- * it yet, so today a framed page still carries its own chrome.
+ * its lobby copy. `?embed=1` is appended by the centre pane. The framed app
+ * honours it: site chrome is dropped and same-origin navigation stays inside
+ * the pane (see client/src/lib/embed.ts).
  *
- * ONE entry is `kind: "local"` — the Council OS local-play gallery, which has no
- * route because none of it is deployed. It renders in the centre pane from
- * play.ts and says so on its face.
+ * TWO entries are `kind: "local"`: Home is the native Council OS desktop
+ * (LobbyHome) — it must not iframe /os, or the OS nests inside itself. Play
+ * is the gold local-play gallery from play.ts; nothing there is deployed.
  */
 
 export type LobbyTabId =
@@ -41,14 +41,15 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "home",
     label: "Home",
-    blurb: "The Council hub — every live surface in one launcher.",
-    path: "/os",
-    cues: /\b(home|hub|launcher|start|lobby home)\b/i,
+    blurb: "Council OS desktop — every live surface, one workspace.",
+    path: "",
+    kind: "local",
+    cues: /\b(home|hub|launcher|start|lobby home|council os|the os)\b/i,
   },
   {
     id: "board",
     label: "Live board",
-    blurb: "The GSPC board — measured axes, and the ones that carry no number.",
+    blurb: "The living GSPC board — every published axis, and in-lane beside it.",
     path: "/gspc-scoreboard",
     cues: /\b(board|scoreboard|score|axes|axis|gspc|leaderboard)\b/i,
   },
@@ -94,7 +95,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "local",
     accent: "gold",
-    cues: /\b(play|game|games|local play|duel|coliseum|council os)\b/i,
+    cues: /\b(play|game|games|local play|duel|coliseum)\b/i,
   },
 ];
 

@@ -5,13 +5,18 @@ import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
 import LobbySideRail from "./LobbySideRail";
 import LobbyChatBar from "./LobbyChatBar";
 import LobbyPlay from "./LobbyPlay";
+import LobbyHome from "./LobbyHome";
 import { useLobbyChat } from "./useLobbyChat";
 import { useFocusTrap } from "./useFocusTrap";
 import {
-  ALPHA_DEFAULT, ALPHA_MAX, ALPHA_MIN, FOCUS, SP, SURFACE_LIFTED, TYPE,
+  ALPHA_DEFAULT, ALPHA_MAX, ALPHA_MIN, FOCUS, SP, SURFACE, SURFACE_LIFTED, TYPE,
   panelStyle, scrimStyle,
 } from "./glass";
 import type { LobbyIntent } from "@/lib/lobbyLink";
+import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
+import {
+  LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
+} from "./rails";
 
 /**
  * LobbyOverlay — the Council Lobby as a WHITE GLASS-OS workspace.
@@ -28,10 +33,11 @@ import type { LobbyIntent } from "@/lib/lobbyLink";
  * THE LAYOUT.
  *   header   full width, at the very top — the mark, the name, transparency and
  *            the window controls. NOT inside the centre pane.
- *   left     the pane / destination list (a real vertical tablist)
- *   centre   the active pane: a framed live route, or the local-play gallery
- *   right    a switchable rail — Reports · Tasks · Chats — collapsible
- *   foot     the chat bar, centred and constrained to max-w-3xl
+ *   left     Destinations — a real vertical tablist. Hideable; `[` toggles it.
+ *   centre   the dominant column: the live pane PLUS the ask thread. This is
+ *            the readable surface. Hiding both rails gives it the workspace.
+ *   right    Reports · Tasks · Chats. Hideable; `]` toggles it. Closed on a
+ *            first visit so the centre reads first.
  *
  * WINDOW STATE. close / minimise / expand-restore.
  *   Esc closes and focus returns to the badge (see CouncilLobby).
@@ -53,6 +59,7 @@ import type { LobbyIntent } from "@/lib/lobbyLink";
 
 const ALPHA_KEY = "coai.lobby.alpha";
 const TAB_KEY = "coai.lobby.tab";
+const SIZE_KEY = "coai.lobby.size";
 const TITLE_ID = "coai-lobby-title";
 
 function readAlpha(): number {
@@ -71,6 +78,14 @@ function readTab(): LobbyTabId {
   return DEFAULT_TAB;
 }
 
+function readSize(): "comfortable" | "full" {
+  try {
+    const v = localStorage.getItem(SIZE_KEY);
+    if (v === "comfortable" || v === "full") return v;
+  } catch { /* ignore */ }
+  return "full";
+}
+
 /** Tabbable guard that bounces focus back into the dialog. See useFocusTrap. */
 function FocusSentinel({ onFocus }: { onFocus: () => void }) {
   return <div data-focus-sentinel tabIndex={0} aria-hidden="true" onFocus={onFocus} className="sr-only" />;
@@ -86,12 +101,19 @@ export default function LobbyOverlay({
   const [alpha, setAlpha] = useState<number>(readAlpha);
   // An intent present at mount picks the pane; otherwise the last pane is restored.
   const [tabId, setTabId] = useState<LobbyTabId>(() => intent?.pane ?? readTab());
-  const [railOpen, setRailOpen] = useState(true);
-  const [size, setSize] = useState<"comfortable" | "full">("comfortable");
+  const [leftOpen, setLeftOpen] = useState(() => readOpen(LEFT_KEY, LEFT_DEFAULT));
+  const [rightOpen, setRightOpen] = useState(() => readOpen(RIGHT_KEY, RIGHT_DEFAULT));
+  const [size, setSize] = useState<"comfortable" | "full">(readSize);
   const [minimised, setMinimised] = useState(false);
   const [frameLoaded, setFrameLoaded] = useState(false);
   /** Set when a play card opens a route that is not itself a pane. */
   const [override, setOverride] = useState<{ path: string; label: string } | null>(null);
+  /** Actual path showing in the iframe — follows in-pane navigation. */
+  const [framePath, setFramePath] = useState<string>(() => intent ? tabById(intent.pane).path : tabById(readTab()).path);
+  const [frameSrc, setFrameSrc] = useState<string>(() => {
+    const path = intent ? tabById(intent.pane).path : tabById(readTab()).path;
+    return path ? withEmbed(path) : "";
+  });
 
   const rootRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
@@ -102,6 +124,9 @@ export default function LobbyOverlay({
 
   useEffect(() => { try { localStorage.setItem(ALPHA_KEY, String(alpha)); } catch { /* ignore */ } }, [alpha]);
   useEffect(() => { try { localStorage.setItem(TAB_KEY, tabId); } catch { /* ignore */ } }, [tabId]);
+  useEffect(() => { try { localStorage.setItem(SIZE_KEY, size); } catch { /* ignore */ } }, [size]);
+  useEffect(() => { writeOpen(LEFT_KEY, leftOpen); }, [leftOpen]);
+  useEffect(() => { writeOpen(RIGHT_KEY, rightOpen); }, [rightOpen]);
 
   const minimise = useCallback(() => setMinimised(true), []);
 
@@ -109,7 +134,11 @@ export default function LobbyOverlay({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") { onClose(); return; }
-      if (e.key === "." && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setMinimised((m) => !m); }
+      if (e.key === "." && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setMinimised((m) => !m); return; }
+      const t = e.target as HTMLElement | null;
+      if (t?.closest("input, textarea, select, [contenteditable='true']")) return;
+      if (e.key === "[") { e.preventDefault(); setLeftOpen((v) => !v); return; }
+      if (e.key === "]") { e.preventDefault(); setRightOpen((v) => !v); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -146,23 +175,53 @@ export default function LobbyOverlay({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minimised]);
 
+  const loadPane = useCallback((path: string) => {
+    setFrameLoaded(false);
+    setFramePath(path);
+    setFrameSrc(path ? withEmbed(path) : "");
+  }, []);
+
   // A later intent (an in-page CTA fired while the lobby is already open) moves
   // the pane. `nonce` makes a repeat of the same request land again.
   useEffect(() => {
     if (!intent) return;
     setMinimised(false);
     setOverride(null);
-    setTabId((cur) => { if (cur !== intent.pane) setFrameLoaded(false); return intent.pane; });
-  }, [intent?.nonce, intent?.pane]);
+    const next = tabById(intent.pane);
+    setTabId(intent.pane);
+    if (next.kind !== "local" && next.path) loadPane(next.path);
+  }, [intent?.nonce, intent?.pane, loadPane]);
 
   const go = useCallback((t: LobbyTab) => {
     setOverride(null);
-    setTabId((cur) => { if (cur !== t.id) setFrameLoaded(false); return t.id; });
-  }, []);
+    setTabId(t.id);
+    if (t.kind !== "local" && t.path) loadPane(t.path);
+  }, [loadPane]);
 
   const openRoute = useCallback((path: string, label: string) => {
-    setFrameLoaded(false);
     setOverride({ path, label });
+    loadPane(path);
+  }, [loadPane]);
+
+  // In-pane clicks stay in the iframe and post `coai:embed-nav`. Follow the
+  // path in the rail without remounting the frame (that would flash and lose
+  // scroll). Lobby-chrome navigation still remounts via loadPane().
+  useEffect(() => {
+    const onMsg = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin) return;
+      if (!isEmbedNav(e.data)) return;
+      const path = e.data.path;
+      const matched = tabForPath(path);
+      setFramePath(path);
+      if (matched) {
+        setTabId(matched.id);
+        setOverride(null);
+      } else {
+        setOverride({ path, label: e.data.title || path });
+      }
+    };
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
   }, []);
 
   // The framed page is same-origin, so Esc pressed INSIDE it can still close the
@@ -176,17 +235,15 @@ export default function LobbyOverlay({
   }, [onClose]);
 
   const localPane = !override && tab.kind === "local";
-  const panePath = override?.path ?? tab.path;
+  const panePath = framePath || override?.path || tab.path;
   const paneLabel = override ? override.label : tab.label;
-  // `?embed=1` is a hint for the framed page, not a contract it honours yet.
-  const src = panePath ? panePath + (panePath.includes("?") ? "&" : "?") + "embed=1" : "";
 
   // ── docked (minimised) ───────────────────────────────────────────────────
   if (minimised) {
     return (
       <div
         role="dialog"
-        aria-label="Council Lobby, minimised"
+        aria-label="Council OS, minimised"
         className={`fixed bottom-5 left-1/2 z-[80] w-[min(30rem,calc(100vw-2.5rem))] -translate-x-1/2 ${SURFACE_LIFTED} ${SP.row} flex items-center gap-3 bg-white/95 backdrop-blur-xl`}
       >
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-700 text-white" aria-hidden="true">
@@ -194,7 +251,7 @@ export default function LobbyOverlay({
         </span>
         <span className="min-w-0">
           <span className="block text-[13px] font-semibold leading-tight text-slate-900">
-            Council Lobby — minimised
+            Council OS — minimised
           </span>
           <span className={`block ${TYPE.fine}`}>
             {paneLabel} · {chat.turnCount} message{chat.turnCount === 1 ? "" : "s"} kept ·{" "}
@@ -204,7 +261,7 @@ export default function LobbyOverlay({
         <button
           type="button"
           onClick={() => setMinimised(false)}
-          aria-label="Restore the Council Lobby"
+          aria-label="Restore Council OS"
           className={`ml-auto shrink-0 rounded-xl bg-emerald-700 px-3.5 py-2 text-[12px] font-semibold text-white transition hover:bg-emerald-800 motion-reduce:transition-none ${FOCUS}`}
         >
           Restore
@@ -212,7 +269,7 @@ export default function LobbyOverlay({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close the Council Lobby"
+          aria-label="Close Council OS"
           className={`shrink-0 rounded-xl border border-slate-900/12 px-3 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
         >
           Close
@@ -221,7 +278,7 @@ export default function LobbyOverlay({
     );
   }
 
-  // ── the workspace ────────────────────────────────────────────────────────
+  // ── the workspace ────────────────────────────────────────────────────
   return (
     <>
       <FocusSentinel onFocus={() => focusEdge("last")} />
@@ -231,6 +288,7 @@ export default function LobbyOverlay({
         role="dialog"
         aria-modal="true"
         aria-labelledby={TITLE_ID}
+        data-coai="Council Lobby"
         className={
           `fixed z-[80] flex flex-col ${SP.shell} outline-none backdrop-blur-2xl ` +
           (size === "full" ? "inset-0" : "inset-2 rounded-3xl sm:inset-4")
@@ -249,13 +307,24 @@ export default function LobbyOverlay({
           onToggleSize={() => setSize((s) => (s === "full" ? "comfortable" : "full"))}
           onMinimise={minimise}
           onClose={onClose}
-          railOpen={railOpen}
-          onToggleRail={() => setRailOpen((v) => !v)}
+          leftOpen={leftOpen}
+          onToggleLeft={() => setLeftOpen((v) => !v)}
+          rightOpen={rightOpen}
+          onToggleRight={() => setRightOpen((v) => !v)}
         />
 
-        {/* ── three rails ───────────────────────────────────────────────── */}
-        <div className="flex min-h-0 flex-1 gap-4">
-          <LobbyPaneRail tabId={tabId} onSelect={go} />
+        {/* ── three rails; centre (pane + ask) is the dominant column ───── */}
+        <div className="flex min-h-0 flex-1 gap-3">
+          {leftOpen ? (
+            <LobbyPaneRail tabId={tabId} onSelect={go} onMinimise={() => setLeftOpen(false)} />
+          ) : (
+            <RailRestore
+              className="hidden sm:flex"
+              label="Show the destinations pane"
+              text="Panes"
+              onClick={() => setLeftOpen(true)}
+            />
+          )}
 
           <main
             id={PANEL_ID}
@@ -267,20 +336,20 @@ export default function LobbyOverlay({
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-slate-900/10 px-5 py-2.5">
               <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
               <span className={`hidden truncate md:inline ${TYPE.fine}`}>
-                {override ? "Opened from the local-play gallery — a page to read." : tab.blurb}
+                {override ? "Opened in this pane — navigation stays inside the OS." : tab.blurb}
               </span>
               {panePath && (
-                <a
-                  href={panePath}
-                  className={`ml-auto shrink-0 rounded font-mono text-[11px] text-emerald-800 underline-offset-2 hover:underline ${FOCUS}`}
+                <span
+                  className="ml-auto shrink-0 rounded font-mono text-[11px] text-slate-500"
+                  title="This page is open in the lobby pane — navigation stays here"
                 >
-                  {panePath} ↗
-                </a>
+                  {panePath}
+                </span>
               )}
               {override && (
                 <button
                   type="button"
-                  onClick={() => { setOverride(null); setFrameLoaded(false); }}
+                  onClick={() => { setOverride(null); if (tab.path) loadPane(tab.path); }}
                   className={`shrink-0 rounded-lg border border-slate-900/10 px-2.5 py-1 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-900/5 motion-reduce:transition-none ${FOCUS}`}
                 >
                   Back to {tab.label}
@@ -310,15 +379,17 @@ export default function LobbyOverlay({
             </div>
 
             <div className="relative min-h-0 flex-1">
-              {localPane ? (
+              {localPane && tab.id === "home" ? (
+                <LobbyHome onSelect={go} onOpenRoute={openRoute} />
+              ) : localPane ? (
                 <LobbyPlay onOpenRoute={openRoute} />
               ) : (
                 <>
                   {!frameLoaded && <FrameSkeleton />}
                   <iframe
                     ref={frameRef}
-                    key={src}
-                    src={src}
+                    key={frameSrc}
+                    src={frameSrc}
                     title={`${paneLabel} — ${panePath}`}
                     onLoad={onFrameLoad}
                     className="h-full w-full border-0 bg-white"
@@ -326,27 +397,62 @@ export default function LobbyOverlay({
                 </>
               )}
             </div>
+
+            <LobbyChatBar
+              chat={chat}
+              onNavigate={go}
+              paneLabel={paneLabel}
+              panePath={panePath || "/"}
+              seedPrompt={intent?.prompt}
+              seedNonce={intent?.nonce}
+            />
           </main>
 
-          {railOpen && (
+          {rightOpen ? (
             <div className="hidden w-72 shrink-0 lg:block xl:w-80">
-              <LobbySideRail chat={chat} />
+              <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} />
             </div>
+          ) : (
+            <RailRestore
+              className="hidden lg:flex"
+              label="Show the reports rail"
+              text="Rail"
+              onClick={() => setRightOpen(true)}
+            />
           )}
         </div>
-
-        {/* ── chat bar ──────────────────────────────────────────────────── */}
-        <LobbyChatBar
-          chat={chat}
-          onNavigate={go}
-          paneLabel={paneLabel}
-          panePath={panePath || "/"}
-          seedPrompt={intent?.prompt}
-          seedNonce={intent?.nonce}
-        />
       </div>
       <FocusSentinel onFocus={() => focusEdge("first")} />
     </>
+  );
+}
+
+function RailRestore({
+  className,
+  label,
+  text,
+  onClick,
+}: {
+  className?: string;
+  label: string;
+  text: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={
+        `${SURFACE} ${FOCUS} w-11 shrink-0 flex-col items-center justify-center gap-2 ` +
+        `bg-white/80 text-[11px] font-semibold text-slate-700 transition hover:bg-white ` +
+        `motion-reduce:transition-none ${className ?? ""}`
+      }
+      style={panelStyle}
+    >
+      <span aria-hidden="true" className="text-[16px] leading-none text-slate-500">+</span>
+      <span className="[writing-mode:vertical-rl] rotate-180 tracking-wide">{text}</span>
+    </button>
   );
 }
 

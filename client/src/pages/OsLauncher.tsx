@@ -1,23 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ARENA_SUBJECTS, ARENA_MATCHES, ARENA_PROVISIONS } from "@/data/arena";
-import CouncilChat from "@/components/os/CouncilChat";
 import GameBar from "@/components/os/GameBar";
 import AxisPanel from "@/components/os/AxisPanel";
+import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 
 /**
- * OsLauncher — councilof.ai's unified "AI OS" hub (route /os).
- *
- * One clean surface, four real zones, all in one:
- *   1. Council chat   — the deterministic AI bar (posts to /api/chat).
- *   2. The game       — Council Town, the open-source AI-agent town (honest
- *                       state: cloned + configured, deploy pending an owner-only
- *                       Convex login; no fake URL). The live interim centrepiece
- *                       is the real Arena + Demo.
- *   3. The Arena      — measured head-to-head model battles, deterministically
- *                       graded, summarised from @/data/arena.
- *   4. The GSPC axes  — the 13 governance axes from lib/gspcAxes.ts, MEASURED-
- *                       only scores via the quotable() guard.
+ * OsLauncher — crawlable /os page. The operable OS is the Council OS overlay
+ * (Enter Council OS). This page keeps the town / arena / axes for readers and
+ * crawlers; it no longer hosts a second chat. `/console` and `/council-os`
+ * alias to the overlay.
  *
  * Brand: white background, emerald (#10b981) accent. Real data only — no
  * invented metrics, no killed/branded routes.
@@ -37,7 +29,7 @@ const NAV: NavGroup[] = [
   {
     label: "Measure",
     items: [
-      { name: "GSPC axes", href: "#axes", note: "14 slots · 13 measured · jail" },
+      { name: "GSPC axes", href: "#axes", note: "living board · counts from /api/gspc" },
       { name: "Benchmarks", href: "/benchmarks", note: "every result" },
       { name: "Verify a card", href: "/gspc-verify", note: "offline check" },
       { name: "Methodology", href: "/methodology", note: "how we grade" },
@@ -96,7 +88,7 @@ export default function OsLauncher() {
   const [topModels, setTopModels] = useState(() => [...ARENA_SUBJECTS].sort((a, b) => b.refusal_rate - a.refusal_rate).slice(0, 5));
 
   useEffect(() => {
-    document.title = "AI OS — the Council hub | councilof.ai";
+    document.title = "Council OS — the Council hub | councilof.ai";
     setTopModels([...ARENA_SUBJECTS].sort((a, b) => b.refusal_rate - a.refusal_rate).slice(0, 5));
   }, []);
 
@@ -108,7 +100,7 @@ export default function OsLauncher() {
           <div className="mb-4 flex items-center gap-2">
             <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500 text-sm font-bold text-white">C</span>
             <div>
-              <div className="text-sm font-bold leading-none text-slate-900">AI OS</div>
+              <div className="text-sm font-bold leading-none text-slate-900">Council OS</div>
               <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-slate-400">councilof.ai</div>
             </div>
           </div>
@@ -130,20 +122,23 @@ export default function OsLauncher() {
         <main className="min-w-0 flex-1 space-y-10">
           {/* Hero + Council chat */}
           <section>
-            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-600">The AI governance OS</p>
+            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-600">Council OS</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-              The game, the arena, the axes and the Council — all in one.
+              Measure. Sign. Check.
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
-              One surface for AI governance: watch governed agents live in a town, see models measured head-to-head,
-              read the 14-slot grid (13 measured of 14, plus jail), and ask the Council — a deterministic answer, grounded in what the estate
-              has actually measured.
+              The living GSPC board, verify, Council Space, and the ask bar — one workspace.
+              Counts come from GET /api/gspc. Empty cells stay empty.
             </p>
             <div className="mt-6 space-y-4">
+              <a
+                href={lobbyHref({ pane: "home" })}
+                onClick={(e) => { e.preventDefault(); openLobby({ pane: "home" }); }}
+                className="inline-flex rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700"
+              >
+                Enter Council OS
+              </a>
               <GameBar />
-              <div id="council-chat">
-                <CouncilChat />
-              </div>
             </div>
           </section>
 
@@ -177,18 +172,19 @@ export default function OsLauncher() {
                     >
                       Open Council Town ↗
                     </a>
-                    <Link
-                      href="/os"
+                    <a
+                      href={lobbyHref({ pane: "home" })}
+                      onClick={(e) => { e.preventDefault(); openLobby({ pane: "home" }); }}
                       className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                     >
-                      Stay in the OS
-                    </Link>
+                      Open Council OS
+                    </a>
                   </div>
                 </div>
 
                 {/* Deployed client — honest backend-state panel */}
                 <div className="flex flex-col justify-center rounded-xl border border-emerald-200 bg-white/80 p-6 text-center">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-2xl">🏛</div>
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-xl font-bold text-emerald-800">C</div>
                   <div className="mt-3 text-sm font-semibold text-slate-900">Client deployed · world owner-gated</div>
                   <p className="mt-1 text-[12px] leading-relaxed text-slate-500">
                     The town UI renders live. The agent world starts once the Convex backend login is completed

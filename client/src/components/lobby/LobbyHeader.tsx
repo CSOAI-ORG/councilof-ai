@@ -67,8 +67,10 @@ export default function LobbyHeader({
   onToggleSize,
   onMinimise,
   onClose,
-  railOpen,
-  onToggleRail,
+  leftOpen,
+  onToggleLeft,
+  rightOpen,
+  onToggleRight,
 }: {
   titleId: string;
   alpha: number;
@@ -77,8 +79,10 @@ export default function LobbyHeader({
   onToggleSize: () => void;
   onMinimise: () => void;
   onClose: () => void;
-  railOpen: boolean;
-  onToggleRail: () => void;
+  leftOpen: boolean;
+  onToggleLeft: () => void;
+  rightOpen: boolean;
+  onToggleRight: () => void;
 }) {
   const pct = Math.round(alpha * 100);
 
@@ -95,9 +99,9 @@ export default function LobbyHeader({
           <ColiseumGlyph className="h-5 w-5" />
         </span>
         <span className="min-w-0">
-          <span id={titleId} className={`block ${TYPE.title}`}>Council Lobby</span>
+          <span id={titleId} className={`block ${TYPE.title}`}>Council OS</span>
           <span className={`block ${TYPE.fine}`}>
-            Council of AI · measurement, not certification
+            Measure · sign · check — not certification
           </span>
         </span>
       </span>
@@ -125,18 +129,29 @@ export default function LobbyHeader({
       <span className="flex items-center gap-2">
         <button
           type="button"
-          onClick={onToggleRail}
-          aria-expanded={railOpen}
-          aria-label={railOpen ? "Hide the right rail" : "Show the right rail"}
+          onClick={onToggleLeft}
+          aria-expanded={leftOpen}
+          aria-label={leftOpen ? "Hide the destinations pane" : "Show the destinations pane"}
+          title="Destinations ([)"
+          className={`${CONTROL} ${SP.chip} hidden text-[12px] font-semibold sm:inline-flex`}
+        >
+          {leftOpen ? "Hide panes" : "Show panes"}
+        </button>
+        <button
+          type="button"
+          onClick={onToggleRight}
+          aria-expanded={rightOpen}
+          aria-label={rightOpen ? "Hide the reports rail" : "Show the reports rail"}
+          title="Reports rail (])"
           className={`${CONTROL} ${SP.chip} hidden text-[12px] font-semibold lg:inline-flex`}
         >
-          {railOpen ? "Hide rail" : "Show rail"}
+          {rightOpen ? "Hide rail" : "Show rail"}
         </button>
 
         <button
           type="button"
           onClick={onToggleSize}
-          aria-label={size === "full" ? "Restore the lobby to a windowed size" : "Expand the lobby to fill the screen"}
+          aria-label={size === "full" ? "Restore Council OS to a windowed size" : "Expand Council OS to fill the screen"}
           title={size === "full" ? "Restore" : "Expand"}
           className={`${CONTROL} ${SP.chip} text-[12px] font-semibold`}
         >
@@ -147,7 +162,7 @@ export default function LobbyHeader({
         <button
           type="button"
           onClick={onMinimise}
-          aria-label="Minimise the Council Lobby, keeping this session"
+          aria-label="Minimise Council OS, keeping this session"
           title="Minimise (Cmd/Ctrl + .)"
           className={`${CONTROL} ${SP.chip} text-[12px] font-semibold`}
         >
@@ -158,7 +173,7 @@ export default function LobbyHeader({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close the Council Lobby"
+          aria-label="Close Council OS"
           title="Close (Esc)"
           className={`${SP.chip} inline-flex items-center gap-1.5 rounded-xl border border-slate-900/10 bg-slate-900 text-[12px] font-semibold text-white transition hover:bg-slate-800 motion-reduce:transition-none ${FOCUS}`}
         >
@@ -170,11 +185,11 @@ export default function LobbyHeader({
       {/* Keyboard shortcuts are a pointer/keyboard affordance — on a touch
           viewport they are noise, and at 375px they cost a third of the pane. */}
       <p className={`hidden w-full sm:block ${TYPE.fine}`}>
-        <span className="font-semibold text-slate-600">Keyboard:</span>{" "}
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">Esc</kbd> close ·{" "}
-        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">Cmd/Ctrl + .</kbd> minimise ·{" "}
-        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">↑ ↓</kbd> move between panes ·{" "}
-        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">← →</kbd> rail sections. Minimising keeps the pane and the thread.
+        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">[</kbd> panes ·{" "}
+        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">]</kbd> rail ·{" "}
+        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">⌘/Ctrl .</kbd> minimise ·{" "}
+        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">↑ ↓</kbd> panes
       </p>
     </header>
   );

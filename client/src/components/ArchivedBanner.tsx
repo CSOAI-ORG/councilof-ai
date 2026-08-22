@@ -1,5 +1,6 @@
 import { useLocation, Link } from "wouter";
 import { isLibraried, classify, replacementFor, PRIMARY_PATHS } from "../data/library-ia";
+import { isEmbedded } from "@/lib/embed";
 
 // ArchivedBanner — mounted once globally. On any LIBRARIED (non-primary) page it shows a slim,
 // honest "archived / reference" strip that (a) tells the reader this is an archive page, (b)
@@ -9,7 +10,7 @@ import { isLibraried, classify, replacementFor, PRIMARY_PATHS } from "../data/li
 export default function ArchivedBanner() {
   const [loc] = useLocation();
   const path = (loc || "/").replace(/\/$/, "") || "/";
-  if (!isLibraried(path)) return null;
+  if (isEmbedded() || !isLibraried(path)) return null;
 
   const sector = classify(path);
   const repl = replacementFor(path);

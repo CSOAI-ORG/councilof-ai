@@ -40,9 +40,11 @@ console.log(`ruling: ${canon.ruling}\n`);
 try {
   const { status, body } = await get("/");
   const title = (body.match(/<title>(.*?)<\/title>/s) || [, ""])[1];
+  const minBytes = Number(canon.min_homepage_bytes || 20000);
   if (status !== 200) fail(`/ returned HTTP ${status}`);
+  else if (body.length < minBytes) fail(`/ is a thin Vite shell (${body.length} bytes; need ≥ ${minBytes}). Production alias was overwritten.`);
   else if (!title.toLowerCase().includes(canon.title_contains.toLowerCase())) fail(`/ title lost "${canon.title_contains}" — got: ${title.slice(0, 80)}`);
-  else pass(`/ title carries "${canon.title_contains}"`);
+  else pass(`/ title carries "${canon.title_contains}" (${body.length} bytes)`);
 } catch (e) { fail(`/ fetch error: ${e.message}`); }
 
 // 2. The API contract (the number that keeps drifting)

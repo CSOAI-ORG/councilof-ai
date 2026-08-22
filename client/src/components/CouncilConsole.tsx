@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
+import { isEmbedded } from "@/lib/embed";
 
 /**
- * CouncilConsole — the living-harness hero, stuck on every page.
+ * CouncilConsole — retired from site chrome (2026-08-21).
+ * The Council OS overlay (CouncilLobby) is the one workspace. This file
+ * stays as the deterministic SUMMON/escort implementation if a page wants
+ * an inline console; App.tsx no longer mounts the floating bubble.
  *
  * The estate, operable from one box: SUMMON pulls live surfaces inline
  * (board, arena, REPORTED, verify); ESCORT navigates — only after an
@@ -104,6 +108,8 @@ export default function CouncilConsole() {
   const [, navigate] = useLocation();
   const endRef = useRef<HTMLDivElement>(null);
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
+
+  if (isEmbedded()) return null;
 
   const say = (m: Msg) => setMsgs((p) => [...p, m]);
 

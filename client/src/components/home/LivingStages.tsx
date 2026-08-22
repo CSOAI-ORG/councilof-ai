@@ -380,7 +380,6 @@ function VerifyYourself() {
           className="mt-12"
           src="/images/infographics/crop/trust-root-offline-verify.jpg"
           alt="The trust root did:web:csoai.org anchoring signed 3KB cards through a hash-chained evidence ledger to local, offline verification on the reader's own machine"
-          caption="The trust root and the offline verification path: the key is published at a domain we control, and the check happens on your side with no live connection to us."
         />
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[1.15fr_1fr] lg:items-start">

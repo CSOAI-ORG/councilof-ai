@@ -3,7 +3,8 @@
  * Shows top analysts, most active reporters, and incident statistics
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { publicCaption } from "@/lib/gspcAxes";
 import { Link } from "wouter";
 import CesiumPortalCard from "@/components/CesiumPortalCard";
 import { motion } from "framer-motion";
@@ -66,15 +67,9 @@ const achievements = [
   { icon: Shield, name: "Ledger Published", description: "Signed measurement ledger from the 2026-08-04 sweep on HF", holders: 1 },
 ];
 
-// GSPC board — the canonical 14-slot measurement board, "13 measured of 14"
-// (SITTING 1 ruling 2026-08-18). Values are the exact figures served by
-// functions/api/gspc.ts (13 canonical measured 2026-08-12, DOI
-// 10.5281/zenodo.21991104; jail promoted 2026-08-18 from the signed living board,
-// smaller fleet, separation UNTESTED). slot15/human-vs-ai are measured IN-LANE only
-// (see the API's measured_in_lane) and are NOT board rows. A "leader" is the highest
-// point estimate; separation says whether that lead is statistically real (McNemar
-// p<0.05 on discordant items vs the best base model), a TIE, or UNTESTED (no
-// separation test run yet). TIES ARE NOT WINS.
+// Dated 2026-08-12 / 2026-08-18 sweep table — a snapshot of one stamp, labelled
+// as such. Live slot counts come from GET /api/gspc (totals.public_count).
+// slot15 / human-vs-ai are measured IN-LANE only and are not board rows.
 type BoardAxis = {
   axis: string;
   leader: string;
@@ -107,19 +102,28 @@ const BOARD_ITEMS = BOARD_V2.reduce((s, a) => s + a.n, 0);
 const pct = (x: number) => (x * 100).toFixed(1) + "%";
 
 function GspcBoardV2() {
+  const [liveCaption, setLiveCaption] = useState("Counts from GET /api/gspc");
+  useEffect(() => {
+    const ac = new AbortController();
+    fetch("/api/gspc", { signal: ac.signal })
+      .then((r) => r.json())
+      .then((d) => setLiveCaption(publicCaption(d?.totals?.public_count)))
+      .catch(() => { /* keep the fallback caption */ });
+    return () => ac.abort();
+  }, []);
+
   return (
     <Card className="mb-8">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Shield className="h-5 w-5 text-emerald-600" />
-          GSPC board — 14 slots, 13 measured of 14
+          GSPC board — {liveCaption}
         </CardTitle>
         <p className="text-xs text-muted-foreground">
-          13 measured axes, 2026-08-12 (19-model fleet, 15,580 per-item rows, DOI
-          10.5281/zenodo.21991104) · jail (slot 14, containment) promoted 2026-08-18 from the
-          signed living board (7-model fleet) · schema csoai.gspc-axes/0.5. A leader is the
+          Live counts: GET /api/gspc. The table below is the dated 2026-08-12 / 2026-08-18
+          sweep (DOI 10.5281/zenodo.21991104) — a snapshot, not chrome. A leader is the
           highest point estimate; separation is McNemar p&lt;0.05 on discordant items vs the best
-          base model. <strong>{BOARD_SEPARATED} separated, {BOARD_TIES} ties, jail untested.</strong>{" "}
+          base model. <strong>{BOARD_SEPARATED} separated, {BOARD_TIES} ties, jail untested on that stamp.</strong>{" "}
           Ties are honest ties — a point-estimate lead is not a measured win.
         </p>
         <p className="mt-2 rounded-lg border border-amber-300/50 bg-amber-50 px-3 py-2 text-xs text-amber-800">

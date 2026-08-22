@@ -76,7 +76,7 @@ export function gspcBoardDataset(withParts = true): Record<string, unknown> {
     "@type": "Dataset",
     name: "GSPC board — governance-axis AI measurement banks",
     description:
-      "Deterministic per-axis AI-governance measurement banks and their live results: per-item counts, leader accuracy, Wilson 95% intervals where n≥30, and McNemar-primary separation verdicts (ties stated as ties). 13 measured of 14 slots; the live count and stamps come from GET /api/gspc.",
+      "Deterministic per-axis AI-governance measurement banks and their live results: per-item counts, leader accuracy, Wilson 95% intervals where n≥30, and McNemar-primary separation verdicts (ties stated as ties). Empty cells stay empty. The live count and stamps come from GET /api/gspc.",
     url: `${BASE}/gspc-scoreboard`,
     identifier: GSPC_DOI,
     citation: `https://doi.org/${GSPC_DOI}`,

@@ -14,7 +14,7 @@ import { ScrollWorld, usePrefersReducedMotion, type Slide } from "@/components/s
  * has been removed entirely.) Nothing can disappear.
  *
  * Hero H1 is locked. No sov-* names. No invented scores. Doctrine: measurement, not
- * certification; "13 measured of 14"; jail is a floor with separation untested; ties are ties.
+ * certification; slot counts live on GET /api/gspc; jail is a floor when the stamp says so; ties are ties.
  */
 
 export const STORY: Slide[] = [
@@ -56,8 +56,8 @@ export const STORY: Slide[] = [
   {
     // 04 The honest board — light, proving-ground video
     kicker: "The honest board",
-    title: "13 measured of 14 — including the one that catches us",
-    body: "Our board shows 13 measured axes across 19 models. The 14th — jail, whether a model can be talked out of its guardrails — is a measured floor on a smaller fleet with separation still untested, and we say so. It caught our own fine-tune missing every escape, and we published that.",
+    title: "The living board — including the axis that catches us",
+    body: "The public board is signed and honest: empty cells stay empty, ties stay ties. Jail — whether a model can be talked out of its guardrails — is a measured floor when the stamp says so, and we say so. It caught our own fine-tune missing every escape, and we published that. Live counts: GET /api/gspc.",
     points: [
       { tag: "pain", text: "Scorecards quietly hide the tests a model fails" },
       { tag: "benefit", text: "Empty cells stay empty — you see exactly what’s measured" },
@@ -105,7 +105,7 @@ export const STORY: Slide[] = [
     body: "Every cell is pulled live from our public API. Empty cells stay empty, every row shows its sample size, and nobody edits yesterday’s numbers.",
     points: [
       { tag: "pain", text: "Marketing dashboards refresh silently and rewrite history" },
-      { tag: "benefit", text: "A 13 × 19 grid, live, with a sample size on every row" },
+      { tag: "benefit", text: "A living grid, live from GET /api/gspc, with a sample size on every row" },
       { tag: "usp", text: "One signed source feeds people, agents and answer engines" },
     ],
     href: "/gspc-scoreboard",

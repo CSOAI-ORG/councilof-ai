@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
+import { CONTROL, FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
 import LobbyReports from "./LobbyReports";
 import LobbyTaskRail from "./LobbyTaskRail";
 import LobbyChats from "./LobbyChats";
@@ -29,7 +29,13 @@ const SECTIONS: { id: SectionId; label: string; hint: string }[] = [
 const domId = (id: SectionId) => `coai-lobby-section-${id}`;
 const PANEL = "coai-lobby-section-panel";
 
-export default function LobbySideRail({ chat }: { chat: LobbyChat }) {
+export default function LobbySideRail({
+  chat,
+  onMinimise,
+}: {
+  chat: LobbyChat;
+  onMinimise?: () => void;
+}) {
   const [section, setSection] = useState<SectionId>("reports");
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -57,10 +63,23 @@ export default function LobbySideRail({ chat }: { chat: LobbyChat }) {
 
   return (
     <aside
-      aria-label="Council Lobby side rail"
+      aria-label="Reports, tasks and chats"
       className={`${SURFACE} ${SP.rail} flex h-full w-full flex-col`}
       style={panelStyle}
     >
+      <div className="mb-3 flex shrink-0 items-center justify-between gap-2">
+        <h2 className={TYPE.section}>Side rail</h2>
+        {onMinimise && (
+          <button
+            type="button"
+            onClick={onMinimise}
+            aria-label="Hide the reports rail"
+            className={`${CONTROL} ${SP.chip} text-[11px] font-semibold`}
+          >
+            Hide
+          </button>
+        )}
+      </div>
       <div
         ref={listRef}
         role="tablist"

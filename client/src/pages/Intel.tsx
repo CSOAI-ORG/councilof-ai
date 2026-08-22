@@ -3,6 +3,7 @@ import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
 import { scoreAccount } from "../lib/hiveScore";
 import { flyAndConvene } from "../lib/globeDrive";
 import CouncilNav from "../components/CouncilNav";
+import { personaSpeak, stopVoice } from "../lib/sovPersona";
 
 // Short, honest spoken line per play (kept tight for speech synthesis).
 const SPEAK_PLAY: Record<string, string> = {
@@ -26,12 +27,12 @@ export default function Intel() {
   const [touring, setTouring] = useState(false);
   const [voiceOn, setVoiceOn] = useState(true);
   const tourTimers = useRef<number[]>([]);
-  function speak(t: string) { if (!voiceOn) return; try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.03; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
+  function speak(t: string) { if (!voiceOn) return; personaSpeak(t); }
   function sayLine(a: Account): string { const s = scoreAccount(a); if (s.confidence === "authority") return `${a.name}. ${a.country}. Regulator — we implement their regime and make it provable.`; return `${a.name}. ${a.country}. ${SPEAK_PLAY[a.play] || ""} Gap ${s.totalGap} of 21.`; }
   // Persistent globe, mounted once: whenever you pick an account, the Council assistant flies it
   // to that account's exact HQ, pulses the point, and narrates the play — the market lights up.
   useEffect(() => { if (sel) { flyAndConvene(globeRef.current?.contentWindow, sel.hq[0], sel.hq[1], { height: 1400000, duration: 2.8, spiral: false }); speak(sayLine(sel)); } }, [sel]);
-  useEffect(() => () => { tourTimers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} }, []);
+  useEffect(() => () => { tourTimers.current.forEach(clearTimeout); stopVoice(); }, []);
   useEffect(() => { document.title = "Distribution Hive — account intelligence | CSOAI"; }, []);
   const REGIONS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.region)))];
   const SECTORS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.sector).filter(Boolean) as string[]))];
@@ -133,7 +134,7 @@ export default function Intel() {
             <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">Live globe — {sel ? "flown to " + sel.name + " · " + sel.country : "pick an account to fly the market"}</div>
             <div className="flex items-center gap-3">
               <button onClick={tourGaps} className={"rounded-full border px-3 py-1 text-[11px] font-bold " + (touring ? "border-amber-400 bg-amber-500/20 text-amber-100" : "border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/10")}>{touring ? "◉ touring the market…" : "▶ Tour the top gaps"}</button>
-              <button onClick={() => { setVoiceOn((v) => !v); try { window.speechSynthesis.cancel(); } catch (e) {} }} className="rounded-full border border-emerald-400/30 px-3 py-1 text-[11px] font-semibold text-emerald-200/80 hover:bg-emerald-500/10">{voiceOn ? "🔊 voice" : "🔇 muted"}</button>
+              <button onClick={() => { setVoiceOn((v) => !v); stopVoice(); }} className="rounded-full border border-emerald-400/30 px-3 py-1 text-[11px] font-semibold text-emerald-200/80 hover:bg-emerald-500/10">{voiceOn ? "Voice on" : "Muted"}</button>
               {sel && <a href={"/brief?id=" + sel.id} className="text-[11px] font-semibold text-emerald-200 hover:underline">Open tailored brief →</a>}
             </div>
           </div>

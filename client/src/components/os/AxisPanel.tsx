@@ -1,16 +1,17 @@
-import { AXES, MEASURED_ON, quotable, hasInterval, wilson, type Axis, type AxisStatus } from "@/lib/gspcAxes";
+import { useEffect, useState } from "react";
+import {
+  countOf, fetchAxes, hasInterval, publicCaption, quotable, wilson,
+  type Axis, type AxisStatus, type InLaneAxis,
+} from "@/lib/gspcAxes";
 
 /**
- * AxisPanel — the 13 GSPC governance axes, rendered from the single source of
- * truth (client/src/lib/gspcAxes.ts).
+ * AxisPanel — every published GSPC axis, live from GET /api/gspc.
  *
  * The invariant, enforced by `quotable()`: an axis shows a score ONLY when its
- * status is MEASURED. UNMEASURED / DRAFT / SPEC / PLANNED axes show their state
- * and NO number. This panel never decides for itself whether a number may
- * appear — it asks the guard. That is the whole point of the instrument.
+ * status is MEASURED. In-lane rows (slot15, human-vs-ai) stay in a separate
+ * strip — they are not board rows and are not counted in totals.public_count.
  */
 
-// Light-theme status tones (the shared STATUS_TONE is tuned for dark surfaces).
 const TONE: Record<AxisStatus, string> = {
   MEASURED: "border-emerald-300 bg-emerald-50 text-emerald-700",
   UNMEASURED: "border-sky-300 bg-sky-50 text-sky-700",
@@ -30,7 +31,7 @@ function AxisCard({ a }: { a: Axis }) {
           <div className="truncate font-semibold text-slate-900">{a.axis}</div>
           <div className="font-mono text-[11px] text-slate-400">{a.bench}</div>
         </div>
-        <span className={`shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${TONE[a.status]}`}>
+        <span className={`shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${TONE[a.status] ?? TONE.PLANNED}`}>
           {a.status}
         </span>
       </div>
@@ -63,23 +64,61 @@ function AxisCard({ a }: { a: Axis }) {
 }
 
 export default function AxisPanel() {
-  const measured = AXES.filter(quotable).length;
-  const withCI = AXES.filter(hasInterval).length;
+  const [axes, setAxes] = useState<Axis[]>([]);
+  const [inLane, setInLane] = useState<InLaneAxis[]>([]);
+  const [caption, setCaption] = useState("Counts from GET /api/gspc");
+  const [source, setSource] = useState<"wire" | "snapshot" | "loading">("loading");
+
+  useEffect(() => {
+    const ac = new AbortController();
+    fetchAxes(ac.signal).then((r) => {
+      const c = countOf(r.axes);
+      setAxes(r.axes);
+      setInLane(r.inLane);
+      setCaption(publicCaption(r.publicCount, c.measured, c.total));
+      setSource(r.source);
+    });
+    return () => ac.abort();
+  }, []);
+
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <h2 className="text-xl font-bold text-slate-900">13 governance axes</h2>
+        <h2 className="text-xl font-bold text-slate-900">The living GSPC board</h2>
         <p className="text-[13px] text-slate-500">
-          <span className="font-semibold text-emerald-600">{measured}</span> measured ·{" "}
-          <span className="font-semibold text-slate-700">{withCI}</span> carry a confidence interval ·
-          measured on {MEASURED_ON.date}. Only a MEASURED axis shows a number.
+          {source === "loading" ? "Reading GET /api/gspc…" : caption}
+          {" · "}Only a MEASURED axis shows a number. Empty cells stay empty.
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {AXES.map((a) => (
+        {axes.map((a) => (
           <AxisCard key={a.axis} a={a} />
         ))}
       </div>
+      {inLane.length > 0 && (
+        <div className="mt-6 rounded-2xl border border-dashed border-slate-200 bg-slate-50/80 p-5">
+          <h3 className="text-sm font-bold text-slate-800">In-lane — not board rows</h3>
+          <p className="mt-1 text-[12px] text-slate-500">
+            Published on GET /api/gspc as measured_in_lane. Not counted in totals.public_count.
+          </p>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+            {inLane.map((r) => (
+              <li key={r.axis} className="rounded-xl border border-slate-200 bg-white p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-slate-900">{r.axis}</span>
+                  <span className="font-mono text-[9px] font-bold uppercase tracking-wide text-slate-500">{r.status}</span>
+                </div>
+                <p className="mt-1 text-[12px] text-slate-500">{r.bench || r.task}</p>
+                {r.n > 0 && (
+                  <p className="mt-2 font-mono text-[13px] tabular-nums text-slate-700">
+                    {r.accuracy.toFixed(3)} · n={r.n}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

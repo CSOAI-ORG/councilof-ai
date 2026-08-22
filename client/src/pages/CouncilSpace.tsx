@@ -7,6 +7,7 @@ import { flyAndConvene, neutralize } from "../lib/globeDrive";
 import CouncilNav from "../components/CouncilNav";
 import { setMetaDescription } from "@/lib/utils";
 import AISystemNotice from "../components/AISystemNotice";
+import { personaSpeak, stopVoice } from "../lib/sovPersona";
 import { useLedger, type DecisionRecord } from "../hooks/useLedger";
 import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
 import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } from "../components/CouncilGalaxy";
@@ -17,15 +18,10 @@ import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } 
 const ArenaView = lazy(() => import("./GSPCArena"));
 const TownsView = lazy(() => import("./SovereignTown"));
 
-// The canonical globe is globe3d.html (Sovereign 3D Governance Earth — live
-// anchors, nodes, arcs; per the consolidation, the old globe pages are retired).
-// The globe LAYER of Sov Space is that same Earth, full-frame, inside the shell.
 function GlobeView() {
   const search = useSearch();
   const ask = new URLSearchParams(search).get("ask") || "";
   const frameRef = useRef<HTMLIFrameElement | null>(null);
-  // Handoff from the console ("See it on the Council Globe →"): fly the
-  // full-frame globe to the scenario's jurisdiction and convene the council.
   function onLoad() {
     if (!ask) return;
     const code = ssGlobeCode(ask);
@@ -46,15 +42,10 @@ function GlobeView() {
   );
 }
 
-// Signed arena fixtures (GENERATED — scripts/arena-generate.py; every number
-// traces to a sha256-pinned artefact). Surfaced above the arena layer so the
-// evidence is visible at the point of viewing.
 import { SOV_ARENA_V2 } from "../data/arena.generated";
 import { useGeolibre } from "../lib/geolibre";
 import { emitCard, promoteCard, subscribeCards, getCards, type AiCard } from "../lib/aiCardBus";
 
-// AI card → timeline event. C cards render as deliberation, J cards (signed)
-// render with verdict weight — one honest stream of every AI call.
 function cardToTimeline(c: AiCard): TimelineEvent {
   return {
     id: c.id,
@@ -99,7 +90,7 @@ const SS_VIEWS = [
   { id: "console", label: "🎛 Console", href: "/gspc-arena" },
   { id: "arena", label: "🏟 Arena", href: "/gspc-arena?view=arena" },
   { id: "globe", label: "🌍 Globe", href: "/gspc-arena?view=globe" },
-  { id: "towns", label: "🏘 Towns", href: "/gspc-arena?view=towns" },
+  { id: "towns", label: "🇦 Towns", href: "/gspc-arena?view=towns" },
 ] as const;
 
 type SovViewId = (typeof SS_VIEWS)[number]["id"];
@@ -118,21 +109,12 @@ function ViewSwitcher({ view }: { view: string }) {
   );
 }
 
-// Map the agent's region → the codes the embedded 3D globe understands (loads local).
 const SS_GLOBE_CODE: Record<string, string> = { EU: "EU", UK: "UK", US: "US", CANADA: "CA", JAPAN: "JP", KOREA: "KR", CHINA: "CN", SINGAPORE: "SG", INDIA: "IN" };
 function ssGlobeCode(text: string): string { const r = sovActions(text).find((a) => a.kind === "region"); return r && r.kind === "region" ? (SS_GLOBE_CODE[r.region] || "") : ""; }
-
-// Sovereign Space - the CSOAI AI-OS simulation. Feed data + text, watch the
-// multi-agent council deliberate, and the Council assistant narrates + speaks every step.
-// When VITE_SOV_GATEWAY is set it runs LIVE against the MEOK 59-MCP substrate
-// (council + audit + sigil); otherwise it runs the local simulation. The same
-// flow pixel-streams from Unreal Engine 5 in the full OS.
 
 type Step = { t: string; phase: number };
 const SAMPLE = "A hospital wants to deploy an AI triage model in the EU that ranks ER patients by urgency.";
 
-// HIVE — water-pinned facts (the corpus). Static; this is what holds the
-// rest up. Counts come from the production sweep 2026-07-30.
 const HIVE: HiveLayer[] = [
   { id: "eu-ai-act", name: "EU AI Act", count: 113, description: "frozen provisions across 113 articles" },
   { id: "gdpr", name: "GDPR", count: 99, description: "data-protection obligations" },
@@ -146,40 +128,18 @@ const HIVE: HiveLayer[] = [
 ];
 
 const FLYWHEELS: FlywheelPlanet[] = [
-  { id: "find-besT", name: "find_besT", axis: "care", phase: "honey",
-    description: "21-subject Day-1 sweep, care_cost joint scoring",
-    metric: "composite=3.1564 (sov33-unified)", last_run_iso: "2026-07-30T11:17:00Z" },
-  { id: "n-eff", name: "n_eff_diversity", axis: "continuity", phase: "milk",
-    description: "pairwise ρ + Kish n_eff across council roster",
-    metric: "n_eff=1.285 · gate failed (>2.0 required)", last_run_iso: "2026-07-30T11:25:00Z" },
-  { id: "provbench", name: "ProvBench", axis: "provenance", phase: "honey",
-    description: "0/20 C2PA markings survive binding-intact",
-    metric: "0 of 20 · one-sided 95% CP upper = 13.9% (rule-of-three: 15.0%)", last_run_iso: "2026-07-30T11:00:00Z" },
-  { id: "defbench", name: "DefBench", axis: "safety", phase: "honey",
-    description: "45-item care battery, 33 harmful / 12 benign",
-    metric: "1 of 4 axes resolved (with gate)", last_run_iso: "2026-07-30T09:35:00Z" },
-  { id: "govbench", name: "GovBench", axis: "governance", phase: "honey",
-    description: "193 samples, 26 dimensions, cluster-robust",
-    metric: "composed +6.63 [+1.05, +12.21]", last_run_iso: "2026-07-30T09:46:00Z" },
-  { id: "pqcbench", name: "PQCBench", axis: "continuity", phase: "water",
-    description: "25 criteria for PQC-ready signing chains",
-    metric: "1 of 25 criteria pass · ML-DSA-65 needed", last_run_iso: "2026-07-30T08:00:00Z" },
-  { id: "flywheel-daily", name: "flywheel-daily", axis: "care", phase: "honey",
-    description: "cron — daily drift, salted PRACTICE/HELD_OUT split",
-    metric: "selftest 9/9 · salt=csoai-flywheel-v1", last_run_iso: "2026-07-30T03:00:00Z" },
-  { id: "honey-pipe", name: "honey_pipeline", axis: "care", phase: "honey",
-    description: "KB harvest → honey cache → cite-on-serve",
-    metric: "83 verified entries · 87KB", last_run_iso: "2026-07-30T05:00:00Z" },
-  { id: "production-ready", name: "production_ready", axis: "care", phase: "honey",
-    description: "signed care_cost evidence pack for marketing",
-    metric: "Ed25519 signature · care_score=0.7891", last_run_iso: "2026-07-30T12:00:00Z" },
+  { id: "find-besT", name: "find_besT", axis: "care", phase: "honey", description: "21-subject Day-1 sweep, care_cost joint scoring", metric: "composite=3.1564 (sov33-unified)", last_run_iso: "2026-07-30T11:17:00Z" },
+  { id: "n-eff", name: "n_eff_diversity", axis: "continuity", phase: "milk", description: "pairwise ρ + Kish n_eff across council roster", metric: "n_eff=1.285 · gate failed (>2.0 required)", last_run_iso: "2026-07-30T11:25:00Z" },
+  { id: "provbench", name: "ProvBench", axis: "provenance", phase: "honey", description: "0/20 C2PA markings survive binding-intact", metric: "0 of 20 · one-sided 95% CP upper = 13.9% (rule-of-three: 15.0%)", last_run_iso: "2026-07-30T11:00:00Z" },
+  { id: "defbench", name: "DefBench", axis: "safety", phase: "honey", description: "45-item care battery, 33 harmful / 12 benign", metric: "1 of 4 axes resolved (with gate)", last_run_iso: "2026-07-30T09:35:00Z" },
+  { id: "govbench", name: "GovBench", axis: "governance", phase: "honey", description: "193 samples, 26 dimensions, cluster-robust", metric: "composed +6.63 [+1.05, +12.21]", last_run_iso: "2026-07-30T09:46:00Z" },
+  { id: "pqcbench", name: "PQCBench", axis: "continuity", phase: "water", description: "25 criteria for PQC-ready signing chains", metric: "1 of 25 criteria pass · ML-DSA-65 needed", last_run_iso: "2026-07-30T08:00:00Z" },
+  { id: "flywheel-daily", name: "flywheel-daily", axis: "care", phase: "honey", description: "cron — daily drift, salted PRACTICE/HELD_OUT split", metric: "selftest 9/9 · salt=csoai-flywheel-v1", last_run_iso: "2026-07-30T03:00:00Z" },
+  { id: "honey-pipe", name: "honey_pipeline", axis: "care", phase: "honey", description: "KB harvest → honey cache → cite-on-serve", metric: "83 verified entries · 87KB", last_run_iso: "2026-07-30T05:00:00Z" },
+  { id: "production-ready", name: "production_ready", axis: "care", phase: "honey", description: "signed care_cost evidence pack for marketing", metric: "Ed25519 signature · care_score=0.7891", last_run_iso: "2026-07-30T12:00:00Z" },
 ];
 
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
-// Local sov-gateway (the coai-dashboard hub at :8080) is DEV-ONLY — set
-// VITE_LOCAL_GATEWAY explicitly to use it. Production must NEVER probe the
-// visitor's own localhost (audit P1-1); the deployed master serves /kb,
-// /kb/stats and /sov-time, so it is the default.
 const LOCAL_GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_LOCAL_GATEWAY) || GW;
 const SS_INDUSTRIES = ["healthcare","health","hospital","clinical","triage","pharma","biotech","finance","fintech","banking","insurance","lending","credit","education","edtech","retail","ecommerce","legal","government","public sector","defense","energy","utilities","automotive","telecom","manufacturing","logistics","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing"];
 function ssIndustry(q: string) { const s = (q || "").toLowerCase(); return SS_INDUSTRIES.find((w) => new RegExp("\\b" + w + "\\b").test(s)) || null; }
@@ -204,9 +164,6 @@ async function ssVerdict(scenario: string): Promise<string> {
   return "";
 }
 
-// KB lookup against the local sov-gateway /kb endpoint. Returns up to 3
-// verified entries with high delta. The KB is the "honey" — verified answers
-// that have been measured-climbing the keystone. Cited below the verdict.
 type KbMatch = { dimension: string; question: string; delta: number; sha256: string; source_clan?: string };
 async function ssLookupKB(query: string): Promise<KbMatch[]> {
   try {
@@ -216,7 +173,6 @@ async function ssLookupKB(query: string): Promise<KbMatch[]> {
     const d = await r.json();
     const entries: any[] = Array.isArray(d.entries) ? d.entries : [];
     const q = query.toLowerCase();
-    // Lightweight keyword scoring — matches all-caps legislation tokens + industry words.
     const tokens = q.split(/\W+/).filter(t => t.length > 3);
     return entries
       .map((e: any) => {
@@ -239,8 +195,6 @@ async function ssLookupKB(query: string): Promise<KbMatch[]> {
   }
 }
 
-// KB stats — pulls the by-dimension breakdown so we can show "12 compliance,
-// 4 sovereignty, 3 accountability" badges in the page header.
 type KbStats = { total_entries: number; verified: number; by_dimension: Record<string, number> };
 async function ssKBStats(): Promise<KbStats | null> {
   try {
@@ -270,13 +224,8 @@ function buildRun(scenario: string): Step[] {
   ];
 }
 
-// Map decision_record shape -> TimelineEvent. The "decided_on" field is the
-// canonical timestamp; we keep tag + verdict as the visual encoding. The KB
-// stores positions + reasoning — much higher information density than flat text.
 function convertToTimeline(records: DecisionRecord[]): TimelineEvent[] {
   return records.map((r) => {
-    // Derive a weight from the verdict: REFUTED/CONFIRMED weight 1.0 (signed),
-    // OPEN 0.6 (pending), default 0.7.
     const w =
       r.verdict === "REFUTED" || r.verdict === "CONFIRMED" || r.verdict === "SETTLED"
         ? 1.0
@@ -297,10 +246,6 @@ function convertToTimeline(records: DecisionRecord[]): TimelineEvent[] {
   });
 }
 
-// Pulled live from the same D1-backed Worker as /live-ledger. Renders signed
-// decision_records in J-space replay mode — no inference, no fabrication. Honest
-// framing: "current as of the last fetch".
-
 export default function CouncilSpace() {
   const search = useSearch();
   const view = (new URLSearchParams(search).get("view") || "console") as SovViewId | string;
@@ -315,15 +260,12 @@ export default function CouncilSpace() {
   const [loc] = useState(() => detectLocale());
   const [cSpaceEvents, setCSpaceEvents] = useState<TimelineEvent[]>([]);
   const [busEvents, setBusEvents] = useState<TimelineEvent[]>(() => getCards().map(cardToTimeline));
-  // Every AI call anywhere on the site (dock asks, council verdicts, KB lookups)
-  // lands here as a C card; signed outcomes promote to J. One stream.
   useEffect(() => subscribeCards((cs) => setBusEvents(cs.map(cardToTimeline))), []);
   const [kbMatches, setKbMatches] = useState<KbMatch[]>([]);
   const [flywheels, setFlywheels] = useState<FlywheelPlanet[]>(FLYWHEELS);
   const [citizens, setCitizens] = useState<CitizenNode[]>([]);
   const [kbStats, setKbStats] = useState<KbStats | null>(null);
   const [kbOnline, setKbOnline] = useState<boolean | null>(null);
-  // null = untested, true = last run reached the gateway, false = local sim.
   const [gwOnline, setGwOnline] = useState<boolean | null>(null);
   const [ledgerOnline, setLedgerOnline] = useState<boolean | null>(null);
   const [ledgerCount, setLedgerCount] = useState<number>(0);
@@ -335,8 +277,6 @@ export default function CouncilSpace() {
   const jrecordsErr = ledgerError;
   const jfetchedAt = ledgerFetchedAt ? new Date(ledgerFetchedAt).toISOString() : "";
 
-  // Fetch KB stats on mount — the "honey" indicator. If the local gateway is
-  // down, the badge shows "offline" rather than fake stats.
   useEffect(() => {
     let alive = true;
     ssKBStats().then((s) => {
@@ -347,11 +287,6 @@ export default function CouncilSpace() {
     return () => { alive = false; };
   }, []);
 
-  // Poll the sov-time ledger — the VWM spacetime canvas. Returns last 100
-  // events in raw form (second zoom). When the ledger is reachable, the
-  // header shows "live: N events"; when unreachable, the badge shows "offline".
-  // The poll is intentionally slow (5s) — the timeline component is the
-  // primary inner visualization; this is the indicator.
   useEffect(() => {
     let alive = true;
     let timer: ReturnType<typeof setTimeout> | null = null;
@@ -375,8 +310,6 @@ export default function CouncilSpace() {
     return () => { alive = false; if (timer) clearTimeout(timer); };
   }, []);
 
-  // Fetch KB matches when the scenario textarea changes (debounced). This is
-  // the "live lookup" — every character updates the citation matches.
   useEffect(() => {
     const q = scenario.trim();
     if (q.length < 12) { setKbMatches([]); return; }
@@ -387,10 +320,6 @@ export default function CouncilSpace() {
     return () => clearTimeout(t);
   }, [scenario]);
 
-  // Stamp "presence" onto the sov-time ledger — the user's local position on the
-  // dome. When the user picks a jurisdiction (via ssGlobeCode) or flies the
-  // globe, that location is appended to the ledger. The UE5 mirror renders the
-  // same ledger with the user's POV as the viewport.
   function stampPresence(reason: string, extra: Record<string, unknown> = {}) {
     const code = ssGlobeCode(scenario);
     const prof = (code && REGIONS[code]) ? REGIONS[code] : REGIONS.GLOBAL;
@@ -400,20 +329,15 @@ export default function CouncilSpace() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         kind: "presence",
-        space: "P", // position-space — the user/agent's local POV
+        space: "P",
         reason,
         region: code || "GLOBAL",
         lng, lat,
         ...extra,
       }),
-    }).catch(() => { /* ledger append is best-effort */ });
+    }).catch(() => { });
   }
 
-  // Sync ledger stamps → Cesium globe stamps. Each stamp is a position on the
-  // dome with a kind (presence/cspace-step/cspace-verdict) that determines its
-  // visual encoding. The iframe accepts a `stamps` postMessage that plots them
-  // all as clickable glyphs. We poll the ledger every 5s and re-send the lot —
-  // the iframe is idempotent so re-sends just replace.
   useEffect(() => {
     let alive = true;
     let timer: ReturnType<typeof setTimeout> | null = null;
@@ -424,8 +348,6 @@ export default function CouncilSpace() {
         if (r.ok) {
           const d = await r.json();
           const events = Array.isArray(d.events) ? d.events : [];
-          // Map ledger records to stamp shapes. Resolve lat/lng from the
-          // REGIONS table by region code; fall back to GLOBAL (0,20).
           const mapped = events.map((e: any) => {
             const p = e.payload ?? {};
             const region = p.region || "GLOBAL";
@@ -448,7 +370,6 @@ export default function CouncilSpace() {
           setStamps(mapped);
           setLedgerCount(d.total ?? 0);
           setLedgerOnline(true);
-          // Push to the iframe.
           const win = globeRef.current?.contentWindow;
           if (win) {
             win.postMessage({ cmd: "stampsClear" }, "*");
@@ -468,9 +389,6 @@ export default function CouncilSpace() {
     return () => { alive = false; if (timer) clearTimeout(timer); };
   }, []);
 
-  // Listen for click events from the iframe. The globe posts
-  // {cmd:'stampClick', id, payload} when a stamp is clicked; we surface the
-  // underlying payload so the user can see the position + scenario it came from.
   useEffect(() => {
     function onMessage(ev: MessageEvent) {
       const d = ev.data;
@@ -480,8 +398,6 @@ export default function CouncilSpace() {
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, []);
-  // The Sovereign flies the embedded globe to the scenario's jurisdiction (auto-pulses),
-  // convenes the multi-agent council spiral there, and neutralizes any rogue-swarm threat.
   function flyToScenario(text: string) {
     const code = ssGlobeCode(text);
     const prof = (code && REGIONS[code]) ? REGIONS[code] : REGIONS.GLOBAL;
@@ -490,7 +406,6 @@ export default function CouncilSpace() {
     flyAndConvene(win, lng, lat, { spiral: true });
     if (sovActions(text).some((a) => a.kind === "threat")) window.setTimeout(() => neutralize(win), 6600);
   }
-  // Globe loads-local to the visitor's region on arrival, then flies to the scenario's jurisdiction on run.
   const [globeRegion, setGlobeRegion] = useState(() => (loc.region.code === "GLOBAL" ? "" : loc.region.code));
   const endRef = useRef<HTMLDivElement | null>(null);
   const timers = useRef<any[]>([]);
@@ -498,17 +413,12 @@ export default function CouncilSpace() {
   useEffect(() => {
     document.title = "Council Space | CSOAI";
     setMetaDescription("Council Space — the Council of AI's live simulation arena: model versus model on frozen benchmarks, every round emitted as signed evidence. Live board counts: GET /api/gspc.");
-    // Handoff from the Council Globe: /simulate?q=… pre-loads the scenario so one
-    // Sovereign flows from "ask on the globe" straight into "run the full simulation".
     try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}
   }, []);
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setScenario(d); const t = setTimeout(() => run(d), 700); return () => clearTimeout(t); } }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [log]);
-  useEffect(() => () => { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} }, []);
+  useEffect(() => () => { timers.current.forEach(clearTimeout); stopVoice(); }, []);
 
-  // LIVE FLYWHEEL SNAPSHOT — fetch the build-time snapshot at /flywheel-snapshot.json
-  // and merge its real last-run timestamps into the galaxy. Falls back silently
-  // to the hardcoded FLYWHEELS list if the snapshot is unreachable.
   useEffect(() => {
     let cancelled = false;
     fetch("/flywheel-snapshot.json")
@@ -518,12 +428,8 @@ export default function CouncilSpace() {
         if (Array.isArray(snap.planets) && snap.planets.length > 0) setFlywheels(snap.planets);
         if (Array.isArray(snap.citizens)) setCitizens(snap.citizens);
       })
-      .catch(() => {
-        // best-effort — keep the static list
-      });
-    return () => {
-      cancelled = true;
-    };
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
@@ -560,7 +466,7 @@ export default function CouncilSpace() {
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", size); };
   }, []);
 
-  function speak(t: string) { if (!voiceOn) return; try { const u = new SpeechSynthesisUtterance(t); u.rate = 1.04; const vs = window.speechSynthesis.getVoices(); const pick = vs.find((v) => /Google US English|Samantha|Microsoft Aria|en-US/i.test(v.name + " " + v.lang)); if (pick) u.voice = pick; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch (e) {} }
+  function speak(t: string) { if (!voiceOn) return; personaSpeak(t); }
 
   function playSteps(steps: Step[], verdict?: string) {
     let i = 0;
@@ -570,7 +476,6 @@ export default function CouncilSpace() {
         phaseRef.current = 4;
         if (verdict) { setVerdictText(verdict); setLog((l) => l.concat("Verdict: " + verdict)); }
         setRunning(false); setDone(true);
-        // Record the verdict as a C-space event — the "honey" stage.
         const cEvent: TimelineEvent = {
           id: "c-v-" + runStart.toString(36),
           ts: Date.now(),
@@ -582,11 +487,7 @@ export default function CouncilSpace() {
           space: "C",
         };
         setCSpaceEvents((prev) => [cEvent, ...prev].slice(0, 50));
-        // The same verdict is a card on the AI card bus — every AI call visible.
         const vCard = emitCard({ kind: "council-verdict", summary: cEvent.claim, detail: "multi-agent council deliberation on: " + scenario.slice(0, 140), axis: "governance", source: verdict ? "live" : "local-sim" });
-        // Persist to the sov-time ledger — the VWM spacetime canvas. The
-        // ledger is append-only with a 16-byte event_id hash; the timestamp
-        // is the canonical position on the log-scale timeline.
         fetch(LOCAL_GW + "/sov-time", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -600,17 +501,12 @@ export default function CouncilSpace() {
           }),
         })
           .then((r) => {
-            // Signed outcome → C card promoted to a J-space card.
             if (r.ok) promoteCard(vCard.id, "sov-time ledger · cspace-verdict");
           })
-          .catch(() => { /* ledger append is best-effort */ });
+          .catch(() => { });
         return;
       }
       const st = steps[i++]; phaseRef.current = st.phase; setLog((l) => l.concat(st.t)); speak(st.t);
-      // Each phase step is a C-space event on the timeline — the "hive layers":
-      // phase 1 = water (scenario ingestion), phase 2 = milk (deliberation),
-      // phase 3 = honey (crosswalk), phase 4 = verdict. Each gets a lower weight
-      // so the verdict reads larger; the lower lane resolver still renders them.
       const phaseTag = st.phase === 1 ? "OPEN" : st.phase === 2 ? "ACTION" : st.phase === 3 ? "CONFIRMED" : "ACTION";
       const phaseWeight = st.phase === 1 ? 0.4 : st.phase === 2 ? 0.55 : st.phase === 3 ? 0.7 : 0.9;
       const stepEvent: TimelineEvent = {
@@ -624,8 +520,6 @@ export default function CouncilSpace() {
         space: "C",
       };
       setCSpaceEvents((prev) => [stepEvent, ...prev].slice(0, 50));
-      // Persist each step to the ledger too — the VWM canvas records every
-      // phase so the inner visualisation has the full deliberation arc.
       fetch(LOCAL_GW + "/sov-time", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -637,7 +531,7 @@ export default function CouncilSpace() {
           tag: stepEvent.tag,
           weight: stepEvent.weight,
         }),
-      }).catch(() => { /* ledger append is best-effort */ });
+      }).catch(() => { });
       const id = setTimeout(play, 1050); timers.current.push(id);
     };
     play();
@@ -661,19 +555,13 @@ export default function CouncilSpace() {
   async function run(override?: string) {
     timers.current.forEach(clearTimeout); timers.current = [];
     if (override) setScenario(override);
-    setGlobeRegion(ssGlobeCode(override ?? scenario)); // label
-    flyToScenario(override ?? scenario); // fly + pulse + convene the council ON the globe
+    setGlobeRegion(ssGlobeCode(override ?? scenario));
+    flyToScenario(override ?? scenario);
     setLog(["Convening the council over your scenario..."]); setVerdictText(""); setDone(false); setRunning(true); phaseRef.current = 2; chargeSovereign(10);
     const scen = ((override ?? scenario) || "").trim() || SAMPLE;
     const ind = ssIndustry(scen);
     const region = ssRegion(scen);
-    // Re-fetch KB matches for the scenario being run. The KB lookup runs in
-    // parallel with the verdict so the citation badge appears as soon as the
-    // verdict is rendered.
     const kbP = ssLookupKB(scen).then((m) => setKbMatches(m)).catch(() => {});
-    // Stamp the user's presence on the ledger — the dome-local position
-    // before the council runs. This is the "look-into" event: the user
-    // engaged Sov Space at a specific jurisdiction with a specific scenario.
     stampPresence("scenario-run", { scenario: scen.slice(0, 140), region, ind });
     try {
       const [gov, verdict] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssVerdict(scen), kbP]);
@@ -689,9 +577,8 @@ export default function CouncilSpace() {
     }
     playSteps(buildRun(scen), "Compliant with conditions - signed and ledgered.");
   }
-  function reset() { timers.current.forEach(clearTimeout); try { window.speechSynthesis.cancel(); } catch (e) {} phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); }
+  function reset() { timers.current.forEach(clearTimeout); stopVoice(); phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); }
 
-  // Layer views — the arena, globe and towns render INSIDE Sov Space.
   if (view !== "console") {
     return (
       <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -725,19 +612,11 @@ export default function CouncilSpace() {
           <span className="text-emerald-100/40">·</span>
           <span className="text-emerald-100/75">{loc.region.label}: {loc.region.frameworks.slice(0, 3).join(", ")}</span>
           <span className="text-emerald-100/40">·</span>
-          <span className={
-            kbOnline === null ? "text-emerald-100/40"
-            : kbOnline ? "text-amber-200"
-            : "text-rose-300/80"
-          } title="Local sov-gateway KB — verified answers from the 7-D flywheel">
+          <span className={kbOnline === null ? "text-emerald-100/40" : kbOnline ? "text-amber-200" : "text-rose-300/80"} title="Local sov-gateway KB — verified answers from the 7-D flywheel">
             KB: {kbOnline ? (kbStats ? `${kbStats.verified} verified` : "online") : "offline"}
           </span>
           <span className="text-emerald-100/40">·</span>
-          <span className={
-            ledgerOnline === null ? "text-emerald-100/40"
-            : ledgerOnline ? "text-sky-200"
-            : "text-rose-300/80"
-          } title="VWM spacetime canvas — append-only event ledger">
+          <span className={ledgerOnline === null ? "text-emerald-100/40" : ledgerOnline ? "text-sky-200" : "text-rose-300/80"} title="VWM spacetime canvas — append-only event ledger">
             VWM: {ledgerOnline ? `${ledgerCount} events` : "offline"}
           </span>
         </div>
@@ -746,14 +625,7 @@ export default function CouncilSpace() {
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
           <canvas ref={canvasRef} className="h-[420px] w-full block" />
           <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "council complete - verdict below" : "council space - idle"}</div>
-          <div
-            className={"absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] " + (
-              gwOnline === null ? "bg-slate-500/20 text-slate-200"
-              : gwOnline ? "bg-emerald-500/20 text-emerald-200"
-              : "bg-rose-500/20 text-rose-200"
-            )}
-            title="Honest state of the Council gateway — set by your last run, never hardcoded"
-          >
+          <div className={"absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] " + (gwOnline === null ? "bg-slate-500/20 text-slate-200" : gwOnline ? "bg-emerald-500/20 text-emerald-200" : "bg-rose-500/20 text-rose-200")} title="Honest state of the Council gateway — set by your last run, never hardcoded">
             {gwOnline === null ? "gateway · untested" : gwOnline ? "LIVE - Council gateway" : "gateway offline - local sim"}
           </div>
         </div>
@@ -763,12 +635,10 @@ export default function CouncilSpace() {
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <button onClick={() => run()} disabled={running} className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">{running ? "Running..." : "Run experiment"}</button>
             <button onClick={reset} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm font-semibold text-emerald-100 hover:bg-white/5">Reset</button>
-            <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm text-emerald-100 hover:bg-white/5">{voiceOn ? "Voice on" : "Voice off"}</button>
+            <button onClick={() => { setVoiceOn((x) => !x); stopVoice(); }} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm text-emerald-100 hover:bg-white/5">{voiceOn ? "Voice on" : "Voice off"}</button>
             <a href={"/gspc-arena?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Council Globe →</a>
-            <button onClick={() => stampPresence("walk-around", { pov: "all", zoom: "all" })} className="rounded-xl border border-amber-400/40 px-3 py-2 text-sm font-semibold text-amber-100 hover:bg-white/5" title="Stamp your POV as 'all-of-data' — every event in the ledger, every zoom level, no filtering">EAT ALL</button>
+            <button onClick={() => stampPresence("walk-around", { pov: "all", zoom: "all" })} className="rounded-xl border border-amber-400/40 px-3 py-2 text-sm font-semibold text-amber-100 hover:bg-white/5" title="Stamp your POV as 'all-of-data'">EAT ALL</button>
           </div>
-          {/* Article 50(1) AI-interaction disclosure — EU AI Act applies from 2 Aug 2026;
-              any front-end that lets a person interact with an AI must clearly state so. */}
           <div role="status" aria-live="polite" className="mt-3 rounded-md border border-amber-400/35 bg-amber-400/10 px-3 py-1.5 text-[11px] font-semibold text-amber-100">
             You are interacting with an AI system.
           </div>
@@ -781,11 +651,6 @@ export default function CouncilSpace() {
         </div>
       </section>
 
-      {/* SOV-SPACE GALAXY — 5D layered view.
-          Hive (water, pinned facts) → C-space (milk, deliberation) → J-space
-          (honey, signed) → flywheels orbiting as planets → live data halo.
-          Each flywheel is its own planet; its phase shows water→milk→honey.
-          Click a planet to inspect, hover for tooltip. */}
       <section className="mx-auto max-w-6xl px-6 pb-8">
         <div className="overflow-hidden rounded-2xl border border-sky-500/25 bg-[#05140d]">
           <div className="flex items-center justify-between border-b border-sky-500/15 px-4 py-2">
@@ -793,38 +658,14 @@ export default function CouncilSpace() {
               <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">Council Space · 5D layered view</div>
               <div className="text-sm font-bold text-sky-100">Hive → C-space → J-space → flywheels → live data — the estate as a galaxy</div>
             </div>
-            <div className="text-right font-mono text-[10px] text-sky-300/60">
-              zoom: ∞ · flywheels: {flywheels.length}
-            </div>
+            <div className="text-right font-mono text-[10px] text-sky-300/60">zoom: ∞ · flywheels: {flywheels.length}</div>
           </div>
           <div className="p-2">
-            <CouncilGalaxy
-              hive={HIVE}
-              cspace={cSpaceEvents.length}
-              jspace={jrecords.length}
-              flywheels={flywheels}
-              citizens={citizens}
-              height={520}
-            />
-          </div>
-          <div className="border-t border-sky-500/15 px-4 py-3 text-[11px] text-sky-300/70">
-            <p>
-              <strong className="text-sky-200">The metaphor:</strong> the Council estate is a galaxy. The HIVE is the central star — water, the pinned facts that ground everything. C-space orbits it — milk, the local deliberation the council does. J-space is the next shell — honey, the signed decisions in the D1 ledger. Each flywheel is its own planet, orbiting on its own radius; its <em>phase</em> shows where it sits in the water→milk→honey flow. The outer halo is the unbounded working memory — the infinite drawing.
-            </p>
-            <p className="mt-2">
-              So the front-end and back-end services operate across all the data <em>living</em>, not frozen — the same way the flywheels keep running while the user looks at any layer. Click a planet, hover for its phase and last-run time, then jump to the J-space timeline below for the signed events it produced.
-            </p>
+            <CouncilGalaxy hive={HIVE} cspace={cSpaceEvents.length} jspace={jrecords.length} flywheels={flywheels} citizens={citizens} height={520} />
           </div>
         </div>
       </section>
 
-      {/* J-space replay panel — the moat made visible.
-          Pulls live decision_records from the D1-backed Worker and renders them
-          on an infinite-time log-scale. Each event is a position on the timeline;
-          the line-scale zooms out as time expands, so yesterday sits nearby
-          and last-decade events nest into fixed slots. Hover to inspect, click
-          to expand the reasoning. This is the visual forest — traverse laterally
-          (time) or via zoom (scale). C-space (council actions) layers above. */}
       <section className="mx-auto max-w-6xl px-6 pb-8">
         <div className="rounded-2xl border border-emerald-500/25 bg-[#05140d] p-5">
           <div className="flex items-center justify-between border-b border-emerald-500/15 pb-3">
@@ -833,36 +674,20 @@ export default function CouncilSpace() {
               <div className="text-sm font-bold text-emerald-100">The Moat, Visible — every event recorded in time</div>
             </div>
             <div className="text-right">
-              <div className="font-mono text-[10px] text-emerald-300/60">
-                {jfetchedAt ? "current as of " + new Date(jfetchedAt).toUTCString().replace("GMT", "UTC") : "loading…"}
-              </div>
+              <div className="font-mono text-[10px] text-emerald-300/60">{jfetchedAt ? "current as of " + new Date(jfetchedAt).toUTCString().replace("GMT", "UTC") : "loading…"}</div>
               <a href="/live-ledger" className="text-[11px] font-semibold text-emerald-200 hover:underline">Open the full ledger →</a>
             </div>
           </div>
           {jrecordsErr && (
             <div className="mt-3 rounded border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-200">
               Upstream unavailable ({jrecordsErr}). The moat is not visible right now — this is rendered honestly, not simulated.
-              The static 8-refutation story lives at <a href="/refutation-ledger" className="underline">/refutation-ledger</a>.
-            </div>
-          )}
-          {!jrecordsErr && jrecords.length === 0 && cSpaceEvents.length === 0 && busEvents.length === 0 && (
-            <div className="mt-3 rounded border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
-              Fetching the J-space… if this persists, the upstream is unreachable. Not simulated.
             </div>
           )}
           {(jrecords.length > 0 || cSpaceEvents.length > 0 || busEvents.length > 0) && (
             <div className="mt-4">
-              <JSpaceTimeline
-                events={[...convertToTimeline(jrecords), ...busEvents, ...cSpaceEvents]}
-                onSelect={(ev) => {
-                  if (ev.space !== "C") setScenario((q) => q + (q ? " — " : "") + ev.claim);
-                }}
-              />
+              <JSpaceTimeline events={[...convertToTimeline(jrecords), ...busEvents, ...cSpaceEvents]} onSelect={(ev) => { if (ev.space !== "C") setScenario((q) => q + (q ? " — " : "") + ev.claim); }} />
             </div>
           )}
-          <p className="mt-3 text-[11px] text-emerald-300/50">
-            Each event is a point on a log-scale line — the timeline zooms out as time expands, so the KB can hold an unbounded number of decision_records while the screen stays readable. Hover any event for context; click to feed it back into the scenario. Watch the <a href="/live-ledger" className="underline">live chain</a> refresh as the council deliberates; see the static story at <a href="/refutation-ledger" className="underline">/refutation-ledger</a>.
-          </p>
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-6 pb-8">
@@ -875,42 +700,14 @@ export default function CouncilSpace() {
           {selectedStamp && (
             <div className="border-t border-sky-500/15 px-4 py-3">
               <div className="flex items-center justify-between">
-                <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">
-                  Stamp · {selectedStamp.kind} · {selectedStamp.region}
-                </div>
-                <button
-                  onClick={() => setSelectedStamp(null)}
-                  className="font-mono text-[10px] text-sky-300/50 hover:text-sky-100"
-                >
-                  ✕ close
-                </button>
+                <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">Stamp · {selectedStamp.kind} · {selectedStamp.region}</div>
+                <button onClick={() => setSelectedStamp(null)} className="font-mono text-[10px] text-sky-300/50 hover:text-sky-100">✕ close</button>
               </div>
-              <div className="mt-2 text-[12px] text-sky-100/90">
-                <strong className="text-sky-200">{selectedStamp.claim || "(no claim)"}</strong>
-              </div>
-              {selectedStamp.scenario && (
-                <div className="mt-1 text-[11px] text-sky-200/70">
-                  <span className="font-mono text-[10px] text-sky-300/50">scenario: </span>
-                  {selectedStamp.scenario}
-                </div>
-              )}
-              <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[10px] font-mono text-sky-300/60">
-                <div>id: {selectedStamp.id}</div>
-                <div>ts: {new Date(selectedStamp.ts).toISOString().replace("T", " ").slice(0, 19)}Z</div>
-                <div>lng: {selectedStamp.lng?.toFixed(2)}</div>
-                <div>lat: {selectedStamp.lat?.toFixed(2)}</div>
-                {selectedStamp.tag && <div>tag: {selectedStamp.tag}</div>}
-                {selectedStamp.weight != null && <div>weight: {selectedStamp.weight}</div>}
-              </div>
-              <div className="mt-2 text-[10px] text-sky-300/50">
-                Click another stamp on the dome to inspect its underlying position + scenario.
-              </div>
+              <div className="mt-2 text-[12px] text-sky-100/90"><strong className="text-sky-200">{selectedStamp.claim || "(no claim)"}</strong></div>
             </div>
           )}
           {!selectedStamp && stamps.length > 0 && (
-            <div className="border-t border-sky-500/15 px-4 py-2 text-[10px] font-mono text-sky-300/50">
-              {stamps.length} stamp{stamps.length === 1 ? "" : "s"} on the dome · click any glyph to inspect
-            </div>
+            <div className="border-t border-sky-500/15 px-4 py-2 text-[10px] font-mono text-sky-300/50">{stamps.length} stamp{stamps.length === 1 ? "" : "s"} on the dome · click any glyph to inspect</div>
           )}
         </div>
       </section>
@@ -919,9 +716,6 @@ export default function CouncilSpace() {
           <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Ask the live Council</div><p className="mt-1 text-sm text-emerald-100/70">Take a real question to the the council and get a verdict.</p></a>
           <a href="/certification" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Training and Certification</div><p className="mt-1 text-sm text-emerald-100/70">Learn the framework and earn your verifiable Council credential.</p></a>
           <a href="/charter" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">The Council Charter</div><p className="mt-1 text-sm text-emerald-100/70">The constitution the OS is governed by - read and align.</p></a>
-        </div>
-        <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/70">
-          <b className="text-emerald-200">Roadmap to Unreal Engine 5.</b> This Council Space runs natively in your browser today. The full immersive OS renders in UE5 and reaches you by pixel-stream, with the same Council voice loop and Layer 0 signing - you take control, it explains as it happens. Building in the open on GitHub; aligned across the M4 build line.
         </div>
       </section>
     </div>

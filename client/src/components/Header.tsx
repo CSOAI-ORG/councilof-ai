@@ -9,6 +9,8 @@ import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Sear
 import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { isEmbedded } from '@/lib/embed';
+import { lobbyHref, openLobby } from '@/lib/lobbyLink';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,7 +43,7 @@ const navigation: NavGroup[] = [
     icon: BarChart2,
     description: 'The instrument and its board',
     submenu: [
-      { name: 'The GSPC board', href: '/gspc-scoreboard', description: '13 measured of 14 axes, plus jail — every cell with its n' },
+      { name: 'The GSPC board', href: '/gspc-scoreboard', description: 'The living board — measured axes, empty cells empty. Counts from GET /api/gspc' },
       { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
       { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head, deterministic grading, no model judging another' },
       { name: 'Verify a signed card', href: '/gspc-verify', description: 'Check any Ed25519-signed record offline against the published key' },
@@ -163,6 +165,8 @@ export function Header() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  if (isEmbedded()) return null;
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
@@ -300,6 +304,13 @@ export function Header() {
             >
               <Search className="h-5 w-5" />
             </button>
+            <a
+              href={lobbyHref({ pane: 'home' })}
+              onClick={(e) => { e.preventDefault(); openLobby({ pane: 'home' }); }}
+              className="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800"
+            >
+              Council OS
+            </a>
 
             {/* "Verify a card" removed from the header 2026-08-21 (owner call): the
                 verify path is already the primary CTA in the hero and in three bands
@@ -403,6 +414,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
+              </a>
+              <a
+                href={lobbyHref({ pane: 'home' })}
+                className="block px-4 py-3 rounded-lg font-medium text-emerald-800 bg-emerald-50"
+                onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); openLobby({ pane: 'home' }); }}
+              >
+                Council OS
               </a>
 
               {navigation.map((item) => (

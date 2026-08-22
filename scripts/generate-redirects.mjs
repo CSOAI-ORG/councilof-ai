@@ -80,6 +80,20 @@ const EXISTING = [
   "/council-space  /gspc-arena             308",  // Council Space's own console/nav linked it
   "/city           /gspc-arena?view=towns  308",  // home "Council City" CTA target
   "/method         /methodology            308",  // home USP cards linked /method
+  // qa-sweep 2026-08-21: guessed / inbound aliases 404'd (catch-all is honest 404.html).
+  "/legal                  /disclaimers                 308",
+  "/vulnerability          /vulnerability-disclosure    308",
+  "/gspc                   /gspc-scoreboard             308",
+  "/scoreboard             /gspc-scoreboard             308",
+  "/lobby                  /?lobby=home                 308",
+  "/console                /?lobby=home                 308",
+  "/council-os             /?lobby=home                 308",
+  "/library/measurement    /library/axes                308",
+  // Klingler/DID stranger-walk 2026-08-22: bare /verify 404s (prerender is /verify/index.html only;
+  // catch-all /* → 404.html). DID serviceEndpoint is https://councilof.ai/verify (no slash).
+  "/verify                 /gspc-verify/                308",
+  "/verify/                /gspc-verify/                308",
+  "/gspc-verify            /gspc-verify/                308",
 ];
 
 const HASHED_DIRS = ["/assets"];
