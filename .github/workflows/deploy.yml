@@ -79,11 +79,30 @@ jobs:
       # so the homepage went thin; `/os/` stayed fat on a week-long cache.
       # Fail this job if that race happens so we do not ship a green lie.
       - name: Recheck after trailing-clobber window
+        id: recheck
+        continue-on-error: true
         run: |
           set -euo pipefail
           echo "waiting 120s for a Git/Mac overwrite of the production alias..."
           sleep 120
           node scripts/assert-prerender-live.mjs --label recheck \
+            --host https://councilof.ai \
+            --also https://councilof-ai.pages.dev
+
+      # Trailing clobber: master.* stays fat (~212KB) while apex + pages.dev go
+      # thin (~7KB Vite) ~2–4 min later (Pages Git auto-build or Mac wrangler).
+      # Re-stamp all three alias names from the same gated dist/client.
+      - name: Anti-clobber — redeploy gated tree if recheck failed
+        if: steps.recheck.outcome == 'failure'
+        env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
+        run: |
+          set -euo pipefail
+          echo "RECHECK FAILED — re-stamping master/main/production aliases"
+          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true
+          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true
+          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=production --commit-dirty=true
+          sleep 30
+          node scripts/assert-prerender-live.mjs --label anti-clobber \
             --host https://councilof.ai \
             --also https://councilof-ai.pages.dev
 
