@@ -89,14 +89,15 @@ const EXISTING = [
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
   "/library/measurement    /library/axes                308",
-  // Klingler/DID stranger-walk 2026-08-22: bare /verify 404s (prerender is /verify/index.html only;
-  // catch-all /* → 404.html). DID serviceEndpoint is https://councilof.ai/verify (no slash).
-  "/verify                 /gspc-verify/                308",
-  "/verify/                /gspc-verify/                308",
-  "/gspc-verify            /gspc-verify/                308",
-  // Clean arena path — Pages Functions rounds.js did not bind in prod (catch-all 404).
-  // Rewrite to the live .jsonl handler (same KV source).
+  // Klingler/DID stranger-walk + persona cold loads (2026-08-22)
+  "/verify                 /gspc-verify                 308",
+  "/verify/                /gspc-verify                 308",
+  "/gspc-verify/           /gspc-verify                 308",
   "/api/arena/rounds       /api/arena/rounds.jsonl      200",
+  "/enterprises            /enterprise                  308",
+  "/developers             /gspc-verify                 308",
+  "/colosseum              /coliseum                    308",
+  "/for                    /for/enterprise              308",
 ];
 
 const HASHED_DIRS = ["/assets"];
@@ -113,8 +114,8 @@ const lines = [
   ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map((d) => `${d}/*  ${d}/:splat  200`),
 
   "",
-  "# --- SPA catch-all: known routes are prerendered static files (200); unknown paths get a real 404 ---",
-  "/*  /404.html  404",
+  "# --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---",
+  "/*  /index.html  200",
   "",
 ];
 
