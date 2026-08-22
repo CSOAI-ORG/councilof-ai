@@ -5,6 +5,10 @@ on:
     branches: [master, main]
     paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch: {}
+  # Re-stamp production when Pages Git auto-build keeps clobbering the apex alias
+  # between pushes. Full gated build — not a probe-only job.
+  schedule:
+    - cron: '20 */3 * * *'
 
 # Queue, don't cancel: rapid successive pushes were cancelling the in-flight
 # prerender deploy mid-run, leaving the production alias on a thin Vite shell
