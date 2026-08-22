@@ -41,9 +41,14 @@ const fail = (m) => {
 };
 
 async function get(url) {
-  const r = await fetch(url, { headers: { "user-agent": UA }, redirect: "follow" });
-  const body = await r.text();
-  return { status: r.status, body, bytes: body.length };
+  try {
+    const r = await fetch(url, { headers: { "user-agent": UA }, redirect: "follow" });
+    const body = await r.text();
+    return { status: r.status, body, bytes: body.length, error: null };
+  } catch (err) {
+    const msg = err instanceof Error ? (err.cause?.message || err.message) : String(err);
+    return { status: 0, body: "", bytes: 0, error: msg };
+  }
 }
 
 console.log(`ASSERT-PRERENDER [${label}] min_homepage_bytes=${MIN}`);
@@ -55,7 +60,8 @@ for (const host of hosts) {
   const verify = await get(host + "/gspc-verify/");
   const board = await get(host + "/gspc-scoreboard");
 
-  if (home.status !== 200) fail(`${host}/ HTTP ${home.status}`);
+  if (home.error) fail(`${host}/ fetch failed: ${home.error}`);
+  else if (home.status !== 200) fail(`${host}/ HTTP ${home.status}`);
   else if (home.bytes < MIN) {
     fail(`${host}/ is a thin Vite shell (${home.bytes} bytes; need ≥ ${MIN})`);
     if (os.status === 200 && os.bytes >= MIN) {
@@ -71,13 +77,16 @@ for (const host of hosts) {
     pass(`${host}/ references CouncilLobby`);
   }
 
-  if (os.status !== 200) fail(`${host}/os/ HTTP ${os.status}`);
+  if (os.error) fail(`${host}/os/ fetch failed: ${os.error}`);
+  else if (os.status !== 200) fail(`${host}/os/ HTTP ${os.status}`);
   else pass(`${host}/os/ HTTP 200`);
 
-  if (verify.status !== 200) fail(`${host}/gspc-verify/ HTTP ${verify.status}`);
+  if (verify.error) fail(`${host}/gspc-verify/ fetch failed: ${verify.error} (often a 308 slash loop)`);
+  else if (verify.status !== 200) fail(`${host}/gspc-verify/ HTTP ${verify.status}`);
   else pass(`${host}/gspc-verify/ HTTP 200`);
 
-  if (board.status !== 200) fail(`${host}/gspc-scoreboard HTTP ${board.status}`);
+  if (board.error) fail(`${host}/gspc-scoreboard fetch failed: ${board.error}`);
+  else if (board.status !== 200) fail(`${host}/gspc-scoreboard HTTP ${board.status}`);
   else if (board.bytes < MIN) {
     fail(`${host}/gspc-scoreboard is the leftover static HTML (${board.bytes} B), not the living React board`);
   } else {
