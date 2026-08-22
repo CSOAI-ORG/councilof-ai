@@ -5,7 +5,9 @@
 ## The rule
 councilof.ai (Cloudflare Pages project `councilof-ai`) is deployed **only** by GitHub Actions on push
 to `master` — the pipeline that runs the brand-gate, the cold prerender, sitemap/redirect generation,
-and ships the result. **Direct `wrangler pages deploy … --project-name=councilof-ai` is prohibited.**
+and ships the result to **both** `--branch=master` and `--branch=main` so the custom domain
+(production alias) cannot stay on a thin Vite shell while a hash preview holds the prerender.
+**Direct `wrangler pages deploy … --project-name=councilof-ai` is prohibited.**
 
 ## Why
 The trust surface is the product. When a second lane runs a direct `wrangler pages deploy`, it silently
