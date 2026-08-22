@@ -81,14 +81,19 @@ const EXISTING = [
   "/city           /gspc-arena?view=towns  308",  // home "Council City" CTA target
   "/method         /methodology            308",  // home USP cards linked /method
   // qa-sweep 2026-08-21: guessed / inbound aliases 404'd (catch-all is honest 404.html).
-  "/legal                  /disclaimers                 308",
+  "/legal                  /disclaimers/                308",
   "/vulnerability          /vulnerability-disclosure    308",
-  "/gspc                   /gspc-scoreboard             308",
-  "/scoreboard             /gspc-scoreboard             308",
+  "/gspc                   /gspc-scoreboard/            308",
+  "/gspc-scoreboard        /gspc-scoreboard/            308",
+  "/scoreboard             /gspc-scoreboard/            308",
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
-  "/library/measurement    /library/axes                308",
+  "/library/measurement    /library/axes/               308",
+  "/vs/vanta               /vs/vanta/                   308",
+  "/vs/drata               /vs/drata/                   308",
+  "/vs/credo-ai            /vs/credo-ai/                308",
+  "/vs/onetrust            /vs/onetrust/                308",
   // Klingler/DID stranger-walk 2026-08-22: bare /verify 404s (prerender is /verify/index.html only;
   // catch-all /* → 404.html). DID serviceEndpoint is https://councilof.ai/verify (no slash).
   "/verify                 /gspc-verify/                308",
