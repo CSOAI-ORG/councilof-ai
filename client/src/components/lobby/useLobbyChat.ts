@@ -39,7 +39,7 @@ export type Thread = {
   turns: Turn[];
 };
 
-/** Shared with client/src/components/os/CouncilChat.tsx — one label vocabulary estate-wide. */
+/** Estate-wide state labels for council replies. */
 export const STATE_LABEL: Record<string, string> = {
   live: "council · live specialist",
   grounded: "grounded in published measurement",
