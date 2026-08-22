@@ -3,6 +3,7 @@ import { LOBBY_TABS, type LobbyTab } from "./tabs";
 import { AUDIENCES, DEFAULT_AUDIENCE, asksFor } from "./asks";
 import { FOCUS, MEASURE, MEASURE_CHAT, PRIMARY, TYPE, TONE } from "./glass";
 import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
+import { personaSpeak, stopVoice } from "../../lib/sovPersona";
 
 /**
  * LobbyChatBar — the chat bar across the foot of the Council Lobby.
@@ -39,6 +40,7 @@ const STATE_TONE: Record<string, string> = {
 };
 
 const AUDIENCE_KEY = "coai.lobby.audience";
+const VOICE_KEY = "coai.lobby.voice";
 
 function readAudience(): string {
   try {
@@ -79,6 +81,10 @@ export default function LobbyChatBar({
   const folded = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const lastSpoken = useRef("");
+  const [voiceOn, setVoiceOn] = useState(() => {
+    try { return localStorage.getItem(VOICE_KEY) !== "off"; } catch { return true; }
+  });
 
   const turns = chat.active?.turns ?? [];
   const suggestions = useMemo(
@@ -89,6 +95,22 @@ export default function LobbyChatBar({
   useEffect(() => {
     try { localStorage.setItem(AUDIENCE_KEY, audience); } catch { /* ignore */ }
   }, [audience]);
+
+  useEffect(() => {
+    try { localStorage.setItem(VOICE_KEY, voiceOn ? "on" : "off"); } catch { /* ignore */ }
+    if (!voiceOn) stopVoice();
+  }, [voiceOn]);
+
+  useEffect(() => {
+    const last = turns[turns.length - 1];
+    if (!voiceOn || !last || last.role !== "council") return;
+    const key = last.at + "\n" + last.text;
+    if (key === lastSpoken.current) return;
+    lastSpoken.current = key;
+    personaSpeak(last.text);
+  }, [turns, voiceOn]);
+
+  useEffect(() => () => { stopVoice(); }, []);
 
   /**
    * Fill the field and focus it. THAT IS THE WHOLE ACTION — used by the seeded
@@ -268,6 +290,15 @@ export default function LobbyChatBar({
             className={`${PRIMARY} shrink-0 px-6 py-3 text-[15px]`}
           >
             {chat.busy ? "…" : "Ask"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setVoiceOn((v) => !v)}
+            aria-pressed={voiceOn}
+            aria-label={voiceOn ? "Mute the Council voice" : "Unmute the Council voice"}
+            className={`shrink-0 rounded-xl border border-slate-900/12 bg-white/80 px-3.5 text-[12px] font-semibold text-slate-700 transition hover:bg-white motion-reduce:transition-none ${FOCUS}`}
+          >
+            {voiceOn ? "Voice" : "Muted"}
           </button>
           <button
             type="button"
