@@ -32,6 +32,8 @@ export interface Audience {
 export const AUDIENCES: Audience[] = [
   { id: "public", label: "Curious public", who: "No prior knowledge assumed." },
   { id: "builder", label: "Builder", who: "Engineers shipping an AI system." },
+  { id: "insurer", label: "Insurer", who: "Underwriting and risk on AI systems." },
+  { id: "regulator", label: "Regulator", who: "Supervisory and policy readers." },
   { id: "compliance", label: "Compliance & legal", who: "Counsel, DPOs, risk teams." },
   { id: "procurement", label: "Procurement", who: "Buyers assessing a vendor." },
   { id: "board", label: "Board & exec", who: "Accountable officers." },
