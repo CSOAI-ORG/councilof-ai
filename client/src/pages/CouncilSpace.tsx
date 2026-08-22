@@ -138,3 +138,17 @@ const FLYWHEELS: FlywheelPlanet[] = [
   { id: "honey-pipe", name: "honey_pipeline", axis: "care", phase: "honey", description: "KB harvest → honey cache → cite-on-serve", metric: "83 verified entries · 87KB", last_run_iso: "2026-07-30T05:00:00Z" },
   { id: "production-ready", name: "production_ready", axis: "care", phase: "honey", description: "signed care_cost evidence pack for marketing", metric: "Ed25519 signature · care_score=0.7891", last_run_iso: "2026-07-30T12:00:00Z" },
 ];
+
+const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
+const LOCAL_GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_LOCAL_GATEWAY) || GW;
+const SS_INDUSTRIES = ["healthcare","health","hospital","clinical","triage","pharma","biotech","finance","fintech","banking","insurance","lending","credit","education","edtech","retail","ecommerce","legal","government","public sector","defense","energy","utilities","automotive","telecom","manufacturing","logistics","hr","recruiting","hiring","media","gaming","agriculture","transport","aviation","real estate","crypto","web3","marketing"];
+function ssIndustry(q: string) { const s = (q || "").toLowerCase(); return SS_INDUSTRIES.find((w) => new RegExp("\\b" + w + "\\b").test(s)) || null; }
+function ssRegion(q: string) {
+  const s = " " + (q || "").toLowerCase() + " ";
+  if (/\bus\b|\busa\b|\bamerica|\bcalifornia\b|\btexas\b|\bcolorado\b|\bnew york\b/.test(s)) return "the United States (NIST AI RMF + state law)";
+  if (/\beu\b|\beurope|\bgerman|\bfrance\b|\bspain\b|\bitaly\b|\bireland\b|\bparis\b|\bberlin\b/.test(s)) return "the European Union (EU AI Act)";
+  if (/\bchina\b|\bbeijing\b/.test(s)) return "China (TC260)";
+  if (/\bsingapore\b/.test(s)) return "Singapore (Model AI Governance)";
+  if (/\buk\b|\bbritain\b|\blondon\b/.test(s)) return "the United Kingdom (UK AI regulation)";
+  return "a global footprint (ISO 42001)";
+}
