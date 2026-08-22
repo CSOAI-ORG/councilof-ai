@@ -88,6 +88,8 @@ const EXISTING = [
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
+  "/sov-os                 /                            308",   // hygiene #316 — SovOS lab killed; mirror App.tsx Redirect
+  "/sov-os/                /                            308",
   "/library/measurement    /library/axes                308",
   // Klingler/DID stranger-walk + persona cold loads (2026-08-22).
   // Do NOT redirect /gspc-verify ↔ /gspc-verify/ — Pages trailing-slash
