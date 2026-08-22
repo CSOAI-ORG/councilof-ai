@@ -42,6 +42,7 @@ export const STRANGER_DIRS = [
   "intel", "hive", "methodology", "honesty", "insurers", "regulators",
   "industries", "enterprise", "library", "library/axes", "library/measurement",
   "privacy-policy", "disclaimers", "legal", "system-card",
+  "pricing", "start",
 ];
 
 function run(distArg = process.argv[2] || "dist/client") {
