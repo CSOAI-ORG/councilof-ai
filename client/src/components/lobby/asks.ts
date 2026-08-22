@@ -37,7 +37,6 @@ export const AUDIENCES: Audience[] = [
   { id: "board", label: "Board & exec", who: "Accountable officers." },
   { id: "researcher", label: "Researcher", who: "Reading the method and the n." },
   { id: "press", label: "Press", who: "Checking a claim before quoting it." },
-  { id: "press", label: "Press", who: "Checking a claim before quoting it." },
 ];
 
 export const DEFAULT_AUDIENCE = "public";
