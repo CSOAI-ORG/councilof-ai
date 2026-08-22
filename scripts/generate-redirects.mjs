@@ -76,6 +76,11 @@ const EXISTING = [
   "/crown-jewels         /          308",   // §0.2 #22 — same
   "/plans                /pricing   308",   // §3.5 #2 — duplicate of /pricing
   "/enterprise-plans     /pricing   308",   // §3.5 #2 — fold Enterprise into one pricing page
+  // bare↔slash fight fix (2026-08-22): /verify and /gspc-verify are the SAME page. The
+  // SPA catch-all served /verify -> client <Redirect to="/gspc-verify"> -> Pages rewrote
+  // /gspc-verify -> loop (assert TypeError, see crawler-view-gate/drift-guard harden).
+  // Edge 308 to the single canonical route kills the client bounce.
+  "/verify               /gspc-verify   308",
   // qa-sweep 2026-08-19: dead internal links found on live pages — no such routes existed.
   "/council-space  /gspc-arena             308",  // Council Space's own console/nav linked it
   "/city           /gspc-arena?view=towns  308",  // home "Council City" CTA target
