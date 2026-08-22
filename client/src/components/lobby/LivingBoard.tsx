@@ -22,8 +22,11 @@ const EMPTY: Pick<AxesState, "axes" | "source" | "measuredOn" | "publicCount" | 
 
 export default function LivingBoard({
   onOpenBoard,
+  embedded,
 }: {
   onOpenBoard: () => void;
+  /** When true, hide the “open full board” CTA — already inside the board pane. */
+  embedded?: boolean;
 }) {
   const [state, setState] = useState(EMPTY);
 
@@ -52,13 +55,15 @@ export default function LivingBoard({
                 : "Live board unreachable — this build's snapshot. Empty cells stay empty."}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onOpenBoard}
-          className={`rounded-xl bg-emerald-700 px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-emerald-800 motion-reduce:transition-none ${FOCUS}`}
-        >
-          Open the full board
-        </button>
+        {!embedded && (
+          <button
+            type="button"
+            onClick={onOpenBoard}
+            className={`rounded-xl bg-emerald-700 px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-emerald-800 motion-reduce:transition-none ${FOCUS}`}
+          >
+            Open the full board
+          </button>
+        )}
       </div>
 
       <ul className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
