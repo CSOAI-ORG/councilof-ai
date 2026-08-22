@@ -193,7 +193,7 @@ export default function About() {
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
-                  <span>Every AI system monitored by certified analysts</span>
+                  <span>Every published finding links to a signed, recomputable record</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-1 flex-shrink-0" />
