@@ -6,7 +6,11 @@ on:
     paths: ['client/**', 'public/**', 'functions/**', 'scripts/**', 'package.json', 'wrangler.jsonc', '.github/workflows/deploy.yml']
   workflow_dispatch: {}
 
-concurrency: { group: site-deploy, cancel-in-progress: true }
+# Queue, don't cancel: rapid successive pushes were cancelling the in-flight
+# prerender deploy mid-run, leaving the production alias on a thin Vite shell
+# (deep links 404). cancel-in-progress:false serialises deploys so the latest
+# commit's full prerendered build always lands.
+concurrency: { group: site-deploy, cancel-in-progress: false }
 
 jobs:
   build-deploy:
