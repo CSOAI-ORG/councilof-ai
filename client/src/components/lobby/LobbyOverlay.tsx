@@ -286,7 +286,7 @@ export default function LobbyOverlay({
     );
   }
 
-  // ── the workspace ────────────────────────────────────────────
+  // ── the workspace ────────────────────────────────────────────────────
   return (
     <>
       <FocusSentinel onFocus={() => focusEdge("last")} />
