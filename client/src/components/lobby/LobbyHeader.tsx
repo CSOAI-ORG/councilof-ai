@@ -101,7 +101,7 @@ export default function LobbyHeader({
         <span className="min-w-0">
           <span id={titleId} className={`block ${TYPE.title}`}>Council OS</span>
           <span className={`block ${TYPE.fine}`}>
-            One workspace · measurement, not certification
+            Measure · sign · check — not certification
           </span>
         </span>
       </span>

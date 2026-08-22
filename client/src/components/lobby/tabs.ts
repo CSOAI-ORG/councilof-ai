@@ -49,7 +49,7 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "board",
     label: "Live board",
-    blurb: "The GSPC board — measured axes, and the ones that carry no number.",
+    blurb: "The living GSPC board — every published axis, and in-lane beside it.",
     path: "/gspc-scoreboard",
     cues: /\b(board|scoreboard|score|axes|axis|gspc|leaderboard)\b/i,
   },

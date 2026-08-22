@@ -122,14 +122,13 @@ export default function OsLauncher() {
         <main className="min-w-0 flex-1 space-y-10">
           {/* Hero + Council chat */}
           <section>
-            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-600">The AI governance OS</p>
+            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-600">Council OS</p>
             <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">
-              The game, the arena, the axes and the Council — all in one.
+              Measure. Sign. Check.
             </h1>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
-              One surface for AI governance: watch governed agents live in a town, see models measured head-to-head,
-              read the living GSPC board (counts from GET /api/gspc; empty cells stay empty), and ask the Council — a deterministic answer, grounded in what the estate
-              has actually measured.
+              The living GSPC board, verify, Council Space, and the ask bar — one workspace.
+              Counts come from GET /api/gspc. Empty cells stay empty.
             </p>
             <div className="mt-6 space-y-4">
               <a

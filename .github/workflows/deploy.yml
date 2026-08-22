@@ -30,7 +30,8 @@ jobs:
 
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
-          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench gspc-scoreboard paper-district; do
+          # gspc-scoreboard stays the prerendered React page (living board + in-lane).
+          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench paper-district; do
             if [ -f "client/public/$b.html" ]; then
               cp "client/public/$b.html" "dist/client/$b.html"
               mkdir -p "dist/client/$b"
@@ -42,9 +43,35 @@ jobs:
       - name: Brand gate — block deploy on any forbidden display string (audit §6.2)
         run: node scripts/brand-gate.mjs dist/client
 
+      # Custom domain councilof.ai follows the Pages PRODUCTION alias
+      # (councilof-ai.pages.dev), not a hash preview. --branch=main alone
+      # published a fat preview (2026-08-22, 42596ad2.…) while production
+      # kept a thin Vite shell + honest 404 catch-all. Ship the same tree
+      # to both names the dashboard has used as production_branch.
       - name: Deploy → councilof.ai
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
-        run: npx wrangler pages deploy --branch=main --commit-dirty=true
+        run: |
+          set -euo pipefail
+          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true
+          npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=main --commit-dirty=true
+
+      - name: Assert apex received the prerender
+        run: |
+          set -euo pipefail
+          sleep 20
+          bytes=$(curl -sS https://councilof.ai/ | wc -c)
+          os=$(curl -sS -o /dev/null -w "%{http_code}" https://councilof.ai/os/)
+          verify=$(curl -sS -o /dev/null -w "%{http_code}" https://councilof.ai/gspc-verify/)
+          echo "apex homepage bytes=$bytes os=$os verify=$verify"
+          if [ "$bytes" -lt 20000 ]; then
+            echo "FATAL: councilof.ai is still a thin Vite shell ($bytes bytes)."
+            echo "The prerender landed on a preview; production alias was not updated."
+            exit 1
+          fi
+          if [ "$os" != "200" ] || [ "$verify" != "200" ]; then
+            echo "FATAL: prerendered routes 404 on the custom domain (os=$os verify=$verify)."
+            exit 1
+          fi
 
       # csoai.org is the static apex (csoai-site-deploy.yml ← csoai-static-deploy2).
       # Do NOT redeploy the SPA to csoai-site — that overwrites did:web:csoai.org.

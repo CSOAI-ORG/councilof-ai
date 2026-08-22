@@ -119,7 +119,7 @@ export const COUNTS = {
   withInterval: AXES.filter(hasInterval).length,
 };
 
-/* ── live wire ──────────────────────────────────────────────────────────────
+/* ── live wire ────────────────────────────────────────────────────────────
  * The board above is a snapshot committed to the bundle. /api/gspc is the
  * authoritative published measurement (it carries the issuer and DOI). Read the
  * wire and merge it over the snapshot, keeping the geography the API does not
@@ -131,12 +131,28 @@ export const COUNTS = {
 
 export type AxesSource = "wire" | "snapshot";
 
+/** In-lane measurements are published beside the board, never as board rows. */
+export interface InLaneAxis {
+  axis: string;
+  bench: string;
+  task: string;
+  n: number;
+  accuracy: number;
+  status: string;
+  note?: string;
+  leader?: string;
+}
+
 export interface AxesState {
   axes: Axis[];
   source: AxesSource;
   measuredOn: string;
   issuer?: string;
   doi?: string;
+  /** Living-board sentence from totals.public_count — never typed in chrome. */
+  publicCount?: string;
+  /** slot15 / human-vs-ai etc. Shown as in-lane, not mixed into board counts. */
+  inLane: InLaneAxis[];
   error?: string;
   loading: boolean;
 }
@@ -172,21 +188,51 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
       };
     });
 
+    const rawLane: any[] = Array.isArray(j?.measured_in_lane) ? j.measured_in_lane : [];
+    const inLane: InLaneAxis[] = rawLane
+      .filter((w) => w && typeof w.axis === "string")
+      .map((w) => ({
+        axis: String(w.axis),
+        bench: String(w.bench ?? ""),
+        task: String(w.task ?? ""),
+        n: Number(w.n ?? 0),
+        accuracy: Number(w.accuracy ?? 0),
+        status: String(w.status ?? "UNMEASURED"),
+        note: w.note ? String(w.note) : undefined,
+        leader: w.leader ? String(w.leader) : undefined,
+      }));
+
+    const publicCount = typeof j?.totals?.public_count === "string"
+      ? j.totals.public_count.trim()
+      : "";
+
     return {
       axes: merged,
       source: "wire",
       measuredOn: j?.measured_on?.date ?? j?.measured_on ?? MEASURED_ON.date,
       issuer: j?.issuer,
       doi: j?.doi,
+      publicCount: publicCount || undefined,
+      inLane,
     };
   } catch (e: any) {
     return {
       axes: AXES,
       source: "snapshot",
       measuredOn: MEASURED_ON.date,
+      inLane: [],
       error: String(e?.message ?? e),
     };
   }
+}
+
+/** Caption for living-board chrome. Prefer the API sentence; never invent a slot count. */
+export function publicCaption(publicCount?: string, measured?: number, total?: number): string {
+  if (publicCount && publicCount.trim()) return publicCount.trim();
+  if (typeof measured === "number" && typeof total === "number" && total > 0) {
+    return `${measured} measured of ${total}`;
+  }
+  return "Counts from GET /api/gspc";
 }
 
 export const countOf = (axes: Axis[]) => ({

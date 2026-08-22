@@ -117,6 +117,31 @@ export default function GspcScoreboard() {
           </div>
         )}
 
+        {data && Array.isArray(data.measured_in_lane) && data.measured_in_lane.length > 0 && (
+          <div className="mt-10 rounded-2xl border border-dashed border-emerald-600/25 bg-emerald-50/40 p-6">
+            <h2 className="text-lg font-bold text-gray-900">In-lane — not board rows</h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Published as <code>measured_in_lane</code> on GET /api/gspc. Not counted in totals.public_count.
+            </p>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+              {data.measured_in_lane.map((r: any) => (
+                <li key={r.axis} className="rounded-xl border border-emerald-600/10 bg-white p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-semibold text-gray-900">{r.axis}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wide text-gray-500">{r.status}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500">{r.bench || r.task}</p>
+                  {typeof r.n === "number" && (
+                    <p className="mt-2 font-mono text-sm tabular-nums text-gray-700">
+                      {typeof r.accuracy === "number" ? (r.accuracy * 100).toFixed(0) : "—"} · n={r.n}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="mt-8 grid gap-4 sm:grid-cols-3 text-sm">
           <a href="/gspc-verify" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
             Verify a card — free, in your browser →
