@@ -6,7 +6,7 @@ import { askSovereign } from "../lib/sovAsk";
 import { fetchHealth } from "../lib/sovHealth";
 import { subscribeBus, busHealth, fetchAnchors, fetchLedgerStats, fetchFlywheelSnapshot, fetchHiveCoverage } from "../lib/sovDataBus";
 import { useGeolibre, GEO_REGION_OPTIONS } from "../lib/geolibre";
-import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, personaSpeak, DOCTRINE_RE, DOCTRINE_REFUSAL } from "../lib/sovPersona";
+import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, personaSpeak, stopVoice, DOCTRINE_RE, DOCTRINE_REFUSAL } from "../lib/sovPersona";
 
 // SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
 // acts: routes you to the right surface, answers from the framework knowledge
@@ -43,7 +43,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
 
 const KNOWLEDGE: { re: RegExp; a: string }[] = [
   { re: /what.?s? layer ?0|explain layer ?0/i, a: "Layer 0 is the trust floor for AI: identity (did:csoai), runtime policy, agentic-finance pre-checks, a legacy bridge and cross-region handoff, plus Ed25519 attestation and A2A. Every governed agent stands on it." },
-  { re: /who are you|what are you/i, a: "I am your Council assistant - the agent-first interface to the CSOAI OS. Speak or type and I act: open any tool, explain any framework, answer with live world data, and route you to a signed council verdict." },
+  { re: /who are you|what are you/i, a: "I'm the Council assistant — I open the right surface, read the living board, and stay inside what we have actually measured." },
 ];
 
 const QUICK: { label: string; href: string }[] = [
@@ -114,7 +114,7 @@ export default function SovereignDock() {
   const go = (href: string) => { if (/^https?:\/\//.test(href)) window.open(href, "_blank"); else navigate(href); };
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "I am your Council assistant. Ask me anything, or tell me what to do - I answer with live world data and take you where you need to go." }]);
+  const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "Hi. I'm the Council assistant. Ask about a measurement, a statute, or tell me which pane to open." }]);
   const [listening, setListening] = useState(false);
   const [voiceOn, setVoiceOn] = useState(true);
   const [hz, setHz] = useState<any>(null);
@@ -278,7 +278,7 @@ export default function SovereignDock() {
                 </select>
               </div>
             </div>
-            <button onClick={() => { setVoiceOn((x) => !x); try { window.speechSynthesis.cancel(); } catch (e) {} }} aria-label="Toggle voice" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{voiceOn ? "On" : "Off"}</button>
+            <button onClick={() => { setVoiceOn((x) => !x); stopVoice(); }} aria-label="Toggle voice" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{voiceOn ? "On" : "Off"}</button>
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
           </div>
           <div className="flex flex-wrap gap-1.5 border-b border-emerald-500/10 px-3 py-2">

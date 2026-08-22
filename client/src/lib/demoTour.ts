@@ -9,7 +9,7 @@ export const TOUR: TourStep[] = [
     path: "/",
     title: "I'm your Council assistant - not a checklist",
     usp: "A live governance brain, not compliance software",
-    say: "Quick tour. Everyone else hands you a compliance checklist and a dashboard. CSOAI is different: I'm a Council measurement brain — signed cards, the living board, and cryptographic proof behind every answer. Let me show you, live.",
+    say: "A short walk. Other tools hand you a checklist. Here you get signed cards, the living board, and a proof you can check. I'll show you.",
   },
   {
     path: "/os",
@@ -30,7 +30,7 @@ export const TOUR: TourStep[] = [
     path: "/try",
     title: "The designed council rules",
     usp: "Multi-agent council review, not one model's opinion",
-    say: "Describe an AI system and the designed multi-provider council reviews it against a 0.95 care-floor - then a signed verdict is sealed (council is a design; live independence measured n_eff 1.21 of 3). Not one AI guessing: a council that can't be captured by any single node. Watch: screening job applicants with AI.",
+    say: "Describe a system. The designed council reviews it against a care floor, then seals a signed verdict. One model does not get the last word. Watch: screening job applicants with AI.",
     demo: "We use AI to screen job applicants",
     tip: "Ask a compliance question - the Council rules on it.",
   },
@@ -75,7 +75,7 @@ export const TOUR: TourStep[] = [
     path: "/pricing",
     title: "Own your AI. Plug governance into anything.",
     usp: "Governance as infrastructure - one command",
-    say: "Start free, scale when you need. And one command - npx csoai-governance-mcp - drops this whole governance layer into any agent you already run. Own your AI, own your data, prove all of it. That's the tour - I'm always bottom-right. Ask me anything, any page.",
+    say: "That's the walk. I'm bottom-right on every page. Ask about a measurement or a statute and I'll take you there.",
     tip: "Copy the MCP command - governance in one line.",
   },
   {

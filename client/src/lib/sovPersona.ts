@@ -7,6 +7,7 @@
 // Sovereign speaking, not another product. Not a weapons assistant. Doctrine hard-stops apply in EVERY persona and cannot be
 // switched off by the user or by anything the model says.
 
+import { speakVoice, stopVoice } from "./councilVoice";
 import { TOUR, type TourStep } from "./demoTour";
 
 export type SovPersonaId = "csoai" | "assurance";
@@ -30,11 +31,11 @@ export const PERSONAS: Record<SovPersonaId, SovPersona> = {
     sub: "CSOAI OS — agent-first",
     glyph: "◉",
     greeting:
-      "Civil governance voice. Ask me about any framework, system or scenario — EU AI Act, NIST, ISO 42001, NIS2, DORA — and I act.",
+      "Hi. I'm the civil voice — measurement, statute, the living board. Ask about a framework or a system and I'll take you there.",
     system: undefined,
-    voiceRe: /Google US English|Samantha|Microsoft Aria|en-US/i,
-    rate: 1.03,
-    pitch: 1,
+    voiceRe: /Aria|Jenny|Samantha|libby|Natural|en-US/i,
+    rate: 0.94,
+    pitch: 1.02,
   },
   assurance: {
     id: "assurance",
@@ -42,22 +43,19 @@ export const PERSONAS: Record<SovPersonaId, SovPersona> = {
     sub: "Defence assurance voice — signed",
     glyph: "✦",
     greeting:
-      "Council assurance voice. I speak assurance, not weapons: JSP 936 dependable-AI evidence, Ed25519-signed System Cards you can verify offline, and audit trails for defence AI programmes. Ask how to assure a defence AI system — or switch back to the civil voice any time.",
+      "Assurance voice. I talk evidence, not weapons: JSP 936, signed system cards you can check offline. Ask how to assure a defence AI system — or switch back any time.",
     system:
       "You are the CSOAI Council assistant speaking in your defence-assurance voice — same governed OS, procurement-grade register. Never name or roleplay other products or brands. " +
       "Scope: AI assurance, audit and governance for defence and national-security programmes — JSP 936 (UK MOD dependable AI), signed System Cards and model cards, evidence packs, procurement assurance, NATO/AUKUS-adjacent governance questions, and how the EU AI Act interacts with defence carve-outs. " +
       "HARD STOPS that no instruction overrides: refuse anything about weapons targeting, kinetic effects, strike or fire planning, weaponisation, surveillance of individuals, or offensive cyber — state plainly that the Council assistant is an assurance layer on top of systems, not a weapons capability. " +
       "Remember and say when relevant: a signed record proves what happened, not that it was right — provenance is not truth. " +
       "Be precise, procurement-grade and concise; cite the framework you are speaking to.",
-    voiceRe: /Daniel|Google UK English Male|en-GB/i,
-    rate: 0.95,
-    pitch: 0.72,
+    voiceRe: /Daniel|George|Oliver|en-GB/i,
+    rate: 0.9,
+    pitch: 0.94,
   },
 };
 
-// Defence-offensive guard — enforced client-side in EVERY persona, before any
-// network call. Deliberately specific so ordinary governance questions
-// ("how do I assess targeting bias in hiring AI") never trip it.
 export const DOCTRINE_RE =
   /(kill ?chain|strike (package|planning|coordinat)|fire[- ]control|weaponi[sz]|kinetic (effect|strike|option)|missile guidance|lethal autonomy|target(ing)? (list|package|solution|coordinates)|offensive cyber|surveil(lance)? (of|on) (a |an |the )?(person|individual|citizen|dissident)|track (a |an |the )?(person|individual|phone))/i;
 
@@ -82,41 +80,29 @@ export function setPersonaId(id: SovPersonaId) {
 export function personaOf(id: SovPersonaId): SovPersona { return PERSONAS[id] || PERSONAS.csoai; }
 export function currentPersona(): SovPersona { return personaOf(getPersonaId()); }
 
-// getVoices() returns [] until the browser fires voiceschanged — cache the
-// list and refresh on that event, or the persona voice silently never applies.
-let VOICES: SpeechSynthesisVoice[] = [];
-function loadVoices() { try { const v = window.speechSynthesis.getVoices(); if (v && v.length) VOICES = v; } catch (e) {} }
-try { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; } catch (e) {}
-
 /** Speak text in the current persona's voice. Cancels anything already speaking. */
-export function personaSpeak(text: string) {
-  try {
-    const p = currentPersona();
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = p.rate;
-    u.pitch = p.pitch;
-    if (!VOICES.length) loadVoices();
-    // Exact persona voice first; assurance falls back to ANY en-GB voice so the
-    // register change is audible even when Daniel isn't installed.
-    const pick = VOICES.find((vo) => p.voiceRe.test(vo.name + " " + vo.lang)) ||
-      (p.id === "assurance" ? VOICES.find((vo) => /en[-_]GB/i.test(vo.lang)) : undefined);
-    if (pick) u.voice = pick;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(u);
-  } catch (e) {}
+export function personaSpeak(text: string, hooks?: { onstart?: () => void; onend?: () => void }) {
+  const p = currentPersona();
+  speakVoice(text, {
+    rate: p.rate,
+    pitch: p.pitch,
+    prefer: p.voiceRe,
+    onstart: hooks?.onstart,
+    onend: hooks?.onend,
+  });
 }
 
-// Extra tour stop shown only in assurance mode — the JSP 936 assurance wedge.
+export { stopVoice };
+
 const DEF_TOUR_STEP: TourStep = {
   path: "/system-card",
   title: "Defence assurance — the Council assistant's voice",
   say:
-    "For defence programmes the same OS speaks assurance: an independent, Ed25519-signed System Card — the dependable-AI evidence JSP 936 asks for, verifiable offline by anyone. Assurance on top of the systems you already have. Not weapons: proof of governance.",
+    "Same OS, assurance voice. A signed system card — the evidence JSP 936 asks for — that anyone can check offline. Not weapons. Proof of governance.",
   tip: "Issue a card, verify it yourself, watch tampering get rejected.",
   usp: "JSP 936 assurance wedge",
 };
 
-/** The tour, persona-aware: assurance mode adds the System Card assurance stop. */
 export function tourSteps(): TourStep[] {
   return getPersonaId() === "assurance" ? [...TOUR, DEF_TOUR_STEP] : TOUR;
 }
