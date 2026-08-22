@@ -34,7 +34,7 @@ const TRACKS: Track[] = [
 ];
 
 export default function Academy() {
-  useEffect(() => { document.title = "CSOAI Academy - learn + demo the governance OS"; }, []);
+  useEffect(() => { document.title = "CSOAI Academy — learn the living board"; }, []);
   const [t, setT] = useState("board");
   const track = TRACKS.find((x) => x.id === t) || TRACKS[0];
   return (

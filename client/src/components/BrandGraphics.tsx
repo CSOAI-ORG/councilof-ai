@@ -130,7 +130,7 @@ export function TrustStrip({ className = "" }: { className?: string }) {
   const items = [
     { k: "Ed25519-signed", v: "every governed action" },
     { k: "Offline-verifiable", v: "in any browser" },
-    { k: "26 frameworks", v: "1,686 controls mapped" },
+    { k: "Empty cells stay empty", v: "live counts on /api/gspc" },
     { k: "Open-source core", v: "no vendor lock-in" },
   ];
   return (

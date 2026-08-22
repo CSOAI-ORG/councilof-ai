@@ -422,7 +422,7 @@ export default function WatchdogLeaderboard() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">2</div>
-                  <p>Earn points when your reports are verified by certified analysts</p>
+                  <p>Earn points when your reports are checked against the published record</p>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">3</div>
@@ -430,7 +430,7 @@ export default function WatchdogLeaderboard() {
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">4</div>
-                  <p>Become a certified analyst to review and verify reports</p>
+                  <p>Train as a reviewer — training, not a conformity mark</p>
                 </div>
                 <Link href="/training">
                   <Button className="w-full mt-4" variant="outline">
