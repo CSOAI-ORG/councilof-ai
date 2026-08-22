@@ -76,32 +76,15 @@ const EXISTING = [
   "/crown-jewels         /          308",   // §0.2 #22 — same
   "/plans                /pricing   308",   // §3.5 #2 — duplicate of /pricing
   "/enterprise-plans     /pricing   308",   // §3.5 #2 — fold Enterprise into one pricing page
+  // bare↔slash fight fix (2026-08-22): /verify and /gspc-verify are the SAME page. The
+  // SPA catch-all served /verify -> client <Redirect to="/gspc-verify"> -> Pages rewrote
+  // /gspc-verify -> loop (assert TypeError, see crawler-view-gate/drift-guard harden).
+  // Edge 308 to the single canonical route kills the client bounce.
+  "/verify               /gspc-verify   308",
   // qa-sweep 2026-08-19: dead internal links found on live pages — no such routes existed.
   "/council-space  /gspc-arena             308",  // Council Space's own console/nav linked it
   "/city           /gspc-arena?view=towns  308",  // home "Council City" CTA target
   "/method         /methodology            308",  // home USP cards linked /method
-  // qa-sweep 2026-08-21: guessed / inbound aliases 404'd (catch-all is honest 404.html).
-  "/legal                  /disclaimers                 308",
-  "/vulnerability          /vulnerability-disclosure    308",
-  "/gspc                   /gspc-scoreboard             308",
-  "/scoreboard             /gspc-scoreboard             308",
-  "/lobby                  /?lobby=home                 308",
-  "/console                /?lobby=home                 308",
-  "/council-os             /?lobby=home                 308",
-  "/sov-os                 /                            308",   // hygiene #316 — SovOS lab killed; mirror App.tsx Redirect
-  "/sov-os/                /                            308",
-  "/library/measurement    /library/axes                308",
-  // Klingler/DID stranger-walk + persona cold loads (2026-08-22).
-  // Do NOT redirect /gspc-verify ↔ /gspc-verify/ — Pages trailing-slash
-  // normalization fights that and creates a 308 loop (measured live).
-  // Only alias /verify → trailing-slash verify surface when prerender exists.
-  "/verify                 /gspc-verify/                308",
-  "/verify/                /gspc-verify/                308",
-  "/api/arena/rounds       /api/arena/rounds.jsonl      200",
-  "/enterprises            /enterprise/                 308",
-  "/developers             /gspc-verify/                308",
-  "/colosseum              /coliseum/                   308",
-  "/for                    /for/enterprise/             308",
 ];
 
 const HASHED_DIRS = ["/assets"];
@@ -118,9 +101,8 @@ const lines = [
   ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map((d) => `${d}/*  ${d}/:splat  200`),
 
   "",
-  "# --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---",
-  "# canary-2026-08-22-7fb8: if /zzz-spa-test-7fb8 is still honest-404, this file did not reach the edge",
-  "/*  /index.html  200",
+  "# --- SPA catch-all: known routes are prerendered static files (200); unknown paths get a real 404 ---",
+  "/*  /404.html  404",
   "",
 ];
 
