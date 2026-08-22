@@ -62,10 +62,15 @@ export const TYPE = {
   muted: "text-[12px] leading-relaxed text-slate-600",
   fine: "text-[11px] leading-relaxed text-slate-600",
   mono: "font-mono text-[11px] leading-relaxed text-slate-600",
+  /** Conversation — larger than body so the ask thread is the readable surface. */
+  chat: "text-[15.5px] leading-[1.65] text-slate-800",
 } as const;
 
 /** Comfortable line length for prose. */
 export const MEASURE = "max-w-[62ch]";
+
+/** Conversation measure — a little wider than body, still a single readable column. */
+export const MEASURE_CHAT = "max-w-[72ch]";
 
 /** The glass surface: hairline white edge, soft shadow, generous radius. */
 export const SURFACE =

@@ -67,8 +67,10 @@ export default function LobbyHeader({
   onToggleSize,
   onMinimise,
   onClose,
-  railOpen,
-  onToggleRail,
+  leftOpen,
+  onToggleLeft,
+  rightOpen,
+  onToggleRight,
 }: {
   titleId: string;
   alpha: number;
@@ -77,8 +79,10 @@ export default function LobbyHeader({
   onToggleSize: () => void;
   onMinimise: () => void;
   onClose: () => void;
-  railOpen: boolean;
-  onToggleRail: () => void;
+  leftOpen: boolean;
+  onToggleLeft: () => void;
+  rightOpen: boolean;
+  onToggleRight: () => void;
 }) {
   const pct = Math.round(alpha * 100);
 
@@ -125,12 +129,23 @@ export default function LobbyHeader({
       <span className="flex items-center gap-2">
         <button
           type="button"
-          onClick={onToggleRail}
-          aria-expanded={railOpen}
-          aria-label={railOpen ? "Hide the right rail" : "Show the right rail"}
+          onClick={onToggleLeft}
+          aria-expanded={leftOpen}
+          aria-label={leftOpen ? "Hide the destinations pane" : "Show the destinations pane"}
+          title="Destinations ([)"
+          className={`${CONTROL} ${SP.chip} hidden text-[12px] font-semibold sm:inline-flex`}
+        >
+          {leftOpen ? "Hide panes" : "Show panes"}
+        </button>
+        <button
+          type="button"
+          onClick={onToggleRight}
+          aria-expanded={rightOpen}
+          aria-label={rightOpen ? "Hide the reports rail" : "Show the reports rail"}
+          title="Reports rail (])"
           className={`${CONTROL} ${SP.chip} hidden text-[12px] font-semibold lg:inline-flex`}
         >
-          {railOpen ? "Hide rail" : "Show rail"}
+          {rightOpen ? "Hide rail" : "Show rail"}
         </button>
 
         <button
@@ -171,6 +186,8 @@ export default function LobbyHeader({
           viewport they are noise, and at 375px they cost a third of the pane. */}
       <p className={`hidden w-full sm:block ${TYPE.fine}`}>
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">Esc</kbd> close ·{" "}
+        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">[</kbd> panes ·{" "}
+        <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">]</kbd> rail ·{" "}
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">⌘/Ctrl .</kbd> minimise ·{" "}
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">↑ ↓</kbd> panes
       </p>

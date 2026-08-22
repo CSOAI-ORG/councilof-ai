@@ -1,18 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { LOBBY_TABS, type LobbyTab } from "./tabs";
 import { AUDIENCES, DEFAULT_AUDIENCE, asksFor } from "./asks";
-import { FOCUS, MEASURE, PRIMARY, SP, SURFACE_LIFTED, TYPE, TONE, panelStyle } from "./glass";
+import { FOCUS, MEASURE, MEASURE_CHAT, PRIMARY, TYPE, TONE } from "./glass";
 import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
 
 /**
  * LobbyChatBar — the chat bar across the foot of the Council Lobby.
  *
- * WHAT CHANGED AND WHY. It used to run the full width of the overlay, which made
- * a 2000px-wide input nobody could see the edges of. It is now CENTRED and
- * constrained to max-w-3xl, lifted off the ground with real elevation, given a
- * generous padding step from the spacing scale, and given a focused state you
- * can actually see (a two-ring emerald treatment on the field itself, not just
- * the browser default).
+ * WHAT CHANGED AND WHY. It sits in the centre column, under the live pane, so
+ * the ask thread is the dominant readable surface — not a slim bar floating
+ * under two sidebars. The conversation is set in TYPE.chat (15.5px / 1.65) on
+ * MEASURE_CHAT so a reply is a column you can actually read. The input is
+ * large and quiet; suggested asks fold away once a thread exists.
  *
  * IT IS NEVER EMPTY. Directly above the field sit the audience chips (AUDIENCES)
  * and the suggested questions for the pane you are looking at
@@ -134,25 +133,28 @@ export default function LobbyChatBar({
   }
 
   return (
-    <div className={`mx-auto flex w-full max-w-3xl shrink-0 flex-col ${SURFACE_LIFTED}`} style={panelStyle}>
+    <div className="flex w-full shrink-0 flex-col border-t border-slate-900/10 bg-white/70">
       {/* ── the thread ──────────────────────────────────────────────────── */}
       {logOpen && turns.length > 0 && (
         <div
           role="log"
           aria-live="polite"
           aria-relevant="additions text"
-          aria-label="Council Lobby conversation"
-          className="max-h-[20vh] space-y-3 overflow-y-auto border-b border-slate-900/10 px-5 py-4"
+          aria-label="Council OS conversation"
+          className="max-h-[38vh] min-h-[8rem] space-y-4 overflow-y-auto px-5 py-5 sm:px-8"
         >
           {turns.map((t, i) => (
-            <div key={i} className={t.role === "user" ? "ml-auto max-w-[85%]" : "max-w-[95%]"}>
+            <div key={i} className={`${MEASURE_CHAT} ${t.role === "user" ? "ml-auto" : ""}`}>
               <p className="sr-only">{t.role === "user" ? "You asked:" : "The Council replied:"}</p>
+              <p className={`mb-1 ${TYPE.section} ${t.role === "user" ? "text-right" : ""}`}>
+                {t.role === "user" ? "You" : "Council"}
+              </p>
               <div
                 className={
-                  "whitespace-pre-wrap rounded-xl px-4 py-2.5 text-[13px] leading-relaxed " +
+                  "whitespace-pre-wrap rounded-2xl px-5 py-3.5 text-[15.5px] leading-[1.65] " +
                   (t.role === "user"
                     ? "bg-emerald-700 text-white"
-                    : "border border-slate-900/10 bg-slate-50 text-slate-800")
+                    : "border border-slate-900/10 bg-white text-slate-900")
                 }
               >
                 {t.text}
@@ -182,7 +184,7 @@ export default function LobbyChatBar({
         </div>
       )}
 
-      <div className={`${SP.card} space-y-3`}>
+      <div className="space-y-3 px-5 py-4 sm:px-8">
         {seeded && (
           <p
             role="status"
@@ -257,13 +259,13 @@ export default function LobbyChatBar({
             aria-label="Ask the Council, or name a pane to open"
             aria-describedby="coai-lobby-chat-note"
             placeholder='Ask the Council — or say "show the board"'
-            className="min-w-0 flex-1 rounded-xl border border-slate-900/15 bg-white px-4 py-2.5 text-[13.5px] text-slate-900 placeholder-slate-500 shadow-inner transition outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/30 motion-reduce:transition-none"
+            className="min-w-0 flex-1 rounded-xl border border-slate-900/15 bg-white px-4 py-3 text-[15.5px] leading-normal text-slate-900 placeholder-slate-500 shadow-inner transition outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/30 motion-reduce:transition-none"
           />
           <button
             type="button"
             onClick={submit}
             disabled={chat.busy || !q.trim()}
-            className={`${PRIMARY} shrink-0 px-6 py-2.5 text-[13.5px]`}
+            className={`${PRIMARY} shrink-0 px-6 py-3 text-[15px]`}
           >
             {chat.busy ? "…" : "Ask"}
           </button>
