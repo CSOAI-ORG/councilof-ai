@@ -27,11 +27,11 @@ const LAYOUT_KEY = "councilos.layout.v2";
 
 /* ── live axes, shared by every panel ──────────────────────────────────────── */
 
-const AxesCtx = createContext<AxesState>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, loading: true });
+const AxesCtx = createContext<AxesState>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, inLane: [], loading: true });
 const useAxes = () => useContext(AxesCtx);
 
 function AxesProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<AxesState>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, loading: true });
+  const [state, setState] = useState<AxesState>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, inLane: [], loading: true });
   useEffect(() => {
     const ac = new AbortController();
     fetchAxes(ac.signal).then((r) => setState({ ...r, loading: false })).catch(() => setState((s) => ({ ...s, loading: false })));
@@ -82,7 +82,7 @@ function Score({ a }: { a: Axis }) {
   );
 }
 
-/* ── panel: globe ──────────────────────────────────────────────────────────── */
+/* ── panel: globe ──────────────────────────────────────────────────────── */
 
 function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
   const { axes } = useAxes();
@@ -134,7 +134,7 @@ function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
   );
 }
 
-/* ── panel: the board ──────────────────────────────────────────────────────── */
+/* ── panel: the board ──────────────────────────────────────────────────── */
 
 function BoardPanel({ containerApi }: IDockviewPanelProps) {
   const { axes, doi, issuer } = useAxes();
@@ -174,7 +174,7 @@ function BoardPanel({ containerApi }: IDockviewPanelProps) {
   );
 }
 
-/* ── panel: evidence ───────────────────────────────────────────────────────── */
+/* ── panel: evidence ───────────────────────────────────────────────────── */
 
 function EvidencePanel({ params }: IDockviewPanelProps<{ axis: string }>) {
   const { axes } = useAxes();
@@ -215,7 +215,7 @@ function EvidencePanel({ params }: IDockviewPanelProps<{ axis: string }>) {
   );
 }
 
-/* ── panel: MCP fleet ──────────────────────────────────────────────────────── */
+/* ── panel: MCP fleet ──────────────────────────────────────────────────── */
 
 function FleetPanel() {
   const [state, setState] = useState<{ loading: boolean; servers: any[]; error?: string }>({ loading: true, servers: [] });
@@ -248,7 +248,7 @@ function FleetPanel() {
   );
 }
 
-/* ── panel: Ask SOV ────────────────────────────────────────────────────────── */
+/* ── panel: Ask SOV ────────────────────────────────────────────────────── */
 
 type Turn = { role: "user" | "assistant"; text: string; sig?: string; state?: string };
 
@@ -384,7 +384,7 @@ function GamesPanel({ params }: IDockviewPanelProps<{ game?: string }>) {
   );
 }
 
-/* ── panel: Training — flywheel runs + mesh simulations ─────────────────────── */
+/* ── panel: Training — flywheel runs + mesh simulations ─────────────────── */
 
 interface FlywheelRun {
   run_id: string;
@@ -511,7 +511,7 @@ function TrainingPanel() {
   );
 }
 
-/* ── panel: method ─────────────────────────────────────────────────────────── */
+/* ── panel: method ─────────────────────────────────────────────────────── */
 
 function MethodPanel() {
   const rules = [
@@ -535,7 +535,7 @@ function MethodPanel() {
   );
 }
 
-/* ── workspace ─────────────────────────────────────────────────────────────── */
+/* ── workspace ───────────────────────────────────────────────────────────── */
 
 const COMPONENTS = { globe: GlobePanel, board: BoardPanel, evidence: EvidencePanel, fleet: FleetPanel, ask: AskPanel, method: MethodPanel, city: CityPanel, games: GamesPanel, training: TrainingPanel };
 
