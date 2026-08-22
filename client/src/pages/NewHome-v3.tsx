@@ -21,7 +21,7 @@ import {
   Eye, FileCheck, RefreshCw, Ban, Landmark, Scale,
 } from "lucide-react";
 
-// ── data ───────────────────────────────────────────────────────────────
+// ── data ───────────────────────────────────────────────────────────
 const FOUR_BUYERS = [
   { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. The living GSPC board is signed; empty cells stay empty. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
@@ -31,9 +31,9 @@ const FOUR_BUYERS = [
 
 const SEVEN_INDUSTRIES = [
   { name: "Insurance", tag: "Underwrite AI risk", img: "⚖", href: "/industries/insurance" },
-  { name: "Health", tag: "Clinical AI, devices, drug discovery", img: "🏥", href: "/industries/health" },
+  { name: "Health", tag: "Clinical AI, devices, drug discovery", img: "🏥", href: "/industries/healthcare" },
   { name: "Finance", tag: "Credit scoring, algorithmic trading, AML", img: "🏦", href: "/industries/finance" },
-  { name: "Transport", tag: "Autonomous vehicles, fleet, logistics", img: "🚚", href: "/industries/transport" },
+  { name: "Transport", tag: "Autonomous vehicles, fleet, logistics", img: "🚚", href: "/industries/transportation" },
   { name: "Retail", tag: "Recommenders, pricing, inventory", img: "🛒", href: "/industries/retail" },
   { name: "Education", tag: "Admissions, proctoring, grading AI", img: "🎓", href: "/industries/education" },
   { name: "Energy", tag: "Grid control, smart metering", img: "⚡", href: "/industries/energy" },
@@ -230,7 +230,7 @@ function BuyerCards() {
   );
 }
 
-// ── industries ─────────────────────────────────────
+// ── industries ───────────────────────────────────
 function IndustryGrid() {
   return (
     <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
@@ -255,7 +255,7 @@ function IndustryGrid() {
   );
 }
 
-// ── blog strip ─────────────────────────────────────
+// ── blog strip ─────────────────────────────────
 function BlogStrip() {
   return (
     <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." bg="bg-white">
@@ -278,7 +278,7 @@ function BlogStrip() {
   );
 }
 
-// ── upsells ──────────────────────────────────────
+// ── upsells ────────────────────────────
 
 // ── FAQ — 21 answers, the whole proposition in plain English ──────────
 // AEO/GEO: FaqBlock renders these as a native <details> accordion (crawlable
@@ -375,7 +375,7 @@ const HOME_FAQ = [
   },
 ];
 
-// ── SEO / schema ───────────────────────────────────
+// ── SEO / schema ───────────────────────────
 // (qa-sweep 2026-08-19) The page-level WebSite + FAQPage constants were REMOVED:
 // the shell (client/index.html) already ships the canonical WebSite node, and the
 // FaqBlock below emits the FAQPage node for exactly the FAQ this page renders —
@@ -384,7 +384,7 @@ const HOME_FAQ = [
 // node also asserted a SearchAction the shell audit (2026-08-14) had already
 // declined to claim until /search?q= is verified.
 
-// ── export ───────────────────────────────────────
+// ── export ───────────────────────────────
 export default function NewHomeV3() {
   return (
     <main>
