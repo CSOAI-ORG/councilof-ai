@@ -9,11 +9,14 @@ import LobbyHome from "./LobbyHome";
 import { useLobbyChat } from "./useLobbyChat";
 import { useFocusTrap } from "./useFocusTrap";
 import {
-  ALPHA_DEFAULT, ALPHA_MAX, ALPHA_MIN, FOCUS, SP, SURFACE_LIFTED, TYPE,
+  ALPHA_DEFAULT, ALPHA_MAX, ALPHA_MIN, FOCUS, SP, SURFACE, SURFACE_LIFTED, TYPE,
   panelStyle, scrimStyle,
 } from "./glass";
 import type { LobbyIntent } from "@/lib/lobbyLink";
 import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
+import {
+  LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
+} from "./rails";
 
 /**
  * LobbyOverlay — the Council Lobby as a WHITE GLASS-OS workspace.
@@ -30,10 +33,11 @@ import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
  * THE LAYOUT.
  *   header   full width, at the very top — the mark, the name, transparency and
  *            the window controls. NOT inside the centre pane.
- *   left     the pane / destination list (a real vertical tablist)
- *   centre   the active pane: a framed live route, or the local-play gallery
- *   right    a switchable rail — Reports · Tasks · Chats — collapsible
- *   foot     the chat bar, centred and constrained to max-w-3xl
+ *   left     Destinations — a real vertical tablist. Hideable; `[` toggles it.
+ *   centre   the dominant column: the live pane PLUS the ask thread. This is
+ *            the readable surface. Hiding both rails gives it the workspace.
+ *   right    Reports · Tasks · Chats. Hideable; `]` toggles it. Closed on a
+ *            first visit so the centre reads first.
  *
  * WINDOW STATE. close / minimise / expand-restore.
  *   Esc closes and focus returns to the badge (see CouncilLobby).
@@ -97,7 +101,8 @@ export default function LobbyOverlay({
   const [alpha, setAlpha] = useState<number>(readAlpha);
   // An intent present at mount picks the pane; otherwise the last pane is restored.
   const [tabId, setTabId] = useState<LobbyTabId>(() => intent?.pane ?? readTab());
-  const [railOpen, setRailOpen] = useState(true);
+  const [leftOpen, setLeftOpen] = useState(() => readOpen(LEFT_KEY, LEFT_DEFAULT));
+  const [rightOpen, setRightOpen] = useState(() => readOpen(RIGHT_KEY, RIGHT_DEFAULT));
   const [size, setSize] = useState<"comfortable" | "full">(readSize);
   const [minimised, setMinimised] = useState(false);
   const [frameLoaded, setFrameLoaded] = useState(false);
@@ -120,6 +125,8 @@ export default function LobbyOverlay({
   useEffect(() => { try { localStorage.setItem(ALPHA_KEY, String(alpha)); } catch { /* ignore */ } }, [alpha]);
   useEffect(() => { try { localStorage.setItem(TAB_KEY, tabId); } catch { /* ignore */ } }, [tabId]);
   useEffect(() => { try { localStorage.setItem(SIZE_KEY, size); } catch { /* ignore */ } }, [size]);
+  useEffect(() => { writeOpen(LEFT_KEY, leftOpen); }, [leftOpen]);
+  useEffect(() => { writeOpen(RIGHT_KEY, rightOpen); }, [rightOpen]);
 
   const minimise = useCallback(() => setMinimised(true), []);
 
@@ -127,7 +134,11 @@ export default function LobbyOverlay({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") { onClose(); return; }
-      if (e.key === "." && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setMinimised((m) => !m); }
+      if (e.key === "." && (e.metaKey || e.ctrlKey)) { e.preventDefault(); setMinimised((m) => !m); return; }
+      const t = e.target as HTMLElement | null;
+      if (t?.closest("input, textarea, select, [contenteditable='true']")) return;
+      if (e.key === "[") { e.preventDefault(); setLeftOpen((v) => !v); return; }
+      if (e.key === "]") { e.preventDefault(); setRightOpen((v) => !v); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -277,6 +288,7 @@ export default function LobbyOverlay({
         role="dialog"
         aria-modal="true"
         aria-labelledby={TITLE_ID}
+        data-coai="Council Lobby"
         className={
           `fixed z-[80] flex flex-col ${SP.shell} outline-none backdrop-blur-2xl ` +
           (size === "full" ? "inset-0" : "inset-2 rounded-3xl sm:inset-4")
@@ -295,13 +307,24 @@ export default function LobbyOverlay({
           onToggleSize={() => setSize((s) => (s === "full" ? "comfortable" : "full"))}
           onMinimise={minimise}
           onClose={onClose}
-          railOpen={railOpen}
-          onToggleRail={() => setRailOpen((v) => !v)}
+          leftOpen={leftOpen}
+          onToggleLeft={() => setLeftOpen((v) => !v)}
+          rightOpen={rightOpen}
+          onToggleRight={() => setRightOpen((v) => !v)}
         />
 
-        {/* ── three rails ───────────────────────────────────────────────── */}
-        <div className="flex min-h-0 flex-1 gap-4">
-          <LobbyPaneRail tabId={tabId} onSelect={go} />
+        {/* ── three rails; centre (pane + ask) is the dominant column ───── */}
+        <div className="flex min-h-0 flex-1 gap-3">
+          {leftOpen ? (
+            <LobbyPaneRail tabId={tabId} onSelect={go} onMinimise={() => setLeftOpen(false)} />
+          ) : (
+            <RailRestore
+              className="hidden sm:flex"
+              label="Show the destinations pane"
+              text="Panes"
+              onClick={() => setLeftOpen(true)}
+            />
+          )}
 
           <main
             id={PANEL_ID}
@@ -374,27 +397,62 @@ export default function LobbyOverlay({
                 </>
               )}
             </div>
+
+            <LobbyChatBar
+              chat={chat}
+              onNavigate={go}
+              paneLabel={paneLabel}
+              panePath={panePath || "/"}
+              seedPrompt={intent?.prompt}
+              seedNonce={intent?.nonce}
+            />
           </main>
 
-          {railOpen && (
+          {rightOpen ? (
             <div className="hidden w-72 shrink-0 lg:block xl:w-80">
-              <LobbySideRail chat={chat} />
+              <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} />
             </div>
+          ) : (
+            <RailRestore
+              className="hidden lg:flex"
+              label="Show the reports rail"
+              text="Rail"
+              onClick={() => setRightOpen(true)}
+            />
           )}
         </div>
-
-        {/* ── chat bar ────────────────────────────────────────────────── */}
-        <LobbyChatBar
-          chat={chat}
-          onNavigate={go}
-          paneLabel={paneLabel}
-          panePath={panePath || "/"}
-          seedPrompt={intent?.prompt}
-          seedNonce={intent?.nonce}
-        />
       </div>
       <FocusSentinel onFocus={() => focusEdge("first")} />
     </>
+  );
+}
+
+function RailRestore({
+  className,
+  label,
+  text,
+  onClick,
+}: {
+  className?: string;
+  label: string;
+  text: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={
+        `${SURFACE} ${FOCUS} w-11 shrink-0 flex-col items-center justify-center gap-2 ` +
+        `bg-white/80 text-[11px] font-semibold text-slate-700 transition hover:bg-white ` +
+        `motion-reduce:transition-none ${className ?? ""}`
+      }
+      style={panelStyle}
+    >
+      <span aria-hidden="true" className="text-[16px] leading-none text-slate-500">+</span>
+      <span className="[writing-mode:vertical-rl] rotate-180 tracking-wide">{text}</span>
+    </button>
   );
 }
 
