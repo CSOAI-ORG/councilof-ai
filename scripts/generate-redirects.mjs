@@ -89,13 +89,15 @@ const EXISTING = [
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
   "/library/measurement    /library/axes                308",
-  // Klingler/DID stranger-walk + persona cold loads (2026-08-22)
-  "/verify                 /gspc-verify                 308",
-  "/verify/                /gspc-verify                 308",
-  "/gspc-verify/           /gspc-verify                 308",
+  // Klingler/DID stranger-walk + persona cold loads (2026-08-22).
+  // Prefer trailing-slash targets: prerender writes route/index.html, and bare
+  // paths 404 until the SPA catch-all is live on the edge.
+  "/verify                 /gspc-verify/                308",
+  "/verify/                /gspc-verify/                308",
+  "/gspc-verify            /gspc-verify/                308",
   "/api/arena/rounds       /api/arena/rounds.jsonl      200",
   "/enterprises            /enterprise                  308",
-  "/developers             /gspc-verify                 308",
+  "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum                    308",
   "/for                    /for/enterprise              308",
 ];
