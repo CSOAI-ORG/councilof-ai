@@ -1,5 +1,5 @@
 /**
- * Eunomia Router — the OpenRouter of governance.
+ * Eunomia Router — governance instrument routing table (not LLM proxy routing).
  *
  * {STACK_STATS.mcpServers} MCP servers catalogued. {HIVE.length} hive frameworks.
  * Not "compliance tools" — routing table entries.
