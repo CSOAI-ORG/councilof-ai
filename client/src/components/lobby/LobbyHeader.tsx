@@ -1,5 +1,18 @@
 import { ALPHA_MAX, ALPHA_MIN, CONTROL, FOCUS, SURFACE, SP, TYPE, panelStyle } from "./glass";
 
+/**
+ * LobbyHeader — the site header, at the TOP of the overlay, spanning full width.
+ *
+ * It is not inside the centre pane and it never was meant to be: the mark, the
+ * lobby's name, the transparency control and the window controls belong to the
+ * WINDOW, not to whatever pane happens to be open. The three rails start below it.
+ *
+ * WINDOW CONTROLS. Minimise, expand/restore and close, each an icon plus a
+ * visible text label at ≥sm, each with an aria-label, each in the focus-ring
+ * system. The shortcuts are printed in the bar, not left for the reader to
+ * discover: Esc closes, Cmd/Ctrl + . minimises.
+ */
+
 export function ColiseumGlyph({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.7"
@@ -93,6 +106,8 @@ export default function LobbyHeader({
         </span>
       </span>
 
+      {/* Transparency — a real labelled range, arrow-key operable, with a
+          spoken value. It drives --lobby-alpha for every surface below. */}
       <label className="ml-auto flex items-center gap-2.5">
         <span className={`hidden sm:inline ${TYPE.section}`}>Transparency</span>
         <input
@@ -167,6 +182,8 @@ export default function LobbyHeader({
         </button>
       </span>
 
+      {/* Keyboard shortcuts are a pointer/keyboard affordance — on a touch
+          viewport they are noise, and at 375px they cost a third of the pane. */}
       <p className={`hidden w-full sm:block ${TYPE.fine}`}>
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">Esc</kbd> close ·{" "}
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">[</kbd> panes ·{" "}
