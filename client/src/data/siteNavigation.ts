@@ -77,7 +77,10 @@ export const SITE_NAVIGATION: SiteNavGroup[] = [
       { name: "Government and regulators", href: "/government", description: "Independent measurement, published method, no conformity mark" },
       { name: "Industries", href: "/industries", description: "Sector-by-sector: what applies to you and when" },
       { name: "Pay as you go", href: "/payg", description: "Per-measurement access — no tiers, no lock-in" },
-      { name: "Integrations", href: "/integrations", description: "Wire the measurement into the tools you already run" },
+      { name: "Distribution Hive", href: "/intel", description: "Regulators, enterprises, SMBs — one cited org index" },
+      { name: "Council OS Refinery", href: "/os", description: "Master ONE workspace — board, arena, ecosystem, AG-UI" },
+      { name: "My systems workspace", href: "/workspace", description: "Portfolio batch assess and re-attest schedule" },
+      { name: "Org index API", href: "/api/ecosystem", description: "Machine-readable ecosystem for agents", external: true },
     ],
   },
   {
