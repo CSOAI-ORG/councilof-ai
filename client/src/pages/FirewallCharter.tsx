@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { setMetaDescription } from "@/lib/utils";
 import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 /**
