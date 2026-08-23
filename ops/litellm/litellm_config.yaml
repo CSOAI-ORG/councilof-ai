@@ -1,0 +1,29 @@
+# LiteLLM proxy — minimal Council of AI spike config.
+# Add provider API keys via env vars referenced below or LiteLLM UI after boot.
+#
+# Docs: https://docs.litellm.ai/docs/proxy/configs
+
+model_list:
+  - model_name: gpt-4o-mini
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: claude-3-5-haiku
+    litellm_params:
+      model: anthropic/claude-3-5-haiku-latest
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: council-grounded
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+      # Route tag for downstream arena eval hooks (future)
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  store_model_in_db: true
+
+litellm_settings:
+  drop_params: true
+  set_verbose: false
