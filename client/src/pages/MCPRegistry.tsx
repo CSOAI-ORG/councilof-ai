@@ -15,7 +15,7 @@ type Server = {
   category: string;
   frameworks: string[];
   language: string;
-  meokLabs: boolean;
+  builtInHouse: boolean;
   updatedAt: string | null;
 };
 
@@ -170,7 +170,7 @@ export default function MCPRegistry() {
                 <Link href={`/mcp/${s.slug}`}>
                   <h3 className="font-bold text-base leading-tight hover:text-emerald-600 cursor-pointer">{s.name}</h3>
                 </Link>
-                {s.meokLabs && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] shrink-0">MEOK</Badge>}
+                {s.builtInHouse && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] shrink-0">In-house</Badge>}
               </div>
               <p className="text-sm text-gray-600 leading-relaxed flex-1">{s.description}</p>
               <div className="flex flex-wrap gap-1.5 mt-3">
