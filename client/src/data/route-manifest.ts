@@ -823,11 +823,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Council Space"
  },
  {
-  "path": "/gspc-arena?view=benchmarks",
-  "comp": "BenchmarkView",
-  "title": "Benchmarks | Council OS"
- },
- {
   "path": "/gspc-gap-map",
   "comp": "GSPCGapMap",
   "title": "GSPCGap Map"

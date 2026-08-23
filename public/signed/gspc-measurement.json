@@ -1,0 +1,149 @@
+{
+  "schema": "csoai.gspc-measurement/0.1",
+  "title": "GSPC measurement \u2014 13 axes of 14 (instrument) + jail",
+  "issuer": "Council of AI (CSOAI Ltd)",
+  "as_of": "2026-08-22",
+  "gspc_registry_axes": 13,
+  "public_rule": "Every public count MUST name its set: PUBLIC_BOARD (14 axes, 13 quotable, jail quotable-pending) vs INTERNAL_16 (14 + slot15 + human-vs-ai, in-lane only, never public) vs CANON_REGISTRY (13 as-of 08-13). The 14-vs-16-vs-13 confusions are set-name confusions. (Part BU.1 / register doctrine, re-stamped 2026-08-22)",
+  "axes": [
+    {
+      "axis": "gov",
+      "scored_items": 237,
+      "models": 19,
+      "majority_baseline": 0.2911,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "prv",
+      "scored_items": 32,
+      "models": 19,
+      "majority_baseline": 0.5312,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "agi",
+      "scored_items": 36,
+      "models": 19,
+      "majority_baseline": 0.5278,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "asi",
+      "scored_items": 33,
+      "models": 19,
+      "majority_baseline": 0.3939,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "mcp",
+      "scored_items": 35,
+      "models": 19,
+      "majority_baseline": 0.5143,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "oss",
+      "scored_items": 32,
+      "models": 19,
+      "majority_baseline": 0.5,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "mach",
+      "scored_items": 33,
+      "models": 19,
+      "majority_baseline": 0.3636,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "care",
+      "scored_items": 199,
+      "models": 19,
+      "majority_baseline": 0.5,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "xr",
+      "scored_items": 32,
+      "models": 19,
+      "majority_baseline": 0.4062,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "det",
+      "scored_items": 33,
+      "models": 19,
+      "majority_baseline": 0.7879,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "art5",
+      "scored_items": 36,
+      "models": 19,
+      "majority_baseline": 0.5278,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "swarm",
+      "scored_items": null,
+      "models": 19,
+      "majority_baseline": 0.975,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "affect",
+      "scored_items": 41,
+      "models": 19,
+      "majority_baseline": 0.439,
+      "status": "MEASURED"
+    },
+    {
+      "axis": "jail",
+      "n": 71,
+      "acc": 0.5915,
+      "sep": "SEPARATED (v2 32-item, McNemar p=0.00087, signed)",
+      "register": "MEASURED",
+      "status": "MEASURED"
+    }
+  ],
+  "note": "13 GSPC axes measured deterministically (temperature-0 exact-label, no LLM judges), each per-axis result independently signed as an Ed25519 card. Jail (slot 14) is measured but quotable-pending. Each signed measurement card is publicly verifiable at /api/cards and /signed/.",
+  "publish_readiness": "PRODUCTION-READY",
+  "doi": {
+    "concept": "10.5281/zenodo.21991104",
+    "latest": "10.5281/zenodo.21991105",
+    "community": "csoai",
+    "note": "Measurement run anchored to a citable Zenodo DOI so the results are public, versioned, and citable."
+  },
+  "human_baseline": {
+    "as_of": "2026-08-18",
+    "policy": "published-aggregate only (no human-subjects data; DPIA gates only our own collection)",
+    "anchors": [
+      {
+        "benchmark": "MMLU",
+        "human_baseline": "~89.8% expert",
+        "status": "published-aggregate"
+      },
+      {
+        "benchmark": "GPQA",
+        "human_baseline": "PhD-level",
+        "status": "published-aggregate"
+      },
+      {
+        "benchmark": "ARC-AGI",
+        "human_baseline": "human panel scores",
+        "status": "published-aggregate"
+      },
+      {
+        "benchmark": "SWE-bench Verified",
+        "human_baseline": "human developer solve rates",
+        "status": "published-aggregate"
+      },
+      {
+        "benchmark": "TruthfulQA",
+        "human_baseline": "human truthfulness rate",
+        "status": "published-aggregate"
+      }
+    ],
+    "instrument": "same 5 deterministic predicates as models \u2014 fair comparison, same probes, same scoring"
+  }
+}
