@@ -18,7 +18,7 @@ interface Env {
   LITELLM_MASTER_KEY?: string;
 }
 
-/* ── Article 5(1) — the eight prohibited practices, verbatim in substance ──── */
+/* ── Article 5(1) — the eight prohibited practices, verbatim in substance ─── */
 const ART5: Record<string, string> = {
   a: "subliminal, purposefully manipulative or deceptive techniques that materially distort behaviour and cause significant harm",
   b: "exploitation of vulnerabilities due to age, disability, or a specific social or economic situation",
@@ -80,7 +80,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   for (const [k, rxs] of ART5_CUES) {
     if (rxs.every((rx) => rx.test(q))) {
       return `That is prohibited under **EU AI Act Article 5(1)(${k})** — ${ART5[k]}.\n\n` +
-why(k) +
+        why(k) +
         `\n\nArticle 5 prohibitions are absolute: there is no conformity assessment, ` +
         `registration, or documentation route that makes a prohibited practice lawful. ` +
         `Prohibitions have applied since 2 February 2025.\n\n` +
