@@ -1,7 +1,7 @@
 /**
  * MeasurementHub — OpenRouter-style board / models / routes in Council software.
  */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BarChart3, Cpu, Route } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LiveLeaderboard from "@/components/board/LiveLeaderboard";
@@ -17,8 +17,18 @@ const TABS: { id: Tab; label: string; icon: typeof BarChart3 }[] = [
   { id: "routes", label: "Routes", icon: Route },
 ];
 
-export default function MeasurementHub({ compact }: { compact?: boolean }) {
-  const [tab, setTab] = useState<Tab>("board");
+export default function MeasurementHub({
+  compact,
+  initialTab = "board",
+}: {
+  compact?: boolean;
+  initialTab?: Tab;
+}) {
+  const [tab, setTab] = useState<Tab>(initialTab);
+
+  useEffect(() => {
+    setTab(initialTab);
+  }, [initialTab]);
 
   return (
     <div className="space-y-4">
@@ -46,7 +56,7 @@ export default function MeasurementHub({ compact }: { compact?: boolean }) {
         <Button
           size="sm"
           className="bg-emerald-600 hover:bg-emerald-500"
-          onClick={() => openLobby({ pane: tab === "routes" ? "home" : "board", task: tab === "routes" ? "eunomia-router" : "read-the-board" })}
+          onClick={() => openLobby({ pane: tab === "routes" ? "routes" : tab === "models" ? "models" : "board", task: tab === "routes" ? "eunomia-router" : "read-the-board" })}
         >
           Open Council OS
         </Button>
