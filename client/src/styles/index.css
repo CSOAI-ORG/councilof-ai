@@ -388,4 +388,39 @@
   .suggestion-card:hover {
     @apply bg-black/5 dark:bg-white/5;
   }
+
+  /* Council OS — site column beside dock (OpenRouter-style workspace) */
+  html[data-coai-os-open] {
+    --coai-os-header-height: 5.25rem;
+    --coai-os-dock-width: 0px;
+    overflow-x: hidden;
+  }
+
+  html[data-coai-os-open] #main-content {
+    padding-top: var(--coai-os-header-height);
+    box-sizing: border-box;
+    min-width: 0;
+    transition: margin-right 0.2s ease, max-width 0.2s ease;
+  }
+
+  /* Mobile / narrow: dock is full-width overlay — do not squeeze the site column */
+  @media (max-width: 639px) {
+    html[data-coai-os-open] #main-content {
+      margin-right: 0;
+      max-width: none;
+      visibility: hidden;
+      pointer-events: none;
+      height: 0;
+      overflow: hidden;
+      padding-top: 0;
+    }
+  }
+
+  /* Tablet+: site column shares the row; margin tracks measured dock width */
+  @media (min-width: 640px) {
+    html[data-coai-os-open] #main-content {
+      margin-right: var(--coai-os-dock-width, 0px);
+      max-width: calc(100vw - var(--coai-os-dock-width, 0px));
+    }
+  }
 }
