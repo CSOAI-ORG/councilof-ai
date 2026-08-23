@@ -30,8 +30,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     | undefined;
   const marketRows = Array.isArray(marketSnapshot?.rows) ? marketSnapshot.rows : null;
   return Response.json({
-    schema: "csoai.sov-signal.pair-gap/0.1",
-    name: "SOV SIGNAL — the measured trust gauge: East-vs-West pair-gap (regulation × measured-AI × market context, composed never fused)",
+    schema: "csoai.dorado.pair-gap/0.1",
+    name: "Dorado — the measured trust gauge: East-vs-West pair-gap (regulation × measured-AI × market context, composed never fused)",
     ts,
     register: "measurement, not certification — displayed side by side, never blended",
     // RAIL 1: EAST-vs-WEST AI regulation-adherence (MEASURED, signed chain)
