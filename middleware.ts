@@ -11,7 +11,7 @@ export const config = {
 
 const META: Record<string, { t: string; d: string }> = {
   "/": { t: "CSOAI — AI governance, cybersecurity & safety", d: "Signed to Layer 0 · deterministic measurement harnesses · open source · aligned to 13 frameworks" },
-  "/os": { t: "The Council OS — 370+ governed AI tools", d: "An operating system for AI governance, not a dashboard. Run live governed tools, sealed to Layer 0." },
+  "/os": { t: "Council OS — measure, sign, check", d: "The AG UI: one workspace for the living board, published tools, and signed cards. Not a marketplace." },
   "/workbench": { t: "Council Governance Workbench", d: "Every output signed, reproducible, council-reviewed — the governance floor under any AI agent." },
   "/crosswalk": { t: "The AI governance framework crosswalk", d: "13 frameworks × 8 controls. Comply once, evidence everywhere. Open and citable." },
   "/agent-governance": { t: "AI agent governance — the agentic era", d: "Signed agent cards, deterministic grading, Ed25519 attestations. Mapped to Art. 14 & 50." },

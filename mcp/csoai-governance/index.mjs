@@ -7,7 +7,7 @@
  *   csoai_sign     — Ed25519-seal an artifact to CSOAI Layer 0 (auditable + reproducible)
  *   csoai_verify   — verify a seal offline against its public key
  *   csoai_govern   — ask the CSOAI Sovereign a governance / cybersecurity question (role-guarded)
- *   csoai_catalog  — search the 370+ governed CSOAI tools / MCPs
+ *   csoai_catalog  — search published CSOAI tools / MCPs (count is live)
  *
  * Gateway is the live Sovereign brain; override with CSOAI_GATEWAY.
  * No API key required for the public governance surface.
@@ -68,7 +68,7 @@ const TOOLS = [
   },
   {
     name: "csoai_catalog",
-    description: "Search the CSOAI catalog of 370+ governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). Returns matching governed tools with their cluster and install hint.",
+    description: "Search the published CSOAI catalog of governed tools / MCPs (framework-compliance, cyber, evidence, identity, and more). The count is live from the gateway. Returns matching tools with their cluster and install hint.",
     inputSchema: {
       type: "object",
       properties: { query: { type: "string", description: "Optional keyword (e.g. 'eu ai act', 'nist', 'evidence')." } },
