@@ -3,6 +3,7 @@ import { useLocation } from 'wouter';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { openLobby } from '@/lib/lobbyLink';
 import {
   Check,
   Globe,
@@ -14,6 +15,7 @@ import {
   ChevronUp,
   ShieldCheck,
   Users,
+  MessageSquare,
 } from 'lucide-react';
 
 // All courses — completely free. Council Academy attests training completion, not conformity.
@@ -313,6 +315,14 @@ export default function Pricing() {
                 >
                   <BookOpen className="h-5 w-5 mr-2" />
                   Start free training
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => openLobby({ task: 'pricing-overview' })}
+                  className="border-emerald-500/50 text-emerald-100 hover:bg-emerald-500/10 px-8 py-3 text-lg"
+                >
+                  <MessageSquare className="h-5 w-5 mr-2" />
+                  Ask in Council OS
                 </Button>
                 <Button
                   variant="outline"
