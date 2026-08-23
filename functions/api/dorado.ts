@@ -19,15 +19,23 @@ interface Env {
   KV?: unknown;
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
+export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
   const ts = new Date().toISOString();
-  // Try the live market snapshot (refreshed by dorado_market.py on a cron). In the
-  // CF Pages runtime we cannot read local files, so the snapshot is injected at
-  // build time via an env/global — fall back to a clearly-stated placeholder that
-  // never fakes a number.
-  const marketSnapshot = (globalThis as Record<string, unknown>).DORADO_MARKET as
-    | { rows?: unknown[]; as_of?: string }
-    | undefined;
+  // Live market snapshot, refreshed by dorado_market.py on a 15-min cron and
+  // published as a static file (public/arena/dorado_market.json) the same way
+  // elo_reference.json is served. We cannot read local files in the CF Pages
+  // runtime, so the endpoint fetches the static snapshot at request time and
+  // falls back to a clearly-stated placeholder that never fakes a number.
+  let marketSnapshot: { rows?: unknown[]; as_of?: string } | null = null;
+  let marketFetchNote: string | null = null;
+  try {
+    const target = new URL("/arena/dorado_market.json", request.url);
+    const res = await fetch(target, { headers: { accept: "application/json" } });
+    if (res.ok) marketSnapshot = (await res.json()) as { rows?: unknown[]; as_of?: string };
+    else marketFetchNote = `snapshot HTTP ${res.status}`;
+  } catch (e) {
+    marketFetchNote = String(e);
+  }
   const marketRows = Array.isArray(marketSnapshot?.rows) ? marketSnapshot.rows : null;
   return Response.json({
     schema: "csoai.sov-signal.pair-gap/0.1",
@@ -68,13 +76,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     },
     // RAIL 3: LIVE MARKET (the index the AI companies trade on — live pull, timestamped)
     market: marketRows
-      ? { as_of: marketSnapshot?.as_of ?? ts, source: "yfinance live pull (Yahoo Finance)", rows: marketRows }
+      ? { as_of: marketSnapshot?.as_of ?? ts, source: "yfinance live pull (Yahoo Finance), static snapshot /arena/dorado_market.json", rows: marketRows }
       : {
           as_of: ts,
-          source: "yfinance live pull (Yahoo Finance) — refresh via dorado_market.py, injected at build",
+          source: `yfinance live pull (Yahoo Finance) — snapshot /arena/dorado_market.json not readable (${marketFetchNote ?? "unknown"})`,
           rows: [
-            { index: "Hang Seng (^HSI)", side: "east", last: null, note: "snapshot not injected this build" },
-            { index: "S&P 500 (^GSPC)", side: "west", last: null, note: "snapshot not injected this build" },
+            { index: "Hang Seng (^HSI)", side: "east", last: null, note: "snapshot not published this deploy" },
+            { index: "S&P 500 (^GSPC)", side: "west", last: null, note: "snapshot not published this deploy" },
           ],
         },
     // RAIL 4: HUMAN BASELINES (REPORTED — published aggregates, attributed)
