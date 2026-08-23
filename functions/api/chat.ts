@@ -86,6 +86,34 @@ why(k) +
   const axes = await loadAxes(origin);
   const axisNames = axes.map((a: any) => String(a.axis)).filter(Boolean);
 
+  // 1o. Pricing / plans — no SaaS tiers.
+  if (/\b(pricing|plans?|per[- ]seat|saas tier|course fee|what is free|not promised)\b/i.test(q)) {
+    return (
+      `There are no SaaS tiers, no per-seat plans, and no course fees on this estate.\n\n` +
+      `Measurement and verification are free forever. Anyone can read GET /api/gspc, verify a card at /gspc-verify/, ` +
+      `and run an assessment at /assess/ with no account.\n\n` +
+      `Where a signed evidence artefact is sold, it is priced as an artefact on its own product page — ` +
+      `never a fee for a ranking or placement. See /pricing/ for the published posture.\n\n` +
+      `_Grounded in the published pricing page, not by a model._`
+    );
+  }
+
+  // 1p. Sector / demographic — what to do first (not an axis score).
+  if (
+    /\b(what should .+ do first|ai governance for |sector|for finance|for healthcare|for startup|for enterprise|for regulator)\b/i.test(q) &&
+    !/\b(governance axis|axis score|accuracy|wilson|n=)\b/i.test(q)
+  ) {
+    return (
+      `A sensible first move with signed evidence:\n\n` +
+      `1. **Inventory** — name the AI systems that matter and which rules might apply (EU AI Act tier, sector law, DORA, etc.).\n` +
+      `2. **Read the board** — GET /api/gspc shows what is measured today; empty cells stay empty.\n` +
+      `3. **Verify, don't trust** — recompute any card at /gspc-verify/ with the published Ed25519 key.\n` +
+      `4. **Get measured** — /assess/ runs against frozen rules; the result attests measurement, not certification.\n\n` +
+      `Sector pages under /for/ and /regulators/ link to published crosswalks. The Council does not give a legal opinion.\n\n` +
+      `_Grounded in the published method and routes, not by a model._`
+    );
+  }
+
   // 1b. Who we are / measure vs certify — the questions the lobby actually suggests.
   if (
     /\b(in plain words|actually measure|what (do|does) (the )?(council|csoai|this (estate|body|site)))\b/i.test(q) ||
@@ -191,34 +219,6 @@ why(k) +
     );
   }
 
-  // 1o. Pricing / plans — no SaaS tiers.
-  if (/\b(pricing|plans?|per[- ]seat|saas tier|course fee|what is free|not promised)\b/i.test(q)) {
-    return (
-      `There are no SaaS tiers, no per-seat plans, and no course fees on this estate.\n\n` +
-      `Measurement and verification are free forever. Anyone can read GET /api/gspc, verify a card at /gspc-verify/, ` +
-      `and run an assessment at /assess/ with no account.\n\n` +
-      `Where a signed evidence artefact is sold, it is priced as an artefact on its own product page — ` +
-      `never a fee for a ranking or placement. See /pricing/ for the published posture.\n\n` +
-      `_Grounded in the published pricing page, not by a model._`
-    );
-  }
-
-  // 1p. Sector / demographic — what to do first (not an axis score).
-  if (
-    /\b(what should .+ do first|ai governance for |sector|for finance|for healthcare|for startup|for enterprise|for regulator)\b/i.test(q) &&
-    !/\b(governance axis|axis score|accuracy|wilson|n=)\b/i.test(q)
-  ) {
-    return (
-      `A sensible first move with signed evidence:\n\n` +
-      `1. **Inventory** — name the AI systems that matter and which rules might apply (EU AI Act tier, sector law, DORA, etc.).\n` +
-      `2. **Read the board** — GET /api/gspc shows what is measured today; empty cells stay empty.\n` +
-      `3. **Verify, don't trust** — recompute any card at /gspc-verify/ with the published Ed25519 key.\n` +
-      `4. **Get measured** — /assess/ runs against frozen rules; the result attests measurement, not certification.\n\n` +
-      `Sector pages under /for/ and /regulators/ link to published crosswalks. The Council does not give a legal opinion.\n\n` +
-      `_Grounded in the published method and routes, not by a model._`
-    );
-  }
-
   // 1h. Endpoints / published bank.
   if (/\b(endpoint|what shape|published bank|items live|reproduce)\b/i.test(q)) {
     return (
@@ -230,8 +230,9 @@ why(k) +
     );
   }
 
-  // 1i. Assessment scope.
-  if (/\b(assessment actually run|explicitly not (claim|say)|get (my system )?measured|would it take to have)\b/i.test(q)) {
+  // 1i. Assessment scope — explicit "get measured", not bare "is measured".
+  if (/\b(assessment actually run|explicitly not (claim|say)|would it take to have)\b/i.test(q) ||
+      /\bget (?:my system )?measured\b/i.test(q)) {
     return (
       `An assessment records a description against published rules and returns a signed ` +
       `measurement. It does not say the system is lawful, certified, or safe to deploy.\n\n` +
