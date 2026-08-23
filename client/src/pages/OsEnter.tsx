@@ -79,7 +79,7 @@ export default function OsEnter() {
           {(loc || err) && (
             <div className="mt-2 rounded-2xl border border-emerald-400/30 bg-white/5 px-6 py-4">
               <div className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Council node located</div>
-              <div className="mt-1 text-xl font-bold text-emerald-200">{"\u25C9 " + place}</div>
+              <div className="mt-1 text-xl font-bold text-emerald-200">{"\\u25C9 " + place}</div>
             </div>
           )}
         </div>
@@ -101,7 +101,7 @@ export default function OsEnter() {
                   <span key={f} className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">{f}</span>
                 ))}
               </div>
-              <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Council Town. No setup, no training required {"\u2014"} your Council assistant helps automatically. Prefer to learn? Immersive courses are inside.</p>
+              <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Council Town. No setup, no training required {"\\u2014"} your Council assistant helps automatically. Prefer to learn? Immersive courses are inside.</p>
               <div className="mt-4 border-t border-emerald-400/15 pt-3">
                 <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Live regulation pulse · synced from the grid</div>
                 {deltas.length === 0 ? (
@@ -117,10 +117,10 @@ export default function OsEnter() {
             </div>
 
             <div className="mt-6 flex w-full flex-wrap justify-center gap-3">
-              <a href="/command-center" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 transition">Talk to your Council assistant {"\u2192"}</a>
-              <a href="/evidence" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Connect your stack {"\u2192"}</a>
+              <a href="/command-center" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 transition">Talk to your Council assistant {"\\u2192"}</a>
+              <a href="/evidence" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Connect your stack {"\\u2192"}</a>
             </div>
-            <button onClick={() => setPhase(3)} className="mt-5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60 hover:text-emerald-300">Or choose how you enter {"\u2193"}</button>
+            <button onClick={() => setPhase(3)} className="mt-5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60 hover:text-emerald-300">Or choose how you enter {"\\u2193"}</button>
           </div>
         </div>
       )}
@@ -132,23 +132,23 @@ export default function OsEnter() {
           <p className="mt-3 max-w-xl text-emerald-50/70">Your Council self can lead with either mind. Switch any time inside the OS.</p>
           <div className="mt-8 grid w-full gap-4 sm:grid-cols-2">
             <a href="/command-center" className="group rounded-2xl border border-sky-400/30 bg-gradient-to-br from-sky-500/15 to-sky-400/5 p-6 text-left transition hover:scale-[1.02]">
-              <div className="text-3xl">{"\u25D0"}</div>
-              <div className="mt-3 text-lg font-bold text-white">Left brain {"\u2014"} Govern</div>
+              <div className="text-3xl">{"\\u25D0"}</div>
+              <div className="mt-3 text-lg font-bold text-white">Left brain {"\\u2014"} Govern</div>
               <p className="mt-1 text-sm text-emerald-50/70">Command Center, compliance, evidence, certification. Structure, proof, control.</p>
             </a>
             <a href="/council-city" className="group rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-teal-400/5 p-6 text-left transition hover:scale-[1.02]">
-              <div className="text-3xl">{"\u25D1"}</div>
-              <div className="mt-3 text-lg font-bold text-white">Right brain {"\u2014"} Explore</div>
+              <div className="text-3xl">{"\\u25D1"}</div>
+              <div className="mt-3 text-lg font-bold text-white">Right brain {"\\u2014"} Explore</div>
               <p className="mt-1 text-sm text-emerald-50/70">Council Town, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>
             </a>
           </div>
-          <a href="/os" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\u2192"}</a>
-          <div className="mt-6 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/40">Council Town is learning {"\u00B7"} accumulating {"\u00B7"} spawning {"\u00B7"} on one signed Layer 0 floor</div>
+          <a href="/?lobby=home" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\\u2192"}</a>
+          <div className="mt-6 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/40">Council Town is learning {"\\u00B7"} accumulating {"\\u00B7"} spawning {"\\u00B7"} on one signed Layer 0 floor</div>
         </div>
       )}
 
       {phase < 2 && (
-        <a href="/os" className="absolute bottom-5 right-6 z-20 font-mono text-[11px] text-emerald-300/50 hover:text-emerald-300">skip {"\u2192"}</a>
+        <a href="/?lobby=home" className="absolute bottom-5 right-6 z-20 font-mono text-[11px] text-emerald-300/50 hover:text-emerald-300">skip {"\\u2192"}</a>
       )}
     </div>
   );
