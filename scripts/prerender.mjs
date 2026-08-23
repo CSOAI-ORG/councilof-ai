@@ -98,6 +98,12 @@ function discover() {
     "/library/axes",
     "/verify", "/os", "/assess", "/academy", "/compare", "/layer0",
     "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",
+    // Legal surface (2026-08-23 audit: all legal routes 404'd — route-manifest has
+    // them but heuristic discovery missed them; force into the snapshot queue)
+    "/legal/licensing", "/legal/privacy", "/legal/terms", "/legal/cookies",
+    "/legal/disclaimers", "/legal/dpa", "/legal/founding-council", "/legal/membership",
+    "/legal/sla", "/licensing-agreement", "/terms-of-service", "/privacy",
+    "/pricing-legacy", "/council-licensing",
   ];
   for (const p of MUST) found.add(p);
   return [...found].filter(p => !p.includes(":") && !p.includes("*")).sort();
