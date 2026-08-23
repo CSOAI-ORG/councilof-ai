@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import CouncilOsInnerNav from "@/components/os/CouncilOsInnerNav";
 
 /**
  * /api-docs — the REAL public API.
@@ -134,6 +135,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
 
   return (
     <div className="min-h-screen bg-background">
+      <CouncilOsInnerNav title="API docs" subtitle="Public endpoints — GSPC, ecosystem, assess, AG-UI wire" />
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -189,6 +191,14 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
               {[
                 { method: "GET", endpoint: "/api/gspc", desc: "The full 14-slot board" },
                 { method: "GET", endpoint: "/api/gspc?axis=<name>", desc: "One axis (404 lists known axes)" },
+                { method: "GET", endpoint: "/api/instruments", desc: "Eunomia router index (291 MCP rules)" },
+                { method: "GET", endpoint: "/api/finance/anatomy", desc: "Engine-axis map — MEASURED / SPEC / DESIGN per crossing" },
+                { method: "GET", endpoint: "/api/finance/bond-crossing", desc: "Axis 18 synthetic crossing (MEASURED pilot)" },
+                { method: "GET", endpoint: "/api/cross", desc: "Divergence layer — regulation × GSPC × reported baselines" },
+                { method: "GET", endpoint: "/api/signal", desc: "SOV Signal Index — + crosswalk + MEOK arena leg (composed)" },
+                { method: "GET", endpoint: "/api/receipt-spec", desc: "RECEIPT-SPEC-0.1 metadata" },
+                { method: "POST", endpoint: "/api/agui/session?handle=<slug>", desc: "AG-UI wire session (503 until AGUI_WIRE_URL is set)" },
+                { method: "GET", endpoint: "/api/agui/stream?session_id=<id>", desc: "AG-UI SSE stream — RUN_*, TEXT_MESSAGE_*, HITL consent" },
               ].map((api, i) => (
                 <div key={i} className="grid grid-cols-12 gap-4 p-3 border-b last:border-0 text-sm">
                   <div className="col-span-2">
@@ -215,7 +225,80 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
                   continuity, conformance, openness, machinery-conformity, care, cross-reality,
                   detector-interop, art5-safeguard, swarm, affect.
                 </p>
+                <p>
+                  <strong className="text-foreground">Agents:</strong>{" "}
+                  <Link href="/agent-runbook" className="text-primary hover:underline">
+                    Agent runbook
+                  </Link>
+                  {" · "}
+                  <Link href="/receipt-spec" className="text-primary hover:underline">
+                    RECEIPT-SPEC-0.1
+                  </Link>
+                </p>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* AG-UI wire — Council OS Lane 2 */}
+          <Card className="mb-12 border-l-4 border-l-violet-500">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Terminal className="w-5 h-5" />
+                AG-UI wire (Council OS Lane 2)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm text-muted-foreground">
+              <p>
+                The Council Lobby runs three lanes: pane commands (local),{" "}
+                <strong className="text-foreground">AG-UI SSE</strong> (streaming + HITL consent), and{" "}
+                <strong className="text-foreground">POST /api/chat</strong> (published measurement or honest refuse).
+                Lane 2 proxies same-origin through <code className="text-xs">/api/agui/*</code> to{" "}
+                <code className="text-xs">AGUI_WIRE_URL</code> on Cloudflare Pages (RunPod wire, port 8785).
+              </p>
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 gap-2"
+                  onClick={() =>
+                    copyToClipboard(
+                      `curl -sS -X POST 'https://councilof.ai/api/agui/session?handle=probe'\n# 503 + agui_wire_unconfigured until AGUI_WIRE_URL is set\n# 200 + session_id when live — then:\ncurl -sS -N 'https://councilof.ai/api/agui/stream?session_id=<id>'`,
+                      "agui",
+                    )
+                  }
+                >
+                  {copiedCode === "agui" ? (
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </Button>
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-xs">
+                  <code>{`# Start a session (instrument handle or probe slug)
+curl -sS -X POST 'https://councilof.ai/api/agui/session?handle=probe'
+
+# When AGUI_WIRE_URL is configured — SSE stream:
+curl -sS -N 'https://councilof.ai/api/agui/stream?session_id=<session_id>'
+
+# Unconfigured — honest 503, never the SPA shell:
+# { "error": "agui_wire_unconfigured", "hint": "Set AGUI_WIRE_URL ..." }`}</code>
+                </pre>
+              </div>
+              <p>
+                Instrument pages seed handles via the Council OS lobby — see{" "}
+                <Link href="/agent-runbook" className="text-primary hover:underline">
+                  Agent runbook
+                </Link>
+                ,{" "}
+                <Link href="/instruments" className="text-primary hover:underline">
+                  Eunomia Router
+                </Link>
+                , and{" "}
+                <Link href="/receipt-spec" className="text-primary hover:underline">
+                  RECEIPT-SPEC-0.1
+                </Link>
+                . HITL consent checkpoints stay visible in the lobby thread; seeded prompts are typed, never auto-sent.
+              </p>
             </CardContent>
           </Card>
 
@@ -327,7 +410,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">See the board it powers</h2>
             <div className="flex items-center justify-center gap-4">
-              <Link href="/leaderboard">
+              <Link href="/gspc-scoreboard">
                 <Button size="lg" className="gap-2">
                   GSPC board v2 <ArrowRight className="w-4 h-4" />
                 </Button>
