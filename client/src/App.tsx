@@ -1,1 +1,1 @@
-LOAD_FROM_PF_ARGS
+@/tmp/app_cou_final2.json:content
