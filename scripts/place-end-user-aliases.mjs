@@ -44,7 +44,8 @@ export const STRANGER_DIRS = [
   "privacy-policy", "disclaimers", "legal", "system-card",
   "pricing", "start",
   "dashboard", "login", "about", "firewall-charter", "csoai-law",
-  "models", "tools", "sov-os", "ag-ui", "agui",
+  "models", "tools",
+  "chat", "ag-ui", "agui", "rankings", "sov-os",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
   "refutation-ledger", "mcp",
 ];
@@ -100,7 +101,6 @@ const disclaimers = pick("disclaimers/index.html", "index.html");
 const industriesHub = pick("industries/index.html", "index.html");
 const library = pick("library/index.html", "index.html");
 const os = pick("os/index.html", "index.html");
-const agui = pick("ag-ui/index.html", home);
 
 if (!home || !board) {
   console.error("[aliases] dist is missing index.html — nothing to place");
@@ -117,8 +117,6 @@ n += pretty("verify", verify);
 n += pretty("console", home);
 n += pretty("council-os", home);
 n += pretty("lobby", home);
-n += pretty("ag-ui", agui);
-n += pretty("agui", agui);
 n += pretty("legal", disclaimers);
 n += pretty("os", os);
 n += pretty("vs", compare);
