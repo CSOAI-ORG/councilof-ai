@@ -3,6 +3,9 @@ import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
 import { scoreAccount } from "../lib/hiveScore";
 import { flyAndConvene } from "../lib/globeDrive";
 import CouncilNav from "../components/CouncilNav";
+import CouncilOsInnerNav from "@/components/os/CouncilOsInnerNav";
+import EnterpriseMeasureCta from "@/components/coliseum/EnterpriseMeasureCta";
+import BriefJsonLd from "@/components/coliseum/BriefJsonLd";
 import { personaSpeak, stopVoice } from "../lib/sovPersona";
 
 // Short, honest spoken line per play (kept tight for speech synthesis).
@@ -68,11 +71,17 @@ export default function Intel() {
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
+      <CouncilOsInnerNav title="Distribution Hive" subtitle="Ecosystem index — regulators · enterprises · SMBs" />
       <div className="mx-auto max-w-6xl px-6 py-12">
         <CouncilNav />
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Distribution Hive · account intelligence</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">The market is <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">nameable.</span></h1>
         <p className="mt-3 max-w-3xl text-emerald-100/80">Governments, regulators, Fortune 500 and high-exposure sectors — under ~10,000 public accounts. Each is one row that feeds the globe, Council Space and the demo. Pick an account, run the rubric, tailor the demo.</p>
+
+        <div className="mt-4 flex flex-wrap gap-3">
+          <EnterpriseMeasureCta label="Start enterprise measurement in Council OS" variant="primary" />
+          <a href="/api/ecosystem" target="_blank" rel="noreferrer" className="rounded-lg border border-emerald-400/40 px-4 py-2.5 text-xs font-bold text-emerald-200 hover:bg-emerald-500/10">Machine-readable index →</a>
+        </div>
 
         <div className="mt-6 flex flex-wrap gap-2">
           {TABS.map((t) => (
