@@ -34,6 +34,17 @@ export const onRequestGet: PagesFunction = async () => {
         in_lane_only: ["slot15", "human-vs-ai"],
         register: "measured in-lane only, never public until the reconciliation gate opens (owner-gated)",
       },
+      engine_22: {
+        count: 22,
+        grammar: "16 GSPC axes (gspc-16) + 6 domain axes = 22 engine axes",
+        axes: [
+          "governance", "care", "swarm", "affect", "jail", "slot15", "human_vs_ai",
+          "safety", "privacy", "transparency", "fairness", "accountability",
+          "continuity", "efficiency", "creativity", "sovereignty",
+          "bank", "bond", "cross-border", "equity", "index", "insurance",
+        ],
+        note: "The full engine definition: 16 GSPC instrument axes + 6 domain axes = 22. The public_board (14) is the published subset; the engine/register is 22.",
+      },
     },
     live_axes: "see /api/gspc for the per-axis measured rows",
     honesty: "https://councilof.ai/honesty",
