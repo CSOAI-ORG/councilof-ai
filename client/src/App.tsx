@@ -20,6 +20,12 @@ const Landing = lazy(() => import("./pages/Landing"));
 const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
+const AgentRunbook = lazy(() => import("./pages/AgentRunbook"));
+const ReceiptSpec = lazy(() => import("./pages/ReceiptSpec"));
+const ReceiptSpecLaunch = lazy(() => import("./pages/ReceiptSpecLaunch"));
+const OwnershipPlan = lazy(() => import("./pages/OwnershipPlan"));
+const InstrumentsCatalog = lazy(() => import("./pages/InstrumentsCatalog"));
+const InstrumentDetail = lazy(() => import("./pages/InstrumentDetail"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
@@ -258,6 +264,8 @@ const SovereignRegistry = lazy(() => import("./pages/SovereignRegistry"));
 const SovereignHives = lazy(() => import("./pages/SovereignHives"));
 const GovernancePulse = lazy(() => import("./pages/GovernancePulse"));
 const LegacyBridge = lazy(() => import("./pages/LegacyBridge"));
+const BondVenturi = lazy(() => import("./pages/BondVenturi"));
+const EngineAxis = lazy(() => import("./pages/EngineAxis"));
 const SocialOS = lazy(() => import("./pages/SocialOS"));
 const SovereignMinds = lazy(() => import("./pages/SovereignMinds"));
 const TryCouncil = lazy(() => import("./pages/TryCouncil"));
@@ -344,6 +352,9 @@ const ROUTE_TITLES: Record<string, string> = {
   "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
   "/courses": "AI governance courses & training | CSOAI",
   "/api-docs": "API & MCP documentation | CSOAI",
+  "/agent-runbook": "Agent runbook — curl-first estate guide | CSOAI",
+  "/receipt-spec": "RECEIPT-SPEC-0.1 — measurement card format | CSOAI",
+  "/ownership": "100-move ownership plan | CSOAI",
   "/academy": "Council Academy — AI governance training | CSOAI",
   "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
   "/models": "AI model registry & scoreboard | CSOAI",
@@ -675,6 +686,10 @@ function App() {
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/ag-ui" component={AgUiBridge} />
+                  <Route path="/agent-runbook" component={AgentRunbook} />
+                  <Route path="/receipt-spec" component={ReceiptSpec} />
+                  <Route path="/ownership" component={OwnershipPlan} />
+                  <Route path="/blog/receipt-spec-0-1" component={ReceiptSpecLaunch} />
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/ai-act-benchmark" component={AiActBenchmark} />
                   <Route path="/provbench" component={ProvBench} />
@@ -730,6 +745,9 @@ function App() {
                   <Route path="/industries/:slug">{(p: any) => <IndustryTemplate slug={p.slug} />}</Route>
                   <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
                   <Route path="/models" component={ModelRegistry} />
+                  <Route path="/instruments" component={InstrumentsCatalog} />
+                  <Route path="/instruments/:layer/:slug" component={InstrumentDetail} />
+                  <Route path="/router">{() => <Redirect to="/instruments" />}</Route>
             <Route path="/framework-catalog" component={FrameworkCatalog} />
             <Route path="/command-center" component={ComplianceCommandCenter} />
             <Route path="/policy-generator" component={PolicyGenerator} />
@@ -749,6 +767,9 @@ function App() {
           <Route path="/join" component={SovereignRegistry} />
           <Route path="/distribution" component={Distribution} />
           <Route path="/legacy" component={LegacyBridge} />
+          <Route path="/venturi" component={BondVenturi} />
+          <Route path="/bond-router" component={BondVenturi} />
+          <Route path="/engine-axis" component={EngineAxis} />
           <Route path="/social" component={SocialOS} />
           {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
           <Route path="/jewels">{() => <Redirect to="/" />}</Route>
