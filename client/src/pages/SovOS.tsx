@@ -5,6 +5,7 @@
 // MapLibre GL (BSD-3) in true globe projection. Everything renders from lib/gspcAxes,
 // which refuses to hand a panel a score the axis has not earned.
 
+import { Redirect } from "wouter";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DockviewReact, themeAbyss, type DockviewReadyEvent, type IDockviewPanelProps, type DockviewApi } from "dockview-react";
 import "dockview/dist/styles/dockview.css";
@@ -272,6 +273,7 @@ function AskPanel() {
 }
 
 /* ── panel: Games — the estate's game arcade ───────────────────────────────── */
+
 //
 // Each game in the arcade is one entry in GAMES. A game ships on its own deploy
 // cycle (its own CF Pages project) and the OS just hosts it — the estate owns
@@ -546,7 +548,9 @@ const LAUNCHER_SECTIONS: LauncherSection[] = [
 ];
 
 export default function SovOS() {
-  return <AxesProvider><SovOSInner /></AxesProvider>;
+  // One OS: Council OS lobby. The dockview shell stays in-tree for local play
+  // but is not a public door.
+  return <Redirect to="/?lobby=home" />;
 }
 
 function SovOSInner() {
