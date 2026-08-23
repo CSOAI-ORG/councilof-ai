@@ -48,7 +48,12 @@ const EXISTING = [
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
-  "/sov-os                 /sov-os/                     308",
+  "/sov-os                 /?lobby=home                 308",
+  "/sov-os/                /?lobby=home                 308",
+  "/ag-ui                  /?lobby=home                 308",
+  "/ag-ui/                 /?lobby=home                 308",
+  "/agui                   /?lobby=home                 308",
+  "/agui/                  /?lobby=home                 308",
   "/chat                   /?lobby=home                 308",
   "/chat/                  /?lobby=home                 308",
   "/rankings               /?lobby=board                308",
@@ -61,15 +66,13 @@ const EXISTING = [
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
   "/for                    /for/enterprise/             308",
-  "/agui                   /ag-ui                       308",
-  "/agui/                  /ag-ui                       308",
 ];
 
 const PERSONA_SLASH = [
   "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
-  "models", "tools", "sov-os", "api-docs",
+  "models", "tools", "api-docs",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
   "refutation-ledger",
 ];
