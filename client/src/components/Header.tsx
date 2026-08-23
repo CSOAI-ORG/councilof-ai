@@ -355,7 +355,6 @@ export function Header() {
                       className="w-full justify-start text-red-600"
                       onClick={() => { logout(); setMobileMenuOpen(false); }}
                     >
-                      <LogOut className="h-4 w-4 mr-2" />
                       Sign Out
                     </Button>
                   </>
