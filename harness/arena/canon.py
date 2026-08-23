@@ -7,8 +7,12 @@ canonical form must be identical across runtimes. Two rules are load-bearing:
 
  1. Integer-valued floats emit as integers (Python json.dumps(0.0)==\"0.0\" but JS
     JSON.stringify(0.0)==\"0\"). We normalize int-valued floats to ints.
- 2. Keys sorted (Perl/Java sort order), compact separators (no spaces), ensure_ascii.
- 3. No NaN/Infinity (never emitted), and strings escaped identically (ensure_ascii).
+ 2. Keys sorted (Perl/Java sort order), compact separators (no spaces), ensure_ascii=False
+    so non-ASCII (em-dash, accented chars) stay LITERAL and byte-match JS JSON.stringify
+    (which does not escape non-ASCII by default). ensure_ascii=True would emit \\u2014
+    (6 chars) where JS emits a literal — (1 char) — a 5-char divergence that breaks the
+    verify path.
+ 3. No NaN/Infinity (never emitted), and strings escaped identically to JS JSON.stringify.
 
 This matches the estate's existing convention (Python json.dumps(sort_keys,
 separators=(',',':'), ensure_ascii=True)) PLUS the integer-float normalization that the
@@ -41,8 +45,9 @@ def _norm(o):
 
 
 def cjson(obj) -> str:
-    """Canonical JSON string: keys sorted, compact, ensure_ascii, int-valued floats as ints."""
-    return json.dumps(_norm(obj), sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    """Canonical JSON string: keys sorted, compact, NON-ASCII literal (ensure_ascii=False
+    to byte-match JS JSON.stringify), int-valued floats as ints."""
+    return json.dumps(_norm(obj), sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
 def cid(obj) -> str:
