@@ -27,6 +27,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     { id: "iso-42001-ai-mcp", name: "ISO 42001", category: "governance", status: "LIVE" },
     { id: "agent-content-watermark-mcp", name: "Agent Content Watermark", category: "provenance", status: "LIVE" },
     { id: "sbom-cyclonedx-mcp", name: "SBOM CycloneDX", category: "security", status: "LIVE" },
+    { id: "csoai-honey-kb-measurement", name: "Honey KB (signed measurement)", category: "measurement", status: "LIVE" },
+    { id: "csoai-axis-register", name: "Axis Register (set boundary)", category: "measurement", status: "LIVE" },
   ].filter((t) => !q || t.category.includes(q) || t.name.toLowerCase().includes(q) || t.id.includes(q));
   return new Response(
     JSON.stringify({ total: CATALOGUE_TOTAL, query: q || null, tools: sample }),
