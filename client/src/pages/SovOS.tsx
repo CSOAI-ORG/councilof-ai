@@ -5,6 +5,7 @@
 // MapLibre GL (BSD-3) in true globe projection. Everything renders from lib/gspcAxes,
 // which refuses to hand a panel a score the axis has not earned.
 
+import { Redirect } from "wouter";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DockviewReact, themeAbyss, type DockviewReadyEvent, type IDockviewPanelProps, type DockviewApi } from "dockview-react";
 import "dockview/dist/styles/dockview.css";
@@ -49,7 +50,7 @@ function SourceChip() {
     : <span className="text-[11px] text-amber-400/80" title={error}>bundled snapshot ({measuredOn}) — /api/gspc unreachable</span>;
 }
 
-/* ── shared chrome ─────────────────────────────────────────────────────────── */
+/* ── shared chrome ─────────────────────────────────────────────────────── */
 
 function PanelShell({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) {
   return (
@@ -82,7 +83,7 @@ function Score({ a }: { a: Axis }) {
   );
 }
 
-/* ── panel: globe ──────────────────────────────────────────────────────── */
+/* ── panel: globe ──────────────────────────────────────── */
 
 function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
   const { axes } = useAxes();
@@ -134,7 +135,7 @@ function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
   );
 }
 
-/* ── panel: the board ──────────────────────────────────────────────────── */
+/* ── panel: the board ──────────────────────────────────── */
 
 function BoardPanel({ containerApi }: IDockviewPanelProps) {
   const { axes, doi, issuer } = useAxes();
@@ -174,7 +175,7 @@ function BoardPanel({ containerApi }: IDockviewPanelProps) {
   );
 }
 
-/* ── panel: evidence ───────────────────────────────────────────────────── */
+/* ── panel: evidence ─────────────────────────────────── */
 
 function EvidencePanel({ params }: IDockviewPanelProps<{ axis: string }>) {
   const { axes } = useAxes();
@@ -215,7 +216,7 @@ function EvidencePanel({ params }: IDockviewPanelProps<{ axis: string }>) {
   );
 }
 
-/* ── panel: MCP fleet ──────────────────────────────────────────────────── */
+/* ── panel: MCP fleet ────────────────────────────────── */
 
 function FleetPanel() {
   const [state, setState] = useState<{ loading: boolean; servers: any[]; error?: string }>({ loading: true, servers: [] });
@@ -248,7 +249,7 @@ function FleetPanel() {
   );
 }
 
-/* ── panel: Ask SOV ────────────────────────────────────────────────────── */
+/* ── panel: Ask SOV ──────────────────────────────────── */
 
 import { openLobby } from "@/lib/lobbyLink";
 
@@ -271,7 +272,7 @@ function AskPanel() {
   );
 }
 
-/* ── panel: Games — the estate's game arcade ───────────────────────────────── */
+/* ── panel: Games — the estate's game arcade ───────────────────────────── */
 //
 // Each game in the arcade is one entry in GAMES. A game ships on its own deploy
 // cycle (its own CF Pages project) and the OS just hosts it — the estate owns
@@ -477,7 +478,7 @@ function TrainingPanel() {
   );
 }
 
-/* ── panel: method ─────────────────────────────────────────────────────── */
+/* ── panel: method ─────────────────────────────────────── */
 
 function MethodPanel() {
   const rules = [
@@ -501,7 +502,7 @@ function MethodPanel() {
   );
 }
 
-/* ── workspace ───────────────────────────────────────────────────────────── */
+/* ── workspace ───────────────────────────────────────────── */
 
 const COMPONENTS = { globe: GlobePanel, board: BoardPanel, evidence: EvidencePanel, fleet: FleetPanel, ask: AskPanel, method: MethodPanel, city: CityPanel, games: GamesPanel, training: TrainingPanel };
 
@@ -512,41 +513,27 @@ function openEvidence(api: DockviewApi, axis: string) {
 }
 
 type LauncherItem = { id: keyof typeof COMPONENTS; title: string; icon: any; hint: string; gated?: boolean };
-type LauncherSection = { heading: string; items: LauncherItem[] };
-
-// The Games section is built from the game registry — adding a game to GAMES
-// adds its own sidebar entry automatically. The arcade holds up to 6 games.
-const LAUNCHER_SECTIONS: LauncherSection[] = [
-  {
-    heading: "Workspace",
-    items: [
+const LAUNCHER_SECTIONS: { heading: string; items: LauncherItem[] }[] = [
+  { heading: "Workspace", items: [
       { id: "globe", title: "Globe", icon: Globe2, hint: "Thirteen seats, one per axis" },
       { id: "board", title: "GSPC Board", icon: LayoutGrid, hint: "Scores only where measured" },
-    ],
-  },
-  {
-    heading: "Measurement",
-    items: [
+    ] },
+  { heading: "Measurement", items: [
       { id: "city", title: "Council City", icon: Building2, hint: "Signed arena runs" },
       { id: "training", title: "Training", icon: GraduationCap, hint: "Flywheel runs + mesh simulations" },
       { id: "method", title: "Method", icon: ScrollText, hint: "The rules the boards run on" },
-    ],
-  },
-  {
-    heading: "Games",
-    items: GAMES.map((g) => ({ id: "games", title: g.title, icon: Gamepad2, hint: g.tagline, gated: g.gated })),
-  },
-  {
-    heading: "Intelligence",
-    items: [
+    ] },
+  { heading: "Games", items: GAMES.map((g) => ({ id: "games" as const, title: g.title, icon: Gamepad2, hint: g.tagline, gated: g.gated })) },
+  { heading: "Intelligence", items: [
       { id: "ask", title: "Ask SOV", icon: MessageSquare, hint: "Answers from the signed layer" },
       { id: "fleet", title: "MCP Fleet", icon: Server, hint: "Declared tool servers" },
-    ],
-  },
+    ] },
 ];
 
 export default function SovOS() {
-  return <AxesProvider><SovOSInner /></AxesProvider>;
+  // One public OS: Council OS lobby. The dockview shell stays in-tree for
+  // local play but is not a public door.
+  return <Redirect to="/?lobby=home" />;
 }
 
 function SovOSInner() {
@@ -566,8 +553,6 @@ function SovOSInner() {
     const saved = localStorage.getItem(LAYOUT_KEY);
     if (saved) {
       try {
-        // Sanitize: drop any saved panel whose component no longer exists, so a
-        // renamed panel (e.g. town -> games) can never break the workspace.
         const json = JSON.parse(saved);
         const known = new Set(Object.keys(COMPONENTS));
         const panels = json?.panels ?? [];
