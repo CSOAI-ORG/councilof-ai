@@ -102,7 +102,7 @@ export default function WatchdogMap() {
       const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: prompt }) });
       if (r.ok) {
         const d = await r.json(); const txt = String(d.response || "");
-        const objs = txt.match(/\{[{}]*\}/g) || []; const add: Report[] = [];
+        const objs = txt.match(/\{[^\{\}]*\}/g) || []; const add: Report[] = [];
         objs.forEach((o) => {
           try {
             const it = JSON.parse(o);
