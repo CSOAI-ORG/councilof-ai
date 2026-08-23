@@ -68,7 +68,7 @@ export function apiDocFor(item: RouterEntry): InstrumentApiDoc {
     aguiSession: `curl -sS -X POST ${host}/api/agui/session?handle=${item.slug}`,
     aguiRun: `curl -sS -N -X POST ${host}/api/agui/session/{session_id}/run`,
     mcpTool: tool,
-    mcpServer: `${host}/.well-known/mcp.json`,
+      mcpServer: `${host}/.well-known/mcp.json`,
   };
 }
 
