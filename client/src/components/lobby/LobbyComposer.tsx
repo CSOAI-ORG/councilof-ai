@@ -182,7 +182,7 @@ export default function LobbyComposer({
                   );
                 })}
               </div>
-              <p className={`${TYPE.section} mt-3`}>For “{paneLabel}”</p>
+              <p className={`${TYPE.section} mt-3`}>For "{paneLabel}"</p>
               <p className={TYPE.fine}>Tap to fill — never auto-send</p>
               <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto">
                 {suggestions.map((s) => (
