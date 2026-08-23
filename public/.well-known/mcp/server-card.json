@@ -1,0 +1,49 @@
+{
+  "schema_version": "2024-11-05",
+  "name": "csoai-gspc-mcp",
+  "display_name": "Council of AI — GSPC Measurement Tools",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) with frozen item banks, published scoring code, and Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment.",
+  "icon_url": "https://councilof.ai/favicon.ico",
+  "provider": {
+    "name": "CSOAI Ltd",
+    "url": "https://councilof.ai",
+    "company_number": "16939677",
+    "jurisdiction": "GB"
+  },
+  "endpoints": {
+    "mcp": {
+      "primary": "https://councilof.ai/mcp",
+      "fallback": "https://csoai.org/mcp",
+      "current": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
+      "note": "Primary and fallback are canonical URLs once routed; current is the live worker endpoint."
+    },
+    "gspc_board": {
+      "url": "https://councilof.ai/api/gspc",
+      "method": "GET",
+      "description": "Live Ed25519-signed GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, McNemar separation. No auth required."
+    }
+  },
+  "capabilities": {
+    "tools": ["measure", "verify", "jail-probe", "enter-arena"],
+    "total_tools": 4,
+    "streaming": false,
+    "auth_required": false
+  },
+  "authentication": {
+    "required": false,
+    "note": "Public MCP — initialize and tools/list require no Authorization header."
+  },
+  "license": "CC-BY-4.0",
+  "doi": "10.5281/zenodo.21991104",
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "legal-determination",
+    "enforcement"
+  ],
+  "discovery": {
+    "well_known_mcp": "https://councilof.ai/.well-known/mcp.json",
+    "agent_card": "https://councilof.ai/.well-known/agent-card.json"
+  }
+}
