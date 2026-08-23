@@ -168,10 +168,12 @@ try {
     const { text: lobbyJs } = await fetchText("/" + lobbyAsset);
     if (/lazy\(\(\)=>\w+\(\(\)=>import\("\.\/LobbyOverlay/.test(lobbyJs) || lobbyJs.includes("import(\"./LobbyOverlay")) {
       fail("CouncilLobby must not lazy-import LobbyOverlay", "second chunk can 404 mid-deploy and white-screen the site");
-    } else if (lobbyJs.includes("LobbyOverlay") || lobbyJs.includes("Council Lobby")) {
-      pass("CouncilLobby ships overlay in-module");
     } else {
-      fail("CouncilLobby missing overlay", "chunk loaded but overlay strings absent");
+      if (lobbyJs.includes("LobbyOverlay") || lobbyJs.includes("Council Lobby")) {
+        pass("CouncilLobby ships overlay in-module");
+      } else {
+        fail("CouncilLobby missing overlay", "chunk loaded but overlay strings absent");
+      }
     }
   }
 } catch (e) {
