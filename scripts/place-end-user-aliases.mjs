@@ -44,7 +44,9 @@ export const STRANGER_DIRS = [
   "privacy-policy", "disclaimers", "legal", "system-card",
   "pricing", "start",
   "dashboard", "login", "about", "firewall-charter", "csoai-law",
-  "models", "tools",
+  "models", "tools", "sov-os", "ag-ui", "agui",
+  "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
+  "refutation-ledger", "mcp",
 ];
 
 /** Concrete /library/:sector values the sitemap and Library IA advertise. */
