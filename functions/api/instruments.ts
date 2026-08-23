@@ -61,7 +61,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     issuer: "Council of AI (CSOAI-ORG)",
     register: "MEASURED / UNMEASURED / REPORTED / DESIGN — never blended",
     description:
-      "The OpenRouter of governance — routing table entries with optional compute backends (local Ollama, RunPod OSS, PAYG). " +
+      "Governance router — 291+ MCP routing rules for frameworks, law, benchmarks, and compute. " +
+      "Not an LLM toll road; downstream proof lives on the GSPC measurement harness (GET /api/gspc). " +
       `${STATS.mcpServers} MCP servers catalogued (${STATS.mcpRegistryCapturedAt}). ${STATS.hiveFrameworks} hive frameworks.`,
     stats: STATS,
     layers: LAYERS,
@@ -73,8 +74,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     },
     example_route: EXAMPLE_ROUTE,
     openrouter_contrast: {
-      openrouter: "1000 cloud models, no app, no offline, token pricing, no attestation",
-      eunomia: `${STATS.mcpServers} catalogued MCP routes, local OR hosted OSS, governance on every path (when wired), C2PA + DID`,
+      llm_router: "Cloud model proxies — token pricing, no governance attestation",
+      eunomia_router: `${STATS.mcpServers} governance MCP routes — instruments, not model proxies`,
+      measurement_harness: "GSPC board + arena traces + RECEIPT-SPEC — signed downstream proof",
     },
     full_catalog: "https://councilof.ai/instruments",
     engine_axis: "https://councilof.ai/engine-axis",
