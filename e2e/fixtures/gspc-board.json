@@ -1,0 +1,48 @@
+{
+  "schema": "csoai.gspc-board/1.0",
+  "issuer": "did:web:csoai.org",
+  "measured_on": { "date": "2026-08-12", "model": "Council-34", "note": "e2e fixture" },
+  "axes": [
+    {
+      "axis": "governance",
+      "bench": "GovBench",
+      "task": "EU AI Act risk-tier classification",
+      "n": 237,
+      "accuracy": 0.7,
+      "leader": "council-governance-v2",
+      "separation": "SEPARATED",
+      "status": "MEASURED",
+      "unparsed_rate": 0.04,
+      "colour": "#34d399",
+      "dataset": "csoai/gspc-gov"
+    },
+    {
+      "axis": "safety",
+      "bench": "DefBench",
+      "task": "calibrated refusal on paired requests",
+      "n": 36,
+      "accuracy": 0.944,
+      "leader": "qwen2.5:3b",
+      "separation": "TIE",
+      "status": "MEASURED",
+      "unparsed_rate": 0.05,
+      "colour": "#f87171",
+      "dataset": "csoai/gspc-agi"
+    },
+    {
+      "axis": "provenance",
+      "bench": "ProvBench",
+      "task": "Article 50 marking survival",
+      "n": 32,
+      "accuracy": 0.781,
+      "leader": "council-provenance-v2",
+      "separation": "SEPARATED",
+      "status": "MEASURED",
+      "unparsed_rate": 0.1,
+      "colour": "#60a5fa",
+      "dataset": "csoai/gspc-prv"
+    }
+  ],
+  "totals": { "measured": 3, "unmeasured": 0, "total": 3 },
+  "limitations": []
+}
