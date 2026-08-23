@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/.well-known/schemas/agent-measurement-card.schema.json",
+  "title": "CSOAI Agent Measurement Card",
+  "description": "RECEIPT-SPEC-0.1 — Ed25519-signed measurement receipt. Measurement, not certification.",
+  "type": "object",
+  "required": ["schema", "content_id", "signature", "issuer", "measured_on", "subject", "scores"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "csoai.measurement-card/0.1",
+      "description": "Media type for this receipt format"
+    },
+    "content_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 hex of canonical body (see RECEIPT-SPEC canonicalization)"
+    },
+    "signature": {
+      "type": "string",
+      "description": "Ed25519 signature (hex or base64url) over canonical signed payload"
+    },
+    "signer": {
+      "type": "string",
+      "pattern": "^did:web:",
+      "description": "Verification method id from did.json, typically did:web:csoai.org#card-attestation-1"
+    },
+    "issuer": {
+      "type": "object",
+      "required": ["name", "did"],
+      "properties": {
+        "name": { "type": "string" },
+        "did": { "type": "string" },
+        "companies_house": { "type": "string" }
+      }
+    },
+    "measured_on": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp of the measurement run"
+    },
+    "subject": {
+      "type": "object",
+      "required": ["system_id"],
+      "properties": {
+        "system_id": { "type": "string" },
+        "model": { "type": "string" },
+        "version": { "type": "string" },
+        "provider": { "type": "string" }
+      }
+    },
+    "instrument": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bench": { "type": "string" },
+        "frozen_at": { "type": "string", "format": "date-time" },
+        "doi": { "type": "string" }
+      }
+    },
+    "scores": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["axis", "status"],
+        "properties": {
+          "axis": { "type": "string" },
+          "status": {
+            "enum": ["MEASURED", "UNMEASURED", "TIE", "SEPARATED", "UNTESTED"]
+          },
+          "accuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+          "n": { "type": "integer", "minimum": 0 },
+          "interval": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "separation": { "type": "string" },
+          "separation_p": { "type": "number" },
+          "leader": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "axes_summary": {
+      "type": "object",
+      "properties": {
+        "total_slots": { "type": "integer" },
+        "measured": { "type": "integer" },
+        "label": { "type": "string", "description": "e.g. 13 measured of 14" }
+      }
+    },
+    "prev_chain": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "content_id of previous card in hash chain"
+    },
+    "timestamp_authority": {
+      "type": "string",
+      "enum": ["none"],
+      "description": "Honest: no RFC-3161 / OTS anchoring wired yet"
+    },
+    "doctrine": {
+      "type": "string",
+      "const": "measurement-not-certification"
+    },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "verify": {
+      "type": "string",
+      "format": "uri",
+      "default": "https://councilof.ai/gspc-verify"
+    }
+  }
+}
