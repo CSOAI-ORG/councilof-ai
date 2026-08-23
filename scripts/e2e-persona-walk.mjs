@@ -65,6 +65,15 @@ const PAGES = [
   "/hive/",
   "/methodology/",
   "/honesty/",
+  "/engine-axis",
+  "/instruments",
+  "/venturi",
+  "/legacy",
+  "/agent-runbook",
+  "/receipt-spec",
+  "/ownership",
+  "/blog/receipt-spec-0-1",
+  "/dashboard",
   "/.well-known/scitt.json",
 ];
 
