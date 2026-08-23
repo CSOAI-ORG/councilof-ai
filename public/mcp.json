@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "csoai-tools": {
+      "type": "http",
+      "url": "https://councilof.ai/api/tools",
+      "description": "CSOAI measurement tools catalogue (deterministic, signed)."
+    },
+    "csoai-article50": {
+      "type": "http",
+      "url": "https://councilof.ai/api/article50",
+      "description": "EU AI Act Article 50 measurement endpoint."
+    },
+    "csoai-gspc": {
+      "type": "http",
+      "url": "https://councilof.ai/api/gspc",
+      "description": "GSPC 14-slot measurement board (13 measured of 14)."
+    }
+  },
+  "catalogue": "https://councilof.ai/api/mcp",
+  "measured": {
+    "total_servers": 3,
+    "note": "Deterministic measurement endpoints, Ed25519-signable, served same-origin."
+  },
+  "honesty": "https://councilof.ai/honesty"
+}
