@@ -27,14 +27,34 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     fetch(u("/signed/gspc-measurement.json")),
   ]);
 
-  const board = await boardRes.json().catch(() => null);
-  const index = await indexRes.json().catch(() => null);
-  const meas = await measRes.json().catch(() => null);
+  const board = boardRes.ok ? await boardRes.json().catch(() => null) : null;
+  const index = indexRes.ok ? await indexRes.json().catch(() => null) : null;
+  const meas = measRes.ok ? await measRes.json().catch(() => null) : null;
 
   if (!board || !index) {
     return Response.json(
-      { schema: "csoai.gspc-cards/0.1", error: "signed assets not available", host },
-      { status: 503 },
+      {
+        schema: "csoai.gspc-cards/0.1",
+        status: "UNPUBLISHED",
+        host,
+        cards: { count: 0, signed: 0, list: [] as CardIndexEntry[] },
+        note:
+          "Signed measurement card bundle (/signed/*.json) is not published on this deploy yet. " +
+          "Live board axes: /api/gspc · axis registry: /api/axis-register.",
+        endpoints: {
+          gspc: "/api/gspc",
+          axis_register: "/api/axis-register",
+          cards: "/api/cards",
+        },
+        timestamp: new Date().toISOString(),
+      },
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json; charset=utf-8",
+          "cache-control": "public, max-age=60",
+        },
+      },
     );
   }
 
