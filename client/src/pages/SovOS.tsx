@@ -50,7 +50,7 @@ function SourceChip() {
     : <span className="text-[11px] text-amber-400/80" title={error}>bundled snapshot ({measuredOn}) — /api/gspc unreachable</span>;
 }
 
-/* ── shared chrome ─────────────────────────────────────────────────────── */
+/* ── shared chrome ─────────────────────────────────────────────────────────── */
 
 function PanelShell({ children, subtitle }: { children: React.ReactNode; subtitle?: string }) {
   return (
@@ -83,7 +83,7 @@ function Score({ a }: { a: Axis }) {
   );
 }
 
-/* ── panel: globe ──────────────────────────────────────── */
+/* ── panel: globe ──────────────────────────────────────────── */
 
 function GlobePanel({ api, containerApi }: IDockviewPanelProps) {
   const { axes } = useAxes();
@@ -175,7 +175,7 @@ function BoardPanel({ containerApi }: IDockviewPanelProps) {
   );
 }
 
-/* ── panel: evidence ─────────────────────────────────── */
+/* ── panel: evidence ───────────────────────────────────── */
 
 function EvidencePanel({ params }: IDockviewPanelProps<{ axis: string }>) {
   const { axes } = useAxes();
@@ -249,7 +249,7 @@ function FleetPanel() {
   );
 }
 
-/* ── panel: Ask SOV ──────────────────────────────────── */
+/* ── panel: Ask SOV ────────────────────────────────────── */
 
 import { openLobby } from "@/lib/lobbyLink";
 
@@ -513,21 +513,37 @@ function openEvidence(api: DockviewApi, axis: string) {
 }
 
 type LauncherItem = { id: keyof typeof COMPONENTS; title: string; icon: any; hint: string; gated?: boolean };
-const LAUNCHER_SECTIONS: { heading: string; items: LauncherItem[] }[] = [
-  { heading: "Workspace", items: [
+type LauncherSection = { heading: string; items: LauncherItem[] };
+
+// The Games section is built from the game registry — adding a game to GAMES
+// adds its own sidebar entry automatically. The arcade holds up to 6 games.
+const LAUNCHER_SECTIONS: LauncherSection[] = [
+  {
+    heading: "Workspace",
+    items: [
       { id: "globe", title: "Globe", icon: Globe2, hint: "Thirteen seats, one per axis" },
       { id: "board", title: "GSPC Board", icon: LayoutGrid, hint: "Scores only where measured" },
-    ] },
-  { heading: "Measurement", items: [
+    ],
+  },
+  {
+    heading: "Measurement",
+    items: [
       { id: "city", title: "Council City", icon: Building2, hint: "Signed arena runs" },
       { id: "training", title: "Training", icon: GraduationCap, hint: "Flywheel runs + mesh simulations" },
       { id: "method", title: "Method", icon: ScrollText, hint: "The rules the boards run on" },
-    ] },
-  { heading: "Games", items: GAMES.map((g) => ({ id: "games" as const, title: g.title, icon: Gamepad2, hint: g.tagline, gated: g.gated })) },
-  { heading: "Intelligence", items: [
+    ],
+  },
+  {
+    heading: "Games",
+    items: GAMES.map((g) => ({ id: "games", title: g.title, icon: Gamepad2, hint: g.tagline, gated: g.gated })),
+  },
+  {
+    heading: "Intelligence",
+    items: [
       { id: "ask", title: "Ask SOV", icon: MessageSquare, hint: "Answers from the signed layer" },
       { id: "fleet", title: "MCP Fleet", icon: Server, hint: "Declared tool servers" },
-    ] },
+    ],
+  },
 ];
 
 export default function SovOS() {
@@ -553,6 +569,8 @@ function SovOSInner() {
     const saved = localStorage.getItem(LAYOUT_KEY);
     if (saved) {
       try {
+        // Sanitize: drop any saved panel whose component no longer exists, so a
+        // renamed panel (e.g. town -> games) can never break the workspace.
         const json = JSON.parse(saved);
         const known = new Set(Object.keys(COMPONENTS));
         const panels = json?.panels ?? [];
