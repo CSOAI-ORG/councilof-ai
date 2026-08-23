@@ -81,7 +81,7 @@ const EXISTING = [
   "/council-space  /gspc-arena             308",  // Council Space's own console/nav linked it
   "/city           /gspc-arena?view=towns  308",  // home "Council City" CTA target
   "/method         /methodology            308",  // home USP cards linked /method
-  // qa-sweep 2026-08-21: guessed / inbound aliases 404'd (catch-all is honest 404.html).
+  // qa-sweep 2026-08-21: guessed / inbound aliases 404'd (catch-all is honest-404.html).
   "/legal                  /disclaimers                 308",
   "/vulnerability          /vulnerability-disclosure    308",
   "/gspc                   /gspc-scoreboard             308",
@@ -89,6 +89,7 @@ const EXISTING = [
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
+  "/sov-os                 /sov-os/                     308",
   // AG UI is Council OS — do not iframe a second console or nest /os.
   "/ag-ui                  /?lobby=home                 308",
   "/ag-ui/                 /?lobby=home                 308",
@@ -116,7 +117,7 @@ const PERSONA_SLASH = [
   "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
-  "models", "tools",
+  "models", "tools", "sov-os", "api-docs",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
   "refutation-ledger",
 ];
