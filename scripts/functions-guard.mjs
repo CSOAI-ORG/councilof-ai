@@ -21,7 +21,7 @@ const arg = (k, d) => {
   const i = process.argv.indexOf("--" + k);
   return i > 0 ? process.argv[i + 1] : d;
 };
-const HOST = (arg("host", "https://councilof.ai")).replace(//$/, "");
+const HOST = (arg("host", "https://councilof.ai")).replace(/\/$/, "");
 const UA = "CSOAI-functions-guard/1.0";
 
 const REQUIRED_API = [
