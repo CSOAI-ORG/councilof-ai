@@ -42,6 +42,7 @@ const ICONS: Record<string, (c: string) => ReactNode> = {
   academy: (c) => <path d="M3 9l9-5 9 5-9 5-9-5ZM5 12v5c0 1.5 3.5 3 7 3s7-1.5 7-3v-5" />,
   models: (c) => <path d="M12 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM5 18a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM19 18a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM7 18l3-6M17 18l-3-6" />,
   tools: (c) => <path d="M14 6a4 4 0 0 1 5-5l-2 3 2 3-3 2M9 12 3 18l3 3 6-6M12 9l3 3" />,
+  meok: (c) => <path d="M3 12h5l3-7 2 8 2-5 2 4h4" />,
   play: (c) => <path d="M6 5v14l12-7Z" />,
 };
 

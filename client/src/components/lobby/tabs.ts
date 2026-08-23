@@ -30,7 +30,8 @@ export type LobbyTabId =
   | "ecosystem"
   | "enterprise"
   | "intel"
-  | "brief";
+  | "brief"
+  | "meok";
 
 /** Side-menu groups, in display order. `id` drives the group heading + collapse state. */
 export type LobbyGroup =
@@ -180,6 +181,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     icon: "tools",
     group: "tooling",
     cues: /\b(tools?|assess tool|verify tool|evidence|claimguard)\b/i,
+  },
+  {
+    id: "meok",
+    label: "MEOK",
+    blurb: "MEOK on DSH — the West's OpenRouter. Run any brain, measured not trusted.",
+    path: "/ag-ui",
+    icon: "meok",
+    group: "tooling",
+    cues: /\b(meok|router|openrouter|run a brain|run brain|ask meok|chat)\b/i,
   },
   {
     id: "play",
