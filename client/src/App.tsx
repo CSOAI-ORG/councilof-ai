@@ -1,2 +1,1 @@
-import { Toaster } from "@/components/ui/sonner";
-// MCP connectivity test - will be replaced immediately
+LOAD_FROM_PF_ARGS
