@@ -51,7 +51,10 @@ export type LobbyTaskId =
   | "regulator-brief"
   | "insurer-evidence"
   | "enterprise-start"
-  | "sector-brief";
+  | "sector-brief"
+  | "engine-axis-brief"
+  | "eunomia-router"
+  | "bond-venturi";
 
 export interface LobbyTask {
   pane: LobbyTabId;
@@ -168,6 +171,24 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
         ? `What is published for ${ctx} about AI governance — frameworks named, evidence signed, and gaps left empty?`
         : "What is published for this sector about AI governance and signed evidence?",
   },
+  "engine-axis-brief": {
+    pane: "home",
+    label: "Engine axis architecture",
+    prompt: () =>
+      "On the engine axis, which crossings are MEASURED today versus PLANNED — bonds, insurance, COBOL, east-west?",
+  },
+  "eunomia-router": {
+    pane: "home",
+    label: "Route through Eunomia",
+    prompt: () =>
+      "Route a request through identity verification, care ethics, and ISO 42001 — what does each MCP layer return?",
+  },
+  "bond-venturi": {
+    pane: "home",
+    label: "Bond venturi COBOL→A2A",
+    prompt: () =>
+      "Walk COBOL overnight batch to A2A T+0 — which steps are SPEC versus MEASURED on councilof.ai today?",
+  },
 };
 
 export interface LobbyIntent {
@@ -176,6 +197,8 @@ export interface LobbyIntent {
   prompt: string;
   ctx?: string;
   task?: LobbyTaskId;
+  /** AG-UI session handle — instrument slug or lane name (e.g. did-verify). */
+  aguiHandle?: string;
   /** Bumps on every fresh intent so a repeat of the same request still lands. */
   nonce: number;
 }
@@ -185,6 +208,8 @@ export interface LobbyLinkOptions {
   prompt?: string;
   ctx?: string;
   task?: LobbyTaskId;
+  /** Opens AG-UI wire with this handle when user presses Ask. */
+  aguiHandle?: string;
   /** Path the link points at. Defaults to the current page — the lobby is global. */
   path?: string;
 }
@@ -236,12 +261,17 @@ export function resolveIntent(input: {
   prompt?: unknown;
   ctx?: unknown;
   task?: unknown;
+  aguiHandle?: unknown;
 }): LobbyIntent | null {
   const task = isTask(input.task) ? input.task : undefined;
   const ctx = typeof input.ctx === "string" && input.ctx.trim() ? input.ctx.trim() : undefined;
   const pane = isPane(input.pane) ? input.pane : task ? LOBBY_TASKS[task].pane : undefined;
   const explicit = typeof input.prompt === "string" && input.prompt.trim() ? input.prompt.trim() : undefined;
   const prompt = explicit ?? (task ? LOBBY_TASKS[task].prompt(ctx) : undefined);
+  const aguiHandle =
+    typeof input.aguiHandle === "string" && input.aguiHandle.trim()
+      ? input.aguiHandle.trim()
+      : undefined;
 
   if (!pane && !prompt) return null;
   return {
@@ -249,6 +279,7 @@ export function resolveIntent(input: {
     prompt: prompt ?? "",
     ctx,
     task,
+    aguiHandle,
     nonce: ++nonce,
   };
 }

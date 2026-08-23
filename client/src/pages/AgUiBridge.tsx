@@ -1,37 +1,45 @@
 import { useEffect } from "react";
+import { openLobby } from "@/lib/lobbyLink";
 
 /**
- * AgUiBridge — the seamless AG UI, embedded from the estate static surface.
+ * /ag-ui — legacy URL that now opens Council OS (native AG-UI wire in the lobby).
  *
- * The AG UI lives on csoai-site.pages.dev/ag-ui (an independently deployable static
- * bundle — 15 side-menu tabs, chat-per-axis, tool windows). It has no X-Frame-Options /
- * CSP frame-ancestors restriction, so we render it full-height in an iframe here so the
- * whole councilof.ai experience stays on one domain and one URL (/ag-ui).
- *
- * Doctrine: the AG UI is measurement, not certification. The bridge itself adds no claim.
+ * The old iframe to csoai-site.pages.dev is retired. Lane 2 SSE runs through
+ * `/api/agui` → `AGUI_WIRE_URL` inside the lobby composer — not a separate surface.
  */
 export default function AgUiBridge() {
-  const SRC = "https://csoai-site.pages.dev/ag-ui";
-
-  // Keep the document title honest and scoped, and pop it back on leave.
   useEffect(() => {
-    document.title = "AG UI — Council of AI";
+    document.title = "Council OS — Council of AI";
+    openLobby({
+      pane: "home",
+      prompt:
+        "Walk the AG-UI wire — which instrument handles are live, and what does streaming return before consent?",
+      aguiHandle: "lobby",
+    });
     return () => {
       document.title = "Council of AI — we measure, we sign, we re-attest";
     };
   }, []);
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] w-full bg-[#0b1020]">
-      <div className="w-full">
-        <iframe
-          src={SRC}
-          title="Council of AI — AG UI"
-          className="block h-[calc(100vh-6rem)] w-full border-0"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"
-          referrerPolicy="no-referrer-when-downgrade"
-        />
-      </div>
+    <div className="mx-auto max-w-lg px-6 py-24 text-center">
+      <h1 className="text-xl font-semibold text-slate-900">Opening Council OS…</h1>
+      <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+        AG-UI now runs inside the lobby — streaming via <code className="text-xs">/api/agui</code> when the wire is
+        configured. If the workspace did not open, use the Council badge in the header.
+      </p>
+      <button
+        type="button"
+        onClick={() =>
+          openLobby({
+            pane: "home",
+            aguiHandle: "lobby",
+          })
+        }
+        className="mt-6 rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+      >
+        Open Council OS
+      </button>
     </div>
   );
 }
