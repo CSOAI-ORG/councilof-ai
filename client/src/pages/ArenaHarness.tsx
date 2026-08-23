@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StackHonestyBanner } from "@/components/StackHonestyBanner";
 import { openLobby } from "@/lib/lobbyLink";
+import { POSITIONING, CTA_PRIMARY } from "@/lib/positioning";
 import { STACK_STATS } from "@/lib/stackHonesty";
 
 type Register = "MEASURED" | "REPORTED" | "DESIGN" | "PARTIAL" | "SHIPPED" | "GAP" | "SPEC";
@@ -190,11 +191,11 @@ export default function ArenaHarness() {
         <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6">
           <Badge className="mb-4 border-amber-500/40 text-amber-300">Strategic thesis · DESIGN register</Badge>
           <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Don&apos;t build a router. Build the arena routers fight in.
+            {POSITIONING.harness.name}: prove routing was correct
           </h1>
           <p className="mt-4 max-w-3xl text-slate-400 leading-relaxed">
-            Stripe bought the highway (REPORTED). EUNOMIA Harness is the toll authority, crash-test facility, and
-            insurance layer — downstream of OpenRouter, Ramp, and Databricks.{" "}
+            {POSITIONING.subhead} Stripe bought the LLM highway (REPORTED). We build the crash-test facility,
+            signed traces, and insurance layer downstream.{" "}
             {STACK_STATS.mcpServers} MCP rules catalogued; {STACK_STATS.gspcAxesMeasured} GSPC core axes MEASURED on the
             frozen bank.
           </p>
@@ -202,6 +203,9 @@ export default function ArenaHarness() {
             <StackHonestyBanner note="Revenue tables and bond mechanics are DESIGN until frozen contracts exist. We measure and sign — we do not certify." />
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/instruments" className={CTA_PRIMARY}>
+              {POSITIONING.router.cta}
+            </Link>
             <Link href="/gspc-arena">
               <Button className="bg-emerald-600 hover:bg-emerald-700">Council Space arena →</Button>
             </Link>
@@ -307,11 +311,7 @@ export default function ArenaHarness() {
           ))}
         </ul>
         <pre className="overflow-x-auto rounded-xl border border-white/10 bg-black/40 p-4 text-xs text-emerald-100 font-mono mb-4">
-{`curl -sS https://councilof.ai/api/signal | jq '.schema, .legs, .signals[0].registers'
-
-# Per-axis composed statement (no fused score):
-# .signals[].divergence_statement
-# .signals[].signal_index  → always null today`}
+{`curl -sS https://councilof.ai/api/signal | jq '.schema, .legs, .signals[0].registers'\n\n# Per-axis composed statement (no fused score):\n# .signals[].divergence_statement\n# .signals[].signal_index  → always null today`}
         </pre>
         <a
           href="/api/signal"
