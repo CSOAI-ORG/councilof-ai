@@ -8,6 +8,7 @@ import LiveLeaderboard from "@/components/board/LiveLeaderboard";
 import ModelsRankings from "./ModelsRankings";
 import RoutesRankings from "./RoutesRankings";
 import { openLobby } from "@/lib/lobbyLink";
+import { useLivingGspcBoard } from "@/components/board/useGspcBoard";
 
 type Tab = "board" | "models" | "routes";
 
@@ -25,15 +26,21 @@ export default function MeasurementHub({
   initialTab?: Tab;
 }) {
   const [tab, setTab] = useState<Tab>(initialTab);
+  const { refreshedAt, error: liveError } = useLivingGspcBoard(45_000);
 
   useEffect(() => {
     setTab(initialTab);
   }, [initialTab]);
 
+  const liveLabel = refreshedAt
+    ? `Live · refreshed ${Math.max(0, Math.round((Date.now() - refreshedAt) / 1000))}s ago`
+    : "Reading GET /api/gspc…";
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-1 rounded-lg border border-border bg-muted/30 p-1">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap gap-1 rounded-lg border border-border bg-muted/30 p-1">
           {TABS.map((t) => {
             const Icon = t.icon;
             return (
@@ -52,6 +59,15 @@ export default function MeasurementHub({
               </button>
             );
           })}
+          </div>
+          <span
+            className={`text-[11px] font-medium tabular-nums ${
+              liveError ? "text-amber-700" : "text-emerald-700"
+            }`}
+            title="Board data pulses from GET /api/gspc while Council OS is open"
+          >
+            {liveError ? "Board unreachable" : liveLabel}
+          </span>
         </div>
         <Button
           size="sm"
