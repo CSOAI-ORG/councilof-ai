@@ -1,14 +1,12 @@
 /**
  * The Council Lobby's centre-pane destinations.
  *
- * Council OS workspace: board / models / routes / tools / chat live in the
+ * OpenRouter-style workspace: board / models / routes / tools / chat live in the
  * centre column. Surfaces with a `path` open the real route in the site main
  * column (footer stays visible) — never in an iframe.
  *
  * `kind: "local"` = native workspace pane. `kind: "route"` = navigate main site.
  */
-
-import { POSITIONING } from "@/lib/positioning";
 
 export type LobbyTabId =
   | "home"
@@ -75,7 +73,7 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "routes",
     label: "Routes",
-    blurb: POSITIONING.router.blurb,
+    blurb: "Eunomia routing table — the OpenRouter of governance.",
     path: "/instruments",
     kind: "local",
     surface: "measured",
