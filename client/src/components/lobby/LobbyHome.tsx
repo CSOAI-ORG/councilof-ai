@@ -1,5 +1,6 @@
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
 import { LOBBY_TABS, type LobbyTab } from "./tabs";
+import { LAYER0_LINKS, LAYER0_INFRA } from "@/lib/layer0Links";
 import LivingBoard from "./LivingBoard";
 
 /**
@@ -24,14 +25,6 @@ const PEOPLE: { label: string; blurb: string; path: string }[] = [
   { label: "Enterprises", blurb: "Prove the system before you ship.", path: "/for/enterprise" },
   { label: "Finance", blurb: "Credit, DORA, and the Act — evidenced once.", path: "/for/finance" },
   { label: "Compare vendors", blurb: "What we publish versus GRC platforms.", path: "/compare" },
-];
-
-const LAYER0: { label: string; blurb: string; path: string }[] = [
-  { label: "Layer 0", blurb: "The signed trust layer the agent rail stands on.", path: "/layer0" },
-  { label: "Trust center", blurb: "Keys, receipts, and what we will not claim.", path: "/trust-center" },
-  { label: "Network", blurb: "N sites and where the record lives.", path: "/network" },
-  { label: "Hive", blurb: "Frameworks and groups, as published.", path: "/hive" },
-  { label: "Intel", blurb: "Competitor and landscape notes.", path: "/intel" },
 ];
 
 export default function LobbyHome({
@@ -110,9 +103,26 @@ export default function LobbyHome({
         ))}
       </ul>
 
+      <h3 className={`${TYPE.section} mt-8 mb-3`}>Eunomia · engine axis</h3>
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {LAYER0_LINKS.map((x) => (
+          <li key={x.path}>
+            <button
+              type="button"
+              onClick={() => onOpenRoute(x.path, x.label)}
+              className={`${SURFACE} ${SP.card} flex h-full w-full flex-col items-start bg-emerald-50/50 text-left transition hover:bg-emerald-50 motion-reduce:transition-none ${FOCUS}`}
+            >
+              <span className="text-[14px] font-semibold text-slate-900">{x.label}</span>
+              <span className={`mt-1.5 ${TYPE.muted}`}>{x.blurb}</span>
+              <span className={`mt-3 ${TYPE.mono}`}>{x.path}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+
       <h3 className={`${TYPE.section} mt-8 mb-3`}>Layer 0 and the record</h3>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {LAYER0.map((x) => (
+        {LAYER0_INFRA.map((x) => (
           <li key={x.path}>
             <button
               type="button"

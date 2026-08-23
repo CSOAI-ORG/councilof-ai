@@ -18,6 +18,7 @@ export default function LobbyComposer({
   panePath,
   seedPrompt,
   seedNonce,
+  aguiHandle,
   onFirstReply,
 }: {
   chat: LobbyChat;
@@ -26,6 +27,7 @@ export default function LobbyComposer({
   panePath: string;
   seedPrompt?: string;
   seedNonce?: number;
+  aguiHandle?: string;
   /** Called once when the reader gets their first council reply. */
   onFirstReply?: () => void;
 }) {
@@ -100,7 +102,7 @@ export default function LobbyComposer({
     setQ("");
     setSeeded(false);
     setAsksOpen(false);
-    void chat.send(text, onNavigate);
+    void chat.send(text, onNavigate, { aguiHandle });
   }
 
   return (
@@ -201,7 +203,16 @@ export default function LobbyComposer({
       </div>
 
       <p id="coai-lobby-chat-note" className={`mt-2 ${TYPE.fine}`}>
-        Answers from published measurement, or it refuses.{" "}
+        Three lanes: pane commands (local), AG-UI wire when configured (streaming + consent), else{" "}
+        <code className="text-[10px]">POST /api/chat</code>.{" "}
+        {chat.aguiWire === true && (
+          <span className="rounded-full border border-violet-400/40 bg-violet-50 px-1.5 py-0.5 text-[10px] font-semibold text-violet-800">
+            AG-UI wire live
+          </span>
+        )}
+        {chat.aguiWire === false && (
+          <span className="text-[10px] text-slate-500">AG-UI wire off — chat lane active</span>
+        )}{" "}
         <button
           type="button"
           onClick={() => setNoteOpen((o) => !o)}
@@ -213,8 +224,11 @@ export default function LobbyComposer({
       </p>
       {noteOpen && (
         <p className={`${MEASURE} mt-1 ${TYPE.fine}`}>
-          Pane commands switch locally with no model. Everything else hits the published endpoint; failures are labelled{" "}
-          <em>deterministic</em>.
+          <strong>Lane 1</strong> — pane commands switch locally with no model.{" "}
+          <strong>Lane 2</strong> — AG-UI SSE from <code className="text-[10px]">/api/agui</code> when{" "}
+          <code className="text-[10px]">AGUI_WIRE_URL</code> is set; streams tokens and pauses at consent
+          checkpoints. <strong>Lane 3</strong> — published measurement via <code className="text-[10px]">/api/chat</code>;
+          failures are labelled <em>deterministic</em>.
         </p>
       )}
     </div>
