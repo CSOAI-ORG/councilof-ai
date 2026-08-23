@@ -10,6 +10,9 @@ const CASES = [
   { q: "What does the honesty page publish about corrections and refusals?", not: "I could not ground" },
   { q: "What is the governance axis score?", want: "governance" },
   { q: "show the board", want: "GSPC suite" },
+  { q: "How much does a grade cost?", want: "free forever" },
+  { q: "What should a regulator do with a GSPC grade?", want: "Regulators" },
+  { q: "Can an insurer use GSPC for underwriting?", want: "not a signal that a system is safe to underwrite" },
 ];
 
 let fail = 0;
