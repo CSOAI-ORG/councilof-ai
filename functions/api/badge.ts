@@ -2,10 +2,10 @@
 //
 // A shields.io-style badge any project can drop into its README:
 //     ![measured](https://councilof.ai/api/badge)
-//     ![measured](https://councilof.ai/api/badge?measured=9&total=14&label=agentname)
+//     ![measured](https://councilof.ai/api/badge?measured=9&label=agentname)
 //
-// The default badge states the board's own honest count — "13 of 14 axes" — the same
-// number the /api/gspc totals report ("13 measured of 14 quotable", SITTING 1 2026-08-18).
+// The default badge states the board's own honest count — 13 measured axes plus jail as
+// a measured floor (not a 14th scored axis). Slot-15 remains unnamed and visible empty.
 // A visiting agent that enrols and is measured on fewer axes states its real count, and an
 // unmeasured subject renders honestly as "unmeasured" in grey — never a fabricated score.
 //
@@ -13,12 +13,12 @@
 //   (default)        → SVG (image/svg+xml), embeddable directly in a README
 //   ?format=shields  → shields.io endpoint JSON {schemaVersion,label,message,color}
 //                      use as https://img.shields.io/endpoint?url=<this-url>&format=shields
-//   ?format=json     → the raw {measured,total,message,color,verify} object
+//   ?format=json     → the raw {measured,message,color,verify,ruling} object
 //
 // Doctrine: measurement, not certification. The badge is an image that points home to
 // /honesty, where the number is recomputable from its rows. It asserts nothing it cannot show.
 
-const BOARD = { measured: 13, total: 14 }; // canon: 13 measured of 14 (mirrors /api/gspc totals)
+const BOARD = { measured: 13, total: 14 }; // internal only — public chrome: 13 measured + jail floor (NOT 14-axis)
 const VERIFY_URL = "https://councilof.ai/honesty";
 const BRAND = "#4f46e5"; // indigo — matches the site
 const GREY = "#9ca3af";
@@ -80,10 +80,16 @@ export const onRequestGet: PagesFunction = async (context) => {
   const measured = url.searchParams.has("measured")
     ? clampInt(url.searchParams.get("measured"), 0, total)
     : BOARD.measured;
-  const label = (url.searchParams.get("label") || "GSPC measured").slice(0, 40);
+  const label = (url.searchParams.get("label") || "GSPC").slice(0, 40);
   const format = url.searchParams.get("format");
 
-  const message = measured <= 0 ? "unmeasured" : `${measured} of ${total} axes`;
+  // Board default shows "13 measured + jail floor"; custom measured values show "X measured"
+  const isDefaultBoard = !url.searchParams.has("measured");
+  const message = measured <= 0
+    ? "unmeasured"
+    : isDefaultBoard
+      ? "13 measured + jail floor"
+      : `${measured} measured`;
   const colour = colourFor(measured, total);
 
   const headers: Record<string, string> = {
@@ -100,7 +106,7 @@ export const onRequestGet: PagesFunction = async (context) => {
   }
   if (format === "json") {
     return new Response(
-      JSON.stringify({ measured, total, message, color: colour, verify: VERIFY_URL, ruling: "13 measured of 14 (SITTING 1, 2026-08-18)" }, null, 2),
+      JSON.stringify({ measured, message, color: colour, verify: VERIFY_URL, ruling: "13 measured + jail floor (SITTING 1, 2026-08-18)" }, null, 2),
       { headers: { ...headers, "content-type": "application/json; charset=utf-8" } },
     );
   }
