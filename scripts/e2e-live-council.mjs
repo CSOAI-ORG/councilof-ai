@@ -134,8 +134,8 @@ for (const path of MUST_RESOLVE) {
     const title = (text.match(/<title>([^<]+)/i) || [])[1] || "";
     if (res.status >= 400 || /404 — Not found/i.test(title)) {
       fail(`${path} must resolve for a stranger`, `HTTP ${res.status} ${title}`);
-    } else if (path.includes("gspc") && /13 axes\s*[\u00d7x]\s*19/i.test(text)) {
-      fail(`${path} leftover static table`, "hardcoded 13\u00d719");
+    } else if (path.includes("gspc") && /13 axes\s*[×x]\s*19/i.test(text)) {
+      fail(`${path} leftover static table`, "hardcoded 13×19");
     } else {
       pass(`${path} resolves`, `HTTP ${res.status} ${text.length} B`);
     }
@@ -168,12 +168,10 @@ try {
     const { text: lobbyJs } = await fetchText("/" + lobbyAsset);
     if (/lazy\(\(\)=>\w+\(\(\)=>import\("\.\/LobbyOverlay/.test(lobbyJs) || lobbyJs.includes("import(\"./LobbyOverlay")) {
       fail("CouncilLobby must not lazy-import LobbyOverlay", "second chunk can 404 mid-deploy and white-screen the site");
+    } else if (lobbyJs.includes("LobbyOverlay") || lobbyJs.includes("Council Lobby")) {
+      pass("CouncilLobby ships overlay in-module");
     } else {
-      if (lobbyJs.includes("LobbyOverlay") || lobbyJs.includes("Council Lobby")) {
-        pass("CouncilLobby ships overlay in-module");
-      } else {
-        fail("CouncilLobby missing overlay", "chunk loaded but overlay strings absent");
-      }
+      fail("CouncilLobby missing overlay", "chunk loaded but overlay strings absent");
     }
   }
 } catch (e) {
