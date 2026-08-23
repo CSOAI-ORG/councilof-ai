@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 // Compare — honest side-by-side of what CSOAI publishes versus named GRC platforms.
 // Measurement, not certification. No invented framework counts. No pricing.
@@ -39,7 +40,7 @@ export default function Compare({ focus }: { focus?: string }) {
     return () => { document.getElementById("cmp-ld")?.remove(); if (prev !== undefined && m) m.content = prev; };
   }, [focus]);
   return (
-    <div className="min-h-screen bg-white">
+    <CouncilOsPageShell title="Compare" subtitle="Honest battlecards — CSOAI measurement vs GRC platforms" className="min-h-screen bg-white">
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
@@ -87,6 +88,6 @@ export default function Compare({ focus }: { focus?: string }) {
           </dl>
         </div>
       </section>
-    </div>
+    </CouncilOsPageShell>
   );
 }
