@@ -30,6 +30,8 @@ import {
 import { routerPath, openInstrumentInLobby } from "@/lib/instrument-routes";
 import { StackHonestyBanner } from "@/components/StackHonestyBanner";
 import { openLobby } from "@/lib/lobbyLink";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
+import { POSITIONING, CTA_PRIMARY } from "@/lib/positioning";
 import { BOND_MARKET_REPORTED_T } from "@/lib/stackHonesty";
 
 const LAYER_ICONS: Record<RouterLayer, typeof Layers> = {
@@ -62,7 +64,11 @@ export default function InstrumentsCatalog() {
   }, [query, layer, sort]);
 
   return (
-    <div className="min-h-screen bg-[#04070d] text-slate-200">
+    <CouncilOsPageShell
+      title="Routes"
+      subtitle={POSITIONING.router.blurb}
+      className="min-h-screen bg-[#04070d] text-slate-200"
+    >
       {/* Hero */}
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -71,11 +77,15 @@ export default function InstrumentsCatalog() {
             Eunomia Router
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-            The OpenRouter of governance
+            {POSITIONING.router.name} — route governance, not models
           </h1>
           <p className="mt-4 max-w-3xl text-sm sm:text-base leading-relaxed text-slate-400">
-            {ROUTER_STATS.mcpServers} MCP servers · {ROUTER_STATS.hiveFrameworks} hive frameworks. Not compliance tools — routing table entries.
-            Each rule says: when intent X arrives, verify Y, route through Z, attest W, bill V.
+            {ROUTER_STATS.mcpServers} MCP servers · {ROUTER_STATS.hiveFrameworks} hive frameworks.{" "}
+            {POSITIONING.router.blurb}{" "}
+            Signed proof lives on GET /api/gspc.{" "}
+            <Link href="/arena-harness" className="text-emerald-400 hover:underline">
+              {POSITIONING.harness.cta} →
+            </Link>
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
@@ -91,6 +101,15 @@ export default function InstrumentsCatalog() {
                 </div>
               );
             })}
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/os" className={CTA_PRIMARY}>
+              {POSITIONING.os.cta}
+            </Link>
+            <Link href="/arena-harness" className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-4 py-2.5 text-sm font-semibold text-emerald-300 hover:bg-white/5">
+              {POSITIONING.harness.cta}
+            </Link>
           </div>
 
           <div className="mt-6 rounded-xl border border-amber-500/20 bg-amber-950/30 px-4 py-3">
@@ -243,13 +262,16 @@ export default function InstrumentsCatalog() {
 
         <div className="mt-12 grid sm:grid-cols-2 gap-4">
           <div className="rounded-xl border border-white/10 p-6">
-            <h3 className="font-semibold text-white mb-2">OpenRouter vs Eunomia</h3>
+            <h3 className="font-semibold text-white mb-2">Router layer vs measurement harness</h3>
             <ul className="text-xs text-slate-400 space-y-2">
-              <li>• OpenRouter: 1,000 models, zero verification</li>
-              <li>• Eunomia: {ROUTER_STATS.mcpServers} MCP routing rules catalogued</li>
-              <li>• Token pricing vs trust pricing (per verified execution)</li>
-              <li>• No liability chain vs C2PA + DID attestation</li>
+              <li>• LLM routers (Stripe/OpenRouter): route models at scale — we do not compete here</li>
+              <li>• {POSITIONING.router.name}: {ROUTER_STATS.mcpServers} governance MCP rules — SHIPPED</li>
+              <li>• {POSITIONING.harness.short}: signed GSPC board + arena traces — MEASURED path</li>
+              <li>• Token pricing vs signed trace + benchmark data (DESIGN revenue thesis)</li>
             </ul>
+            <Link href="/arena-harness" className="mt-3 inline-block text-xs text-emerald-400 hover:underline">
+              {POSITIONING.harness.cta} →
+            </Link>
           </div>
           <div className="rounded-xl border border-white/10 p-6">
             <h3 className="font-semibold text-white mb-2">Try it in the Council Lobby</h3>
@@ -278,6 +300,6 @@ export default function InstrumentsCatalog() {
           </div>
         </div>
       </div>
-    </div>
+    </CouncilOsPageShell>
   );
 }
