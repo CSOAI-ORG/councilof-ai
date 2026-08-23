@@ -28,11 +28,11 @@ const REQUIRED_API = [
   "/api/gspc",
   "/api/cards",
   "/api/axis-register",
+  "/api/clarity",
+  "/api/methodology",
   "/api/mcp",
   "/api/tools",
   "/api/receipts/latest",
-  "/api/dorado",
-  "/api/evidence-pack",
 ];
 
 async function fetchCode(path) {
