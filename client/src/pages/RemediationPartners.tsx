@@ -29,9 +29,6 @@ const RULES = [
   "The routing rule is mechanical: the top-ranked model on each axis, whichever it is, at the time of measurement.",
 ];
 
-// Empty providers list — the architecture is the product, not the directory.
-// Providers are added only after they demonstrate: (a) they can read a card,
-// (b) they map findings to a fix plan, (c) they use the public verify endpoint.
 const PROVIDERS: { name: string; url: string; region: string; note: string }[] = [
   {
     name: "Your team (self-remediation)",
@@ -48,7 +45,6 @@ export default function RemediationPartners() {
       subtitle="Measurement body — independent remediation partners and self-fix via workspace"
       className="min-h-screen bg-white"
     >
-      {/* Hero */}
       <section className="border-b border-gray-100 bg-gradient-to-b from-emerald-50 to-white">
         <div className="mx-auto max-w-4xl px-6 py-20">
           <span className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-600">
@@ -63,8 +59,6 @@ export default function RemediationPartners() {
           </p>
         </div>
       </section>
-
-      {/* How it works */}
       <section className="py-16 px-6 bg-white">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-3xl font-extrabold text-center text-gray-900">How it works</h2>
@@ -81,8 +75,6 @@ export default function RemediationPartners() {
           </div>
         </div>
       </section>
-
-      {/* The rules */}
       <section className="py-16 px-6 bg-gray-50">
         <div className="mx-auto max-w-4xl">
           <div className="flex items-center gap-3 mb-8">
@@ -97,60 +89,27 @@ export default function RemediationPartners() {
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-sm text-gray-400 italic">
-            These rules are published. Anyone can audit them. If we ever break one, the market finds out —
-            and the measurement board becomes a liability rather than an asset. That is the discipline.
-          </p>
         </div>
       </section>
-
-      {/* Providers directory */}
       <section className="py-16 px-6 bg-white">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-3xl font-extrabold text-center text-gray-900">Independent remediation providers</h2>
-          <p className="mt-3 text-center text-gray-500 max-w-xl mx-auto">
-            These providers use CSOAI measurement cards as input. They are independently owned and operated.
-            CSOAI has no financial interest in any of them.
-          </p>
-          {PROVIDERS.length === 0 ? (
-            <div className="mt-10 rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-10 text-center">
-              <p className="text-lg font-bold text-gray-500">No providers listed yet.</p>
-              <p className="mt-2 text-sm text-gray-400 max-w-md mx-auto">
-                This page will list providers as they demonstrate the ability to read a CSOAI measurement card,
-                map findings to a fix plan, and use our public verify endpoint. Interested in being listed?
-              </p>
-              <a href="mailto:verify@csoai.org" className="mt-4 inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-                Email us <ExternalLink className="w-3 h-3" />
+          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            {PROVIDERS.map(p => (
+              <a key={p.name} href={p.url} className="rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-lg hover:border-emerald-200 transition-all">
+                <h3 className="font-extrabold text-gray-900">{p.name}</h3>
+                <p className="mt-1 text-xs text-emerald-600 font-semibold">{p.region}</p>
+                <p className="mt-2 text-sm text-gray-500">{p.note}</p>
               </a>
-            </div>
-          ) : (
-            <div className="mt-10 grid gap-4 sm:grid-cols-2">
-              {PROVIDERS.map(p => (
-                <a key={p.name} href={p.url} target="_blank" rel="noopener"
-                   className="rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-lg hover:border-emerald-200 transition-all">
-                  <h3 className="font-extrabold text-gray-900">{p.name}</h3>
-                  <p className="mt-1 text-xs text-emerald-600 font-semibold">{p.region}</p>
-                  <p className="mt-2 text-sm text-gray-500">{p.note}</p>
-                </a>
-              ))}
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       </section>
-
-      {/* CTAs */}
       <section className="py-12 px-6 bg-emerald-50">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-2xl font-extrabold text-gray-900">Want to become a listed provider?</h2>
-          <p className="mt-2 text-gray-500">Email us at verify@csoai.org with the subject "Provider listing". We'll send the verification steps.</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href="/assess" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-extrabold text-white hover:bg-emerald-400">
-              Get measured first <ArrowRight className="inline w-3 h-3 ml-1" />
-            </Link>
-            <Link href="/gspc-verify" className="rounded-xl border-2 border-emerald-200 bg-white px-5 py-2.5 text-sm font-bold text-emerald-700 hover:bg-emerald-50">
-              Verify a card
-            </Link>
-          </div>
+          <Link href="/assess" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-extrabold text-white hover:bg-emerald-400">
+            Get measured first <ArrowRight className="inline w-3 h-3 ml-1" />
+          </Link>
         </div>
       </section>
     </CouncilOsPageShell>
