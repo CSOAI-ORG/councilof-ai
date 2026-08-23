@@ -461,6 +461,7 @@ const SUBJECTS: SubjectRecord[] = [
       { id: "still_separates_top_systems", result: "UNKNOWN", evidence: "Scores did not render to the fetch, so no separation between top systems could be read.", src: "board", unknown_reason: "Client-rendered leaderboard. Reporting a saturation verdict here would require reading numbers we did not read." },
       { id: "public_corrections_ledger_or_versioning", result: "UNKNOWN", evidence: "No public version history or corrections ledger was observed on the artifacts fetched.", src: "board", unknown_reason: "Client-rendered surface; not determinable from the served HTML." },
     ],
+  },
 
   // ── ARC-AGI ─────────────────────────────────────────────────────────────────────────────
   {
@@ -614,7 +615,6 @@ const SUBJECTS: SubjectRecord[] = [
       { id: "still_separates_top_systems", result: "PASS", evidence: "The paper reports clear separation: 'our model solves 28.8% of the problems, while GPT-3 solves 0% and GPT-J solves 11.4%' — the benchmark distinguishes model capabilities. (Caveat for the register: because HumanEval is fully public, it is known to be prone to training-data contamination, which the paper does not address.)", src: "humaneval-arxiv-paper" },
       { id: "public_corrections_ledger_or_versioning", result: "FAIL", evidence: "The repo's only version marker is `version=\"1.0\"` in setup.py with no changelog; no public corrections ledger/versioning is published.", src: "humaneval-setup" }
     ],
-  },
   },
 ];
 
