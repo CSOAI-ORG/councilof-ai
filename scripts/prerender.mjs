@@ -101,7 +101,7 @@ function discover() {
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/watchdog", "/disclaimers", "/csoai-law",
-    "/models", "/tools", "/sov-os", "/sov-os/", "/api-docs",
+    "/models", "/tools", "/api-docs",
     "/workbench", "/instrument", "/system-card", "/feed", "/mcp-fleet",
     "/crosswalk", "/refutation-ledger", "/library",
     // Flagship pages that were only SPA-routed (direct HTTP 404 = credibility leak:
