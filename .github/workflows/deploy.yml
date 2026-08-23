@@ -55,6 +55,20 @@ jobs:
       - name: Brand gate — block deploy on any forbidden display string (audit §6.2)
         run: node scripts/brand-gate.mjs dist/client
 
+      - name: Dist bundle guard — stranger paths + API functions present
+        run: |
+          set -euo pipefail
+          for p in sov-os/index.html api-docs/index.html os/index.html gspc-verify/index.html; do
+            if [ ! -f "dist/client/$p" ]; then
+              echo "MISSING dist/client/$p — prerender did not snapshot this route"
+              exit 1
+            fi
+            echo "ok dist/client/$p ($(wc -c < dist/client/$p) bytes)"
+          done
+          for fn in functions/api/receipts/latest.ts functions/api/dorado.ts functions/api/evidence-pack.ts functions/api/cards.ts functions/api/axis-register.ts; do
+            test -f "$fn" || (echo "missing $fn" && exit 1)
+          done
+
       # Custom domain councilof.ai follows the Pages PRODUCTION alias
       # (councilof-ai.pages.dev), not a hash preview. --branch=main alone
       # published a fat preview (2026-08-22, 42596ad2.…) while production
