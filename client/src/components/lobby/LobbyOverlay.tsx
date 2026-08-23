@@ -15,7 +15,7 @@ import {
   ALPHA_DEFAULT, ALPHA_MAX, ALPHA_MIN, FOCUS, SP, SURFACE, SURFACE_LIFTED, TYPE,
   panelStyle, scrimStyle,
 } from "./glass";
-import type { LobbyIntent } from "@/lib/lobbyLink";
+import { LOBBY_TASKS, type LobbyIntent } from "@/lib/lobbyLink";
 import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
 import { setOsOpen } from "@/lib/osChrome";
 import {
@@ -198,11 +198,16 @@ export default function LobbyOverlay({
   useEffect(() => {
     if (!intent) return;
     setMinimised(false);
-    setOverride(null);
     const next = tabById(intent.pane);
     setTabId(intent.pane);
+    if (intent.route) {
+      setOverride({ path: intent.route, label: intent.task ? LOBBY_TASKS[intent.task].label : intent.route });
+      loadPane(intent.route);
+      return;
+    }
+    setOverride(null);
     if (next.kind !== "local" && next.kind !== "native" && next.path) loadPane(next.path);
-  }, [intent?.nonce, intent?.pane, loadPane]);
+  }, [intent?.nonce, intent?.pane, intent?.route, loadPane, intent?.task]);
 
   const go = useCallback((t: LobbyTab) => {
     setOverride(null);
@@ -258,7 +263,7 @@ export default function LobbyOverlay({
     requestAnimationFrame(() => threadEndRef.current?.scrollIntoView({ block: "end" }));
   }, [chat.turnCount, chatActive]);
 
-  // ── docked (minimised) ───────────────────────────────────────────────────
+  // ── docked (minimised) ─────────────────────────────────────────────────────────
   if (minimised) {
     return (
       <div
@@ -433,6 +438,7 @@ export default function LobbyOverlay({
             <LobbyComposer
               chat={chat}
               onNavigate={go}
+              onOpenRoute={openRoute}
               paneLabel={paneLabel}
               panePath={panePath || "/"}
               seedPrompt={intent?.prompt}
