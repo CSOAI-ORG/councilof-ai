@@ -258,7 +258,7 @@ export default function LobbyOverlay({
     requestAnimationFrame(() => threadEndRef.current?.scrollIntoView({ block: "end" }));
   }, [chat.turnCount, chatActive]);
 
-  // ── docked (minimised) ───────────────────────────────────────────────────
+  // ── docked (minimised) ───────────────────────────────────────────────
   if (minimised) {
     return (
       <div
@@ -298,7 +298,7 @@ export default function LobbyOverlay({
     );
   }
 
-  // ── the workspace ────────────────────────────────────────────────────
+  // ── the workspace ─────────────────────────────────────────────────────
   return (
     <>
       <FocusSentinel onFocus={() => focusEdge("last")} />
@@ -333,7 +333,7 @@ export default function LobbyOverlay({
           onToggleRight={() => setRightOpen((v) => !v)}
         />
 
-        {/* ── three rails; centre (pane + ask) is the dominant column ───── */}
+        {/* ── three rails; centre (pane + ask) is the dominant column ──── */}
         <div className="flex min-h-0 flex-1 gap-3">
           {leftOpen ? (
             <LobbyPaneRail tabId={tabId} onSelect={go} onMinimise={() => setLeftOpen(false)} />
@@ -437,6 +437,7 @@ export default function LobbyOverlay({
               panePath={panePath || "/"}
               seedPrompt={intent?.prompt}
               seedNonce={intent?.nonce}
+              aguiHandle={intent?.aguiHandle}
             />
           </main>
 
