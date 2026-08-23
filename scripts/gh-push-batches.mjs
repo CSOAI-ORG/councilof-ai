@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Emit GitHub push_files batches as JSON lines for MCP / manual push.
  * Usage: node scripts/gh-push-batches.mjs [baseRef]
