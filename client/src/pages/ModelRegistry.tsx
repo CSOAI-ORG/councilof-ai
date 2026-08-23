@@ -1,9 +1,13 @@
-// Model Registry — a live view of measured model performance across the 13 GSPC axes.
+// Model Registry — OpenRouter-style models surface: GSPC axes, rankings, gateway catalog.
 // Reads /api/gspc (the signed measurement layer). No fabricated numbers, no demo data.
 // Falls back to the bundled AXES snapshot if the API is unreachable — honest about which.
 
 import { useEffect, useState } from "react";
 import { AXES, MEASURED_ON, type Axis } from "@/lib/gspcAxes";
+import MeasurementHub from "@/components/hub/MeasurementHub";
+import GatewayCatalog from "@/components/hub/GatewayCatalog";
+import { openLobby, lobbyHref } from "@/lib/lobbyLink";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 interface GspcAxis {
   axis: string;
@@ -92,8 +96,17 @@ const AXIS_LABEL: Record<string, string> = {
   affect: "Affect",
 };
 
+type RegistryTab = "axes" | "rankings" | "gateway";
+
+const TABS: { id: RegistryTab; label: string }[] = [
+  { id: "axes", label: "GSPC axes" },
+  { id: "rankings", label: "Rankings" },
+  { id: "gateway", label: "Gateway catalog" },
+];
+
 export default function ModelRegistry() {
   const { axes, source, measuredOn, loading, error, limitations, issuer } = useGspc();
+  const [tab, setTab] = useState<RegistryTab>("rankings");
 
   if (loading) {
     return (
@@ -110,19 +123,47 @@ export default function ModelRegistry() {
   const measuredCount = wireAxes.filter((a) => a.status === "MEASURED").length;
 
   return (
-    <div className="min-h-screen bg-[#04070d] text-slate-200">
+    <CouncilOsPageShell
+      title="Models"
+      subtitle="Per-axis leaders from GET /api/gspc — separated leads only"
+      className="min-h-screen bg-[#04070d] text-slate-200"
+    >
       {/* Header */}
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <a href="/os" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
-            ← Open in Council OS
-          </a>
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href={lobbyHref({ pane: "models" })}
+              onClick={(e) => {
+                e.preventDefault();
+                openLobby({ pane: "models", task: "read-the-board" });
+              }}
+              className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300"
+            >
+              ← Open in Council OS
+            </a>
+          </div>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">Model Registry</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-            Measured performance of AI models across the 13 GSPC axes. Every cell is a
-            deterministic score — no model judges another. Unmeasured cells are reported as
-            UNMEASURED, never fabricated.
+            OpenRouter-style model surface for Council measurement — live GSPC rankings, per-axis
+            leaders, and an optional LiteLLM gateway catalog when configured.
           </p>
+          <div className="mt-4 flex flex-wrap gap-1 rounded-lg border border-white/10 bg-white/5 p-1">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTab(t.id)}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                  tab === t.id
+                    ? "bg-emerald-600 text-white shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
             <span>
               {source === "wire"
@@ -132,11 +173,9 @@ export default function ModelRegistry() {
             {issuer && <span className="text-slate-600">issuer {issuer}</span>}
             <a
               className="rounded border border-white/10 px-2.5 py-1 text-emerald-400 hover:bg-white/5"
-              href="https://csoai-site.pages.dev/gspc-scoreboard"
-              target="_blank"
-              rel="noreferrer"
+              href="/gspc-scoreboard"
             >
-              Full scoreboard (19 models) ↗
+              Full scoreboard (19 models) →
             </a>
           </div>
           {limitations.length > 0 && (
@@ -150,8 +189,21 @@ export default function ModelRegistry() {
         </div>
       </header>
 
-      {/* Axis grid */}
+      {/* Tab panels */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {tab === "rankings" && (
+          <div className="rounded-xl border border-white/10 bg-[#0a0f18] p-4 text-slate-200">
+            <MeasurementHub initialTab="models" />
+          </div>
+        )}
+
+        {tab === "gateway" && (
+          <div className="rounded-xl border border-white/10 bg-[#0a0f18] p-4 text-slate-200">
+            <GatewayCatalog />
+          </div>
+        )}
+
+        {tab === "axes" && (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {wireAxes.map((a) => {
             const isMeasured = a.status === "MEASURED";
@@ -221,16 +273,17 @@ export default function ModelRegistry() {
             );
           })}
         </div>
+        )}
 
         {/* Scoreboard link footnote */}
         <div className="mt-8 border-t border-white/8 pt-4 text-center text-[11px] text-slate-600">
           This page shows per-axis leaders. The full 13×19 scoreboard with all models is at{" "}
-          <a className="text-emerald-400 hover:underline" href="https://csoai-site.pages.dev/gspc-scoreboard" target="_blank" rel="noreferrer">
+          <a className="text-emerald-400 hover:underline" href="/gspc-scoreboard">
             GSPC Scoreboard ↗
           </a>
           . Measurement, not certification. Every cell recomputable.
         </div>
       </section>
-    </div>
+    </CouncilOsPageShell>
   );
 }
