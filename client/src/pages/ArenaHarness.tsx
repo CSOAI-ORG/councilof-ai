@@ -64,7 +64,8 @@ const PHASES: {
     title: "The data vampire (downstream, not competing)",
     body:
       "Stripe/OpenRouter own the toll road — routing at scale. EUNOMIA Harness sits downstream: every prompt that passes through any router gets evaluated in our arena. We do not compete on routing. We compete on proving the routing was correct.",
-    diagram: `OpenRouter/Stripe ──► EUNOMIA Arena ──► Proof DB\n     (routes)            (evaluates)         (owns traces)`,
+    diagram: `OpenRouter/Stripe ──► EUNOMIA Arena ──► Proof DB
+     (routes)            (evaluates)         (owns traces)`,
     revenue: [
       { label: "Model vendors pay to prove they were the right route choice", register: "DESIGN" },
       { label: "Enterprises pay to audit routing bills against signed benchmarks", register: "DESIGN" },
@@ -75,7 +76,9 @@ const PHASES: {
     title: "The bond market (insurance for the toll road)",
     body:
       "Stripe bought a tollbooth. We build verification + risk: performance bonds where vendors stake collateral against live benchmark failure, legacy migration coverage for COBOL breakage, and data futures on upcoming arena seasons. Stripe handles payments; we handle attestation.",
-    diagram: `Performance bond ──► live GSPC / arena fail ──► payout (DESIGN)\nLegacy COBOL cover ──► venturi crossing ──► insurer evidence (PARTIAL)\nData futures ──► arena season N+1 traces (DESIGN)`,
+    diagram: `Performance bond ──► live GSPC / arena fail ──► payout (DESIGN)
+Legacy COBOL cover ──► venturi crossing ──► insurer evidence (PARTIAL)
+Data futures ──► arena season N+1 traces (DESIGN)`,
     revenue: [
       { label: "Performance bonds — collateral against live benchmark failure", register: "DESIGN" },
       { label: "Legacy migration insurance — COBOL→A2A venturi coverage", register: "DESIGN" },
@@ -87,7 +90,8 @@ const PHASES: {
     title: "The embodiment gap (physical substrate)",
     body:
       "Stripe is pure software. SovOS has water-pipe memory (CPO), LED visual cortex, farm-based bio-compute (iokfarm), and fly-brain neuromorphic cores — mostly PARTIAL repos today, not a shipped product line. The thesis: regulators and defense buyers will want physically verifiable AI, not a ghost in a datacenter.",
-    diagram: `Software router ──► no body\nEUNOMIA harness ──► CPO · LED · farm · neuromorphic (PARTIAL)`,
+    diagram: `Software router ──► no body
+EUNOMIA harness ──► CPO · LED · farm · neuromorphic (PARTIAL)`,
     revenue: [
       { label: "Defense / regulated physical-verifiable AI contracts", register: "DESIGN" },
     ],
