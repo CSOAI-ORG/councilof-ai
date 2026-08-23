@@ -230,6 +230,38 @@ export default function About() {
         </div>
       </div>
 
+      {/* Founder Section */}
+      <section id="founder" className="bg-gradient-to-br from-slate-900 to-slate-800 text-white py-20">
+        <div className="container max-w-5xl">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 bg-white/10 text-white border-white/20">Founder</Badge>
+            <h2 className="text-4xl font-bold mb-4">Founded by Nicholas Templeman</h2>
+            <p className="text-xl text-slate-300 leading-relaxed max-w-3xl mx-auto">
+              CSOAI (Council of AI) is the independent AI measurement body — no certification, no
+              accreditation chain, no fees from anything it ranks. Founded by Nicholas Templeman,
+              it measures against frozen instruments and publishes Ed25519-signed, offline-verifiable
+              records so anyone can check the evidence for themselves.
+            </p>
+          </div>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+            <div className="flex-shrink-0">
+              <img src="/images/founder-nicholas-templeman.jpg"
+                alt="Nicholas Templeman — Founder, Council of AI (CSOAI)"
+                className="w-56 h-56 object-cover rounded-2xl shadow-xl ring-1 ring-white/20" />
+            </div>
+            <div className="text-center md:text-left">
+              <h3 className="text-2xl font-bold">Nicholas Templeman</h3>
+              <p className="text-emerald-300 font-semibold mt-1">Founder — Council of AI (CSOAI)</p>
+              <p className="text-slate-300 mt-3 max-w-xl leading-relaxed">
+                CSOAI Ltd (UK Companies House 16939677). Independent measurement body for AI behaviour:
+                deterministic grading on frozen instruments, Ed25519-signed credentials, honest UNMEASURED,
+                and re-attestation on a cadence. Measurement, not certification.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Global Presence Section */}
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
