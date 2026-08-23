@@ -34,18 +34,6 @@ const PROBES = [
     cmd: "curl -sS https://councilof.ai/api/finance/bond-crossing | jq '.register, .attestation.content_hash'",
   },
   {
-    id: "signal",
-    title: "SOV Signal Index",
-    desc: "Regulation × crosswalk × GSPC × arena sim — composed, not fused",
-    cmd: "curl -sS https://councilof.ai/api/signal | jq '.schema, .totals, .signals[0].registers'",
-  },
-  {
-    id: "cross",
-    title: "Divergence layer",
-    desc: "Law × measured AI × reported human baseline",
-    cmd: "curl -sS https://councilof.ai/api/cross | jq '.schema, .rows[0].axis'",
-  },
-  {
     id: "agui",
     title: "AG-UI wire",
     desc: "503 until AGUI_WIRE_URL — then 200 + session_id",
