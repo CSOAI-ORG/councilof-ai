@@ -43,7 +43,8 @@ const OUT = join(ROOT, "public/_redirects");
 // Static asset directories served directly by Pages — must NOT be routed to the app.
 // /sov-space is no longer a public tree: it 308s to /gspc-arena (Council Space).
 const STATIC_DIRS = ["/arena", "/benchmarks", "/vendor", "/assets",
-                     "/.well-known", "/corpus-watch", "/flywheel", "/packs"];
+                     "/.well-known", "/corpus-watch", "/flywheel", "/packs",
+                     "/datasets"]; // signed licensable dataset bundle: serve the raw files, not the SPA shell
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
