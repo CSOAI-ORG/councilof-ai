@@ -13,8 +13,10 @@
 //   • Every asserted field is verifiable: the HF datasets exist under the csoai
 //     org and are licensed CC-BY-4.0; the concept DOI resolves and is the same
 //     DOI GET /api/gspc publishes as the board's citable identifier.
-//   • The concept DOI is attached to the BOARD only. The per-axis banks do not
-//     yet have their own minted DOIs, so no per-axis `identifier` is asserted.
+//   • The concept DOI is attached to the BOARD only. Per-axis DOIs are attached
+//     where a bank's DOI has been minted and the axis is in the single source of
+//     truth (AXES). Axes minted but not yet in AXES await registry inclusion —
+//     no constructed identifiers, no invented DOIs.
 
 import { AXES } from "./gspcAxes";
 
@@ -27,6 +29,29 @@ export const GSPC_DOI = "10.5281/zenodo.21991104";
 /** CC-BY-4.0 — the license carried by every csoai/gspc-* dataset on HF and
  *  reported in the /api/gspc license field. */
 export const GSPC_LICENSE = "https://creativecommons.org/licenses/by/4.0/";
+
+/** Per-axis minted DOIs (Zenodo, 2026-08-23). Keyed by AXES axis id. Only
+ *  axes whose bank is in the registry AND whose DOI is minted appear here —
+ *  a DOI is never guessed. Minted-but-unregistered axes (the 10 new banks)
+ *  are documented in AXES_ACCEPTING_DOIS and wired once the registry adds them. */
+export const GSPC_AXIS_DOIS: Record<string, string> = {
+  safety: "10.5281/zenodo.22070699",
+  continuity: "10.5281/zenodo.22070703",
+};
+
+/** Axis banks with a minted Zenodo DOI but not yet in the AXES registry
+ *  (board-count expansion is the canon owner's call). Listed here so the
+ *  identifier wiring is a one-line addition when each axis lands. */
+export const AXES_ACCEPTING_DOIS: Record<string, string> = {
+  transparency: "10.5281/zenodo.22070706",
+  accountability: "10.5281/zenodo.22070711",
+  creativity: "10.5281/zenodo.22070713",
+  efficiency: "10.5281/zenodo.22070715",
+  fairness: "10.5281/zenodo.22070718",
+  "human-vs-ai": "10.5281/zenodo.22070721",
+  slot15: "10.5281/zenodo.22070723",
+  sovereignty: "10.5281/zenodo.22070725",
+};
 
 /** The estate's canonical publisher node. */
 export const GSPC_CREATOR = {
@@ -47,7 +72,8 @@ const hfUrl = (slug: string) => `https://huggingface.co/datasets/${slug}`;
 export function gspcAxisDatasets(): Record<string, unknown>[] {
   return AXES.filter((a) => a.dataset).map((a) => {
     const hf = hfUrl(a.dataset as string);
-    return {
+    const doi = GSPC_AXIS_DOIS[a.axis];
+    const node: Record<string, unknown> = {
       "@type": "Dataset",
       name: `GSPC — ${a.axis} bank (${a.bench})`,
       description: a.task,
@@ -64,6 +90,12 @@ export function gspcAxisDatasets(): Record<string, unknown>[] {
         { "@type": "DataDownload", encodingFormat: "application/json", contentUrl: hf },
       ],
     };
+    // A minted DOI makes the bank citable; it is only asserted when real.
+    if (doi) {
+      node.identifier = doi;
+      node.citation = `https://doi.org/${doi}`;
+    }
+    return node;
   });
 }
 
