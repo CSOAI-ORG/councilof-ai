@@ -61,8 +61,8 @@ async function mockCouncilApis(page: Page) {
 }
 
 async function openCouncilOs(page: Page) {
-  await expect(page.getByRole("button", { name: "Open Council OS" })).toBeVisible({ timeout: 15_000 });
-  await page.getByRole("link", { name: "Council OS" }).click();
+  await expect(page.getByRole("button", { name: "Open Council OS" }).first()).toBeVisible({ timeout: 15_000 });
+  await page.getByRole("button", { name: "Open Council OS" }).first().click();
   await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
 }
 
@@ -82,7 +82,7 @@ test.describe("Council OS workspace", () => {
     await dismissCookieBanner(page);
     await expect(page.getByRole("button", { name: "Workspace" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Agents" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Council OS" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Open Council OS" }).first()).toBeVisible();
     await assertNoCriticalErrors(page);
   });
 
@@ -92,6 +92,25 @@ test.describe("Council OS workspace", () => {
     await page.locator("#footer-site-map-heading").scrollIntoViewIfNeeded();
     await expect(page.getByRole("heading", { name: "Explore the site" })).toBeVisible();
     await expect(page.getByText("Regulation", { exact: true }).first()).toBeVisible();
+    await assertNoCriticalErrors(page);
+  });
+
+  test("master side menu groups expand and open ecosystem pane", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await openCouncilOs(page);
+
+    const menu = page.getByRole("navigation", { name: "Council OS master menu" });
+    await expect(menu).toBeVisible();
+    await expect(menu.getByText("Master menu")).toBeVisible();
+    await expect(menu.getByText("Measurement", { exact: true })).toBeVisible();
+
+    await menu.getByRole("tab", { name: "Hive index" }).click();
+    await expect(page.getByText("Ecosystem index")).toBeVisible({ timeout: 10_000 });
+
+    await menu.getByRole("tab", { name: "MCP tools" }).click();
+    await expect(page.getByText("Eunomia MCP spine")).toBeVisible({ timeout: 10_000 });
+
     await assertNoCriticalErrors(page);
   });
 
