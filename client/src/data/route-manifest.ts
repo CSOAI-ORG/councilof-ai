@@ -38,6 +38,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Accessibility"
  },
  {
+  "path": "/accountability-loop",
+  "comp": "AccountabilityLoop",
+  "title": "Accountability Loop"
+ },
+ {
   "path": "/accreditation",
   "comp": "Accreditation",
   "title": "Accreditation"
@@ -198,6 +203,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Benchmark Index"
  },
  {
+  "path": "/benchmark-quality",
+  "comp": "BenchmarkQuality",
+  "title": "Benchmark Quality"
+ },
+ {
   "path": "/benchmarks",
   "comp": "Benchmarks",
   "title": "Benchmarks"
@@ -276,6 +286,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/cobol",
   "comp": "LegacyBridge",
   "title": "Legacy Bridge"
+ },
+ {
+  "path": "/coliseum",
+  "comp": "Coliseum",
+  "title": "Coliseum"
  },
  {
   "path": "/command-center",
@@ -588,6 +603,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Evidence Hub"
  },
  {
+  "path": "/evidence-rail",
+  "comp": "EvidenceRail",
+  "title": "Evidence Rail"
+ },
+ {
   "path": "/faq",
   "comp": "FAQ",
   "title": "FAQ"
@@ -801,6 +821,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/gspc-arena",
   "comp": "CouncilSpace",
   "title": "Council Space"
+ },
+ {
+  "path": "/gspc-arena?view=benchmarks",
+  "comp": "BenchmarkView",
+  "title": "Benchmarks | Council OS"
  },
  {
   "path": "/gspc-gap-map",
@@ -1168,6 +1193,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Methodology"
  },
  {
+  "path": "/metrology",
+  "comp": "Metrology",
+  "title": "Metrology"
+ },
+ {
   "path": "/minds",
   "comp": "SovereignMinds",
   "title": "Sovereign Minds"
@@ -1176,6 +1206,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/models",
   "comp": "ModelRegistry",
   "title": "Model Registry"
+ },
+ {
+  "path": "/motion-lab",
+  "comp": "MotionLab",
+  "title": "Motion Lab"
  },
  {
   "path": "/my-applications",
@@ -1236,6 +1271,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/open-media",
   "comp": "OpenMedia",
   "title": "Open Media"
+ },
+ {
+  "path": "/open-source",
+  "comp": "OpenSourceFramework",
+  "title": "Open Source Framework"
  },
  {
   "path": "/opengridworks",
@@ -1628,6 +1668,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Status Page"
  },
  {
+  "path": "/statute-to-predicate",
+  "comp": "StatuteToPredicate",
+  "title": "Statute To Predicate"
+ },
+ {
   "path": "/stripe-checkout.js",
   "comp": "Gone",
   "title": "Gone"
@@ -1738,9 +1783,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Why CSOAI"
  },
  {
-  "path": "/verify",
-  "comp": "Article50Pack",
-  "title": "Article50 Pack"
+  "path": "/verifiable-trust",
+  "comp": "VerifiableTrust",
+  "title": "Verifiable Trust"
  },
  {
   "path": "/verify-certificate",
@@ -1821,6 +1866,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/welcome",
   "comp": "Welcome",
   "title": "Welcome"
+ },
+ {
+  "path": "/where-the-record-lives",
+  "comp": "WhereTheRecordLives",
+  "title": "Where The Record Lives"
  },
  {
   "path": "/why",
