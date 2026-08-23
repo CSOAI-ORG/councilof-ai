@@ -104,6 +104,7 @@ function discover() {
     "/legal/disclaimers", "/legal/dpa", "/legal/founding-council", "/legal/membership",
     "/legal/sla", "/licensing-agreement", "/terms-of-service", "/privacy",
     "/pricing-legacy", "/council-licensing",
+    "/benchmark-quality", "/benchmark-index", "/benchmarks", "/compare", "/leaderboard",
   ];
   for (const p of MUST) found.add(p);
   return [...found].filter(p => !p.includes(":") && !p.includes("*")).sort();
