@@ -14,7 +14,8 @@ const base = process.argv[2] || "origin/cursor/instruments-catalog-7fb8";
 const files = execSync(`git diff --name-only ${base}..HEAD`, { cwd: ROOT, encoding: "utf8" })
   .trim()
   .split("\n")
-  .filter(Boolean);
+  .filter(Boolean)
+  .filter((rel) => fs.existsSync(path.join(ROOT, rel)));
 
 const manifest = files.map((rel, i) => ({
   index: i,
