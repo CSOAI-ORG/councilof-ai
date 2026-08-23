@@ -15,14 +15,17 @@ import { lobbyHref, openLobby } from "@/lib/lobbyLink";
  * invented metrics, no killed/branded routes.
  */
 
-type NavGroup = { label: string; items: { name: string; href: string; note?: string; badge?: string }[] };
+type NavGroup = {
+  label: string;
+  items: { name: string; href: string; note?: string; badge?: string; task?: Parameters<typeof openLobby>[0]["task"]; pane?: Parameters<typeof openLobby>[0]["pane"] }[];
+};
 
 const NAV: NavGroup[] = [
   {
     label: "Play",
     items: [
       { name: "Council Town", href: "#council-town", note: "the agent-town game", badge: "live" },
-      { name: "The Arena", href: "/gspc-arena", note: "model vs model" },
+      { name: "The Arena", href: "/gspc-arena", note: "model vs model", pane: "space" },
       { name: "Live demo & tour", href: "/demo", note: "watch it run" },
     ],
   },
@@ -30,19 +33,22 @@ const NAV: NavGroup[] = [
     label: "Measure",
     items: [
       { name: "GSPC axes", href: "#axes", note: "living board · counts from /api/gspc" },
-      { name: "Benchmarks", href: "/benchmarks", note: "every result" },
-      { name: "Verify a card", href: "/gspc-verify", note: "offline check" },
-      { name: "Methodology", href: "/methodology", note: "how we grade" },
+      { name: "Live board", href: "/gspc-scoreboard", note: "signed scores", pane: "board" },
+      { name: "Results", href: "/benchmarks", note: "every artefact-bound figure", pane: "results" },
+      { name: "Models", href: "/models", note: "ranked by signed scores", pane: "models" },
+      { name: "Verify a card", href: "/gspc-verify", note: "offline check", pane: "verify" },
+      { name: "Methodology", href: "/methodology", note: "how we grade", task: "browse-methodology" },
     ],
   },
   {
     label: "Tools",
     items: [
-      { name: "Framework Hive", href: "/hive" },
-      { name: "Governance Graph", href: "/graph" },
-      { name: "System Card", href: "/system-card" },
-      { name: "Watchdog map", href: "/watchdog-map" },
-      { name: "Status", href: "/status" },
+      { name: "Published tools", href: "/tools", pane: "tools" },
+      { name: "Workbench", href: "/workbench", pane: "workbench" },
+      { name: "Library", href: "/library", pane: "library" },
+      { name: "Framework Hive", href: "/hive", task: "browse-hive" },
+      { name: "System Card", href: "/system-card", task: "browse-system-card" },
+      { name: "Watchdog map", href: "/watchdog-map", pane: "watchdog" },
     ],
   },
   {
@@ -71,6 +77,22 @@ function NavLink({ item }: { item: NavGroup["items"][number] }) {
   if (isAnchor) {
     return (
       <a href={item.href} className={cls}>
+        {inner}
+        {item.note && <span className="block text-[11px] font-normal text-slate-400 group-hover:text-emerald-600/70">{item.note}</span>}
+      </a>
+    );
+  }
+  if (item.pane || item.task) {
+    const href = lobbyHref({ pane: item.pane, task: item.task, path: "/os" });
+    return (
+      <a
+        href={href}
+        className={cls}
+        onClick={(e) => {
+          e.preventDefault();
+          openLobby({ pane: item.pane, task: item.task });
+        }}
+      >
         {inner}
         {item.note && <span className="block text-[11px] font-normal text-slate-400 group-hover:text-emerald-600/70">{item.note}</span>}
       </a>

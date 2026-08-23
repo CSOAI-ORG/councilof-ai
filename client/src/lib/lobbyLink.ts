@@ -53,10 +53,21 @@ export type LobbyTaskId =
   | "enterprise-start"
   | "sector-brief"
   | "browse-models"
-  | "browse-tools";
+  | "browse-tools"
+  | "browse-results"
+  | "browse-workbench"
+  | "browse-instrument"
+  | "browse-system-card"
+  | "browse-fleet"
+  | "browse-crosswalk"
+  | "regulation-feed"
+  | "browse-methodology"
+  | "browse-hive";
 
 export interface LobbyTask {
   pane: LobbyTabId;
+  /** Optional live route to frame instead of the pane's default path. */
+  route?: string;
   /** Label for a CTA that has none of its own. */
   label: string;
   /** The seeded first message. `ctx` is the subject the caller passed, if any. */
@@ -132,12 +143,13 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
   },
   "honesty-audit": {
     pane: "home",
+    route: "/honesty",
     label: "Read the honesty ledger",
     prompt: () =>
       "What does the honesty page publish about corrections, refusals, and what the Council got wrong?",
   },
   "library-research": {
-    pane: "home",
+    pane: "library",
     label: "Research the method",
     prompt: () =>
       "What is published in the library about the measurement method, the n, and which materials are reproducible?",
@@ -182,10 +194,73 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
     prompt: () =>
       "What tooling is published, and how do I run it inside Council OS without treating a tool as a certificate?",
   },
+  "browse-results": {
+    pane: "results",
+    label: "Open measured results",
+    prompt: () =>
+      "Which measured results name a published artefact, and which rows are empty or a loss?",
+  },
+  "browse-workbench": {
+    pane: "workbench",
+    label: "Open the workbench",
+    prompt: () =>
+      "What can the workbench run today, and what does it explicitly not certify?",
+  },
+  "browse-instrument": {
+    pane: "home",
+    route: "/instrument",
+    label: "Open the instrument",
+    prompt: () =>
+      "What do the four lenses actually run, and what stays out of the verdict path?",
+  },
+  "browse-system-card": {
+    pane: "home",
+    route: "/system-card",
+    label: "Open the system card",
+    prompt: () =>
+      "What does the system card attest, and how do I verify it offline?",
+  },
+  "browse-fleet": {
+    pane: "home",
+    route: "/mcp-fleet",
+    label: "Open the MCP fleet",
+    prompt: () =>
+      "What does the published fleet manifest list, and how is that not a marketplace?",
+  },
+  "browse-crosswalk": {
+    pane: "home",
+    route: "/crosswalk",
+    label: "Open the framework crosswalk",
+    prompt: () =>
+      "What does this crosswalk map, and why is it not a signed score?",
+  },
+  "regulation-feed": {
+    pane: "home",
+    route: "/feed",
+    label: "Open the regulation feed",
+    prompt: () =>
+      "What does the published regulation feed say moved, and what is its source?",
+  },
+  "browse-methodology": {
+    pane: "home",
+    route: "/methodology",
+    label: "Open the methodology",
+    prompt: () =>
+      "How is a figure graded — gold labels, minimum n, and what stays out of the verdict?",
+  },
+  "browse-hive": {
+    pane: "home",
+    route: "/hive",
+    label: "Open the hive",
+    prompt: () =>
+      "What frameworks and groups are published in the hive, and what is left unnamed?",
+  },
 };
 
 export interface LobbyIntent {
   pane: LobbyTabId;
+  /** Frame this live route when a task points at a Home-desktop page. */
+  route?: string;
   /** Typed into the chat bar. Never sent. */
   prompt: string;
   ctx?: string;
@@ -258,8 +333,10 @@ export function resolveIntent(input: {
   const prompt = explicit ?? (task ? LOBBY_TASKS[task].prompt(ctx) : undefined);
 
   if (!pane && !prompt) return null;
+  const route = task && LOBBY_TASKS[task].route ? LOBBY_TASKS[task].route : undefined;
   return {
     pane: pane ?? "home",
+    route,
     prompt: prompt ?? "",
     ctx,
     task,

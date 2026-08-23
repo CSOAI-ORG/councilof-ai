@@ -102,6 +102,8 @@ function discover() {
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/watchdog", "/disclaimers", "/csoai-law",
     "/models", "/tools",
+    "/workbench", "/instrument", "/system-card", "/feed", "/mcp-fleet",
+    "/crosswalk", "/refutation-ledger", "/library",
   ];
   for (const p of MUST) found.add(p);
   const routes = [...found].filter(p => !p.includes(":") && !p.includes("*"));

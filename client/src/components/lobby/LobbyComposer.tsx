@@ -14,6 +14,7 @@ import type { LobbyChat } from "./useLobbyChat";
 export default function LobbyComposer({
   chat,
   onNavigate,
+  onOpenRoute,
   paneLabel,
   panePath,
   seedPrompt,
@@ -22,6 +23,7 @@ export default function LobbyComposer({
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
+  onOpenRoute?: (path: string, label: string) => void;
   paneLabel: string;
   panePath: string;
   seedPrompt?: string;
@@ -100,7 +102,7 @@ export default function LobbyComposer({
     setQ("");
     setSeeded(false);
     setAsksOpen(false);
-    void chat.send(text, onNavigate);
+    void chat.send(text, onNavigate, onOpenRoute);
   }
 
   return (

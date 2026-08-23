@@ -31,6 +31,9 @@ describe("tabForPath", () => {
     expect(tabForPath("/dashboard")?.id).toBe("software");
     expect(tabForPath("/models")?.id).toBe("models");
     expect(tabForPath("/tools")?.id).toBe("tools");
+    expect(tabForPath("/benchmarks")?.id).toBe("results");
+    expect(tabForPath("/library")?.id).toBe("library");
+    expect(tabForPath("/workbench")?.id).toBe("workbench");
   });
 
   it("matches a nested path under a pane", () => {

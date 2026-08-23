@@ -202,6 +202,55 @@ const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
     ],
   },
   {
+    test: /^\/benchmarks/,
+    asks: [
+      "Which measured results on this page name a published artefact, and which are empty?",
+      "What does a loss on this page mean, and where is it recorded?",
+    ],
+  },
+  {
+    test: /^\/instrument/,
+    asks: [
+      "What do the four lenses actually run, and what stays out of the verdict path?",
+      "How does the instrument differ from the living board?",
+    ],
+  },
+  {
+    test: /^\/workbench/,
+    asks: [
+      "What can the workbench run today, and what does it explicitly not certify?",
+      "Which artefacts on this desk are signed, and how do I verify one?",
+    ],
+  },
+  {
+    test: /^\/system-card/,
+    asks: [
+      "What does the system card attest, and what does it refuse to certify?",
+      "How do I verify this card offline against the published key?",
+    ],
+  },
+  {
+    test: /^\/feed/,
+    asks: [
+      "What does the published regulation feed say moved, and what is its source?",
+      "Which recorded deltas are in force versus deferred?",
+    ],
+  },
+  {
+    test: /^\/crosswalk/,
+    asks: [
+      "What does this crosswalk map, and why is it not a signed score?",
+      "Which frameworks are named here, and which cells stay empty?",
+    ],
+  },
+  {
+    test: /^\/(mcp-fleet|mcp$)/,
+    asks: [
+      "What MCP servers are published here, and how do I connect one without treating it as a certificate?",
+      "Where does the live count come from, and what is not a marketplace listing?",
+    ],
+  },
+  {
     test: /^\/(start|enterprise)/,
     asks: [
       "What does enterprise measurement actually run, and what does the result attest?",

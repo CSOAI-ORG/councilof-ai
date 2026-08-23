@@ -117,6 +117,8 @@ const PERSONA_SLASH = [
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
   "models", "tools",
+  "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
+  "refutation-ledger",
 ];
 const PERSONA_FOR_SLASH = [
   "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
