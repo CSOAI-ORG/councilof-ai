@@ -3,27 +3,25 @@ import { CONTROL, FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
 import LobbyReports from "./LobbyReports";
 import LobbyTaskRail from "./LobbyTaskRail";
 import LobbyChats from "./LobbyChats";
+import LobbyToolingRail from "./LobbyToolingRail";
 import type { LobbyChat } from "./useLobbyChat";
 
 /**
- * LobbySideRail — the RIGHT rail, with three switchable sections.
+ * LobbySideRail — the RIGHT rail, with four switchable sections.
  *
  *   Reports  the signed / public artefacts, with honest live-or-failed states
  *   Tasks    the running checks (the fetches this lobby makes on your behalf)
  *   Chats    this session's threads, in memory, and the rail says so
- *
- * Same ARIA contract as the left rail, horizontal this time: role="tablist"
- * aria-orientation="horizontal", roving tabindex so the switcher is a single Tab
- * stop, ←/→ to move, Home/End to jump. The rail itself is collapsible from the
- * header; when it is hidden nothing here is mounted, so the fetches stop too.
+ *   Tooling  quick links to depth surfaces (batch assess, engine axis, firewall, …)
  */
 
-type SectionId = "reports" | "tasks" | "chats";
+type SectionId = "reports" | "tasks" | "chats" | "tooling";
 
 const SECTIONS: { id: SectionId; label: string; hint: string }[] = [
   { id: "reports", label: "Reports", hint: "Signed and public artefacts" },
   { id: "tasks", label: "Tasks", hint: "Checks running right now" },
   { id: "chats", label: "Chats", hint: "Threads in this session" },
+  { id: "tooling", label: "Tooling", hint: "Depth surfaces beside the dock" },
 ];
 
 const domId = (id: SectionId) => `coai-lobby-section-${id}`;
@@ -31,9 +29,11 @@ const PANEL = "coai-lobby-section-panel";
 
 export default function LobbySideRail({
   chat,
+  onOpenRoute,
   onMinimise,
 }: {
   chat: LobbyChat;
+  onOpenRoute?: (path: string, label: string) => void;
   onMinimise?: () => void;
 }) {
   const [section, setSection] = useState<SectionId>("reports");
@@ -63,7 +63,7 @@ export default function LobbySideRail({
 
   return (
     <aside
-      aria-label="Reports, tasks and chats"
+      aria-label="Reports, tasks, chats and tooling"
       className={`${SURFACE} ${SP.rail} flex h-full w-full flex-col`}
       style={panelStyle}
     >
@@ -86,7 +86,7 @@ export default function LobbySideRail({
         aria-orientation="horizontal"
         aria-label="Side rail sections"
         onKeyDown={onKeyDown}
-        className="mb-4 flex gap-1 rounded-xl bg-slate-900/5 p-1"
+        className="mb-4 flex flex-wrap gap-1 rounded-xl bg-slate-900/5 p-1"
       >
         {SECTIONS.map((s) => {
           const on = s.id === section;
@@ -102,7 +102,7 @@ export default function LobbySideRail({
               title={s.hint}
               onClick={() => setSection(s.id)}
               className={
-                `flex-1 rounded-lg px-3 py-1.5 text-[12px] font-semibold transition ` +
+                `flex-1 min-w-[4.5rem] rounded-lg px-2 py-1.5 text-[11px] font-semibold transition ` +
                 `motion-reduce:transition-none ${FOCUS} ` +
                 (on ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900")
               }
@@ -118,15 +118,20 @@ export default function LobbySideRail({
         role="tabpanel"
         aria-labelledby={domId(section)}
         tabIndex={0}
-        className={`min-h-0 flex-1 ${FOCUS}`}
+        className={`min-h-0 flex-1 overflow-hidden ${FOCUS}`}
       >
         <p className="sr-only">{current.hint}</p>
         {section === "reports" && <LobbyReports />}
         {section === "tasks" && <LobbyTaskRail />}
         {section === "chats" && <LobbyChats chat={chat} />}
+        {section === "tooling" && (
+          <div className="h-full overflow-y-auto pr-1">
+            <LobbyToolingRail onOpenRoute={onOpenRoute} />
+          </div>
+        )}
       </div>
 
-      <p className={`pt-4 ${TYPE.fine}`}>
+      <p className={`shrink-0 pt-4 ${TYPE.fine}`}>
         <span className="font-semibold text-slate-600">← →</span> move between sections.
       </p>
     </aside>
