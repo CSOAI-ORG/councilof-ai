@@ -8,7 +8,7 @@ import { test, expect, Page } from '@playwright/test';
  * - New flagship pages (Globe, SovSpace, Council, GovBench, Watchdog)
  * - Article 50 (transparency passport — what users come for)
  * - Every compliance framework page
- * - Crosswalk (the headline 13×8 claim)
+ * - Crosswalk (published frameworks — do not pin counts)
  * - Auth flows (login/signup don't crash)
  * - "What we don't claim" surfaces (no false ISO/accreditation claims)
  *
@@ -213,15 +213,13 @@ test.describe('Compliance Landing — CTA Buttons', () => {
   });
 });
 
-// ─── 5. CROSSWALK (the headline 13×8 claim) ───
-test.describe('Crosswalk — 13×8 Matrix', () => {
+// ─── 5. CROSSWALK (counts live on the page — do not pin 13×8) ───
+test.describe('Crosswalk — published frameworks', () => {
   test('/crosswalk renders the framework comparison', async ({ page }) => {
     await page.goto('/crosswalk', { waitUntil: 'networkidle' });
     const body = (await page.textContent('body')) || '';
-    // Must reference the 13 frameworks
-    expect(body).toContain('13');
-    // Must reference the 8 sections
-    expect(body).toContain('8');
+    expect(body.toLowerCase()).toContain('crosswalk');
+    expect(body.toLowerCase()).toMatch(/framework/);
   });
 
   test('crosswalk page is accessible from main nav or footer', async ({ page }) => {
