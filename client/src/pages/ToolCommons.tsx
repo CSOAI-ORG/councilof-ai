@@ -15,7 +15,7 @@ export default function ToolCommons() {
     try { const r = await fetch(GW + "/tools?q=" + encodeURIComponent(term)); if (r.ok) setData(await r.json()); } catch (e) {}
     setLoading(false);
   }
-  function copy(cmd: string, name: string) { try { navigator.clipboard.writeText(cmd); setCopied(name); setTimeout(() => setCopied(""), 1200); } catch (e) {}
+  function copy(cmd: string, name: string) { try { navigator.clipboard.writeText(cmd); setCopied(name); setTimeout(() => setCopied(""), 1200); } catch (e) {} }
   const matches = (data && data.matches) || [];
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
