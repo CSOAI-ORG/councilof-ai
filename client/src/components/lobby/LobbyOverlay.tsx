@@ -232,7 +232,7 @@ export default function LobbyOverlay({
           className="flex min-w-0 flex-1 flex-col overflow-hidden"
         >
           <div className="flex flex-wrap items-center gap-x-3 border-b border-slate-900/10 px-4 py-2">
-            <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
+            <span className="text-[12px] font-semibold text-slate-900">{paneLabel}</span>
             <span className={`hidden truncate md:inline ${TYPE.fine}`}>{tab.blurb}</span>
             {tab.path && showWorkspace && (
               <button
