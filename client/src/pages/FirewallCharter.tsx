@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { setMetaDescription } from "@/lib/utils";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 /**
  * /firewall-charter — the Measurement/Remediation Firewall Charter.
@@ -55,7 +55,11 @@ export default function FirewallCharter() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
+    <CouncilOsPageShell
+      title="Firewall charter"
+      subtitle="Measurement never fixes — published independence commitment"
+      className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white"
+    >
       <div className="mx-auto max-w-3xl px-6 py-16">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
           Council of AI — published commitment
@@ -95,6 +99,6 @@ export default function FirewallCharter() {
           </p>
         </div>
       </div>
-    </div>
+    </CouncilOsPageShell>
   );
 }
