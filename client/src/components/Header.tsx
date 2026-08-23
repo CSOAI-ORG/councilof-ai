@@ -44,6 +44,8 @@ const navigation: NavGroup[] = [
     description: 'The instrument and its board',
     submenu: [
       { name: 'The GSPC board', href: '/gspc-scoreboard', description: 'The living board — measured axes, empty cells empty. Counts from GET /api/gspc' },
+      { name: 'Measured models', href: '/models', description: 'Ranked by signed GSPC scores, not tokens' },
+      { name: 'Published tools', href: '/tools', description: 'MCP you can run — not a marketplace' },
       { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
       { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head, deterministic grading, no model judging another' },
       { name: 'Verify a signed card', href: '/gspc-verify', description: 'Check any Ed25519-signed record offline against the published key' },
@@ -309,8 +311,9 @@ export function Header() {
               href={lobbyHref({ pane: 'home' })}
               onClick={(e) => { e.preventDefault(); openLobby({ pane: 'home' }); }}
               className="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800"
+              title="Chat is Council OS — the AG UI"
             >
-              Council OS
+              Chat
             </a>
 
             {/* "Verify a card" removed from the header 2026-08-21 (owner call): the
@@ -420,8 +423,9 @@ export function Header() {
                 href={lobbyHref({ pane: 'home' })}
                 className="block px-4 py-3 rounded-lg font-medium text-emerald-800 bg-emerald-50"
                 onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); openLobby({ pane: 'home' }); }}
+                title="Chat is Council OS — the AG UI"
               >
-                Council OS
+                Chat
               </a>
 
               {navigation.map((item) => (
