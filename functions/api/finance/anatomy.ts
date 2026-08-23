@@ -15,7 +15,8 @@ const ANATOMY = {
   financial_axes: {
     slots: "18–25",
     count: 8,
-    register: "PLANNED / SPEC / PARTIAL / GAP",
+    register: "slot 18 MEASURED (synthetic pilot) · others PLANNED / SPEC / PARTIAL / GAP",
+    measured_slot_18: "GET /api/finance/bond-crossing",
     surface: "https://councilof.ai/engine-axis",
   },
   bridge_layers: ["cobol-a2a", "banks-insurance", "east-west", "stocks-bonds"],
@@ -39,8 +40,11 @@ const ANATOMY = {
   first_repo: { name: "CSOAI-ORG/cobol-a2a-bridge-mcp", register: "SPEC" },
   endpoints: {
     settle: "POST https://councilof.ai/api/finance/settle",
+    bond_crossing: "GET https://councilof.ai/api/finance/bond-crossing",
     instruments: "GET https://councilof.ai/api/instruments",
     gspc: "GET https://councilof.ai/api/gspc",
+    receipt_spec: "https://councilof.ai/receipt-spec",
+    measurement_card_schema: "https://councilof.ai/.well-known/schemas/agent-measurement-card.schema.json",
   },
   surfaces: {
     engine_axis: "https://councilof.ai/engine-axis",
