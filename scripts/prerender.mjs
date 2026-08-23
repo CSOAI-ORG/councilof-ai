@@ -113,6 +113,13 @@ function discover() {
     "/legal/disclaimers", "/legal/dpa", "/legal/founding-council", "/legal/membership",
     "/legal/sla", "/licensing-agreement", "/terms-of-service", "/privacy",
     "/pricing-legacy", "/council-licensing",
+    // Benchmark surfaces (2026-08-23 audit: 404'd live — heuristic discovery misses
+    // route-manifest paths). Council OS layer URLs carry ?view= query strings that
+    // heuristic discovery never sees; snapshot each so the static host serves them
+    // exactly as it does for arena/towns (query-string-named snapshot dirs).
+    "/benchmark-quality", "/benchmark-index", "/benchmarks", "/compare", "/leaderboard",
+    "/gspc-arena?view=benchmarks",
+    "/gspc-arena?view=arena", "/gspc-arena?view=globe", "/gspc-arena?view=towns",
   ];
   for (const p of MUST) found.add(p);
   const routes = [...found].filter(p => !p.includes(":") && !p.includes("*"));

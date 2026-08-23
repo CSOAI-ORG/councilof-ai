@@ -17,6 +17,7 @@ import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } 
 // 2026-08-01). The old routes redirect here with ?view=.
 const ArenaView = lazy(() => import("./GSPCArena"));
 const TownsView = lazy(() => import("./SovereignTown"));
+const BenchmarkView = lazy(() => import("./BenchmarkView"));
 
 function GlobeView() {
   const search = useSearch();
@@ -91,6 +92,7 @@ const SS_VIEWS = [
   { id: "arena", label: "🏟 Arena", href: "/gspc-arena?view=arena" },
   { id: "globe", label: "🌍 Globe", href: "/gspc-arena?view=globe" },
   { id: "towns", label: "🇦 Towns", href: "/gspc-arena?view=towns" },
+  { id: "benchmarks", label: "📊 Benchmarks", href: "/gspc-arena?view=benchmarks" },
 ] as const;
 
 type SovViewId = (typeof SS_VIEWS)[number]["id"];
@@ -590,7 +592,8 @@ export default function CouncilSpace() {
           {view === "arena" && (<><ArenaEvidenceStrip /><ArenaView /></>)}
           {view === "globe" && <GlobeView />}
           {view === "towns" && <TownsView />}
-          {view !== "arena" && view !== "globe" && view !== "towns" && (
+          {view === "benchmarks" && <BenchmarkView />}
+          {view !== "arena" && view !== "globe" && view !== "towns" && view !== "benchmarks" && (
             <div className="mx-auto max-w-6xl px-6 py-16 text-emerald-300/60">Unknown layer “{view}” — pick one above.</div>
           )}
         </Suspense>
