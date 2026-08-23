@@ -11,7 +11,7 @@ import { useLobbyChat } from "./useLobbyChat";
 import { ALPHA_DEFAULT, ALPHA_MAX, ALPHA_MIN, FOCUS, SP, SURFACE_LIFTED, TYPE } from "./glass";
 import type { LobbyIntent } from "@/lib/lobbyLink";
 import { tabForPath } from "@/lib/embed";
-import { setOsOpen } from "@/lib/osChrome";
+import { setOsOpen, setOsDockWidth } from "@/lib/osChrome";
 import { isWorkspaceTab } from "./lobbyNav";
 import {
   LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
@@ -63,6 +63,7 @@ export default function LobbyOverlay({
   const [location, setLocation] = useLocation();
 
   const threadEndRef = useRef<HTMLDivElement>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
   const chat = useLobbyChat();
   const tab = tabById(tabId);
 
@@ -73,8 +74,34 @@ export default function LobbyOverlay({
 
   useEffect(() => {
     setOsOpen(!minimised);
-    return () => setOsOpen(false);
+    return () => {
+      setOsOpen(false);
+      setOsDockWidth(0);
+    };
   }, [minimised]);
+
+  // Keep site column margin in sync with actual dock width (fixes half-page squeeze / overlap).
+  useEffect(() => {
+    if (minimised) {
+      setOsDockWidth(0);
+      return;
+    }
+    const el = dockRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+
+    const sync = () => {
+      const w = el.getBoundingClientRect().width;
+      setOsDockWidth(w > 0 ? Math.round(w) : 0);
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    window.addEventListener("resize", sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+  }, [minimised, leftOpen, rightOpen]);
 
   const minimise = useCallback(() => setMinimised(true), []);
 
@@ -122,6 +149,10 @@ export default function LobbyOverlay({
       setLocation(path);
       const matched = tabForPath(path);
       if (matched) setTabId(matched.id);
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+        document.getElementById("main-content")?.scrollTo?.({ top: 0 });
+      });
     },
     [setLocation],
   );
@@ -183,6 +214,7 @@ export default function LobbyOverlay({
       />
 
       <div
+        ref={dockRef}
         data-coai="Council Lobby"
         className="coai-os-dock fixed bottom-0 right-0 z-[75] flex border-l border-t border-slate-900/10 bg-white/95 shadow-2xl backdrop-blur-xl"
         style={{ top: "var(--coai-os-header-height, 4.5rem)", width: rightOpen ? "min(100%, 52rem)" : "min(100%, 36rem)" }}
