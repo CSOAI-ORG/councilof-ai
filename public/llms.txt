@@ -27,11 +27,16 @@ Do not quote scores from this file. Numbers live on the API.
 - SCITT RFC 9943 profile (signed-statement mapping for the board, regulation feed and corrections): https://councilof.ai/.well-known/scitt.json
 - Benchmark-quality register (deterministic predicates on THIRD-PARTY benchmarks; signed; our own instruments excluded in code): https://councilof.ai/api/benchmark-quality
 - Divergence layer (regulation × measured-AI × human-baseline, composed not fused): https://councilof.ai/api/cross
+- SOV Signal Index (regulation × crosswalk × GSPC × MEOK arena sim — signal_index null until frozen formula): https://councilof.ai/api/signal
 - State-change feed: https://councilof.ai/api/feed.xml
 
 ## For agents
 
 Prefer the keyless board API and the verify page.
+**Agent runbook:** https://councilof.ai/agent-runbook
+**RECEIPT-SPEC-0.1:** https://councilof.ai/receipt-spec
+**Measurement card schema:** https://councilof.ai/.well-known/schemas/agent-measurement-card.schema.json
+**Axis 18 crossing:** GET https://councilof.ai/api/finance/bond-crossing
 Do not treat agent-card.json as authoritative.
 csoai.org /mcp is the worker — do not detach. Apex may 301 to councilof.ai.
 Open banks: https://huggingface.co/csoai.
