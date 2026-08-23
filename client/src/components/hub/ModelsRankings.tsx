@@ -150,13 +150,13 @@ export default function ModelsRankings({ compact }: { compact?: boolean }) {
                         className="text-emerald-700"
                         onClick={() =>
                           openLobby({
-                            pane: "board",
+                            pane: "models",
                             prompt: `What is published about ${r.name} on the GSPC board — separated leads, ties, and empty cells?`,
                             ctx: r.name,
                           })
                         }
                       >
-                        Council OS
+                        Try
                       </Button>
                     </td>
                   )}
