@@ -72,8 +72,14 @@ export interface GspcBoardState {
 }
 
 export const GSPC_ENDPOINT = "/api/gspc";
+export const GSPC_REFRESH_EVENT = "coai:gspc-refresh";
 
 let inflight: Promise<GspcPayload> | null = null;
+
+/** Clear shared cache so the next read refetches (living board pulse). */
+export function invalidateGspcBoard(): void {
+  inflight = null;
+}
 
 /** One fetch per page load, shared by every board component. */
 export function loadGspcBoard(): Promise<GspcPayload> {
@@ -96,16 +102,68 @@ export function useGspcBoard(): GspcBoardState {
 
   useEffect(() => {
     let live = true;
-    loadGspcBoard()
-      .then((d) => { if (live) setState({ data: d, error: null, loading: false }); })
-      .catch((e) => { if (live) setState({ data: null, error: String(e?.message ?? e), loading: false }); });
-    return () => { live = false; };
+    const pull = () =>
+      loadGspcBoard()
+        .then((d) => { if (live) setState({ data: d, error: null, loading: false }); })
+        .catch((e) => { if (live) setState({ data: null, error: String(e?.message ?? e), loading: false }); });
+
+    pull();
+    const onRefresh = () => pull();
+    window.addEventListener(GSPC_REFRESH_EVENT, onRefresh);
+    return () => {
+      live = false;
+      window.removeEventListener(GSPC_REFRESH_EVENT, onRefresh);
+    };
   }, []);
 
   return state;
 }
 
-/* ── honest readers ──────────────────────────────────────────────────────── */
+/** Living board — refetch on an interval while the tab is visible. */
+export function useLivingGspcBoard(intervalMs = 60_000): GspcBoardState & { refreshedAt: number | null } {
+  const [state, setState] = useState<GspcBoardState>({ data: null, error: null, loading: true });
+  const [refreshedAt, setRefreshedAt] = useState<number | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    const pull = (force = false) => {
+      if (force) invalidateGspcBoard();
+      loadGspcBoard()
+        .then((d) => {
+          if (!live) return;
+          setState({ data: d, error: null, loading: false });
+          setRefreshedAt(Date.now());
+          window.dispatchEvent(new Event(GSPC_REFRESH_EVENT));
+        })
+        .catch((e) => {
+          if (!live) return;
+          setState({ data: null, error: String(e?.message ?? e), loading: false });
+        });
+    };
+
+    pull();
+    timer = setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') pull(true);
+    }, intervalMs);
+
+    const onVis = () => {
+      if (document.visibilityState === 'visible') pull(true);
+    };
+    document.addEventListener('visibilitychange', onVis);
+
+    return () => {
+      live = false;
+      if (timer) clearInterval(timer);
+      document.removeEventListener('visibilitychange', onVis);
+    };
+  }, [intervalMs]);
+
+  return { ...state, refreshedAt };
+}
+
+/* ── honest readers ─────────────────────────────────────────────────────── */
 
 /** A slot carries a quotable figure only when it is MEASURED and the number is real. */
 export function hasFigure(a: GspcAxis): boolean {
