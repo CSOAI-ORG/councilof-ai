@@ -29,7 +29,8 @@ export type LobbyTabId =
   | "space"
   | "measured"
   | "watchdog"
-  | "academy"
+  | "claimguard"
+  | "ras"
   | "library"
   | "workbench"
   | "software"
@@ -122,17 +123,24 @@ export const LOBBY_TABS: LobbyTab[] = [
   },
   {
     id: "watchdog",
-    label: "Watchdog",
-    blurb: "Reported incidents and the analyst surface that triages them.",
-    path: "/watchdog",
-    cues: /\b(watchdog|incident|report(?:ed)?|complaint)\b/i,
+    label: "Watchdog map",
+    blurb: "The live global incident heat-map — reported incidents visualized by region.",
+    path: "/watchdog-map",
+    cues: /\b(watchdog|incident|report(?:ed)?|complaint|heat.?map)\b/i,
   },
   {
-    id: "academy",
-    label: "Academy",
-    blurb: "Council Academy — training. Course completion attests training, not conformity.",
-    path: "/academy",
-    cues: /\b(academy|course|training|learn|teach)\b/i,
+    id: "claimguard",
+    label: "ClaimGuard",
+    blurb: "Claim-vs-signed-artifact integrity checking. Measurement, not certification.",
+    path: "/claimguard",
+    cues: /\b(claimguard|claim.?guard|claim check|verify claim)\b/i,
+  },
+  {
+    id: "ras",
+    label: "RAS booking",
+    blurb: "Human-rail readiness assessment booking desk — Paddle pending.",
+    path: "/ras",
+    cues: /\b(ras|readiness assessment|booking|human.?rail)\b/i,
   },
   {
     id: "library",
