@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import EnforcementTimeline from "../components/EnforcementTimeline";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 // /crosswalk — the single most citable public asset CSOAI owns: an open,
 // crawlable map of how 13 global AI-governance frameworks align to 8 universal
@@ -41,7 +42,7 @@ export default function Crosswalk() {
   };
 
   return (
-    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+    <CouncilOsPageShell title="Crosswalk" subtitle="13 frameworks × 8 universal controls — open, crawlable, citable" className="min-h-screen bg-[#03110b] text-emerald-50">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <div className="mx-auto max-w-5xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Open · crawlable · citable</p>
@@ -103,6 +104,6 @@ export default function Crosswalk() {
           </div>
         </div>
       </div>
-    </div>
+    </CouncilOsPageShell>
   );
 }
