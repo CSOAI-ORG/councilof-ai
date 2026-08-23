@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 /**
  * export-ecosystem-json.mjs — machine-readable org index from ecosystem.ts
+ *
+ * Writes:
+ *   public/ecosystem.json          — static asset (CDN-cacheable)
+ *   functions/data/ecosystem.json    — Pages Functions import at the edge
+ *
+ * Honesty: recon_status derived from source field — never upgrades modeled → cited.
  */
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
