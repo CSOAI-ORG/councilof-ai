@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 const API: string = ((import.meta as any).env && (import.meta as any).env.VITE_API_BASE) || "";
 
@@ -82,7 +83,7 @@ export default function McpFleet() {
   const list = useMemo(() => SRC.filter((s) => s.n.includes(q.toLowerCase())), [q, SRC]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <CouncilOsPageShell title="MCP fleet" subtitle="216 governed servers — Layer 0 wrapped, attestable" className="min-h-screen bg-white">
       <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">The governance MCP fleet</p>
@@ -142,7 +143,7 @@ export default function McpFleet() {
           <b> L0‑3</b> = attested · <b>L0‑5</b> = A2A‑ready.
         </div>
       </section>
-    </div>
+    </CouncilOsPageShell>
   );
 }
 
