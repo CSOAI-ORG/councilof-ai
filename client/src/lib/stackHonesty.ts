@@ -1,14 +1,5 @@
 /**
  * Canonical stack honesty register — single source for counts and labels.
- *
- * Binding register (never blend):
- *   MEASURED  — our signed deterministic runs (GSPC board, /api/gspc)
- *   UNMEASURED — honestly empty, reason stated
- *   REPORTED  — third-party figures, cited + dated, not measured here
- *   DESIGN    — architecture thesis, scenario, or roadmap — not a live claim
- *   SHIPPED   — repo + site surface exists and is reachable
- *   PARTIAL   — repo or stub only; not wired end-to-end on councilof.ai
- *   GAP       — design only, no repo yet
  */
 import mcpRegistry from "@/data/mcpRegistry.json";
 import { HIVE } from "@/data/hive-frameworks";
@@ -25,23 +16,17 @@ export type StackRegister =
   | "PLANNED"
   | "SPEC";
 
-/** Counts we can cite from checked-in artefacts — not inflated marketing numbers. */
 export const STACK_STATS = {
-  /** MCP servers in client/src/data/mcpRegistry.json */
   mcpServers: mcpRegistry.total as number,
   mcpRegistryCapturedAt: mcpRegistry.generatedAt as string,
   mcpRegistrySource: mcpRegistry.source as string,
-  /** Distinct framework tags on MCP server records */
   mcpFrameworkTags: (mcpRegistry.frameworkCounts as { name: string }[]).length,
-  /** Frameworks in hive-frameworks crosswalk */
   hiveFrameworks: HIVE.length,
-  /** GSPC core axes (13 in AXES; public board may reserve a 14th jail slot) */
   gspcAxesTotal: GSPC_COUNTS.total,
   gspcAxesMeasured: GSPC_COUNTS.measured,
   routerLayers: 5,
 } as const;
 
-/** Industry bond market size — REPORTED context, not CSOAI measurement */
 export const BOND_MARKET_REPORTED_T = 130;
 
 export const REGISTER_CHIP: Record<StackRegister, string> = {
