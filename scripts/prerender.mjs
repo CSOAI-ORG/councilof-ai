@@ -101,7 +101,14 @@ function discover() {
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/watchdog", "/disclaimers", "/csoai-law",
-    "/models", "/tools",
+    "/models", "/tools", "/sov-os",
+    "/workbench", "/instrument", "/system-card", "/feed", "/mcp-fleet",
+    "/crosswalk", "/refutation-ledger", "/library",
+    // Legal surface (2026-08-23 audit)
+    "/legal/licensing", "/legal/privacy", "/legal/terms", "/legal/cookies",
+    "/legal/disclaimers", "/legal/dpa", "/legal/founding-council", "/legal/membership",
+    "/legal/sla", "/licensing-agreement", "/terms-of-service", "/privacy",
+    "/pricing-legacy", "/council-licensing",
   ];
   for (const p of MUST) found.add(p);
   const routes = [...found].filter(p => !p.includes(":") && !p.includes("*"));
