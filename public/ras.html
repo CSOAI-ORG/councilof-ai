@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAS Booking Desk — Readiness Assessment Service | CSOAI</title>
+<meta name="description" content="Book a human-rail readiness assessment with Council of AI. Measurement, not certification — we assess, we sign, we re-attest. Verify stays free.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","name":"RAS Booking Desk",
+ "description":"Human-rail readiness assessment booking. Measurement, not certification — assessed, not certified.",
+ "provider":{"@type":"Organization","name":"CSOAI Ltd","url":"https://councilof.ai"},
+ "offers":{"@type":"Offer","availability":"https://schema.org/PreOrder","price":"0","priceCurrency":"GBP","description":"Assessment booking — Paddle integration pending"}}
+</script>
+<style>
+:root{--bg:#03110b;--fg:#e8f5e9;--accent:#10b981;--muted:#6b7280}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+.container{max-width:48rem;margin:0 auto;padding:2rem 1rem}
+header{border-bottom:1px solid rgba(255,255,255,0.1);padding:1rem 0}
+h1{font-size:2rem;font-weight:700;margin-bottom:0.5rem}
+.tagline{color:var(--accent);font-weight:600;font-size:1.1rem}
+.register{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:0.5rem;padding:1rem;margin:1.5rem 0;font-size:0.9rem}
+.register strong{color:var(--accent)}
+main{flex:1;padding:2rem 0}
+section{margin-bottom:2rem}
+h2{font-size:1.25rem;margin-bottom:0.75rem;color:var(--accent)}
+ul{padding-left:1.5rem}
+li{margin-bottom:0.5rem}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.cta-box{background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05));border:1px solid rgba(16,185,129,0.4);border-radius:0.75rem;padding:1.5rem;margin:2rem 0;text-align:center}
+.cta-box h3{font-size:1.1rem;margin-bottom:0.5rem}
+.cta-button{display:inline-block;background:var(--muted);color:var(--fg);padding:0.75rem 1.5rem;border-radius:0.5rem;font-weight:600;margin-top:0.75rem;cursor:not-allowed;opacity:0.7}
+.cta-note{font-size:0.8rem;color:var(--muted);margin-top:0.5rem}
+.free-badge{display:inline-block;background:var(--accent);color:var(--bg);padding:0.25rem 0.75rem;border-radius:1rem;font-size:0.75rem;font-weight:700;margin-left:0.5rem}
+.links{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1rem}
+.links a{background:rgba(255,255,255,0.05);padding:0.5rem 1rem;border-radius:0.5rem;border:1px solid rgba(255,255,255,0.1)}
+footer{border-top:1px solid rgba(255,255,255,0.1);padding:1.5rem 0;text-align:center;font-size:0.85rem;color:var(--muted)}
+.status-draft{display:inline-block;background:#f59e0b;color:#000;padding:0.2rem 0.6rem;border-radius:0.25rem;font-size:0.7rem;font-weight:700;text-transform:uppercase;margin-left:0.5rem}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>RAS Booking Desk <span class="status-draft">Draft</span></h1>
+<p class="tagline">Human-rail readiness assessment booking</p>
+</header>
+
+<div class="register">
+<strong>Register:</strong> Measurement, not certification. We assess, we sign, we re-attest.
+Assessed — not certified. The measurement is signed and verifiable without trusting us.
+</div>
+
+<main>
+<section>
+<h2>What is RAS?</h2>
+<p>The Readiness Assessment Service (RAS) is a human-rail assessment where a Council analyst reviews your AI governance posture against the GSPC measurement framework. You receive a signed measurement report — not a certification, but verifiable evidence of your current state.</p>
+</section>
+
+<section>
+<h2>What you get</h2>
+<ul>
+<li>Signed measurement report (Ed25519, RFC 8785 canonical JSON)</li>
+<li>Gap analysis against the 6-axis GSPC framework</li>
+<li>Evidence collection guidance for your specific deployment</li>
+<li>Re-attestation timeline and checkpoints</li>
+</ul>
+</section>
+
+<section>
+<h2>Free verification <span class="free-badge">Always Free</span></h2>
+<p>Verification stays free. Anyone can verify any signed measurement at any time.</p>
+<div class="links">
+<a href="/gspc-verify">GSPC Verify</a>
+<a href="/.well-known/mcp.json">MCP Tools</a>
+<a href="/api/dorado">SOV SIGNAL</a>
+<a href="/catalog.json">Product Catalog</a>
+</div>
+</section>
+
+<section>
+<h2>Start with the free assessment</h2>
+<p>Before booking a human-rail assessment, try the free self-service readiness check:</p>
+<div class="links">
+<a href="/readiness-assessment">Free Readiness Assessment</a>
+<a href="/assess">AI Act Assessment</a>
+</div>
+</section>
+
+<div class="cta-box">
+<h3>Book a Human-Rail Assessment</h3>
+<p>Human-rail assessments will be available via Paddle checkout.</p>
+<span class="cta-button">Coming — Paddle</span>
+<p class="cta-note">Paddle integration pending. This is a placeholder CTA, not a live checkout.</p>
+</div>
+
+<section>
+<h2>Honesty</h2>
+<ul>
+<li><strong>Measurement, not certification</strong> — the report is signed and verifiable without trusting us.</li>
+<li><strong>Assessed, not certified</strong> — we measure your current state, we do not grant a credential.</li>
+<li><strong>Verify stays free</strong> — verification is always free, for anyone.</li>
+<li><strong>Paddle, not Stripe</strong> — human-rail payments will use Paddle (not currently wired).</li>
+</ul>
+</section>
+</main>
+
+<footer>
+<p>Issuer: CSOAI Ltd (UK 16939677) · <a href="https://councilof.ai">councilof.ai</a> · <a href="/catalog.json">Catalog</a></p>
+</footer>
+</div>
+</body></html>
