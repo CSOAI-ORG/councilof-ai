@@ -19,6 +19,8 @@
 export type LobbyTabId =
   | "home"
   | "board"
+  | "models"
+  | "tools"
   | "verify"
   | "space"
   | "measured"
@@ -49,7 +51,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "Council OS desktop — every live surface, one workspace.",
     path: "",
     kind: "local",
-    cues: /\b(home|hub|launcher|start|lobby home|council os|the os)\b/i,
+    cues: /\b(home|hub|launcher|start|lobby home|council os|the os|ag[- ]?ui|chat)\b/i,
   },
   {
     id: "board",
@@ -58,6 +60,20 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "/gspc-scoreboard",
     kind: "native",
     cues: /\b(board|scoreboard|score|axes|axis|gspc|leaderboard)\b/i,
+  },
+  {
+    id: "models",
+    label: "Models",
+    blurb: "Measured models on the published board — ranked by signed scores, not tokens.",
+    path: "/models",
+    cues: /\b(models?|model registry)\b/i,
+  },
+  {
+    id: "tools",
+    label: "Tools",
+    blurb: "Published tooling and MCP servers — connect, run, verify. Not a marketplace.",
+    path: "/tools",
+    cues: /\b(tools?|tooling|tool commons|mcp tools)\b/i,
   },
   {
     id: "verify",
@@ -128,7 +144,9 @@ export function matchTab(text: string): LobbyTab | null {
   return LOBBY_TABS.find((tab) => tab.cues.test(t)) ?? null;
 }
 
-/** Dashboard sidebar: same destinations as OS, minus Play, Home, and Software (this surface). */
-export const DASHBOARD_TABS: LobbyTab[] = LOBBY_TABS.filter(
-  (t) => t.kind === "route" && t.id !== "play" && t.id !== "software",
-);
+/** Same destinations as OS, minus Play, Home, and Software (this surface). */
+export function isDashboardTab(t: LobbyTab): boolean {
+  return Boolean(t.path) && t.id !== "play" && t.id !== "software" && t.id !== "home";
+}
+
+export const DASHBOARD_TABS: LobbyTab[] = LOBBY_TABS.filter(isDashboardTab);
