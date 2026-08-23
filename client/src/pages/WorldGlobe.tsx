@@ -389,7 +389,7 @@ export default function WorldGlobe() {
                   ? "Regulator / standards authority - not a governance-gap target."
                   : "Governance gap: " + hiveSel.gap + " / " + hiveSel.maxGap + " (" + hiveSel.confidence + (hiveSel.topUsp ? ", lead with " + hiveSel.topUsp : "") + ")"}
               </p>
-              <button onClick={() => { setHiveSel(null); setSpin(true); }} className="mt-4 text-sm text-white/50 hover:bg-white/80">resume spin</button>
+              <button onClick={() => { setHiveSel(null); setSpin(true); }} className="mt-4 text-sm text-white/50 hover:text-white/80">resume spin</button>
             </div>
           ) : (
             <div className="text-white/60">
