@@ -13,6 +13,16 @@
 
 interface Env { SOV_GATE_URL?: string; SOV_GATE_TOKEN?: string }
 
+const CORS: Record<string, string> = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, OPTIONS",
+  "access-control-allow-headers": "Content-Type, Authorization",
+};
+
+export const onRequestOptions: PagesFunction = async () =>
+  new Response(null, { status: 204, headers: CORS });
+
+
 /* ── Article 5(1) — the eight prohibited practices, verbatim in substance ──── */
 const ART5: Record<string, string> = {
   a: "subliminal, purposefully manipulative or deceptive techniques that materially distort behaviour and cause significant harm",
@@ -401,13 +411,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     typeof body.prompt === "string" ? [{ role: "user", content: body.prompt }] :
     typeof body.message === "string" ? [{ role: "user", content: body.message }] : [];
   const model = typeof body.model === "string" ? body.model : "sov6-ethics-v3-light";
-  if (!messages.length) return Response.json({ error: "no message" }, { status: 400 });
+  if (!messages.length) return Response.json({ error: "no message" }, { status: 400, headers: CORS });
 
   const question = String(messages[messages.length - 1]?.content ?? "");
   const origin = new URL(request.url).origin;
 
   const reply = (answer: string, signature: string, state: string, extra: Record<string, unknown> = {}) =>
-    Response.json({ answer, reply: answer, signature, state, model, message: { role: "assistant", content: answer }, ...extra });
+    Response.json({ answer, reply: answer, signature, state, model, message: { role: "assistant", content: answer }, ...extra }, { headers: CORS });
 
   // LIVE lane — the specialist, when it is wired.
   if (env.SOV_GATE_URL && env.SOV_GATE_TOKEN) {
