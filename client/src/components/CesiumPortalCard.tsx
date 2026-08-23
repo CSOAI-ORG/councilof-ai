@@ -24,7 +24,7 @@ type Lens = "csoai" | "defoneos" | "meok";
 const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: string; preset: string; tour: string; routes: { label: string; href: string; tour?: boolean }[] }> = {
   csoai: {
     title: "Measurement Lens",
-    subtitle: "Frozen corpus · 4 axes · deterministic",
+    subtitle: "Frozen corpus · live axes · deterministic",
     color: "#10b981",
     preset: "EU_Brussels_50_85_4_35",
     tour: "measurement",
@@ -45,7 +45,7 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
       { label: "Open the Regulator Atlas", href: "/regulators", tour: true },
       { label: "Why CSOAI vs the rest", href: "/why" },
       { label: "Read the Methodology", href: "/methodology" },
-      { label: "Crosswalk (13×8)", href: "/crosswalk" },
+      { label: "Framework Crosswalk", href: "/crosswalk" },
     ],
   },
   meok: {
@@ -56,7 +56,7 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
     tour: "sovspace",
     routes: [
       { label: "Open Council Space", href: "/gspc-arena", tour: true },
-      { label: "Governance Graph", href: "/graph" },
+      { label: "Council OS", href: "/?lobby=home" },
       { label: "Tool Commons (published MCP)", href: "/tools" },
       { label: "Your Council assistant Twin", href: "/emergence" },
     ],
