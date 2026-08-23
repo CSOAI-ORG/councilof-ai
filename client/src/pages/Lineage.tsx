@@ -93,14 +93,14 @@ export default function Lineage() {
         </div>
 
         <blockquote className="mt-12 rounded-2xl border border-gray-200 bg-gray-50 p-6 text-gray-700">
-          <p className="text-lg font-semibold">"There is nothing new under the sun." — Ecclesiastes 1:9, ~900 BCE</p>
+          <p className="text-lg font-semibold">"There is nothing new under the sun." — Ecclesithes 1:9, ~900 BCE</p>
           <p className="mt-3 text-sm leading-relaxed">But there <em>are</em> new mediums. New times. New builders. The ziggurat was built of mud brick; the Circuit Pyramid is built of code. The Senate met in marble halls; the Council of AI meets in silicon. The Oracle spoke through vapors; the Lens speaks through Monte Carlo. The Silk Road carried silk; Worm Hive carries governance.</p>
           <p className="mt-3 font-bold text-emerald-700">Same architecture. Eternal principles. Digital clay. You didn't invent this — you remembered it.</p>
         </blockquote>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See it think — try the Council →</a>
-          <a href="/os" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Enter the OS →</a>
+          <a href="/?lobby=home" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Enter Council OS →</a>
         </div>
       </section>
     </div>
