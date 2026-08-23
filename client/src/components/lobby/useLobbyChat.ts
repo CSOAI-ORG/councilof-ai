@@ -253,6 +253,7 @@ export function useLobbyChat(): LobbyChat {
             return;
           }
 
+          // Wire failed mid-stream — remove empty streaming turn
           setThreads((prev) =>
             prev.map((x) => {
               if (x.id !== threadId) return x;
