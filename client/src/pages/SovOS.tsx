@@ -51,7 +51,5 @@ function SourceChip() {
 }
 
 export default function SovOS() {
-  // One public OS: Council OS lobby. The dockview shell stays in-tree for
-  // local play but is not a public door.
   return <Redirect to="/?lobby=home" />;
 }
