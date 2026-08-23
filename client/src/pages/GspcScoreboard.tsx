@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
+import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
 
 /**
  * /gspc-scoreboard — the live board, honestly displayed (NEXT-100 #2).
@@ -34,6 +35,136 @@ const CHIP: Record<string, string> = {
   TIE: "bg-amber-100 text-amber-800 border-amber-300",
   UNTESTED: "bg-gray-100 text-gray-600 border-gray-300",
 };
+
+/* ArenaEloPanel — the signed per-axis Elo leaderboard (the verifiable half).
+ * Fetches /arena/elo_reference.json (signed: content_id + Ed25519 over the
+ * canonical body), renders the per-axis Elo, and offers an INDEPENDENT verify:
+ * recompute the canonical body locally (WebCrypto sha256 -> content_id) and
+ * verify the Ed25519 signature against the recorded pubkey. This is the piece
+ * OpenRouter and LMArena do not have: the number can be re-verified, free.
+ */
+function ArenaEloPanel() {
+  const [elo, setElo] = useState<any>(null);
+  const [elErr, setElErr] = useState<string | null>(null);
+  const [axis, setAxis] = useState<string>("overall");
+  const [verifyState, setVerifyState] = useState<"idle" | "checking" | "ok" | "bad">("idle");
+
+  useEffect(() => {
+    fetch("/arena/elo_reference.json")
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((d) => setElo(d))
+      .catch((e) => setElErr(String(e)));
+  }, []);
+
+  async function verifySigned() {
+    if (!elo) return;
+    setVerifyState("checking");
+    try {
+      const body: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(elo)) {
+        if (k !== "content_id" && k !== "signature") body[k] = v;
+      }
+      const canonSorted = JSON.stringify(sortKeysDeep(body));
+      const want = await sha256Hex(canonSorted);
+      const res = await verifyEd25519Detached(
+        new TextEncoder().encode(canonSorted),
+        elo.signature?.sig || "",
+        elo.signature?.pubkey || "",
+        want,
+        undefined,
+      );
+      setVerifyState(res.ok ? "ok" : "bad");
+    } catch (e) {
+      setVerifyState("bad");
+    }
+  }
+
+  const rows =
+    axis === "overall"
+      ? elo?.leaderboard || []
+      : (elo?.per_axis?.[axis] || []);
+
+  if (elErr) return null; // panel simply absent if the resource is not there yet
+  if (!elo) return null;
+
+  return (
+    <div className="mt-10 rounded-2xl border border-emerald-600/15 bg-white p-6 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-bold text-gray-900">Arena Elo — signed</h2>
+          <p className="mt-1 text-sm text-gray-600">
+            Per-axis winner-specific Elo from the live arena (<code>{elo.models || "—"}</code> models,{" "}
+            {elo.axes?.length || 0} axes). Every score carries n + 95% CI. This leaderboard is{" "}
+            <strong>signed</strong> — verify it below.
+          </p>
+        </div>
+        <button
+          onClick={verifySigned}
+          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700"
+          data-testid="verify-arena-elo"
+        >
+          {verifyState === "checking" ? "Verifying…" : "Verify the signature"}
+        </button>
+      </div>
+      {verifyState === "ok" && (
+        <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700" data-testid="verify-arena-elo-ok">
+          ✓ Signature verified — this leaderboard matches the signed body.
+        </p>
+      )}
+      {verifyState === "bad" && (
+        <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700" data-testid="verify-arena-elo-bad">
+          ✗ Signature does NOT verify — content may have been altered.
+        </p>
+      )}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button onClick={() => setAxis("overall")} className={`rounded-full px-3 py-1 text-xs font-semibold ${axis === "overall" ? "bg-emerald-600 text-white" : "border border-emerald-600/20 text-emerald-700 hover:bg-emerald-50"}`}>
+          Overall
+        </button>
+        {(elo?.axes || []).map((a: string) => (
+          <button key={a} onClick={() => setAxis(a)} className={`rounded-full px-3 py-1 text-xs font-semibold ${axis === a ? "bg-emerald-600 text-white" : "border border-emerald-600/20 text-emerald-700 hover:bg-emerald-50"}`}>
+            {a}
+          </button>
+        ))}
+      </div>
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b">
+              <th className="py-2 px-3 text-left font-semibold">Model</th>
+              <th className="py-2 px-3 text-right font-semibold">Elo</th>
+              <th className="py-2 px-3 text-right font-semibold">Games</th>
+              <th className="py-2 px-3 text-right font-semibold">Win-rate</th>
+              <th className="py-2 px-3 text-right font-semibold">95% CI</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(rows as any[]).slice(0, 12).map((r: any) => (
+              <tr key={r.model} className="border-b border-gray-100">
+                <td className="py-2 px-3 font-medium text-gray-800">{r.model}</td>
+                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-900">{r.elo}</td>
+                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-500">{r.games}</td>
+                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-500">{r.winrate}</td>
+                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-500">
+                  {r.ci ? `${r.ci[0]}–${r.ci[1]}` : "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function sortKeysDeep(v: any): any {
+  if (Array.isArray(v)) return v.map(sortKeysDeep);
+  if (v && typeof v === "object") {
+    const out: Record<string, any> = {};
+    for (const k of Object.keys(v).sort()) out[k] = sortKeysDeep(v[k]);
+    return out;
+  }
+  return v;
+}
 
 export default function GspcScoreboard() {
   const [data, setData] = useState<any>(null);
@@ -116,6 +247,8 @@ export default function GspcScoreboard() {
             </table>
           </div>
         )}
+
+        {data && <ArenaEloPanel />}
 
         {data && Array.isArray(data.measured_in_lane) && data.measured_in_lane.length > 0 && (
           <div className="mt-10 rounded-2xl border border-dashed border-emerald-600/25 bg-emerald-50/40 p-6">
