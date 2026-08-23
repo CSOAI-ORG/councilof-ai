@@ -51,6 +51,8 @@ export type LobbyTaskId =
   | "regulator-brief"
   | "insurer-evidence"
   | "enterprise-start"
+  | "fix-gaps"
+  | "meok-assist"
   | "sector-brief"
   | "engine-axis-brief"
   | "eunomia-router"
@@ -158,10 +160,26 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
       "What on the live board is safe for an insurer to rely on today, and which cells are explicitly empty?",
   },
   "enterprise-start": {
-    pane: "measured",
+    pane: "workspace",
     label: "Start enterprise measurement",
+    prompt: (ctx) =>
+      ctx
+        ? `We are ${ctx} — what does getting measured actually run across our frameworks, what does the signed result attest, and what does it not claim?`
+        : "We are an enterprise team — what does getting measured actually run, what does the result attest, and what does it not claim?",
+  },
+  "fix-gaps": {
+    pane: "fix",
+    label: "Fix gaps with AG-UI assist",
+    prompt: (ctx) =>
+      ctx
+        ? `Our signed measurement for ${ctx} shows gaps — walk me through fixing them on web/PC via AG-UI assist, what Council will re-measure, and what it refuses to certify.`
+        : "Our signed measurement card shows gaps — walk me through the fix-and-re-measure loop via AG-UI assist, and what Council refuses to certify.",
+  },
+  "meok-assist": {
+    pane: "fix",
+    label: "MEOK offline/online assist",
     prompt: () =>
-      "We are an enterprise team — what does getting measured actually run, what does the result attest, and what does it not claim?",
+      "When AGUI_WIRE_URL is live, how does MEOK assist fix problems on my machine or in the browser — and how does that stay separate from Council's measurement verdict?",
   },
   "sector-brief": {
     pane: "home",
@@ -255,6 +273,16 @@ export function lobbyTaskHref(task: LobbyTaskId, opts: Omit<LobbyLinkOptions, "t
 
 let nonce = 0;
 
+/** Survives lazy-load races: openLobby() may fire before CouncilLobby mounts. */
+let pendingIntent: LobbyIntent | null = null;
+
+function publishIntent(intent: LobbyIntent): void {
+  pendingIntent = intent;
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(LOBBY_EVENT, { detail: intent }));
+  }
+}
+
 /** Resolve a loose request into a complete intent, or null if it names nothing real. */
 export function resolveIntent(input: {
   pane?: unknown;
@@ -289,7 +317,14 @@ export function openLobby(opts: Omit<LobbyLinkOptions, "path"> = {}): void {
   if (typeof window === "undefined") return;
   const intent = resolveIntent(opts);
   if (!intent) return;
-  window.dispatchEvent(new CustomEvent(LOBBY_EVENT, { detail: intent }));
+  publishIntent(intent);
+}
+
+/** Consumed once when CouncilLobby mounts — never drops a header CTA click. */
+export function consumePendingLobbyIntent(): LobbyIntent | null {
+  const next = pendingIntent;
+  pendingIntent = null;
+  return next;
 }
 
 /** Strip the lobby params so a refresh does not re-open the lobby. */
@@ -342,10 +377,13 @@ export function useLobbyDeepLink(): LobbyIntent | null {
     const onOpen = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail && typeof detail === "object" && isPane((detail as LobbyIntent).pane)) {
+        pendingIntent = null;
         setIntent(detail as LobbyIntent);
       }
     };
     window.addEventListener(LOBBY_EVENT, onOpen as EventListener);
+    const queued = consumePendingLobbyIntent();
+    if (queued) setIntent(queued);
     return () => window.removeEventListener(LOBBY_EVENT, onOpen as EventListener);
   }, []);
 
