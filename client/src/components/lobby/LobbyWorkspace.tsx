@@ -9,6 +9,11 @@ import LobbyHome from "./LobbyHome";
 import LobbyPlay from "./LobbyPlay";
 import LobbyVerifyPane from "./LobbyVerifyPane";
 import LobbyToolPane from "./LobbyToolPane";
+import LobbyEcosystemPane from "./LobbyEcosystemPane";
+import LobbyWorkspacePane from "./LobbyWorkspacePane";
+import LobbyFixPane from "./LobbyFixPane";
+import LobbyArenaPane from "./LobbyArenaPane";
+import LobbySurfacePane from "./LobbySurfacePane";
 
 export type HubView = "board" | "models" | "routes";
 
@@ -32,6 +37,36 @@ export default function LobbyWorkspace({
       return <LobbyVerifyPane />;
     case "tools":
       return <LobbyToolPane />;
+    case "ecosystem":
+      return <LobbyEcosystemPane onOpenRoute={onOpenRoute} />;
+    case "workspace":
+      return <LobbyWorkspacePane onOpenRoute={onOpenRoute} />;
+    case "fix":
+      return <LobbyFixPane onOpenRoute={onOpenRoute} />;
+    case "arena":
+      return <LobbyArenaPane onOpenRoute={onOpenRoute} />;
+    case "measured":
+    case "academy":
+    case "watchdog":
+    case "software":
+    case "space":
+      return (
+        <LobbySurfacePane
+          tab={tab}
+          onOpenRoute={onOpenRoute}
+          task={
+            tab.id === "measured"
+              ? "get-measured"
+              : tab.id === "academy"
+                ? "academy"
+                : tab.id === "watchdog"
+                  ? "report-an-incident"
+                  : tab.id === "space"
+                    ? "arena"
+                    : undefined
+          }
+        />
+      );
     case "board":
     case "models":
     case "routes":
