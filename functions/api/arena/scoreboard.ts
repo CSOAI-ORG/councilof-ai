@@ -21,6 +21,11 @@ function canonize(o: unknown): string {
     const obj = o as Record<string, unknown>;
     return "{" + Object.keys(obj).sort().map((k) => JSON.stringify(k) + ":" + canonize(obj[k])).join(",") + "}";
   }
+  if (typeof o === "number") {
+    if (Number.isInteger(o)) return String(o);            // int-valued float -> int (byte-match Python)
+    const s = o.toString();                               // shortest round-trip repr
+    return s.includes(".") ? s : s + ".0";
+  }
   return JSON.stringify(o);
 }
 
