@@ -89,14 +89,6 @@ const EXISTING = [
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
-  // AG UI is Council OS — do not iframe a second console or nest /os.
-  "/ag-ui                  /?lobby=home                 308",
-  "/ag-ui/                 /?lobby=home                 308",
-  "/chat                   /?lobby=home                 308",
-  "/chat/                  /?lobby=home                 308",
-  // OpenRouter-shaped guesses: chat is the AG UI; rankings are the signed board.
-  "/rankings               /?lobby=board                308",
-  "/rankings/              /?lobby=board                308",
   "/library/measurement    /library/axes                308",
   // Klingler/DID stranger-walk + persona cold loads (2026-08-22).
   // Do NOT redirect /gspc-verify ↔ /gspc-verify/ — Pages trailing-slash
@@ -109,6 +101,8 @@ const EXISTING = [
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
   "/for                    /for/enterprise/             308",
+  "/agui                   /ag-ui                       308",
+  "/agui/                  /ag-ui                       308",
 ];
 
 /** Persona gauntlet bare paths → trailing-slash prerender (production still on honest-404 catch-all). */
@@ -117,8 +111,6 @@ const PERSONA_SLASH = [
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
   "models", "tools",
-  "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
-  "refutation-ledger",
 ];
 const PERSONA_FOR_SLASH = [
   "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
