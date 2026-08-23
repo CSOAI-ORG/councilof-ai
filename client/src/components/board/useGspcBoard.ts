@@ -163,7 +163,7 @@ export function useLivingGspcBoard(intervalMs = 60_000): GspcBoardState & { refr
   return { ...state, refreshedAt };
 }
 
-/* ── honest readers ─────────────────────────────────────────────────────── */
+/* ── honest readers ──────────────────────────────────────────────────────── */
 
 /** A slot carries a quotable figure only when it is MEASURED and the number is real. */
 export function hasFigure(a: GspcAxis): boolean {
