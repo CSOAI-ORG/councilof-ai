@@ -53,7 +53,7 @@ export default function LobbyFixPane({
           onClick={() => onOpenRoute("/remediation-partners", "Remediation partners")}
           className={`rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 ${FOCUS}`}
         >
-          Open independent fixer →
+          Choose independent fixer →
         </button>
         <button
           type="button"
