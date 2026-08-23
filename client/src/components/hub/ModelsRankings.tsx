@@ -123,7 +123,7 @@ export default function ModelsRankings({ compact }: { compact?: boolean }) {
                 <th className="p-3">Ties</th>
                 <th className="p-3">Point leads</th>
                 <th className="p-3">Best axis</th>
-                {!compact && <th className="p-3 text-right">Try</th>}
+                <th className="p-3 text-right">Try</th>
               </tr>
             </thead>
             <tbody>
@@ -142,8 +142,7 @@ export default function ModelsRankings({ compact }: { compact?: boolean }) {
                       <span className="ml-2 font-mono text-xs">{pct(r.bestAccuracy)}</span>
                     )}
                   </td>
-                  {!compact && (
-                    <td className="p-3 text-right">
+                  <td className="p-3 text-right">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -159,7 +158,6 @@ export default function ModelsRankings({ compact }: { compact?: boolean }) {
                         Try
                       </Button>
                     </td>
-                  )}
                 </tr>
               ))}
             </tbody>
