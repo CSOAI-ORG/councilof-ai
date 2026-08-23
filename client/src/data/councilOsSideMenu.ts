@@ -73,8 +73,7 @@ export const COUNCIL_OS_LEFT_MENU: SideMenuGroup[] = [
     items: [
       { kind: "pane", id: "board", pane: "board", label: "Live board", hint: "GET /api/gspc", icon: BarChart3, task: "read-the-board", badge: "live" },
       { kind: "pane", id: "models", pane: "models", label: "Models", hint: "Rankings · separated leads", icon: Cpu },
-      { kind: "pane", id: "routes", pane: "routes", label: "Routes", hint: "Governance router — Eunomia", icon: Route, task: "eunomia-router" },
-      { kind: "route", id: "harness", href: "/arena-harness", label: "Harness thesis", hint: "Downstream signed proof", icon: Shield },
+      { kind: "pane", id: "routes", pane: "routes", label: "Routes", hint: "Eunomia routing table", icon: Route, task: "eunomia-router" },
       { kind: "pane", id: "arena", pane: "arena", label: "Arena", hint: "LMArena-style compare", icon: Swords, task: "arena" },
       { kind: "route", id: "scoreboard", href: "/gspc-scoreboard", label: "Full scoreboard", hint: "13-axis board in site column", icon: BarChart3 },
       { kind: "route", id: "models-page", href: "/models", label: "Model registry", hint: "Per-axis leaders page", icon: Cpu },
