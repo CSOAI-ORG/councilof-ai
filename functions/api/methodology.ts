@@ -62,6 +62,16 @@ const FEED = {
       refuses: "Does not claim real-LLM agent quality; the mock is a coordination-mechanics instrument.",
     },
   ],
+  aggregation: {
+    what: "How axis scores roll up — and where the estate refuses to roll them up. Every aggregate is a declared weighted function, never a black-box index.",
+    policy: "The 16-axis GSPC battery reports each axis as its own score + 95% CI (with sample size n). There is NO single opaque 'intelligence index': a model's GSPC record is the vector of per-axis cells, each with CI + n, so a reader sees spread, not one lulling number.",
+    declared_weights: {
+      gspc_board: { kind: "per-axis vector", note: "no blended scalar; each axis equi-weighted only in the optional display mean, which is labelled 'mean (equal weight, per-axis)' and always shown with sd/se/ci95." },
+      arena: { kind: "equal-weight composite of 6 axes", axes: ["efficiency", "coordination", "governance", "transparency", "continuity", "accountability"], weights: "1/6 each (declared)", note: "composite CI shown from seed variation; reproducible same-seed." },
+      human_vs_ai: { kind: "per-game Wilson 95% CI", note: "win/ai/draw rates with Wilson CI per game; never blended into the signed AI-vs-AI Elo." },
+    },
+    refuses: "No unweighted average is presented as an index; no single 'score' is claimed to rank models; a composite is only shown where its weights are published and its CI is shown.",
+  },
   honesty_rules: [
     "MEASURED / REPORTED / UNMEASURED are three kinds of claim — never merged.",
     "UNMEASURED is a disclosure about us, not a failing grade for the system.",
