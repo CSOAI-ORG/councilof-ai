@@ -41,7 +41,7 @@ GSPC axes 1–13: governance, safety, provenance, continuity, conformance, openn
 
 | Slot | Axis | Status | First bridge repo |
 |------|------|--------|-------------------|
-| 18 | Bond Router | **MEASURED** (synthetic pilot) | `GET /api/finance/bond-crossing` |
+| 18 | Bond Router | SPEC | `eunomia-bond-router` |
 | 19 | Insurance Engine | PLANNED | `eunomia-insurance-engine` |
 | 20 | Stock Market Axis | PLANNED | `eunomia-bond-router` |
 | 21 | East-West Bridge | PLANNED | `eunomia-east-west-bridge` |
