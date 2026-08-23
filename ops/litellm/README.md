@@ -1,6 +1,7 @@
-# LiteLLM spike — self-hosted OpenRouter API layer
+/**
+ * LiteLLM spike — self-hosted OpenRouter API layer
 
-OpenRouter’s product is closed. [LiteLLM](https://github.com/BerriAI/litellm) is the usual open-source substitute: one OpenAI-compatible endpoint, virtual keys, model list, and an admin UI at `/ui`.
+OpenRouter's product is closed. [LiteLLM](https://github.com/BerriAI/litellm) is the usual open-source substitute: one OpenAI-compatible endpoint, virtual keys, model list, and an admin UI at `/ui`.
 
 Council uses this as the **routing toll road** layer. Measurement (GSPC), Eunomia MCP routes, and arena proof stay on councilof.ai.
 
