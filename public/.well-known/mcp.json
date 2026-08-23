@@ -1,12 +1,18 @@
 {
   "schema_version": "2026-07-28",
   "name": "csoai",
-  "description": "CSOAI measurement tools over MCP. No public MCP server is advertised until a first-party endpoint is live.",
-  "servers": [],
+  "description": "CSOAI measurement tools exposed over MCP.",
+  "servers": [
+    {
+      "name": "csoai-gspc-mcp",
+      "url": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp"
+    }
+  ],
+  "catalogue": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
   "measured": {
-    "total_tools": 0,
-    "server_count": 0,
-    "tools": [],
-    "note": "The personal-account worker previously listed here was removed from did:web:csoai.org on 2026-08-19. GET on that worker returns 404. A discovery document must not advertise a dead service. It returns in the same commit that redeploys a live first-party endpoint."
+    "total_tools": 4,
+    "server_count": 1,
+    "tools": ["measure", "verify", "jail-probe", "enter-arena"],
+    "note": "MEASURED live from worker tools/list. Dead csoai.org/api/* routes removed 2026-08-19."
   }
 }
