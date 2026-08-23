@@ -86,6 +86,34 @@ why(k) +
   const axes = await loadAxes(origin);
   const axisNames = axes.map((a: any) => String(a.axis)).filter(Boolean);
 
+  // 1o. Pricing / plans — no SaaS tiers.
+  if (/\b(pricing|plans?|per[- ]seat|saas tier|course fee|what is free|not promised)\b/i.test(q)) {
+    return (
+      `There are no SaaS tiers, no per-seat plans, and no course fees on this estate.\n\n` +
+      `Measurement and verification are free forever. Anyone can read GET /api/gspc, verify a card at /gspc-verify/, ` +
+      `and run an assessment at /assess/ with no account.\n\n` +
+      `Where a signed evidence artefact is sold, it is priced as an artefact on its own product page — ` +
+      `never a fee for a ranking or placement. See /pricing/ for the published posture.\n\n` +
+      `_Grounded in the published pricing page, not by a model._`
+    );
+  }
+
+  // 1p. Sector / demographic — what to do first (not an axis score).
+  if (
+    /\b(what should .+ do first|ai governance for |sector|for finance|for healthcare|for startup|for enterprise|for regulator)\b/i.test(q) &&
+    !/\b(governance axis|axis score|accuracy|wilson|n=)\b/i.test(q)
+  ) {
+    return (
+      `A sensible first move with signed evidence:\n\n` +
+      `1. **Inventory** — name the AI systems that matter and which rules might apply (EU AI Act tier, sector law, DORA, etc.).\n` +
+      `2. **Read the board** — GET /api/gspc shows what is measured today; empty cells stay empty.\n` +
+      `3. **Verify, don't trust** — recompute any card at /gspc-verify/ with the published Ed25519 key.\n` +
+      `4. **Get measured** — /assess/ runs against frozen rules; the result attests measurement, not certification.\n\n` +
+      `Sector pages under /for/ and /regulators/ link to published crosswalks. The Council does not give a legal opinion.\n\n` +
+      `_Grounded in the published method and routes, not by a model._`
+    );
+  }
+
   // 1b. Who we are / measure vs certify — the questions the lobby actually suggests.
   if (
     /\b(in plain words|actually measure|what (do|does) (the )?(council|csoai|this (estate|body|site)))\b/i.test(q) ||
@@ -148,8 +176,12 @@ why(k) +
     );
   }
 
-  // 1f. Corrections / what we refuse.
-  if (/\b(correction|got wrong|refuse to (state|opine)|not claim|out of scope|rely on in a (published|signed)|underwriter|what can i rely on)\b/i.test(q)) {
+  // 1f. Corrections / what we refuse / insurer reliance.
+  if (
+    /\b(correction|got wrong|refuse to (state|opine|certif)|not claim|out of scope|rely on in a (published|signed)|what can i rely on)\b/i.test(q) ||
+    /\b(who checks|checks the council|corrections ledger|refutation)\b/i.test(q) ||
+    /\b(safe to underwrite|must not be underwritten|empty cells)\b/i.test(q)
+  ) {
     return (
       `A published measurement says: this system, this frozen bank, this n, this score, ` +
       `this signature. It does not say the system is lawful, safe to deploy, or certified.\n\n` +
@@ -158,6 +190,32 @@ why(k) +
       `When we get a number wrong it lands on GET /api/corrections. Read that feed — ` +
       `this reply will not summarise it from memory.\n\n` +
       `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 1m. Regulators / crosswalks / frozen statute.
+  if (
+    /\b(regulator|supervisory|crosswalk|frozen (text|statute|provision)|frameworks (are )?crosswalked|policy bodies)\b/i.test(q) ||
+    /\b(refuse to certify|decide for supervisory)\b/i.test(q)
+  ) {
+    return (
+      `Regulators read crosswalks and frozen provisions — not a conformity opinion from us.\n\n` +
+      `Published material: GET /api/regulation (what is in force vs deferred), the Regulator Atlas at /regulators/, ` +
+      `and framework pages under /hive/. Each measurement card states what was frozen and what was graded.\n\n` +
+      `The Council measures and signs; supervisory bodies and notified bodies decide conformity. ` +
+      `We refuse to certify or fill empty cells.\n\n` +
+      `_Grounded in the published regulation surfaces, not by a model._`
+    );
+  }
+
+  // 1n. Honesty page / corrections published.
+  if (/\b(honesty (page|ledger)|corrections and refusals|what has the council got wrong)\b/i.test(q)) {
+    return (
+      `The honesty gate at /honesty/ publishes where our own fine-tunes and instruments lose on published banks — ` +
+      `win or lose, with the n and the signature attached.\n\n` +
+      `Structured corrections live at GET /api/corrections. Read that feed for what we got wrong and when; ` +
+      `this reply will not summarise it from memory.\n\n` +
+      `_Grounded in the published honesty and corrections surfaces, not by a model._`
     );
   }
 
@@ -172,8 +230,9 @@ why(k) +
     );
   }
 
-  // 1i. Assessment scope.
-  if (/\b(assessment actually run|explicitly not (claim|say)|get (my system )?measured|would it take to have)\b/i.test(q)) {
+  // 1i. Assessment scope — explicit "get measured", not bare "is measured".
+  if (/\b(assessment actually run|explicitly not (claim|say)|would it take to have)\b/i.test(q) ||
+      /\bget (?:my system )?measured\b/i.test(q)) {
     return (
       `An assessment records a description against published rules and returns a signed ` +
       `measurement. It does not say the system is lawful, certified, or safe to deploy.\n\n` +
@@ -220,9 +279,23 @@ why(k) +
     );
   }
 
-  // 2. A named axis.
-  const hit = axes.find((a: any) =>
-    t.includes(String(a.axis).toLowerCase()) || t.includes(String(a.bench ?? "").toLowerCase()));
+  // 2. A named axis — word-boundary match AND score intent (avoid "AI governance" → governance axis).
+  const axisIntent =
+    /\b(score|accuracy|axis|axes|bench|gspc|leader|wilson|macro f1|unparsed|measured on)\b/i.test(q) ||
+    /\bwhat is the \w+ (score|axis)\b/i.test(q) ||
+    /\b(how many|which) axes\b/i.test(q);
+
+  const hit = axisIntent
+    ? axes.find((a: any) => {
+        const name = String(a.axis ?? "");
+        const bench = String(a.bench ?? "");
+        const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return (
+          (name && new RegExp(`\\b${esc(name)}\\b`, "i").test(q)) ||
+          (bench && new RegExp(`\\b${esc(bench)}\\b`, "i").test(q))
+        );
+      })
+    : null;
   if (hit) {
     const q_ok = hit.status === "MEASURED" && hit.n > 0;
     if (!q_ok) {
@@ -243,8 +316,11 @@ why(k) +
       `Task: ${hit.task}.` + (hit.note ? `\n\n${hit.note}` : "");
   }
 
-  // 3. The board as a whole.
-  if (/\b(board|axes|axis|coverage|measured|how many|overview|status|walk me through)\b/.test(t) && axes.length) {
+  // 3. The board as a whole — must ask about the board, not merely contain "measured".
+  if (
+    /\b(board|scoreboard|axes|axis|gspc|coverage|how many axes|walk me through|overview|live board)\b/.test(t) &&
+    axes.length
+  ) {
     const m = axes.filter((a: any) => a.status === "MEASURED" && a.n > 0);
     const withCI = m.filter((a: any) => a.n * (1 - (a.unparsed_rate ?? 0)) >= 30);
     return `The GSPC suite is **${axes.length} axes**. **${m.length}** are MEASURED; ` +
@@ -349,10 +425,11 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const axisHint = named || "the axes published on GET /api/gspc";
 
   return reply(
-    "I can answer from what this estate has actually measured — ask about a named board axis " +
-    `(${axisHint}), whether a practice is prohibited under EU AI Act Article 5, ` +
-    "Council Space rounds, or the measurement method.\n\n" +
-    "I will not invent a number or a legal opinion. The living board is GET /api/gspc.",
+    `I could not ground an answer to your question from published measurement.\n\n` +
+    "Try asking about a **named board axis** (with its score), whether a practice is **prohibited under EU AI Act Article 5**, " +
+    "what is on **GET /api/gspc**, **pricing** (/pricing/), **regulators** (/regulators/), or the **measurement method**.\n\n" +
+    `Named axes on this stamp: ${axisHint}.\n\n` +
+    "I will not invent a number or a legal opinion.",
     "refused — no grounding available", "ungrounded",
   );
 };
