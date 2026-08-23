@@ -8,7 +8,16 @@ export function onRequestGet() {
       status: "ok",
       service: "councilof.ai",
       timestamp: new Date().toISOString(),
-      endpoints: ["/api/mcp", "/api/tools", "/api/gspc", "/api/assess", "/api/health"],
+      endpoints: [
+        "/api/mcp",
+        "/api/tools",
+        "/api/gspc",
+        "/api/assess",
+        "/api/health",
+        "/api/receipts/latest",
+        "/api/dorado",
+        "/api/evidence-pack",
+      ],
     }),
     {
       status: 200,

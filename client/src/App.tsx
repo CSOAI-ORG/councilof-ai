@@ -448,12 +448,18 @@ function WidgetRouter() {
   );
 }
 
+function normPath(p: string) {
+  const s = p.replace(/\/$/, "");
+  return s === "" ? "/" : s;
+}
+
 function App() {
   const [location] = useLocation();
+  const path = normPath(location);
   if (location.startsWith('/widget')) {
     return <WidgetRouter />;
   }
-  if (location === '/sov-os' || location === '/council-os') {
+  if (path === '/sov-os' || path === '/council-os') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="dark">

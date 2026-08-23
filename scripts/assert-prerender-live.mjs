@@ -51,6 +51,22 @@ async function get(url) {
   }
 }
 
+// getStable — retry a transient 404 on a route a few times before declaring failure.
+// Cloudflare Pages propagates a fresh deployment across aliases over a short window; a single
+// fetch right after deploy can catch a route mid-propagation and 404 transiently even though the
+// gated tree is correct (and already 200 a few seconds later). This distinguishes a genuine
+// persistent 404 (a real regression) from a propagation blip — it does NOT fabricate a 200.
+const MAX_TRIES = 4;
+const RETRY_MS = 4000;
+async function getStable(url) {
+  for (let i = 1; i <= MAX_TRIES; i++) {
+    const r = await get(url);
+    if (r.status >= 200 && r.status < 400) return r; // healthy or a redirect that resolves
+    if (i < MAX_TRIES) await new Promise((res) => setTimeout(res, RETRY_MS));
+  }
+  return await get(url); // final authoritative result (likely a genuine persistent 404)
+}
+
 console.log(`ASSERT-PRERENDER [${label}] min_homepage_bytes=${MIN}`);
 
 for (const host of hosts) {
@@ -81,6 +97,12 @@ for (const host of hosts) {
   else if (os.status !== 200) fail(`${host}/os/ HTTP ${os.status}`);
   else pass(`${host}/os/ HTTP 200`);
 
+  const sovos = await getStable(host + "/sov-os/");
+  if (sovos.error) fail(`${host}/sov-os/ fetch failed: ${sovos.error}`);
+  else if (sovos.status !== 200 || /404 — Not found/i.test(sovos.body)) fail(`${host}/sov-os/ HTTP ${sovos.status || "404"}`);
+  else if (sovos.bytes < 8000) fail(`${host}/sov-os/ thin (${sovos.bytes} B — prerender missing?)`);
+  else pass(`${host}/sov-os/ HTTP 200 (${sovos.bytes} B)`);
+
   if (verify.error) fail(`${host}/gspc-verify/ fetch failed: ${verify.error} (often a 308 slash loop)`);
   else if (verify.status !== 200) fail(`${host}/gspc-verify/ HTTP ${verify.status}`);
   else pass(`${host}/gspc-verify/ HTTP 200`);
@@ -93,14 +115,12 @@ for (const host of hosts) {
     pass(`${host}/gspc-scoreboard ${board.bytes} bytes (living board)`);
   }
 
-  // Unsuffixed stranger URLs a demographic types. 404 here means the alias
-  // pack did not land on this host (or a Vite overwrite wiped it).
   for (const path of [
     "/gspc", "/verify", "/console", "/for/regulator", "/vs/vanta",
     "/gspc-verify", "/dashboard", "/about", "/library/regulation",
     "/honesty", "/watchdog", "/insurers", "/login",
   ]) {
-    const r = await get(host + path);
+    const r = await getStable(host + path);
     if (r.error) fail(`${host}${path} fetch failed: ${r.error}`);
     else if (r.status >= 400 || /404 — Not found/i.test(r.body)) fail(`${host}${path} HTTP ${r.status || "404"}`);
     else pass(`${host}${path} HTTP ${r.status}`);

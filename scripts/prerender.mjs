@@ -77,8 +77,8 @@ function discover() {
     for (const f of readdirSync(assets))
       if (f.endsWith(".js")) js += readFileSync(join(assets, f), "utf8");
   const found = new Set(["/"]);
-  for (const m of js.matchAll(/path\s*:\s*["'`](\/[a-zA-Z0-9\/_-]*)["'`]/g)) found.add(m[1]);
-  for (const m of js.matchAll(/["'`](\/[a-z0-9][a-z0-9\/-]{2,60})["'`]\s*[,:\)]/g)) {
+  for (const m of js.matchAll(/path\s*:\s*[\"'`](\/[a-zA-Z0-9\/_-]*)[\"'`]/g)) found.add(m[1]);
+  for (const m of js.matchAll(/[\"'`](\/[a-z0-9][a-z0-9\/-]{2,60})[\"'`]\s*[,:\)]/g)) {
     const p = m[1];
     if (!/\.(js|css|png|svg|jpg|json|ico|woff2?|txt|xml)$/i.test(p) && !p.startsWith("/assets/"))
       found.add(p);
@@ -101,9 +101,18 @@ function discover() {
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/watchdog", "/disclaimers", "/csoai-law",
-    "/models", "/tools",
+    "/models", "/tools", "/sov-os", "/sov-os/", "/api-docs",
     "/workbench", "/instrument", "/system-card", "/feed", "/mcp-fleet",
     "/crosswalk", "/refutation-ledger", "/library",
+    // Flagship pages that were only SPA-routed (direct HTTP 404 = credibility leak:
+    // crawlers + the law's visitors hit a broken page). Force-prerender them.
+    "/article-50", "/tour", "/live-ledger", "/gspc-anchors",
+    "/gspc-gap-map",
+    // Legal surface (2026-08-23 audit)
+    "/legal/licensing", "/legal/privacy", "/legal/terms", "/legal/cookies",
+    "/legal/disclaimers", "/legal/dpa", "/legal/founding-council", "/legal/membership",
+    "/legal/sla", "/licensing-agreement", "/terms-of-service", "/privacy",
+    "/pricing-legacy", "/council-licensing",
   ];
   for (const p of MUST) found.add(p);
   const routes = [...found].filter(p => !p.includes(":") && !p.includes("*"));

@@ -203,7 +203,8 @@ export default function LobbyComposer({
       </div>
 
       <p id="coai-lobby-chat-note" className={`mt-2 ${TYPE.fine}`}>
-        Answers from published measurement, or it refuses.{" "}
+        Answers from published measurement, or it refuses.{
+        " "}
         <button
           type="button"
           onClick={() => setNoteOpen((o) => !o)}
@@ -215,7 +216,8 @@ export default function LobbyComposer({
       </p>
       {noteOpen && (
         <p className={`${MEASURE} mt-1 ${TYPE.fine}`}>
-          Pane commands switch locally with no model. Everything else hits the published endpoint; failures are labelled{" "}
+          Pane commands switch locally with no model. Everything else hits the published endpoint; failures are labelled{
+          " "}
           <em>deterministic</em>.
         </p>
       )}
