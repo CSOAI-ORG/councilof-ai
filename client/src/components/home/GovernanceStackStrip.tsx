@@ -75,9 +75,13 @@ export default function GovernanceStackStrip() {
           <span className="text-center sm:text-left">
             <strong className="text-white">{POSITIONING.os.name}</strong> — {POSITIONING.os.blurb}
           </span>
-          <Link href={POSITIONING.os.href} className={CTA_PRIMARY + " shrink-0"}>
+          <button
+            type="button"
+            className={CTA_PRIMARY + " shrink-0"}
+            onClick={() => openLobby({ pane: "home" })}
+          >
             {POSITIONING.os.cta}
-          </Link>
+          </button>
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-500 max-w-2xl mx-auto">
