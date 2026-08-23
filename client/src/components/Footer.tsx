@@ -10,6 +10,7 @@ import FooterVerifyStrip from './FooterVerifyStrip';
 import { SECTORS } from '@/data/library-ia';
 import { Button } from '@/components/ui/button';
 import { useSiteChromeHidden } from '@/lib/osChrome';
+import { EUNOMIA_ESTATE_LINKS, AGENT_ESTATE_LINKS } from '@/lib/estateLinks';
 
 interface FooterLink {
   name: string;
@@ -24,6 +25,13 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   const footerSections: { title: string; links: FooterLink[] }[] = [
+    {
+      title: 'Eunomia & Layer 0',
+      links: [
+        ...EUNOMIA_ESTATE_LINKS.map((l) => ({ name: l.name, href: l.href })),
+        ...AGENT_ESTATE_LINKS.map((l) => ({ name: l.name, href: l.href })),
+      ],
+    },
     {
       title: 'Product',
       links: [
@@ -140,7 +148,7 @@ export function Footer() {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-8">
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center space-x-3 mb-4 hover:opacity-80 transition-opacity">
