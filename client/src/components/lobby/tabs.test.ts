@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DASHBOARD_TABS, LOBBY_TABS, matchTab, tabById } from "./tabs";
+import { DASHBOARD_TABS, isDashboardTab, LOBBY_TABS, matchTab, tabById } from "./tabs";
 
 describe("Council OS tabs", () => {
   it("keeps Home as a native desktop, not an /os iframe", () => {
@@ -29,6 +29,15 @@ describe("Council OS tabs", () => {
     expect(matchTab("go to dsh")?.id).toBe("software");
   });
 
+  it("treats chat / AG UI as the Council OS home, and frames models and tools", () => {
+    expect(matchTab("open chat")?.id).toBe("home");
+    expect(matchTab("open the ag ui")?.id).toBe("home");
+    expect(tabById("models").path).toBe("/models");
+    expect(tabById("tools").path).toBe("/tools");
+    expect(matchTab("open the model registry")?.id).toBe("models");
+    expect(matchTab("show tools")?.id).toBe("tools");
+  });
+
   it("lists every pane exactly once", () => {
     const ids = LOBBY_TABS.map((t) => t.id);
     expect(new Set(ids).size).toBe(ids.length);
@@ -39,8 +48,10 @@ describe("Council OS tabs", () => {
     expect(ids).not.toContain("play");
     expect(ids).not.toContain("home");
     expect(ids).not.toContain("software");
-    expect(ids).toEqual(
-      LOBBY_TABS.filter((t) => t.kind === "route" && t.id !== "play" && t.id !== "software").map((t) => t.id),
-    );
+    expect(ids).toContain("board");
+    expect(ids).toContain("verify");
+    expect(ids).toContain("models");
+    expect(ids).toContain("tools");
+    expect(ids).toEqual(LOBBY_TABS.filter(isDashboardTab).map((t) => t.id));
   });
 });

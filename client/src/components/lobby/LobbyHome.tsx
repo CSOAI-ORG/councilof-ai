@@ -53,9 +53,10 @@ export default function LobbyHome({
         Measure. Sign. Check.
       </h2>
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>
-        One workspace. The living board is below — every axis the API publishes,
-        nothing invented. Ask underneath. Hide the sidebars when you want this
-        column alone.
+        This chat is the AG UI — Council OS. One workspace, not a model
+        playground. The living board is below — every axis the API publishes,
+        nothing invented. Models and tools are ranked by signed measurement,
+        not tokens. Ask underneath.
       </p>
 
       <div className="mt-8">

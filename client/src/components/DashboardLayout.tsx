@@ -94,7 +94,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             onClick={() => openLobby({ pane: "home" })}
             className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
           >
-            Open Council OS
+            Open chat (Council OS)
           </button>
         </nav>
       </motion.aside>

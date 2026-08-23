@@ -51,7 +51,9 @@ export type LobbyTaskId =
   | "regulator-brief"
   | "insurer-evidence"
   | "enterprise-start"
-  | "sector-brief";
+  | "sector-brief"
+  | "browse-models"
+  | "browse-tools";
 
 export interface LobbyTask {
   pane: LobbyTabId;
@@ -167,6 +169,18 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
       ctx
         ? `What is published for ${ctx} about AI governance — frameworks named, evidence signed, and gaps left empty?`
         : "What is published for this sector about AI governance and signed evidence?",
+  },
+  "browse-models": {
+    pane: "models",
+    label: "Open measured models",
+    prompt: () =>
+      "What models are published on the living board, and which cells are still empty?",
+  },
+  "browse-tools": {
+    pane: "tools",
+    label: "Open published tools",
+    prompt: () =>
+      "What tooling is published, and how do I run it inside Council OS without treating a tool as a certificate?",
   },
 };
 
