@@ -612,12 +612,12 @@ export default function CouncilSpace() {
           <span className="text-emerald-100/40">·</span>
           <span className="text-emerald-100/75">{loc.region.label}: {loc.region.frameworks.slice(0, 3).join(", ")}</span>
           <span className="text-emerald-100/40">·</span>
-          <span className={kbOnline === null ? "text-emerald-100/40" : kbOnline ? "text-amber-200" : "text-rose-300/80"} title="Local sov-gateway KB — verified answers from the 7-D flywheel">
+          <span className={kbOnline === null ? "text-emerald-100/40" : kbOnline ? "text-amber-200" : "text-rose-300/80"} title="Knowledge base status">
             KB: {kbOnline ? (kbStats ? `${kbStats.verified} verified` : "online") : "offline"}
           </span>
           <span className="text-emerald-100/40">·</span>
-          <span className={ledgerOnline === null ? "text-emerald-100/40" : ledgerOnline ? "text-sky-200" : "text-rose-300/80"} title="VWM spacetime canvas — append-only event ledger">
-            VWM: {ledgerOnline ? `${ledgerCount} events` : "offline"}
+          <span className={ledgerOnline === null ? "text-emerald-100/40" : ledgerOnline ? "text-sky-200" : "text-rose-300/80"} title="Council Space event ledger">
+            Ledger: {ledgerOnline ? `${ledgerCount} events` : "offline"}
           </span>
         </div>
       </section>
