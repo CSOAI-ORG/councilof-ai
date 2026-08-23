@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { askSovereign } from "../lib/sovAsk";
 import AISystemNotice from "../components/AISystemNotice";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 // /classifier — an interactive EU AI Act risk-tier classifier, wired to the live
 // Council engine. Describe an AI system → get its risk tier, why, the obligations
@@ -63,7 +64,7 @@ export default function EuActClassifier() {
 
   const tier = out && out.tier ? TIERS[out.tier] : null;
   return (
-    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+    <CouncilOsPageShell title="Classifier" subtitle="EU AI Act risk tier — governed reasoning, not a lookup table" className="min-h-screen bg-[#03110b] text-emerald-50">
       <div className="mx-auto max-w-2xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">EU AI Act · risk classifier</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Is your AI <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">high-risk?</span></h1>
@@ -94,6 +95,6 @@ export default function EuActClassifier() {
         )}
         <p className="mt-6 text-[11px] text-emerald-300/70">Indicative classification to guide you — not legal advice. For a signed, council-reviewed determination, run it through the Workbench.</p>
       </div>
-    </div>
+    </CouncilOsPageShell>
   );
 }
