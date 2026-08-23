@@ -49,6 +49,7 @@ export const LAYER0_LINKS: Layer0Link[] = [
 export const LAYER0_INFRA: Layer0Link[] = [
   { label: "Agent runbook", blurb: "curl-first — gspc, instruments, AG-UI, bond crossing.", path: "/agent-runbook" },
   { label: "RECEIPT-SPEC", blurb: "Measurement-card format — Ed25519, 3-path verify.", path: "/receipt-spec" },
+  { label: "Ownership plan", blurb: "100 moves — standards, domain, data, trust, distribution.", path: "/ownership" },
   { label: "Layer 0", blurb: "The signed trust layer the agent rail stands on.", path: "/layer0" },
   { label: "Trust center", blurb: "Keys, receipts, and what we will not claim.", path: "/trust-center" },
   { label: "Network", blurb: "N sites and where the record lives.", path: "/network" },

@@ -68,6 +68,21 @@ curl -sS https://councilof.ai/.well-known/schemas/agent-measurement-card.schema.
 cd client && npx vitest run src/components/lobby/aguiStream.test.ts src/components/lobby/tabs.test.ts
 ```
 
+## End-user persona tests (Playwright)
+
+All 9 lobby audiences × primary surfaces + Layer 0 + DSH + mobile:
+
+```bash
+npm run test:personas          # local build on :4173 — 46 frontend tests
+npm run test:personas:live     # councilof.ai API + persona walk
+```
+
+Pre-deploy smoke (no uncaught JS):
+
+```bash
+npm run test:pre-deploy
+```
+
 ## Do not cite in copy
 
 - ~~568 repos~~ → **291 MCP servers** (`mcpRegistry.json`)
