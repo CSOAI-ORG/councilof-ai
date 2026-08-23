@@ -45,6 +45,7 @@ export const STRANGER_DIRS = [
   "pricing", "start",
   "dashboard", "login", "about", "firewall-charter", "csoai-law",
   "models", "tools",
+  "chat", "ag-ui", "agui", "rankings", "sov-os",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
   "refutation-ledger", "mcp",
 ];
