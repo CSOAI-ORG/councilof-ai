@@ -40,7 +40,7 @@ export const MASTER_NAVIGATION: MasterNavGroup[] = [
     name: "Workspace",
     href: "/os",
     icon: Sparkles,
-    description: "Council OS — board, models, routes, MCP, chat",
+    description: "Council OS — router + harness in one dock (board, models, routes, MCP, chat)",
     submenu: [
       {
         name: "Council OS home",
