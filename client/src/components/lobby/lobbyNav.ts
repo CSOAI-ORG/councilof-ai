@@ -11,23 +11,27 @@ export type NavGroup = {
   items: LobbyTabId[];
 };
 
-/** Primary IA — measurement hub first, like OpenRouter Models/Rankings. */
+/** Primary IA — OpenRouter Models/Rankings + LMArena compare + Moody's depth rail. */
 export const NAV_GROUPS: NavGroup[] = [
   {
-    title: "Workspace",
+    title: "Refinery",
     items: ["home"],
   },
   {
     title: "Measurement",
-    items: ["board", "models", "routes"],
+    items: ["board", "models", "routes", "arena"],
+  },
+  {
+    title: "Ecosystem",
+    items: ["ecosystem", "workspace", "fix"],
   },
   {
     title: "Tooling",
-    items: ["tools"],
+    items: ["tools", "verify"],
   },
   {
     title: "Surfaces",
-    items: ["verify", "measured", "space", "watchdog", "academy", "software"],
+    items: ["measured", "space", "watchdog", "academy", "software"],
   },
   {
     title: "Local play",
@@ -35,11 +39,21 @@ export const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
+/** Centre-column panes — local workspace only (route tabs open the site column). */
 export const WORKSPACE_TABS: LobbyTabId[] = [
   "home",
   "board",
   "models",
   "routes",
+  "arena",
+  "ecosystem",
+  "workspace",
+  "fix",
+  "measured",
+  "academy",
+  "watchdog",
+  "software",
+  "space",
   "tools",
   "play",
   "verify",
