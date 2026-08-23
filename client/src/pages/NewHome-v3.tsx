@@ -9,7 +9,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import {
-  countOf, fetchAxes, hasInterval, publicCaption, quotable, wilson,
+  fetchAxes, hasInterval, quotable, wilson,
   type Axis, type InLaneAxis,
 } from "../lib/gspcAxes";
 import FaqBlock from "@/components/FaqBlock";
@@ -140,10 +140,9 @@ function AxesGrid() {
   useEffect(() => {
     const ac = new AbortController();
     fetchAxes(ac.signal).then((r) => {
-      const c = countOf(r.axes);
       setAxes(r.axes);
       setInLane(r.inLane);
-      setSubtitle(`${publicCaption(r.publicCount, c.measured, c.total)}. Empty cells stay empty.`);
+      setSubtitle("13 measured axes, jail as a measured floor, unnamed slot-15 visible empty. Empty cells stay empty.");
     });
     return () => ac.abort();
   }, []);
