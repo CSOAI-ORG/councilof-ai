@@ -48,6 +48,13 @@ export default function LobbyComposer({
   const suggestions = asksFor(panePath || "/", audience);
 
   useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${Math.min(el.scrollHeight, 112)}px`;
+  }, [q]);
+
+  useEffect(() => {
     try { localStorage.setItem("coai.lobby.audience", audience); } catch { /* ignore */ }
   }, [audience]);
 
