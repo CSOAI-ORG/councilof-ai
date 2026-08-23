@@ -70,7 +70,6 @@ export default function EuActClassifier() {
         <h1 className="mt-3 text-4xl font-black tracking-tight">Is your AI <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">high-risk?</span></h1>
         <p className="mt-3 text-emerald-100/75">Describe any AI system. The Council assistant classifies its EU AI Act risk tier, tells you why, and lists the obligations that follow — plus every other framework that applies.</p>
 
-        {/* Article 50(1) AI-interaction disclosure — registry-driven wording. */}
         <div className="mt-6">
           <AISystemNotice route="/classifier" />
         </div>
