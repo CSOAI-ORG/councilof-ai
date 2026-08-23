@@ -56,6 +56,7 @@ const BY_AUDIENCE: Record<string, string[]> = {
     "How is a measurement card signed, and how do I verify one without trusting you?",
     "What does an assessment run against my system, and what does it explicitly not claim?",
     "Which axes have a published bank I can reproduce, and where do the items live?",
+    "What models are published on the living board, and which cells are still empty?",
   ],
   compliance: [
     "Which EU AI Act provisions are crosswalked, and what is the frozen text they were measured against?",
