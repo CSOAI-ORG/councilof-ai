@@ -21,7 +21,8 @@ import LobbyOverlay from "./LobbyOverlay";
  * The lobby frames real routes in same-origin iframes. Inside such a frame the
  * app boots again, so the badge would otherwise stack forever. `isEmbedded()`
  * suppresses this trigger there. Header, footer, cookie banner and the
- * skip links hide via `useSiteChromeHidden()` (embed or OS open).
+ * When Council OS is open the marketing Header hides; LobbyHeader is the site
+ * header. Footer and main content stay visible — surfaces open in the page column.
  *
  * The overlay owns its own window state (open / minimised / expanded); this file
  * only owns the badge and the mount. Minimising does NOT unmount the overlay —
@@ -45,7 +46,9 @@ export default function CouncilLobby() {
   useEffect(() => { setEmbedded(isEmbedded()); }, []);
 
   // A deep link opens the lobby. It does not ask the question — the user does.
-  useEffect(() => { if (intent) setOpen(true); }, [intent]);
+  useEffect(() => {
+    if (intent) setOpen(true);
+  }, [intent?.nonce, intent?.pane]);
 
   // Return focus to the badge when the overlay closes (not on first mount).
   useEffect(() => {
