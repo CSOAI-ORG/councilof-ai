@@ -1,1 +1,1 @@
-LOAD_FROM_FILE
+file:///workspace/sources/councilof-ai/client/src/App.tsx
