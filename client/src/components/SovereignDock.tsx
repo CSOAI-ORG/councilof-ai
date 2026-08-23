@@ -15,8 +15,8 @@ import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, per
 type Msg = { role: "you" | "sov"; text: string };
 
 const ROUTES: { re: RegExp; href: string; label: string }[] = [
-  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/graph", label: "the Governance Graph" },
-  { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/graph", label: "the Governance Graph" },
+  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/?lobby=home", label: "the Governance Graph" },
+  { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/?lobby=home", label: "the Governance Graph" },
   { re: /framework|crosswalk|\biso\b|\bnist\b|tc260|eu ai act/i, href: "/crosswalks", label: "Framework crosswalks" },
   { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/gspc-arena", label: "Council Space" },
   { re: /sovereign town|\btown\b|incident/i, href: "/gspc-arena?view=towns", label: "the Towns layer of Council Space" },
@@ -38,7 +38,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /council network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Council network" },
   { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
-  { re: /\bos\b|launch|grid|everything/i, href: "/os", label: "the OS launcher" },
+  { re: /\bos\b|launch|grid|everything/i, href: "/?lobby=home", label: "the OS launcher" },
 ];
 
 const KNOWLEDGE: { re: RegExp; a: string }[] = [
@@ -47,12 +47,12 @@ const KNOWLEDGE: { re: RegExp; a: string }[] = [
 ];
 
 const QUICK: { label: string; href: string }[] = [
-  { label: "Governance Graph", href: "/graph" },
+  { label: "Governance Graph", href: "/?lobby=home" },
   { label: "Council Space", href: "/gspc-arena" },
   { label: "Open Commons", href: "/commons" },
   { label: "Plans", href: "/pricing" },
   { label: "Status", href: "/status" },
-  { label: "Full OS", href: "/os" },
+  { label: "Full OS", href: "/?lobby=home" },
 ];
 
 const GW = "/api";
@@ -77,10 +77,10 @@ const APP_ROUTES: Record<string, string> = {
   revenue: "/pricing", pricing: "/pricing", plans: "/pricing", billing: "/pricing",
   king: "/try", council: "/try", try: "/try", vote: "/try", bft: "/try",
   setup: "/start", onboard: "/start", start: "/start", welcome: "/start",
-  graph: "/graph", knowledge: "/graph", search: "/graph",
+  graph: "/?lobby=home", knowledge: "/?lobby=home", search: "/?lobby=home",
   space: "/gspc-arena", sim: "/gspc-arena", simulation: "/gspc-arena", experiment: "/gspc-arena", sovspace: "/gspc-arena",
   tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
-  status: "/status", system: "/status", os: "/os", home: "/os", grid: "/os",
+  status: "/status", system: "/status", os: "/?lobby=home", home: "/?lobby=home", grid: "/?lobby=home",
   twin: "/me",
   certification: "/academy", cert: "/academy", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
@@ -97,7 +97,7 @@ function routeForAction(a: any): string | null {
   if (!a || !a.command) return null;
   if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url);
   if (a.command === "open_app" && a.args && a.args.id) return APP_ROUTES[String(a.args.id).toLowerCase()] || null;
-  if (a.command === "govern") return "/graph";
+  if (a.command === "govern") return "/?lobby=home";
   return null;
 }
 async function orchestrate(message: string, context: any): Promise<{ say: string; actions: any[] } | null> {
