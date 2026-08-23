@@ -25,6 +25,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
 
+      - name: One-door guard (AG UI is Council OS)
+        run: node scripts/one-door-guard.mjs
+
       - name: Install deps
         run: npm install --no-audit --no-fund
 

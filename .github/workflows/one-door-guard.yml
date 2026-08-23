@@ -1,0 +1,37 @@
+name: One-door guard — AG UI is Council OS
+
+# Source-only. Fails a PR that restores the #365/#372 iframe of
+# csoai-site.pages.dev/ag-ui, or that 308s /ag-ui /sov-os /chat to a
+# second console instead of /?lobby=home.
+on:
+  pull_request:
+    paths:
+      - "client/src/pages/AgUiBridge.tsx"
+      - "client/src/pages/SovOS.tsx"
+      - "scripts/generate-redirects.mjs"
+      - "scripts/one-door-guard.mjs"
+      - "public/_redirects"
+      - ".github/workflows/one-door-guard.yml"
+      - ".github/workflows/deploy.yml"
+  push:
+    branches: [master]
+    paths:
+      - "client/src/pages/AgUiBridge.tsx"
+      - "client/src/pages/SovOS.tsx"
+      - "scripts/generate-redirects.mjs"
+      - "scripts/one-door-guard.mjs"
+      - "public/_redirects"
+      - ".github/workflows/one-door-guard.yml"
+      - ".github/workflows/deploy.yml"
+
+jobs:
+  one-door:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: One-door guard
+        run: node scripts/one-door-guard.mjs
