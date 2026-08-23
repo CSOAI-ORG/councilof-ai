@@ -2,6 +2,7 @@
  * Shared navigation for Eunomia / Layer 0 surfaces — Footer, GlobalSearch, home strips.
  * Keep in sync with Header.tsx Evidence nav and layer0Links.ts.
  */
+import { POSITIONING } from "@/lib/positioning";
 export type EstateLink = {
   name: string;
   href: string;
@@ -21,7 +22,7 @@ export const EUNOMIA_ESTATE_LINKS: EstateLink[] = [
   {
     name: "Eunomia Router",
     href: "/instruments",
-    description: "291 MCP routing rules — the OpenRouter of governance",
+    description: POSITIONING.router.blurb,
     keywords: ["mcp", "router", "instruments", "eunomia"],
   },
   {
@@ -55,7 +56,7 @@ export const AGENT_ESTATE_LINKS: EstateLink[] = [
   {
     name: "Arena harness",
     href: "/arena-harness",
-    description: "Downstream of routers — arena, bonds, proof DB (DESIGN thesis)",
+    description: POSITIONING.harness.blurb,
     keywords: ["stripe", "openrouter", "arena", "harness", "bond"],
   },
   {
