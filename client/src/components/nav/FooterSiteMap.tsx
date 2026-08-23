@@ -2,6 +2,7 @@
  * Full site map in the footer — the former header mega menu (SITE_NAVIGATION).
  */
 import { SITE_NAVIGATION } from "@/data/siteNavigation";
+import { POSITIONING } from "@/lib/positioning";
 import { MegaDropdown } from "./NavMegaPanel";
 
 export default function FooterSiteMap() {
@@ -12,8 +13,7 @@ export default function FooterSiteMap() {
           Explore the site
         </h2>
         <p className="mt-1 text-sm text-gray-600 max-w-2xl">
-          Full estate map — regulation, evidence, academy, and company. Council OS and AG-UI
-          live workspace controls are in the header.
+          {POSITIONING.subhead} Council OS controls are in the header; the full estate map is below.
         </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
