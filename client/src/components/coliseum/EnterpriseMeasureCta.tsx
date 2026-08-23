@@ -1,29 +1,38 @@
-import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { openLobby } from "@/lib/lobbyLink";
+import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 
 /**
- * EnterpriseMeasureCta — honest CTA for enterprise measurement.
- * Measurement, not certification. Council measures; fixers remediate.
+ * EnterpriseMeasureCta — opens Council OS with org context seeded.
+ * Measurement + training loop — not certification.
  */
-export default function EnterpriseMeasureCta() {
+export default function EnterpriseMeasureCta({
+  orgName,
+  orgId,
+  label = "Start enterprise measurement",
+  className = "",
+  variant = "primary",
+}: {
+  orgName?: string;
+  orgId?: string;
+  label?: string;
+  className?: string;
+  variant?: "primary" | "outline";
+}) {
+  const ctx = orgName || orgId || undefined;
+  const base =
+    variant === "primary"
+      ? "rounded-lg bg-emerald-400 px-4 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-300 transition"
+      : "rounded-lg border border-emerald-400/40 px-4 py-2.5 text-sm font-bold text-emerald-100 hover:bg-white/5 transition";
+
   return (
-    <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-6">
-      <h3 className="text-lg font-semibold text-emerald-900">Enterprise measurement</h3>
-      <p className="mt-2 text-sm text-emerald-800/90">
-        Batch assess your AI systems against the rules that govern them. Signed cards, not conformity marks.
-      </p>
-      <div className="mt-4 flex flex-wrap gap-3">
-        <Button asChild className="bg-emerald-700 hover:bg-emerald-600">
-          <Link href="/enterprise">Get measured</Link>
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => openLobby({ task: "enterprise-start", pane: "measured" })}
-        >
-          Ask in Council OS
-        </Button>
-      </div>
-    </div>
+    <a
+      href={lobbyHref({ task: "enterprise-start", ctx, pane: "measured" })}
+      className={`${base} ${className}`}
+      onClick={(e) => {
+        e.preventDefault();
+        openLobby({ task: "enterprise-start", ctx, pane: "measured" });
+      }}
+    >
+      {label} →
+    </a>
   );
 }
