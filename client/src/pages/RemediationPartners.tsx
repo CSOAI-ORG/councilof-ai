@@ -6,6 +6,7 @@
  */
 import { Link } from "wouter";
 import { Shield, CheckCircle, ArrowRight, ExternalLink } from "lucide-react";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 const DOCTRINE = `Council of AI (CSOAI Ltd, UK 16939677) is a measurement body. We issue
 verified measurement credentials — 3KB Ed25519-signed cards that tell you how your AI
@@ -32,13 +33,21 @@ const RULES = [
 // Providers are added only after they demonstrate: (a) they can read a card,
 // (b) they map findings to a fix plan, (c) they use the public verify endpoint.
 const PROVIDERS: { name: string; url: string; region: string; note: string }[] = [
-  // Example entry — uncomment when a provider passes verification:
-  // { name: "Example Remediation Ltd", url: "https://example.com", region: "UK/EU", note: "Verified: can read cards, can map findings to fix plans." },
+  {
+    name: "Your team (self-remediation)",
+    url: "/workspace",
+    region: "Global",
+    note: "Read the signed card, fix gaps yourself, schedule free re-measure at /workspace. Council does not certify the fix.",
+  },
 ];
 
 export default function RemediationPartners() {
   return (
-    <div className="min-h-screen bg-white">
+    <CouncilOsPageShell
+      title="Fix & train"
+      subtitle="Measurement body — independent remediation partners and self-fix via workspace"
+      className="min-h-screen bg-white"
+    >
       {/* Hero */}
       <section className="border-b border-gray-100 bg-gradient-to-b from-emerald-50 to-white">
         <div className="mx-auto max-w-4xl px-6 py-20">
@@ -144,6 +153,6 @@ export default function RemediationPartners() {
           </div>
         </div>
       </section>
-    </div>
+    </CouncilOsPageShell>
   );
 }
