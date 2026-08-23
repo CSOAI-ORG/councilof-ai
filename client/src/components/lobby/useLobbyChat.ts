@@ -1,26 +1,20 @@
 import { useCallback, useMemo, useState } from "react";
+import {
+  aguiAvailable,
+  resumeAguiAfterConsent,
+  runAguiSession,
+  submitAguiConsent,
+  type AguiHitl,
+} from "./aguiStream";
 import { matchTab, type LobbyTab } from "./tabs";
 
 /**
  * useLobbyChat — the lobby's chat state, lifted out of the bar.
  *
- * WHY IT IS A HOOK AND NOT COMPONENT STATE. Two things need it: the chat bar
- * that writes the turns, and the right rail's "Chats" section that lists the
- * session's threads. Lifting it also means MINIMISING THE LOBBY CANNOT LOSE THE
- * THREAD — the overlay stays mounted while docked, so the state simply survives.
- *
- * IN MEMORY ONLY, AND THE UI SAYS SO. Threads live for this page session. There
- * is no server-side history, no localStorage of message text, nothing to
- * retrieve after a reload. The Chats section states that plainly rather than
- * implying a transcript exists somewhere.
- *
- * DETERMINISTIC FIRST. Two lanes, and the pill on every answer says which one
- * produced it:
- *   1. a local pane command ("show the board") — no network, no model;
- *   2. POST /api/chat, which answers from published measurement or refuses.
- * A non-200 or a network failure falls back to a short local help message that
- * is EXPLICITLY labelled deterministic. We never dress a local string up as a
- * live answer, and this lane never writes a compliance verdict.
+ * Three network lanes (pill on every answer says which):
+ *   1. local pane command — no network;
+ *   2. AG-UI SSE via /api/agui when AGUI_WIRE_URL is set (streaming + HITL);
+ *   3. POST /api/chat — published measurement or refuse.
  */
 
 export type Turn = {
@@ -29,28 +23,31 @@ export type Turn = {
   state?: string;
   signature?: string;
   at: string;
+  streaming?: boolean;
+  hitl?: AguiHitl;
+  sessionId?: string;
 };
 
 export type Thread = {
   id: string;
-  /** First question asked, trimmed — the thread's name in the Chats rail. */
   title: string;
   startedAt: string;
   turns: Turn[];
 };
 
-/** Estate-wide state labels for council replies. */
 export const STATE_LABEL: Record<string, string> = {
   live: "council · live specialist",
   grounded: "grounded in published measurement",
   ungrounded: "refused — no grounding available",
   unreachable: "endpoint unreachable",
   deterministic: "deterministic · local, no model",
+  agui: "council · AG-UI wire",
+  "agui-hitl": "consent checkpoint · AG-UI",
+  "agui-streaming": "council · AG-UI streaming",
 };
 
 const now = () => new Date().toISOString();
 
-/** The offline help text. Deterministic, and it says so on its face. */
 function offlineHelp(reason: string): string {
   return (
     `The Council endpoint did not answer — ${reason}. This reply is a local, deterministic ` +
@@ -67,10 +64,15 @@ export interface LobbyChat {
   activeId: string | null;
   active: Thread | null;
   busy: boolean;
-  send: (question: string, onNavigate: (t: LobbyTab) => void) => Promise<void>;
+  aguiWire: boolean | null;
+  send: (
+    question: string,
+    onNavigate: (t: LobbyTab) => void,
+    opts?: { aguiHandle?: string },
+  ) => Promise<void>;
+  submitHitl: (decision: "approve" | "deny") => Promise<void>;
   startThread: () => void;
   selectThread: (id: string) => void;
-  /** Total turns this session — quoted by the docked bar, computed never typed. */
   turnCount: number;
 }
 
@@ -78,6 +80,7 @@ export function useLobbyChat(): LobbyChat {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [aguiWire, setAguiWire] = useState<boolean | null>(null);
 
   const active = useMemo(
     () => threads.find((t) => t.id === activeId) ?? null,
@@ -92,12 +95,77 @@ export function useLobbyChat(): LobbyChat {
   const startThread = useCallback(() => setActiveId(null), []);
   const selectThread = useCallback((id: string) => setActiveId(id), []);
 
+  const updateLastCouncilTurn = useCallback((threadId: string, patch: Partial<Turn>) => {
+    setThreads((prev) =>
+      prev.map((x) => {
+        if (x.id !== threadId) return x;
+        const turns = [...x.turns];
+        const last = turns.length - 1;
+        if (last < 0 || turns[last].role !== "council") return x;
+        turns[last] = { ...turns[last], ...patch };
+        return { ...x, turns };
+      }),
+    );
+  }, []);
+
+  const submitHitl = useCallback(
+    async (decision: "approve" | "deny") => {
+      const thread = threads.find((t) => t.id === activeId);
+      const last = thread?.turns[thread.turns.length - 1];
+      if (!last?.sessionId || !last.hitl) return;
+
+      setBusy(true);
+      try {
+        const ok = await submitAguiConsent(last.sessionId, decision);
+        if (!ok) {
+          updateLastCouncilTurn(activeId!, {
+            text: `${last.text}\n\n(Consent ${decision} failed — wire unreachable.)`,
+            streaming: false,
+            hitl: undefined,
+            state: "unreachable",
+          });
+          return;
+        }
+
+        const extra = await resumeAguiAfterConsent(last.sessionId, {
+          onDelta: (delta) => {
+            setThreads((prev) =>
+              prev.map((x) => {
+                if (x.id !== activeId) return x;
+                const turns = [...x.turns];
+                const i = turns.length - 1;
+                if (i < 0 || turns[i].role !== "council") return x;
+                turns[i] = {
+                  ...turns[i],
+                  text: turns[i].text + delta,
+                  streaming: true,
+                  state: "agui-streaming",
+                };
+                return { ...x, turns };
+              }),
+            );
+          },
+        });
+
+        updateLastCouncilTurn(activeId!, {
+          text: extra ? `${last.text}\n\nAfter ${decision}: ${extra}` : `${last.text}\n\nConsent: ${decision}.`,
+          streaming: false,
+          hitl: undefined,
+          state: "agui",
+          signature: `${last.signature ?? ""} · consent ${decision}`,
+        });
+      } finally {
+        setBusy(false);
+      }
+    },
+    [activeId, threads, updateLastCouncilTurn],
+  );
+
   const send = useCallback(
-    async (raw: string, onNavigate: (t: LobbyTab) => void) => {
+    async (raw: string, onNavigate: (t: LobbyTab) => void, opts?: { aguiHandle?: string }) => {
       const question = raw.trim();
       if (!question || busy) return;
 
-      // Open (or continue) a thread and record the user's turn.
       let id = activeId;
       const userTurn: Turn = { role: "user", text: question, at: now() };
       setThreads((prev) => {
@@ -113,8 +181,6 @@ export function useLobbyChat(): LobbyChat {
         id = fresh.id;
         return [...prev, fresh];
       });
-      // `id` was assigned synchronously inside the updater above when a thread
-      // was created, so it is safe to adopt it here.
       const threadId = id!;
       setActiveId(threadId);
 
@@ -123,7 +189,6 @@ export function useLobbyChat(): LobbyChat {
           prev.map((x) => (x.id === threadId ? { ...x, turns: [...x.turns, { ...t, at: now() }] } : x)),
         );
 
-      // Lane 1 — deterministic command. Answered locally, labelled locally.
       const tab = matchTab(question);
       if (tab) {
         onNavigate(tab);
@@ -138,9 +203,67 @@ export function useLobbyChat(): LobbyChat {
         return;
       }
 
-      // Lane 2 — the estate's honest endpoint.
       setBusy(true);
       try {
+        const wireUp = await aguiAvailable();
+        setAguiWire(wireUp);
+
+        if (wireUp) {
+          push({
+            role: "council",
+            text: "",
+            state: "agui-streaming",
+            signature: "agui · connecting…",
+            streaming: true,
+          });
+
+          const agui = await runAguiSession(
+            question,
+            {
+              onDelta: (delta) => {
+              setThreads((prev) =>
+                prev.map((x) => {
+                  if (x.id !== threadId) return x;
+                  const turns = [...x.turns];
+                  const i = turns.length - 1;
+                  if (i < 0 || turns[i].role !== "council") return x;
+                  turns[i] = {
+                    ...turns[i],
+                    text: turns[i].text + delta,
+                    streaming: true,
+                    state: "agui-streaming",
+                  };
+                  return { ...x, turns };
+                }),
+              );
+            },
+          },
+            opts?.aguiHandle ?? "lobby",
+          );
+
+          if (agui?.text) {
+            updateLastCouncilTurn(threadId, {
+              text: agui.text,
+              state: agui.state,
+              signature: agui.signature,
+              streaming: false,
+              hitl: agui.hitl,
+              sessionId: agui.sessionId,
+            });
+            return;
+          }
+
+          setThreads((prev) =>
+            prev.map((x) => {
+              if (x.id !== threadId) return x;
+              const turns = x.turns.filter(
+                (t, i) => !(i === x.turns.length - 1 && t.role === "council" && !t.text.trim()),
+              );
+              return { ...x, turns };
+            }),
+          );
+        }
+
         const r = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -178,8 +301,19 @@ export function useLobbyChat(): LobbyChat {
         setBusy(false);
       }
     },
-    [activeId, busy],
+    [activeId, busy, updateLastCouncilTurn],
   );
 
-  return { threads, activeId, active, busy, send, startThread, selectThread, turnCount };
+  return {
+    threads,
+    activeId,
+    active,
+    busy,
+    aguiWire,
+    send,
+    submitHitl,
+    startThread,
+    selectThread,
+    turnCount,
+  };
 }
