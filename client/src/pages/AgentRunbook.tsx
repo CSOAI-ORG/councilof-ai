@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { StackHonestyBanner } from "@/components/StackHonestyBanner";
 import { STACK_STATS } from "@/lib/stackHonesty";
 import { openLobby } from "@/lib/lobbyLink";
+import { POSITIONING } from "@/lib/positioning";
 import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 const PROBES = [
@@ -94,8 +95,8 @@ export default function AgentRunbook() {
             curl-first — agents eat in days, not years
           </h1>
           <p className="mt-4 max-w-2xl text-sm sm:text-base leading-relaxed text-slate-400">
-            Keyless machine surfaces for the OpenRouter of governance. Prefer live JSON over this page —
-            numbers change on the API. Measurement, not certification.
+            Keyless machine surfaces for the governance harness — {POSITIONING.router.short} + signed GSPC.
+            Prefer live JSON over this page. Measurement, not certification.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button
