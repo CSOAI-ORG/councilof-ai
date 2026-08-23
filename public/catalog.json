@@ -3,10 +3,8 @@
   "name": "Council of AI — Product Catalog",
   "register": "measurement, not certification — assessed, not certified",
   "updated": "2026-08-23",
-  "slots": {
-    "description": "Public 15-slot grid: 13 measured products + jail floor + unnamed slot-15",
-    "measured": 13,
-    "reserved": ["jail_floor", "slot_15_empty"]
+  "board": {
+    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard — 13 measured axes, jail as a measured floor, unnamed empty slot-15"
   },
   "products": [
     {
@@ -26,8 +24,8 @@
       "note": "measurement not certification — MCP tools: measure, verify, jail-probe, enter-arena"
     },
     {
-      "id": "dorado-signal",
-      "name": "SOV SIGNAL (Dorado)",
+      "id": "dorado",
+      "name": "Dorado (measured trust gauge)",
       "status": "live",
       "href": "/api/dorado",
       "payment": null,
@@ -56,22 +54,6 @@
       "href": "/arena-scoreboard",
       "payment": null,
       "note": "measurement not certification — signed per-axis rankings"
-    },
-    {
-      "id": "evidence-hub",
-      "name": "Evidence Hub",
-      "status": "live",
-      "href": "/evidence",
-      "payment": null,
-      "note": "measurement not certification — evidence collection and audit trail"
-    },
-    {
-      "id": "readiness-assessment",
-      "name": "Readiness Assessment",
-      "status": "live",
-      "href": "/readiness-assessment",
-      "payment": null,
-      "note": "measurement not certification — free governance readiness check"
     },
     {
       "id": "article-50-pack",
@@ -112,22 +94,6 @@
       "href": "/cobol",
       "payment": null,
       "note": "measurement not certification — legacy system integration (DRAFT, same-owner shelf)"
-    },
-    {
-      "id": "jail_floor",
-      "name": "Jail Floor",
-      "status": "reserved",
-      "href": null,
-      "payment": null,
-      "note": "reserved slot — baseline measurement floor"
-    },
-    {
-      "id": "slot_15_empty",
-      "name": "",
-      "status": "reserved",
-      "href": null,
-      "payment": null,
-      "note": "reserved empty slot"
     }
   ],
   "payment_rails": {
