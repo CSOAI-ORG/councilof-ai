@@ -2,7 +2,7 @@
   "schema_version": "2024-11-05",
   "name": "csoai-gspc-mcp",
   "display_name": "Council of AI — GSPC Measurement Tools",
-  "description": "Independent AI-governance measurement body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) with frozen item banks, published scoring code, and Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC 15-slot instrument (Governance · Safety · Provenance · Continuity): 13 measured axes, jail floor, empty slot-15. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment.",
   "icon_url": "https://councilof.ai/favicon.ico",
   "provider": {
     "name": "CSOAI Ltd",
@@ -20,7 +20,7 @@
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
       "method": "GET",
-      "description": "Live Ed25519-signed GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, McNemar separation. No auth required."
+      "description": "Live GSPC 15-slot measurement board (13 measured axes + jail floor + empty slot-15): per-axis n, leader, Wilson interval, McNemar separation. No auth required."
     }
   },
   "capabilities": {
