@@ -75,7 +75,7 @@ export function apiDocFor(item: RouterEntry): InstrumentApiDoc {
 /** Open Council OS with instrument slug as AG-UI handle — consent lock on prompt. */
 export function openInstrumentInLobby(item: RouterEntry) {
   openLobby({
-    pane: "tools",
+    pane: "home",
     prompt:
       item.runPrompt ??
       `Route through ${item.name} (${item.eunomiaUri}) — what does each capability return?`,
