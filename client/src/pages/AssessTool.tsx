@@ -10,6 +10,7 @@ import { ShieldCheck, AlertTriangle, Loader2, BadgeCheck, XCircle } from "lucide
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DashboardLayout from "@/components/DashboardLayout";
+import CouncilOsInnerNav from "@/components/os/CouncilOsInnerNav";
 
 // Same-origin by default: /api/assess is a Pages Function on this deployment. The old
 // default, https://api.csoai.org, was a hostname with NO DNS record — every click on the
@@ -63,7 +64,9 @@ export default function AssessTool() {
   }
 
   return (
-    <DashboardLayout>
+    <>
+      <CouncilOsInnerNav title="Assess" subtitle="Signed measurement — training loop, not certification" />
+      <DashboardLayout>
       <div className="max-w-3xl mx-auto px-4 py-10">
         <div className="flex items-center gap-3 mb-2">
           <ShieldCheck className="h-7 w-7 text-emerald-600" />
@@ -155,5 +158,6 @@ export default function AssessTool() {
         )}
       </div>
     </DashboardLayout>
+    </>
   );
 }
