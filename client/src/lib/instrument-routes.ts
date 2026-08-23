@@ -26,7 +26,7 @@ export type InstrumentApiDoc = {
 
 export function apiDocFor(item: RouterEntry): InstrumentApiDoc {
   const host = "https://councilof.ai";
-  const tool = item.mcpSlug?.replace(/-mcp$/, "")?.replace(/-/g, ".") ?? item.id;
+  const tool = item.mcpSlug?.replace(/-mcp$/, "").replace(/-/g, ".") ?? item.id;
 
   if (item.endpoint?.includes("/api/gspc")) {
     return {
