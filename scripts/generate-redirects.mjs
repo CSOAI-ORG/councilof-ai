@@ -74,7 +74,7 @@ const EXISTING = [
   "/consensus            /council   308",   // §0.2 #14 — same
   "/jewels               /          308",   // §0.2 #22 — internal strategy page was public
   "/crown-jewels         /          308",   // §0.2 #22 — same
-  "/plans                /pricing   308",   // §3.5 #2 — duplicate of /pricing
+  "/plans                /pricing   308",   // §0.2 wait that's §3.5
   "/enterprise-plans     /pricing   308",   // §3.5 #2 — fold Enterprise into one pricing page
   // qa-sweep 2026-08-19: dead internal links found on live pages — no such routes existed.
   "/council-space  /gspc-arena             308",  // Council Space's own console/nav linked it
@@ -88,6 +88,9 @@ const EXISTING = [
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
+  // AG UI is Council OS — do not iframe a second console or nest /os.
+  "/ag-ui                  /?lobby=home                 308",
+  "/ag-ui/                 /?lobby=home                 308",
   "/library/measurement    /library/axes                308",
   // Klingler/DID stranger-walk + persona cold loads (2026-08-22).
   // Do NOT redirect /gspc-verify ↔ /gspc-verify/ — Pages trailing-slash
@@ -106,6 +109,7 @@ const EXISTING = [
 const PERSONA_SLASH = [
   "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
+  "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
 ];
 const PERSONA_FOR_SLASH = [
   "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
