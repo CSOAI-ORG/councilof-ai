@@ -15,13 +15,14 @@ import {
 import FaqBlock from "@/components/FaqBlock";
 import StoryWorld from "@/components/home/StoryWorld";
 import LivingStages from "@/components/home/LivingStages";
+import { LAYER0_LINKS, LAYER0_INFRA, openLayer0InLobby } from "@/lib/layer0Links";
 import {
   Shield, CheckCircle, Users, Building2,
   Zap, ChevronRight, BarChart3, Gamepad2, TrendingUp,
   Eye, FileCheck, RefreshCw, Ban, Landmark, Scale,
 } from "lucide-react";
 
-// ── data ───────────────────────────────────────────────────────
+// ── data ─────────────────────────────────────────────────────────
 const FOUR_BUYERS = [
   { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. The living GSPC board is signed; empty cells stay empty. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
@@ -50,7 +51,7 @@ const RECENT: Post[] = [
   { title: "NIS2 Compliance for Critical Infrastructure Operators", date: "2026-06-17", desc: "NIS2 expanded scope reaches energy, transport, health and digital infrastructure. Every AI in that chain is in scope.", href: "/blog/nis2-compliance-critical-infrastructure" },
 ];
 
-// ── sections ───────────────────────────────────────────────────
+// ── sections ─────────────────────────────────────────────────────
 function Section({ id, title, subtitle, children, bg }: { id?: string; title?: string; subtitle?: string; children: ReactNode; bg?: string }) {
   return (
     <section id={id} className={`py-20 px-6 ${bg ?? ""}`}>
@@ -65,7 +66,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
 
 // ── living GSPC grid (honest empties stay empty) ─────────────────────────
 
-// ── problem we fix ─────────────────────────────────────
+// ── problem we fix ───────────────────────────────────────────────
 function ProblemStrip() {
   return (
     <Section
@@ -209,7 +210,56 @@ function AxesGrid() {
   );
 }
 
-// ── demographics ───────────────────────────────────
+function EunomiaLayerStrip() {
+  const infra = LAYER0_INFRA.slice(0, 3);
+  return (
+    <Section
+      id="eunomia"
+      title="Eunomia — the arena routers fight in"
+      subtitle="CSOAI measures (body). MEOK routes eval volume (head). Don't compete on routing — prove routing was correct. 291 MCP servers catalogued; 13 GSPC core axes MEASURED."
+      bg="bg-gray-50"
+    >
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {LAYER0_LINKS.map((link) => (
+          <div
+            key={link.path}
+            className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-lg hover:border-emerald-200 transition-all"
+          >
+            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-600">{link.label}</h3>
+            <p className="mt-2 text-sm text-gray-500 leading-relaxed flex-1">{link.blurb}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href={link.path}
+                className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700"
+              >
+                Open <ChevronRight className="w-3 h-3" />
+              </a>
+              <button
+                type="button"
+                onClick={() => openLayer0InLobby(link)}
+                className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-50"
+              >
+                Ask in Lobby
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm">
+        {infra.map((x) => (
+          <a key={x.path} href={x.path} className="font-semibold text-emerald-600 hover:underline">
+            {x.label} →
+          </a>
+        ))}
+        <a href="/ownership" className="font-semibold text-emerald-600 hover:underline">
+          Ownership plan →
+        </a>
+      </div>
+    </Section>
+  );
+}
+
+// ── demographics ────────────────────────────────────────────────
 function BuyerCards() {
   return (
     <Section title="Built for the people who get audited" subtitle="One instrument, four audiences. Pick your path — every CTA leads to the same measurement, signed." bg="bg-gray-50">
@@ -230,7 +280,7 @@ function BuyerCards() {
   );
 }
 
-// ── industries ───────────────────────────────────
+// ── industries ────────────────────────────────────────────────
 function IndustryGrid() {
   return (
     <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
@@ -255,7 +305,7 @@ function IndustryGrid() {
   );
 }
 
-// ── blog strip ───────────────────────────────
+// ── blog strip ──────────────────────────────────────────────────
 function BlogStrip() {
   return (
     <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." bg="bg-white">
@@ -278,7 +328,7 @@ function BlogStrip() {
   );
 }
 
-// ── upsells ────────────────────────────
+// ── upsells ───────────────────────────────────────────────────
 
 // ── FAQ — 21 answers, the whole proposition in plain English ──────────
 // AEO/GEO: FaqBlock renders these as a native <details> accordion (crawlable
@@ -375,7 +425,7 @@ const HOME_FAQ = [
   },
 ];
 
-// ── SEO / schema ─────────────────────────
+// ── SEO / schema ───────────────────────────────────────────────
 // (qa-sweep 2026-08-19) The page-level WebSite + FAQPage constants were REMOVED:
 // the shell (client/index.html) already ships the canonical WebSite node, and the
 // FaqBlock below emits the FAQPage node for exactly the FAQ this page renders —
@@ -384,7 +434,7 @@ const HOME_FAQ = [
 // node also asserted a SearchAction the shell audit (2026-08-14) had already
 // declined to claim until /search?q= is verified.
 
-// ── export ───────────────────────────────
+// ── export ────────────────────────────────────────────────────
 export default function NewHomeV3() {
   return (
     <main>
@@ -394,6 +444,8 @@ export default function NewHomeV3() {
       <ProblemStrip />
       <div className="border-b border-gray-100" />
       <UspGrid />
+      <div className="border-b border-gray-100" />
+      <EunomiaLayerStrip />
       <div className="border-b border-gray-100" />
       <BuyerCards />
       <div className="border-b border-gray-100" />
