@@ -145,6 +145,6 @@ Four ownership levers: **Standards** · **Domain** · **Data** · **Trust** · *
 
 **Today (in-lane):** 1–4, 13, 81, 85, 96–97  
 **This week (owner gate):** 6–7, 91–93, 100  
-**This month:** 10, 18, 27, 49, 86–88
+**This month:** 10, 18, 27, 49, 86–888
 
 **Tipping move:** Ship spec (#1) + get cited (#81–99). Standards adoption + distribution compound.
