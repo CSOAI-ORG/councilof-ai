@@ -98,6 +98,9 @@ function discover() {
     "/library/axes",
     "/verify", "/os", "/assess", "/academy", "/compare", "/layer0",
     "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",
+    "/dashboard", "/login", "/start", "/about", "/insurers",
+    "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
+    "/watchdog", "/disclaimers", "/csoai-law",
   ];
   for (const p of MUST) found.add(p);
   const routes = [...found].filter(p => !p.includes(":") && !p.includes("*"));
