@@ -89,6 +89,7 @@ const EXISTING = [
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
+  "/sov-os                 /sov-os/                     308",
   // AG UI is Council OS — do not iframe a second console or nest /os.
   "/ag-ui                  /?lobby=home                 308",
   "/ag-ui/                 /?lobby=home                 308",
@@ -116,7 +117,7 @@ const PERSONA_SLASH = [
   "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
-  "models", "tools",
+  "models", "tools", "sov-os", "api-docs",
 ];
 const PERSONA_FOR_SLASH = [
   "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
