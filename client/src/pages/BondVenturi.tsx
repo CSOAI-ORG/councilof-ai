@@ -152,13 +152,13 @@ Governance safety on every crossing — when wired (mostly SPEC today).`}
 ┌─────────┐                            ┌─────────┐
 │ COBOL   │──► EUNOMIA Wrapper ────────►│ A2A     │
 │ Core    │    (reads legacy)           │ Agent   │
-│ Banking │◄─── (writes back) ◄────────│ Card    │
+│ Banking │◄─── (writes back) ◄─────────│ Card    │
 └────┬────┘                            └────┬────┘
      │                                      │
      └──────────────┬───────────────────────┘
                     ▼
            ┌───────────────┐
-           │ SMART CONTRACT  │
+           │ SMART CONTRACT│
            │ · Tokenized bond│  USDC / JPM Coin on Base
            │ · Cash leg      │  Atomic DvP
            │ · Compliance    │  Ed25519 + x402 receipt
