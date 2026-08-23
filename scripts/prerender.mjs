@@ -104,6 +104,10 @@ function discover() {
     "/models", "/tools", "/sov-os", "/sov-os/", "/api-docs",
     "/workbench", "/instrument", "/system-card", "/feed", "/mcp-fleet",
     "/crosswalk", "/refutation-ledger", "/library",
+    // Flagship pages that were only SPA-routed (direct HTTP 404 = credibility leak:
+    // crawlers + the law's visitors hit a broken page). Force-prerender them.
+    "/article-50", "/tour", "/live-ledger", "/gspc-anchors",
+    "/gspc-gap-map",
     // Legal surface (2026-08-23 audit)
     "/legal/licensing", "/legal/privacy", "/legal/terms", "/legal/cookies",
     "/legal/disclaimers", "/legal/dpa", "/legal/founding-council", "/legal/membership",
