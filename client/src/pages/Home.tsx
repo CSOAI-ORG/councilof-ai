@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { Streamdown } from "streamdown";
 import DashboardLayout from "@/components/DashboardLayout";
 import AISystemNotice from "@/components/AISystemNotice";
+import { LAYER0_LINKS, openLayer0InLobby } from "@/lib/layer0Links";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 
@@ -293,6 +294,28 @@ export default function Home() {
                     );
                   })}
                 </div>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.2, delay: 0.35 }}
+                  className="mb-2"
+                >
+                  <p className="text-xs font-medium text-muted-foreground mb-2">Eunomia · Layer 0</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {LAYER0_LINKS.map((link) => (
+                      <button
+                        key={link.path}
+                        type="button"
+                        onClick={() => openLayer0InLobby(link)}
+                        className="suggestion-card text-left group border-emerald-200/50 bg-emerald-50/30"
+                      >
+                        <span className="font-medium text-foreground line-clamp-1">{link.label}</span>
+                        <span className="text-xs text-muted-foreground line-clamp-2">{link.blurb}</span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
               </div>
             </div>
           )}
