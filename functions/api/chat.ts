@@ -269,6 +269,107 @@ why(k) +
     );
   }
 
+  // 1q. TIE / board walk-through (lobby suggested questions).
+  if (/\b(what does a tie mean|statistically indistinguishable|point lead not an advantage|point lead is not)\b/i.test(q)) {
+    return (
+      `A **TIE** on the GSPC board means the leader's point-estimate edge failed McNemar separation (p≥0.05 on discordant items). ` +
+      `We never count a tie as a win — the chip reads "indistinguishable", not "leading".\n\n` +
+      `Ordering on the board is presentation, not a ranking claim. Read the separation chip, not the row position.\n\n` +
+      `_Grounded in the published method on GET /api/gspc._`
+    );
+  }
+
+  if (/\b(walk me through|which axes carry|measured figure and which carry none)\b/i.test(q) && axes.length) {
+    const m = axes.filter((a: any) => a.status === "MEASURED" && a.n > 0);
+    const empty = axes.filter((a: any) => a.status !== "MEASURED" || !a.n);
+    return (
+      `**${m.length}** axes carry a measured figure on this stamp; **${empty.length}** do not.\n\n` +
+      `Measured:\n` +
+      m.map((a: any) => `· **${a.axis}** — ${(a.accuracy * 100).toFixed(1)}% · ${a.separation ?? "—"} · leader ${a.leader ?? "—"}`).join("\n") +
+      `\n\nNo score (honest empty):\n` +
+      empty.map((a: any) => `· **${a.axis}** — ${a.status}`).join("\n") +
+      `\n\nFull intervals and harm tails: GET /api/gspc · /gspc-scoreboard\n\n` +
+      `_Grounded in live board payload._`
+    );
+  }
+
+  // 1r. Insurer / underwriting.
+  if (/\b(safe to underwrite|underwrite on today|insurer|pricing ai risk)\b/i.test(q)) {
+    const m = axes.filter((a: any) => a.status === "MEASURED" && a.separation === "SEPARATED");
+    return (
+      `For underwriting, rely only on **SEPARATED** leads and signed measurement cards you can verify at /gspc-verify.\n\n` +
+      `On this stamp **${m.length}** axes have a statistically separated leader. TIE rows are not wins. ` +
+      `Empty cells are empty — not zeros.\n\n` +
+      `REPORTED third-party context lives at GET /api/reported — never merged into board scores.\n\n` +
+      `_Grounded in published board + method._`
+    );
+  }
+
+  // 1s. REPORTED vs measured.
+  if (/\b(reported third|third.party context|versus the council's own|our own measurement)\b/i.test(q)) {
+    return (
+      `**MEASURED** figures come from our frozen banks and deterministic graders — signed on GET /api/gspc.\n\n` +
+      `**REPORTED** is cited third-party context (press, market sizes, acquisition context) — GET /api/reported. ` +
+      `It is never merged into GovBench scores or board cells.\n\n` +
+      `_Grounded in stack honesty registers._`
+    );
+  }
+
+  // 1t. Engine axis / venturi / bond crossing.
+  if (/\b(engine axis|bond venturi|bond crossing|cobol|a2a|fixed income)\b/i.test(q)) {
+    return (
+      `**Engine axis** (/engine-axis) — honest register of MEASURED vs PLANNED crossings (bonds, insurance, COBOL, east-west).\n\n` +
+      `**Bond venturi** (/venturi) — COBOL overnight batch → A2A T+0 settlement thesis. Bond market size is REPORTED; pipeline steps are SPEC until measured.\n\n` +
+      `**Bond crossing API** — GET /api/finance/bond-crossing (when deployed). Arena harness thesis: /arena-harness.\n\n` +
+      `_Grounded in published pages — counts not invented here._`
+    );
+  }
+
+  // 1u. Eunomia router / instruments / MCP.
+  if (/\b(eunomia|instruments|mcp server|routing table|openrouter of governance)\b/i.test(q)) {
+    return (
+      `**Eunomia Router** (/instruments) — governance routing table entries (framework, regulation, law, benchmark, compute). ` +
+      `Not a model proxy — each path exposes REST, MCP, or AG-UI SSE.\n\n` +
+      `Catalog: GET /api/instruments · MCP spine: /.well-known/mcp.json\n\n` +
+      `Try a route in **Council OS** — AG-UI handle = instrument slug when AGUI_WIRE_URL is set.\n\n` +
+      `_Grounded in published router catalog._`
+    );
+  }
+
+  // 1v. Council OS / AG-UI.
+  if (/\b(council os|ag.ui|agui|lobby|streaming|hitl|consent checkpoint)\b/i.test(q)) {
+    return (
+      `**Council OS** is the site-wide lobby — three lanes:\n\n` +
+      `1. **Local** — pane commands (show board, verify, arena) — no network.\n` +
+      `2. **AG-UI** — POST /api/agui/session → SSE stream when AGUI_WIRE_URL points at the wire (RunPod :8785).\n` +
+      `3. **Grounded** — POST /api/chat — published measurement or honest refuse.\n\n` +
+      `Seeded prompts are typed, never auto-sent (consent lock). Open from any page via Council OS button.\n\n` +
+      `_Grounded in agent runbook /api-docs._`
+    );
+  }
+
+  // 1w. Receipt spec / ownership / signal.
+  if (/\b(receipt.spec|measurement.card format|ed25519 envelope|ownership plan|100 moves|sov signal)\b/i.test(q)) {
+    return (
+      `**RECEIPT-SPEC-0.1** (/receipt-spec) — canonical measurement-card envelope (hash, Ed25519, content_id).\n\n` +
+      `**Ownership plan** (/ownership) — 100 moves across standards, domain, data, trust, distribution.\n\n` +
+      `**SOV Signal Index** — GET /api/signal (schema csoai.sov-signal-index/0.1) when deployed.\n\n` +
+      `_Grounded in published spec pages._`
+    );
+  }
+
+  // 1x. Penalties — Article 99 (deterministic truth).
+  if (/\b(penalt|fine|article 99|eur \d+|turnover)\b/i.test(q) && /\b(ai act|eu)\b/i.test(q)) {
+    return (
+      `Under **Article 99** EU AI Act statutory ceilings:\n\n` +
+      `· Prohibited practices (Art 5): up to **EUR 35M** or **7%** global turnover\n` +
+      `· High-risk duty breaches (e.g. missing Art 9 RMS): up to **EUR 15M** or **3%**\n` +
+      `· Misleading information to authorities: up to **EUR 7.5M** or **1.5%**\n\n` +
+      `Exact fines depend on the authority's assessment. Dated obligations: GET /api/regulation.\n\n` +
+      `_Grounded in published statutory anchors — not a legal opinion._`
+    );
+  }
+
   // 1g. Minimum n / researcher floor.
   if (/\b(minimum n|usable n|quotable figure|below it|n\s*[≥>=]{0,2}\s*30)\b/i.test(q)) {
     return (
