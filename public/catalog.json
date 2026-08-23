@@ -1,0 +1,114 @@
+{
+  "schema": "csoai.storefront/0.1",
+  "name": "Council of AI — Product Catalog",
+  "register": "measurement, not certification — assessed, not certified",
+  "updated": "2026-08-23",
+  "board": {
+    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard — 13 measured axes, jail as a measured floor, unnamed empty slot-15"
+  },
+  "products": [
+    {
+      "id": "claimguard",
+      "name": "ClaimGuard",
+      "status": "live",
+      "href": "/claimguard",
+      "payment": null,
+      "note": "measurement not certification — deterministic claim-vs-signed-artifact checking"
+    },
+    {
+      "id": "gspc-mcp",
+      "name": "GSPC MCP Tools",
+      "status": "live",
+      "href": "/.well-known/mcp.json",
+      "payment": null,
+      "note": "measurement not certification — MCP tools: measure, verify, jail-probe, enter-arena"
+    },
+    {
+      "id": "dorado",
+      "name": "Dorado (measured trust gauge)",
+      "status": "live",
+      "href": "/api/dorado",
+      "payment": null,
+      "note": "measurement not certification — East-vs-West pair-gap context rail, not a grade"
+    },
+    {
+      "id": "gspc-verify",
+      "name": "GSPC Verify",
+      "status": "live",
+      "href": "/gspc-verify",
+      "payment": null,
+      "note": "measurement not certification — signed measurement verification"
+    },
+    {
+      "id": "gspc-arena",
+      "name": "GSPC Arena",
+      "status": "live",
+      "href": "/gspc-arena",
+      "payment": null,
+      "note": "measurement not certification — live measurement scoreboard"
+    },
+    {
+      "id": "arena-scoreboard",
+      "name": "Signed Per-Axis Leaderboard",
+      "status": "live",
+      "href": "/arena-scoreboard",
+      "payment": null,
+      "note": "measurement not certification — signed per-axis rankings"
+    },
+    {
+      "id": "article-50-pack",
+      "name": "Article 50 Evidence Pack",
+      "status": "live",
+      "href": "/packs/eu-article-50",
+      "payment": null,
+      "note": "measurement not certification — signed C2PA durability attestation"
+    },
+    {
+      "id": "benchmarks",
+      "name": "GSPC Benchmarks",
+      "status": "live",
+      "href": "/benchmarks",
+      "payment": null,
+      "note": "measurement not certification — deterministic predicate benchmarks"
+    },
+    {
+      "id": "mcp-fleet",
+      "name": "MCP Fleet",
+      "status": "live",
+      "href": "/mcp-fleet",
+      "payment": null,
+      "note": "measurement not certification — MCP server registry"
+    },
+    {
+      "id": "ras-booking",
+      "name": "RAS Booking Desk",
+      "status": "draft",
+      "href": "/ras",
+      "payment": "paddle_pending",
+      "note": "measurement not certification — human-rail readiness assessment booking (DRAFT)"
+    },
+    {
+      "id": "cobol-bridge",
+      "name": "COBOL Bridge",
+      "status": "draft",
+      "href": "/cobol",
+      "payment": null,
+      "note": "measurement not certification — legacy system integration (DRAFT, same-owner shelf)"
+    }
+  ],
+  "payment_rails": {
+    "paddle": {
+      "status": "pending",
+      "note": "Paddle integration pending — placeholder CTAs shown"
+    },
+    "stripe": {
+      "status": "disabled",
+      "note": "Stripe NOT wired per CEO directive"
+    }
+  },
+  "verify": {
+    "href": "/gspc-verify",
+    "status": "free",
+    "note": "Verification is always free"
+  }
+}
