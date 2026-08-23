@@ -5,6 +5,7 @@
  * Every href was verified against App.tsx before linking.
  */
 import type { LucideIcon } from "lucide-react";
+import { POSITIONING } from "@/lib/positioning";
 import {
   BarChart2,
   BookMarked,
@@ -38,7 +39,8 @@ export const SITE_NAVIGATION: SiteNavGroup[] = [
     description: "The instrument and its board",
     submenu: [
       { name: "The GSPC board", href: "/gspc-scoreboard", description: "The living board — measured axes, empty cells empty. Counts from GET /api/gspc" },
-      { name: "Eunomia Router", href: "/instruments", description: "291 MCP routing rules — frameworks, law, benchmarks, compute. The OpenRouter of governance" },
+      { name: "Eunomia Router", href: "/instruments", description: POSITIONING.router.blurb },
+      { name: "Measurement harness", href: "/arena-harness", description: POSITIONING.harness.blurb },
       { name: "Engine Axis", href: "/engine-axis", description: "Bond venturi, COBOL→A2A, one engine signs all crossings" },
       { name: "Bond Venturi", href: "/venturi", description: "COBOL fed state → A2A stream — metabolic boundary (DESIGN register)" },
       { name: "Measured results", href: "/benchmarks", description: "Every number traces to a published artefact, losses included" },
