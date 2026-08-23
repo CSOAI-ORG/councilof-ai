@@ -152,6 +152,34 @@ const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
     ],
   },
   {
+    test: /^\/engine-axis/,
+    asks: [
+      "Which financial axes slots 18–25 are PLANNED versus MEASURED on the engine axis page?",
+      "What bridge layers connect banks, insurance, COBOL, and east-west — and what is DESIGN only?",
+    ],
+  },
+  {
+    test: /^\/instruments/,
+    asks: [
+      "How many MCP routing rules are catalogued in the Eunomia router, and which are kernel layers?",
+      "What is the difference between an instrument route and a live GSPC measurement?",
+    ],
+  },
+  {
+    test: /^\/venturi|^\/bond-router/,
+    asks: [
+      "Which bond venturi openings are SPEC versus live measurement on councilof.ai?",
+      "What does the COBOL-to-A2A Rosetta map publish about MCP bridges?",
+    ],
+  },
+  {
+    test: /^\/dashboard/,
+    asks: [
+      "From Council software, what can I open in the Council OS lobby with AG-UI streaming?",
+      "Which Layer 0 surfaces — engine axis, router, venturi — are published for finance teams?",
+    ],
+  },
+  {
     test: /^\/layer0/,
     asks: [
       "How is Layer 0 signed and verified — what is the public key and hash chain?",
