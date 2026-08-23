@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import EnforcementTimeline from "../components/EnforcementTimeline";
 
 // /crosswalk — the single most citable public asset CSOAI owns: an open,
-// crawlable map of how 13 global AI-governance frameworks align to 8 universal
-// controls. schema.org Dataset + FAQPage JSON-LD so answer engines can cite it.
+// crawlable map of published AI-governance frameworks to a shared control set.
+// schema.org Dataset + FAQPage JSON-LD so answer engines can cite it.
 // Indicative references — the signed, article-level crosswalk runs in the OS.
 
 const FRAMEWORKS = ["EU AI Act", "NIST AI RMF", "ISO/IEC 42001", "DORA", "NIS2", "GDPR", "ISO 27001", "SOC 2", "HIPAA", "MiCA", "PCI DSS", "CRA", "TC260"];
@@ -20,7 +20,7 @@ const CONTROLS: { c: string; refs: Record<string, string> }[] = [
 
 const FAQ = [
   { q: "What is an AI governance framework crosswalk?", a: "A crosswalk maps the overlapping requirements of different regulations and standards to a single set of controls, so that implementing one control satisfies the equivalent obligation in every framework it maps to — you comply once and evidence everywhere." },
-  { q: "Which frameworks does the CSOAI crosswalk cover?", a: "13+ including the EU AI Act, NIST AI RMF, ISO/IEC 42001, DORA, NIS2, GDPR, ISO 27001, SOC 2, HIPAA, MiCA, PCI DSS, the Cyber Resilience Act (CRA), and China TC260 — mapped to 8 universal AI-governance controls." },
+  { q: "Which frameworks does the CSOAI crosswalk cover?", a: "Published frameworks including the EU AI Act, NIST AI RMF, ISO/IEC 42001, DORA, NIS2, GDPR, ISO 27001, SOC 2, HIPAA, MiCA, PCI DSS, the Cyber Resilience Act (CRA), and China TC260 — mapped to a shared control set. The live list is on this page." },
   { q: "How does a crosswalk save time on EU AI Act compliance?", a: "Most EU AI Act obligations (risk management, data governance, transparency, oversight, documentation) already overlap with ISO 42001 and NIST AI RMF. Mapping them means existing controls can be reused as evidence rather than rebuilt, cutting duplicate work ahead of the 2 August 2026 enforcement date." },
   { q: "Is the CSOAI crosswalk verifiable?", a: "Yes — the signed, article-level crosswalk runs as a governed MCP tool inside the CSOAI OS and every output can be sealed to Layer 0 (Ed25519) for an auditable, reproducible record." },
 ];
@@ -28,14 +28,14 @@ const FAQ = [
 function days(to: string) { return Math.max(0, Math.ceil((new Date(to + "T00:00:00Z").getTime() - Date.now()) / 86400000)); }
 
 export default function Crosswalk() {
-  useEffect(() => { document.title = "AI governance framework crosswalk — 13 frameworks × 8 controls | CSOAI"; }, []);
+  useEffect(() => { document.title = "AI governance framework crosswalk | CSOAI"; }, []);
   const fwParam = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("fw") : null;
   const SLUG_MAP: Record<string, string> = { "eu-ai-act": "EU AI Act", "eu-ai-act-gpai": "EU AI Act", "eu-ai-act-highrisk": "EU AI Act", "nist-ai-rmf": "NIST AI RMF", "iso-42001": "ISO/IEC 42001", "dora": "DORA", "nis2": "NIS2", "gdpr": "GDPR", "gdpr-uk": "GDPR", "iso-27001": "ISO 27001", "soc-2": "SOC 2", "hipaa": "HIPAA", "mica": "MiCA", "pci-dss": "PCI DSS", "cra": "CRA", "tc260": "TC260" };
   const hi = new Set((fwParam ? fwParam.split(",") : []).map((s) => SLUG_MAP[s.trim().toLowerCase()]).filter(Boolean) as string[]);
   const ld = {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Dataset", name: "CSOAI AI Governance Framework Crosswalk", description: "Open crosswalk mapping 13 global AI-governance frameworks (EU AI Act, NIST AI RMF, ISO 42001, DORA, NIS2, GDPR, and more) to 8 universal controls.", keywords: ["EU AI Act", "NIST AI RMF", "ISO 42001", "AI governance", "compliance crosswalk", "DORA", "NIS2"], creator: { "@type": "Organization", name: "CSOAI", url: "https://csoai.org" }, license: "https://opensource.org/licenses/MIT", url: "https://csoai.org/crosswalk" },
+      { "@type": "Dataset", name: "CSOAI AI Governance Framework Crosswalk", description: "Open crosswalk mapping published AI-governance frameworks (EU AI Act, NIST AI RMF, ISO 42001, DORA, NIS2, GDPR, and more) to a shared control set.", keywords: ["EU AI Act", "NIST AI RMF", "ISO 42001", "AI governance", "compliance crosswalk", "DORA", "NIS2"], creator: { "@type": "Organization", name: "CSOAI", url: "https://csoai.org" }, license: "https://opensource.org/licenses/MIT", url: "https://csoai.org/crosswalk" },
       { "@type": "FAQPage", mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
     ],
   };
@@ -46,7 +46,7 @@ export default function Crosswalk() {
       <div className="mx-auto max-w-5xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Open · crawlable · citable</p>
         <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The AI governance <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">framework crosswalk.</span></h1>
-        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How <b>13 AI-governance &amp; adjacent compliance frameworks</b> map to <b>8 universal controls</b>. Comply once, evidence everywhere. The signed, article-level version runs inside the <a href="/os" className="text-emerald-300 underline">CSOAI OS</a>.</p>
+        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How published AI-governance and adjacent compliance frameworks map to a shared control set. Comply once, evidence everywhere. The signed, article-level version runs inside <a href="/?lobby=home" className="text-emerald-300 underline">Council OS</a>.</p>
 
         {/* EU AI Act staggered-application timeline (branded, date-accurate) */}
         <div className="mt-5 rounded-2xl border border-emerald-500/15 bg-[#03110b]/60 p-3">
