@@ -761,6 +761,7 @@ function App() {
           <Route path="/temples" component={Temples} />
           <Route path="/playbooks" component={Playbooks} />
           <Route path="/dragonfly" component={Dragonfly} />
+          <Route path="/csoai-law" component={MeokLaw} />
           <Route path="/meok-law" component={MeokLaw} />
           <Route path="/law" component={MeokLaw} />
           <Route path="/hive-model" component={HiveModel} />
