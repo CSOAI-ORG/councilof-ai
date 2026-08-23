@@ -32,7 +32,7 @@ export function Footer() {
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
         { name: 'Global AI Regulation Tracker', href: '/global-ai-regulation' },
-        { name: 'Framework Crosswalk (13×8)', href: '/crosswalk' },
+        { name: 'Framework Crosswalk', href: '/crosswalk' },
         { name: 'Library — full archive', href: '/library' },
         { name: 'AI Glossary', href: '/glossary' },
         { name: 'Blog', href: '/blog' },

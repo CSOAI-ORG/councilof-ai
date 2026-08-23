@@ -23,7 +23,10 @@ const SKIP_LIVE = process.env.E2E_SKIP_LIVE === "1";
 
 const ALIASES = [
   ["/vulnerability", "/vulnerability-disclosure"],
-  ["/sov-os", "/sov-os/"],
+  ["/sov-os", "/?lobby=home"],
+  ["/ag-ui", "/?lobby=home"],
+  ["/agui", "/?lobby=home"],
+  ["/chat", "/?lobby=home"],
 ];
 // Aliases that MUST resolve for a stranger (308 or a real 200 page — never the
 // honest-404 catch-all). /gspc and /console 404'd on production 2026-08-22.

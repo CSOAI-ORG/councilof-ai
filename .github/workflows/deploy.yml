@@ -25,6 +25,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
 
+      - name: One-door guard (AG UI is Council OS)
+        run: node scripts/one-door-guard.mjs
+
       - name: Install deps
         run: npm install --no-audit --no-fund
 
@@ -43,7 +46,7 @@ jobs:
           # /gspc, /console) must be real files or the honest 404 catch-all hides them.
           rm -f dist/client/gspc-scoreboard.html
           node scripts/place-end-user-aliases.mjs dist/client
-          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench paper-district; do
+          for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench paper-district claimguard; do
             if [ -f "client/public/$b.html" ]; then
               cp "client/public/$b.html" "dist/client/$b.html"
               mkdir -p "dist/client/$b"

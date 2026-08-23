@@ -7,8 +7,8 @@ import AISystemNotice from "../components/AISystemNotice";
 // Type a compliance question; five specialised agents (Oracle, Skeptic, Architect,
 // Ethicist, Strategist) deliberate with designed multi-agent review and return a
 // risk classification mapped to global frameworks. Runs entirely client-side as a
-// deterministic governance engine — the production council + emailed 13-framework
-// report switch on with the Layer 0 backend.
+// deterministic governance engine — the production council + emailed signed
+// gap report switch on with the Layer 0 backend.
 
 type Agent = { id: string; name: string; role: string; color: string };
 const AGENTS: Agent[] = [
@@ -189,17 +189,17 @@ export default function TryCouncil() {
                     <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="you@company.com"
                       className="flex-1 min-w-[220px] rounded-xl border border-emerald-300 px-4 py-2.5 text-sm text-gray-900 outline-none" />
                     <button onClick={() => { if (/.+@.+\..+/.test(email)) { try { localStorage.setItem("csoai_report_request", JSON.stringify({ q, tier: result.tier, email, at: Date.now() })); } catch (e) {} setSent(true); } }}
-                      className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Email me the full 13-framework report →</button>
+                      className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Email me the signed gap report →</button>
                   </div>
                 ) : (
-                  <div className="mt-4 rounded-xl bg-white p-3 text-sm text-emerald-800">Saved. Your full 13-framework gap report is queued — it's generated and delivered once the Council backend is live. You'll be first in line.</div>
+                  <div className="mt-4 rounded-xl bg-white p-3 text-sm text-emerald-800">Saved. Your signed gap report is queued — it's generated and delivered once the Council backend is live. You'll be first in line.</div>
                 )}
                 <div className="mt-5 border-t border-emerald-200 pt-4">
                   <div className="text-xs font-bold uppercase tracking-wide text-emerald-700">Carry this verdict across the OS</div>
                   <div className="mt-2 flex flex-wrap gap-2">
                     <a href={"/hive?q=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open the Framework Hive →</a>
                     <a href="/system-card" className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-800 hover:bg-amber-100">Get a signed System Card →</a>
-                    <a href={"/graph?demo=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">See it on the Governance Graph →</a>
+                    <a href={"/?lobby=home&q=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open it in Council OS →</a>
                   </div>
                 </div>
               </div>
@@ -208,13 +208,13 @@ export default function TryCouncil() {
         )}
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3 text-center text-sm">
-          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">13</div><div className="text-gray-500">frameworks auto-mapped</div></div>
+          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">Live</div><div className="text-gray-500">frameworks from the catalog</div></div>
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">5</div><div className="text-gray-500">agents · multi-agent vote</div></div>
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">Aug 2 2026</div><div className="text-gray-500">EU AI Act deadline</div></div>
         </div>
 
         <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-xs text-gray-500 leading-relaxed">
-          This demo runs a deterministic governance engine in your browser for instant, private triage — it is decision-support, not legal advice. The production Council deliberates with live LLM agents and emails a full 13-framework gap report; it switches on with the Layer 0 backend. Explore the full OS at <a href="/os" className="text-emerald-700 font-semibold">/os</a>.
+          This demo runs a deterministic governance engine in your browser for instant, private triage — it is decision-support, not legal advice. The production Council deliberates with live LLM agents and emails a signed gap report; it switches on with the Layer 0 backend. Explore Council OS at <a href="/?lobby=home" className="text-emerald-700 font-semibold">/?lobby=home</a>.
         </div>
       </section>
     </div>
