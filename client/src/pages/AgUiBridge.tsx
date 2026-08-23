@@ -1,7 +1,8 @@
 import { Redirect } from "wouter";
 
 /**
- * AG UI is Council OS. Deep-link stays `?lobby=`.
+ * AG UI is Council OS. `/chat` and `/ag-ui` both land here.
+ * Deep-link stays `?lobby=`.
  *
  * Do not iframe `/os` as Home. Do not remount a second CouncilConsole.
  * A previous revision embedded csoai-site.pages.dev/ag-ui — that is a
@@ -9,4 +10,9 @@ import { Redirect } from "wouter";
  */
 export default function AgUiBridge() {
   return <Redirect to="/?lobby=home" />;
+}
+
+/** OpenRouter-shaped /rankings → living GSPC board (signed scores, not tokens). */
+export function RankingsBridge() {
+  return <Redirect to="/?lobby=board" />;
 }

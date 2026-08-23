@@ -29,6 +29,8 @@ describe("tabForPath", () => {
     expect(tabForPath("/gspc-scoreboard")?.id).toBe("board");
     expect(tabForPath("/assess")?.id).toBe("measured");
     expect(tabForPath("/dashboard")?.id).toBe("software");
+    expect(tabForPath("/models")?.id).toBe("models");
+    expect(tabForPath("/tools")?.id).toBe("tools");
   });
 
   it("matches a nested path under a pane", () => {
