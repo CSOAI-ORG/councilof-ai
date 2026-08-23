@@ -4,13 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { FileText, Download, ExternalLink, Shield, Bot } from "lucide-react";
 import { StackHonestyBanner } from "@/components/StackHonestyBanner";
 import { openLobby } from "@/lib/lobbyLink";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 /**
  * /receipt-spec — RECEIPT-SPEC-0.1 public surface (Phase 1 move #1 + #4).
  */
 export default function ReceiptSpec() {
   return (
-    <div className="min-h-screen bg-[#04070d] text-slate-200">
+    <CouncilOsPageShell title="Receipt spec" subtitle="RECEIPT-SPEC-0.1 — signed measurement card envelope" className="min-h-screen bg-[#04070d] text-slate-200">
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
           <Badge className="mb-4 border-emerald-500/40 bg-emerald-950/40 text-emerald-300">
@@ -137,6 +138,6 @@ export default function ReceiptSpec() {
           </div>
         </section>
       </div>
-    </div>
+    </CouncilOsPageShell>
   );
 }
