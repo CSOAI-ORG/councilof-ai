@@ -51,6 +51,22 @@ async function get(url) {
   }
 }
 
+// getStable — retry a transient 404 on a route a few times before declaring failure.
+// Cloudflare Pages propagates a fresh deployment across aliases over a short window; a single
+// fetch right after deploy can catch a route mid-propagation and 404 transiently even though the
+// gated tree is correct (and already 200 a few seconds later). This distinguishes a genuine
+// persistent 404 (a real regression) from a propagation blip — it does NOT fabricate a 200.
+const MAX_TRIES = 4;
+const RETRY_MS = 4000;
+async function getStable(url) {
+  for (let i = 1; i <= MAX_TRIES; i++) {
+    const r = await get(url);
+    if (r.status >= 200 && r.status < 400) return r; // healthy or a redirect that resolves
+    if (i < MAX_TRIES) await new Promise((res) => setTimeout(res, RETRY_MS));
+  }
+  return await get(url); // final authoritative result (likely a genuine persistent 404)
+}
+
 console.log(`ASSERT-PRERENDER [${label}] min_homepage_bytes=${MIN}`);
 
 for (const host of hosts) {
@@ -100,7 +116,7 @@ for (const host of hosts) {
     "/gspc-verify", "/dashboard", "/about", "/library/regulation",
     "/honesty", "/watchdog", "/insurers", "/login",
   ]) {
-    const r = await get(host + path);
+    const r = await getStable(host + path);
     if (r.error) fail(`${host}${path} fetch failed: ${r.error}`);
     else if (r.status >= 400 || /404 — Not found/i.test(r.body)) fail(`${host}${path} HTTP ${r.status || "404"}`);
     else pass(`${host}${path} HTTP ${r.status}`);
