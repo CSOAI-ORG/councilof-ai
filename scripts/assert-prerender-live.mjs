@@ -97,6 +97,12 @@ for (const host of hosts) {
   else if (os.status !== 200) fail(`${host}/os/ HTTP ${os.status}`);
   else pass(`${host}/os/ HTTP 200`);
 
+  const sovos = await getStable(host + "/sov-os/");
+  if (sovos.error) fail(`${host}/sov-os/ fetch failed: ${sovos.error}`);
+  else if (sovos.status !== 200 || /404 — Not found/i.test(sovos.body)) fail(`${host}/sov-os/ HTTP ${sovos.status || "404"}`);
+  else if (sovos.bytes < 8000) fail(`${host}/sov-os/ thin (${sovos.bytes} B — prerender missing?)`);
+  else pass(`${host}/sov-os/ HTTP 200 (${sovos.bytes} B)`);
+
   if (verify.error) fail(`${host}/gspc-verify/ fetch failed: ${verify.error} (often a 308 slash loop)`);
   else if (verify.status !== 200) fail(`${host}/gspc-verify/ HTTP ${verify.status}`);
   else pass(`${host}/gspc-verify/ HTTP 200`);
