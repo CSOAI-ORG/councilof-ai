@@ -27,3 +27,31 @@ const LAYOUT_KEY = "councilos.layout.v2";
 
 
 /* ── live axes, shared by every panel ──────────────────────────────────────── */
+
+const AxesCtx = createContext<AxesState>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, inLane: [], loading: true });
+const useAxes = () => useContext(AxesCtx);
+
+function AxesProvider({ children }: { children: React.ReactNode }) {
+  const [state, setState] = useState<AxesState>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, inLane: [], loading: true });
+  useEffect(() => {
+    const ac = new AbortController();
+    fetchAxes(ac.signal).then((r) => setState({ ...r, loading: false })).catch(() => setState((s) => ({ ...s, loading: false })));
+    return () => ac.abort();
+  }, []);
+  return <AxesCtx.Provider value={state}>{children}</AxesCtx.Provider>;
+}
+
+/** Says where the numbers came from. Never lets a stale snapshot look live. */
+function SourceChip() {
+  const { source, measuredOn, loading, error } = useAxes();
+  if (loading) return <span className="text-[11px] text-slate-600">reading /api/gspc…</span>;
+  return source === "wire"
+    ? <span className="text-[11px] text-emerald-400/80">live · /api/gspc · measured {measuredOn}</span>
+    : <span className="text-[11px] text-amber-400/80" title={error}>bundled snapshot ({measuredOn}) — /api/gspc unreachable</span>;
+}
+
+export default function SovOS() {
+  // One public OS: Council OS lobby. The dockview shell stays in-tree for
+  // local play but is not a public door.
+  return <Redirect to="/?lobby=home" />;
+}
