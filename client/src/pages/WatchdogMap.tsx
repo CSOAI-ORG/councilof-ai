@@ -166,7 +166,7 @@ export default function WatchdogMap() {
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/globe3d.html" className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-semibold text-amber-100 hover:bg-amber-400/20">🟡 AI economy on the globe</a>
             <a href="/network" className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/20">🩵 The Council network</a>
-            <a href="/graph" className="rounded-full border border-emerald-400/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</a>
+            <a href="/?lobby=home" className="rounded-full border border-emerald-400/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Open Council OS →</a>
           </div>
         </div>
       </section>
