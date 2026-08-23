@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { StackHonestyBanner } from "@/components/StackHonestyBanner";
 import { STACK_STATS } from "@/lib/stackHonesty";
 import { openLobby } from "@/lib/lobbyLink";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 const PROBES = [
   {
@@ -78,7 +79,11 @@ export default function AgentRunbook() {
   };
 
   return (
-    <div className="min-h-screen bg-[#04070d] text-slate-200">
+    <CouncilOsPageShell
+      title="Agents & API"
+      subtitle="curl-first runbook — GSPC, instruments, AG-UI SSE, bond crossing"
+      className="min-h-screen bg-[#04070d] text-slate-200"
+    >
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
           <div className="flex items-center gap-2 text-emerald-400 text-xs uppercase tracking-[0.2em] mb-4">
@@ -214,6 +219,6 @@ export default function AgentRunbook() {
           </p>
         </section>
       </div>
-    </div>
+    </CouncilOsPageShell>
   );
 }

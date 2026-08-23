@@ -3,6 +3,9 @@ import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
 import { scoreAccount } from "../lib/hiveScore";
 import { flyAndConvene } from "../lib/globeDrive";
 import CouncilNav from "../components/CouncilNav";
+import CouncilOsInnerNav from "@/components/os/CouncilOsInnerNav";
+import EnterpriseMeasureCta from "@/components/coliseum/EnterpriseMeasureCta";
+import BriefJsonLd from "@/components/coliseum/BriefJsonLd";
 
 // /brief?id=<accountId> — a per-account tailored one-pager: region-flown globe, the
 // frameworks that govern them, the CSOAI play + the exact USPs to lead with, and
@@ -41,6 +44,8 @@ export default function AccountBrief() {
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
+      <BriefJsonLd account={a} />
+      <CouncilOsInnerNav title={`Brief · ${a.name}`} subtitle="Org-level public intel — JSON-LD on page" />
       <div className="mx-auto max-w-5xl px-6 py-12">
         <CouncilNav />
         <a href="/intel" className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/75 hover:text-emerald-200">← Distribution Hive</a>
@@ -88,6 +93,8 @@ export default function AccountBrief() {
 
         {/* tailored demo CTAs */}
         <div className="mt-6 flex flex-wrap gap-2">
+          <EnterpriseMeasureCta orgName={a.name} orgId={a.id} label={`Measure ${a.name} in Council OS`} />
+          <a href={`/api/ecosystem?id=${a.id}`} target="_blank" rel="noreferrer" className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">JSON org record →</a>
           <a href={`/classifier?q=${clsQ}`} className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Classify their AI live →</a>
           <a href="/try" className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Convene the council →</a>
           <a href="/tool-commons" className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Install the governance MCP →</a>
