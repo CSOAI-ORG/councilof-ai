@@ -65,7 +65,7 @@ function RegCard({ r }: { r: Regime }) {
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <button onClick={ask} disabled={busy} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{busy ? "Reading…" : "Ask the Council assistant for a live read"}</button>
         {r.hiveSlug && <a href={"/hive/" + r.hiveSlug} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Open in the Hive →</a>}
-        <a href={"/graph?demo=" + encodeURIComponent("an organisation subject to " + r.name)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern a case →</a>
+        <a href="/?lobby=home" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern a case →</a>
       </div>
       {ans && <div className="mt-3 whitespace-pre-wrap rounded-lg bg-black/30 p-3 text-[13px] text-emerald-50/90">{ans}</div>}
     </div>
