@@ -44,7 +44,16 @@ export type LobbyTaskId =
   | "get-measured"
   | "report-an-incident"
   | "human-vs-ai"
-  | "academy";
+  | "academy"
+  | "pricing-overview"
+  | "honesty-audit"
+  | "library-research"
+  | "regulator-brief"
+  | "insurer-evidence"
+  | "enterprise-start"
+  | "sector-brief"
+  | "browse-models"
+  | "browse-tools";
 
 export interface LobbyTask {
   pane: LobbyTabId;
@@ -114,6 +123,64 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
     label: "Open the Academy",
     prompt: () =>
       "What does Council Academy actually attest on completion, and what does it explicitly not attest?",
+  },
+  "pricing-overview": {
+    pane: "home",
+    label: "Understand plans and pricing",
+    prompt: () =>
+      "What is published about plans and pricing — what is measured, what is free, and what is explicitly not promised?",
+  },
+  "honesty-audit": {
+    pane: "home",
+    label: "Read the honesty ledger",
+    prompt: () =>
+      "What does the honesty page publish about corrections, refusals, and what the Council got wrong?",
+  },
+  "library-research": {
+    pane: "home",
+    label: "Research the method",
+    prompt: () =>
+      "What is published in the library about the measurement method, the n, and which materials are reproducible?",
+  },
+  "regulator-brief": {
+    pane: "home",
+    label: "Regulator crosswalk",
+    prompt: (ctx) =>
+      ctx
+        ? `What is published about ${ctx} crosswalked to frozen statute, and what does the Council refuse to certify?`
+        : "What is published for regulators — crosswalks, frozen provisions, and what the Council does not decide?",
+  },
+  "insurer-evidence": {
+    pane: "board",
+    label: "Evidence for underwriting",
+    prompt: () =>
+      "What on the live board is safe for an insurer to rely on today, and which cells are explicitly empty?",
+  },
+  "enterprise-start": {
+    pane: "measured",
+    label: "Start enterprise measurement",
+    prompt: () =>
+      "We are an enterprise team — what does getting measured actually run, what does the result attest, and what does it not claim?",
+  },
+  "sector-brief": {
+    pane: "home",
+    label: "Sector-specific governance",
+    prompt: (ctx) =>
+      ctx
+        ? `What is published for ${ctx} about AI governance — frameworks named, evidence signed, and gaps left empty?`
+        : "What is published for this sector about AI governance and signed evidence?",
+  },
+  "browse-models": {
+    pane: "models",
+    label: "Open measured models",
+    prompt: () =>
+      "What models are published on the living board, and which cells are still empty?",
+  },
+  "browse-tools": {
+    pane: "tools",
+    label: "Open published tools",
+    prompt: () =>
+      "What tooling is published, and how do I run it inside Council OS without treating a tool as a certificate?",
   },
 };
 

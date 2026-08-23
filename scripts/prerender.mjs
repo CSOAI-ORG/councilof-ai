@@ -83,7 +83,36 @@ function discover() {
     if (!/\.(js|css|png|svg|jpg|json|ico|woff2?|txt|xml)$/i.test(p) && !p.startsWith("/assets/"))
       found.add(p);
   }
-  return [...found].filter(p => !p.includes(":") && !p.includes("*")).sort();
+  // Dynamic and alias paths the homepage / lobby send strangers to. Heuristic
+  // discovery never sees /for/:persona or /industries/:slug, so those cold-load
+  // 404 against the honest catch-all. Force them into the snapshot queue.
+  const MUST = [
+    "/gspc", "/scoreboard", "/console", "/council-os", "/lobby", "/legal",
+    "/vs", "/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust",
+    "/for/regulator", "/for/enterprise", "/for/finance", "/for/healthcare",
+    "/for/startup", "/for/sec-filer",
+    "/industries/insurance", "/industries/finance", "/industries/healthcare",
+    "/industries/health", "/industries/care", "/industries/transport",
+    "/industries/transportation", "/industries/retail", "/industries/education",
+    "/industries/energy", "/industries/government", "/industries/legal",
+    "/library/axes",
+    "/verify", "/os", "/assess", "/academy", "/compare", "/layer0",
+    "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",
+    "/dashboard", "/login", "/start", "/about", "/insurers",
+    "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
+    "/watchdog", "/disclaimers", "/csoai-law",
+    "/models", "/tools",
+  ];
+  for (const p of MUST) found.add(p);
+  const routes = [...found].filter(p => !p.includes(":") && !p.includes("*"));
+  // Library IA: /library/:sector is a dynamic route (filtered above), but the 8 concrete
+  // sectors are prime AEO citation surface and the sitemap lists them — prerender each
+  // so the static host serves them (2026-08-23 JEEVES: they were 404 on the static host
+  // because only the :param pattern was discovered, never its values).
+  for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance", "product", "company"]) {
+    routes.push(`/library/${s}`);
+  }
+  return [...new Set(routes)].sort();
 }
 
 const routes = discover();

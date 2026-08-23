@@ -250,57 +250,23 @@ function FleetPanel() {
 
 /* ── panel: Ask SOV ────────────────────────────────────────────────────── */
 
-type Turn = { role: "user" | "assistant"; text: string; sig?: string; state?: string };
+import { openLobby } from "@/lib/lobbyLink";
 
+/** Council chat lives in Council OS — no duplicate composer here. */
 function AskPanel() {
-  const [turns, setTurns] = useState<Turn[]>([]);
-  const [q, setQ] = useState("");
-  const [busy, setBusy] = useState(false);
-  const end = useRef<HTMLDivElement>(null);
-  useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth" }); }, [turns, busy]);
-
-  const send = async () => {
-    const text = q.trim();
-    if (!text || busy) return;
-    setQ(""); setBusy(true);
-    setTurns((t) => [...t, { role: "user", text }]);
-    try {
-      const r = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text }) });
-      const j = await r.json();
-      setTurns((t) => [...t, { role: "assistant", text: j.answer ?? j.reply ?? "(empty)", sig: j.signature, state: j.state }]);
-    } catch (e: any) {
-      setTurns((t) => [...t, { role: "assistant", text: `/api/chat unreachable — ${e?.message ?? e}. No offline guess is shown in its place.`, state: "unreachable" }]);
-    } finally { setBusy(false); }
-  };
-
   return (
-    <div className="flex h-full flex-col bg-[#080c14]">
-      <div className="flex-1 space-y-3 overflow-auto p-4">
-        {!turns.length && (
-          <div className="rounded-lg border border-white/10 bg-white/[0.02] p-4 text-[12px] leading-relaxed text-slate-400">
-            Ask the Council specialist. It answers from the signed measurement layer — and says
-            <span className="text-slate-200"> "unmeasured" </span> where the estate has not earned a number.
-          </div>
-        )}
-        {turns.map((t, i) => (
-          <div key={i} className={t.role === "user" ? "ml-auto max-w-[85%]" : "max-w-[92%]"}>
-            <div className={`rounded-xl px-3.5 py-2.5 text-sm leading-relaxed ${t.role === "user" ? "bg-emerald-500/15 text-emerald-50" : "border border-white/8 bg-white/[0.03] text-slate-200"}`}>
-              {t.text}
-            </div>
-            {t.sig && <div className="mt-1 text-[10px] tracking-wide text-slate-600">{t.sig}</div>}
-          </div>
-        ))}
-        {busy && <div className="text-[11px] text-slate-500">specialist thinking…</div>}
-        <div ref={end} />
-      </div>
-      <div className="flex gap-2 border-t border-white/5 p-3">
-        <input
-          value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
-          placeholder="Is a CV-screening model high-risk under the AI Act?"
-          className="flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600 focus:border-emerald-400/40"
-        />
-        <button onClick={send} disabled={busy} className="rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 text-sm font-medium text-emerald-200 disabled:opacity-40">Ask</button>
-      </div>
+    <div className="flex h-full flex-col items-center justify-center gap-5 bg-[#080c14] p-8 text-center">
+      <p className="max-w-md text-[13px] leading-relaxed text-slate-400">
+        Ask the Council in <strong className="text-emerald-200">Council OS</strong> — one slim composer,
+        grounded answers, native board and verify panes. This dock no longer runs a second chat.
+      </p>
+      <button
+        type="button"
+        onClick={() => openLobby({ pane: "home" })}
+        className="rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/25"
+      >
+        Open Council OS
+      </button>
     </div>
   );
 }

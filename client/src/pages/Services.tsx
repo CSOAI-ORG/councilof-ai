@@ -13,15 +13,15 @@ const SERVICES: Svc[] = [
 ];
 
 export default function Services() {
-  useEffect(() => { document.title = "Services - the CSOAI governance OS, end to end"; }, []);
+  useEffect(() => { document.title = "Services — measure, sign, check"; }, []);
   return (
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - services</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">One OS for AI governance</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Not a checklist tool - a living operating system. From a 30-second council demo to full framework coverage, Council City learning, and legacy bridging. Every piece connects.</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Measure once. Check the signed card.</h1>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Independent measurement, not a checklist product. We measure published behaviour against frozen rules, sign the result, and leave empty cells empty. Verify stays free.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Start with the Council -&gt;</a>
             <a href="/os" className="rounded-xl border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Open the full OS -&gt;</a>

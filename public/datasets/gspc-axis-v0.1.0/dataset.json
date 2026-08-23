@@ -1,0 +1,52 @@
+{
+ "content_id": "494e82d21d33a4a41fb7a6191062c20aa28cf5a6599d7c4b92534ad0912a067e",
+ "corpus_disclosure": "Responses are raw MODEL OUTPUT captured verbatim; they are measurement content, not CSOAI-authored text. Some responses to the swarm/consensus probe use standard consensus vocabulary (as ordinary academic terms) that could be misread as internal identifiers; these are the measured models' own words, NOT estate naming. No estate codenames or internal engine identifiers appear in this dataset.",
+ "doctrine": "measurement-not-certification · nobody-ranked-pays · corrections appended not edited",
+ "generated": "2026-08-23T04:55:39.518618Z",
+ "not_a_certification": true,
+ "note": "Longitudinal GSPC axis probe corpus (frozen probes re-run across generations = drift/consistency signal). Signed manifest. Licensed data, never a ranking of vendors.",
+ "schema": "csoai.gspc-axis-dataset/0.1",
+ "signature": {
+  "alg": "Ed25519",
+  "canonical_form": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=False)",
+  "content_id": "494e82d21d33a4a41fb7a6191062c20aa28cf5a6599d7c4b92534ad0912a067e",
+  "note": "Ed25519 over canonical content_id bytes. Verify: recompute canonical (excluding signature), sha256=content_id, ed25519(content_id)==sig using PUBKEY. Honest label: signed by this pod's city_ed25519 key; see finding about identity-vs-published did:web.",
+  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
+  "sig": "6Ku/uxdzNknzctCF8qwT6j7PT/zFQFxSqOH8mwH6dgPv/Vq4hy4aDEjXWWnF2qKljbqHz0l8PEfjdZy6Ude3Ag==",
+  "signed_by": "pod-city-ed25519",
+  "signed_payload_sha256": "494e82d21d33a4a41fb7a6191062c20aa28cf5a6599d7c4b92534ad0912a067e"
+ },
+ "stats": {
+  "axes": 16,
+  "clean_set_models": [
+   "deepseek-r1:7b",
+   "mistral:7b",
+   "qwen2.5:7b"
+  ],
+  "per_axis": {
+   "accountability": 681,
+   "affect": 692,
+   "care": 544,
+   "continuity": 692,
+   "creativity": 690,
+   "efficiency": 546,
+   "fairness": 549,
+   "gov": 686,
+   "human-vs-ai": 549,
+   "jail": 595,
+   "privacy": 694,
+   "safety": 692,
+   "slot15": 690,
+   "sovereignty": 689,
+   "swarm": 545,
+   "transparency": 692
+  },
+  "per_model": {
+   "deepseek-r1:7b": 1468,
+   "mistral:7b": 4374,
+   "qwen2.5:7b": 4384
+  },
+  "records": 10226
+ },
+ "version": "gspc-axis-v0.1.0"
+}

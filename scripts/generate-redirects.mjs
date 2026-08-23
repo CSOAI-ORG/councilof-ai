@@ -43,7 +43,8 @@ const OUT = join(ROOT, "public/_redirects");
 // Static asset directories served directly by Pages — must NOT be routed to the app.
 // /sov-space is no longer a public tree: it 308s to /gspc-arena (Council Space).
 const STATIC_DIRS = ["/arena", "/benchmarks", "/vendor", "/assets",
-                     "/.well-known", "/corpus-watch", "/flywheel", "/packs"];
+                     "/.well-known", "/corpus-watch", "/flywheel", "/packs",
+                     "/datasets"]; // signed licensable dataset bundle: serve the raw files, not the SPA shell
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
@@ -88,12 +89,37 @@ const EXISTING = [
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /?lobby=home                 308",
+  // AG UI is Council OS — do not iframe a second console or nest /os.
+  "/ag-ui                  /?lobby=home                 308",
+  "/ag-ui/                 /?lobby=home                 308",
+  "/chat                   /?lobby=home                 308",
+  "/chat/                  /?lobby=home                 308",
+  // OpenRouter-shaped guesses: chat is the AG UI; rankings are the signed board.
+  "/rankings               /?lobby=board                308",
+  "/rankings/              /?lobby=board                308",
   "/library/measurement    /library/axes                308",
-  // Klingler/DID stranger-walk 2026-08-22: bare /verify 404s (prerender is /verify/index.html only;
-  // catch-all /* → 404.html). DID serviceEndpoint is https://councilof.ai/verify (no slash).
+  // Klingler/DID stranger-walk + persona cold loads (2026-08-22).
+  // Do NOT redirect /gspc-verify ↔ /gspc-verify/ — Pages trailing-slash
+  // normalization fights that and creates a 308 loop (measured live).
+  // Only alias /verify → trailing-slash verify surface when prerender exists.
   "/verify                 /gspc-verify/                308",
   "/verify/                /gspc-verify/                308",
-  "/gspc-verify            /gspc-verify/                308",
+  "/api/arena/rounds       /api/arena/rounds.jsonl      200",
+  "/enterprises            /enterprise/                 308",
+  "/developers             /gspc-verify/                308",
+  "/colosseum              /coliseum/                   308",
+  "/for                    /for/enterprise/             308",
+];
+
+/** Persona gauntlet bare paths → trailing-slash prerender (production still on honest-404 catch-all). */
+const PERSONA_SLASH = [
+  "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
+  "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
+  "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
+  "models", "tools",
+];
+const PERSONA_FOR_SLASH = [
+  "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
 ];
 
 const HASHED_DIRS = ["/assets"];
@@ -106,12 +132,17 @@ const lines = [
   "# --- hand-written consolidation redirects (preserved) ---",
   ...EXISTING,
   "",
+  "# --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---",
+  ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
+  ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
+  "",
   "# --- static asset trees: served directly, never routed to the app ---",
   ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map((d) => `${d}/*  ${d}/:splat  200`),
 
   "",
-  "# --- SPA catch-all: known routes are prerendered static files (200); unknown paths get a real 404 ---",
-  "/*  /404.html  404",
+  "# --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---",
+  "# canary-2026-08-22-7fb8: if /zzz-spa-test-7fb8 is still honest-404, this file did not reach the edge",
+  "/*  /index.html  200",
   "",
 ];
 

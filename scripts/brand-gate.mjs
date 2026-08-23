@@ -50,8 +50,13 @@ const RULES = [
   },
   {
     id: "framework_overclaim",
-    pattern: /\b30\s+(?:regulatory\s+)?frameworks\b/i,
-    why: '"30 frameworks" is unevidenced. Say the evidenced control-set count (4) or "crosswalked provisions".',
+    pattern: /\b30\s+(?:regulatory\s+)?frameworks\b|\b26\s+frameworks\b|1,686\s+controls/i,
+    why: '"30/26 frameworks" and "1,686 controls" are unevidenced. Live counts live at GET /api/gspc.',
+  },
+  {
+    id: "first_card_price_imply",
+    pattern: /first card.{0,24}free/i,
+    why: 'Implies later cards are sold. HO.2: a grade is never sold. Say verify stays free.',
   },
   {
     id: "pricing_leak",
@@ -60,7 +65,7 @@ const RULES = [
     // and were caught only by the manual qa-sweep 2026-08-19. This makes it a hard build-fail:
     // a currency amount bound to a per-unit or subscription cadence is OUR pricing (distinct from
     // regulation PENALTY amounts, which read "€35M or 7%", never "/mo" or "/card").
-    pattern: /(?:£|\$|€)\s?\d[\d,.]*\s?(?:[-–]\s?(?:£|\$|€)?\s?\d[\d,.]*\s?)?(?:\/|\bper\s)(?:mo\b|month|year|yr\b|card|hr\b|hour|seat|user|assessment|report|query|call|run)/i,
+    pattern: /(?:£|\$|€)\s?\d[\d,.]*\s?(?:[-–]\s?(?:£|\$|€)?\s?\d[\d,.]*)?(?:\/|\bper\s)(?:mo\b|month|year|yr\b|card|hr\b|hour|seat|user|assessment|report|query|call|run)/i,
     // A page may DISCLOSE the no-pricing rule ("we never charge £/$ per anything") near the hit.
     nearAllow: /free\s+forever|never\s+(?:sold|charge|priced)|no\s+pricing|not\s+for\s+sale|a\s+grade\s+is\s+never/i,
     why: 'HO.2: no pricing on public surfaces — verification is free forever, a grade is never sold. Remove the amount.',
@@ -103,7 +108,12 @@ function visibleText(html) {
 //   - refutation-ledger  the honest evidence/retraction page — renders real measured model IDs
 //                        (sov-sovereign-v4-mined-latest), SIGIL evidence hashes, and the
 //                        Byzantine/BFT RETRACTION history. All legitimate in this exact context.
-const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-|ai-transparency|authority|badges)/;
+//   - j-space            the signed-event data artifact viewer — embeds the real 205KB
+//                        signature-chain events.json (event world dashboard). It renders the
+//                        estate's own production signature-chain records, NOT a marketing claim;
+//                        "sigil" appears only as the name of the signed-event chain it visualizes,
+//                        the same data-artifact category as regulator-console/refutation-ledger.
+const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-|ai-transparency|authority|badges|j-space(\/|\.html|$))/;
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;

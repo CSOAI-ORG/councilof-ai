@@ -9,7 +9,7 @@ import NewsletterSignup from './NewsletterSignup';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import { SECTORS } from '@/data/library-ia';
 import { Button } from '@/components/ui/button';
-import { isEmbedded } from '@/lib/embed';
+import { useSiteChromeHidden } from '@/lib/osChrome';
 
 interface FooterLink {
   name: string;
@@ -19,7 +19,8 @@ interface FooterLink {
 }
 
 export function Footer() {
-  if (isEmbedded()) return null;
+  const hideChrome = useSiteChromeHidden();
+  if (hideChrome) return null;
   const currentYear = new Date().getFullYear();
 
   const footerSections: { title: string; links: FooterLink[] }[] = [

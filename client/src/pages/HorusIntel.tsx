@@ -205,7 +205,7 @@ export default function HorusIntel() {
                   <td className="p-3 text-gray-900">CB Insights</td>
                   <td className="p-3 text-gray-600">$30K+/yr</td>
                   <td className="p-3 text-gray-600">General tech</td>
-                  <td className="p-3 text-emerald-700">Horus is AI governance only, 100x cheaper</td>
+                  <td className="p-3 text-emerald-700">AI-governance only. A grade is never sold.</td>
                 </tr>
                 <tr className="border-t border-gray-100">
                   <td className="p-3 text-gray-900">Gartner Research</td>

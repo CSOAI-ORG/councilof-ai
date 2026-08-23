@@ -22,14 +22,26 @@ const BASE = process.env.E2E_BASE || "https://councilof.ai";
 const SKIP_LIVE = process.env.E2E_SKIP_LIVE === "1";
 
 const ALIASES = [
-  ["/legal", "/disclaimers"],
   ["/vulnerability", "/vulnerability-disclosure"],
-  ["/gspc", "/gspc-scoreboard"],
-  ["/scoreboard", "/gspc-scoreboard"],
-  ["/lobby", "/?lobby=home"],
-  ["/console", "/?lobby=home"],
-  ["/council-os", "/?lobby=home"],
-  ["/library/measurement", "/library/axes"],
+];
+// Aliases that MUST resolve for a stranger (308 or a real 200 page — never the
+// honest-404 catch-all). /gspc and /console 404'd on production 2026-08-22.
+const MUST_RESOLVE = [
+  "/gspc",
+  "/scoreboard",
+  "/gspc-scoreboard",
+  "/console",
+  "/council-os",
+  "/lobby",
+  "/chat",
+  "/ag-ui",
+  "/models",
+  "/tools",
+  "/rankings",
+  "/legal",
+  "/for/regulator",
+  "/vs/vanta",
+  "/industries/insurance",
 ];
 
 const PAGES = [
@@ -106,6 +118,22 @@ for (const [from, to] of ALIASES) {
     }
   } catch (e) {
     fail(`${from} redirect`, String(e).slice(0, 120));
+  }
+}
+
+for (const path of MUST_RESOLVE) {
+  try {
+    const { res, text } = await fetchText(path);
+    const title = (text.match(/<title>([^<]+)/i) || [])[1] || "";
+    if (res.status >= 400 || /404 — Not found/i.test(title)) {
+      fail(`${path} must resolve for a stranger`, `HTTP ${res.status} ${title}`);
+    } else if (path.includes("gspc") && /13 axes\s*[×x]\s*19/i.test(text)) {
+      fail(`${path} leftover static table`, "hardcoded 13×19");
+    } else {
+      pass(`${path} resolves`, `HTTP ${res.status} ${text.length} B`);
+    }
+  } catch (e) {
+    fail(`${path} resolve`, String(e).slice(0, 120));
   }
 }
 

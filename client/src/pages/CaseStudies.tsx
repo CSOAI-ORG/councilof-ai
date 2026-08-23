@@ -331,8 +331,8 @@ export default function CaseStudies() {
 
   // Defensible, verifiable figures only — no invented traction stats.
   const stats = [
-    { label: 'Frameworks mapped', value: '26', icon: <Shield className="w-6 h-6" />, color: 'emerald' },
-    { label: 'Controls crosswalked', value: '1,686', icon: <Cpu className="w-6 h-6" />, color: 'emerald' },
+    { label: 'Signed result', value: 'Ed25519', icon: <Shield className="w-6 h-6" />, color: 'emerald' },
+    { label: 'Unmeasured slots', value: 'Stay empty', icon: <Cpu className="w-6 h-6" />, color: 'emerald' },
     { label: 'Every governed action', value: 'Signed', icon: <Building2 className="w-6 h-6" />, color: 'emerald' },
     { label: 'Verify offline', value: 'In-browser', icon: <Globe className="w-6 h-6" />, color: 'emerald' },
   ];

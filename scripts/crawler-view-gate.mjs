@@ -82,12 +82,37 @@ function canonical(html) {
 }
 
 async function get(path) {
-  const res = await fetch(HOST + path, { headers: { "User-Agent": UA }, redirect: "follow" });
-  const html = await res.text();
-  return { status: res.status, html, text: visibleText(html), key: canonical(html) };
+  // Loop-safe fetch (2026-08-22): `redirect:"follow"` on a bare↔slash redirect loop
+  // throws TypeError (max-redirect) which the post-upload assert turns into a generic
+  // build failure. Use "manual" and classify the 3xx chain ourselves so a loop or an
+  // asymmetric 308 is reported as a CLEAN status failure, never a crash.
+  const res = await fetch(HOST + path, { headers: { "User-Agent": UA }, redirect: "manual" });
+  // Note (2026-08-22 JEEVES audit): a bare→slash redirect (/pricing → /pricing/) is the
+  // NORMAL trailing-slash canonicalization (Pages serves dist/<route>/index.html at the
+  // slashed path). It is NOT a loop: a loop is when the redirect target redirects BACK.
+  // The old check flagged path + "/" as a loop, which false-failed every PR whenever the
+  // live site served the SPA catch-all. Only a self-bounce is a loop.
+  // A 3xx that points back at the ORIGINAL path exactly (not the slash-form) is a loop.
+  if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
+    const loc = res.headers.get("location");
+    if (loc === path) {
+      return { status: res.status, html: "", text: "", key: "", loop: true, location: loc };
+    }
+  }
+  // Still following one redirect is fine (thin link), but bound it: re-request the
+  // resolved target once so the final document is what we measure, not a 30x body.
+  let html = "";
+  if (res.status >= 300 && res.status < 400 && res.headers.get("location")) {
+    const target = new URL(res.headers.get("location"), HOST).toString();
+    const final = await fetch(target, { headers: { "User-Agent": UA }, redirect: "error" });
+    html = await final.text();
+    return { status: final.status, html, text: visibleText(html), key: canonical(html) };
+  }
+  html = await res.text();
+  return { status: res.status, html, text: visibleText(html), key: canonical(html), loop: false };
 }
 
-function evaluate(pages, absent, sec = null) {
+function evaluate(pages, absent, sec = null, scitt = null) {
   const failures = [];
 
   // 1. DISTINCTNESS
@@ -107,6 +132,7 @@ function evaluate(pages, absent, sec = null) {
 
   // 2. SUBSTANCE
   for (const [route, p] of pages) {
+    if (p.loop) { failures.push(`${route}: REDIRECT LOOP (HTTP ${p.status} -> ${p.location ?? "self"}) — bare↔slash fight, must be a clean 200 or a single canonical redirect`); continue; }
     if (p.status !== 200) { failures.push(`${route}: HTTP ${p.status} to a crawler UA`); continue; }
     if (p.text.length < MIN_TEXT_CHARS) {
       failures.push(
@@ -169,6 +195,24 @@ function evaluate(pages, absent, sec = null) {
       `${ABSENT_URL} returned HTTP 200. A catch-all that answers 200 for every path tells ` +
       `crawlers that every URL in the 350-entry sitemap is a real page. Serve a real 404.`);
   }
+
+  // 6. SCITT PROFILE SURFACE — /.well-known/scitt.json must serve JSON (the
+  // RFC 9943 statement mapping is itself a machine contract; a soft-404 or
+  // stale document silently breaks agent discovery of the signed surfaces).
+  if (scitt !== null) {
+    if (scitt.status !== 200) {
+      failures.push(`/.well-known/scitt.json: HTTP ${scitt.status}`);
+    } else {
+      try {
+        const j = JSON.parse(scitt.html);
+        if (!Array.isArray(j.statements) || !Array.isArray(j.trust_anchor?.signing_keys)) {
+          failures.push("/.well-known/scitt.json: missing statements[] / trust_anchor.signing_keys[]");
+        }
+      } catch {
+        failures.push("/.well-known/scitt.json: not valid JSON");
+      }
+    }
+  }
   return failures;
 }
 
@@ -188,11 +232,13 @@ async function selftest() {
                      {status: 200, html: "Contact: mailto:x@y\nExpires: 2030-01-01T00:00:00Z\n"}],
     ["canonical",    [["/pricing", mk(rich + '<link rel="canonical" href="https://csoai.org"/>')]],
                      mk("", 404), /canonical points at/],
+    ["scitt surface", [["/a", mk(rich)]], mk("", 404), /scitt.json/,
+                     null, {status: 200, html: "not json"}],
   ];
   let ok = true;
   console.log("SELFTEST — each rule must fire on a seeded violation:");
-  for (const [name, pages, absent, want, sec] of cases) {
-    const fs = evaluate(pages, absent, sec ?? null);
+  for (const [name, pages, absent, want, sec, scitt] of cases) {
+    const fs = evaluate(pages, absent, sec ?? null, scitt ?? null);
     const fired = fs.some((f) => want.test(f));
     ok &&= fired;
     console.log(`  ${fired ? "OK  " : "FAIL"} ${name}`);
@@ -228,7 +274,8 @@ async function main() {
   console.log(`  ${String(absent.status).padEnd(4)} ${String(absent.text.length).padStart(6)} chars  ${ABSENT_URL} (should be 404)\n`);
 
   const sec = await get("/.well-known/security.txt").catch(() => null);
-  const failures = evaluate(pages, absent, sec);
+  const scitt = await get("/.well-known/scitt.json").catch(() => null);
+  const failures = evaluate(pages, absent, sec, scitt);
   if (failures.length) {
     console.log("CRAWLER-VIEW GATE: FAIL");
     for (const f of failures) console.log(" - " + f);

@@ -7,7 +7,7 @@
  * Rather than ship an empty suggestion strip, this is a local stand-in with the
  * SAME public shape, living in the folder this change owns. If the shared
  * registry lands later, delete this file and re-point the two imports in
- * LobbyChatBar.tsx; no other call site knows about it.
+ * LobbyComposer.tsx; no other call site knows about it.
  *
  * GRAMMAR (binding, inherited from client/src/lib/lobbyLink.ts). Every question
  * here is a request for PUBLISHED material — "what does the board publish",
@@ -32,6 +32,8 @@ export interface Audience {
 export const AUDIENCES: Audience[] = [
   { id: "public", label: "Curious public", who: "No prior knowledge assumed." },
   { id: "builder", label: "Builder", who: "Engineers shipping an AI system." },
+  { id: "insurer", label: "Insurer", who: "Underwriting and risk on AI systems." },
+  { id: "regulator", label: "Regulator", who: "Supervisory and policy readers." },
   { id: "compliance", label: "Compliance & legal", who: "Counsel, DPOs, risk teams." },
   { id: "procurement", label: "Procurement", who: "Buyers assessing a vendor." },
   { id: "board", label: "Board & exec", who: "Accountable officers." },
@@ -54,6 +56,7 @@ const BY_AUDIENCE: Record<string, string[]> = {
     "How is a measurement card signed, and how do I verify one without trusting you?",
     "What does an assessment run against my system, and what does it explicitly not claim?",
     "Which axes have a published bank I can reproduce, and where do the items live?",
+    "What models are published on the living board, and which cells are still empty?",
   ],
   compliance: [
     "Which EU AI Act provisions are crosswalked, and what is the frozen text they were measured against?",
@@ -84,6 +87,18 @@ const BY_AUDIENCE: Record<string, string[]> = {
     "What was the most recent published correction, and what caused it?",
     "What does the Council explicitly not claim about the systems it measures?",
     "Who publishes these numbers, and what is the legal entity behind them?",
+  ],
+  insurer: [
+    "Which board figures are safe to underwrite on today, and which cells are explicitly empty?",
+    "How is a measurement card signed, and how do I verify one offline?",
+    "What does the Council publish about bias, explainability, and oversight evidence?",
+    "What is reported third-party context versus the Council's own measurement?",
+  ],
+  regulator: [
+    "Which frameworks are crosswalked to frozen statute, and where is the text published?",
+    "What does a published measurement card attest, and what does it explicitly not decide?",
+    "What is in the corrections ledger, and how are refutations handled?",
+    "What does the Council refuse to certify or opine on?",
   ],
 };
 
@@ -129,6 +144,69 @@ const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
   {
     test: /^\/academy/,
     asks: ["What does Council Academy attest on completion, and what does it explicitly not attest?"],
+  },
+  {
+    test: /^\/compare/,
+    asks: [
+      "What is the difference between measurement and certification on this page?",
+      "What can procurement rely on in a published measurement, and what is out of scope?",
+    ],
+  },
+  {
+    test: /^\/layer0/,
+    asks: [
+      "How is Layer 0 signed and verified — what is the public key and hash chain?",
+      "What does Layer 0 publish that downstream measurement depends on?",
+    ],
+  },
+  {
+    test: /^\/for\//,
+    asks: [
+      "What is published for this sector — frameworks named, evidence signed, and gaps left empty?",
+      "What should this audience do first for AI governance with signed evidence?",
+    ],
+  },
+  {
+    test: /^\/pricing|^\/plans/,
+    asks: [
+      "What is published about plans and pricing — what is measured, what is free?",
+      "What is explicitly not promised in the published pricing material?",
+    ],
+  },
+  {
+    test: /^\/honesty/,
+    asks: [
+      "What does the honesty page publish about corrections and refusals?",
+      "What has the Council got wrong so far, and where is it recorded?",
+    ],
+  },
+  {
+    test: /^\/library/,
+    asks: [
+      "What is published in the library about the measurement method and reproducibility?",
+      "Which materials are under an open licence I can cite?",
+    ],
+  },
+  {
+    test: /^\/regulators/,
+    asks: [
+      "What is published for regulators — crosswalks and frozen provisions?",
+      "What does the Council refuse to certify or decide for supervisory readers?",
+    ],
+  },
+  {
+    test: /^\/insurers/,
+    asks: [
+      "What on the live board is safe for an insurer to rely on today?",
+      "Which cells are explicitly empty and must not be underwritten?",
+    ],
+  },
+  {
+    test: /^\/(start|enterprise)/,
+    asks: [
+      "What does enterprise measurement actually run, and what does the result attest?",
+      "What does a completed assessment explicitly NOT say about our system?",
+    ],
   },
 ];
 

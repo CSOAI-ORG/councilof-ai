@@ -84,10 +84,232 @@ why(k) +
   }
 
   const axes = await loadAxes(origin);
+  const axisNames = axes.map((a: any) => String(a.axis)).filter(Boolean);
 
-  // 2. A named axis.
-  const hit = axes.find((a: any) =>
-    t.includes(String(a.axis).toLowerCase()) || t.includes(String(a.bench ?? "").toLowerCase()));
+  // 1o. Pricing / plans — no SaaS tiers.
+  if (/\b(pricing|plans?|per[- ]seat|saas tier|course fee|what is free|not promised|how much|grade cost|does (a |the )?grade cost|cost of (a )?(grade|card|measurement)|is (it|verify|verification) free)\b/i.test(q)) {
+    return (
+      `There are no SaaS tiers, no per-seat plans, and no course fees on this estate.\n\n` +
+      `Measurement and verification are free forever. Anyone can read GET /api/gspc, verify a card at /gspc-verify/, ` +
+      `and run an assessment at /assess/ with no account.\n\n` +
+      `Where a signed evidence artefact is sold, it is priced as an artefact on its own product page — ` +
+      `never a fee for a ranking or placement. See /pricing/ for the published posture.\n\n` +
+      `_Grounded in the published pricing page, not by a model._`
+    );
+  }
+
+  // 1q. Insurer / underwriting — a grade is not a policy decision.
+  if (/\b(insurer|underwrit|insurance)\b/i.test(q) && !/\b(governance axis|axis score)\b/i.test(q)) {
+    return (
+      `A published GSPC grade is a signed measurement of named behaviour on a frozen bank. ` +
+      `It is not a licence, not a certification, and not a signal that a system is safe to underwrite.\n\n` +
+      `An insurer can read GET /api/gspc, recompute any card at /gspc-verify/ (free), ` +
+      `and treat empty cells as empty. We will not fill a cell to make a book look complete.\n\n` +
+      `See /insurers/ for the published posture. The Council does not opine on premium or cover.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 1p. Sector / demographic — what to do first (not an axis score).
+  if (
+    (/\b(what should .+ do first|ai governance for |sector|for finance|for healthcare|for startup|for enterprise|for regulator)\b/i.test(q) ||
+      (/\b(regulator|insurer|underwrit|enterprise buyer|finance team)\b/i.test(q) &&
+        /\b(do with|should .+ do|first move|use gspc|underwrit)\b/i.test(q))) &&
+    !/\b(governance axis|axis score|accuracy|wilson|n=)\b/i.test(q)
+  ) {
+    return (
+      `A sensible first move with signed evidence:\n\n` +
+      `1. **Inventory** — name the AI systems that matter and which rules might apply (EU AI Act tier, sector law, DORA, etc.).\n` +
+      `2. **Read the board** — GET /api/gspc shows what is measured today; empty cells stay empty.\n` +
+      `3. **Verify, don't trust** — recompute any card at /gspc-verify/ with the published Ed25519 key.\n` +
+      `4. **Get measured** — /assess/ runs against frozen rules; the result attests measurement, not certification.\n\n` +
+      `Sector pages under /for/ and /regulators/ link to published crosswalks. The Council does not give a legal opinion.\n\n` +
+      `_Grounded in the published method and routes, not by a model._`
+    );
+  }
+
+  // 1b. Who we are / measure vs certify — the questions the lobby actually suggests.
+  if (
+    /\b(in plain words|actually measure|what (do|does) (the )?(council|csoai|this (estate|body|site)))\b/i.test(q) ||
+    (/\bcertif/i.test(q) && /\bmeasur/i.test(q)) ||
+    /\bdifference between measur/i.test(q) ||
+    /\bone-paragraph summary\b/i.test(q)
+  ) {
+    const list = axisNames.length
+      ? `This stamp's board axes, from GET /api/gspc: ${axisNames.join(", ")}.`
+      : "Read the living board at GET /api/gspc — this process could not load it just now.";
+    return (
+      `The Council of AI measures published behaviour against frozen rules, signs the ` +
+      `result with Ed25519, and publishes what it cannot measure.\n\n` +
+      `It does not certify, approve, or remediate. A grade is never sold. Anyone can ` +
+      `recompute a card at /gspc-verify with no account.\n\n` +
+      `${list}\n\n` +
+      `Counts and stamps live on the API. This reply does not type a slot number.\n\n` +
+      `_Grounded in the published board, not by a model._`
+    );
+  }
+
+  // 1c. Empty cells / no number.
+  if (/\b(no number|empty cell|carry no number|without a (number|score)|unmeasured axis|axis is published with no)\b/i.test(q)) {
+    return (
+      `An axis with no number is not a missing graphic. It is a published cell that ` +
+      `has not earned a quotable figure on this stamp — UNMEASURED, below the usable-n ` +
+      `floor, or still in-lane beside the board.\n\n` +
+      `Empty cells stay empty. We do not invent a score to fill them. ` +
+      `In-lane rows (instrument-honesty, human-vs-ai) sit beside the board and are ` +
+      `not counted in totals.public_count.\n\n` +
+      `Read the cells from GET /api/gspc.\n\n` +
+      `_Grounded in the published board, not by a model._`
+    );
+  }
+
+  // 1d. Verify a card.
+  if (
+    (/\b(verif|recompute|ed25519|public key|without (trusting|a csoai account))\b/i.test(q) &&
+      /\b(card|hash|sign|key|did|check)\b/i.test(q)) ||
+    /\bcheck a (published )?card\b/i.test(q)
+  ) {
+    return (
+      `A measurement card is a canonical JSON record plus an Ed25519 signature.\n\n` +
+      `1. Drop content_id and signature, sort keys, SHA-256 the bytes — that hash is the card.\n` +
+      `2. Fetch the public key from https://csoai.org/.well-known/did.json (did:web:csoai.org).\n` +
+      `3. Check the signature in your own browser at /gspc-verify. No account, no fee.\n\n` +
+      `If the hash or the signature fails, the card is not ours. We do not have a third step.\n\n` +
+      `_Grounded in the published verify path, not by a model._`
+    );
+  }
+
+  // 1e. Legal entity / who publishes.
+  if (/\b(legal entity|who publishes|behind them|csoai ltd|companies house|nicholas templeman)\b/i.test(q)) {
+    return (
+      `The publisher is **CSOAI Ltd**, UK company **16939677**. Trading as Council of AI. ` +
+      `Site: councilof.ai. Founder: Nicholas Templeman.\n\n` +
+      `The signing identity is **did:web:csoai.org**. Keys live on the static apex ` +
+      `https://csoai.org/.well-known/did.json — not on this SPA.\n\n` +
+      `_Grounded in the published legal pages, not by a model._`
+    );
+  }
+
+  // 1f. Corrections / what we refuse / insurer reliance.
+  if (
+    /\b(correction|got wrong|refuse to (state|opine|certif)|not claim|out of scope|rely on in a (published|signed)|what can i rely on)\b/i.test(q) ||
+    /\b(who checks|checks the council|corrections ledger|refutation)\b/i.test(q) ||
+    /\b(safe to underwrite|must not be underwritten|empty cells|can an insurer|insurer use gspc)\b/i.test(q)
+  ) {
+    return (
+      `A published measurement says: this system, this frozen bank, this n, this score, ` +
+      `this signature. It does not say the system is lawful, safe to deploy, or certified.\n\n` +
+      `The Council will not invent a missing instrument, will not fill an empty cell, ` +
+      `and will not give a legal opinion. Regulators and notified bodies decide conformity.\n\n` +
+      `When we get a number wrong it lands on GET /api/corrections. Read that feed — ` +
+      `this reply will not summarise it from memory.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 1m. Regulators / crosswalks / frozen statute.
+  if (
+    /\b(regulator|supervisory|crosswalk|frozen (text|statute|provision)|frameworks (are )?crosswalked|policy bodies)\b/i.test(q) ||
+    /\b(refuse to certify|decide for supervisory)\b/i.test(q)
+  ) {
+    return (
+      `Regulators read crosswalks and frozen provisions — not a conformity opinion from us.\n\n` +
+      `Published material: GET /api/regulation (what is in force vs deferred), the Regulator Atlas at /regulators/, ` +
+      `and framework pages under /hive/. Each measurement card states what was frozen and what was graded.\n\n` +
+      `The Council measures and signs; supervisory bodies and notified bodies decide conformity. ` +
+      `We refuse to certify or fill empty cells.\n\n` +
+      `_Grounded in the published regulation surfaces, not by a model._`
+    );
+  }
+
+  // 1n. Honesty page / corrections published.
+  if (/\b(honesty (page|ledger)|corrections and refusals|what has the council got wrong)\b/i.test(q)) {
+    return (
+      `The honesty gate at /honesty/ publishes where our own fine-tunes and instruments lose on published banks — ` +
+      `win or lose, with the n and the signature attached.\n\n` +
+      `Structured corrections live at GET /api/corrections. Read that feed for what we got wrong and when; ` +
+      `this reply will not summarise it from memory.\n\n` +
+      `_Grounded in the published honesty and corrections surfaces, not by a model._`
+    );
+  }
+
+  // 1h. Endpoints / published bank.
+  if (/\b(endpoint|what shape|published bank|items live|reproduce)\b/i.test(q)) {
+    return (
+      `The living board is GET /api/gspc (JSON). Corrections: GET /api/corrections. ` +
+      `Regulation feed: GET /api/regulation. Keys: https://csoai.org/.well-known/did.json.\n\n` +
+      `Axis banks that are public are named on the board payload as dataset slugs ` +
+      `(Hugging Face). This reply will not invent a slug — read the axis object.\n\n` +
+      `_Grounded in the published API, not by a model._`
+    );
+  }
+
+  // 1i. Assessment scope — explicit "get measured", not bare "is measured".
+  if (/\b(assessment actually run|explicitly not (claim|say)|would it take to have)\b/i.test(q) ||
+      /\bget (?:my system )?measured\b/i.test(q)) {
+    return (
+      `An assessment records a description against published rules and returns a signed ` +
+      `measurement. It does not say the system is lawful, certified, or safe to deploy.\n\n` +
+      `Start at /assess. Recompute the card at /gspc-verify. Counts stay on GET /api/gspc.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 1j. Regulation feed / obligations.
+  if (/\b(regulation feed|in force today|deferred|obligations land next|penalty exposure)\b/i.test(q)) {
+    return (
+      `The dated obligation feed is GET /api/regulation. What is in force versus deferred ` +
+      `is on that payload. This reply will not type a deadline from memory.\n\n` +
+      `_Grounded in the published feed, not by a model._`
+    );
+  }
+
+  // 1k. Separation / unparsed / licence.
+  if (/\b(mcnemar|statistical separation|what counts as a tie|unparseable|not dropped|licence|license)\b/i.test(q)) {
+    return (
+      `A point lead is a TIE unless a McNemar test on the disagreed items separates it. ` +
+      `Unparsed answers are counted incorrect, never dropped. Board data is CC-BY-4.0 — ` +
+      `attribute Council of AI, CSOAI Ltd 16939677, councilof.ai. See totals.license on GET /api/gspc.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 1l. Watchdog / academy.
+  if (/\b(incident after it is reported|who sees it|academy attest)\b/i.test(q)) {
+    return (
+      `A Watchdog report is triaged on /watchdog. Completing Academy attests training, ` +
+      `not conformity — a course is not a measurement and not a certificate of a system.\n\n` +
+      `_Grounded in the published surfaces, not by a model._`
+    );
+  }
+
+  // 1g. Minimum n / researcher floor.
+  if (/\b(minimum n|usable n|quotable figure|below it|n\s*[≥>=]{0,2}\s*30)\b/i.test(q)) {
+    return (
+      `Nothing is quoted below usable n ≥ 30 (n × (1 − unparsed rate)). Under that floor ` +
+      `the axis carries no interval and says so. Unparsed answers are counted incorrect, ` +
+      `never dropped. Ties stay ties — a point lead without McNemar separation is not a win.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
+  // 2. A named axis — word-boundary match AND score intent (avoid "AI governance" → governance axis).
+  const axisIntent =
+    /\b(score|accuracy|axis|axes|bench|gspc|leader|wilson|macro f1|unparsed|measured on)\b/i.test(q) ||
+    /\bwhat is the \w+ (score|axis)\b/i.test(q) ||
+    /\b(how many|which) axes\b/i.test(q);
+
+  const hit = axisIntent
+    ? axes.find((a: any) => {
+        const name = String(a.axis ?? "");
+        const bench = String(a.bench ?? "");
+        const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return (
+          (name && new RegExp(`\\b${esc(name)}\\b`, "i").test(q)) ||
+          (bench && new RegExp(`\\b${esc(bench)}\\b`, "i").test(q))
+        );
+      })
+    : null;
   if (hit) {
     const q_ok = hit.status === "MEASURED" && hit.n > 0;
     if (!q_ok) {
@@ -108,8 +330,11 @@ why(k) +
       `Task: ${hit.task}.` + (hit.note ? `\n\n${hit.note}` : "");
   }
 
-  // 3. The board as a whole.
-  if (/\b(board|axes|axis|coverage|measured|how many|overview|status)\b/.test(t) && axes.length) {
+  // 3. The board as a whole — must ask about the board, not merely contain "measured".
+  if (
+    /\b(board|scoreboard|axes|axis|gspc|coverage|how many axes|walk me through|overview|live board)\b/.test(t) &&
+    axes.length
+  ) {
     const m = axes.filter((a: any) => a.status === "MEASURED" && a.n > 0);
     const withCI = m.filter((a: any) => a.n * (1 - (a.unparsed_rate ?? 0)) >= 30);
     return `The GSPC suite is **${axes.length} axes**. **${m.length}** are MEASURED; ` +
@@ -139,7 +364,7 @@ why(k) +
   }
 
   // 5. Method questions.
-  if (/\b(method|how do you|unparsed|interval|wilson|grader|judge|canary|n *[≥>=]* *30)\b/.test(t)) {
+  if (/\b(method|how do you|unparsed|interval|wilson|grader|judge|canary|n *[>=≥]* *30)\b/.test(t)) {
     return `The rules every board here runs on:\n\n` +
       `· **Unparsed counted incorrect** — an answer we cannot read is a wrong answer, never a dropped row.\n` +
       `· **No model judges another model** — every grader is deterministic; there is no LLM jury.\n` +
@@ -206,13 +431,19 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const g = await grounded(question, origin);
   if (g) return reply(g, "grounded in published measurement · deterministic · recomputable", "grounded");
 
+  let named = "";
+  try {
+    const live = await loadAxes(origin);
+    if (live.length) named = live.map((a: any) => a.axis).filter(Boolean).join(", ");
+  } catch { /* refuse text falls back */ }
+  const axisHint = named || "the axes published on GET /api/gspc";
+
   return reply(
-    "I can answer from what this estate has actually measured — ask about one of the twelve GSPC axes " +
-    "(governance, safety, provenance, continuity, conformance, openness, care, swarm, cross-reality, " +
-    "art5-safeguard, detector-interop, machinery-conformity), whether a practice is prohibited under " +
-    "EU AI Act Article 5, the Council City arena runs, or the measurement method itself.\n\n" +
-    "I won't answer this one, because I would be improvising rather than grounding. The tuned " +
-    "specialist that handles open-ended questions is not connected yet.",
+    `I could not ground an answer to your question from published measurement.\n\n` +
+    "Try asking about a **named board axis** (with its score), whether a practice is **prohibited under EU AI Act Article 5**, " +
+    "what is on **GET /api/gspc**, **pricing** (/pricing/), **regulators** (/regulators/), or the **measurement method**.\n\n" +
+    `Named axes on this stamp: ${axisHint}.\n\n` +
+    "I will not invent a number or a legal opinion.",
     "refused — no grounding available", "ungrounded",
   );
 };

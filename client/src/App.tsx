@@ -10,14 +10,15 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
-// Widget imports
 import WidgetLayout from "./components/widget/WidgetLayout";
 import WidgetCourses from "./components/widget/WidgetCourses";
 import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
-// Home removed - using NewHomeV2 instead
 const Landing = lazy(() => import("./pages/Landing"));
+const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
+const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
+const RankingsBridge = lazy(() => import("./pages/AgUiBridge").then((m) => ({ default: m.RankingsBridge })));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
@@ -47,7 +48,6 @@ const Watchdog = lazy(() => import("./pages/Watchdog"));
 const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
 const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
-// Training removed - using Training-v2 instead
 const TrainingV2 = lazy(() => import("./pages/Training-v2"));
 const TrainingHub = lazy(() => import("./pages/TrainingHub"));
 const Courses = lazy(() => import("./pages/Courses"));
@@ -83,7 +83,7 @@ const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
-const MotionLab = lazy(() => import("./pages/MotionLab")); // demo-only, not in nav
+const MotionLab = lazy(() => import("./pages/MotionLab"));
 const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
 const Signup = lazy(() => import("./pages/Signup"));
@@ -167,7 +167,6 @@ const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const Insurers = lazy(() => import("./pages/Insurers"));
-// Deck scroll-worlds — owner decks fact-checked into shared-module scroll-world pages
 const Coliseum = lazy(() => import("./pages/Coliseum"));
 const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
 const VerifiableTrust = lazy(() => import("./pages/VerifiableTrust"));
@@ -199,7 +198,6 @@ const PDCASimulator = lazy(() => import("./pages/PDCASimulator"));
 const CertificateVerification = lazy(() => import("./pages/CertificateVerification"));
 const EnterpriseDashboard = lazy(() => import("./pages/EnterpriseDashboard"));
 const Enterprise = lazy(() => import("./pages/Enterprise"));
-// New pages for CSOAI briefing requirements
 const ProsperityFund = lazy(() => import("./pages/ProsperityFund"));
 const Charter = lazy(() => import("./pages/Charter"));
 const FoundingMembers = lazy(() => import("./pages/FoundingMembers"));
@@ -211,7 +209,6 @@ const NISTAIRMFGuide = lazy(() => import("./pages/NISTAIRMFGuide"));
 const ISO42001Guide = lazy(() => import("./pages/ISO42001Guide"));
 const TC260Guide = lazy(() => import("./pages/TC260Guide"));
 const WhyCSOAI = lazy(() => import("./pages/WhyCSOAI"));
-// Legal Pages
 const MembershipAgreement = lazy(() => import("./pages/legal/MembershipAgreement"));
 const FoundingCouncilAgreement = lazy(() => import("./pages/legal/FoundingCouncilAgreement"));
 const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement"));
@@ -222,7 +219,6 @@ const DataProcessingAgreement = lazy(() => import("./pages/legal/DataProcessingA
 const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 const ServiceLevelAgreement = lazy(() => import("./pages/legal/ServiceLevelAgreement"));
 const Council = lazy(() => import("./pages/Council"));
-// New competitive improvement pages
 const GlobalRegulationTracker = lazy(() => import("./pages/GlobalRegulationTracker"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const Glossary = lazy(() => import("./pages/Glossary"));
@@ -324,17 +320,12 @@ import CookieConsent from "./components/CookieConsent";
 
 function ScrollToTop() {
   const [location] = useLocation();
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [location]);
-
   return null;
 }
 
-// Global SEO title fixer — gives proper titles to pages that don't set their own,
-// so no route falls back to the generic default. Pages that set their own title
-// aren't listed here and are left untouched.
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
@@ -345,7 +336,6 @@ const ROUTE_TITLES: Record<string, string> = {
   "/academy": "Council Academy — AI governance training | CSOAI",
   "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
   "/models": "AI model registry & scoreboard | CSOAI",
-  // Top public routes — "<Plain page name> | CSOAI"
   "/": "Council of AI — we measure, we sign, we re-attest",
   "/plans": "Plans | CSOAI",
   "/gspc-arena": "GSPC Arena | CSOAI",
@@ -402,53 +392,28 @@ function RouteTitle() {
   return null;
 }
 
-/**
- * Announce route changes to screen readers
- */
 function RouteAnnouncer() {
   const [location] = useLocation();
-
   useEffect(() => {
-    // Get the page title or create one from the path
     const getPageTitle = () => {
       const title = document.title;
       if (title) return title;
-
-      // Fallback: create title from path
       const path = location.replace(/^\//, '').replace(/-/g, ' ');
       return path ? path.charAt(0).toUpperCase() + path.slice(1) : 'Home';
     };
-
-    // Announce the new page to screen readers
     const announcement = document.createElement('div');
     announcement.setAttribute('role', 'status');
     announcement.setAttribute('aria-live', 'polite');
     announcement.setAttribute('aria-atomic', 'true');
     announcement.className = 'sr-only';
-    announcement.style.cssText = `
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    `;
-
+    announcement.style.cssText = `\n      position: absolute;\n      width: 1px;\n      height: 1px;\n      padding: 0;\n      margin: -1px;\n      overflow: hidden;\n      clip: rect(0, 0, 0, 0);\n      white-space: nowrap;\n      border: 0;\n    `;
     document.body.appendChild(announcement);
-
-    // Delay announcement slightly to ensure it's picked up
     const timeoutId = setTimeout(() => {
       announcement.textContent = `Navigated to ${getPageTitle()}`;
     }, 100);
-
-    // Clean up
     const cleanupId = setTimeout(() => {
       document.body.removeChild(announcement);
     }, 1000);
-
     return () => {
       clearTimeout(timeoutId);
       clearTimeout(cleanupId);
@@ -457,13 +422,9 @@ function RouteAnnouncer() {
       }
     };
   }, [location]);
-
   return null;
 }
 
-/**
- * Widget Router - renders widget pages without Header/Footer/Auth
- */
 function WidgetRouter() {
   return (
     <ErrorBoundary>
@@ -489,15 +450,10 @@ function WidgetRouter() {
 
 function App() {
   const [location] = useLocation();
-
-  // Widget routes - no header/footer/auth
   if (location.startsWith('/widget')) {
     return <WidgetRouter />;
   }
-
-  // Immersive full-bleed routes — the live demo takes over the whole screen (no header/footer).
-  // Dockview lab only. /council-os is the public OS name — it 308s to the overlay.
-  if (location === '/sov-os') {
+  if (location === '/sov-os' || location === '/council-os') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="dark">
@@ -511,7 +467,6 @@ function App() {
       </ErrorBoundary>
     );
   }
-
   if (location === '/demo' || location === '/os-demo') {
     return (
       <ErrorBoundary>
@@ -524,7 +479,6 @@ function App() {
       </ErrorBoundary>
     );
   }
-
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
@@ -532,7 +486,6 @@ function App() {
           <AnalyticsProvider>
             <TooltipProvider>
               <div className="flex flex-col min-h-screen">
-                {/* Skip Navigation - must be first focusable element */}
                 <SkipNavigation />
                 <ScrollToTop />
                 <RouteTitle />
@@ -540,15 +493,8 @@ function App() {
                 <Header />
                 <PageSchema />
                 <ArchivedBanner />
-                <main
-                  id="main-content"
-                  className="flex-1"
-                  role="main"
-                  aria-label="Main content"
-                  tabIndex={-1}
-                >
+                <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
                   <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
-                  {/* Main routes */}
                   <Route path="/" component={NewHomeV3} />
                   <Route path="/home-v2" component={NewHomeV2} />
                   <Route path="/home-v3" component={NewHomeV3} />
@@ -562,7 +508,6 @@ function App() {
                   <Route path="/system-card" component={SystemCard} />
                   <Route path="/assurance" component={SystemCard} />
                   <Route path="/systemcard" component={SystemCard} />
-                  {/* Clean twins — the sov3/ceasai slugs below are KILLED (IA law: banned codenames never in machine payloads, GY.0/IA.0) */}
                   <Route path="/council-model-card" component={Sov3ModelCard} />
                   <Route path="/council-system-card" component={Sov3SystemCard} />
                   <Route path="/workbench-paper" component={Sov3Whitepaper} />
@@ -577,7 +522,6 @@ function App() {
                   <Route path="/about-ceasai">{() => <Redirect to="/about-credential" />}</Route>
                   <Route path="/accessibility" component={Accessibility} />
                   <Route path="/analytics" component={AnalyticsDashboard} />
-                  {/* KILLED (audit §0.2 #12): asserted retracted Byzantine/fault-tolerance claim. */}
                   <Route path="/byzantine-consensus">{() => <Redirect to="/council" />}</Route>
                   <Route path="/credential-training" component={CEASAITraining} />
                   <Route path="/ceasai-training">{() => <Redirect to="/credential-training" />}</Route>
@@ -596,7 +540,6 @@ function App() {
                   <Route path="/docs" component={Documentation} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
-                  {/* REDIRECTED (audit §3.5 #2): one pricing page. Enterprise folds into /pricing. */}
                   <Route path="/enterprise-plans">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />
                   <Route path="/eu-ai-act-urgency" component={EUAIActUrgency} />
@@ -607,7 +550,6 @@ function App() {
                   <Route path="/global-ai-safety-initiative" component={GlobalAISafetyInitiative} />
                   <Route path="/govbench" component={GovBench} />
                   <Route path="/drift-audit" component={DriftProduct} />
-                  {/* KILLED slug (IA law): banned codename — clean twin is /town-lab; page was design-stage */}
                   <Route path="/sov-town-lab">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
                   <Route path="/government-links" component={GovernmentLinks} />
                   <Route path="/government-portal" component={GovernmentPortal} />
@@ -641,25 +583,18 @@ function App() {
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
                   <Route path="/watchdog/report" component={PublicWatchdogHub} />
                   <Route path="/benchmarks" component={Benchmarks} />
-                  {/* Meta-benchmark index — REPORTED (others, cited) beside MEASURED (ours, signed); never fused */}
                   <Route path="/benchmark-index" component={BenchmarkIndex} />
-                  {/* Benchmark-quality register — deterministic predicates on OTHER benchmarks; our own boards are firewalled out in code */}
                   <Route path="/benchmark-quality" component={BenchmarkQuality} />
-                  {/* Library IA — the "align, don't delete" archive hub + per-sector views */}
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />
-                  {/* The honesty gate — our own losses, published (owner GO 2026-08-18) */}
                   <Route path="/honesty" component={Honesty} />
-                  {/* Appeals & dispute resolution — Charter Art 18, boundary #7 (GAP-E2E HM.0) */}
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
-                  {/* Insurers evidence pack — underwriter-legible measurement (3 data states, live board) */}
                   <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
-                  {/* Deck scroll-worlds — see client/src/data/deckWorlds/* for each deck's corrections log */}
                   <Route path="/coliseum" component={Coliseum} />
                   <Route path="/open-source" component={OpenSourceFramework} />
                   <Route path="/verifiable-trust" component={VerifiableTrust} />
@@ -669,10 +604,12 @@ function App() {
                   <Route path="/where-the-record-lives" component={WhereTheRecordLives} />
                   <Route path="/statute-to-predicate" component={StatuteToPredicate} />
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
-                  {/* 17 Aug 2026: Council Space spectator lives at /gspc-arena. Do not bounce to /sov-space. */}
                   <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
+                  <Route path="/ag-ui" component={AgUiBridge} />
+                  <Route path="/chat" component={AgUiBridge} />
+                  <Route path="/rankings" component={RankingsBridge} />
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/ai-act-benchmark" component={AiActBenchmark} />
                   <Route path="/provbench" component={ProvBench} />
@@ -683,32 +620,29 @@ function App() {
                   <Route path="/personal-protection" component={Protect} />
                   <Route path="/deepfake-protection" component={Protect} />
                   <Route path="/ontology" component={Ontology} />
-          <Route path="/network" component={NetworkPage} />
-          {/* KILLED slug (IA law): banned codename — clean twin is /network */}
-          <Route path="/sovereign-network">{() => <Redirect to="/network" />}</Route>
-          <Route path="/agents-network" component={NetworkPage} />
-          <Route path="/regulators" component={RegulatorAtlas} />
-          <Route path="/regulator-atlas" component={RegulatorAtlas} />
-          <Route path="/scan" component={CyberScan} />
-          <Route path="/gods-eye" component={CyberScan} />
-          <Route path="/cyber-scan" component={CyberScan} />
-          <Route path="/usp" component={WhyCSOAI} />
-          <Route path="/competitors" component={Competitors} />
-          <Route path="/battlecards" component={Competitors} />
+                  <Route path="/network" component={NetworkPage} />
+                  <Route path="/sovereign-network">{() => <Redirect to="/network" />}</Route>
+                  <Route path="/agents-network" component={NetworkPage} />
+                  <Route path="/regulators" component={RegulatorAtlas} />
+                  <Route path="/regulator-atlas" component={RegulatorAtlas} />
+                  <Route path="/scan" component={CyberScan} />
+                  <Route path="/gods-eye" component={CyberScan} />
+                  <Route path="/cyber-scan" component={CyberScan} />
+                  <Route path="/usp" component={WhyCSOAI} />
+                  <Route path="/competitors" component={Competitors} />
+                  <Route path="/battlecards" component={Competitors} />
                   <Route path="/marketing" component={MarketingHome} />
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
                   <Route path="/careers" component={Careers} />
-                  {/* Key CSOAI pages */}
                   <Route path="/charter" component={Charter} />
                   <Route path="/maternal-covenant" component={MaternalCovenant} />
                   <Route path="/covenant" component={MaternalCovenant} />
                   <Route path="/why-csoai" component={WhyCSOAI} />
                   <Route path="/our-difference" component={WhyCSOAI} />
                   <Route path="/why" component={WhyCSOAI} />
-                  {/* AI Framework Guides */}
                   <Route path="/eu-ai-act" component={EUAIActGuide} />
                   <Route path="/frameworks/eu-ai-act" component={EUAIActGuide} />
                   <Route path="/nist-ai-rmf" component={NISTAIRMFGuide} />
@@ -717,157 +651,147 @@ function App() {
                   <Route path="/frameworks/iso-42001" component={ISO42001Guide} />
                   <Route path="/tc260" component={TC260Guide} />
                   <Route path="/frameworks/tc260" component={TC260Guide} />
-                  {/* Additional /guides/ routes for internal navigation */}
                   <Route path="/guides/eu-ai-act" component={EUAIActGuide} />
                   <Route path="/guides/nist-ai-rmf" component={NISTAIRMFGuide} />
                   <Route path="/guides/iso-42001" component={ISO42001Guide} />
                   <Route path="/guides/tc260" component={TC260Guide} />
-                  {/* Absorbed data-driven content: per-framework / sector / industry / blog pages */}
                   <Route path="/frameworks/:slug">{(p: any) => <ContentPage dataset={frameworksdata} slug={p.slug} />}</Route>
                   <Route path="/sectors/:slug">{(p: any) => <ContentPage dataset={sectorsdata} slug={p.slug} />}</Route>
                   <Route path="/industries/:slug">{(p: any) => <IndustryTemplate slug={p.slug} />}</Route>
                   <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
                   <Route path="/models" component={ModelRegistry} />
-            <Route path="/framework-catalog" component={FrameworkCatalog} />
-            <Route path="/command-center" component={ComplianceCommandCenter} />
-            <Route path="/policy-generator" component={PolicyGenerator} />
-            <Route path="/mcp-fleet" component={McpFleet} />
-            <Route path="/os" component={OsLauncher} />
-            <Route path="/workbench" component={Workbench} />
-            {/* KILLED slug (IA law): banned codename never in machine payloads — clean twin is /workbench */}
-            <Route path="/sov3">{() => <Redirect to="/workbench" />}</Route>
-            <Route path="/demo" component={DemoOS} />
-            <Route path="/os-demo" component={DemoOS} />
-          <Route path="/enter" component={OsEnter} />
-          <Route path="/tour" component={SovereignTour} />
-          <Route path="/academy" component={SovereignAcademy} />
-          <Route path="/register" component={SovereignRegistry} />
-          <Route path="/hives" component={SovereignHives} />
-          <Route path="/pulse" component={GovernancePulse} />
-          <Route path="/join" component={SovereignRegistry} />
-          <Route path="/distribution" component={Distribution} />
-          <Route path="/legacy" component={LegacyBridge} />
-          <Route path="/social" component={SocialOS} />
-          {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
-          <Route path="/jewels">{() => <Redirect to="/" />}</Route>
-          {/* 2026-08-01 unification: the towns live INSIDE Sov Space as a layer */}
-          <Route path="/towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
-          <Route path="/minds" component={SovereignMinds} />
-          <Route path="/try" component={TryCouncil} />
-          <Route path="/lineage" component={Lineage} />
-          <Route path="/map" component={RelevanceMap} />
-          <Route path="/temples" component={Temples} />
-          <Route path="/playbooks" component={Playbooks} />
-          <Route path="/dragonfly" component={Dragonfly} />
-          <Route path="/meok-law" component={MeokLaw} />
-          <Route path="/law" component={MeokLaw} />
-          <Route path="/hive-model" component={HiveModel} />
-          <Route path="/services" component={Services} />
-          <Route path="/how" component={HowItWorks} />
-          <Route path="/how-it-works" component={HowItWorks} />
-          <Route path="/sectors" component={SectorsAtlas} />
-          <Route path="/regions" component={RegionsMap} />
-          {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
-          <Route path="/globe">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
-          <Route path="/registry" component={RegistryAll} />
-          <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
-          <Route path="/checklist" component={EUActChecklist} />
-          <Route path="/gpai" component={GpaiObligations} />
-          <Route path="/foundation-models" component={GpaiObligations} />
-          <Route path="/penalties" component={Penalties} />
-          <Route path="/uk-ai-regulation">{() => <JurisdictionAct jx="uk" />}</Route>
-          <Route path="/canada-aida">{() => <JurisdictionAct jx="canada" />}</Route>
-          <Route path="/china-ai-law">{() => <JurisdictionAct jx="china" />}</Route>
-          <Route path="/singapore-ai-governance">{() => <JurisdictionAct jx="singapore" />}</Route>
-          <Route path="/south-korea-ai-act">{() => <JurisdictionAct jx="korea" />}</Route>
-          <Route path="/us-ai-regulation">{() => <JurisdictionAct jx="usfederal" />}</Route>
-          <Route path="/sec-disclosure">{() => <SECDisclosure />}</Route>
-          <Route path="/sec-ai-disclosure">{() => <SECDisclosure />}</Route>
-          <Route path="/for/:persona">{(params: any) => <PersonaRouter persona={params.persona} />}</Route>
-          <Route path="/ai-act-faq" component={AiActFaq} />
-          <Route path="/eu-ai-act-faq" component={AiActFaq} />
-          <Route path="/conformity-assessment" component={ConformityAssessment} />
-          <Route path="/ai-governance" component={AiGovernanceHub} />
-          <Route path="/ai-governance-guide" component={AiGovernanceHub} />
-          <Route path="/high-risk-ai-systems" component={HighRiskSystems} />
-          <Route path="/classifier" component={EuActClassifier} />
-          <Route path="/report" component={IncidentReport} />
-          <Route path="/high-risk-ai" component={HighRiskSystems} />
-          <Route path="/ai-act-summary" component={ActSummary} />
-          <Route path="/eu-ai-act-explained" component={ActSummary} />
-          <Route path="/colorado-ai-act">{() => <UsStateAct state="colorado" />}</Route>
-          <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
-          <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
-          <Route path="/connect" component={SocialConnect} />
-          {/* KILLED slug (IA law): banned codename — clean twin is /me */}
-          <Route path="/sovereign">{() => <Redirect to="/me" />}</Route>
-          <Route path="/me" component={SovereignHub} />
-          <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
-          <Route path="/nist-eu" component={NistVsEuAct} />
-          <Route path="/iso-42001-vs-eu-ai-act" component={Iso42001VsEuAct} />
-          <Route path="/healthcare-ai-act">{() => <SectorAct sector="healthcare" />}</Route>
-          <Route path="/finance-ai-act">{() => <SectorAct sector="finance" />}</Route>
-          <Route path="/hr-ai-act">{() => <SectorAct sector="hr" />}</Route>
-          <Route path="/energy-ai-act">{() => <SectorAct sector="energy" />}</Route>
-          <Route path="/pharma-ai-act">{() => <SectorAct sector="pharma" />}</Route>
-          <Route path="/defence-ai-act">{() => <SectorAct sector="defence" />}</Route>
-          <Route path="/vanta-alternative">{() => <AltPage comp="vanta" />}</Route>
-          <Route path="/onetrust-alternative">{() => <AltPage comp="onetrust" />}</Route>
-          <Route path="/credo-ai-alternative">{() => <AltPage comp="credo" />}</Route>
-          <Route path="/eu-ai-act-vs-gdpr" component={EuActVsGdpr} />
-          <Route path="/ai-act-vs-gdpr" component={EuActVsGdpr} />
-          <Route path="/eu-ai-act-timeline" component={ActTimeline} />
-          <Route path="/ai-act-timeline" component={ActTimeline} />
-          <Route path="/iso-eu" component={Iso42001VsEuAct} />
-          <Route path="/fines" component={Penalties} />
-          <Route path="/all" component={RegistryAll} />
-          {/* REDIRECTED (audit §0.2 #14): "BFT setup" pages assert the retracted fault-tolerance claim. */}
-          <Route path="/bft">{() => <Redirect to="/council" />}</Route>
-          <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
-          <Route path="/world">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
-          <Route path="/map-regions" component={RegionsMap} />
-          <Route path="/compare" component={Compare} />
-          <Route path="/vs" component={Compare} />
-          <Route path="/vs/:slug">{(p: any) => <Compare focus={p.slug} />}</Route>
-          <Route path="/vs-competitors" component={Compare} />
-          <Route path="/rfc-0024" component={Fedramp} />
-          <Route path="/aug-2026" component={Readiness} />
-          <Route path="/governance-council" component={Agents} />
-          <Route path="/council-vs-agents" component={Agents} />
-          <Route path="/fedramp" component={Fedramp} />
-          <Route path="/oscal-readiness" component={Fedramp} />
-          <Route path="/readiness" component={Readiness} />
-          <Route path="/agents" component={Agents} />
-          <Route path="/press" component={Pressroom} />
-          <Route path="/pressroom" component={Pressroom} />
-          <Route path="/sector-atlas" component={SectorsAtlas} />
-          <Route path="/learn" component={Academy} />
-          <Route path="/tracks" component={Academy} />
-          <Route path="/four-wings" component={Dragonfly} />
-          <Route path="/industry-playbooks" component={Playbooks} />
-          <Route path="/framework-temples" component={Temples} />
-          <Route path="/relevance-map" component={RelevanceMap} />
-          <Route path="/rediscovered" component={Lineage} />
-          <Route path="/voice" component={SovereignMinds} />
-          <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
-          {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
-          <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
-          <Route path="/cobol" component={LegacyBridge} />
-            <Route path="/risk-heatmap" component={RiskHeatmap} />
-            <Route path="/webhooks" component={Webhooks} />
-            <Route path="/evidence" component={EvidenceHub} />
-            <Route path="/oscal" component={OscalStudio} />
-            <Route path="/sovereign-town">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+                  <Route path="/framework-catalog" component={FrameworkCatalog} />
+                  <Route path="/command-center" component={ComplianceCommandCenter} />
+                  <Route path="/policy-generator" component={PolicyGenerator} />
+                  <Route path="/mcp-fleet" component={McpFleet} />
+                  <Route path="/os" component={OsLauncher} />
+                  <Route path="/workbench" component={Workbench} />
+                  <Route path="/sov3">{() => <Redirect to="/workbench" />}</Route>
+                  <Route path="/demo" component={DemoOS} />
+                  <Route path="/os-demo" component={DemoOS} />
+                  <Route path="/enter" component={OsEnter} />
+                  <Route path="/tour" component={SovereignTour} />
+                  <Route path="/academy" component={SovereignAcademy} />
+                  <Route path="/register" component={SovereignRegistry} />
+                  <Route path="/hives" component={SovereignHives} />
+                  <Route path="/pulse" component={GovernancePulse} />
+                  <Route path="/join" component={SovereignRegistry} />
+                  <Route path="/distribution" component={Distribution} />
+                  <Route path="/legacy" component={LegacyBridge} />
+                  <Route path="/social" component={SocialOS} />
+                  <Route path="/jewels">{() => <Redirect to="/" />}</Route>
+                  <Route path="/towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+                  <Route path="/minds" component={SovereignMinds} />
+                  <Route path="/try" component={TryCouncil} />
+                  <Route path="/lineage" component={Lineage} />
+                  <Route path="/map" component={RelevanceMap} />
+                  <Route path="/temples" component={Temples} />
+                  <Route path="/playbooks" component={Playbooks} />
+                  <Route path="/dragonfly" component={Dragonfly} />
+                  <Route path="/csoai-law" component={MeokLaw} />
+                  <Route path="/meok-law" component={MeokLaw} />
+                  <Route path="/law" component={MeokLaw} />
+                  <Route path="/hive-model" component={HiveModel} />
+                  <Route path="/services" component={Services} />
+                  <Route path="/how" component={HowItWorks} />
+                  <Route path="/how-it-works" component={HowItWorks} />
+                  <Route path="/sectors" component={SectorsAtlas} />
+                  <Route path="/regions" component={RegionsMap} />
+                  <Route path="/globe">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
+                  <Route path="/registry" component={RegistryAll} />
+                  <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
+                  <Route path="/checklist" component={EUActChecklist} />
+                  <Route path="/gpai" component={GpaiObligations} />
+                  <Route path="/foundation-models" component={GpaiObligations} />
+                  <Route path="/penalties" component={Penalties} />
+                  <Route path="/uk-ai-regulation">{() => <JurisdictionAct jx="uk" />}</Route>
+                  <Route path="/canada-aida">{() => <JurisdictionAct jx="canada" />}</Route>
+                  <Route path="/china-ai-law">{() => <JurisdictionAct jx="china" />}</Route>
+                  <Route path="/singapore-ai-governance">{() => <JurisdictionAct jx="singapore" />}</Route>
+                  <Route path="/south-korea-ai-act">{() => <JurisdictionAct jx="korea" />}</Route>
+                  <Route path="/us-ai-regulation">{() => <JurisdictionAct jx="usfederal" />}</Route>
+                  <Route path="/sec-disclosure">{() => <SECDisclosure />}</Route>
+                  <Route path="/sec-ai-disclosure">{() => <SECDisclosure />}</Route>
+                  <Route path="/for/:persona">{(params: any) => <PersonaRouter persona={params.persona} />}</Route>
+                  <Route path="/ai-act-faq" component={AiActFaq} />
+                  <Route path="/eu-ai-act-faq" component={AiActFaq} />
+                  <Route path="/conformity-assessment" component={ConformityAssessment} />
+                  <Route path="/ai-governance" component={AiGovernanceHub} />
+                  <Route path="/ai-governance-guide" component={AiGovernanceHub} />
+                  <Route path="/high-risk-ai-systems" component={HighRiskSystems} />
+                  <Route path="/classifier" component={EuActClassifier} />
+                  <Route path="/report" component={IncidentReport} />
+                  <Route path="/high-risk-ai" component={HighRiskSystems} />
+                  <Route path="/ai-act-summary" component={ActSummary} />
+                  <Route path="/eu-ai-act-explained" component={ActSummary} />
+                  <Route path="/colorado-ai-act">{() => <UsStateAct state="colorado" />}</Route>
+                  <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
+                  <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
+                  <Route path="/connect" component={SocialConnect} />
+                  <Route path="/sovereign">{() => <Redirect to="/me" />}</Route>
+                  <Route path="/me" component={SovereignHub} />
+                  <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
+                  <Route path="/nist-eu" component={NistVsEuAct} />
+                  <Route path="/iso-42001-vs-eu-ai-act" component={Iso42001VsEuAct} />
+                  <Route path="/healthcare-ai-act">{() => <SectorAct sector="healthcare" />}</Route>
+                  <Route path="/finance-ai-act">{() => <SectorAct sector="finance" />}</Route>
+                  <Route path="/hr-ai-act">{() => <SectorAct sector="hr" />}</Route>
+                  <Route path="/energy-ai-act">{() => <SectorAct sector="energy" />}</Route>
+                  <Route path="/pharma-ai-act">{() => <SectorAct sector="pharma" />}</Route>
+                  <Route path="/defence-ai-act">{() => <SectorAct sector="defence" />}</Route>
+                  <Route path="/vanta-alternative">{() => <AltPage comp="vanta" />}</Route>
+                  <Route path="/onetrust-alternative">{() => <AltPage comp="onetrust" />}</Route>
+                  <Route path="/credo-ai-alternative">{() => <AltPage comp="credo" />}</Route>
+                  <Route path="/eu-ai-act-vs-gdpr" component={EuActVsGdpr} />
+                  <Route path="/ai-act-vs-gdpr" component={EuActVsGdpr} />
+                  <Route path="/eu-ai-act-timeline" component={ActTimeline} />
+                  <Route path="/ai-act-timeline" component={ActTimeline} />
+                  <Route path="/iso-eu" component={Iso42001VsEuAct} />
+                  <Route path="/fines" component={Penalties} />
+                  <Route path="/all" component={RegistryAll} />
+                  <Route path="/bft">{() => <Redirect to="/council" />}</Route>
+                  <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
+                  <Route path="/world">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
+                  <Route path="/map-regions" component={RegionsMap} />
+                  <Route path="/compare" component={Compare} />
+                  <Route path="/vs" component={Compare} />
+                  <Route path="/vs/:slug">{(p: any) => <Compare focus={p.slug} />}</Route>
+                  <Route path="/vs-competitors" component={Compare} />
+                  <Route path="/rfc-0024" component={Fedramp} />
+                  <Route path="/aug-2026" component={Readiness} />
+                  <Route path="/governance-council" component={Agents} />
+                  <Route path="/council-vs-agents" component={Agents} />
+                  <Route path="/fedramp" component={Fedramp} />
+                  <Route path="/oscal-readiness" component={Fedramp} />
+                  <Route path="/readiness" component={Readiness} />
+                  <Route path="/agents" component={Agents} />
+                  <Route path="/press" component={Pressroom} />
+                  <Route path="/pressroom" component={Pressroom} />
+                  <Route path="/sector-atlas" component={SectorsAtlas} />
+                  <Route path="/learn" component={Academy} />
+                  <Route path="/tracks" component={Academy} />
+                  <Route path="/four-wings" component={Dragonfly} />
+                  <Route path="/industry-playbooks" component={Playbooks} />
+                  <Route path="/framework-temples" component={Temples} />
+                  <Route path="/relevance-map" component={RelevanceMap} />
+                  <Route path="/rediscovered" component={Lineage} />
+                  <Route path="/voice" component={SovereignMinds} />
+                  <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+                  <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
+                  <Route path="/cobol" component={LegacyBridge} />
+                  <Route path="/risk-heatmap" component={RiskHeatmap} />
+                  <Route path="/webhooks" component={Webhooks} />
+                  <Route path="/evidence" component={EvidenceHub} />
+                  <Route path="/oscal" component={OscalStudio} />
+                  <Route path="/sovereign-town">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
-                  {/* KILLED (audit §0.2 #13): "33-agent Byzantine consensus" page — retracted claim. */}
                   <Route path="/byzantine">{() => <Redirect to="/council" />}</Route>
                   <Route path="/council" component={Council} />
                   <Route path="/public-watchdog" component={PublicWatchdog} />
                   <Route path="/government" component={GovernmentDashboard} />
                   <Route path="/government-dashboard" component={GovernmentDashboard} />
-                  {/* old-home route removed - was using broken Home component */}
                   <Route path="/landing" component={Landing} />
                   <Route path="/dashboard" component={Dashboard} />
                   <Route path="/ai-systems" component={AISystems} />
@@ -932,7 +856,6 @@ function App() {
                   <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
                   <Route path="/compliance-monitoring" component={ComplianceMonitoring} />
                   <Route path="/bulk-import" component={BulkAISystemImport} />
-                  {/* Legal Pages */}
                   <Route path="/membership-agreement" component={MembershipAgreement} />
                   <Route path="/legal/membership" component={MembershipAgreement} />
                   <Route path="/founding-council-agreement" component={FoundingCouncilAgreement} />
@@ -956,7 +879,6 @@ function App() {
                   <Route path="/sla" component={ServiceLevelAgreement} />
                   <Route path="/service-level-agreement" component={ServiceLevelAgreement} />
                   <Route path="/legal/sla" component={ServiceLevelAgreement} />
-                  {/* New Competitive Improvement Pages */}
                   <Route path="/global-regulations" component={GlobalRegulationTracker} />
                   <Route path="/regulation-tracker" component={GlobalRegulationTracker} />
                   <Route path="/faq" component={FAQ} />
@@ -980,7 +902,6 @@ function App() {
                   <Route path="/architecture" component={Technology} />
                   <Route path="/integrations" component={Integrations} />
                   <Route path="/ecosystem" component={Integrations} />
-                  {/* Framework Crosswalks */}
                   <Route path="/crosswalks" component={Crosswalks} />
                   <Route path="/crosswalk" component={Crosswalk} />
                   <Route path="/agent-governance" component={AgentGovernance} />
@@ -993,22 +914,11 @@ function App() {
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
-                  <Route path="/verify">{() => <Redirect to="/gspc-verify" />}</Route>
-                  <Route path="/legal">{() => <Redirect to="/disclaimers" />}</Route>
-                  <Route path="/vulnerability">{() => <Redirect to="/vulnerability-disclosure" />}</Route>
-                  <Route path="/gspc">{() => <Redirect to="/gspc-scoreboard" />}</Route>
-                  <Route path="/scoreboard">{() => <Redirect to="/gspc-scoreboard" />}</Route>
-                  <Route path="/lobby">{() => <Redirect to="/?lobby=home" />}</Route>
-                  <Route path="/console">{() => <Redirect to="/?lobby=home" />}</Route>
-                  <Route path="/council-os">{() => <Redirect to="/?lobby=home" />}</Route>
-                  <Route path="/library/measurement">{() => <Redirect to="/library/axes" />}</Route>
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
-                  {/* Individual Charter Articles */}
                   <Route path="/charter/article/:id" component={CharterArticle} />
                   <Route path="/404" component={NotFound} />
-                  {/* 410 Gone — retired routes, do not redirect. Clean dead-end paths (banned codename slugs killed per IA law). */}
                   <Route path="/gone-space" component={Gone} />
                   <Route path="/sov-space">{() => <Redirect to="/gone-space" />}</Route>
                   <Route path="/sovereign-space">{() => <Redirect to="/gone-space" />}</Route>
@@ -1018,9 +928,7 @@ function App() {
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
-                  {/* REDIRECTED (audit §3.5 #2): /plans was a byte-identical duplicate of /pricing. */}
                   <Route path="/plans">{() => <Redirect to="/pricing" />}</Route>
-                  {/* KILLED slug (IA law): banned codename — clean twin is /pricing */}
                   <Route path="/sovereign-pricing">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/start" component={OnboardOS} />
                   <Route path="/onboard" component={OnboardOS} />
@@ -1034,28 +942,17 @@ function App() {
                   <Route path="/tools" component={ToolCommons} />
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
-                  {/* KILLED slug (IA law): banned codename — design-stage twin surface; /me is the live assistant */}
                   <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>
                   <Route component={NotFound} />
                   </Switch></Suspense>
                 </main>
                 <Footer />
-                <ErrorBoundary fallback={null}>
-                  <Suspense fallback={null}><CouncilLobby /></Suspense>
-                </ErrorBoundary>
+                <Suspense fallback={null}><CouncilConsole /></Suspense>
+                <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />
               </div>
-              <Toaster
-                position="top-right"
-                toastOptions={{
-                  style: {
-                    background: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    color: 'hsl(var(--foreground))',
-                  },
-                }}
-              />
+              <Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} />
             </TooltipProvider>
           </AnalyticsProvider>
         </AuthProvider>

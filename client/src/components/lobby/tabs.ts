@@ -10,16 +10,23 @@
  * TWO entries are `kind: "local"`: Home is the native Council OS desktop
  * (LobbyHome) — it must not iframe /os, or the OS nests inside itself. Play
  * is the gold local-play gallery from play.ts; nothing there is deployed.
+ *
+ * Software (DSH) is the signed-in dashboard at /dashboard. The same tab
+ * ids and labels are the dashboard sidebar. When /dashboard is framed here
+ * it drops its own rail so we do not get two tab lists.
  */
 
 export type LobbyTabId =
   | "home"
   | "board"
+  | "models"
+  | "tools"
   | "verify"
   | "space"
   | "measured"
   | "watchdog"
   | "academy"
+  | "software"
   | "play";
 
 export type LobbyTab = {
@@ -27,10 +34,10 @@ export type LobbyTab = {
   label: string;
   /** One honest line about what the pane actually shows. */
   blurb: string;
-  /** Same-origin route framed in the centre pane. Empty for `kind: "local"`. */
+  /** Same-origin route framed in the centre pane. Empty for `kind: "local"` / `native`. */
   path: string;
-  /** "route" frames a live page; "local" renders in-lobby content. */
-  kind?: "route" | "local";
+  /** "route" frames a live page; "local" renders in-lobby content; "native" is in-process. */
+  kind?: "route" | "local" | "native";
   /** Gold accent — reserved for the local-play surface, never for measurement. */
   accent?: "emerald" | "gold";
   /** Deterministic phrases that switch to this tab from the chat bar. */
@@ -44,20 +51,36 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "Council OS desktop — every live surface, one workspace.",
     path: "",
     kind: "local",
-    cues: /\b(home|hub|launcher|start|lobby home|council os|the os)\b/i,
+    cues: /\b(home|hub|launcher|start|lobby home|council os|the os|ag[- ]?ui|chat)\b/i,
   },
   {
     id: "board",
     label: "Live board",
     blurb: "The living GSPC board — every published axis, and in-lane beside it.",
     path: "/gspc-scoreboard",
+    kind: "native",
     cues: /\b(board|scoreboard|score|axes|axis|gspc|leaderboard)\b/i,
+  },
+  {
+    id: "models",
+    label: "Models",
+    blurb: "Measured models on the published board — ranked by signed scores, not tokens.",
+    path: "/models",
+    cues: /\b(models?|model registry)\b/i,
+  },
+  {
+    id: "tools",
+    label: "Tools",
+    blurb: "Published tooling and MCP servers — connect, run, verify. Not a marketplace.",
+    path: "/tools",
+    cues: /\b(tools?|tooling|tool commons|mcp tools)\b/i,
   },
   {
     id: "verify",
     label: "Verify a card",
     blurb: "Recompute a record's hash and check its Ed25519 signature in your browser.",
     path: "/gspc-verify",
+    kind: "native",
     cues: /\b(verify|verification|signature|signed|check a (?:card|record)|hash)\b/i,
   },
   {
@@ -89,6 +112,13 @@ export const LOBBY_TABS: LobbyTab[] = [
     cues: /\b(academy|course|training|learn|teach)\b/i,
   },
   {
+    id: "software",
+    label: "Software",
+    blurb: "Signed-in dashboard (DSH) — the same destinations as this rail.",
+    path: "/dashboard",
+    cues: /\b(dashboard|software|dsh|signed[- ]in)\b/i,
+  },
+  {
     id: "play",
     label: "Council OS — local play",
     blurb: "The arenas, with honest playable / in-build states. Nothing here is deployed.",
@@ -113,3 +143,10 @@ export function matchTab(text: string): LobbyTab | null {
   if (!/\b(show|open|go|take me|switch|jump|load|view|bring up|let me)\b/i.test(t)) return null;
   return LOBBY_TABS.find((tab) => tab.cues.test(t)) ?? null;
 }
+
+/** Same destinations as OS, minus Play, Home, and Software (this surface). */
+export function isDashboardTab(t: LobbyTab): boolean {
+  return Boolean(t.path) && t.id !== "play" && t.id !== "software" && t.id !== "home";
+}
+
+export const DASHBOARD_TABS: LobbyTab[] = LOBBY_TABS.filter(isDashboardTab);

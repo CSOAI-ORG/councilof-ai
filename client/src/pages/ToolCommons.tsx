@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import ToolRunner from "../components/ToolRunner";
+import { isEmbedded } from "@/lib/embed";
 const GW: string = ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) || "/api";
 const EX = ["audit", "compliance", "EU AI Act", "payments", "defence", "identity"];
 export default function ToolCommons() {
   const [q, setQ] = useState(""); const [data, setData] = useState<any>(null); const [loading, setLoading] = useState(false); const [copied, setCopied] = useState("");
-  useEffect(() => { document.title = "Tool Commons - 370+ governed MCP tools | CSOAI"; run("governance"); }, []);
+  const framed = typeof window !== "undefined" && isEmbedded();
+  useEffect(() => { document.title = "Tool Commons — published MCP | CSOAI"; run("governance"); }, []);
+  useEffect(() => {
+    if (data?.total != null) document.title = `Tool Commons — ${data.total} published MCP | CSOAI`;
+  }, [data]);
   async function run(query?: string) {
     const term = (query !== undefined ? query : q).trim() || "governance"; setQ(term); setLoading(true);
     try { const r = await fetch(GW + "/tools?q=" + encodeURIComponent(term)); if (r.ok) setData(await r.json()); } catch (e) {}
@@ -17,10 +22,12 @@ export default function ToolCommons() {
       <section className="relative overflow-hidden border-b border-emerald-500/15">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <div className="relative mx-auto max-w-4xl px-6 pt-16 pb-10 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - open tool commons</p>
+          {!framed && (
+            <a href="/?lobby=tools" className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70 hover:text-emerald-200">Council OS · tools</a>
+          )}
           <h1 className="mt-3 text-5xl sm:text-6xl font-black tracking-tight">The open <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">tool commons.</span></h1>
-          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">{data ? data.total : "291"}+ governed MCP servers - search, connect with one command, run them inside the Council OS. Open source, made easy.</p>
-          <div className="mt-7 flex gap-2 max-w-2xl mx-auto"><input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Search 370+ governed tools..." className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" /><button onClick={() => run()} className="rounded-xl bg-emerald-500 px-6 py-4 text-base font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Search"}</button></div>
+          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">{data?.total != null ? `${data.total} published MCP servers` : "Published MCP servers"} — search, connect with one command, run them inside Council OS. The count is live, not a slogan.</p>
+          <div className="mt-7 flex gap-2 max-w-2xl mx-auto"><input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Search published tools…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" /><button onClick={() => run()} className="rounded-xl bg-emerald-500 px-6 py-4 text-base font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Search"}</button></div>
           <div className="mt-3 flex flex-wrap justify-center gap-2">{EX.map((e) => (<button key={e} onClick={() => run(e)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-3 py-1 text-xs text-emerald-200/80 hover:bg-emerald-500/15">{e}</button>))}</div>
         </div>
       </section>

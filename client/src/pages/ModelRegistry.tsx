@@ -1,9 +1,10 @@
-// Model Registry — a live view of measured model performance across the 13 GSPC axes.
+// Model Registry — a live view of measured model performance from GET /api/gspc.
 // Reads /api/gspc (the signed measurement layer). No fabricated numbers, no demo data.
 // Falls back to the bundled AXES snapshot if the API is unreachable — honest about which.
 
 import { useEffect, useState } from "react";
 import { AXES, MEASURED_ON, type Axis } from "@/lib/gspcAxes";
+import { isEmbedded } from "@/lib/embed";
 
 interface GspcAxis {
   axis: string;
@@ -94,6 +95,7 @@ const AXIS_LABEL: Record<string, string> = {
 
 export default function ModelRegistry() {
   const { axes, source, measuredOn, loading, error, limitations, issuer } = useGspc();
+  const framed = typeof window !== "undefined" && isEmbedded();
 
   if (loading) {
     return (
@@ -114,14 +116,16 @@ export default function ModelRegistry() {
       {/* Header */}
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <a href="/os" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
-            ← Open in Council OS
-          </a>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">Model Registry</h1>
+          {!framed && (
+            <a href="/?lobby=models" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
+              ← Open in Council OS
+            </a>
+          )}
+          <h1 className={`${framed ? "" : "mt-2 "}text-3xl font-bold tracking-tight text-white`}>Model Registry</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-            Measured performance of AI models across the 13 GSPC axes. Every cell is a
-            deterministic score — no model judges another. Unmeasured cells are reported as
-            UNMEASURED, never fabricated.
+            Measured performance of AI models on the living GSPC board. Counts live in
+            GET /api/gspc — this page does not type a slot number. Every cell is a
+            deterministic score — no model judges another. Unmeasured cells stay empty.
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
             <span>
@@ -132,11 +136,9 @@ export default function ModelRegistry() {
             {issuer && <span className="text-slate-600">issuer {issuer}</span>}
             <a
               className="rounded border border-white/10 px-2.5 py-1 text-emerald-400 hover:bg-white/5"
-              href="https://csoai-site.pages.dev/gspc-scoreboard"
-              target="_blank"
-              rel="noreferrer"
+              href="/gspc-scoreboard/"
             >
-              Full scoreboard (19 models) ↗
+              Living board ↗
             </a>
           </div>
           {limitations.length > 0 && (
@@ -178,7 +180,7 @@ export default function ModelRegistry() {
                 {isMeasured ? (
                   <div className="mt-3 space-y-1.5">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold tabular-nums text-slate-100">{a.accuracy.toFixed(3)}</span>
+                      <span className="text-2xl font-bold tabular-nums text-slate-100">{a.accuracy?.toFixed(3) ?? "—"}</span>
                       <span className="text-[11px] text-slate-500">accuracy</span>
                     </div>
                     {hasInterval && (
@@ -191,14 +193,14 @@ export default function ModelRegistry() {
                         best: <span className="font-medium text-emerald-300">{a.leader}</span>
                       </div>
                     )}
-                    {a.separation === "SEPARATED" && a.separation_p !== null && (
+                    {a.separation === "SEPARATED" && a.separation_p != null && (
                       <div className="text-[10px] text-slate-600">
-                        leader separation p={a.separation_p.toFixed(4)} {a.separation_p < 0.05 ? "(significant)" : ""}
+                        leader separation p={a.separation_p?.toFixed(4) ?? "—"} {a.separation_p < 0.05 ? "(significant)" : ""}
                       </div>
                     )}
-                    {a.fleet_mean !== null && (
+                    {a.fleet_mean != null && (
                       <div className="text-[10px] text-slate-600">
-                        fleet mean {a.fleet_mean.toFixed(3)} · macro F1 {a.macro_f1?.toFixed(3) ?? "—"}
+                        fleet mean {a.fleet_mean?.toFixed(3) ?? "—"} · macro F1 {a.macro_f1?.toFixed(3) ?? "—"}
                       </div>
                     )}
                   </div>
@@ -224,9 +226,9 @@ export default function ModelRegistry() {
 
         {/* Scoreboard link footnote */}
         <div className="mt-8 border-t border-white/8 pt-4 text-center text-[11px] text-slate-600">
-          This page shows per-axis leaders. The full 13×19 scoreboard with all models is at{" "}
-          <a className="text-emerald-400 hover:underline" href="https://csoai-site.pages.dev/gspc-scoreboard" target="_blank" rel="noreferrer">
-            GSPC Scoreboard ↗
+          This page shows per-axis leaders from the live API. The living board is at{" "}
+          <a className="text-emerald-400 hover:underline" href="/gspc-scoreboard/">
+            /gspc-scoreboard/
           </a>
           . Measurement, not certification. Every cell recomputable.
         </div>

@@ -11,7 +11,7 @@ export default function StatuteToPredicate() {
   return (
     <DeckPage
       title="From statute to predicate — how a law becomes a test | Council of AI"
-      description="How Council of AI turns a frozen statutory provision into a deterministic boolean predicate: the 417-provision corpus, structural extraction, the Article 14 worked example, and the Ed25519-signed record it produces. Measurement, not certification."
+      description="How Council of AI turns a frozen statutory provision into a deterministic boolean predicate: the frozen statute corpus, structural extraction, the Article 14 worked example, and the Ed25519-signed record it produces. Measurement, not certification."
       hero={PREDICATE_HERO}
       slides={PREDICATE_SLIDES}
       notClaimed={PREDICATE_NOT_CLAIMED}

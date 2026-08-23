@@ -16,6 +16,8 @@ import { test, expect, Page } from '@playwright/test';
  */
 
 // ─── 1. BUILT-ON FOOTER (license attribution — must be honest) ───
+// BuiltOnFooter strip removed in the Council OS redesign — all strip
+// assertions below are skipped rather than fabricated.
 test.describe('BuiltOnFooter — License Attribution', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
@@ -23,15 +25,15 @@ test.describe('BuiltOnFooter — License Attribution', () => {
     await page.waitForTimeout(800);
   });
 
-  test('renders the "What this is built on" strip', async ({ page }) => {
+  test.skip('renders the "What this is built on" strip', async ({ page }) => {
     await expect(page.locator('text=What this is built on')).toBeVisible();
   });
 
-  test('disclosure banner is present and visible', async ({ page }) => {
+  test.skip('disclosure banner is present and visible', async ({ page }) => {
     await expect(page.locator('text=These are dependencies, anchors and citations')).toBeVisible();
   });
 
-  test('Built on tab shows real open-source dependencies', async ({ page }) => {
+  test.skip('Built on tab shows real open-source dependencies', async ({ page }) => {
     const builtOnTab = page.locator('button:has-text("Built on")').first();
     await builtOnTab.click();
     await page.waitForTimeout(300);
@@ -41,7 +43,7 @@ test.describe('BuiltOnFooter — License Attribution', () => {
     await expect(page.locator('text=Pillow')).toBeVisible();
   });
 
-  test('Anchored to tab shows real regulations', async ({ page }) => {
+  test.skip('Anchored to tab shows real regulations', async ({ page }) => {
     const tab = page.locator('button:has-text("Anchored to")').first();
     await tab.click();
     await page.waitForTimeout(500);
@@ -53,7 +55,7 @@ test.describe('BuiltOnFooter — License Attribution', () => {
     await expect(stripSection.locator('text=C2PA specification').first()).toBeVisible();
   });
 
-  test('Standing on tab shows arXiv citations', async ({ page }) => {
+  test.skip('Standing on tab shows arXiv citations', async ({ page }) => {
     const tab = page.locator('button:has-text("Standing on")').first();
     await tab.click();
     await page.waitForTimeout(500);
@@ -62,14 +64,14 @@ test.describe('BuiltOnFooter — License Attribution', () => {
     await expect(stripSection.locator('text=COMPL-AI').first()).toBeVisible();
   });
 
-  test('no partner/endorsement claims in strip', async ({ page }) => {
+  test.skip('no partner/endorsement claims in strip', async ({ page }) => {
     // The whole point of the strip is to NOT make false partnership claims
     const bodyText = await page.textContent('body');
     // Must contain the explicit disclaimer
     expect(bodyText).toContain('not partners, sponsors or endorsements');
   });
 
-  test('all dependency links open in new tab (target=_blank)', async ({ page }) => {
+  test.skip('all dependency links open in new tab (target=_blank)', async ({ page }) => {
     const builtOnTab = page.locator('button:has-text("Built on")').first();
     await builtOnTab.click();
     await page.waitForTimeout(300);
@@ -114,7 +116,8 @@ test.describe('Honesty Cards — No False Claims', () => {
     expect(hasHonestContent).toBeTruthy();
   });
 
-  test('BuiltOnFooter strip explicitly denies partnership', async ({ page }) => {
+  // BuiltOnFooter strip removed in the Council OS redesign — skipped.
+  test.skip('BuiltOnFooter strip explicitly denies partnership', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(500);
@@ -261,8 +264,10 @@ test.describe('Globe & Sovereign Surfaces', () => {
     expect(body.length).toBeGreaterThan(100);
   });
 
-  test('SovSpace page (/sov-space) renders', async ({ page }) => {
-    await page.goto('/sov-space', { waitUntil: 'networkidle' });
+  // SovSpace was replaced by the Council Space arena in the Council OS redesign:
+  // /sov-space now returns 410 Gone. Assert the successor surface instead.
+  test('Council Space arena (/gspc-arena) renders', async ({ page }) => {
+    await page.goto('/gspc-arena', { waitUntil: 'networkidle' });
     const body = (await page.textContent('body')) || '';
     expect(body.length).toBeGreaterThan(200);
   });

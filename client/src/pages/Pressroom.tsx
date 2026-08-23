@@ -16,7 +16,7 @@ const QUOTES = [
 ];
 
 export default function Pressroom() {
-  useEffect(() => { document.title = "Pressroom - CSOAI, the AI governance OS"; }, []);
+  useEffect(() => { document.title = "Pressroom — Council of AI (CSOAI)"; }, []);
   return (
     <div className="min-h-screen bg-white">
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
