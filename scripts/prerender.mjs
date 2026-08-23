@@ -127,7 +127,7 @@ const srv = http.createServer((q, r) => {
 }).listen(PORT);
 
 // ---------------------------------------------------------------- render
-const browser = await chromium.launch();
+const browser = await chromium.launch({ channel: 'chrome' });
 const results = [];
 const queue = routes.slice();
 

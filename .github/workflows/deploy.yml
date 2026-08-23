@@ -55,6 +55,28 @@ jobs:
       - name: Brand gate — block deploy on any forbidden display string (audit §6.2)
         run: node scripts/brand-gate.mjs dist/client
 
+      # Functions guard (Move 12) — block a deploy that dropped a required /api/*
+      # function from the bundle. Prevents the deploy war from silently 404ing
+      # /api/cards, /api/axis-register, etc. while / stays 200.
+      - name: Functions bundle guard — required /api/* present in dist
+        run: |
+          set -euo pipefail
+          echo "Checking required /api functions are in the bundle..."
+          missing=0
+          for f in cards axis-register gspc mcp tools; do
+            if [ ! -f "dist/client/functions/api/$f.ts" ]; then
+              echo "  ✗ missing function: $f"
+              missing=1
+            else
+              echo "  ✓ $f.ts present"
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "FUNCTIONS-GUARD RED: a required /api function is missing from the bundle — blocking deploy."
+            exit 1
+          fi
+          echo "FUNCTIONS-GUARD green: all required /api functions present."
+
       # Custom domain councilof.ai follows the Pages PRODUCTION alias
       # (councilof-ai.pages.dev), not a hash preview. --branch=main alone
       # published a fat preview (2026-08-22, 42596ad2.…) while production
@@ -77,6 +99,12 @@ jobs:
           node scripts/assert-prerender-live.mjs --label immediate \
             --host https://councilof.ai \
             --also https://councilof-ai.pages.dev
+
+      - name: Assert live /api functions serving (functions-guard, Move 12)
+        run: |
+          set -euo pipefail
+          sleep 8
+          node scripts/functions-guard.mjs --host https://councilof.ai
 
       # 2026-08-22: official deploy went green (apex 212889) then a Vite-only
       # writer flipped the production alias ~3 minutes later. `/` is no-cache
