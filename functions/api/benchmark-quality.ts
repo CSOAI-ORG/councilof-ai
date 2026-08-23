@@ -644,7 +644,7 @@ const LIMITATIONS = [
   "Predicate counts are not a score and must not be ranked. A benchmark with more PASSes than another is not thereby better; the predicates are not weighted, not independent, and not exhaustive. We publish no league table of benchmarks and no composite grade.",
   "No language model judged anything on this register. Every predicate was read off a fetched page by a human-directed process. This is a constraint we accept even where it costs coverage — an LLM-graded register of benchmark quality would fail its own scoring-transparency predicate.",
   "This register is unsolicited and the subjects did not participate. Nothing here is a certification, an accreditation, an endorsement, or a verification by any third party. Council of AI is a measurement body, not a certification or accreditation body and not a notified body.",
-  "Coverage is small on purpose. Six benchmarks whose artifacts were actually fetched are worth more than fifty whose properties were assumed.",
+  "Coverage is small on purpose. Ten benchmarks whose artifacts were actually fetched are worth more than fifty whose properties were assumed.",
 ];
 
 export function buildRegister() {
