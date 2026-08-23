@@ -61,6 +61,7 @@ export async function askSovereign(
   const started = Date.now();
   const messages: { role: string; content: string }[] = [];
 
+  // Optional system hint is prepended as context the grounded lane may use.
   if (opts?.system) {
     messages.push({
       role: "user",
