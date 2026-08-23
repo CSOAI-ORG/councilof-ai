@@ -1,35 +1,73 @@
-import { useRef } from "react";
-import { LOBBY_TABS, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
-import { NAV_GROUPS } from "./lobbyNav";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { tabById, type LobbyTab, type LobbyTabId } from "./tabs";
 import { CONTROL, FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
+import { COUNCIL_OS_LEFT_MENU, type SideMenuItem } from "@/data/councilOsSideMenu";
 
 export const PANEL_ID = "coai-lobby-panel";
-export const tabDomId = (id: LobbyTabId) => `coai-lobby-tab-${id}`;
+export const tabDomId = (id: LobbyTabId | string) => `coai-lobby-tab-${id}`;
 
-const flatOrder = NAV_GROUPS.flatMap((g) => g.items);
+const STORAGE_KEY = "coai.os.menu.collapsed";
+
+function readCollapsed(): Record<string, boolean> {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function Badge({ kind }: { kind?: "live" | "api" | "train" }) {
+  if (!kind) return null;
+  const cls =
+    kind === "live"
+      ? "bg-emerald-100 text-emerald-800"
+      : kind === "api"
+        ? "bg-slate-100 text-slate-600"
+        : "bg-amber-100 text-amber-900";
+  return (
+    <span className={`ml-auto shrink-0 rounded px-1 py-0.5 text-[8px] font-bold uppercase tracking-wide ${cls}`}>
+      {kind}
+    </span>
+  );
+}
 
 export default function LobbyPaneRail({
   tabId,
   onSelect,
+  onOpenRoute,
   onMinimise,
 }: {
   tabId: LobbyTabId;
   onSelect: (t: LobbyTab) => void;
+  onOpenRoute?: (path: string, label: string) => void;
   onMinimise?: () => void;
 }) {
   const listRef = useRef<HTMLDivElement>(null);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>(readCollapsed);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(collapsed));
+    } catch {
+      /* ignore */
+    }
+  }, [collapsed]);
+
+  const flatPanes = COUNCIL_OS_LEFT_MENU.flatMap((g) =>
+    g.items.filter((i): i is Extract<SideMenuItem, { kind: "pane" }> => i.kind === "pane"),
+  );
 
   const move = (to: number) => {
-    const id = flatOrder[((to % flatOrder.length) + flatOrder.length) % flatOrder.length];
-    const next = tabById(id);
-    onSelect(next);
+    const item = flatPanes[((to % flatPanes.length) + flatPanes.length) % flatPanes.length];
+    onSelect(tabById(item.pane));
     setTimeout(() => {
-      listRef.current?.querySelector<HTMLButtonElement>(`#${tabDomId(next.id)}`)?.focus();
+      listRef.current?.querySelector<HTMLButtonElement>(`#${tabDomId(item.id)}`)?.focus();
     }, 0);
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    const at = flatOrder.indexOf(tabId);
+    const at = flatPanes.findIndex((i) => i.pane === tabId);
     switch (e.key) {
       case "ArrowDown":
       case "ArrowRight":
@@ -47,28 +85,42 @@ export default function LobbyPaneRail({
         break;
       case "End":
         e.preventDefault();
-        move(flatOrder.length - 1);
+        move(flatPanes.length - 1);
         break;
       default:
         break;
     }
   };
 
+  const activate = (item: SideMenuItem) => {
+    if (item.kind === "pane") {
+      onSelect(tabById(item.pane));
+      return;
+    }
+    if (item.external) {
+      window.open(item.href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (onOpenRoute) onOpenRoute(item.href, item.label);
+    else window.location.href = item.href;
+  };
+
+  const isActive = (item: SideMenuItem) => {
+    if (item.kind === "pane") return item.pane === tabId;
+    const t = tabById(tabId);
+    return t.path === item.href;
+  };
+
   return (
     <nav
-      aria-label="Council OS"
+      aria-label="Council OS master menu"
       className={`${SURFACE} ${SP.rail} flex h-full w-full shrink-0 flex-col`}
       style={panelStyle}
     >
       <div className="mb-2 flex shrink-0 items-center justify-between gap-2 px-1">
-        <h2 className={TYPE.section}>Council OS</h2>
+        <h2 className={TYPE.section}>Master menu</h2>
         {onMinimise && (
-          <button
-            type="button"
-            onClick={onMinimise}
-            aria-label="Hide sidebar"
-            className={`${CONTROL} ${SP.chip} text-[11px] font-semibold`}
-          >
+          <button type="button" onClick={onMinimise} aria-label="Hide sidebar" className={`${CONTROL} ${SP.chip} text-[11px] font-semibold`}>
             Hide
           </button>
         )}
@@ -79,58 +131,65 @@ export default function LobbyPaneRail({
         role="tablist"
         aria-orientation="vertical"
         onKeyDown={onKeyDown}
-        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto"
+        className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto"
       >
-        {NAV_GROUPS.map((group) => (
-          <div key={group.title}>
-            <p className={`mb-1.5 px-1 ${TYPE.section}`}>{group.title}</p>
-            <div className="flex flex-col gap-0.5">
-              {group.items.map((id) => {
-                const t = tabById(id);
-                const on = t.id === tabId;
-                const gold = t.accent === "gold";
-                const surface = t.kind === "route";
-                return (
-                  <button
-                    key={t.id}
-                    id={tabDomId(t.id)}
-                    type="button"
-                    role="tab"
-                    aria-selected={on}
-                    aria-controls={PANEL_ID}
-                    tabIndex={on ? 0 : -1}
-                    onClick={() => onSelect(t)}
-                    className={
-                      `w-full rounded-xl px-3 py-2 text-left transition motion-reduce:transition-none ${FOCUS} ` +
-                      (on
-                        ? gold
-                          ? "bg-amber-100 text-amber-900 ring-1 ring-amber-600/40"
-                          : "bg-emerald-100 text-emerald-900 ring-1 ring-emerald-700/30"
-                        : gold
-                          ? "text-amber-800 hover:bg-amber-50"
-                          : "text-slate-700 hover:bg-slate-900/5")
-                    }
-                  >
-                    <span className="text-[13px] font-semibold leading-snug">{t.label}</span>
-                    {surface && t.path && (
-                      <span className={`mt-0.5 block font-mono text-[10px] text-slate-500`}>{t.path}</span>
-                    )}
-                    {gold && (
-                      <span className="mt-0.5 block text-[10px] font-medium text-amber-800">
-                        not a measurement surface
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+        {COUNCIL_OS_LEFT_MENU.map((group) => {
+          const shut = collapsed[group.id] ?? !group.defaultOpen;
+          return (
+            <div key={group.id} className="rounded-xl border border-slate-900/5 bg-slate-900/[0.02]">
+              <button
+                type="button"
+                onClick={() => setCollapsed((c) => ({ ...c, [group.id]: !shut }))}
+                className={`flex w-full items-center gap-1 rounded-xl px-2 py-1.5 text-left ${FOCUS}`}
+                aria-expanded={!shut}
+              >
+                <ChevronDown className={`h-3.5 w-3.5 shrink-0 text-slate-500 transition ${shut ? "-rotate-90" : ""}`} />
+                <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">{group.title}</span>
+              </button>
+              {!shut && (
+                <div className="flex flex-col gap-0.5 px-1 pb-1.5">
+                  {group.items.map((item) => {
+                    const on = isActive(item);
+                    const Icon = item.icon;
+                    const gold = item.kind === "pane" && tabById(item.pane).accent === "gold";
+                    return (
+                      <button
+                        key={item.id}
+                        id={tabDomId(item.id)}
+                        type="button"
+                        role="tab"
+                        aria-selected={on}
+                        aria-controls={PANEL_ID}
+                        tabIndex={on ? 0 : -1}
+                        title={item.hint}
+                        onClick={() => activate(item)}
+                        className={
+                          `flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition motion-reduce:transition-none ${FOCUS} ` +
+                          (on
+                            ? gold
+                              ? "bg-amber-100 text-amber-900 ring-1 ring-amber-600/30"
+                              : "bg-emerald-100 text-emerald-900 ring-1 ring-emerald-700/25"
+                            : "text-slate-700 hover:bg-white/80")
+                        }
+                      >
+                        <Icon className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+                        <span className="min-w-0 flex-1 truncate text-[12px] font-semibold leading-snug">{item.label}</span>
+                        <Badge kind={item.badge} />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      <p className={`shrink-0 pt-3 ${TYPE.fine}`}>
-        Leaderboards and MCP tools stay in this workspace. Surfaces open in the site column — never framed here.
-      </p>
+      <div className="mt-2 shrink-0 space-y-1 border-t border-slate-900/10 pt-2">
+        <p className={`px-1 ${TYPE.fine}`}>
+          <kbd className="rounded bg-slate-100 px-1">[</kbd> toggle menu · <kbd className="rounded bg-slate-100 px-1">]</kbd> reports
+        </p>
+      </div>
     </nav>
   );
 }
