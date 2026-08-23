@@ -14,6 +14,7 @@ import type { LobbyChat } from "./useLobbyChat";
 export default function LobbyComposer({
   chat,
   onNavigate,
+  onOpenRoute,
   paneLabel,
   panePath,
   seedPrompt,
@@ -22,6 +23,7 @@ export default function LobbyComposer({
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
+  onOpenRoute?: (path: string, label: string) => void;
   paneLabel: string;
   panePath: string;
   seedPrompt?: string;
@@ -100,7 +102,7 @@ export default function LobbyComposer({
     setQ("");
     setSeeded(false);
     setAsksOpen(false);
-    void chat.send(text, onNavigate);
+    void chat.send(text, onNavigate, onOpenRoute);
   }
 
   return (
@@ -201,7 +203,8 @@ export default function LobbyComposer({
       </div>
 
       <p id="coai-lobby-chat-note" className={`mt-2 ${TYPE.fine}`}>
-        Answers from published measurement, or it refuses.{" "}
+        Answers from published measurement, or it refuses.{
+        " "}
         <button
           type="button"
           onClick={() => setNoteOpen((o) => !o)}
@@ -213,7 +216,8 @@ export default function LobbyComposer({
       </p>
       {noteOpen && (
         <p className={`${MEASURE} mt-1 ${TYPE.fine}`}>
-          Pane commands switch locally with no model. Everything else hits the published endpoint; failures are labelled{" "}
+          Pane commands switch locally with no model. Everything else hits the published endpoint; failures are labelled{
+          " "}
           <em>deterministic</em>.
         </p>
       )}
