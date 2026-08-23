@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { matchTab, type LobbyTab } from "./tabs";
+import { matchRoute, matchTab, type LobbyTab } from "./tabs";
 
 /**
  * useLobbyChat — the lobby's chat state, lifted out of the bar.
@@ -67,7 +67,11 @@ export interface LobbyChat {
   activeId: string | null;
   active: Thread | null;
   busy: boolean;
-  send: (question: string, onNavigate: (t: LobbyTab) => void) => Promise<void>;
+  send: (
+    question: string,
+    onNavigate: (t: LobbyTab) => void,
+    onOpenRoute?: (path: string, label: string) => void,
+  ) => Promise<void>;
   startThread: () => void;
   selectThread: (id: string) => void;
   /** Total turns this session — quoted by the docked bar, computed never typed. */
@@ -93,7 +97,7 @@ export function useLobbyChat(): LobbyChat {
   const selectThread = useCallback((id: string) => setActiveId(id), []);
 
   const send = useCallback(
-    async (raw: string, onNavigate: (t: LobbyTab) => void) => {
+    async (raw: string, onNavigate: (t: LobbyTab) => void, onOpenRoute?: (path: string, label: string) => void) => {
       const question = raw.trim();
       if (!question || busy) return;
 
@@ -134,6 +138,19 @@ export function useLobbyChat(): LobbyChat {
             `That was a local pane switch, not a measurement. Whatever the pane shows, it fetched itself.`,
           state: "deterministic",
           signature: `local command · ${tab.path || "in-lobby pane"}`,
+        });
+        return;
+      }
+      const extra = matchRoute(question);
+      if (extra && onOpenRoute) {
+        onOpenRoute(extra.path, extra.label);
+        push({
+          role: "council",
+          text:
+            `Opened “${extra.label}” in the centre pane — ${extra.blurb}\n\n` +
+            `That was a local pane switch, not a measurement. Whatever the pane shows, it fetched itself.`,
+          state: "deterministic",
+          signature: `local command · ${extra.path}`,
         });
         return;
       }
