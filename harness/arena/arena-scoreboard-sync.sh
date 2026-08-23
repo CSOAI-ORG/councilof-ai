@@ -18,10 +18,11 @@ mkdir -p "$STAGE"
 TS() { date +%FT%TZ; }
 echo "$(TS) scoreboard-sync start" >> /tmp/arena-sync.log
 
-# 1. Pull the signed scoreboard from the pod.
+# 1. Pull the signed scoreboard from the pod (local overlay /tmp — the /workspace
+#    mfs RAG mount drops new large writes; scoreboard lives in /tmp there).
 rsync -a --partial -e "ssh -i $KEY -p $A100_PORT -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=10" \
-  root@$A100_IP:/workspace/arena_scoreboard.json "$STAGE/arena_scoreboard.json" >> /tmp/arena-sync.log 2>&1
-[ -f "$STAGE/arena_scoreboard.json" ] || { echo "$(TS) FAILED: no scoreboard pulled" >> /tmp/arena-sync.log; exit 1; }
+  root@$A100_IP:/tmp/arena_scoreboard.json "$STAGE/arena_scoreboard.json" >> /tmp/arena-sync.log 2>&1
+[ -f "$STAGE/arena_scoreboard.json" ] || { echo "$(TS) FAILED: no scoreboard pulled (from /tmp)" >> /tmp/arena-sync.log; exit 1; }
 
 # 2. Verify the content_id recomputes (the credibility gate) before publishing.
 CID=$(python3 - "$STAGE/arena_scoreboard.json" <<'PY'
