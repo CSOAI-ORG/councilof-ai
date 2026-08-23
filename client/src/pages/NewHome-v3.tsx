@@ -1,4 +1,1 @@
-/**
- * NewHome-v3 — councilof.ai Homepage
- */
-export default function NewHomeV3() { return null; }
+LOAD_FROM_FILE:/tmp/cdt-fresh2-client__src__pages__NewHome-v3.tsx.json
