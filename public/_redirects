@@ -23,6 +23,7 @@
 /council-space  /gspc-arena             308
 /city           /gspc-arena?view=towns  308
 /method         /methodology            308
+/measurement-verify   https://csoai-verify.pages.dev/verify   302
 
 # --- static asset trees: served directly, never routed to the app ---
 /arena/*  /arena/:splat  200
@@ -33,5 +34,5 @@
 /flywheel/*  /flywheel/:splat  200
 /packs/*  /packs/:splat  200
 
-# --- SPA catch-all: known routes are prerendered static files (200); unknown paths get a real 404 ---
-/*  /404.html  404
+# --- SPA catch-all: wouter boots for EVERY path; real routes render (200), unknown paths 404 in-app ---
+/*  /index.html  200
