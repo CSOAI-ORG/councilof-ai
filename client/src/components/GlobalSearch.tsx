@@ -1,1 +1,1 @@
-PLACEHOLDER
+LOAD_FROM_FILE:/workspace/sources/councilof-ai/client/src/components/GlobalSearch.tsx
