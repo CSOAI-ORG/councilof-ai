@@ -201,7 +201,7 @@ export default function PersonaRouter({ persona }: { persona: string }) {
       </section>
 
       <section className="bg-[#03110b] py-10"><div className="mx-auto max-w-6xl px-6">
-        <SovereignSpot topic={"AI governance for " + p.key} layer="regulators" suggest={"What should " + p.key + " do first for AI governance?"} />
+        <SovereignSpot topic={p.key} layer="regulators" task="sector-brief" suggest={"What should " + p.key + " do first for AI governance with signed evidence?"} />
       </div></section>
     </div>
   );
