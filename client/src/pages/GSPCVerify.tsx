@@ -4,6 +4,7 @@ import { VerifyButton } from "@/components/gspc/VerifyButton";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import { CHAIN_STATUS } from "@/data/chain";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 /**
  * /gspc-verify — recompute the chain yourself.
@@ -21,7 +22,7 @@ export default function GSPCVerify() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+    <CouncilOsPageShell title="Verify" subtitle="Recompute Ed25519 chain client-side — no account required" className="min-h-screen bg-[#03110b] text-emerald-50">
       {/* HERO */}
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
@@ -151,6 +152,6 @@ export default function GSPCVerify() {
           </Link>
         </div>
       </div>
-    </div>
+    </CouncilOsPageShell>
   );
 }
