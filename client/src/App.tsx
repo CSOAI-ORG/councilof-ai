@@ -1,1 +1,2 @@
-file:///workspace/sources/councilof-ai/client/src/App.tsx
+import { Toaster } from "@/components/ui/sonner";
+// MCP connectivity test - will be replaced immediately
