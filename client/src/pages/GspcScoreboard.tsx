@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
+import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
 /**
  * /gspc-scoreboard — the live board, honestly displayed (NEXT-100 #2).
@@ -55,7 +56,11 @@ export default function GspcScoreboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
+    <CouncilOsPageShell
+      title="Board"
+      subtitle="Live GSPC — every axis from GET /api/gspc, separation honest"
+      className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white"
+    >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(DATASET_LD) }} />
       <div className="mx-auto max-w-5xl px-6 py-14">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
@@ -162,6 +167,6 @@ export default function GspcScoreboard() {
           harm tails and the signed living stamp: <code>GET /api/gspc</code>.
         </p>
       </div>
-    </div>
+    </CouncilOsPageShell>
   );
 }
