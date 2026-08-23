@@ -214,7 +214,7 @@ export default function TryCouncil() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-xs text-gray-500 leading-relaxed">
-          This demo runs a deterministic governance engine in your browser for instant, private triage — it is decision-support, not legal advice. The production Council deliberates with live LLM agents and emails a full 13-framework gap report; it switches on with the Layer 0 backend. Explore the full OS at <a href="/os" className="text-emerald-700 font-semibold">/os</a>.
+          This demo runs a deterministic governance engine in your browser for instant, private triage — it is decision-support, not legal advice. The production Council deliberates with live LLM agents and emails a signed gap report; it switches on with the Layer 0 backend. Open Council OS at <a href="/?lobby=home" className="text-emerald-700 font-semibold">the AG UI</a>.
         </div>
       </section>
     </div>
