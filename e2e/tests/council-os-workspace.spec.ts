@@ -61,8 +61,9 @@ async function mockCouncilApis(page: Page) {
 }
 
 async function openCouncilOs(page: Page) {
-  await expect(page.getByRole("button", { name: "Open Council OS" }).first()).toBeVisible({ timeout: 15_000 });
-  await page.getByRole("button", { name: "Open Council OS" }).first().click();
+  const launcher = page.locator('button[aria-label="Open Council OS"]');
+  await expect(launcher).toBeVisible({ timeout: 15_000 });
+  await launcher.click();
   await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
 }
 
