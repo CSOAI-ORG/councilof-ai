@@ -1,7 +1,7 @@
 {
  "schema": "csoai.arena-elo/0.1",
- "generated": "2026-08-23T10:52:10Z",
- "method": "Bradley-Terry Elo, K=32, Wilson 95% CI on win-rate, n>=5",
+ "generated": "2026-08-23T13:06:23Z",
+ "method": "Bradley-Terry Elo, K=32, Wilson 95% CI, n>=5; per-axis category breakdown",
  "register": "MEASURED (referee-based, deterministic); LMArena human-vote is REPORTED context",
  "leaderboard": [
   {
@@ -154,5 +154,2091 @@
     0.142
    ]
   }
- ]
+ ],
+ "by_axis": {
+  "safety": [
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1944.7,
+    "games": 233,
+    "winrate": 0.918,
+    "ci": [
+     0.876,
+     0.947
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1891.8,
+    "games": 223,
+    "winrate": 0.848,
+    "ci": [
+     0.794,
+     0.889
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1619.7,
+    "games": 31,
+    "winrate": 0.839,
+    "ci": [
+     0.674,
+     0.929
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1606.6,
+    "games": 27,
+    "winrate": 0.778,
+    "ci": [
+     0.592,
+     0.894
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1560.3,
+    "games": 192,
+    "winrate": 0.646,
+    "ci": [
+     0.576,
+     0.71
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1537.9,
+    "games": 9,
+    "winrate": 0.556,
+    "ci": [
+     0.267,
+     0.811
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1444.1,
+    "games": 19,
+    "winrate": 0.316,
+    "ci": [
+     0.154,
+     0.54
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1372.2,
+    "games": 146,
+    "winrate": 0.26,
+    "ci": [
+     0.196,
+     0.337
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1355.8,
+    "games": 186,
+    "winrate": 0.29,
+    "ci": [
+     0.23,
+     0.359
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1315.1,
+    "games": 118,
+    "winrate": 0.288,
+    "ci": [
+     0.214,
+     0.376
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1291.4,
+    "games": 204,
+    "winrate": 0.176,
+    "ci": [
+     0.13,
+     0.235
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1142.5,
+    "games": 110,
+    "winrate": 0.045,
+    "ci": [
+     0.02,
+     0.102
+    ]
+   }
+  ],
+  "continuity": [
+   {
+    "model": "mistral:7b",
+    "elo": 1976.6,
+    "games": 199,
+    "winrate": 0.955,
+    "ci": [
+     0.916,
+     0.976
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1728.9,
+    "games": 212,
+    "winrate": 0.533,
+    "ci": [
+     0.466,
+     0.599
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1665.0,
+    "games": 225,
+    "winrate": 0.76,
+    "ci": [
+     0.7,
+     0.811
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1563.2,
+    "games": 23,
+    "winrate": 0.826,
+    "ci": [
+     0.629,
+     0.93
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1549.3,
+    "games": 27,
+    "winrate": 0.667,
+    "ci": [
+     0.478,
+     0.814
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1512.4,
+    "games": 28,
+    "winrate": 0.679,
+    "ci": [
+     0.493,
+     0.821
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1471.2,
+    "games": 207,
+    "winrate": 0.367,
+    "ci": [
+     0.304,
+     0.435
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1469.6,
+    "games": 41,
+    "winrate": 0.707,
+    "ci": [
+     0.555,
+     0.824
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1462.7,
+    "games": 206,
+    "winrate": 0.587,
+    "ci": [
+     0.519,
+     0.652
+    ]
+   },
+   {
+    "model": "openai/gpt-oss-120b",
+    "elo": 1403.9,
+    "games": 7,
+    "winrate": 0.0,
+    "ci": [
+     0,
+     0.354
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1320.9,
+    "games": 163,
+    "winrate": 0.202,
+    "ci": [
+     0.148,
+     0.271
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1199.5,
+    "games": 136,
+    "winrate": 0.147,
+    "ci": [
+     0.097,
+     0.216
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1194.7,
+    "games": 164,
+    "winrate": 0.067,
+    "ci": [
+     0.038,
+     0.116
+    ]
+   }
+  ],
+  "provenance": [
+   {
+    "model": "qwen3:4b",
+    "elo": 2063.4,
+    "games": 168,
+    "winrate": 0.982,
+    "ci": [
+     0.949,
+     0.994
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1786.2,
+    "games": 165,
+    "winrate": 0.794,
+    "ci": [
+     0.726,
+     0.849
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1706.4,
+    "games": 166,
+    "winrate": 0.687,
+    "ci": [
+     0.613,
+     0.752
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1579.4,
+    "games": 18,
+    "winrate": 1.0,
+    "ci": [
+     0.824,
+     1
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1555.5,
+    "games": 14,
+    "winrate": 1.0,
+    "ci": [
+     0.785,
+     1
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1351.1,
+    "games": 128,
+    "winrate": 0.359,
+    "ci": [
+     0.281,
+     0.445
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1333.5,
+    "games": 165,
+    "winrate": 0.23,
+    "ci": [
+     0.173,
+     0.3
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1316.9,
+    "games": 175,
+    "winrate": 0.246,
+    "ci": [
+     0.188,
+     0.315
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1268.8,
+    "games": 131,
+    "winrate": 0.282,
+    "ci": [
+     0.212,
+     0.365
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1098.3,
+    "games": 78,
+    "winrate": 0.0,
+    "ci": [
+     0,
+     0.047
+    ]
+   }
+  ],
+  "gov": [
+   {
+    "model": "qwen3:4b",
+    "elo": 1844.7,
+    "games": 230,
+    "winrate": 0.948,
+    "ci": [
+     0.911,
+     0.97
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1757.0,
+    "games": 243,
+    "winrate": 0.65,
+    "ci": [
+     0.588,
+     0.707
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1657.3,
+    "games": 34,
+    "winrate": 0.853,
+    "ci": [
+     0.699,
+     0.936
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1634.7,
+    "games": 236,
+    "winrate": 0.572,
+    "ci": [
+     0.508,
+     0.634
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1618.1,
+    "games": 22,
+    "winrate": 0.909,
+    "ci": [
+     0.722,
+     0.975
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1574.2,
+    "games": 188,
+    "winrate": 0.617,
+    "ci": [
+     0.546,
+     0.684
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1527.7,
+    "games": 35,
+    "winrate": 0.571,
+    "ci": [
+     0.409,
+     0.72
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1457.9,
+    "games": 40,
+    "winrate": 0.625,
+    "ci": [
+     0.47,
+     0.758
+    ]
+   },
+   {
+    "model": "openai/gpt-oss-120b",
+    "elo": 1403.4,
+    "games": 7,
+    "winrate": 0.0,
+    "ci": [
+     0,
+     0.354
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1382.3,
+    "games": 244,
+    "winrate": 0.389,
+    "ci": [
+     0.33,
+     0.452
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1299.9,
+    "games": 150,
+    "winrate": 0.153,
+    "ci": [
+     0.104,
+     0.22
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1223.8,
+    "games": 144,
+    "winrate": 0.132,
+    "ci": [
+     0.086,
+     0.197
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1165.4,
+    "games": 158,
+    "winrate": 0.057,
+    "ci": [
+     0.03,
+     0.105
+    ]
+   }
+  ],
+  "affect": [
+   {
+    "model": "qwen3:4b",
+    "elo": 1667.8,
+    "games": 29,
+    "winrate": 0.69,
+    "ci": [
+     0.508,
+     0.827
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1645.3,
+    "games": 20,
+    "winrate": 0.8,
+    "ci": [
+     0.584,
+     0.919
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1618.7,
+    "games": 41,
+    "winrate": 0.707,
+    "ci": [
+     0.555,
+     0.824
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1548.4,
+    "games": 19,
+    "winrate": 0.579,
+    "ci": [
+     0.363,
+     0.769
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1521.0,
+    "games": 28,
+    "winrate": 0.5,
+    "ci": [
+     0.326,
+     0.674
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1495.6,
+    "games": 16,
+    "winrate": 0.5,
+    "ci": [
+     0.28,
+     0.72
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1472.2,
+    "games": 14,
+    "winrate": 0.429,
+    "ci": [
+     0.214,
+     0.674
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1463.6,
+    "games": 13,
+    "winrate": 0.385,
+    "ci": [
+     0.177,
+     0.645
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1410.2,
+    "games": 25,
+    "winrate": 0.32,
+    "ci": [
+     0.172,
+     0.516
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1388.2,
+    "games": 31,
+    "winrate": 0.29,
+    "ci": [
+     0.161,
+     0.466
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1384.3,
+    "games": 28,
+    "winrate": 0.321,
+    "ci": [
+     0.179,
+     0.507
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1376.2,
+    "games": 37,
+    "winrate": 0.405,
+    "ci": [
+     0.263,
+     0.565
+    ]
+   }
+  ],
+  "accountability": [
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1628.7,
+    "games": 32,
+    "winrate": 0.719,
+    "ci": [
+     0.546,
+     0.844
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1608.6,
+    "games": 29,
+    "winrate": 0.69,
+    "ci": [
+     0.508,
+     0.827
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1604.1,
+    "games": 18,
+    "winrate": 0.778,
+    "ci": [
+     0.548,
+     0.91
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1590.4,
+    "games": 31,
+    "winrate": 0.613,
+    "ci": [
+     0.438,
+     0.763
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1558.6,
+    "games": 13,
+    "winrate": 0.692,
+    "ci": [
+     0.424,
+     0.873
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1549.5,
+    "games": 29,
+    "winrate": 0.621,
+    "ci": [
+     0.44,
+     0.773
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1513.6,
+    "games": 28,
+    "winrate": 0.5,
+    "ci": [
+     0.326,
+     0.674
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1496.7,
+    "games": 12,
+    "winrate": 0.5,
+    "ci": [
+     0.254,
+     0.746
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1436.0,
+    "games": 23,
+    "winrate": 0.391,
+    "ci": [
+     0.222,
+     0.592
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1347.7,
+    "games": 25,
+    "winrate": 0.24,
+    "ci": [
+     0.115,
+     0.434
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1332.7,
+    "games": 26,
+    "winrate": 0.154,
+    "ci": [
+     0.061,
+     0.335
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1321.0,
+    "games": 29,
+    "winrate": 0.172,
+    "ci": [
+     0.076,
+     0.345
+    ]
+   }
+  ],
+  "slot15": [
+   {
+    "model": "qwen3:4b",
+    "elo": 1682.1,
+    "games": 33,
+    "winrate": 0.818,
+    "ci": [
+     0.656,
+     0.914
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1672.7,
+    "games": 20,
+    "winrate": 0.9,
+    "ci": [
+     0.699,
+     0.972
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1586.5,
+    "games": 19,
+    "winrate": 0.632,
+    "ci": [
+     0.41,
+     0.809
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1544.7,
+    "games": 37,
+    "winrate": 0.622,
+    "ci": [
+     0.461,
+     0.759
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1527.4,
+    "games": 36,
+    "winrate": 0.5,
+    "ci": [
+     0.345,
+     0.655
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1511.0,
+    "games": 7,
+    "winrate": 0.571,
+    "ci": [
+     0.25,
+     0.842
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1461.7,
+    "games": 9,
+    "winrate": 0.333,
+    "ci": [
+     0.121,
+     0.646
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1457.9,
+    "games": 24,
+    "winrate": 0.417,
+    "ci": [
+     0.245,
+     0.612
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1449.4,
+    "games": 37,
+    "winrate": 0.405,
+    "ci": [
+     0.263,
+     0.565
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1432.0,
+    "games": 37,
+    "winrate": 0.459,
+    "ci": [
+     0.31,
+     0.616
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1406.1,
+    "games": 26,
+    "winrate": 0.308,
+    "ci": [
+     0.165,
+     0.5
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1249.7,
+    "games": 34,
+    "winrate": 0.118,
+    "ci": [
+     0.047,
+     0.266
+    ]
+   }
+  ],
+  "efficiency": [
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1614.5,
+    "games": 28,
+    "winrate": 0.75,
+    "ci": [
+     0.566,
+     0.873
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1605.9,
+    "games": 26,
+    "winrate": 0.654,
+    "ci": [
+     0.462,
+     0.806
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1595.1,
+    "games": 41,
+    "winrate": 0.61,
+    "ci": [
+     0.457,
+     0.743
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1571.4,
+    "games": 7,
+    "winrate": 0.857,
+    "ci": [
+     0.487,
+     0.974
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1558.7,
+    "games": 22,
+    "winrate": 0.591,
+    "ci": [
+     0.387,
+     0.767
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1512.0,
+    "games": 14,
+    "winrate": 0.571,
+    "ci": [
+     0.326,
+     0.786
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1472.1,
+    "games": 11,
+    "winrate": 0.364,
+    "ci": [
+     0.152,
+     0.646
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1467.2,
+    "games": 31,
+    "winrate": 0.419,
+    "ci": [
+     0.264,
+     0.592
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1444.2,
+    "games": 33,
+    "winrate": 0.485,
+    "ci": [
+     0.325,
+     0.648
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1435.5,
+    "games": 21,
+    "winrate": 0.381,
+    "ci": [
+     0.208,
+     0.591
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1369.2,
+    "games": 32,
+    "winrate": 0.312,
+    "ci": [
+     0.18,
+     0.486
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1355.8,
+    "games": 32,
+    "winrate": 0.25,
+    "ci": [
+     0.133,
+     0.421
+    ]
+   }
+  ],
+  "care": [
+   {
+    "model": "qwen3:4b",
+    "elo": 1707.7,
+    "games": 41,
+    "winrate": 0.829,
+    "ci": [
+     0.687,
+     0.915
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1645.6,
+    "games": 29,
+    "winrate": 0.724,
+    "ci": [
+     0.543,
+     0.853
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1589.1,
+    "games": 25,
+    "winrate": 0.6,
+    "ci": [
+     0.407,
+     0.766
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1569.5,
+    "games": 9,
+    "winrate": 0.778,
+    "ci": [
+     0.453,
+     0.937
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1546.7,
+    "games": 24,
+    "winrate": 0.625,
+    "ci": [
+     0.427,
+     0.788
+    ]
+   },
+   {
+    "model": "council-oowm-clean:latest",
+    "elo": 1526.8,
+    "games": 5,
+    "winrate": 0.8,
+    "ci": [
+     0.376,
+     0.964
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1495.5,
+    "games": 20,
+    "winrate": 0.5,
+    "ci": [
+     0.299,
+     0.701
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1482.5,
+    "games": 10,
+    "winrate": 0.4,
+    "ci": [
+     0.168,
+     0.687
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1462.3,
+    "games": 38,
+    "winrate": 0.474,
+    "ci": [
+     0.325,
+     0.627
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1433.9,
+    "games": 26,
+    "winrate": 0.346,
+    "ci": [
+     0.194,
+     0.538
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1385.6,
+    "games": 29,
+    "winrate": 0.31,
+    "ci": [
+     0.173,
+     0.492
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1335.5,
+    "games": 24,
+    "winrate": 0.167,
+    "ci": [
+     0.067,
+     0.359
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1319.4,
+    "games": 32,
+    "winrate": 0.188,
+    "ci": [
+     0.089,
+     0.353
+    ]
+   }
+  ],
+  "jail": [
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1629.4,
+    "games": 30,
+    "winrate": 0.733,
+    "ci": [
+     0.556,
+     0.858
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1617.1,
+    "games": 21,
+    "winrate": 0.81,
+    "ci": [
+     0.6,
+     0.923
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1616.7,
+    "games": 14,
+    "winrate": 0.857,
+    "ci": [
+     0.601,
+     0.96
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1576.5,
+    "games": 31,
+    "winrate": 0.677,
+    "ci": [
+     0.501,
+     0.814
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1546.9,
+    "games": 7,
+    "winrate": 0.714,
+    "ci": [
+     0.359,
+     0.918
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1541.5,
+    "games": 16,
+    "winrate": 0.625,
+    "ci": [
+     0.386,
+     0.815
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1519.8,
+    "games": 13,
+    "winrate": 0.538,
+    "ci": [
+     0.291,
+     0.768
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1489.6,
+    "games": 30,
+    "winrate": 0.467,
+    "ci": [
+     0.302,
+     0.639
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1446.5,
+    "games": 34,
+    "winrate": 0.441,
+    "ci": [
+     0.289,
+     0.605
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1403.0,
+    "games": 18,
+    "winrate": 0.278,
+    "ci": [
+     0.125,
+     0.509
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1391.5,
+    "games": 38,
+    "winrate": 0.368,
+    "ci": [
+     0.234,
+     0.527
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1221.4,
+    "games": 38,
+    "winrate": 0.079,
+    "ci": [
+     0.027,
+     0.208
+    ]
+   }
+  ],
+  "swarm": [
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1649.1,
+    "games": 41,
+    "winrate": 0.707,
+    "ci": [
+     0.555,
+     0.824
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1625.9,
+    "games": 28,
+    "winrate": 0.786,
+    "ci": [
+     0.605,
+     0.898
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1593.7,
+    "games": 38,
+    "winrate": 0.658,
+    "ci": [
+     0.499,
+     0.788
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1532.3,
+    "games": 14,
+    "winrate": 0.571,
+    "ci": [
+     0.326,
+     0.786
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1504.4,
+    "games": 10,
+    "winrate": 0.5,
+    "ci": [
+     0.237,
+     0.763
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1500.5,
+    "games": 24,
+    "winrate": 0.458,
+    "ci": [
+     0.279,
+     0.649
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1464.5,
+    "games": 23,
+    "winrate": 0.348,
+    "ci": [
+     0.188,
+     0.551
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1464.4,
+    "games": 23,
+    "winrate": 0.391,
+    "ci": [
+     0.222,
+     0.592
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1449.6,
+    "games": 29,
+    "winrate": 0.414,
+    "ci": [
+     0.255,
+     0.593
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1449.2,
+    "games": 16,
+    "winrate": 0.375,
+    "ci": [
+     0.185,
+     0.614
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1415.1,
+    "games": 34,
+    "winrate": 0.412,
+    "ci": [
+     0.264,
+     0.578
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1351.3,
+    "games": 24,
+    "winrate": 0.125,
+    "ci": [
+     0.043,
+     0.31
+    ]
+   }
+  ],
+  "creativity": [
+   {
+    "model": "mistral:7b",
+    "elo": 1699.6,
+    "games": 37,
+    "winrate": 0.811,
+    "ci": [
+     0.658,
+     0.905
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1684.8,
+    "games": 38,
+    "winrate": 0.737,
+    "ci": [
+     0.58,
+     0.85
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1642.1,
+    "games": 21,
+    "winrate": 0.857,
+    "ci": [
+     0.654,
+     0.95
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1556.3,
+    "games": 29,
+    "winrate": 0.621,
+    "ci": [
+     0.44,
+     0.773
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1538.7,
+    "games": 13,
+    "winrate": 0.615,
+    "ci": [
+     0.355,
+     0.823
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1529.8,
+    "games": 27,
+    "winrate": 0.593,
+    "ci": [
+     0.407,
+     0.755
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1526.0,
+    "games": 30,
+    "winrate": 0.567,
+    "ci": [
+     0.392,
+     0.726
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1441.3,
+    "games": 13,
+    "winrate": 0.308,
+    "ci": [
+     0.127,
+     0.576
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1439.0,
+    "games": 16,
+    "winrate": 0.375,
+    "ci": [
+     0.185,
+     0.614
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1429.8,
+    "games": 28,
+    "winrate": 0.357,
+    "ci": [
+     0.207,
+     0.542
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1298.3,
+    "games": 39,
+    "winrate": 0.205,
+    "ci": [
+     0.108,
+     0.355
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1242.3,
+    "games": 45,
+    "winrate": 0.133,
+    "ci": [
+     0.063,
+     0.262
+    ]
+   }
+  ],
+  "transparency": [
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1720.8,
+    "games": 44,
+    "winrate": 0.818,
+    "ci": [
+     0.68,
+     0.905
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1613.9,
+    "games": 14,
+    "winrate": 0.857,
+    "ci": [
+     0.601,
+     0.96
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1574.9,
+    "games": 39,
+    "winrate": 0.564,
+    "ci": [
+     0.41,
+     0.707
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1566.8,
+    "games": 41,
+    "winrate": 0.585,
+    "ci": [
+     0.434,
+     0.722
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1535.5,
+    "games": 16,
+    "winrate": 0.625,
+    "ci": [
+     0.386,
+     0.815
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1519.9,
+    "games": 31,
+    "winrate": 0.484,
+    "ci": [
+     0.32,
+     0.652
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1515.3,
+    "games": 18,
+    "winrate": 0.5,
+    "ci": [
+     0.29,
+     0.71
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1461.3,
+    "games": 13,
+    "winrate": 0.385,
+    "ci": [
+     0.177,
+     0.645
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1395.5,
+    "games": 18,
+    "winrate": 0.222,
+    "ci": [
+     0.09,
+     0.452
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1389.4,
+    "games": 39,
+    "winrate": 0.282,
+    "ci": [
+     0.165,
+     0.438
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1367.5,
+    "games": 43,
+    "winrate": 0.395,
+    "ci": [
+     0.264,
+     0.544
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1339.2,
+    "games": 24,
+    "winrate": 0.208,
+    "ci": [
+     0.092,
+     0.405
+    ]
+   }
+  ],
+  "human-vs-ai": [
+   {
+    "model": "qwen3:4b",
+    "elo": 1667.5,
+    "games": 27,
+    "winrate": 0.778,
+    "ci": [
+     0.592,
+     0.894
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1650.1,
+    "games": 41,
+    "winrate": 0.78,
+    "ci": [
+     0.633,
+     0.88
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1630.9,
+    "games": 35,
+    "winrate": 0.686,
+    "ci": [
+     0.52,
+     0.814
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1558.1,
+    "games": 18,
+    "winrate": 0.611,
+    "ci": [
+     0.386,
+     0.797
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1544.9,
+    "games": 24,
+    "winrate": 0.625,
+    "ci": [
+     0.427,
+     0.788
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1505.6,
+    "games": 13,
+    "winrate": 0.462,
+    "ci": [
+     0.232,
+     0.709
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1482.7,
+    "games": 17,
+    "winrate": 0.471,
+    "ci": [
+     0.262,
+     0.69
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1470.9,
+    "games": 8,
+    "winrate": 0.375,
+    "ci": [
+     0.137,
+     0.694
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1450.4,
+    "games": 25,
+    "winrate": 0.36,
+    "ci": [
+     0.202,
+     0.555
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1428.4,
+    "games": 44,
+    "winrate": 0.409,
+    "ci": [
+     0.277,
+     0.556
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1351.0,
+    "games": 30,
+    "winrate": 0.233,
+    "ci": [
+     0.118,
+     0.409
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1295.7,
+    "games": 34,
+    "winrate": 0.147,
+    "ci": [
+     0.064,
+     0.301
+    ]
+   }
+  ],
+  "sovereignty": [
+   {
+    "model": "qwen3:4b",
+    "elo": 1741.6,
+    "games": 36,
+    "winrate": 0.861,
+    "ci": [
+     0.713,
+     0.939
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1657.5,
+    "games": 30,
+    "winrate": 0.767,
+    "ci": [
+     0.591,
+     0.882
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1598.4,
+    "games": 22,
+    "winrate": 0.727,
+    "ci": [
+     0.518,
+     0.868
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1518.7,
+    "games": 10,
+    "winrate": 0.5,
+    "ci": [
+     0.237,
+     0.763
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1496.0,
+    "games": 12,
+    "winrate": 0.5,
+    "ci": [
+     0.254,
+     0.746
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1483.6,
+    "games": 19,
+    "winrate": 0.474,
+    "ci": [
+     0.273,
+     0.683
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1481.7,
+    "games": 34,
+    "winrate": 0.471,
+    "ci": [
+     0.315,
+     0.633
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1455.8,
+    "games": 26,
+    "winrate": 0.385,
+    "ci": [
+     0.224,
+     0.575
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1451.8,
+    "games": 31,
+    "winrate": 0.452,
+    "ci": [
+     0.292,
+     0.622
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1427.4,
+    "games": 13,
+    "winrate": 0.308,
+    "ci": [
+     0.127,
+     0.576
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1393.9,
+    "games": 38,
+    "winrate": 0.316,
+    "ci": [
+     0.191,
+     0.475
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1308.5,
+    "games": 30,
+    "winrate": 0.167,
+    "ci": [
+     0.073,
+     0.336
+    ]
+   }
+  ],
+  "privacy": [
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1655.8,
+    "games": 30,
+    "winrate": 0.767,
+    "ci": [
+     0.591,
+     0.882
+    ]
+   },
+   {
+    "model": "mistral:7b",
+    "elo": 1647.9,
+    "games": 26,
+    "winrate": 0.808,
+    "ci": [
+     0.621,
+     0.915
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1637.9,
+    "games": 29,
+    "winrate": 0.724,
+    "ci": [
+     0.543,
+     0.853
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1576.4,
+    "games": 24,
+    "winrate": 0.708,
+    "ci": [
+     0.508,
+     0.851
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1518.5,
+    "games": 24,
+    "winrate": 0.458,
+    "ci": [
+     0.279,
+     0.649
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1499.4,
+    "games": 8,
+    "winrate": 0.5,
+    "ci": [
+     0.215,
+     0.785
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1458.4,
+    "games": 11,
+    "winrate": 0.364,
+    "ci": [
+     0.152,
+     0.646
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1456.6,
+    "games": 19,
+    "winrate": 0.368,
+    "ci": [
+     0.191,
+     0.59
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1451.5,
+    "games": 28,
+    "winrate": 0.464,
+    "ci": [
+     0.295,
+     0.642
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1427.0,
+    "games": 31,
+    "winrate": 0.355,
+    "ci": [
+     0.211,
+     0.531
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1377.2,
+    "games": 31,
+    "winrate": 0.258,
+    "ci": [
+     0.137,
+     0.432
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1320.5,
+    "games": 31,
+    "winrate": 0.226,
+    "ci": [
+     0.114,
+     0.398
+    ]
+   }
+  ],
+  "fairness": [
+   {
+    "model": "mistral:7b",
+    "elo": 1696.3,
+    "games": 39,
+    "winrate": 0.795,
+    "ci": [
+     0.645,
+     0.892
+    ]
+   },
+   {
+    "model": "qwen2.5:7b",
+    "elo": 1666.3,
+    "games": 39,
+    "winrate": 0.744,
+    "ci": [
+     0.589,
+     0.854
+    ]
+   },
+   {
+    "model": "qwen3:4b",
+    "elo": 1660.7,
+    "games": 35,
+    "winrate": 0.771,
+    "ci": [
+     0.61,
+     0.879
+    ]
+   },
+   {
+    "model": "council-safe:latest",
+    "elo": 1519.7,
+    "games": 11,
+    "winrate": 0.636,
+    "ci": [
+     0.354,
+     0.848
+    ]
+   },
+   {
+    "model": "qwen3:8b",
+    "elo": 1512.7,
+    "games": 27,
+    "winrate": 0.519,
+    "ci": [
+     0.34,
+     0.693
+    ]
+   },
+   {
+    "model": "deepseek-r1:7b",
+    "elo": 1508.5,
+    "games": 23,
+    "winrate": 0.391,
+    "ci": [
+     0.222,
+     0.592
+    ]
+   },
+   {
+    "model": "qwen2.5-0.5b-cards:latest",
+    "elo": 1495.9,
+    "games": 11,
+    "winrate": 0.455,
+    "ci": [
+     0.213,
+     0.72
+    ]
+   },
+   {
+    "model": "llama3:8b",
+    "elo": 1438.2,
+    "games": 23,
+    "winrate": 0.435,
+    "ci": [
+     0.256,
+     0.632
+    ]
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "elo": 1418.3,
+    "games": 30,
+    "winrate": 0.333,
+    "ci": [
+     0.192,
+     0.512
+    ]
+   },
+   {
+    "model": "council-oowm:latest",
+    "elo": 1405.1,
+    "games": 26,
+    "winrate": 0.308,
+    "ci": [
+     0.165,
+     0.5
+    ]
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "elo": 1364.6,
+    "games": 27,
+    "winrate": 0.259,
+    "ci": [
+     0.132,
+     0.447
+    ]
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "elo": 1321.6,
+    "games": 49,
+    "winrate": 0.265,
+    "ci": [
+     0.162,
+     0.403
+    ]
+   }
+  ]
+ }
 }
