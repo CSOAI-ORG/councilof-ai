@@ -14,7 +14,7 @@ type Server = {
   category: string;
   frameworks: string[];
   language: string;
-  meokLabs: boolean;
+  builtInHouse: boolean;
   updatedAt: string | null;
 };
 
@@ -69,7 +69,7 @@ export default function MCPDetail() {
 
         <div className="flex items-start justify-between gap-4 mb-4">
           <h1 className="text-4xl font-bold">{server.name}</h1>
-          {server.meokLabs && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">MEOK AI Labs</Badge>}
+          {server.builtInHouse && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">In-house Labs</Badge>}
         </div>
         <p className="text-xl text-gray-600 leading-relaxed mb-5">{server.description}</p>
 

@@ -25,7 +25,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/about-credential",
   "comp": "AboutCEASAI",
-  "title": "About CEASAI"
+  "title": "About Credentials"
  },
  {
   "path": "/academy",
@@ -390,12 +390,12 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/council-model-card",
   "comp": "Sov3ModelCard",
-  "title": "Sov3 Model Card"
+  "title": "Model Card"
  },
  {
   "path": "/council-system-card",
   "comp": "Sov3SystemCard",
-  "title": "Sov3 System Card"
+  "title": "System Card"
  },
  {
   "path": "/council-vs-agents",
@@ -420,7 +420,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/credential-training",
   "comp": "CEASAITraining",
-  "title": "CEASAITraining"
+  "title": "Credential Training"
  },
  {
   "path": "/crosswalk",
@@ -1014,8 +1014,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/law",
-  "comp": "MeokLaw",
-  "title": "Meok Law"
+  "comp": "CSOAILaw",
+  "title": "CSOAI Law"
  },
  {
   "path": "/layer0",
@@ -1158,9 +1158,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Membership Agreement"
  },
  {
-  "path": "/meok-law",
-  "comp": "MeokLaw",
-  "title": "Meok Law"
+  "path": "/csoai-law",
+  "comp": "CSOAILaw",
+  "title": "CSOAI Law"
  },
  {
   "path": "/methodology",
@@ -1845,7 +1845,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/workbench-paper",
   "comp": "Sov3Whitepaper",
-  "title": "Sov3 Whitepaper"
+  "title": "Architecture Whitepaper"
  },
  {
   "path": "/world-3d",
