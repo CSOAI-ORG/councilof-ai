@@ -88,7 +88,7 @@ export default function LobbyHeader({
 
   return (
     <header
-      className={`${SURFACE} ${SP.row} flex w-full flex-wrap items-center gap-x-5 gap-y-2.5`}
+      className={`fixed top-0 left-0 right-0 z-[80] ${SURFACE} ${SP.row} flex w-full flex-wrap items-center gap-x-5 gap-y-2.5`}
       style={panelStyle}
     >
       <span className="flex items-center gap-3">
