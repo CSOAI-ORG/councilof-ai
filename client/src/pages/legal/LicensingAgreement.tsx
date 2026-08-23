@@ -65,6 +65,36 @@ const incidentTimelines = [
   { severity: "Low-risk", time: "30 days", color: "bg-green-500" }
 ];
 
+const dataLicenseTiers = [
+  {
+    tier: "Open access",
+    audience: "Public — signed sample + verify tooling",
+    term: "Perpetual",
+    fee: "Free",
+    note: "Signed sample dataset + verify_dataset.py; labelling on the artifact lets anyone verify provenance."
+  },
+  {
+    tier: "Research",
+    audience: "Academics / independent researchers",
+    term: "Quarterly",
+    fee: "£250",
+    note: "Verified ranking access + longitudinal axis signal. Measurement data only — never certification."
+  },
+  {
+    tier: "Enterprise",
+    audience: "AI teams / model providers",
+    term: "Annual",
+    fee: "£5,000",
+    note: "Licenses the signed GSPC axis corpus (drift/consistency signal over generations). Buyer is a data licensee, not a ranked party."
+  },
+  {
+    tier: "Regulator / Auditor",
+    audience: "Regulators & auditors",
+    term: "Case-by-case",
+    fee: "Custom",
+    note: "Signed attestation evidence package + verify path. This is evidence, not a certification."
+  }
+];
 export default function LicensingAgreement() {
   return (
     <div className="min-h-screen bg-background">
@@ -363,6 +393,55 @@ export default function LicensingAgreement() {
                     <p className="text-sm text-muted-foreground">+50% premium</p>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </motion.section>
+
+          {/* Section 7.1: Data Licensing (BaaS) */}
+          <motion.section {...fadeInUp} transition={{ delay: 0.5 }}>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileCheck className="h-5 w-5 text-primary" />
+                  7.1 Data Licensing — Signed Measurement Data
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <p className="text-sm text-muted-foreground">
+                  CSOAI licenses <strong>signed measurement data</strong> (a live, continuously verified
+                  corpus), not a ranking of vendors and never a certification. Every record carries an
+                  Ed25519 signature over a canonical <code>content_id</code>, so a licensee can verify
+                  provenance without trusting us.
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-4 font-semibold">Tier</th>
+                        <th className="text-left py-3 px-4 font-semibold">Audience</th>
+                        <th className="text-left py-3 px-4 font-semibold">Term</th>
+                        <th className="text-left py-3 px-4 font-semibold">Fee</th>
+                        <th className="text-left py-3 px-4 font-semibold">What it covers</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dataLicenseTiers.map((t, index) => (
+                        <tr key={index} className="border-b">
+                          <td className="py-3 px-4 font-medium">{t.tier}</td>
+                          <td className="py-3 px-4 text-muted-foreground">{t.audience}</td>
+                          <td className="py-3 px-4 text-muted-foreground">{t.term}</td>
+                          <td className="py-3 px-4 font-medium">{t.fee}</td>
+                          <td className="py-3 px-4 text-muted-foreground text-sm">{t.note}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Paid data licensing covers the <strong>measurement data product</strong> only. Model
+                  vendors are never charged to enter or be measured (nobody-ranked-pays). Pricing appears
+                  on this legal surface only — never in a dataset, ranking, or measurement artifact.
+                </p>
               </CardContent>
             </Card>
           </motion.section>

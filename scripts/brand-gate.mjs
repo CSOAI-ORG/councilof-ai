@@ -108,7 +108,12 @@ function visibleText(html) {
 //   - refutation-ledger  the honest evidence/retraction page — renders real measured model IDs
 //                        (sov-sovereign-v4-mined-latest), SIGIL evidence hashes, and the
 //                        Byzantine/BFT RETRACTION history. All legitimate in this exact context.
-const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-|ai-transparency|authority|badges)/;
+//   - j-space            the signed-event data artifact viewer — embeds the real 205KB
+//                        signature-chain events.json (event world dashboard). It renders the
+//                        estate's own production signature-chain records, NOT a marketing claim;
+//                        "sigil" appears only as the name of the signed-event chain it visualizes,
+//                        the same data-artifact category as regulator-console/refutation-ledger.
+const EXCLUDE_PAGES = /(^|\/)(regulator-console\.html$|refutation-ledger(\/|\.html|$)|mcps?(\/|\.html|$)|mcp-|ai-transparency|authority|badges|j-space(\/|\.html|$))/;
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
