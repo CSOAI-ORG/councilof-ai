@@ -1,28 +1,38 @@
-import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { openLobby } from "@/lib/lobbyLink";
+import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 
-/** CTA — enterprise measurement intake (not a certificate). */
-export default function EnterpriseMeasureCta() {
+/**
+ * EnterpriseMeasureCta — opens Council OS with org context seeded.
+ * Measurement + training loop — not certification.
+ */
+export default function EnterpriseMeasureCta({
+  orgName,
+  orgId,
+  label = "Start enterprise measurement",
+  className = "",
+  variant = "primary",
+}: {
+  orgName?: string;
+  orgId?: string;
+  label?: string;
+  className?: string;
+  variant?: "primary" | "outline";
+}) {
+  const ctx = orgName || orgId || undefined;
+  const base =
+    variant === "primary"
+      ? "rounded-lg bg-emerald-400 px-4 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-300 transition"
+      : "rounded-lg border border-emerald-400/40 px-4 py-2.5 text-sm font-bold text-emerald-100 hover:bg-white/5 transition";
+
   return (
-    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-      <p className="text-sm font-semibold text-emerald-900">Get measured</p>
-      <p className="mt-1 text-xs text-emerald-800/80">
-        Run an assessment against the rules that govern your system. Measurement, not certification.
-      </p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <Button asChild size="sm" className="bg-emerald-700 hover:bg-emerald-600">
-          <Link href="/assess">Open assess →</Link>
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant="outline"
-          onClick={() => openLobby({ task: "enterprise-start", pane: "measured" })}
-        >
-          Ask Council OS →
-        </Button>
-      </div>
-    </div>
+    <a
+      href={lobbyHref({ task: "enterprise-start", ctx, pane: "measured" })}
+      className={`${base} ${className}`}
+      onClick={(e) => {
+        e.preventDefault();
+        openLobby({ task: "enterprise-start", ctx, pane: "measured" });
+      }}
+    >
+      {label} →
+    </a>
   );
 }
