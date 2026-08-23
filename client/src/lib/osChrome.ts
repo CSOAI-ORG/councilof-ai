@@ -1,10 +1,8 @@
 /**
- * osChrome — one chrome at a time.
+ * osChrome — Council OS + public site share one page.
  *
- * Council OS, the public site, and the software dashboard (DSH) share this
- * page. When the OS overlay is open (not minimised), marketing Header/Footer
- * hide so the workspace is the only chrome. Embed frames already drop chrome
- * via isEmbedded(). Minimising the OS returns the public site.
+ * When Council OS is open: marketing Header hides (LobbyHeader replaces it).
+ * Footer and main site content stay visible — surfaces open in the page column.
  */
 import { useEffect, useState } from "react";
 import { isEmbedded } from "./embed";
@@ -24,8 +22,13 @@ export function isOsOpen(): boolean {
   return document.documentElement.getAttribute(OS_OPEN_ATTR) === "1";
 }
 
-/** Hide marketing chrome: framed pane, or OS covering the page. */
+/** Hide marketing chrome only when embedded in a legacy frame. */
 export function useSiteChromeHidden(): boolean {
+  return isEmbedded();
+}
+
+/** Marketing site header — hidden when Council OS header is active. */
+export function useMarketingHeaderHidden(): boolean {
   const [osOpen, setOpen] = useState(false);
   useEffect(() => {
     const sync = () => setOpen(isOsOpen());
@@ -33,5 +36,16 @@ export function useSiteChromeHidden(): boolean {
     window.addEventListener(OS_CHROME_EVENT, sync);
     return () => window.removeEventListener(OS_CHROME_EVENT, sync);
   }, []);
-  return isEmbedded() || osOpen;
+  return osOpen;
+}
+
+export function useOsOpen(): boolean {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const sync = () => setOpen(isOsOpen());
+    sync();
+    window.addEventListener(OS_CHROME_EVENT, sync);
+    return () => window.removeEventListener(OS_CHROME_EVENT, sync);
+  }, []);
+  return open;
 }
