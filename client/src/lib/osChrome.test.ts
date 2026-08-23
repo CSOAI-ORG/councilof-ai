@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { isOsOpen, OS_OPEN_ATTR, setOsOpen } from "./osChrome";
+import { isOsOpen, OS_OPEN_ATTR, setOsDockWidth, setOsOpen } from "./osChrome";
 
 function stubDom() {
   const attrs = new Map<string, string>();
@@ -26,11 +26,24 @@ describe("osChrome", () => {
     expect(el.getAttribute(OS_OPEN_ATTR)).toBe("1");
   });
 
-  it("clears the mark when the OS closes or minimises", () => {
+  it("clears the mark when the OS closes", () => {
     const el = stubDom();
     setOsOpen(true);
     setOsOpen(false);
     expect(isOsOpen()).toBe(false);
     expect(el.hasAttribute(OS_OPEN_ATTR)).toBe(false);
+  });
+
+  it("clears dock width when the OS closes or minimises", () => {
+    const el = stubDom();
+    const style = { removeProperty: vi.fn(), setProperty: vi.fn() };
+    vi.stubGlobal("document", {
+      documentElement: { ...el, style },
+      getElementById: () => null,
+    });
+    setOsDockWidth(480);
+    expect(style.setProperty).toHaveBeenCalled();
+    setOsOpen(false);
+    expect(style.removeProperty).toHaveBeenCalled();
   });
 });

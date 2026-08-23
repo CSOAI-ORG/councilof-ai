@@ -9,11 +9,22 @@ import { isEmbedded } from "./embed";
 
 export const OS_OPEN_ATTR = "data-coai-os-open";
 export const OS_CHROME_EVENT = "coai:os-chrome";
+export const DOCK_WIDTH_VAR = "--coai-os-dock-width";
+
+export function setOsDockWidth(px: number): void {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+  if (px <= 0) root.style.removeProperty(DOCK_WIDTH_VAR);
+  else root.style.setProperty(DOCK_WIDTH_VAR, `${px}px`);
+}
 
 export function setOsOpen(open: boolean): void {
   if (typeof document === "undefined") return;
   if (open) document.documentElement.setAttribute(OS_OPEN_ATTR, "1");
-  else document.documentElement.removeAttribute(OS_OPEN_ATTR);
+  else {
+    document.documentElement.removeAttribute(OS_OPEN_ATTR);
+    setOsDockWidth(0);
+  }
   window.dispatchEvent(new Event(OS_CHROME_EVENT));
 }
 
