@@ -1,0 +1,69 @@
+# Agent runbook — councilof.ai
+
+**Measurement, not certification.** Prefer live JSON over this markdown — numbers change on the API.
+
+## Quick probe (30 seconds)
+
+```bash
+# GSPC board — 13 measured core axes (keyless)
+curl -sS https://councilof.ai/api/gspc | jq '.totals'
+
+# Eunomia routing index — 291 MCP rules
+curl -sS https://councilof.ai/api/instruments | jq '.stats'
+
+# Finance anatomy — honest register map
+curl -sS https://councilof.ai/api/finance/anatomy | jq '.financial_axes'
+
+# Axis 18 — synthetic bond crossing (MEASURED pilot fixture)
+curl -sS https://councilof.ai/api/finance/bond-crossing | jq '.register, .content_hash // .attestation.content_hash'
+
+# AG-UI wire (503 until AGUI_WIRE_URL set on Pages)
+curl -sS -o /dev/null -w "%{http_code}\n" -X POST 'https://councilof.ai/api/agui/session?handle=probe'
+```
+
+## Three lobby lanes (human + agent)
+
+| Lane | Surface | When |
+|------|---------|------|
+| 1 | Pane commands | Local, no model |
+| 2 | `POST /api/agui/session` → SSE run | Wire configured |
+| 3 | `POST /api/chat` | Published measurement or refuse |
+
+Open Council OS on any page: `?task=eunomia-router` or instrument `aguiHandle=<slug>`.
+
+## Honesty register
+
+| Label | Meaning |
+|-------|---------|
+| MEASURED | Our signed deterministic runs |
+| UNMEASURED | Empty — reason stated |
+| REPORTED | Third-party context, cited |
+| DESIGN | Thesis / scenario only |
+
+Do **not** cite: ~~568 repos~~ (use **291 MCP servers**), ~~30-framework~~ (use **15 hive frameworks**).
+
+## Machine surfaces
+
+| Endpoint | Role |
+|----------|------|
+| `GET /api/gspc` | Live GSPC board |
+| `GET /api/instruments` | Eunomia router index |
+| `GET /api/finance/anatomy` | Engine axis map |
+| `GET /api/finance/bond-crossing` | Axis 18 synthetic crossing |
+| `POST /api/finance/settle` | Settlement envelope (stub until wired) |
+| `GET /.well-known/did.json` | Trust root |
+| `GET /api/corrections` | Corrections ledger |
+
+## SovOS
+
+- **CSOAI** (body): measurement, insurers, government — councilof.ai
+- **MEOK** (head): arenas, NPC wallets — eval volume
+- **SovOS** (engine): one `eunomia://` URI per crossing
+
+## Council software (DSH)
+
+Signed-in teams: `https://councilof.ai/dashboard` — same Layer 0 destinations as Council OS.
+
+## Verify
+
+https://councilof.ai/gspc-verify — recompute hash, check Ed25519 offline.
