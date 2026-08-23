@@ -55,6 +55,7 @@ import MarketingHome from "./pages/MarketingHome";
 import Standards from "./pages/Standards";
 import Resources from "./pages/Resources";
 import About from "./pages/About";
+import Eunomia from "./pages/Eunomia";
 import Careers from "./pages/Careers";
 import NewHomeV2 from "./pages/NewHome-v2";
 import Login from "./pages/Login";
@@ -233,6 +234,7 @@ function App() {
                   <Route path="/standards" component={Standards} />
                   <Route path="/resources" component={Resources} />
                   <Route path="/about" component={About} />
+                  <Route path="/eunomia" component={Eunomia} />
                   <Route path="/careers" component={Careers} />
                   {/* Key CSOAI pages */}
                   <Route path="/charter" component={Charter} />
