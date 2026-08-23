@@ -113,6 +113,7 @@ jobs:
       # Clobber has also landed after the first recheck went green. One more
       # window; rewrite again if a second writer wins the alias later.
       - name: Confirm gated tree still holds
+        timeout-minutes: 6
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
         run: |
           set -euo pipefail
