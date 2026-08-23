@@ -109,8 +109,6 @@ for (const host of hosts) {
     pass(`${host}/gspc-scoreboard ${board.bytes} bytes (living board)`);
   }
 
-  // Unsuffixed stranger URLs a demographic types. 404 here means the alias
-  // pack did not land on this host (or a Vite overwrite wiped it).
   for (const path of [
     "/gspc", "/verify", "/console", "/for/regulator", "/vs/vanta",
     "/gspc-verify", "/dashboard", "/about", "/library/regulation",
