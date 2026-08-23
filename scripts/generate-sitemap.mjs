@@ -201,6 +201,7 @@ const MACHINE_PATHS = [
   ["/.well-known/agent-card.json", "daily", "0.6"],
   ["/.well-known/did.json", "daily", "0.6"],
   ["/.well-known/scitt.json", "daily", "0.6"],
+  ["/api/arena/scoreboard", "daily", "0.6"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
