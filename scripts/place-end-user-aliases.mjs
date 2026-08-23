@@ -43,6 +43,13 @@ export const STRANGER_DIRS = [
   "industries", "enterprise", "library", "library/axes", "library/measurement",
   "privacy-policy", "disclaimers", "legal", "system-card",
   "pricing", "start",
+  "dashboard", "login", "about", "firewall-charter", "csoai-law",
+  "models", "tools",
+];
+
+/** Concrete /library/:sector values the sitemap and Library IA advertise. */
+export const LIBRARY_SECTORS = [
+  "regulation", "regions", "academy", "tech", "axes", "governance", "product", "company",
 ];
 
 function run(distArg = process.argv[2] || "dist/client") {
@@ -126,6 +133,10 @@ for (const p of PERSONAS) n += pretty(`for/${p}`, home);
 for (const s of INDUSTRIES) n += pretty(`industries/${s}`, industriesHub);
 n += pretty("library/axes", library);
 n += pretty("library/measurement", library);
+for (const s of LIBRARY_SECTORS) {
+  const src = fromDir(`library/${s}`, library);
+  if (src) n += pretty(`library/${s}`, src);
+}
 
 const scittSrc = join(ROOT, "public/.well-known/scitt.json");
 const scittDest = join(DIST, ".well-known/scitt.json");

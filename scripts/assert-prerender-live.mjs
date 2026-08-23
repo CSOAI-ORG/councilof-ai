@@ -95,7 +95,11 @@ for (const host of hosts) {
 
   // Unsuffixed stranger URLs a demographic types. 404 here means the alias
   // pack did not land on this host (or a Vite overwrite wiped it).
-  for (const path of ["/gspc", "/verify", "/console", "/for/regulator", "/vs/vanta", "/ag-ui", "/models"]) {
+  for (const path of [
+    "/gspc", "/verify", "/console", "/for/regulator", "/vs/vanta",
+    "/gspc-verify", "/dashboard", "/about", "/library/regulation",
+    "/honesty", "/watchdog", "/insurers", "/login", "/ag-ui", "/models",
+  ]) {
     const r = await get(host + path);
     if (r.error) fail(`${host}${path} fetch failed: ${r.error}`);
     else if (r.status >= 400 || /404 — Not found/i.test(r.body)) fail(`${host}${path} HTTP ${r.status || "404"}`);
