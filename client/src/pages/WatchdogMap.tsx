@@ -164,9 +164,9 @@ export default function WatchdogMap() {
           <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">A public watchdog for <b className="text-emerald-200">humans, AI agents, humanoids and systems</b>. They report to us - or we find the signals - and the world lights up by region and by problem layer. Every signal Layer 0 signed.</p>
           <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/heatmap" /></div>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <a href="/globe3d.html" className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-semibold text-amber-100 hover:bg-amber-400/20">🟡 AI economy on the globe</a>
-            <a href="/network" className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/20">🩵 The Council network</a>
-            <a href="/graph" className="rounded-full border border-emerald-400/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</a>
+            <a href="/globe3d.html" className="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-semibold text-amber-100 hover:bg-amber-400/20">AI economy on the globe</a>
+            <a href="/network" className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 hover:bg-cyan-500/20">The Council network</a>
+            <a href="/?lobby=home" className="rounded-full border border-emerald-400/30 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</a>
           </div>
         </div>
       </section>
@@ -207,7 +207,7 @@ export default function WatchdogMap() {
               <p className="mt-2 text-sm leading-relaxed text-emerald-50/85 whitespace-pre-wrap">{briefing ? "Pulling live signals…" : (brief || "Click a hub to pull live signals.")}</p>
               {!briefing && brief && (
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <a href={"/graph?demo=" + encodeURIComponent("AI governance risk in " + sel.region)} className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Govern this on the Graph →</a>
+                  <a href="/?lobby=home" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">Govern this in Council OS →</a>
                   <a href={"/try?demo=" + encodeURIComponent("What are my obligations for AI deployed in " + sel.region + "?")} className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Take it to the Council →</a>
                   <a href="/protect" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Protect a person →</a>
                 </div>
@@ -236,7 +236,7 @@ export default function WatchdogMap() {
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
             <div className="flex items-center justify-between gap-2">
               <div className="text-lg font-bold">Live signal feed</div>
-              <button onClick={ingest} disabled={pulling} className="rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20 disabled:opacity-60">{pulling ? "Scanning…" : "🛰 Pull live signals"}</button>
+              <button onClick={ingest} disabled={pulling} className="rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20 disabled:opacity-60">{pulling ? "Scanning…" : " Pull live signals"}</button>
             </div>
             {pulled > 0 && <div className="mt-2 rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs text-emerald-200">Ingested {pulled} live signals - heat-mapped and Layer 0 signed.</div>}
             <div className="mt-3 space-y-2 max-h-[320px] overflow-y-auto">
