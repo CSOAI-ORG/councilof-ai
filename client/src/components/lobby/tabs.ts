@@ -16,6 +16,10 @@ export type LobbyTabId =
   | "tools"
   | "verify"
   | "space"
+  | "arena"
+  | "ecosystem"
+  | "workspace"
+  | "fix"
   | "measured"
   | "watchdog"
   | "academy"
@@ -98,16 +102,52 @@ export const LOBBY_TABS: LobbyTab[] = [
     label: "Council Space",
     blurb: "The governed arena — rounds graded deterministically, never by a model jury.",
     path: "/gspc-arena",
-    kind: "route",
+    kind: "local",
     surface: "measured",
-    cues: /\b(arena|space|council space|rounds|match|towns|globe)\b/i,
+    cues: /\b(space|council space|towns|globe)\b/i,
+  },
+  {
+    id: "arena",
+    label: "Arena",
+    blurb: "LMArena-style compare — blind rounds on the GSPC board, not a model jury.",
+    path: "/gspc-arena",
+    kind: "local",
+    surface: "measured",
+    cues: /\b(arena|compare|head.?to.?head|lmarena|coliseum|match|rounds)\b/i,
+  },
+  {
+    id: "ecosystem",
+    label: "Ecosystem",
+    blurb: "Regulators, enterprises, SMBs — the nameable market in one index.",
+    path: "/intel",
+    kind: "local",
+    surface: "measured",
+    cues: /\b(ecosystem|hive|intel|enterprises?|regulators?|smb|distribution)\b/i,
+  },
+  {
+    id: "workspace",
+    label: "My systems",
+    blurb: "Your org portfolio — batch assess, re-attest, keep current. Not certification.",
+    path: "/workspace",
+    kind: "local",
+    surface: "measured",
+    cues: /\b(workspace|my systems|portfolio|batch|reattest|our org)\b/i,
+  },
+  {
+    id: "fix",
+    label: "Fix & train",
+    blurb: "MEOK/AG-UI assist lane — close gaps, schedule re-measure. Council does not certify.",
+    path: "/remediation-partners",
+    kind: "local",
+    surface: "measured",
+    cues: /\b(fix|remediat|train|gap|meok|offline|assist)\b/i,
   },
   {
     id: "measured",
     label: "Get measured",
     blurb: "Run an assessment against the rules that govern your system.",
     path: "/assess",
-    kind: "route",
+    kind: "local",
     surface: "measured",
     cues: /\b(assess|assessment|get measured|measure me|measure my|readiness)\b/i,
   },
@@ -116,7 +156,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     label: "Watchdog",
     blurb: "Reported incidents and the analyst surface that triages them.",
     path: "/watchdog",
-    kind: "route",
+    kind: "local",
     surface: "measured",
     cues: /\b(watchdog|incident|report(?:ed)?|complaint)\b/i,
   },
@@ -125,7 +165,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     label: "Academy",
     blurb: "Council Academy — training. Course completion attests training, not conformity.",
     path: "/academy",
-    kind: "route",
+    kind: "local",
     surface: "measured",
     cues: /\b(academy|course|training|learn|teach)\b/i,
   },
@@ -134,7 +174,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     label: "Software",
     blurb: "Signed-in dashboard (DSH) — the same destinations as this rail.",
     path: "/dashboard",
-    kind: "route",
+    kind: "local",
     surface: "measured",
     cues: /\b(dashboard|software|dsh|signed[- ]in)\b/i,
   },
