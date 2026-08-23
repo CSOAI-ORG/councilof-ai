@@ -91,6 +91,11 @@ const EXISTING = [
   // AG UI is Council OS — do not iframe a second console or nest /os.
   "/ag-ui                  /?lobby=home                 308",
   "/ag-ui/                 /?lobby=home                 308",
+  "/chat                   /?lobby=home                 308",
+  "/chat/                  /?lobby=home                 308",
+  // OpenRouter-shaped guesses: chat is the AG UI; rankings are the signed board.
+  "/rankings               /?lobby=board                308",
+  "/rankings/              /?lobby=board                308",
   "/library/measurement    /library/axes                308",
   // Klingler/DID stranger-walk + persona cold loads (2026-08-22).
   // Do NOT redirect /gspc-verify ↔ /gspc-verify/ — Pages trailing-slash
@@ -110,6 +115,7 @@ const PERSONA_SLASH = [
   "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
+  "models", "tools",
 ];
 const PERSONA_FOR_SLASH = [
   "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
