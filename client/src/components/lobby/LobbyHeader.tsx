@@ -106,6 +106,8 @@ export default function LobbyHeader({
         </span>
       </span>
 
+      {/* Transparency — a real labelled range, arrow-key operable, with a
+          spoken value. It drives --lobby-alpha for every surface below. */}
       <label className="ml-auto flex items-center gap-2.5">
         <span className={`hidden sm:inline ${TYPE.section}`}>Transparency</span>
         <input
@@ -180,6 +182,8 @@ export default function LobbyHeader({
         </button>
       </span>
 
+      {/* Keyboard shortcuts are a pointer/keyboard affordance — on a touch
+          viewport they are noise, and at 375px they cost a third of the pane. */}
       <p className={`hidden w-full sm:block ${TYPE.fine}`}>
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">Esc</kbd> close ·{" "}
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">[</kbd> panes ·{" "}
