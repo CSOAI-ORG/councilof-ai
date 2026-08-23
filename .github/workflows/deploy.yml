@@ -78,6 +78,7 @@ jobs:
       # kept a thin Vite shell + honest 404 catch-all. Ship the same tree
       # to both names the dashboard has used as production_branch.
       - name: Deploy → councilof.ai
+        timeout-minutes: 8
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
         run: |
           set -euo pipefail
@@ -88,6 +89,7 @@ jobs:
           npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=production --commit-dirty=true
 
       - name: Assert apex + production alias received the prerender
+        timeout-minutes: 5
         run: |
           set -euo pipefail
           sleep 20
@@ -100,6 +102,7 @@ jobs:
       # so the homepage went thin; `/os/` stayed fat on a week-long cache.
       # Fail this job if that race happens so we do not ship a green lie.
       - name: Recheck after trailing-clobber window
+        timeout-minutes: 5
         id: recheck
         continue-on-error: true
         run: |
