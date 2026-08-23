@@ -57,7 +57,7 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
     routes: [
       { label: "Open Council Space", href: "/gspc-arena", tour: true },
       { label: "Governance Graph", href: "/graph" },
-      { label: "Tool Commons (370+ governed MCPs)", href: "/tool-commons" },
+      { label: "Tool Commons (published MCP)", href: "/tools" },
       { label: "Your Council assistant Twin", href: "/emergence" },
     ],
   },
