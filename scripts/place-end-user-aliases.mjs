@@ -1,19 +1,7 @@
 #!/usr/bin/env node
 /**
  * place-end-user-aliases.mjs
- *
- * Cloudflare Pages pretty-URLs: `foo.html` is /foo; `foo/index.html` is /foo/.
- * The honest 404 catch-all (or a thin Vite overwrite) 404s any path that has
- * neither file. Demographic landings, verify, and OS aliases are those paths.
- *
- * After prerender this script:
- *   1. Overwrites leftover gspc-scoreboard.html with the LIVING board
- *      (never the 8KB static table).
- *   2. Writes path.html + path/index.html for every stranger URL we already
- *      send people to, so unsuffixed and slashed both 200.
- *   3. Copies public/.well-known/scitt.json into dist.
- *
- *   node scripts/place-end-user-aliases.mjs [dist/client]
+ * OS guesses (chat, ag-ui, sov-os) copy HOME so they never keep a second-console prerender.
  */
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -34,7 +22,6 @@ export const INDUSTRIES = [
   "mining", "telecoms",
 ];
 
-/** Public routes a stranger types or a homepage tile opens. */
 export const STRANGER_DIRS = [
   "os", "gspc", "gspc-scoreboard", "scoreboard", "gspc-verify", "verify",
   "gspc-arena", "assess", "watchdog", "academy", "console", "council-os",
@@ -44,12 +31,12 @@ export const STRANGER_DIRS = [
   "privacy-policy", "disclaimers", "legal", "system-card",
   "pricing", "start",
   "dashboard", "login", "about", "firewall-charter", "csoai-law",
-  "models", "tools", "sov-os", "ag-ui", "agui",
+  "models", "tools",
+  "chat", "ag-ui", "agui", "rankings", "sov-os",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
   "refutation-ledger", "mcp",
 ];
 
-/** Concrete /library/:sector values the sitemap and Library IA advertise. */
 export const LIBRARY_SECTORS = [
   "regulation", "regions", "academy", "tech", "axes", "governance", "product", "company",
 ];
@@ -84,7 +71,6 @@ function place(destRel, srcRel, { overwrite = false } = {}) {
   return true;
 }
 
-/** `for/regulator` → for/regulator.html (/for/regulator) + for/regulator/index.html (/for/regulator/). */
 function pretty(path, src, overwrite = true) {
   let n = 0;
   if (place(`${path}.html`, src, { overwrite })) n += 1;
@@ -100,14 +86,12 @@ const disclaimers = pick("disclaimers/index.html", "index.html");
 const industriesHub = pick("industries/index.html", "index.html");
 const library = pick("library/index.html", "index.html");
 const os = pick("os/index.html", "index.html");
-const agui = pick("ag-ui/index.html", home);
 
 if (!home || !board) {
   console.error("[aliases] dist is missing index.html — nothing to place");
   process.exit(1);
 }
 
-// Living board owns the pretty URL. Do not delete the file — replace it.
 let n = 0;
 n += pretty("gspc", board);
 n += pretty("gspc-scoreboard", board);
@@ -117,8 +101,11 @@ n += pretty("verify", verify);
 n += pretty("console", home);
 n += pretty("council-os", home);
 n += pretty("lobby", home);
-n += pretty("ag-ui", agui);
-n += pretty("agui", agui);
+n += pretty("ag-ui", home);
+n += pretty("agui", home);
+n += pretty("chat", home);
+n += pretty("rankings", home);
+n += pretty("sov-os", home);
 n += pretty("legal", disclaimers);
 n += pretty("os", os);
 n += pretty("vs", compare);
@@ -148,7 +135,6 @@ if (existsSync(scittSrc)) {
   console.log("[aliases] placed .well-known/scitt.json");
 }
 
-// Drop any leftover static bench HTML that is not a named standalone.
 try {
   for (const f of readdirSync(DIST)) {
     if (f === "gspc-scoreboard.html" && board) {
