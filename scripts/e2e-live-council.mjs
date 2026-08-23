@@ -23,7 +23,8 @@ const SKIP_LIVE = process.env.E2E_SKIP_LIVE === "1";
 
 const ALIASES = [
   ["/vulnerability", "/vulnerability-disclosure"],
-  ["/sov-os", "/sov-os/"],
+  ["/sov-os", "/?lobby=home"],
+  ["/agui", "/?lobby=home"],
 ];
 // Aliases that MUST resolve for a stranger (308 or a real 200 page — never the
 // honest-404 catch-all). /gspc and /console 404'd on production 2026-08-22.
@@ -133,8 +134,8 @@ for (const path of MUST_RESOLVE) {
     const title = (text.match(/<title>([^<]+)/i) || [])[1] || "";
     if (res.status >= 400 || /404 — Not found/i.test(title)) {
       fail(`${path} must resolve for a stranger`, `HTTP ${res.status} ${title}`);
-    } else if (path.includes("gspc") && /13 axes\s*[×x]\s*19/i.test(text)) {
-      fail(`${path} leftover static table`, "hardcoded 13×19");
+    } else if (path.includes("gspc") && /13 axes\s*[\u00d7x]\s*19/i.test(text)) {
+      fail(`${path} leftover static table`, "hardcoded 13\u00d719");
     } else {
       pass(`${path} resolves`, `HTTP ${res.status} ${text.length} B`);
     }
