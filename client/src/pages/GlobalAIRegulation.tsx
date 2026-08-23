@@ -25,7 +25,7 @@ const TONE: Record<string, string> = { amber: "border-amber-400/30 text-amber-20
 const FAQ = [
   { q: "Which countries regulate AI in 2026?", a: "The EU (AI Act), the US at state level (Colorado, Texas, California, Utah) with an executive-led federal approach, the UK (principles-based), China (generative-AI + synthetic-content rules), South Korea (Basic AI Act, in force Jan 2026), Singapore (voluntary framework), and Canada (proposed AIDA). The EU AI Act remains the only comprehensive, binding, risk-tiered regime." },
   { q: "What is the biggest AI regulation deadline in 2026?", a: "2 August 2026 — the EU AI Act's Article 50 transparency obligations and GPAI supervision become enforceable, with fines up to €15M or 3% of turnover. Legacy generative systems have until 2 December 2026 for machine-readable content marking." },
-  { q: "How does CSOAI keep up with all of these?", a: "CSOAI maps every regime to one control set via a 13-framework crosswalk, tracks the enforcement dates live, and produces Layer-0 (Ed25519) signed evidence — so complying once crosswalks everywhere. Each regime has a dedicated, current page linked here." },
+  { q: "How does CSOAI keep up with all of these?", a: "CSOAI maps every regime to one control set via a published-framework crosswalk, tracks the enforcement dates live, and produces Layer-0 (Ed25519) signed evidence — so complying once crosswalks everywhere. Each regime has a dedicated, current page linked here." },
 ];
 
 export default function GlobalAIRegulation() {
@@ -40,7 +40,7 @@ export default function GlobalAIRegulation() {
       <div className="mx-auto max-w-5xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Global AI regulation tracker · verified mid-2026</p>
         <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Every AI regime, <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">one map.</span></h1>
-        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">Where AI law stands right now, worldwide — and the CSOAI page for each. Comply once; the 13-framework <a href="/crosswalk" className="text-emerald-300 underline">crosswalk</a> maps it everywhere.</p>
+        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">Where AI law stands right now, worldwide — and the CSOAI page for each. Comply once; the published-framework <a href="/crosswalk" className="text-emerald-300 underline">crosswalk</a> maps it everywhere.</p>
 
         <div className="mt-8 space-y-2">
           {ROWS.map((r) => (
