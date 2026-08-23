@@ -145,6 +145,34 @@ export default function FoundingMembers() {
         </div>
       </section>
 
+      {/* Founder */}
+      <section className="py-16 bg-white">
+        <div className="container max-w-4xl">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl font-bold">The Founder</h2>
+            <p className="text-xl text-gray-600 mt-3">Founded by Nicholas Templeman</p>
+          </div>
+          <Card className="border-2 border-amber-200">
+            <CardContent className="p-8 flex flex-col md:flex-row items-center gap-8">
+              <img
+                src="/images/founder-nicholas-templeman.jpg"
+                alt="Nicholas Templeman — Founder, Council of AI (CSOAI)"
+                className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-2xl shadow-lg ring-1 ring-amber-200"
+              />
+              <div>
+                <h3 className="text-2xl font-bold">Nicholas Templeman</h3>
+                <p className="text-amber-700 font-semibold mt-1">Founder — Council of AI (CSOAI)</p>
+                <p className="text-gray-600 mt-3 leading-relaxed">
+                  CSOAI Ltd (UK Companies House 16939677). Independent AI measurement body — deterministic
+                  grading on frozen instruments, Ed25519-signed credentials, honest UNMEASURED,
+                  re-attestation on a cadence. Measurement, not certification.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
       {/* Progress Tracker */}
       <section className="py-12 bg-amber-50">
         <div className="container max-w-4xl">
