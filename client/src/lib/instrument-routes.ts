@@ -26,7 +26,7 @@ export type InstrumentApiDoc = {
 
 export function apiDocFor(item: RouterEntry): InstrumentApiDoc {
   const host = "https://councilof.ai";
-  const tool = item.mcpSlug?.replace(/-mcp$/, "").replace(/-/g, ".") ?? item.id;
+  const tool = item.mcpSlug?.replace(/-mcp$/, "")?.replace(/-/g, ".") ?? item.id;
 
   if (item.endpoint?.includes("/api/gspc")) {
     return {
@@ -68,7 +68,7 @@ export function apiDocFor(item: RouterEntry): InstrumentApiDoc {
     aguiSession: `curl -sS -X POST ${host}/api/agui/session?handle=${item.slug}`,
     aguiRun: `curl -sS -N -X POST ${host}/api/agui/session/{session_id}/run`,
     mcpTool: tool,
-      mcpServer: `${host}/.well-known/mcp.json`,
+    mcpServer: `${host}/.well-known/mcp.json`,
   };
 }
 
