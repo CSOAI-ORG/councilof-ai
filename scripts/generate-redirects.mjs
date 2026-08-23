@@ -66,8 +66,6 @@ const EXISTING = [
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
   "/for                    /for/enterprise/             308",
-  "/evidence/              /evidence                    308",
-  "/readiness-assessment/  /readiness-assessment        308",
 ];
 
 const PERSONA_SLASH = [
