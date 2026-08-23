@@ -180,20 +180,6 @@ const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
     ],
   },
   {
-    test: /^\/agent-runbook/,
-    asks: [
-      "Which curl probes should an agent run first on councilof.ai?",
-      "What is the difference between the GSPC board API and the finance bond-crossing endpoint?",
-    ],
-  },
-  {
-    test: /^\/receipt-spec|^\/ownership/,
-    asks: [
-      "What does RECEIPT-SPEC-0.1 define, and what does it explicitly not certify?",
-      "What are the three verification paths for a measurement card?",
-    ],
-  },
-  {
     test: /^\/layer0/,
     asks: [
       "How is Layer 0 signed and verified — what is the public key and hash chain?",
