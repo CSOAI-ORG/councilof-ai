@@ -73,18 +73,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           aria-label="Council software destinations"
           className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5"
         >
-          <Link href="/dashboard/measurement">
-            <div
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors mb-1",
-                location.startsWith("/dashboard/measurement")
-                  ? "bg-accent text-foreground font-medium"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <span className="truncate">Measurement hub</span>
-            </div>
-          </Link>
           {DASHBOARD_TABS.map((tab) => {
             const isActive = !!tab.path && location.startsWith(tab.path);
             return (
@@ -146,13 +134,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               );
             })}
           </div>
-          <button
-            type="button"
-            onClick={() => openLobby({ pane: "play" })}
-            className="mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
-          >
-            <span className="truncate">Local play</span>
-          </button>
           <button
             type="button"
             onClick={() => openLobby({ pane: "home" })}
