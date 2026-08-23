@@ -87,7 +87,7 @@ why(k) +
   const axisNames = axes.map((a: any) => String(a.axis)).filter(Boolean);
 
   // 1o. Pricing / plans — no SaaS tiers.
-  if (/\b(pricing|plans?|per[- ]seat|saas tier|course fee|what is free|not promised)\b/i.test(q)) {
+  if (/\b(pricing|plans?|per[- ]seat|saas tier|course fee|what is free|not promised|how much|grade cost|does (a |the )?grade cost|cost of (a )?(grade|card|measurement)|is (it|verify|verification) free)\b/i.test(q)) {
     return (
       `There are no SaaS tiers, no per-seat plans, and no course fees on this estate.\n\n` +
       `Measurement and verification are free forever. Anyone can read GET /api/gspc, verify a card at /gspc-verify/, ` +
@@ -98,9 +98,23 @@ why(k) +
     );
   }
 
+  // 1q. Insurer / underwriting — a grade is not a policy decision.
+  if (/\b(insurer|underwrit|insurance)\b/i.test(q) && !/\b(governance axis|axis score)\b/i.test(q)) {
+    return (
+      `A published GSPC grade is a signed measurement of named behaviour on a frozen bank. ` +
+      `It is not a licence, not a certification, and not a signal that a system is safe to underwrite.\n\n` +
+      `An insurer can read GET /api/gspc, recompute any card at /gspc-verify/ (free), ` +
+      `and treat empty cells as empty. We will not fill a cell to make a book look complete.\n\n` +
+      `See /insurers/ for the published posture. The Council does not opine on premium or cover.\n\n` +
+      `_Grounded in the published method, not by a model._`
+    );
+  }
+
   // 1p. Sector / demographic — what to do first (not an axis score).
   if (
-    /\b(what should .+ do first|ai governance for |sector|for finance|for healthcare|for startup|for enterprise|for regulator)\b/i.test(q) &&
+    (/\b(what should .+ do first|ai governance for |sector|for finance|for healthcare|for startup|for enterprise|for regulator)\b/i.test(q) ||
+      (/\b(regulator|insurer|underwrit|enterprise buyer|finance team)\b/i.test(q) &&
+        /\b(do with|should .+ do|first move|use gspc|underwrit)\b/i.test(q))) &&
     !/\b(governance axis|axis score|accuracy|wilson|n=)\b/i.test(q)
   ) {
     return (
@@ -180,7 +194,7 @@ why(k) +
   if (
     /\b(correction|got wrong|refuse to (state|opine|certif)|not claim|out of scope|rely on in a (published|signed)|what can i rely on)\b/i.test(q) ||
     /\b(who checks|checks the council|corrections ledger|refutation)\b/i.test(q) ||
-    /\b(safe to underwrite|must not be underwritten|empty cells)\b/i.test(q)
+    /\b(safe to underwrite|must not be underwritten|empty cells|can an insurer|insurer use gspc)\b/i.test(q)
   ) {
     return (
       `A published measurement says: this system, this frozen bank, this n, this score, ` +
