@@ -293,6 +293,7 @@ const VulnerabilityDisclosure = lazy(() => import("./pages/VulnerabilityDisclosu
 const Intel = lazy(() => import("./pages/Intel"));
 const AccountBrief = lazy(() => import("./pages/AccountBrief"));
 const Article50 = lazy(() => import("./pages/Article50"));
+const VerifyLeaderboard = lazy(() => import("./pages/VerifyLeaderboard"));
 const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
 const Dora = lazy(() => import("./pages/Dora"));
 const DemoOS = lazy(() => import("./pages/DemoOS"));
@@ -928,6 +929,7 @@ function App() {
                   <Route path="/intel" component={Intel} />
                   <Route path="/brief" component={AccountBrief} />
                   <Route path="/article-50" component={Article50} />
+                  <Route path="/verify-leaderboard" component={VerifyLeaderboard} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
