@@ -5,7 +5,7 @@
 # Run via cron: */10 * * * * bash ~/clawd/harness/arena/arena-health.sh
 export PATH="/opt/homebrew/bin:$PATH"
 KEY="$HOME/.runpod/ssh/runpodctl-ssh-key"
-A100_PORT=23166; A100_IP=38.128.232.57
+A100_PORT=14954; A100_IP=38.128.232.57
 STAGE=/tmp/arena-health
 mkdir -p "$STAGE"
 TS(){ date -u +%FT%TZ; }
