@@ -87,7 +87,8 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // "No prohibited practice or Annex III category matched" — i.e. a governance API answering
   // "looks fine" to a question it never actually read. That is the worst failure this product
   // can have, so the field list is generous and the empty case is refused outright below.
-  const text = ["system", "purpose", "domain", "description", "scenario", "text", "use_case"]
+  const text = ["system", "purpose", "domain", "description", "scenario", "text", "use_case",
+    "endpoint", "url", "system_url"]
     .map((k) => String(body[k] ?? ""))
     .join(" ")
     .slice(0, 4000);
@@ -101,13 +102,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
         error: "no assessable description supplied",
         detail:
           "Provide the system description in one of: system, purpose, domain, description, " +
-          "scenario, text, use_case. An empty description is not a low-risk finding.",
+          "scenario, text, use_case, endpoint, url, system_url. An empty description is not a low-risk finding.",
       },
       { status: 400 },
     );
   }
 
-  // ── classify ────────────────────────────────────────────────────────────────
+  // ── classify ───────────────────────────────────────────────────────────────
   const prohibited = PROHIBITED.filter(([, rx]) => rx.test(text)).map(([n]) => n);
   const cats = ANNEX_III.filter(([, rx]) => rx.test(text)).map(([n]) => n);
 
@@ -127,7 +128,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     basis = "EU AI Act Art 5";
   } else if (cats.length) {
     tier = "HIGH_RISK";
-    verdict = `High-risk on this description (Annex III: ${cats.join(", ")}). Conformity assessment required before EU placement; ${gaps.length} of ${CONTROLS.length} controls unclaimed.`;
+    verdict = `High-risk on this description (Annex III: ${cats.join(", ")}). ${gaps.length} of ${CONTROLS.length} controls unclaimed. This is a measurement of the submitted text, not a conformity assessment.`;
     basis = "EU AI Act Art 6, Annex III";
   } else {
     tier = "LIMITED_OR_MINIMAL";
@@ -144,14 +145,16 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     compliance_score: score,
     gaps,
     rationale:
-      "Deterministic keyword classification against frozen Annex III category sets; gap list is the fixed Art 9–15/50 control set minus claimed controls. No model in the verdict path.",
+      "Deterministic keyword classification against frozen Annex III category sets; gap list is the fixed Art 9–15/50 control set minus claimed controls. No model in the verdict path. The endpoint field is recorded as text — this function does not fetch or probe a URL, and it is not a GSPC bench run.",
     basis,
-    engine: "csoai-assess/2.0 pages-function",
+    engine: "csoai-assess/2.1 pages-function",
+    measurement_kind: "eu_ai_act_keyword_v2",
+    disclaimer: "Text-only classifier. Not a certificate. We do not remediate. Empty cells stay empty.",
   };
 
   const signed_payload = canonical(payload);
 
-  // ── sign, or say plainly that we cannot ────────────────────────────────────
+  // ── sign, or say plainly that we cannot ────────────────────────────────
   let sig = "", pub = "", kid = "", alg = "UNSIGNED";
   const b64 = ctx.env.ASSESS_SIGNING_KEY_PKCS8_B64;
   if (b64) {
