@@ -99,7 +99,13 @@ def sov_index():
             if c.get("owem", {}).get("sov_score") is not None}
     index = round(sum(meas.values()) / len(meas), 4) if meas else None
     return {"sov_index_signal": index, "measured_axes": len(meas),
-            "total_axes": len(cl), "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+            "total_axes": len(cl), "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            # GX.2: this is a MEASUREMENT-TELEMETRY signal produced by workers (worker-signed).
+            # The PUBLIC board/index card must be signed by the ESTATE signing pod (did:web:csoai.org#board-attestation)
+            # — the key never leaves the pod; workers REQUEST, never hold. Printed here as the honest level.
+            "trust_level": "worker-measurement",
+            "signing_pod": "did:web:csoai.org#board-attestation-1",
+            "public_card_unsigned": True}
 
 def _append_signal(index):
     """Living 24/7 signal database: append each measured index tick."""
@@ -122,14 +128,20 @@ def sov_signal():
     idx = [h["sov_index"] for h in hist if h.get("sov_index") is not None]
     last = idx[-1] if idx else None
     delta = round(idx[-1] - idx[0], 4) if len(idx) >= 2 else None
-    # naive forecast: last + average per-step drift over up to 3 next ticks
+    # IY Wall 2: SCENARIO MEASUREMENT, NEVER FORECAST. The "next-3" is NOT a prediction — it is a
+    # sim-generated scenario receipt (SYNTHETIC-SIM) about the measured drift, plus a disclaimer that
+    # it says nothing about the future of the estate. The index counts what was measured, never predicts.
+    measured_series = idx
     steps = []
     if len(idx) >= 2:
         drift = (idx[-1] - idx[0]) / (len(idx) - 1) if len(idx) > 1 else 0
         for k in range(1, 4):
             steps.append(round(max(0.0, min(1.0, idx[-1] + drift * k)), 4))
-    return {"kind": "csoai-sov-signal/0.1", "history": hist, "signal_series": idx,
-            "last_index": last, "delta_since_first": delta, "forecast_next_3": steps,
+    return {"kind": "csoai-sov-signal/0.2", "history": hist, "signal_series": measured_series,
+            "last_index": last, "delta_since_first": delta,
+            "scenario_measurements": {"label": "SYNTHETIC-SIM", "values": steps,
+                                      "grammar": "measured in simulation, never proven in reality (IY Wall 2, ECON 211/237). "
+                                                 "This is a scenario receipt about measured drift, NOT a forecast of the estate."},
             "growth": "rising" if (delta or 0) > 0 else ("falling" if (delta or 0) < 0 else "flat"),
             "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
 
