@@ -167,7 +167,7 @@ export const STORY: Slide[] = [
       { tag: "benefit", text: "One signed result every side can rely on" },
       { tag: "usp", text: "Independent of all of them — we take no money from anything we rank" },
     ],
-    href: "/start",
+    href: "/?lobby=measured&task=get-measured",
     cta: "Prove your AI",
     video: { src: "/videos/trust-ecosystem.mp4", poster: "/videos/trust-ecosystem.jpg", title: "The trust ecosystem — who Council of AI serves" },
   },
@@ -205,7 +205,7 @@ export const STORY: Slide[] = [
 const PERSONAS: { who: string; hook: string; href: string }[] = [
   { who: "Insurers", hook: "price AI risk on signed evidence", href: "/industries/insurance" },
   { who: "Regulators", hook: "check behaviour against the law", href: "/regulators" },
-  { who: "Enterprises", hook: "prove your AI before you ship", href: "/start" },
+  { who: "Enterprises", hook: "prove your AI before you ship", href: "/?lobby=measured&task=enterprise-start" },
   { who: "Developers", hook: "measure per call on the agent rail", href: "/payg" },
 ];
 
@@ -214,8 +214,14 @@ function HeroActions() {
     <>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <a
-          href="/gspc-verify"
+          href="/?lobby=measured&task=get-measured"
           className="inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
+        >
+          Get measured
+        </a>
+        <a
+          href="/gspc-verify"
+          className="inline-flex items-center rounded-xl border-2 border-white/40 bg-white/5 px-6 py-3 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
         >
           Verify a card — free
         </a>
