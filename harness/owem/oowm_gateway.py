@@ -176,6 +176,8 @@ def mcp(body):
              "inputSchema": {"type": "object", "properties": {}}},
             {"name": "oowm_index", "description": "Aggregate sovereign index signal across all measured axes.",
              "inputSchema": {"type": "object", "properties": {}}},
+            {"name": "oowm_signal", "description": "Living signal history + forecast of the index (forecast / grow the sovereign signal).",
+             "inputSchema": {"type": "object", "properties": {}}},
         ]}}
     if method == "tools/call":
         name = body.get("params", {}).get("name")
@@ -186,6 +188,8 @@ def mcp(body):
             out = _load_reg()
         elif name == "oowm_index":
             out = sov_index(); _append_signal(out.get("sov_index_signal"))
+        elif name == "oowm_signal":
+            out = sov_signal()
         else:
             return {"jsonrpc": "2.0", "id": body.get("id"), "error": {"code": -32601, "message": "tool not found"}}
         return {"jsonrpc": "2.0", "id": body.get("id"), "result": {"content": [{"type": "text", "text": json.dumps(out, indent=2)}]}}
