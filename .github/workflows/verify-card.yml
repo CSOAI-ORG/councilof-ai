@@ -1,0 +1,67 @@
+name: Verify signed measurement card
+
+# EXP 125/126 reference Action — verify-a-card in any workflow.
+# Offline-capable: recomputes the canonical body (sorted keys, RFC-8785-ish), derives content_id,
+# verifies the Ed25519 signature against the EMBEDDED pubkey. FAIL-CLOSED on tamper: any mismatch
+# exits non-zero. No telemetry, no score assertion — the badge verifies, never ranks.
+
+on:
+  workflow_call:
+    inputs:
+      artifact:
+        description: 'Path to the signed JSON artifact (card / signal / leaderboard)'
+        required: true
+        type: string
+      fail_on_mismatch:
+        description: 'Exit non-zero on a signature mismatch (fail-closed). Default true.'
+        required: false
+        default: 'true'
+        type: string
+    outputs:
+      content_id:
+        description: 'The verified content_id (or "unverified")'
+        value: ${{ jobs.verify.outputs.cid }}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    outputs:
+      cid: ${{ steps.check.outputs.cid }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify the signed artifact (recompute canonical -> content_id -> Ed25519)
+        id: check
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, hashlib, base64, sys
+          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+          p = "${{ inputs.artifact }}"
+          try:
+              d = json.load(open(p))
+          except FileNotFoundError:
+              print(f"::error::artifact not found: {p}")
+              sys.exit(1)
+          body = {k: v for k, v in d.items() if k not in ("content_id", "signature", "sha256", "sig")}
+          canon = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+          want = hashlib.sha256(canon).hexdigest()
+          sig = d.get("signature") or {}
+          if not sig.get("pubkey") or not sig.get("sig"):
+              print("::error::artifact has no signature")
+              sys.exit(1)
+          pub = Ed25519PublicKey.from_public_bytes(base64.b64decode(sig["pubkey"]))
+          pub.verify(base64.b64decode(sig["sig"]), want.encode())
+          match = want == d.get("content_id")
+          if not match:
+              print("::error::content_id MISMATCH (recomputed=", want[:16], "stated=", d.get("content_id","")[:16], ")")
+              if "${{ inputs.fail_on_mismatch }}" == "true":
+                  sys.exit(1)
+          else:
+              print(f"::set-output name=cid::{want[:24]}")
+              print(f"::notice::SIGNED and VERIFIED content_id={want[:24]}")
+          # doctrine: never assert a score; measurement evidence only.
+          print(f"::notice::register={d.get('register')} not_a_certification={d.get('not_a_certification')}")
+          PY
