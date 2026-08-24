@@ -27,7 +27,7 @@ export function Footer() {
     {
       title: 'Product',
       links: [
-        { name: 'Training Courses', href: '/training' },
+        { name: 'Academy (we certify nothing)', href: '/academy' },
         { name: 'Training records (we certify nothing)', href: '/certification' },
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
