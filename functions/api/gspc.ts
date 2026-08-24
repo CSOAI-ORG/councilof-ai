@@ -1,4 +1,4 @@
-// functions/api/gspc.ts — the GSPC 14-slot board: "13 measured of 14" (SITTING 1 ruling, 2026-08-18).
+// functions/api/gspc.ts — living board. Slot counts are derived from the payload, never typed.
 // Restored from signed board / pre-PR#425 blob b4b3ab1788ec044156da0d4962189fe5f4dd975f.
 // Scores are verbatim — nothing invented. Split into private modules for deploy only.
 
@@ -25,6 +25,10 @@ export const onRequestGet: PagesFunction = async (context) => {
   }
 
   const items = selected.reduce((s, a) => s + a.n, 0);
+  const measuredSlots = selected.filter((a) => a.status === "MEASURED");
+  const measuredCount = measuredSlots.filter((a) => a.separation !== "UNTESTED").length;
+  const separatedNames = measuredSlots.filter((a) => a.separation === "SEPARATED").map((a) => a.axis);
+  const tieCount = measuredSlots.filter((a) => a.separation === "TIE").length;
   const body = {
     schema: "csoai.gspc-axes/0.5",
     issuer: "CSOAI Ltd (GB, Companies House 16939677)",
@@ -45,15 +49,16 @@ export const onRequestGet: PagesFunction = async (context) => {
         const vals = m.map(f).filter((v): v is number => typeof v === "number");
         return vals.length ? round(vals.reduce((s, v) => s + v, 0) / vals.length) : null;
       };
-      // GR.2 ruling: "14 axes, 13 measured, jail quotable". A slot is MEASURED when it has a
-      // completed separation determination (SEPARATED or TIE); jail's separation is UNTESTED, so
-      // it is quotable (carries data) but is NOT one of the 13 measured axes. quotable_axes counts
-      // every slot with data.
+      // A slot is MEASURED when it has a completed separation determination (SEPARATED or TIE).
+      // Jail's separation is UNTESTED: quotable (carries data) but not a measured axis.
+      // public_count is derived from those two numbers — never a typed 13/14.
+      const measured = m.filter((a) => a.separation !== "UNTESTED").length;
+      const quotable = m.length;
       return {
         axes: selected.length,
-        measured_axes: m.filter((a) => a.separation !== "UNTESTED").length,
-        quotable_axes: m.length,
-        public_count: "13 measured of 14 quotable (GSPC ruling 2026-08-18)",
+        measured_axes: measured,
+        quotable_axes: quotable,
+        public_count: `${measured} measured of ${quotable} quotable`,
         license: "CC-BY-4.0",
         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
         items,
@@ -68,7 +73,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         mean_note: "Means are over MEASURED axes that carry the field. mean_accuracy averages the " +
           "per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is " +
           "selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy " +
-          "hides; it exists only for the 13 board-v2 axes.",
+          "hides; it exists only for the measured board-v2 axes.",
       };
     })(),
     axes: selected,
@@ -90,7 +95,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       },
     ],
     limitations: [
-      "3 of the 13 canonical axes show a statistically separated leader (McNemar p<0.05 on discordant items): governance, care, affect. 10 are statistical ties — a point-estimate lead is not a measured advantage.",
+      `${separatedNames.length} of the ${measuredCount} canonical axes show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage.`,
       "Jail (slot 14) was measured on a 7-model fleet, not the 19-model board fleet; it carries NO separation test (UNTESTED) and its bank is pending publication. Do not compare its numbers against the canonical axes.",
       "jail's fleet accuracy 0.5412 is pooled across 7 models x 71 gold cells; the shown leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best recall is 0.237 — the best detector still misses 3 of 4 escapes.",
       "measured_in_lane (slot15 instrument-honesty, human-vs-ai) is the internal 16-slot living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",
@@ -102,7 +107,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     ],
   };
 
-  // ── site attestation ──────────────────────────────────────────────────────
+  // ── site attestation ────────────────────────────────────────
   // Sign the served board snapshot at the edge with the dedicated board key
   // (#board-attestation-1, provisioned as a Cloudflare secret; its public half
   // is published in did.json). This attests INTEGRITY of THIS payload as

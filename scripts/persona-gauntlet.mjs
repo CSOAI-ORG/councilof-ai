@@ -17,7 +17,7 @@ const PERSONAS = [
   { who: "buyer",      path: "/pricing",                       must: ["free"] },
   { who: "auditor",    path: "/honesty",                       must: ["council-oowm"] },
   { who: "researcher", path: "/library",                       must: ["reference pages across"] },
-  { who: "api-agent",  path: "/api/gspc",                      must: ['"axes": 14', '"measured_axes": 13', "13 measured of 14"] , json: true },
+  { who: "api-agent",  path: "/api/gspc",                      must: ['"measured_axes"', '"quotable_axes"', '"public_count"'] , json: true },
   { who: "a2a-agent",  path: "/.well-known/agent-card.json",   must: ['"doi"', "CSOAI Ltd"], json: true, forbid: [/MEOK AI Labs/, /\$\d+\/mo/] },
   { who: "regulator",  path: "/regulators",                    must: [] },
   { who: "enterprise", path: "/start",                         must: [] },
@@ -40,6 +40,14 @@ for (const p of PERSONAS) {
     const scan = p.json ? body : body.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ").replace(/<[^>]+>/g, " ");
     const killers = [...KILL, ...(p.forbid || [])].filter((re) => re.test(scan));
     if (killers.length) { fail(`${p.who} ${p.path}: kill-string hit ${killers.map(String).join(", ")}`); continue; }
+    if (p.json && p.path === "/api/gspc") {
+      const t = JSON.parse(body).totals || {};
+      const derived = `${t.measured_axes} measured of ${t.quotable_axes} quotable`;
+      if (typeof t.public_count !== "string" || !String(t.public_count).startsWith(derived)) {
+        fail(`${p.who}: public_count ${JSON.stringify(t.public_count)} does not derive from measured/quotable`);
+        continue;
+      }
+    }
     pass(`${p.who} ${p.path}`);
   } catch (e) {
     fail(`${p.who} ${p.path}: fetch error ${e.message}`);
