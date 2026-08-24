@@ -21,7 +21,7 @@ function sha256Hex(text) {
 }
 
 const file = process.argv[2];
-If (!file) {
+if (!file) {
   console.error("usage: node verify-pack.mjs <pack.json>");
   process.exit(1);
 }
