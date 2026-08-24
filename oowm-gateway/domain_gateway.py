@@ -131,8 +131,19 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--serve":
         port = int(sys.argv[2]) if len(sys.argv) > 2 else 8767
         from http.server import BaseHTTPRequestHandler, HTTPServer
+        import os as _os, hmac as _hmac
+        API_KEY = _os.environ.get("OOWM_API_KEY", "")  # public-safety: bearer token; empty = local-only (no auth)
         class H(BaseHTTPRequestHandler):
+            def _authed(self):
+                if not API_KEY:
+                    return True  # no key set -> localhost-only mode (don't expose publicly)
+                auth = self.headers.get("Authorization", "")
+                return auth.startswith("Bearer ") and _hmac.compare_digest(auth[7:], API_KEY)
             def do_POST(self):
+                if not self._authed():
+                    self.send_response(401); self.send_header("Content-Type", "application/json")
+                    self.end_headers(); self.wfile.write('{"error":"unauthorized - set OOWM_API_KEY bearer token"}'.encode())
+                    return
                 n = int(self.headers.get("Content-Length", 0))
                 q = json.loads(self.rfile.read(n) or b"{}").get("query", "")
                 domain, model, ctx, resp = route(q)
@@ -142,7 +153,7 @@ def main():
                 self.send_header("Content-Length", str(len(out))); self.end_headers()
                 self.wfile.write(out)
             def log_message(self, *a): pass
-        print(f"OOWM domain gateway on :{port}")
+        print(f"OOWM domain gateway on :{port} (auth={'bearer-OOWM_API_KEY' if API_KEY else 'local-only'})")
         HTTPServer(("127.0.0.1", port), H).serve_forever()
         return
     q = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "What are EU AI Act obligations?"

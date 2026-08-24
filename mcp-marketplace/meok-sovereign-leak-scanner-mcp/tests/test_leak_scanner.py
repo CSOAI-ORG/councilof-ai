@@ -39,7 +39,7 @@ def test_risky_path_detection():
 
 def test_secret_redaction():
     """Test that secrets are properly redacted."""
-    secret = "sk-proj-abc123def456ghi789jkl012mno345pqr678stu901vwx234"
+    secret = "[REDACTED-SECRET-GH-PUSH-PROTECTION]"
     redacted = _redact_secret(secret)
     assert "sk-p" in redacted
     assert "234" in redacted
@@ -51,7 +51,7 @@ def test_scan_file_openai_key():
     """Test scanning file with OpenAI key."""
     content = '''
 # Config file
-OPENAI_API_KEY=sk-proj-abc123def456ghi789jkl012mno345pqr678stu901vwx
+OPENAI_API_KEY=[REDACTED-SECRET-GH-PUSH-PROTECTION]
 OTHER=foo
 '''
     r = scan_file("/test/config.py", content)
@@ -66,7 +66,7 @@ OTHER=foo
 def test_scan_file_aws_key():
     """Test scanning file with AWS key."""
     content = '''
-aws_access_key_id = "AKIAIOSFODNN7EXAMPLE"
+aws_access_key_id = "[REDACTED-SECRET-GH-PUSH-PROTECTION]"
 aws_secret_access_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 '''
     r = scan_file("/test/aws.py", content)
@@ -102,7 +102,7 @@ def hello():
 
 def test_scan_file_github_token():
     """Test GitHub PAT detection."""
-    content = 'GITHUB_TOKEN = "ghp_abc123def456ghi789jkl012mno345pqr678"'
+    content = 'GITHUB_TOKEN = "[REDACTED-SECRET-GH-PUSH-PROTECTION]"'
     r = scan_file("/test/github.py", content)
     assert r["findings_count"] >= 1
     assert any("GitHub" in f["pattern_name"] for f in r["findings"])
@@ -120,7 +120,7 @@ def test_scan_file_stripe_key():
 
 def test_scan_file_anthropic_key():
     """Test Anthropic key detection."""
-    content = 'ANTHROPIC_KEY = "sk-ant-api03-abc123def456ghi789jkl012mno345pqr"'
+    content = 'ANTHROPIC_KEY = "[REDACTED-SECRET-GH-PUSH-PROTECTION]"'
     r = scan_file("/test/anthropic.py", content)
     assert r["findings_count"] >= 1
     print("✅ test_scan_file_anthropic_key")
@@ -145,8 +145,8 @@ def test_check_env_files():
 def test_check_api_keys():
     """Test API key checker."""
     text = """
-    OPENAI_KEY=sk-proj-abc123def456ghi789jkl012mno345pqr678stu901vwx
-    GITHUB=ghp_abc123def456ghi789jkl012mno345pqr678stu
+    OPENAI_KEY=[REDACTED-SECRET-GH-PUSH-PROTECTION]
+    GITHUB=[REDACTED-SECRET-GH-PUSH-PROTECTION]stu
     """
     r = check_api_keys(text, "test.txt")
     assert r["keys_found"] >= 2
@@ -215,7 +215,7 @@ def test_scan_repository_temp():
 
         # Create Python file with API key
         with open(os.path.join(tmpdir, "config.py"), "w") as f:
-            f.write('OPENAI = "sk-proj-abc123def456ghi789jkl012mno345pqr678stu901vwx"\n')
+            f.write('OPENAI = "[REDACTED-SECRET-GH-PUSH-PROTECTION]"\n')
 
         # Create a private key file (on a single line for regex match)
         with open(os.path.join(tmpdir, "id_rsa"), "w") as f:
@@ -252,7 +252,7 @@ def test_scan_file_not_found():
 
 def test_scan_file_gcp_key():
     """Test GCP API key detection."""
-    content = 'GCP_KEY = "AIzaSyAbcdefghijklmnopqrstuvwxyz0123456789"'
+    content = 'GCP_KEY = "[REDACTED-SECRET-GH-PUSH-PROTECTION]789"'
     r = scan_file("/test/gcp.py", content)
     assert r["findings_count"] >= 1
     assert any("GCP" in f["pattern_name"] for f in r["findings"])
@@ -261,7 +261,7 @@ def test_scan_file_gcp_key():
 
 def test_scan_file_huggingface():
     """Test HuggingFace token detection."""
-    content = 'HF_TOKEN = "hf_abc123def456ghi789jkl012mno3456"'
+    content = 'HF_TOKEN = "[REDACTED-SECRET-GH-PUSH-PROTECTION]"'
     r = scan_file("/test/hf.py", content)
     assert r["findings_count"] >= 1
     print("✅ test_scan_file_huggingface")
@@ -277,7 +277,7 @@ def test_scan_file_slack_webhook():
 
 def test_sigil_signed():
     """Test that all responses are SIGIL-signed."""
-    r = scan_file("/test.py", "OPENAI = 'sk-proj-abc123def456ghi789jkl012mno345pqr678stu901vwx'")
+    r = scan_file("/test.py", "OPENAI = '[REDACTED-SECRET-GH-PUSH-PROTECTION]'")
     assert "sigil" in r
     assert len(r["sigil"]) == 16
     print("✅ test_sigil_signed")
@@ -285,7 +285,7 @@ def test_sigil_signed():
 
 def test_redaction_in_output():
     """Test that secrets are never exposed in output."""
-    full_secret = "sk-proj-abc123def456ghi789jkl012mno345pqr678stu901vwx"
+    full_secret = "[REDACTED-SECRET-GH-PUSH-PROTECTION]"
     content = f'KEY = "{full_secret}"'
     r = scan_file("/test.py", content)
     output = str(r)
