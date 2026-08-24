@@ -1,1 +1,54 @@
-LOAD_FROM_JSON_FILE
+{
+  "kind": "csoai.east-west-pack/0.1",
+  "format": "multinational",
+  "banner": "Cross-jurisdiction measurement ≠ compliance determination — determination stays with authorities, always.",
+  "not": [
+    "Not a compliance determination",
+    "Not a certification",
+    "Not legal advice",
+    "Not an endorsement of the measured system"
+  ],
+  "card": {
+    "kind": "csoai.cross-border-card/0.1",
+    "grammar": "verified measurement credential",
+    "id": "cbc_ew_v1_001",
+    "issuedAt": "2026-08-24T00:00:00.000Z",
+    "schema": "https://councilof.ai/.well-known/schemas/cross-border-card.schema.json",
+    "issuer": {
+      "name": "CSOAI Ltd",
+      "companiesHouse": "16939677",
+      "did": "did:web:councilof.ai",
+      "didNote": "OWNER-BLOCKED — did.json id-mismatch (P0-1). Issuer is not claimed as externally resolved on this card."
+    },
+    "subject": {
+      "name": "Council of AI public GSPC board snapshot",
+      "kind": "measurement-instrument-snapshot",
+      "note": "Self-measurement of the published board snapshot. Not an endorsement of any third-party system. Not a certification."
+    },
+    "measured": "13 measured of 14",
+    "axes": [
+      {"axis": "governance", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "safety", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "provenance", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "continuity", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "conformance", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "openness", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "machinery-conformity", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "care", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "cross-reality", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "detector-interop", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "art5-safeguard", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "swarm", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "affect", "status": "MEASURED", "mapping": "mapped"},
+      {"axis": "jail", "status": "UNMEASURED", "mapping": "unmeasured-on-this-credential", "note": "Jail stays UNMEASURED on this credential. A smaller-fleet jail run exists on GET /api/gspc with UNTESTED separation and is not folded in."}
+    ],
+    "regimes": ["eu", "uk", "illinois", "china"],
+    "crosswalk": {"version": "v1", "hash": "5be5ceea8733744a5b7079cc922dbf064b7593cc87012cbe57a94562265f8854", "banner": "Cross-jurisdiction measurement ≠ compliance determination — determination stays with authorities, always."},
+    "environment": {"method": "Deterministic grading on frozen GSPC banks for the 13 measured axes. Jail not run for this credential.", "date": "2026-08-24", "nonEndorsement": "This credential does not endorse the measured subject and is not a compliance determination."},
+    "prevHead": null,
+    "contentHash": "b6f4e845281769e6b7829873034346598e40329aece84a3b4a17b0a89004e064",
+    "signature": {"status": "UNSIGNED", "note": "UNSIGNED — hash trail only. Board-attestation key is not bound on this card. Not a Council attestation. Not a certification."}
+  },
+  "crosswalk": {"kind": "csoai.east-west-crosswalk/0.1", "version": "v1", "frozenAt": "2026-08-24", "issuer": "CSOAI Ltd (UK Companies House 16939677)", "banner": "Cross-jurisdiction measurement ≠ compliance determination — determination stays with authorities, always.", "methodologyId": "east-west-method-v1", "schema": "https://councilof.ai/.well-known/schemas/cross-border-card.schema.json", "regimes": ["eu", "uk", "illinois", "china"], "grammar": "13 measured of 14", "jail": "UNMEASURED on this credential — 13 measured of 14", "supersession": [], "hash": "5be5ceea8733744a5b7079cc922dbf064b7593cc87012cbe57a94562265f8854", "rows": []},
+  "method": {"id": "east-west-method-v1", "inclusion": "A cell is included only when a named provision or published principle exists in primary text, regulator guidance, or a published standard. We do not invent statutory hooks.", "sourceTiers": ["primary text (statute, regulation, published bill text)", "regulator guidance (DRCF, AI Office, AG portals)", "published standard (GB/T clauses as published)", "whitespace note (honest absence — never papered)"], "labeling": "Every cell is labeled mapped | open | unmeasured-on-this-credential. Never compliant, never certified.", "banner": "Cross-jurisdiction measurement ≠ compliance determination — determination stays with authorities, always.", "versioning": "v1 is frozen. A regime change (implementing act, GB/T revision, guidance, portal resolution) lands as a dated v-next. Silent edits are forbidden."}
+}
