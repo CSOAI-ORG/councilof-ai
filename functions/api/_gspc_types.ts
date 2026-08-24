@@ -35,8 +35,9 @@ export const MEASURED_ON = {
   endpoint: "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
   date: "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
   grading: "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
-  note: "GSPC (Governance · Safety · Provenance · Continuity) 14-slot board: 13 measured of 14, " +
-    "plus jail. The 13 canonical axes were measured on the same fleet, same rows, same grader. " +
+  note: "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals " +
+    "(public_count, measured_axes, quotable_axes) and are derived, never typed. " +
+    "The measured canonical axes used the same fleet, same rows, same grader. " +
     "Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval " +
     "where n is honestly independent, and whether the lead is statistically separated (McNemar " +
     "p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and " +
