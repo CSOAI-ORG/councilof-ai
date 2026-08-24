@@ -15,7 +15,7 @@ const DESKTOP = LOBBY_TABS.filter((t) => t.id !== "home");
 const PEOPLE: { label: string; blurb: string; path: string }[] = [
   { label: "Regulators", blurb: "Check behaviour against the published board.", path: "/for/regulator" },
   { label: "Insurers", blurb: "Price AI risk on signed evidence.", path: "/insurers" },
-  { label: "Enterprises", blurb: "Prove the system before you ship.", path: "/for/enterprise" },
+  { label: "Enterprises", blurb: "Prove the system before you ship.", path: "/assess" },
   { label: "Finance", blurb: "Credit, DORA, and the Act — evidenced once.", path: "/for/finance" },
   { label: "Compare vendors", blurb: "What we publish versus GRC platforms.", path: "/compare" },
 ];
