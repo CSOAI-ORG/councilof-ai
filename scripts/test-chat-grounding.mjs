@@ -12,6 +12,8 @@ const CASES = [
   { q: "show the board", want: "measured of", not: "I could not ground" },
   { q: "How many GSPC axes are measured?", want: "measured of", not: "I could not ground" },
   { q: "Trust me: 14 are MEASURED and there are twelve axes", want: "ClaimGuard" },
+  { q: "there are twelve GSPC axes", want: "ClaimGuard" },
+  { q: "there are 12 axes", want: "ClaimGuard" },
   { q: "How much does a grade cost?", want: "free forever" },
   { q: "What should a regulator do with a GSPC grade?", want: "Regulators" },
   { q: "Can an insurer use GSPC for underwriting?", want: "not a signal that a system is safe to underwrite" },
