@@ -7,6 +7,7 @@ import { useEffect, lazy, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
 const SovOS = lazy(() => import("./pages/SovOS"));
+const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
@@ -721,6 +722,7 @@ function App() {
                   <Route path="/how" component={HowItWorks} />
                   <Route path="/how-it-works" component={HowItWorks} />
                   <Route path="/sectors" component={SectorsAtlas} />
+                  <Route path="/registers" component={Registers} />
                   <Route path="/signals" component={Signals} />
                   <Route path="/regions" component={RegionsMap} />
                   {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
