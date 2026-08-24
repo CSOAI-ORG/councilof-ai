@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
+import { openLobby } from "@/lib/lobbyLink";
 
 // Welcome - the post-signup interstitial. Reads the plan the user picked on /pricing
 // (persisted to localStorage by Signup) and acknowledges it before dropping them into
@@ -12,6 +14,7 @@ const PLAN: Record<string, { label: string; price: string; accent: "amber" | "em
 };
 
 export default function Welcome() {
+  const [, navigate] = useLocation();
   const [plan, setPlan] = useState("");
   const [credits, setCredits] = useState("");
   useEffect(() => {
@@ -24,10 +27,27 @@ export default function Welcome() {
     } catch (e) {}
   }, []);
 
-  function go(href: string) {
-    // consume the intent so it doesn't re-fire on the next visit
-    try { localStorage.removeItem("sov_intended_plan"); localStorage.removeItem("sov_intended_credits"); } catch (e) {}
-    window.location.href = href;
+  function consumeIntent() {
+    try {
+      localStorage.removeItem("sov_intended_plan");
+      localStorage.removeItem("sov_intended_credits");
+    } catch (e) {}
+  }
+
+  function enterOs() {
+    consumeIntent();
+    openLobby({ pane: "home" });
+    navigate("/");
+  }
+
+  function goDemo() {
+    consumeIntent();
+    navigate("/demo");
+  }
+
+  function goDashboard() {
+    consumeIntent();
+    navigate("/dashboard");
   }
 
   const info = plan ? PLAN[plan] : null;
@@ -57,8 +77,8 @@ export default function Welcome() {
             </ul>
             <div className="mt-4 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">The rail is free. Verification is free forever — explore the full OS now.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-              <button onClick={() => go("/os")} className={"flex-1 rounded-xl px-4 py-2.5 text-center text-sm font-bold " + (amber ? "bg-amber-400 text-[#1a1206] hover:bg-amber-300" : "bg-emerald-500 text-[#03110b] hover:bg-emerald-400")}>Enter your OS →</button>
-              <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
+              <button type="button" onClick={enterOs} className={"flex-1 rounded-xl px-4 py-2.5 text-center text-sm font-bold " + (amber ? "bg-amber-400 text-[#1a1206] hover:bg-amber-300" : "bg-emerald-500 text-[#03110b] hover:bg-emerald-400")}>Enter your OS →</button>
+              <button type="button" onClick={goDemo} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
             </div>
           </div>
         ) : (
@@ -66,14 +86,14 @@ export default function Welcome() {
             {credits && <div className="mb-3 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">Your <b className="text-emerald-300">{credits}</b> pack is noted.</div>}
             <div className="text-sm text-emerald-100/80">You're on the free, open-source base — your own Council assistant, the governance graph, the council and Layer 0 signing, forever. The rail is free; verification is free forever.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-              <button onClick={() => go("/os")} className="flex-1 rounded-xl bg-emerald-500 px-4 py-2.5 text-center text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS →</button>
-              <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
+              <button type="button" onClick={enterOs} className="flex-1 rounded-xl bg-emerald-500 px-4 py-2.5 text-center text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS →</button>
+              <button type="button" onClick={goDemo} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
             </div>
           </div>
         )}
 
         <div className="mt-6 text-center">
-          <button onClick={() => go("/dashboard")} className="text-sm text-emerald-300/70 hover:text-emerald-200">Skip to dashboard</button>
+          <button type="button" onClick={goDashboard} className="text-sm text-emerald-300/70 hover:text-emerald-200">Skip to dashboard</button>
         </div>
       </div>
     </div>
