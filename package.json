@@ -23,8 +23,8 @@
     "test:cypress": "cypress run",
     "test:cypress:open": "cypress open",
     "test:pre-deploy": "npx vite preview --config client/vite.config.ts --port 4173 --strictPort & PREVIEW_PID=$!; sleep 3; BASE_URL=http://localhost:4173 npx playwright test --config e2e/playwright.config.ts e2e/tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line; RC=$?; kill $PREVIEW_PID 2>/dev/null; wait $PREVIEW_PID 2>/dev/null; exit $RC",
-    "test:council-os": "npm run build:client && npx vite preview --config client/vite.config.ts --port 4173 --strictPort & PREVIEW_PID=$!; sleep 4; BASE_URL=http://127.0.0.1:4173 npx playwright test --config e2e/playwright.config.ts e2e/tests/council-os-workspace.spec.ts e2e/tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line; RC=$?; kill $PREVIEW_PID 2>/dev/null; wait $PREVIEW_PID 2>/dev/null; exit $RC",
-    "test:personas": "npm run build:client && npx vite preview --config client/vite.config.ts --port 4173 --strictPort & PREVIEW_PID=$!; sleep 4; BASE_URL=http://127.0.0.1:4173 npx playwright test --config e2e/playwright.config.ts e2e/tests/end-user-personas.spec.ts --project=chromium --reporter=line; RC=$?; kill $PREVIEW_PID 2>/dev/null; wait $PREVIEW_PID 2>/dev/null; exit $RC",
+    "test:council-os": "npm run build:client && (fuser -k 4173/tcp 2>/dev/null || true) && npx vite preview --config client/vite.config.ts --port 4173 --strictPort & PREVIEW_PID=$!; node scripts/wait-preview.mjs; BASE_URL=http://127.0.0.1:4173 npx playwright test --config e2e/playwright.config.ts e2e/tests/council-os-workspace.spec.ts e2e/tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line; RC=$?; kill $PREVIEW_PID 2>/dev/null; wait $PREVIEW_PID 2>/dev/null; exit $RC",
+    "test:personas": "npm run build:client && (fuser -k 4173/tcp 2>/dev/null || true) && npx vite preview --config client/vite.config.ts --port 4173 --strictPort & PREVIEW_PID=$!; node scripts/wait-preview.mjs; BASE_URL=http://127.0.0.1:4173 npx playwright test --config e2e/playwright.config.ts e2e/tests/end-user-personas.spec.ts --project=chromium --reporter=line; RC=$?; kill $PREVIEW_PID 2>/dev/null; wait $PREVIEW_PID 2>/dev/null; exit $RC",
     "test:personas:live": "E2E_BASE=https://councilof.ai node scripts/e2e-persona-walk.mjs && BASE_URL=https://councilof.ai npx playwright test --config e2e/playwright.config.ts e2e/tests/end-user-personas.spec.ts --project=chromium --grep 'API smoke' --reporter=line",
     "deploy:prod": "npm run build:client && npm run prerender && bash scripts/deploy-prod.sh",
     "deploy:prod:dry": "bash scripts/deploy-prod.sh --dry",
@@ -144,6 +144,7 @@
     "vaul": "^1.1.2",
     "workers-og": "^0.0.25",
     "wouter": "^3.3.5",
+    "ws": "^8.21.3",
     "xlsx": "^0.18.5",
     "zod": "^3.25.76",
     "zustand": "^5.0.14"
