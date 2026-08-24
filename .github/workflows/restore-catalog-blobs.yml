@@ -2,8 +2,7 @@ name: restore-catalog-blobs
 on:
   push:
     paths:
-      - '.restore-chunks/**'
-      - '.github/workflows/restore-catalog-blobs.yml'
+      - '.restore-chunks/READY'
   workflow_dispatch:
 jobs:
   restore:
@@ -27,12 +26,7 @@ jobs:
             ("functions/data/ecosystem.json", "functions__data__ecosystem.json", 10, 83080),
           ]
           for dest, prefix, nparts, expect in specs:
-              parts = []
-              for i in range(nparts):
-                  p = pathlib.Path(f".restore-chunks/{prefix}.part{i:02d}")
-                  if not p.exists():
-                      raise SystemExit(f"missing {p}")
-                  parts.append(p.read_text())
+              parts = [pathlib.Path(f".restore-chunks/{prefix}.part{i:02d}").read_text().strip() for i in range(nparts)]
               data = base64.b64decode("".join(parts))
               if len(data) != expect:
                   raise SystemExit(f"{dest}: got {len(data)} expected {expect}")
@@ -41,9 +35,5 @@ jobs:
               print(dest, len(data), "OK")
           PY
           git add public/sitemap.xml public/ecosystem.json functions/data/ecosystem.json
-          if git diff --cached --quiet; then
-            echo "no changes"
-          else
-            git commit -m "fix: restore full ecosystem.json and sitemap.xml from chunked base64"
-            git push origin HEAD:cursor/instruments-catalog-7fb8
-          fi
+          git commit -m "fix: restore full ecosystem.json and sitemap.xml from chunked base64"
+          git push origin HEAD:cursor/instruments-catalog-7fb8
