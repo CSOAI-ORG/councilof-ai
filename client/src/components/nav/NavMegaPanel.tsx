@@ -32,6 +32,7 @@ export function MegaDropdown({
   groupDescription,
   icon: Icon,
   groupHref,
+  groupOnClick,
   items,
   onNavigate,
   variant = "header",
@@ -40,6 +41,7 @@ export function MegaDropdown({
   groupDescription: string;
   icon: LucideIcon;
   groupHref: string;
+  groupOnClick?: (e: MouseEvent) => void;
   items: MegaItem[];
   onNavigate?: () => void;
   variant?: "header" | "footer";
@@ -96,7 +98,10 @@ export function MegaDropdown({
         <a
           href={groupHref}
           className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
-          onClick={() => onNavigate?.()}
+          onClick={(e) => {
+            groupOnClick?.(e);
+            onNavigate?.();
+          }}
         >
           View all {groupName.toLowerCase()} →
         </a>
