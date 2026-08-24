@@ -1,4 +1,6 @@
 import { ALPHA_MAX, ALPHA_MIN, CONTROL, FOCUS, SURFACE, SP, TYPE, panelStyle } from "./glass";
+import LobbyPaneTabs, { NAV_ID } from "./LobbyPaneTabs";
+import type { LobbyTab, LobbyTabId } from "./tabs";
 
 /**
  * LobbyHeader — the site header, at the TOP of the overlay, spanning full width.
@@ -6,6 +8,10 @@ import { ALPHA_MAX, ALPHA_MIN, CONTROL, FOCUS, SURFACE, SP, TYPE, panelStyle } f
  * It is not inside the centre pane and it never was meant to be: the mark, the
  * lobby's name, the transparency control and the window controls belong to the
  * WINDOW, not to whatever pane happens to be open. The three rails start below it.
+ *
+ * On narrow viewports the destination tablist lives here (OpenRouter-style
+ * horizontal header nav) because the left rail is hidden. On sm+ the left
+ * rail owns id="navigation" instead — only one tablist is mounted at a time.
  *
  * WINDOW CONTROLS. Minimise, expand/restore and close, each an icon plus a
  * visible text label at ≥sm, each with an aria-label, each in the focus-ring
@@ -71,6 +77,10 @@ export default function LobbyHeader({
   onToggleLeft,
   rightOpen,
   onToggleRight,
+  showHeaderNav,
+  tabId,
+  onSelectTab,
+  navOverride,
 }: {
   titleId: string;
   alpha: number;
@@ -83,107 +93,128 @@ export default function LobbyHeader({
   onToggleLeft: () => void;
   rightOpen: boolean;
   onToggleRight: () => void;
+  /** Horizontal destination tablist in the header (narrow viewports). */
+  showHeaderNav?: boolean;
+  tabId?: LobbyTabId;
+  onSelectTab?: (t: LobbyTab) => void;
+  navOverride?: boolean;
 }) {
   const pct = Math.round(alpha * 100);
 
   return (
     <header
-      className={`${SURFACE} ${SP.row} flex w-full flex-wrap items-center gap-x-5 gap-y-2.5`}
+      className={`${SURFACE} ${SP.row} flex w-full flex-col gap-2`}
       style={panelStyle}
     >
-      <span className="flex items-center gap-3">
-        <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-700 text-white"
-          aria-hidden="true"
-        >
-          <ColiseumGlyph className="h-5 w-5" />
-        </span>
-        <span className="min-w-0">
-          <span id={titleId} className={`block ${TYPE.title}`}>Council OS</span>
-          <span className={`block ${TYPE.fine}`}>
-            Measure · sign · check — not certification
+      <div className="flex w-full flex-wrap items-center gap-x-5 gap-y-2.5">
+        <span className="flex items-center gap-3">
+          <span
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-700 text-white"
+            aria-hidden="true"
+          >
+            <ColiseumGlyph className="h-5 w-5" />
+          </span>
+          <span className="min-w-0">
+            <span id={titleId} className={`block ${TYPE.title}`}>Council OS</span>
+            <span className={`block ${TYPE.fine}`}>
+              Measure · sign · check — not certification
+            </span>
           </span>
         </span>
-      </span>
 
-      {/* Transparency — a real labelled range, arrow-key operable, with a
-          spoken value. It drives --lobby-alpha for every surface below. */}
-      <label className="ml-auto flex items-center gap-2.5">
-        <span className={`hidden sm:inline ${TYPE.section}`}>Transparency</span>
-        <input
-          type="range"
-          min={ALPHA_MIN}
-          max={ALPHA_MAX}
-          step={0.01}
-          value={alpha}
-          onChange={(e) => onAlpha(Number(e.target.value))}
-          aria-label="Panel transparency"
-          aria-valuetext={`${pct}% opaque`}
-          className={`h-1.5 w-28 cursor-pointer accent-emerald-700 sm:w-40 ${FOCUS}`}
-        />
-        <span className="w-11 text-right font-mono text-[11px] tabular-nums text-slate-600">
-          {pct}%
+        <label className="ml-auto flex items-center gap-2.5">
+          <span className={`hidden sm:inline ${TYPE.section}`}>Transparency</span>
+          <input
+            type="range"
+            min={ALPHA_MIN}
+            max={ALPHA_MAX}
+            step={0.01}
+            value={alpha}
+            onChange={(e) => onAlpha(Number(e.target.value))}
+            aria-label="Panel transparency"
+            aria-valuetext={`${pct}% opaque`}
+            className={`h-1.5 w-28 cursor-pointer accent-emerald-700 sm:w-40 ${FOCUS}`}
+          />
+          <span className="w-11 text-right font-mono text-[11px] tabular-nums text-slate-600">
+            {pct}%
+          </span>
+        </label>
+
+        <span className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onToggleLeft}
+            aria-expanded={leftOpen}
+            aria-label={leftOpen ? "Hide the destinations pane" : "Show the destinations pane"}
+            title="Destinations ([)"
+            className={`${CONTROL} ${SP.chip} hidden text-[12px] font-semibold sm:inline-flex`}
+          >
+            {leftOpen ? "Hide panes" : "Show panes"}
+          </button>
+          <button
+            type="button"
+            onClick={onToggleRight}
+            aria-expanded={rightOpen}
+            aria-label={rightOpen ? "Hide the reports rail" : "Show the reports rail"}
+            title="Reports rail (])"
+            className={`${CONTROL} ${SP.chip} hidden text-[12px] font-semibold lg:inline-flex`}
+          >
+            {rightOpen ? "Hide rail" : "Show rail"}
+          </button>
+
+          <button
+            type="button"
+            onClick={onToggleSize}
+            aria-label={size === "full" ? "Restore Council OS to a windowed size" : "Expand Council OS to fill the screen"}
+            title={size === "full" ? "Restore" : "Expand"}
+            className={`${CONTROL} ${SP.chip} text-[12px] font-semibold`}
+          >
+            {size === "full" ? <IconRestore /> : <IconExpand />}
+            <span className="hidden sm:inline">{size === "full" ? "Restore" : "Expand"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onMinimise}
+            aria-label="Minimise Council OS, keeping this session"
+            title="Minimise (Cmd/Ctrl + .)"
+            className={`${CONTROL} ${SP.chip} text-[12px] font-semibold`}
+          >
+            <IconMinimise />
+            <span className="hidden sm:inline">Minimise</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close Council OS"
+            title="Close (Esc)"
+            className={`${SP.chip} inline-flex items-center gap-1.5 rounded-xl border border-slate-900/10 bg-slate-900 text-[12px] font-semibold text-white transition hover:bg-slate-800 motion-reduce:transition-none ${FOCUS}`}
+          >
+            <IconClose />
+            <span className="hidden sm:inline">Close</span>
+          </button>
         </span>
-      </label>
+      </div>
 
-      <span className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={onToggleLeft}
-          aria-expanded={leftOpen}
-          aria-label={leftOpen ? "Hide the destinations pane" : "Show the destinations pane"}
-          title="Destinations ([)"
-          className={`${CONTROL} ${SP.chip} hidden text-[12px] font-semibold sm:inline-flex`}
+      {showHeaderNav && tabId && onSelectTab && (
+        <nav
+          id={NAV_ID}
+          aria-label="Council OS destinations"
+          className="w-full border-t border-slate-900/10 pt-2 sm:hidden"
+          tabIndex={-1}
         >
-          {leftOpen ? "Hide panes" : "Show panes"}
-        </button>
-        <button
-          type="button"
-          onClick={onToggleRight}
-          aria-expanded={rightOpen}
-          aria-label={rightOpen ? "Hide the reports rail" : "Show the reports rail"}
-          title="Reports rail (])"
-          className={`${CONTROL} ${SP.chip} hidden text-[12px] font-semibold lg:inline-flex`}
-        >
-          {rightOpen ? "Hide rail" : "Show rail"}
-        </button>
+          <LobbyPaneTabs
+            tabId={tabId}
+            onSelect={onSelectTab}
+            orientation="horizontal"
+            override={navOverride}
+            variant="chip"
+            className="pb-0.5"
+          />
+        </nav>
+      )}
 
-        <button
-          type="button"
-          onClick={onToggleSize}
-          aria-label={size === "full" ? "Restore Council OS to a windowed size" : "Expand Council OS to fill the screen"}
-          title={size === "full" ? "Restore" : "Expand"}
-          className={`${CONTROL} ${SP.chip} text-[12px] font-semibold`}
-        >
-          {size === "full" ? <IconRestore /> : <IconExpand />}
-          <span className="hidden sm:inline">{size === "full" ? "Restore" : "Expand"}</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={onMinimise}
-          aria-label="Minimise Council OS, keeping this session"
-          title="Minimise (Cmd/Ctrl + .)"
-          className={`${CONTROL} ${SP.chip} text-[12px] font-semibold`}
-        >
-          <IconMinimise />
-          <span className="hidden sm:inline">Minimise</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close Council OS"
-          title="Close (Esc)"
-          className={`${SP.chip} inline-flex items-center gap-1.5 rounded-xl border border-slate-900/10 bg-slate-900 text-[12px] font-semibold text-white transition hover:bg-slate-800 motion-reduce:transition-none ${FOCUS}`}
-        >
-          <IconClose />
-          <span className="hidden sm:inline">Close</span>
-        </button>
-      </span>
-
-      {/* Keyboard shortcuts are a pointer/keyboard affordance — on a touch
-          viewport they are noise, and at 375px they cost a third of the pane. */}
       <p className={`hidden w-full sm:block ${TYPE.fine}`}>
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">Esc</kbd> close ·{" "}
         <kbd className="rounded border border-slate-900/15 bg-white px-1 font-mono text-[10px]">[</kbd> panes ·{" "}
