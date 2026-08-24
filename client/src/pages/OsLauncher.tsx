@@ -34,7 +34,7 @@ const NAV: NavGroup[] = [
     label: "City",
     items: [
       { name: "Council City", href: "#city", note: "living printer of the public board" },
-      { name: "Living board", href: "#city", note: "13 measured axes" },
+      { name: "Living board", href: "#city", note: "counts from GET /api/gspc" },
       { name: "Paper District", href: "https://councilof.ai/paper-district", note: "research library" },
       { name: "Council Space", href: "/gspc-arena", note: "the governed arena", pane: "space" },
     ],
@@ -65,7 +65,7 @@ const NAV: NavGroup[] = [
     label: "Estate",
     items: [
       { name: "About", href: "/about" },
-      { name: "Pricing", href: "/pricing" },
+      { name: "How the free rail works", href: "/?lobby=measured&task=pricing-overview" },
     ],
   },
 ];
@@ -202,7 +202,7 @@ export default function OsLauncher() {
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900">Council City</h2>
                 <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-600">
-                  The living printer of the public board. 13 measured axes, jail as a measured floor, slot-15 unnamed.
+                  The living printer of the public board. Axis and model counts come from GET /api/gspc.
                   Empty cells stay empty. Measurement credential, never certification.
                 </p>
                 <div className="mt-6"><CityPanel /></div>

@@ -288,7 +288,7 @@ function Independence() {
         ]}
       />
       <Cta
-        href="/pricing"
+        href="/?lobby=measured&task=pricing-overview"
         label="How the free rail works"
         secondary={{ href: "/about", label: "Who we are" }}
       />
