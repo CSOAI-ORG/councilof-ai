@@ -95,7 +95,7 @@ export default function Academy() {
                 >
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-black text-white">{i + 1}</span>
                   <span className="font-semibold text-gray-800">{s.t}</span>
-                  <span className="ml-auto text-emerald-700 font-bold">-></span>
+                  <span className="ml-auto text-emerald-700 font-bold">-&gt;</span>
                 </a>
               </li>
             ))}
