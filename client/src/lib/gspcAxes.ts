@@ -157,11 +157,28 @@ export interface AxesState {
   loading: boolean;
 }
 
+async function readGspcJson(signal?: AbortSignal): Promise<any> {
+  const r = await fetch("/api/gspc", { signal, headers: { accept: "application/json" } });
+  const ct = (r.headers.get("content-type") || "").toLowerCase();
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  if (ct.includes("text/html")) throw new Error("HTML instead of JSON");
+  const j: any = await r.json();
+  if (!j || typeof j !== "object" || Array.isArray(j?.axes) === false) {
+    throw new Error("not a GSPC payload");
+  }
+  return j;
+}
+
 export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "loading">> {
   try {
-    const r = await fetch("/api/gspc", { signal });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const j: any = await r.json();
+    let j: any;
+    try {
+      j = await readGspcJson(signal);
+    } catch (first) {
+      if (signal?.aborted) throw first;
+      await new Promise((res) => setTimeout(res, 350));
+      j = await readGspcJson(signal);
+    }
     const live: any[] = Array.isArray(j?.axes) ? j.axes : [];
     if (!live.length) throw new Error("no axes in payload");
 

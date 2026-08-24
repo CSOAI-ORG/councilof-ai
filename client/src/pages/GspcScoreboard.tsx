@@ -198,8 +198,18 @@ export default function GspcScoreboard() {
   useEffect(() => {
     document.title = "The GSPC board — live | Council of AI";
     setMetaDescription("The live GSPC board. Every measured cell has n and a 95% CI where honest. UNMEASURED is reported, never hidden. Counts and stamps come from GET /api/gspc.");
-    fetch("/api/gspc")
-      .then((r) => r.json())
+    const ac = new AbortController();
+    const read = async () => {
+      const r = await fetch("/api/gspc", { signal: ac.signal, headers: { accept: "application/json" } });
+      const ct = (r.headers.get("content-type") || "").toLowerCase();
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      if (ct.includes("text/html")) throw new Error("HTML instead of JSON");
+      const d = await r.json();
+      if (!d || typeof d !== "object" || !Array.isArray(d.axes)) throw new Error("not a GSPC payload");
+      return d;
+    };
+    read()
+      .catch(() => new Promise((res) => setTimeout(res, 350)).then(read))
       .then((d) => {
         setData(d);
         const count = d?.totals?.public_count;
@@ -207,7 +217,11 @@ export default function GspcScoreboard() {
           document.title = `The GSPC board — ${count} | Council of AI`;
         }
       })
-      .catch((e) => setErr(String(e)));
+      .catch((e) => {
+        if (ac.signal.aborted) return;
+        setErr(String(e));
+      });
+    return () => ac.abort();
   }, []);
 
   return (

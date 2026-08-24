@@ -70,6 +70,10 @@ for (const rel of ["scripts/generate-redirects.mjs", "public/_redirects"]) {
 
   if (!/\/chat\s+\/\?lobby=home\s+308/.test(src)) fail(`${rel} must 308 /chat to /?lobby=home`);
   else pass(`${rel} /chat → /?lobby=home`);
+
+  if (!/\/enterprise\s+\/\?lobby=measured&task=enterprise-start\s+308/.test(src)) {
+    fail(`${rel} must 308 /enterprise to /?lobby=measured&task=enterprise-start`);
+  } else pass(`${rel} /enterprise → lobby get-measured`);
 }
 
 console.log("");
