@@ -7,6 +7,8 @@ import { REGIONS } from "../lib/locale";
 import { Link } from "wouter";
 import CouncilNav from "../components/CouncilNav";
 import AISystemNotice from "../components/AISystemNotice";
+import { openLobby } from "@/lib/lobbyLink";
+import { POSITIONING } from "@/lib/positioning";
 import { LAYER0_NODES, PERSONA_TOURS, STATUS_COLOR, COUNTS, type Persona } from "../data/layer0Nodes";
 
 // sovAgent region name → 3D globe REGIONS code + globe3d layer tag maps (module-level).
@@ -147,7 +149,7 @@ export default function WorldGlobe() {
   const [acted, setActed] = useState("");
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const globe3dRef = useRef<HTMLIFrameElement | null>(null);
-  // ── The Sovereign tour ─────────────────────────────────────────────────────
+  // ── The Sovereign tour ──────────────────────────────────────────────────────
   // Watch the Council assistant work the Layer-0 estate, one persona at a time. Every stop is a real
   // node with the status it has earned (LIVE by proven fetch / UNKNOWN said honestly /
   // CANDIDATE not yet earned) — the tour is the node registry made visible, not a promo reel.
@@ -285,7 +287,7 @@ export default function WorldGlobe() {
           ))}
           <span className="hidden text-emerald-100/40 md:inline">{COUNTS.live} LIVE · {COUNTS.unknown} UNKNOWN · {COUNTS.candidate} candidate</span>
           <a href="/instrument" className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-200 hover:bg-emerald-500/30">Instrument</a>
-          <a href="/os" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
+          <button type="button" onClick={() => openLobby({ pane: "home" })} className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">{POSITIONING.os.name}</button>
         </div>
       </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
