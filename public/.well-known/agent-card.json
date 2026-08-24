@@ -1,1 +1,72 @@
-PLACEHOLDER
+{
+  "name": "Council of AI — Measurement Agent",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) — 13 measured of 14 — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
+  "url": "https://councilof.ai",
+  "version": "0.2.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "capabilities": {
+    "streaming": false,
+    "stateTransitionHistory": false
+  },
+  "skills": [
+    {
+      "id": "east-west-crosswalk",
+      "name": "East-West crosswalk & cross-border card",
+      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
+      "endpoint": "https://councilof.ai/east-west",
+      "tags": [
+        "cross-border",
+        "crosswalk",
+        "measurement",
+        "verification"
+      ]
+    },
+    {
+      "id": "gspc-board",
+      "name": "Signed GSPC Board",
+      "description": "Fetch the live Ed25519-signed GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, and McNemar separation. Live JSON, recomputable from published rows.",
+      "endpoint": "https://councilof.ai/api/gspc",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ]
+    },
+    {
+      "id": "measured-badge",
+      "name": "Measured Badge",
+      "description": "Shields-style README badge stating a subject's measured-axis count; unmeasured subjects render honestly as 'unmeasured', never a fabricated score.",
+      "endpoint": "https://councilof.ai/api/badge",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ]
+    },
+    {
+      "id": "benchmark-quality-register",
+      "name": "Benchmark-quality register",
+      "description": "Fetch the signed register of what THIRD-PARTY AI benchmarks disclose about their own process integrity: contamination control, reproducibility, statistical rigour, scoring transparency, governance and conflicts of interest, item quality, licensing, saturation, failure disclosure. Deterministic predicates only — no language model judges anything. Every predicate answer carries the URL it was read from and the date it was fetched; a predicate that could not be checked is UNKNOWN with its reason. Records are unsolicited, the subjects did not participate, and nothing on the register is a certification, accreditation or endorsement. Council of AI's own instruments are structurally excluded by an impartiality firewall enforced in code. Filter one subject with ?benchmark=<id>.",
+      "endpoint": "https://councilof.ai/api/benchmark-quality",
+      "tags": [
+        "meta-evaluation",
+        "benchmark-quality",
+        "reproducibility",
+        "governance"
+      ]
+    }
+  ],
+  "documentation": "https://councilof.ai/.well-known/agent.json",
+  "doi": "10.5281/zenodo.21991104",
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "legal-determination",
+    "enforcement"
+  ],
+  "protocolVersion": "0.3.0"
+}
