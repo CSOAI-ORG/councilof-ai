@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.signed-eat-compliance-board/0.1",
+  "ts": "2026-08-24T09:08:16.624921+00:00",
+  "backend": "ollama-local (A100, OOWM fleet)",
+  "n_measured": 6,
+  "models": [
+    {
+      "model": "gemma3:12b",
+      "baseline": 33.0,
+      "context": 71.9,
+      "lift": 38.9
+    },
+    {
+      "model": "nemotron-3-nano:30b",
+      "baseline": 35.2,
+      "context": 67.0,
+      "lift": 31.8
+    },
+    {
+      "model": "mistral:7b",
+      "baseline": 33.0,
+      "context": 66.5,
+      "lift": 33.5
+    },
+    {
+      "model": "phi4:14b",
+      "baseline": 36.7,
+      "context": 63.8,
+      "lift": 27.1
+    },
+    {
+      "model": "qwen3:8b",
+      "baseline": 29.0,
+      "context": 59.1,
+      "lift": 30.1
+    },
+    {
+      "model": "deepseek-r1:8b",
+      "baseline": 18.7,
+      "context": 47.5,
+      "lift": 28.8
+    }
+  ],
+  "doctrine": "measurement, not certification \u2014 context-RAG lift is measured, not claimed; unmeasured models are UNMEASURABLE, never invented",
+  "signature": {
+    "content_id": "147051611f68557afebf6bada0ce39b3e8eb8203ac9a571a8d1ec7170f4f8dd2",
+    "sig": "ed2ec85406da1711a155c6d1ce20ba790e8fec1a9c1da3e6826a169d76b96abe8c58bc067b84ccd881b015deb39e6d88f22d47424c35af1f89afcbe868175003",
+    "kid": "did:web:csoai.org#card-attestation-1"
+  }
+}
