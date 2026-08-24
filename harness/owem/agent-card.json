@@ -1,0 +1,21 @@
+{
+  "$schema": "https://a2a-protocol.org/schema/agent-card/1.0.json",
+  "name": "csoai-oowm-gateway",
+  "displayName": "CSOAI OOWM Gateway — one AI in chat to every axis specialist",
+  "description": "One OOWM/OWEM specialist per GSPC axis, each measuring against its regulatory baseline. This gateway is the single conversational + MCP/A2A surface: it fans any question across the axis specialist clusters, returns each specialist's sovereign signal, and the whole-estate index signal. Measurement, never certification.",
+  "url": "https://councilof.ai/.well-known/agent-cards/csoai-oowm-gateway.json",
+  "version": "0.1.0",
+  "provider": { "organization": "Council of AI (CSOAI Ltd)", "url": "https://councilof.ai" },
+  "capabilities": {
+    "streaming": false,
+    "tools": {
+      "oowm_query": { "description": "Ask one AI to all axis specialist clusters — classify the question, return per-axis sovereign signal + estate index.", "inputSchema": { "type": "object", "properties": { "question": { "type": "string" } }, "required": ["question"] } },
+      "oowm_clusters": { "description": "List every axis specialist cluster (oowm measurement + owem serving) with its sovereign score.", "inputSchema": { "type": "object", "properties": {} } },
+      "oowm_index": { "description": "Aggregate sovereign index signal across all measured axis specialists.", "inputSchema": { "type": "object", "properties": {} } },
+      "oowm_signal": { "description": "Living signal history + forecast of the index (forecast / grow the sovereign signal).", "inputSchema": { "type": "object", "properties": {} } }
+    }
+  },
+  "interfaces": ["A2A", "MCP"],
+  "skills": ["measure", "route", "mine", "sign", "chain"],
+  "honesty": "Measurement, not certification. Each specialist's signal is a real, measured estate surface; UNMEASURED stays honest. No certification, no ranking, no endorsement."
+}

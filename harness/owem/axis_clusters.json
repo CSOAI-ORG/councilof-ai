@@ -1,0 +1,283 @@
+{
+  "kind": "csoai-axis-cluster-register/0.1",
+  "issuer": "councilof.ai",
+  "counting_rule": "One OOWM+OWEM cluster per GSPC axis. Sov signal = measured sovereign accuracy per axis on the dedicated bench.",
+  "sov_index_signal": 0.2821,
+  "measured_axes": 13,
+  "clusters": {
+    "gov": {
+      "axis": "gov",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 237,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.2911,
+      "gap_sov_vs_baseline": -0.2911,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "prv": {
+      "axis": "prv",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 32,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.5312,
+      "gap_sov_vs_baseline": -0.5312,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "agi": {
+      "axis": "agi",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 36,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.6667,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.5278,
+      "gap_sov_vs_baseline": 0.1389,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "asi": {
+      "axis": "asi",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 33,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.3939,
+      "gap_sov_vs_baseline": -0.3939,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "mcp": {
+      "axis": "mcp",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 35,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.5,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.5143,
+      "gap_sov_vs_baseline": -0.0143,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "oss": {
+      "axis": "oss",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 32,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.25,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.5,
+      "gap_sov_vs_baseline": -0.25,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "mach": {
+      "axis": "mach",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 33,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.3636,
+      "gap_sov_vs_baseline": -0.3636,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "care": {
+      "axis": "care",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 199,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 1.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.5,
+      "gap_sov_vs_baseline": 0.5,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "xr": {
+      "axis": "xr",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 32,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.4062,
+      "gap_sov_vs_baseline": -0.4062,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "det": {
+      "axis": "det",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 33,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.7879,
+      "gap_sov_vs_baseline": -0.7879,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "art5": {
+      "axis": "art5",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 36,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.25,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.5278,
+      "gap_sov_vs_baseline": -0.2778,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "swarm": {
+      "axis": "swarm",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 40,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 0.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.04,
+      "gap_sov_vs_baseline": -0.04,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    },
+    "affect": {
+      "axis": "affect",
+      "status": "MEASURED",
+      "oowm": {
+        "role": "measure",
+        "type": "GSPC-dimension measurement",
+        "scored_items": 41,
+        "registry_models": 19
+      },
+      "owem": {
+        "role": "serve/route",
+        "type": "sovereign serving cluster",
+        "sov_model": "sov33-unified:latest",
+        "sov_score": 1.0,
+        "bench": "http://127.0.0.1:11435/api/chat"
+      },
+      "registry_baseline": 0.439,
+      "gap_sov_vs_baseline": 0.561,
+      "last_measured": "2026-08-24T11:10:07Z",
+      "trend": "flat"
+    }
+  },
+  "ts": "2026-08-24T11:10:07Z"
+}

@@ -18,7 +18,14 @@ const TEAM = {
     { id: "regulator-uk", class: "regulator", model: "mistral:7b", role: "UK regulator specialist", mcp: "estate:regulation", signal: "/register/register-index" },
     { id: "industry-finance", class: "industry", model: "phi4:14b", role: "financial-AI specialist", mcp: "estate:financial-ai", signal: "/register/financial-ai-index" },
     { id: "product-games", class: "product", model: "qwen3:4b", role: "game/arena measurement specialist", mcp: "estate:games", signal: "/games/gspc" },
+    { id: "product-oowm-gateway", class: "product", model: "council-oowm:latest", role: "one AI in chat to all axis specialists (OOWM gateway)", mcp: "oowm://csoai-gateway", signal: "/oowm/index" },
   ],
+  metrics: {
+    sov_index_signal: 0.2821,
+    measured_axes: 13,
+    total_axes: 13,
+    note: "Sovereign index signal = mean measured sovereign accuracy per axis on the dedicated bench (23-axis free sov-router). One OOWM+OWEM cluster per axis; each re-measures and improves on the loop. UNMEASURED never 0.",
+  },
   honesty: "Measurement, never certification. Every specialist's signal is a real estate surface; each is a trainable cluster, not a claim about a regulator or product.",
   refuses: "No certification, no ranking of regulators, no endorsement of any model or product. UNMEASURED stays honest.",
 };
