@@ -23,6 +23,8 @@ Do not quote scores from this file. Numbers live on the API.
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Board API: https://councilof.ai/api/gspc
 - Regulation deadlines (cited, dated, quarterly re-verified): https://councilof.ai/api/regulation
+- Machine-readability & clarity record (binary process facts about how regimes publish guidance; predicates only; signed; UNMEASURED honest): https://councilof.ai/api/clarity
+- Measurement methodology (how every instrument measures + honesty rules + claims it refuses): https://councilof.ai/api/methodology
 - Corrections ledger (our own errors, appended never edited): https://councilof.ai/api/corrections
 - Benchmark-quality register (deterministic predicates on THIRD-PARTY benchmarks; signed; our own instruments excluded in code): https://councilof.ai/api/benchmark-quality
 - Divergence layer (regulation × measured-AI × human-baseline, composed not fused): https://councilof.ai/api/cross
@@ -49,3 +51,5 @@ Measurement only. Nothing here is a conformity mark. This live stamp is UNSIGNED
 - [Benchmark-quality register](https://councilof.ai/benchmark-quality): what third-party benchmarks disclose about their own process integrity — contamination control, reproducibility, statistical rigour, scoring, governance/COI, item quality, licensing, corrections. Deterministic predicates, no model judgment; every answer carries the URL fetched and the fetch date; unanswerable predicates are UNKNOWN with a reason. Unsolicited, no subject participation, not a certification. Council of AI's own boards are structurally excluded (impartiality firewall enforced in code).
 - [Arena rounds feed](https://councilof.ai/api/arena/rounds.jsonl): live AI-vs-AI round evidence (NDJSON; honest 503 when no live state)
 - [Regulation-change detector](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/reg-watch.mjs): daily provision-change detection for the instruments the board measures against (state: reg-watch-state.json in the same repo)
+
+- Specialist team (signed, per-axis/regulator/industry/product OOWM/OWEM): https://councilof.ai/api/specialists
