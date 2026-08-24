@@ -35,81 +35,254 @@ interface GspcResponse {
   totals: { measured: number; unmeasured: number; total: number };
   limitations: string[];
 }
+interface AxesState {
+  axes: Axis[];
+  source: "snapshot";
+  measuredOn: string;
+  loading: true;
+}
 
-function useGspc() {
-  const [state, setState] = useState({
-    axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, loading: true, error: null, limitations: [], issuer: ""
-  });
+function useGspc(): { axes: (GspcAxis | Axis)[]; source: string; measuredOn: string; loading: boolean; error: string | null; limitations: string[]; issuer: string } {
+  const [state, setState] = useState<{
+    axes: (GspcAxis | Axis)[];
+    source: string;
+    measuredOn: string;
+    loading: boolean;
+    error: string | null;
+    limitations: string[];
+    issuer: string;
+  }>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, loading: true, error: null, limitations: [], issuer: "" });
+
   useEffect(() => {
     const ac = new AbortController();
     fetch("/api/gspc", { signal: ac.signal })
       .then((r) => r.json())
-      .then((d) => {
+      .then((d: GspcResponse) => {
         setState({
-          axes: d.axes, source: "wire", measuredOn: d.measured_on?.date ?? "",
-          loading: false, error: null, limitations: d.limitations ?? [], issuer: d.issuer ?? "",
+          axes: d.axes,
+          source: "wire",
+          measuredOn: d.measured_on?.date ?? "",
+          loading: false,
+          error: null,
+          limitations: d.limitations ?? [],
+          issuer: d.issuer ?? "",
         });
       })
-      .catch(() => setState((s) => ({ ...s, loading: false })));
+      .catch(() => {
+        setState((s) => ({ ...s, loading: false }));
+      });
     return () => ac.abort();
   }, []);
+
   return state;
 }
 
+function fmtPct(v: number) { return (v * 100).toFixed(1) + "%"; }
 function fmtCI(lo: number, hi: number) { return `[${lo.toFixed(3)}, ${hi.toFixed(3)}]`; }
 
 const AXIS_LABEL: Record<string, string> = {
-  governance: "EU AI Act", safety: "Safety", provenance: "Provenance", continuity: "Continuity",
-  conformance: "Conformance", openness: "Openness", "machinery-conformity": "Machinery", care: "Care",
-  "cross-reality": "XR", "detector-interop": "Detection", "art5-safeguard": "Art 5", swarm: "Swarm", affect: "Affect",
+  governance: "EU AI Act",
+  safety: "Safety",
+  provenance: "Provenance",
+  continuity: "Continuity",
+  conformance: "Conformance",
+  openness: "Openness",
+  "machinery-conformity": "Machinery",
+  care: "Care",
+  "cross-reality": "XR",
+  "detector-interop": "Detection",
+  "art5-safeguard": "Art 5",
+  swarm: "Swarm",
+  affect: "Affect",
 };
 
 type RegistryTab = "axes" | "rankings" | "gateway";
-const TABS = [
-  { id: "axes" as const, label: "GSPC axes" },
-  { id: "rankings" as const, label: "Rankings" },
-  { id: "gateway" as const, label: "Gateway catalog" },
+
+const TABS: { id: RegistryTab; label: string }[] = [
+  { id: "axes", label: "GSPC axes" },
+  { id: "rankings", label: "Rankings" },
+  { id: "gateway", label: "Gateway catalog" },
 ];
 
 export default function ModelRegistry() {
-  const { axes, source, measuredOn, loading, limitations, issuer } = useGspc();
+  const { axes, source, measuredOn, loading, error, limitations, issuer } = useGspc();
   const [tab, setTab] = useState<RegistryTab>("rankings");
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#04070d]">
-        <div className="text-center"><div className="text-sm text-slate-500">reading /api/gspc…</div></div>
+        <div className="text-center">
+          <div className="text-sm text-slate-500">reading /api/gspc…</div>
+          <div className="mt-2 text-[11px] text-slate-600">If this takes too long, the bundled snapshot serves as fallback.</div>
+        </div>
       </div>
     );
   }
+
   const wireAxes = axes.filter((a) => "leader" in a) as GspcAxis[];
   const measuredCount = wireAxes.filter((a) => a.status === "MEASURED").length;
+
   return (
-    <CouncilOsPageShell title="Models" subtitle="Per-axis leaders from GET /api/gspc — separated leads only" className="min-h-screen bg-[#04070d] text-slate-200">
+    <CouncilOsPageShell
+      title="Models"
+      subtitle="Per-axis leaders from GET /api/gspc — separated leads only"
+      className="min-h-screen bg-[#04070d] text-slate-200"
+    >
+      {/* Header */}
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <a href={lobbyHref({ pane: "models" })} onClick={(e) => { e.preventDefault(); openLobby({ pane: "models", task: "read-the-board" }); }} className="text-[11px] uppercase tracking-[0.2em] text-emerald-400">← Open in Council OS</a>
-          <h1 className="mt-2 text-3xl font-bold text-white">Model Registry</h1>
-          <div className="mt-4 flex gap-1 rounded-lg border border-white/10 bg-white/5 p-1">
+          <div className="flex flex-wrap items-center gap-3">
+            <a
+              href={lobbyHref({ pane: "models" })}
+              onClick={(e) => {
+                e.preventDefault();
+                openLobby({ pane: "models", task: "read-the-board" });
+              }}
+              className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300"
+            >
+              ← Open in Council OS
+            </a>
+          </div>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-white">Model Registry</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
+            OpenRouter-style model surface for Council measurement — live GSPC rankings, per-axis
+            leaders, and an optional LiteLLM gateway catalog when configured.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-1 rounded-lg border border-white/10 bg-white/5 p-1">
             {TABS.map((t) => (
-              <button key={t.id} type="button" onClick={() => setTab(t.id)} className={tab === t.id ? "rounded-md px-3 py-1.5 text-sm bg-emerald-600 text-white" : "rounded-md px-3 py-1.5 text-sm text-slate-400"}>{t.label}</button>
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTab(t.id)}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                  tab === t.id
+                    ? "bg-emerald-600 text-white shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                {t.label}
+              </button>
             ))}
           </div>
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
+            <span>
+              {source === "wire"
+                ? `live · /api/gspc · ${measuredOn} · ${measuredCount}/${wireAxes.length} measured`
+                : `bundled snapshot (${measuredOn}) · /api/gspc unreachable`}
+            </span>
+            {issuer && <span className="text-slate-600">issuer {issuer}</span>}
+            <a
+              className="rounded border border-white/10 px-2.5 py-1 text-emerald-400 hover:bg-white/5"
+              href="/gspc-scoreboard"
+            >
+              Full scoreboard (19 models) →
+            </a>
+          </div>
+          {limitations.length > 0 && (
+            <details className="mt-2 text-[11px] text-slate-600">
+              <summary className="cursor-pointer">Limitations ({limitations.length})</summary>
+              <ul className="mt-1 list-disc pl-4">
+                {limitations.map((l, i) => <li key={i}>{l}</li>)}
+              </ul>
+            </details>
+          )}
         </div>
       </header>
-      <section className="mx-auto max-w-7xl px-4 py-8">
-        {tab === "rankings" && <div className="rounded-xl border border-white/10 bg-[#0a0f18] p-4"><MeasurementHub initialTab="models" /></div>}
-        {tab === "gateway" && <div className="rounded-xl border border-white/10 bg-[#0a0f18] p-4"><GatewayCatalog /></div>}
-        {tab === "axes" && (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {wireAxes.map((a) => (
-              <div key={a.axis} className="rounded-xl border border-white/8 bg-white/[0.02] p-4">
-                <h3 className="text-sm font-semibold text-slate-100">{AXIS_LABEL[a.axis] ?? a.axis}</h3>
-                <div className="mt-2 text-[11px] text-slate-500">{a.bench} · n={a.n}</div>
-                {a.status === "MEASURED" && <div className="mt-2 text-2xl font-bold text-slate-100">{a.accuracy?.toFixed(3)}</div>}
-              </div>
-            ))}
+
+      {/* Tab panels */}
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {tab === "rankings" && (
+          <div className="rounded-xl border border-white/10 bg-[#0a0f18] p-4 text-slate-200">
+            <MeasurementHub initialTab="models" />
           </div>
         )}
+
+        {tab === "gateway" && (
+          <div className="rounded-xl border border-white/10 bg-[#0a0f18] p-4 text-slate-200">
+            <GatewayCatalog />
+          </div>
+        )}
+
+        {tab === "axes" && (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {wireAxes.map((a) => {
+            const isMeasured = a.status === "MEASURED";
+            const hasInterval = a.interval && a.interval.length === 2;
+            return (
+              <div
+                key={a.axis}
+                className="rounded-xl border border-white/8 bg-white/[0.02] p-4 transition hover:border-white/15 hover:bg-white/[0.04]"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: a.colour || "#34d399" }} />
+                  <h3 className="truncate text-sm font-semibold text-slate-100">
+                    {AXIS_LABEL[a.axis] ?? a.axis}
+                  </h3>
+                  <span
+                    className={`ml-auto shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-semibold ${
+                      isMeasured ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-300" : "border-slate-600 bg-slate-800/50 text-slate-500"
+                    }`}
+                  >
+                    {a.status}
+                  </span>
+                </div>
+                <div className="mt-2 text-[11px] text-slate-500">{a.bench} · n={a.n}</div>
+                {isMeasured ? (
+                  <div className="mt-3 space-y-1.5">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold tabular-nums text-slate-100">{a.accuracy?.toFixed(3) ?? "—"}</span>
+                      <span className="text-[11px] text-slate-500">accuracy</span>
+                    </div>
+                    {hasInterval && (
+                      <div className="text-[11px] tabular-nums text-slate-500">
+                        95% {fmtCI(a.interval![0], a.interval![1])}
+                      </div>
+                    )}
+                    {a.leader && (
+                      <div className="text-[11px] text-slate-400">
+                        best: <span className="font-medium text-emerald-300">{a.leader}</span>
+                      </div>
+                    )}
+                    {a.separation === "SEPARATED" && a.separation_p != null && (
+                      <div className="text-[10px] text-slate-600">
+                        leader separation p={a.separation_p?.toFixed(4) ?? "—"} {a.separation_p < 0.05 ? "(significant)" : ""}
+                      </div>
+                    )}
+                    {a.fleet_mean != null && (
+                      <div className="text-[10px] text-slate-600">
+                        fleet mean {a.fleet_mean?.toFixed(3) ?? "—"} · macro F1 {a.macro_f1?.toFixed(3) ?? "—"}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="mt-3 text-[12px] text-slate-600 italic">
+                    {a.note?.substring(0, 120) ?? "No score earned — measurement board not yet clean."}
+                  </div>
+                )}
+                {a.dataset && (
+                  <a
+                    className="mt-3 block text-[11px] text-teal-400 hover:underline"
+                    href={`https://huggingface.co/datasets/${a.dataset}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {a.dataset} ↗
+                  </a>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        )}
+
+        {/* Scoreboard link footnote */}
+        <div className="mt-8 border-t border-white/8 pt-4 text-center text-[11px] text-slate-600">
+          This page shows per-axis leaders. The full 13×19 scoreboard with all models is at{" "}
+          <a className="text-emerald-400 hover:underline" href="/gspc-scoreboard">
+            GSPC Scoreboard ↗
+          </a>
+          . Measurement, not certification. Every cell recomputable.
+        </div>
       </section>
     </CouncilOsPageShell>
   );
