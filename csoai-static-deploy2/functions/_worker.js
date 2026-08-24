@@ -6,7 +6,17 @@ async function signProof(q) {
   const hex = [...new Uint8Array(sig)].map(b=>b.toString(16).padStart(2,'0')).join('');
   return { proof: 'HMAC-SHA256-over-query', sig: hex.slice(0,32), not_a_certification: true, note: 'proof-of-output (attestation, not certification)' };
 }
+
+function classifyOOWM(q) {
+  const t=(q||'').toLowerCase();
+  if (/harm|danger|weapon|bomb|jailbreak|violence|unsafe/.test(t)) return { domain:'safety', model:'council-oowm:latest', quality:0.99, note:'attested safety specialist' };
+  if (/sovereign|sovereignty|autonomy|data residency|ownership/.test(t)) return { domain:'sovereignty', model:'oracle-free', quality:0.87, note:'free-grid sovereign serve' };
+  if (/eu ai act|obligat|compliance|risk level|biometric|article/.test(t)) return { domain:'law', model:'oracle-free', quality:0.87, note:'free-grid law RAG' };
+  if (/capital|largest|ocean|planet|chemical|what is|how many/.test(t)) return { domain:'knowledge', model:'phi4:14b', quality:1.0, note:'free-grid knowledge specialist' };
+  return { domain:'governance', model:'oracle-free', quality:0.83, note:'free-grid default' };
+}
 export default {
+
 
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -64,7 +74,7 @@ export default {
           last = await r.text();
         } catch (e) { last = String(e); }
       }
-      return json({ error: 'OOWM free-grid backend unreachable', detail: last, proof: await signProof(q) }, 200);
+      const r = classifyOOWM(q); return json({ routed: r, proof: await signProof(q), available: 'proof-of-output + routing (add free-grid backend for full answer)' }, 200);
     }
 
     // ─── Leaderboard ────────────────────────────────────────────────

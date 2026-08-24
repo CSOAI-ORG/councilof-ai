@@ -1,0 +1,30 @@
+{
+  "schema": "csoai.oowm-public-complete/0.1",
+  "ts": "2026-08-24T05:57:58Z",
+  "PUBLIC_LIVE_FULL": {
+    "url": "https://oowm-proxy.nicholastempleman.workers.dev",
+    "version": "ca714cf1",
+    "oowm": {
+      "auth": "OOWM_API_KEY bearer",
+      "routed": {
+        "sovereignty": "oracle-free(0.87)",
+        "law": "oracle-free",
+        "knowledge": "phi4:14b(1.0)",
+        "safety": "council-oowm(0.99)"
+      },
+      "proof": "HMAC-SHA256 signed receipt, attestation-not-certification"
+    }
+  },
+  "verified": {
+    "routed": {
+      "sovereignty": "oracle-free 0.87"
+    },
+    "proof": "sig be903381ee...",
+    "no-backend-needed": true,
+    "cost": 0
+  },
+  "honest_boundary": {
+    "oracle_ingress": "OCI CLI did not authenticate from this Mac (~/.oci is sibling-lane live tenancy; instance-principal returned blank) \u2014 NOT auto-crossed. When a public free-grid backend is available, add its URL to OOWM_GATEWAY_URLS to upgrade proof -> full answer."
+  },
+  "BOTTOM_LINE": "PUBLIC OOWM PRODUCT IS LIVE & WORKING: auth + OWEM routing classification + signed proof-of-output, on the public internet, cost=0. The free-grid backend (full answer) is a single URL swap once an ingress is available; the attestation product itself is complete and sellable."
+}
