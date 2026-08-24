@@ -3,6 +3,7 @@ import {
   boardCanon, claimGuardRefuse, isJailAxis, loadAxes, loadBoard, wilson,
 } from "./_chatCanon";
 import { ART5, ART5_CUES, why } from "./_chatArt5";
+import { lobbyGround } from "./_chatLobby";
 
 interface Env { SOV_GATE_URL?: string; SOV_GATE_TOKEN?: string }
 
@@ -19,6 +20,9 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   const t = q.toLowerCase().trim();
   const refused = claimGuardRefuse(q);
   if (refused) return refused;
+
+  const door = lobbyGround(q);
+  if (door) return door;
 
   for (const [k, rxs] of ART5_CUES) {
     if (rxs.every((rx) => rx.test(q))) {
@@ -169,7 +173,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   return reply(
     `I could not ground an answer from published measurement.\n\n` +
-    "Try a **named board axis**, **EU AI Act Article 5**, **GET /api/gspc**, **pricing**, or the **measurement method**.\n\n" +
+    "Try a **named board axis**, **EU AI Act Article 5**, **GET /api/gspc**, **pricing**, **get measured**, or the **measurement method**.\n\n" +
     `Named axes: ${named || "see GET /api/gspc"}.\n\n` +
     "I will not invent a number or a legal opinion.",
     "refused - no grounding available", "ungrounded",
