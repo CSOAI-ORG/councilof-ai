@@ -98,7 +98,7 @@ export default function CityPanel() {
           <h2 className="text-xl font-bold text-slate-900">The living board</h2>
           <p className="text-[13px] text-slate-500">
             {source === "loading" ? "Reading GET /api/gspc…" : caption}
-            {" · "}13 measured axes. MEASURED shows a number; empty stays empty.
+            {" · "}MEASURED shows a number; empty stays empty.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -120,7 +120,7 @@ export default function CityPanel() {
           <p className="text-[13px] text-slate-600 max-w-2xl">
             Can this model be talked out of its guardrails? Measured on a smaller fleet
             ({jail.n ? `n=${jail.n} gold cells` : "pending"}) with separation <strong>UNTESTED</strong> —
-            a measured floor, never counted as a 14th axis. The best detector still misses most escapes.
+            a measured floor, never counted as an extra axis. The best detector still misses most escapes.
           </p>
           {quotable(jail) && (
             <div className="mt-4 flex items-baseline gap-3">
@@ -136,7 +136,7 @@ export default function CityPanel() {
 
       {/* Slot-15 — unnamed, shown honestly empty */}
       <section className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-5">
-        <h3 className="text-sm font-bold text-slate-800">Slot 15 — unnamed</h3>
+        <h3 className="text-sm font-bold text-slate-800">Unnamed reserved slot</h3>
         <p className="mt-1 text-[12px] text-slate-500">
           Reserved. No name. No score. No fabricated instrument. Shown honestly empty.
         </p>
@@ -178,7 +178,7 @@ export default function CityPanel() {
             <strong>Empty stays empty.</strong> A slot without a score is honestly unmeasured — we do not invent numbers.
           </li>
           <li>
-            <strong>Jail is a floor.</strong> Measured, but separation UNTESTED. Never called a 14th axis.
+            <strong>Jail is a floor.</strong> Measured, but separation UNTESTED. Never called an extra axis.
           </li>
           <li>
             <strong>Ties are ties.</strong> If the lead is not statistically separated (McNemar p{"<"}0.05), it is a tie and we do not count it as a win.
