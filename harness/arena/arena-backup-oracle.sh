@@ -11,7 +11,10 @@
 # written on ANY exit so monitors always see the verdict.
 set -uo pipefail
 KEY="$HOME/.runpod/ssh/runpodctl-ssh-key"
-A100_PORT=14954; A100_IP=38.128.232.57
+A100_IP=38.128.232.57
+PORT_HELPER="$(dirname "$0")/runpod-port.sh"
+A100_PORT=$("$PORT_HELPER" l7g747oivyq6ab "$A100_IP")
+[ "${A100_PORT:-0}" -gt 0 ] || A100_PORT=14954
 SINK_PORT=33982; SINK_IP=213.173.105.83
 ORACLE=oracle-micro-2
 STAGE=/tmp/arena-backup
