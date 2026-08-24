@@ -1,8 +1,8 @@
 /**
  * osChrome — Council OS + public site share one page.
  *
- * When Council OS is open: marketing Header hides (LobbyHeader replaces it).
- * Footer and main site content stay visible — surfaces open in the page column.
+ * When Council OS is open: the product Header stays. LobbyHeader is dock chrome,
+ * not a second site header. Footer and main site content stay visible.
  */
 import { useEffect, useState } from "react";
 import { isEmbedded } from "./embed";
