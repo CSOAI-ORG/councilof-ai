@@ -35,6 +35,28 @@
       ]
     },
     {
+      "id": "east-west-board",
+      "name": "East-West cross-jurisdiction board",
+      "description": "One signed measurement mapped across EU / UK / Illinois / China. Mapping is not a compliance determination. UNSIGNED on this stamp; Value Ledger count 0.",
+      "endpoint": "https://councilof.ai/api/east-west",
+      "tags": [
+        "measurement",
+        "cross-jurisdiction",
+        "verification"
+      ]
+    },
+    {
+      "id": "mcp-measured-tools",
+      "name": "MCP measured tools",
+      "description": "JSON-RPC tools/list and tools/call over live board APIs (gspc, east-west, ecosystem, verify-tally, benchmark-quality, instruments). Deterministic proxy — no LLM judges.",
+      "endpoint": "https://councilof.ai/api/mcp",
+      "tags": [
+        "mcp",
+        "measurement",
+        "agents"
+      ]
+    },
+    {
       "id": "benchmark-quality-register",
       "name": "Benchmark-quality register",
       "description": "Fetch the signed register of what THIRD-PARTY AI benchmarks disclose about their own process integrity: contamination control, reproducibility, statistical rigour, scoring transparency, governance and conflicts of interest, item quality, licensing, saturation, failure disclosure. Deterministic predicates only — no language model judges anything. Every predicate answer carries the URL it was read from and the date it was fetched; a predicate that could not be checked is UNKNOWN with its reason. Records are unsolicited, the subjects did not participate, and nothing on the register is a certification, accreditation or endorsement. Council of AI's own instruments are structurally excluded by an impartiality firewall enforced in code. Filter one subject with ?benchmark=<id>.",

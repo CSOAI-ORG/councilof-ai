@@ -1,12 +1,26 @@
 {
-  "schema_version": "2026-07-28",
+  "schema_version": "2026-08-24",
   "name": "csoai",
-  "description": "CSOAI measurement tools over MCP. No public MCP server is advertised until a first-party endpoint is live.",
-  "servers": [],
+  "description": "CSOAI measured board tools over MCP JSON-RPC. Proxies live /api/gspc, /api/east-west, /api/ecosystem, /api/verify-tally, /api/benchmark-quality, /api/instruments.",
+  "servers": [
+    {
+      "name": "csoai-measured",
+      "url": "https://councilof.ai/api/mcp",
+      "transport": "streamable-http",
+      "description": "First-party measured APIs via JSON-RPC tools/list + tools/call. No LLM-as-judge. Measurement, not certification."
+    }
+  ],
   "measured": {
-    "total_tools": 0,
-    "server_count": 0,
-    "tools": [],
-    "note": "The personal-account worker previously listed here was removed from did:web:csoai.org on 2026-08-19. GET on that worker returns 404. A discovery document must not advertise a dead service. It returns in the same commit that redeploys a live first-party endpoint."
+    "total_tools": 6,
+    "server_count": 1,
+    "tools": [
+      "gspc_board",
+      "east_west_board",
+      "ecosystem_index",
+      "verify_tally",
+      "benchmark_quality",
+      "instruments_catalog"
+    ],
+    "note": "Verify with POST {jsonrpc:'2.0',id:1,method:'tools/list'} to /api/mcp. Tally is self-reported opt-in — not a MEASURED number."
   }
 }
