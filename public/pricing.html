@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSOAI Pricing — signed measurement, sold as products</title>
+<meta name="description" content="CSOAI (Council of AI) pricing: EU AI Act compliance pack and Article 50 kit. Signed, Ed25519-verifiable measurement. Measurement, not certification.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Product","name":"CSOAI Compliance Packs",
+"description":"Signed EU AI Act compliance measurement packs. Ed25519-verifiable. Measurement, not certification.",
+"brand":{"@type":"Organization","name":"CSOAI Ltd","url":"https://councilof.ai"},"offers":{"@type":"AggregateOffer","priceCurrency":"GBP","lowPrice":"99","highPrice":"199"}}
+</script></head>
+<body>
+<h1>CSOAI — signed measurement, priced</h1>
+<p class="tagline">Measurement, not certification. Every pack is Ed25519-signed and offline-verifiable.</p>
+<h2>Products</h2>
+<table>
+<tr><th>Pack</th><th>What you get</th><th>Price</th><th></th></tr>
+<tr><td>Article 50 Kit</td><td>Signed EU AI Act Art 50 transparency measurement + ledger receipt</td><td>£99</td><td><button onclick="buy('article50_kit')">Buy</button></td></tr>
+<tr><td>EU AI Act Compliance Pack</td><td>Signed full EU AI Act risk-tier + conformity-gap measurement pack</td><td>£199</td><td><button onclick="buy('pack_eu_ai_act')">Buy</button></td></tr>
+</table>
+<p class="honesty">If checkout is not yet enabled, the signed <a href="/api/assess">assessment endpoint</a> shows the honest state. Measurement, not certification.</p>
+<script>
+async function buy(id){
+  try{
+    const r=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:id})});
+    const d=await r.json();
+    if(d.url){ window.location=d.url; }
+    else if(d.configured===false){ alert('Checkout not yet enabled — add the Stripe key (owner).'); }
+    else{ alert('Checkout error: '+JSON.stringify(d).slice(0,120)); }
+  }catch(e){ alert('Network error'); }
+}
+</script>
+<footer>CSOAI Ltd (UK 16939677) · <a href="https://councilof.ai">councilof.ai</a> · <a href="/honesty">honesty</a></footer>
+</body></html>
