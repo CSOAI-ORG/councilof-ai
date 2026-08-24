@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, Redirect } from "wouter";
+import RequireAuth from "./components/RequireAuth";
 import { useEffect, lazy, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
@@ -668,6 +669,7 @@ function App() {
                   <Route path="/industries/:slug">{(p: any) => <IndustryTemplate slug={p.slug} />}</Route>
                   <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
                   <Route path="/models" component={ModelRegistry} />
+<<<<<<< Updated upstream
                   <Route path="/framework-catalog" component={FrameworkCatalog} />
                   <Route path="/command-center" component={ComplianceCommandCenter} />
                   <Route path="/policy-generator" component={PolicyGenerator} />
@@ -792,6 +794,136 @@ function App() {
                   <Route path="/evidence" component={EvidenceHub} />
                   <Route path="/oscal" component={OscalStudio} />
                   <Route path="/sovereign-town">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+=======
+            <Route path="/framework-catalog" component={FrameworkCatalog} />
+            <Route path="/command-center" component={ComplianceCommandCenter} />
+            <Route path="/policy-generator" component={PolicyGenerator} />
+            <Route path="/mcp-fleet" component={McpFleet} />
+            <Route path="/os" component={OsLauncher} />
+            <Route path="/workbench">{() => <RequireAuth><Workbench /></RequireAuth>}</Route>
+            <Route path="/sov3" component={Workbench} />
+            <Route path="/demo" component={DemoOS} />
+            <Route path="/os-demo" component={DemoOS} />
+          <Route path="/enter" component={OsEnter} />
+          <Route path="/tour" component={SovereignTour} />
+          <Route path="/academy" component={SovereignAcademy} />
+          <Route path="/register" component={SovereignRegistry} />
+          <Route path="/hives" component={SovereignHives} />
+          <Route path="/pulse" component={GovernancePulse} />
+          <Route path="/join" component={SovereignRegistry} />
+          <Route path="/distribution" component={Distribution} />
+          <Route path="/legacy" component={LegacyBridge} />
+          <Route path="/social" component={SocialOS} />
+          {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
+          <Route path="/jewels">{() => <Redirect to="/" />}</Route>
+          {/* 2026-08-01 unification: the towns live INSIDE Sov Space as a layer */}
+          <Route path="/towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+          <Route path="/minds" component={SovereignMinds} />
+          <Route path="/try" component={TryCouncil} />
+          <Route path="/lineage" component={Lineage} />
+          <Route path="/map" component={RelevanceMap} />
+          <Route path="/temples" component={Temples} />
+          <Route path="/playbooks" component={Playbooks} />
+          <Route path="/dragonfly" component={Dragonfly} />
+          <Route path="/meok-law" component={MeokLaw} />
+          <Route path="/law" component={MeokLaw} />
+          <Route path="/hive-model" component={HiveModel} />
+          <Route path="/services" component={Services} />
+          <Route path="/how" component={HowItWorks} />
+          <Route path="/how-it-works" component={HowItWorks} />
+          <Route path="/sectors" component={SectorsAtlas} />
+          <Route path="/regions" component={RegionsMap} />
+          {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
+          <Route path="/globe">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
+          <Route path="/registry" component={RegistryAll} />
+          <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
+          <Route path="/checklist" component={EUActChecklist} />
+          <Route path="/gpai" component={GpaiObligations} />
+          <Route path="/foundation-models" component={GpaiObligations} />
+          <Route path="/penalties" component={Penalties} />
+          <Route path="/uk-ai-regulation">{() => <JurisdictionAct jx="uk" />}</Route>
+          <Route path="/canada-aida">{() => <JurisdictionAct jx="canada" />}</Route>
+          <Route path="/china-ai-law">{() => <JurisdictionAct jx="china" />}</Route>
+          <Route path="/singapore-ai-governance">{() => <JurisdictionAct jx="singapore" />}</Route>
+          <Route path="/south-korea-ai-act">{() => <JurisdictionAct jx="korea" />}</Route>
+          <Route path="/us-ai-regulation">{() => <JurisdictionAct jx="usfederal" />}</Route>
+          <Route path="/sec-disclosure">{() => <SECDisclosure />}</Route>
+          <Route path="/sec-ai-disclosure">{() => <SECDisclosure />}</Route>
+          <Route path="/for/:persona">{(params: any) => <PersonaRouter persona={params.persona} />}</Route>
+          <Route path="/ai-act-faq" component={AiActFaq} />
+          <Route path="/eu-ai-act-faq" component={AiActFaq} />
+          <Route path="/conformity-assessment" component={ConformityAssessment} />
+          <Route path="/ai-governance" component={AiGovernanceHub} />
+          <Route path="/ai-governance-guide" component={AiGovernanceHub} />
+          <Route path="/high-risk-ai-systems" component={HighRiskSystems} />
+          <Route path="/classifier" component={EuActClassifier} />
+          <Route path="/report" component={IncidentReport} />
+          <Route path="/high-risk-ai" component={HighRiskSystems} />
+          <Route path="/ai-act-summary" component={ActSummary} />
+          <Route path="/eu-ai-act-explained" component={ActSummary} />
+          <Route path="/colorado-ai-act">{() => <UsStateAct state="colorado" />}</Route>
+          <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
+          <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
+          <Route path="/connect" component={SocialConnect} />
+          <Route path="/sovereign" component={SovereignHub} />
+          <Route path="/me" component={SovereignHub} />
+          <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
+          <Route path="/nist-eu" component={NistVsEuAct} />
+          <Route path="/iso-42001-vs-eu-ai-act" component={Iso42001VsEuAct} />
+          <Route path="/healthcare-ai-act">{() => <SectorAct sector="healthcare" />}</Route>
+          <Route path="/finance-ai-act">{() => <SectorAct sector="finance" />}</Route>
+          <Route path="/hr-ai-act">{() => <SectorAct sector="hr" />}</Route>
+          <Route path="/energy-ai-act">{() => <SectorAct sector="energy" />}</Route>
+          <Route path="/pharma-ai-act">{() => <SectorAct sector="pharma" />}</Route>
+          <Route path="/defence-ai-act">{() => <SectorAct sector="defence" />}</Route>
+          <Route path="/vanta-alternative">{() => <AltPage comp="vanta" />}</Route>
+          <Route path="/onetrust-alternative">{() => <AltPage comp="onetrust" />}</Route>
+          <Route path="/credo-ai-alternative">{() => <AltPage comp="credo" />}</Route>
+          <Route path="/eu-ai-act-vs-gdpr" component={EuActVsGdpr} />
+          <Route path="/ai-act-vs-gdpr" component={EuActVsGdpr} />
+          <Route path="/eu-ai-act-timeline" component={ActTimeline} />
+          <Route path="/ai-act-timeline" component={ActTimeline} />
+          <Route path="/iso-eu" component={Iso42001VsEuAct} />
+          <Route path="/fines" component={Penalties} />
+          <Route path="/all" component={RegistryAll} />
+          {/* REDIRECTED (audit §0.2 #14): "BFT setup" pages assert the retracted fault-tolerance claim. */}
+          <Route path="/bft">{() => <Redirect to="/council" />}</Route>
+          <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
+          <Route path="/world">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
+          <Route path="/map-regions" component={RegionsMap} />
+          <Route path="/compare" component={Compare} />
+          <Route path="/vs" component={Compare} />
+          <Route path="/vs/:slug">{(p: any) => <Compare focus={p.slug} />}</Route>
+          <Route path="/vs-competitors" component={Compare} />
+          <Route path="/rfc-0024" component={Fedramp} />
+          <Route path="/aug-2026" component={Readiness} />
+          <Route path="/governance-council" component={Agents} />
+          <Route path="/council-vs-agents" component={Agents} />
+          <Route path="/fedramp" component={Fedramp} />
+          <Route path="/oscal-readiness" component={Fedramp} />
+          <Route path="/readiness" component={Readiness} />
+          <Route path="/agents" component={Agents} />
+          <Route path="/press" component={Pressroom} />
+          <Route path="/pressroom" component={Pressroom} />
+          <Route path="/sector-atlas" component={SectorsAtlas} />
+          <Route path="/learn" component={Academy} />
+          <Route path="/tracks" component={Academy} />
+          <Route path="/four-wings" component={Dragonfly} />
+          <Route path="/industry-playbooks" component={Playbooks} />
+          <Route path="/framework-temples" component={Temples} />
+          <Route path="/relevance-map" component={RelevanceMap} />
+          <Route path="/rediscovered" component={Lineage} />
+          <Route path="/voice" component={SovereignMinds} />
+          <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+          {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
+          <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
+          <Route path="/cobol" component={LegacyBridge} />
+            <Route path="/risk-heatmap" component={RiskHeatmap} />
+            <Route path="/webhooks" component={Webhooks} />
+            <Route path="/evidence" component={EvidenceHub} />
+            <Route path="/oscal" component={OscalStudio} />
+            <Route path="/sovereign-town">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+>>>>>>> Stashed changes
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
@@ -801,10 +933,10 @@ function App() {
                   <Route path="/government" component={GovernmentDashboard} />
                   <Route path="/government-dashboard" component={GovernmentDashboard} />
                   <Route path="/landing" component={Landing} />
-                  <Route path="/dashboard" component={Dashboard} />
+                  <Route path="/dashboard">{() => <RequireAuth><Dashboard /></RequireAuth>}</Route>
                   <Route path="/ai-systems" component={AISystems} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
-                  <Route path="/assess" component={AssessTool} />
+                  <Route path="/assess">{() => <RequireAuth><AssessTool /></RequireAuth>}</Route>
                   <Route path="/compliance" component={Compliance} />
                   <Route path="/agent-council" component={AgentCouncil} />
                   <Route path="/watchdog" component={Watchdog} />
@@ -815,15 +947,15 @@ function App() {
                   <Route path="/humanoids-poc" component={PocShowcase} />
                   <Route path="/one-os" component={PocShowcase} />
                   <Route path="/reports" component={Reports} />
-                  <Route path="/settings" component={Settings} />
-                  <Route path="/settings/billing" component={Billing} />
-                  <Route path="/settings/notifications" component={NotificationSettings} />
+                  <Route path="/settings">{() => <RequireAuth><Settings /></RequireAuth>}</Route>
+                  <Route path="/settings/billing">{() => <RequireAuth><Billing /></RequireAuth>}</Route>
+                  <Route path="/settings/notifications">{() => <RequireAuth><NotificationSettings /></RequireAuth>}</Route>
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
                   <Route path="/training-hub" component={TrainingHub} />
                   <Route path="/drift-product" component={DriftProduct} />
                   <Route path="/training" component={TrainingV2} />
                   <Route path="/courses" component={Courses} />
-                  <Route path="/my-courses" component={MyCourses} />
+                  <Route path="/my-courses">{() => <RequireAuth><MyCourses /></RequireAuth>}</Route>
                   <Route path="/dashboard/progress" component={StudentProgress} />
                   <Route path="/courses/:id/learn" component={CoursePlayer} />
                   <Route path="/free-course/:courseId" component={FreeCoursePlayer} />
@@ -837,13 +969,13 @@ function App() {
                   <Route path="/certification/results" component={CertificationResults} />
                   <Route path="/certificates" component={MyCertificates} />
                   <Route path="/certification/review" component={ExamReview} />
-                  <Route path="/workbench" component={Workbench} />
+                  <Route path="/workbench">{() => <RequireAuth><Workbench /></RequireAuth>}</Route>
                   <Route path="/jobs" component={Jobs} />
-                  <Route path="/my-applications" component={MyApplications} />
+                  <Route path="/my-applications">{() => <RequireAuth><MyApplications /></RequireAuth>}</Route>
                   <Route path="/public" component={PublicHome} />
-                  <Route path="/admin" component={Admin} />
+                  <Route path="/admin">{() => <RequireAuth><Admin /></RequireAuth>}</Route>
                   <Route path="/api-docs" component={ApiDocs} />
-                  <Route path="/api-keys" component={ApiKeys} />
+                  <Route path="/api-keys">{() => <RequireAuth><ApiKeys /></RequireAuth>}</Route>
                   <Route path="/pdca" component={PDCACycles} />
                   <Route path="/transparency" component={PublicDashboard} />
                   <Route path="/public-dashboard">{() => <Redirect to="/transparency" />}</Route>
