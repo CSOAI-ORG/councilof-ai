@@ -69,6 +69,14 @@ const EXISTING = [
   "/for                    /for/enterprise/             308",
 ];
 
+const STOREFRONT = [
+  "/catalog.json  /catalog.json     200",
+  "/claimguard    /claimguard.html  200",
+  "/claimguard/   /claimguard       308",
+  "/ras           /ras.html         200",
+  "/ras/          /ras              308",
+];
+
 const PERSONA_SLASH = [
   "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
@@ -94,6 +102,9 @@ const lines = [
   ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
   ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
   "",
+  "# --- storefront static pages: served directly, trailing slash 308→slashless ---",
+  ...STOREFRONT,
+  "",
   "# --- static asset trees: served directly, never routed to the app ---",
   ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map((d) => `${d}/*  ${d}/:splat  200`),
   "",
@@ -105,4 +116,4 @@ const lines = [
 
 writeFileSync(OUT, lines.join("\n"));
 console.log(`[redirects] ${routes.length} app routes detected (not emitted; catch-all covers them)`);
-console.log(`[redirects] ${STATIC_DIRS.length} static trees + ${EXISTING.length} hand-written redirects + catch-all`);
+console.log(`[redirects] ${STATIC_DIRS.length} static trees + ${EXISTING.length} hand-written + ${STOREFRONT.length} storefront redirects + catch-all`);
