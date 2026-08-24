@@ -8,7 +8,7 @@ const PERSONAS: { who: string; hook: string; href: string }[] = [
   { who: "Insurers", hook: "price AI risk on signed evidence", href: "/industries/insurance" },
   { who: "Regulators", hook: "check behaviour against the law", href: "/regulators" },
   { who: "Enterprises", hook: "prove your AI before you ship", href: "/start" },
-  { who: "Developers", hook: "measure per call on the agent rail", href: "/payg" },
+  { who: "Developers", hook: "verify a signed card — free forever", href: "/gspc-verify" },
 ];
 // Routes where the banner would clutter the immersive experience.
 const HIDE = ["/os", "/workbench", "/world", "/globe", "/demo", "/try", "/scan", "/watchdog-map", "/council-space", "/gspc-arena", "/graph", "/council-twin", "/me", "/enter", "/globe3d"];
