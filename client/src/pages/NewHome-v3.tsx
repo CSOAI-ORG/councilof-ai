@@ -65,7 +65,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
 
 // ── living GSPC grid (honest empties stay empty) ─────────────────────────
 
-// ── problem we fix ───────────────────────────────────
+// ── problem we fix ─────────────────────────────────────
 function ProblemStrip() {
   return (
     <Section
@@ -260,7 +260,7 @@ function BlogStrip() {
     <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." bg="bg-white">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {RECENT.slice(0, 6).map(p => (
-          <a key={p.href} href={p.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-lg hover:border-emerald-200 transition-all">
+          <a key={p.href} href={p.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-lg hover:border-emerald-200 transition-all">
             <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600">{p.date}</span>
             <h4 className="mt-2 text-base font-extrabold text-gray-900 group-hover:text-emerald-600 leading-snug">{p.title}</h4>
             <p className="mt-2 text-sm text-gray-500 line-clamp-2 flex-1">{p.desc}</p>
