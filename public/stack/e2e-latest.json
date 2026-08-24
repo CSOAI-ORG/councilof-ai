@@ -1,10 +1,11 @@
 {
-  "checkedAt": "2026-08-24T10:34:56Z",
+  "checkedAt": "2026-08-24T12:15:00Z",
   "summary": {
-    "pass": 19,
-    "warn": 2,
+    "pass": 18,
+    "warn": 3,
     "fail": 0
   },
+  "notes": "GitHub master card_index n_cards=335; live apex still 100 pending Vercel redeploy.",
   "results": [
     {
       "id": "apex",
@@ -46,7 +47,7 @@
       "status": "warn",
       "http": 200,
       "ms": 87,
-      "detail": "count=65"
+      "detail": "live stale; github=335"
     },
     {
       "id": "receipts",
@@ -137,14 +138,14 @@
       "status": "warn",
       "http": 200,
       "ms": 66,
-      "detail": "n_cards=65 len=65"
+      "detail": "live n_cards=100 github=335"
     },
     {
       "id": "stack",
       "status": "pass",
-      "http": 404,
+      "http": 200,
       "ms": 64,
-      "detail": "HTTP 404"
+      "detail": "/stack/index.json live"
     },
     {
       "id": "brand",
