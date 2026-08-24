@@ -317,6 +317,7 @@ const Distribution = lazy(() => import("./pages/Distribution"));
 const McpFleet = lazy(() => import("./pages/McpFleet"));
 const Gone = lazy(() => import("./pages/Gone"));
 const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));import { frameworksdata } from "./data/frameworks-content";
+const ChallengeDoor = lazy(() => import("./pages/ChallengeDoor"));
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
 import { blogdata } from "./data/blog-content";
@@ -346,6 +347,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
   "/gspc-verify": "GSPC Verify | CSOAI",
+  "/challenge": "Challenge a Measurement | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
   "/layer0": "Layer 0 | CSOAI",
@@ -619,6 +621,7 @@ function App() {
                   <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
+                  <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/chat" component={AgUiBridge} />
