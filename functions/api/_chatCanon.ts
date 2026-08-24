@@ -52,10 +52,16 @@ export function boardCanon(board: GspcBoard) {
   return { quotable, measured, publicCount, measuredAxes, jail, jailNote };
 }
 
-/** ClaimGuard refuse for /16 measured|twelve axes|12 axes|twelve GSPC axes|14 are MEASURED/i */
+/** ClaimGuard refuse for false board-count claims (16 measured, 12 axes, 14-all-MEASURED variants) */
 export function claimGuardRefuse(q: string): string | null {
-  // Allow optional words between count and "axes" so "twelve GSPC axes" / "12 GSPC axes" refuse too.
-  if (!/16\s+measured|(?:twelve|\b12)(?:\s+\w+){0,2}\s+axes|14\s+are\s+MEASURED/i.test(q)) return null;
+  // Allow optional words between count and "axes" / "are MEASURED" so
+  // "twelve GSPC axes", "all 14 axes are MEASURED", etc. refuse too.
+  if (
+    !/16\s+measured|(?:twelve|\b12)(?:\s+\w+){0,2}\s+axes|(?:all\s+)?14(?:\s+\w+){0,3}\s+are\s+MEASURED/i.test(
+      q,
+    )
+  )
+    return null;
   return (
     `**Refused (ClaimGuard).** That claim does not match the published board.\n\n` +
     `Canon from GET /api/gspc: **14** quotable board axes, **13 measured of 14**, ` +

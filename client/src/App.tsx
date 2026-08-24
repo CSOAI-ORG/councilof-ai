@@ -822,7 +822,7 @@ function App() {
                   <Route path="/government" component={GovernmentDashboard} />
                   <Route path="/government-dashboard" component={GovernmentDashboard} />
                   <Route path="/landing" component={Landing} />
-                  <Route path="/dashboard">{() => <RequireAuth><Dashboard /></RequireAuth>}</Route>
+                  <Route path="/dashboard" component={Dashboard} />
                   <Route path="/ai-systems" component={AISystems} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
                   <Route path="/assess">{() => <RequireAuth><AssessTool /></RequireAuth>}</Route>
