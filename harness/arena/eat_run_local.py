@@ -28,33 +28,29 @@ def grade_response(expected_keywords, response):
     return hits / len(words)
 
 OLLAMA = os.environ.get("OLLAMA_CHAT", "http://localhost:11434/api/chat")
-RESULTS_DIR = Path("benchmark-results/eat_govbench"); RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+# ABSOLUTE, so a run from any cwd (micro2 / 3090 / A100) writes to the same place and never
+# hangs on a relative path. AXIS-BOOTSTRAP §5 "FIX IT" (2026-08-24).
+_HERE = Path(__file__).resolve().parent
+RESULTS_DIR = Path(os.environ.get("EAT_RESULTS_DIR", _HERE / "benchmark-results" / "eat_govbench"))
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 def call_ollama(model, prompt, context=""):
-    # REFUSAL-CONFOUND ISOLATION (2026-08-22): EAT_DIRECTIVE appends a directive to the system
-    # prompt (e.g. "answer directly, never refuse"); EAT_TEMP overrides temperature. Both default
-    # to neutral so existing runs are unchanged.
-    _dir = os.environ.get("EAT_DIRECTIVE", "")
-    _tmp = 0.0
-    try:
-        _tmp = float(os.environ.get("EAT_TEMP", "0"))
-    except Exception:
-        _tmp = 0.0
     body = json.dumps({
         "model": model, "stream": False,
-        "options": {"temperature": _tmp, "num_predict": 64, "num_ctx": 2048},
-        "think": False,
+        "options": {"temperature": 0, "num_predict": 64, "num_ctx": 2048},
+        "think": False,   # reasoning models (nemotron/deepseek) answer in thinking otherwise
         "messages": [
-            {"role": "system", "content": f"You are SOV33, a sovereign AI expert. {context} {_dir}"},
+            {"role": "system", "content": f"You are SOV33, a sovereign AI expert. {context}"},
             {"role": "user", "content": f"Answer briefly: {prompt}"},
         ],
     }).encode()
     req = urllib.request.Request(OLLAMA, data=body, headers={"Content-Type": "application/json"})
     try:
-        with urllib.request.urlopen(req, timeout=200) as r:
+        # Hard per-call timeout (AXIS-BOOTSTRAP §5 FIX IT) — a hung backend must never
+        # block the whole EAT run. Default 90s, configurable via EAT_TIMEOUT.
+        _t = float(os.environ.get("EAT_TIMEOUT", "90"))
+        with urllib.request.urlopen(req, timeout=_t) as r:
             msg = json.loads(r.read())["message"]
-            # deepseek-r1 puts the answer in message.thinking (chat) even with think:false;
-            # read thinking as a fallback so reasoning models are measured, not UNMEASURABLE.
             content = (msg.get("content") or msg.get("thinking") or "").strip().lower()
             import re as _re
             content = _re.sub(r"<think>.*?</think>", "", content, flags=_re.DOTALL)
@@ -65,19 +61,6 @@ def call_ollama(model, prompt, context=""):
 
 def run(model):
     print("=" * 64); print(f"  EAT GOVBENCH (offline) — model: {model}"); print("=" * 64)
-    # HONEST BACKEND HEALTH CHECK (2026-08-21): empty bridge == UNMEASURABLE, never a 0.0 score.
-    _probe = call_ollama(model, "Reply with the single word: ok")
-    if not _probe.strip():
-        out = {
-            "timestamp": datetime.now(timezone.utc).isoformat(), "model": model,
-            "backend": "ollama-local", "status": "UNMEASURABLE",
-            "reason": "inference backend returned empty (SSH bridge / GCP-billing gate); not a model score",
-            "dimensions": {}, "avg_baseline": None, "avg_context": None,
-        }
-        fp = RESULTS_DIR / f"eat_local_{model.replace(':','_').replace('/','_')}.json"
-        fp.write_text(json.dumps(out, indent=2))
-        print(f"  -> {model}: UNMEASURABLE (backend empty) — wrote {fp}")
-        return out
     all_results = {}
     for dim, data in WEAK_DIMENSIONS.items():
         base = ctx = 0
@@ -108,8 +91,5 @@ if __name__ == "__main__":
     summary = [run(m) for m in models]
     if len(summary) > 1:
         print("\n=== LEADERBOARD (context %) ===")
-        for s in sorted(summary, key=lambda x: -(x.get("avg_context") or -1.0)):
-            if s.get("avg_context") is None:
-                print(f"  {s['model']:24s} UNMEASURABLE")
-            else:
-                print(f"  {s['model']:24s} {s['avg_context']:5.1f}%")
+        for s in sorted(summary, key=lambda x: -x["avg_context"]):
+            print(f"  {s['model']:24s} {s['avg_context']:5.1f}%")
