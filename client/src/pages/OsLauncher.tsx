@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { ARENA_SUBJECTS, ARENA_MATCHES, ARENA_PROVISIONS } from "@/data/arena";
 import GameBar from "@/components/os/GameBar";
 import AxisPanel from "@/components/os/AxisPanel";
+import CityPanel from "@/components/os/CityPanel";
 import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 
 /**
@@ -27,6 +28,15 @@ const NAV: NavGroup[] = [
       { name: "Council Town", href: "#council-town", note: "the agent-town game", badge: "live" },
       { name: "The Arena", href: "/gspc-arena", note: "model vs model", pane: "space" },
       { name: "Live demo & tour", href: "/demo", note: "watch it run" },
+    ],
+  },
+  {
+    label: "City",
+    items: [
+      { name: "Council City", href: "#city", note: "living printer of the public board" },
+      { name: "Living board", href: "#city", note: "13 measured axes" },
+      { name: "Paper District", href: "https://councilof.ai/paper-district", note: "research library" },
+      { name: "Council Space", href: "/gspc-arena", note: "the governed arena", pane: "space" },
     ],
   },
   {
@@ -62,6 +72,7 @@ const NAV: NavGroup[] = [
 
 function NavLink({ item }: { item: NavGroup["items"][number] }) {
   const isAnchor = item.href.startsWith("#");
+  const isExternal = item.href.startsWith("http");
   const inner = (
     <span className="flex items-center gap-2">
       <span className="flex-1 truncate">{item.name}</span>
@@ -74,9 +85,9 @@ function NavLink({ item }: { item: NavGroup["items"][number] }) {
   );
   const cls =
     "group block rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700";
-  if (isAnchor) {
+  if (isAnchor || isExternal) {
     return (
-      <a href={item.href} className={cls}>
+      <a href={item.href} className={cls} {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}>
         {inner}
         {item.note && <span className="block text-[11px] font-normal text-slate-400 group-hover:text-emerald-600/70">{item.note}</span>}
       </a>
@@ -179,6 +190,22 @@ export default function OsLauncher() {
               <div className="mt-4 flex flex-wrap items-center gap-4">
                 <Link href="/gspc-arena" className="rounded-lg bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-600">Open the full Arena →</Link>
                 <Link href="/methodology" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">How it is graded — no LLM-as-judge</Link>
+              </div>
+            </div>
+          </section>
+          <section id="city" className="scroll-mt-8">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-emerald-50/40 to-white">
+              <div className="p-6 md:p-8">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-600">Council City</span>
+                  <span className="rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-emerald-700">Live from /api/gspc</span>
+                </div>
+                <h2 className="text-2xl font-bold text-slate-900">Council City</h2>
+                <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-600">
+                  The living printer of the public board. 13 measured axes, jail as a measured floor, slot-15 unnamed.
+                  Empty cells stay empty. Measurement credential, never certification.
+                </p>
+                <div className="mt-6"><CityPanel /></div>
               </div>
             </div>
           </section>
