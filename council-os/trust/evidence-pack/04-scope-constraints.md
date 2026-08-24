@@ -1,0 +1,2 @@
+# Scope & Constraints Statement
+The system measures model behaviour; it does NOT certify, does NOT rate for investment, does NOT determine compliance (determination stays with authorities), does NOT sell scores, does NOT accept money from ranked entities, does NOT monetize regulators. Human approval gates exist at every consequential decision. Jail axis stays UNTESTED ("13 measured of 14"). No token/coin settlement surfaces.

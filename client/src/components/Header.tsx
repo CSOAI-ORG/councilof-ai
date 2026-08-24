@@ -37,10 +37,11 @@ interface NavGroup { name: string; href: string; icon: typeof Globe2; descriptio
 const navigation: NavGroup[] = [
   {
     name: 'Measure',
-    href: '/gspc-scoreboard',
+    href: '/ag-ui',
     icon: BarChart2,
-    description: 'The instrument and its board',
+    description: 'The AG UI — one interface for every axis',
     submenu: [
+      { name: 'Open the AG UI', href: '/ag-ui', description: '15 tabs, one per axis — chat, tools and security checks in one window' },
       { name: 'The GSPC board', href: '/gspc-scoreboard', description: '13 measured of 14 axes, plus jail — every cell with its n' },
       { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
       { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head, deterministic grading, no model judging another' },

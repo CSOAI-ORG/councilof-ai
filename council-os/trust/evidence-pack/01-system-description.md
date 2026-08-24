@@ -1,0 +1,2 @@
+# Technical System Description
+CSOAI Ltd (Council of AI) is an independent AI-governance MEASUREMENT body. The system performs deterministic measurement of AI model behaviour across GSPC axes (governance/safety/provenance/continuity/conformance/openness) using public bench harnesses (GovBench/DefBench/ProvBench/PQCBench/MCPBench/OSSBench), and issues signed measurement artifacts. Outputs: measurement cards, verification, intelligence verdicts. No scores sold. Regulators receive signed streams free.

@@ -34,6 +34,7 @@ const ActTimeline = lazy(() => import("./pages/ActTimeline"));
 const UsStateAct = lazy(() => import("./pages/UsStateAct"));
 const HighRiskSystems = lazy(() => import("./pages/HighRiskSystems"));
 const ActSummary = lazy(() => import("./pages/ActSummary"));
+const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
 const AiGovernanceHub = lazy(() => import("./pages/AiGovernanceHub"));
 const AiActFaq = lazy(() => import("./pages/AiActFaq"));
 const ConformityAssessment = lazy(() => import("./pages/ConformityAssessment"));
@@ -84,6 +85,7 @@ const About = lazy(() => import("./pages/About"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
+const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
 const MotionLab = lazy(() => import("./pages/MotionLab")); // demo-only, not in nav
 const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
@@ -550,6 +552,7 @@ function App() {
                   <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
                   {/* Main routes */}
                   <Route path="/" component={NewHomeV3} />
+                  <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/home-v2" component={NewHomeV2} />
                   <Route path="/home-v3" component={NewHomeV3} />
                   <Route path="/motion-lab" component={MotionLab} />
@@ -818,6 +821,8 @@ function App() {
           <Route path="/ai-act-vs-gdpr" component={EuActVsGdpr} />
           <Route path="/eu-ai-act-timeline" component={ActTimeline} />
           <Route path="/ai-act-timeline" component={ActTimeline} />
+          <Route path="/first-fine-watch" component={FirstFineWatch} />
+          <Route path="/enforcement-watch" component={FirstFineWatch} />
           <Route path="/iso-eu" component={Iso42001VsEuAct} />
           <Route path="/fines" component={Penalties} />
           <Route path="/all" component={RegistryAll} />

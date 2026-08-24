@@ -214,8 +214,13 @@ function HeroActions() {
     <>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <a
+          href="/ag-ui"
+          className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-7 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
+        >
+          Open the AG UI <span aria-hidden className="text-emerald-100">→</span>
+        </a>        <a
           href="/gspc-verify"
-          className="inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
+          className="inline-flex items-center rounded-xl border-2 border-white/40 bg-white/5 px-6 py-3 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
         >
           Verify a card — free
         </a>

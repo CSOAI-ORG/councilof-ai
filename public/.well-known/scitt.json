@@ -1,0 +1,88 @@
+{
+  "schema": "csoai.scitt-profile/0.1",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "standards": {
+    "scitt_architecture": "RFC 9943 — An Architecture for Trustworthy and Transparent Digital Supply Chains",
+    "scitt_reference_api": "draft-ietf-scitt-scrapi (IESG review, near publication)",
+    "payload_binding": "JCS (RFC 8785)-style canonical JSON — the estate's canonical form: Python json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True)"
+  },
+  "trust_anchor": {
+    "did": "did:web:csoai.org",
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "signing_keys": [
+      {
+        "id": "did:web:csoai.org#card-attestation-1",
+        "purpose": "3KB h3k measurement cards, corrections ledger, MANIFEST chain",
+        "fingerprint": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+        "signature_algorithm": "Ed25519"
+      },
+      {
+        "id": "did:web:csoai.org#board-attestation-1",
+        "purpose": "public board snapshot (/api/gspc) as served by the site",
+        "signature_algorithm": "Ed25519"
+      },
+      {
+        "id": "did:web:csoai.org#estate-chain-1",
+        "purpose": "fleet measurement chains, boards (pod-held)",
+        "signature_algorithm": "Ed25519"
+      },
+      {
+        "id": "did:web:csoai.org#site-release-1",
+        "purpose": "site artifacts (keystone-held)",
+        "signature_algorithm": "Ed25519"
+      }
+    ]
+  },
+  "statements": [
+    {
+      "type": "csoai.gspc-board/0.1",
+      "url": "https://councilof.ai/api/gspc",
+      "signer": "did:web:csoai.org#board-attestation-1",
+      "cadence": "signed snapshot, re-issued on board change",
+      "canonical_form": "JSON body minus signature fields, recursive sort_keys, compact separators, ensure_ascii escapes",
+      "registration_policy": "append-only"
+    },
+    {
+      "type": "csoai.regulation-deadlines/0.1",
+      "url": "https://councilof.ai/api/regulation",
+      "signer": "did:web:csoai.org#board-attestation-1",
+      "cadence": "quarterly reverification + provision-change events",
+      "canonical_form": "JSON body minus signature fields, recursive sort_keys, compact separators, ensure_ascii escapes",
+      "registration_policy": "append-only; corrections appended never edited"
+    },
+    {
+      "type": "csoai.corrections-ledger/0.1",
+      "url": "https://councilof.ai/api/corrections",
+      "signer": "did:web:csoai.org#card-attestation-1",
+      "cadence": "per append",
+      "canonical_form": "sha256(canonical LEDGER minus signature fields, sort_keys)",
+      "registration_policy": "append-only; serve-time staleness guard flags stale signatures visibly"
+    },
+    {
+      "type": "csoai.measurement-card/0.1",
+      "url": "https://councilof.ai/verify",
+      "signer": "did:web:csoai.org#card-attestation-1",
+      "cadence": "per measurement",
+      "canonical_form": "3KB capsule, ed25519-chained, prev-chain, MANIFEST indexed",
+      "registration_policy": "append-only"
+    }
+  ],
+  "transparency_service": {
+    "status": "planned",
+    "note": "Registration to a SCITT transparency service (SCRAPI) once draft-ietf-scitt-scrapi is near publication; DNS-anchored log candidates under evaluation. Registration provides a receipt proving the statement was logged — evidence of registration, never certification.",
+    "doctrine": "measurement-not-certification; signing keys never leave the estate; no fees from measured entities"
+  },
+  "verification": {
+    "stranger_walk": "fetch did.json → resolve signer key → recompute canonical JSON → verify Ed25519",
+    "live_verifier": "https://councilof.ai/verify",
+    "evidence": "corrections ledger content_id 20ef8ec4 (brick key), board + regulation edge-signed (board-attestation-1)"
+  },
+  "coordination": {
+    "mailing_lists": ["scitt@ietf.org", "agent2agent@ietf.org", "agentproto@ietf.org"],
+    "related_drafts": [
+      "draft-ietf-scitt-scrapi",
+      "draft-sirkkavaara-vaara-receipt (near-twin format — coordinate, differentiate on credible-neutrality firewall)",
+      "draft-kuehlewind-audit-architecture (pre-charter AUDIT WG proposal)"
+    ]
+  }
+}

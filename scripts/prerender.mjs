@@ -83,7 +83,15 @@ function discover() {
     if (!/\.(js|css|png|svg|jpg|json|ico|woff2?|txt|xml)$/i.test(p) && !p.startsWith("/assets/"))
       found.add(p);
   }
-  return [...found].filter(p => !p.includes(":") && !p.includes("*")).sort();
+  const routes = [...found].filter(p => !p.includes(":") && !p.includes("*"));
+  // Library IA: /library/:sector is a dynamic route (filtered above), but the 8 concrete
+  // sectors are prime AEO citation surface and the sitemap lists them — prerender each
+  // so the static host serves them (2026-08-23 JEEVES: they were 404 on the static host
+  // because only the :param pattern was discovered, never its values).
+  for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance", "product", "company"]) {
+    routes.push(`/library/${s}`);
+  }
+  return [...new Set(routes)].sort();
 }
 
 const routes = discover();
