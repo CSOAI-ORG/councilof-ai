@@ -24,12 +24,17 @@ type Report = {
 };
 
 const TIER_STYLE: Record<string, string> = {
-  prohibited: "text-red-600", high_risk: "text-amber-600",
-  limited_risk: "text-blue-600", minimal_risk: "text-emerald-600",
+  prohibited: "text-red-600", PROHIBITED: "text-red-600",
+  high_risk: "text-amber-600", HIGH_RISK: "text-amber-600",
+  limited_risk: "text-blue-600", LIMITED_OR_MINIMAL: "text-blue-600",
+  UNMEASURED: "text-slate-600",
 };
 
 export default function AssessTool() {
-  const [form, setForm] = useState({ system: "", purpose: "", domain: "", human_oversight: true, logging: true });
+  const [form, setForm] = useState({
+    system: "", purpose: "", domain: "", endpoint: "",
+    human_oversight: true, logging: true,
+  });
   const [report, setReport] = useState<Report | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +49,12 @@ export default function AssessTool() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...lead, report_id: report?.report_id, tier: report?.tier, verdict: report?.verdict, wants: "signed_report" }),
       });
+      const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(`Could not save (${res.status})`);
+      if (j && j.stored === false) {
+        setLeadError(j.fallback || "No datastore bound — email nicholas@csoai.org with your report_id.");
+        return;
+      }
       setLeadSent(true);
     } catch (e: any) { setLeadError(e.message || "Could not save your details."); }
   }
@@ -70,9 +80,10 @@ export default function AssessTool() {
           <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
         <p className="text-muted-foreground mb-8">
-          Describe the system. We run it against published rules and return an Ed25519-signed
-          record you can recompute. This is a measurement, not a conformity assessment and not
-          a certification. No signup.
+          Describe the system — text, and optionally an endpoint URL we record but do not probe.
+          We classify against frozen EU AI Act keywords and return a signed report you can
+          recompute. This is a measurement, not a GSPC bench run, not a conformity assessment,
+          and not a certification. No signup.
         </p>
 
         <Card className="mb-6">
@@ -84,13 +95,15 @@ export default function AssessTool() {
               value={form.purpose} onChange={(e) => setForm({ ...form, purpose: e.target.value })} />
             <input className="w-full rounded-lg border px-3 py-2" placeholder="Domain (e.g. employment, credit, healthcare)"
               value={form.domain} onChange={(e) => setForm({ ...form, domain: e.target.value })} />
+            <input className="w-full rounded-lg border px-3 py-2" placeholder="Endpoint or URL (optional — recorded as text, never fetched)"
+              value={form.endpoint} onChange={(e) => setForm({ ...form, endpoint: e.target.value })} />
             <div className="flex gap-6 text-sm">
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.human_oversight}
                 onChange={(e) => setForm({ ...form, human_oversight: e.target.checked })} /> Human oversight in place</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.logging}
                 onChange={(e) => setForm({ ...form, logging: e.target.checked })} /> Logging / record-keeping</label>
             </div>
-            <Button onClick={run} disabled={loading || (!form.system && !form.purpose)} className="w-full">
+            <Button onClick={run} disabled={loading || (!form.system && !form.purpose && !form.endpoint)} className="w-full">
               {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Measuring…</> : "Run signed measurement"}
             </Button>
             {error && <p className="text-sm text-red-600 flex items-center gap-2"><AlertTriangle className="h-4 w-4" />{error}</p>}
@@ -109,10 +122,10 @@ export default function AssessTool() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="flex items-center gap-2 font-semibold">
-                  {report.verdict === "pass"
-                    ? <><BadgeCheck className="h-5 w-5 text-emerald-600" />Verdict: pass</>
-                    : <><XCircle className="h-5 w-5 text-amber-600" />Verdict: {report.verdict}</>}
+                <p className="flex items-start gap-2 font-semibold">
+                  {report.tier === "LIMITED_OR_MINIMAL"
+                    ? <><BadgeCheck className="h-5 w-5 text-emerald-600 shrink-0" />{report.verdict}</>
+                    : <><XCircle className="h-5 w-5 text-amber-600 shrink-0" />{report.verdict}</>}
                 </p>
                 <p className="text-sm text-muted-foreground">{report.rationale}</p>
                 {report.gaps.length > 0 && (
@@ -127,9 +140,12 @@ export default function AssessTool() {
                   <div><span className="text-muted-foreground">signature:</span> {report.sig.slice(0, 44)}…</div>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  This result is Ed25519-signed. Anyone can verify it against the public key at
-                  <code className="mx-1">{API_BASE || ""}/api/assess/key</code>. It records a measurement
-                  against published rules. It does not say the system is lawful or certified.
+                  {report.alg === "Ed25519"
+                    ? <>This result is Ed25519-signed. Anyone can verify it against the public key at
+                      <code className="mx-1">{API_BASE || ""}/api/assess/key</code>.</>
+                    : <>This result is <strong>UNSIGNED</strong> — the signing key is not bound on this deploy.</>}
+                  {" "}It records a keyword measurement against published rules. It does not say
+                  the system is lawful or certified. We do not remediate.
                 </p>
 
                 {leadSent ? (
