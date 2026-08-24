@@ -108,7 +108,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     );
   }
 
-  // ── classify ───────────────────────────────────────────────────────────────
+  // ── classify ────────────────────────────────────────────────────────────────
   const prohibited = PROHIBITED.filter(([, rx]) => rx.test(text)).map(([n]) => n);
   const cats = ANNEX_III.filter(([, rx]) => rx.test(text)).map(([n]) => n);
 
@@ -154,7 +154,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 
   const signed_payload = canonical(payload);
 
-  // ── sign, or say plainly that we cannot ────────────────────────────────
+  // ── sign, or say plainly that we cannot ────────────────────────────────────
   let sig = "", pub = "", kid = "", alg = "UNSIGNED";
   const b64 = ctx.env.ASSESS_SIGNING_KEY_PKCS8_B64;
   if (b64) {
