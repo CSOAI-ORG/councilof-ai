@@ -1,5 +1,9 @@
 name: restore-catalog-blobs
 on:
+  push:
+    paths:
+      - '.restore-chunks/**'
+      - '.github/workflows/restore-catalog-blobs.yml'
   workflow_dispatch:
 jobs:
   restore:
@@ -10,13 +14,36 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: cursor/instruments-catalog-7fb8
-          fetch-depth: 0
-      - name: Restore full blobs from a5b8aaec
+      - name: Assemble base64 chunks into target files
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout a5b8aaec -- public/sitemap.xml public/ecosystem.json functions/data/ecosystem.json
-          wc -c public/sitemap.xml public/ecosystem.json functions/data/ecosystem.json
+          python3 << 'PY'
+          import base64, pathlib
+          specs = [
+            ("public/sitemap.xml", "public__sitemap.xml", 8, 63246),
+            ("public/ecosystem.json", "public__ecosystem.json", 10, 83080),
+            ("functions/data/ecosystem.json", "functions__data__ecosystem.json", 10, 83080),
+          ]
+          for dest, prefix, nparts, expect in specs:
+              parts = []
+              for i in range(nparts):
+                  p = pathlib.Path(f".restore-chunks/{prefix}.part{i:02d}")
+                  if not p.exists():
+                      raise SystemExit(f"missing {p}")
+                  parts.append(p.read_text())
+              data = base64.b64decode("".join(parts))
+              if len(data) != expect:
+                  raise SystemExit(f"{dest}: got {len(data)} expected {expect}")
+              pathlib.Path(dest).parent.mkdir(parents=True, exist_ok=True)
+              pathlib.Path(dest).write_bytes(data)
+              print(dest, len(data), "OK")
+          PY
           git add public/sitemap.xml public/ecosystem.json functions/data/ecosystem.json
-          git commit -m "fix: restore full ecosystem.json and sitemap.xml from a5b8aaec" || echo "no changes"
-          git push origin HEAD:cursor/instruments-catalog-7fb8
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "fix: restore full ecosystem.json and sitemap.xml from chunked base64"
+            git push origin HEAD:cursor/instruments-catalog-7fb8
+          fi
