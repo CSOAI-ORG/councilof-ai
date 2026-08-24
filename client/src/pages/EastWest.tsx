@@ -5,6 +5,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
+import VerifyTallyOptIn from "@/components/VerifyTallyOptIn";
 import { openLobby } from "@/lib/lobbyLink";
 import { verifyHashedEnvelope } from "@/lib/eastWestCrypto";
 import {
@@ -371,6 +372,9 @@ export default function EastWest() {
                     </li>
                   ))}
                 </ul>
+                <div className="mt-3">
+                  <VerifyTallyOptIn ok={verdict.ok} variant="dark" />
+                </div>
               </div>
             )}
           </div>
