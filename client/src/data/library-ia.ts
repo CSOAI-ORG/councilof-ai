@@ -60,7 +60,7 @@ export const SECTORS: Sector[] = [
     blurb: "Compliance MCPs, C2PA / Article-50 watermarking, Ed25519 signature verification, the agent (A2A) API, drift and provenance.",
     test: rx(/\bmcps?\b|layer-?0|c2pa|watermark|signature|\bverify\b|\bapi\b|distribution|sigstore|attest|did-|ed25519|oscal|\bagents?\b|registry|drift|provenance|\bledger\b|architecture|cobol|integrat|webhook|vulnerabilit|\bscan\b|cyber|deepfake|instrument|systemcard|technolog|\bdocs?\b|ontolog|\bmodels?\b|transparency|\bvoice\b/) },
   { id: "axes", title: "GSPC Axes & Benchmarks",
-    blurb: "The GSPC 14-slot board (13 measured axes + jail) — the flagship. Every number recomputable from its rows; UNMEASURED reported, never hidden.",
+    blurb: "The living GSPC board — the flagship. Counts come from GET /api/gspc. Every number recomputable from its rows; UNMEASURED reported, never hidden.",
     test: rx(/gspc|benchmark|\barena\b|\bboard\b|leaderboard|provbench|govbench|\baxis\b|\baxes\b|scorecard|\bmeasured?\b|evidence|anchors|gap-map|\bassess/) },
   { id: "governance", title: "Governance & Frameworks",
     blurb: "NIST AI RMF, ISO/IEC 42001, OSCAL, readiness, PDCA, sector playbooks — the frameworks crosswalked to the measured axes.",
@@ -92,12 +92,12 @@ export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
   "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/how-it-works": { path: "/methodology", label: "Methodology" },
-  "/roi-calculator": { path: "/payg", label: "Pay as you go" },
+  "/roi-calculator": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
   "/compare": { path: "/about", label: "About" },
   "/our-difference": { path: "/about", label: "About" },
   // Added by the site-alignment pass 2026-08-20 — each of these had a current
   // equivalent in the new six-group nav but no forward link.
-  "/pricing": { path: "/payg", label: "Pay as you go" },
+  "/pricing": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
   "/global-ai-regulation": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/global-regulations": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/training-hub": { path: "/academy", label: "Council Academy" },
