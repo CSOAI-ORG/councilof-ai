@@ -25,7 +25,7 @@ export function isJailAxis(a: any): boolean {
   return n === "jail" || n === "jail_floor";
 }
 
-/** Canon: 14 quotable, 13 measured of 14; jail = floor / UNTESTED. Prefer published totals. */
+/** Canon: prefer published totals. Jail = floor / UNTESTED. Never invent a slot count. */
 export function boardCanon(board: GspcBoard) {
   const axes = board.axes ?? [];
   const jail = board.jail_floor ?? axes.find(isJailAxis) ?? null;
@@ -35,8 +35,8 @@ export function boardCanon(board: GspcBoard) {
   );
   const quotable =
     typeof board.totals.quotable_axes === "number" ? board.totals.quotable_axes
-    : typeof board.totals.axes === "number" && board.totals.axes >= 14 ? board.totals.axes
-    : Math.max(boardAxes.length + (jail ? 1 : 0), 14);
+    : typeof board.totals.axes === "number" ? board.totals.axes
+    : boardAxes.length + (jail ? 1 : 0);
   const measured =
     typeof board.totals.measured_axes === "number" ? board.totals.measured_axes : measuredAxes.length;
   const publicCount =
@@ -64,8 +64,8 @@ export function claimGuardRefuse(q: string): string | null {
     return null;
   return (
     `**Refused (ClaimGuard).** That claim does not match the published board.\n\n` +
-    `Canon from GET /api/gspc: **14** quotable board axes, **13 measured of 14**, ` +
-    `never "12 axes" and never "14 are MEASURED". **jail** is a **floor**; separation **UNTESTED**.\n\n` +
+    `Canon lives in GET /api/gspc totals (public_count, measured_axes, quotable_axes) ` +
+    `and is derived from the payload. Never invent a slot count. **jail** is a **floor**; separation **UNTESTED**.\n\n` +
     `_Deterministic refuse against a false count claim - not a model opinion._`
   );
 }
