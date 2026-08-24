@@ -1,0 +1,36 @@
+{
+  "schema": "csoai.enforcement-corpus/0.1",
+  "title": "Signed coverage of the public AI enforcement record",
+  "as_of": "2026-08-23",
+  "note": "Systematic signed coverage of the public enforcement record. Never 'every problem of every AI company' — that framing is disavowed. The EU AI Act fining powers switched ON 2026-08-02 (Art 101 GPAI up to EUR 35M/7%); EUR 0 collected to date. Every entry is signed + stranger-verifiable. Verification free forever. Nobody ranked pays.",
+  "first_fine_watch": {
+    "eu_ai_act_fines_collected_eur": 0,
+    "enforcement_powers_live_since": "2026-08-02",
+    "days_since_powers_live": 21,
+    "page": "The exact page every journalist on this beat needs: 'EU AI Act fines: EUR 0 · days since powers live: 21'",
+    "sentence": "EU AI Act enforcement powers switched ON 2026-08-02; fines to date EUR 0.",
+    "signature_style": "Ed25519, RFC 9943 / SCITT-a COSE receipt",
+    "verify_free": true
+  },
+  "fines_by_jurisdiction": [
+    { "jurisdiction": "EU (GDPR/DSA)", "key": "Clearview", "amount_eur": 100, "unit": "M", "note": "EUR 100M+ cumulative; GDPR/DSA route, pre-AIA" },
+    { "jurisdiction": "US (FTC)", "key": "FTC AI settlement", "amount_usd": 85, "unit": "M", "note": "USD ~85M headline; mostly suspended" },
+    { "jurisdiction": "UK", "key": "ICO AI-adjacent", "amount_gbp": 17, "unit": "M", "note": "GBP ~17M AI-adjacent" },
+    { "jurisdiction": "EU", "key": "OpenAI (annulled)", "amount_eur": 15, "unit": "M", "note": "EUR 15M annulled March 2026" }
+  ],
+  "deadlines_calendar": [
+    { "event": "Texas AI portal", "date": "2026-09-01", "note": "State AI portal deadline" },
+    { "event": "DRCF AI consumer call", "date": "2026-09-02", "note": "Digital Regulators Cooperation Forum response" },
+    { "event": "Art 50(2) grace ends", "date": "2026-12-02", "note": "EU AI Act transparency grace period ends" },
+    { "event": "Korea AI grace ends", "date": "2027-01-22", "note": "Korea AI regulation grace period" },
+    { "event": "Illinois AI audits", "date": "2027-01-01", "note": "Illinois AI audit compliance date" }
+  ],
+  "correction_59": "Art 73 windows are 15d/10d/2d (not 15d/24h — that was NIS2).",
+  "honest_register": {
+    "status": "MEASURED/REPORTED/UNMEASURED",
+    "rule": "an unmeasurable entry is stated UNMEASURED, never defaulted to a fake 0",
+    "certification": false,
+    "issued_by": "did:web:csoai.org",
+    "signer": "estate-chain-1"
+  }
+}
