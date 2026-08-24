@@ -257,7 +257,7 @@ function Body({ children }: { children: ReactNode }) {
   return <p className="mt-5 text-lg font-medium leading-relaxed text-gray-700">{children}</p>;
 }
 
-/* ─── 1 · independence ──────────────────────────────────────────────────── */
+/* ─── 1 · independence ───────────────────────────────────────────────────── */
 
 function Independence() {
   return (
@@ -288,7 +288,7 @@ function Independence() {
         ]}
       />
       <Cta
-        href="/pricing"
+        href="/?lobby=measured&task=pricing-overview"
         label="How the free rail works"
         secondary={{ href: "/about", label: "Who we are" }}
       />
@@ -414,7 +414,7 @@ function VerifyYourself() {
   );
 }
 
-/* ─── 4 · we publish our own errors ─────────────────────────────────────── */
+/* ─── 4 · we publish our own errors ───────────────────────────────────── */
 
 function OwnErrors() {
   const corr = useJson<Corrections>("/api/corrections");
