@@ -1,0 +1,22 @@
+{
+  "schema": "csoai.oowm-public-live/0.1",
+  "ts": "2026-08-24T05:51:17Z",
+  "PUBLIC_LIVE": {
+    "url": "https://oowm-proxy.nicholastempleman.workers.dev",
+    "version": "28846e03",
+    "status": "DEPLOYED + serving",
+    "auth": "OOWM_API_KEY bearer",
+    "oowm": "returns real signed proof-of-output (HMAC-SHA256, not_a_certification:true)"
+  },
+  "tested": {
+    "health": "serves",
+    "no-token": "401",
+    "with-token": "returns proof sig be903381ee...",
+    "proof": "HMAC-SHA256-over-query, attestation-not-certification"
+  },
+  "backend_gap": {
+    "oracle": "141.147.73.85:8771 not reachable from CF edge (OCI security-list blocks 8771; sibling-lane live tenancy -> NOT auto-modified)",
+    "when_open": "public /oowm routes to free-grid Oracle serve (cost=0) for full answer"
+  },
+  "honest_boundary": "PUBLIC PRODUCT IS LIVE (auth + proof-of-output). The free-grid BACKEND needs an OCI ingress rule on the sibling-lane live tenancy (owner sign-off, not auto-crossed)."
+}
