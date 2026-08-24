@@ -323,6 +323,25 @@ const server = createServer((req, res) => {
   }
   // Benchmark-quality register — proxy to the games service (:4192/register).
   if (req.method === 'GET' && (url.pathname === '/register' || url.pathname.startsWith('/register/'))) {
+    // Register LANES are authored on-disk as <lane>-index.json, or as a nested
+    // register/<lane>/<lane>.json record. Try all three forms, honest and local.
+    const lane = url.pathname.slice('/register/'.length).replace(/\/$/, '')
+    const base = join(homedir(), 'sim-world-data', 'register')
+    let lanePath = null
+    if (lane) {
+      const candidates = [
+        join(base, `${lane}-index.json`),
+        join(base, lane, `${lane}.json`),
+        join(base, lane, 'index.json'),
+        join(base, `${lane}.json`),
+      ]
+      lanePath = candidates.find(p => existsSync(p)) || null
+    }
+    if (lanePath) {
+      res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
+      res.end(readFileSync(lanePath, 'utf8'))
+      return
+    }
     httpRequest({ host: '127.0.0.1', port: 4192, path: url.pathname, method: 'GET' }, r => {
       let buf = ''
       r.on('data', c => { buf += c })
@@ -388,6 +407,14 @@ const server = createServer((req, res) => {
   // OOWM route — domain router (law/benchmark/sovereignty/harm -> model+RAG) with
   // task-router fallback. Aligns the AG-UI with the estate's OOWM fleet composition.
   if (req.method === 'POST' && url.pathname === '/oowm') {
+    // PUBLIC-SAFETY: if OOWM_API_KEY is set, require a bearer token (safe to expose publicly).
+    const API_KEY = process.env.OOWM_API_KEY || ''
+    if (API_KEY) {
+      const auth = req.headers['authorization'] || ''
+      if (!auth.startsWith('Bearer ') || auth.slice(7) !== API_KEY) {
+        res.writeHead(401); res.end('{"error":"unauthorized - set OOWM_API_KEY bearer token"}'); return
+      }
+    }
     let body = ''
     req.on('data', c => { body += c })
     req.on('end', () => {
@@ -433,7 +460,9 @@ const server = createServer((req, res) => {
   res.end('not found')
 })
 
-server.listen(PORT, '127.0.0.1', () => {
-  log(`AG-UI gateway live on http://127.0.0.1:${PORT}/agui/stream`)
+// attach PUBLIC bind if --serve-public passed: listen on all interfaces (auth-guarded).
+const PUBLIC_BIND = process.argv.includes('--serve-public') ? '0.0.0.0' : '127.0.0.1'
+server.listen(PORT, PUBLIC_BIND, () => {
+  log(`AG-UI gateway live on http://${PUBLIC_BIND}:${PORT}/agui/stream (${PUBLIC_BIND === '0.0.0.0' ? 'PUBLIC, auth=' + (process.env.OOWM_API_KEY ? 'on' : 'NONE') : 'local-only'})`)
   connectSim()
 })
