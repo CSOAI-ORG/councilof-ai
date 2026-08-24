@@ -1,0 +1,24 @@
+{
+ "pending_directories": [
+  "mcp.so",
+  "glama.ai"
+ ],
+ "purpose": "Ready-to-paste submission metadata for mcp.so, Glama, and other MCP directories (agent-native distribution). Upload/paste is a human action; this is the complete metadata.",
+ "schema": "csoai.mcp-listing-bundle/0.1",
+ "servers": [
+  {
+   "capabilities": [
+    "check",
+    "check --live",
+    "--self-test"
+   ],
+   "category": "Governance",
+   "description": "Claim-vs-signed-artifact integrity checker. Verifies a signed measurement board (Ed25519 over RFC-8785 canonical JSON), payload completeness, and whether natural-language claims are supported. Determi",
+   "license": "MIT",
+   "name": "ClaimGuard",
+   "slug": "claimguard-mcp",
+   "transport": "cli",
+   "url": "https://github.com/CSOAI-ORG/claimguard"
+  }
+ ]
+}
