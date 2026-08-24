@@ -28,10 +28,13 @@ def log(*a):
 
 def ask(model, prompt, timeout=600):
     body = {"model": model, "prompt": prompt, "stream": False,
-            "options": {"temperature": 0.0}}
+            "options": {"temperature": 0.0, "num_predict": 128, "num_ctx": 2048},
+            "think": False}
     r = json.loads(urllib.request.urlopen(urllib.request.Request(
         OLLAMA, json.dumps(body).encode(), {"Content-Type": "application/json"}), timeout=timeout).read())
-    return r.get("response", "")
+    # reasoning models (nemotron) answer in 'thinking' when not think:false; we set
+    # think:false but still fall back to thinking if response is empty.
+    return r.get("response") or r.get("thinking") or ""
 
 def load_banks():
     banks = {}
