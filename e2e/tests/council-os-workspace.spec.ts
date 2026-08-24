@@ -1,1 +1,3 @@
-PLACEHOLDER_E2E
+import { test } from '@playwright/test';
+
+test('council os workspace probe', async () => {});
