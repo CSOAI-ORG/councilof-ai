@@ -1,0 +1,23 @@
+name: conflict-guard
+
+# Source-only. FAILS any PR / push that commits unresolved git conflict markers
+# (<<<<<<< / >>>>>>>). A sibling lane pushed App.tsx with such markers (PR #415)
+# and it broke every deploy at 'Build client' (vite:esbuild 'Expected identifier
+# but found <') — this guard catches it at PR time, before it can ship.
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  conflict-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: No committed conflict markers
+        run: |
+          node scripts/no-conflict-markers.mjs --selftest
+          node scripts/no-conflict-markers.mjs

@@ -28,6 +28,9 @@ jobs:
       - name: One-door guard (AG UI is Council OS)
         run: node scripts/one-door-guard.mjs
 
+      - name: No committed conflict markers (blocks the 2026-08-24 build break)
+        run: node scripts/no-conflict-markers.mjs
+
       - name: Install deps
         run: npm install --no-audit --no-fund
 
