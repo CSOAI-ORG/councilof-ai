@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/.well-known/schemas/cross-border-card.schema.json",
+  "title": "CSOAI cross-border measurement card",
+  "description": "Verified measurement credential — not a certification. Mapping is not a determination.",
+  "type": "object",
+  "required": ["kind", "grammar", "id", "issuedAt", "schema", "issuer", "subject", "measured", "axes", "regimes", "crosswalk", "contentHash", "signature"],
+  "properties": {
+    "kind": { "const": "csoai.cross-border-card/0.1" },
+    "grammar": { "const": "verified measurement credential" },
+    "measured": { "const": "13 measured of 14" },
+    "id": { "type": "string" },
+    "issuedAt": { "type": "string", "format": "date-time" },
+    "schema": { "type": "string", "format": "uri" },
+    "issuer": { "type": "object" },
+    "subject": { "type": "object" },
+    "axes": { "type": "array" },
+    "regimes": { "type": "array", "items": { "enum": ["eu", "uk", "illinois", "china"] } },
+    "crosswalk": {
+      "type": "object",
+      "required": ["version", "hash"],
+      "properties": {
+        "version": { "type": "string" },
+        "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "contentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "signature": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["UNSIGNED", "ED25519"] },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}
