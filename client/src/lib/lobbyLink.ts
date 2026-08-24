@@ -40,11 +40,13 @@ export type LobbyTaskId =
   | "read-the-board"
   | "explain-axis"
   | "verify-a-card"
+  | "east-west"
   | "arena"
   | "get-measured"
   | "report-an-incident"
   | "human-vs-ai"
   | "academy"
+  | "live-drill"
   | "pricing-overview"
   | "honesty-audit"
   | "library-research"
@@ -95,6 +97,12 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
         ? `Help me verify measurement card ${ctx} — recompute its hash and check the Ed25519 signature.`
         : "Help me verify a measurement card — recompute its hash and check the Ed25519 signature.",
   },
+  "east-west": {
+    pane: "east-west",
+    label: "Open East-West",
+    prompt: () =>
+      "Show the East-West cross-jurisdiction measurement: the frozen crosswalk, the unsigned hash-chained card, and how a stranger verifies it without asking us.",
+  },
   arena: {
     pane: "space",
     label: "Open Council Space",
@@ -126,6 +134,14 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
     label: "Open the Academy",
     prompt: () =>
       "What does Council Academy actually attest on completion, and what does it explicitly not attest?",
+  },
+  "live-drill": {
+    pane: "academy",
+    label: "Art. 4 live training drill",
+    prompt: (ctx) =>
+      ctx
+        ? `In the Art. 4 live sim (${ctx}), what does published Commission Q&A actually say, and what does the Council refuse to certify?`
+        : "Walk me through the Art. 4 office sim: what a verified training-outcome record attests, and what it explicitly is not.",
   },
   "pricing-overview": {
     pane: "home",
