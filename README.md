@@ -33,6 +33,26 @@ Every published measurement carries a public key and a verify path. Check any cr
 
 - **https://councilof.ai/verify** — free, no login
 
+
+## East-West (cross-jurisdiction measurement)
+
+One signed measurement, mapped across EU / UK / Illinois / China. Mapping is not a compliance determination — determination stays with authorities.
+
+- Flagship: `/east-west`
+- Verify (client-side): `/east-west/verify` and `/gspc-verify`
+- Challenge door: `/challenge`
+- Evidence packs: `/east-west/packs` (multinational / insurer / law-firm samples)
+- Regulator desks: `/east-west/desks` — signed streams **free forever**
+- Buyer screen + license template + one-pagers: `/east-west/buyers`, `/east-west/license`, `/east-west/briefs`
+- Pay rail demo: `/east-west/pay` and `GET /api/east-west/pay/demo` (HTTP 402, **amount is null** — no invented price)
+- Board API: `GET /api/east-west`
+- Offline pack check: `node public/east-west/verify-pack.mjs path/to/pack.json`
+- Schema: `https://councilof.ai/.well-known/schemas/cross-border-card.schema.json`
+
+Public grammar: **13 measured of 14**. Product: verified measurement credential — never a certification. Scores are never sold. Regulator streams are free forever.
+
+**Owner-blocked until a published ruling (honest placeholders, not fake commerce):** pricing, x402/MPP activation, first pack sale, DID root, `cibola.dev` / `getcibola.com`, UKIPO. Value Ledger published count is **0**. Empty is launch honesty.
+
 ## 📖 Documentation
 
 - [Measurement body overview](https://councilof.ai/about/)
