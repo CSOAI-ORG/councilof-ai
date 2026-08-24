@@ -62,8 +62,8 @@ export const SITE_NAVIGATION: SiteNavGroup[] = [
     description: "The statute we measure against",
     submenu: [
       { name: "EU AI Act — the guide", href: "/eu-ai-act", description: "The whole Act, phased, with the Digital Omnibus amendments" },
-      { name: "Article 50 — transparency", href: "/article-50", description: "Live since 2 Aug 2026; marking grace ends 2 Feb 2026" },
-      { name: "Dates and deadlines", href: "/ai-act-timeline", description: "What applies when — Annex III deferred to 2 Aug 2027" },
+      { name: "Article 50 — transparency", href: "/article-50", description: "Live since 2 Aug 2026; marking grace ends 2 Dec 2026" },
+      { name: "Dates and deadlines", href: "/ai-act-timeline", description: "What applies when — Annex III deferred to 2 Dec 2027" },
       { name: "GPAI model duties", href: "/gpai", description: "Documentation, training-data summary, copyright" },
       { name: "Readiness checklist", href: "/checklist", description: "Work through the duties that are actually in force" },
       { name: "Global regulation tracker", href: "/regulation-tracker", description: "Every AI regime worldwide, with its current dates" },
