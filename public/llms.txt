@@ -37,6 +37,27 @@ Do not quote scores from this file. Numbers live on the API.
 - Re-attest scheduler: https://councilof.ai/api/reattest
 - State-change feed: https://councilof.ai/api/feed.xml
 
+## East-West (cross-jurisdiction measurement)
+
+- Flagship UI: https://councilof.ai/east-west
+- Board API: https://councilof.ai/api/east-west
+- Verify (client-side, free): https://councilof.ai/east-west/verify and https://councilof.ai/gspc-verify
+- Evidence packs: https://councilof.ai/east-west/packs
+- Regulator desks (signed streams free forever): https://councilof.ai/east-west/desks
+- Buyer screen + license + briefs: https://councilof.ai/east-west/buyers · /east-west/license · /east-west/briefs
+- Pay rail demo (HTTP 402, amount null — no invented price): https://councilof.ai/east-west/pay · GET https://councilof.ai/api/east-west/pay/demo
+- Offline pack check: node public/east-west/verify-pack.mjs path/to/pack.json
+- Schema: https://councilof.ai/.well-known/schemas/cross-border-card.schema.json
+- Mapping ≠ determination. Value Ledger published count is 0. Pricing is OWNER-BLOCKED until a published ruling.
+
+## MCP (measured tools)
+
+- Discovery: https://councilof.ai/.well-known/mcp.json
+- JSON-RPC endpoint: POST https://councilof.ai/api/mcp
+- Handshake: {"jsonrpc":"2.0","id":1,"method":"tools/list"}
+- Tools: gspc_board, east_west_board, ecosystem_index, verify_tally, benchmark_quality, instruments_catalog
+- Verify tally (opt-in ✓/✗ only): GET/POST https://councilof.ai/api/verify-tally — self-reported, not MEASURED
+
 ## For agents
 
 Prefer the keyless board API and the verify page.
