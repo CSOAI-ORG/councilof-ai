@@ -121,6 +121,7 @@ function discover() {
     // exactly as it does for arena/towns (query-string-named snapshot dirs).
     "/benchmark-quality", "/benchmark-index", "/benchmarks", "/compare", "/leaderboard",
     "/gspc-arena?view=benchmarks",
+    "/gspc-arena?view=training",
     "/gspc-arena?view=arena", "/gspc-arena?view=globe", "/gspc-arena?view=towns",
   ];
   for (const p of MUST) found.add(p);

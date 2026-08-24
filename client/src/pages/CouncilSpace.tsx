@@ -18,6 +18,7 @@ import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } 
 const ArenaView = lazy(() => import("./GSPCArena"));
 const TownsView = lazy(() => import("./SovereignTown"));
 const BenchmarkView = lazy(() => import("./BenchmarkView"));
+const TrainingView = lazy(() => import("./TrainingView"));
 
 function GlobeView() {
   const search = useSearch();
@@ -93,6 +94,7 @@ const SS_VIEWS = [
   { id: "globe", label: "🌍 Globe", href: "/gspc-arena?view=globe" },
   { id: "towns", label: "🇦 Towns", href: "/gspc-arena?view=towns" },
   { id: "benchmarks", label: "📊 Benchmarks", href: "/gspc-arena?view=benchmarks" },
+  { id: "training", label: "🎮 Live Training", href: "/gspc-arena?view=training" },
 ] as const;
 
 type SovViewId = (typeof SS_VIEWS)[number]["id"];
@@ -593,7 +595,8 @@ export default function CouncilSpace() {
           {view === "globe" && <GlobeView />}
           {view === "towns" && <TownsView />}
           {view === "benchmarks" && <BenchmarkView />}
-          {view !== "arena" && view !== "globe" && view !== "towns" && view !== "benchmarks" && (
+          {view === "training" && <TrainingView />}
+          {view !== "arena" && view !== "globe" && view !== "towns" && view !== "benchmarks" && view !== "training" && (
             <div className="mx-auto max-w-6xl px-6 py-16 text-emerald-300/60">Unknown layer “{view}” — pick one above.</div>
           )}
         </Suspense>
