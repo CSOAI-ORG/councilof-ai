@@ -13,7 +13,7 @@ import {
   GRAMMAR,
   OWNER_BLOCKS,
   DESKS,
-} from "../../client/src/data/eastWest.ts";
+} from "../../client/src/data/eastWest";
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
