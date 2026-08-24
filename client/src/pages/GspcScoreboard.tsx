@@ -116,6 +116,31 @@ function ArenaEloPanel() {
           ✗ Signature does NOT verify — content may have been altered.
         </p>
       )}
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-emerald-600/10 pt-4">
+        <a
+          href="/legal/licensing"
+          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700"
+          data-testid="researcher-access"
+        >
+          Researcher access — verified rankings
+        </a>
+        <a
+          href="/legal/licensing"
+          className="rounded-xl border border-emerald-600/20 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
+        >
+          Enterprise data license
+        </a>
+        <span className="text-xs text-gray-500">
+          Free access is permanent and unconditional (researchers, journalists, fact-checkers) —
+          see the licensing tiers for the license legs. Pricing lives on the legal surface.
+        </span>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <a href="/compliance/eu-ai-act" className="rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50">EU AI Act pack</a>
+        <a href="/compliance/nist-ai-rmf" className="rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50">NIST RMF pack</a>
+        <a href="/compliance/uk-ai-bill" className="rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50">UK AI Bill pack</a>
+        <a href="/compliance/canada-ai-act" className="rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50">Canada AI Act pack</a>
+      </div>
       <div className="mt-4 flex flex-wrap gap-2">
         <button onClick={() => setAxis("overall")} className={`rounded-full px-3 py-1 text-xs font-semibold ${axis === "overall" ? "bg-emerald-600 text-white" : "border border-emerald-600/20 text-emerald-700 hover:bg-emerald-50"}`}>
           Overall
