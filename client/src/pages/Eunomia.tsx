@@ -36,14 +36,11 @@ export default function Eunomia() {
               )}
             </div>
             <p className="mt-1 text-xs text-slate-400">{a.instrument} · {a.seat}</p>
-            <div className="mt-3 font-mono text-sm">
-              {a.status === "MEASURED" && a.accuracy !== null ? (
+            <div className="mt-3 flex flex-col gap-1 font-mono text-sm">
+              {a.status === "MEASURED" && a.strong ? (
                 <>
-                  <span className="text-emerald-300">{a.accuracy.toFixed(3)}</span>
-                  <span className="text-slate-500"> acc</span>
-                  {a.ci && (
-                    <span className="text-slate-400"> · 95% CI [{a.ci[0].toFixed(3)}, {a.ci[1].toFixed(3)}]</span>
-                  )}
+                  <span><span className="text-emerald-300">{a.strong.acc.toFixed(3)}</span><span className="text-slate-500"> strong (7b)</span> <span className="text-slate-400">95% CI [{a.strong.ci[0].toFixed(3)}, {a.strong.ci[1].toFixed(3)}]</span></span>
+                  <span><span className="text-slate-400">{a.baseline ? a.baseline.acc.toFixed(3) : "—"}</span><span className="text-slate-500"> baseline (0.5b)</span></span>
                 </>
               ) : (
                 <span className="text-slate-500">— no number until measured</span>
