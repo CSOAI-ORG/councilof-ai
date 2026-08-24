@@ -1,5 +1,8 @@
 /**
  * osChrome — Council OS + public site share one page.
+ *
+ * When Council OS is open: the product Header stays. LobbyHeader is dock chrome,
+ * not a second site header. Footer and main site content stay visible.
  */
 import { useEffect, useState } from "react";
 import { isEmbedded } from "./embed";
@@ -30,10 +33,12 @@ export function isOsOpen(): boolean {
   return document.documentElement.getAttribute(OS_OPEN_ATTR) === "1";
 }
 
+/** Hide marketing chrome only when embedded in a legacy frame. */
 export function useSiteChromeHidden(): boolean {
   return isEmbedded();
 }
 
+/** Marketing site header — hidden when Council OS header is active. */
 export function useMarketingHeaderHidden(): boolean {
   const [osOpen, setOpen] = useState(false);
   useEffect(() => {
