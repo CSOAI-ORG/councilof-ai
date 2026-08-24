@@ -58,7 +58,9 @@ Empty cells stay empty. Ties stay ties. Live counts: GET /api/gspc. Verify free 
   cite("the published insurer FAQ");
 
 const CROSSWALK =
-  `The published crosswalk at /crosswalk maps named AI-governance and adjacent frameworks to a shared control set so one control can evidence several obligations. It is a map, not a signed score and not a certificate.
+  `The published crosswalk at /crosswalk maps named AI-governance and adjacent frameworks to a shared control set so one control can evidence several obligations. It is a map, not a signed score and not a certificate. Determination stays with authorities.
+
+East-West flagship: /east-west. Machine-readable v1: /crosswalk/east-west-v1.json. Challenge a mapping: /challenge.
 
 The live list is on that page. We do not treat a crosswalk row as a GSPC measurement. Signed article-level output, when it exists, is a separate artefact you can verify.` +
   cite("/crosswalk");

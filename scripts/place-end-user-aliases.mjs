@@ -35,6 +35,7 @@ export const STRANGER_DIRS = [
   "benchmarks", "benchmark-index", "benchmark-quality",
   "chat", "ag-ui", "agui", "rankings", "sov-os",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
+  "east-west", "challenge",
   "refutation-ledger", "mcps", "claimguard", "ras",
 ];
 

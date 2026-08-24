@@ -286,6 +286,8 @@ const WatchdogMap = lazy(() => import("./pages/WatchdogMap"));
 const IncidentReport = lazy(() => import("./pages/IncidentReport"));
 const EuActClassifier = lazy(() => import("./pages/EuActClassifier"));
 const Crosswalk = lazy(() => import("./pages/Crosswalk"));
+const EastWest = lazy(() => import("./pages/EastWest"));
+const Challenge = lazy(() => import("./pages/Challenge"));
 const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
 const AgentRegistry = lazy(() => import("./pages/AgentRegistry"));
 const GlobalAIRegulation = lazy(() => import("./pages/GlobalAIRegulation"));
@@ -354,6 +356,9 @@ const ROUTE_TITLES: Record<string, string> = {
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
   "/refutation-ledger": "Refutation Ledger | CSOAI",
   "/dispute": "Appeals & dispute resolution | Council of AI",
+  "/east-west": "East-West — one signed measurement, every regime mapped | Council of AI",
+  "/challenge": "Challenge a measurement — East-West redress | Council of AI",
+  "/crosswalk": "AI governance framework crosswalk | Council of AI",
   "/live-ledger": "Live Ledger | CSOAI",
   "/coliseum": "The Coliseum of AI | Council of AI",
   "/open-source": "The open-source framework | Council of AI",
@@ -601,6 +606,8 @@ function App() {
                   <Route path="/library/:sector" component={Library} />
                   <Route path="/honesty" component={Honesty} />
                   <Route path="/dispute" component={Dispute} />
+                  <Route path="/east-west" component={EastWest} />
+                  <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />

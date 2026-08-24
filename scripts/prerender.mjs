@@ -77,8 +77,8 @@ function discover() {
     for (const f of readdirSync(assets))
       if (f.endsWith(".js")) js += readFileSync(join(assets, f), "utf8");
   const found = new Set(["/"]);
-  for (const m of js.matchAll(/path\s*:\s*[\"'`](\/[a-zA-Z0-9\/_-]*)[\"'`]/g)) found.add(m[1]);
-  for (const m of js.matchAll(/[\"'`](\/[a-z0-9][a-z0-9\/-]{2,60})[\"'`]\s*[,:\)]/g)) {
+  for (const m of js.matchAll(/path\s*:\s*["'`](\/[a-zA-Z0-9\/_-]*)["'`]/g)) found.add(m[1]);
+  for (const m of js.matchAll(/["'`](\/[a-z0-9][a-z0-9\/-]{2,60})["'`]\s*[,:\)]/g)) {
     const p = m[1];
     if (!/\.(js|css|png|svg|jpg|json|ico|woff2?|txt|xml)$/i.test(p) && !p.startsWith("/assets/"))
       found.add(p);
@@ -105,6 +105,7 @@ function discover() {
     "/models", "/tools", "/api-docs",
     "/workbench", "/instrument", "/system-card", "/feed", "/mcp-fleet",
     "/crosswalk", "/refutation-ledger", "/library",
+    "/east-west", "/challenge",
     // Flagship pages that were only SPA-routed (direct HTTP 404 = credibility leak:
     // crawlers + the law's visitors hit a broken page). Force-prerender them.
     "/article-50", "/tour", "/live-ledger", "/gspc-anchors",

@@ -1,0 +1,60 @@
+{
+  "schema": "csoai.east-west-crosswalk/1.0",
+  "version": "2026-08-24",
+  "title": "East-West crosswalk canon v1",
+  "determination": "Determination stays with authorities. This crosswalk maps obligations; it is not a conformity opinion, certificate, or legal verdict.",
+  "measurement_not_certification": true,
+  "supersedes": null,
+  "jurisdictions": [
+    {
+      "regime": "EU",
+      "instrument": "EU AI Act (Reg 2024/1689)",
+      "rows": [
+        { "control": "Risk management system", "ref": "Art. 9", "mapped_to": "Risk management" },
+        { "control": "Data and data governance", "ref": "Art. 10", "mapped_to": "Data governance" },
+        { "control": "Technical documentation", "ref": "Art. 11", "mapped_to": "Documentation & records" },
+        { "control": "Record-keeping", "ref": "Art. 12", "mapped_to": "Documentation & records" },
+        { "control": "Transparency and provision of information", "ref": "Art. 13", "mapped_to": "Transparency & disclosure" },
+        { "control": "Human oversight", "ref": "Art. 14", "mapped_to": "Human oversight" },
+        { "control": "Accuracy, robustness and cybersecurity", "ref": "Art. 15", "mapped_to": "Security & resilience" }
+      ]
+    },
+    {
+      "regime": "UK",
+      "instrument": "UK Digital Regulation Cooperation Forum (DRCF) AI alignment",
+      "rows": [
+        { "control": "Safety & security", "ref": "DRCF principle 1", "mapped_to": "Security & resilience" },
+        { "control": "Transparency & explainability", "ref": "DRCF principle 2", "mapped_to": "Transparency & disclosure" },
+        { "control": "Fairness", "ref": "DRCF principle 3", "mapped_to": "Bias & fairness" },
+        { "control": "Accountability & governance", "ref": "DRCF principle 4", "mapped_to": "Accountability & governance" },
+        { "control": "Contestability & redress", "ref": "DRCF principle 5", "mapped_to": "Human oversight" }
+      ]
+    },
+    {
+      "regime": "US-IL",
+      "instrument": "Illinois SB 315 (AI governance audits)",
+      "clock": "Audits required from 1 Jan 2028",
+      "rows": [
+        { "control": "Impact assessment", "ref": "SB 315 § audit scope", "mapped_to": "Risk management" },
+        { "control": "Documentation of AI systems", "ref": "SB 315 § records", "mapped_to": "Documentation & records" },
+        { "control": "Bias & discrimination testing", "ref": "SB 315 § fairness audit", "mapped_to": "Bias & fairness" },
+        { "control": "Cybersecurity controls", "ref": "SB 315 § security", "mapped_to": "Security & resilience" }
+      ]
+    },
+    {
+      "regime": "CN",
+      "instrument": "GB/T AI safety governance (TC260 alignment)",
+      "note": "Honest line: mapping to GB/T is measurement alignment, not equivalence to TC260 or MIIT certification.",
+      "rows": [
+        { "control": "Algorithmic transparency", "ref": "GB/T labelling", "mapped_to": "Transparency & disclosure" },
+        { "control": "Data security & cross-border transfer", "ref": "GB/T data governance", "mapped_to": "Data governance" },
+        { "control": "Human-in-the-loop oversight", "ref": "GB/T oversight", "mapped_to": "Human oversight" },
+        { "control": "Risk assessment & monitoring", "ref": "GB/T risk management", "mapped_to": "Risk management" }
+      ]
+    }
+  ],
+  "methodology": "One signed measurement mapped across regimes. Scores are never sold; regulator rails free forever. Crosswalk evidence packs and white-label bridge tooling are the commercial surfaces.",
+  "verify": "https://councilof.ai/gspc-verify",
+  "cross_border_card": "/signals/cross-border-card.signed.json",
+  "east_west_flagship": "/east-west/"
+}

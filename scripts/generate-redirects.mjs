@@ -12,7 +12,7 @@ const OUT = join(ROOT, "public/_redirects");
 
 const STATIC_DIRS = ["/arena", "/benchmarks", "/vendor", "/assets",
                      "/.well-known", "/corpus-watch", "/flywheel", "/packs",
-                     "/datasets", "/claimguard", "/ras", "/dorado"];
+                     "/datasets"];
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
@@ -73,26 +73,14 @@ const EXISTING = [
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
   "/for                    /for/enterprise/             308",
-  "/challenge              /dispute/                    308",
-  "/challenge/             /dispute/                    308",
-  "/scorecard              /gspc-scoreboard             308",
-  "/scorecard/             /gspc-scoreboard             308",
-  "/benchmarkers           /benchmarks/                 308",
-  "/benchmarkers/          /benchmarks/                 308",
-  "/mcp-registry           /mcps/                       308",
-  "/mcp-registry/          /mcps/                       308",
-  "/dorado                 /dorado/                     308",
-  "/cibola                 /dorado/                     308",
 ];
 
 const STOREFRONT = [
-  // Directory indexes under public/{claimguard,ras}/ — NEVER slash→slashless 308
-  // (that pattern self-loops on Cloudflare Pages with .html pretty-URL).
-  "/catalog.json     /catalog.json      200",
-  "/claimguard       /claimguard/       308",
-  "/claimguard.html  /claimguard/       308",
-  "/ras              /ras/              308",
-  "/ras.html         /ras/              308",
+  "/catalog.json  /catalog.json     200",
+  "/claimguard    /claimguard.html  200",
+  "/claimguard/   /claimguard       308",
+  "/ras           /ras.html         200",
+  "/ras/          /ras              308",
 ];
 
 const PERSONA_SLASH = [
@@ -101,6 +89,7 @@ const PERSONA_SLASH = [
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
   "models", "tools", "api-docs",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
+  "east-west", "challenge",
   "refutation-ledger",
   "benchmarks", "benchmark-index", "benchmark-quality", "watchdog-map",
   "mcps", "trust-center", "network", "hive", "intel",

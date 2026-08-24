@@ -21,15 +21,17 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   const origin = new URL(request.url).origin;
   const u = (p: string) => new URL(p, origin).toString();
 
-  const [boardRes, indexRes, measRes] = await Promise.all([
+  const [boardRes, indexRes, measRes, crossBorderRes] = await Promise.all([
     fetch(u("/signed/board_living.json")),
     fetch(u("/signed/card_index.json")),
     fetch(u("/signed/gspc-measurement.json")),
+    fetch(u("/signals/cross-border-card.signed.json")),
   ]);
 
   const board = boardRes.ok ? await boardRes.json().catch(() => null) : null;
   const index = indexRes.ok ? await indexRes.json().catch(() => null) : null;
   const meas = measRes.ok ? await measRes.json().catch(() => null) : null;
+  const crossBorder = crossBorderRes.ok ? await crossBorderRes.json().catch(() => null) : null;
 
   if (!board || !index) {
     return Response.json(
@@ -68,6 +70,18 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     ? { present: true, signer: board.signer, sig_input: board.sig_input }
     : { present: false, signer: board.signer };
 
+  const crossBorderEntry = crossBorder
+    ? {
+        card: "cross-border-card",
+        axis: "cross-border",
+        signed: !!crossBorder.signature?.sig,
+        title: crossBorder.title || "One signed measurement, every regime mapped",
+        schema: crossBorder.schema || "csoai.east-west-card/1",
+        content_id: crossBorder.content_id,
+        url: "/signals/cross-border-card.signed.json",
+      }
+    : null;
+
   return Response.json({
     schema: "csoai.gspc-cards/0.1",
     issuer: "councilof.ai",
@@ -83,14 +97,15 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       axes: Object.keys(board.axes || {}),
       signature,
     },
+    cross_border: crossBorderEntry,
     cards: {
-      count,
-      signed,
-      list: cards.slice(0, 100),
-      full_count_hint: count,
+      count: count + (crossBorderEntry ? 1 : 0),
+      signed: signed + (crossBorderEntry?.signed ? 1 : 0),
+      list: crossBorderEntry ? [crossBorderEntry, ...cards.slice(0, 99)] : cards.slice(0, 100),
+      full_count_hint: count + (crossBorderEntry ? 1 : 0),
     },
     note:
-      "count = signed measurement cards in the living registry. " +
+      "count = signed measurement cards in the living registry plus cross-border East-West card when published. " +
       "kid identifies the signing key; signed=true means the card carries a JWS signature.",
   });
 };

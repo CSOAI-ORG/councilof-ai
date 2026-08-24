@@ -74,6 +74,21 @@ export const onRequestGet: PagesFunction = async (context) => {
     axes: selected,
     // In the payload for honesty; NOT the board. See the note on each entry.
     measured_in_lane: axis ? undefined : MEASURED_IN_LANE,
+    domains: [
+      {
+        domain: "cross-border",
+        title: "Cross-Border / East-West Bridge Governance",
+        schema: "csoai.gspc-domains/cross-border/1.0",
+        axes: 6,
+        status: "SCAFFOLD",
+        crosswalk: "/crosswalk/",
+        crosswalk_v1: "/crosswalk/east-west-v1.json",
+        east_west: "/east-west/",
+        challenge: "/challenge/",
+        card: "/signals/cross-border-card.signed.json",
+        note: "One signed measurement mapped across EU/UK/US/IL/CN regimes. Scores free to verify; determination stays with authorities.",
+      },
+    ],
     limitations: [
       "3 of the 13 canonical axes show a statistically separated leader (McNemar p<0.05 on discordant items): governance, care, affect. 10 are statistical ties — a point-estimate lead is not a measured advantage.",
       "Jail (slot 14) was measured on a 7-model fleet, not the 19-model board fleet; it carries NO separation test (UNTESTED) and its bank is pending publication. Do not compare its numbers against the canonical axes.",
