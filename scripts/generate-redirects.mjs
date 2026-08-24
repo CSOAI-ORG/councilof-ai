@@ -88,6 +88,7 @@ const PERSONA_SLASH = [
 const PERSONA_FOR_SLASH = [
   "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
 ];
+
 const HASHED_DIRS = ["/assets"];
 
 const lines = [
