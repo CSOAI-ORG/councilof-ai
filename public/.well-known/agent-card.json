@@ -1,65 +1,75 @@
 {
   "name": "Council of AI — Measurement Agent",
-  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC 14-slot instrument (13 measured of 14) with frozen item banks, published scoring code, and Ed25519-signed board evidence. Measurement only — not certification, accreditation, or conformity assessment. No money from anything ranked.",
-  "version": "1.0.0",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) — 13 measured of 14 — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
+  "url": "https://councilof.ai",
+  "version": "0.2.0",
   "provider": {
     "organization": "CSOAI Ltd",
     "url": "https://councilof.ai"
   },
-  "documentationUrl": "https://councilof.ai/agent-runbook",
-  "supportedInterfaces": [
-    {
-      "url": "https://councilof.ai/api/mcp",
-      "protocolBinding": "JSONRPC",
-      "protocolVersion": "1.0"
-    }
-  ],
   "capabilities": {
     "streaming": false,
-    "pushNotifications": false,
-    "extendedAgentCard": false
+    "stateTransitionHistory": false
   },
-  "defaultInputModes": ["application/json", "text/plain"],
-  "defaultOutputModes": ["application/json"],
   "skills": [
     {
       "id": "gspc-board",
       "name": "Signed GSPC Board",
-      "description": "Fetch the live GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, McNemar separation. Live JSON — recomputable from published rows.",
-      "tags": ["measurement", "governance", "verification"],
-      "examples": ["Fetch the live GSPC board", "What is the current governance axis leader?"]
+      "description": "Fetch the live Ed25519-signed GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, and McNemar separation. Live JSON, recomputable from published rows.",
+      "endpoint": "https://councilof.ai/api/gspc",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ]
+    },
+    {
+      "id": "measured-badge",
+      "name": "Measured Badge",
+      "description": "Shields-style README badge stating a subject's measured-axis count; unmeasured subjects render honestly as 'unmeasured', never a fabricated score.",
+      "endpoint": "https://councilof.ai/api/badge",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ]
     },
     {
       "id": "east-west-board",
       "name": "East-West cross-jurisdiction board",
       "description": "One signed measurement mapped across EU / UK / Illinois / China. Mapping is not a compliance determination. UNSIGNED on this stamp; Value Ledger count 0.",
-      "tags": ["measurement", "cross-jurisdiction", "verification"],
-      "examples": ["Show the East-West crosswalk hash", "List regimes on the cross-border card"]
+      "endpoint": "https://councilof.ai/api/east-west",
+      "tags": [
+        "measurement",
+        "cross-jurisdiction",
+        "verification"
+      ]
+    },
+    {
+      "id": "mcp-measured-tools",
+      "name": "MCP measured tools",
+      "description": "JSON-RPC tools/list and tools/call over live board APIs (gspc, east-west, ecosystem, verify-tally, benchmark-quality, instruments). Deterministic proxy — no LLM judges.",
+      "endpoint": "https://councilof.ai/api/mcp",
+      "tags": [
+        "mcp",
+        "measurement",
+        "agents"
+      ]
     },
     {
       "id": "benchmark-quality-register",
       "name": "Benchmark-quality register",
-      "description": "Third-party benchmark process-integrity register. Deterministic predicates only; our own instruments excluded in code. Not a certification.",
-      "tags": ["meta-evaluation", "benchmark-quality", "governance"],
-      "examples": ["What does benchmark X disclose about contamination control?"]
-    },
-    {
-      "id": "verify-tally",
-      "name": "Verification tally (opt-in)",
-      "description": "Self-reported opt-in verification counters (valid/invalid bit only). Not a MEASURED number — privacy contract: no record content stored.",
-      "tags": ["verification", "privacy", "telemetry"],
-      "examples": ["How many opt-in verifications have been counted?"]
-    },
-    {
-      "id": "measured-badge",
-      "name": "Measured badge",
-      "description": "Shields-style badge for measured-axis count. Unmeasured subjects render as 'unmeasured' — never a fabricated score.",
-      "tags": ["measurement", "badge", "verification"],
-      "examples": ["Badge for org example-corp showing measured axis count"]
+      "description": "Fetch the signed register of what THIRD-PARTY AI benchmarks disclose about their own process integrity: contamination control, reproducibility, statistical rigour, scoring transparency, governance and conflicts of interest, item quality, licensing, saturation, failure disclosure. Deterministic predicates only — no language model judges anything. Every predicate answer carries the URL it was read from and the date it was fetched; a predicate that could not be checked is UNKNOWN with its reason. Records are unsolicited, the subjects did not participate, and nothing on the register is a certification, accreditation or endorsement. Council of AI's own instruments are structurally excluded by an impartiality firewall enforced in code. Filter one subject with ?benchmark=<id>.",
+      "endpoint": "https://councilof.ai/api/benchmark-quality",
+      "tags": [
+        "meta-evaluation",
+        "benchmark-quality",
+        "reproducibility",
+        "governance"
+      ]
     }
   ],
-  "securitySchemes": {},
-  "signatures": [],
+  "documentation": "https://councilof.ai/.well-known/agent.json",
   "doi": "10.5281/zenodo.21991104",
   "explicitly_not": [
     "certification",
@@ -67,5 +77,6 @@
     "conformity-assessment",
     "legal-determination",
     "enforcement"
-  ]
+  ],
+  "protocolVersion": "0.3.0"
 }

@@ -1,16 +1,13 @@
 {
   "schema_version": "2026-08-24",
   "name": "csoai",
-  "description": "CSOAI measured board tools over MCP JSON-RPC and npm stdio package csoai-governance-mcp@1.0.2.",
+  "description": "CSOAI measured board tools over MCP JSON-RPC. Proxies live /api/gspc, /api/east-west, /api/ecosystem, /api/verify-tally, /api/benchmark-quality, /api/instruments.",
   "servers": [
     {
-      "name": "io.github.CSOAI-ORG/csoai-governance",
-      "title": "CSOAI Governance MCP",
+      "name": "csoai-measured",
       "url": "https://councilof.ai/api/mcp",
       "transport": "streamable-http",
-      "package": "csoai-governance-mcp@1.0.2",
-      "registry": "https://registry.modelcontextprotocol.io/servers/io.github.CSOAI-ORG/csoai-governance",
-      "description": "First-party measured APIs via JSON-RPC tools/list + tools/call. Registry server.json v1.0.2."
+      "description": "First-party measured APIs via JSON-RPC tools/list + tools/call. No LLM-as-judge. Measurement, not certification."
     }
   ],
   "measured": {
@@ -24,6 +21,6 @@
       "benchmark_quality",
       "instruments_catalog"
     ],
-    "note": "Handshake: POST {jsonrpc:'2.0',id:1,method:'tools/list'} to /api/mcp. Publish registry: mcp-publisher publish mcp/csoai-governance/server.json"
+    "note": "Verify with POST {jsonrpc:'2.0',id:1,method:'tools/list'} to /api/mcp. Tally is self-reported opt-in — not a MEASURED number."
   }
 }
