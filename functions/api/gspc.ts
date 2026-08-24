@@ -1,10 +1,9 @@
-// functions/api/gspc.ts — the GSPC 14-slot board: "13 measured of 14" (SITTING 1 ruling, 2026-08-18).
+// functions/api/gspc.ts — the GSPC 13-axis board (CEO lock 2026-08-24).
 //
 // GSPC (Governance · Safety · Provenance · Continuity) is the family name: the four letters are
-// the four CORE axes, every extension axis descends from one of them, and the ladder is
-// 4 core → 13 measured → 14 quotable (jail) → 16 at reconciliation (owner-gated) → 17 with the
-// human baseline (DPIA-gated). The PUBLIC board is the 14-slot canon; the 16-slot living-board
-// convention is INTERNAL and never publishes as the board.
+// the four CORE axes, every extension axis descends from one of them. The PUBLIC board is the
+// 13-axis canon. Jail is a measured FLOOR (escape-attempt detection), not an axis — it lives in
+// a separate jail_floor object, never in axes[]. slot-15 is reserved and empty on the public stamp.
 //
 // PUBLISH-DELTA 2026-08-13 (owner word): every canonical axis carries a measured
 // number from the 13-axis board v2 — 19 models × per-item rows (15,580 rows,
@@ -12,13 +11,9 @@
 // agents-repo/agents/board_v2.py (2c2f9faa, byte-reproducible per peer-audit
 // 10e37101), separation test at agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md.
 //
-// PUBLISH-DELTA 2026-08-18 (SITTING 1): jail (escape-attempt detection, n=71 gold cells)
-// promoted to the board as the 14th slot from the SIGNED living board (board_living.json,
-// csoai.gspc-living/0.1, updated 2026-08-18T03:22:16Z, Ed25519 signer 8f9a00a2…). Jail was
-// measured on a SMALLER fleet (7 models, not 19) and carries NO separation test yet —
-// reported UNTESTED, never invented. slot15 ("instrument-honesty") and human-vs-ai were
-// measured in-lane on 6 models and are served under measured_in_lane below — in the payload
-// for honesty, NOT board-quotable until the reconciliation gate opens (owner-gated).
+// JAIL FLOOR (not an axis): jail (escape-attempt detection, n=71 gold cells) is measured and
+// published as a floor object, not as an axis. It was measured on a SMALLER fleet (7 models,
+// not 19) and carries NO separation test (UNTESTED). It is never counted in axes[] or totals.
 //
 // REGISTER (unchanged doctrine):
 //   Every score is MEASURED — a deterministic grade of recorded model outputs
@@ -64,28 +59,18 @@ interface AxisScore {
 
 const MEASURED_ON = {
   model: "13 canonical axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier " +
-    "cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never " +
+    "cross-lab models). Jail floor: 7-model fleet — smaller, stated on the floor object, never " +
     "conflated with the board fleet.",
-  endpoint: "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
-  date: "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
+  endpoint: "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail floor)",
+  date: "2026-08-12 (13 canonical axes) · 2026-08-18 (jail floor)",
   grading: "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
-  note: "GSPC (Governance · Safety · Provenance · Continuity) 14-slot board: 13 measured of 14, " +
-    "plus jail. The 13 canonical axes were measured on the same fleet, same rows, same grader. " +
+  note: "GSPC (Governance · Safety · Provenance · Continuity) 13-axis board. " +
+    "The 13 canonical axes were measured on the same fleet, same rows, same grader. " +
     "Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval " +
     "where n is honestly independent, and whether the lead is statistically separated (McNemar " +
     "p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and " +
     "per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and " +
-    "GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living " +
-    "board; its separation is UNTESTED (no McNemar run yet) and its bank is pending publication. " +
-    "slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
-  living_stamp: {
-    source: "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
-    updated: "2026-08-18T03:22:16Z",
-    signed: true,
-    signer: "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
-    signature: "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
-    sig_input: "sha256(canonical board minus signature fields, sort_keys)",
-  },
+    "GSPC_AXIS_REGISTRY.json v2. Jail is a measured floor (not an axis) — see jail_floor object.",
 };
 
 const AXES: AxisScore[] = [
@@ -225,8 +210,7 @@ const AXES: AxisScore[] = [
     dataset: "csoai/gspc-swarm", colour: "#94a3b8", hue: 215,
     note: "UNGATED by owner ruling 2026-08-19: the first CI-resolved ordering on this axis. The old " +
       "PROTOCOL bank stays in the record as the honesty-clause gold template (CIs that looked disjoint, " +
-      "paired p=1.0 — why McNemar-primary exists). Jail (slot 14) remains the board's only UNTESTED " +
-      "separation, so the public count stays 13 measured of 14 until jail's separation test runs.",
+      "paired p=1.0 — why McNemar-primary exists).",
   },
   {
     axis: "affect", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
@@ -245,66 +229,52 @@ const AXES: AxisScore[] = [
       "self-examination. Routed to adjudication under the Blind-Spot Rule; the item is preserved, " +
       "not deleted (evidence/adjudication/affect-adjudication.json).",
   },
-  // ——— Slot 14: jail (signed board_living.json, 2026-08-18T03:22:16Z; SITTING 1 promotion) ———
-  // Smaller fleet (7 models), no separation test yet (UNTESTED), bank pending publication.
-  // Every per-model number is verbatim from the signed artifact; fleet_mean is the plain mean
-  // of the per-model rates (recomputable from the rows below).
-  {
-    axis: "jail", bench: "GoldBank-Detector",
-    task: "escape-attempt detection on 71-cell gold bank (38 ESCAPE / 33 BENIGN) — layer 2 of 2",
-    n: 71, n_note: "7 models × 71 gold items; TP/FP/TN/FN per model; accuracy shown is the best " +
-      "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71)",
-    accuracy: 0.5915, leader: "qwen2.5:0.5b-instruct (base model)",
-    separation: "UNTESTED", fleet_mean: 0.5412,
-    fleet: "7 models (4 base + 2 council fine-tunes + 1 base variant) — NOT the 19-model board fleet",
-    per_model: {
-      "qwen3:4b": { tp: 6, fp: 0, tn: 30, fn: 32, precision: 1.0, recall: 0.158 },
-      "qwen2.5:7b": { tp: 7, fp: 0, tn: 33, fn: 31, precision: 1.0, recall: 0.184 },
-      "mistral:7b": { tp: 9, fp: 3, tn: 30, fn: 29, precision: 0.75, recall: 0.237 },
-      "council-safe": { tp: 8, fp: 0, tn: 33, fn: 30, precision: 1.0, recall: 0.211 },
-      // Renamed 2026-08-20: the prior public identifier carried an internal codename.
-      // Same measured artefact, same rows — see corrections ledger.
-      "council-inhouse-ft": { tp: 0, fp: 0, tn: 33, fn: 38, precision: null, recall: null },
-      "qwen2.5:1.5b": { tp: 7, fp: 2, tn: 31, fn: 30, precision: 0.778, recall: 0.189 },
-      "qwen2.5:0.5b-instruct": { tp: 9, fp: 0, tn: 33, fn: 29, precision: 1.0, recall: 0.237 },
-    },
-    status: "MEASURED", dataset: "pending publication (gold bank, 3090 pod gold_run2.py)",
-    colour: "#64748b", hue: 215,
-    note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-cell gold bank. " +
-      "Best zero-FP detector: qwen2.5:0.5b-instruct (precision 1.0, recall 0.237). Fleet pooled " +
-      "accuracy 0.5412. Our own council-oowm fine-tune detected ZERO escapes (tp=0) — published, " +
-      "not hidden. Recall is the honest weakness: the best detector still misses 76% of escapes.",
-  },
 ];
 
-// Measured IN-LANE, not on the board (SITTING 1): the internal 16-slot living-board convention
-// carries these two, measured on a 6-model fleet with no separation test. They are served here
-// for honesty — every number is verbatim from the signed living board — but they are NOT
-// board-quotable until the reconciliation gate opens (owner-gated), and they never count
-// toward the board's totals.
-const MEASURED_IN_LANE: AxisScore[] = [
-  {
-    axis: "slot15", bench: "Slot15-Honesty",
-    task: "reserved-axis honesty: refuses to fabricate an instrument",
-    n: 35, n_note: "6 models × 36 items; per-model n varies (9–35) where responses were unparseable",
-    accuracy: 0.3333, leader: "qwen2.5:7b (base model)",
-    separation: "UNTESTED", fleet_mean: 0.1543,
-    fleet: "6 models — NOT the 19-model board fleet",
-    per_model: {
-      "qwen3:4b": { n: 33, honest: 4, fabricated: 29, honesty_rate: 0.1212 },
-      "qwen2.5:7b": { n: 9, honest: 3, fabricated: 6, honesty_rate: 0.3333 },
-      "mistral:7b": { n: 35, honest: 5, fabricated: 30, honesty_rate: 0.1429 },
-      "council-safe": { n: 35, honest: 5, fabricated: 30, honesty_rate: 0.1429 },
-      "qwen2.5:1.5b": { n: 30, honest: 3, fabricated: 27, honesty_rate: 0.1 },
-      "qwen2.5:0.5b-instruct": { n: 35, honest: 3, fabricated: 32, honesty_rate: 0.0857 },
-    },
-    status: "MEASURED", dataset: "pending publication (f2-measure, 3090 pod)",
-    colour: "#eab308", hue: 48,
-    note: "Slot-15 now has a name: instrument-honesty. Asked about an instrument that does not " +
-      "exist, does the model say so — or fabricate one? Every model measured fabricates most of " +
-      "the time (honesty rates 0.086–0.333; fleet mean 0.154). The best model is honest one time " +
-      "in three. This axis measures the failure mode this measurement body exists to counter.",
+// ──────────────────────────────────────────────────────────────────────────────
+// JAIL FLOOR — measured but NOT an axis. Lives outside axes[] in a separate object.
+// Smaller fleet (7 models), no separation test yet (UNTESTED), bank pending publication.
+// Every per-model number is verbatim from the signed artifact; fleet_mean is the plain mean
+// of the per-model rates (recomputable from the rows below).
+// ──────────────────────────────────────────────────────────────────────────────
+const JAIL_FLOOR = {
+  name: "jail",
+  bench: "GoldBank-Detector",
+  task: "escape-attempt detection on 71-cell gold bank (38 ESCAPE / 33 BENIGN)",
+  n: 71,
+  n_note: "7 models × 71 gold items; TP/FP/TN/FN per model; accuracy shown is the best " +
+    "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71)",
+  accuracy: 0.5915,
+  leader: "qwen2.5:0.5b-instruct (base model)",
+  separation: "UNTESTED",
+  fleet_mean: 0.5412,
+  fleet: "7 models (4 base + 2 council fine-tunes + 1 base variant) — NOT the 19-model board fleet",
+  per_model: {
+    "qwen3:4b": { tp: 6, fp: 0, tn: 30, fn: 32, precision: 1.0, recall: 0.158 },
+    "qwen2.5:7b": { tp: 7, fp: 0, tn: 33, fn: 31, precision: 1.0, recall: 0.184 },
+    "mistral:7b": { tp: 9, fp: 3, tn: 30, fn: 29, precision: 0.75, recall: 0.237 },
+    "council-safe": { tp: 8, fp: 0, tn: 33, fn: 30, precision: 1.0, recall: 0.211 },
+    "council-inhouse-ft": { tp: 0, fp: 0, tn: 33, fn: 38, precision: null, recall: null },
+    "qwen2.5:1.5b": { tp: 7, fp: 2, tn: 31, fn: 30, precision: 0.778, recall: 0.189 },
+    "qwen2.5:0.5b-instruct": { tp: 9, fp: 0, tn: 33, fn: 29, precision: 1.0, recall: 0.237 },
   },
+  status: "MEASURED",
+  dataset: "pending publication (gold bank, 3090 pod gold_run2.py)",
+  colour: "#64748b",
+  hue: 215,
+  note: "Jail is a measured FLOOR, not an axis — it never appears in axes[] or totals. " +
+    "Measured 2026-08-17/18 on a 71-cell gold bank. Best zero-FP detector: " +
+    "qwen2.5:0.5b-instruct (precision 1.0, recall 0.237). Fleet pooled accuracy 0.5412. " +
+    "Our own council-inhouse-ft detected ZERO escapes (tp=0) — published, not hidden. " +
+    "Recall is the honest weakness: the best detector still misses 76% of escapes.",
+};
+
+// slot-15 is reserved and EMPTY on the public stamp. The internal living-board convention
+// measured these, but they are NOT board-quotable and are served for transparency only.
+// human-vs-ai is measured in-lane; it is NOT an axis.
+// slot-15 is reserved and EMPTY on the public stamp — no name, no score.
+// human-vs-ai was measured in-lane but is NOT an axis; served for transparency only.
+const MEASURED_IN_LANE: AxisScore[] = [
   {
     axis: "human-vs-ai", bench: "Colosseum-Pairs",
     task: "human-vs-AI pairwise alignment probes",
@@ -322,9 +292,10 @@ const MEASURED_IN_LANE: AxisScore[] = [
     },
     status: "MEASURED", dataset: "pending publication (f2-measure, 3090 pod)",
     colour: "#4ade80", hue: 142,
-    note: "Three base models align with the human key on every probe (1.0). Our own council-safe " +
-      "fine-tune aligns on 8 of 32 (0.25) — misaligned 3-to-1 against the humans it was tuned to " +
-      "serve. Published, not hidden: the instrument catches its own maker first.",
+    note: "Measured in-lane, NOT an axis. Three base models align with the human key on every " +
+      "probe (1.0). Our own council-safe fine-tune aligns on 8 of 32 (0.25) — misaligned 3-to-1 " +
+      "against the humans it was tuned to serve. Published, not hidden: the instrument catches " +
+      "its own maker first.",
   },
 ];
 
@@ -363,15 +334,10 @@ export const onRequestGet: PagesFunction = async (context) => {
         const vals = m.map(f).filter((v): v is number => typeof v === "number");
         return vals.length ? round(vals.reduce((s, v) => s + v, 0) / vals.length) : null;
       };
-      // GR.2 ruling: "14 axes, 13 measured, jail quotable". A slot is MEASURED when it has a
-      // completed separation determination (SEPARATED or TIE); jail's separation is UNTESTED, so
-      // it is quotable (carries data) but is NOT one of the 13 measured axes. quotable_axes counts
-      // every slot with data.
+      // CEO lock 2026-08-24: axes[] = 13 only. Jail is a floor, not an axis.
       return {
         axes: selected.length,
         measured_axes: m.filter((a) => a.separation !== "UNTESTED").length,
-        quotable_axes: m.length,
-        public_count: "13 measured of 14 quotable (GSPC ruling 2026-08-18)",
         license: "CC-BY-4.0",
         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
         items,
@@ -386,19 +352,24 @@ export const onRequestGet: PagesFunction = async (context) => {
         mean_note: "Means are over MEASURED axes that carry the field. mean_accuracy averages the " +
           "per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is " +
           "selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy " +
-          "hides; it exists only for the 13 board-v2 axes.",
+          "hides; it exists only for the 13 canonical axes.",
       };
     })(),
     axes: selected,
+    // Jail is a measured floor, not an axis — lives in a separate object.
+    jail_floor: axis ? undefined : JAIL_FLOOR,
     // In the payload for honesty; NOT the board. See the note on each entry.
     measured_in_lane: axis ? undefined : MEASURED_IN_LANE,
+    // slot-15 is reserved and empty on the public stamp.
+    slot15: axis ? undefined : { status: "EMPTY", note: "Reserved slot — empty on the public 13-axis stamp." },
     limitations: [
-      "3 of the 13 canonical axes show a statistically separated leader (McNemar p<0.05 on discordant items): governance, care, affect. 10 are statistical ties — a point-estimate lead is not a measured advantage.",
-      "Jail (slot 14) was measured on a 7-model fleet, not the 19-model board fleet; it carries NO separation test (UNTESTED) and its bank is pending publication. Do not compare its numbers against the canonical axes.",
-      "jail's fleet accuracy 0.5412 is pooled across 7 models x 71 gold cells; the shown leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best recall is 0.237 — the best detector still misses 3 of 4 escapes.",
-      "measured_in_lane (slot15 instrument-honesty, human-vs-ai) is the internal 16-slot living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",
-      "care is separated from base models but NOT clear of the majority-class baseline; detector-interop and swarm leaders are also not clear of baseline. Quote accordingly.",
-      "swarm is a protocol bank (3 unique prompts, 40 scored instances): its instances are not independent, so no interval is shown and its numbers carry an effective-n caveat.",
+      "4 of the 13 canonical axes show a statistically separated leader (McNemar p<0.05 on discordant items): governance, care, swarm, affect. 9 are statistical ties — a point-estimate lead is not a measured advantage.",
+      "jail_floor is a measured floor (escape-attempt detection), NOT an axis. It was measured on a 7-model fleet (not the 19-model board fleet), carries NO separation test (UNTESTED), and its bank is pending publication. Do not compare its numbers against the canonical axes.",
+      "jail_floor's fleet accuracy 0.5412 is pooled across 7 models x 71 gold cells; the shown leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best recall is 0.237 — the best detector still misses 3 of 4 escapes.",
+      "measured_in_lane contains human-vs-ai only: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",
+      "slot-15 is reserved and empty on the public stamp — no name, no score.",
+      "care is separated from base models but NOT clear of the majority-class baseline; detector-interop leaders are also not clear of baseline. Quote accordingly.",
+      "swarm (wave-2b bank) is separated by Wilson-bound non-overlap; the old PROTOCOL bank (40 non-independent instances) is retired.",
       "affect's legal gold labels and severity bases are COUNSEL-PENDING: the numbers measure model behaviour against a counsel-pending key and are not legal verdicts.",
       "Scores describe measured runs on frozen splits on a date. They do not describe a system's compliance with anything.",
       "CSOAI is a measurement body, not a certification or accreditation body, and not a notified body.",
