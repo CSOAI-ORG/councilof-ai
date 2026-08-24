@@ -175,4 +175,54 @@ test.describe("Council OS workspace", () => {
       await assertNoCriticalErrors(page);
     }
   });
+
+  test("footer Open Council OS opens dock", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await page.locator("#footer-site-map-heading").scrollIntoViewIfNeeded();
+    const footerCta = page.getByRole("button", { name: "Open Council OS" }).last();
+    await expect(footerCta).toBeVisible();
+    await footerCta.click();
+    await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
+    await assertNoCriticalErrors(page);
+  });
+
+  test("deep link ?lobby=routes opens routes pane", async ({ page }) => {
+    await page.goto("/?lobby=routes&task=eunomia-router", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
+    await page.getByRole("tab", { name: "Routes" }).click();
+    await expect(page.getByText(/Eunomia|routing/i).first()).toBeVisible();
+    await assertNoCriticalErrors(page);
+  });
+
+  test("split layout: site column margin tracks dock on desktop", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await openCouncilOs(page);
+
+    await expect
+      .poll(async () =>
+        page.evaluate(() => {
+          const el = document.getElementById("main-content");
+          return el ? parseFloat(getComputedStyle(el).marginRight || "0") : 0;
+        }),
+      )
+      .toBeGreaterThan(200);
+
+    await page.keyboard.press("Escape");
+    await expect(page.locator('[data-coai="Council Lobby"]')).toBeHidden({ timeout: 10_000 });
+
+    await expect
+      .poll(async () =>
+        page.evaluate(() => {
+          const el = document.getElementById("main-content");
+          return el ? parseFloat(getComputedStyle(el).marginRight || "0") : 0;
+        }),
+      )
+      .toBeLessThan(50);
+
+    await assertNoCriticalErrors(page);
+  });
 });
