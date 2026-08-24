@@ -7,9 +7,16 @@
  "applicationCategory":"DeveloperApplication","operatingSystem":"Any",
  "description":"Claim-vs-signed-artifact integrity checker. Verifies signature, payload completeness, and claim support in one deterministic audit.",
  "license":"https://creativecommons.org/licenses/by/4.0/",
- "offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},
+ "offers":{"@type":"Offer","availability":"https://schema.org/PreOrder","description":"ClaimGuard human rail — Paddle integration pending"},
  "publisher":{"@type":"Organization","name":"CSOAI Ltd","url":"https://councilof.ai"}}
-</script></head>
+</script>
+<style>
+.cta-box{background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05));border:1px solid rgba(16,185,129,0.4);border-radius:0.75rem;padding:1.5rem;margin:2rem 0;text-align:center}
+.cta-box h3{font-size:1.1rem;margin-bottom:0.5rem}
+.cta-button{display:inline-block;background:#6b7280;color:#fff;padding:0.75rem 1.5rem;border-radius:0.5rem;font-weight:600;margin-top:0.75rem;cursor:not-allowed;opacity:0.7}
+.cta-note{font-size:0.8rem;color:#6b7280;margin-top:0.5rem}
+</style>
+</head>
 <body>
 <h1>ClaimGuard</h1>
 <p class="tagline">The receipt for your claims.</p>
@@ -28,5 +35,13 @@ claimguard check board.signed.json '{"refusal_rate": 0.633}'</pre>
 <li>Fail-closed: no key → unsigned-labelled; empty payload → STUB flagged.</li>
 <li>RFC 8785 + Ed25519 + did:web:csoai.org trust root. CC-BY-4.0.</li>
 </ul>
+
+<div class="cta-box">
+<h3>Book ClaimGuard (human rail)</h3>
+<p>Human-rail ClaimGuard booking will be available via Paddle checkout.</p>
+<span class="cta-button">Coming — Paddle</span>
+<p class="cta-note">Paddle integration pending. This is a placeholder CTA, not a live checkout.</p>
+</div>
+
 <footer>Issuer: CSOAI Ltd (UK 16939677) · <a href="https://councilof.ai">councilof.ai</a></footer>
 </body></html>
