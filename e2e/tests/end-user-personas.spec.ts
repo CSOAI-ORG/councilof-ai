@@ -89,15 +89,30 @@ const LAYER0_ROUTES = [
   "/ownership",
 ];
 
+async function dismissCookieBanner(page: Page) {
+  const essential = page.getByRole("button", { name: "Essential only" });
+  if (await essential.isVisible().catch(() => false)) {
+    await essential.click();
+  }
+}
+
 async function assertHealthy(page: Page, route: string, mustSee: RegExp) {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
 
-  const response = await page.goto(route, { waitUntil: "networkidle", timeout: 45000 });
-  expect(response?.status(), `${route} status`).toBeLessThan(400);
+  const response = await page.goto(route, { waitUntil: "domcontentloaded", timeout: 45_000 });
+  await dismissCookieBanner(page);
+  await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
 
-  // SPA: wait for React hydration
-  await page.waitForTimeout(2000);
+  const status = response?.status();
+  if (status != null) {
+    expect(status, `${route} status`).toBeLessThan(400);
+  } else {
+    // SPA fallback when navigation response is missing (preview race / HMR)
+    await expect(page.locator("#root, body")).toBeVisible({ timeout: 10_000 });
+  }
+
+  await page.waitForTimeout(800);
 
   const body = (await page.textContent("body")) || "";
   expect(body.length, `${route} content length`).toBeGreaterThan(200);
@@ -140,20 +155,12 @@ test.describe("Council OS — lobby opens for all entry points", () => {
   for (const route of entryPoints) {
     test(`lobby CTA from ${route}`, async ({ page }) => {
       await page.goto(route, { waitUntil: "domcontentloaded" });
-      await page.waitForTimeout(1000);
+      await dismissCookieBanner(page);
 
-      const councilBtn = page
-        .locator(
-          'button:has-text("Council"), a:has-text("Council OS"), button:has-text("Open Council"), [aria-label*="Council"]',
-        )
-        .first();
-
-      if (await councilBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await councilBtn.click();
-        await page.waitForTimeout(1500);
-        const body = (await page.textContent("body")) || "";
-        expect(body).toMatch(/Council OS|Ask the Council|Measure/i);
-      }
+      const launcher = page.locator('button[aria-label="Open Council OS"]').first();
+      await expect(launcher).toBeVisible({ timeout: 10_000 });
+      await launcher.click();
+      await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
     });
   }
 });
