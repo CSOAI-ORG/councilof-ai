@@ -166,7 +166,7 @@ export default function LobbyHeader({
           title="Minimise (Cmd/Ctrl + .)"
           className={`${CONTROL} ${SP.chip} text-[12px] font-semibold`}
         >
-          <IconMinimise />
+          {size === "full" ? <IconRestore /> : <IconExpand />}
           <span className="hidden sm:inline">Minimise</span>
         </button>
 
