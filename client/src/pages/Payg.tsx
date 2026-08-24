@@ -3,6 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Coins } from "lucide-react";
 
+// PAYG (pay-per-call / x402) — the agent rail from /pricing, in detail.
+// Machine-access pricing is pending a published ruling — not yet set. 100 free
+// calls/day per key remain free. Every call returns a 3KB Ed25519-signed,
+// hash-chained measurement card. CTAs point at real destinations (get a key,
+// top up), never a bounce back to /pricing.
+
 const PRICING_STATUS = "Machine-access pricing is pending a published ruling — not yet set";
 
 const TIERS = [
@@ -32,6 +38,8 @@ export default function Payg() {
           ))}
         </div>
       </div>
+
+      {/* Price tiers */}
       <div className="grid md:grid-cols-3 gap-4 mb-14">
         {TIERS.map((t) => (
           <Card key={t.label} className={`p-6 flex flex-col items-center text-center ${t.popular ? "border-primary ring-1 ring-primary" : ""}`}>
@@ -45,6 +53,44 @@ export default function Payg() {
           </Card>
         ))}
       </div>
+
+      {/* Setup */}
+      <Card className="p-6 mb-10">
+        <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> Setup in 30 seconds</h2>
+        <pre className="bg-muted rounded-lg p-4 text-sm overflow-x-auto">
+{`export COAI_PAYG_KEY="key_xxxxxxxxxxxxxxxx"
+# 100 free calls/day per key. After that:
+#   machine-access pricing is pending a published ruling — not yet set.
+# Every call returns a 3KB Ed25519-signed measurement card.
+# When the balance hits zero, the call returns a top-up URL.`}
+        </pre>
+      </Card>
+
+      {/* Why PAYG */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <Card className="p-6">
+          <h3 className="font-bold mb-3 flex items-center gap-2"><Check className="h-5 w-5 text-primary" /> Why pay-per-call</h3>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li>• One key across every published instrument</li>
+            <li>• Same token across machines and CI</li>
+            <li>• Balance never expires; top up any time</li>
+            <li>• 100 free cards a day before you pay a cent</li>
+          </ul>
+        </Card>
+        <Card className="p-6">
+          <h3 className="font-bold mb-3 flex items-center gap-2"><Coins className="h-5 w-5 text-primary" /> Two ways to pay</h3>
+          <p className="text-sm text-muted-foreground">
+            Top up with <strong>card</strong> or <strong>USDC on Base</strong> via x402 for
+            agent-to-agent payments. Every call is metered and the result is Ed25519-signed —
+            so your auditor verifies the card independently of us.
+          </p>
+        </Card>
+      </div>
+
+      <p className="text-center text-sm text-muted-foreground mt-10">
+        Prefer a fixed monthly plan for humans? See the <a href="/pricing" className="underline">Council rail →</a>
+      </p>
+
       <Card className="p-6 mt-10 border-amber-400/40">
         <h2 className="text-xl font-bold mb-2">East-West packs — pricing pending a published ruling</h2>
         <p className="text-sm text-muted-foreground">
