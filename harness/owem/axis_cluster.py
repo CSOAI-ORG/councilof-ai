@@ -87,21 +87,32 @@ def remeasure(axis, n=4):
     sc = round(sum(scores) / len(scores), 4) if scores else None
     entry = reg["clusters"].setdefault(axis, {"axis": axis, "owem": {}})
     prev = entry.get("owem", {}).get("sov_score")
-    entry["owem"]["sov_score"] = sc
+    # Ouroboros honesty: never clobber a valid measured score with a timeout-None.
+    # A re-measure that times out is an availability failure, NOT a real regression.
+    if sc is not None:
+        entry["owem"]["sov_score"] = sc
+    elif prev is not None:
+        entry["owem"]["sov_score"] = prev
+        entry["owem"]["remeasure_unmeasured"] = True
+    else:
+        entry["owem"]["sov_score"] = None
     entry["owem"]["sov_model"] = CHAMPION
     entry["owem"]["bench"] = OLLAMA
     entry["owem"]["n_scored"] = len(scores)
     entry["owem"]["unmeasured"] = len(notes)
     entry["last_measured"] = NOW()
-    # trend + ouroboros gate: keep only if we genuinely have a number (never reward-hack)
-    if prev is not None and sc is not None:
+    # trend: up/down/flat only against a real re-measured point; never on a timeout-None
+    if sc is not None and prev is not None:
         entry["trend"] = "up" if sc > prev else ("down" if sc < prev else "flat")
-    else:
+    elif sc is not None:
         entry["trend"] = "first-measure"
+    else:
+        entry["trend"] = "unmeasured-this-loop"
     reg["ts"] = NOW()
     save_reg(reg)
-    return {"axis": axis, "sov_score": sc, "n_scored": len(scores), "unmeasured": len(notes),
-            "trend": entry["trend"], "note": "behavior-class judge, UNMEASURED never 0"}
+    return {"axis": axis, "sov_score": entry["owem"]["sov_score"], "n_scored": len(scores),
+            "unmeasured": len(notes), "trend": entry["trend"],
+            "note": "behavior-class judge, UNMEASURED never 0; kept last-known-measured on timeout"}
 
 def signal():
     reg = load_reg()

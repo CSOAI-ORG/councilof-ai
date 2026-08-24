@@ -54,6 +54,32 @@ def _load_reg():
         except Exception: pass
     return {"kind": "empty", "clusters": {}, "sov_index_signal": None}
 
+def specialists():
+    """Full specialist team (axis + regulator + industry + product) with live sov signals merged.
+    Merges the estate /api/specialists catalog with the measured axis register. Honest: a
+    specialist whose signal is not yet measured is reported UNMEASURED (never fabricated)."""
+    try:
+        req = urllib.request.Request(ESTATE + "/api/specialists", headers={"User-Agent": "oowm/1.0"})
+        team = json.loads(urllib.request.urlopen(req, timeout=12).read().decode())
+    except Exception:
+        team = {"schema": "csoai.specialist-team/0.2", "specialists": [], "metrics": {}}
+    reg = _load_reg()
+    cl = reg.get("clusters", {})
+    out = []
+    for sp in team.get("specialists", []):
+        c = cl.get(sp.get("id"), {})
+        sov = c.get("owem", {}).get("sov_score")
+        out.append({
+            "id": sp.get("id"), "class": sp.get("class"), "role": sp.get("role"),
+            "model": sp.get("model"), "mcp": sp.get("mcp"),
+            "signal_status": "MEASURED" if sov is not None else "UNMEASURED",
+            "sov_score": sov, "registry_baseline": c.get("registry_baseline"),
+            "gap": c.get("gap_sov_vs_baseline"),
+        })
+    return {"schema": "csoai.specialist-team/0.3", "classes": team.get("classes", []),
+            "specialists": out, "sov_index_signal": reg.get("sov_index_signal"),
+            "honesty": "Measurement, never certification. UNMEASURED specialists are reported honestly; no fabricated signal."}
+
 def classify(question):
     q = (question or "").lower()
     hits = []
@@ -141,13 +167,14 @@ class H(http.server.BaseHTTPRequestHandler):
         self.send_response(code); self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(b))); self.end_headers(); self.wfile.write(b)
     def do_GET(self):
+        if self.path.startswith("/oowm/specialists"): return self._send(200, specialists())
         if self.path.startswith("/oowm/clusters"): return self._send(200, _load_reg())
         if self.path.startswith("/oowm/signal"): return self._send(200, sov_signal())
         if self.path.startswith("/oowm/index"):
             idx = sov_index(); _append_signal(idx.get("sov_index_signal")); return self._send(200, idx)
         if self.path.startswith("/a2a"): return self._send(200, agent_card())
         if self.path.startswith("/health"): return self._send(200, {"ok": True})
-        self._send(404, {"error": "not_found", "paths": ["/oowm/clusters", "/oowm/signal", "/oowm/index", "/oowm/chat", "/mcp", "/a2a"]})
+        self._send(404, {"error": "not_found", "paths": ["/oowm/specialists", "/oowm/clusters", "/oowm/signal", "/oowm/index", "/oowm/chat", "/mcp", "/a2a"]})
     def do_POST(self):
         try:
             n = int(self.headers.get("Content-Length", 0))
@@ -178,6 +205,8 @@ def mcp(body):
              "inputSchema": {"type": "object", "properties": {}}},
             {"name": "oowm_signal", "description": "Living signal history + forecast of the index (forecast / grow the sovereign signal).",
              "inputSchema": {"type": "object", "properties": {}}},
+            {"name": "oowm_specialists", "description": "Full specialist team (axis + regulator + industry + product) with live sovereign signals, honest UNMEASURED.",
+             "inputSchema": {"type": "object", "properties": {}}},
         ]}}
     if method == "tools/call":
         name = body.get("params", {}).get("name")
@@ -190,6 +219,8 @@ def mcp(body):
             out = sov_index(); _append_signal(out.get("sov_index_signal"))
         elif name == "oowm_signal":
             out = sov_signal()
+        elif name == "oowm_specialists":
+            out = specialists()
         else:
             return {"jsonrpc": "2.0", "id": body.get("id"), "error": {"code": -32601, "message": "tool not found"}}
         return {"jsonrpc": "2.0", "id": body.get("id"), "result": {"content": [{"type": "text", "text": json.dumps(out, indent=2)}]}}
