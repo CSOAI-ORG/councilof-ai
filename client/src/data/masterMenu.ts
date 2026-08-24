@@ -33,6 +33,8 @@ export interface MasterNavGroup {
   icon: LucideIcon;
   description: string;
   submenu: MasterNavItem[];
+  /** When set, "View all …" opens Council OS instead of navigating away. */
+  groupLobby?: { pane: LobbyTabId; task?: LobbyTaskId };
 }
 
 export const MASTER_NAVIGATION: MasterNavGroup[] = [
@@ -40,12 +42,13 @@ export const MASTER_NAVIGATION: MasterNavGroup[] = [
     name: "Workspace",
     href: "/os",
     icon: Sparkles,
-    description: "Council OS — board, models, routes, MCP, chat",
+    description: "Council OS — router + harness in one dock (board, models, routes, MCP, chat)",
+    groupLobby: { pane: "home" },
     submenu: [
       {
         name: "Council OS home",
         description: "Open the living refinery — dock, AG-UI chat, grouped sidebar",
-        action: { kind: "link", href: "/os" },
+        action: { kind: "lobby", pane: "home" },
       },
       {
         name: "Live board",
