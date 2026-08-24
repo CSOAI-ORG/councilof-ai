@@ -105,7 +105,7 @@ export default function LobbyPaneRail({
               {t.label}
               {gold && (
                 <span className="mt-0.5 block text-[10.5px] font-medium text-amber-800">
-                  gold · nothing here is deployed
+                  Local play · in build
                 </span>
               )}
             </button>

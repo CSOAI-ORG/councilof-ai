@@ -9,7 +9,7 @@
  *
  * TWO entries are `kind: "local"`: Home is the native Council OS desktop
  * (LobbyHome) — it must not iframe /os, or the OS nests inside itself. Play
- * is the gold local-play gallery from play.ts; nothing there is deployed.
+ * is the gold local-play gallery from play.ts; routes are preview-only until live.
  *
  * Software (DSH) is the signed-in dashboard at /dashboard. The same tab
  * ids and labels are the dashboard sidebar. When /dashboard is framed here
@@ -165,8 +165,8 @@ export const LOBBY_TABS: LobbyTab[] = [
   },
   {
     id: "play",
-    label: "Council OS — local play",
-    blurb: "The arenas, with honest playable / in-build states. Nothing here is deployed.",
+    label: "Play gallery",
+    blurb: "Arena previews with honest in-build labels — measurement surfaces, not live multiplayer yet.",
     path: "",
     kind: "local",
     accent: "gold",

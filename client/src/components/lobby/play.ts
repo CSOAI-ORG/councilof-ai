@@ -2,7 +2,7 @@
  * play — the "Council OS — local play" gallery data.
  *
  * THE HONESTY RULE FOR THIS FILE, AND IT IS THE WHOLE POINT OF IT.
- * Nothing here is deployed as a playable experience. The arena wrapper exists
+ * Play gallery cards are preview-only until live routes ship. The arena wrapper exists
  * only as a local package; no match, duel or swarm run is running on this site
  * for anyone to join. So:
  *
@@ -52,7 +52,7 @@ export const PLAY_CARDS: PlayCard[] = [
     image: "/images/coliseum_logic_duel.jpg",
     alt: "A human and an AI facing each other across a chessboard in the arena",
     status: "in-build",
-    reality: "No route serves this. Nothing is deployed to play against.",
+    reality: "In build — no live match route on councilof.ai yet.",
   },
   {
     id: "swarm-clash",
@@ -61,7 +61,7 @@ export const PLAY_CARDS: PlayCard[] = [
     image: "/images/coliseum_swarm_clash.jpg",
     alt: "A swarm of green shards clashing with clay scientists raising shields",
     status: "in-build",
-    reality: "No route serves this. The arena wrapper exists only as a local package.",
+    reality: "In build — arena wrapper is local preview only.",
   },
   {
     id: "humans-vs-humanoids",
@@ -86,6 +86,6 @@ export const PLAY_CARDS: PlayCard[] = [
 
 /** The standing notice above the gallery. Rendered every time, never dismissible. */
 export const PLAY_NOTICE =
-  "None of these is deployed as a game you can play. Where a card opens a route, that route is a " +
-  "page to read. Cards marked “Not yet playable — in build” have no destination at all, and are " +
+  "Play gallery previews on councilof.ai. Where a card opens a route, that route is a " +
+  "page to read. Cards marked “Not yet playable — in build” have no live destination yet, and are " +
   "shown so the roadmap is visible rather than implied.";
