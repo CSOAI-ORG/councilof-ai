@@ -17,9 +17,10 @@ const CASES = [
   { q: "How much does a grade cost?", want: "free forever" },
   { q: "What should a regulator do with a GSPC grade?", want: "Regulators" },
   { q: "Can an insurer use GSPC for underwriting?", want: "not a signal that a system is safe to underwrite" },
-  { q: "I want my system measured against the rules that govern it. What does the assessment actually run, and what does it not claim?", want: "signed card", not: "I could not ground" },
-  { q: "We are an enterprise team — what does getting measured actually run, what does the result attest, and what does it not claim?", want: "signed card", not: "I could not ground" },
+  { q: "I want my system measured against the rules that govern it. What does the assessment actually run, and what does it not claim?", want: "does not fetch", not: "we run it against the frozen instruments" },
+  { q: "We are an enterprise team — what does getting measured actually run, what does the result attest, and what does it not claim?", want: "does not fetch", not: "we run it against the frozen instruments" },
   { q: "Help me verify a measurement card — recompute its hash and check the Ed25519 signature.", want: "did:web:csoai.org", not: "I could not ground" },
+  { q: "How do I verify a signed report?", want: "did:web:csoai.org", not: "I could not ground" },
 ];
 
 let fail = 0;
