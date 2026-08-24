@@ -4,9 +4,11 @@
  * Links are visually hidden until focused, meeting WCAG 2.1 Success Criterion 2.4.1.
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { navigateToSkipTarget, type SkipLink } from '@/lib/accessibility';
-import { useSiteChromeHidden } from '@/lib/osChrome';
+import { isEmbedded } from '@/lib/embed';
+import { isOsOpen, OS_CHROME_EVENT } from '@/lib/osChrome';
+import { NAV_ID, PANEL_ID } from '@/components/lobby/LobbyPaneTabs';
 
 interface SkipNavigationProps {
   /**
@@ -19,14 +21,26 @@ interface SkipNavigationProps {
   className?: string;
 }
 
-const defaultLinks: SkipLink[] = [
+const siteLinks: SkipLink[] = [
   { id: 'skip-to-main', label: 'Skip to main content', targetId: 'main-content' },
   { id: 'skip-to-nav', label: 'Skip to navigation', targetId: 'navigation' },
 ];
 
-export function SkipNavigation({ links = defaultLinks, className = '' }: SkipNavigationProps) {
-  const hideChrome = useSiteChromeHidden();
+const osLinks: SkipLink[] = [
+  { id: 'skip-to-os-nav', label: 'Skip to Council OS destinations', targetId: NAV_ID },
+  { id: 'skip-to-os-pane', label: 'Skip to Council OS pane', targetId: PANEL_ID },
+];
+
+export function SkipNavigation({ links, className = '' }: SkipNavigationProps) {
+  const [osOpen, setOsOpen] = useState(false);
   const [focusedLinkId, setFocusedLinkId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const sync = () => setOsOpen(isOsOpen());
+    sync();
+    window.addEventListener(OS_CHROME_EVENT, sync);
+    return () => window.removeEventListener(OS_CHROME_EVENT, sync);
+  }, []);
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
@@ -40,7 +54,10 @@ export function SkipNavigation({ links = defaultLinks, className = '' }: SkipNav
     }
   }, []);
 
-  if (hideChrome) return null;
+  // Framed embed panes drop site chrome entirely — skip links belong to the parent.
+  if (isEmbedded()) return null;
+
+  const activeLinks = links ?? (osOpen ? osLinks : siteLinks);
 
   return (
     <div
@@ -48,7 +65,7 @@ export function SkipNavigation({ links = defaultLinks, className = '' }: SkipNav
       role="navigation"
       aria-label="Skip links"
     >
-      {links.map((link) => (
+      {activeLinks.map((link) => (
         <a
           key={link.id}
           id={link.id}
