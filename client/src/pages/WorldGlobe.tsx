@@ -149,7 +149,7 @@ export default function WorldGlobe() {
   const [acted, setActed] = useState("");
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const globe3dRef = useRef<HTMLIFrameElement | null>(null);
-  // ━━ The Sovereign tour ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // ── The Sovereign tour ─────────────────────────────────────────────────────
   // Watch the Council assistant work the Layer-0 estate, one persona at a time. Every stop is a real
   // node with the status it has earned (LIVE by proven fetch / UNKNOWN said honestly /
   // CANDIDATE not yet earned) — the tour is the node registry made visible, not a promo reel.
