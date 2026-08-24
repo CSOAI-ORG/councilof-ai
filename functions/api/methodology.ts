@@ -6,7 +6,7 @@
 export const onRequestGet: PagesFunction = async () => {
   const methodology = {
     schema: "csoai.methodology/0.1",
-    doctrine: "measurement-not-certification · nobody-ranked-pays · corrections appended not edited",
+    doctrine: "measurement-not-certification \u00b7 nobody-ranked-pays \u00b7 corrections appended not edited",
     instruments: {
       gspc: {
         what: "16-axis governance measurement over deterministic banks",
@@ -27,7 +27,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
     honesty_rules: [
       "measurement, not certification — never a 'safe'/'compliant' verdict",
-      "13 measured of 14 quotable (jail separation untested, stated honestly)",
+      "public_count is derived from GET /api/gspc totals (measured_axes of quotable_axes); jail separation untested, stated honestly",
       "corrections appended, never edited",
       "no ranked party pays (nobody-ranked-pays)",
       "unmeasured axes stay UNMEASURED — never fabricated into a score",
