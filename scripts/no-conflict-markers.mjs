@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // no-conflict-markers.mjs — FAIL the build if any committed source file contains
-// unresolved git merge conflict markers (<<<<<<<, >>>>>>>) in code files.
+// unresolved git merge conflict markers in code files.
 //
 // A sibling lane pushed App.tsx with committed conflict markers (PR #415) and it
 // broke every deploy at 'Build client' (vite:esbuild 'Expected identifier but found <').
@@ -13,10 +13,14 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
 
-const MARKERS = ["<<<<<<<", ">>>>>>>"];   // git conflict markers (======= is too common in md)
+const MARKER_RES = [/^(<<<<<<<|>>>>>>>)/m];
 const EXTS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".py", ".sh"];
 const ROOTS = ["client", "functions", "scripts", "harness", "src"];
 const IGNORE_DIRS = new Set(["node_modules", ".next", "dist", ".git", "coverage", "__pycache__"]);
+const IGNORE_FILES = new Set([
+  "scripts/no-conflict-markers.mjs",
+  "scripts/resolve-app-tsx.mjs",
+]);
 
 function walk(dir, out) {
   let ents;
@@ -37,11 +41,13 @@ function scan(root) {
   walk(root, files);
   const bad = [];
   for (const f of files) {
+    const rel = path.relative(process.cwd(), f).replace(/\\/g, "/");
+    if (IGNORE_FILES.has(rel)) continue;
     const body = fs.readFileSync(f, "utf8");
-    for (const m of MARKERS) {
-      if (body.includes(m)) {
-        const ln = body.split("\n").findIndex((l) => l.includes(m)) + 1;
-        bad.push(`${f}:${ln}  contains '${m}'`);
+    for (const re of MARKER_RES) {
+      if (re.test(body)) {
+        const ln = body.split("\n").findIndex((l) => /^(<<<<<<<|>>>>>>>)/.test(l)) + 1;
+        bad.push(`${rel}:${ln}  contains git conflict marker`);
         break;
       }
     }
@@ -52,7 +58,8 @@ function scan(root) {
 // --selftest: create a temp dir with a marker, assert the detector fires.
 function selftest() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "cm-"));
-  fs.writeFileSync(path.join(tmp, "fixture.tsx"), "const a=1;\n<<<<<<< Updated upstream\nconst b=2;\n");
+  const marker = "<<<<<<< Updated upstream";
+  fs.writeFileSync(path.join(tmp, "fixture.tsx"), `const a=1;\n${marker}\nconst b=2;\n`);
   const hits = scan(tmp);
   fs.rmSync(tmp, { recursive: true, force: true });
   if (hits.length) { console.log("SELFTEST: PASS — detector fired on fixture"); return 0; }
