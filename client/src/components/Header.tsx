@@ -77,11 +77,11 @@ const navigation: NavGroup[] = [
   },
   {
     name: 'Solutions',
-    href: '/enterprise',
+    href: '/?lobby=measured&task=enterprise-start',
     icon: Building2,
     description: 'Who the measurement is for',
     submenu: [
-      { name: 'Enterprise', href: '/enterprise', description: 'Measure a portfolio of systems against the duties that bind them' },
+      { name: 'Enterprise', href: '/?lobby=measured&task=enterprise-start', description: 'Measure a portfolio of systems against the duties that bind them' },
       { name: 'Insurers and underwriters', href: '/insurers', description: 'Signed evidence a risk model can actually price' },
       { name: 'Government and regulators', href: '/government', description: 'Independent measurement, published method, no conformity mark' },
       { name: 'Industries', href: '/industries', description: 'Sector-by-sector: what applies to you and when' },
