@@ -38,40 +38,42 @@ import {
 import { Link } from 'wouter';
 import CouncilOsInnerNav from '@/components/os/CouncilOsInnerNav';
 import EnterpriseMeasureCta from '@/components/coliseum/EnterpriseMeasureCta';
+import { openLobby } from '@/lib/lobbyLink';
+import { POSITIONING } from '@/lib/positioning';
 
-// FAQ Data
+// FAQ Data — measurement body, not a certification shop
 const faqData = [
   {
     question: "What frameworks does CSOAI cover?",
-    answer: "CSOAI provides comprehensive coverage for EU AI Act compliance, NIST AI RMF alignment, ISO 42001 certification support, and TC260 (China's AI governance standard). Our platform also offers cross-framework mapping, allowing you to see how compliance in one framework translates to others."
+    answer: "Eunomia routes governance instruments across EU AI Act, NIST AI RMF, ISO 42001 control language, and TC260 — plus law, benchmarks, and compute. We measure and sign what happened; we do not issue ISO certificates or act as a notified body. Crosswalks show overlap so you reuse evidence, not rebuild it."
   },
   {
     question: "How does automated assessment work?",
-    answer: "Our designed multi-provider Council of AI draws on 12 different AI providers to independently evaluate your AI systems against the selected frameworks — no single-vendor conflict of interest. It is a designed council; its measured performance is published openly on our public Refutation Ledger."
+    answer: "Scoped measurement runs against frozen, published instruments. Results land on a signed card (~3KB, Ed25519) you can re-check without an account. Live board counts stay on GET /api/gspc. Empty cells stay empty — we never invent a score to close a deal."
   },
   {
     question: "Is my data secure?",
-    answer: "Absolutely. CSOAI employs enterprise-grade security including end-to-end encryption, SOC 2 Type II compliance, and data residency options for EU and US. Your AI system documentation never leaves our secure infrastructure, and we never use your data to train models."
+    answer: "Enterprise engagements use encrypted transport and agreed residency. We do not train models on your systems. Measurement evidence is yours to hold; verify stays free."
   },
   {
     question: "Can I use CSOAI for ISO 42001 certification?",
-    answer: "Yes. CSOAI provides complete ISO 42001 certification support including gap analysis, documentation templates, control implementation guidance, and audit preparation. Our platform generates documentation to support that work. We are not a certification body and we do not speak for any auditor."
+    answer: "No — we are not a certification body and we do not speak for any auditor. We measure ISO-aligned controls and issue signed evidence your auditor (or insurer) can recompute. Gap analysis and documentation support that work; the certificate comes from them, not us."
   },
   {
-    question: "What happens if we fail compliance?",
-    answer: "If your AI system doesn't meet compliance requirements, our platform provides detailed remediation recommendations prioritized by risk level. You'll receive specific action items, implementation guidance, and the ability to re-assess once changes are made. Our goal is to help you achieve compliance, not just identify gaps."
+    question: "What if measurement shows gaps?",
+    answer: "You get a signed card with axes, sample sizes, and intervals — then you choose who fixes. Per the firewall charter we never operate the fixer. Re-attest after remediation; the delta card is append-only history."
   },
   {
-    question: "How does the Council monitor us?",
-    answer: "After initial assessment, the Council performs continuous monitoring based on your subscription tier. This includes periodic re-assessments, real-time alerts for regulatory changes affecting your systems, and proactive notifications when your systems may be drifting out of compliance."
+    question: "How does ongoing monitoring work?",
+    answer: "Corpus-watch and scheduled re-measure keep evidence current as law and models move. Subscription tiers buy re-attest cadence and portfolio workspace — not a conformity badge that quietly goes stale."
   },
   {
-    question: "What reports do we receive?",
-    answer: "You receive comprehensive compliance reports including executive summaries for leadership, detailed technical reports for your team, framework-specific compliance certificates, risk heat maps, and audit-ready documentation. Reports can be exported in PDF, JSON, or integrated directly via API."
+    question: "What do we receive?",
+    answer: "Signed measurement cards, executive summaries, technical axis detail, risk heat from measured cells only, and API/JSON export. No framework 'compliance certificates' from CSOAI — that would be a lie about our register."
   },
   {
     question: "How do we register multiple AI systems?",
-    answer: "Enterprise customers can use our bulk import feature via CSV/JSON upload or API integration. Each AI system gets its own compliance profile, but you can manage them collectively through our dashboard. System grouping, tagging, and batch operations make managing large portfolios efficient."
+    answer: "Enterprise workspace supports CSV/JSON bulk import and API. Each system gets its own measurement profile; batch re-attest keeps the portfolio honest without fusing scores."
   }
 ];
 
@@ -135,14 +137,14 @@ export default function Enterprise() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
-                For CISOs & Compliance Teams
+                For CISOs · insurers · boards — {POSITIONING.router.short} + {POSITIONING.harness.short}
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Avoid €35M Fines. Ensure AI Compliance Across Every Framework.
+                Prove how your AI behaves — before the €35M question lands.
               </h1>
               <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                The EU AI Act is here with fines up to €35M or 7% of global revenue. CSOAI's Council
-                automates compliance across EU AI Act, NIST AI RMF, ISO 42001, and TC260—all from one platform.
+                {POSITIONING.subhead} Portfolio measurement across EU AI Act, NIST AI RMF, ISO 42001
+                controls, and TC260 — signed cards you can re-check. Measurement, not certification.
               </p>
 
               {/* Key Stats */}
@@ -190,33 +192,40 @@ export default function Enterprise() {
             <Card className="p-8 bg-white/10 backdrop-blur-sm border-white/20">
               <div className="flex items-center gap-3 mb-6">
                 <Shield className="h-8 w-8 text-emerald-400" />
-                <h3 className="text-2xl font-bold text-white">Compliance Dashboard</h3>
+                <h3 className="text-2xl font-bold text-white">Measurement portfolio</h3>
               </div>
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-3 bg-emerald-500/20 rounded-lg">
-                  <span className="text-gray-200">EU AI Act</span>
-                  <Badge className="bg-emerald-500 text-white">Compliant</Badge>
+                  <span className="text-gray-200">EU AI Act instruments</span>
+                  <Badge className="bg-emerald-500 text-white">MEASURED</Badge>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-emerald-500/20 rounded-lg">
-                  <span className="text-gray-200">NIST AI RMF</span>
-                  <Badge className="bg-emerald-500 text-white">Aligned</Badge>
+                  <span className="text-gray-200">NIST AI RMF map</span>
+                  <Badge className="bg-emerald-500 text-white">ROUTED</Badge>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-emerald-500/20 rounded-lg">
-                  <span className="text-gray-200">ISO 42001</span>
-                  <Badge className="bg-emerald-500 text-white">Certified</Badge>
+                  <span className="text-gray-200">ISO 42001 controls</span>
+                  <Badge className="bg-emerald-500 text-white">EVIDENCE</Badge>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-yellow-500/20 rounded-lg">
                   <span className="text-gray-200">TC260</span>
-                  <Badge className="bg-yellow-500 text-white">In Progress</Badge>
+                  <Badge className="bg-yellow-500 text-white">PARTIAL</Badge>
                 </div>
                 <div className="pt-4 border-t border-white/20">
-                  <div className="text-sm text-gray-400 mb-2">Overall Risk Score</div>
+                  <div className="text-sm text-gray-400 mb-2">GSPC board (live)</div>
                   <div className="flex items-center gap-3">
                     <div className="flex-1 bg-white/10 rounded-full h-3">
-                      <div className="bg-emerald-500 h-3 rounded-full" style={{ width: '85%' }}></div>
+                      <div className="bg-emerald-500 h-3 rounded-full" style={{ width: '93%' }}></div>
                     </div>
-                    <span className="text-emerald-400 font-bold">85/100</span>
+                    <span className="text-emerald-400 font-bold">13/14 measured</span>
                   </div>
+                  <button
+                    type="button"
+                    className="mt-4 w-full rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500"
+                    onClick={() => openLobby({ task: 'enterprise-start' })}
+                  >
+                    {POSITIONING.os.cta}
+                  </button>
                 </div>
               </div>
             </Card>
@@ -302,22 +311,30 @@ export default function Enterprise() {
                   5
                 </div>
                 <Award className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
-                <h3 className="font-bold text-lg mb-2">Certification & Badges</h3>
+                <h3 className="font-bold text-lg mb-2">Signed cards & re-attest</h3>
                 <p className="text-sm text-gray-600">
-                  Earn compliance badges, generate audit-ready reports, and showcase your commitment to AI safety.
+                  Hold Ed25519-signed measurement cards, export audit-ready evidence, and re-measure when the rules or the model move. No conformity badge from us.
                 </p>
               </Card>
             </div>
           </div>
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-12 flex flex-wrap justify-center gap-3">
           <Link href="/enterprise-onboarding">
             <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
-              Start Your Compliance Journey
+              Start portfolio measurement
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-emerald-600 text-emerald-700"
+            onClick={() => openLobby({ task: 'enterprise-start' })}
+          >
+            {POSITIONING.os.cta}
+          </Button>
         </div>
       </div>
 
@@ -409,11 +426,11 @@ export default function Enterprise() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">ISO 42001</h3>
-                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">Certification</Badge>
+                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">Measured evidence</Badge>
                 </div>
               </div>
               <p className="text-gray-600 mb-4">
-                Full support for AI Management System certification. Gap analysis, control implementation, and audit preparation.
+                Control-language measurement and gap evidence your auditor can recompute. We prepare the signed record — we do not issue the certificate.
               </p>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-center gap-2">
