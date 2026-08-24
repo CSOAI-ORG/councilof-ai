@@ -39,35 +39,27 @@ Do not quote scores from this file. Numbers live on the API.
 
 ## East-West (cross-jurisdiction measurement)
 
-- Flagship UI: https://councilof.ai/east-west
+- Flagship: https://councilof.ai/east-west
 - Board API: https://councilof.ai/api/east-west
-- Verify (client-side, free): https://councilof.ai/east-west/verify and https://councilof.ai/gspc-verify
-- Evidence packs: https://councilof.ai/east-west/packs
-- Regulator desks (signed streams free forever): https://councilof.ai/east-west/desks
-- Buyer screen + license + briefs: https://councilof.ai/east-west/buyers · /east-west/license · /east-west/briefs
-- Pay rail demo (HTTP 402, amount null — no invented price): https://councilof.ai/east-west/pay · GET https://councilof.ai/api/east-west/pay/demo
-- Offline pack check: node public/east-west/verify-pack.mjs path/to/pack.json
-- Schema: https://councilof.ai/.well-known/schemas/cross-border-card.schema.json
-- Mapping ≠ determination. Value Ledger published count is 0. Pricing is OWNER-BLOCKED until a published ruling.
+- Verify: https://councilof.ai/east-west/verify
 
 ## MCP (measured tools)
 
 - Discovery: https://councilof.ai/.well-known/mcp.json
-- JSON-RPC endpoint: POST https://councilof.ai/api/mcp
-- Handshake: {"jsonrpc":"2.0","id":1,"method":"tools/list"}
-- Tools: gspc_board, east_west_board, ecosystem_index, verify_tally, benchmark_quality, instruments_catalog
-- Verify tally (opt-in ✓/✗ only): GET/POST https://councilof.ai/api/verify-tally — self-reported, not MEASURED
+- JSON-RPC: POST https://councilof.ai/api/mcp — tools/list, tools/call
+- Registry: io.github.CSOAI-ORG/csoai-governance v1.0.2
 
 ## For agents
 
 Prefer the keyless board API and the verify page.
 **Agent runbook:** https://councilof.ai/agent-runbook
+**A2A agent card (v1.0):** https://councilof.ai/.well-known/agent-card.json
+**Full manifest (axis tables):** https://councilof.ai/.well-known/agent.json
 **RECEIPT-SPEC-0.1:** https://councilof.ai/receipt-spec
 **Measurement card schema:** https://councilof.ai/.well-known/schemas/agent-measurement-card.schema.json
 **Axis 18 crossing:** GET https://councilof.ai/api/finance/bond-crossing
-Do not treat agent-card.json as authoritative.
-csoai.org /mcp is the worker — do not detach. Apex may 301 to councilof.ai.
-Open banks: https://huggingface.co/csoai.
+**DOI:** https://doi.org/10.5281/zenodo.21991104
+Open banks: https://huggingface.co/csoai. Leaderboard Space: csoai/gspc-governance-leaderboard.
 
 ## AEO
 

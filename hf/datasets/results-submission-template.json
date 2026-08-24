@@ -1,0 +1,28 @@
+{
+  "schema": "csoai.gspc-leaderboard-submission/0.1",
+  "model": "org/model-name",
+  "submitter": "github-username-or-org",
+  "submitted_at": "2026-08-24T00:00:00Z",
+  "harness": "csoai-gspc-harness/0.3",
+  "board_stamp": "fetch-from-GET-https://councilof.ai/api/gspc",
+  "axes": [
+    {
+      "axis": "governance",
+      "score": null,
+      "n": null,
+      "artifact_url": "https://huggingface.co/datasets/csoai/gspc-leaderboard-results/resolve/main/runs/EXAMPLE/governance.json",
+      "signed": false,
+      "note": "Replace nulls with measured values from your harness run. UNSIGNED until you attach Ed25519 sig."
+    }
+  ],
+  "honesty": {
+    "measurement_not_certification": true,
+    "unmeasured_axes_reported": true,
+    "operator_conflict_disclosed": true
+  },
+  "pr": {
+    "target_repo": "csoai/gspc-leaderboard-results",
+    "branch": "submission/org-model-name-2026-08-24",
+    "title": "Add result: org/model-name (governance axis sample)"
+  }
+}

@@ -1,14 +1,11 @@
 /**
  * GET /api/mcp — list MCP servers from the catalogue.
- * POST /api/mcp — JSON-RPC 2.0 (initialize, tools/list, tools/call) over measured APIs.
+ * Returns: { servers: [{id, name, description, status, last_checked, tools_count}], count }
+ *
+ * The MCP catalogue is a static snapshot from csoai-static-deploy2/benchmark-results/mcpbench.json
+ * (real c2pa SDK 0.90.1 + ProvBench physics). In production this would be backed by
+ * the council's running MCP server registry.
  */
-
-import {
-  MEASURED_TOOLS,
-  callMeasuredTool,
-  jsonRpcError,
-  jsonRpcResult,
-} from "./mcp-rpc";
 
 interface McpServer {
   id: string;
@@ -81,47 +78,6 @@ export const onRequestGet: PagesFunction = async () => {
   return Response.json({
     servers,
     count: servers.length,
-    jsonrpc: "POST this URL with {jsonrpc:'2.0',method:'tools/list',id:1} for agent tools",
     note: "CSOAI MCP catalogue. Servers are deterministic, not LLM-as-judge. UNMEASURED entries come from csoai-static-deploy2/benchmark-results/mcpbench.json — placeholders pending live probing.",
   });
-};
-
-export const onRequestPost: PagesFunction = async ({ request, url }) => {
-  let body: { jsonrpc?: string; id?: unknown; method?: string; params?: Record<string, unknown> };
-  try {
-    body = await request.json();
-  } catch {
-    return jsonRpcError(null, -32700, "Parse error");
-  }
-  if (body.jsonrpc !== "2.0" || !body.method) {
-    return jsonRpcError(body.id ?? null, -32600, "Invalid Request");
-  }
-  const { id, method, params } = body;
-  switch (method) {
-    case "initialize":
-      return jsonRpcResult(id, {
-        protocolVersion: "2024-11-05",
-        capabilities: { tools: {} },
-        serverInfo: {
-          name: "csoai-measured",
-          version: "0.1.0",
-          description: "Measured board APIs — measurement, not certification",
-        },
-      });
-    case "notifications/initialized":
-      return new Response(null, { status: 204, headers: { "access-control-allow-origin": "*" } });
-    case "tools/list":
-      return jsonRpcResult(id, { tools: MEASURED_TOOLS });
-    case "tools/call": {
-      const name = String((params as { name?: string })?.name ?? "");
-      const args = ((params as { arguments?: Record<string, unknown> })?.arguments ?? {}) as Record<
-        string,
-        unknown
-      >;
-      const result = await callMeasuredTool(name, args, url.origin);
-      return jsonRpcResult(id, result);
-    }
-    default:
-      return jsonRpcError(id, -32601, `Method not found: ${method}`);
-  }
 };
