@@ -82,6 +82,7 @@ const Standards = lazy(() => import("./pages/Standards"));
 const Resources = lazy(() => import("./pages/Resources"));
 const About = lazy(() => import("./pages/About"));
 const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
+const EunomiaData = lazy(() => import("./pages/EunomiaData"));
 const Eunomia = lazy(() => import("./pages/Eunomia"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
@@ -649,6 +650,7 @@ function App() {
                   <Route path="/payg" component={Payg} />
                   <Route path="/about" component={About} />
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
+                  <Route path="/eunomia-data" component={EunomiaData} />
                   <Route path="/eunomia" component={Eunomia} />
                   <Route path="/careers" component={Careers} />
                   <Route path="/charter" component={Charter} />
