@@ -1,2 +1,2 @@
-// functions/api/chat.ts — thin re-export; logic lives in chatGrounded.ts
-export { onRequestOptions, onRequestPost } from "./chatGrounded";
+// functions/api/chat.ts - Ask SOV entry (helpers are _-private modules)
+export { onRequestOptions, onRequestPost } from "./_chatGrounded";
