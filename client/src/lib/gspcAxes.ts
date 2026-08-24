@@ -119,7 +119,7 @@ export const COUNTS = {
   withInterval: AXES.filter(hasInterval).length,
 };
 
-/* ── live wire ────────────────────────────────────────────────────────
+/* ── live wire ────────────────────────────────────────────────────────────
  * The board above is a snapshot committed to the bundle. /api/gspc is the
  * authoritative published measurement (it carries the issuer and DOI). Read the
  * wire and merge it over the snapshot, keeping the geography the API does not
