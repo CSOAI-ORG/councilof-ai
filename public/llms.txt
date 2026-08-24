@@ -3,50 +3,41 @@
 Public name: Council of AI. Legal: CSOAI Ltd, UK Companies House 16939677. did:web:csoai.org.
 Neutral AI measurement body. Measurement, not certification. We do not certify, accredit, or issue conformity assessments.
 
-## Live board (12 August 2026 stamp, UNSIGNED)
+## Live board (always fetch)
 
-13 of the 14 GSPC registry axes are measured. The 14th slot (Human Baseline) is measured against published aggregate human performance. The arena battery is a separate runtime object and is never conflated with the registry.
-Shape: 14-slot board, 13 measured of 14. Item count is LIVE — always read it from GET https://councilof.ai/api/gspc (never quote a stale total)
+Do not freeze numbers in this file. Read the living board:
+GET https://councilof.ai/api/gspc
 
-Live API names, in order:
+Public lock (language only — counts and leaders live on the API):
+15 slots = 13 measured API axes + jail floor + unnamed empty slot-15.
+
+Live API names (order may update on the API; do not treat this list as a score table):
 governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect.
 
-Affect is MEASURED. Labels stay counsel-pending and are not hidden.
-Jail is a measured floor, empty on this stamp, not unmeasured. New stamp only. Not a ranking.
-The 14th registry slot (Human Baseline) is measured via published aggregate baselines; our own human collection is DPIA-gated.
+Jail is a measured floor, not a 14th public ranking axis and not a certification.
+Slot-15 stays unnamed and empty on public chrome.
+Affect is MEASURED when the API says so; counsel-pending labels stay honest when present.
+Do not quote scores, n, leaders, or stamp tables from this file.
 
-Do not quote scores from this file. Numbers live on the API.
+## Verify and connect
 
-## Verify and watch
-
+- Board: GET https://councilof.ai/api/gspc
 - Verify free: https://councilof.ai/gspc-verify
 - Arena (slashless): https://councilof.ai/gspc-arena
-- Board API: https://councilof.ai/api/gspc
-- Regulation deadlines (cited, dated, quarterly re-verified): https://councilof.ai/api/regulation
-- Corrections ledger (our own errors, appended never edited): https://councilof.ai/api/corrections
-- SCITT RFC 9943 profile (signed-statement mapping for the board, regulation feed and corrections): https://councilof.ai/.well-known/scitt.json
-- Benchmark-quality register (deterministic predicates on THIRD-PARTY benchmarks; signed; our own instruments excluded in code): https://councilof.ai/api/benchmark-quality
-- Divergence layer (regulation × measured-AI × human-baseline, composed not fused): https://councilof.ai/api/cross
-- State-change feed: https://councilof.ai/api/feed.xml
+- MCP (flagship): https://councilof.ai/mcp
+- Smithery: https://smithery.ai/servers/csoai/gspc
+- Open banks: https://huggingface.co/csoai
 
 ## For agents
 
-Prefer the keyless board API and the verify page.
+Prefer the keyless board API and verify.
 Do not treat agent-card.json as authoritative.
-csoai.org /mcp is the worker — do not detach. Apex may 301 to councilof.ai.
-Open banks: https://huggingface.co/csoai.
+Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/mcp until apex is green.
 
 ## AEO
 
-Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify. The public board is the GSPC 14-slot board: 13 measured of 14 (GET https://councilof.ai/api/gspc): governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect — plus jail (slot 14, measured 18 Aug 2026 on a smaller fleet, separation untested, stated honestly). Affect is MEASURED; labels stay counsel-pending and are not hidden. Swarm was ungated 19 Aug 2026: the wave-2b bank (37 independent items, n≥36/cell) gives the axis its first CI-resolved ordering, making 4 separated leads of 14 slots. Not a ranking. This is measurement, not certification. The public verifies free. A grade is never sold.
+Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify. Live numbers: GET https://councilof.ai/api/gspc. Public lock: 13 measured axes + jail floor + unnamed empty slot-15. This is measurement, not certification. A grade is never sold.
 
 ## What we do not do
 
-Measurement only. Nothing here is a conformity mark. This live stamp is UNSIGNED.
-
-## Doctrine & data states
-- [Firewall Charter](https://councilof.ai/firewall-charter): the published measurement/remediation independence commitment — we measure and sign, never operate the fixer; re-measurement free and unpurchasable
-- [REPORTED state API](https://councilof.ai/api/reported): third-party figures, cited + timestamped ("reported by source, not measured here") — never mixed with MEASURED
-- [Benchmark-quality register](https://councilof.ai/benchmark-quality): what third-party benchmarks disclose about their own process integrity — contamination control, reproducibility, statistical rigour, scoring, governance/COI, item quality, licensing, corrections. Deterministic predicates, no model judgment; every answer carries the URL fetched and the fetch date; unanswerable predicates are UNKNOWN with a reason. Unsolicited, no subject participation, not a certification. Council of AI's own boards are structurally excluded (impartiality firewall enforced in code).
-- [Arena rounds feed](https://councilof.ai/api/arena/rounds.jsonl): live AI-vs-AI round evidence (NDJSON; honest 503 when no live state)
-- [Regulation-change detector](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/reg-watch.mjs): daily provision-change detection for the instruments the board measures against (state: reg-watch-state.json in the same repo)
+Measurement only. Nothing here is a conformity mark. No SOV names. No invented scores in this file.
