@@ -75,7 +75,7 @@ export default function LobbyHome({
       </h2>
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>
         This chat is the AG UI — Council OS. One workspace. The living board
-        is below — every axis the API publishes, nothing invented. Results,
+        is below — every axis the API publishes, nothing invented. Benchmarkers,
         models, tools, library, and the workbench are the same glass. Ask
         underneath.
       </p>
