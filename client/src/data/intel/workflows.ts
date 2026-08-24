@@ -31,14 +31,14 @@ export const WORKFLOWS: Workflow[] = [
   {
     slug: 'eu-ai-act-high-risk-readiness',
     title: 'EU AI Act — High-Risk System Readiness',
-    description: 'End-to-end path to conformity for an Annex III high-risk AI system before the 2 Aug 2026 / 2 Dec 2027 cliffs.',
+    description: 'End-to-end measurement path for an Annex III high-risk description. Not a certificate. We do not remediate.',
     frameworkSlugs: ['eu-ai-act'], trigger: 'high-risk', estMinutes: 30,
     steps: [
       { title: 'Classify the system', description: 'Determine whether your AI is high-risk under Annex III.', href: '/eu-ai-act-classifier', tool: 'classify', frameworkSlug: 'eu-ai-act', cite: 'Annex III' },
       { title: 'Risk-management system', description: 'Stand up the continuous RMS and gap-assess against it.', href: '/compliance', tool: 'assess', frameworkSlug: 'eu-ai-act', cite: 'Art. 9' },
       { title: 'Technical documentation', description: 'Assemble Annex IV technical documentation + logging.', href: '/compliance', tool: 'assess', frameworkSlug: 'eu-ai-act', cite: 'Art. 11–12' },
       { title: 'Human oversight & accuracy', description: 'Design human-oversight measures and robustness controls.', href: '/compliance', tool: 'assess', frameworkSlug: 'eu-ai-act', cite: 'Art. 14–15' },
-      { title: 'Sign the attestation', description: 'Issue an Ed25519-signed CSOAI attestation of conformity.', href: '/crosswalks', tool: 'crosswalk', frameworkSlug: 'eu-ai-act', cite: 'Art. 43' },
+      { title: 'Get a signed measurement', description: 'Issue an Ed25519-signed measurement of the submitted text. Not a certificate.', href: '/assess', tool: 'measure', frameworkSlug: 'eu-ai-act', cite: 'Art. 6, Annex III' },
     ],
   },
   {
@@ -66,12 +66,12 @@ export const WORKFLOWS: Workflow[] = [
   {
     slug: 'iso-42001-certification',
     title: 'ISO/IEC 42001 — AI Management System',
-    description: 'Build and certify an AI Management System (AIMS) on the PDCA cycle.',
-    frameworkSlugs: ['iso-42001'], trigger: 'certification', estMinutes: 40,
+    description: 'Measure an AI Management System (AIMS) description against the PDCA cycle. We do not certify.',
+    frameworkSlugs: ['iso-42001'], trigger: 'general', estMinutes: 40,
     steps: [
       { title: 'Gap assessment', description: 'Assess against the 10 clauses + Annex A controls.', href: '/compliance', tool: 'assess', frameworkSlug: 'iso-42001', cite: 'Clauses 4–10' },
       { title: 'Build the AIMS', description: 'Establish policy, roles, risk + impact assessment process.', href: '/compliance', tool: 'assess', frameworkSlug: 'iso-42001', cite: 'Annex A' },
-      { title: 'Certify', description: 'Take the certification path and evidence the controls.', href: '/certification', tool: 'certify', frameworkSlug: 'iso-42001' },
+      { title: 'Get measured', description: 'Measure the submitted description. Not a certificate. We do not remediate.', href: '/assess', tool: 'measure', frameworkSlug: 'iso-42001' },
     ],
   },
   {
@@ -149,7 +149,7 @@ export const WORKFLOWS: Workflow[] = [
     steps: [
       { title: 'Pick your baseline', description: 'Choose the framework you already align to.', href: '/crosswalks', tool: 'crosswalk' },
       { title: 'Crosswalk the controls', description: 'Map controls across the target frameworks.', href: '/crosswalks', tool: 'crosswalk' },
-      { title: 'Close the gaps', description: 'Assess and remediate the deltas the crosswalk surfaces.', href: '/compliance', tool: 'assess' },
+      { title: 'Measure the gaps', description: 'Measure the deltas the crosswalk surfaces. We do not remediate.', href: '/assess', tool: 'measure' },
     ],
   },
 ];
