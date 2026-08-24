@@ -1,1 +1,1 @@
-# test
+@file:///tmp/f0.content
