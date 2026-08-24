@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { openLobby } from "@/lib/lobbyLink";
+import { POSITIONING } from "@/lib/positioning";
 
 // Services - what CSOAI offers, as one connected OS. Funnels every visitor to the
 // front door (/try) and the sector view (/playbooks).
@@ -24,7 +26,13 @@ export default function Services() {
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Independent measurement, not a checklist product. We measure published behaviour against frozen rules, sign the result, and leave empty cells empty. Verify stays free.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Start with the Council -&gt;</a>
-            <a href="/os" className="rounded-xl border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Open the full OS -&gt;</a>
+            <button
+              type="button"
+              onClick={() => openLobby({ pane: "home" })}
+              className="rounded-xl border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10"
+            >
+              {POSITIONING.os.cta} -&gt;
+            </button>
           </div>
         </div>
       </section>

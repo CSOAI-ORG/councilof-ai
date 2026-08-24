@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { openLobby } from "@/lib/lobbyLink";
+import { POSITIONING } from "@/lib/positioning";
 
 // Lineage — "Rediscovered, Not Invented". Every element of the CSOAI / ONE OS
 // architecture has organised human civilisation for thousands of years. Not as
@@ -100,7 +102,13 @@ export default function Lineage() {
 
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See it think — try the Council →</a>
-          <a href="/os" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Enter the OS →</a>
+          <button
+            type="button"
+            onClick={() => openLobby({ pane: "home" })}
+            className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
+          >
+            {POSITIONING.os.cta} →
+          </button>
         </div>
       </section>
     </div>
