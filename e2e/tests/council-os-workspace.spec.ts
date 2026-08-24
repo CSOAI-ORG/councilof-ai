@@ -225,4 +225,47 @@ test.describe("Council OS workspace", () => {
 
     await assertNoCriticalErrors(page);
   });
+
+  test("/os refinery auto-opens Council OS dock", async ({ page }) => {
+    await page.goto("/os", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
+    await assertNoCriticalErrors(page);
+  });
+
+  test("welcome Enter your OS opens dock on home", async ({ page }) => {
+    await page.goto("/welcome", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await page.getByRole("button", { name: "Enter your OS →" }).click();
+    await expect(page).toHaveURL(/\//);
+    await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
+    await assertNoCriticalErrors(page);
+  });
+
+  test("header Workspace menu Council OS home opens dock", async ({ page }) => {
+    await page.setViewportSize({ width: 1400, height: 900 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await page.getByRole("button", { name: "Workspace" }).hover();
+    await page.getByRole("link", { name: "Council OS home" }).click();
+    await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
+    await assertNoCriticalErrors(page);
+  });
+
+  test("footer Council OS Refinery opens dock", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await page.locator("#footer-site-map-heading").scrollIntoViewIfNeeded();
+    await page.getByRole("link", { name: "Council OS Refinery" }).click();
+    await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
+    await assertNoCriticalErrors(page);
+  });
+
+  test("sovereign academy hero opens Council OS", async ({ page }) => {
+    await page.goto("/academy", { waitUntil: "domcontentloaded" });
+    await dismissCookieBanner(page);
+    await page.getByRole("button", { name: "Open Council OS" }).first().click();
+    await expect(page.locator('[data-coai="Council Lobby"]')).toBeVisible({ timeout: 15_000 });
+    await assertNoCriticalErrors(page);
+  });
 });
