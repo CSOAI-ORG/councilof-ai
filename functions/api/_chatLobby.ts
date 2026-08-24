@@ -128,7 +128,8 @@ export function lobbyGround(q: string): string | null {
   if (
     /want .{0,80}measured against the rules/i.test(q) ||
     /getting measured actually run/i.test(q) ||
-    /what does the assessment actually run/i.test(q) ||
+    /what does the assessment actually (run|measure)/i.test(q) ||
+    (/assessment/.test(t) && /actually measur/.test(t)) ||
     (/enterprise team/.test(t) && /measur/.test(t)) ||
     /how does a (company|team) get measured/.test(t) ||
     (/what do i send/.test(t) && /measur/.test(t))
