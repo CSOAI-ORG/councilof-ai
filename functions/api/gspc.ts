@@ -1,1 +1,1 @@
-// TEMP TEST - will upload full content next
+LOAD_FROM_FILE
