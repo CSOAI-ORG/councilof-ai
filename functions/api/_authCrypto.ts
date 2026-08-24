@@ -20,6 +20,23 @@ export function canonical(o: unknown): string {
 const hex = (buf: ArrayBuffer) =>
   [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 
+/** Ed25519 verify key — derive public OKP from the shared assess PKCS8 (Workers needs pub for verify). */
+async function verifyKey(env: AuthEnv): Promise<CryptoKey | null> {
+  const b64 = env.ASSESS_SIGNING_KEY_PKCS8_B64;
+  if (!b64) return null;
+  const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+  const priv = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
+  const jwk = (await crypto.subtle.exportKey("jwk", priv)) as JsonWebKey;
+  if (!jwk.x) return null;
+  return crypto.subtle.importKey(
+    "jwk",
+    { kty: "OKP", crv: "Ed25519", x: jwk.x },
+    { name: "Ed25519" },
+    true,
+    ["verify"],
+  );
+}
+
 export async function hashPassword(pw: string, salt: string): Promise<string> {
   const enc = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveBits"]);
@@ -39,7 +56,7 @@ export async function issueToken(env: AuthEnv, user: { email: string; name: stri
     return btoa(JSON.stringify({ payload, sig: "", alg: "UNSIGNED" }));
   }
   const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-  const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, false, ["sign"]);
+  const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
   const sigBytes = await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(payload));
   const sig = btoa(String.fromCharCode(...new Uint8Array(sigBytes)));
   return btoa(JSON.stringify({ payload, sig }));
@@ -55,8 +72,8 @@ export async function verifyToken(env: AuthEnv, token: string): Promise<{ sub: s
     }
     const b64 = env.ASSESS_SIGNING_KEY_PKCS8_B64;
     if (!b64 || !parsed.sig) return null;
-    const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-    const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["verify"]);
+    const key = await verifyKey(env);
+    if (!key) return null;
     const sigBytes = Uint8Array.from(atob(parsed.sig), (c) => c.charCodeAt(0));
     const ok = await crypto.subtle.verify("Ed25519", key, sigBytes, new TextEncoder().encode(parsed.payload));
     if (!ok) return null;
