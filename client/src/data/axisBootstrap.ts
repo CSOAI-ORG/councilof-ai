@@ -86,7 +86,7 @@ export const HONEST_REGISTER: { claim: string; register: string; flip: string }[
   { claim: "Corrections register (65+ entries)", register: "LIVE", flip: "— (/api/corrections)" },
   { claim: "DID trust root resolves for strangers", register: "GATED", flip: "P0-1 / EXE 001 — did.json id-mismatch" },
   { claim: "OTS time anchors", register: "LANE-REPORTED", flip: "EXE 007/008 stranger-verified anchor" },
-  { claim: "Per-axis signed cards at scale", register: "LANE-REAL", flip: "Identity purge + each §2 first-row gate" },
+  { claim: "Per-axis signed cards at scale", register: "LANE-REAL", flip: "Identity purge + each £2 first-row gate" },
   { claim: "8 signed financial registers", register: "LANE-REPORTED", flip: "/api/registers must serve rows" },
   { claim: "East-West cross-jurisdiction pack", register: "PACKAGED", flip: "/east-west live; UNSIGNED hash trail" },
   { claim: "Competitor EAT database (52 players)", register: "LIVE", flip: "— (this page + /api/competitors/eat)" },
