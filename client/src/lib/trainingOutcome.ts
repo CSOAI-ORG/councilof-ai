@@ -1,10 +1,5 @@
 /**
  * Local hash-chained training-outcome records.
- *
- * DESIGN until an edge Ed25519 key signs the payload (same posture as
- * /api/regulation: no key → no signature field). A SHA-256 chain is still
- * a stranger-checkable integrity trail for the demo; it is not a Council
- * attestation. Never call this a certificate.
  */
 
 import { TRAINING_GRAMMAR, type TrainingLane, type TrainingWorld } from "@/data/liveTraining";
@@ -39,7 +34,6 @@ export async function sha256Hex(text: string): Promise<string> {
   if (globalThis.crypto?.subtle) {
     return hex(await crypto.subtle.digest("SHA-256", data));
   }
-  // Node test fallback without subtle (should not hit on Node 20+).
   const { createHash } = await import("node:crypto");
   return createHash("sha256").update(text).digest("hex");
 }
