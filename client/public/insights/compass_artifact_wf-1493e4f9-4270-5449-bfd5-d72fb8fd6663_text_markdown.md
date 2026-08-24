@@ -1,12 +1,12 @@
-# Soft Signals in Econophysics: Descriptive but Predictive Challenges
+# AI Governance Index: Real Insights, Imagined Predictions
 
-The study evaluates the efficacy of soft signals and econophysics in prediction versus description, finding limitations in predictive capabilities while acknowledging their descriptive utility. Formal methodologies like explore-exploit frameworks are relevant but distinct from passive index construction.
+The AI Governance Index reveals the limitations of sentiment prediction and the genuine application of explore-exploit frameworks in active portfolio management, emphasizing the need for cautious interpretation of soft signals.
 
-**Finding:** Soft signals have partial descriptive value but largely fail in prediction, evidenced by the failure of hedge funds based on such strategies and the observed alpha-decay pattern.
+**Finding:** Soft signals can describe sentiment but often fail in predicting economic outcomes, with notable failures in replicating previously claimed predictive success.
 
-**Insight:** While soft signals and econophysics can describe market sentiment and patterns, their predictive reliability is questionable, leading to diminished returns post-publication and practical application failures.
+**Insight:** While sentiment analysis offers descriptive insights, its predictive power is limited, as evidenced by failed hedge funds and studies showing diminished post-publication performance.
 
-**Bottom line:** Soft signals offer descriptive insights but lack predictive robustness, underscoring the need for cautious application in financial strategies.
+**Bottom line:** Rely on AI governance frameworks for robust insights but exercise caution with sentiment predictions for future economic forecasting.
 
 ---
 *Council of AI · 2026-08-24*
