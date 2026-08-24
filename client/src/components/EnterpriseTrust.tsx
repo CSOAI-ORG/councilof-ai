@@ -7,8 +7,8 @@ const SIGNALS: { icon: string; label: string; sub: string; href?: string }[] = [
   { icon: "⚖", label: "Multi-provider measurement", sub: "No single vendor grades itself. Fleet size is live on GET /api/gspc.", href: "/benchmarks" },
   { icon: "◫", label: "Aligned to published frameworks", sub: "EU AI Act · NIST · ISO 42001 · DORA · NIS2", href: "/crosswalk" },
   { icon: "◍", label: "Open source · MIT", sub: "Open measurement tooling, inspectable", href: "/tool-commons" },
-  { icon: "🛡", label: "Coordinated disclosure", sub: "Published security.txt + CVD policy", href: "/vulnerability-disclosure" },
-  { icon: "🏛", label: "CSOAI Ltd · UK", sub: "Companies House 16939677", href: "/about" },
+  { icon: "훡", label: "Coordinated disclosure", sub: "Published security.txt + CVD policy", href: "/vulnerability-disclosure" },
+  { icon: "훻", label: "CSOAI Ltd · UK", sub: "Companies House 16939677", href: "/about" },
 ];
 
 export default function EnterpriseTrust() {
@@ -33,11 +33,11 @@ export default function EnterpriseTrust() {
             LOT Network: application submitted, membership pending (labelled). */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
           <a href="/about" className="flex items-center gap-2 rounded-full border border-emerald-500/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-emerald-50 hover:border-emerald-400/50">
-            <span aria-hidden>🪪</span> C2PA Contributor Member
+            <span aria-hidden>픾</span> C2PA Contributor Member
             <span className="text-emerald-300/80 font-normal">· Linux Foundation project</span>
           </a>
           <a href="/about" className="flex items-center gap-2 rounded-full border border-emerald-500/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-emerald-50 hover:border-emerald-400/50">
-            <span aria-hidden>🛡</span> Open Invention Network
+            <span aria-hidden>훡</span> Open Invention Network
             <span className="text-emerald-300/80 font-normal">· member</span>
           </a>
           <a href="/about" className="flex items-center gap-2 rounded-full border border-amber-400/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-amber-50 hover:border-amber-300/50">
@@ -55,7 +55,7 @@ export default function EnterpriseTrust() {
           </a>
           <p className="max-w-2xl text-center text-[11px] leading-relaxed text-emerald-100/60">
             We show what is verifiable, not badges we do not hold. We are not certified to
-            SOC 2 or ISO/IEC 42001 and we do not claim to be. <a href="/pricing" className="underline hover:text-emerald-200">Pricing</a>.
+            SOC 2 or ISO/IEC 42001 and we do not claim to be. <a href="/?lobby=measured&task=pricing-overview" className="underline hover:text-emerald-200">How the free rail works</a>.
           </p>
         </div>
       </div>
