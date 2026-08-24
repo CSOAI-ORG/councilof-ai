@@ -24,7 +24,7 @@ export const onRequestGet: PagesFunction<Env> = async () => {
     // CLASS 1: SYSTEM TRANSPARENCY — what was measured, how, by what method
     system_transparency: {
       what_is_measured: "AI system behaviour against in-force regulatory provisions (deterministic predicates, never LLM-as-judge)",
-      board: "GET /api/gspc — 13 measured of 14 GSPC axes, every score with item count + CI where quotable (n>=30)",
+      board: "GET /api/gspc — public_count derived from totals (measured_axes of quotable_axes); every score with item count + CI where quotable (n>=30)",
       methodology: "GET /api/regulation + /methodology — provision-version-pinned, quarterly re-verified + on amendment",
       verify: "GET /gspc-verify — 60-second in-browser Ed25519 verification, no account, no fee",
     },
