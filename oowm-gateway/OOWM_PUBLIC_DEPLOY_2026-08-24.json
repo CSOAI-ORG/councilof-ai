@@ -1,0 +1,23 @@
+{
+  "schema": "csoai.oowm-public-deploy/0.1",
+  "ts": "2026-08-24T05:44:13Z",
+  "DEPLOYED_LIVE": {
+    "worker_url": "https://oowm-proxy.nicholastempleman.workers.dev",
+    "service": "oowm-proxy (Workers script)",
+    "auth": "OOWM_API_KEY bearer token",
+    "health": "/health serves",
+    "deploy": "wrangler deploy succeeded (Version 483cc648)"
+  },
+  "gateway_oracle": {
+    "bind": "0.0.0.0:8771 (public)",
+    "gateway": "domain_gateway.py on Oracle always-free (cost=0)",
+    "status": "public-bound, needs OCI ingress rule to be reachable"
+  },
+  "backend_gap": {
+    "worker": "routes /oowm correctly + auth-correct",
+    "backend": "cannot reach Oracle 141.147.73.85:8771 from Cloudflare edge (port not open in security list)",
+    "why": "Oracle security-list blocks inbound 8771 (default only 22/SSH). Opening it = modifying the SIBLING-lane live tenancy (config comment: # DEFAULT = sibling agent live Oracle tenancy) -> needs owner sign-off, NOT auto-modified."
+  },
+  "honest_boundary": "PUBLIC worker is LIVE + auth-correct (real, deployed, health serves). The last inch = Oracle ingress rule on the sibling-lane live tenancy \u2014 I will NOT modify another lane live security list without owner approval. Do not cross-lane infra.",
+  "committed": "worker + auth + deploy staged; recorded honest state"
+}
