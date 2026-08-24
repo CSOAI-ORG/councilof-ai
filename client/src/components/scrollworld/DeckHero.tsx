@@ -34,7 +34,7 @@ export function LiveBoardCount({ className = "" }: { className?: string }) {
         </>
       ) : (
         <>
-          Last published ruling: <strong>13 measured of 14</strong> — confirming live from{" "}
+          Coverage is live on{" "}
           <a href="/api/gspc" className="underline decoration-emerald-400 underline-offset-2">/api/gspc</a>
         </>
       )}
