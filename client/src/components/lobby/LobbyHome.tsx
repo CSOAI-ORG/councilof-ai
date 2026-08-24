@@ -13,10 +13,10 @@ const DESKTOP = LOBBY_TABS.filter((t) => t.id !== "home");
 
 /** Existing public landings — not new audiences. Each is a live route. */
 const PEOPLE: { label: string; blurb: string; path: string }[] = [
-  { label: "Regulators", blurb: "Check behaviour against the published board.", path: "/for/regulator" },
+  { label: "Regulators", blurb: "Check behaviour against the published board.", path: "/gspc-scoreboard" },
   { label: "Insurers", blurb: "Price AI risk on signed evidence.", path: "/insurers" },
   { label: "Enterprises", blurb: "Prove the system before you ship.", path: "/assess" },
-  { label: "Finance", blurb: "Credit, DORA, and the Act — evidenced once.", path: "/for/finance" },
+  { label: "Finance", blurb: "Credit, DORA, and the Act — evidenced once.", path: "/assess" },
   { label: "Compare vendors", blurb: "What we publish versus GRC platforms.", path: "/compare" },
 ];
 
@@ -102,7 +102,7 @@ export default function LobbyHome({
       <h3 className={`${TYPE.section} mt-8 mb-3`}>Who you are</h3>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {PEOPLE.map((x) => (
-          <li key={x.path}>
+          <li key={x.label}>
             <Tile label={x.label} blurb={x.blurb} path={x.path} onClick={() => onOpenRoute(x.path, x.label)} />
           </li>
         ))}
