@@ -269,6 +269,7 @@ const HiveModel = lazy(() => import("./pages/HiveModel"));
 const Services = lazy(() => import("./pages/Services"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const SectorsAtlas = lazy(() => import("./pages/SectorsAtlas"));
+const Signals = lazy(() => import("./pages/Signals"));
 const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const RegistryAll = lazy(() => import("./pages/RegistryAll"));
 const SocialConnect = lazy(() => import("./pages/SocialConnect"));
@@ -720,6 +721,7 @@ function App() {
                   <Route path="/how" component={HowItWorks} />
                   <Route path="/how-it-works" component={HowItWorks} />
                   <Route path="/sectors" component={SectorsAtlas} />
+                  <Route path="/signals" component={Signals} />
                   <Route path="/regions" component={RegionsMap} />
                   {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
                   <Route path="/globe">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
