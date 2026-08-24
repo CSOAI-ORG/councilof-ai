@@ -35,6 +35,9 @@ const CRITICAL_PAGES = [
   '/engine-axis',
   '/instruments',
   '/ownership',
+  '/east-west',
+  '/east-west/verify',
+  '/east-west/desks/eu',
 ];
 
 for (const route of CRITICAL_PAGES) {
