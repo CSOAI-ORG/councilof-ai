@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import EnforcementTimeline from "../components/EnforcementTimeline";
 import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
+import { openLobby } from "@/lib/lobbyLink";
+import { POSITIONING } from "@/lib/positioning";
 
 // /crosswalk — the single most citable public asset CSOAI owns: an open,
 // crawlable map of how 13 global AI-governance frameworks align to 8 universal
@@ -47,7 +49,11 @@ export default function Crosswalk() {
       <div className="mx-auto max-w-5xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Open · crawlable · citable</p>
         <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The AI governance <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">framework crosswalk.</span></h1>
-        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How <b>13 AI-governance &amp; adjacent compliance frameworks</b> map to <b>8 universal controls</b>. Comply once, evidence everywhere. The signed, article-level version runs inside the <a href="/os" className="text-emerald-300 underline">CSOAI OS</a>.</p>
+        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How <b>13 AI-governance &amp; adjacent compliance frameworks</b> map to <b>8 universal controls</b>. Comply once, evidence everywhere. The signed, article-level version runs inside{" "}
+          <button type="button" onClick={() => openLobby({ pane: "routes", task: "eunomia-router" })} className="text-emerald-300 underline">
+            {POSITIONING.os.name}
+          </button>.
+        </p>
 
         {/* EU AI Act staggered-application timeline (branded, date-accurate) */}
         <div className="mt-5 rounded-2xl border border-emerald-500/15 bg-[#03110b]/60 p-3">

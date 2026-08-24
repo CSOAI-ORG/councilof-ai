@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { askSovereign } from "../lib/sovAsk";
 import ToolRunner from "../components/ToolRunner";
 import AISystemNotice from "../components/AISystemNotice";
+import { openLobby } from "@/lib/lobbyLink";
+import { POSITIONING } from "@/lib/positioning";
 
 // /workbench — the CSOAI AI OS as a GOVERNANCE WORKBENCH, powered by Council Workbench.
 // The Claude-Science pattern, applied to AI governance: a coordinating Council
@@ -74,7 +76,7 @@ export default function Workbench() {
                 </button>
               ))}
             </div>
-            <a href="/os" className="mt-3 block rounded-lg border border-emerald-500/20 px-3 py-2 text-center text-[12px] font-semibold text-emerald-200/80 hover:bg-white/5">All 370+ skills →</a>
+            <button type="button" onClick={() => openLobby({ pane: "tools" })} className="mt-3 block w-full rounded-lg border border-emerald-500/20 px-3 py-2 text-center text-[12px] font-semibold text-emerald-200/80 hover:bg-white/5">{POSITIONING.os.cta} — MCP tools →</button>
           </div>
 
           {/* Coordinating agent + artifacts */}

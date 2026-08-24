@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import AISystemNotice from "../components/AISystemNotice";
+import { openLobby } from "@/lib/lobbyLink";
+import { POSITIONING } from "@/lib/positioning";
 
 // CSOAI World — the immersive sovereign load-up. Login locates your node in the
 // real world, then the CSOAI world greets you ALREADY KNOWING your jurisdiction:
@@ -134,7 +136,7 @@ export default function OsEnter() {
             <a href="/command-center" className="group rounded-2xl border border-sky-400/30 bg-gradient-to-br from-sky-500/15 to-sky-400/5 p-6 text-left transition hover:scale-[1.02]">
               <div className="text-3xl">{"\u25D0"}</div>
               <div className="mt-3 text-lg font-bold text-white">Left brain {"\u2014"} Govern</div>
-              <p className="mt-1 text-sm text-emerald-50/70">Command Center, compliance, evidence, certification. Structure, proof, control.</p>
+              <p className="mt-1 text-sm text-emerald-50/70">Command Center, compliance evidence, signed measurement. Structure, proof, control.</p>
             </a>
             <a href="/council-city" className="group rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-teal-400/5 p-6 text-left transition hover:scale-[1.02]">
               <div className="text-3xl">{"\u25D1"}</div>
@@ -142,13 +144,25 @@ export default function OsEnter() {
               <p className="mt-1 text-sm text-emerald-50/70">Council Town, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>
             </a>
           </div>
-          <a href="/os" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\u2192"}</a>
+          <button
+            type="button"
+            onClick={() => openLobby({ pane: "home" })}
+            className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition"
+          >
+            Or {POSITIONING.os.cta} {"\u2192"}
+          </button>
           <div className="mt-6 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/40">Council Town is learning {"\u00B7"} accumulating {"\u00B7"} spawning {"\u00B7"} on one signed Layer 0 floor</div>
         </div>
       )}
 
       {phase < 2 && (
-        <a href="/os" className="absolute bottom-5 right-6 z-20 font-mono text-[11px] text-emerald-300/50 hover:text-emerald-300">skip {"\u2192"}</a>
+        <button
+          type="button"
+          onClick={() => openLobby({ pane: "home" })}
+          className="absolute bottom-5 right-6 z-20 font-mono text-[11px] text-emerald-300/50 hover:text-emerald-300"
+        >
+          skip {"\u2192"}
+        </button>
       )}
     </div>
   );
