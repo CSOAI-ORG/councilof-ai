@@ -1,0 +1,22 @@
+name: restore-catalog-blobs
+on:
+  workflow_dispatch:
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/instruments-catalog-7fb8
+          fetch-depth: 0
+      - name: Restore full blobs from a5b8aaec
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout a5b8aaec -- public/sitemap.xml public/ecosystem.json functions/data/ecosystem.json
+          wc -c public/sitemap.xml public/ecosystem.json functions/data/ecosystem.json
+          git add public/sitemap.xml public/ecosystem.json functions/data/ecosystem.json
+          git commit -m "fix: restore full ecosystem.json and sitemap.xml from a5b8aaec" || echo "no changes"
+          git push origin HEAD:cursor/instruments-catalog-7fb8
