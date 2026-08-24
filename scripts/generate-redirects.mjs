@@ -69,7 +69,9 @@ const EXISTING = [
   "/verify                 /gspc-verify/                308",
   "/verify/                /gspc-verify/                308",
   "/api/arena/rounds       /api/arena/rounds.jsonl      200",
-  "/enterprises            /enterprise/                 308",
+  "/enterprise             /?lobby=measured&task=enterprise-start  308",
+  "/enterprise/            /?lobby=measured&task=enterprise-start  308",
+  "/enterprises            /?lobby=measured&task=enterprise-start  308",
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
   "/for                    /for/enterprise/             308",
@@ -84,7 +86,7 @@ const STOREFRONT = [
 ];
 
 const PERSONA_SLASH = [
-  "pricing", "honesty", "library", "regulators", "start", "enterprise", "insurers",
+  "pricing", "honesty", "library", "regulators", "start", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
   "models", "tools", "api-docs",
