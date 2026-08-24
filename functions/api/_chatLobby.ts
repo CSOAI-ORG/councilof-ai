@@ -8,11 +8,13 @@ _Grounded in ${src}, not by a model._`;
 }
 
 const GET_MEASURED =
-  `You send the system - an endpoint, a model, or an agent - and we run it against the frozen instruments that apply to it. Nothing about the test is bespoke: the same items, the same grader, and the same thresholds every other subject faced, so the result is comparable.
+  `Get measured starts at /assess. You describe the system - purpose, domain, or a URL recorded as text. The assess function is a deterministic EU AI Act keyword classifier (Annex III / Art 5). It does not fetch or probe an endpoint and it is not a GSPC bench run.
 
-You get back a signed card, including every slot we could not fill. Empty cells stay empty. The first measurement costs nothing. Re-measuring after your model or the law changes is the normal case, not an upsell.
+You get back a signed card: tier, gaps against the fixed Art 9-15/50 control set, and what we could not measure. Empty cells stay empty. The first measurement costs nothing. Re-measuring after the description or the law changes is the normal case, not an upsell.
 
-The card is not a certificate, not a conformity mark, and not legal advice. We do not remediate. We measure, sign, and publish what we cannot measure. Verify the card yourself at /gspc-verify - no account, no fee. Live board counts stay on GET /api/gspc.
+The card is not a certificate, not a conformity mark, and not legal advice. We do not remediate. We measure, sign, and publish what we cannot measure.
+
+The living GSPC board is a separate published artefact at GET /api/gspc. Verify any signed record at /gspc-verify - no account, no fee.
 
 Start at /assess, or open Get measured in Council OS.` +
   cite("the published FAQ and /assess");
@@ -134,9 +136,16 @@ export function lobbyGround(q: string): string | null {
     return GET_MEASURED;
   }
 
-  if (/verify a measurement card|recompute its hash|ed25519 signature/i.test(q) &&
-      /verify|hash|signature/i.test(q) &&
-      !/how many|board/.test(t)) {
+  if (
+    (
+      /verify a (measurement |signed )?(card|report)/i.test(q) ||
+      /recompute its hash/i.test(q) ||
+      /ed25519 signature/i.test(q) ||
+      (/how do i verify/.test(t) && /signed|report|card|hash/.test(t)) ||
+      (/verify/.test(t) && /signed (report|card)/.test(t))
+    ) &&
+    !/how many|board/.test(t)
+  ) {
     return VERIFY_CARD;
   }
 
