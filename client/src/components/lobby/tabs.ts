@@ -32,11 +32,17 @@ export type LobbyTabId =
 export type LobbyTab = {
   id: LobbyTabId;
   label: string;
+  /** One honest line about what the pane actually shows. */
   blurb: string;
+  /** Same-origin route framed in the centre pane. Empty for `kind: "local"` / `native`. */
   path: string;
+  /** "route" frames a live page; "local" renders in-lobby content; "native" is in-process. */
   kind?: "route" | "local" | "native";
+  /** Gold accent — reserved for the local-play surface, never for measurement. */
   accent?: "emerald" | "gold";
+  /** Emerald = measured; gold = local play gallery. */
   surface?: "measured" | "play";
+  /** Deterministic phrases that switch to this tab from the chat bar. */
   cues: RegExp;
 };
 
@@ -202,15 +208,19 @@ export function tabById(id: LobbyTabId): LobbyTab {
   return LOBBY_TABS.find((t) => t.id === id) ?? LOBBY_TABS[0];
 }
 
+/** Deterministic phrase -> tab. Returns null when nothing matches; never guesses. */
 export function matchTab(text: string): LobbyTab | null {
   const t = text.trim();
   if (!t) return null;
+  // Only treat it as a navigation command when the sentence reads like one.
   if (!/\b(show|open|go|take me|switch|jump|load|view|bring up|let me)\b/i.test(t)) return null;
   return LOBBY_TABS.find((tab) => tab.cues.test(t)) ?? null;
 }
 
+/** Dashboard sidebar: same destinations as OS, minus Home and Software (you are already in software). */
 export const DASHBOARD_TABS: LobbyTab[] = LOBBY_TABS.filter(
   (t) => !["home", "software"].includes(t.id),
 );
 
+/** Local play tab — opens Council OS play pane, not a standalone route. */
 export const DASHBOARD_PLAY_TAB = tabById("play");
