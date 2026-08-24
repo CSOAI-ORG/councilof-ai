@@ -85,7 +85,7 @@ const navigation: NavGroup[] = [
       { name: 'Insurers and underwriters', href: '/insurers', description: 'Signed evidence a risk model can actually price' },
       { name: 'Government and regulators', href: '/government', description: 'Independent measurement, published method, no conformity mark' },
       { name: 'Industries', href: '/industries', description: 'Sector-by-sector: what applies to you and when' },
-      { name: 'Pay as you go', href: '/payg', description: 'Per-measurement access — no tiers, no lock-in' },
+      { name: 'How the free rail works', href: '/?lobby=measured&task=pricing-overview', description: 'Verify is free. A grade is never sold. No public prices.' },
       { name: 'Integrations', href: '/integrations', description: 'Wire the measurement into the tools you already run' },
     ],
   },
@@ -112,10 +112,10 @@ const navigation: NavGroup[] = [
     description: 'Training — not conformity',
     submenu: [
       { name: 'Council Academy', href: '/academy', description: 'Learn the statute and the method' },
-      { name: 'All courses', href: '/courses', description: 'The full catalogue, free' },
-      { name: 'Training overview', href: '/training', description: 'How the free training rail works, and what a record does and does not say' },
-      { name: 'Verify a training record', href: '/verify-certificate', description: 'Check a completion record against the published signer' },
-      { name: 'What a course attests', href: '/accreditation', description: 'Course completion attests training, not conformity' },
+      { name: 'All courses', href: '/academy', description: 'Learn the statute and the method. We do not certify.' },
+      { name: 'Training overview', href: '/academy', description: 'How the free training rail works. We certify nothing.' },
+      { name: 'Verify a training record', href: '/gspc-verify', description: 'Check a signed record. Verify is free forever.' },
+      { name: 'What a course attests', href: '/academy', description: 'Course completion attests training, not conformity' },
     ],
   },
   {
