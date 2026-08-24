@@ -96,7 +96,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   }
 
   if (
-    /\b(board|scoreboard|axes|axis|gspc|coverage|how many axes|walk me through|overview|live board)\b/.test(t) &&
+    /\b(board|scoreboard|axes|axis|gspc|coverage|how many axes|walk me through|overview|live board|how many.*measured|measured of)\b/.test(t) &&
     (axes.length || canon.quotable)
   ) {
     const mAxes = canon.measuredAxes;
@@ -139,8 +139,13 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const reply = (answer: string, signature: string, state: string, extra: Record<string, unknown> = {}) =>
     Response.json({ answer, reply: answer, signature, state, model, message: { role: "assistant", content: answer }, ...extra }, { headers: CORS });
 
+  // ClaimGuard: refuse false count claims before LIVE / grounded
   const guarded = claimGuardRefuse(question);
   if (guarded) return reply(guarded, "claimguard - refused false count claim", "refused");
+
+  // Prefer published board canon over SOV LIVE (sales-blocker fix)
+  const g = await grounded(question, origin);
+  if (g) return reply(g, "grounded in published measurement - deterministic - recomputable", "grounded");
 
   if (env.SOV_GATE_URL && env.SOV_GATE_TOKEN) {
     try {
@@ -155,9 +160,6 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       if (content.trim()) return reply(content, "council - signed - verifiable offline", "live");
     } catch { /* fall through */ }
   }
-
-  const g = await grounded(question, origin);
-  if (g) return reply(g, "grounded in published measurement - deterministic - recomputable", "grounded");
 
   let named = "";
   try {
