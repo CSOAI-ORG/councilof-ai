@@ -11,6 +11,7 @@ import { MASTER_NAVIGATION } from "@/data/masterMenu";
 export default function CouncilOsRefinery() {
   useEffect(() => {
     document.title = "Council OS Refinery | Council of AI";
+    openLobby({ pane: "home" });
   }, []);
 
   return (
@@ -72,6 +73,12 @@ export default function CouncilOsRefinery() {
                     target={item.external ? "_blank" : undefined}
                     rel={item.external ? "noreferrer" : undefined}
                     className="block rounded-xl border border-slate-200 bg-white p-4 hover:border-emerald-300"
+                    onClick={(e) => {
+                      if (item.pane) {
+                        e.preventDefault();
+                        openLobby({ pane: item.pane, task: item.task, path: item.href });
+                      }
+                    }}
                   >
                     <div className="font-semibold text-slate-900">{item.label}</div>
                   </a>

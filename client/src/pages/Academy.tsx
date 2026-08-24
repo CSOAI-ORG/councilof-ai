@@ -1,14 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
+import { openLobby, lobbyHref } from "@/lib/lobbyLink";
 
 // Academy - training + demo distribution surface. Turns the OS into courses anyone can
 // learn from and share. Each track is a short, sharable path through the live OS.
-type Track = { id: string; name: string; level: string; mins: number; blurb: string; steps: { t: string; href: string }[] };
+type TrackStep =
+  | { t: string; href: string }
+  | { t: string; lobby: { pane: "home"; ask?: string } };
+
+type Track = { id: string; name: string; level: string; mins: number; blurb: string; steps: TrackStep[] };
+
 const TRACKS: Track[] = [
   { id: "board", name: "Read the living board", level: "Beginner", mins: 15, blurb: "What is measured, what is empty, how to check a card. Completion attests training, not conformity.", steps: [
-    { t: "Open Council OS", href: "/?lobby=home" },
+    { t: "Open Council OS", lobby: { pane: "home" } },
     { t: "The living board — empty cells stay empty", href: "/gspc-scoreboard" },
     { t: "Verify a card in your browser", href: "/gspc-verify" },
-    { t: "Ask as the reader you are", href: "/?lobby=home&ask=" + encodeURIComponent("In plain words, what does the Council of AI actually measure?") },
+    { t: "Ask as the reader you are", lobby: { pane: "home", ask: "In plain words, what does the Council of AI actually measure?" } },
   ]},
   { id: "found", name: "Foundations of AI Governance", level: "Beginner", mins: 20, blurb: "Why governance, where it comes from, and how the OS decides.", steps: [
     { t: "Rediscovered, Not Invented - 4,000 years", href: "/lineage" },
@@ -32,6 +38,25 @@ const TRACKS: Track[] = [
     { t: "Services - the whole OS", href: "/services" },
   ]},
 ];
+
+function stepHref(step: TrackStep): string {
+  if ("lobby" in step) {
+    return lobbyHref({
+      pane: step.lobby.pane,
+      prompt: step.lobby.ask,
+    });
+  }
+  return step.href;
+}
+
+function onStepClick(e: MouseEvent, step: TrackStep) {
+  if (!("lobby" in step)) return;
+  e.preventDefault();
+  openLobby({
+    pane: step.lobby.pane,
+    prompt: step.lobby.ask,
+  });
+}
 
 export default function Academy() {
   useEffect(() => { document.title = "CSOAI Academy — learn the living board"; }, []);
@@ -62,8 +87,12 @@ export default function Academy() {
           <p className="mt-1 text-gray-600">{track.blurb}</p>
           <ol className="mt-5 space-y-3">
             {track.steps.map((s, i) => (
-              <li key={s.href}>
-                <a href={s.href} className="flex items-center gap-3 rounded-xl border border-gray-200 px-4 py-3 hover:border-emerald-300 hover:bg-emerald-50/40">
+              <li key={stepHref(s)}>
+                <a
+                  href={stepHref(s)}
+                  onClick={(e) => onStepClick(e, s)}
+                  className="flex items-center gap-3 rounded-xl border border-gray-200 px-4 py-3 hover:border-emerald-300 hover:bg-emerald-50/40"
+                >
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-black text-white">{i + 1}</span>
                   <span className="font-semibold text-gray-800">{s.t}</span>
                   <span className="ml-auto text-emerald-700 font-bold">-&gt;</span>
