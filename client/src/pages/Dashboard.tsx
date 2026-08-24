@@ -31,8 +31,33 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useLocation, Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
-import { trpc } from "@/lib/trpc";
+import { useQuery } from "@tanstack/react-query";
 import { ComplianceTrendChart, FrameworkComparisonChart } from "@/components/charts";
+
+interface DashboardStats {
+  complianceScore: number | null;
+  totalSystems: number;
+  pendingReviews: number;
+  trend?: { date: string; score: number }[];
+  council: { totalSessions: number; pendingReview: number; consensusReached: number };
+  watchdog: { count: number; reports: { title: string; companyName?: string; createdAt: string; status: string }[] };
+  pdca: {
+    totalCycles: number;
+    activeCycles: number;
+    completedCycles: number;
+    pausedCycles: number;
+    phaseDistribution: { plan: number; do: number; check: number; act: number };
+  };
+  loi: { total: number; count: number };
+  gspc?: { measured_axes: number; quotable_axes: number; public_count?: string };
+  cards?: { count: number; signed: number };
+}
+
+async function fetchDashboardStats(): Promise<DashboardStats> {
+  const r = await fetch("/api/dashboard/stats");
+  if (!r.ok) throw new Error("dashboard stats unavailable");
+  return r.json();
+}
 
 const frameworkCompliance = [
   { name: "EU AI Act", score: 72, status: "In Progress", deadline: "Dec 2027", articles: 113 },
@@ -51,14 +76,17 @@ const quickActions = [
 export default function Dashboard() {
   const [, setLocation] = useLocation();
   
-  // Real API data
-  const { data: loiData, isLoading: loiLoading } = trpc.applications.getCount.useQuery();
-  const { data: councilStats, isLoading: councilLoading } = trpc.council.getStats.useQuery();
-  const { data: dashboardStats, isLoading: statsLoading, refetch } = trpc.dashboard.getStats.useQuery();
-  const { data: watchdogReports } = trpc.watchdog.list.useQuery();
-  const { data: pdcaStats } = trpc.pdca.getStats.useQuery();
+  const { data: stats, isLoading, refetch } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: fetchDashboardStats,
+    staleTime: 30_000,
+  });
 
-  const isLoading = loiLoading || councilLoading || statsLoading;
+  const dashboardStats = stats;
+  const councilStats = stats?.council;
+  const watchdogReports = stats?.watchdog?.reports ?? [];
+  const pdcaStats = stats?.pdca;
+  const loiData = stats?.loi;
 
   // Calculate real metrics
   const metrics = [
@@ -86,7 +114,7 @@ export default function Dashboard() {
     },
     {
       title: "Watchdog Reports",
-      value: watchdogReports?.length?.toString() || "0",
+      value: (watchdogReports?.length ?? stats?.watchdog?.count ?? 0).toString(),
       change: "Public database",
       changeType: "neutral",
       icon: Eye,
@@ -108,7 +136,7 @@ export default function Dashboard() {
 
   // Recent activity from real data
   const recentActivity = [
-    ...(watchdogReports?.slice(0, 3).map(report => ({
+    ...(watchdogReports.slice(0, 3).map(report => ({
       action: `Watchdog report: ${report.title.substring(0, 30)}...`,
       system: report.companyName || "Unknown",
       time: new Date(report.createdAt).toLocaleDateString(),
