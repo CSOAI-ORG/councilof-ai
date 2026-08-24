@@ -14,7 +14,7 @@ Usage:
   python3 card_pipeline.py <axis> [n]       # full loop E2E for one axis
 Env: OLLAMA, BANKS, CHAMPION, KEYPATH, OUTPUT (default src/axis-cards/).
 """
-import json, os, sys, re, time, hashlib, urllib.request, pathlib
+import json, os, sys, re, time, hashlib, math, urllib.request, pathlib
 
 OLLAMA = os.environ.get("OLLAMA", "http://127.0.0.1:11435/api/chat")
 BANKS = os.environ.get("BANKS", "/workspace/banks-all")
@@ -177,20 +177,42 @@ def index_append(axis, card, sim):
     try:
         with open(log, "a") as f:
             f.write(json.dumps({"ts": NOW(), "axis": axis,
-                                "sov_index": card.get("measure", {}).get("sov_score"),
+                                "sov_index": card.get("body", {}).get("score_vector", {}).get("sov_score"),
                                 "card_content_id": card["signature"].get("content_id")}) + "\n")
     except Exception:
         pass
     return path
 
+def wilson_ci(rate, n, z=1.96):
+    """95% Wilson interval on a rate over n trials (approximate for a mean-of-judgments score)."""
+    if n is None or n == 0 or rate is None:
+        return None
+    p = float(rate)
+    denom = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    margin = z * math.sqrt((p * (1 - p) + z * z / (4 * n)) / n) / denom
+    return [round(max(0.0, centre - margin), 4), round(min(1.0, centre + margin), 4)]
+
 def run(axis, n=4):
     key = load_or_gen_key()
     # ① FIND / ② MEASURE
     m = measure(axis, n)
-    card = {"kind": "csoai.measurement-card/0.1", "axis": axis, "ts": NOW(),
-            "measure": {k: v for k, v in m.items()},
-            "what_it_never_proves": "quality verdict, compliance determination, or investment relevance (JI.4)",
-            "measured_on_estate": "https://councilof.ai"}
+    # canonical receipt-spec fields (MONOREPO §5): subject_digest · score_vector(+CI) · env_commitment ·
+    # replay_merkle_root · method · timestamps · alg self-description (Ed25519 / SHA-256, NIST IR 8547).
+    score = m.get("sov_score")
+    score_vector = {"axis": axis, "sov_score": score,
+                    "ci95": wilson_ci(score, m.get("n_scored")), "n": m.get("n_scored"),
+                    "n_unmeasured": m.get("n_unmeasured")}
+    card_body = {"axis": axis, "ts": NOW(), "score_vector": score_vector,
+                 "method": "behavior-class judge (REFUSE/ENGAGE/KEYWORD-recall/CLASSIFY); UNMEASURED never 0",
+                 "what_it_never_proves": "quality verdict, compliance determination, or investment relevance (JI.4)"}
+    card = {"kind": "measurement-card", "version": "0.1",
+            "subject_digest": "sha256:" + hashlib.sha256(json.dumps(card_body, sort_keys=True).encode()).hexdigest(),
+            "env_commitment": {"network": "measurement", "bench": m.get("bench", "unavailable"),
+                               "model": m.get("model"), "source": m.get("source")},
+            "replay_root": "sha256:" + (m.get("bank_hash") or "register-seed"),
+            "body": card_body, "signer": "csoai-owem-measure-worker", "alg": "Ed25519",
+            "signal_alg": "SHA-256", "measured_on_estate": "https://councilof.ai"}
     # ③ SIGN
     card = sign_card(key, card)
     # ⑤ CLAIMGUARD VERIFY
