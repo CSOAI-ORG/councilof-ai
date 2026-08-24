@@ -100,6 +100,7 @@ function discover() {
     "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
+    "/challenge",
     "/arena-scoreboard",
     "/watchdog", "/disclaimers", "/csoai-law",
     "/models", "/tools", "/api-docs",
