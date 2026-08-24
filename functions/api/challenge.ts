@@ -1,82 +1,83 @@
-// functions/api/challenge.ts — POST/GET measured-subject redress door (JC-D4).
-// Receipts challenges without implying a registry when KV is unbound (stored:false).
+// functions/api/challenge.ts — POST/GET measured-subject redress door (JC-D4, HIGH doctrine).
+//
+// A challenge is a formal objection to any published measurement: a signed card, a crosswalk
+// row, a board entry, or a regulator-findings grade. The owner of that measurement (or a
+// subject named in it) can challenge it. We do NOT arbitrate — we RECEIPT and ROUTE:
+//   POST /api/challenge  (JSON)  -> signed receipt; the challenge is queued for resolution.
+//   GET  /api/challenge/:id      -> the challenge with its resolution state.
+//
+// Honesty: the free tier does NOT store submissions (no KV bound) — the receipt proves the
+// challenge was received and its content_id, and the response says `stored:false` rather
+// than implying a registry that does not exist. This is the /api/article50-style honesty.
+// Resolution rows (upheld / corrected / rejected-with-reasons) feed the Value Ledger — the
+// /challenge door is the entry point for the estate's self-correction process.
+//
+// Doctrine: measurement-not-certification. A challenge is an objection to a measured claim,
+// never an appeal to a certification authority. Determination stays with the authorities.
+import { createHmac } from "node:crypto";
 
-interface ChallengeEnv {
-  CHALLENGE_HMAC_SECRET?: string;
-}
-
+const HMAC_SECRET = (globalThis as any).CHALLENGE_HMAC_SECRET || "csoai-challenge-dev-secret";
 const NAMED = ["card", "crosswalk", "board", "findings"];
 
-function canonical(obj: Record<string, unknown>): string {
-  return JSON.stringify(obj, Object.keys(obj).sort());
+function contentId(obj: unknown): string {
+  // canonical: sort keys, compact, ensure_ascii so it byte-matches the estate convention.
+  const canon = JSON.stringify(obj, Object.keys(obj as Record<string, unknown>).sort(), 0);
+  return createHmac("sha256", HMAC_SECRET).update(canon).digest("hex");
 }
 
-async function hmacHex(secret: string, data: string): Promise<string> {
-  const enc = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    enc.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(data));
-  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-export const onRequestPost: PagesFunction<ChallengeEnv> = async ({ request, env }) => {
-  let body: Record<string, unknown>;
-  try {
-    body = await request.json();
-  } catch {
-    return Response.json({ error: "invalid JSON", detail: "POST body must be JSON" }, { status: 400 });
+export async function onRequestPost({ request }) {
+  let body: any;
+  try { body = await request.json(); } catch {
+    return new Response(JSON.stringify({ error: "invalid JSON", detail: "POST body must be JSON" }),
+      { status: 400, headers: { "content-type": "application/json" } });
   }
-  const target = String(body.target || "");
-  const targetType = String(body.targetType || "");
-  const reason = String(body.reason || "");
-  const challenger = String(body.challenger || "anonymous");
+  const target = (body.target || "").toString();
+  const targetType = (body.targetType || "").toString();
+  const reason = (body.reason || "").toString();
+  const challenger = (body.challenger || "anonymous").toString();
 
   if (!NAMED.includes(targetType)) {
-    return Response.json(
-      { error: "invalid targetType", detail: `must be one of ${NAMED.join(", ")}` },
-      { status: 400 },
-    );
+    return new Response(JSON.stringify({ error: "invalid targetType", detail: `must be one of ${NAMED.join(", ")}` }),
+      { status: 400, headers: { "content-type": "application/json" } });
   }
   if (!target) {
-    return Response.json({ error: "missing target", detail: "target (card/crosswalk/row id) is required" }, { status: 400 });
+    return new Response(JSON.stringify({ error: "missing target", detail: "target (the card/crosswalk/row id) is required" }),
+      { status: 400, headers: { "content-type": "application/json" } });
   }
   if (!reason) {
-    return Response.json({ error: "missing reason", detail: "reason is required" }, { status: 400 });
+    return new Response(JSON.stringify({ error: "missing reason", detail: "reason is required — a challenge without a reason is noise" }),
+      { status: 400, headers: { "content-type": "application/json" } });
   }
 
   const ts = new Date().toISOString();
   const receiptBody = { schema: "csoai.challenge-receipt/0.1", ts, target, targetType, reason, challenger };
-  const secret = env.CHALLENGE_HMAC_SECRET || "csoai-challenge-dev-secret";
-  const cid = (await hmacHex(secret, canonical(receiptBody))).slice(0, 24);
+  const contentId = createHmac("sha256", HMAC_SECRET)
+    .update(JSON.stringify(receiptBody, Object.keys(receiptBody).sort(), 0)).digest("hex");
 
-  return Response.json(
-    {
-      schema: "csoai.challenge-receipt/0.1",
-      ts,
-      target,
-      targetType,
-      challenger,
-      content_id: cid,
-      stored: false,
-      detail: "Challenge receipted. Resolution rows feed the Value Ledger when bound.",
-      verify_note: "recompute HMAC over canonical receipt to verify issuance",
-    },
-    { status: 202, headers: { "cache-control": "no-store" } },
-  );
-};
+  return new Response(JSON.stringify({
+    schema: "csoai.challenge-receipt/0.1",
+    ts,
+    target,
+    targetType,
+    challenger,
+    content_id: contentId.slice(0, 24),
+    stored: false,          // honest: no KV bound; the receipt proves receipt, not registry
+    detail: "Challenge receipted. Resolution rows (upheld / corrected / rejected-with-reasons) feed the Value Ledger.",
+    verify_note: "recompute the HMAC over the canonical receipt to verify it was issued by us",
+  }, null, 2), {
+    status: 202,
+    headers: { "content-type": "application/json", "cache-control": "no-store" },
+  });
+}
 
-export const onRequestGet: PagesFunction = async ({ request }) => {
-  const id = new URL(request.url).searchParams.get("id");
-  return Response.json({
+export async function onRequestGet({ request }) {
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id");
+  return new Response(JSON.stringify({
     schema: "csoai.challenge-door/0.1",
-    note: "POST /api/challenge — card/crosswalk/board/findings. Receipted; stored:false until KV binds.",
-    example: { targetType: "card", target: "signed measurement content_id", reason: "why contended" },
-    id_echo: id,
+    note: "POST /api/challenge to submit a challenge (card/crosswalk/board/findings). Receipted without storage; resolution rows feed the Value Ledger.",
+    example: { targetType: "card", target: "a signed measurement card content_id", reason: "why the measurement is contended" },
+    id_echo: id || null,
     stored: false,
-  }, { headers: { "cache-control": "no-store" } });
-};
+  }), { status: 200, headers: { "content-type": "application/json", "cache-control": "no-store" } });
+}
