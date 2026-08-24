@@ -9,7 +9,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import {
-  fetchAxes, hasInterval, quotable, wilson,
+  fetchAxes, hasInterval, quotable, wilson, publicCaption,
   type Axis, type InLaneAxis,
 } from "../lib/gspcAxes";
 import FaqBlock from "@/components/FaqBlock";
@@ -26,7 +26,7 @@ const FOUR_BUYERS = [
   { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. The living GSPC board is signed; empty cells stay empty. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
   { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get measured", href: "/?lobby=measured&task=enterprise-start", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. The board includes the axis that catches our own models." },
-  { icon: Zap, who: "Developers", tagline: "Measure per call on the agent rail", cta: "Verify a card", href: "/gspc-verify", desc: "Call the signed measurement tools from CI: gate a release, re-check a card, track a run. Counts stay on GET /api/gspc." },
+  { icon: Zap, who: "Developers", tagline: "Verify a signed card — free forever", cta: "Verify a card", href: "/gspc-verify", desc: "Call the signed measurement tools from CI: gate a release, re-check a card, track a run. Counts stay on GET /api/gspc." },
 ];
 
 const SEVEN_INDUSTRIES = [
@@ -65,7 +65,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
 
 // ── living GSPC grid (honest empties stay empty) ─────────────────────────
 
-// ── problem we fix ─────────────────────────────────────
+// ── problem we fix ───────────────────────────────────
 function ProblemStrip() {
   return (
     <Section
@@ -142,7 +142,7 @@ function AxesGrid() {
     fetchAxes(ac.signal).then((r) => {
       setAxes(r.axes);
       setInLane(r.inLane);
-      setSubtitle("13 measured axes, jail as a measured floor, unnamed slot-15 visible empty. Empty cells stay empty.");
+      setSubtitle(`${publicCaption(r.publicCount)}. Empty cells stay empty.`);
     });
     return () => ac.abort();
   }, []);
@@ -260,7 +260,7 @@ function BlogStrip() {
     <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." bg="bg-white">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {RECENT.slice(0, 6).map(p => (
-          <a key={p.href} href={p.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-lg hover:border-emerald-200 transition-all">
+          <a key={p.href} href={p.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-lg hover:border-emerald-200 transition-all">
             <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600">{p.date}</span>
             <h4 className="mt-2 text-base font-extrabold text-gray-900 group-hover:text-emerald-600 leading-snug">{p.title}</h4>
             <p className="mt-2 text-sm text-gray-500 line-clamp-2 flex-1">{p.desc}</p>
