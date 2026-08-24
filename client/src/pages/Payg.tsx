@@ -90,6 +90,18 @@ export default function Payg() {
       <p className="text-center text-sm text-muted-foreground mt-10">
         Prefer a fixed monthly plan for humans? See the <a href="/pricing" className="underline">Council rail →</a>
       </p>
+
+      <Card className="p-6 mt-10 border-amber-400/40">
+        <h2 className="text-xl font-bold mb-2">East-West packs — pricing pending a published ruling</h2>
+        <p className="text-sm text-muted-foreground">
+          Crosswalk evidence packs are data. Bridge tooling is a license. Scores and rankings are £0 forever.
+          Regulators consume signed streams at £0 forever. No ranked entity pays or is paid in either direction.
+          The owner pricing ruling is unpublished — this page will not invent a number.
+        </p>
+        <p className="text-sm mt-3">
+          <a href="/east-west/pricing" className="underline">Read the East-West doctrine →</a>
+        </p>
+      </Card>
     </div>
   );
 }

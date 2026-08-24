@@ -141,6 +141,9 @@ export default function GSPCVerify() {
 
         {/* LINKS */}
         <div className="flex flex-wrap gap-4 pb-4 text-[13px]">
+          <Link href="/east-west/verify" className="text-emerald-300 hover:underline">
+            East-West cross-border card →
+          </Link>
           <Link href="/gspc-arena" className="text-emerald-300 hover:underline">
             See the records in the arena →
           </Link>
