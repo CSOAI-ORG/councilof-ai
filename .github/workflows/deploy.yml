@@ -71,7 +71,7 @@ jobs:
             fi
             echo "ok dist/client/$p ($(wc -c < dist/client/$p) bytes)"
           done
-          for fn in functions/api/receipts/latest.ts functions/api/dorado.ts functions/api/evidence-pack.ts functions/api/cards.ts functions/api/axis-register.ts functions/api/auth/[[path]].ts functions/api/dashboard/stats.ts functions/api/_authCrypto.ts functions/api/challenge.ts functions/api/wave-dashboard.ts functions/api/counters.ts functions/api/eunomia-data.ts; do
+          for fn in functions/api/receipts/latest.ts functions/api/dorado.ts functions/api/evidence-pack.ts functions/api/cards.ts functions/api/axis-register.ts functions/api/auth/[[path]].ts functions/api/dashboard/stats.ts functions/api/_authCrypto.ts functions/api/challenge.ts functions/api/wave-dashboard.ts functions/api/counters.ts functions/api/eunomia-data.ts functions/api/_chatLobby.ts functions/enterprise.ts functions/enterprises.ts functions/chat.ts; do
             test -f "$fn" || (echo "missing $fn" && exit 1)
           done
 
@@ -91,8 +91,13 @@ jobs:
           # master.pages.dev can be fat while councilof.ai is thin. Write the third name too.
           npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=production --commit-dirty=true
 
+      # continue-on-error: a thin apex right after upload used to FAIL this
+      # step and skip Recheck + Anti-clobber, leaving councilof.ai on a 7KB
+      # Vite shell while master.pages.dev held the gated tree.
       - name: Assert apex + production alias received the prerender
+        id: immediate
         timeout-minutes: 5
+        continue-on-error: true
         run: |
           set -euo pipefail
           sleep 20
@@ -119,8 +124,8 @@ jobs:
       # Trailing clobber: master.* stays fat (~212KB) while apex + pages.dev go
       # thin (~7KB Vite) ~2–4 min later (Pages Git auto-build or Mac wrangler).
       # Re-stamp all three alias names from the same gated dist/client.
-      - name: Anti-clobber — redeploy gated tree if recheck failed
-        if: steps.recheck.outcome == 'failure'
+      - name: Anti-clobber — redeploy gated tree if assert or recheck failed
+        if: steps.immediate.outcome == 'failure' || steps.recheck.outcome == 'failure'
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
         run: |
           set -euo pipefail
