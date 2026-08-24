@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
 const STEPS = [
@@ -25,9 +25,36 @@ const STEPS = [
 ];
 
 export default function Challenge() {
+  const [targetType, setTargetType] = useState("card");
+  const [target, setTarget] = useState("");
+  const [reason, setReason] = useState("");
+  const [challenger, setChallenger] = useState("");
+  const [receipt, setReceipt] = useState<{ content_id?: string; stored?: boolean } | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
   useEffect(() => {
     document.title = "Challenge a measurement — East-West redress | Council of AI";
   }, []);
+
+  const submit = async () => {
+    setSubmitting(true);
+    setErr(null);
+    try {
+      const r = await fetch("/api/challenge", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ targetType, target, reason, challenger: challenger || "anonymous" }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.detail || d.error || `${r.status}`);
+      setReceipt(d);
+    } catch (e) {
+      setErr(String(e));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#fafaf7] text-[#0c1a12]">
@@ -54,7 +81,56 @@ export default function Challenge() {
           ))}
         </ol>
 
-        <div className="mt-10 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm">
+        <div className="mt-10 rounded-xl border border-emerald-200 bg-[#05140d] p-5 text-sm text-emerald-50">
+          <p className="font-semibold text-emerald-200">Submit a challenge (signed receipt)</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {["card", "crosswalk", "board", "findings"].map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setTargetType(t)}
+                className={`rounded-full px-3 py-1 text-xs ${targetType === t ? "bg-emerald-500 font-bold text-[#03110b]" : "border border-emerald-500/30"}`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+          <input
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+            placeholder="target content_id or URL"
+            className="mt-3 w-full rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm"
+          />
+          <textarea
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="why is the measurement contended?"
+            rows={3}
+            className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm"
+          />
+          <input
+            value={challenger}
+            onChange={(e) => setChallenger(e.target.value)}
+            placeholder="contact (optional)"
+            className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black/40 px-3 py-2 text-sm"
+          />
+          <button
+            type="button"
+            onClick={submit}
+            disabled={submitting || !target || !reason}
+            className="mt-3 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] disabled:opacity-50"
+          >
+            {submitting ? "Submitting…" : "Submit challenge"}
+          </button>
+          {err && <p className="mt-2 text-rose-300">{err}</p>}
+          {receipt && (
+            <p className="mt-2 font-mono text-xs text-emerald-300">
+              receipted · content_id: {receipt.content_id} · stored: {String(receipt.stored)}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm">
           <p className="font-semibold text-emerald-900">How to file</p>
           <p className="mt-2 text-emerald-800">
             Email <a className="underline" href="mailto:nicholas@csoai.org?subject=East-West%20measurement%20challenge">nicholas@csoai.org</a> with
