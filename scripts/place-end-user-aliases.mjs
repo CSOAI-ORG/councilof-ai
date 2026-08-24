@@ -24,7 +24,7 @@ export const INDUSTRIES = [
 
 export const STRANGER_DIRS = [
   "os", "gspc", "gspc-scoreboard", "scoreboard", "gspc-verify", "verify",
-  "gspc-arena", "assess", "watchdog", "academy", "console", "council-os",
+  "gspc-arena", "assess", "watchdog", "watchdog-map", "academy", "console", "council-os",
   "lobby", "compare", "vs", "layer0", "trust-center", "network", "distribution",
   "intel", "hive", "methodology", "honesty", "insurers", "regulators",
   "industries", "enterprise", "library", "library/axes", "library/measurement",
@@ -32,9 +32,10 @@ export const STRANGER_DIRS = [
   "pricing", "start",
   "dashboard", "login", "about", "firewall-charter", "csoai-law",
   "models", "tools",
+  "benchmarks", "benchmark-index", "benchmark-quality",
   "chat", "ag-ui", "agui", "rankings", "sov-os",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
-  "refutation-ledger", "mcp",
+  "refutation-ledger", "mcps", "claimguard", "ras",
 ];
 
 export const LIBRARY_SECTORS = [
@@ -96,6 +97,7 @@ let n = 0;
 n += pretty("gspc", board);
 n += pretty("gspc-scoreboard", board);
 n += pretty("scoreboard", board);
+n += pretty("scorecard", board);
 n += pretty("gspc-verify", verify);
 n += pretty("verify", verify);
 n += pretty("console", home);

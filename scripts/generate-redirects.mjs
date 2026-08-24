@@ -45,6 +45,8 @@ const EXISTING = [
   "/vulnerability          /vulnerability-disclosure    308",
   "/gspc                   /gspc-scoreboard             308",
   "/scoreboard             /gspc-scoreboard             308",
+  "/scorecard              /gspc-scoreboard             308",
+  "/scorecard/             /gspc-scoreboard             308",
   "/lobby                  /?lobby=home                 308",
   "/console                /?lobby=home                 308",
   "/council-os             /os                          308",
@@ -59,6 +61,10 @@ const EXISTING = [
   "/chat/                  /?lobby=home                 308",
   "/rankings               /?lobby=board                308",
   "/rankings/              /?lobby=board                308",
+  "/benchmarkers           /?lobby=results              308",
+  "/benchmarkers/          /?lobby=results              308",
+  "/mcp-registry           /mcps/                       308",
+  "/mcp-registry/          /mcps/                       308",
   "/library/measurement    /library/axes                308",
   "/verify                 /gspc-verify/                308",
   "/verify/                /gspc-verify/                308",
@@ -84,6 +90,8 @@ const PERSONA_SLASH = [
   "models", "tools", "api-docs",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
   "refutation-ledger",
+  "benchmarks", "benchmark-index", "benchmark-quality", "watchdog-map", "claimguard", "ras",
+  "mcps", "trust-center", "network", "hive", "intel",
 ];
 const PERSONA_FOR_SLASH = [
   "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
