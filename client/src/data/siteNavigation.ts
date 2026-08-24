@@ -6,6 +6,8 @@
  */
 import type { LucideIcon } from "lucide-react";
 import { POSITIONING } from "@/lib/positioning";
+import type { LobbyTabId } from "@/components/lobby/tabs";
+import type { LobbyTaskId } from "@/lib/lobbyLink";
 import {
   BarChart2,
   BookMarked,
@@ -20,6 +22,8 @@ export interface SiteNavItem {
   href: string;
   description: string;
   external?: boolean;
+  /** Opens Council OS in place — href stays crawlable for SEO. */
+  lobby?: { pane: LobbyTabId; task?: LobbyTaskId };
 }
 
 export interface SiteNavGroup {
@@ -58,8 +62,8 @@ export const SITE_NAVIGATION: SiteNavGroup[] = [
     description: "The statute we measure against",
     submenu: [
       { name: "EU AI Act — the guide", href: "/eu-ai-act", description: "The whole Act, phased, with the Digital Omnibus amendments" },
-      { name: "Article 50 — transparency", href: "/article-50", description: "Live since 2 Aug 2026; marking grace ends 2 Dec 2026" },
-      { name: "Dates and deadlines", href: "/ai-act-timeline", description: "What applies when — Annex III deferred to 2 Dec 2027" },
+      { name: "Article 50 — transparency", href: "/article-50", description: "Live since 2 Aug 2026; marking grace ends 2 Feb 2026" },
+      { name: "Dates and deadlines", href: "/ai-act-timeline", description: "What applies when — Annex III deferred to 2 Aug 2027" },
       { name: "GPAI model duties", href: "/gpai", description: "Documentation, training-data summary, copyright" },
       { name: "Readiness checklist", href: "/checklist", description: "Work through the duties that are actually in force" },
       { name: "Global regulation tracker", href: "/regulation-tracker", description: "Every AI regime worldwide, with its current dates" },
@@ -80,7 +84,7 @@ export const SITE_NAVIGATION: SiteNavGroup[] = [
       { name: "Industries", href: "/industries", description: "Sector-by-sector: what applies to you and when" },
       { name: "Pay as you go", href: "/payg", description: "Per-measurement access — no tiers, no lock-in" },
       { name: "Distribution Hive", href: "/intel", description: "Regulators, enterprises, SMBs — one cited org index" },
-      { name: "Council OS Refinery", href: "/os", description: "Master ONE workspace — board, arena, ecosystem, AG-UI" },
+      { name: "Council OS Refinery", href: "/os", description: "Master ONE workspace — board, arena, ecosystem, AG-UI", lobby: { pane: "home" } },
       { name: "My systems workspace", href: "/workspace", description: "Portfolio batch assess and re-attest schedule" },
       { name: "Org index API", href: "/api/ecosystem", description: "Machine-readable ecosystem for agents", external: true },
     ],
