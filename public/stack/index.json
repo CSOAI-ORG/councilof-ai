@@ -1,0 +1,46 @@
+{
+  "schema": "csoai.48h-stack/0.1",
+  "kind": "stack_index",
+  "updated": "2026-08-24T09:33:11+00:00",
+  "phases": {
+    "0-8h": [
+      "unfixed-watch.json",
+      "first-fine-watch.json"
+    ],
+    "8-24h": [
+      "ox-alpha-identity-card.json",
+      "claims-vs-evidence-ledger-v0.json"
+    ],
+    "24-36h": [
+      "../docs/specs/session-receipt-v0.md",
+      "texas-mapper-sep1.json",
+      "drcf-filing-sep2.json"
+    ],
+    "36-48h": [
+      "../docs/press/README.md",
+      "claimguard-sweep.json"
+    ],
+    "value_ledger": [
+      "value-ledger-v0.json"
+    ],
+    "binding_entry": [
+      "binding-entry-v0.json"
+    ]
+  },
+  "doctrine": "docs/48-HOUR-STACK.md",
+  "verify": "python3 gspc/verify_offline.py --card public/stack/ox-alpha-identity-card.json",
+  "laws": [
+    "JL.1",
+    "JL.2",
+    "JL.3",
+    "JL.4",
+    "JL.5",
+    "JE.1",
+    "JE.2",
+    "JE.3",
+    "JF"
+  ],
+  "binding_entry": "binding-entry-v0.json",
+  "east_west": "docs/STAGE-45.md",
+  "stage_48": "docs/STAGE-48.md"
+}

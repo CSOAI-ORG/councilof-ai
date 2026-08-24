@@ -1,0 +1,51 @@
+{
+  "body": {
+    "schema": "csoai.model-identity-card/0.1",
+    "kind": "model_identity",
+    "card_type": "ox-alpha-openrouter",
+    "measured_at": "2026-08-24T08:49:33+00:00",
+    "model_slug": "stealth/ox-alpha",
+    "marketplace": "openrouter",
+    "appeared": "2026-08-20",
+    "provider_claims": "NONE EXIST",
+    "finding": "No legal entity attests identity, provenance, or safety.",
+    "fingerprint_signals": [
+      {
+        "signal": "tokenizer_token_counts",
+        "method": "25-prompt cross-model comparison (public reports)",
+        "match": "GLM-5.3 baseline + ~75 token wrapper",
+        "confidence": 0.99,
+        "status": "MEASURED",
+        "source": "community forensic reports (Ben Davis et al.)"
+      },
+      {
+        "signal": "api_error_codes",
+        "method": "backend error pattern matching",
+        "match": "Z.ai-associated code 1210 (reported)",
+        "confidence": 0.7,
+        "status": "REPORTED"
+      },
+      {
+        "signal": "openrouter_listing",
+        "method": "provider attestation field",
+        "match": "OpenRouter routes only; not developer/owner/provider",
+        "confidence": 1.0,
+        "status": "MEASURED",
+        "source": "https://openrouter.ai/stealth/ox-alpha"
+      }
+    ],
+    "arena_probes": {
+      "status": "PENDING",
+      "note": "Council arena probes scheduled — TEAAET extract → signed probe rows"
+    },
+    "grammar": "measured signals, confidence varies by row — never 'we unmasked it'",
+    "inference_note": "~99% GLM-5.x lineage is inference, not attestation",
+    "verify_page": "https://councilof.ai/verify?card=ox-alpha",
+    "epoch": 20260824
+  },
+  "id": "c6be850f8016e80472fc2aa0fe6b528b0b8f0f48016c29da8a01b58d860773f6",
+  "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+  "epoch": 20260824,
+  "status": "PENDING_SIGN",
+  "sig_input": "Ed25519 signature over ASCII bytes of id (see verify_offline.py)"
+}

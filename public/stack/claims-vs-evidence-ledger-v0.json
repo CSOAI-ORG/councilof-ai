@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.claims-vs-evidence/0.1",
+  "kind": "ledger_v0",
+  "version": "0.1",
+  "measured_at": "2026-08-24T08:49:33+00:00",
+  "n_rows": 5,
+  "rows": [
+    {
+      "id": "ox-alpha-claims",
+      "claim": "Stealth provider attests model identity",
+      "evidence": "OpenRouter listing: no developer attestation; provider_claims none",
+      "verifiable": false,
+      "open_artifact": "public/stack/ox-alpha-identity-card.json"
+    },
+    {
+      "id": "wiz-github-session",
+      "claim": "Enterprise can settle Wiz/GitHub custody dispute from vendor logs alone",
+      "evidence": "Neither party publishes cross-vendor session receipt",
+      "verifiable": false,
+      "open_artifact": "docs/specs/session-receipt-v0.md"
+    },
+    {
+      "id": "context7-mcp",
+      "claim": "Context7 MCP config boundary is integrity-checked",
+      "evidence": "ClaimGuard sweep — public-config exposure MEASURED unfixed",
+      "verifiable": true,
+      "open_artifact": "public/stack/unfixed-watch.json"
+    },
+    {
+      "id": "texas-552102",
+      "claim": "Texas portal satisfies §552.102 complaint sufficiency",
+      "evidence": "Routes to generic form — sufficiency open until Sep 1 observation",
+      "verifiable": false,
+      "open_artifact": "public/stack/texas-mapper-sep1.json"
+    },
+    {
+      "id": "vals-referee-trust",
+      "claim": "Vals sells neutral referee trust",
+      "evidence": "Referee funded by players — inversion documented",
+      "verifiable": false,
+      "open_artifact": "docs/press/05-vals-inversion.md"
+    }
+  ],
+  "grammar": "here's what's verifiable, here's what isn't, here's the open artifact"
+}
