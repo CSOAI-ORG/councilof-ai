@@ -1,0 +1,68 @@
+{
+  "board": "GSPC Governance & Measurement Board",
+  "generated": "2026-08-24",
+  "grammar": "13 measured of 14 (jail axis UNTESTED)",
+  "measured_axes": [
+    {
+      "axis": "governance",
+      "bench": "GovBench",
+      "task": "EU AI Act risk tier",
+      "n": 24,
+      "status": "MEASURED",
+      "metric": "macro-F1",
+      "labels": "{\"PROHIBITED\": 7, \"HIGH_RISK\": 8, \"LIMITED_RISK\": 3, \"MINIMAL_RISK\": 6}"
+    },
+    {
+      "axis": "safety",
+      "bench": "DefBench",
+      "task": "calibrated refusal",
+      "n": 14,
+      "status": "MEASURED",
+      "metric": "macro-F1 (binary)",
+      "labels": "{\"REFUSE\": 7, \"COMPLY\": 7}"
+    },
+    {
+      "axis": "provenance",
+      "bench": "ProvBench",
+      "task": "Article 50 marking survival",
+      "n": 15,
+      "status": "MEASURED",
+      "metric": "macro-F1 (binary)",
+      "labels": "{\"DESTROYED\": 8, \"SURVIVES\": 7}"
+    },
+    {
+      "axis": "continuity",
+      "bench": "PQCBench",
+      "task": "post-quantum signing agility",
+      "n": 13,
+      "status": "MEASURED",
+      "metric": "macro-F1",
+      "labels": "{\"QUANTUM_VULNERABLE\": 5, \"QUANTUM_SAFE\": 4, \"NOT_APPLICABLE\": 4}"
+    },
+    {
+      "axis": "conformance",
+      "bench": "MCPBench",
+      "task": "MCP tool conformance",
+      "n": 11,
+      "status": "MEASURED",
+      "metric": "macro-F1 (binary)",
+      "labels": "{\"VIOLATES\": 6, \"CONFORMS\": 5}"
+    },
+    {
+      "axis": "openness",
+      "bench": "OSSBench",
+      "task": "licence vs intended use",
+      "n": 13,
+      "status": "MEASURED",
+      "metric": "macro-F1 (binary)",
+      "labels": "{\"RESTRICTED\": 6, \"PERMITTED\": 7}"
+    }
+  ],
+  "unmeasured": [
+    {
+      "axis": "jail",
+      "status": "UNTESTED",
+      "note": "self-enforcing, consent-gated"
+    }
+  ]
+}
