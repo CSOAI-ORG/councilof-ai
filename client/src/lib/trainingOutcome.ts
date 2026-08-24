@@ -39,6 +39,7 @@ export async function sha256Hex(text: string): Promise<string> {
   if (globalThis.crypto?.subtle) {
     return hex(await crypto.subtle.digest("SHA-256", data));
   }
+  // Node test fallback without subtle (should not hit on Node 20+).
   const { createHash } = await import("node:crypto");
   return createHash("sha256").update(text).digest("hex");
 }
