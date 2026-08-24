@@ -90,7 +90,7 @@ const PERSONA_SLASH = [
   "models", "tools", "api-docs",
   "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
   "refutation-ledger",
-  "benchmarks", "benchmark-index", "benchmark-quality", "watchdog-map", "claimguard", "ras",
+  "benchmarks", "benchmark-index", "benchmark-quality", "watchdog-map",
   "mcps", "trust-center", "network", "hive", "intel",
 ];
 const PERSONA_FOR_SLASH = [
