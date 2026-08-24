@@ -1,0 +1,27 @@
+{
+  "name": "csoai-gspc-measurement-feed",
+  "displayName": "CSOAI GSPC Measurement Board",
+  "description": "Live GSPC 14-slot AI governance measurement board (13 measured of 14). Measurement, not certification. API-backed; scores trace to frozen item banks on Hugging Face.",
+  "publisher": "CSOAI Ltd",
+  "version": "2026.08.24",
+  "categories": ["AI Governance", "Benchmarks", "Compliance Data"],
+  "pricing": {
+    "model": "contact",
+    "note": "No invented price. Owner-blocked until published ruling."
+  },
+  "endpoints": [
+    {
+      "type": "rest",
+      "url": "https://councilof.ai/api/gspc",
+      "format": "application/json"
+    },
+    {
+      "type": "rest",
+      "url": "https://councilof.ai/api/east-west",
+      "format": "application/json"
+    }
+  ],
+  "documentation": "https://councilof.ai/agent-runbook",
+  "doi": "10.5281/zenodo.21991104",
+  "explicitly_not": ["certification", "accreditation", "conformity-assessment"]
+}
