@@ -1,0 +1,59 @@
+{
+ "content_id": "538aed68d72af1c4c628385d9badcca3390e71b4d9b7b1ebd9b55959dff7a134",
+ "generated": "2026-08-24T09:45:38Z",
+ "law": "JL.5: we never assert traction we cannot row - no 'growing fast', no 'trusted by', unless the ledger holds the checkable row.",
+ "not_a_certification": true,
+ "note": "Every row is a signed, stranger-checkable event. Early emptiness is the same honesty as UNPUBLISHED, count: 0. The first real rows are worth more because nothing was inflated.",
+ "rows": [
+  {
+   "artifact": "https://councilof.ai/api/article50",
+   "claim": "Free Article 50 passport issues",
+   "date": "2026-08-24",
+   "kind": "verification_event",
+   "verified": "POST returns ok:true, tier:free, honest stored:false"
+  },
+  {
+   "artifact": "https://pypi.org/project/claimguard/0.1.0/",
+   "claim": "ClaimGuard published to PyPI",
+   "date": "2026-08-24",
+   "kind": "distribution",
+   "verified": "installs + self-test PASS"
+  },
+  {
+   "artifact": "https://huggingface.co/datasets/csoai/gspc-axis-corpus",
+   "claim": "Signed GSPC axis corpus on Hugging Face",
+   "date": "2026-08-24",
+   "kind": "distribution",
+   "verified": "sig VERIFY PASS, corpus downloadable"
+  },
+  {
+   "artifact": "https://doi.org/10.5281/zenodo.22076930",
+   "claim": "Dataset DOI registered",
+   "date": "2026-08-24",
+   "kind": "distribution",
+   "verified": "record resolves 200"
+  },
+  {
+   "artifact": "https://councilof.ai/signals/",
+   "claim": "13 per-axis signed signals + growth index",
+   "date": "2026-08-24",
+   "kind": "measurement",
+   "verified": "each content_id + Ed25519, self-verify PASS"
+  },
+  {
+   "artifact": "https://councilof.ai/signals/cross-border-card.signed.json",
+   "claim": "First cross-border signed card (EU/UK/US)",
+   "date": "2026-08-24",
+   "kind": "milestone",
+   "verified": "one signed measurement, every regime mapped"
+  }
+ ],
+ "schema": "csoai.value-ledger/1",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "538aed68d72af1c4c628385d9badcca3390e71b4d9b7b1ebd9b55959dff7a134",
+  "note": "Ed25519 over canonical content_id. Verify with PUBKEY.",
+  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
+  "sig": "CijzCHwJK4mjlJSiX4eVWyl9KRWaJ/TBq7MFe9+84rgrpLe9iCISicBTf3R35VtZzqTxZyovTv1EQUMkr7nBCA=="
+ }
+}
