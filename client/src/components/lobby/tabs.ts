@@ -80,10 +80,10 @@ export const LOBBY_TABS: LobbyTab[] = [
   },
   {
     id: "results",
-    label: "Results",
-    blurb: "Measured results — every figure traces to a published artefact, losses included.",
+    label: "Benchmarkers",
+    blurb: "Measured benchmark results — every figure traces to a published artefact, losses included.",
     path: "/benchmarks",
-    cues: /\b(benchmarks?|results|artefacts?|artifacts?)\b/i,
+    cues: /\b(benchmarkers?|benchmarks?|results|artefacts?|artifacts?|meta[- ]?benchmark)\b/i,
   },
   {
     id: "models",
@@ -254,6 +254,20 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(firewall charter)\b/i,
   },
   {
+    label: "Meta-benchmark index",
+    blurb: "What other benchmarks report, beside what we measure.",
+    path: "/benchmark-index",
+    group: "analyst",
+    cues: /\b(benchmark[- ]?index|meta[- ]?benchmark index)\b/i,
+  },
+  {
+    label: "Benchmark quality",
+    blurb: "Deterministic predicates on third-party AI benchmarks.",
+    path: "/benchmark-quality",
+    group: "analyst",
+    cues: /\b(benchmark[- ]?quality|quality register)\b/i,
+  },
+  {
     label: "MCP fleet",
     blurb: "The published fleet manifest — not a marketplace.",
     path: "/mcp-fleet",
@@ -262,10 +276,10 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
   },
   {
     label: "MCP registry",
-    blurb: "Named MCP servers as published. Counts live on the page.",
-    path: "/mcp",
+    blurb: "Named MCP servers as published. /mcp is the protocol proxy; this is the human registry.",
+    path: "/mcps",
     group: "analyst",
-    cues: /\b(mcp registry)\b/i,
+    cues: /\b(mcp registry|mcp servers|browse mcp)\b/i,
   },
   {
     label: "Crosswalk",
