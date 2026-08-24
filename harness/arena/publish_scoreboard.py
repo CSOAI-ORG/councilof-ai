@@ -21,9 +21,9 @@ import argparse, glob, hashlib, json, os
 from collections import defaultdict
 from pathlib import Path
 from elo import EloSystem
+from canon import cjson
 
-def canon_json(obj): return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
-def content_id(obj): return hashlib.sha256(canon_json(obj).encode()).hexdigest()
+def content_id(obj): return hashlib.sha256(cjson(obj).encode()).hexdigest()
 def sign(cid, keyfile):
     from nacl.signing import SigningKey
     return SigningKey(keyfile.read_bytes()).sign(cid.encode()).signature.hex()
