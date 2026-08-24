@@ -32,6 +32,32 @@ export default {
       });
     }
 
+    // ─── OOWM — free-grid sovereign routing proxy (auth if env key set) ───
+    if (path === '/oowm' && request.method === 'POST') {
+      const envKey = env.OOWM_API_KEY || '';
+      if (envKey) {
+        const auth = request.headers.get('Authorization') || '';
+        if (!auth.startsWith('Bearer ') || auth.slice(7) !== envKey) {
+          return json({ error: 'unauthorized - set OOWM_API_KEY bearer token' }, 401);
+        }
+      }
+      let q = '';
+      try { q = (await request.json()).query || ''; } catch {}
+      if (!q) return json({ error: 'query required' }, 400);
+      // route to the free-grid gateway: try Oracle serve, else local AG-UI
+      const body = JSON.stringify({ query: q });
+      const targets = (env.OOWM_GATEWAY_URLS || 'http://127.0.0.1:4191/oowm').split(',');
+      let last = null;
+      for (const t of targets) {
+        try {
+          const r = await fetch(t, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + envKey }, body });
+          if (r.ok) { const d = await r.json(); return json({ provider: t, domain: d.domain || d.route, model: d.model, content: d.content || d.note }); }
+          last = await r.text();
+        } catch (e) { last = String(e); }
+      }
+      return json({ error: 'OOWM gateway unreachable', detail: last }, 502);
+    }
+
     // ─── Leaderboard ────────────────────────────────────────────────
     if (path === '/leaderboard' && request.method === 'GET') {
       return json([
