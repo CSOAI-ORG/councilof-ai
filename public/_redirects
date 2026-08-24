@@ -48,6 +48,16 @@
 /developers             /gspc-verify/                308
 /colosseum              /coliseum/                   308
 /for                    /for/enterprise/             308
+/challenge              /dispute/                    308
+/challenge/             /dispute/                    308
+/scorecard              /gspc-scoreboard             308
+/scorecard/             /gspc-scoreboard             308
+/benchmarkers           /benchmarks/                 308
+/benchmarkers/          /benchmarks/                 308
+/mcp-registry           /mcps/                       308
+/mcp-registry/          /mcps/                       308
+/dorado                 /dorado/                     308
+/cibola                 /dorado/                     308
 
 # --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---
 /pricing  /pricing/  308
@@ -88,11 +98,11 @@
 /for/sec-filer  /for/sec-filer/  308
 
 # --- storefront static pages: served directly, trailing slash 308→slashless ---
-/catalog.json  /catalog.json     200
-/claimguard    /claimguard.html  200
-/claimguard/   /claimguard       308
-/ras           /ras.html         200
-/ras/          /ras              308
+/catalog.json     /catalog.json      200
+/claimguard       /claimguard/       308
+/claimguard.html  /claimguard/       308
+/ras              /ras/              308
+/ras.html         /ras/              308
 
 # --- static asset trees: served directly, never routed to the app ---
 /arena/*  /arena/:splat  200
@@ -103,6 +113,9 @@
 /flywheel/*  /flywheel/:splat  200
 /packs/*  /packs/:splat  200
 /datasets/*  /datasets/:splat  200
+/claimguard/*  /claimguard/:splat  200
+/ras/*  /ras/:splat  200
+/dorado/*  /dorado/:splat  200
 
 # --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---
 # canary-2026-08-22-7fb8: if /zzz-spa-test-7fb8 is still honest-404, this file did not reach the edge
