@@ -59,6 +59,7 @@ export type LobbyTaskId =
   | "browse-instrument"
   | "browse-system-card"
   | "browse-fleet"
+  | "browse-mcp-registry"
   | "browse-crosswalk"
   | "regulation-feed"
   | "browse-methodology"
@@ -130,7 +131,8 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
       "What is published about human baselines beside the measured AI figures, and which parts are REPORTED third-party context rather than our own measurement?",
   },
   academy: {
-    pane: "academy",
+    pane: "home",
+    route: "/academy",
     label: "Open the Academy",
     prompt: () =>
       "What does Council Academy actually attest on completion, and what does it explicitly not attest?",
@@ -226,6 +228,13 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
     label: "Open the MCP fleet",
     prompt: () =>
       "What does the published fleet manifest list, and how is that not a marketplace?",
+  },
+  "browse-mcp-registry": {
+    pane: "home",
+    route: "/mcps",
+    label: "Open the MCP registry",
+    prompt: () =>
+      "Which MCP servers are published in the registry, and how is /mcp different from this page?",
   },
   "browse-crosswalk": {
     pane: "home",
