@@ -101,9 +101,9 @@ export const CSOAI_TOOLS: OverlayTool[] = [
   { id: 'classify', label: 'Classify a system',   blurb: 'Free EU AI Act risk classifier — is your AI high-risk here?', href: '/eu-ai-act-classifier', color: '#34d399' },
   { id: 'assess',   label: 'Run Assessment',      blurb: 'Score this region\'s frameworks against your AI system.', href: '/compliance', color: '#10b981' },
   { id: 'watchdog', label: 'Watchdog',            blurb: 'AI-incident reports & obligations for this jurisdiction.', href: '/watchdog', color: '#38bdf8' },
-  { id: 'certify',  label: 'Get Certified',       blurb: 'Measurement credential mapped to local requirements.',      href: '/certification', color: '#f59e0b' },
+  { id: 'measure',  label: 'Get measured',        blurb: 'Measure this description against the rules that govern it. Not a certificate.', href: '/assess', color: '#f59e0b' },
   { id: 'mcp',      label: 'MCP Tools',           blurb: '291 compliance MCP servers callable per framework.',      href: '/mcp', color: '#a78bfa' },
-  { id: 'crosswalk',label: 'Crosswalks',          blurb: 'EU AI Act ⇄ NIST ⇄ ISO 42001 mappings.',                  href: '/crosswalks', color: '#f472b6' },
+  { id: 'crosswalk',label: 'Crosswalks',          blurb: 'EU AI Act ⇔ NIST ⇔ ISO 42001 mappings.',                  href: '/crosswalks', color: '#f472b6' },
 ];
 
 // world-atlas feature `id` is ISO 3166-1 NUMERIC; map the codes we hold data for → alpha-3.
