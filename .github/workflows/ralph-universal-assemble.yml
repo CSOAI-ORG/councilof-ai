@@ -1,0 +1,56 @@
+name: ralph-universal-assemble
+on:
+  push:
+    paths:
+      - '.ralph-restore/**'
+      - '.github/workflows/ralph-universal-assemble.yml'
+  workflow_dispatch:
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/instruments-catalog-7fb8
+      - name: Assemble all restored files
+        run: |
+          python3 <<'PY'
+          import pathlib, json
+          mapping = json.loads(pathlib.Path('.ralph-restore/mapping.json').read_text())
+          root = pathlib.Path('.ralph-restore')
+          for key, dest in mapping.items():
+            d = root / key
+            if not d.exists():
+              continue
+            parts = sorted(d.glob('part-*.txt'))
+            if not parts:
+              continue
+            data = ''.join(p.read_text() for p in parts)
+            out = pathlib.Path(dest)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(data)
+            print('wrote', dest, len(data))
+            if dest.endswith('GlobalSearch.tsx'):
+              assert data.startswith('/**'), data[:40]
+              assert 'PLACEHOLDER' not in data and 'FROM_FILE' not in data
+            if dest.endswith('Competitors.tsx'):
+              assert ('EatCard' in data) or ('competitorDatabase' in data) or ('EAT playbook' in data)
+            if dest.endswith('EastWest.tsx'):
+              assert 'surface-hits' in data
+            if dest.endswith('competitorDatabase.json'):
+              j = json.loads(data)
+              recs = j.get('records', j if isinstance(j, list) else [])
+              print('competitor records', len(recs))
+              assert len(recs) == 52, len(recs)
+          PY
+      - name: Commit
+        run: |
+          git config user.name ralph-universal-assemble
+          git config user.email ralph@csoai.org
+          git add -A
+          git status --short | head -40
+          git diff --cached --quiet && exit 0
+          git commit -m "Ralph overnight parity: assemble restored files from parts"
+          git push
