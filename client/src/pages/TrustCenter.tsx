@@ -936,17 +936,21 @@ export default function TrustCenter() {
       {/* CTA Section */}
       <div className="bg-white border-t-1 py-16">
         <div className="container max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Build With Confidence?</h2>
+          <h2 className="text-3xl font-bold mb-4">Get measured</h2>
           <p className="text-xl text-gray-600 mb-8">
-            Deploy AI systems on a platform designed with security and compliance from day one.
+            Describe the system. Get a signed card. Not a certificate. We do not remediate. Verify stays free.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-              Start Free Trial
-            </Button>
-            <Button size="lg" variant="outline">
-              Schedule Security Review
-            </Button>
+            <a href="/assess">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                Get measured
+              </Button>
+            </a>
+            <a href="/gspc-verify">
+              <Button size="lg" variant="outline">
+                Verify a record
+              </Button>
+            </a>
           </div>
         </div>
       </div>
