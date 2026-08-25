@@ -1,0 +1,40 @@
+name: ralph-ew-assemble
+on:
+  push:
+    paths:
+      - '.ralph-restore/ew/**'
+      - '.github/workflows/ralph-ew-assemble.yml'
+  workflow_dispatch:
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/instruments-catalog-7fb8
+          fetch-depth: 0
+      - name: Assemble EastWest.tsx
+        run: |
+          python3 - <<'PY'
+          import pathlib, base64
+          parts=[pathlib.Path(f'.ralph-restore/ew/part-{i:02d}.b64') for i in range(6)]
+          missing=[str(p) for p in parts if not p.exists()]
+          assert not missing, missing
+          data=b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
+          out=pathlib.Path('client/src/pages/EastWest.tsx')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_bytes(data)
+          assert b'/api/surface-hits' in data
+          print('wrote', len(data))
+          PY
+      - name: Commit
+        run: |
+          git config user.name ralph-ew-assemble
+          git config user.email ralph@csoai.org
+          git add client/src/pages/EastWest.tsx
+          git diff --cached --quiet && exit 0
+          git commit -m "Ralph overnight parity 5/10: EastWest.tsx (assembled)"
+          git pull --rebase origin cursor/instruments-catalog-7fb8 || true
+          git push origin HEAD:cursor/instruments-catalog-7fb8
