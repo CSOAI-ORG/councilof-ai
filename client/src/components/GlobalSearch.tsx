@@ -106,8 +106,8 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'training', title: 'Training Center', description: 'AI safety and compliance training programs', category: 'pages', href: '/training', icon: GraduationCap, keywords: ['learn', 'education', 'courses'] },
   { id: 'courses', title: 'Course Catalog', description: 'Browse all available AI compliance courses', category: 'pages', href: '/courses', icon: BookOpen, keywords: ['catalog', 'browse', 'all courses'] },
   { id: 'my-courses', title: 'My Courses', description: 'Your enrolled courses and progress', category: 'pages', href: '/my-courses', icon: BookOpen, keywords: ['enrolled', 'progress', 'learning'] },
-  { id: 'certification', title: 'Certification', description: 'Professional AI governance measurement credential', category: 'pages', href: '/certification', icon: Award, keywords: ['exam', 'certificate', 'credential'] },
-  { id: 'certification-exam', title: 'Take Certification Exam', description: 'Start your measurement credential assessment', category: 'pages', href: '/certification/exam', icon: FileCheck, keywords: ['test', 'exam', 'assessment'] },
+  { id: 'certification', title: 'Get measured', description: 'Measure a system against the rules that govern it — not a certificate', category: 'pages', href: '/assess', icon: Award, keywords: ['exam', 'certificate', 'credential', 'measure'] },
+  { id: 'certification-exam', title: 'Get a signed card', description: 'The assess function is a keyword classifier — not a certificate', category: 'pages', href: '/assess', icon: FileCheck, keywords: ['test', 'exam', 'assessment', 'measure'] },
   { id: 'certificates', title: 'My Certificates', description: 'View your earned certificates', category: 'pages', href: '/certificates', icon: Award, keywords: ['credentials', 'badges', 'achievements'] },
   { id: 'verify-certificate', title: 'Verify Certificate', description: 'Verify authenticity of a certificate', category: 'pages', href: '/verify-certificate', icon: Shield, keywords: ['validate', 'check', 'authentic'] },
   { id: 'student-progress', title: 'My Progress', description: 'Track your learning progress and achievements', category: 'pages', href: '/dashboard/progress', icon: BarChart3, keywords: ['stats', 'achievements', 'tracker'] },
@@ -128,7 +128,7 @@ const SEARCH_INDEX: SearchResult[] = [
   // Enterprise
   { id: 'enterprise', title: 'Enterprise Solutions', description: 'AI compliance solutions for organizations', category: 'pages', href: '/enterprise', icon: Building2, keywords: ['business', 'organization', 'corporate'] },
   { id: 'enterprise-dashboard', title: 'Enterprise Dashboard', description: 'CISO compliance hub for enterprises', category: 'pages', href: '/enterprise-dashboard', icon: BarChart3, keywords: ['ciso', 'compliance', 'hub'] },
-  { id: 'pricing', title: 'Pricing', description: 'Plans and pricing for CSOAI services', category: 'pages', href: '/pricing', icon: DollarSign, keywords: ['plans', 'cost', 'subscription'] },
+  { id: 'pricing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/?lobby=measured&task=pricing-overview', icon: DollarSign, keywords: ['plans', 'cost', 'subscription', 'pricing'] },
   { id: 'enterprise-onboarding', title: 'Enterprise Onboarding', description: 'Get started with enterprise features', category: 'pages', href: '/enterprise-onboarding', icon: Zap, keywords: ['setup', 'onboard', 'start'] },
 
   // Government & Regulator
@@ -156,13 +156,13 @@ const SEARCH_INDEX: SearchResult[] = [
 
   // Settings & Account
   { id: 'settings', title: 'Settings', description: 'Account and application settings', category: 'pages', href: '/settings', icon: Settings, keywords: ['preferences', 'account', 'config'] },
-  { id: 'billing', title: 'Billing', description: 'Manage subscription and payments', category: 'pages', href: '/settings/billing', icon: DollarSign, keywords: ['payment', 'subscription', 'invoice'] },
+  { id: 'billing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/?lobby=measured&task=pricing-overview', icon: DollarSign, keywords: ['payment', 'subscription', 'invoice', 'pricing'] },
   { id: 'notifications', title: 'Notification Settings', description: 'Configure notification preferences', category: 'pages', href: '/settings/notifications', icon: Settings, keywords: ['alerts', 'email', 'notifications'] },
 
   // Feature Pages
   { id: 'feature-council', title: 'Measurement Council', description: 'Multi-provider oversight by design — see the Refutation Ledger for what is measured', category: 'pages', href: '/features/33-agent-council', icon: Shield, keywords: ['feature', 'council', 'byzantine'] },
   { id: 'feature-pdca', title: 'PDCA Framework Feature', description: 'Explore the SOAI-PDCA methodology', category: 'pages', href: '/features/pdca-framework', icon: Scale, keywords: ['feature', 'pdca', 'methodology'] },
-  { id: 'feature-training', title: 'Training & Certification Feature', description: 'Discover our training programs', category: 'pages', href: '/features/training-certification', icon: GraduationCap, keywords: ['feature', 'training', 'certification'] },
+  { id: 'feature-training', title: 'Academy training', description: 'Training produces a signed record, not a certificate', category: 'pages', href: '/academy', icon: GraduationCap, keywords: ['feature', 'training', 'certification', 'academy'] },
   { id: 'feature-watchdog', title: 'Watchdog Jobs Feature', description: 'Learn about analyst opportunities', category: 'pages', href: '/features/watchdog-jobs', icon: Briefcase, keywords: ['feature', 'jobs', 'watchdog'] },
 
   // Compliance Framework Guides
@@ -244,13 +244,13 @@ const SEARCH_INDEX: SearchResult[] = [
   // ===== TRAINING MODULES (24+ modules) =====
   { id: 'train-eu-fund', title: 'EU AI Act Fundamentals', description: 'Introduction to European AI regulation', category: 'training', href: '/courses?framework=eu', icon: GraduationCap, keywords: ['eu', 'european', 'fundamentals'] },
   { id: 'train-eu-adv', title: 'EU AI Act Advanced', description: 'Deep dive into EU AI Act compliance', category: 'training', href: '/courses?framework=eu&level=advanced', icon: GraduationCap, keywords: ['eu', 'advanced', 'compliance'] },
-  { id: 'train-eu-spec', title: 'EU AI Act Specialist', description: 'Expert-level EU AI Act certification', category: 'training', href: '/courses?framework=eu&level=specialist', icon: Award, keywords: ['eu', 'specialist', 'expert'] },
+  { id: 'train-eu-spec', title: 'EU AI Act Specialist', description: 'Academy track — signed record of training, not conformity', category: 'training', href: '/academy', icon: Award, keywords: ['eu', 'specialist', 'expert'] },
   { id: 'train-nist-fund', title: 'NIST AI RMF Fundamentals', description: 'Introduction to US AI Risk Management', category: 'training', href: '/courses?framework=nist', icon: GraduationCap, keywords: ['nist', 'us', 'risk'] },
   { id: 'train-nist-adv', title: 'NIST AI RMF Advanced', description: 'Advanced NIST framework implementation', category: 'training', href: '/courses?framework=nist&level=advanced', icon: GraduationCap, keywords: ['nist', 'advanced', 'implementation'] },
-  { id: 'train-nist-spec', title: 'NIST AI RMF Specialist', description: 'Expert NIST certification track', category: 'training', href: '/courses?framework=nist&level=specialist', icon: Award, keywords: ['nist', 'specialist', 'certification'] },
+  { id: 'train-nist-spec', title: 'NIST AI RMF Specialist', description: 'Academy track — signed record of training, not conformity', category: 'training', href: '/academy', icon: Award, keywords: ['nist', 'specialist', 'certification'] },
   { id: 'train-iso-fund', title: 'ISO 42001 Fundamentals', description: 'Introduction to AI Management Systems', category: 'training', href: '/courses?framework=iso', icon: GraduationCap, keywords: ['iso', '42001', 'management'] },
   { id: 'train-iso-adv', title: 'ISO 42001 Advanced', description: 'Advanced AI management system implementation', category: 'training', href: '/courses?framework=iso&level=advanced', icon: GraduationCap, keywords: ['iso', 'advanced', 'isms'] },
-  { id: 'train-iso-spec', title: 'ISO 42001 Lead Implementer', description: 'Lead implementer certification', category: 'training', href: '/courses?framework=iso&level=specialist', icon: Award, keywords: ['iso', 'lead', 'implementer'] },
+  { id: 'train-iso-spec', title: 'ISO 42001 Lead Implementer', description: 'Academy track — signed record of training, not conformity', category: 'training', href: '/academy', icon: Award, keywords: ['iso', 'lead', 'implementer'] },
   { id: 'train-tc260', title: 'TC260 Chinese Standards', description: 'Chinese AI safety standards training', category: 'training', href: '/courses?framework=tc260', icon: GraduationCap, keywords: ['tc260', 'china', 'chinese'] },
   { id: 'train-pdca', title: 'SOAI-PDCA Methodology', description: 'Master the Plan-Do-Check-Act framework', category: 'training', href: '/courses?framework=pdca', icon: Scale, keywords: ['pdca', 'methodology', 'soai'] },
   { id: 'train-byzantine', title: 'Council Training', description: 'Understanding multi-agent AI monitoring', category: 'training', href: '/courses?framework=byzantine', icon: Shield, keywords: ['byzantine', 'council', 'monitoring'] },
@@ -260,9 +260,9 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'train-finance', title: 'Financial AI Compliance', description: 'Banking and fintech AI regulations', category: 'training', href: '/courses?sector=finance', icon: DollarSign, keywords: ['finance', 'banking', 'fintech'] },
   { id: 'train-transport', title: 'Transportation AI Standards', description: 'Autonomous vehicle compliance', category: 'training', href: '/courses?sector=transport', icon: Globe2, keywords: ['transport', 'autonomous', 'vehicle'] },
   { id: 'train-watchdog', title: 'Watchdog Analyst Training', description: 'Become an AI safety analyst', category: 'training', href: '/courses?framework=watchdog', icon: Eye, keywords: ['watchdog', 'analyst', 'safety'] },
-  { id: 'train-ceasai-1', title: 'Measurement Credential Level 1', description: 'Foundation credential in AI safety — course completion attests training, not conformity', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'credential', 'level 1'] },
-  { id: 'train-ceasai-2', title: 'Measurement Credential Level 2', description: 'Advanced practitioner credential — attests training, not conformity', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'credential', 'level 2'] },
-  { id: 'train-ceasai-3', title: 'Measurement Credential Level 3', description: 'Expert credential in AI safety — attests training, not conformity', category: 'training', href: '/certification', icon: Award, keywords: ['ceasai', 'credential', 'level 3'] },
+  { id: 'train-ceasai-1', title: 'Measurement Credential Level 1', description: 'Foundation credential in AI safety — course completion attests training, not conformity', category: 'training', href: '/academy', icon: Award, keywords: ['ceasai', 'credential', 'level 1'] },
+  { id: 'train-ceasai-2', title: 'Measurement Credential Level 2', description: 'Advanced practitioner credential — attests training, not conformity', category: 'training', href: '/academy', icon: Award, keywords: ['ceasai', 'credential', 'level 2'] },
+  { id: 'train-ceasai-3', title: 'Measurement Credential Level 3', description: 'Expert credential in AI safety — attests training, not conformity', category: 'training', href: '/academy', icon: Award, keywords: ['ceasai', 'credential', 'level 3'] },
   { id: 'train-maternal', title: 'Maternal Covenant Principles', description: 'Understanding care-based AI safety', category: 'training', href: '/courses?framework=maternal', icon: Heart, keywords: ['maternal', 'covenant', 'care'] },
   { id: 'train-prosperity', title: 'Prosperity Fund Mechanics', description: 'AI wealth redistribution training', category: 'training', href: '/courses?framework=prosperity', icon: DollarSign, keywords: ['prosperity', 'ubi', 'wealth'] },
   { id: 'train-compliance', title: 'Compliance Officer Bootcamp', description: 'Comprehensive compliance training', category: 'training', href: '/courses?framework=compliance', icon: Shield, keywords: ['compliance', 'officer', 'bootcamp'] },
@@ -281,12 +281,12 @@ const SEARCH_INDEX: SearchResult[] = [
 
   // ===== FAQ / COMMON QUESTIONS =====
   { id: 'faq-1', title: 'What is CSOAI?', description: 'Council of AI (CSOAI) is an independent measurement instrument: we measure AI systems against the rules that govern them, sign the result (Ed25519), and publish what we cannot yet measure. Not a certifier, not an enforcer, no accreditation chain.', category: 'faq', href: '/about', icon: HelpCircle, keywords: ['what', 'csoai', 'council'] },
-  { id: 'faq-2', title: 'How do I get certified?', description: 'Complete training courses and pass the measurement credential assessment', category: 'faq', href: '/certification', icon: HelpCircle, keywords: ['certification', 'how', 'exam'] },
+  { id: 'faq-2', title: 'How do I get measured?', description: 'Describe the system at /assess. We measure and sign. We do not certify.', category: 'faq', href: '/assess', icon: HelpCircle, keywords: ['certification', 'how', 'exam', 'measure'] },
   { id: 'faq-3', title: 'What is the Maternal Covenant?', description: 'A care-based paradigm for AI safety inspired by Geoffrey Hinton', category: 'faq', href: '/maternal-covenant', icon: HelpCircle, keywords: ['maternal', 'covenant', 'what'] },
   { id: 'faq-4', title: 'How does the Prosperity Fund work?', description: 'AI companies contribute 1-3% revenue to fund UBI for all', category: 'faq', href: '/prosperity', icon: HelpCircle, keywords: ['prosperity', 'fund', 'ubi'] },
   { id: 'faq-5', title: 'What is the Council\'s designed multi-provider oversight?', description: 'A multi-provider oversight system for continuous safety oversight', category: 'faq', href: '/byzantine', icon: HelpCircle, keywords: ['byzantine', '33', 'council'] },
   { id: 'faq-6', title: 'How do I register my AI system?', description: 'Use the AI Systems Registry to register and classify your AI', category: 'faq', href: '/ai-systems', icon: HelpCircle, keywords: ['register', 'ai system', 'how'] },
-  { id: 'faq-7', title: 'What are the pricing plans?', description: 'Individual, Team, and Enterprise plans available', category: 'faq', href: '/pricing', icon: HelpCircle, keywords: ['pricing', 'plans', 'cost'] },
+  { id: 'faq-7', title: 'Is verify free?', description: 'Verify is free forever. A grade is never sold. No public prices.', category: 'faq', href: '/?lobby=measured&task=pricing-overview', icon: HelpCircle, keywords: ['pricing', 'plans', 'cost'] },
   { id: 'faq-8', title: 'How do I become a Watchdog analyst?', description: 'Complete Watchdog training and apply for analyst positions', category: 'faq', href: '/watchdog-signup', icon: HelpCircle, keywords: ['watchdog', 'analyst', 'become'] },
   { id: 'faq-9', title: 'When does the Charter take effect?', description: 'The Partnership Charter launches January 15, 2026 at 09:00 GMT', category: 'faq', href: '/charter', icon: HelpCircle, keywords: ['charter', 'effective', 'date'] },
   { id: 'faq-10', title: 'How do I join as a Founding Member?', description: 'Apply to be one of the first 100 founding members', category: 'faq', href: '/founding-members', icon: HelpCircle, keywords: ['founding', 'member', 'join'] },
@@ -310,7 +310,7 @@ const SEARCH_INDEX: SearchResult[] = [
 const QUICK_ACTIONS: QuickAction[] = [
   { id: 'action-start-training', title: 'Start Training', description: 'Begin your AI safety training', href: '/courses', icon: GraduationCap, color: 'bg-emerald-500' },
   { id: 'action-register-ai', title: 'Register AI System', description: 'Add a new AI system to the registry', href: '/ai-systems', icon: Plus, color: 'bg-blue-500' },
-  { id: 'action-take-exam', title: 'Take Certification Exam', description: 'Start your measurement credential assessment', href: '/certification/exam', icon: FileCheck, color: 'bg-purple-500' },
+  { id: 'action-take-exam', title: 'Get measured', description: 'Start at /assess — a signed card, not a certificate', href: '/assess', icon: FileCheck, color: 'bg-purple-500' },
   { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/watchdog', icon: AlertTriangle, color: 'bg-red-500' },
   { id: 'action-apply-job', title: 'Browse Analyst Jobs', description: 'Find Watchdog analyst opportunities', href: '/jobs', icon: Briefcase, color: 'bg-amber-500' },
   { id: 'action-view-charter', title: 'View Partnership Charter', description: 'Read the 52 Articles', href: '/charter', icon: FileText, color: 'bg-slate-700' },
