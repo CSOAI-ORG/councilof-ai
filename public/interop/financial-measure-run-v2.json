@@ -1,0 +1,179 @@
+{
+ "schema": "csoai.financial-measure-run/0.2",
+ "axis": "provenance-controls",
+ "network": "XRPL MAINNET (fresh account_info fetch, documented flag decode)",
+ "supersedes": "financial-measure-run.json (2026-08-25 v1 — stale flag decode corrected; v1 kept as history. Corrections appended, never edited.)",
+ "measured": [
+  {
+   "instrument": "RLUSD (Ripple USD)",
+   "mainnet_issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-08-25-REMEASURE v2",
+    "rubric": "3 deterministic XRPL flags (Ref: LSR flags 0x00010000/0x00100000, Domain field)",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": false,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "NoFreeze": true
+    },
+    "domain": "https://ripple.com/",
+    "coverage_rate": 0.3333,
+    "n_facts": 3,
+    "wilson95": [
+     0.061,
+     0.792
+    ],
+    "honest_note": "Coverage rate over 3 control facts (n=3 — small n, stated not hidden). NOT a risk score, rating, or endorsement."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Ondo OUSG (Short-Term US Treasuries)",
+   "mainnet_issuer": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-08-25-REMEASURE v2",
+    "rubric": "3 deterministic XRPL flags (Ref: LSR flags 0x00010000/0x00100000, Domain field)",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "NoFreeze": false
+    },
+    "domain": "ondo.finance",
+    "coverage_rate": 0.6667,
+    "n_facts": 3,
+    "wilson95": [
+     0.208,
+     0.939
+    ],
+    "honest_note": "Coverage rate over 3 control facts (n=3 — small n, stated not hidden). NOT a risk score, rating, or endorsement."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Archax x abrdn USD Liquidity Fund",
+   "mainnet_issuer": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-08-25-REMEASURE v2",
+    "rubric": "3 deterministic XRPL flags (Ref: LSR flags 0x00010000/0x00100000, Domain field)",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "NoFreeze": false
+    },
+    "domain": "archax.com",
+    "coverage_rate": 0.6667,
+    "n_facts": 3,
+    "wilson95": [
+     0.208,
+     0.939
+    ],
+    "honest_note": "Coverage rate over 3 control facts (n=3 — small n, stated not hidden). NOT a risk score, rating, or endorsement."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "OpenEden TBILL (TBL)",
+   "mainnet_issuer": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-08-25-REMEASURE v2",
+    "rubric": "3 deterministic XRPL flags (Ref: LSR flags 0x00010000/0x00100000, Domain field)",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": false,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "NoFreeze": true
+    },
+    "domain": "openeden.com",
+    "coverage_rate": 0.3333,
+    "n_facts": 3,
+    "wilson95": [
+     0.061,
+     0.792
+    ],
+    "honest_note": "Coverage rate over 3 control facts (n=3 — small n, stated not hidden). NOT a risk score, rating, or endorsement."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Braza Bank USDB",
+   "mainnet_issuer": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-08-25-REMEASURE v2",
+    "rubric": "3 deterministic XRPL flags (Ref: LSR flags 0x00010000/0x00100000, Domain field)",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "NoFreeze": false
+    },
+    "domain": "tokens.brazacripto.com.br",
+    "coverage_rate": 0.6667,
+    "n_facts": 3,
+    "wilson95": [
+     0.208,
+     0.939
+    ],
+    "honest_note": "Coverage rate over 3 control facts (n=3 — small n, stated not hidden). NOT a risk score, rating, or endorsement."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Braza Bank BBRL",
+   "mainnet_issuer": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-08-25-REMEASURE v2",
+    "rubric": "3 deterministic XRPL flags (Ref: LSR flags 0x00010000/0x00100000, Domain field)",
+    "facts": {
+     "allowlisting_enforced": false,
+     "issuer_can_freeze": true,
+     "identity_domain_declared": true
+    },
+    "raw_flags": {
+     "RequireAuth": false,
+     "NoFreeze": false
+    },
+    "domain": "tokens.brazacripto.com.br",
+    "coverage_rate": 0.6667,
+    "n_facts": 3,
+    "wilson95": [
+     0.208,
+     0.939
+    ],
+    "honest_note": "Coverage rate over 3 control facts (n=3 — small n, stated not hidden). NOT a risk score, rating, or endorsement."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  }
+ ],
+ "honesty": "Financial axis MEASURED for on-chain control facts (deterministic, signed, stranger-recomputable: re-run this script + compare). Risk verdicts remain UNMEASURED pending counsel. Not ratings/advice/endorsements.",
+ "content_id": "29369542cb537f38331fecb22b53067b7702f83d93d2ce8e94147a77a97a7d4b",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "29369542cb537f38331fecb22b53067b7702f83d93d2ce8e94147a77a97a7d4b",
+  "sig": "UHM2Eikrqh6zMrQ1qBOzwO8UYXHgQPBx4azo6F/vcF77P8rZ0MarofWvPrITwqU7Wvjibk7Zj9I7hc9VKsHDAg==",
+  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
+  "note": "Ed25519 over canonical content_id; verify: recompute sha256(canonical sans envelope) == content_id, then ed25519 == sig with PUBKEY."
+ }
+}
