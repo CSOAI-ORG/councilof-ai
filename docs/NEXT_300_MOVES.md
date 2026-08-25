@@ -58,18 +58,18 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 137 | JSON Schema for index snapshot | `/.well-known/schemas/labour-economy-index.schema.json` · ✅ |
 | 138 | Empty snapshot fixtures (all null scores) | `scripts/index-fixtures/` · ✅ |
 | 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF · plan + local fixture ✅ · upload 🔄 (needs write token) |
-| 140 | HF README: UNMEASURED doctrine | HF · plan · 🔄 |
+| 140 | HF README: UNMEASURED doctrine | `datasets/labour-economy-unmeasured/README.md` · ✅ staged |
 | 141 | Kaggle mirror policy (REPORTED only) | docs · ✅ in HF plan |
 | 142 | Oracle-fleet adjacency note (not grade oracle) | `docs/ORACLE_FLEET.md` · ✅ |
 | 143 | RunPod job template: **do not** use for RWA churn | `docs/RUNPOD_POLICY.md` · ✅ |
 | 144 | Cursor skill: refuse inventing MEASURED labour scores | `.claude/skills/refuse-measured-labour` · ✅ |
-| 145 | Value Ledger remains publishedCount 0 | enforce · ☐ |
-| 146 | Corrections path for index method errata | `/api/corrections` · ☐ |
-| 147 | Refutation ledger row type for index claims | schema · ☐ |
-| 148 | Public FAQ: why empty indices | `/indices` copy · 🔄 |
+| 145 | Value Ledger remains publishedCount 0 | `scripts/value-ledger-lint.mjs` · ✅ |
+| 146 | Corrections path for index method errata | `C-2026-0825-01` · ✅ |
+| 147 | Refutation ledger row type for index claims | `kind: index-claim` · ✅ |
+| 148 | Public FAQ: why empty indices | `/indices` FaqBlock · ✅ |
 | 149 | Regulator-facing one-pager PDF | owner · ☐ |
 | 150 | Counsel review of index disclaimers | ⛔ |
-| 151–160 | Ten REPORTED citation captures (dated, linked, no scores) | research · ☐ |
+| 151–160 | Ten REPORTED citation captures (dated, linked, no scores) | `docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md` · ✅ |
 
 ---
 
@@ -89,11 +89,11 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 170 | KMS both-curves or Turnkey wired | ⛔ |
 | 171 | Testnet Memo pointer format frozen | RECEIPT-SPEC |
 | 172 | EAS indexer compose (read-only) | infra |
-| 173 | W3C VC 2.0 mapping draft for cards | docs |
+| 173 | W3C VC 2.0 mapping draft for cards | `docs/W3C_VC_2_0_MEASUREMENT_CARD_MAPPING.md` · ✅ |
 | 174 | Wilson only on frozen RWA banks | harness |
 | 175 | Eight RWA × contact matrix spreadsheet | ops |
 | 176 | Contact = public artifact URL/address only | doctrine |
-| 177 | No AUM invented as MEASURED | lint/CI |
+| 177 | No AUM invented as MEASURED | `scripts/aum-not-measured-lint.mjs` · ✅ |
 | 178 | Option A child API keys design | `/powered-by` |
 | 179 | White-label badge SVG | public |
 | 180 | Securities counsel pack sent | ⛔ |
@@ -120,18 +120,18 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 203 | Header Solutions: Powered-by | siteNav |
 | 204 | PRODUCT_TABS add Products | productNav |
 | 205 | PRODUCT_TABS add Indices | productNav |
-| 206 | Bottom estate bar includes new links | BottomEstateNav |
-| 207 | Lobby sidebar group “Indices” | councilOsSideMenu |
-| 208 | GlobalSearch entries | GlobalSearch |
+| 206 | Bottom estate bar includes new links | BottomEstateNav · ✅ |
+| 207 | Lobby sidebar group “Indices” | councilOsSideMenu · ✅ |
+| 208 | GlobalSearch entries | GlobalSearch · ✅ |
 | 209 | Homepage hero CTA unchanged; below-fold indices strip | NewHomeV3 |
 | 210 | MarketingHome alignment check | MarketingHome |
-| 211 | Instruments catalog links RWA + indices | /instruments |
-| 212 | API docs page lists /api/indices | ApiDocs |
+| 211 | Instruments catalog links RWA + indices | InstrumentsCatalog · ✅ |
+| 212 | API docs page lists /api/indices | ApiDocs · ✅ |
 | 213 | Agent runbook curl examples | agent-runbook |
-| 214 | OpenAPI stub fragment | openapi |
-| 215 | Sitemap.xml new paths | public |
-| 216 | robots allow | robots |
-| 217 | OG cards for /indices /products | og |
+| 214 | OpenAPI stub fragment | `public/openapi/indices.yaml` · ✅ |
+| 215 | Sitemap.xml new paths | generate-sitemap · ✅ |
+| 216 | robots allow | robots.txt · ✅ |
+| 217 | OG cards for /indices /products | setOgMeta · ✅ |
 | 218 | i18n keys if used | i18n |
 | 219 | Accessibility pass on new pages | a11y |
 | 220 | Mobile nav smoke | e2e |
@@ -145,13 +145,13 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 |---|------|-------|
 | 231 | Keep attestation language template current | compliance |
 | 232 | Custody decision doc owner-signed | ⛔ |
-| 233 | No Stripe-as-grade assert in CI | test |
+| 233 | No Stripe-as-grade assert in CI | `scripts/no-stripe-as-grade-lint.mjs` · ✅ |
 | 234 | Payg/products copy audit HO.2 | copy |
 | 235 | Privacy: surface-hits path-only | already |
 | 236 | DPA mention of measurement cards | legal |
 | 237 | Terms: opinion not advice | legal |
-| 238 | NRSRO / CRA disclaimer footer shared component | UI |
-| 239 | UK 16939677 on products footer | copy |
+| 238 | NRSRO / CRA disclaimer footer shared component | NrsroDisclaimer · ✅ |
+| 239 | UK 16939677 on products footer | Products · ✅ |
 | 240 | Export control note if any | legal |
 | 241–250 | Counsel Qs 1–4 cleared (template §) | ⛔ |
 
@@ -165,18 +165,18 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 252 | Upload GSPC MEASURED snapshot (existing) | HF · ☐ |
 | 253 | Upload indices UNMEASURED manifest | HF · plan ✅ fixture local |
 | 254 | Upload RWA corpus REPORTED (no fake scores) | HF · ☐ |
-| 255 | Kaggle notebook: verify Ed25519 offline | Kaggle · ☐ |
-| 256 | Kaggle: refuse labour MEASURED claims | notebook · ☐ |
+| 255 | Kaggle notebook: verify Ed25519 offline | `notebooks/kaggle/ed25519_offline_verify.py` · ✅ |
+| 256 | Kaggle: refuse labour MEASURED claims | `notebooks/kaggle/refuse_labour_measured.md` · ✅ |
 | 257 | RunPod template: GSPC model axes only | RunPod · ✅ policy |
 | 258 | RunPod: ban RWA attestation GPU jobs | policy · ✅ |
 | 259 | Oracle-fleet docs: opinion vs price feed | `docs/ORACLE_FLEET.md` · ✅ |
 | 260 | DSH parity checklist for every new card | `DSH_PARITY_NEW_SURFACES.md` · ✅ |
-| 261 | Cursor cloud env: docs paths in README | env · 🔄 |
+| 261 | Cursor cloud env: docs paths in README | README · ✅ |
 | 262 | cursor-guide / agent-runbook sync | docs · ✅ |
 | 263 | Stack honesty row for three indices | STACK_HONESTY · ✅ |
 | 264 | Production checklist tick new surfaces | PRODUCTION_CHECKLIST · ✅ |
 | 265 | Demo readiness: indices = empty OK | DEMO_READINESS · ✅ |
-| 266–280 | Fifteen dataset freshness cron designs | ops · ☐ |
+| 266–280 | Fifteen dataset freshness cron designs | `docs/DATASET_FRESHNESS_CRONS.md` · ✅ |
 
 ---
 
@@ -229,17 +229,17 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 361 | Cite INDEX-METHOD in SCITT profile when ready | standards |
 | 362 | Zenodo method DOI when frozen | standards |
 | 363 | IETF differentiation note vs other receipts | standards |
-| 364 | Press kit: UNMEASURED honesty | marketing |
+| 364 | Press kit: UNMEASURED honesty | `docs/PRESS_KIT_UNMEASURED.md` · ✅ |
 | 365 | HF paper card for methodology | HF |
 | 366 | Kaggle competition? only if method frozen | later |
 | 367 | Partner Option A first design partner | sales ⛔ |
 | 368 | Child keys issued | eng ⛔ |
-| 369 | Public status page: indices UNMEASURED | status |
+| 369 | Public status page: indices UNMEASURED | StatusPage · ✅ |
 | 370 | Branch merge to master (owner) | ⛔ |
 | 371 | Cloudflare Pages prod smoke | ops |
 | 372 | Rollback plan if App truncate | ops |
-| 373 | MCP push_files size discipline | ops |
-| 374 | Single-writer tip policy | ops |
+| 373 | MCP push_files size discipline | AGENT_COORDINATION · ✅ |
+| 374 | Single-writer tip policy | AGENT_COORDINATION · ✅ |
 | 375–390 | Sixteen contact outreach (public artifacts only) | distro |
 | 391–399 | Nine quarterly freshness reviews | ops |
 | 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta |
