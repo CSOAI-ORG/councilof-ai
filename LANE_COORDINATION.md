@@ -121,3 +121,14 @@ NEXT-300 refresh (#642); HF mirror csoai/rwa-attest live. rsync installed on 309
 grammar sweep 14-of-14).
 Next (measured lane): assemble the 3 index input banks → measure; locate Aviva/
 DCP/EURCV/JMWH XRPL issuers → extend control facts; EVM control-facts rubric.
+
+## 2026-08-25 · K3 notice 4 — indexes measured v0.1 + EVM facts (append)
+
+Merged #648: ai-economy-index v0.1 (EU AI adoption 13.48% 2024 / 8.06% 2023, Eurostat live,
+cid bbb28b5c), human-labour-index v0.1 (participation 57.58% + unemployment 5.92%, WB live,
+cid 8abf5166), evm-control-facts (BUIDL/BENJI/ACRED, cid 532c59c4) — all Ed25519-signed,
+producers committed, HF csoai/rwa-attest (10 files). financial-axes 0.3: 2 indexes
+MEASURED-INDEX-v0.1 (bank gaps stated), humanoid-labour UNMEASURED (bank-pending).
+Word of the round: index v0.1 = reference-value index, never a forecast.
+Next: XRPL address location (Aviva/DCP/EURCV/JMWH), gold bank → HF, portable verifier,
+humanoid deployment-registry design.
