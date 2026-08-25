@@ -7,11 +7,13 @@
  * every section renderer, motion helper and bullet style now lives here.
  *
  * Doctrine that the copy in every consumer must hold to:
- *   measurement, not certification · "13 measured of 14" read live from /api/gspc ·
- *   jail (slot 14) is MEASURED with separation UNTESTED · the anchor is Ed25519 +
+ *   measurement, not certification · cite live totals.public_count from /api/gspc
+ *   (as of 2026-08-25: "14 measured of 14 quotable") ·
+ *   jail (slot 14) is MEASURED with separation TIE · the anchor is Ed25519 +
  *   SHA-256 hash-chain against did:web:csoai.org (no time-stamping authority) ·
  *   nothing "expires" — when the law moves we re-measure and issue a delta card ·
  *   the 33-agent council is a DESIGNED structure, never a fault-tolerance guarantee.
+ *   Do not invent 22 axes — quotable board = 14.
  */
 
 export type Point = { tag: "pain" | "benefit" | "usp"; text: string };
