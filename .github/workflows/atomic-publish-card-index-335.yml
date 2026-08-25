@@ -6,11 +6,14 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pull-requests: write
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Assemble verified 335 and publish
         run: |
           set -euo pipefail
@@ -21,12 +24,17 @@ jobs:
           python3 -c 'import json; j=json.load(open("/tmp/card_index.json")); assert j["n_cards"]==335 and len(j["cards"])==335; print("OK", j["n_cards"], len(open("/tmp/card_index.json").read()))'
           cp /tmp/card_index.json public/signed/card_index.json
           printf '%s\n' '{' '  "deployed_at": "2026-08-25T07:00:00Z",' '  "reason": "atomic verified 335 publish sha256-gated",' '  "card_index_n": 335' '}' > public/stack/e2e-latest.json
-      - name: Commit publish
+      - name: Open PR with assembled card_index
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BR="atomic-335-publish-$(date -u +%Y%m%d%H%M%S)"
+          git checkout -b "$BR"
           git add public/signed/card_index.json public/stack/e2e-latest.json
-          if git diff --cached --quiet; then echo "nothing"; exit 0; fi
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
           git commit -m "fix: ATOMIC restore card_index 335 (75578B) + redeploy bump"
-          git push
+          git push -u origin "$BR"
+          gh pr create --base master --head "$BR" --title "fix: ATOMIC restore card_index 335" --body "SHA256-gated assemble from p00-p50. Expected 12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb. n_cards=335."
