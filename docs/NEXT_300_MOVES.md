@@ -23,8 +23,8 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 109 | Wire Measure menu → indices | `masterMenu.ts` | ✅ |
 | 110 | Wire Solutions → products + powered-by | `siteNavigation.ts` | ✅ |
 | 111 | Product tabs: Products + Indices | `productNav.ts` | ✅ |
-| 112 | App routes: indices + products + powered-by | `App.tsx` | 🔄 |
-| 113 | Route manifest entries | `route-manifest.ts` | ☐ |
+| 112 | App routes: indices + products + powered-by | `App.tsx` / AppRoutesA | ✅ |
+| 113 | Route manifest entries | `route-manifest.ts` | ✅ |
 | 114 | Engine-axis candidacy block | `engine-axis.ts` | ✅ |
 | 115 | EAT playbook doc | `docs/EAT_PLAYBOOK.md` | ✅ |
 | 116 | This register | `docs/NEXT_300_MOVES.md` | ✅ |
@@ -37,9 +37,9 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 123 | Footer sitemap Measure links | `FooterSiteMap` / siteNav | ✅ |
 | 124 | Homepage strip: “3 indices UNMEASURED” | `NewHomeV3` | ✅ |
 | 125 | Competitors CTA → indices + products | `Competitors.tsx` | ✅ |
-| 126 | Payg links → products catalog | `Payg.tsx` | ☐ |
-| 127 | DSH dashboard tile for indices | `/dashboard/measurement` | ☐ |
-| 128 | E2E smoke: /indices /products /powered-by | `e2e/tests/` | ☐ |
+| 126 | Payg links → products catalog | `Payg.tsx` | ✅ |
+| 127 | DSH dashboard tile for indices | `/dashboard/measurement` | ✅ |
+| 128 | E2E smoke: /indices /products /powered-by | `e2e/tests/` | ✅ |
 | 129 | Vitest: labourIndices firewall constants | unit test | ✅ |
 | 130 | Merge-gate note: branch ≠ master prod | owner | ⛔ |
 
@@ -47,29 +47,29 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 
 ## Phase 7 — Method before score (131–160) · *INDEX-METHOD*
 
-| # | Move | Field | Status |
-|---|------|-------|--------|
-| 131 | Draft INDEX-METHOD-0.1 skeleton | `docs/SOVOS/INDEX-METHOD-0.1.md` | ✅ |
-| 132 | AI-economy input whitelist (org density ≠ score) | method § | ☐ |
-| 133 | Human-labour input whitelist (ILO/AEI as context IDs only) | method § | ☐ |
-| 134 | Humanoid-labour input whitelist (MachBench tasks) | method § | ☐ |
-| 135 | Freeze “never fuse into GSPC” normative clause | method § | ☐ |
-| 136 | n≥ threshold for any future Wilson on indices | method § | ☐ |
-| 137 | JSON Schema for index snapshot | `/.well-known/schemas/` | ☐ |
-| 138 | Empty snapshot fixtures (all null scores) | `scripts/index-fixtures/` | ☐ |
-| 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF | ☐ |
-| 140 | HF README: UNMEASURED doctrine | HF | ☐ |
-| 141 | Kaggle mirror policy (REPORTED only) | docs | ☐ |
-| 142 | Oracle-fleet adjacency note (not grade oracle) | `/api/oracle-fleet` | ☐ |
-| 143 | RunPod job template: **do not** use for RWA churn | `docs/RUNPOD_POLICY.md` | ✅ |
-| 144 | Cursor skill: refuse inventing MEASURED labour scores | skill | ☐ |
-| 145 | Value Ledger remains publishedCount 0 | enforce | ☐ |
-| 146 | Corrections path for index method errata | `/api/corrections` | ☐ |
-| 147 | Refutation ledger row type for index claims | schema | ☐ |
-| 148 | Public FAQ: why empty indices | `/indices` copy | ☐ |
-| 149 | Regulator-facing one-pager PDF | owner | ☐ |
-| 150 | Counsel review of index disclaimers | ⛔ | ☐ |
-| 151–160 | Ten REPORTED citation captures (dated, linked, no scores) | research |
+| # | Move | Field |
+|---|------|-------|
+| 131 | Draft INDEX-METHOD-0.1 skeleton | `docs/SOVOS/INDEX-METHOD-0.1.md` · ✅ |
+| 132 | AI-economy input whitelist (org density ≠ score) | method § · ✅ |
+| 133 | Human-labour input whitelist (ILO/AEI as context IDs only) | method § · ✅ |
+| 134 | Humanoid-labour input whitelist (MachBench tasks) | method § · ✅ |
+| 135 | Freeze “never fuse into GSPC” normative clause | method § · ✅ |
+| 136 | n≥ threshold for any future Wilson on indices | method § · ✅ |
+| 137 | JSON Schema for index snapshot | `/.well-known/schemas/labour-economy-index.schema.json` · ✅ |
+| 138 | Empty snapshot fixtures (all null scores) | `scripts/index-fixtures/` · ✅ |
+| 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF · plan `docs/HF_DATASET_PLAN.md` · 🔄 |
+| 140 | HF README: UNMEASURED doctrine | HF · plan · 🔄 |
+| 141 | Kaggle mirror policy (REPORTED only) | docs · ✅ in HF plan |
+| 142 | Oracle-fleet adjacency note (not grade oracle) | `/api/oracle-fleet` · ☐ |
+| 143 | RunPod job template: **do not** use for RWA churn | `docs/RUNPOD_POLICY.md` · ✅ |
+| 144 | Cursor skill: refuse inventing MEASURED labour scores | skill · ☐ |
+| 145 | Value Ledger remains publishedCount 0 | enforce · ☐ |
+| 146 | Corrections path for index method errata | `/api/corrections` · ☐ |
+| 147 | Refutation ledger row type for index claims | schema · ☐ |
+| 148 | Public FAQ: why empty indices | `/indices` copy · 🔄 |
+| 149 | Regulator-facing one-pager PDF | owner · ☐ |
+| 150 | Counsel review of index disclaimers | ⛔ |
+| 151–160 | Ten REPORTED citation captures (dated, linked, no scores) | research · ☐ |
 
 ---
 
@@ -113,28 +113,28 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 
 ## Phase 9 — Tooling · tabs · nav · homepage (201–230)
 
-| # | Move | Field | Status |
-|---|------|-------|--------|
-| 201 | Header Measure: Indices | masterMenu | ✅ |
-| 202 | Header Measure: Products | masterMenu | ✅ |
-| 203 | Header Solutions: Powered-by | siteNav | ✅ |
-| 204 | PRODUCT_TABS add Products | productNav | ✅ |
-| 205 | PRODUCT_TABS add Indices | productNav | ✅ |
-| 206 | Bottom estate bar includes new links | BottomEstateNav | ☐ |
-| 207 | Lobby sidebar group “Indices” | councilOsSideMenu | ☐ |
-| 208 | GlobalSearch entries | GlobalSearch | ☐ |
-| 209 | Homepage hero CTA unchanged; below-fold indices strip | NewHomeV3 | ☐ |
-| 210 | MarketingHome alignment check | MarketingHome | ☐ |
-| 211 | Instruments catalog links RWA + indices | /instruments | ☐ |
-| 212 | API docs page lists /api/indices | ApiDocs | ☐ |
-| 213 | Agent runbook curl examples | `docs/agent-runbook.md` + `public/docs/agent-runbook.md` | ✅ |
-| 214 | OpenAPI stub fragment | openapi | ☐ |
-| 215 | Sitemap.xml new paths | public | ☐ |
-| 216 | robots allow | robots | ☐ |
-| 217 | OG cards for /indices /products | og | ☐ |
-| 218 | i18n keys if used | i18n | ☐ |
-| 219 | Accessibility pass on new pages | a11y | ☐ |
-| 220 | Mobile nav smoke | e2e | ☐ |
+| # | Move | Field |
+|---|------|-------|
+| 201 | Header Measure: Indices | masterMenu |
+| 202 | Header Measure: Products | masterMenu |
+| 203 | Header Solutions: Powered-by | siteNav |
+| 204 | PRODUCT_TABS add Products | productNav |
+| 205 | PRODUCT_TABS add Indices | productNav |
+| 206 | Bottom estate bar includes new links | BottomEstateNav |
+| 207 | Lobby sidebar group “Indices” | councilOsSideMenu |
+| 208 | GlobalSearch entries | GlobalSearch |
+| 209 | Homepage hero CTA unchanged; below-fold indices strip | NewHomeV3 |
+| 210 | MarketingHome alignment check | MarketingHome |
+| 211 | Instruments catalog links RWA + indices | /instruments |
+| 212 | API docs page lists /api/indices | ApiDocs |
+| 213 | Agent runbook curl examples | agent-runbook |
+| 214 | OpenAPI stub fragment | openapi |
+| 215 | Sitemap.xml new paths | public |
+| 216 | robots allow | robots |
+| 217 | OG cards for /indices /products | og |
+| 218 | i18n keys if used | i18n |
+| 219 | Accessibility pass on new pages | a11y |
+| 220 | Mobile nav smoke | e2e |
 | 221–230 | Ten broken-link crawls fixed | QA |
 
 ---
@@ -159,24 +159,24 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 
 ## Phase 11 — HF · Kaggle · RunPod · Oracle · Cursor DSH (251–280)
 
-| # | Move | Field | Status |
-|---|------|-------|--------|
-| 251 | HF org `csoai` dataset index page | HF | ☐ |
-| 252 | Upload GSPC MEASURED snapshot (existing) | HF | ☐ |
-| 253 | Upload indices UNMEASURED manifest | HF | ☐ |
-| 254 | Upload RWA corpus REPORTED (no fake scores) | HF | ☐ |
-| 255 | Kaggle notebook: verify Ed25519 offline | Kaggle | ☐ |
-| 256 | Kaggle: refuse labour MEASURED claims | notebook | ☐ |
-| 257 | RunPod template: GSPC model axes only | `docs/RUNPOD_POLICY.md` | ✅ |
-| 258 | RunPod: ban RWA attestation GPU jobs | `docs/RUNPOD_POLICY.md` | ✅ |
-| 259 | Oracle-fleet docs: opinion vs price feed | docs | ☐ |
-| 260 | DSH parity checklist for every new card | `docs/DSH_PARITY_NEW_SURFACES.md` | ✅ |
-| 261 | Cursor cloud env: docs paths in README | env | ☐ |
-| 262 | cursor-guide / agent-runbook sync | docs | ☐ |
-| 263 | Stack honesty row for three indices | STACK_HONESTY | ☐ |
-| 264 | Production checklist tick new surfaces | PRODUCTION_CHECKLIST | ☐ |
-| 265 | Demo readiness: indices = empty OK | DEMO_READINESS | ☐ |
-| 266–280 | Fifteen dataset freshness cron designs | ops |
+| # | Move | Field |
+|---|------|-------|
+| 251 | HF org `csoai` dataset index page | HF · 🔄 plan |
+| 252 | Upload GSPC MEASURED snapshot (existing) | HF · ☐ |
+| 253 | Upload indices UNMEASURED manifest | HF · plan ✅ fixture local |
+| 254 | Upload RWA corpus REPORTED (no fake scores) | HF · ☐ |
+| 255 | Kaggle notebook: verify Ed25519 offline | Kaggle · ☐ |
+| 256 | Kaggle: refuse labour MEASURED claims | notebook · ☐ |
+| 257 | RunPod template: GSPC model axes only | RunPod · ✅ policy |
+| 258 | RunPod: ban RWA attestation GPU jobs | policy · ✅ |
+| 259 | Oracle-fleet docs: opinion vs price feed | docs · ☐ |
+| 260 | DSH parity checklist for every new card | `DSH_PARITY_NEW_SURFACES.md` · ✅ |
+| 261 | Cursor cloud env: docs paths in README | env · 🔄 |
+| 262 | cursor-guide / agent-runbook sync | docs · ✅ |
+| 263 | Stack honesty row for three indices | STACK_HONESTY · ✅ |
+| 264 | Production checklist tick new surfaces | PRODUCTION_CHECKLIST · ☐ |
+| 265 | Demo readiness: indices = empty OK | DEMO_READINESS · ☐ |
+| 266–280 | Fifteen dataset freshness cron designs | ops · ☐ |
 
 ---
 
