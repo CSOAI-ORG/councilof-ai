@@ -1,6 +1,6 @@
 /**
  * Interactive Platform Tour
- * Guided walkthrough for new users: Training → Certification → Job Board → Compliance
+ * Guided walkthrough for new users: Academy → signed attestation → Job Board → measurement
  */
 
 import { useEffect } from "react";
@@ -30,23 +30,23 @@ export function startTour() {
       {
         popover: {
           title: "Welcome to CSOAI! 🎉",
-          description: "Let's take a quick tour of the platform. You'll learn how to become a certified AI Safety Analyst and start earning.",
+          description: "Let's take a quick tour of the platform. You'll learn how we measure AI systems and how analysts get signed, verifiable proof of skill.",
         },
       },
       {
-        element: '[href="/training"]',
+        element: '[href="/academy"]',
         popover: {
-          title: "Step 1: Training",
-          description: "Start with our comprehensive training modules. Learn AI safety principles, risk assessment, and compliance frameworks. All courses are 100% free.",
+          title: "Step 1: Academy",
+          description: "Start with free academy modules. Learn the statutes that govern AI systems. Training is free. We measure and sign. We do not certify.",
           side: "bottom",
           align: "start",
         },
       },
       {
-        element: '[href="/certification"]',
+        element: '[href="/academy"]',
         popover: {
-          title: "Step 2: Certification",
-          description: "After completing training, take the certification exam. Pass to become an official CSOAI Watchdog Analyst and join our global network.",
+          title: "Step 2: Signed attestation",
+          description: "After academy training, your attestation is signed and independently verifiable. That is measurement of skill, not a certificate and not a conformity mark.",
           side: "bottom",
           align: "start",
         },
