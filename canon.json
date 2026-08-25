@@ -1,15 +1,15 @@
 {
-  "_comment": "Single source of truth for councilof.ai's ruled public invariants. The drift-guard asserts the LIVE site matches these. When a ruling changes a value (e.g. GR.2 moves the axis count), change it HERE in one place and the guard follows. Do not hand-edit the live site to a value that contradicts this file.",
-  "ruling": "SITTING 1 \u00b7 2026-08-18 \u00b7 GSPC 14-slot board, 13 measured of 14",
+  "_comment": "Single source of truth for councilof.ai's ruled public invariants. The drift-guard asserts the LIVE site matches these. When a ruling changes a value (e.g. public_count moves), change it HERE in one place and the guard follows. Do not hand-edit the live site to a value that contradicts this file. Cite live GET /api/gspc for scores.",
+  "ruling": "LIVE \u00b7 2026-08-25 \u00b7 GSPC 14-slot board, 14 measured of 14 quotable",
   "title_contains": "Council of AI",
   "min_homepage_bytes": 20000,
   "api": {
     "path": "/api/gspc",
     "schema": "csoai.gspc-axes/0.5",
     "axes_total": 14,
-    "measured_axes": 13,
+    "measured_axes": 14,
     "quotable_axes": 14,
-    "public_count_contains": "13 measured of 14 quotable"
+    "public_count_contains": "14 measured of 14 quotable"
   },
   "required_routes": {
     "/library": "reference pages across",
