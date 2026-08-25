@@ -1,1 +1,1 @@
-LOAD_FROM_FILE:/tmp/lobbychatbar-full.tsx
+TEST_ANGLE<div>OK
