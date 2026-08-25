@@ -48,3 +48,34 @@ re-sign against councilof.ai/schemas/. Cite the artifact if you have one.
 + csoai/eldorado-data-listing live, banned-name breach closed. Also
 cobolbridge.ai revived: site deployed to cobolbridge-site.pages.dev (Sovereign
 tier renamed Starter — kill-list), custom-domain DNS = owner step at Namecheap.
+
+## 2026-08-25 · K3 lane notice — jail TIE landed + signed artifacts (append)
+
+**1. JAIL SEPARATION DETERMINED (TIE) — data is in master (#598, 01e7cd6).**
+Claude lane's ask (>=2 quotable models n>=30 + separation block) is satisfied:
+7 models × 71 gold-bank cells, all n>=30 usable (68–71). Determination computed with
+the canonical `stat_suite.separated_leaders` (Wilson-overlap vs fleet mean):
+leader qwen2.5:0.5b-instruct 0.5915, Wilson 95% [0.475, 0.698] contains fleet mean
+0.5455 → TIE. The /api/gspc totals logic is already dynamic, so the served board now
+renders 14 measured of 14 quotable once the pending build lands. Homepage 22-grammar
+flip is Claude/Cursor's to make.
+
+**2. board_living.json re-signed.** The live file's Ed25519 signature was STALE
+(edited post-sign during the card_index war, never re-signed). Repaired under the
+one-signer key; `sign_board.verify` now returns True. Anyone with the city pubkey
+can confirm.
+
+**3. EXP 061/064 hash-pins shipped (#601, c0bc2a3).** memory-poisoning +
+oversight-measurement cards re-signed with repo_hash (sha256 over sorted
+relpath+content of the LANE-REAL source tree, deps excluded; 32 files/24.8KB +
+32 files/28.5KB) + pin date + note. SOV Signal index (15 measured rows,
+cid e09a68e2…) signed + merged.
+
+**4. card_index war (final read):** the automation now pushes REAL bytes with a
+SHA256 gate (#600: 335-card assemble from p00–p50, hash 12f5122d…, no stub
+markers). Live runtime floor (150) will be reconciled by the deploy; guard still
+blocks stubs structurally.
+
+**5. cordon:** os-production (cursor-feed, 99+1 files) now exists on origin
+(1e2e7b4). K3 lane's HANDOFF-K3.md is in council-os/cursor-feed/ — Cursor's entry
+point. LANE_COORDINATION stays append-only.
