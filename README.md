@@ -89,7 +89,23 @@ Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/ro
 - [INDEX-METHOD-0.1](docs/SOVOS/INDEX-METHOD-0.1.md) — labour/economy indices stay UNMEASURED until bank freeze
 - [RunPod policy](docs/RUNPOD_POLICY.md) — GPU for model axes; not RWA churn or invented labour scores
 - [HF dataset plan](docs/HF_DATASET_PLAN.md) — honesty dumps; UNMEASURED stub first
+- [Oracle fleet](docs/ORACLE_FLEET.md) — infra status only; not a grade/price oracle
+- [Dataset freshness crons](docs/DATASET_FRESHNESS_CRONS.md) — ops designs; no invented MEASURED
+- [REPORTED labour/economy citations](docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md) — dated links, no scores
 - [Estate crosswalk](docs/ESTATE_CROSSWALK.md) — RWA × GSPC × SOV Signal × regulation × labour/economy
+
+### Cursor Cloud / agent env
+
+Canonical paths for overnight agents (read these before inventing scores):
+
+- `docs/EAT_PLAYBOOK.md` · `docs/NEXT_300_MOVES.md` · `docs/SOVOS/INDEX-METHOD-0.1.md`
+- `docs/RUNPOD_POLICY.md` · `docs/HF_DATASET_PLAN.md` · `docs/ORACLE_FLEET.md`
+- `docs/agent-runbook.md` · `docs/DEMO_READINESS.md` · `docs/DSH_PARITY_NEW_SURFACES.md`
+- `scripts/index-fixtures/labour-economy-unmeasured.json`
+- `.claude/skills/refuse-measured-labour/SKILL.md`
+- Branch tip writer: GitHub MCP `push_files` with real bytes — never `LOAD_FROM_FILE` / `PLACEHOLDER` stubs
+- Prod deploys **`master` only** — this branch is not live until owner merge
+
 - [Council OS cleaned product plan](docs/COUNCIL_OS_PRODUCT.md) — AG-UI / MCP / A2A research mapped to what ships
 - [Council OS build plan](docs/COUNCIL_OS_BUILD_PLAN.md) — adapters/publishers/flywheel; **DSH into all**; no CopilotKit rewrite
 - [EAT · DSH · RWA attestation alignment](docs/EAT_DSH_ALIGNMENT.md) — permissionless Memo/EAS targets under measurement doctrine
