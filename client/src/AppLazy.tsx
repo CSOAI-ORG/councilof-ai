@@ -1,1 +1,1 @@
-PLACEHOLDER
+LOAD_FROM_/tmp/split2-AppLazy.tsx.json
