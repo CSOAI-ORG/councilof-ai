@@ -1,0 +1,78 @@
+  { id: 'new-industries', title: 'Industry Solutions', description: 'AI governance solutions tailored for finance, healthcare, government, and more', category: 'frameworks', href: '/industry-solutions', icon: Building2, keywords: ['industry', 'solutions', 'finance', 'healthcare', 'government', 'sector'] },
+  { id: 'new-partners', title: 'Partners & Advisory Services', description: 'Strategic partnerships, advisory services, and partner program', category: 'faq', href: '/partners', icon: Users, keywords: ['partners', 'advisory', 'consulting', 'services', 'ecosystem'] },
+  { id: 'new-casestudies', title: 'Case Studies', description: 'Real-world AI governance implementation success stories', category: 'faq', href: '/case-studies', icon: BookOpen, keywords: ['case', 'studies', 'success', 'stories', 'implementations', 'results', 'ROI'] },
+  { id: 'new-trustcenter', title: 'Trust Center', description: 'Security certifications, compliance, data protection, and infrastructure details', category: 'faq', href: '/trust-center', icon: Shield, keywords: ['trust', 'security', 'compliance', 'certifications', 'ISO', 'SOC', 'GDPR', 'encryption', 'privacy'] },
+  { id: 'new-compare', title: 'Why Choose CSOAI', description: 'Compare CSOAI against traditional GRC tools, AI-specific platforms, and consulting firms', category: 'faq', href: '/compare', icon: BarChart3, keywords: ['compare', 'comparison', 'versus', 'vs', 'alternative', 'why', 'choose', 'better', 'difference'] },
+  { id: 'new-roi', title: 'ROI Calculator', description: 'Calculate your return on investment for AI governance implementation', category: 'faq', href: '/roi-calculator', icon: BarChart3, keywords: ['roi', 'calculator', 'return', 'investment', 'cost', 'savings', 'money', 'budget', 'estimate'] },
+  { id: 'new-technology', title: 'Technology & Architecture', description: 'How the Council\'s designed multi-provider oversight and CSOAI platform architecture works', category: 'faq', href: '/technology', icon: Shield, keywords: ['technology', 'architecture', 'byzantine', 'council', 'agents', 'infrastructure', 'platform', 'technical', 'how it works'] },
+  { id: 'new-integrations', title: 'Integrations & Ecosystem', description: '50+ enterprise integrations and the open-source governance ecosystem', category: 'faq', href: '/integrations', icon: Shield, keywords: ['integrations', 'ecosystem', 'api', 'connect', 'platforms', 'aws', 'azure', 'slack', 'sdk'] },
+];
+
+// Quick Actions
+const QUICK_ACTIONS: QuickAction[] = [
+  { id: 'action-council-os', title: 'Open Council OS', description: POSITIONING.os.blurb, href: '/os', icon: Zap, color: 'bg-emerald-700' },
+  { id: 'action-agent-runbook', title: 'Agent runbook', description: 'curl-first machine surfaces — gspc, AG-UI, bond crossing', href: '/agent-runbook', icon: Brain, color: 'bg-violet-600' },
+  { id: 'action-eunomia-router', title: 'Eunomia Router', description: '291 MCP routing rules — governance on every path', href: '/instruments', icon: Zap, color: 'bg-emerald-600' },
+  { id: 'action-register-ai', title: 'Register AI System', description: 'Add a new AI system to the registry', href: '/ai-systems', icon: Plus, color: 'bg-blue-500' },
+  { id: 'action-take-exam', title: 'Take Certification Exam', description: 'Start your measurement credential assessment', href: '/certification/exam', icon: FileCheck, color: 'bg-purple-500' },
+  { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/watchdog', icon: AlertTriangle, color: 'bg-red-500' },
+  { id: 'action-apply-job', title: 'Browse Analyst Jobs', description: 'Find Watchdog analyst opportunities', href: '/jobs', icon: Briefcase, color: 'bg-amber-500' },
+  { id: 'action-view-charter', title: 'View Partnership Charter', description: 'Read the 52 Articles', href: '/charter', icon: FileText, color: 'bg-slate-700' },
+];
+
+// Category configuration
+const CATEGORY_CONFIG: Record<SearchCategory, { label: string; icon: React.ElementType; color: string }> = {
+  pages: { label: 'Pages', icon: FileText, color: 'text-blue-600 bg-blue-100' },
+  charter: { label: 'Charter Articles', icon: FileText, color: 'text-rose-600 bg-rose-100' },
+  training: { label: 'Training', icon: GraduationCap, color: 'text-emerald-600 bg-emerald-100' },
+  frameworks: { label: 'Frameworks', icon: Shield, color: 'text-purple-600 bg-purple-100' },
+  faq: { label: 'FAQ', icon: HelpCircle, color: 'text-amber-600 bg-amber-100' },
+  actions: { label: 'Quick Actions', icon: Zap, color: 'text-green-600 bg-green-100' },
+  recent: { label: 'Recent', icon: Clock, color: 'text-gray-600 bg-gray-100' },
+};
+
+// Fuzzy search function
+function fuzzyMatch(text: string, query: string): boolean {
+  const searchText = text.toLowerCase();
+  const searchQuery = query.toLowerCase();
+
+  // Direct substring match
+  if (searchText.includes(searchQuery)) return true;
+
+  // Fuzzy match - all characters must appear in order
+  let queryIndex = 0;
+  for (let i = 0; i < searchText.length && queryIndex < searchQuery.length; i++) {
+    if (searchText[i] === searchQuery[queryIndex]) {
+      queryIndex++;
+    }
+  }
+
+  return queryIndex === searchQuery.length;
+}
+
+// Score results for ranking
+function scoreResult(result: SearchResult, query: string): number {
+  const q = query.toLowerCase();
+  const title = result.title.toLowerCase();
+  const desc = result.description.toLowerCase();
+
+  let score = 0;
+
+  // Exact title match
+  if (title === q) score += 100;
+  // Title starts with query
+  else if (title.startsWith(q)) score += 80;
+  // Title contains query as word
+  else if (title.includes(q)) score += 60;
+  // Description contains query
+  else if (desc.includes(q)) score += 40;
+  // Keywords match
+  if (result.keywords?.some(k => k.toLowerCase().includes(q))) score += 30;
+  // Highlighted items get bonus
+  if (result.highlight) score += 20;
+
+  return score;
+}
+
+// Recent searches storage key
+const RECENT_S
