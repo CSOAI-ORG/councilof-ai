@@ -68,7 +68,7 @@ export default function Technology() {
       details: [
         'Coverage: EU AI Act, NIST AI RMF, ISO 42001',
         'Automatic regulation version tracking',
-        'Gap analysis and remediation suggestions',
+        'Gap analysis — we measure, we do not remediate',
         'Multi-jurisdiction support',
         'Custom framework integration'
       ]
@@ -77,11 +77,11 @@ export default function Technology() {
       id: 'reporting-action',
       title: 'Reporting & Action Layer',
       icon: Layers,
-      description: 'Dashboards, alerts, and automated remediation',
+      description: 'Dashboards and alerts — measurement, not remediation',
       details: [
         'Real-time compliance dashboards',
         'Configurable alerting thresholds',
-        'Automated remediation workflow triggers',
+        'Alerts when a measurement cell is empty or fails',
         'Audit trail with tamper-proof logging',
         'Export to SIEM and compliance tools'
       ]
@@ -117,9 +117,9 @@ export default function Technology() {
             Built on a designed multi-agent review architecture. The 33-agent council is a design (Charter Art. 11), not a measured live pipeline — its effective independence is measured, not assumed, and published on the Refutation Ledger.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/pricing">
+            <Link href="/?lobby=measured&task=pricing-overview">
               <a className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2">
-                View Pricing <ArrowRight size={20} />
+                How the free rail works <ArrowRight size={20} />
               </a>
             </Link>
             <Link href="/demo">
@@ -287,7 +287,7 @@ export default function Technology() {
                 <Layers className="text-blue-400 flex-shrink-0" size={28} />
                 <div>
                   <h4 className="font-bold text-white">Reporting & Action</h4>
-                  <p className="text-sm text-blue-200">Dashboards, alerts, automated remediation</p>
+                  <p className="text-sm text-blue-200">Dashboards and alerts — measurement, not remediation</p>
                 </div>
               </div>
             </div>
@@ -456,9 +456,9 @@ export default function Technology() {
             <h3 className="text-2xl font-bold text-white mb-6">Performance & Limits</h3>
             <div className="grid md:grid-cols-3 gap-6">
               <div>
-                <p className="text-blue-200 text-sm mb-2">Enterprise Plan</p>
-                <p className="text-3xl font-bold text-blue-400">10,000</p>
-                <p className="text-blue-100">requests/minute</p>
+                <p className="text-blue-200 text-sm mb-2">Request rate</p>
+                <p className="text-3xl font-bold text-blue-400">Unmeasured</p>
+                <p className="text-blue-100">no invented plan quotas</p>
               </div>
               <div>
                 <p className="text-blue-200 text-sm mb-2">Response Time</p>
@@ -491,14 +491,14 @@ export default function Technology() {
           <h2 className="text-4xl font-bold text-white mb-6">Ready to Deploy Enterprise-Grade AI Governance?</h2>
           <p className="text-xl text-blue-100 mb-8">Join leading organizations using CSOAI to ensure compliance, reduce risk, and build trust in their AI systems.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/pricing">
+            <Link href="/?lobby=measured&task=pricing-overview">
               <a className="px-8 py-3 bg-white hover:bg-blue-50 text-blue-900 rounded-lg font-semibold transition flex items-center justify-center gap-2">
-                Explore Plans <ArrowRight size={20} />
+                How the free rail works <ArrowRight size={20} />
               </a>
             </Link>
-            <Link href="/enterprise">
+            <Link href="/?lobby=measured&task=enterprise-start">
               <a className="px-8 py-3 border-2 border-white text-white hover:bg-white/10 rounded-lg font-semibold transition">
-                Contact Sales
+                Enterprise lobby
               </a>
             </Link>
           </div>
