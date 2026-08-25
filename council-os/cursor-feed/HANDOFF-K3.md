@@ -95,3 +95,25 @@ Freshness/risk dossier integrated (merged #628, `02ff64f`):
   NOT in our tree; consumers pin ≥4.2.5/5.x + SCA + npm 2FA prep.
 - **SEC posture:** pure-attestor (no issuance/custody/synthetic) sits outside the
   2026-01-28 staff taxonomy — keep it that way; no issuer payment ever.
+
+## 6. RWA SCALE 2026-08-25 — data is LIVE, wire it (exact list for Cursor)
+**Done (merged + live in repo):** control-facts v2 (`public/interop/financial-measure-run-v2.json`
+— 6 XRPL issuers, fresh mainnet flags, coverage rate + **Wilson 95%**, Ed25519-signed cid
+`29369542cb537f38`, supersedes v1 with corrections-append note) · corpus 18 entries + intel/flags
+(JMWH demo-only) · `financial-axes 0.2` (3 index axes declared UNMEASURED + rubric + bank NONE) ·
+HF mirror **csoai/rwa-attest** (7 files) · scripts + methodology committed.
+
+**Cursor wiring (from os-production / master):**
+1. `client/src/pages/XrplAttest.tsx` already routed (`/xrpl-attest`, Header item "Attestation on
+   the ledger" ✅ exists) → **wire it to the live data:** fetch `financial-measure-run-v2.json` +
+   `attestation-corpus.json`; render per-target coverage rate + Wilson interval + raw flags +
+   `watch` flags; verdicts stay UNMEASURED badges (never implied safe); JMWH card = demo-only
+   negative-signal framing with the represented≠distributed callout.
+2. **New menu item + page:** `/financial-axes` — the 8 financial axes; 3 index candidates
+   (AI-economy, human-labour, humanoid-labour) rendered as **declared-UNMEASURED cards**
+   (rubric + bank_status NONE shown; no live numbers — honest empty state).
+3. **Homepage/header grammar sweep:** "14 measured of 14" (live) — replace any "13 measured of 14";
+   emerald brand (#10B981) everywhere; no gold/gray leftovers.
+4. **Products catalogue:** link the five products (evidence pack / data licence / attestation
+   coverage / training world / payg) — pricing stays DRAFT (owner ruling).
+5. Data endpoints already public: `/interop/*.json` + `/signals/*.signed.json` + `/api/gspc`.
