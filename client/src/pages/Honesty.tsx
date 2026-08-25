@@ -158,8 +158,9 @@ export default function Honesty() {
           <Link href="/gspc-arena" className="text-emerald-700 underline">
             jail
           </Link>{" "}
-          (council-inhouse-ft detected zero escapes) and human-vs-ai (council-safe aligned 0.25) — published
-          on the live board, not hidden.
+          (council-inhouse-ft detected zero escapes; n=71, MEASURED, separation TIE — a tie is not a
+          ranked leader) and human-vs-ai (council-safe aligned 0.25) — published on the live board, not
+          hidden.
         </p>
 
         <div className="mt-12 rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
