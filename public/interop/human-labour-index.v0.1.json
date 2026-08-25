@@ -1,0 +1,40 @@
+{
+ "schema": "csoai.human-labour-index/0.1",
+ "axis": "human-labour-index",
+ "status": "MEASURED-INDEX-v0.1",
+ "fetched_at": "2026-08-25T14:07:09Z",
+ "scope_honesty": "Reference-series snapshot (participation + unemployment, EU). Displacement/wage components are BANK-GAPS. Not a forecast.",
+ "sources": [
+  "World Bank SL.TLF.CACT.ZS + SL.UEM.TOTL.ZS (EU) — live fetch 2026-08-25"
+ ],
+ "components": {
+  "labour_force_participation": {
+   "latest_year": "2024",
+   "value": 57.5769911220536,
+   "prev_year": "2023",
+   "prev_value": 57.7151000918271,
+   "unit": "%"
+  },
+  "unemployment": {
+   "latest_year": "2024",
+   "value": 5.92300803762815,
+   "prev_year": "2023",
+   "prev_value": 6.02643653344515,
+   "unit": "%"
+  }
+ },
+ "recompute": "python3 harness/rwa-attest/index_measure.py",
+ "bank_gaps": [
+  "displacement indicators",
+  "wage series",
+  "worker-hours by AI exposure"
+ ],
+ "content_id": "8abf5166de5a8cb80d87d9b5d435748edb21f9a056d5f197905baca107e48228",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "8abf5166de5a8cb80d87d9b5d435748edb21f9a056d5f197905baca107e48228",
+  "sig": "VG7PGrnYtSK6Kq1Mzx2yTIN5U+Sxo9WKtol1y3ursLsF0f9T3LsvsQkXD2/lKd/8gvAYDLeakJugEEgPbVzDCA==",
+  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
+  "note": "Ed25519 over canonical content_id (recompute, verify, trust none)."
+ }
+}

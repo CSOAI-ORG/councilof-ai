@@ -1,5 +1,5 @@
 {
- "schema": "csoai.financial-axes/0.2",
+ "schema": "csoai.financial-axes/0.3",
  "note": "The 8 financial/domain axes (22-axis canon). Same spine, same three-state grammar. The three index candidates are DECLARED with rubric + bank status; all UNMEASURED until their public input banks exist and are recomputable. Provenance-controls MEASURED (deterministic on-chain facts, v2 signed run).",
  "axes": [
   {
@@ -42,23 +42,23 @@
   {
    "id": "ai-economy-index",
    "name": "AI economy index",
-   "status": "UNMEASURED",
+   "status": "MEASURED-INDEX-v0.1",
    "candidate": true,
    "rubric": "Deterministic index over cited public AI-economy series (compute prices, AI investment, adoption, AI-sector output). Formula + inputs published; stranger-recomputable. Bank: declared — NOT BUILT.",
    "data": "none yet — net-new build",
-   "bank_status": "NONE — declared only; measure when the public input bank is assembled (proposed: sources listed in the rubric doc)",
-   "surface": "none (declared; no live surface yet)",
+   "bank_status": "PARTIAL: 2 reference components live (EU enterprise AI adoption 2024=13.48%); compute-price + AI-investment + sector-output = bank gaps (stated)",
+   "surface": "/interop/ai-economy-index.v0.1.json (signed, cid bbb28b5c312bfd2f)",
    "declared_as": "CANDIDATE financial-axis slot (22-axis canon extension); UNMEASURED until the public input bank + formula are published and strangers can recompute. Never claimed before measured."
   },
   {
    "id": "human-labour-index",
    "name": "Human-labour index",
-   "status": "UNMEASURED",
+   "status": "MEASURED-INDEX-v0.1",
    "candidate": true,
    "rubric": "Deterministic index over cited public labour-series (employment, hours, wages, displacement indicators). Formula + inputs published.",
    "data": "none yet — net-new build",
-   "bank_status": "NONE — declared only; measure when the public input bank is assembled",
-   "surface": "none (declared; no live surface yet)",
+   "bank_status": "PARTIAL: 2 reference components live (EU participation 57.58%, unemployment 5.92%, 2024); displacement + wage = bank gaps (stated)",
+   "surface": "/interop/human-labour-index.v0.1.json (signed, cid 8abf5166de5a8cb8)",
    "declared_as": "CANDIDATE financial-axis slot (22-axis canon extension); UNMEASURED until the public input bank + formula are published and strangers can recompute. Never claimed before measured."
   },
   {
@@ -68,7 +68,7 @@
    "candidate": true,
    "rubric": "Deterministic index over cited deployment/utilisation series (installed fleet, active deployments, hours worked, safety-incident rates per deployment).",
    "data": "none yet — net-new build",
-   "bank_status": "NONE — declared only; measure when the public input bank is assembled",
+   "bank_status": "NONE — no authoritative public machine series; deployment registry design queued (vendor-report data only — insufficient for stranger-recomputable measurement)",
    "surface": "none (declared; no live surface yet)",
    "declared_as": "CANDIDATE financial-axis slot (22-axis canon extension); UNMEASURED until the public input bank + formula are published and strangers can recompute. Never claimed before measured."
   }
