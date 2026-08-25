@@ -42,12 +42,12 @@ const SEVEN_INDUSTRIES = [
 
 interface Post { title: string; date: string; desc: string; href: string; }
 const RECENT: Post[] = [
-  { title: "Layer 0: The Missing Trust Layer for the Agent Economy", date: "2026-06-17", desc: "Every MCP and A2A assumes a trusted agent identity with enforceable policy — that is the market we built.", href: "/blog/layer-0-agent-economy-trust" },
-  { title: "The EU AI Act Article 50 Countdown: What Changes 2 Aug 2026", date: "2026-06-17", desc: "Transparency obligations arrive 2 August. Organisations in or serving the EU need signed, verifiable evidence — not an attestation PDF.", href: "/blog/eu-ai-act-article-50-countdown" },
-  { title: "How to Choose an AI Compliance Vendor", date: "2026-06-17", desc: "GRC rebrands are everywhere. Here is how to spot a real measurement body vs a marketing operation.", href: "/blog/choosing-ai-compliance-vendor" },
-  { title: "DORA Compliance for UK Financial Services", date: "2026-06-17", desc: "The Digital Operational Resilience Act applies 17 Jan 2025. AI systems in-scope need a measurement rail, not a form.", href: "/blog/dora-compliance-uk-financial-services" },
-  { title: "AI Governance vs AI Compliance — What's the Difference?", date: "2026-06-17", desc: "Governance is strategy. Compliance is a snapshot. Buy a snapshot without a governance layer, and you re-buy every six months.", href: "/blog/ai-governance-vs-compliance" },
-  { title: "NIS2 Compliance for Critical Infrastructure Operators", date: "2026-06-17", desc: "NIS2 expanded scope reaches energy, transport, health and digital infrastructure. Every AI in that chain is in scope.", href: "/blog/nis2-compliance-critical-infrastructure" },
+  { title: "Layer 0: The Missing Trust Layer for the Agent Economy", date: "2026-06-17", desc: "Every MCP and A2A assumes a trusted agent identity with enforceable policy — that is the market we built.",     href: "/blog/" },
+  { title: "The EU AI Act Article 50 Countdown: What Changes 2 Aug 2026", date: "2026-06-17", desc: "Transparency obligations arrive 2 August. Organisations in or serving the EU need signed, verifiable evidence — not an attestation PDF.", href: "/blog/" },
+  { title: "How to Choose an AI Compliance Vendor", date: "2026-06-17", desc: "GRC rebrands are everywhere. Here is how to spot a real measurement body vs a marketing operation.", href: "/blog/" },
+  { title: "DORA Compliance for UK Financial Services", date: "2026-06-17", desc: "The Digital Operational Resilience Act applies 17 Jan 2025. AI systems in-scope need a measurement rail, not a form.", href: "/blog/" },
+  { title: "AI Governance vs AI Compliance — What's the Difference?", date: "2026-06-17", desc: "Governance is strategy. Compliance is a snapshot. Buy a snapshot without a governance layer, and you re-buy every six months.", href: "/blog/" },
+  { title: "NIS2 Compliance for Critical Infrastructure Operators", date: "2026-06-17", desc: "NIS2 expanded scope reaches energy, transport, health and digital infrastructure. Every AI in that chain is in scope.", href: "/blog/" },
 ];
 
 // ── sections ───────────────────────────────────────────────
@@ -65,7 +65,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
 
 // ── living GSPC grid (honest empties stay empty) ─────────────────────────
 
-// ── problem we fix ─────────────────────────────────────
+// ── problem we fix ───────────────────────────────────
 function ProblemStrip() {
   return (
     <Section
@@ -232,7 +232,7 @@ function AxesGrid() {
   );
 }
 
-// ── demographics ───────────────────────────────────
+// ── demographics ─────────────────────────────────
 function BuyerCards() {
   return (
     <Section title="Built for the people who get audited" subtitle="One instrument, four audiences. Pick your path — every CTA leads to the same measurement, signed." bg="bg-gray-50">
@@ -253,7 +253,7 @@ function BuyerCards() {
   );
 }
 
-// ── industries ───────────────────────────────────
+// ── industries ─────────────────────────────────
 function IndustryGrid() {
   return (
     <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
