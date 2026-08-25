@@ -122,6 +122,40 @@ async function grounded(q: string, origin: string): Promise<string | null> {
     return `Rules: unparsed counted incorrect; no model judges another model; nothing quoted below usable n >= 30; canaries excluded; three outcomes (success, failure, unmeasured).`;
   }
 
+  // Conversational floor - greet, identity, capability. Answered from the About facts and
+  // the live board canon (never an invented number or legal opinion), so the concierge holds
+  // a basic conversation instead of refusing "hello". claimGuardRefuse already ran above.
+  const openNames = axes.map((a: any) => a.axis).filter((n: any) => n && String(n).toLowerCase() !== "jail");
+  if (/^(hi|hey+|hello+|yo|gm|ga|ge|good (morning|afternoon|evening)|greetings|sup|howdy|hiya|heya|hej|hola)\b/i.test(t) || t === "hi" || t === "hello") {
+    return (
+      `Hi - I'm the Council of AI concierge. I answer from published measurement and frozen rules, and I say **UNMEASURED** rather than guess.\n\n` +
+      `Ask me a **named axis** (${openNames.slice(0, 4).join(", ")}${openNames.length > 4 ? ", ..." : ""}), **how the board works**, **EU AI Act Article 5**, **the measurement method**, **pricing**, or **how to get measured**.\n\n` +
+      `_A concierge over published facts, not a model that invents them._`
+    );
+  }
+  if (/\b(who are you|what (is|are|s) (this|you|council|csoai|the council of ai)|what do you do|tell me about (council|csoai|this|you)|about (council|csoai|you)|explain (council|csoai|this)|are you (an? )?(ai|bot|chatbot))\b/i.test(t)) {
+    return (
+      `The **Council of AI** is an independent measurement instrument: it measures how AI systems behave against the rules that govern them, signs each result with Ed25519, and publishes what it cannot yet measure. It does **not** certify and issues no conformity mark.\n\n` +
+      `The GSPC board carries **${canon.measured} measured of ${canon.quotable}** quotable axes (${openNames.slice(0, 6).join(", ")}${openNames.length > 6 ? ", ..." : ""}). Verification is free forever; a grade is never sold.\n\n` +
+      `Ask me a named axis, the method, Article 5, or how to get measured.\n\n_Grounded in the published board, not by a model._`
+    );
+  }
+  if (/\b(what can i ask|what can you (do|answer|help)|^help$|how (do|does) (this|it|i) (work|use)|what (are my )?options|menu|get started|where do i start|what now)\b/i.test(t) || t === "help") {
+    return (
+      `Here's what I can answer from published facts:\n\n` +
+      `- **A named board axis** - its measured accuracy, Wilson interval and n (or UNMEASURED, honestly).\n` +
+      `- **The board** - how many axes are measured of the quotable set.\n` +
+      `- **EU AI Act Article 5** - the prohibited practices, by a deterministic rule.\n` +
+      `- **The measurement method** - unparsed counted wrong, n>=30 to quote, three outcomes.\n` +
+      `- **Pricing** - no SaaS tiers; verification is free forever.\n` +
+      `- **Get measured** - how to run a signed assessment.\n\n` +
+      `_I answer from published measurement; I won't invent a number or a legal opinion._`
+    );
+  }
+  if (/\b(thank|thanks|cheers|ta\b|appreciate|nice|cool|great|awesome|ok|okay|bye|goodbye|see ya)\b/i.test(t) && t.length < 40) {
+    return `Anytime. Ask me a named axis, the board, Article 5, the method, or how to get measured whenever you're ready.\n\n_Council of AI - measurement, not certification._`;
+  }
+
   return null;
 }
 
