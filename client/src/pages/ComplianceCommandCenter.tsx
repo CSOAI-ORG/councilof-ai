@@ -47,7 +47,7 @@ export default function ComplianceCommandCenter() {
 
   useEffect(() => {
     document.title = "Compliance Command Center · CSOAI";
-    fetch("https://proofof.ai/sovereign-town/status.json", { cache: "no-store" })
+    fetch("https://proofof.ai/towns/status.json", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => {
         if (typeof d.cum_episodes === "number") setEp(d.cum_episodes);
