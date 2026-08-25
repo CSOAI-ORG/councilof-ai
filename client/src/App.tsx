@@ -96,9 +96,9 @@ const Signup = lazy(() => import("./pages/Signup"));
 const Welcome = lazy(() => import("./pages/Welcome"));
 const FrameworkHive = lazy(() => import("./pages/FrameworkHive"));
 const SystemCard = lazy(() => import("./pages/SystemCard"));
-const Sov3ModelCard = lazy(() => import("./pages/Sov3ModelCard"));
-const Sov3SystemCard = lazy(() => import("./pages/Sov3SystemCard"));
-const Sov3Whitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
+const CouncilModelCard = lazy(() => import("./pages/Sov3ModelCard"));
+const CouncilSystemCard = lazy(() => import("./pages/Sov3SystemCard"));
+const CouncilWhitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
 const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const ProvenanceFinding = lazy(() => import("./pages/ProvenanceFinding"));
 const Article50Pack = lazy(() => import("./pages/Article50Pack"));
@@ -348,6 +348,8 @@ function ScrollToTop() {
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
   "/products": "The product family — one signed rail | Council of AI",
+  "/council-model-card": "Council model card | Council of AI",
+  "/council-system-card": "Council system card | Council of AI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
   "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
   "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
@@ -548,9 +550,9 @@ function App() {
                   <Route path="/system-card" component={SystemCard} />
                   <Route path="/assurance" component={SystemCard} />
                   <Route path="/systemcard" component={SystemCard} />
-                  <Route path="/council-model-card" component={Sov3ModelCard} />
-                  <Route path="/council-system-card" component={Sov3SystemCard} />
-                  <Route path="/workbench-paper" component={Sov3Whitepaper} />
+                  <Route path="/council-model-card" component={CouncilModelCard} />
+                  <Route path="/council-system-card" component={CouncilSystemCard} />
+                  <Route path="/workbench-paper" component={CouncilWhitepaper} />
                   <Route path="/sov3-model-card">{() => <Redirect to="/council-model-card" />}</Route>
                   <Route path="/sov3-system-card">{() => <Redirect to="/council-system-card" />}</Route>
                   <Route path="/sov3-whitepaper">{() => <Redirect to="/workbench-paper" />}</Route>

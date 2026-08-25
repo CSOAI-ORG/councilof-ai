@@ -42,6 +42,14 @@ const RULES = [
     why: 'De-branded surface: "Sovereign" is not the product name. Use Council / Council Signal / the measurement engine.',
   },
   {
+    id: "internal_codenames",
+    // sov3 / sov33 / sov34 (and hyphenated variants like sov33-dist-c3), SOVOS,
+    // dorado, cibola — internal names, never public. Caught live on /benchmarks
+    // 2026-08-25 because this class was missing from the gate.
+    pattern: /\bsovos\b|\bsov3\d*(?:-[a-z0-9-]+)?\b|\bdorado\b|\bcibola\b/i,
+    why: "Internal codename on a public surface. Use the public-canon name (Council / the fine-tune's neutral description).",
+  },
+  {
     id: "cert_overclaim",
     // No trailing \b: CamelCase-derived titles concatenate the brand ("CEASAITraining"
     // shipped on /library because \bCEASAI\b missed it — qa-sweep 2026-08-19).

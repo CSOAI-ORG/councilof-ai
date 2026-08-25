@@ -168,6 +168,9 @@ const NOT_LIBRARIED =
 /** Every non-primary, surfaced route, classified — the archive contents. */
 export function libraryItems(): LibraryItem[] {
   return ROUTE_MANIFEST
+    // A redirect is not a page — never list it in the Library (legacy /sov3-* rows
+    // were rendering their internal-codename titles as archive links).
+    .filter((r) => r.comp !== "Redirect")
     .filter((r) => !PRIMARY_PATHS.has(r.path) && !NOT_LIBRARIED.test(r.path) && !hasForbiddenBrand(r.path) && !/\.[a-z]+$/.test(r.path))
     .filter((r) => !/certification exam|view pricing|paid plans|get certified/i.test(`${r.title} ${r.path}`))
     .map((r) => ({ ...r, title: prettifyTitle(r.title), sector: classify(r.path, r.title).id }));

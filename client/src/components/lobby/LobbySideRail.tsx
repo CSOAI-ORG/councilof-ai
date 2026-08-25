@@ -32,9 +32,12 @@ const PANEL = "coai-lobby-section-panel";
 export default function LobbySideRail({
   chat,
   onMinimise,
+  onOpenRoute,
 }: {
   chat: LobbyChat;
   onMinimise?: () => void;
+  /** Open a route in the lobby pane instead of navigating away (session survives). */
+  onOpenRoute?: (path: string, label: string) => void;
 }) {
   const [section, setSection] = useState<SectionId>("reports");
   const listRef = useRef<HTMLDivElement>(null);
@@ -121,7 +124,7 @@ export default function LobbySideRail({
         className={`min-h-0 flex-1 ${FOCUS}`}
       >
         <p className="sr-only">{current.hint}</p>
-        {section === "reports" && <LobbyReports />}
+        {section === "reports" && <LobbyReports onOpenRoute={onOpenRoute} />}
         {section === "tasks" && <LobbyTaskRail />}
         {section === "chats" && <LobbyChats chat={chat} />}
       </div>

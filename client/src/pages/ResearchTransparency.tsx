@@ -65,7 +65,7 @@ export default function ResearchTransparency() {
         </Finding>
 
         <Finding title="A capability benchmark we do not yet have" verdict="OPEN — NOT DONE" tone="partial">
-          <p>We have not run a head-to-head capability benchmark (e.g. GSM8K, MMLU) of SOV3 against frontier models. The governance-topology results above measure decision-quality, safety, and cost under a stated error model — they are a real, useful, and different thing from a capability benchmark, and we do not present one as a substitute for the other. This is an open item, not a hidden one.</p>
+          <p>We have not run a head-to-head capability benchmark (e.g. GSM8K, MMLU) of our fine-tuned model against frontier models. The governance-topology results above measure decision-quality, safety, and cost under a stated error model — they are a real, useful, and different thing from a capability benchmark, and we do not present one as a substitute for the other. This is an open item, not a hidden one.</p>
         </Finding>
       </section>
 

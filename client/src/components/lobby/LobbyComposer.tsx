@@ -202,8 +202,12 @@ export default function LobbyComposer({
         </div>
       </div>
 
+      {/* In conversation the sentence folds away — bubbles get the room — but the
+          "How it answers" toggle stays clickable and aria-describedby stays intact. */}
       <p id="coai-lobby-chat-note" className={`mt-2 ${TYPE.fine}`}>
-        Answers from published measurement, or it refuses.{
+        <span className={turns.length > 0 && !noteOpen ? "sr-only" : undefined}>
+          Answers from published measurement, or it refuses.
+        </span>{
         " "}
         <button
           type="button"

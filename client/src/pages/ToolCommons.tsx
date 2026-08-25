@@ -16,7 +16,7 @@ export default function ToolCommons() {
     setLoading(false);
   }
   function copy(cmd: string, name: string) { try { navigator.clipboard.writeText(cmd); setCopied(name); setTimeout(() => setCopied(""), 1200); } catch (e) {} }
-  const matches = (data && data.matches) || [];
+  const matches = (data && (data.tools || data.matches)) || [];
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <section className="relative overflow-hidden border-b border-emerald-500/15">
@@ -26,7 +26,7 @@ export default function ToolCommons() {
             <a href="/?lobby=tools" className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70 hover:text-emerald-200">Council OS · tools</a>
           )}
           <h1 className="mt-3 text-5xl sm:text-6xl font-black tracking-tight">The open <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">tool commons.</span></h1>
-          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">{data?.total != null ? `${data.total} published MCP servers` : "Published MCP servers"} — search, connect with one command, run them inside Council OS. The count is live, not a slogan.</p>
+          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">{data?.total != null ? `${data.total} published MCP servers (catalogue snapshot)` : "Published MCP servers"} — search, connect with one command, run them inside Council OS. The count is a dated snapshot, not a live meter.</p>
           <div className="mt-7 flex gap-2 max-w-2xl mx-auto"><input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") run(); }} placeholder="Search published tools…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-5 py-4 text-base text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" /><button onClick={() => run()} className="rounded-xl bg-emerald-500 px-6 py-4 text-base font-bold text-[#03110b] hover:bg-emerald-400">{loading ? "..." : "Search"}</button></div>
           <div className="mt-3 flex flex-wrap justify-center gap-2">{EX.map((e) => (<button key={e} onClick={() => run(e)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-3 py-1 text-xs text-emerald-200/80 hover:bg-emerald-500/15">{e}</button>))}</div>
         </div>

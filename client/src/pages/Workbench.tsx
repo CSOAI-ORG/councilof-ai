@@ -59,8 +59,8 @@ export default function Workbench() {
       <div className="mx-auto max-w-6xl px-5 py-10">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · governance workbench · powered by Council Workbench</p>
         <h1 className="mt-3 text-3xl sm:text-4xl font-black tracking-tight">Every output — <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">signed, reproducible, designed for council review.</span></h1>
-        <p className="mt-3 max-w-3xl text-emerald-100/75 text-[15px]">The AI-workbench pattern, applied to AI governance. A coordinating Council agent runs your skills; every result is produced as an auditable artifact — sealed to Layer 0 and reproducible from its own provenance. Council review is a designed layer (Charter Art. 11), not a live pipeline — measured status on the <a href="/refutation-ledger" className="underline text-emerald-300">Refutation Ledger</a> (DR-0007). {tools ? <span className="text-emerald-300">{tools} governed skills live.</span> : null}</p>
-        <div className="mt-5 max-w-3xl"><AISystemNotice route="/sov3" /></div>
+        <p className="mt-3 max-w-3xl text-emerald-100/75 text-[15px]">The AI-workbench pattern, applied to AI governance. A coordinating Council agent runs your skills; every result is produced as an auditable artifact — sealed to Layer 0 and reproducible from its own provenance. Council review is a designed layer (Charter Art. 11), not a live pipeline — measured status on the <a href="/refutation-ledger" className="underline text-emerald-300">Refutation Ledger</a> (DR-0007).</p>
+        <div className="mt-5 max-w-3xl"><AISystemNotice route="/workbench" /></div>
 
         <div className="mt-7 grid gap-5 lg:grid-cols-[260px_1fr]">
           {/* Skill palette */}

@@ -29,7 +29,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     { id: "sbom-cyclonedx-mcp", name: "SBOM CycloneDX", category: "security", status: "LIVE" },
   ].filter((t) => !q || t.category.includes(q) || t.name.toLowerCase().includes(q) || t.id.includes(q));
   return new Response(
-    JSON.stringify({ total: CATALOGUE_TOTAL, query: q || null, tools: sample }),
+    JSON.stringify({ total: CATALOGUE_TOTAL, total_kind: "catalogue-snapshot", query: q || null, tools: sample }),
     { status: 200, headers: { "content-type": "application/json", "cache-control": "public, max-age=60" } }
   );
 };

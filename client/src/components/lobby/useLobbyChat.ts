@@ -56,7 +56,7 @@ function offlineHelp(reason: string): string {
     `The Council endpoint did not answer — ${reason}. This reply is a local, deterministic ` +
     `help message, not an answer to your question: no measurement was read and none is implied.\n\n` +
     `What still works right now, with no network: say “show the board”, “verify a card”, ` +
-    `“open Council Space”, “get measured”, “open the Academy” — each switches the pane on the ` +
+    `“open Council Space”, “get measured” — each switches the pane on the ` +
     `left of this lobby. The pages themselves fetch their own live data and will tell you if ` +
     `they cannot reach it either.`
   );

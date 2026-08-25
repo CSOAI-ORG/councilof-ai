@@ -484,11 +484,11 @@ export default function TrainingV2() {
                   View Attestation
                 </Button>
               </Link>
-              <a href="/training-board.html" target="_blank" rel="noopener">
+              <Link href="/gspc-arena">
                 <Button size="lg" variant="outline" className="border-2 border-yellow-300/70 text-yellow-200 hover:bg-white/10 px-10 py-7 text-lg font-semibold">
-                  ⚔ Live Training Board — sims, quests & the ladder
+                  ⚔ Council Space — rounds, fixtures & the ladder
                 </Button>
-              </a>
+              </Link>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">

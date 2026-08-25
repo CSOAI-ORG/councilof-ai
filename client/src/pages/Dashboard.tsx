@@ -59,10 +59,12 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
   return r.json();
 }
 
-const frameworkCompliance = [
-  { name: "EU AI Act", score: 72, status: "In Progress", deadline: "Dec 2027", articles: 113 },
-  { name: "NIST AI RMF", score: 85, status: "Compliant", deadline: "Voluntary", articles: 72 },
-  { name: "TC260", score: 68, status: "In Progress", deadline: "Q2 2025", articles: 56 },
+// Framework compliance scores are UNMEASURED for this account — no number is
+// invented here. The card renders an honest empty state pointing at the live board.
+const frameworkCompliance: { name: string }[] = [
+  { name: "EU AI Act" },
+  { name: "NIST AI RMF" },
+  { name: "TC260" },
 ];
 
 const quickActions = [
@@ -476,39 +478,20 @@ export default function Dashboard() {
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-5">
+              <CardContent className="space-y-3">
                 {frameworkCompliance.map((framework) => (
-                  <div key={framework.name} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="font-medium text-sm">{framework.name}</span>
-                        <span className="text-xs text-muted-foreground ml-2">
-                          ({framework.articles} requirements)
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                            framework.status === "Compliant"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-amber-100 text-amber-700"
-                          }`}
-                        >
-                          {framework.status}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Progress value={framework.score} className="h-2 flex-1" />
-                      <span className="text-sm font-semibold w-12 text-right">
-                        {framework.score}%
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Deadline: {framework.deadline}
-                    </p>
+                  <div key={framework.name} className="flex items-center justify-between">
+                    <span className="font-medium text-sm">{framework.name}</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-slate-100 text-slate-600">
+                      UNMEASURED
+                    </span>
                   </div>
                 ))}
+                <p className="text-xs text-muted-foreground pt-1">
+                  No compliance score is invented here. Your framework posture is UNMEASURED
+                  until an assessment runs — start one at /assess, or read the live measured
+                  board at /gspc-scoreboard.
+                </p>
               </CardContent>
             </Card>
           </motion.div>

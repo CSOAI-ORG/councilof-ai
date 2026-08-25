@@ -84,7 +84,13 @@ function signatureOf(j: any): string {
   return `${alg}${state ? ` · ${state}` : ""}${signer ? ` · ${signer}` : ""}`;
 }
 
-export default function LobbyReports() {
+export default function LobbyReports({
+  onOpenRoute,
+}: {
+  /** Open a route in the lobby pane — keeps the OS session alive. Without it the
+   *  human-page link falls back to a full navigation (which ends the session). */
+  onOpenRoute?: (path: string, label: string) => void;
+}) {
   const [rows, setRows] = useState<Report[]>(INITIAL);
   const [busy, setBusy] = useState(false);
   const [ranAt, setRanAt] = useState<string | null>(null);
@@ -200,14 +206,22 @@ export default function LobbyReports() {
               >
                 {r.endpoint} ↗
               </a>
-              {r.page && (
+              {r.page && (onOpenRoute ? (
+                <button
+                  type="button"
+                  onClick={() => onOpenRoute(r.page!, r.label)}
+                  className="text-[10.5px] font-semibold text-slate-600 underline underline-offset-2 hover:text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2 rounded"
+                >
+                  human page →
+                </button>
+              ) : (
                 <a
                   href={r.page}
                   className="text-[10.5px] font-semibold text-slate-600 underline underline-offset-2 hover:text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 focus-visible:ring-offset-2 rounded"
                 >
                   human page ↗
                 </a>
-              )}
+              ))}
             </div>
           </li>
         ))}

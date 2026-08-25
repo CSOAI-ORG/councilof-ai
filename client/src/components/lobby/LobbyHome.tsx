@@ -13,10 +13,10 @@ const DESKTOP = LOBBY_TABS.filter((t) => t.id !== "home");
 
 /** Existing public landings — not new audiences. Each is a live route. */
 const PEOPLE: { label: string; blurb: string; path: string }[] = [
-  { label: "Regulators", blurb: "Check behaviour against the published board.", path: "/gspc-scoreboard" },
+  { label: "Regulators", blurb: "The regulator door — everything free, forever.", path: "/regulators" },
   { label: "Insurers", blurb: "Price AI risk on signed evidence.", path: "/insurers" },
   { label: "Enterprises", blurb: "Prove the system before you ship.", path: "/assess" },
-  { label: "Finance", blurb: "Credit, DORA, and the Act — evidenced once.", path: "/assess" },
+  { label: "Finance", blurb: "The financial axes — UNMEASURED stated first.", path: "/financial-axes" },
   { label: "Compare vendors", blurb: "What we publish versus GRC platforms.", path: "/compare" },
 ];
 

@@ -54,18 +54,18 @@ const BY_AUDIENCE: Record<string, string[]> = {
   builder: [
     "Which endpoints can my system call to read the published board, and what shape do they return?",
     "How is a measurement card signed, and how do I verify one without trusting you?",
-    "What does an assessment run against my system, and what does it explicitly not claim?",
+    "What does the assessment actually run, and what does it explicitly not claim?",
     "Which axes have a published bank I can reproduce, and where do the items live?",
     "What models are published on the living board, and which cells are still empty?",
   ],
   compliance: [
     "Which EU AI Act provisions are crosswalked, and what is the frozen text they were measured against?",
     "What does the published regulation feed say is in force today versus deferred?",
-    "What is the penalty exposure recorded against each deadline, and what is its legal basis?",
-    "What does the Council refuse to state an opinion on, and why?",
+    "Which axes are measured today, and which carry no number at all?",
+    "What is the difference between measuring a system and certifying it?",
   ],
   procurement: [
-    "What can I rely on in a published measurement, and what is explicitly out of scope?",
+    "Walk me through the board — which axes carry a measured figure?",
     "How would I check a supplier's claim against the published board myself?",
     "What is published about the method — deterministic grading, gold labels, minimum n?",
     "Which figures are the Council's own measurement and which are reported third-party context?",
@@ -73,20 +73,20 @@ const BY_AUDIENCE: Record<string, string[]> = {
   board: [
     "What is the one-paragraph summary of what is measured and what is not?",
     "Where is the corrections ledger, and what has the Council got wrong so far?",
-    "What obligations land next, and which of them apply to a system like ours?",
-    "What would it take to have our system measured, and what would the result actually say?",
+    "How many axes are measured of the quotable set right now?",
+    "How do we get measured, and what does the result actually say?",
   ],
   researcher: [
-    "What is the minimum n for a quotable figure, and what happens below it?",
-    "How is statistical separation tested, and what counts as a tie?",
+    "Why is nothing quoted below n >= 30, and what happens under it?",
+    "What does a TIE mean on the board, and how is separation tested?",
     "How are unparseable responses counted, and why are they not dropped?",
     "Which axis banks are public, and under what licence?",
   ],
   press: [
     "Which figures on the board are safe to quote today, and which are not?",
-    "What was the most recent published correction, and what caused it?",
-    "What does the Council explicitly not claim about the systems it measures?",
-    "Who publishes these numbers, and what is the legal entity behind them?",
+    "Where is the corrections ledger, and what has the Council got wrong so far?",
+    "What is the difference between measuring a system and certifying it?",
+    "In plain words, who measures these numbers, and what do they refuse to decide?",
   ],
   insurer: [
     "Which board figures are safe to underwrite on today, and which cells are explicitly empty?",
@@ -98,7 +98,7 @@ const BY_AUDIENCE: Record<string, string[]> = {
     "Which frameworks are crosswalked to frozen statute, and where is the text published?",
     "What does a published measurement card attest, and what does it explicitly not decide?",
     "What is in the corrections ledger, and how are refutations handled?",
-    "What does the Council refuse to certify or opine on?",
+    "What is the difference between measuring and certifying, for supervisory readers?",
   ],
 };
 
@@ -131,19 +131,36 @@ const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
     ],
   },
   {
-    test: /^\/assess/,
+    test: /^\/(assess|readiness-assessment)/,
     asks: [
       "What does the assessment actually run, and what does the result attest?",
       "What does a completed assessment explicitly NOT say about my system?",
     ],
   },
   {
-    test: /^\/watchdog/,
-    asks: ["What happens to an incident after it is reported, and who sees it?"],
+    test: /^\/(watchdog|report)/,
+    asks: ["What happens to a watchdog incident after it is reported, and who sees it?"],
   },
   {
-    test: /^\/academy/,
-    asks: ["What does Council Academy attest on completion, and what does it explicitly not attest?"],
+    test: /^\/models/,
+    asks: [
+      "Which axes are measured on the live board, and who leads where?",
+      "How many axes are measured of the quotable set right now?",
+    ],
+  },
+  {
+    test: /^\/tools/,
+    asks: [
+      "What MCP servers are in the published fleet, and what is not a marketplace listing?",
+      "How do I connect a published tool without treating it as a certificate?",
+    ],
+  },
+  {
+    test: /^\/dashboard/,
+    asks: [
+      "How many axes are measured of the quotable set right now?",
+      "Where do these dashboard numbers come from — what does GET /api/gspc publish?",
+    ],
   },
   {
     test: /^\/compare/,

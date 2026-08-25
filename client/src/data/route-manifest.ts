@@ -484,13 +484,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/council-model-card",
-  "comp": "Sov3ModelCard",
-  "title": "Sov3 Model Card"
+  "comp": "CouncilModelCard",
+  "title": "Council Model Card"
  },
  {
   "path": "/council-system-card",
-  "comp": "Sov3SystemCard",
-  "title": "Sov3 System Card"
+  "comp": "CouncilSystemCard",
+  "title": "Council System Card"
  },
  {
   "path": "/council-vs-agents",
@@ -2239,8 +2239,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/workbench-paper",
-  "comp": "Sov3Whitepaper",
-  "title": "Sov3 Whitepaper"
+  "comp": "CouncilWhitepaper",
+  "title": "Council Whitepaper"
  },
  {
   "path": "/world",

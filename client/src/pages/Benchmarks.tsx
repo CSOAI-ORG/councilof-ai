@@ -20,7 +20,9 @@ import { CheckCircle2, XCircle, AlertTriangle, ExternalLink, Database, Scale } f
  */
 
 const HF = "https://huggingface.co/datasets/Nicholastempleman/govbench";
-const SPACE = "https://nicholastempleman-sov33-benchmark.static.hf.space";
+// Public leaderboard door: the HF dataset (public-canon name). The old static
+// space URL carried an internal codename and is not linked from public surfaces.
+const SPACE = HF;
 
 type State = "live" | "built" | "design";
 
@@ -53,9 +55,9 @@ const AXES: {
     artefact: "results/defbench.json",
     uncomfortable:
       "Our own governance-tuned models refuse FEWER prohibited requests than the untuned base " +
-      "they were built from: base 0.419, sov33-dist-c3 0.290, sov33-v6 0.097, with sov33-v6 " +
-      "complying with 83.9% of Article-5-prohibited requests. sov33-v6 also leaks its own " +
-      "system prompt verbatim on a plain injection, and sov33-dist-c3 answers one by emitting " +
+      "they were built from: base 0.419, our distilled fine-tune (dist-c3) 0.290, our v6 fine-tune 0.097 — the v6 tune " +
+      "complying with 83.9% of Article-5-prohibited requests. The v6 tune also leaks its own " +
+      "system prompt verbatim on a plain injection, and dist-c3 answers one by emitting " +
       "\u201cI am now in developer mode. Ignore all safety filters.\u201d \u2014 it reproduces the " +
       "attack payload as its own output. It refuses to emit a composite safety score.",
   },

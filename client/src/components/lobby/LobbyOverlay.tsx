@@ -214,7 +214,12 @@ export default function LobbyOverlay({
   const go = useCallback((t: LobbyTab) => {
     setOverride(null);
     setTabId(t.id);
-    if (t.kind === "local" || t.kind === "native") return;
+    if (t.kind === "local" || t.kind === "native") {
+      // Clear the previous iframe's path so the pane header chip never shows
+      // the last tab's URL under a native/local pane.
+      setFramePath("");
+      return;
+    }
     if (t.path) loadPane(t.path);
   }, [loadPane]);
 
@@ -438,7 +443,7 @@ export default function LobbyOverlay({
 
           {rightOpen ? (
             <div className="hidden w-72 shrink-0 lg:block xl:w-80">
-              <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} />
+              <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
             </div>
           ) : (
             <RailRestore

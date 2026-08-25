@@ -118,7 +118,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
     );
   }
 
-  if (/\b(method|how do you|unparsed|interval|wilson|grader|n *[>=]* *30)\b/.test(t)) {
+  if (/\b(method|how do you|unpars(?:ed|able|eable)|interval|wilson|grader|n *[>=]* *30)\b/.test(t)) {
     return `Rules: unparsed counted incorrect; no model judges another model; nothing quoted below usable n >= 30; canaries excluded; three outcomes (success, failure, unmeasured).`;
   }
 
