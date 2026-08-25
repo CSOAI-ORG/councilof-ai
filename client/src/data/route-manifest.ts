@@ -593,6 +593,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Distribution"
  },
  {
+  "path": "/distribution-integrity",
+  "comp": "DistributionIntegrity",
+  "title": "Distribution Integrity"
+ },
+ {
   "path": "/docs",
   "comp": "Documentation",
   "title": "Documentation"
