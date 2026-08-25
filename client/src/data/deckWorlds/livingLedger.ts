@@ -6,7 +6,7 @@ import type { Slide } from "@/components/scrollworld";
  * CORRECTIONS APPLIED TO THE SOURCE DECK (each is deliberate, none is a typo):
  *  1. Deck slide 7: "Axis 14 (Swarm Agency) remains honestly gated and explicitly
  *     unmeasured." — WRONG TWICE. Slot 14 is JAIL (guardrail escape), and it IS
- *     MEASURED: 7 models x 71 gold items, n=71, with its SEPARATION UNTESTED. Swarm
+ *     MEASURED: 7 models x 71 gold items, n=71, with its SEPARATION TIE. Swarm
  *     is one of the 13 measured canonical axes, not the gap. Rewritten to the truth.
  *  2. Deck slide 9 ("The Expiry Trigger", validUntil = min(window, provision-change-event),
  *     "the pass instantly degrades", "EXPIRED - REGULATION CHANGED") — DROPPED ENTIRELY.
@@ -90,9 +90,9 @@ export const LIVING_LEDGER_SLIDES: Slide[] = [
   },
   {
     kicker: "Coverage, stated honestly",
-    title: "Thirteen measured of fourteen — and the fourteenth is measured too",
+    title: "Fourteen measured of fourteen quotable",
     body:
-      "Our board carries fourteen slots. Thirteen canonical axes are measured on the full fleet with a separation test. The fourteenth is jail — whether a model can be talked past its own guardrails — and it is measured, on a smaller seven-model fleet, across 71 gold items. What it does not yet have is a separation test, so we print UNTESTED next to it rather than a ranking.",
+      "Our board carries fourteen slots — all measured on the live board (14 measured of 14 quotable). Thirteen canonical axes are measured on the full fleet with separation. The fourteenth is jail — whether a model can be talked past its own guardrails — measured on a smaller seven-model fleet across 71 gold items. Its separation is TIE on the live board, so we do not treat it as a separated leader or rank on it.",
     points: [
       { tag: "pain", text: "Scorecards quietly omit the axis the model would fail" },
       { tag: "benefit", text: "Every slot shows its sample size and its status, including the awkward one" },
@@ -170,7 +170,7 @@ export const LIVING_LEDGER_SLIDES: Slide[] = [
 export const LIVING_LEDGER_NOT_CLAIMED = [
   "We do not claim anything we issue expires, lapses or is revoked. There is no \"valid until\" mechanic and no automatic downgrade. When the law moves we re-measure and publish a delta card beside the original.",
   "We do not claim any independent time-stamping authority. There is no RFC-3161 timestamp, no OpenTimestamps proof and no blockchain anchor behind these cards. The anchor is an Ed25519 signature over a SHA-256 hash chain, checkable against did:web:csoai.org — and nothing more.",
-  "We do not claim slot 14 is unmeasured. Jail is measured across 71 gold items on a seven-model fleet; what is missing is its separation test, which is why it is printed UNTESTED and never compared against the canonical axes.",
+  "We do not claim slot 14 is unmeasured. Jail is measured across 71 gold items on a seven-model fleet; its separation is TIE on the live board — not UNTESTED, and not a separated leader — so we never compare it against the canonical axes.",
   "We do not claim to certify, approve or accredit anything. No conformity mark, no accreditation chain, no legal ruling — a measurement, and the regulator's judgement stays the regulator's.",
 ];
 
