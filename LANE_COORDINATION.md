@@ -98,3 +98,13 @@ restore-150 workflows). Bytes verdict:
   data. Owner ruling needed: publish the full 335 chain, or the 150 subset.
   K3 does not unilaterally settle the rule; the deploy guard keeps either
   choice structurally safe.
+
+## 2026-08-25 · K3 lane notice 2 — attestation strategy pass mapped (append)
+
+Dossier (unsolicited+permissionless thesis) integrated. Merged #628 (02ff64f):
+rwa-attest TARGETS refreshed (6 fact updates: Aviva CBI-LIVE, RLUSD 1.711B/EU CASP,
+BUIDL ~2.6-2.7B+Aaa-mf, BENJI 700-830M/40Act, OUSG 375M+SEC-closed, JMWH
+mint-not-distribute evidence), corpus 18 entries + intel/watch flags, doctrine flags
+unsolicited:true+issuer_paid:false on all 10 targets, CRA + GPAI docs, regen SBOM.
+Links: docs/AXIS_MAPPING_AND_UPGRADES_2026-08-25.md. Owner ask: NRSRO/counsel analysis
+before risk verdicts publish at scale (verdicts UNMEASURED until then). JMWH = demo-only.
