@@ -100,6 +100,7 @@ function discover() {
     "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
+    "/embed", "/white-label",
     "/challenge",
     "/regulator-findings",
     "/arena-scoreboard",
@@ -111,6 +112,7 @@ function discover() {
     // Flagship pages that were only SPA-routed (direct HTTP 404 = credibility leak:
     // crawlers + the law's visitors hit a broken page). Force-prerender them.
     "/article-50", "/tour", "/live-ledger", "/gspc-anchors", "/xrpl-attest",
+    "/distribution-integrity",
     "/gspc-gap-map",
     // Legal surface (2026-08-23 audit)
     "/legal/licensing", "/legal/privacy", "/legal/terms", "/legal/cookies",
@@ -123,11 +125,22 @@ function discover() {
     "/gspc/conformance", "/gspc/openness", "/gspc/machinery-conformity", "/gspc/care",
     "/gspc/cross-reality", "/gspc/detector-interop", "/gspc/art5-safeguard",
     "/gspc/swarm", "/gspc/affect", "/gspc/jail",
+    // Financial half of the 22-axis canon (2026-08-25): the 8 financial/domain axes were
+    // invisible — /gspc/<financial-axis> 404'd and no board listed them. /financial-axes
+    // lists all 8 honestly from /interop/financial-axes.json; each /gspc/<financial-axis>
+    // now renders a deep-dive from the same JSON. Static host needs a real snapshot per URL.
+    "/financial-axes",
+    "/gspc/provenance-controls", "/gspc/reserve-attestation", "/gspc/regulatory-framework",
+    "/gspc/distribution-integrity", "/gspc/custody-disclosure", "/gspc/ai-economy-index",
+    "/gspc/human-labour-index", "/gspc/humanoid-labour-index",
+    // Sitemap-listed routes that fell through to the homepage shell (E2E RETEST #2):
+    // both have real pages in App.tsx but were never in the snapshot queue.
+    "/badges", "/verify-certificate",
     // Benchmark surfaces (2026-08-23 audit: 404'd live — heuristic discovery misses
     // route-manifest paths). Council OS layer URLs carry ?view= query strings that
     // heuristic discovery never sees; snapshot each so the static host serves them
     // exactly as it does for arena/towns (query-string-named snapshot dirs).
-    "/products", "/catalog",
+    "/products", "/catalog", "/gpai-evidence", "/cra-readiness", "/cobolbridge",
     "/benchmark-quality", "/benchmark-index", "/benchmarks", "/compare", "/leaderboard",
     "/gspc-arena?view=benchmarks",
     "/gspc-arena?view=arena", "/gspc-arena?view=globe", "/gspc-arena?view=towns",
@@ -159,6 +172,7 @@ function discover() {
     "/blog/third-party-ai-audit-standards-ss584-isae3000",
     "/blog/uk-cyber-security-resilience-bill-ai-supply-chain",
     "/blog/verified-measurement-credential-how-to-verify",
+    "/blog/governance-benchmarking-is-broken-signed-fix",
     "/evidence-rail",
     "/datasets",
   ];

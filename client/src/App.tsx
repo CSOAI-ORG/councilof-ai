@@ -102,6 +102,8 @@ const Sov3Whitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
 const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const ProvenanceFinding = lazy(() => import("./pages/ProvenanceFinding"));
 const Article50Pack = lazy(() => import("./pages/Article50Pack"));
+const GpaiEvidencePack = lazy(() => import("./pages/GpaiEvidencePack"));
+const CraReadinessKit = lazy(() => import("./pages/CraReadinessKit"));
 const AiTransparency = lazy(() => import("./pages/AiTransparency"));
 const ABTesting = lazy(() => import("./pages/ABTesting"));
 const AboutCEASAI = lazy(() => import("./pages/AboutCEASAI"));
@@ -173,6 +175,7 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
+const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
 const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
@@ -259,6 +262,7 @@ const SovereignRegistry = lazy(() => import("./pages/SovereignRegistry"));
 const SovereignHives = lazy(() => import("./pages/SovereignHives"));
 const GovernancePulse = lazy(() => import("./pages/GovernancePulse"));
 const LegacyBridge = lazy(() => import("./pages/LegacyBridge"));
+const CobolBridge = lazy(() => import("./pages/CobolBridge"));
 const SocialOS = lazy(() => import("./pages/SocialOS"));
 const SovereignMinds = lazy(() => import("./pages/SovereignMinds"));
 const TryCouncil = lazy(() => import("./pages/TryCouncil"));
@@ -308,6 +312,7 @@ const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
 const BadgesPage = lazy(() => import("./pages/BadgesPage"));
+const EmbedPage = lazy(() => import("./pages/EmbedPage"));
 const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
 const PlansPage = lazy(() => import("./pages/PlansPage"));
 const OnboardOS = lazy(() => import("./pages/OnboardOS"));
@@ -320,6 +325,7 @@ const ToolCommons = lazy(() => import("./pages/ToolCommons"));
 const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const StatusPage = lazy(() => import("./pages/StatusPage"));
 const Distribution = lazy(() => import("./pages/Distribution"));
+const DistributionIntegrity = lazy(() => import("./pages/DistributionIntegrity"));
 const McpFleet = lazy(() => import("./pages/McpFleet"));
 const Gone = lazy(() => import("./pages/Gone"));
 const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));import { frameworksdata } from "./data/frameworks-content";
@@ -355,11 +361,16 @@ const ROUTE_TITLES: Record<string, string> = {
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
   "/gspc-verify": "GSPC Verify | CSOAI",
+  "/embed": "Embed / white-label — Powered by Council of AI | CSOAI",
   "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
+  "/financial-axes": "Financial axes — the 8 financial slots of the 22-axis canon | Council of AI",
+  "/badges": "Governance badges — wear your measured status | CSOAI",
+  "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
   "/xrpl-attest": "Ledger attestation | Council of AI",
+  "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
@@ -386,6 +397,9 @@ const ROUTE_TITLES: Record<string, string> = {
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
+  "/gpai-evidence": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
+  "/cra-readiness": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
+  "/cobolbridge": "CobolBridge — enterprise on-ramp to signed compliance evidence | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "System Status | CSOAI",
@@ -619,6 +633,7 @@ function App() {
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
+                  <Route path="/financial-axes" component={FinancialAxes} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
@@ -636,7 +651,10 @@ function App() {
                   <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/xrpl-attest" component={XrplAttest} />
+                  <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
+                  <Route path="/embed" component={EmbedPage} />
+                  <Route path="/white-label" component={EmbedPage} />
                   <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/regulator-findings" component={RegulatorFindings} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
@@ -821,6 +839,7 @@ function App() {
                   {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
                   <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
                   <Route path="/cobol" component={LegacyBridge} />
+                  <Route path="/cobolbridge" component={CobolBridge} />
                   <Route path="/risk-heatmap" component={RiskHeatmap} />
                   <Route path="/webhooks" component={Webhooks} />
                   <Route path="/evidence" component={EvidenceHub} />
@@ -959,6 +978,8 @@ function App() {
                   <Route path="/article-50" component={Article50} />
                   <Route path="/verify-leaderboard" component={VerifyLeaderboard} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
+                  <Route path="/gpai-evidence" component={GpaiEvidencePack} />
+                  <Route path="/cra-readiness" component={CraReadinessKit} />
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />

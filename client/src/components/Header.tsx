@@ -44,6 +44,7 @@ const navigation: NavGroup[] = [
     description: 'The instrument and its board',
     submenu: [
       { name: 'The GSPC board', href: '/gspc-scoreboard', description: 'The living board — measured axes, empty cells empty. Counts from GET /api/gspc' },
+      { name: 'Financial axes', href: '/financial-axes', description: 'The 8 financial slots of the 22-axis canon — provenance-controls measured, the rest UNMEASURED and honest' },
       { name: 'Measured models', href: '/models', description: 'Ranked by signed GSPC scores, not tokens' },
       { name: 'Published tools', href: '/tools', description: 'MCP you can run — not a marketplace' },
       { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
@@ -83,12 +84,16 @@ const navigation: NavGroup[] = [
     description: 'Who the measurement is for',
     submenu: [
       { name: 'Products', href: '/products', description: 'The signed-evidence products — verify is free, a grade is never sold, no public prices' },
+      { name: 'GPAI Evidence Pack', href: '/gpai-evidence', description: 'Signed measurement a GPAI provider can hand the AI Office — evidence, never a conformity mark' },
+      { name: 'CRA Readiness Kit', href: '/cra-readiness', description: 'The 24h/72h/14-day ENISA runbook + signed SBOM workflow — template and tooling, not legal advice' },
+      { name: 'Legacy modernization on-ramp', href: '/cobolbridge', description: 'COBOL migration under DORA / Basel / SOX / Solvency II — the lineage it produces becomes signed, continuous evidence' },
       { name: 'Enterprise', href: '/?lobby=measured&task=enterprise-start', description: 'Measure a portfolio of systems against the duties that bind them' },
       { name: 'Insurers and underwriters', href: '/insurers', description: 'Signed evidence a risk model can actually price' },
       { name: 'Government and regulators', href: '/government', description: 'Independent measurement, published method, no conformity mark' },
       { name: 'Industries', href: '/industries', description: 'Sector-by-sector: what applies to you and when' },
       { name: 'How the free rail works', href: '/?lobby=measured&task=pricing-overview', description: 'Verify is free. A grade is never sold. No public prices.' },
       { name: 'Integrations', href: '/integrations', description: 'Wire the measurement into the tools you already run' },
+      { name: 'Embed / white-label', href: '/embed', description: 'Drop a signed, self-verifying measurement into your own site — verify is free forever' },
     ],
   },
   {
@@ -99,6 +104,7 @@ const navigation: NavGroup[] = [
     submenu: [
       { name: 'The honesty gate', href: '/honesty', description: 'What we cannot yet measure, published rather than hidden' },
       { name: 'Attestation on the ledger', href: '/xrpl-attest', description: 'Signed evidence attached to a public ledger about accounts we do not control — permissionless attach, never a rating' },
+      { name: 'Distribution integrity', href: '/distribution-integrity', description: 'Represented is not distributed — the tokenized-RWA committed-vs-distributed spread as a declared financial axis, coverage-first and UNMEASURED' },
       { name: 'Refutation Ledger', href: '/refutation-ledger', description: 'Experiments that killed our own theses — with artefacts' },
       { name: 'Firewall Charter', href: '/firewall-charter', description: 'We measure; we never fix what we measure' },
       { name: 'Corrections — live JSON', href: '/api/corrections', description: 'Corrections published, never silently edited', external: true },

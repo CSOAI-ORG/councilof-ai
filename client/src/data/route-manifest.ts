@@ -353,6 +353,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Legacy Bridge"
  },
  {
+  "path": "/cobolbridge",
+  "comp": "CobolBridge",
+  "title": "Cobol Bridge"
+ },
+ {
   "path": "/coliseum",
   "comp": "Coliseum",
   "title": "Coliseum"
@@ -508,6 +513,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Cra"
  },
  {
+  "path": "/cra-readiness",
+  "comp": "CraReadinessKit",
+  "title": "Cra Readiness Kit"
+ },
+ {
   "path": "/credential-training",
   "comp": "CEASAITraining",
   "title": "CEASAITraining"
@@ -588,6 +598,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Distribution"
  },
  {
+  "path": "/distribution-integrity",
+  "comp": "DistributionIntegrity",
+  "title": "Distribution Integrity"
+ },
+ {
   "path": "/docs",
   "comp": "Documentation",
   "title": "Documentation"
@@ -636,6 +651,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/ei3",
   "comp": "EI3",
   "title": "EI3"
+ },
+ {
+  "path": "/embed",
+  "comp": "EmbedPage",
+  "title": "Embed Page"
  },
  {
   "path": "/energy-ai-act",
@@ -766,6 +786,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/finance-ai-act",
   "comp": "SectorAct",
   "title": "Finance Ai Act"
+ },
+ {
+  "path": "/financial-axes",
+  "comp": "FinancialAxes",
+  "title": "Financial Axes"
  },
  {
   "path": "/fines",
@@ -941,6 +966,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/gpai",
   "comp": "GpaiObligations",
   "title": "Gpai Obligations"
+ },
+ {
+  "path": "/gpai-evidence",
+  "comp": "GpaiEvidencePack",
+  "title": "Gpai Evidence Pack"
  },
  {
   "path": "/graph",
@@ -1688,6 +1718,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Regulator Atlas"
  },
  {
+  "path": "/regulator-findings",
+  "comp": "RegulatorFindings",
+  "title": "Regulator Findings"
+ },
+ {
   "path": "/regulators",
   "comp": "RegulatorAtlas",
   "title": "Regulator Atlas"
@@ -1918,7 +1953,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Space"
  },
  {
-  "path": "/gspc-arena?view=towns",
+  "path": "/sovereign-town",
   "comp": "Redirect",
   "title": "Sovereign Town"
  },
@@ -2176,6 +2211,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/where-the-record-lives",
   "comp": "WhereTheRecordLives",
   "title": "Where The Record Lives"
+ },
+ {
+  "path": "/white-label",
+  "comp": "EmbedPage",
+  "title": "Embed Page"
  },
  {
   "path": "/why",
