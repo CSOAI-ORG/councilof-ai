@@ -1,0 +1,204 @@
+EARCHES_KEY = 'csoai-recent-searches';
+const MAX_RECENT_SEARCHES = 5;
+
+interface GlobalSearchProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function GlobalSearch({ open: controlledOpen, onOpenChange }: GlobalSearchProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [aiAnswer, setAiAnswer] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [, setLocation] = useLocation();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Use controlled or internal state
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = onOpenChange || setInternalOpen;
+
+  // Load recent searches on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+      if (stored) {
+        setRecentSearches(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.error('Failed to load recent searches', e);
+    }
+  }, []);
+
+  // Save recent search
+  const saveRecentSearch = useCallback((searchQuery: string) => {
+    if (!searchQuery.trim()) return;
+
+    setRecentSearches(prev => {
+      const filtered = prev.filter(s => s.toLowerCase() !== searchQuery.toLowerCase());
+      const updated = [searchQuery, ...filtered].slice(0, MAX_RECENT_SEARCHES);
+      try {
+        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+      } catch (e) {
+        console.error('Failed to save recent searches', e);
+      }
+      return updated;
+    });
+  }, []);
+
+  // Global keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd+K / Ctrl+K to open
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setOpen(!isOpen);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, setOpen]);
+
+  // Focus input when opened
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100);
+    } else {
+      setQuery('');
+      setSelectedIndex(0);
+    }
+  }, [isOpen]);
+
+  // Filtered and scored results
+  const results = useMemo(() => {
+    if (!query.trim()) {
+      // Show quick actions and recent searches when no query
+      const recentResults: SearchResult[] = recentSearches.map((search, idx) => ({
+        id: `recent-${idx}`,
+        title: search,
+        description: 'Recent search',
+        category: 'recent' as const,
+        href: '#',
+        icon: Clock,
+      }));
+
+      const actionResults: SearchResult[] = QUICK_ACTIONS.map(action => ({
+        id: action.id,
+        title: action.title,
+        description: action.description,
+        category: 'actions' as const,
+        href: action.href,
+        icon: action.icon,
+      }));
+
+      return [...recentResults, ...actionResults];
+    }
+
+    // Filter and score results
+    const matched = SEARCH_INDEX.filter(result => {
+      const searchableText = `${result.title} ${result.description} ${result.keywords?.join(' ') || ''}`;
+      return fuzzyMatch(searchableText, query);
+    });
+
+    // Sort by score
+    return matched
+      .map(result => ({ ...result, score: scoreResult(result, query) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 20);
+  }, [query, recentSearches]);
+
+  // Group results by category
+  const groupedResults = useMemo(() => {
+    const groups: Record<SearchCategory, SearchResult[]> = {
+      recent: [],
+      actions: [],
+      pages: [],
+      charter: [],
+      training: [],
+      frameworks: [],
+      faq: [],
+    };
+
+    results.forEach(result => {
+      groups[result.category].push(result);
+    });
+
+    return Object.entries(groups)
+      .filter(([, items]) => items.length > 0) as [SearchCategory, SearchResult[]][];
+  }, [results]);
+
+  // Flat list for keyboard navigation
+  const flatResults = useMemo(() => results, [results]);
+
+  // Handle selection
+  const handleSelect = useCallback((result: SearchResult) => {
+    if (result.category === 'recent') {
+      // Use recent search as new query
+      setQuery(result.title);
+      return;
+    }
+
+    saveRecentSearch(query);
+    setOpen(false);
+    setLocation(result.href);
+  }, [query, saveRecentSearch, setOpen, setLocation]);
+
+  // Keyboard navigation
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(prev => Math.min(prev + 1, flatResults.length - 1));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex(prev => Math.max(prev - 1, 0));
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (flatResults[selectedIndex]) {
+          handleSelect(flatResults[selectedIndex]);
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        setOpen(false);
+        break;
+    }
+  }, [flatResults, selectedIndex, handleSelect, setOpen]);
+
+  // Scroll selected item into view
+  useEffect(() => {
+    const container = resultsRef.current;
+    if (!container) return;
+
+    const selectedElement = container.querySelector(`[data-index="${selectedIndex}"]`);
+    if (selectedElement) {
+      selectedElement.scrollIntoView({ block: 'nearest' });
+    }
+  }, [selectedIndex]);
+
+  // Reset selected index (and any AI answer) when the query changes
+  useEffect(() => {
+    setSelectedIndex(0);
+    setAiAnswer('');
+    setAiLoading(false);
+  }, [query]);
+
+  // Ask the Council assistant - fuse live governance reasoning into the command bar
+  const runCouncilAsk = useCallback(async () => {
+    const t = query.trim();
+    if (!t) return;
+    setAiLoading(true); setAiAnswer(''); chargeSovereign(4);
+    const res = await askSovereign(t);
+    setAiAnswer(res.text);
+    setAiLoading(false);
+  }, [query]);
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setOpen}>
+      <DialogContent
