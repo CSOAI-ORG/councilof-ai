@@ -74,6 +74,13 @@ export const MEASURED_TOOL_CARDS: Record<string, MeasuredToolCardSpec> = {
     path: "/indices",
     status: "UNMEASURED surfaces · GET /api/indices",
   },
+  rwa_attestation_catalog: {
+    tool: "rwa_attestation_catalog",
+    title: "RWA attestation catalog",
+    blurb: "Stage 2 prep — OUSG, BUIDL, RLUSD, BENJI, JMWH (demo). Declared UNMEASURED; measured_score null. Attestation ≠ tokenization ≠ ownership.",
+    path: "/products",
+    status: "UNMEASURED Stage 2 · GET /api/rwa-attestation",
+  },
 };
 
 export type ToolCardInstance = MeasuredToolCardSpec & {
@@ -103,6 +110,13 @@ export function inferToolFromResult(result: Record<string, unknown>): string | n
   if (result.kind === "csoai.east-west-board" || result.crosswalk) return "east_west_board";
   if (result.accounts || result.counts) return "ecosystem_index";
   if (result.instruments || result.layers) return "instruments_catalog";
+  if (result.schema === "csoai.rwa-attestation-catalog/0.1") return "rwa_attestation_catalog";
+  if (
+    result.schema === "csoai.labour-economy-index-catalog/0.1" ||
+    result.schema === "csoai.labour-economy-index/0.1"
+  ) {
+    return "indices_catalog";
+  }
   return null;
 }
 

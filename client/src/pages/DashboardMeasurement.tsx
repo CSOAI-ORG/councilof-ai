@@ -43,6 +43,22 @@ export default function DashboardMeasurement() {
               </Button>
             </CardContent>
           </Card>
+          <Card className="border-amber-200/70 bg-amber-50/40">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">RWA attestation catalog</CardTitle>
+              <span className="text-[10px] font-mono uppercase tracking-wide text-amber-900/80">UNMEASURED · Stage 2</span>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Honest Stage 2 targets — public artifacts only; measured_score null until custody + counsel gates.
+                Attestation ≠ tokenization ≠ ownership. Same evidence as Council OS{" "}
+                <code className="text-[10px]">GET /api/rwa-attestation</code>.
+              </p>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/products">Open products · RWA posture</Link>
+              </Button>
+            </CardContent>
+          </Card>
           <Card className="border-emerald-200/60 bg-emerald-50/30">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold">Products catalog</CardTitle>
