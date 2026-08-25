@@ -14,6 +14,12 @@ interface FeedItem {
 
 const ITEMS: FeedItem[] = [
   {
+    title: "GSPC board: 14 measured of 14 quotable — jail separation MEASURED (TIE)",
+    link: "https://councilof.ai/api/gspc",
+    date: "Tue, 25 Aug 2026 17:10:00 GMT",
+    desc: "Live public_count is now 14 measured of 14 quotable. Jail status MEASURED; separation TIE (n=71); untested_separations=0. Cite live totals.public_count — do not invent 22 axes. Historical RSS items below keep their sitting-day wording.",
+  },
+  {
     title: "The carder is live: deterministic fact-cards, and it caught us first",
     link: "https://github.com/CSOAI-ORG/carder",
     date: "Wed, 19 Aug 2026 13:30:00 GMT",
