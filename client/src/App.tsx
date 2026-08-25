@@ -262,6 +262,7 @@ const SovereignRegistry = lazy(() => import("./pages/SovereignRegistry"));
 const SovereignHives = lazy(() => import("./pages/SovereignHives"));
 const GovernancePulse = lazy(() => import("./pages/GovernancePulse"));
 const LegacyBridge = lazy(() => import("./pages/LegacyBridge"));
+const CobolBridge = lazy(() => import("./pages/CobolBridge"));
 const SocialOS = lazy(() => import("./pages/SocialOS"));
 const SovereignMinds = lazy(() => import("./pages/SovereignMinds"));
 const TryCouncil = lazy(() => import("./pages/TryCouncil"));
@@ -398,6 +399,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
   "/gpai-evidence": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
   "/cra-readiness": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
+  "/cobolbridge": "CobolBridge — enterprise on-ramp to signed compliance evidence | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "System Status | CSOAI",
@@ -837,6 +839,7 @@ function App() {
                   {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
                   <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
                   <Route path="/cobol" component={LegacyBridge} />
+                  <Route path="/cobolbridge" component={CobolBridge} />
                   <Route path="/risk-heatmap" component={RiskHeatmap} />
                   <Route path="/webhooks" component={Webhooks} />
                   <Route path="/evidence" component={EvidenceHub} />

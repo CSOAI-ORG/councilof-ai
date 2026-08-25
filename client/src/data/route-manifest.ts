@@ -353,6 +353,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Legacy Bridge"
  },
  {
+  "path": "/cobolbridge",
+  "comp": "CobolBridge",
+  "title": "Cobol Bridge"
+ },
+ {
   "path": "/coliseum",
   "comp": "Coliseum",
   "title": "Coliseum"
@@ -781,6 +786,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/finance-ai-act",
   "comp": "SectorAct",
   "title": "Finance Ai Act"
+ },
+ {
+  "path": "/financial-axes",
+  "comp": "FinancialAxes",
+  "title": "Financial Axes"
  },
  {
   "path": "/fines",
