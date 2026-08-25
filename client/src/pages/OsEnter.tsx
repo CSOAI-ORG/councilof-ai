@@ -103,13 +103,13 @@ export default function OsEnter() {
               </div>
               <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Council Town. No setup, no training required {"\u2014"} your Council assistant helps automatically. Prefer to learn? Immersive courses are inside.</p>
               <div className="mt-4 border-t border-emerald-400/15 pt-3">
-                <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Live regulation pulse \u00b7 synced from the grid</div>
+                <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Live regulation pulse · synced from the grid</div>
                 {deltas.length === 0 ? (
-                  <div className="mt-1 text-[12px] text-emerald-50/50">Syncing the latest moves\u2026</div>
+                  <div className="mt-1 text-[12px] text-emerald-50/50">Syncing the latest moves…</div>
                 ) : (
                   <ul className="mt-2 space-y-1.5">
                     {deltas.slice(0, 3).map((d, i) => (
-                      <li key={i} className="text-[12px] leading-snug text-emerald-50/75"><span className="font-semibold text-emerald-300/80">{d.frameworkSlug || d.kind || "update"}</span> \u00b7 {d.summary}</li>
+                      <li key={i} className="text-[12px] leading-snug text-emerald-50/75"><span className="font-semibold text-emerald-300/80">{d.frameworkSlug || d.kind || "update"}</span> · {d.summary}</li>
                     ))}
                   </ul>
                 )}
@@ -118,9 +118,9 @@ export default function OsEnter() {
 
             <div className="mt-6 flex w-full flex-wrap justify-center gap-3">
               <a href="/command-center" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400 transition">Talk to your Council assistant {"\u2192"}</a>
-              <a href="/evidence" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Connect your stack {"\u2192"}</a>
+              <a href="/evidence-rail" className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Connect your stack {"\u2192"}</a>
             </div>
-            <button onClick={() => setPhase(3)} className="mt-5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60 hover:text-emerald-300">Or choose how you enter {"\u2193"}</button>
+            <button onClick={() => setPhase(3)} className="mt and-5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60 hover:text-emerald-300">Or choose how you enter {"\u2193"}</button>
           </div>
         </div>
       )}
