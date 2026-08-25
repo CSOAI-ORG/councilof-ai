@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/.well-known/schemas/labour-economy-index.schema.json",
+  "title": "CSOAI labour-economy index snapshot 0.1",
+  "type": "object",
+  "required": ["schema", "slug", "status", "measured_score", "fused_into_gspc"],
+  "properties": {
+    "schema": { "const": "csoai.labour-economy-index/0.1" },
+    "slug": { "type": "string", "enum": ["ai-economy", "human-labour", "humanoid-labour"] },
+    "status": { "type": "string", "enum": ["UNMEASURED", "REPORTED", "MEASURED"] },
+    "measured_score": { "type": ["number", "null"] },
+    "fused_into_gspc": { "type": "boolean", "const": false },
+    "as_of": { "type": "string" },
+    "citations": { "type": "array" }
+  },
+  "additionalProperties": true
+}
