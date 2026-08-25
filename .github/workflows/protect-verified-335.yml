@@ -1,43 +1,16 @@
 name: protect-verified-335
+# workflow_dispatch only — do not auto re-land a fabricated 335 board.
+# The honest published board is exactly 150 cards / 34171B. Do not invent the missing 185.
 on:
-  push:
-    paths: ['public/signed/card_index.json']
   workflow_dispatch:
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 jobs:
   protect:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Re-land verified 335 if needed
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Refuse fabricated 335 protect
         run: |
-          set -euo pipefail
-          EXPECTED=12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
-          if python3 -c "
-import hashlib,json,pathlib,sys
-raw=pathlib.Path('public/signed/card_index.json').read_bytes()
-j=json.loads(raw); h=hashlib.sha256(raw).hexdigest()
-sys.exit(0 if j.get('n_cards')==335 and len(j.get('cards',[]))==335 and h=='$EXPECTED' else 1)
-"; then
-            echo already verified 335; exit 0
-          fi
-          cat .github/ci/card_index_335_atomic/p*.txt | tr -d '\n' | base64 -d > /tmp/card_index.json
-          ACTUAL=$(python3 -c 'import hashlib; print(hashlib.sha256(open("/tmp/card_index.json","rb").read()).hexdigest())')
-          test "$ACTUAL" = "$EXPECTED"
-          cp /tmp/card_index.json public/signed/card_index.json
-          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "protect-verified-335 auto re-land",' '  "card_index_n": 335' '}' > public/stack/e2e-latest.json
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          BR=protect-335-$(date -u +%Y%m%d%H%M%S)
-          git checkout -b "$BR"
-          git add public/signed/card_index.json public/stack/e2e-latest.json
-          git commit -m "fix: protect-verified-335 re-land card_index 335"
-          git push -u origin "$BR"
-          gh pr create --base master --head "$BR" --title "fix: protect-verified-335 re-land" --body "Auto re-land sha256-gated 335" || true
-          gh pr merge --squash --auto "$BR" || gh pr merge --squash $(gh pr list --head "$BR" --json number -q '.[0].number') || true
+          echo "protect-verified-335 is disabled. The honest board is 150 cards."
+          echo "Do not claim 335. Do not invent the missing 185."
+          exit 1
