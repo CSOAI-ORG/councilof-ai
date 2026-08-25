@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * generate-sitemap.mjs — builds public/sitemap.xml from client/src/App.tsx
+ * generate-sitemap.mjs — builds public/sitemap.xml from App + AppRoutesA/B.
  *
  * Parses `<Route path="...">` declarations (static string paths only), drops
  * :param routes, duplicates, and auth/admin/legacy junk, then emits a sitemap
@@ -13,7 +13,11 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const APP_TSX = join(ROOT, "client/src/App.tsx");
+const ROUTE_SOURCES = [
+  join(ROOT, "client/src/App.tsx"),
+  join(ROOT, "client/src/AppRoutesA.tsx"),
+  join(ROOT, "client/src/AppRoutesB.tsx"),
+];
 const OUT = join(ROOT, "public/sitemap.xml");
 const BASE = "https://councilof.ai";
 
@@ -49,6 +53,9 @@ const PRIORITY = new Map([
   ["/about", P_HIGH],
   ["/contact", P_HIGH],
   ["/blog", P_HIGH],
+  ["/indices", P_HIGH],
+  ["/products", P_HIGH],
+  ["/powered-by", P_HIGH],
 ]);
 
 const CHANGEFREQ = new Map([
@@ -56,6 +63,8 @@ const CHANGEFREQ = new Map([
   ["/status", "hourly"],
   ["/blog", "daily"],
   ["/", "weekly"],
+  ["/indices", "weekly"],
+  ["/products", "weekly"],
 ]);
 
 // --- Junk / legacy / non-indexable filters --------------------------------
@@ -161,27 +170,34 @@ function changefreqFor(path) {
 }
 
 // --- Parse routes ---------------------------------------------------------
-const src = readFileSync(APP_TSX, "utf8");
 const routeRe = /<Route\b[^>]*?\bpath="([^"]+)"/g;
 const seen = new Set();
 const paths = [];
 let skippedParams = 0;
 let skippedJunk = 0;
-let m;
-while ((m = routeRe.exec(src)) !== null) {
-  const p = m[1].trim();
-  if (!p.startsWith("/")) continue;
-  if (p.includes(":")) {
-    skippedParams++;
+for (const srcPath of ROUTE_SOURCES) {
+  let src;
+  try {
+    src = readFileSync(srcPath, "utf8");
+  } catch {
     continue;
   }
-  if (seen.has(p)) continue;
-  seen.add(p);
-  if (isJunk(p)) {
-    skippedJunk++;
-    continue;
+  let m;
+  while ((m = routeRe.exec(src)) !== null) {
+    const p = m[1].trim();
+    if (!p.startsWith("/")) continue;
+    if (p.includes(":")) {
+      skippedParams++;
+      continue;
+    }
+    if (seen.has(p)) continue;
+    seen.add(p);
+    if (isJunk(p)) {
+      skippedJunk++;
+      continue;
+    }
+    paths.push(p);
   }
-  paths.push(p);
 }
 // Library IA: the /library/:sector pages are dynamic routes (skipped above as :param) but are
 // prime AEO citation surface — one sector-organized archive index each. List them explicitly.
@@ -195,6 +211,7 @@ paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 // prime agent/AEO citation surface. Kept here so regeneration never drops them.
 const MACHINE_PATHS = [
   ["/api/gspc", "daily", "0.8"],
+  ["/api/indices", "weekly", "0.7"],
   ["/api/feed.xml", "daily", "0.7"],
   ["/api/reported", "daily", "0.6"],
   ["/llms.txt", "daily", "0.6"],
@@ -251,6 +268,10 @@ const REQUIRED = [
   "/instrument",
   "/live-ledger",
   "/tour",
+  "/indices",
+  "/products",
+  "/powered-by",
+  "/api/indices",
 ];
 const missing = REQUIRED.filter((r) => !seen.has(r) || isJunk(r));
 if (missing.length) {
