@@ -93,18 +93,18 @@ export default function Watchdog() {
               set your own hours, and build measured, signed proof of your skill.
             </p>
             <p className="text-xl text-emerald-300 font-semibold mb-10">
-              Free training. Signed attestation. Get attested now.
+              Free training. We measure and sign. We do not certify.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/training">
+              <Link href="/academy">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-8">
                   Start Free Training
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/certification">
+              <Link href="/academy">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8">
-                  View Attestation
+                  Open the academy
                 </Button>
               </Link>
             </div>
@@ -149,7 +149,7 @@ export default function Watchdog() {
               Learn EU AI Act, NIST AI RMF, and ISO 42001 frameworks. Understand AI risks, bias detection, 
               and compliance requirements. Takes 4-6 hours, self-paced.
             </p>
-            <Link href="/training">
+            <Link href="/academy">
               <Button variant="outline" className="w-full">Start Training</Button>
             </Link>
           </Card>
@@ -158,13 +158,13 @@ export default function Watchdog() {
             <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-3xl font-bold text-emerald-600 mx-auto mb-6">
               2
             </div>
-            <h3 className="text-2xl font-bold mb-4">Pass Attestation</h3>
+            <h3 className="text-2xl font-bold mb-4">Learn the statute</h3>
             <p className="text-gray-600 leading-relaxed mb-4">
               50-question exam, 90 minutes, 70% to pass. Unlimited retakes. Your CSOAI
               Watchdog Analyst attestation is signed and independently verifiable.
             </p>
-            <Link href="/certification">
-              <Button variant="outline" className="w-full">View Exam Details</Button>
+            <Link href="/academy">
+              <Button variant="outline" className="w-full">Open the academy</Button>
             </Link>
           </Card>
 
@@ -227,8 +227,8 @@ export default function Watchdog() {
               <CheckCircle2 className="h-12 w-12 text-orange-600 mb-4" />
               <h3 className="text-2xl font-bold mb-4">Write Safety Reports</h3>
               <p className="text-gray-600 leading-relaxed">
-                Document your findings in clear, actionable reports. Recommend approval, rejection, or 
-                improvements. Your reports are routed to the designed 33-agent Council for review.
+                Document your findings in clear, actionable reports. Recommend approval, rejection, or
+                improvements. Reports are signed evidence artefacts — we measure, we do not certify.
               </p>
             </Card>
           </div>
@@ -285,7 +285,7 @@ export default function Watchdog() {
             network opens at launch — and every figure on this page will be measured, signed, and real.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/training">
+            <Link href="/academy">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-8">
                 Start Free Training Now
                 <ArrowRight className="ml-2 h-5 w-5" />
