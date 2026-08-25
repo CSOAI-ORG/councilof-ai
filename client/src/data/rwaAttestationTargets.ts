@@ -27,7 +27,7 @@ export type RwaAttestationTarget = {
 };
 
 export const RWA_EAT_DOCTRINE =
-  "Permissionless pointer to a signed measurement card. Attestation ≠ tokenization ≠ ownership. Unsolicited ≠ endorsed. Mapping/attestation ≠ determination or credit rating. Scores never sold.";
+  "Permissionless pointer to a signed measurement card. Unsolicited ≠ endorsed. Mapping/attestation ≠ determination or credit rating. Scores never sold.";
 
 /** Compass corpus framing — strategy, not MEASURED traction. */
 export const RWA_CORPUS_NOTE =
