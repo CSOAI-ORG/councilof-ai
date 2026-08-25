@@ -32,18 +32,37 @@ try:
 except Exception:
     HAVE_CRYPTO = False
 
-# ---- TARGET REGISTRY (public, verified addresses; AUM = stated source, not our claim) ----
+# ---- TARGET REGISTRY (FULL universe: ~16 XRPL + named EVM, ranked; AUM = stated source, NOT our claim) ----
+# addr/evm = public issuing r-address / contract address. Where not yet in a primary source, mark
+# "unverified" and CHECK XRPScan/Etherscan immediately before any attestation (lookalike risk).
 TARGETS = {
-    "ousg":  {"name":"Ondo OUSG (US Treasuries, BUIDL-backed)","chain":"xrpl+evm","addr":"rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p","evm":"0x","aum":"~$183M (XRPL, xrpdashboard Aug 2026)","source":"BlackRock BUIDL-backed; JPMorgan/Mastercard/Ondo RLUSD settlement","tier":1,"prestige":"BlackRock/JPMorgan-adjacent"},
-    "buidl": {"name":"BlackRock BUIDL (USD Institutional Digital Liquidity Fund)","chain":"evm","addr":"0xe498ac8ef18ecfdfdb43f8e557b2f64a3d4bf8d7","evm":"0x7712c34205737192402172409a8f7ccef8aa2aec","aum":"$2.58B (RWA.xyz May 2026)","source":"Securitize; largest tokenized RWA fund","tier":1,"prestige":"BlackRock"},
-    "benji": {"name":"Franklin Templeton BENJI (FOBXX)","chain":"evm","addr":"0x","evm":"0x3DDc84940Ab509C11B20B76B466933f40b750dc9","aum":"~$0.83B-$2B","source":"US-registered 40 Act mutual fund; multi-chain","tier":1,"prestige":"Franklin Templeton"},
-    "acred": {"name":"Apollo ACRED (Diversified Credit Securitize Fund)","chain":"evm","addr":"0x","evm":"0x17418038ecF73BA4026c4f428547BF099706F27B","aum":">$100M since Jan 2025","source":"Securitize; Apollo >$1.2B feeder; Coinbase/Kraken invested","tier":1,"prestige":"Apollo"},
-    "aviva": {"name":"Aviva Investors USD Liquidity Fund","chain":"xrpl","addr":"r","aum":"$1.23B other share classes; £1M min","source":"CBI-approved; Licuido/Ripple; Komainu custody","tier":1,"prestige":"Aviva Plc"},
-    "jmwh":  {"name":"Justoken JMWH (tokenized energy / YPF Luz)","chain":"xrpl","addr":"r","aum":"~$2.23B represented (RWA.xyz)","source":"CNV 'closed-loop' audit record; FLAG: 19 holders, $0 monthly volume (independent scrutiny)","tier":3,"prestige":"ARG (contrarian proof-of-concept)"},
-    "dcp":   {"name":"Guggenheim Digital Commercial Paper (Zeconomy)","chain":"xrpl","addr":"r","aum":"$280M+ issued","source":"Moody's P-1; Great Bridge SPV; QIB-only","tier":1,"prestige":"Guggenheim + Moody's"},
+    # XRPL Tier 1
+    "ousg":  {"name":"Ondo OUSG (US Treasuries, BUIDL-backed)","chain":"xrpl+evm","addr":"rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p","evm":"unverified","aum":"~$183M (XRPL, xrpdashboard Aug 2026)","source":"BUIDL-backed; JPMorgan/Mastercard/Ondo RLUSD settlement","tier":1,"prestige":"BlackRock/JPMorgan-adjacent"},
     "rlusd": {"name":"Ripple USD (RLUSD)","chain":"xrpl","addr":"rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De","aum":"~$962.8M outstanding","source":"NYDFS-regulated; Ripple settlement backbone","tier":1,"prestige":"Ripple"},
-    "eurcv": {"name":"Societe Generale-FORGE EURCV","chain":"xrpl+evm","addr":"r","aum":"~65.75M","source":"MiCA-compliant; Ripple Custody; 3rd chain","tier":2,"prestige":"SocGen"},
-    "archax":{"name":"Archax x abrdn US Dollar Liquidity Fund","chain":"xrpl","addr":"rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q","aum":"part of abrdn GBP3.8B","source":"first tokenized MMF on XRPL; Ripple $5M","tier":2,"prestige":"abrdn/Archax"},
+    "aviva": {"name":"Aviva Investors USD Liquidity Fund","chain":"xrpl","addr":"unverified","aum":"$1.23B other classes; GBP1M min","source":"CBI-approved (first); Licuido/Ripple; Komainu","tier":1,"prestige":"Aviva Plc"},
+    "dcp":   {"name":"Guggenheim Digital Commercial Paper (Zeconomy)","chain":"xrpl","addr":"unverified","aum":"$280M+ issued","source":"Moody's P-1; Great Bridge SPV; QIB-only","tier":1,"prestige":"Guggenheim + Moody's"},
+    "archax":{"name":"Archax x abrdn US Dollar Liquidity Fund","chain":"xrpl","addr":"rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q","aum":"part of abrdn GBP3.8B","source":"first tokenized MMF on XRPL; Ripple $5M","tier":1,"prestige":"abrdn/Archax"},
+    # XRPL Tier 2
+    "tbill": {"name":"OpenEden TBILL","chain":"xrpl","addr":"rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn","aum":"unstated","source":"US T-bills + reverse repo; BVI-regulated; Ripple $10M","tier":2,"prestige":"OpenEden"},
+    "eurcv": {"name":"Societe Generale-FORGE EURCV","chain":"xrpl+evm","addr":"unverified","aum":"~65.75M","source":"MiCA-compliant; Ripple Custody; 3rd chain","tier":2,"prestige":"SocGen"},
+    "sbi":   {"name":"SBI Holdings tokenized bond","chain":"xrpl","addr":"unverified","aum":"$65M on-chain","source":"Japanese regulated-market first; XRP rewards to retail","tier":2,"prestige":"SBI"},
+    "usdb":  {"name":"Braza Bank USDB","chain":"xrpl","addr":"rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc","aum":"~$21.6M","source":"bank-issued USD stablecoin","tier":2,"prestige":"Braza Bank"},
+    "bbrl":  {"name":"Braza BBRL","chain":"xrpl","addr":"rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt","aum":"~41.35M","source":"Brazilian real stablecoin","tier":2,"prestige":"Braza Bank"},
+    "dxb_re":{"name":"Ctrl Alt / Dubai Land Dept real-estate title tokens","chain":"xrpl","addr":"unverified","aum":">$5M (AED 18.5M); Phase 2 live","source":"first gov real-estate registry tokenized; Ripple Custody; Prypco Mint","tier":2,"prestige":"Dubai gov"},
+    # XRPL Tier 3 / caution
+    "jmwh":  {"name":"Justoken JMWH (tokenized energy / YPF Luz)","chain":"xrpl","addr":"unverified","aum":"~$2.23B represented (RWA.xyz)","source":"CNV 'closed-loop'; FLAG: 19 holders, $0 volume (independent scrutiny)","tier":3,"prestige":"ARG (contrarian proof-of-concept)"},
+    "xau":   {"name":"GateHub XAU (tokenized allocated gold)","chain":"xrpl","addr":"unverified","aum":"unstated","source":"1g/token allocated gold","tier":3,"prestige":"GateHub"},
+    "dia":   {"name":"Ctrl Alt x Billiton tokenized diamonds","chain":"xrpl","addr":"unverified","aum":">$280M (AED 1B)","source":"certified polished diamonds; DMCC/VARA; redemption undisclosed","tier":3,"prestige":"Dubai/VARA"},
+    "kyobo": {"name":"Kyobo Life tokenized Korean gov bonds","chain":"xrpl","addr":"unverified","aum":"POC, NOT confirmed live","source":"Ripple Custody pilot (Apr 2026); forward-looking","tier":3,"prestige":"Kyobo"},
+    # EVM Tier 1
+    "buidl": {"name":"BlackRock BUIDL (USD Institutional Digital Liquidity)","chain":"evm","addr":"0x7712c34205737192402172409a8f7ccef8aa2aec","aum":"$2.58B (RWA.xyz May 2026)","source":"Securitize; largest tokenized RWA fund","tier":1,"prestige":"BlackRock"},
+    "benji": {"name":"Franklin Templeton BENJI (FOBXX)","chain":"evm","addr":"0x3DDc84940Ab509C11B20B76B466933f40b750dc9","aum":"~$0.83B-$2B","source":"US 40 Act mutual fund; multi-chain","tier":1,"prestige":"Franklin Templeton"},
+    "acred": {"name":"Apollo ACRED (Diversified Credit Securitize Fund)","chain":"evm","addr":"0x17418038ecF73BA4026c4f428547BF099706F27B","aum":">$100M since Jan 2025","source":"Securitize; Apollo >$1.2B feeder; Coinbase/Kraken","tier":1,"prestige":"Apollo"},
+    "usyc":  {"name":"Hashnote USYC (short-dur Treasuries)","chain":"evm","addr":"unverified","aum":"~$3B peak","source":"Circle stablecoin distribution","tier":2,"prestige":"Hashnote/Circle"},
+    "ustb":  {"name":"Superstate USTB / USCC","chain":"evm","addr":"unverified","aum":"unstated","source":"tokenized Treasury + carry funds","tier":2,"prestige":"Superstate"},
+    "centrifuge":{"name":"Centrifuge private-credit pools","chain":"evm","addr":"unverified","aum":"~$430M active","source":"tokenized private credit","tier":2,"prestige":"Centrifuge"},
+    "bcspx": {"name":"Backed Finance bCSPX (S&P 500)","chain":"evm","addr":"unverified","aum":"~$120M (executive range)","source":"1:1 collateralized; regulated custodian; non-US retail","tier":2,"prestige":"Backed"},
+    "scope": {"name":"Hamilton Lane SCOPE (Senior Credit Ops)","chain":"evm","addr":"unverified","aum":"$10K min","source":"Securitize; Hamilton Lane strategic investor","tier":2,"prestige":"Hamilton Lane"},
 }
 
 def canon(o):
@@ -130,6 +149,21 @@ def main():
         tid=sys.argv[2]; print(json.dumps(memo_hex(tid),indent=2))
     elif mode=="eas":
         tid=sys.argv[2]; print(json.dumps(eas_payload(tid),indent=2))
-    else: print("usage: rwa_attest.py targets|card <id>|memo <id>|eas <id>",file=sys.stderr)
+    elif mode=="batch":
+        # generate + ClaimGuard-verify EVERY target card, write a combined index
+        idx={"kind":"csoai.rwa-attest-index/1","doctrine":"unsolicited signed attestation, measurement not certification",
+             "cards":[]}
+        for tid in sorted(TARGETS):
+            c=build_card(tid)
+            idx["cards"].append({"target":tid,"tier":TARGETS[tid]["tier"],"chain":TARGETS[tid]["chain"],
+                                 "asset":TARGETS[tid]["name"],"register":c["card"]["body"]["governance_measurement"],
+                                 "verdict":c["claimguard"]["verdict"],"content_id":c["card"]["signature"]["content_id"]})
+        idx["n_targets"]=len(idx["cards"])
+        idx["n_valid"]=sum(1 for c in idx["cards"] if c["verdict"]=="VALID")
+        idx["generated"]=NOW()
+        os.makedirs(OUT,exist_ok=True); json.dump(idx,open(os.path.join(OUT,"rwa-attest-index.json"),"w"),indent=2)
+        print(json.dumps({"n_targets":idx["n_targets"],"n_valid":idx["n_valid"],
+                          "index":os.path.join(OUT,"rwa-attest-index.json")},indent=2))
+    else: print("usage: rwa_attest.py targets|card <id>|memo <id>|eas <id>|batch",file=sys.stderr)
 
 if __name__=="__main__": main()
