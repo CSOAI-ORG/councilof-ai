@@ -89,7 +89,7 @@ function LiveLedgerTool() {
           Live Refutation Ledger
         </h1>
         <p className="mt-4 max-w-2xl text-slate-400">
-          The same nine refutations rendered by the /refutation-ledger page, here
+          The same ten refutations rendered by the /refutation-ledger page, here
           fetched live from the D1-backed Worker. Every row carries a signed record link,
           a decided-on timestamp, and the tag it travels with.{" "}
           <Link href="/refutation-ledger" className="text-emerald-400 underline">

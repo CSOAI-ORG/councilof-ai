@@ -10,7 +10,7 @@ import { Link } from "wouter";
  *   3. "We publish our failures" — refutation glyphs falling like snow (amber)
  *
  * Discipline: every number on screen is canon (417 provisions, 193 GovBench
- * items, 9 refutations — all real, all recomputable). No composites, no hype.
+ * items, 10 refutations — all real, all recomputable). No composites, no hype.
  * Honors prefers-reduced-motion (static frame, no auto-advance).
  */
 
