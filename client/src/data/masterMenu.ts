@@ -166,6 +166,16 @@ export const MASTER_NAVIGATION: MasterNavGroup[] = [
         description: "Financial axes 18–25 — bond, insurance, COBOL",
         action: { kind: "link", href: "/engine-axis" },
       },
+      {
+        name: "Labour & AI-economy indices",
+        description: "AI-economy · human-labour · humanoid-labour — UNMEASURED first",
+        action: { kind: "link", href: "/indices" },
+      },
+      {
+        name: "Products catalog",
+        description: "Living catalog — scores never sold · HO.2",
+        action: { kind: "link", href: "/products" },
+      },
     ],
   },
   {
