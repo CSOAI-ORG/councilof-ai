@@ -83,7 +83,7 @@ export const EVIDENCE_RAIL_SLIDES: Slide[] = [
     kicker: "The board",
     title: "Fourteen slots, and the honest status on every one",
     body:
-      "Thirteen canonical axes are measured on the full fleet with a separation test. The fourteenth is jail — whether a model can be talked past its guardrails — measured on a smaller fleet across 71 gold items, with its separation still untested and labelled that way. Where a leader is not statistically separated we print a tie. Where a response cannot be parsed by a rule we report it unmeasured rather than scoring it wrong.",
+      "All 14 board slots are measured. Thirteen canonical axes run on the full fleet with a separation test; the fourteenth is jail — whether a model can be talked past its guardrails — measured on a smaller fleet across 71 gold items, with living-board separation TIE (a TIE is not a separated leader). Cite live totals.public_count from GET /api/gspc. Where a leader is not statistically separated we print a tie. Where a response cannot be parsed by a rule we report it unmeasured rather than scoring it wrong.",
     points: [
       { tag: "pain", text: "Grids filled in by converting ambiguity into failure" },
       { tag: "benefit", text: "Sample size, interval and status visible on every slot" },
