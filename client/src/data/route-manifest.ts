@@ -638,6 +638,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "EI3"
  },
  {
+  "path": "/embed",
+  "comp": "EmbedPage",
+  "title": "Embed Page"
+ },
+ {
   "path": "/energy-ai-act",
   "comp": "SectorAct",
   "title": "Energy Ai Act"
@@ -1688,6 +1693,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Regulator Atlas"
  },
  {
+  "path": "/regulator-findings",
+  "comp": "RegulatorFindings",
+  "title": "Regulator Findings"
+ },
+ {
   "path": "/regulators",
   "comp": "RegulatorAtlas",
   "title": "Regulator Atlas"
@@ -1918,7 +1928,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Space"
  },
  {
-  "path": "/gspc-arena?view=towns",
+  "path": "/sovereign-town",
   "comp": "Redirect",
   "title": "Sovereign Town"
  },
@@ -2176,6 +2186,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/where-the-record-lives",
   "comp": "WhereTheRecordLives",
   "title": "Where The Record Lives"
+ },
+ {
+  "path": "/white-label",
+  "comp": "EmbedPage",
+  "title": "Embed Page"
  },
  {
   "path": "/why",
