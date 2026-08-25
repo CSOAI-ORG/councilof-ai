@@ -363,3 +363,30 @@ unverified "Oracle cascade confirmed live" claim (downgraded to DESIGNED/partial
 the known chat-grounding caveat noted), and a topology-count mislabel in the whitepaper. Remaining
 open item from the release-readiness audit: the internal-wiki gap is intentionally left as a
 separate task (user chose public-curated-page-only for now, not an auth-gated internal site).
+
+---
+
+## Tip / MCP write discipline (NEXT_300 #373–374) · 2026-08-25
+
+### `push_files` size discipline (#373)
+
+GitHub MCP `push_files` / bulk content writes corrupt easily when payloads are huge or multi-file
+with unrelated trees. Prefer:
+
+1. **Small batches** — one logical concern per push (e.g. one page + its fixture), not whole trees.
+2. **No LOAD_ME stubs** — never replace a real page with a placeholder pointer file.
+3. **Prefer local git** for large edits; use MCP push only when the cloud tip is the only write path
+   and the parent agent is coordinating tip restore.
+4. If a tip file shows `LOAD_ME` / `PLACEHOLDER`, treat it as **corrupt** — restore from a known-good
+   commit before more writes.
+
+### Single-writer tip policy (#374)
+
+Only **one** agent writes the branch tip at a time.
+
+- Parent / tip owner: restores corrupt tip, merges, or force-coordinates.
+- Sibling agents: commit **locally**, do not `git push` / MCP-overwrite the tip while restore is in
+  flight.
+- Announce lane + files in this doc (or the overnight run note) before touching shared tip files
+  (`IndicesHub`, `RefutationLedger`, `AppMainRoutes`, `NewHome-v3`).
+- `NewHome-v3.tsx` and `AppMainRoutes.tsx` are **do-not-corrupt** — no drive-by rewrites.

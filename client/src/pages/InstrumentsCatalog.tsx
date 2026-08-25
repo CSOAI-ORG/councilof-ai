@@ -133,6 +133,26 @@ export default function InstrumentsCatalog() {
             </p>
           </div>
 
+          <div className="mt-6 rounded-xl border border-emerald-500/20 bg-emerald-950/20 px-4 py-3">
+            <p className="text-[11px] uppercase tracking-wide text-emerald-400/80 mb-1">
+              Related surfaces — not model routers
+            </p>
+            <p className="text-sm text-slate-400">
+              <Link href="/indices" className="text-emerald-300 hover:underline">
+                Labour &amp; AI-economy indices
+              </Link>
+              <span className="text-slate-600"> · UNMEASURED first · </span>
+              <Link href="/competitors" className="text-emerald-300 hover:underline">
+                RWA attestation corpus
+              </Link>
+              <span className="text-slate-600"> · REPORTED targets · </span>
+              <Link href="/products" className="text-emerald-300 hover:underline">
+                Products catalog
+              </Link>
+              <span className="text-slate-600"> · HO.2</span>
+            </p>
+          </div>
+
           <div className="mt-6">
             <StackHonestyBanner showStats />
           </div>

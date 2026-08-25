@@ -191,6 +191,8 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
               {[
                 { method: "GET", endpoint: "/api/gspc", desc: "The full 14-slot board" },
                 { method: "GET", endpoint: "/api/gspc?axis=<name>", desc: "One axis (404 lists known axes)" },
+                { method: "GET", endpoint: "/api/indices", desc: "Labour & AI-economy indices — UNMEASURED register (measured_score null)" },
+                { method: "GET", endpoint: "/api/indices/:slug", desc: "One index (ai-economy · human-labour · humanoid-labour)" },
                 { method: "GET", endpoint: "/api/instruments", desc: "Eunomia router index (291 MCP rules)" },
                 { method: "GET", endpoint: "/api/finance/anatomy", desc: "Engine-axis map — MEASURED / SPEC / DESIGN per crossing" },
                 { method: "GET", endpoint: "/api/finance/bond-crossing", desc: "Axis 18 synthetic crossing (MEASURED pilot)" },
@@ -224,6 +226,18 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
                   <strong className="text-foreground">Axes:</strong> governance, safety, provenance,
                   continuity, conformance, openness, machinery-conformity, care, cross-reality,
                   detector-interop, art5-safeguard, swarm, affect.
+                </p>
+                <p>
+                  <strong className="text-foreground">Labour / AI-economy indices:</strong>{" "}
+                  <code className="text-xs">GET /api/indices</code> returns the UNMEASURED register
+                  (ai-economy · human-labour · humanoid-labour).{" "}
+                  <code className="text-xs">measured_score</code> stays{" "}
+                  <code className="text-xs">null</code> until INDEX-METHOD freezes a bank — never invent
+                  scores. OpenAPI fragment:{" "}
+                  <a href="/openapi/indices.yaml" className="text-primary hover:underline">
+                    /openapi/indices.yaml
+                  </a>
+                  .
                 </p>
                 <p>
                   <strong className="text-foreground">Agents:</strong>{" "}
