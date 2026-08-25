@@ -148,6 +148,30 @@ export default function StatusPage() {
             decoration, not a status page.
           </p>
         </div>
+
+        <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] px-5 py-4 space-y-2">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="font-mono text-xs text-emerald-300/70">register</span>
+            <span className="text-sm font-bold text-emerald-50">Labour &amp; AI-economy indices — UNMEASURED</span>
+            <span className="ml-auto rounded-full border border-rose-400/30 px-2.5 py-0.5 font-mono text-[11px] text-rose-200">
+              UNMEASURED
+            </span>
+          </div>
+          <p className="text-sm text-emerald-100/70">
+            AI-economy · human-labour · humanoid-labour stay empty by design until INDEX-METHOD
+            freezes a bank. Empty is not an outage —{" "}
+            <code className="font-mono text-[11px] text-emerald-300/80">measured_score: null</code>{" "}
+            is honesty. See{" "}
+            <a href="/indices" className="text-emerald-300 hover:underline">
+              /indices
+            </a>{" "}
+            and{" "}
+            <a href="/api/indices" className="text-emerald-300 hover:underline font-mono text-xs">
+              GET /api/indices
+            </a>
+            .
+          </p>
+        </div>
       </section>
     </div>
   );
