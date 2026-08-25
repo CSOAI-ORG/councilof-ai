@@ -51,9 +51,9 @@ A100 console restart (measurement volume) · HF DOIs (web-UI) · MCP publish (Gi
 `harness/regulator/` — `eu_ai_act_findings.py` · `article_findings.py` · `sector_findings.py` · `eu_ai_act_article_map.json` · `functions/api/regulator-findings.ts` · `functions/api/challenge.ts` · `harness/arena/` (elo.py, canon.py, axis_arena.py, publish_scoreboard.py, eat_compliance_board.py) · `public/signed/*.json` (signed boards).
 
 ## What Cursor should do (align with Claude's Compass AG-UI/MCP architecture)
-1. **Brand + polish** `/challenge` (the redress form) and a `/regulator-findings` *page* (currently a raw API) — apply the Council OS theme/branding pass.
+1. **Brand + polish** `/challenge` (redress form) and `/regulator-findings` — the findings **page is now built** (PR #633, axis/article/sector modes). Apply the Council OS theme/branding pass + extend the 5-device E2E to both.
 2. **Render as AG-UI cards** (per Claude's Compass §1/§4): wire `regulator-findings` + `challenge` + `scoreboard` as MCP tools served over AG-UI so each returns a typed React card (Running → Done) inline in Council OS chat — the "hand them a working tool" becomes a chat card.
-3. **Add to Council OS Measure nav**: the `/challenge` + regulator-findings surfaces (and `/registers`, `/sectors`) into the menu.
+3. **Add to Council OS Measure nav**: `/regulator-findings`, `/challenge`, and the EUNOMIA surfaces (`/registers`, `/sectors`) into the menu.
 4. **E2E after polish** — extend the 5-device Playwright suite to the new surfaces.
 
 ## Canon (binding — do not break)
