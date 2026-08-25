@@ -73,7 +73,7 @@ const PRODUCTS: Product[] = [
     tag: "Data",
     what: "The signed insurability evidence pack maps a measurement receipt into the four evidence classes underwriters ask for. The commercial data feed (EUNOMIA) serves the signed enforcement record + deadline calendar as raw data — never scores, never ranked.",
     who: "Insurers, bond desks and vendors buying decision-grade data — not a score.",
-    billing: "Data-by-query is live over x402 at $0.02/query (settled via the open x402 receipt rail). Evidence packs are a signed artefact supplied on request. Regulators and the public get the same stream free.",
+    billing: "Data-by-query is live over the open x402 receipt rail (per-query, settled on-chain — see the endpoint for the current rate). Evidence packs are a signed artefact supplied on request. Regulators and the public get the same stream free.",
     status: "live",
     links: [
       { label: "Evidence pack →", href: "/evidence" },

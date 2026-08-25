@@ -278,6 +278,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Case Studies"
  },
  {
+  "path": "/catalog",
+  "comp": "Redirect",
+  "title": "Catalog"
+ },
+ {
   "path": "/ceasai-training",
   "comp": "Redirect",
   "title": "Ceasai Training"
@@ -1546,6 +1551,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/privacy-policy",
   "comp": "PrivacyPolicy",
   "title": "Privacy Policy"
+ },
+ {
+  "path": "/products",
+  "comp": "Products",
+  "title": "Products"
  },
  {
   "path": "/prosperity",
