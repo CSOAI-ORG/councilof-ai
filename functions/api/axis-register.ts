@@ -1,10 +1,9 @@
 /**
- * GET /api/axis-register — the GSPC axis register (13 canonical axes + jail).
+ * GET /api/axis-register — the GSPC axis register (canonical scored rows).
  *
- * Serves the measurement registry: each axis's scored_items, model fleet size,
- * and majority baseline, plus the public "13 of 14" framing. Mirrors
- * GSPC_AXIS_REGISTRY.json (the ruled single source of truth). Bundled statically
- * at deploy time so it needs no runtime fetch and survives the deploy guard.
+ * Slot counts live in GET /api/gspc totals (public_count, measured_axes,
+ * quotable_axes). This register lists the bundled scored rows; it does not
+ * type a board fraction.
  */
 
 interface AxisEntry {
@@ -37,13 +36,15 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     schema: "csoai.gspc-axis-register/0.1",
     issuer: "councilof.ai",
     served_from: host,
-    gspc_registry_axes: 13, // 13 quotable of 14
-    of_14: true,
+    registry_axis_count: AXES.length,
+    public_count: "GET /api/gspc totals.public_count",
     counting_rule:
-      "Say '13 GSPC axes (registry)' — the registry is the measurement instrument. " +
-      "Jail (slot 14) is measured but quotable-pending. Never a bare '16 axes'.",
+      "Slot counts live in GET /api/gspc totals (public_count, measured_axes, quotable_axes). " +
+      "This register lists the canonical scored rows. Jail is a measured floor when its " +
+      "separation is UNTESTED. Empty cells stay empty.",
     axes: AXES,
     note: "Static from GSPC_AXIS_REGISTRY.json (ruled source of truth). " +
-      "Per-axis results are independently signed; see /api/cards and /signed/ for verification.",
+      "Per-axis results are independently signed; see /api/cards and /signed/ for verification. " +
+      "Living board counts: GET /api/gspc.",
   });
 };
