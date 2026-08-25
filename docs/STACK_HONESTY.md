@@ -5,9 +5,11 @@ Binding rule for all councilof.ai finance and router surfaces: **measurement, no
 | Register | Meaning | Example on site |
 |----------|---------|-----------------|
 | **MEASURED** | Our signed deterministic runs | `GET /api/gspc` · GSPC axes 1–13 |
-| **UNMEASURED** | Honestly empty — reason stated | Empty GSPC cells · insufficient n |
+| **UNMEASURED** | Honestly empty — reason stated | Empty GSPC cells · insufficient n · `/indices` (all three labour/economy) |
 | **REPORTED** | Third-party context, cited + dated | $130T bond market anatomy |
 | **DESIGN** | Architecture thesis or scenario | Revenue tables · flywheel loops |
+
+Labour / AI-economy indices (`/indices`, `GET /api/indices`) are a **contextual firewall** — never GSPC cell inputs — and stay **UNMEASURED** until INDEX-METHOD freezes a bank.
 
 Wire status (for MCP / finance):
 

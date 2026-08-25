@@ -17,6 +17,10 @@ curl -sS https://councilof.ai/api/finance/anatomy | jq '.financial_axes'
 # Axis 18 — synthetic bond crossing (MEASURED pilot fixture)
 curl -sS https://councilof.ai/api/finance/bond-crossing | jq '.register, .content_hash // .attestation.content_hash'
 
+# Labour / AI-economy indices — UNMEASURED catalog (contextual firewall)
+curl -sS https://councilof.ai/api/indices | jq '.indices[] | {slug, status, measured_score}'
+curl -sS https://councilof.ai/api/indices/ai-economy | jq '{slug, status, measured_score, fused_into_gspc}'
+
 # AG-UI wire (503 until AGUI_WIRE_URL set on Pages)
 curl -sS -o /dev/null -w "%{http_code}\n" -X POST 'https://councilof.ai/api/agui/session?handle=probe'
 ```
@@ -48,11 +52,11 @@ Do **not** cite: ~~568 repos~~ (use **291 MCP servers**), ~~30-framework~~ (use 
 |----------|------|
 | `GET /api/gspc` | Live GSPC board |
 | `GET /api/instruments` | Eunomia router index |
+| `GET /api/indices` | Labour / AI-economy indices (UNMEASURED) |
+| `GET /api/indices/:slug` | Per-index honesty shape (`measured_score: null`) |
 | `GET /api/finance/anatomy` | Engine axis map |
 | `GET /api/finance/bond-crossing` | Axis 18 synthetic crossing |
 | `POST /api/finance/settle` | Settlement envelope (stub until wired) |
-| `GET /api/indices` | Labour / AI-economy catalog (UNMEASURED) |
-| `GET /api/indices/:slug` | Single index (`ai-economy` · `human-labour` · `humanoid-labour`) |
 | `GET /.well-known/did.json` | Trust root |
 | `GET /api/corrections` | Corrections ledger |
 
@@ -66,19 +70,10 @@ Do **not** cite: ~~568 repos~~ (use **291 MCP servers**), ~~30-framework~~ (use 
 
 Signed-in teams: `https://councilof.ai/dashboard` — same Layer 0 destinations as Council OS.
 
-**DSH into all (OWNERSHIP #80):** every measurement card that appears in Council OS must be reachable from DSH without a second scoreboard — GSPC, East-West, EAT, Estate, Instruments, Verify, indices, products, Option A, and (later) RWA. Matrix: `docs/COUNCIL_OS_BUILD_PLAN.md`. Alignment: `docs/EAT_DSH_ALIGNMENT.md`. Checklist: `docs/DSH_PARITY_NEW_SURFACES.md`.
+**DSH into all (OWNERSHIP #80):** every measurement card that appears in Council OS must be reachable from DSH without a second scoreboard — GSPC, East-West, EAT, Estate, Instruments, Indices, Products, Verify, and (later) RWA. Matrix: `docs/COUNCIL_OS_BUILD_PLAN.md`. Alignment: `docs/EAT_DSH_ALIGNMENT.md`. Parity checklist: `docs/DSH_PARITY_NEW_SURFACES.md`.
 
-**EAT parity:** competitor and RWA measurement cards use the same rule.
+**EAT parity:** competitor and RWA measurement cards use the same rule. Indices stay **UNMEASURED** on both OS and DSH — never invent labour/economy scores.
 
 ## Verify
 
 https://councilof.ai/gspc-verify — recompute hash, check Ed25519 offline.
-
-## Labour & AI-economy indices (UNMEASURED)
-
-```bash
-curl -sS https://councilof.ai/api/indices
-curl -sS https://councilof.ai/api/indices/ai-economy
-```
-
-All three slugs ship **UNMEASURED** with `measured_score: null` until INDEX-METHOD promotion. Absence is not zero — do not invent scores. Never fuse into GSPC. Hub: `/indices`. Method: `docs/SOVOS/INDEX-METHOD-0.1.md`. GPU policy: `docs/RUNPOD_POLICY.md`. HF plan: `docs/HF_DATASET_PLAN.md`. DSH parity: `docs/DSH_PARITY_NEW_SURFACES.md`.
