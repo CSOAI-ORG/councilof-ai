@@ -120,7 +120,7 @@ export default function Article50Calculator() {
           <h2 className="mb-3 text-2xl font-bold tracking-tight">Ready to remove the risk?</h2>
           <p className="mb-6 text-emerald-100/80 leading-relaxed">
             The Article 50 Kit ships disclosure strings, watermarking templates, human oversight
-            triggers, and 12 months of signed attestations from the watermark-attest MCP — from £999.
+            triggers, and 12 months of signed attestations from the watermark-attest MCP.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
