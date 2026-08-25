@@ -20,8 +20,8 @@ import { ScrollWorld, usePrefersReducedMotion, type Slide } from "@/components/s
 export const STORY: Slide[] = [
   {
     // 01 HERO — H1 is locked. Hero video sits above the headline, over the arena.
-    kicker: "Council of AI — the independent measurement body for AI behaviour",
-    body: "We measure how your AI actually behaves on published, frozen tests, then hand you a signed result you can re-check yourself — a small card, not a slide deck. When your model or the law changes, we measure again. That is measurement, not certification.",
+    kicker: "Council of AI — the unsolicited, permissionless measurement body for AI behaviour",
+    body: "We measure how your AI actually behaves on published, frozen tests — invited or not — then hand you a signed result anyone can re-check without our permission: a small card, not a slide deck. When your model or the law changes, we measure again. That is measurement, not certification.",
     bg: { src: "/images/coliseum_hero_arena.jpg", alt: "Clay figures and green verification seals gathered in a marble arena" },
   },
   {

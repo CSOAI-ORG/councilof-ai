@@ -132,6 +132,30 @@ function UspGrid() {
   );
 }
 
+// ── ledger attestation / evidence-that-travels ────────────────
+function LedgerAttestBand() {
+  return (
+    <section className="py-14 px-6 bg-emerald-900">
+      <div className="mx-auto max-w-5xl flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
+        <div className="max-w-2xl">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-300">Interop — evidence that travels</p>
+          <h3 className="mt-2 text-2xl font-black text-white sm:text-3xl">Attach a signed card to a public ledger</h3>
+          <p className="mt-3 text-sm leading-relaxed text-emerald-100/90">
+            Permissionless attach: we bind signed measurement evidence to accounts we do not control,
+            so a stranger can verify it without us. A devnet-proven capability — never a rating, never an investment.
+          </p>
+        </div>
+        <a
+          href="/xrpl-attest"
+          className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-6 py-3 text-base font-extrabold text-emerald-950 transition-colors hover:bg-emerald-300"
+        >
+          Attestation on the ledger <ChevronRight className="w-4 h-4" />
+        </a>
+      </div>
+    </section>
+  );
+}
+
 function AxesGrid() {
   const [axes, setAxes] = useState<Axis[]>([]);
   const [inLane, setInLane] = useState<InLaneAxis[]>([]);
@@ -393,6 +417,7 @@ export default function NewHomeV3() {
       <ProblemStrip />
       <div className="border-b border-gray-100" />
       <UspGrid />
+      <LedgerAttestBand />
       <div className="border-b border-gray-100" />
       <BuyerCards />
       <div className="border-b border-gray-100" />

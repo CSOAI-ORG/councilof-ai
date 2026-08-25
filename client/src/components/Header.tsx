@@ -81,6 +81,7 @@ const navigation: NavGroup[] = [
     icon: Building2,
     description: 'Who the measurement is for',
     submenu: [
+      { name: 'Products', href: '/products', description: 'The signed-evidence products — verify is free, a grade is never sold, no public prices' },
       { name: 'Enterprise', href: '/?lobby=measured&task=enterprise-start', description: 'Measure a portfolio of systems against the duties that bind them' },
       { name: 'Insurers and underwriters', href: '/insurers', description: 'Signed evidence a risk model can actually price' },
       { name: 'Government and regulators', href: '/government', description: 'Independent measurement, published method, no conformity mark' },
@@ -96,6 +97,7 @@ const navigation: NavGroup[] = [
     description: 'Our receipts, including the losses',
     submenu: [
       { name: 'The honesty gate', href: '/honesty', description: 'What we cannot yet measure, published rather than hidden' },
+      { name: 'Attestation on the ledger', href: '/xrpl-attest', description: 'Signed evidence attached to a public ledger about accounts we do not control — permissionless attach, never a rating' },
       { name: 'Refutation Ledger', href: '/refutation-ledger', description: 'Experiments that killed our own theses — with artefacts' },
       { name: 'Firewall Charter', href: '/firewall-charter', description: 'We measure; we never fix what we measure' },
       { name: 'Corrections — live JSON', href: '/api/corrections', description: 'Corrections published, never silently edited', external: true },
