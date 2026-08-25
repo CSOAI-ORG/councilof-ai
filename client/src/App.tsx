@@ -102,6 +102,8 @@ const Sov3Whitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
 const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const ProvenanceFinding = lazy(() => import("./pages/ProvenanceFinding"));
 const Article50Pack = lazy(() => import("./pages/Article50Pack"));
+const GpaiEvidencePack = lazy(() => import("./pages/GpaiEvidencePack"));
+const CraReadinessKit = lazy(() => import("./pages/CraReadinessKit"));
 const AiTransparency = lazy(() => import("./pages/AiTransparency"));
 const ABTesting = lazy(() => import("./pages/ABTesting"));
 const AboutCEASAI = lazy(() => import("./pages/AboutCEASAI"));
@@ -386,6 +388,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/learn": "Learn | CSOAI",
   "/article-50": "Article 50 | CSOAI",
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
+  "/gpai-evidence": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
+  "/cra-readiness": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "System Status | CSOAI",
@@ -959,6 +963,8 @@ function App() {
                   <Route path="/article-50" component={Article50} />
                   <Route path="/verify-leaderboard" component={VerifyLeaderboard} />
                   <Route path="/packs/eu-article-50" component={Article50Pack} />
+                  <Route path="/gpai-evidence" component={GpaiEvidencePack} />
+                  <Route path="/cra-readiness" component={CraReadinessKit} />
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />

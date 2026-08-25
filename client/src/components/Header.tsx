@@ -83,6 +83,8 @@ const navigation: NavGroup[] = [
     description: 'Who the measurement is for',
     submenu: [
       { name: 'Products', href: '/products', description: 'The signed-evidence products — verify is free, a grade is never sold, no public prices' },
+      { name: 'GPAI Evidence Pack', href: '/gpai-evidence', description: 'Signed measurement a GPAI provider can hand the AI Office — evidence, never a conformity mark' },
+      { name: 'CRA Readiness Kit', href: '/cra-readiness', description: 'The 24h/72h/14-day ENISA runbook + signed SBOM workflow — template and tooling, not legal advice' },
       { name: 'Enterprise', href: '/?lobby=measured&task=enterprise-start', description: 'Measure a portfolio of systems against the duties that bind them' },
       { name: 'Insurers and underwriters', href: '/insurers', description: 'Signed evidence a risk model can actually price' },
       { name: 'Government and regulators', href: '/government', description: 'Independent measurement, published method, no conformity mark' },
