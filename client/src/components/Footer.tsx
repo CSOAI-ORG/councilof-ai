@@ -46,7 +46,7 @@ export function Footer() {
         { name: 'Regulation feed — live JSON', href: '/api/regulation', external: true },
         { name: 'Corrections feed — live JSON', href: '/api/corrections', external: true },
         { name: 'Verify a card', href: '/gspc-verify' },
-        { name: 'Evidence packs', href: '/evidence' },
+        { name: 'Evidence packs', href: '/evidence-rail' },
         { name: 'llms.txt — for answer engines', href: '/llms.txt', external: true },
         { name: 'did:web trust root (did.json)', href: '/.well-known/did.json', external: true },
         { name: 'API Documentation', href: '/api-docs' },
@@ -275,7 +275,7 @@ export function Footer() {
           <p className="text-gray-600 text-sm mb-4 md:mb-0">
             © {currentYear} CSOAI. All rights reserved.
           </p>
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/privacy-policy" className="text-gray-600 hover:text-green-600 text-sm transition-colors">
               Privacy Policy
             </Link>
