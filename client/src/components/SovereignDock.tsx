@@ -29,7 +29,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /risk|heatmap/i, href: "/risk-heatmap", label: "Risk Heatmap" },
   { re: /oscal|fedramp/i, href: "/oscal", label: "OSCAL Studio" },
   { re: /model|bias|fairness/i, href: "/models", label: "Model Registry" },
-  { re: /price|pricing|plan|cost/i, href: "/pricing", label: "Plans and pricing" },
+  { re: /price|pricing|plan|cost/i, href: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
   { re: /media|image|photo|creative commons/i, href: "/commons", label: "Open Commons media" },
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
@@ -50,7 +50,7 @@ const QUICK: { label: string; href: string }[] = [
   { label: "Governance Graph", href: "/?lobby=home" },
   { label: "Council Space", href: "/gspc-arena" },
   { label: "Open Commons", href: "/commons" },
-  { label: "Plans", href: "/pricing" },
+  { label: "Free rail", href: "/?lobby=measured&task=pricing-overview" },
   { label: "Status", href: "/status" },
   { label: "Full OS", href: "/?lobby=home" },
 ];
@@ -74,7 +74,7 @@ async function askGovern(q: string): Promise<any | null> {
 // SOV3 shared brain: /orchestrate returns {say, actions}. The Sovereign SEES the
 // page (getScreenContext), THINKS via the measurement API, then ACTS - opening OS surfaces.
 const APP_ROUTES: Record<string, string> = {
-  revenue: "/pricing", pricing: "/pricing", plans: "/pricing", billing: "/pricing",
+  revenue: "/?lobby=measured&task=pricing-overview", pricing: "/?lobby=measured&task=pricing-overview", plans: "/?lobby=measured&task=pricing-overview", billing: "/?lobby=measured&task=pricing-overview",
   king: "/try", council: "/try", try: "/try", vote: "/try", bft: "/try",
   setup: "/start", onboard: "/start", start: "/start", welcome: "/start",
   graph: "/?lobby=home", knowledge: "/?lobby=home", search: "/?lobby=home",
