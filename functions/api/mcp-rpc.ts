@@ -63,6 +63,15 @@ export const MEASURED_TOOLS: McpToolDef[] = [
       properties: { slug: { type: "string", description: "Optional: ai-economy | human-labour | humanoid-labour" } },
     },
   },
+  {
+    name: "rwa_attestation_catalog",
+    description:
+      "RWA attestation targets (Stage 2). Declared UNMEASURED — measured_score is null. Honest catalog; not live MEASURED mainnet. Attestation ≠ tokenization ≠ ownership.",
+    inputSchema: {
+      type: "object",
+      properties: { slug: { type: "string", description: "Optional target slug (e.g. ondo-ousg, blackrock-buidl, justoken-jmwh)" } },
+    },
+  },
 ];
 
 const TOOL_ROUTES: Record<string, (args: Record<string, unknown>) => string> = {
@@ -75,6 +84,10 @@ const TOOL_ROUTES: Record<string, (args: Record<string, unknown>) => string> = {
   instruments_catalog: () => "/api/instruments",
   indices_catalog: (a) =>
     a.slug ? `/api/indices/${encodeURIComponent(String(a.slug))}` : "/api/indices",
+  rwa_attestation_catalog: (a) =>
+    a.slug
+      ? `/api/rwa-attestation/${encodeURIComponent(String(a.slug))}`
+      : "/api/rwa-attestation",
 };
 
 export function jsonRpcResult(id: unknown, result: unknown): Response {
