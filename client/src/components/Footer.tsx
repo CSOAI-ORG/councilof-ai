@@ -28,7 +28,7 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Academy (we certify nothing)', href: '/academy' },
-        { name: 'Training records (we certify nothing)', href: '/certification' },
+        { name: 'Training records (we certify nothing)', href: '/academy' },
         { name: 'Watchdog Reports', href: '/watchdog' },
         { name: 'Analyst Workbench', href: '/workbench' },
         { name: 'Global AI Regulation Tracker', href: '/global-ai-regulation' },
