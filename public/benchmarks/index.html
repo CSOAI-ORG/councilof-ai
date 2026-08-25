@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <title>GSPC Benchmarks — Council of AI</title>
-<meta name="description" content="Live GSPC board: 13 measured axes, 19 models, 12 August 2026. Jail is measured floor (empty on this stamp); slot 15 reserved. UNSIGNED on 12 Aug. Measurement credential, not certification.">
+<meta name="description" content="Live GSPC board: 14 measured of 14 quotable. Jail MEASURED with separation TIE (2026-08-25). Cite councilof.ai/api/gspc. Measurement, not certification.">
 <link rel="canonical" href="https://councilof.ai/benchmarks">
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="GSPC Benchmarks — Council of AI">
-<meta property="og:description" content="13 measured axes × 19 models. Jail measured floor (empty on 12 Aug stamp); slot 15 reserved. UNSIGNED.">
+<meta property="og:description" content="Live ruling: 14 measured of 14 quotable. Jail MEASURED · separation TIE. Measurement credential, not certification.">
 <meta property="og:url" content="https://councilof.ai/benchmarks">
 <style>
   :root{--fg:#e8f5ee;--mut:#9bb5a6;--bd:#1e3d2e;--bg:#07110c;--acc:#5ee9a3;--warn:#e8b86d}
@@ -31,15 +31,14 @@
 <body>
 <main>
 <h1>GSPC Benchmarks</h1>
-<p class="sub">13 measured axes · 19-model fleet · frozen 12 August 2026<br>
+<p class="sub">Live ruling: <strong>14 measured of 14 quotable</strong> · cite <a href="https://councilof.ai/api/gspc">/api/gspc</a><br>
 Verified measurement credential. Not certification. Not a notified body.</p>
 <div class="note">
-<strong>Live source:</strong> <a href="https://councilof.ai/api/gspc">councilof.ai/api/gspc</a>
-schema csoai.gspc-axes/0.3 · 819 items · 3 separated leads · 10 ties.
-Jail is a measured floor (empty on this stamp); slot 15 is reserved.
-This page replaces the stale six-axis / 30-model / 4 August copy.
+<strong>Live source of truth:</strong> <a href="https://councilof.ai/api/gspc">councilof.ai/api/gspc</a>
+(<code>totals.public_count</code>). Jail (slot 14) is <strong>MEASURED</strong> with separation <strong>TIE</strong> (determined 2026-08-25).
+Do not invent 22 axes. Slot 15 / human-vs-ai stay in-lane only.
 </div>
-<h2>Measured axes</h2>
+<h2>Measured axes (live board)</h2>
 <div class="wrap">
 <table>
 <thead><tr><th>Axis</th><th>Bench</th><th class="num">n</th><th class="num">Leader acc.</th><th>Leader</th><th>Separation</th></tr></thead>
@@ -55,32 +54,23 @@ This page replaces the stale six-axis / 30-model / 4 August copy.
 <tr><td>cross-reality</td><td>XRAIV</td><td class="num">32</td><td class="num">0.812</td><td>mistral:7b</td><td>TIE</td></tr>
 <tr><td>detector-interop</td><td>DetBench</td><td class="num">33</td><td class="num">0.879</td><td>deepseek-r1:8b</td><td>TIE</td></tr>
 <tr><td>art5-safeguard</td><td>Art5Bench</td><td class="num">36</td><td class="num">0.972</td><td>council specialist</td><td>TIE</td></tr>
-<tr><td>swarm</td><td>SwarmBench</td><td class="num">40</td><td class="num">0.975</td><td>qwen2.5:0.5b-instruct</td><td>TIE</td></tr>
+<tr><td>swarm</td><td>SwarmBench v2b</td><td class="num">37</td><td class="num">0.384*</td><td>qwen2.5:7b</td><td class="ok">SEPARATED</td></tr>
 <tr><td>affect</td><td>AffectBench</td><td class="num">41</td><td class="num">0.878</td><td>council specialist</td><td class="ok">SEPARATED</td></tr>
+<tr><td>jail</td><td>GoldBank-Detector</td><td class="num">71</td><td class="num">0.592</td><td>qwen2.5:0.5b-instruct</td><td>TIE</td></tr>
 </tbody>
 </table>
 </div>
-<h2>Public slots with no score on this stamp</h2>
-<div class="wrap">
-<table>
-<thead><tr><th>Slot</th><th>What it is</th><th>Score</th></tr></thead>
-<tbody>
-<tr><td>gspc_jail</td><td>containment / sandbox-escape</td><td class="warn">measured floor — empty on this stamp</td></tr>
-<tr><td>slot-15</td><td>reserved public slot</td><td class="warn">no name assigned — empty</td></tr>
-</tbody>
-</table>
-</div>
+<p class="sub">* Swarm accuracy shown is the 95% Wilson <em>lower bound</em> that resolves the ordering (live API).</p>
 <div class="note">
-A TIE is not a win. Swarm instances are not independent, so no interval is shown.
-Affect gold is counsel-pending: behaviour against a pending key, not a legal verdict.
+A TIE is not a win. Affect gold is counsel-pending: behaviour against a pending key, not a legal verdict.
 Care is separated from base models, not from the majority baseline.
 Scores describe a frozen run on a date. They do not describe compliance.
+Historical RSS / sitting-day copy may still say “13 measured of 14” for the pre-jail-TIE sitting — cite live <code>totals.public_count</code>.
 </div>
-<p>Fleet mean accuracy across measured axes is 0.531. Leader-mean accuracy is 0.788. That gap is selection, not skill.</p>
 <footer>
 Council of AI · CSOAI Ltd · UK 16939677 ·
-<a href="https://councilof.ai/api/gspc">UNSIGNED API (12 Aug)</a> ·
-<a href="https://councilof.ai/measure">measure waitlist</a> ·
+<a href="https://councilof.ai/api/gspc">live API</a> ·
+<a href="https://councilof.ai/gspc-verify">verify</a> ·
 <a href="https://councilof.ai/gspc-arena">arena</a>
 </footer>
 </main>
