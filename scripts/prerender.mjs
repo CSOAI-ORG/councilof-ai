@@ -131,13 +131,9 @@ function discover() {
     "/benchmark-quality", "/benchmark-index", "/benchmarks", "/compare", "/leaderboard",
     "/gspc-arena?view=benchmarks",
     "/gspc-arena?view=arena", "/gspc-arena?view=globe", "/gspc-arena?view=towns",
-    // Homepage blog deep links (J-D2) — static host honest-404 without snapshots
-    "/blog/layer-0-agent-economy-trust",
-    "/blog/eu-ai-act-article-50-countdown",
-    "/blog/choosing-ai-compliance-vendor",
-    "/blog/dora-compliance-uk-financial-services",
-    "/blog/ai-governance-vs-compliance",
-    "/blog/nis2-compliance-critical-infrastructure",
+    // Dead homepage blog slugs already 308 to /blog/. Do not snapshot them —
+    // prerendered HTML shadows the 308 and brand-gate rejects leftover
+    // competitor GRC prices on choosing-ai-compliance-vendor.
     // AEO regulatory-explainer seed pages (22) — regulator/procurement citation surface.
     // Absent from heuristic discovery (blog deep links are only reachable via /blog/:slug),
     // so each needs an explicit snapshot or the static host serves an honest-404.
@@ -170,7 +166,15 @@ function discover() {
   // /api/* are data endpoints served by Pages Functions — snapshotting them writes an
   // index.html that can shadow the JSON on the static host, and (2026-08-25) bakes live
   // data (incl. corrections-ledger text) into pages the brand gate then rejects.
-  const routes = [...found].filter(p => !p.includes(":") && !p.includes("*") && !p.startsWith("/api/"));
+  const DEAD_BLOG = new Set([
+    "/blog/layer-0-agent-economy-trust",
+    "/blog/eu-ai-act-article-50-countdown",
+    "/blog/choosing-ai-compliance-vendor",
+    "/blog/dora-compliance-uk-financial-services",
+    "/blog/ai-governance-vs-compliance",
+    "/blog/nis2-compliance-critical-infrastructure",
+  ]);
+  const routes = [...found].filter(p => !p.includes(":") && !p.includes("*") && !p.startsWith("/api/") && !DEAD_BLOG.has(p));
   // Library IA: /library/:sector is a dynamic route (filtered above), but the 8 concrete
   // sectors are prime AEO citation surface and the sitemap lists them — prerender each
   // so the static host serves them (2026-08-23 JEEVES: they were 404 on the static host
