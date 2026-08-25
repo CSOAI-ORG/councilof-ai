@@ -1,0 +1,82 @@
+ult.title}
+                                </span>
+                                {result.highlight && (
+                                  <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-emerald-50 text-emerald-600 border-emerald-200">
+                                    Featured
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-500 truncate">
+                                {result.description}
+                              </p>
+                            </div>
+
+                            {isSelected && (
+                              <div className="flex-shrink-0 flex items-center gap-1 text-emerald-600">
+                                <CornerDownLeft className="h-4 w-4" />
+                              </div>
+                            )}
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-t text-xs text-gray-500">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 bg-white border rounded shadow-sm font-mono">
+                <ChevronUp className="h-3 w-3" />
+              </kbd>
+              <kbd className="px-1.5 py-0.5 bg-white border rounded shadow-sm font-mono">
+                <ChevronDown className="h-3 w-3" />
+              </kbd>
+              <span className="ml-1">Navigate</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <kbd className="px-1.5 py-0.5 bg-white border rounded shadow-sm font-mono">
+                <CornerDownLeft className="h-3 w-3" />
+              </kbd>
+              <span className="ml-1">Select</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-400">Powered by</span>
+            <span className="font-medium text-emerald-600">CSOAI</span>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// Search trigger button component for Header
+export function GlobalSearchTrigger({ onClick }: { onClick?: () => void }) {
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    setIsMac(navigator.platform.toLowerCase().includes('mac'));
+  }, []);
+
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-lg border border-gray-200 transition-colors"
+    >
+      <Search className="h-4 w-4" />
+      <span className="hidden sm:inline">Search</span>
+      <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 bg-white rounded border text-xs text-gray-400 font-mono">
+        {isMac ? <Command className="h-3 w-3" /> : 'Ctrl'}
+        <span>K</span>
+      </kbd>
+    </button>
+  );
+}
+
+export default GlobalSearch;
