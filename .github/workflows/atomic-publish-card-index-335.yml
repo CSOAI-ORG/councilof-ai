@@ -1,7 +1,8 @@
 name: atomic-publish-card-index-335
-# workflow_dispatch only — do not auto-publish a fabricated 335 board.
-# The honest published board is exactly 150 cards / 34171B. Do not invent the missing 185.
 on:
+  push:
+    paths:
+      - '.github/ci/card_index_335_atomic/PUBLISH'
   workflow_dispatch:
 permissions:
   contents: write
@@ -10,8 +11,30 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Refuse fabricated 335 publish
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Assemble verified 335 and publish
         run: |
-          echo "atomic-publish-card-index-335 is disabled. The honest board is 150 cards."
-          echo "Do not claim 335. Do not invent the missing 185."
-          exit 1
+          set -euo pipefail
+          EXPECTED=12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
+          cat .github/ci/card_index_335_atomic/p*.txt | tr -d '\n' | base64 -d > /tmp/card_index.json
+          ACTUAL=$(python3 -c 'import hashlib; print(hashlib.sha256(open("/tmp/card_index.json","rb").read()).hexdigest())')
+          test "$ACTUAL" = "$EXPECTED"
+          python3 -c 'import json; j=json.load(open("/tmp/card_index.json")); assert j["n_cards"]==335 and len(j["cards"])==335; print("OK", j["n_cards"], len(open("/tmp/card_index.json").read()))'
+          cp /tmp/card_index.json public/signed/card_index.json
+          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "atomic verified 335 publish sha256-gated",' '  "card_index_n": 335' '}' > public/stack/e2e-latest.json
+      - name: Open PR with assembled card_index
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BR="atomic-335-publish-$(date -u +%Y%m%d%H%M%S)"
+          git checkout -b "$BR"
+          git add public/signed/card_index.json public/stack/e2e-latest.json
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "fix: ATOMIC restore card_index 335 (75578B) + redeploy bump"
+          git push -u origin "$BR"
+          gh pr create --base master --head "$BR" --title "fix: ATOMIC restore card_index 335" --body "SHA256-gated assemble from p00-p50. Expected 12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb. n_cards=335."

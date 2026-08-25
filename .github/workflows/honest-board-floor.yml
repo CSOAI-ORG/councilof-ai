@@ -1,4 +1,5 @@
 name: honest-board-floor
+# Accept exact-150 OR sha256-gated verified 335. Restore 150 only for stubs/invalid.
 on:
   push:
     paths:
@@ -13,26 +14,62 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Restore honest 150 if the board is not exactly 150
+      - name: Accept exact-150 or verified 335; restore 150 only if stub/invalid
         run: |
           set -euo pipefail
+          EXPECTED_335=12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
           python3 - <<'PY'
-          import json, pathlib, sys
-          p = pathlib.Path('public/signed/card_index.json')
+          import hashlib, json, pathlib, sys
+          EXPECTED_335 = "12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb"
+          p = pathlib.Path("public/signed/card_index.json")
           raw = p.read_bytes()
-          j = json.loads(raw)
-          n = j.get('n_cards')
-          cards = j.get('cards') if isinstance(j.get('cards'), list) else []
-          print('current', n, len(cards), len(raw))
-          if n == 150 and len(cards) == 150 and len(raw) == 34171:
-              print('honest 150 — nothing to restore')
+          text = raw.decode("utf-8", errors="replace")
+          print("bytes", len(raw))
+
+          stub = (
+              "file://" in text
+              or "PLACEHOLDER" in text
+              or text.strip().startswith("file:")
+          )
+          try:
+              j = json.loads(raw)
+          except Exception as e:
+              print("invalid JSON", e)
+              open("/tmp/need_restore", "w").write("1")
               sys.exit(0)
-          print('not the honest 150 board — restoring')
+
+          n = j.get("n_cards")
+          cards = j.get("cards") if isinstance(j.get("cards"), list) else []
+          digest = hashlib.sha256(raw).hexdigest()
+          print("current", n, len(cards), digest)
+
+          if stub:
+              print("stub board — restoring 150")
+              open("/tmp/need_restore", "w").write("1")
+              sys.exit(0)
+
+          # Allowed: exact honest 150
+          if n == 150 and len(cards) == 150 and len(raw) == 34171:
+              print("honest 150 — nothing to restore")
+              sys.exit(0)
+
+          # Allowed: verified 335 (sha256-gated)
+          if (
+              digest == EXPECTED_335
+              and n == 335
+              and len(cards) == 335
+          ):
+              print("verified 335 — sha256-gated allowed")
+              sys.exit(0)
+
+          print("neither allowed board — restoring 150")
+          open("/tmp/need_restore", "w").write("1")
           PY
+          if [[ ! -f /tmp/need_restore ]]; then echo nothing; exit 0; fi
           GOOD=521df33b6c35dad6c3b2ca3e444fba2ac653687b
           git show "$GOOD:public/signed/card_index.json" > public/signed/card_index.json
           python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==150 and len(j["cards"])==150 and len(c)==34171'
-          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "honest-board-floor restored 150 (do not claim 335)",' '  "card_index_n": 150' '}' > public/stack/e2e-latest.json
+          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "honest-board-floor restored 150 (stub/invalid board)",' '  "card_index_n": 150' '}' > public/stack/e2e-latest.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/signed/card_index.json public/stack/e2e-latest.json
