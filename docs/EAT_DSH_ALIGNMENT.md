@@ -55,7 +55,9 @@ Permissionless rails (viable, largely unoccupied):
 | XRPL XLS-70 Credential | Issuer alone creates; subject acceptance optional | **Provisional until accepted** = honest “unsolicited opinion” |
 | EAS `attest()` (EVM) | Recipient passive | Own schema; recipient = token contract; off-chain free, on-chain indexed |
 
-**Not competitors to copy:** Moody’s Token Integration, S&P on-chain, Chainlink ACE, Credora — all **issuer-cooperation**. Our wedge is unsolicited, signed, public-artifact measurement.
+**Not competitors to copy:** Moody’s TIE, S&P on-chain (via Chainlink), Chainlink ACE, Credora/RedStone, Particula — all **issuer-led / solicited** (issuers “choose to have” ratings pushed on-chain). They all call themselves “independent.”  
+
+**Our defensible moat (freshness wf-15a67236):** **unsolicited + permissionless** — no issuer opt-in, no issuer payment, attached without cooperation. Not merely “independent.”
 
 ### Corpus size (opportunity map — not MEASURED AUM)
 
@@ -136,7 +138,7 @@ Pricing precedents (order-of-magnitude, third-party estimates — **not** our qu
 | Stage | Scope | Exit |
 |-------|--------|------|
 | **1 (now)** | EAT on `/competitors` (52); RWA stubs + doctrine; DSH parity; OS spine; **no mainnet RWA attach** | Cards + doctrine live |
-| **2** | Testnet: XRPL Devnet Memo + EAS Sepolia/Base off-chain schema; three refs: **OUSG, BUIDL, JMWH** | Independent verify of testnet pointers |
+| **2** | Testnet: XRPL Devnet Memo + EAS Sepolia/Base; **clean plays** OUSG, BUIDL, Aviva (or RLUSD); **JMWH demo-only** schema (represented≠distributed) | Independent verify of testnet pointers |
 | **3** | Mainnet top 10; Memo-first XRPL; EAS off-chain scale, on-chain for marquee | Dispute = earned media + methodology defense |
 | **Later** | Catalog breadth (Ondo Stocks / Securitize / Backed); bond-tokenization + insurer + audit *pilots* only after citation | CRA/counsel check; scores never sold |
 
@@ -145,19 +147,41 @@ Pricing precedents (order-of-magnitude, third-party estimates — **not** our qu
 1. **Free reference layer** — unsolicited attestations as “DeFiLlama for compliance”; Lobby lookup by r-address / contract.  
 2. **Paid index/API** — only after third parties *cite* the corpus; monetize the feed, **never the grade**.  
 3. **Bridge** — bond-tokenization verification gap (IOSCO/OECD/ECB framing); insurer underwriting input; Big Four continuous-assurance *input* (not a Big Four product).  
-4. **COBOL engagements** — trust on-ramp via data-lineage artefacts (SOX/Basel/DORA/Solvency II); **out of Stage 1 productization**.
+4. **COBOL engagements** — trust on-ramp via data-lineage artefacts (SOX/Basel/DORA/Solvency II); **out of Stage 1 productization**.  
 
 **Out of Stage 1 (unchanged):** CobolBridge SKU, XRPL bond *issuance*, becoming a regulated issuer/TA, invented AUM/revenue as MEASURED, mainnet RWA attach, insurer/Big Four paid pilots before reference-layer proof, any marketing that equates attestation with tokenization or ownership.
 
-## DSH parity checklist for RWA cards
+## DSH parity checklist — all surfaces (“DSH into all”)
 
-When a card ships:
+**Rule:** anything MEASURED in Council OS is reachable from `/dashboard` without a second scoreboard. Same card hash / Layer 0 URI. Full matrix: `docs/COUNCIL_OS_BUILD_PLAN.md`.
 
-- [ ] Openable from Council OS Lobby (tool card / East-West / Competitors-adjacent surface)  
+When any card ships (GSPC, East-West, EAT, Estate, Instruments, RWA, Verify):
+
+- [ ] Openable from Council OS Lobby (tool card / pane / route)  
 - [ ] Same card reachable from `/dashboard` (DSH sidebar or measurement hub)  
-- [ ] Verify path loginless (`/gspc-verify` or pack verify)  
+- [ ] Verify path loginless when signed (`/gspc-verify` or pack verify)  
 - [ ] Chain pointer (if any) is optional; card stands offline  
 - [ ] Grammar pill: MEASURED / UNMEASURED / provisional — never “rated”  
+- [ ] Shared links via `client/src/lib/layer0Links.ts` (extend, don’t fork)  
+
+### RWA-specific addenda
+
+- [ ] Unsigned stubs stay unsigned until Stage 2 testnet attach  
+- [ ] Attestation ≠ tokenization copy on card / `/powered-by`  
+
+## Freshness & clean plays (wf-15a67236 · Aug 2026)
+
+**Proceed with confidence (clean plays):** Aviva (live CBI Jul 29 2026), RLUSD, BUIDL, BENJI, Ondo OUSG.  
+
+**Demo only — never endorsement:** Justoken JMWH (represented ≫ distributed; minting-driven headline). Schema must carry holder-count / transfer-volume / represented≠distributed flags.  
+
+**Pure-attestor posture:** no token issuance, no custody, no synthetic exposure → sits outside SEC staff Jan 2026 tokenized-securities taxonomy (staff views, not law). Favorable for unsolicited model; still watch NRSRO / anti-touting (document non-issuer-paid + transparent methodology).  
+
+**EU ops (genuine fresh gates):** AI Act GPAI enforcement live Aug 2 2026 (map GPAI vendors; model portability); CRA vuln reporting from Sept 11 2026 for white-label engine (SBOM + 24h/72h/14d ENISA workflow).  
+
+**Tooling hygiene:** pin `xrpl` npm ≥4.2.5 / current 5.x (CVE-2025-32965 patched Apr 2025 — routine SCA, not a new blocker). EAS SDK v2.9.1 stable. Credentials/Memos not deprecated.  
+
+**Threshold that changes the plan:** an incumbent launches a true *unsolicited* on-chain opinion product → accelerate breadth; Commission-level credit-rating treatment of opinions → counsel/NRSRO analysis before scale.
 
 ## Thresholds that change the plan
 
@@ -175,7 +199,7 @@ When a card ships:
 
 ## Sources
 
-- Compass: permissionless XRPL Credential/Memo + EAS ranking (`wf-98f085ad-…`); Signed Attestations target-list corpus (`wf-67a7e7b4-…`); Attestation vs Tokenization options (`wf-b01660de-…`, Aug 2026)  
+- Compass: permissionless XRPL Credential/Memo + EAS ranking (`wf-98f085ad-…`); Signed Attestations target-list corpus (`wf-67a7e7b4-…`); Attestation vs Tokenization (`wf-b01660de-…`); Pre-execution freshness (`wf-15a67236-…`, Aug 2026)  
 - Primary posture anchors: EAS docs (attestations ≠ tokens/NFTs); xrpl.org Credentials (no effect until accept); SEC staff Statement on Tokenized Securities (28 Jan 2026 — staff views, not law); Peirce Jul 2025 tokenization statement  
 - Repo: `competitorDatabase` EAT rules; `client/src/data/rwaAttestationTargets.ts`; `docs/agent-runbook.md` DSH; `docs/COUNCIL_OS_PRODUCT.md`  
 - Doctrine: measurement ≠ certification; scores never sold; regulators free forever; attestation ≠ tokenization ≠ ownership  
