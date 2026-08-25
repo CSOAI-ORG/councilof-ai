@@ -1,0 +1,34 @@
+name: assemble-gs
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.restore-gs/s26.b64']
+jobs:
+  a:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/instruments-catalog-7fb8
+      - name: assemble
+        run: |
+          set -euo pipefail
+          : > /tmp/gs.b64
+          for i in $(seq -w 0 7); do cat ".restore-gs/p$i.b64" >> /tmp/gs.b64; done
+          for i in $(seq -w 0 26); do cat ".restore-gs/s$i.b64" >> /tmp/gs.b64; done
+          base64 -d /tmp/gs.b64 > client/src/components/GlobalSearch.tsx
+          python3 - <<'PY'
+          from pathlib import Path
+          t=Path('client/src/components/GlobalSearch.tsx').read_text()
+          assert t.startswith('/**'), t[:40]
+          assert len(t) > 60000, len(t)
+          print('ok', len(t))
+          PY
+          rm -rf .restore-gs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Wave overnight: MCP transport, surface hits, EAT, e2e (3/5)"
+          git push
