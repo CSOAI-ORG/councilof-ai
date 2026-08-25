@@ -19,43 +19,96 @@
     "pushNotifications": false,
     "extendedAgentCard": false
   },
-  "defaultInputModes": ["application/json", "text/plain"],
-  "defaultOutputModes": ["application/json"],
+  "defaultInputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json"
+  ],
   "skills": [
     {
       "id": "gspc-board",
       "name": "Signed GSPC Board",
       "description": "Fetch the live GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, McNemar separation. Live JSON — recomputable from published rows.",
-      "tags": ["measurement", "governance", "verification"],
-      "examples": ["Fetch the live GSPC board", "What is the current governance axis leader?"]
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ],
+      "examples": [
+        "Fetch the live GSPC board",
+        "What is the current governance axis leader?"
+      ]
     },
     {
       "id": "east-west-board",
       "name": "East-West cross-jurisdiction board",
       "description": "One signed measurement mapped across EU / UK / Illinois / China. Mapping is not a compliance determination. UNSIGNED on this stamp; Value Ledger count 0.",
-      "tags": ["measurement", "cross-jurisdiction", "verification"],
-      "examples": ["Show the East-West crosswalk hash", "List regimes on the cross-border card"]
+      "tags": [
+        "measurement",
+        "cross-jurisdiction",
+        "verification"
+      ],
+      "examples": [
+        "Show the East-West crosswalk hash",
+        "List regimes on the cross-border card"
+      ]
     },
     {
       "id": "benchmark-quality-register",
       "name": "Benchmark-quality register",
       "description": "Third-party benchmark process-integrity register. Deterministic predicates only; our own instruments excluded in code. Not a certification.",
-      "tags": ["meta-evaluation", "benchmark-quality", "governance"],
-      "examples": ["What does benchmark X disclose about contamination control?"]
+      "tags": [
+        "meta-evaluation",
+        "benchmark-quality",
+        "governance"
+      ],
+      "examples": [
+        "What does benchmark X disclose about contamination control?"
+      ]
     },
     {
       "id": "verify-tally",
       "name": "Verification tally (opt-in)",
       "description": "Self-reported opt-in verification counters (valid/invalid bit only). Not a MEASURED number — privacy contract: no record content stored.",
-      "tags": ["verification", "privacy", "telemetry"],
-      "examples": ["How many opt-in verifications have been counted?"]
+      "tags": [
+        "verification",
+        "privacy",
+        "telemetry"
+      ],
+      "examples": [
+        "How many opt-in verifications have been counted?"
+      ]
     },
     {
       "id": "measured-badge",
       "name": "Measured badge",
       "description": "Shields-style badge for measured-axis count. Unmeasured subjects render as 'unmeasured' — never a fabricated score.",
-      "tags": ["measurement", "badge", "verification"],
-      "examples": ["Badge for org example-corp showing measured axis count"]
+      "tags": [
+        "measurement",
+        "badge",
+        "verification"
+      ],
+      "examples": [
+        "Badge for org example-corp showing measured axis count"
+      ]
+    },
+    {
+      "id": "indices-catalog",
+      "name": "Labour & AI-economy indices",
+      "description": "AI-economy, human-labour, and humanoid-labour indices declared UNMEASURED. GET /api/indices returns measured_score null. Contextual firewall — never fused into GSPC grades. Hub: /indices. Method: docs/SOVOS/INDEX-METHOD-0.1.md.",
+      "tags": [
+        "measurement",
+        "indices",
+        "UNMEASURED",
+        "labour",
+        "ai-economy"
+      ],
+      "examples": [
+        "List labour and AI-economy index status",
+        "Fetch GET /api/indices/ai-economy"
+      ]
     }
   ],
   "securitySchemes": {},

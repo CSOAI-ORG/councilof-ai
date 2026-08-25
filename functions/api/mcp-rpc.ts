@@ -54,6 +54,15 @@ export const MEASURED_TOOLS: McpToolDef[] = [
     description: "Published instruments catalogue with links to live measurement surfaces.",
     inputSchema: { type: "object", properties: {} },
   },
+  {
+    name: "indices_catalog",
+    description:
+      "Labour & AI-economy indices (ai-economy, human-labour, humanoid-labour). Declared UNMEASURED — measured_score is null. Contextual firewall only; never GSPC cell inputs.",
+    inputSchema: {
+      type: "object",
+      properties: { slug: { type: "string", description: "Optional: ai-economy | human-labour | humanoid-labour" } },
+    },
+  },
 ];
 
 const TOOL_ROUTES: Record<string, (args: Record<string, unknown>) => string> = {
@@ -64,6 +73,8 @@ const TOOL_ROUTES: Record<string, (args: Record<string, unknown>) => string> = {
   benchmark_quality: (a) =>
     a.benchmark ? `/api/benchmark-quality?benchmark=${encodeURIComponent(String(a.benchmark))}` : "/api/benchmark-quality",
   instruments_catalog: () => "/api/instruments",
+  indices_catalog: (a) =>
+    a.slug ? `/api/indices/${encodeURIComponent(String(a.slug))}` : "/api/indices",
 };
 
 export function jsonRpcResult(id: unknown, result: unknown): Response {
