@@ -1,86 +1,48 @@
 /**
  * GET /api/specialists — the 13-specialist catapult (GW.1), served LIVE + signed.
  *
- * This is an honest PROXY of the estate's signed specialist-team feed
- * (https://csoai-sovereign.pages.dev/api/specialists.json), which is emitted by
- * the sim-world-estate public-api-generator.mjs (schema csoai.specialist-team/0.1,
+ * Honest PROXY of the estate's signed specialist-team feed
+ * (https://csoai-sovereign.pages.dev/api/specialists.json), emitted by the
+ * sim-world-estate public-api-generator.mjs (schema csoai.specialist-team/0.1,
  * count 13, record_type measured-current-state, not_a_certification:true,
- * endorsement:none) and signed Ed25519 against the estate key
- * (~/.sov33_session_ed25519.key). We do NOT re-sign here: we pass the exact
- * signed body through so a stranger can recompute body_sha256 + Ed25519 and get
- * the same answer. Measurement, never certification.
+ * endorsement:none) and signed Ed25519 against the estate key. We do NOT re-sign
+ * here: we pass the exact signed bytes through so a stranger can recompute
+ * body_sha256 + Ed25519 and get the same answer. Measurement, never certification.
  *
- * Sourced (not re-authored) — if the sovereign feed is momentarily unreachable we
- * fall back to an embedded signed snapshot of the same payload, which still
- * recomputes (body_sha256 + sig_b64 are the signed bytes literally).
+ * If the sovereign feed is momentarily unreachable we fall back to an embedded
+ * read-only snapshot of the SAME signed bytes (as_of / deploy 00f15b09), which is
+ * not a live feed but recomputes identically (body_sha256 + sig_b64 are the signed
+ * bytes literally). This fallback is a generated mirror, never re-signed here.
  */
 
-interface SpecialistTeam {
-  schema: string;
-  record_type: string;
-  as_of: string;
-  count: number;
-  not_a_certification: boolean;
-  endorsement: string;
-  note?: string;
-  specialists: Array<{ id: string; class: string; model: string; role: string; signal: string; ready: boolean }>;
-  body_sha256: string;
-  sig_algo: string;
-  sig_b64: string;
-}
-
-// Embedded signed snapshot (as of 2026-08-25T15:55:14.240Z, deploy 00f15b09).
-// body_sha256 + Ed25519 recompute against the estate key. Never re-signed here.
-const SNAPSHOT: SpecialistTeam = {
-  schema: "csoai.specialist-team/0.1",
-  record_type: "measured-current-state",
-  as_of: "2026-08-25T15:55:14.240Z",
-  count: 13,
-  not_a_certification: true,
-  endorsement: "none",
-  note: "The 13-specialist catapult (GW.1): one OOWM/OWEM specialist per axis/regulator/industry/product, each wired to a real signed estate signal. Measurement, never certification. Firewall 2 holds — adapters train on axis knowledge packs + methodology, never eval outcomes.",
-  specialists: [
-    { id: "gov", class: "axis", model: "qwen3:8b", role: "governance specialist", signal: "/register/register-index", ready: true },
-    { id: "safety", class: "axis", model: "council-oowm:latest", role: "safety/containment specialist", signal: "/jail", ready: true },
-    { id: "knowledge", class: "axis", model: "phi4:14b", role: "factual/general knowledge specialist", signal: "/register/model-measurements-index", ready: true },
-    { id: "prv", class: "axis", model: "mistral:7b", role: "privacy specialist", signal: "/register/register-index", ready: true },
-    { id: "swarm", class: "axis", model: "qwen2.5:7b", role: "swarm/coordination specialist", signal: "/cross", ready: true },
-    { id: "provenance", class: "axis", model: "gemma3:12b", role: "provenance/source-attribution specialist", signal: "/register/boards-pod-index", ready: true },
-    { id: "conformance", class: "axis", model: "qwen3:4b", role: "protocol-conformance specialist", signal: "/register/x402-a2a-conformance", ready: true },
-    { id: "care", class: "axis", model: "qwen2.5:7b", role: "care/values-alignment specialist", signal: "/compliance", ready: true },
-    { id: "regulator-uk", class: "regulator", model: "mistral:7b", role: "UK regulator specialist", signal: "/register/register-index", ready: true },
-    { id: "regulator-eu", class: "regulator", model: "qwen3:8b", role: "EU AI-Act regulator specialist", signal: "/register/register-index", ready: true },
-    { id: "industry-finance", class: "industry", model: "phi4:14b", role: "financial-AI specialist", signal: "/register/financial-ai-index", ready: true },
-    { id: "industry-gaming", class: "industry", model: "qwen3:4b", role: "game/arena measurement specialist", signal: "/games/gspc", ready: true },
-    { id: "product-payments", class: "product", model: "qwen2.5:7b", role: "x402/payments specialist", signal: "/register/x402-a2a-conformance", ready: true },
-  ],
-  body_sha256: "61789f7082a3186b4fcb6356b4509789585a1202e7909f5de62a50de51a4e04d",
-  sig_algo: "ed25519",
-  sig_b64: "NQT9uaHt6ye/MwiLzX20/rLT41VM6Xv5nVGKCxxQdVJajuB4OqwKHKHhcdpYqIaMReH9YtEvBczwLms3Q29cBw==",
-};
-
 const SOVEREIGN_FEED = "https://csoai-sovereign.pages.dev/api/specialists.json";
+
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
   "access-control-allow-origin": "*",
   "cache-control": "public, max-age=300",
 };
 
+// Embedded read-only signed snapshot (canonical signed bytes; body_sha256 + Ed25519
+// recompute TRUE against the estate key). Generated mirror, never re-signed.
+const SNAPSHOT_JSON = "{\n  \"schema\": \"csoai.specialist-team/0.1\",\n  \"record_type\": \"measured-current-state\",\n  \"as_of\": \"2026-08-25T15:55:14.240Z\",\n  \"count\": 13,\n  \"not_a_certification\": true,\n  \"endorsement\": \"none\",\n  \"note\": \"The 13-specialist catapult (GW.1): one OOWM/OWEM specialist per axis/regulator/industry/product, each wired to a real signed estate signal. Measurement, never certification. Firewall 2 holds — adapters train on axis knowledge packs + methodology, never eval outcomes.\",\n  \"specialists\": [\n    {\n      \"id\": \"gov\",\n      \"class\": \"axis\",\n      \"model\": \"qwen3:8b\",\n      \"role\": \"governance specialist\",\n      \"signal\": \"/register/register-index\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"gov\",\n        \"class\": \"axis\",\n        \"model\": \"qwen3:8b\",\n        \"role\": \"governance specialist\",\n        \"signal\": \"/register/register-index\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"safety\",\n      \"class\": \"axis\",\n      \"model\": \"council-oowm:latest\",\n      \"role\": \"safety/containment specialist\",\n      \"signal\": \"/jail\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"safety\",\n        \"class\": \"axis\",\n        \"model\": \"council-oowm:latest\",\n        \"role\": \"safety/containment specialist\",\n        \"signal\": \"/jail\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"knowledge\",\n      \"class\": \"axis\",\n      \"model\": \"phi4:14b\",\n      \"role\": \"factual/general knowledge specialist\",\n      \"signal\": \"/register/model-measurements-index\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"knowledge\",\n        \"class\": \"axis\",\n        \"model\": \"phi4:14b\",\n        \"role\": \"factual/general knowledge specialist\",\n        \"signal\": \"/register/model-measurements-index\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"prv\",\n      \"class\": \"axis\",\n      \"model\": \"mistral:7b\",\n      \"role\": \"privacy specialist\",\n      \"signal\": \"/register/register-index\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"prv\",\n        \"class\": \"axis\",\n        \"model\": \"mistral:7b\",\n        \"role\": \"privacy specialist\",\n        \"signal\": \"/register/register-index\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"swarm\",\n      \"class\": \"axis\",\n      \"model\": \"qwen2.5:7b\",\n      \"role\": \"swarm/coordination specialist\",\n      \"signal\": \"/cross\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"swarm\",\n        \"class\": \"axis\",\n        \"model\": \"qwen2.5:7b\",\n        \"role\": \"swarm/coordination specialist\",\n        \"signal\": \"/cross\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"provenance\",\n      \"class\": \"axis\",\n      \"model\": \"gemma3:12b\",\n      \"role\": \"provenance/source-attribution specialist\",\n      \"signal\": \"/register/boards-pod-index\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"provenance\",\n        \"class\": \"axis\",\n        \"model\": \"gemma3:12b\",\n        \"role\": \"provenance/source-attribution specialist\",\n        \"signal\": \"/register/boards-pod-index\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"conformance\",\n      \"class\": \"axis\",\n      \"model\": \"qwen3:4b\",\n      \"role\": \"protocol-conformance specialist\",\n      \"signal\": \"/register/x402-a2a-conformance\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"conformance\",\n        \"class\": \"axis\",\n        \"model\": \"qwen3:4b\",\n        \"role\": \"protocol-conformance specialist\",\n        \"signal\": \"/register/x402-a2a-conformance\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"care\",\n      \"class\": \"axis\",\n      \"model\": \"qwen2.5:7b\",\n      \"role\": \"care/values-alignment specialist\",\n      \"signal\": \"/compliance\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"care\",\n        \"class\": \"axis\",\n        \"model\": \"qwen2.5:7b\",\n        \"role\": \"care/values-alignment specialist\",\n        \"signal\": \"/compliance\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"regulator-uk\",\n      \"class\": \"regulator\",\n      \"model\": \"mistral:7b\",\n      \"role\": \"UK regulator specialist\",\n      \"signal\": \"/register/register-index\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"regulator-uk\",\n        \"class\": \"regulator\",\n        \"model\": \"mistral:7b\",\n        \"role\": \"UK regulator specialist\",\n        \"signal\": \"/register/register-index\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"regulator-eu\",\n      \"class\": \"regulator\",\n      \"model\": \"qwen3:8b\",\n      \"role\": \"EU AI-Act regulator specialist\",\n      \"signal\": \"/register/register-index\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"regulator-eu\",\n        \"class\": \"regulator\",\n        \"model\": \"qwen3:8b\",\n        \"role\": \"EU AI-Act regulator specialist\",\n        \"signal\": \"/register/register-index\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"industry-finance\",\n      \"class\": \"industry\",\n      \"model\": \"phi4:14b\",\n      \"role\": \"financial-AI specialist\",\n      \"signal\": \"/register/financial-ai-index\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"industry-finance\",\n        \"class\": \"industry\",\n        \"model\": \"phi4:14b\",\n        \"role\": \"financial-AI specialist\",\n        \"signal\": \"/register/financial-ai-index\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"industry-gaming\",\n      \"class\": \"industry\",\n      \"model\": \"qwen3:4b\",\n      \"role\": \"game/arena measurement specialist\",\n      \"signal\": \"/games/gspc\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"industry-gaming\",\n        \"class\": \"industry\",\n        \"model\": \"qwen3:4b\",\n        \"role\": \"game/arena measurement specialist\",\n        \"signal\": \"/games/gspc\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    },\n    {\n      \"id\": \"product-payments\",\n      \"class\": \"product\",\n      \"model\": \"qwen2.5:7b\",\n      \"role\": \"x402/payments specialist\",\n      \"signal\": \"/register/x402-a2a-conformance\",\n      \"ready\": true,\n      \"mcp_manifest\": {\n        \"schema\": \"csoai.specialist-mcp/0.1\",\n        \"id\": \"product-payments\",\n        \"class\": \"product\",\n        \"model\": \"qwen2.5:7b\",\n        \"role\": \"x402/payments specialist\",\n        \"signal\": \"/register/x402-a2a-conformance\",\n        \"not_a_certification\": true,\n        \"as_of\": \"2026-08-25T15:42:47Z\"\n      }\n    }\n  ],\n  \"body_sha256\": \"61789f7082a3186b4fcb6356b4509789585a1202e7909f5de62a50de51a4e04d\",\n  \"sig_algo\": \"ed25519\",\n  \"sig_b64\": \"NQT9uaHt6ye/MwiLzX20/rLT41VM6Xv5nVGKCxxQdVJajuB4OqwKHKHhcdpYqIaMReH9YtEvBczwLms3Q29cBw==\"\n}";
+
 export const onRequestGet: PagesFunction = async () => {
   // Prefer the live signed estate feed (single source of truth); fall back to the
-  // embedded signed snapshot, which recomputes identically. Never re-signed here.
+  // embedded read-only signed snapshot, which recomputes identically.
   try {
-    const r = await fetch(SOVEREIGN_FEED, { headers: { "user-agent": "csoai-specialists/0.1" } });
-    if (r.ok) {
-      const j = (await r.json()) as SpecialistTeam;
+    const resp = await fetch(SOVEREIGN_FEED, { headers: { "user-agent": "csoai-specialists/0.1" } });
+    if (resp.ok) {
+      const j = (await resp.json()) as { schema?: string; count?: number; body_sha256?: string; sig_b64?: string };
       if (j.schema === "csoai.specialist-team/0.1" && j.count === 13 && j.body_sha256 && j.sig_b64) {
+        // Serve the freshly fetched bytes exactly as the estate signed them.
         return new Response(JSON.stringify(j, null, 2), { headers: JSON_HEADERS });
       }
     }
   } catch {
-    /* honest fallback below */
+    /* honest read-only fallback below */
   }
-  return new Response(JSON.stringify(SNAPSHOT, null, 2), {
+  return new Response(SNAPSHOT_JSON, {
     headers: { ...JSON_HEADERS, "x-csoai-source": "embedded-signed-snapshot" },
   });
 };
