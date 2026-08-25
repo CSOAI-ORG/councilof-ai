@@ -28,6 +28,7 @@ export interface AxisScore {
   note?: string;
 }
 
+// Pages nudge 2026-08-25T18:47Z — ensure measured_on.note TIE ships past sticky storm
 export const MEASURED_ON = {
   model: "13 canonical axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier " +
     "cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never " +
