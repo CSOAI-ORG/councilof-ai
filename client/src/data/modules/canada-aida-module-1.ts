@@ -102,7 +102,7 @@ export const canadaAidaModule1Quiz: QuizQuestion[] = [
     question: 'What penalties can be imposed for serious violations of AIDA?',
     options: [
       'No penalties, only warnings',
-      'Up to $10,000 in fines',
+      'A small fixed administrative fee only',
       'Up to $25 million or 5% of global revenue',
       'Only criminal charges',
     ],
