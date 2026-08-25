@@ -14,13 +14,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: cursor/instruments-catalog-7fb8
-      - name: Assemble GlobalSearch.tsx
+      - name: Assemble GlobalSearch.tsx from b64 parts
         run: |
           mkdir -p client/src/components
-          cat .ralph-restore/gs/part-*.txt > client/src/components/GlobalSearch.tsx
-          wc -c client/src/components/GlobalSearch.tsx
-          head -c 40 client/src/components/GlobalSearch.tsx; echo
-          grep -c PLACEHOLDER_WILL_REPLACE client/src/components/GlobalSearch.tsx || true
+          python3 - <<'PY'
+          import pathlib, base64, hashlib
+          parts = [pathlib.Path(f'.ralph-restore/gs/part-{i:02d}.b64') for i in range(16)]
+          missing = [str(p) for p in parts if not p.exists()]
+          assert not missing, f'missing {missing}'
+          data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
+          out = pathlib.Path('client/src/components/GlobalSearch.tsx')
+          out.write_bytes(data)
+          print('wrote', out, 'bytes', len(data), 'sha256', hashlib.sha256(data).hexdigest())
+          print('starts', data[:40])
+          assert data.startswith(b'/**')
+          assert b'PLACEHOLDER_WILL_REPLACE' not in data
+          PY
       - name: Commit
         run: |
           git config user.name ralph-gs-assemble
