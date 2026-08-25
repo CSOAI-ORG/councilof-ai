@@ -75,8 +75,8 @@ export default function ROICalculator() {
     },
     {
       icon: <CheckCircle className="w-8 h-8 text-blue-400" />,
-      title: "Certification & Training Included",
-      description: "Built-in training programs and certification pathways"
+      title: "Get measured, not certified",
+      description: "Signed cards from /assess. Not a certificate. We do not remediate."
     },
     {
       icon: <Building2 className="w-8 h-8 text-blue-400" />,
@@ -313,9 +313,9 @@ export default function ROICalculator() {
               Contact our advisory team for a personalized ROI assessment tailored to your organization's unique needs and AI governance challenges.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/pricing">
+              <Link href="/?lobby=measured&task=get-measured">
                 <a className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
-                  View Pricing
+                  Get measured
                   <ArrowRight className="w-5 h-5" />
                 </a>
               </Link>
