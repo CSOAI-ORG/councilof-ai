@@ -169,7 +169,7 @@ export default function SovereignTown() {
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <a
-              href="https://proofof.ai/sovereign-town"
+              href="https://proofof.ai/towns"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-lg bg-emerald-400 px-5 py-3 font-bold text-emerald-950 hover:bg-emerald-300"
@@ -305,7 +305,7 @@ export default function SovereignTown() {
               Request a pilot
             </a>
             <a
-              href="https://proofof.ai/sovereign-town"
+              href="https://proofof.ai/towns"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-lg border border-emerald-300/50 px-5 py-3 font-semibold text-emerald-100 hover:bg-white/5"

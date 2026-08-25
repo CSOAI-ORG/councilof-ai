@@ -825,7 +825,7 @@ function App() {
                   <Route path="/webhooks" component={Webhooks} />
                   <Route path="/evidence" component={EvidenceHub} />
                   <Route path="/oscal" component={OscalStudio} />
-                  <Route path="/sovereign-town">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
+                  {/* JA-D2: towns alias is edge-only via public/_redirects — do not embed banned slug in client bundle */}
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
                   <Route path="/founding-members" component={FoundingMembers} />
