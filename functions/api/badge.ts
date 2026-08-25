@@ -16,7 +16,7 @@
 // ?axis=<name> renders ONE axis's real live status from the same AXES data the
 // board serves, three honest states, never a fabricated number:
 //   · measured   (status MEASURED, separation determined) → "governance · measured · n=237"
-//   · untested   (status MEASURED, separation UNTESTED)    → "jail · untested · n=71"
+//   · untested   (status MEASURED, separation UNTESTED)    → "<axis> · untested · n=…"  (jail is TIE as of 2026-08-25)
 //   · unmeasured (status not MEASURED, or unknown axis)    → "<axis> · unmeasured"
 // SEPARATED leads render green; a TIE (still a measured axis, but the point-estimate
 // lead is not a measured advantage) renders lime — a visible, honest distinction.
