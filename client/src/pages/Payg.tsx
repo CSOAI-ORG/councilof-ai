@@ -89,6 +89,10 @@ export default function Payg() {
 
       <p className="text-center text-sm text-muted-foreground mt-10">
         Prefer a fixed monthly plan for humans? See the <a href="/pricing" className="underline">Council rail →</a>
+        {" · "}
+        <a href="/products" className="underline">Products catalog →</a>
+        {" · "}
+        <a href="/indices" className="underline">Indices · UNMEASURED →</a>
       </p>
 
       <Card className="p-6 mt-10 border-amber-400/40">
@@ -102,6 +106,8 @@ export default function Payg() {
           <a href="/east-west/pricing" className="underline">Read the East-West doctrine →</a>
           {" · "}
           <a href="/powered-by" className="underline">Powered by · white-label (Option A) →</a>
+          {" · "}
+          <a href="/products" className="underline">HO.2 products →</a>
         </p>
       </Card>
     </div>

@@ -1,8 +1,10 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import MeasurementHub from "@/components/hub/MeasurementHub";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { openLobby } from "@/lib/lobbyLink";
 import CouncilOsInnerNav from "@/components/os/CouncilOsInnerNav";
+import { Link } from "wouter";
 
 export default function DashboardMeasurement() {
   return (
@@ -23,6 +25,37 @@ export default function DashboardMeasurement() {
           >
             Open Council OS workspace
           </Button>
+        </div>
+        {/* DSH = OS: indices UNMEASURED tile — never invent scores here */}
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Card className="border-amber-200/70 bg-amber-50/40">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">Labour & AI-economy indices</CardTitle>
+              <span className="text-[10px] font-mono uppercase tracking-wide text-amber-900/80">UNMEASURED</span>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                AI-economy · human-labour · humanoid-labour — contextual firewall only; never GSPC cell inputs.
+                Same evidence as Council OS <code className="text-[10px]">/indices</code>.
+              </p>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/indices">Open /indices</Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <Card className="border-emerald-200/60 bg-emerald-50/30">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">Products catalog</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                HO.2 living catalog — registers honest, scores never sold. Option A on /powered-by.
+              </p>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/products">Open /products</Link>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
         <MeasurementHub />
       </div>

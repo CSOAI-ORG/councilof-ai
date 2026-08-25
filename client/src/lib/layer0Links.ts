@@ -43,6 +43,13 @@ export const LAYER0_LINKS: Layer0Link[] = [
     path: "/legacy",
     lobbyPrompt: "What does the legacy bridge publish about COBOL wrap versus replace?",
   },
+  {
+    label: "Labour & AI-economy indices",
+    blurb: "3 indices UNMEASURED — contextual firewall; never GSPC inputs. GET /api/indices",
+    path: "/indices",
+    lobbyPrompt:
+      "What are the three labour/AI-economy indices, why are they UNMEASURED, and why must they never fuse into GSPC grades?",
+  },
 ];
 
 /** Trust floor surfaces — shared infra links (not finance-specific). */
