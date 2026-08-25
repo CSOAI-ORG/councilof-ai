@@ -40,7 +40,7 @@ const PRIORITY = new Map([
   ["/gspc-gap-map", P_HIGH],
   ["/live-ledger", P_HIGH],
   ["/instrument", P_HIGH],
-  ["/tour", P_HIGH],
+  ["/cloud", P_HIGH],
   ["/learn", P_HIGH],
   ["/article-50", P_HIGH],
   ["/benchmarks", P_HIGH],
@@ -223,7 +223,7 @@ for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
 }
 
-// --- Emit XML -------------------------------------------------------------
+// --- Emit XML ---------------------------------------------------------------
 const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
@@ -267,7 +267,7 @@ const REQUIRED = [
   "/refutation-ledger",
   "/instrument",
   "/live-ledger",
-  "/tour",
+  "/cloud",
   "/indices",
   "/products",
   "/powered-by",
