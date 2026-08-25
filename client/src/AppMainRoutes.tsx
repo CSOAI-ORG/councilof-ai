@@ -1,16 +1,19 @@
+import { Suspense } from "react";
 import { Switch, Route } from "wouter";
+import { SectionLoader } from "./components/PageLoader";
+import NotFound from "@/pages/NotFound";
 import { AppRoutesA } from "./AppRoutesA";
 import { AppRoutesB } from "./AppRoutesB";
-import NotFound from "@/pages/NotFound";
 
-/** Composes AppRoutesA + AppRoutesB + terminal NotFound. */
 export function AppMainRoutes() {
   return (
-    <Switch>
-      <AppRoutesA />
-      <AppRoutesB />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}>
+      <Switch>
+        {...AppRoutesA()}
+        {...AppRoutesB()}
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 
