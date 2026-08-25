@@ -8,7 +8,9 @@ import {
 } from "../data/competitorDatabase";
 import {
   RWA_ATTESTATION_TARGETS,
+  RWA_CORPUS_NOTE,
   RWA_EAT_DOCTRINE,
+  RWA_EVM_CATALOG_CLUSTERS,
   RWA_STAGE,
 } from "../data/rwaAttestationTargets";
 import SovereignSpot from "../components/SovereignSpot";
@@ -125,6 +127,7 @@ export default function Competitors() {
             <a href="/dashboard" className="text-teal-300 underline">/dashboard</a>
             ). Canon: <code className="text-teal-200/80">docs/EAT_DSH_ALIGNMENT.md</code>.
           </p>
+          <p className="mt-2 max-w-3xl text-[12px] text-cyan-100/55">{RWA_CORPUS_NOTE}</p>
           <div className="mt-5 grid gap-4 lg:grid-cols-2">
             {RWA_ATTESTATION_TARGETS.map((t) => (
               <div key={t.slug} className="rounded-2xl border border-cyan-500/20 bg-[#041018] p-5">
@@ -132,6 +135,7 @@ export default function Competitors() {
                   <div className="text-lg font-black text-emerald-50">{t.name}</div>
                   <span className="font-mono text-[10px] uppercase text-cyan-300/70">
                     tier {t.tier} · {t.chain} · {t.signing_state}
+                    {t.cluster ? ` · ${t.cluster}` : ""}
                   </span>
                 </div>
                 <p className="mt-2 font-mono text-[11px] text-cyan-100/60 break-all">{t.public_id}</p>
@@ -144,6 +148,20 @@ export default function Competitors() {
                 </p>
               </div>
             ))}
+          </div>
+          <div className="mt-6">
+            <h3 className="text-sm font-bold uppercase tracking-wide text-teal-300/80">
+              EVM catalog clusters (Stage 3+ breadth)
+            </h3>
+            <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+              {RWA_EVM_CATALOG_CLUSTERS.map((c) => (
+                <li key={c.id} className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
+                  <div className="text-[13px] font-semibold text-emerald-50">{c.label}</div>
+                  <div className="mt-0.5 font-mono text-[11px] text-cyan-200/70">{c.approx_instruments}</div>
+                  <p className="mt-1 text-[11px] text-emerald-100/50">{c.note}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
