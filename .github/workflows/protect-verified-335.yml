@@ -1,96 +1,16 @@
 name: protect-verified-335
+# workflow_dispatch only — do not auto re-land a fabricated 335 board.
+# The honest published board is exactly 150 cards / 34171B. Do not invent the missing 185.
 on:
-  push:
-    paths:
-      - 'public/signed/card_index.json'
-      - '.github/workflows/protect-verified-335.yml'
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
 permissions:
-  contents: write
-concurrency:
-  group: protect-verified-335
-  cancel-in-progress: false
+  contents: read
 jobs:
   protect:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Enforce verified 335 on master via Contents API
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Refuse fabricated 335 protect
         run: |
-          set -euo pipefail
-          EXPECTED=12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
-          python3 <<'PY'
-          import base64, hashlib, json, os, pathlib, urllib.request, urllib.error
-          from datetime import datetime, timezone
-
-          EXPECTED = "12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb"
-          token = os.environ["GH_TOKEN"]
-          headers = {
-            "Authorization": f"Bearer {token}",
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "protect-verified-335",
-          }
-
-          def api(url, data=None, method=None):
-            req = urllib.request.Request(url, data=data, method=method, headers={**headers, **({"Content-Type": "application/json"} if data else {})})
-            try:
-              with urllib.request.urlopen(req, timeout=120) as r:
-                return r.status, json.loads(r.read().decode() or "null")
-            except urllib.error.HTTPError as e:
-              body = e.read().decode()
-              print("HTTP", e.code, body[:500])
-              raise
-
-          raw = pathlib.Path("public/signed/card_index.json").read_bytes()
-          j = json.loads(raw)
-          h = hashlib.sha256(raw).hexdigest()
-          print("current", j.get("n_cards"), len(j.get("cards", [])), h)
-          if j.get("n_cards") == 335 and len(j.get("cards", [])) == 335 and h == EXPECTED:
-            print("OK verified 335")
-            raise SystemExit(0)
-
-          # Prefer git-history blob, else atomic parts
-          try:
-            import subprocess
-            hist = subprocess.check_output(["git", "show", "062b73b05a1f0000000000000000000000000000:public/signed/card_index.json"], stderr=subprocess.DEVNULL)
-          except Exception:
-            hist = None
-          if hist is None or hashlib.sha256(hist).hexdigest() != EXPECTED:
-            import glob
-            b64 = "".join(pathlib.Path(p).read_text().strip() for p in sorted(glob.glob(".github/ci/card_index_335_atomic/p*.txt")))
-            hist = base64.b64decode(b64)
-          assert hashlib.sha256(hist).hexdigest() == EXPECTED, hashlib.sha256(hist).hexdigest()
-          assert json.loads(hist).get("n_cards") == 335
-
-          status, meta = api("https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/public/signed/card_index.json?ref=master")
-          body = json.dumps({
-            "message": "fix: protect-verified-335 direct re-land card_index 335",
-            "content": base64.b64encode(hist).decode(),
-            "sha": meta["sha"],
-            "branch": "master",
-          }).encode()
-          status, out = api("https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/public/signed/card_index.json", data=body, method="PUT")
-          print("card_index put", status, out.get("content", {}).get("sha"))
-
-          e2e = json.dumps({
-            "deployed_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "reason": "protect-verified-335 direct master re-land",
-            "card_index_n": 335,
-            "card_index_sha256": EXPECTED,
-          }, indent=2).encode() + b"\n"
-          status, meta2 = api("https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/public/stack/e2e-latest.json?ref=master")
-          body2 = json.dumps({
-            "message": "fix: protect-verified-335 stamp e2e 335",
-            "content": base64.b64encode(e2e).decode(),
-            "sha": meta2["sha"],
-            "branch": "master",
-          }).encode()
-          status, out2 = api("https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/public/stack/e2e-latest.json", data=body2, method="PUT")
-          print("e2e put", status)
-          PY
+          echo "protect-verified-335 is disabled. The honest board is 150 cards."
+          echo "Do not claim 335. Do not invent the missing 185."
+          exit 1
