@@ -58,7 +58,7 @@ export default function LobbyHome({
 
       <JurisdictionDeskBanner onOpenDesk={onOpenRoute} />
 
-      <h3 className={`${TYPE.section} mt-8 mb-3">Live surfaces</h3>
+      <h3 className={`${TYPE.section} mt-8 mb-3`}>Live surfaces</h3>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {DESKTOP.map((t) => {
           const gold = t.accent === "gold";
