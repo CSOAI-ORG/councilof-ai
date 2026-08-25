@@ -54,6 +54,8 @@ browser can actually install (i.e. not this sandbox).
 - The catalogue is **377 connectable** MCP packages; **5 execute server-side** live. Say both accurately — don't imply all 377 run in our cloud.
 - Seals are **real Ed25519** when the brain is reachable; the offline fallback is a **real SHA-256 content hash**, labelled as such — never presented as a signature.
 - Regulatory dates: only state ✅ rows from the ground-truth register; flag anything else "indicative — verify".
+- **Indices = empty OK.** `/indices` (AI-economy · human-labour · humanoid-labour) is **UNMEASURED** first — demo the honesty, never invent MEASURED labour/economy scores. Same tile on DSH `/dashboard/measurement`. Canon: `docs/SOVOS/INDEX-METHOD-0.1.md`.
+- **Oracle fleet ≠ grade oracle.** `GET /api/oracle-fleet` is substrate status only — not a price feed and not a labour score source (`docs/ORACLE_FLEET.md`).
 
 *If it's not green here, it's not ready to show. Green here = we can walk into any room and it works.*
 
@@ -89,7 +91,7 @@ original date). MCP one-liner (`npx csoai-governance-mcp`) confirmed still live 
 **Verdict: green. Both CI truth gates pass fresh, right now, on the actual deployed commit
 (`19bda30`) -- not a cached/stale result.** Nothing outstanding blocks a Monday demo from a
 technical-correctness standpoint. Remaining items are business decisions already logged under
-"Blocked on Nick" (Phase 3 deploy trigger, outreach send, app.csoai.org DNS split, main-branch
+"Blocked on Nick" (Phase 3 deploy request, outreach send, app.csoai.org DNS split, main-branch
 archival, ACLED/FIRMS keys) -- none of them block showing the live product.
 
 ## Update (2026-07-12) — fresh CI check after SOV3 release-page push

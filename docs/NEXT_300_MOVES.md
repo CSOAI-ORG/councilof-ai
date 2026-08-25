@@ -57,12 +57,12 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 136 | n≥ threshold for any future Wilson on indices | method § · ✅ |
 | 137 | JSON Schema for index snapshot | `/.well-known/schemas/labour-economy-index.schema.json` · ✅ |
 | 138 | Empty snapshot fixtures (all null scores) | `scripts/index-fixtures/` · ✅ |
-| 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF · plan `docs/HF_DATASET_PLAN.md` · 🔄 |
+| 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF · plan + local fixture ✅ · upload 🔄 (needs write token) |
 | 140 | HF README: UNMEASURED doctrine | HF · plan · 🔄 |
 | 141 | Kaggle mirror policy (REPORTED only) | docs · ✅ in HF plan |
-| 142 | Oracle-fleet adjacency note (not grade oracle) | `/api/oracle-fleet` · ☐ |
+| 142 | Oracle-fleet adjacency note (not grade oracle) | `docs/ORACLE_FLEET.md` · ✅ |
 | 143 | RunPod job template: **do not** use for RWA churn | `docs/RUNPOD_POLICY.md` · ✅ |
-| 144 | Cursor skill: refuse inventing MEASURED labour scores | skill · ☐ |
+| 144 | Cursor skill: refuse inventing MEASURED labour scores | `.claude/skills/refuse-measured-labour` · ✅ |
 | 145 | Value Ledger remains publishedCount 0 | enforce · ☐ |
 | 146 | Corrections path for index method errata | `/api/corrections` · ☐ |
 | 147 | Refutation ledger row type for index claims | schema · ☐ |
@@ -169,13 +169,13 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 256 | Kaggle: refuse labour MEASURED claims | notebook · ☐ |
 | 257 | RunPod template: GSPC model axes only | RunPod · ✅ policy |
 | 258 | RunPod: ban RWA attestation GPU jobs | policy · ✅ |
-| 259 | Oracle-fleet docs: opinion vs price feed | docs · ☐ |
+| 259 | Oracle-fleet docs: opinion vs price feed | `docs/ORACLE_FLEET.md` · ✅ |
 | 260 | DSH parity checklist for every new card | `DSH_PARITY_NEW_SURFACES.md` · ✅ |
 | 261 | Cursor cloud env: docs paths in README | env · 🔄 |
 | 262 | cursor-guide / agent-runbook sync | docs · ✅ |
 | 263 | Stack honesty row for three indices | STACK_HONESTY · ✅ |
-| 264 | Production checklist tick new surfaces | PRODUCTION_CHECKLIST · ☐ |
-| 265 | Demo readiness: indices = empty OK | DEMO_READINESS · ☐ |
+| 264 | Production checklist tick new surfaces | PRODUCTION_CHECKLIST · ✅ |
+| 265 | Demo readiness: indices = empty OK | DEMO_READINESS · ✅ |
 | 266–280 | Fifteen dataset freshness cron designs | ops · ☐ |
 
 ---
