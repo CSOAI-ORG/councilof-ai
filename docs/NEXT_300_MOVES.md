@@ -78,12 +78,12 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | # | Move | Field |
 |---|------|-------|
 | 161 | Expand clean-play adapters to all clean corpus rows | `adapters/` |
-| 162 | Ondo OUSG adapter harden | `adapters/xrpl/ondo-ousg` |
-| 163 | RLUSD adapter stub | adapters |
-| 164 | BUIDL adapter stub | adapters |
-| 165 | BENJI adapter stub | adapters |
+| 162 | Ondo OUSG adapter harden | `adapters/xrpl/ondo-ousg` | ✅ |
+| 163 | RLUSD adapter stub | adapters | ✅ |
+| 164 | BUIDL adapter stub | adapters | ✅ |
+| 165 | BENJI adapter stub | adapters | ✅ |
 | 166 | Aviva-on-ledger gate check | corpus |
-| 167 | Demo-play hard refuse in publisher | publishers |
+| 167 | Demo-play hard refuse in publisher | publishers | ✅ |
 | 168 | Publisher `--publish` requires `CSOAI_KEY_CUSTODY` | publishers |
 | 169 | Custody decision: KMS vs Turnkey chosen | ⛔ |
 | 170 | KMS both-curves or Turnkey wired | ⛔ |
@@ -92,10 +92,10 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 173 | W3C VC 2.0 mapping draft for cards | `docs/W3C_VC_2_0_MEASUREMENT_CARD_MAPPING.md` · ✅ |
 | 174 | Wilson only on frozen RWA banks | harness |
 | 175 | Eight RWA × contact matrix spreadsheet | ops |
-| 176 | Contact = public artifact URL/address only | doctrine |
+| 176 | Contact = public artifact URL/address only | doctrine | ✅ |
 | 177 | No AUM invented as MEASURED | `scripts/aum-not-measured-lint.mjs` · ✅ |
-| 178 | Option A child API keys design | `/powered-by` |
-| 179 | White-label badge SVG | public |
+| 178 | Option A child API keys design | `/powered-by` | ✅ |
+| 179 | White-label badge SVG | public | ✅ |
 | 180 | Securities counsel pack sent | ⛔ |
 | 181 | Counsel written OK for named securities | ⛔ |
 | 182 | First testnet signed RWA card | Stage 2 |
@@ -103,9 +103,9 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 184 | OS Lobby card for RWA tool | MeasuredToolCard |
 | 185 | DSH same card | dashboard |
 | 186 | HF dump of testnet cards (labeled TESTNET) | HF |
-| 187 | Agent-card RWA tool entry | well-known |
-| 188 | MCP `rwa_attestation_catalog` | mcp |
-| 189 | JMWH remains demo-only in CI assert | test |
+| 187 | Agent-card RWA tool entry | well-known | ✅ |
+| 188 | MCP `rwa_attestation_catalog` | mcp | ✅ |
+| 189 | JMWH remains demo-only in CI assert | test | ✅ |
 | 190 | CRA SBOM path for Option A SKU | compliance |
 | 191–200 | Ten issuer public-artifact refreshes | corpus |
 
@@ -115,26 +115,26 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 
 | # | Move | Field |
 |---|------|-------|
-| 201 | Header Measure: Indices | masterMenu |
-| 202 | Header Measure: Products | masterMenu |
-| 203 | Header Solutions: Powered-by | siteNav |
-| 204 | PRODUCT_TABS add Products | productNav |
-| 205 | PRODUCT_TABS add Indices | productNav |
+| 201 | Header Measure: Indices | masterMenu · ✅ |
+| 202 | Header Measure: Products | masterMenu · ✅ |
+| 203 | Header Solutions: Powered-by | siteNav · ✅ |
+| 204 | PRODUCT_TABS add Products | productNav · ✅ |
+| 205 | PRODUCT_TABS add Indices | productNav · ✅ |
 | 206 | Bottom estate bar includes new links | BottomEstateNav · ✅ |
 | 207 | Lobby sidebar group “Indices” | councilOsSideMenu · ✅ |
 | 208 | GlobalSearch entries | GlobalSearch · ✅ |
-| 209 | Homepage hero CTA unchanged; below-fold indices strip | NewHomeV3 |
-| 210 | MarketingHome alignment check | MarketingHome |
+| 209 | Homepage hero CTA unchanged; below-fold indices strip | NewHomeV3 · ✅ |
+| 210 | MarketingHome alignment check | MarketingHome | ✅ |
 | 211 | Instruments catalog links RWA + indices | InstrumentsCatalog · ✅ |
 | 212 | API docs page lists /api/indices | ApiDocs · ✅ |
-| 213 | Agent runbook curl examples | agent-runbook |
+| 213 | Agent runbook curl examples | agent-runbook · ✅ |
 | 214 | OpenAPI stub fragment | `public/openapi/indices.yaml` · ✅ |
 | 215 | Sitemap.xml new paths | generate-sitemap · ✅ |
 | 216 | robots allow | robots.txt · ✅ |
 | 217 | OG cards for /indices /products | setOgMeta · ✅ |
 | 218 | i18n keys if used | i18n |
 | 219 | Accessibility pass on new pages | a11y |
-| 220 | Mobile nav smoke | e2e |
+| 220 | Mobile nav smoke | e2e | ✅ |
 | 221–230 | Ten broken-link crawls fixed | QA |
 
 ---
@@ -206,7 +206,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 
 | # | Move | Field |
 |---|------|-------|
-| 321 | Products page linked from Payg + Pricing | nav |
+| 321 | Products page linked from Payg + Pricing | nav · ✅ |
 | 322 | Pricing page: no grade SKUs | HO.2 |
 | 323 | Enterprise page cites Option A | copy |
 | 324 | Insurers page cites RWA input posture | copy |
@@ -228,7 +228,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 |---|------|-------|
 | 361 | Cite INDEX-METHOD in SCITT profile when ready | standards |
 | 362 | Zenodo method DOI when frozen | standards |
-| 363 | IETF differentiation note vs other receipts | standards |
+| 363 | IETF differentiation note vs other receipts | standards | ✅ |
 | 364 | Press kit: UNMEASURED honesty | `docs/PRESS_KIT_UNMEASURED.md` · ✅ |
 | 365 | HF paper card for methodology | HF |
 | 366 | Kaggle competition? only if method frozen | later |
@@ -237,7 +237,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 369 | Public status page: indices UNMEASURED | StatusPage · ✅ |
 | 370 | Branch merge to master (owner) | ⛔ |
 | 371 | Cloudflare Pages prod smoke | ops |
-| 372 | Rollback plan if App truncate | ops |
+| 372 | Rollback plan if App truncate | ops | ✅ |
 | 373 | MCP push_files size discipline | AGENT_COORDINATION · ✅ |
 | 374 | Single-writer tip policy | AGENT_COORDINATION · ✅ |
 | 375–390 | Sixteen contact outreach (public artifacts only) | distro |
