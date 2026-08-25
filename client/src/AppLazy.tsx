@@ -1,1 +1,1 @@
-LOAD_FROM_/tmp/split2-AppLazy.tsx.json
+LOAD_ME_FROM_/tmp/mcp-call-1.json
