@@ -135,8 +135,42 @@ Per Firewall Charter:
 - Agent runbook: `/agent-runbook`
 - Verify walk: `/verify-walk.md`
 
-## 12. Changelog
+## 12. XRPL Memo pointer (testnet — frozen v0.1)
+
+**Status:** Frozen for Stage 2 testnet publishers. A Memo is a **hash pointer** to an off-chain signed measurement card — not a token, NFT, ownership claim, or score.
+
+### 12.1 Memo type
+
+```
+MemoType: csoai.attest-pointer/0.1
+```
+
+### 12.2 MemoData (JSON, UTF-8, keys sorted lexicographically before hash)
+
+| Field | Required | Role |
+|-------|----------|------|
+| `schema` | yes | Always `csoai.xrpl-memo-pointer/0.1` |
+| `content_id` | yes | SHA-256 hex of the signed measurement card body (same as RECEIPT-SPEC §4) |
+| `subject` | yes | `{ "chain": "xrpl", "issuer": "<r-address>", "currency?": "<ISO code or hex>" }` — public artifact only |
+| `card_uri` | yes | HTTPS URL where the full signed card JSON is fetchable |
+| `network` | yes | `testnet` until counsel + custody gates clear for mainnet |
+| `register` | yes | `MEASURED` \| `UNMEASURED` \| `REPORTED` — honest state; **never invent scores** |
+| `as_of` | yes | ISO-8601 UTC date the pointer was published |
+| `doctrine` | yes | `pointer-only` — attestation ≠ tokenization ≠ ownership |
+
+**Forbidden in MemoData:** `measured_score`, `accuracy`, `n`, `interval`, `aum`, `tvl`, or any numeric grade not present on the linked signed card.
+
+### 12.3 Verification
+
+1. Fetch `card_uri` → verify Ed25519 + `content_id` per §§4–5.
+2. Confirm `content_id` in MemoData matches the verified card.
+3. Treat the Memo as provenance of *our opinion pointer* — not issuer endorsement.
+
+Stage 2 scope: XRPL Devnet / testnet only. Mainnet attach requires custody (`CSOAI_KEY_CUSTODY`) + counsel gates.
+
+## 13. Changelog
 
 | Version | Date | Change |
 |---------|------|--------|
 | 0.1 | 2026-08-23 | Initial public spec — RECEIPT-SPEC-0.1 |
+| 0.1.1 | 2026-08-25 | §12 XRPL Memo pointer format frozen (testnet) |
