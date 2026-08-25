@@ -26,7 +26,30 @@ function json(data: unknown, status = 200) {
   });
 }
 
-export const onRequestGet: PagesFunction = async () => {
+export const onRequestGet: PagesFunction<{ SOV_ARENA_STATE?: KVNamespace }> = async ({
+  env,
+  request,
+}) => {
+  // Anonymous hit counter — path only, no IP/UA/record content. Not MEASURED.
+  try {
+    const kv = env.SOV_ARENA_STATE;
+    if (kv) {
+      const key = "surface_hits_v1";
+      const t = JSON.parse((await kv.get(key)) || "{}") as Record<string, number>;
+      t["/api/east-west"] = (t["/api/east-west"] || 0) + 1;
+      ctxWait(kv.put(key, JSON.stringify(t)));
+    } else {
+      // Best-effort self-POST when KV unbound (local preview)
+      void fetch(new URL("/api/surface-hits", request.url), {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ path: "/api/east-west" }),
+      }).catch(() => {});
+    }
+  } catch {
+    /* never fail the board on telemetry */
+  }
+
   const frozen = await freezeEastWest();
   return json({
     schema: "csoai.east-west-board/0.1",
@@ -62,3 +85,8 @@ export const onRequestGet: PagesFunction = async () => {
     },
   });
 };
+
+/** Fire-and-forget KV write without blocking the response path. */
+function ctxWait(p: Promise<unknown>) {
+  void p.catch(() => {});
+}
