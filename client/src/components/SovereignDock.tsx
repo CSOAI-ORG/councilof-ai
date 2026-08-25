@@ -23,7 +23,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /arena|benchmark|head.?to.?head|model compar/i, href: "/gspc-arena?view=arena", label: "the Arena layer of Council Space" },
   { re: /distribution|\bmcp\b|pypi|npm|glama|mcpize|registry/i, href: "/distribution", label: "Distribution & Layer 0 coverage" },
   { re: /jsp ?936|defence assurance|defense assurance|system card|mod evidence|evidence pack|dependable ai/i, href: "/system-card", label: "the Signed System Card — JSP 936 assurance" },
-  { re: /evidence|connect|integrat|webhook/i, href: "/evidence", label: "Evidence Hub" },
+  { re: /evidence|connect|integrat|webhook/i, href: "/evidence-rail", label: "Evidence Hub" },
   { re: /certif|attest|train|academy|course|learn/i, href: "/academy", label: "Council Academy (training, not conformity)" },
   { re: /policy/i, href: "/policy-generator", label: "Policy Generator" },
   { re: /risk|heatmap/i, href: "/risk-heatmap", label: "Risk Heatmap" },
