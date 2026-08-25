@@ -2,7 +2,7 @@ name: assemble-competitor-db
 on:
   workflow_dispatch:
   push:
-    paths: ['.restore-compdb/part-10.b64']
+    paths: ['.restore-compdb/DONE']
 jobs:
   a:
     runs-on: ubuntu-latest
@@ -16,7 +16,7 @@ jobs:
         run: |
           set -euo pipefail
           : > /tmp/compdb.b64
-          for f in .restore-compdb/part-*.b64; do cat "$f" >> /tmp/compdb.b64; done
+          for f in $(ls .restore-compdb/part-*.b64 | sort); do cat "$f" >> /tmp/compdb.b64; done
           tr -d '\n' < /tmp/compdb.b64 | base64 -d > client/src/data/competitorDatabase.json
           python3 - <<'PY'
           import json
