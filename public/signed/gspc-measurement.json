@@ -1,1 +1,31 @@
-PLACEHOLDER
+{
+ "schema": "csoai.gspc-measurement/0.1",
+ "gspc_registry_axes": 14,
+ "axes": [
+  {
+   "axis": "governance",
+   "bench": "GovBench",
+   "task": "EU AI Act risk-tier classification",
+   "n": 237,
+   "accuracy": 0.7,
+   "leader": "council-embodiment-v3-light (council specialist)",
+   "separation": "SEPARATED",
+   "separation_p": 0.0086,
+   "interval": [
+    0.639,
+    0.755
+   ],
+   "fleet_mean": 0.49,
+   "mean_harm": 0.51,
+   "cvar05_harm": 0.8728,
+   "macro_f1": 0.705,
+   "unparsed_rate": 0.0386,
+   "status": "MEASURED",
+   "dataset": "csoai/gspc-gov",
+   "colour": "#34d399",
+   "hue": 152,
+   "note": "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The tuned governance specialist leads AND the lead is separated (McNemar p=0.0086 vs best base mistral:7b) — one of only 4 separated leads on the board. The fleet mean is 0.490: EU AI Act tiering is hard for everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real."
+  }
+ ],
+ "packaged_at": "2026-08-25T19:35:00+00:00"
+}
