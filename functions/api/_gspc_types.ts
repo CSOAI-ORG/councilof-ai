@@ -43,7 +43,7 @@ export const MEASURED_ON = {
     "p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and " +
     "per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and " +
     "GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living " +
-    "board; its separation is UNTESTED (no McNemar run yet) and its bank is pending publication. " +
+    "board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. " +
     "slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
   living_stamp: {
     source: "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
