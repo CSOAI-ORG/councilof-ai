@@ -7,7 +7,7 @@ import type { Slide } from "@/components/scrollworld";
  *  1. Deck slide 7 "Honesty Gating: The 14th Axis (Swarm Agency) ... Why Swarm stays
  *     UNMEASURED ... 13 Measured / 1 Gated" — WRONG TWICE, and it is the deck's
  *     centrepiece. Slot 14 is JAIL, and it IS measured: 7 models x 71 gold items. What it
- *     lacks is a separation test, which is why it prints UNTESTED. Swarm is a MEASURED
+ *     lacks is a separated leader, which is why it prints TIE. Swarm is a MEASURED
  *     canonical axis (a protocol bank, carrying an effective-n caveat). Rewritten to the
  *     real discipline, which is a better story than the invented one.
  *  2. Deck slides 11/12 "ProvBench & The 13.9% Retraction ... 4.2% RE-MEASURED & SIGNED"
@@ -93,9 +93,9 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
   },
   {
     kicker: "Slot fourteen, precisely",
-    title: "The awkward slot is measured. What is missing is its separation test.",
+    title: "The awkward slot is measured. Its separation is a tie.",
     body:
-      "It would be tidier to say the fourteenth slot is gated and unmeasured. It is not true. Jail — whether a model can be talked past its own guardrails — is measured across 71 gold items on a seven-model fleet. It has no separation test yet, so we print UNTESTED, refuse to rank on it, and never compare it against the canonical axes measured on the full fleet. The discipline is in the label, not in the blank.",
+      "It would be tidier to say the fourteenth slot is gated and unmeasured. It is not true. Jail — whether a model can be talked past its own guardrails — is measured across 71 gold items on a seven-model fleet. Its separation is TIE on the live board, so we refuse to rank on it and never compare it against the canonical axes measured on the full fleet. A tie is not a separated leader — the discipline is in the label, not in the blank.",
     points: [
       { tag: "pain", text: "\"Gated\" is an easier story than \"measured, but not yet separable\"" },
       { tag: "benefit", text: "You see the sample size, the fleet and the exact status on the slot" },
@@ -177,7 +177,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
 ];
 
 export const VERIFIABLE_TRUST_NOT_CLAIMED = [
-  "We do not claim the fourteenth slot is gated or unmeasured. Jail is measured across 71 gold items on a seven-model fleet; its separation test is what is missing, which is why it prints UNTESTED and is never ranked.",
+  "We do not claim the fourteenth slot is gated or unmeasured. Jail is measured across 71 gold items on a seven-model fleet; its separation is TIE on the live board — a tie is not a separated leader — so it is never ranked.",
   "We do not claim our 33-agent council delivers a resilience or consensus guarantee. That claim was retracted under DR-0007 after we measured an effective independence of about 1.21 against 3 nominal legs. The 33 seats and the 23-of-33 threshold are a design figure only.",
   "We do not claim any independent time-stamping or sealing authority. Records are Ed25519-signed over a SHA-256 hash chain, verifiable against did:web:csoai.org, and nothing more.",
   "We do not publish third-party human-baseline scores as if they were ours. Where we have not measured a human baseline ourselves, no number appears.",
