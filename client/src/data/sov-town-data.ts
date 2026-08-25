@@ -17,7 +17,7 @@ function num(n?: number): number {
 }
 
 export async function fetchSovTownStats(): Promise<SovTownStats> {
-  const base = "https://proofof.ai/sovereign-town";
+  const base = "https://proofof.ai/towns";
   // Last-known values shown ONLY when the live feed is unreachable — and the UI
   // must say so (source: "last-known"). Never silent fake-live.
   const fallback: SovTownStats = {
