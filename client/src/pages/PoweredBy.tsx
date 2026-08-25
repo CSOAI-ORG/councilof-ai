@@ -11,7 +11,7 @@ import { Check, Shield, Ban, Layers } from "lucide-react";
  */
 
 const MESSAGING_LOCK =
-  "Unsolicited + permissionless signed opinions/measurements — no issuer opt-in, no issuer payment. Attestations are not tokens, NFTs, or ownership claims. They do not tokenize anything and confer no title. Rivals who call themselves “independent” still require issuer cooperation; we do not.";
+  "Attestations are independent, cryptographically verifiable opinions/measurements about an asset. They are not tokens, NFTs, or ownership claims. They do not tokenize anything and confer no title.";
 
 const SHAPES = [
   {
