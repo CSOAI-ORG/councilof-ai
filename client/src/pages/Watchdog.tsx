@@ -158,7 +158,7 @@ export default function Watchdog() {
             <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-3xl font-bold text-emerald-600 mx-auto mb-6">
               2
             </div>
-            <h3 className="text-2xl font-bold mb-4">Learn the supply</h3>
+            <h3 className="text-2xl font-bold mb-4">Learn the statute</h3>
             <p className="text-gray-600 leading-relaxed mb-4">
               50-question exam, 90 minutes, 70% to pass. Unlimited retakes. Your CSOAI
               Watchdog Analyst attestation is signed and independently verifiable.
