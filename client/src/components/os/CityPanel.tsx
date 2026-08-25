@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import {
-  countOf, fetchAxes, hasInterval, publicCaption, quotable, wilson,
+  fetchAxes, hasInterval, publicCaption, quotable, wilson,
   type Axis, type InLaneAxis,
 } from "@/lib/gspcAxes";
 
 /**
  * CityPanel — Council City inside Council OS.
  *
- * The living printer of the public board: 13 measured axes, jail as a measured
- * floor (never a 14th axis), and unnamed slot-15 shown honestly empty.
+ * The living printer of the public board. Jail is a measured floor (never an
+ * extra axis). An unnamed reserved slot stays honestly empty.
  *
  * Honesty rules enforced here:
  *   - jail is MEASURED but separated in its own section (it has no separation test yet)
- *   - slot-15 is shown unnamed — no fabricated "instrument-honesty" label
- *   - Never say "13-of-14" or "14-axis" — the board is 13 measured + jail floor
+ *   - the reserved slot is shown unnamed — no fabricated instrument label
+ *   - Never type a slot count — chrome reads totals.public_count from GET /api/gspc
  *   - Every number comes from GET /api/gspc, never typed into this component
  *   - UNMEASURED stays UNMEASURED; no score invented
  */
@@ -80,11 +80,12 @@ export default function CityPanel() {
     fetchAxes(ac.signal).then((r) => {
       const jailAxis = r.axes.find((a) => a.axis === "jail") ?? null;
       const canonical = r.axes.filter((a) => a.axis !== "jail");
-      const c = countOf(canonical);
       setAxes(canonical);
       setJail(jailAxis);
       setInLane(r.inLane);
-      setCaption(publicCaption(r.publicCount, c.measured, c.total));
+      // Prefer the API sentence. Do not fall back to jail-filtered countOf
+      // (that prints "N measured of N" and hides the live public_count).
+      setCaption(publicCaption(r.publicCount));
       setSource(r.source);
     });
     return () => ac.abort();
@@ -92,7 +93,7 @@ export default function CityPanel() {
 
   return (
     <div className="space-y-8">
-      {/* The living board — 13 measured axes */}
+      {/* The living board — counts from GET /api/gspc */}
       <section>
         <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
           <h2 className="text-xl font-bold text-slate-900">The living board</h2>
@@ -108,7 +109,7 @@ export default function CityPanel() {
         </div>
       </section>
 
-      {/* Jail — the measured floor (not a 14th axis) */}
+      {/* Jail — the measured floor (not an extra axis) */}
       {jail && (
         <section className="rounded-2xl border border-slate-200 bg-gradient-to-b from-slate-50/60 to-white p-6">
           <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
@@ -134,7 +135,7 @@ export default function CityPanel() {
         </section>
       )}
 
-      {/* Slot-15 — unnamed, shown honestly empty */}
+      {/* Unnamed reserved slot — shown honestly empty */}
       <section className="rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-5">
         <h3 className="text-sm font-bold text-slate-800">Unnamed reserved slot</h3>
         <p className="mt-1 text-[12px] text-slate-500">
