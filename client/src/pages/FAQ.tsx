@@ -60,7 +60,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "Is CSOAI free to use?",
     answer:
-      "CSOAI offers a free tier for individuals, startups, and non-profits with access to basic governance tools, educational resources, and training programmes. Enterprise features, unlimited audits, and dedicated support are available through our paid plans. Training and analyst completion records are entirely free.",
+      "Get measured is free. Verify is free forever. A grade is never sold, and there are no public prices on this site. Enterprise starts at the lobby door. We measure, sign and preserve evidence; we do not certify or remediate.",
     tags: ["pricing", "free"],
   },
   {
@@ -320,7 +320,7 @@ const faqData: FAQItem[] = [
     category: "WATCHDOG PROGRAM",
     question: "How are Watchdog analysts paid?",
     answer:
-      "Watchdog analysts earn on a per-incident and per-audit basis. Compensation ranges from $50-500+ per assignment depending on complexity, time required, and experience level. Experienced analysts can earn $3,000-8,000+ monthly. Some analysts work full-time on CSOAI; others supplement existing income. CSOAI also offers performance bonuses for high-quality work and referrals.",
+      "The public watchdog-jobs door is closed. We do not publish analyst rates or product prices. Inbound systems become signed evidence artefacts. We do not certify or remediate.",
     tags: ["watchdog", "compensation"],
   },
   {
@@ -385,7 +385,7 @@ const faqData: FAQItem[] = [
     category: "ENTERPRISE",
     question: "What is the enterprise pricing model?",
     answer:
-      "Enterprise pricing is customized based on: (1) Number of AI systems monitored, (2) Geographic coverage and compliance requirements, (3) Support level selected, (4) Integration complexity, (5) Data storage and processing volume, and (6) Professional services needed. Most enterprise customers spend $10,000-100,000+ annually depending on scale. We'll conduct a needs assessment to provide accurate pricing.",
+      "There is no public price list. A grade is never sold. Verify is free forever. Enterprise starts at /enterprise — the lobby door for measured evidence. We measure, sign and preserve artefacts; regulators and accredited bodies decide. We do not certify or remediate.",
     tags: ["enterprise", "pricing"],
   },
 
