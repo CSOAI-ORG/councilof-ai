@@ -65,7 +65,7 @@ function Section({ id, title, subtitle, children, bg }: { id?: string; title?: s
 
 // ── living GSPC grid (honest empties stay empty) ─────────────────────────
 
-// ── problem we fix ───────────────────────────────────
+// ── problem we fix ─────────────────────────────────────
 function ProblemStrip() {
   return (
     <Section
@@ -232,7 +232,7 @@ function AxesGrid() {
   );
 }
 
-// ── demographics ─────────────────────────────────
+// ── demographics ───────────────────────────────────
 function BuyerCards() {
   return (
     <Section title="Built for the people who get audited" subtitle="One instrument, four audiences. Pick your path — every CTA leads to the same measurement, signed." bg="bg-gray-50">
@@ -253,7 +253,7 @@ function BuyerCards() {
   );
 }
 
-// ── industries ─────────────────────────────────
+// ── industries ───────────────────────────────────
 function IndustryGrid() {
   return (
     <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous vehicles, underwrite insurance, or grade students with AI. Measure once, evidence everywhere." bg="bg-white">
