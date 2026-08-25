@@ -22,6 +22,39 @@ export function setMetaDescription(content: string): void {
   m.content = content;
 }
 
+/**
+ * Lightweight OG / Twitter tags via the existing /api/og image helper.
+ * Does not invent a full OG system — only title, description, and image URL.
+ */
+export function setOgMeta(opts: { title: string; description: string; path?: string }): void {
+  const title = opts.title.slice(0, 90);
+  const description = opts.description.slice(0, 160);
+  const ogImage =
+    `/api/og?title=${encodeURIComponent(title)}&desc=${encodeURIComponent(description.slice(0, 140))}`;
+  const pairs: [string, string][] = [
+    ["og:title", title],
+    ["og:description", description],
+    ["og:type", "website"],
+    ["og:image", ogImage],
+    ["twitter:card", "summary_large_image"],
+    ["twitter:title", title],
+    ["twitter:description", description],
+    ["twitter:image", ogImage],
+  ];
+  if (opts.path) {
+    pairs.push(["og:url", `https://councilof.ai${opts.path}`]);
+  }
+  for (const [property, content] of pairs) {
+    let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute("property", property);
+      document.head.appendChild(el);
+    }
+    el.content = content;
+  }
+}
+
 export function formatCurrency(cents: number, currency = 'USD'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
