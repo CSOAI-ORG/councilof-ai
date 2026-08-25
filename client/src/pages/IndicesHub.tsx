@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { Link, useRoute } from "wouter";
-import { setMetaDescription } from "@/lib/utils";
+import { setMetaDescription, setOgMeta } from "@/lib/utils";
 import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 import FaqBlock from "@/components/FaqBlock";
+import { NrsroDisclaimer } from "@/components/NrsroDisclaimer";
 import {
   INDICES_FIREWALL,
   LABOUR_ECONOMY_INDICES,
@@ -147,9 +148,14 @@ function IndexDetail({ index }: { index: LabourEconomyIndex }) {
 function Hub() {
   useEffect(() => {
     document.title = "Labour & AI-economy indices — UNMEASURED first | CSOAI";
-    setMetaDescription(
-      "AI-economy, human-labour, and humanoid-labour indices declared UNMEASURED. Contextual citations only — never fused into GSPC grades.",
-    );
+    const desc =
+      "AI-economy, human-labour, and humanoid-labour indices declared UNMEASURED. Contextual citations only — never fused into GSPC grades.";
+    setMetaDescription(desc);
+    setOgMeta({
+      title: "Labour & AI-economy indices — UNMEASURED | CSOAI",
+      description: desc,
+      path: "/indices",
+    });
     void fetch("/api/surface-hits", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -218,6 +224,7 @@ function Hub() {
             GET /api/indices
           </a>
         </div>
+        <NrsroDisclaimer className="mt-6 text-xs leading-relaxed text-emerald-200/55 border-t border-emerald-500/10 pt-4" />
       </div>
     </CouncilOsPageShell>
   );
