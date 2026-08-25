@@ -24,6 +24,7 @@ npx -y @smithery/cli@latest install councilof-ai --client claude
 - **13 GSPC measurement axes** — governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect
 - **Deterministic grading** on frozen instruments — no LLM-as-judge, no invented scores
 - **UNMEASURED is a first-class outcome** — gaps are reported with their n and limits, never hidden, never scored as a fail
+- **Labour / AI-economy indices** — `/indices` declares AI-economy · human-labour · humanoid-labour as **UNMEASURED** first (contextual firewall; never fused into GSPC grades)
 - **Signed credentials** — Ed25519 over SHA-256, chain-linked, time-anchored, offline-verifiable
 - **Live axis data**: `GET https://councilof.ai/api/gspc` (schema `csoai.gspc-axes/0.3`)
 
@@ -83,10 +84,13 @@ Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/ro
 
 ## 📖 Documentation
 
-- [Estate crosswalk](docs/ESTATE_CROSSWALK.md) — RWA × GSPC × SOV Signal × regulation × labour/economy gaps
+- [EAT playbook](docs/EAT_PLAYBOOK.md) — clean plays, stages, custody/counsel gates, DSH/RunPod/HF
+- [Next 300 moves](docs/NEXT_300_MOVES.md) — ownership register moves 101–400
+- [Estate crosswalk](docs/ESTATE_CROSSWALK.md) — RWA × GSPC × SOV Signal × regulation × labour/economy
 - [Council OS cleaned product plan](docs/COUNCIL_OS_PRODUCT.md) — AG-UI / MCP / A2A research mapped to what ships
 - [Council OS build plan](docs/COUNCIL_OS_BUILD_PLAN.md) — adapters/publishers/flywheel; **DSH into all**; no CopilotKit rewrite
 - [EAT · DSH · RWA attestation alignment](docs/EAT_DSH_ALIGNMENT.md) — permissionless Memo/EAS targets under measurement doctrine
+- Surfaces on this branch: `/indices` (UNMEASURED) · `/products` · `/powered-by` · `/competitors` RWA
 - [Measurement body overview](https://councilof.ai/about/)
 - [Methodology — how we measure](https://councilof.ai/methodology/)
 - [GSPC scoreboard](https://councilof.ai/gspc-scoreboard)
