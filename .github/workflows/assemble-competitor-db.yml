@@ -16,8 +16,17 @@ jobs:
         run: |
           set -euo pipefail
           : > /tmp/compdb.b64
-          for f in $(ls .restore-compdb/part-*.b64 | sort); do cat "$f" >> /tmp/compdb.b64; done
-          # Parts may use ! as a j-safe stand-in (avoids j→z corruption in transit); no-op if absent.
+          # Prefer monolithic part-XX.b64; else concatenate part-XX/NN.txt slices (sorted).
+          for i in $(seq -w 0 31); do
+            if [ -f ".restore-compdb/part-$i.b64" ]; then
+              cat ".restore-compdb/part-$i.b64" >> /tmp/compdb.b64
+            elif [ -d ".restore-compdb/part-$i" ]; then
+              for f in $(ls ".restore-compdb/part-$i"/*.txt | sort); do cat "$f" >> /tmp/compdb.b64; done
+            else
+              echo "missing part $i" >&2
+              exit 1
+            fi
+          done
           tr -d '\n' < /tmp/compdb.b64 | tr '!' 'j' | base64 -d > client/src/data/competitorDatabase.json
           python3 - <<'PY'
           import json
