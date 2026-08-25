@@ -220,11 +220,11 @@ export default function PublicDashboard() {
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Join the AI Safety Movement</h2>
           <p className="text-zinc-400 mb-8 max-w-xl mx-auto">
-            Become a certified AI Safety Analyst and help protect humanity from AI risks.
-            100% free training and certification.
+            Learn the measurement rail and help keep the living board honest.
+            Training and signed records are free. We measure. We do not certify.
           </p>
           <div className="flex gap-4 justify-center">
-            <Link href="/training">
+            <Link href="/academy">
               <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-cyan-600">
                 Start Free Training
                 <ArrowRight className="ml-2 h-5 w-5" />
