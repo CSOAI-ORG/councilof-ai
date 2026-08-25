@@ -176,6 +176,11 @@ export const MASTER_NAVIGATION: MasterNavGroup[] = [
         description: "Living catalog — scores never sold · HO.2",
         action: { kind: "link", href: "/products" },
       },
+      {
+        name: "Powered by Council OS",
+        description: "Option A white-label attestation — not tokenization",
+        action: { kind: "link", href: "/powered-by" },
+      },
     ],
   },
   {
