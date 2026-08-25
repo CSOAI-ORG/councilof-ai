@@ -44,6 +44,7 @@ const navigation: NavGroup[] = [
     description: 'The instrument and its board',
     submenu: [
       { name: 'The GSPC board', href: '/gspc-scoreboard', description: 'The living board — measured axes, empty cells empty. Counts from GET /api/gspc' },
+      { name: 'Financial axes', href: '/financial-axes', description: 'The 8 financial slots of the 22-axis canon — provenance-controls measured, the rest UNMEASURED and honest' },
       { name: 'Measured models', href: '/models', description: 'Ranked by signed GSPC scores, not tokens' },
       { name: 'Published tools', href: '/tools', description: 'MCP you can run — not a marketplace' },
       { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact, losses included' },
