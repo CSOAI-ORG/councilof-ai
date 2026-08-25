@@ -10,7 +10,7 @@
  * Checks: each REQUIRED_API path must end HTTP 200 (redirects followed) on the host.
  *   (a) /api/gspc            — the board
  *   (b) /api/cards           — signed measurement cards (G4)
- *   (c) /api/axis-register   — the 13-axis registry (Move 24)
+ *   (c) /api/axis-register   — the 14-axis registry (13 canonical + jail; Move 24)
  *   (d) /api/mcp             — MCP catalogue
  * Reads nothing secret. Fetches public URLs and asserts. Exit 1 = a function dropped.
  *
