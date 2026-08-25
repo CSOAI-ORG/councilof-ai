@@ -482,7 +482,7 @@ export default function ProsperityFund() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link href="/training">
+            <Link href="/academy">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8">
                 Start Free Training
               </Button>
@@ -575,7 +575,7 @@ export default function ProsperityFund() {
             or simply want to learn more—there's a place for you in building shared AI prosperity.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/pricing">
+            <Link href="/?lobby=measured&task=pricing-overview">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8">
                 How the Free Rail Works
                 <ArrowRight className="ml-2 h-5 w-5" />
