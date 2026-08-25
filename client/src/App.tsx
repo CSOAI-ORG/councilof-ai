@@ -1,1 +1,1 @@
-@file:///tmp/App_content_only.txt
+@file-contents-from /tmp/hygiene/App.good.tsx
