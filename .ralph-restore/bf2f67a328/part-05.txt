@@ -1,0 +1,32 @@
+          <p>Scores are never sold. Ranked entities: no money in either direction.</p>
+            <p>We conform to our own method. We are never “certified” by ourselves.</p>
+          </div>
+        )}
+
+        {section === "press" && (
+          <div className="space-y-4">
+            <Banner />
+            <p className="text-sm text-emerald-100/70">{OWNER_BLOCKS.press}</p>
+            <ul className="space-y-3">
+              {PRESS_DRAFTS.map((d) => (
+                <li key={d.id} className="rounded-2xl border border-emerald-500/20 p-4">
+                  <div className="font-bold">
+                    {"title" in d && d.title ? d.title : "outlet" in d ? d.outlet : d.id}
+                  </div>
+                  {"beat" in d && d.beat ? <div className="text-sm text-emerald-100/70">{d.beat}</div> : null}
+                  {"claim" in d && d.claim ? <div className="mt-1 text-sm">{d.claim}</div> : null}
+                  <div className="mt-2 font-mono text-xs text-amber-200">{d.status}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <p className="text-[12px] text-emerald-100/45">
+          Sample subject is a self-measurement of the published GSPC snapshot ({CARD_BODY.subject.name}). Schema{" "}
+          {CARD_BODY.schema}.
+        </p>
+      </div>
+    </CouncilOsPageShell>
+  );
+}
