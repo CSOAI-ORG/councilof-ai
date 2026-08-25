@@ -129,6 +129,16 @@ export default function EastWest() {
   }, []);
 
   useEffect(() => {
+    if (section !== "verify") return;
+    // Anonymous surface hit — path only, no record content. Not MEASURED.
+    void fetch("/api/surface-hits", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ path: "/east-west/verify" }),
+    }).catch(() => {});
+  }, [section]);
+
+  useEffect(() => {
     if (frozen && !paste) setPaste(JSON.stringify(frozen.card, null, 2));
   }, [frozen, paste]);
 
