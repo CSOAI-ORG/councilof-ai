@@ -6,7 +6,7 @@ Consolidated work products + brand directives so you can push them live, branded
 - **Emerald Green `#10B981`** + **Stark White `#FFFFFF`** + deep emerald shadow `#065F46`. No gold/gray/MEOK.
 - Typeface: Avenir Next (Demi Bold headers, Regular body). Font: `/System/Library/Fonts/Supplemental/Avenir Next.ttc` (index 3 = Demi Bold).
 - Cards: `#0e1118` panel, `rgba(16,185,129,.25)` border, radius 16, subtle emerald radial glow, `border-emerald-500/20 bg-white/5` glassmorphism.
-- Grammar (binding): "13 measured of 14" (jail UNTESTED) · measurement ≠ certification (we CONFORM, never "certified") · signed · measured · sovereign.
+- Grammar (binding): cite live `totals.public_count` — **14 measured of 14 quotable** (jail MEASURED · separation TIE, 2026-08-25) · measurement ≠ certification (we CONFORM, never "certified") · signed · measured · sovereign. Do not invent 22 axes.
 
 ## 2. WHAT TO PUSH (paths in this repo)
 | Surface | Path | Render as (AG-UI card / route) |
@@ -21,17 +21,18 @@ Consolidated work products + brand directives so you can push them live, branded
 | Alignment | `cursor-feed/MASTER-FRONTEND-PUBLISHING.md` + `CONTENT_STUDIO.md` | internal |
 
 ## 3. LIVE MEASUREMENT SURFACES (already public, reference/link not rebuild)
-- `https://huggingface.co/datasets/csoai/gspc-board` · `.../gspc-bench-results` · `.../gspc-leaderboard-results` · `https://huggingface.co/spaces/csoai/gspc-governance-leaderboard-spc` (first-of-niche) — all HTTP 200.
-- Evidence pack: `trust/evidence-pack/` (4-doc underwriter pack). Register: `ops/overnight-register-2026-08-24/`.
+- `https://huggingface.co/datasets/csoai/gspc-board` · `.../gspc-bench-results` · `.../gspc-leaderboard-results` · `https://huggingface.co/spaces/csoai/gspc-governance-leaderboard` — HTTP 200 (Space runtime may be PAUSED on free tier).
+- Live board: `https://councilof.ai/api/gspc` · agent card: `https://councilof.ai/.well-known/agent-card.json`
+- Evidence pack: `trust/evidence-pack/` (4-doc underwriter pack). Register: `ops/overnight-register-2026-08-24.md`.
 
 ## 4. HOW IT FITS THE COUNCIL OS (AG-UI/MCP)
 - Each intelligence/verdict/measurement product = an **MCP tool output → AG-UI inline card** (RUNNING→DONE, typed card). Wire the render tools to the `cursor-feed/insights/*.html` card templates.
 - `/intelligence`, `/first-fine`, `/unfixed`, `/ledger`, `/training`, `/revenue` = routes/cards. The watch desks + training world are live-demo cards.
-- Keep the 13-measured-of-14 + measurement-never-certified grammar in every card.
+- Keep the live-public_count + measurement-never-certified grammar in every card.
 
 ## 5. NOTES / GATES
 - Pricing = **DRAFT** (owner ruling Move 211) — render as draft-tagged, never a live price.
-- DOIs + MCP registry publish are owner/hub-version gated (logged in the register).
+- DOIs + MCP registry publish are owner/hub-version gated (logged in the register). Never remint DOIs.
 - Push only to `os-production`; keep codenames out of public strings.
 
 *Pushed content: 99 files in `cursor-feed/` · branch `os-production` · aligned to the Council OS AG-UI/MCP architecture.*
