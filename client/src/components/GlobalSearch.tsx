@@ -125,4 +125,4 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'my-courses', title: 'My Courses', description: 'Your enrolled courses and progress', category: 'pages', href: '/my-courses', icon: BookOpen, keywords: ['enrolled', 'progress', 'learning'] },
   { id: 'certification', title: 'Certification', description: 'Professional AI governance measurement credential', category: 'pages', href: '/certification', icon: Award, keywords: ['exam', 'certificate', 'credential'] },
   { id: 'certification-exam', title: 'Take Certification Exam', description: 'Start your measurement credential assessment', category: 'pages', href: '/certification/exam', icon: FileCheck, keywords: ['test', 'exam', 'assessment'] },
-  { id: 'certificates', title: 'My Certificates', description: 'View your earned certificates', categ
+  { id: 'certificates', title: 'My Certificates', description: 'View your earned certificates', categPART01_PENDING_FULL_CONTENT
