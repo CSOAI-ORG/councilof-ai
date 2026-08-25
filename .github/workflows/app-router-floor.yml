@@ -1,0 +1,16 @@
+name: app-router-floor
+on: { push: { branches: [master, main] }, pull_request: {} }
+jobs:
+  floor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: App.tsx must carry the full router (block truncation)
+        run: |
+          set -euo pipefail
+          f=client/src/App.tsx
+          bytes=$(wc -c < "$f")
+          [ "$bytes" -ge 40000 ] || { echo "FAIL: $f is $bytes bytes (<40000) — router truncated"; exit 1; }
+          grep -q "<Switch>" "$f" || { echo "FAIL: $f lost its <Switch>"; exit 1; }
+          grep -q "export default App" "$f" || { echo "FAIL: $f lost 'export default App'"; exit 1; }
+          echo "OK: $f $bytes bytes, Switch + export present"
