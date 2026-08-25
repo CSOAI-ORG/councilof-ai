@@ -24,6 +24,12 @@ interface RunRecord {
     evm: { asset: string; contract: string; status: string; uid: string }[];
     honesty: string;
   };
+  registry?: {
+    counts: { named: number; mainnet_verified_and_attested: number; not_located: number };
+    instruments: { instrument: string; category: string; status: string; address_status: string; tx?: string }[];
+    corpus_index: string;
+    honesty: string;
+  };
 }
 
 export default function XrplAttest() {
@@ -134,6 +140,51 @@ export default function XrplAttest() {
                           <td className="p-2">{c.asset}</td>
                           <td className="p-2 font-mono text-xs">{c.contract.slice(0, 14)}…</td>
                           <td className="p-2"><span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600">{c.status}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {rec.registry && (
+              <div className="mt-8 rounded-xl border border-emerald-600/20 bg-white p-5 shadow-sm">
+                <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
+                  Coverage registry — the full XRPL RWA universe
+                </p>
+                <p className="mt-2 text-sm text-gray-600">
+                  All <strong>{rec.registry.counts.named}</strong> named XRPL tokenized-RWA
+                  instruments, accounted for honestly:{" "}
+                  <strong>{rec.registry.counts.mainnet_verified_and_attested}</strong>{" "}
+                  mainnet-verified and attested on-ledger,{" "}
+                  <strong>{rec.registry.counts.not_located}</strong> listed but{" "}
+                  <em>not attested</em> because no public issuer address was independently
+                  confirmable. Nothing is faked to reach a count — the reference layer earns
+                  trust by what it refuses to assert. Queryable index:{" "}
+                  <a className="text-emerald-700 underline" href={rec.registry.corpus_index}>
+                    attestation-corpus.json
+                  </a>.
+                </p>
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b text-left text-gray-700">
+                        <th className="p-2">Instrument</th><th className="p-2">Category</th>
+                        <th className="p-2">Address</th><th className="p-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rec.registry.instruments.map((r) => (
+                        <tr key={r.instrument} className="border-b last:border-0">
+                          <td className="p-2">{r.instrument}</td>
+                          <td className="p-2 text-gray-500">{r.category}</td>
+                          <td className="p-2">
+                            <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${r.address_status === "mainnet-verified" ? "bg-emerald-100 text-emerald-800" : "bg-gray-100 text-gray-500"}`}>
+                              {r.address_status}
+                            </span>
+                          </td>
+                          <td className="p-2 font-mono text-xs text-gray-600">{r.status}</td>
                         </tr>
                       ))}
                     </tbody>
