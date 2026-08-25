@@ -19,7 +19,7 @@ pip install councilof_ai
 npx -y @smithery/cli@latest install councilof-ai --client claude
 ```
 
-## 📏 What we measure
+## 🧭 What we measure
 
 - **13 GSPC measurement axes** — governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect
 - **Deterministic grading** on frozen instruments — no LLM-as-judge, no invented scores
@@ -27,7 +27,7 @@ npx -y @smithery/cli@latest install councilof-ai --client claude
 - **Signed credentials** — Ed25519 over SHA-256, chain-linked, time-anchored, offline-verifiable
 - **Live axis data**: `GET https://councilof.ai/api/gspc` (schema `csoai.gspc-axes/0.3`)
 
-## 🧭 Verify
+## 🔍 Verify
 
 Every published measurement carries a public key and a verify path. Check any credential at:
 
@@ -83,6 +83,7 @@ Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/ro
 
 ## 📖 Documentation
 
+- [Council OS cleaned product plan](docs/COUNCIL_OS_PRODUCT.md) — AG-UI / MCP / A2A research mapped to what ships
 - [Measurement body overview](https://councilof.ai/about/)
 - [Methodology — how we measure](https://councilof.ai/methodology/)
 - [GSPC scoreboard](https://councilof.ai/gspc-scoreboard)
