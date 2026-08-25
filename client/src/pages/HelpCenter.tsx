@@ -29,13 +29,13 @@ export default function HelpCenter() {
       ],
     },
     {
-      title: 'Training & Certification',
+      title: 'Academy & signed records',
       icon: CheckCircle,
-      description: 'Information about courses and exams',
+      description: 'Training produces a signed record, not a certificate',
       articles: [
-        { title: 'How to Enroll in Courses', href: '#' },
-        { title: 'Preparing for the Certification Exam', href: '#' },
-        { title: 'Understanding Your Certificate', href: '#' },
+        { title: 'How to Enroll in Courses', href: '/academy' },
+        { title: 'Preparing for an academy assessment', href: '/academy' },
+        { title: 'Understanding a signed record', href: '/gspc-verify' },
       ],
     },
     {
@@ -66,12 +66,12 @@ export default function HelpCenter() {
       answer: 'Create an account, complete your profile, and explore the training courses. You can start with our Getting Started course to understand the platform.',
     },
     {
-      question: 'What is the certification exam?',
-      answer: 'The certification exam tests your knowledge of AI safety, compliance frameworks, and incident analysis. It takes 2 hours and requires 70% to pass.',
+      question: 'Does academy training certify a system?',
+      answer: 'No. Academy assessments produce a signed record that a person completed training. Council of AI measures; it does not certify systems or issue conformity marks.',
     },
     {
       question: 'How can I become a Watchdog Analyst?',
-      answer: 'Apply through the Watchdog program, complete the training modules, pass the certification exam, and you\'ll be eligible to review AI safety incidents.',
+      answer: 'Start at /academy, complete the training modules, and get a signed record of what you finished. We do not issue a certificate of system compliance.',
     },
     {
       question: 'What are the different compliance frameworks?',

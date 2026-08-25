@@ -162,7 +162,7 @@ export function FrameworkLandingPage({
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Award className="w-5 h-5 text-emerald-600" />
-                {frameworkName} Certification
+                {frameworkName} academy
               </CardTitle>
             </CardHeader>
             <CardContent className="grid md:grid-cols-3 gap-8">
@@ -177,7 +177,7 @@ export function FrameworkLandingPage({
                 <p className="text-sm text-gray-600">required</p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-2">Certificate Validity</p>
+                <p className="text-sm text-gray-600 mb-2">Signed record — not a certificate</p>
                 <p className="text-3xl font-bold text-emerald-600">{certificationInfo.validity}</p>
                 <p className="text-sm text-gray-600">years</p>
               </div>
@@ -197,9 +197,9 @@ export function FrameworkLandingPage({
                 View Training Catalog
               </Button>
             </Link>
-            <Link href="/certification">
+            <Link href="/academy">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Learn About Certification
+                Open the academy
               </Button>
             </Link>
           </div>
