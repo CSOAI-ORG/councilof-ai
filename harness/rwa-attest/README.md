@@ -13,12 +13,16 @@ off-chain free/signed/immutable; recipient = token contract, no consent).
 
 ## Usage
 ```
-python3 rwa_attest.py targets            # list the 10-target registry
+python3 rwa_attest.py targets            # list the 22-target registry
 python3 rwa_attest.py card <id>          # build + sign + ClaimGuard-verify a verdict card
 python3 rwa_attest.py memo <id>          # XRPL Memo hex (ready to submit from our funded account)
 python3 rwa_attest.py eas <id>           # EAS off-chain attestation payload (recipient = contract)
+python3 rwa_attest.py batch              # gen + ClaimGuard-verify all targets -> rwa-attest-index.json
 ```
-Targets: ousg, buidl, benji, acred, aviva, jmwh, dcp, rlusd, eurcv, archax (verified public addresses in code).
+Targets: ousg, buidl, benji, acred, aviva, jmwh, dcp, rlusd, eurcv, archax + 12 deep-universe
+adapters (usdy, ondo_stk, haml_scope, kkr_hc, vaneck, backed_nvda, backed_bib01, superstate_uscc,
+circle_usyc, plume, blochome, schuman_eurp). Verified public addresses are in code; the adapters are
+cataloged from research and carry `addr:pending` until RWA.xyz/Etherscan-verified.
 
 ## Execution plan (from the ranked target list)
 - **Stage 1 (testnet):** XRPL Devnet Memo + CredentialCreate; EAS off-chain on Sepolia/Base. Reference impls:
