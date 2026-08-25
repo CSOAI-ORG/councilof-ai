@@ -45,10 +45,10 @@ async function grounded(q: string, origin: string): Promise<string | null> {
     /\b(in plain words|actually measure|what (do|does) (the )?(council|csoai)|difference between measur|one-paragraph summary)\b/i.test(q) ||
     (/\bcertif/i.test(q) && /\bmeasur/i.test(q))
   ) {
-    const names = axes.map((a: any) => a.axis).filter((n: any) => n && String(n).toLowerCase() !== "jail");
+    const names = axes.map((a: any) => a.axis).filter(Boolean);
     return (
       `The Council of AI measures published behaviour against frozen rules, signs with Ed25519, and publishes what it cannot measure. It does not certify.\n\n` +
-      `Board axes: ${names.join(", ") || "(unavailable)"}. Public count: ${canon.publicCount}. Jail is floor (separation UNTESTED).\n\n` +
+      `Board axes: ${names.join(", ") || "(unavailable)"}. Public count: ${canon.publicCount}. Jail is MEASURED; living-board separation is TIE (not a separated leader).\n\n` +
       `_Grounded in the published board, not by a model._`
     );
   }
@@ -68,12 +68,13 @@ async function grounded(q: string, origin: string): Promise<string | null> {
 
   if (hit) {
     if (isJailAxis(hit)) {
+      const sep = String(hit.separation ?? "TIE").toUpperCase();
       return (
-        `**${hit.axis}** (${hit.bench}) is the board **floor**, not a board-measured axis.\n\n` +
-        `Separation is **UNTESTED**. Not counted in totals.measured_axes (${canon.publicCount}).\n\n` +
-        (typeof hit.accuracy === "number" ? `Floor accuracy ${Number(hit.accuracy).toFixed(3)}` : "No board-grade accuracy") +
+        `**${hit.axis}** (${hit.bench}) is **MEASURED** on the quotable board (slot 14).\n\n` +
+        `Separation is **${sep}** — a TIE is not a separated leader. Counted in totals (${canon.publicCount}).\n\n` +
+        (typeof hit.accuracy === "number" ? `Leader accuracy ${Number(hit.accuracy).toFixed(3)}` : "No board-grade accuracy") +
         (hit.n ? ` at n=${hit.n}` : "") +
-        `.\n\n_Grounded in GET /api/gspc - jail floor / UNTESTED, not by a model._`
+        `.\n\n_Grounded in GET /api/gspc jail axis, not by a model._`
       );
     }
     if (!(hit.status === "MEASURED" && hit.n > 0)) {
@@ -92,10 +93,10 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   if (/\bjail\b/i.test(q) && canon.jail && !axes.some(isJailAxis)) {
     const j = canon.jail;
     return (
-      `**jail** is a measured **floor**, not a board axis.\n\n${canon.jailNote}\n\n` +
-      (typeof j.accuracy === "number" ? `Floor accuracy ${Number(j.accuracy).toFixed(3)}` : "No board-grade accuracy") +
+      `**jail** is MEASURED on the quotable board.\n\n${canon.jailNote}\n\n` +
+      (typeof j.accuracy === "number" ? `Leader accuracy ${Number(j.accuracy).toFixed(3)}` : "No board-grade accuracy") +
       (j.n ? ` at n=${j.n}` : "") +
-      `. Public count: ${canon.publicCount}.\n\n_Grounded in GET /api/gspc jail_floor, not by a model._`
+      `. Public count: ${canon.publicCount}.\n\n_Grounded in GET /api/gspc, not by a model._`
     );
   }
 
@@ -109,9 +110,9 @@ async function grounded(q: string, origin: string): Promise<string | null> {
       `**${canon.measured} measured of ${canon.quotable}**` +
       (canon.publicCount ? ` (${canon.publicCount})` : "") +
       `.\n\n` +
-      `Never "12 axes" and never "14 are MEASURED" - jail is not board-measured.\n\n` +
+      `Cite live totals.public_count — never invent 22 axes. Jail is MEASURED; a TIE is not a separated leader.\n\n` +
       `${canon.jailNote}\n\n` +
-      `The ${mAxes.length} board-measured axes:\n` +
+      `The ${mAxes.length} measured axes:\n` +
       mAxes.map((a: any) => `- **${a.axis}** ${Number(a.accuracy).toFixed(3)} (n=${a.n}` +
         (a.separation ? `, ${a.separation}` : "") + `)`).join("\n") +
       `\n\n_Grounded in GET /api/gspc totals (measured_axes / public_count), not by a model._`
@@ -125,7 +126,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   // Conversational floor - greet, identity, capability. Answered from the About facts and
   // the live board canon (never an invented number or legal opinion), so the concierge holds
   // a basic conversation instead of refusing "hello". claimGuardRefuse already ran above.
-  const openNames = axes.map((a: any) => a.axis).filter((n: any) => n && String(n).toLowerCase() !== "jail");
+  const openNames = axes.map((a: any) => a.axis).filter(Boolean);
   if (/^(hi|hey+|hello+|yo|gm|ga|ge|good (morning|afternoon|evening)|greetings|sup|howdy|hiya|heya|hej|hola)\b/i.test(t) || t === "hi" || t === "hello") {
     return (
       `Hi - I'm the Council of AI concierge. I answer from published measurement and frozen rules, and I say **UNMEASURED** rather than guess.\n\n` +
