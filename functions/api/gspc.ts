@@ -50,7 +50,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         return vals.length ? round(vals.reduce((s, v) => s + v, 0) / vals.length) : null;
       };
       // A slot is MEASURED when it has a completed separation determination (SEPARATED or TIE).
-      // Jail's separation is UNTESTED: quotable (carries data) but not a measured axis.
+      // Jail separation is TIE (determined 2026-08-25) — counted in measured_axes; a TIE is not a separated lead.
       // public_count is derived from those two numbers — never a typed 13/14.
       const measured = m.filter((a) => a.separation !== "UNTESTED").length;
       const quotable = m.length;
