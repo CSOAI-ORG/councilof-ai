@@ -6,6 +6,9 @@
  * This function reads the latest payload back, same-origin over HTTPS.
  * Honest by construction: if the worker/D1 is down, the caller gets a 502 and the
  * UI shows OFFLINE — never a fabricated fleet.
+ *
+ * NOT a grade oracle / price feed / labour MEASURED source.
+ * See docs/ORACLE_FLEET.md · docs/RUNPOD_POLICY.md · docs/SOVOS/INDEX-METHOD-0.1.md.
  */
 
 const FLEET_URL = "https://supervisor-worker.nicholastempleman.workers.dev/fleet/status";
