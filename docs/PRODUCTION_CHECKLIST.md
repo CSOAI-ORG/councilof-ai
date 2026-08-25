@@ -23,7 +23,7 @@ Example:
 AGUI_WIRE_URL=https://<tunnel-or-agui.councilof.ai>
 ```
 
-## Surfaces — production parity
+## Surfaces — production parity (DSH into all)
 
 | Surface | Council OS (Lobby) | DSH (`/dashboard`) | Public nav |
 |---------|-------------------|-------------------|------------|
@@ -32,8 +32,14 @@ AGUI_WIRE_URL=https://<tunnel-or-agui.councilof.ai>
 | Bond Venturi | LobbyHome tile | Sidebar + dashboard card | Header Measure |
 | Legacy Bridge | LobbyHome tile | — | — |
 | Layer 0 / Trust / Hive | LobbyHome infra | DSH sidebar infra | — |
+| GSPC board | Lobby card + `/gspc-scoreboard` | Hub tile | Measure |
+| East-West | Lobby pane + `/east-west/*` | Same pack IDs | — |
+| EAT / Competitors / RWA stubs | `/competitors` | Same records when MEASURED | — |
+| Verify | Lobby + `/gspc-verify` | Hub | Loginless verify |
+| Powered-by (Option A) | `/powered-by` | Partner admin later | — |
 
-Shared constants: `client/src/lib/layer0Links.ts`
+Shared constants: `client/src/lib/layer0Links.ts`  
+Full matrix + adapters/publishers plan: `docs/COUNCIL_OS_BUILD_PLAN.md`
 
 ## Lobby — three answer lanes
 
