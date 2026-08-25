@@ -17,6 +17,13 @@ import { useSiteChromeHidden } from "@/lib/osChrome";
 
 const HOVER_MS = 150;
 
+/** Always-visible estate shortcuts (NEXT_300 #206). */
+const ESTATE_QUICK = [
+  { href: "/indices", label: "Indices" },
+  { href: "/products", label: "Products" },
+  { href: "/powered-by", label: "Powered-by" },
+] as const;
+
 function resolveMasterAction(action: MasterNavAction) {
   if (action.kind === "lobby") return resolveLobbyItem(action.pane, action.task);
   return { href: action.href, external: action.external };
@@ -136,9 +143,21 @@ export function BottomEstateNav() {
           })}
         </div>
 
+        <div className="ml-auto hidden items-center gap-0.5 sm:flex" aria-label="Estate shortcuts">
+          {ESTATE_QUICK.map((q) => (
+            <a
+              key={q.href}
+              href={q.href}
+              className="rounded-lg px-2 py-1.5 text-xs font-medium text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
+            >
+              {q.label}
+            </a>
+          ))}
+        </div>
+
         <button
           type="button"
-          className="ml-auto rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 md:hidden"
+          className="ml-auto rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 md:hidden sm:ml-0"
           aria-expanded={sheet}
           onClick={() => setSheet((v) => !v)}
         >
@@ -155,6 +174,22 @@ export function BottomEstateNav() {
 
       {sheet && (
         <div className="max-h-[55vh] overflow-y-auto border-t border-slate-100 bg-white px-3 py-3 md:hidden">
+          <div className="mb-3">
+            <p className="px-2 text-[10px] font-bold uppercase tracking-wide text-emerald-700">Estate</p>
+            <ul className="mt-1">
+              {ESTATE_QUICK.map((q) => (
+                <li key={q.href}>
+                  <a
+                    href={q.href}
+                    className="block rounded-md px-2 py-1.5 text-sm text-slate-700 hover:bg-emerald-50"
+                    onClick={() => setSheet(false)}
+                  >
+                    {q.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
           {MASTER_NAVIGATION.map((item) => (
             <div key={item.name} className="mb-3">
               <p className="px-2 text-[10px] font-bold uppercase tracking-wide text-emerald-700">{item.name}</p>
