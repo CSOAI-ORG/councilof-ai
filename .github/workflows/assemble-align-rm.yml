@@ -1,0 +1,56 @@
+name: assemble-align-rm
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.align-staging/rm/**'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble and write via Contents API
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import base64, pathlib, hashlib, json, urllib.request, os
+          parts = sorted(pathlib.Path('.align-staging/rm').glob('part*.b64'), key=lambda p: int(p.stem[4:]))
+          data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
+          path = 'client/src/data/route-manifest.ts'
+          print('assembled', len(data), hashlib.sha1(data).hexdigest())
+          token = os.environ['GH_TOKEN']
+          api = f'https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/{path}'
+          req = urllib.request.Request(api + '?ref=master', headers={
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'User-Agent': 'assemble-align-rm',
+            'X-GitHub-Api-Version': '2022-11-28',
+          })
+          meta = json.loads(urllib.request.urlopen(req).read())
+          sha = meta['sha']
+          body = json.dumps({
+            'message': 'align: route-manifest towns path -> gspc-arena?view=towns',
+            'content': base64.b64encode(data).decode('ascii'),
+            'branch': 'master',
+            'sha': sha,
+          }).encode()
+          put = urllib.request.Request(api, data=body, method='PUT', headers={
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'User-Agent': 'assemble-align-rm',
+            'Content-Type': 'application/json',
+            'X-GitHub-Api-Version': '2022-11-28',
+          })
+          try:
+            resp = urllib.request.urlopen(put)
+            out = json.loads(resp.read())
+            print('OK', out.get('commit',{}).get('sha'))
+          except Exception as e:
+            print('PUT failed', e)
+            if hasattr(e, 'read'):
+              print(e.read().decode())
+            raise
+          PY
