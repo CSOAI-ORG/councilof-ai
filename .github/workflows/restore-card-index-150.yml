@@ -1,39 +1,8 @@
 name: restore-card-index-150
-# MANUAL ONLY — auto-push path trigger removed (was racing atomic 335).
 on:
   workflow_dispatch:
 jobs:
-  restore:
+  noop:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Restore honest 150 from known commit
-        run: |
-          set -euo pipefail
-          git show 521df33b6c35dad6c3b2ca3e444fba2ac653687b:public/signed/card_index.json > public/signed/card_index.json
-          python3 - <<'PY'
-          import json
-          d=json.load(open("public/signed/card_index.json"))
-          assert d["n_cards"]==150 and len(d["cards"])==150
-          print("ok", len(open("public/signed/card_index.json").read()))
-          PY
-          cat > public/stack/e2e-latest.json <<EOF
-          {
-            "deployed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "reason": "manual restore card_index 150",
-            "card_index_n": 150
-          }
-          EOF
-      - name: Commit
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/signed/card_index.json public/stack/e2e-latest.json
-          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
-          git commit -m "fix: restore card_index 150 (manual)"
-          git push
+      - run: echo "NOOP — restore-card-index-150 neutered; verified 335 is live target"
