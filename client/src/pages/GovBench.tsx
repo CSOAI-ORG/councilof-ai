@@ -293,7 +293,7 @@ inspect eval govbench_inspect.py --model ollama/qwen2.5:0.5b`}</code>
                target="_blank" rel="noopener noreferrer">
               Results, tooling and raw JSON →
             </a>
-            <Link className="text-emerald-700 dark:text-emerald-400 hover:underline" href="/trust">
+            <Link className="text-emerald-700 dark:text-emerald-400 hover:underline" href="/trust-center">
               Trust &amp; methodology →
             </Link>
           </div>

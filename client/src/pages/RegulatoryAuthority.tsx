@@ -19,13 +19,13 @@ export default function RegulatoryAuthority() {
               A measurement body for AI governance: signed, provision-anchored measurement records — not accredited certification.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/regulatory/iso-17065">
+              <Link href="/accreditation">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
                   Learn About ISO 17065
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/regulatory/roadmap">
+              <Link href="/trust-center">
                 <Button size="lg" variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50">
                   View 5-Year Roadmap
                 </Button>
@@ -71,7 +71,7 @@ export default function RegulatoryAuthority() {
                     <span>Signed records that third parties can verify independently</span>
                   </li>
                 </ul>
-                <Link href="/regulatory/iso-17065">
+                <Link href="/accreditation">
                   <Button variant="outline" className="w-full border-emerald-600 text-emerald-600 hover:bg-emerald-50">
                     Learn More
                   </Button>
@@ -102,7 +102,7 @@ export default function RegulatoryAuthority() {
                     <span>Coverage across all major regulatory regions</span>
                   </li>
                 </ul>
-                <Link href="/regulatory/roadmap">
+                <Link href="/trust-center">
                   <Button variant="outline" className="w-full border-emerald-600 text-emerald-600 hover:bg-emerald-50">
                     View Roadmap
                   </Button>
@@ -171,7 +171,7 @@ export default function RegulatoryAuthority() {
                   <li>▹ Foundation for all other recognitions</li>
                   <li>▹ Timeline: 12 months (2025)</li>
                 </ul>
-                <Link href="/regulatory/iso-17065">
+                <Link href="/accreditation">
                   <Button className="w-full bg-blue-600 hover:bg-blue-700">
                     Learn More
                   </Button>
@@ -193,7 +193,7 @@ export default function RegulatoryAuthority() {
                   <li>▹ €30M fines for non-compliance</li>
                   <li>▹ Timeline: 24 months (2026-2027)</li>
                 </ul>
-                <Link href="/regulatory/eu-notified-body">
+                <Link href="/accreditation">
                   <Button className="w-full bg-yellow-600 hover:bg-yellow-700">
                     Learn More
                   </Button>
@@ -215,7 +215,7 @@ export default function RegulatoryAuthority() {
                   <li>▹ Voluntary but increasingly required</li>
                   <li>▹ Timeline: 12 months (2026)</li>
                 </ul>
-                <Link href="/regulatory/nist-recognition">
+                <Link href="/accreditation">
                   <Button className="w-full bg-red-600 hover:bg-red-700">
                     Learn More
                   </Button>
@@ -237,7 +237,7 @@ export default function RegulatoryAuthority() {
                   <li>▹ Data security and content safety</li>
                   <li>▹ Timeline: 12 months (2027)</li>
                 </ul>
-                <Link href="/regulatory/tc260-alignment">
+                <Link href="/accreditation">
                   <Button className="w-full bg-orange-600 hover:bg-orange-700">
                     Learn More
                   </Button>

@@ -273,7 +273,7 @@ export default function Article50Explained() {
               See the framework crosswalk
             </Link>
             <Link
-              href="/article-50-calculator"
+              href="/article-50"
               className="inline-flex rounded-lg border-2 border-emerald-500/60 bg-transparent px-6 py-3 text-center text-sm font-bold text-emerald-300 transition hover:bg-emerald-500/10"
             >
               Estimate your exposure

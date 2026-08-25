@@ -136,7 +136,7 @@ export default function OsEnter() {
               <div className="mt-3 text-lg font-bold text-white">Left brain {"\u2014"} Govern</div>
               <p className="mt-1 text-sm text-emerald-50/70">Command Center, compliance, evidence, certification. Structure, proof, control.</p>
             </a>
-            <a href="/council-city" className="group rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-teal-400/5 p-6 text-left transition hover:scale-[1.02]">
+            <a href="/gspc-arena?view=towns" className="group rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/15 to-teal-400/5 p-6 text-left transition hover:scale-[1.02]">
               <div className="text-3xl">{"\u25d1"}</div>
               <div className="mt-3 text-lg font-bold text-white">Right brain {"\u2014"} Explore</div>
               <p className="mt-1 text-sm text-emerald-50/70">Council Town, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>

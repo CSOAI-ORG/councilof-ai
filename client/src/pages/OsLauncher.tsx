@@ -54,11 +54,11 @@ const NAV: NavGroup[] = [
     label: "Tools",
     items: [
       { name: "Published tools", href: "/tools", pane: "tools" },
-      { name: "ClaimGuard", href: "/claimguard", note: "claim-vs-artifact check", badge: "live", pane: "claimguard" },
+      { name: "Claim integrity", href: "/honesty", note: "claim-vs-artifact check", badge: "live", pane: "claimguard" },
       { name: "Workbench", href: "/workbench", pane: "workbench" },
       { name: "Library", href: "/library", pane: "library" },
       { name: "Watchdog map", href: "/watchdog-map", pane: "watchdog" },
-      { name: "RAS booking", href: "/ras", note: "human-rail assessment", pane: "ras" },
+      { name: "Get assessed", href: "/assess", note: "human-rail assessment", pane: "ras" },
     ],
   },
   {

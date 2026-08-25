@@ -192,7 +192,7 @@ export function FrameworkLandingPage({
             Learn to comply with the world's most important AI regulations.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Link href="/training/catalog">
+            <Link href="/academy">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
                 View Training Catalog
               </Button>

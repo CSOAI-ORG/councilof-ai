@@ -177,7 +177,7 @@ export default function HorusIntel() {
           </div>
           <div className="text-center mt-6">
             <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50" asChild>
-              <a href="/horus/sample" target="_blank" rel="noopener noreferrer">
+              <a href="/horus" target="_blank" rel="noopener noreferrer">
                 Read Full Sample Brief
                 <ArrowRight className="w-4 h-4 ml-2" />
               </a>

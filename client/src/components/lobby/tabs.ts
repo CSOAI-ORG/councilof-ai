@@ -130,16 +130,16 @@ export const LOBBY_TABS: LobbyTab[] = [
   },
   {
     id: "claimguard",
-    label: "ClaimGuard",
-    blurb: "Claim-vs-signed-artifact integrity checking. Measurement, not certification.",
-    path: "/claimguard",
+    label: "Claim integrity",
+    blurb: "Claim-vs-signed-artifact integrity checking. Measurement, never a badge.",
+    path: "/honesty",
     cues: /\b(claimguard|claim.?guard|claim check|verify claim)\b/i,
   },
   {
     id: "ras",
-    label: "RAS booking",
-    blurb: "Human-rail readiness assessment booking desk — Paddle pending.",
-    path: "/ras",
+    label: "Get assessed",
+    blurb: "Run an assessment against the rules that govern your system.",
+    path: "/assess",
     cues: /\b(ras|readiness assessment|booking|human.?rail)\b/i,
   },
   {

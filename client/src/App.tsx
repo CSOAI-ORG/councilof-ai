@@ -386,7 +386,6 @@ const ROUTE_TITLES: Record<string, string> = {
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
-  "/article-50-kit": "Article 50 Kit | CSOAI",
   "/status": "System Status | CSOAI",
   "/contact": "Contact | CSOAI",
   "/about": "About | CSOAI",

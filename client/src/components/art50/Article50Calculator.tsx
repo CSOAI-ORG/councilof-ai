@@ -124,7 +124,7 @@ export default function Article50Calculator() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
-              href="/article-50-kit"
+              href="/article-50"
               className="inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] transition hover:bg-emerald-400"
             >
               Get the Article 50 Kit →
