@@ -25,7 +25,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/about-credential",
   "comp": "AboutCEASAI",
-  "title": "About Credentials"
+  "title": "About CEASAI"
  },
  {
   "path": "/academy",
@@ -38,19 +38,24 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Accessibility"
  },
  {
+  "path": "/accountability-loop",
+  "comp": "AccountabilityLoop",
+  "title": "Accountability Loop"
+ },
+ {
   "path": "/accreditation",
   "comp": "Accreditation",
   "title": "Accreditation"
  },
  {
-  "path": "/admin",
-  "comp": "Admin",
-  "title": "Admin"
- },
- {
   "path": "/advisory",
   "comp": "PartnersAdvisory",
   "title": "Partners Advisory"
+ },
+ {
+  "path": "/ag-ui",
+  "comp": "AgUiBridge",
+  "title": "Ag Ui Bridge"
  },
  {
   "path": "/agent-council",
@@ -143,24 +148,19 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Api Docs"
  },
  {
-  "path": "/api-keys",
-  "comp": "ApiKeys",
-  "title": "Api Keys"
- },
- {
   "path": "/architecture",
   "comp": "Technology",
   "title": "Technology"
  },
  {
+  "path": "/arena-scoreboard",
+  "comp": "ArenaScoreboard",
+  "title": "Arena Scoreboard"
+ },
+ {
   "path": "/article-50",
   "comp": "Article50",
   "title": "Article50"
- },
- {
-  "path": "/assess",
-  "comp": "AssessTool",
-  "title": "Assess Tool"
  },
  {
   "path": "/assessment",
@@ -196,6 +196,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/benchmark-index",
   "comp": "BenchmarkIndex",
   "title": "Benchmark Index"
+ },
+ {
+  "path": "/benchmark-quality",
+  "comp": "BenchmarkQuality",
+  "title": "Benchmark Quality"
  },
  {
   "path": "/benchmarks",
@@ -258,9 +263,19 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Exam Review"
  },
  {
+  "path": "/challenge",
+  "comp": "Challenge",
+  "title": "Challenge"
+ },
+ {
   "path": "/charter",
   "comp": "Charter",
   "title": "Charter"
+ },
+ {
+  "path": "/chat",
+  "comp": "AgUiBridge",
+  "title": "Ag Ui Bridge"
  },
  {
   "path": "/checklist",
@@ -276,6 +291,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/cobol",
   "comp": "LegacyBridge",
   "title": "Legacy Bridge"
+ },
+ {
+  "path": "/coliseum",
+  "comp": "Coliseum",
+  "title": "Coliseum"
  },
  {
   "path": "/command-center",
@@ -390,12 +410,12 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/council-model-card",
   "comp": "Sov3ModelCard",
-  "title": "Model Card"
+  "title": "Sov3 Model Card"
  },
  {
   "path": "/council-system-card",
   "comp": "Sov3SystemCard",
-  "title": "System Card"
+  "title": "Sov3 System Card"
  },
  {
   "path": "/council-vs-agents",
@@ -420,7 +440,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/credential-training",
   "comp": "CEASAITraining",
-  "title": "Credential Training"
+  "title": "CEASAITraining"
  },
  {
   "path": "/crosswalk",
@@ -431,6 +451,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/crosswalks",
   "comp": "Crosswalks",
   "title": "Crosswalks"
+ },
+ {
+  "path": "/csoai-law",
+  "comp": "MeokLaw",
+  "title": "Meok Law"
  },
  {
   "path": "/cyber-scan",
@@ -513,6 +538,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Early Access Landing"
  },
  {
+  "path": "/east-west",
+  "comp": "EastWest",
+  "title": "East West"
+ },
+ {
   "path": "/ecosystem",
   "comp": "Integrations",
   "title": "Integrations"
@@ -583,9 +613,24 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eu Act Vs Gdpr"
  },
  {
+  "path": "/eunomia",
+  "comp": "Eunomia",
+  "title": "Eunomia"
+ },
+ {
+  "path": "/eunomia-data",
+  "comp": "EunomiaData",
+  "title": "Eunomia Data"
+ },
+ {
   "path": "/evidence",
   "comp": "EvidenceHub",
   "title": "Evidence Hub"
+ },
+ {
+  "path": "/evidence-rail",
+  "comp": "EvidenceRail",
+  "title": "Evidence Rail"
  },
  {
   "path": "/faq",
@@ -631,6 +676,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/firewall-charter",
   "comp": "FirewallCharter",
   "title": "Firewall Charter"
+ },
+ {
+  "path": "/first-fine-watch",
+  "comp": "FirstFineWatch",
+  "title": "First Fine Watch"
  },
  {
   "path": "/foundation-models",
@@ -1014,8 +1064,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/law",
-  "comp": "CSOAILaw",
-  "title": "CSOAI Law"
+  "comp": "MeokLaw",
+  "title": "Meok Law"
  },
  {
   "path": "/layer0",
@@ -1158,14 +1208,19 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Membership Agreement"
  },
  {
-  "path": "/csoai-law",
-  "comp": "CSOAILaw",
-  "title": "CSOAI Law"
+  "path": "/meok-law",
+  "comp": "MeokLaw",
+  "title": "Meok Law"
  },
  {
   "path": "/methodology",
   "comp": "Methodology",
   "title": "Methodology"
+ },
+ {
+  "path": "/metrology",
+  "comp": "Metrology",
+  "title": "Metrology"
  },
  {
   "path": "/minds",
@@ -1178,14 +1233,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Model Registry"
  },
  {
-  "path": "/my-applications",
-  "comp": "MyApplications",
-  "title": "My Applications"
- },
- {
-  "path": "/my-courses",
-  "comp": "MyCourses",
-  "title": "My Courses"
+  "path": "/motion-lab",
+  "comp": "MotionLab",
+  "title": "Motion Lab"
  },
  {
   "path": "/network",
@@ -1236,6 +1286,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/open-media",
   "comp": "OpenMedia",
   "title": "Open Media"
+ },
+ {
+  "path": "/open-source",
+  "comp": "OpenSourceFramework",
+  "title": "Open Source Framework"
  },
  {
   "path": "/opengridworks",
@@ -1398,6 +1453,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Regulation Radar"
  },
  {
+  "path": "/rankings",
+  "comp": "RankingsBridge",
+  "title": "Rankings Bridge"
+ },
+ {
   "path": "/readiness",
   "comp": "Readiness",
   "title": "Readiness"
@@ -1446,6 +1506,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/register",
   "comp": "SovereignRegistry",
   "title": "Sovereign Registry"
+ },
+ {
+  "path": "/registers",
+  "comp": "Registers",
+  "title": "Registers"
  },
  {
   "path": "/registry",
@@ -1573,19 +1638,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Services"
  },
  {
-  "path": "/settings",
-  "comp": "Settings",
-  "title": "Settings"
- },
- {
-  "path": "/settings/billing",
-  "comp": "Billing",
-  "title": "Billing"
- },
- {
-  "path": "/settings/notifications",
-  "comp": "NotificationSettings",
-  "title": "Notification Settings"
+  "path": "/signals",
+  "comp": "Signals",
+  "title": "Signals"
  },
  {
   "path": "/signup",
@@ -1626,6 +1681,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/status",
   "comp": "StatusPage",
   "title": "Status Page"
+ },
+ {
+  "path": "/statute-to-predicate",
+  "comp": "StatuteToPredicate",
+  "title": "Statute To Predicate"
  },
  {
   "path": "/stripe-checkout.js",
@@ -1738,14 +1798,19 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Why CSOAI"
  },
  {
-  "path": "/verify",
-  "comp": "Article50Pack",
-  "title": "Article50 Pack"
+  "path": "/verifiable-trust",
+  "comp": "VerifiableTrust",
+  "title": "Verifiable Trust"
  },
  {
   "path": "/verify-certificate",
   "comp": "CertificateVerification",
   "title": "Certificate Verification"
+ },
+ {
+  "path": "/verify-leaderboard",
+  "comp": "VerifyLeaderboard",
+  "title": "Verify Leaderboard"
  },
  {
   "path": "/voice",
@@ -1823,6 +1888,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Welcome"
  },
  {
+  "path": "/where-the-record-lives",
+  "comp": "WhereTheRecordLives",
+  "title": "Where The Record Lives"
+ },
+ {
   "path": "/why",
   "comp": "WhyCSOAI",
   "title": "Why CSOAI"
@@ -1838,14 +1908,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Widget Courses"
  },
  {
-  "path": "/workbench",
-  "comp": "Workbench",
-  "title": "Workbench"
- },
- {
   "path": "/workbench-paper",
   "comp": "Sov3Whitepaper",
-  "title": "Architecture Whitepaper"
+  "title": "Sov3 Whitepaper"
  },
  {
   "path": "/world-3d",

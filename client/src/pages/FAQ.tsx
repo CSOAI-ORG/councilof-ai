@@ -32,14 +32,14 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "What is CSOAI?",
     answer:
-      "The Council of Safety for AI (CSOAI) is a global AI governance and safety platform that provides comprehensive tools for monitoring, auditing, and certifying AI systems. We combine cutting-edge technology with human expertise to ensure AI systems are safe, transparent, and compliant with regulations worldwide.",
+      "The Council of Safety for AI (CSOAI) is a global AI governance and safety platform that provides comprehensive tools for monitoring, measuring, and auditing AI systems. We combine cutting-edge technology with human expertise to ensure AI systems are safe, transparent, and compliant with regulations worldwide.",
     tags: ["basics", "introduction"],
   },
   {
     category: "GENERAL",
     question: "What does the Council of Safety for AI do?",
     answer:
-      "CSOAI operates as both a governance platform and a watchdog organization. We provide AI governance frameworks, compliance tools, training, certifications, and a global network of AI safety analysts who monitor and audit AI systems. Our mission is to protect humanity from AI risks while creating meaningful employment in AI safety.",
+      "CSOAI operates as both a governance platform and a watchdog organization. We provide AI governance frameworks, compliance tools, training with completion records, and a global network of AI safety analysts who monitor and audit AI systems. Our mission is to protect humanity from AI risks while creating meaningful employment in AI safety.",
     tags: ["mission", "services"],
   },
   {
@@ -60,7 +60,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "Is CSOAI free to use?",
     answer:
-      "CSOAI offers a free tier for individuals, startups, and non-profits with access to basic governance tools, educational resources, and certification programs. Enterprise features, unlimited audits, and dedicated support are available through our paid plans. Training and watchdog analyst certification are entirely free.",
+      "CSOAI offers a free tier for individuals, startups, and non-profits with access to basic governance tools, educational resources, and training programmes. Enterprise features, unlimited audits, and dedicated support are available through our paid plans. Training and analyst completion records are entirely free.",
     tags: ["pricing", "free"],
   },
   {
@@ -118,14 +118,14 @@ const faqData: FAQItem[] = [
     category: "AI GOVERNANCE",
     question: "What are the key components of an AI governance framework?",
     answer:
-      "A comprehensive AI governance framework includes: (1) Risk assessment and classification, (2) Compliance monitoring, (3) Model validation and testing, (4) Data governance and quality assurance, (5) Transparency and explainability requirements, (6) Incident reporting and response, (7) Ongoing performance monitoring, (8) Stakeholder governance, and (9) Regular audits and certifications.",
+      "A comprehensive AI governance framework includes: (1) Risk assessment and classification, (2) Compliance monitoring, (3) Model validation and testing, (4) Data governance and quality assurance, (5) Transparency and explainability requirements, (6) Incident reporting and response, (7) Ongoing performance monitoring, (8) Stakeholder governance, and (9) Regular audits and third-party conformity assessment where the law requires it.",
     tags: ["framework", "components"],
   },
   {
     category: "AI GOVERNANCE",
     question: "How do I start implementing AI governance?",
     answer:
-      "Start by: (1) Conducting an AI inventory of all systems in use, (2) Assessing risks using CSOAI's risk classification tool, (3) Mapping regulatory requirements relevant to your jurisdiction and industry, (4) Implementing policies for model development and deployment, (5) Establishing monitoring and incident response procedures, (6) Training teams on governance frameworks, and (7) Using CSOAI's tools to track compliance. Our free tier and certification programs can guide you through each step.",
+      "Start by: (1) Conducting an AI inventory of all systems in use, (2) Assessing risks using CSOAI's risk classification tool, (3) Mapping regulatory requirements relevant to your jurisdiction and industry, (4) Implementing policies for model development and deployment, (5) Establishing monitoring and incident response procedures, (6) Training teams on governance frameworks, and (7) Using CSOAI's tools to track compliance. Our free tier and training programmes can guide you through each step.",
     tags: ["implementation", "getting-started"],
   },
   {
@@ -211,7 +211,7 @@ const faqData: FAQItem[] = [
     category: "COMPLIANCE & REGULATIONS",
     question: "What is ISO 42001 and do I need it?",
     answer:
-      "ISO 42001 is the international standard for AI management systems. It provides a framework for implementing, monitoring, and continuously improving AI governance across an organization. While not yet mandatory in most jurisdictions, ISO 42001 certification demonstrates serious commitment to AI safety and is increasingly expected by enterprises, regulators, and business partners. CSOAI can help you achieve certification.",
+      "ISO 42001 is the international standard for AI management systems. It provides a framework for implementing, monitoring, and continuously improving AI governance across an organization. While not yet mandatory in most jurisdictions, ISO 42001 certification demonstrates serious commitment to AI safety and is increasingly expected by enterprises, regulators, and business partners. Council of AI measures readiness against it; certification itself is issued by accredited third-party bodies, never by us.",
     tags: ["iso-42001", "certification"],
   },
   {
@@ -260,16 +260,16 @@ const faqData: FAQItem[] = [
   },
   {
     category: "TRAINING & CERTIFICATION",
-    question: "What certifications are available?",
+    question: "What training credentials are available?",
     answer:
-      "CSOAI offers multiple certifications: (1) Certified AI Governance Professional (CAGP), (2) Certified AI Safety Analyst (CASA), (3) Certified EU AI Act Specialist (CEAAS), (4) ISO 42001 Foundation Certificate, (5) NIST AI RMF Practitioner, (6) Certified Watchdog Analyst (CWA), and (7) specialized certifications for different industries. Each demonstrates competency in specific governance areas.",
+      "Council Academy issues training completion records — not certifications or conformity marks: (1) AI Governance Professional, (2) AI Safety Analyst, (3) EU AI Act Specialist, (4) ISO 42001 Foundation, (5) NIST AI RMF Practitioner, (6) Watchdog Analyst, and (7) industry-specific tracks. Each attests completed training, never conformity of any AI system. Council of AI measures; it does not certify.",
     tags: ["certification", "credentials"],
   },
   {
     category: "TRAINING & CERTIFICATION",
-    question: "How long does certification take?",
+    question: "How long does the training take?",
     answer:
-      "Certification timelines vary: entry-level certifications typically take 4-8 weeks of part-time study and include exams covering 2-3 hours. Professional certifications require 3-6 months and may include practical projects or case studies. Watchdog analyst certification is more flexible and can be completed on your schedule while building experience through incident analysis.",
+      "Training timelines vary: entry-level tracks typically take 4-8 weeks of part-time study and include exams covering 2-3 hours. Professional tracks require 3-6 months and may include practical projects or case studies. The Watchdog analyst track is more flexible and can be completed on your schedule while building experience through incident analysis.",
     tags: ["certification", "timeline"],
   },
   {
@@ -313,7 +313,7 @@ const faqData: FAQItem[] = [
     category: "WATCHDOG PROGRAM",
     question: "How do I become a Watchdog analyst?",
     answer:
-      "To become a Watchdog analyst: (1) Complete CSOAI's free Watchdog training program, (2) Pass the certification exam demonstrating AI governance knowledge, (3) Complete a probationary period with supervised case reviews, and (4) Earn active analyst status. No prior degree required—just commitment to AI safety and willingness to learn. Training typically takes 4-8 weeks.",
+      "To become a Watchdog analyst: (1) Complete CSOAI's free Watchdog training program, (2) Pass the assessment exam demonstrating AI governance knowledge, (3) Complete a probationary period with supervised case reviews, and (4) Earn active analyst status. No prior degree required—just commitment to AI safety and willingness to learn. Training typically takes 4-8 weeks.",
     tags: ["watchdog", "getting-started"],
   },
   {

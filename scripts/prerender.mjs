@@ -116,6 +116,12 @@ function discover() {
     "/legal/disclaimers", "/legal/dpa", "/legal/founding-council", "/legal/membership",
     "/legal/sla", "/licensing-agreement", "/terms-of-service", "/privacy",
     "/pricing-legacy", "/council-licensing",
+    // Per-axis deep-dive URLs (2026-08-25): the board's axis rows link /gspc/<axis>;
+    // production is a static host with an honest 404, so each needs a real snapshot.
+    "/gspc/governance", "/gspc/safety", "/gspc/provenance", "/gspc/continuity",
+    "/gspc/conformance", "/gspc/openness", "/gspc/machinery-conformity", "/gspc/care",
+    "/gspc/cross-reality", "/gspc/detector-interop", "/gspc/art5-safeguard",
+    "/gspc/swarm", "/gspc/affect", "/gspc/jail",
     // Benchmark surfaces (2026-08-23 audit: 404'd live — heuristic discovery misses
     // route-manifest paths). Council OS layer URLs carry ?view= query strings that
     // heuristic discovery never sees; snapshot each so the static host serves them

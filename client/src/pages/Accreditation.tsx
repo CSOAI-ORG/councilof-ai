@@ -62,11 +62,11 @@ export default function Accreditation() {
       title: 'AI Safety Fundamentals',
       duration: '40 hours',
       requirements: ['Complete 5 core courses', 'Pass foundation exam (70%)', 'Ethics assessment'],
-      badge: 'Foundation Certified',
+      badge: 'Foundation Track',
     },
     {
       level: 'Professional',
-      title: 'Certified AI Safety Analyst',
+      title: 'AI Safety Analyst Track',
       duration: '120 hours',
       requirements: [
         'Foundation certification',
@@ -75,7 +75,7 @@ export default function Accreditation() {
         '10 practical assessments',
         'Peer review submission',
       ],
-      badge: 'Professionally Certified',
+      badge: 'Professional Track',
     },
     {
       level: 'Expert',
@@ -89,7 +89,7 @@ export default function Accreditation() {
         'Published case study',
         'Mentorship of 5 analysts',
       ],
-      badge: 'Expert Certified',
+      badge: 'Expert Track',
     },
   ];
 
@@ -119,7 +119,7 @@ export default function Accreditation() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/training">
                 <Button size="lg" variant="secondary" className="bg-white text-blue-900 hover:bg-gray-100">
-                  Start Certification
+                  Start training
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -292,7 +292,7 @@ export default function Accreditation() {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Three Levels of Professional Certification
+              Three Levels of Professional Training
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Progress from foundational knowledge to expert-level mastery with our
@@ -364,7 +364,7 @@ export default function Accreditation() {
                   <Users className="h-10 w-10 mb-4" />
                   <h3 className="font-bold text-lg mb-2">Team Training Programs</h3>
                   <p className="text-blue-100 text-sm">
-                    Bulk certification for your team with dedicated support, custom tracks,
+                    Bulk training for your team with dedicated support, custom tracks,
                     and progress dashboards.
                   </p>
                 </CardContent>
@@ -402,7 +402,7 @@ export default function Accreditation() {
             </Link>
             <Link href="/certification">
               <Button size="lg" variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50">
-                View Certification Exams
+                View Assessment Exams
               </Button>
             </Link>
           </div>

@@ -18,7 +18,7 @@ const ARTEFACT_T4 =
 
 const RESULTS = [
   {
-    engine: "clan-sovereignty-refusing",
+    engine: "clan-refusal-gate",
     setF1: "0.153",
     ci95: "[0.128, 0.182]",
     t4F1: "0.151",

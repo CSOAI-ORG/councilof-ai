@@ -12,7 +12,7 @@ const FORMULA_DIMENSIONS = [
 ];
 
 const ASSTI_VENDORS = [
-  { name: "CSOAI MEOK ONE (sov3)", score: 78, transparent: true, formula: true, audit: true, public: true, badge: "bg-emerald-600" },
+  { name: "Council of AI reference stack", score: 78, transparent: true, formula: true, audit: true, public: true, badge: "bg-emerald-600" },
   { name: "Anthropic Claude (constitutional AI doc)", score: 62, transparent: true, formula: false, audit: false, public: true },
   { name: "OpenAI (Model Spec)", score: 54, transparent: true, formula: false, audit: false, public: true },
   { name: "Google Gemini (Responsible AI)", score: 42, transparent: false, formula: false, audit: false, public: true },
@@ -59,7 +59,7 @@ export default function EI3() {
             Care is not a vibe. It is a vector you can verify.
           </p>
           <div className="flex flex-wrap gap-3 mt-6">
-            <Badge variant="outline" className="border-rose-600 text-rose-700 dark:text-rose-400">Powered by sov3</Badge>
+            <Badge variant="outline" className="border-rose-600 text-rose-700 dark:text-rose-400">Council reference stack</Badge>
             <Badge variant="outline" className="border-rose-600 text-rose-700 dark:text-rose-400">Consciousness 0.788</Badge>
             <Badge variant="outline" className="border-rose-600 text-rose-700 dark:text-rose-400">1,394 episodes</Badge>
             <Badge variant="outline" className="border-rose-600 text-rose-700 dark:text-rose-400">33-node Council of AI</Badge>

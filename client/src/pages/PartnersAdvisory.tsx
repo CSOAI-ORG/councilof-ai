@@ -436,7 +436,7 @@ const PartnersAdvisory: React.FC = () => {
         <div className="relative mx-auto max-w-4xl text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-300 text-sm font-medium mb-8">
             <Hand className="w-4 h-4" />
-            Trusted by Leading Organizations Worldwide
+            Open partner programme — no pay-to-play, ever
           </div>
           <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6">
             Partners & Advisory Services
@@ -449,8 +449,8 @@ const PartnersAdvisory: React.FC = () => {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">50+</div>
-              <div className="text-sm text-slate-400">Global Partners</div>
+              <div className="text-3xl font-bold text-white">Open</div>
+              <div className="text-sm text-slate-400">Partner programme</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-emerald-400">6</div>
@@ -853,7 +853,7 @@ const PartnersAdvisory: React.FC = () => {
             Ready to Partner or Get Started?
           </h2>
           <p className="text-lg text-purple-100 mb-8 max-w-2xl mx-auto">
-            Join hundreds of organizations transforming their AI governance with CSOAI and our partner ecosystem.
+            Partner with an independent measurement body. Every claim on this page is checkable; every measurement is signed.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-semibold">
@@ -876,8 +876,7 @@ const PartnersAdvisory: React.FC = () => {
           </p>
           <div className="grid md:grid-cols-4 gap-6 text-center">
             {[
-              { label: 'Active Partners', value: '200+' },
-              { label: 'Countries', value: '40+' },
+              { label: 'Measurement axes on the signed board', value: 'live at /api/gspc' },
               { label: 'Industries', value: '8' },
               { label: 'Employees Trained', value: '50K+' },
             ].map((stat, idx) => (

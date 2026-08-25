@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link, useRoute } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
@@ -191,9 +192,22 @@ function sortKeysDeep(v: any): any {
   return v;
 }
 
+// Short axis ids (HF dataset slugs, spine ids) → board axis names, so /gspc/gov
+// and /gspc/governance both land on the same row.
+const AXIS_ALIAS: Record<string, string> = {
+  gov: "governance", agi: "safety", prv: "provenance", asi: "continuity",
+  mcp: "conformance", oss: "openness", mach: "machinery-conformity",
+  xr: "cross-reality", det: "detector-interop", art5: "art5-safeguard",
+};
+
 export default function GspcScoreboard() {
   const [data, setData] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [, axisParams] = useRoute("/gspc/:axis");
+  const rawAxis = axisParams?.axis?.toLowerCase() ?? null;
+  const wantAxis = rawAxis ? (AXIS_ALIAS[rawAxis] ?? rawAxis) : null;
+  const focused: Axis | null =
+    data && wantAxis ? ((data.axes as Axis[]).find((a) => a.axis === wantAxis) ?? null) : null;
 
   useEffect(() => {
     document.title = "The GSPC board — live | Council of AI";
@@ -242,6 +256,38 @@ export default function GspcScoreboard() {
         {err && <p className="mt-8 text-red-600">Board fetch failed: {err} — the API at /api/gspc is the source of truth.</p>}
         {!data && !err && <p className="mt-8 text-gray-500">Loading the live board…</p>}
 
+        {wantAxis && data && !focused && (
+          <p className="mt-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+            No axis named <span className="font-mono">{wantAxis}</span> on the board — the full board
+            is below. Every axis we publish is in GET /api/gspc; we never invent one for a URL.
+          </p>
+        )}
+
+        {focused && (
+          <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">Axis deep-dive</p>
+            <h2 className="mt-1 text-2xl font-black text-gray-900">{focused.axis}</h2>
+            <p className="mt-2 text-sm text-gray-700">
+              Bench <strong>{focused.bench}</strong> · n=<span className="font-mono">{focused.n}</span> ·
+              leader accuracy <span className="font-mono">{(focused.accuracy * 100).toFixed(1)}%</span>
+              {focused.interval && (
+                <> · 95% CI <span className="font-mono">{(focused.interval[0] * 100).toFixed(1)}–{(focused.interval[1] * 100).toFixed(1)}%</span></>
+              )} · separation{" "}
+              <span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-bold ${CHIP[focused.separation]}`}>
+                {focused.separation}
+              </span>
+            </p>
+            <p className="mt-3 flex flex-wrap gap-4 text-sm">
+              <a className="font-semibold text-emerald-700 underline" href={`https://huggingface.co/datasets/csoai/gspc-${rawAxis && AXIS_ALIAS[rawAxis] ? rawAxis : Object.entries(AXIS_ALIAS).find(([, v]) => v === focused.axis)?.[0] ?? focused.axis}`}>
+                Frozen gold bank (Hugging Face)
+              </a>
+              <Link className="font-semibold text-emerald-700 underline" href="/gspc-verify">Verify the signed chain</Link>
+              <a className="font-semibold text-emerald-700 underline" href="/api/gspc">Raw JSON (GET /api/gspc)</a>
+              <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">Full board</Link>
+            </p>
+          </div>
+        )}
+
         {data && (
           <div className="mt-8 overflow-x-auto rounded-xl border border-emerald-600/15 bg-white shadow-sm">
             <table className="w-full text-sm">
@@ -257,8 +303,10 @@ export default function GspcScoreboard() {
               </thead>
               <tbody>
                 {(data.axes as Axis[]).map((a) => (
-                  <tr key={a.axis} className="border-b last:border-0">
-                    <td className="p-3 font-semibold text-gray-900">{a.axis}</td>
+                  <tr key={a.axis} className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
+                    <td className="p-3 font-semibold text-gray-900">
+                      <Link href={`/gspc/${a.axis}`} className="hover:underline">{a.axis}</Link>
+                    </td>
                     <td className="p-3 text-gray-600">{a.bench}</td>
                     <td className="p-3 font-mono">{a.n}</td>
                     <td className="p-3 font-mono">
