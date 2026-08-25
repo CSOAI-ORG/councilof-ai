@@ -1,1 +1,1 @@
-LOAD_ME_FROM_/tmp/mcp-call-1.json
+@file:/tmp/out-AppLazy.tsx
