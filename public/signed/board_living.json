@@ -1,181 +1,206 @@
 {
-  "schema": "csoai.gspc-living/0.1",
-  "kind": "board_living",
-  "updated": "2026-08-18T03:22:16Z",
-  "signed": true,
-  "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
-  "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
-  "sig_input": "sha256(canonical board minus signature fields, sort_keys)",
-  "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
-  "axes": {
-    "governance": {
-      "status": "MEASURED",
-      "accuracy": 0.7,
-      "n": 237,
-      "leader": "council-embodiment-v3-light (council specialist)",
-      "separation": "SEPARATED",
-      "interval": [
-        0.639,
-        0.755
-      ]
-    },
-    "safety": {
-      "status": "MEASURED",
-      "accuracy": 0.944,
-      "n": 36,
-      "leader": "gemma3:12b (base model)",
-      "separation": "TIE",
-      "interval": [
-        0.819,
-        0.985
-      ]
-    },
-    "provenance": {
-      "status": "MEASURED",
-      "accuracy": 0.781,
-      "n": 32,
-      "leader": "council-aesthetics-v3-light (council specialist)",
-      "separation": "TIE",
-      "interval": [
-        0.612,
-        0.89
-      ]
-    },
-    "continuity": {
-      "status": "MEASURED",
-      "accuracy": 0.606,
-      "n": 33,
-      "leader": "council-destruction-v3-light (council specialist)",
-      "separation": "TIE",
-      "interval": [
-        0.437,
-        0.753
-      ]
-    },
-    "conformance": {
-      "status": "MEASURED",
-      "accuracy": 0.743,
-      "n": 35,
-      "leader": "council-preservation-v3-light (council specialist)",
-      "separation": "TIE",
-      "interval": [
-        0.579,
-        0.858
-      ]
-    },
-    "openness": {
-      "status": "MEASURED",
-      "accuracy": 0.875,
-      "n": 32,
-      "leader": "council-preservation-v3-light (council specialist)",
-      "separation": "TIE",
-      "interval": [
-        0.719,
-        0.95
-      ]
-    },
-    "machinery-conformity": {
-      "status": "MEASURED",
-      "accuracy": 0.545,
-      "n": 33,
-      "leader": "llama3.2:3b (base model)",
-      "separation": "TIE",
-      "interval": [
-        0.38,
-        0.702
-      ]
-    },
-    "care": {
-      "status": "MEASURED",
-      "accuracy": 0.535,
-      "n": 199,
-      "leader": "council-ethics-v3-light (council specialist)",
-      "separation": "SEPARATED",
-      "interval": [
-        0.466,
-        0.603
-      ]
-    },
-    "cross-reality": {
-      "status": "MEASURED",
-      "accuracy": 0.812,
-      "n": 32,
-      "leader": "mistral:7b (base model)",
-      "separation": "TIE",
-      "interval": [
-        0.647,
-        0.911
-      ]
-    },
-    "detector-interop": {
-      "status": "MEASURED",
-      "accuracy": 0.879,
-      "n": 33,
-      "leader": "deepseek-r1:8b (base model)",
-      "separation": "TIE",
-      "interval": [
-        0.727,
-        0.952
-      ]
-    },
-    "art5-safeguard": {
-      "status": "MEASURED",
-      "accuracy": 0.972,
-      "n": 36,
-      "leader": "council-relationality-v3-light (council specialist)",
-      "separation": "TIE",
-      "interval": [
-        0.858,
-        0.995
-      ]
-    },
-    "swarm": {
-      "status": "MEASURED",
-      "accuracy": 0.384,
-      "n": 37,
-      "leader": "qwen2.5:7b (base model)",
-      "separation": "SEPARATED",
-      "interval": null
-    },
-    "affect": {
-      "status": "MEASURED",
-      "accuracy": 0.878,
-      "n": 41,
-      "leader": "council-preservation-v3-light (council specialist)",
-      "separation": "SEPARATED",
-      "interval": [
-        0.745,
-        0.947
-      ]
-    },
-    "jail": {
-      "status": "MEASURED",
-      "accuracy": 0.5915,
-      "n": 71,
-      "leader": "qwen2.5:0.5b-instruct (base model)",
-      "separation": "UNTESTED",
-      "interval": null
-    }
+ "schema": "csoai.gspc-living/0.1",
+ "kind": "board_living",
+ "updated": "2026-08-18T03:22:16Z",
+ "signed": true,
+ "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
+ "signature": "32a373b6dd408f2a28f60bd4c9e0543b94bcc24d69f950a6b225bd46d769dc0446752a358d1199ab55772385515e80ba5762c9c13cdb2615c608091d13c8bb05",
+ "sig_input": "sha256(canonical board minus signature fields, sort_keys)",
+ "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
+ "axes": {
+  "governance": {
+   "status": "MEASURED",
+   "accuracy": 0.7,
+   "n": 237,
+   "leader": "council-embodiment-v3-light (council specialist)",
+   "separation": "SEPARATED",
+   "interval": [
+    0.639,
+    0.755
+   ]
   },
-  "totals": {
-    "axes": 14,
-    "measured_axes": 13,
-    "quotable_axes": 14,
-    "public_count": "13 measured of 14 quotable (GSPC ruling 2026-08-18)",
-    "license": "CC-BY-4.0",
-    "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field \u2014 fixed same day.",
-    "items": 887,
-    "separated_leads": 4,
-    "ties": 9,
-    "untested_separations": 1,
-    "mean_macro_f1": 0.7528,
-    "mean_accuracy": 0.7318,
-    "mean_fleet_mean": 0.5443,
-    "mean_harm": 0.4877,
-    "mean_unparsed_rate": 0.0813,
-    "mean_note": "Means are over MEASURED axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet \u2014 the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the 13 board-v2 axes."
+  "safety": {
+   "status": "MEASURED",
+   "accuracy": 0.944,
+   "n": 36,
+   "leader": "gemma3:12b (base model)",
+   "separation": "TIE",
+   "interval": [
+    0.819,
+    0.985
+   ]
   },
-  "doi": "10.5281/zenodo.21991104",
-  "packaged_at": "2026-08-24T07:58:34.454956+00:00",
-  "note": "Axes snapshot from live /api/gspc at package time. Signature fields are the SITTING-1 living_stamp already published on /api/gspc."
+  "provenance": {
+   "status": "MEASURED",
+   "accuracy": 0.781,
+   "n": 32,
+   "leader": "council-aesthetics-v3-light (council specialist)",
+   "separation": "TIE",
+   "interval": [
+    0.612,
+    0.89
+   ]
+  },
+  "continuity": {
+   "status": "MEASURED",
+   "accuracy": 0.606,
+   "n": 33,
+   "leader": "council-destruction-v3-light (council specialist)",
+   "separation": "TIE",
+   "interval": [
+    0.437,
+    0.753
+   ]
+  },
+  "conformance": {
+   "status": "MEASURED",
+   "accuracy": 0.743,
+   "n": 35,
+   "leader": "council-preservation-v3-light (council specialist)",
+   "separation": "TIE",
+   "interval": [
+    0.579,
+    0.858
+   ]
+  },
+  "openness": {
+   "status": "MEASURED",
+   "accuracy": 0.875,
+   "n": 32,
+   "leader": "council-preservation-v3-light (council specialist)",
+   "separation": "TIE",
+   "interval": [
+    0.719,
+    0.95
+   ]
+  },
+  "machinery-conformity": {
+   "status": "MEASURED",
+   "accuracy": 0.545,
+   "n": 33,
+   "leader": "llama3.2:3b (base model)",
+   "separation": "TIE",
+   "interval": [
+    0.38,
+    0.702
+   ]
+  },
+  "care": {
+   "status": "MEASURED",
+   "accuracy": 0.535,
+   "n": 199,
+   "leader": "council-ethics-v3-light (council specialist)",
+   "separation": "SEPARATED",
+   "interval": [
+    0.466,
+    0.603
+   ]
+  },
+  "cross-reality": {
+   "status": "MEASURED",
+   "accuracy": 0.812,
+   "n": 32,
+   "leader": "mistral:7b (base model)",
+   "separation": "TIE",
+   "interval": [
+    0.647,
+    0.911
+   ]
+  },
+  "detector-interop": {
+   "status": "MEASURED",
+   "accuracy": 0.879,
+   "n": 33,
+   "leader": "deepseek-r1:8b (base model)",
+   "separation": "TIE",
+   "interval": [
+    0.727,
+    0.952
+   ]
+  },
+  "art5-safeguard": {
+   "status": "MEASURED",
+   "accuracy": 0.972,
+   "n": 36,
+   "leader": "council-relationality-v3-light (council specialist)",
+   "separation": "TIE",
+   "interval": [
+    0.858,
+    0.995
+   ]
+  },
+  "swarm": {
+   "status": "MEASURED",
+   "accuracy": 0.384,
+   "n": 37,
+   "leader": "qwen2.5:7b (base model)",
+   "separation": "SEPARATED",
+   "interval": null
+  },
+  "affect": {
+   "status": "MEASURED",
+   "accuracy": 0.878,
+   "n": 41,
+   "leader": "council-preservation-v3-light (council specialist)",
+   "separation": "SEPARATED",
+   "interval": [
+    0.745,
+    0.947
+   ]
+  },
+  "jail": {
+   "status": "MEASURED",
+   "accuracy": 0.5915,
+   "n": 71,
+   "leader": "qwen2.5:0.5b-instruct (base model)",
+   "separation": "TIE",
+   "interval": [
+    0.475,
+    0.698
+   ],
+   "separation_method": "Wilson 95% interval over n=71 items tested against the fleet mean (stat_suite.separated_leaders, McNemar-style Wilson-overlap check)",
+   "separation_evidence": {
+    "leader": "qwen2.5:0.5b-instruct",
+    "leader_acc": 0.5915,
+    "wilson95": [
+     0.475,
+     0.698
+    ],
+    "fleet_mean": 0.5455,
+    "determination": "leader interval contains fleet mean — point-estimate lead is not a measured advantage",
+    "determined": "2026-08-25"
+   },
+   "quotable_models": [
+    "qwen2.5:0.5b-instruct",
+    "council-safe",
+    "qwen2.5:7b",
+    "mistral:7b",
+    "qwen2.5:1.5b",
+    "qwen3:4b",
+    "council-oowm"
+   ],
+   "quotable_note": "7 models x >=30 usable gold-bank items (68-71 each); per-model n recorded in gspc-measurement.json"
+  }
+ },
+ "totals": {
+  "axes": 14,
+  "measured_axes": 13,
+  "quotable_axes": 14,
+  "public_count": "13 measured of 14 quotable (GSPC ruling 2026-08-18)",
+  "license": "CC-BY-4.0",
+  "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
+  "items": 887,
+  "separated_leads": 4,
+  "ties": 9,
+  "untested_separations": 1,
+  "mean_macro_f1": 0.7528,
+  "mean_accuracy": 0.7318,
+  "mean_fleet_mean": 0.5443,
+  "mean_harm": 0.4877,
+  "mean_unparsed_rate": 0.0813,
+  "mean_note": "Means are over MEASURED axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the 13 board-v2 axes."
+ },
+ "doi": "10.5281/zenodo.21991104",
+ "packaged_at": "2026-08-24T07:58:34.454956+00:00",
+ "note": "Axes snapshot from live /api/gspc at package time. Signature fields are the SITTING-1 living_stamp already published on /api/gspc."
 }
