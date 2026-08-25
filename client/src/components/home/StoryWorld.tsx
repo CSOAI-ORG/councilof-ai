@@ -61,7 +61,7 @@ export const STORY: Slide[] = [
     points: [
       { tag: "pain", text: "Scorecards quietly hide the tests a model fails" },
       { tag: "benefit", text: "Empty cells stay empty — you see exactly what’s measured" },
-      { tag: "benefit", text: "Jail is a floor, “separation untested” stated in plain sight" },
+      { tag: "benefit", text: "Jail is a floor — measured; living-board separation is TIE, stated in plain sight" },
       { tag: "usp", text: "It caught our own fine-tune — and we published it" },
     ],
     href: "/gspc-scoreboard",
