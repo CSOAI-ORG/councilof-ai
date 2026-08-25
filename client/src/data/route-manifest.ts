@@ -23,6 +23,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "About"
  },
  {
+  "path": "/about-ceasai",
+  "comp": "Redirect",
+  "title": "About Ceasai"
+ },
+ {
   "path": "/about-credential",
   "comp": "AboutCEASAI",
   "title": "About CEASAI"
@@ -46,6 +51,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/accreditation",
   "comp": "Accreditation",
   "title": "Accreditation"
+ },
+ {
+  "path": "/admin",
+  "comp": "RequireAuth",
+  "title": "Admin"
  },
  {
   "path": "/advisory",
@@ -148,6 +158,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Api Docs"
  },
  {
+  "path": "/api-keys",
+  "comp": "RequireAuth",
+  "title": "Api Keys"
+ },
+ {
   "path": "/architecture",
   "comp": "Technology",
   "title": "Technology"
@@ -161,6 +176,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/article-50",
   "comp": "Article50",
   "title": "Article50"
+ },
+ {
+  "path": "/assess",
+  "comp": "RequireAuth",
+  "title": "Assess"
  },
  {
   "path": "/assessment",
@@ -208,6 +228,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Benchmarks"
  },
  {
+  "path": "/bft",
+  "comp": "Redirect",
+  "title": "Bft"
+ },
+ {
   "path": "/blog",
   "comp": "Blog",
   "title": "Blog"
@@ -223,6 +248,26 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Bulk AISystem Import"
  },
  {
+  "path": "/byzantine",
+  "comp": "Redirect",
+  "title": "Byzantine"
+ },
+ {
+  "path": "/byzantine-consensus",
+  "comp": "Redirect",
+  "title": "Byzantine Consensus"
+ },
+ {
+  "path": "/california-ai-law",
+  "comp": "UsStateAct",
+  "title": "California Ai Law"
+ },
+ {
+  "path": "/canada-aida",
+  "comp": "JurisdictionAct",
+  "title": "Canada Aida"
+ },
+ {
   "path": "/careers",
   "comp": "Careers",
   "title": "Careers"
@@ -231,6 +276,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/case-studies",
   "comp": "CaseStudies",
   "title": "Case Studies"
+ },
+ {
+  "path": "/ceasai-training",
+  "comp": "Redirect",
+  "title": "Ceasai Training"
  },
  {
   "path": "/certificate-verification",
@@ -283,6 +333,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "EUAct Checklist"
  },
  {
+  "path": "/china-ai-law",
+  "comp": "JurisdictionAct",
+  "title": "China Ai Law"
+ },
+ {
   "path": "/classifier",
   "comp": "EuActClassifier",
   "title": "Eu Act Classifier"
@@ -296,6 +351,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/coliseum",
   "comp": "Coliseum",
   "title": "Coliseum"
+ },
+ {
+  "path": "/colorado-ai-act",
+  "comp": "UsStateAct",
+  "title": "Colorado Ai Act"
  },
  {
   "path": "/command-center",
@@ -378,6 +438,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Social Connect"
  },
  {
+  "path": "/consensus",
+  "comp": "Redirect",
+  "title": "Consensus"
+ },
+ {
   "path": "/contact",
   "comp": "Contact",
   "title": "Contact"
@@ -443,6 +508,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "CEASAITraining"
  },
  {
+  "path": "/credo-ai-alternative",
+  "comp": "AltPage",
+  "title": "Credo Ai Alternative"
+ },
+ {
   "path": "/crosswalk",
   "comp": "Crosswalk",
   "title": "Crosswalk"
@@ -451,6 +521,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/crosswalks",
   "comp": "Crosswalks",
   "title": "Crosswalks"
+ },
+ {
+  "path": "/crown-jewels",
+  "comp": "Redirect",
+  "title": "Crown Jewels"
  },
  {
   "path": "/csoai-law",
@@ -481,6 +556,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/deepfake-protection",
   "comp": "Protect",
   "title": "Protect"
+ },
+ {
+  "path": "/defence-ai-act",
+  "comp": "SectorAct",
+  "title": "Defence Ai Act"
  },
  {
   "path": "/demo",
@@ -553,6 +633,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "EI3"
  },
  {
+  "path": "/energy-ai-act",
+  "comp": "SectorAct",
+  "title": "Energy Ai Act"
+ },
+ {
   "path": "/enter",
   "comp": "OsEnter",
   "title": "Os Enter"
@@ -571,6 +656,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/enterprise-onboarding",
   "comp": "EnterpriseOnboarding",
   "title": "Enterprise Onboarding"
+ },
+ {
+  "path": "/enterprise-plans",
+  "comp": "Redirect",
+  "title": "Enterprise Plans"
  },
  {
   "path": "/eu-ai-act",
@@ -666,6 +756,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/feed",
   "comp": "RegulationFeed",
   "title": "Regulation Feed"
+ },
+ {
+  "path": "/finance-ai-act",
+  "comp": "SectorAct",
+  "title": "Finance Ai Act"
  },
  {
   "path": "/fines",
@@ -771,6 +866,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/global-regulations",
   "comp": "GlobalRegulationTracker",
   "title": "Global Regulation Tracker"
+ },
+ {
+  "path": "/globe",
+  "comp": "Redirect",
+  "title": "Globe"
  },
  {
   "path": "/glossary",
@@ -888,6 +988,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "TC260 Guide"
  },
  {
+  "path": "/healthcare-ai-act",
+  "comp": "SectorAct",
+  "title": "Healthcare Ai Act"
+ },
+ {
   "path": "/heatmap",
   "comp": "WatchdogMap",
   "title": "Watchdog Map"
@@ -983,6 +1088,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Training How It Works"
  },
  {
+  "path": "/hr-ai-act",
+  "comp": "SectorAct",
+  "title": "Hr Ai Act"
+ },
+ {
   "path": "/humanoids-poc",
   "comp": "PocShowcase",
   "title": "Poc Showcase"
@@ -1036,6 +1146,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/iso-eu",
   "comp": "Iso42001VsEuAct",
   "title": "Iso42001 Vs Eu Act"
+ },
+ {
+  "path": "/jewels",
+  "comp": "Redirect",
+  "title": "Jewels"
  },
  {
   "path": "/jobs",
@@ -1238,6 +1353,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Motion Lab"
  },
  {
+  "path": "/my-applications",
+  "comp": "RequireAuth",
+  "title": "My Applications"
+ },
+ {
+  "path": "/my-courses",
+  "comp": "RequireAuth",
+  "title": "My Courses"
+ },
+ {
   "path": "/network",
   "comp": "NetworkPage",
   "title": "Network Page"
@@ -1276,6 +1401,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/one-os",
   "comp": "PocShowcase",
   "title": "Poc Showcase"
+ },
+ {
+  "path": "/onetrust-alternative",
+  "comp": "AltPage",
+  "title": "Onetrust Alternative"
  },
  {
   "path": "/ontology",
@@ -1363,6 +1493,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Protect"
  },
  {
+  "path": "/pharma-ai-act",
+  "comp": "SectorAct",
+  "title": "Pharma Ai Act"
+ },
+ {
+  "path": "/plans",
+  "comp": "Redirect",
+  "title": "Plans"
+ },
+ {
   "path": "/playbooks",
   "comp": "Playbooks",
   "title": "Playbooks"
@@ -1436,6 +1576,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/public",
   "comp": "PublicHome",
   "title": "Public Home"
+ },
+ {
+  "path": "/public-dashboard",
+  "comp": "Redirect",
+  "title": "Public Dashboard"
  },
  {
   "path": "/public-watchdog",
@@ -1613,6 +1758,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Cyber Scan"
  },
  {
+  "path": "/sec-ai-disclosure",
+  "comp": "SECDisclosure",
+  "title": "Sec Ai Disclosure"
+ },
+ {
+  "path": "/sec-disclosure",
+  "comp": "SECDisclosure",
+  "title": "Sec Disclosure"
+ },
+ {
   "path": "/sector-atlas",
   "comp": "SectorsAtlas",
   "title": "Sectors Atlas"
@@ -1638,6 +1793,21 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Services"
  },
  {
+  "path": "/settings",
+  "comp": "RequireAuth",
+  "title": "Settings"
+ },
+ {
+  "path": "/settings/billing",
+  "comp": "RequireAuth",
+  "title": "Settings Billing"
+ },
+ {
+  "path": "/settings/notifications",
+  "comp": "RequireAuth",
+  "title": "Settings Notifications"
+ },
+ {
   "path": "/signals",
   "comp": "Signals",
   "title": "Signals"
@@ -1646,6 +1816,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/signup",
   "comp": "Signup",
   "title": "Signup"
+ },
+ {
+  "path": "/simulate",
+  "comp": "Redirect",
+  "title": "Simulate"
+ },
+ {
+  "path": "/singapore-ai-governance",
+  "comp": "JurisdictionAct",
+  "title": "Singapore Ai Governance"
  },
  {
   "path": "/sla",
@@ -1666,6 +1846,76 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/social",
   "comp": "SocialOS",
   "title": "Social OS"
+ },
+ {
+  "path": "/south-korea-ai-act",
+  "comp": "JurisdictionAct",
+  "title": "South Korea Ai Act"
+ },
+ {
+  "path": "/sov-space",
+  "comp": "Redirect",
+  "title": "Sov Space"
+ },
+ {
+  "path": "/sov-town-lab",
+  "comp": "Redirect",
+  "title": "Sov Town Lab"
+ },
+ {
+  "path": "/sov-towns",
+  "comp": "Redirect",
+  "title": "Sov Towns"
+ },
+ {
+  "path": "/sov3",
+  "comp": "Redirect",
+  "title": "Sov3"
+ },
+ {
+  "path": "/sov3-model-card",
+  "comp": "Redirect",
+  "title": "Sov3 Model Card"
+ },
+ {
+  "path": "/sov3-system-card",
+  "comp": "Redirect",
+  "title": "Sov3 System Card"
+ },
+ {
+  "path": "/sov3-whitepaper",
+  "comp": "Redirect",
+  "title": "Sov3 Whitepaper"
+ },
+ {
+  "path": "/sovereign",
+  "comp": "Redirect",
+  "title": "Sovereign"
+ },
+ {
+  "path": "/sovereign-network",
+  "comp": "Redirect",
+  "title": "Sovereign Network"
+ },
+ {
+  "path": "/sovereign-pricing",
+  "comp": "Redirect",
+  "title": "Sovereign Pricing"
+ },
+ {
+  "path": "/sovereign-space",
+  "comp": "Redirect",
+  "title": "Sovereign Space"
+ },
+ {
+  "path": "/sovereign-town",
+  "comp": "Redirect",
+  "title": "Sovereign Town"
+ },
+ {
+  "path": "/sovereign-twin",
+  "comp": "Redirect",
+  "title": "Sovereign Twin"
  },
  {
   "path": "/standards",
@@ -1743,6 +1993,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Terms Of Service"
  },
  {
+  "path": "/texas-ai-act",
+  "comp": "UsStateAct",
+  "title": "Texas Ai Act"
+ },
+ {
   "path": "/tool-commons",
   "comp": "ToolCommons",
   "title": "Tool Commons"
@@ -1756,6 +2011,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/tour",
   "comp": "SovereignTour",
   "title": "Sovereign Tour"
+ },
+ {
+  "path": "/towns",
+  "comp": "Redirect",
+  "title": "Towns"
  },
  {
   "path": "/tracks",
@@ -1793,9 +2053,24 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Try Council"
  },
  {
+  "path": "/uk-ai-regulation",
+  "comp": "JurisdictionAct",
+  "title": "Uk Ai Regulation"
+ },
+ {
+  "path": "/us-ai-regulation",
+  "comp": "JurisdictionAct",
+  "title": "Us Ai Regulation"
+ },
+ {
   "path": "/usp",
   "comp": "WhyCSOAI",
   "title": "Why CSOAI"
+ },
+ {
+  "path": "/vanta-alternative",
+  "comp": "AltPage",
+  "title": "Vanta Alternative"
  },
  {
   "path": "/verifiable-trust",
@@ -1908,9 +2183,19 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Widget Courses"
  },
  {
+  "path": "/workbench",
+  "comp": "RequireAuth",
+  "title": "Workbench"
+ },
+ {
   "path": "/workbench-paper",
   "comp": "Sov3Whitepaper",
   "title": "Sov3 Whitepaper"
+ },
+ {
+  "path": "/world",
+  "comp": "Redirect",
+  "title": "World"
  },
  {
   "path": "/world-3d",

@@ -296,8 +296,8 @@ export default function EUAIActGuide() {
       link: "/workbench"
     },
     {
-      title: "Training & Certification",
-      description: "Comprehensive EU AI Act training courses with certification to demonstrate organizational competency.",
+      title: "Professional Training",
+      description: "Comprehensive EU AI Act training courses to demonstrate organizational competency.",
       link: "/courses"
     },
     {
@@ -842,14 +842,14 @@ export default function EUAIActGuide() {
           >
             <Badge variant="secondary" className="text-sm bg-white/20 text-white border-white/30">
               <Award className="h-4 w-4 mr-2" />
-              Professional Certification
+              Professional Training
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold">
               Master EU AI Act Compliance
             </h2>
             <p className="text-xl text-green-100 max-w-3xl mx-auto">
               Our comprehensive training program covers all aspects of the EU AI Act, from risk classification
-              to conformity assessment. Earn your certification and demonstrate compliance expertise.
+              to conformity assessment. Complete the training and demonstrate compliance expertise.
             </p>
             <div className="flex flex-wrap gap-4 justify-center pt-4">
               <Link href="/courses">
@@ -861,7 +861,7 @@ export default function EUAIActGuide() {
               <Link href="/certification">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                   <Award className="mr-2 h-5 w-5" />
-                  View Certifications
+                  View training tracks
                 </Button>
               </Link>
             </div>
@@ -995,7 +995,7 @@ export default function EUAIActGuide() {
               Ready to Start Your Compliance Journey?
             </h2>
             <p className="text-xl text-muted-foreground">
-              Join thousands of organizations preparing for EU AI Act compliance with CSOAI.
+              Prepare for EU AI Act compliance with Council of AI.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="/signup">

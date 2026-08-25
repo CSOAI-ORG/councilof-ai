@@ -177,7 +177,7 @@ const schedules = [
   { id: "J", title: "Prosperity Fund Calculations", desc: "Contribution formulas based on revenue and AI impact", icon: Landmark },
   { id: "K", title: "Voting Procedures", desc: "Council consensus rules and human override protocols", icon: Vote },
   { id: "L", title: "Appeal Forms", desc: "Templates for disputes, exemptions, and regulatory challenges", icon: Scale },
-  { id: "M", title: "Certification Marks", desc: "CSOAI badge specifications and usage guidelines", icon: Award },
+  { id: "M", title: "Verification badges", desc: "CSOAI badge specifications and usage guidelines (we issue no conformity marks)", icon: Award },
 ];
 
 const faqItems = [
@@ -187,7 +187,7 @@ const faqItems = [
   },
   {
     question: "How is this different from the EU AI Act?",
-    answer: "The EU AI Act is a government regulation focused on compliance and penalties. The CSOAI Charter is a voluntary framework that goes further in three key ways: (1) It establishes a relationship-based approach through the Maternal Covenant rather than just rules-based compliance; (2) It creates economic redistribution through the Prosperity Fund, ensuring AI wealth benefits everyone; (3) It provides operational infrastructure—the Council, Watchdog system, and certified analysts—to actually implement safety monitoring. The Charter is designed to complement the EU AI Act, helping organizations exceed regulatory requirements while creating meaningful jobs in AI oversight."
+    answer: "The EU AI Act is a government regulation focused on compliance and penalties. The CSOAI Charter is a voluntary framework that goes further in three key ways: (1) It establishes a relationship-based approach through the Maternal Covenant rather than just rules-based compliance; (2) It creates economic redistribution through the Prosperity Fund, ensuring AI wealth benefits everyone; (3) It provides operational infrastructure—the Council, Watchdog system, and trained analysts—to actually implement safety monitoring. The Charter is designed to complement the EU AI Act, helping organizations exceed regulatory requirements while creating meaningful jobs in AI oversight."
   },
   {
     question: "Who wrote this Charter?",
@@ -195,7 +195,7 @@ const faqItems = [
   },
   {
     question: "Is this legally binding?",
-    answer: "The Charter is not government legislation—it's a voluntary framework. However, it becomes contractually binding on those who sign the Partnership Agreement and obtain a CSOAI license. Licensed organizations commit to following Charter requirements as a condition of their license. The Charter is designed to work alongside existing laws (EU AI Act, GDPR, etc.) and often exceeds their requirements. Organizations that violate Charter terms face license revocation, public disclosure through the Watchdog system, and potential loss of their 'CSOAI Certified Analyst' status."
+    answer: "The Charter is not government legislation—it's a voluntary framework. However, it becomes contractually binding on those who sign the Partnership Agreement and obtain a CSOAI license. Licensed organizations commit to following Charter requirements as a condition of their license. The Charter is designed to work alongside existing laws (EU AI Act, GDPR, etc.) and often exceeds their requirements. Organizations that violate Charter terms face license revocation, public disclosure through the Watchdog system, and potential loss of their standing with the Council for those who complete the training."
   },
   {
     question: "How do I become a signatory?",
@@ -207,7 +207,7 @@ const faqItems = [
   },
   {
     question: "How is the Charter enforced?",
-    answer: "Enforcement operates through four mechanisms: (1) the designed Council—a 33-agent AI system using 12 different AI providers intended to monitors licensed systems 24/7 for safety violations; (2) Public Watchdog—a transparency platform where safety incidents are publicly disclosed; (3) Certified Analysts—trained human professionals who review AI systems and validate Council decisions; (4) License Revocation—organizations that violate Charter terms lose their license and CSOAI certification, which is publicly disclosed. The combination of AI monitoring, human oversight, and public transparency creates accountability at every level."
+    answer: "Enforcement operates through four mechanisms: (1) the designed Council—a 33-agent AI system using 12 different AI providers intended to monitors licensed systems 24/7 for safety violations; (2) Public Watchdog—a transparency platform where safety incidents are publicly disclosed; (3) Trained Analysts—human professionals who review AI systems and validate Council decisions; (4) License Revocation—organizations that violate Charter terms lose their license, which is publicly disclosed. The combination of AI monitoring, human oversight, and public transparency creates accountability at every level."
   },
   {
     question: "Can the Charter be amended?",
@@ -305,7 +305,7 @@ export default function Charter() {
               <CardContent className="p-8">
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
                   Artificial intelligence is transforming every aspect of human society. By 2030, AI systems will make
-                  decisions affecting healthcare, finance, transportation, education, and employment for billions of people.
+                  decisions affecting healthcare, finance, transportation, education, and employment at population scale.
                   The question is not whether AI will reshape our world—it's <span className="font-semibold text-emerald-700">who benefits and who decides</span>.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
@@ -316,7 +316,7 @@ export default function Charter() {
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed">
                   The Charter creates a complete ecosystem: technical safety standards, democratic governance, economic
-                  redistribution through the Prosperity Fund, and the workforce to make it all work—certified AI Safety
+                  redistribution through the Prosperity Fund, and the workforce to make it all work—trained AI Safety
                   Analysts earning meaningful wages to protect humanity from AI risks.
                 </p>
               </CardContent>

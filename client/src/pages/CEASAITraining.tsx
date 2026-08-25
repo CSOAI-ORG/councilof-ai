@@ -192,7 +192,7 @@ export default function CEASAITraining() {
               <div>
                 <Award className="h-8 w-8 text-emerald-600 mb-3" />
                 <h3 className="font-bold text-gray-900 mb-2">Industry Recognized</h3>
-                <p className="text-gray-600">Accepted by enterprises and governments worldwide</p>
+                <p className="text-gray-600">Built on published frameworks (EU AI Act, NIST AI RMF, ISO 42001)</p>
               </div>
               
               <div>
@@ -204,7 +204,7 @@ export default function CEASAITraining() {
               <div>
                 <Users className="h-8 w-8 text-emerald-600 mb-3" />
                 <h3 className="font-bold text-gray-900 mb-2">Community</h3>
-                <p className="text-gray-600">Join thousands of AI Safety Analysts worldwide</p>
+                <p className="text-gray-600">Join AI Safety Analysts worldwide</p>
               </div>
             </div>
           </div>

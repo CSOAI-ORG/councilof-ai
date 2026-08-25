@@ -103,7 +103,7 @@ export const TOUR: TourStep[] = [
     path: "/training",
     title: "The Living Cert",
     usp: "Training that updates itself when the law changes",
-    say: "A £100k compliance certificate is dead the day you finish the course. Ours is alive: when a watched provision changes, your certification path updates with it. Learn governance in measured simulations, stay current forever.",
+    say: "A £100k compliance certificate is dead the day you finish the course. Ours is alive: when a watched provision changes, your training path updates with it. Learn governance in measured simulations, stay current forever.",
     tip: "Gamified modules, real instruments, zero dead PDFs.",
   },
   {

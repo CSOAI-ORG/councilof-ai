@@ -23,12 +23,12 @@ const gaps = [
   {
     title: "No Jobs for AI Analysts",
     problem: "There was no structured profession or marketplace for AI safety monitoring",
-    solution: "CSOAI creates thousands of remote, high-paying AI Safety Analyst positions",
+    solution: "CSOAI creates remote AI Safety Analyst positions",
     icon: GraduationCap,
   },
   {
     title: "No Human Oversight at Scale",
-    problem: "Governments can't monitor millions of AI systems with limited staff",
+    problem: "Governments can't monitor AI systems at scale with limited staff",
     solution: "Trained analysts working from measured results — every figure recomputable from the published harness",
     icon: Users,
   },

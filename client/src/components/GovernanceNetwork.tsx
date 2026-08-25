@@ -312,9 +312,9 @@ export default function GovernanceNetwork() {
           className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6"
         >
           {[
-            { value: "8+", label: "Major Frameworks" },
-            { value: "12+", label: "Governments" },
-            { value: "45+", label: "Stakeholders" },
+            { value: "Open", label: "Frameworks" },
+            { value: "Global", label: "Jurisdictions" },
+            { value: "Open", label: "Stakeholders" },
             { value: "1", label: "Unified Platform" },
           ].map((stat, index) => (
             <div key={index} className="text-center">

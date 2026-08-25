@@ -80,7 +80,7 @@ For AI systems that handle critical functions (healthcare, autonomous vehicles, 
 
 This does not mean perfection or impossible guarantees. Rather, it means that safety claims must be falsifiable and testable. Every high-risk AI system must have documented safety properties, test protocols, and failure modes. The burden of proof rests with the developer to demonstrate that deployed AI systems are safe, not for regulators to prove they are unsafe.
 
-Safety verification shall be proportionate to risk level and reviewed by certified CSOAI analysts before deployment.`,
+Safety verification shall be proportionate to risk level and reviewed by trained Council analysts before deployment.`,
     frameworks: {
       euAIAct: "Article 15 (Risk management system)",
       nist: "PM (Process Management), 6.3 (Risk assessment)",
@@ -260,7 +260,7 @@ License Tiers:
 
 Practitioner Licenses:
 1. Associate Analyst: 40-hour foundational training
-2. Certified Analyst: 200-hour comprehensive certification
+2. Analyst track: 200-hour comprehensive training
 3. Senior Analyst: 1000+ hours, specialization track
 4. Director: Leadership and governance credentials
 
@@ -422,7 +422,7 @@ Democratic participation makes CSOAI's governance responsive to public concerns 
     title: "Compliance Assessment",
     part: 2,
     partTitle: "Governance Structure",
-    content: `The CSOAI Assessment Standard (CASA) is the certification framework for assessing AI system compliance with Charter requirements. CASA includes 14 sector-specific assessment programs tailored to different industries.
+    content: `The CSOAI Assessment Standard (CASA) is the training framework for assessing AI system compliance with Charter requirements. CASA includes 14 sector-specific assessment programs tailored to different industries.
 
 Assessment Program Tracks:
 1. Healthcare AI
@@ -441,11 +441,11 @@ Assessment Program Tracks:
 14. General Purpose AI
 
 Assessment Process:
-- Initial documentation review by certified analysts
+- Initial documentation review by trained analysts
 - Technical testing and validation
 - Organizational maturity assessment
 - Field deployment monitoring
-- Annual recertification
+- Annual refresher training
 
 Assessment Criteria:
 - Safety and risk management (40%)
@@ -1143,7 +1143,7 @@ Interoperability enables innovation and prevents monopolistic control of AI mark
     content: `Standards for AI practitioner education and ongoing professional development, building a skilled and ethical AI workforce.
 
 Measurement Credential Program:
-The Cooperative Education in AI Safety and Governance program provides tiered certification:
+The Cooperative Education in AI Safety and Governance program provides tiered training:
 
 Associate Analyst (40 hours):
 - Foundations of AI safety
@@ -1747,7 +1747,7 @@ SME Definition:
 - Medium: 50-250 employees
 
 Support Programs:
-1. Subsidized CSOAI certification (covers 50-75% of assessment costs)
+1. Subsidized CSOAI training (covers 50-75% of assessment costs)
 2. Simplified Tier 1 licensing with minimal compliance burden
 3. No annual licensing fee for Tier 1 SME licenses
 4. Access to low-cost technical consulting

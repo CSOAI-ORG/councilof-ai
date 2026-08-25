@@ -53,6 +53,11 @@ export function Footer() {
         { name: 'The honesty gate — our own losses', href: '/honesty' },
         { name: 'Meta-benchmark index — other benchmarks, cited', href: '/benchmark-index' },
         { name: 'Firewall Charter — measure, never fix', href: '/firewall-charter' },
+        { name: 'Statute to predicate — how law becomes a test', href: '/statute-to-predicate' },
+        { name: 'The accountability loop', href: '/accountability-loop' },
+        { name: 'Where the record lives', href: '/where-the-record-lives' },
+        { name: 'Council OS', href: '/os' },
+        { name: 'System card', href: '/system-card' },
       ],
     },
     {

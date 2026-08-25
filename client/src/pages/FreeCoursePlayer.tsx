@@ -150,7 +150,7 @@ export default function FreeCoursePlayer() {
                 </p>
               </div>
               <div className="flex justify-center gap-3">
-                <Badge className="bg-green-600 text-white">CSOAI Certified Analyst</Badge>
+                <Badge className="bg-green-600 text-white">Council Academy — training complete</Badge>
                 <Link href="/training">
                   <Button variant="outline" className="border-green-600 text-green-700">
                     Explore More Courses

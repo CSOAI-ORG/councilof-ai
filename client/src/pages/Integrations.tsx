@@ -230,7 +230,7 @@ export default function Integrations() {
               Connect CSOAI to Your Entire AI Stack
             </h1>
             <p className="text-xl text-slate-300 mb-8">
-              Seamlessly integrate CSOAI with 50+ enterprise platforms and tools. Connect your AI systems, configure compliance rules, and monitor governance in real-time.
+              Seamlessly integrate CSOAI with your enterprise platforms and tools. Connect your AI systems, configure compliance rules, and monitor governance in real-time.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button

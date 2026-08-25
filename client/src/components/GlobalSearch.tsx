@@ -303,12 +303,12 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'new-compare', title: 'Why Choose CSOAI', description: 'Compare CSOAI against traditional GRC tools, AI-specific platforms, and consulting firms', category: 'faq', href: '/compare', icon: BarChart3, keywords: ['compare', 'comparison', 'versus', 'vs', 'alternative', 'why', 'choose', 'better', 'difference'] },
   { id: 'new-roi', title: 'ROI Calculator', description: 'Calculate your return on investment for AI governance implementation', category: 'faq', href: '/roi-calculator', icon: BarChart3, keywords: ['roi', 'calculator', 'return', 'investment', 'cost', 'savings', 'money', 'budget', 'estimate'] },
   { id: 'new-technology', title: 'Technology & Architecture', description: 'How the Council\'s designed multi-provider oversight and CSOAI platform architecture works', category: 'faq', href: '/technology', icon: Shield, keywords: ['technology', 'architecture', 'byzantine', 'council', 'agents', 'infrastructure', 'platform', 'technical', 'how it works'] },
-  { id: 'new-integrations', title: 'Integrations & Ecosystem', description: '50+ enterprise integrations and the open-source governance ecosystem', category: 'faq', href: '/integrations', icon: Shield, keywords: ['integrations', 'ecosystem', 'api', 'connect', 'platforms', 'aws', 'azure', 'slack', 'sdk'] },
+  { id: 'new-integrations', title: 'Integrations & Ecosystem', description: 'Enterprise integrations and the open-source governance ecosystem', category: 'faq', href: '/integrations', icon: Shield, keywords: ['integrations', 'ecosystem', 'api', 'connect', 'platforms', 'aws', 'azure', 'slack', 'sdk'] },
 ];
 
 // Quick Actions
 const QUICK_ACTIONS: QuickAction[] = [
-  { id: 'action-start-training', title: 'Start Training', description: 'Begin your AI safety certification journey', href: '/courses', icon: GraduationCap, color: 'bg-emerald-500' },
+  { id: 'action-start-training', title: 'Start Training', description: 'Begin your AI safety training', href: '/courses', icon: GraduationCap, color: 'bg-emerald-500' },
   { id: 'action-register-ai', title: 'Register AI System', description: 'Add a new AI system to the registry', href: '/ai-systems', icon: Plus, color: 'bg-blue-500' },
   { id: 'action-take-exam', title: 'Take Certification Exam', description: 'Start your measurement credential assessment', href: '/certification/exam', icon: FileCheck, color: 'bg-purple-500' },
   { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/watchdog', icon: AlertTriangle, color: 'bg-red-500' },

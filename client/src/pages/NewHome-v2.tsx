@@ -1171,7 +1171,7 @@ export default function NewHomeV2() {
 
               <div className="grid sm:grid-cols-2 gap-4 mb-8">
                 {[
-                  { value: "33+", label: "Training Courses", icon: BookOpen },
+                  { value: "Open", label: "Training Courses", icon: BookOpen },
                   { value: "FREE", label: "Cost", icon: DollarSign },
                   { value: "7", label: "Frameworks", icon: Globe2 },
                   { value: "Signed", label: "Verifiable Records", icon: TrendingUp },
@@ -1549,7 +1549,7 @@ export default function NewHomeV2() {
                 href: "/global-regulations",
                 icon: Globe2,
                 color: "bg-emerald-500",
-                badge: "40+ Nations",
+                badge: "International",
               },
               {
                 title: "AI Glossary",
@@ -1557,7 +1557,7 @@ export default function NewHomeV2() {
                 href: "/glossary",
                 icon: BookOpen,
                 color: "bg-purple-500",
-                badge: "60+ Terms",
+                badge: "Glossary",
               },
               {
                 title: "Industry Solutions",
@@ -1577,7 +1577,7 @@ export default function NewHomeV2() {
               },
               {
                 title: "Trust Center",
-                description: "Our security certifications, compliance frameworks, data protection measures, and infrastructure details.",
+                description: "Our security practices, compliance frameworks, data protection measures, and infrastructure details.",
                 href: "/trust-center",
                 icon: Shield,
                 color: "bg-slate-600",

@@ -9,10 +9,10 @@ const DASHBOARD_HOWTO_SCHEMA = {
   description: "Navigate the CSOAI dashboard step by step: log in, check your overview, start training, prepare for your exam, browse jobs, then apply and earn.",
   step: [
     { "@type": "HowToStep", position: 1, name: "Log In", text: "Access your dashboard using your email or OAuth credentials." },
-    { "@type": "HowToStep", position: 2, name: "Check Overview", text: "See your certification status, earnings, and recent activity at a glance." },
+    { "@type": "HowToStep", position: 2, name: "Check Overview", text: "See your training status, earnings, and recent activity at a glance." },
     { "@type": "HowToStep", position: 3, name: "Start Training", text: "If new, go to Training Hub and start with Fundamentals module." },
     { "@type": "HowToStep", position: 4, name: "Prepare for Exam", text: "Review study materials and practice exams before taking the real exam." },
-    { "@type": "HowToStep", position: 5, name: "Browse Jobs", text: "Once certified, explore available AI safety monitoring projects." },
+    { "@type": "HowToStep", position: 5, name: "Browse Jobs", text: "Once trained, explore available AI safety monitoring projects." },
     { "@type": "HowToStep", position: 6, name: "Apply & Earn", text: "Apply for projects, complete work, and get paid directly to your account." },
   ],
 };
@@ -34,7 +34,7 @@ export default function DashboardHowItWorks() {
   const dashboardFeatures = [
     {
       title: "Overview",
-      description: "Your personal dashboard showing certification status, earnings, and recent activity",
+      description: "Your personal dashboard showing training status, earnings, and recent activity",
       icon: BarChart3,
       details: "Track your progress, view earnings summary, see upcoming deadlines, and monitor your analyst rating"
     },
@@ -45,10 +45,10 @@ export default function DashboardHowItWorks() {
       details: "Self-paced modules, interactive quizzes, real-world case studies, and downloadable resources"
     },
     {
-      title: "Certification",
-      description: "Manage your certifications and view your exam history",
+      title: "Training records",
+      description: "Manage your training records and view your exam history",
       icon: Trophy,
-      details: "View current certifications, retake exams, track renewal dates, and download certificates"
+      details: "View completed training, retake exams, track refresher dates, and download completion certificates"
     },
     {
       title: "Jobs Board",
@@ -78,7 +78,7 @@ export default function DashboardHowItWorks() {
     },
     {
       step: "2. Check Overview",
-      description: "See your certification status, earnings, and recent activity at a glance",
+      description: "See your training status, earnings, and recent activity at a glance",
       action: "Click cards to dive deeper into specific areas"
     },
     {
@@ -93,7 +93,7 @@ export default function DashboardHowItWorks() {
     },
     {
       step: "5. Browse Jobs",
-      description: "Once certified, explore available AI safety monitoring projects",
+      description: "Once trained, explore available AI safety monitoring projects",
       action: "Filter by pay, difficulty, and frameworks that match your expertise"
     },
     {
@@ -198,7 +198,7 @@ export default function DashboardHowItWorks() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="p-6 border-2 border-emerald-200 bg-emerald-50">
               <h3 className="font-bold text-emerald-900 mb-2">📊 Track Your Progress</h3>
-              <p className="text-gray-700">Check your Overview daily to see your earnings growth, certification status, and upcoming deadlines.</p>
+              <p className="text-gray-700">Check your Overview daily to see your earnings growth, training status, and upcoming deadlines.</p>
             </Card>
             <Card className="p-6 border-2 border-emerald-200 bg-emerald-50">
               <h3 className="font-bold text-emerald-900 mb-2">🎯 Complete Your Profile</h3>
@@ -214,7 +214,7 @@ export default function DashboardHowItWorks() {
             </Card>
             <Card className="p-6 border-2 border-emerald-200 bg-emerald-50">
               <h3 className="font-bold text-emerald-900 mb-2">📚 Keep Learning</h3>
-              <p className="text-gray-700">Renew your certifications and take advanced courses to qualify for higher-paying expert-level projects.</p>
+              <p className="text-gray-700">Refresh your training and take advanced courses to qualify for higher-paying expert-level projects.</p>
             </Card>
             <Card className="p-6 border-2 border-emerald-200 bg-emerald-50">
               <h3 className="font-bold text-emerald-900 mb-2">💰 Optimize Earnings</h3>
@@ -254,7 +254,7 @@ export default function DashboardHowItWorks() {
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Access Your Dashboard?</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Sign up for free and start your journey to becoming a certified AI Safety Analyst
+            Sign up for free and start your journey by completing the AI Safety Analyst training
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

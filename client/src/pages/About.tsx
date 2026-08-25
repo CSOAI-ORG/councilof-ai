@@ -147,7 +147,7 @@ export default function About() {
           </p>
           <p className="text-xl text-gray-300 leading-relaxed">
             That's when CSOAI was born—not as another AI company, but as <span className="text-emerald-300 font-semibold">the solution to two problems at once</span>:
-            protecting humanity from AI risks while creating thousands of meaningful jobs for people displaced by automation.
+            protecting humanity from AI risks while creating meaningful jobs for people displaced by automation.
           </p>
           <HeroStatsBar />
         </div>

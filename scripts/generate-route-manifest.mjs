@@ -21,9 +21,22 @@ const OUT = join(ROOT, "client/src/data/route-manifest.ts");
 try {
   const src = readFileSync(APP, "utf8");
   const re = /<Route\s+path="([^"]+)"\s+component=\{([A-Za-z0-9_]+)\}/g;
+  // Render-prop routes — <Route path="/x">{() => <SectorAct sector="healthcare" />}</Route> —
+  // were invisible to the manifest (2026-08-25 audit: the whole vertical AI-Act and
+  // US-state clusters were unreachable through the Library because of this).
+  const reRender = /<Route\s+path="([^"]+)"\s*>\s*\{\s*\(\)\s*=>\s*<([A-Za-z0-9_]+)/g;
   const seen = new Set();
   const rows = [];
   let m;
+  while ((m = reRender.exec(src)) !== null) {
+    const [, p, comp] = m;
+    if (!p.startsWith("/") || p.includes(":") || seen.has(p)) continue;
+    seen.add(p);
+    const title = (p.slice(1) || comp)
+      .split(/[\/-]/).filter(Boolean)
+      .map((w) => w[0].toUpperCase() + w.slice(1)).join(" ");
+    rows.push({ path: p, comp, title });
+  }
   while ((m = re.exec(src)) !== null) {
     const [, p, comp] = m;
     if (!p.startsWith("/") || p.includes(":") || seen.has(p)) continue;

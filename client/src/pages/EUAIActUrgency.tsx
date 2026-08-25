@@ -96,7 +96,7 @@ const comparisonRows = [
     time: "20 weeks",
     cost: "£3.5K-£7.5K",
     risk: "Low",
-    result: "Certification",
+    result: "Signed measurement",
     highlight: true,
   },
 ];
@@ -118,14 +118,14 @@ const faqs = [
       "Yes. The measurement credential curriculum is explicitly mapped to every high-risk requirement in the EU AI Act, including risk classification, conformity assessment, technical documentation, post-market monitoring, human oversight, and quality management.",
   },
   {
-    question: "Can I get certified if my AI is still in development?",
+    question: "Can I start if my AI is still in development?",
     answer:
-      "Absolutely. The measurement credential applies to your organization's compliance processes and governance framework, not just deployed systems. Getting certified during development ensures you build compliance in from the start—cheaper and faster than retrofitting later.",
+      "Absolutely. The measurement credential applies to your organization's compliance processes and governance framework, not just deployed systems. Starting during development ensures you build compliance in from the start—cheaper and faster than retrofitting later.",
   },
   {
-    question: "What's the difference between compliance software and certification?",
+    question: "What's the difference between compliance software and a signed measurement?",
     answer:
-      "Compliance software tracks metrics and generates reports. Certification is an independent, auditable attestation that your people, processes, and systems meet a recognized standard. Regulators and enterprise buyers trust certification; software alone does not carry the same legal weight.",
+      "Compliance software tracks metrics and generates reports. Council of AI publishes signed, independently verifiable measurements of your people, processes, and systems against published frameworks. Any compliance determination or certification remains with regulators and accredited conformity-assessment bodies—we measure; we never certify.",
   },
 ];
 
@@ -220,7 +220,7 @@ export default function EUAIActUrgency() {
                     size="lg"
                     className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-8 py-6"
                   >
-                    Start Measurement Credential Certification
+                    Start the training
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>

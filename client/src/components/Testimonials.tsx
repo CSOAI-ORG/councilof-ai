@@ -135,8 +135,8 @@ export default function Testimonials() {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8"
         >
           {[
-            { value: "7+", label: "Frameworks crosswalked" },
-            { value: "33", label: "Council of AI agents" },
+            { value: "Open", label: "Frameworks crosswalked" },
+            { value: "Live", label: "Board at /api/gspc" },
             { value: "Layer 0", label: "Signed & verifiable" },
             { value: "Free", label: "Open-source core" },
           ].map((stat, index) => (

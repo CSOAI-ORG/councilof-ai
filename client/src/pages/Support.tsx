@@ -121,7 +121,7 @@ Need more specific help with exam preparation?`
 **For the Public:**
 • Report AI safety incidents at **Watchdog → Report Incident**
 • Track your reports in your dashboard
-• All reports are reviewed by certified analysts
+• All reports are reviewed by trained analysts
 
 **Becoming an Analyst:**
 1. Complete the measurement credential training program

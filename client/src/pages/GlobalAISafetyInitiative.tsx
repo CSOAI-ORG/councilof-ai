@@ -275,7 +275,7 @@ export default function GlobalAISafetyInitiative() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>Training for 1,000+ AI Safety Analysts</span>
+                    <span>Training for AI Safety Analysts</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />

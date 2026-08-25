@@ -640,8 +640,8 @@ export default function SOAIPDCAFramework() {
                 },
                 {
                   step: 4,
-                  title: 'Get Certified',
-                  description: 'Train your team and earn CSOAI certification for your organization',
+                  title: 'Get trained',
+                  description: 'Train your team — completion records, never conformity marks',
                   action: 'View Training',
                   link: '/training',
                 },

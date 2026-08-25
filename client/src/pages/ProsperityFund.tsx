@@ -340,7 +340,7 @@ export default function ProsperityFund() {
                   Just 10 tech giants = $100B/year to Prosperity Fund
                 </p>
                 <p className="opacity-80">
-                  Enough to fund pilot UBI for millions of displaced workers
+                  Enough to fund pilot UBI for displaced workers
                 </p>
               </CardContent>
             </Card>

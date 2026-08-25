@@ -133,7 +133,7 @@ export default function MarketingHome() {
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-green-500" />
-                <span>1,000+ LOI Signups</span>
+                <span>Early-adopter programme</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-green-500" />
@@ -343,7 +343,7 @@ export default function MarketingHome() {
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Join 1,000+ Early Adopters</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Join the Early Adopters</h2>
             <p className="text-xl mb-8 opacity-90">
               Sign up for early access and get <strong>50% off</strong> as a Founding Member.
             </p>

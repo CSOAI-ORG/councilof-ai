@@ -189,7 +189,7 @@ export function FrameworkLandingPage({
         <div className="bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg p-12 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Master {frameworkName}?</h2>
           <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of AI safety professionals learning to comply with the world's most important AI regulations.
+            Learn to comply with the world's most important AI regulations.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link href="/training/catalog">

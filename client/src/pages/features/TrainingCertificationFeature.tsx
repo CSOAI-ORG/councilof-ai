@@ -54,7 +54,7 @@ export default function TrainingCertificationFeature() {
       modules: 8,
       duration: "14-18 hours",
       level: "Intermediate to Advanced",
-      description: "Understand the international standard for AI Management Systems (AIMS) and achieve organizational certification readiness.",
+      description: "Understand the international standard for AI Management Systems (AIMS) and build organizational compliance readiness.",
       topics: [
         "ISO 42001 introduction",
         "AIMS requirements",
@@ -89,8 +89,8 @@ export default function TrainingCertificationFeature() {
     },
     {
       step: 4,
-      title: "Earn Certificate",
-      description: "Download your professional certificate with unique ID, QR code verification, and LinkedIn sharing.",
+      title: "Earn a completion certificate",
+      description: "Download your verifiable training record with unique ID, QR code verification, and LinkedIn sharing.",
       icon: Award
     }
   ];
@@ -371,7 +371,7 @@ export default function TrainingCertificationFeature() {
               Start Your AI Safety Journey Today
             </h2>
             <p className="text-xl text-muted-foreground">
-              Join thousands of professionals earning recognized AI safety certifications.
+              Professional AI-safety training with signed, verifiable completion records.
               Free to start, learn at your own pace.
             </p>
             <div className="flex gap-4 justify-center">
