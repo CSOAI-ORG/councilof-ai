@@ -19,6 +19,12 @@ export default function GSPCVerify() {
   useEffect(() => {
     document.title = "Verify the chain — recompute it yourself, client-side | CSOAI";
     setMetaDescription("Verify a Council of AI measurement card client-side: recompute the Ed25519 signature chain in your browser against the published public key. No account, no server trust.");
+    // Anonymous surface hit — path only, no record content. Not MEASURED.
+    void fetch("/api/surface-hits", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ path: "/gspc-verify" }),
+    }).catch(() => {});
   }, []);
 
   return (
