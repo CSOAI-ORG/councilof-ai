@@ -172,6 +172,7 @@ function discover() {
     "/blog/third-party-ai-audit-standards-ss584-isae3000",
     "/blog/uk-cyber-security-resilience-bill-ai-supply-chain",
     "/blog/verified-measurement-credential-how-to-verify",
+    "/blog/governance-benchmarking-is-broken-signed-fix",
     "/evidence-rail",
     "/datasets",
   ];

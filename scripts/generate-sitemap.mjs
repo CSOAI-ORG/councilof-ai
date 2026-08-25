@@ -233,6 +233,7 @@ const AEO_BLOG_SLUGS = [
   "third-party-ai-audit-standards-ss584-isae3000",
   "uk-cyber-security-resilience-bill-ai-supply-chain",
   "verified-measurement-credential-how-to-verify",
+  "governance-benchmarking-is-broken-signed-fix",
 ];
 for (const slug of AEO_BLOG_SLUGS) {
   const bp = `/blog/${slug}`;
