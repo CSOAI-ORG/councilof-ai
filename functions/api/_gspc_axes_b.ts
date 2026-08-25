@@ -70,8 +70,10 @@ export const AXES_B: AxisScore[] = [
       "self-examination. Routed to adjudication under the Blind-Spot Rule; the item is preserved, " +
       "not deleted (evidence/adjudication/affect-adjudication.json).",
   },
-  // ——— Slot 14: jail (signed board_living.json, 2026-08-18T03:22:16Z; SITTING 1 promotion) ———
-  // Smaller fleet (7 models), no separation test yet (UNTESTED), bank pending publication.
+  // ——— Slot 14: jail (signed board_living.json, re-signed 2026-08-25; separation TIE) ———
+  // 7-model gold-bank fleet, all models n>=30 usable (68-71); separation determination
+  // 2026-08-25: TIE (leader Wilson 95% [0.475, 0.698] contains fleet mean 0.5455 — canonical
+  // stat_suite.separated_leaders). Bank dataset pending publication.
   // Every per-model number is verbatim from the signed artifact; fleet_mean is the plain mean
   // of the per-model rates (recomputable from the rows below).
   {
@@ -80,25 +82,35 @@ export const AXES_B: AxisScore[] = [
     n: 71, n_note: "7 models × 71 gold items; TP/FP/TN/FN per model; accuracy shown is the best " +
       "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71)",
     accuracy: 0.5915, leader: "qwen2.5:0.5b-instruct (base model)",
-    separation: "UNTESTED", fleet_mean: 0.5412,
+    separation: "TIE", interval: [0.475, 0.698], fleet_mean: 0.5455,
+    separation_method: "Wilson 95% interval over n=71 items tested against the fleet mean (stat_suite.separated_leaders, McNemar-style Wilson-overlap check)",
+    separation_evidence: {
+      leader: "qwen2.5:0.5b-instruct", leader_acc: 0.5915, wilson95: [0.475, 0.698],
+      fleet_mean: 0.5455, determined: "2026-08-25",
+      determination: "leader interval contains fleet mean — point-estimate lead is not a measured advantage",
+    },
+    quotable_models: ["qwen2.5:0.5b-instruct", "council-safe", "qwen2.5:7b", "mistral:7b",
+      "qwen2.5:1.5b", "qwen3:4b", "council-inhouse-ft"],
+    quotable_note: "7 models x >=30 usable gold-bank items (68-71 each); per-model n below",
     fleet: "7 models (4 base + 2 council fine-tunes + 1 base variant) — NOT the 19-model board fleet",
     per_model: {
-      "qwen3:4b": { tp: 6, fp: 0, tn: 30, fn: 32, precision: 1.0, recall: 0.158 },
-      "qwen2.5:7b": { tp: 7, fp: 0, tn: 33, fn: 31, precision: 1.0, recall: 0.184 },
-      "mistral:7b": { tp: 9, fp: 3, tn: 30, fn: 29, precision: 0.75, recall: 0.237 },
-      "council-safe": { tp: 8, fp: 0, tn: 33, fn: 30, precision: 1.0, recall: 0.211 },
+      "qwen3:4b": { n: 68, quotable: true, tp: 6, fp: 0, tn: 30, fn: 32, precision: 1.0, recall: 0.158, accuracy: 0.5294 },
+      "qwen2.5:7b": { n: 71, quotable: true, tp: 7, fp: 0, tn: 33, fn: 31, precision: 1.0, recall: 0.184, accuracy: 0.5634 },
+      "mistral:7b": { n: 71, quotable: true, tp: 9, fp: 3, tn: 30, fn: 29, precision: 0.75, recall: 0.237, accuracy: 0.5493 },
+      "council-safe": { n: 71, quotable: true, tp: 8, fp: 0, tn: 33, fn: 30, precision: 1.0, recall: 0.211, accuracy: 0.5775 },
       // Renamed 2026-08-20: the prior public identifier carried an internal codename.
       // Same measured artefact, same rows — see corrections ledger.
-      "council-inhouse-ft": { tp: 0, fp: 0, tn: 33, fn: 38, precision: null, recall: null },
-      "qwen2.5:1.5b": { tp: 7, fp: 2, tn: 31, fn: 30, precision: 0.778, recall: 0.189 },
-      "qwen2.5:0.5b-instruct": { tp: 9, fp: 0, tn: 33, fn: 29, precision: 1.0, recall: 0.237 },
+      "council-inhouse-ft": { n: 71, quotable: true, tp: 0, fp: 0, tn: 33, fn: 38, precision: null, recall: null, accuracy: 0.4648 },
+      "qwen2.5:1.5b": { n: 70, quotable: true, tp: 7, fp: 2, tn: 31, fn: 30, precision: 0.778, recall: 0.189, accuracy: 0.5429 },
+      "qwen2.5:0.5b-instruct": { n: 71, quotable: true, tp: 9, fp: 0, tn: 33, fn: 29, precision: 1.0, recall: 0.237, accuracy: 0.5915 },
     },
     status: "MEASURED", dataset: "pending publication (gold bank, 3090 pod gold_run2.py)",
     colour: "#64748b", hue: 215,
-    note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-cell gold bank. " +
-      "Best zero-FP detector: qwen2.5:0.5b-instruct (precision 1.0, recall 0.237). Fleet pooled " +
-      "accuracy 0.5412. Our own council-oowm fine-tune detected ZERO escapes (tp=0) — published, " +
-      "not hidden. Recall is the honest weakness: the best detector still misses 76% of escapes.",
+    note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-cell gold bank, " +
+      "separation determined 2026-08-25 (TIE). Best zero-FP detector: qwen2.5:0.5b-instruct " +
+      "(precision 1.0, recall 0.237). Fleet mean accuracy 0.5455 (7 models, usable n 68-71). " +
+      "Our own council-inhouse-ft fine-tune detected ZERO escapes (tp=0) — published, not hidden. " +
+      "Recall is the honest weakness: the best detector still misses 76% of escapes.",
   },
 
 ];
