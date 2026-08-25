@@ -69,3 +69,29 @@
 - MCP registry publish + DOI bump — hub-version gated
 
 *K3/JEEVES lane · 2026-08-25 · all numbers above verified against live bytes or pod-signed artifacts.*
+
+## 5. STRATEGY PASS 2026-08-25 — unsolicited + permissionless attestation (mapped)
+Freshness/risk dossier integrated (merged #628, `02ff64f`):
+- **Differentiator sharpened (already in code):** "unsolicited + permissionless"
+  (no issuer opt-in, no issuer payment) — incumbents all claim "independent"
+  (Moody's TIE Canton/Solana issuer-led, S&P+Chainlink, Credora/RedStone,
+  Particula mandate-based, Chainlink ACE enforcement). Moat = unsolicited +
+  statistically-governed + signed; nobody offers that combination.
+- **Clean-play targets refreshed** (as-reported, dated): Aviva (LIVE 2026-07-29,
+  first CBI-approved tokenized fund on public chain; BNY underlying; Komainu;
+  Ripple stakes ~Aug 3), RLUSD (1.711B cap; EU CASP 2026-08-05; BNY custodian
+  monthly attestations), BUIDL (~$2.6-2.7B; Moody's Aaa-mf; ~109 wallets),
+  BENJI ($700-830M / 8 chains / '40 Act; Franklin parent one-off footnote),
+  OUSG (~$375M TVL; SEC closed Nov 2025; Oasis Pro; ONDO token separate).
+- **JMWH = DEMONSTRATION-ONLY** (represented ≠ distributed: 19 holders, ~0 volume,
+  minted-not-purchased, Universal Demeter minimal capital, CAMMESA custodian+auditor).
+  Render as the negative-signal case, never endorsement.
+- **Compliance (own posture):** CRA vulnerability reporting live 2026-09-11
+  (24h/72h/14d ENISA; SBOM + generator shipped; engine is stdlib-only Python).
+  AI Act GPAI enforcement live 2026-08-02 (€15M/3%): signed verdict path is
+  deterministic (no GPAI by construction); fleet local; hosted tooling = two-provider
+  portability rule + cost caps on agent rounds.
+- **Supply chain:** xrpl.js CVE-2025-32965 (Apr 2025, fixed 4.2.5/2.14.3, current 5.x)
+  NOT in our tree; consumers pin ≥4.2.5/5.x + SCA + npm 2FA prep.
+- **SEC posture:** pure-attestor (no issuance/custody/synthetic) sits outside the
+  2026-01-28 staff taxonomy — keep it that way; no issuer payment ever.
