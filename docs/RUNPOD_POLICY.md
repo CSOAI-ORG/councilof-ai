@@ -1,41 +1,38 @@
-# RunPod policy — what GPU is for (and is not)
+# RunPod / GPU policy — honest compute
 
-**Status:** OPERATING · RunPod capacity is real; scope stays honest.  
-**Canon:** `docs/EAT_PLAYBOOK.md` · `docs/STACK_HONESTY.md` · `docs/SOVOS/INDEX-METHOD-0.1.md` · `ops/runpod-bootstrap.sh`
+**Binding:** GPU / RunPod is for **model axes only**. It does **not** accelerate RWA / contract attestation churn, and it must **never** invent labour or AI-economy **MEASURED** scores.
 
-Measurement, not certification. Scores never sold. DSH = OS.
+Attestation scale is I/O (archive RPC, explorers, public artifacts) + deterministic CPU grading. See `docs/EAT_PLAYBOOK.md` (DSH · RunPod · Oracle · Kaggle · Cursor) and `docs/SOVOS/INDEX-METHOD-0.1.md` (method before score).
 
-## Allowed on RunPod
+## Allowed
 
-| Job class | Why GPU helps |
-|-----------|----------------|
-| GSPC / model-axis evaluation harness | Inference + batch grading on frozen banks |
-| Arena / Council Space contest rounds | Model-vs-model evidence volume |
-| Vision / humanoid / machinery-conformity probes | Heavy multimodal runs |
-| HF / Kaggle dump packaging of **already MEASURED** cards | Throughput after signature |
+- GSPC / engine-axis jobs that actually call a model (inference, eval harness, probe banks)
+- Training or eval workloads that are already model-bound and labeled MEASURED / DESIGN / REPORTED honestly
+- AG-UI wire hosts (`AGUI_WIRE_URL`) when the pod is serving model SSE — not for inventing grades
+- Explicit owner-approved experiments labeled **DESIGN** or **REPORTED** (never silent MEASURED)
 
-## Banned on RunPod
+## Forbidden
 
-| Job class | Why |
-|-----------|-----|
-| RWA attestation churn (XRPL Memo / EAS / credential mint loops) | Attestation is custody + publisher CPU — GPU does **not** speed honest contract reads or Ed25519 sign |
-| Inventing MEASURED labour / AI-economy scores | Indices stay UNMEASURED until INDEX-METHOD freezes a bank + usable n |
-| Selling or soft-grading “preview” scores for dashboards | HO.2 — grades never sold; DSH ≠ softer truth |
-| Demo-play publish to mainnet | Publisher fail-closed until custody + counsel |
+- Using RunPod / GPU to “speed up” Memo / EAS / XRPL attestation publishing or contract churn
+- Inventing labour / AI-economy **MEASURED** scores (`measured_score`) on GPU
+- Silent fill of **UNMEASURED** cells (zeros, averages, scraped TVL/ARR dressed as ours)
+- Selling grades from any GPU run (HO.2 — meter access/runs/seats only)
+- Treating GPU latency or token spend as evidence of measurement quality
 
-## Operator checklist
+## Labour & economy indices
 
-1. Name the instrument / bank frozen ID in the job env.  
-2. If the output is a measurement card, it must verify on `/gspc-verify` offline.  
-3. If the job touches labour/economy series → write **REPORTED citations or UNMEASURED manifests only** — never invent TVL/ARR/wage %.  
-4. Log `CSOAI_KEY_CUSTODY` absence as fail-closed for any `--publish`.  
-5. Prefer CPU/archive workers for public-artifact refresh and adapter crawls.
+AI-economy · human-labour · humanoid-labour ship as **UNMEASURED** (`GET /api/indices`, hub `/indices`).
+`measured_score` stays `null` until INDEX-METHOD + frozen bank. GPU cannot promote them.
 
-## Template note (job README)
+## Accelerator for attestation
 
-```
-# Do NOT use this pod for RWA attestation churn or labour MEASURED invention.
-# GPU = model axes / arena / multimodal probes only.
-```
+Parallel **CPU** workers + archive RPC + public-artifact adapters — not GPU.
+RWA clean plays remain Stage gates (custody + counsel) per `docs/EAT_PLAYBOOK.md`.
 
-Owner gates (custody, securities counsel, mainnet) are unchanged by RunPod availability.
+## Canon
+
+- `docs/EAT_PLAYBOOK.md`
+- `docs/SOVOS/INDEX-METHOD-0.1.md`
+- `docs/EAT_DSH_ALIGNMENT.md`
+- `docs/ESTATE_CROSSWALK.md`
+- Moves: `docs/NEXT_300_MOVES.md` #143, #257–258, #289
