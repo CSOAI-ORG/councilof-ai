@@ -19,6 +19,7 @@ import {
   REVENUE_PROJECTION,
   SOVOS_FLYWHEEL,
 } from "@/data/engine-axis";
+import { CONTEXT_FIREWALL_INDICES } from "@/data/contextFirewallIndices";
 import { openLobby } from "@/lib/lobbyLink";
 import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
@@ -149,7 +150,31 @@ export default function EngineAxis() {
                 </tr>
               ))}
             </tbody>
+
           </table>
+        </div>
+
+        <h3 className="mt-10 text-base font-bold text-white mb-2">Labour &amp; AI-economy companions — UNMEASURED first</h3>
+        <p className="text-sm text-slate-500 mb-4">
+          Candidates on the same honesty rail. Contextual firewall only — never GSPC cell inputs.{" "}
+          <Link href="/indices" className="text-emerald-400 hover:underline">
+            /indices
+          </Link>
+        </p>
+        <div className="grid sm:grid-cols-3 gap-3">
+          {CONTEXT_FIREWALL_INDICES.map((i) => (
+            <Link key={i.slug} href={i.path}>
+              <a className="block rounded-xl border border-rose-500/20 bg-rose-950/20 p-4 hover:border-rose-400/40">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-sm font-semibold text-white">{i.title}</span>
+                  <Badge variant="outline" className="text-[10px] border-rose-400/40 text-rose-200">
+                    {i.status}
+                  </Badge>
+                </div>
+                <p className="text-[11px] text-slate-500">{i.candidacy}</p>
+              </a>
+            </Link>
+          ))}
         </div>
       </section>
 
