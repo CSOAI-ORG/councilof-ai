@@ -73,6 +73,7 @@ const ComplianceScorecard = lazy(() => import("./pages/ComplianceScorecard"));
 const KnowledgeBase = lazy(() => import("./pages/KnowledgeBase"));
 const EnterpriseOnboarding = lazy(() => import("./pages/EnterpriseOnboarding"));
 const Pricing = lazy(() => import("./pages/Pricing"));
+const Products = lazy(() => import("./pages/Products"));
 const Payg = lazy(() => import("./pages/Payg"));
 const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
@@ -339,6 +340,7 @@ function ScrollToTop() {
 
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
+  "/products": "Product catalogue — measurement, data & tooling | CSOAI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
   "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
   "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
@@ -881,6 +883,8 @@ function App() {
                   <Route path="/knowledge-base" component={KnowledgeBase} />
                   <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />
                   <Route path="/pricing" component={PlansPage} />
+                  <Route path="/products" component={Products} />
+                  <Route path="/catalog">{() => <Redirect to="/products" />}</Route>
                   <Route path="/pricing-legacy" component={Pricing} />
                   <Route path="/leaderboard" component={WatchdogLeaderboard} />
                   <Route path="/regulator" component={RegulatorDashboard} />
