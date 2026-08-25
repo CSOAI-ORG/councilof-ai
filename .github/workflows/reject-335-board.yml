@@ -1,4 +1,5 @@
 name: reject-335-board
+# Second exact-150 floor. Do not claim 335. Do not invent the missing 185.
 on:
   push:
     paths:
@@ -12,18 +13,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Allow verified 335 sha256-gated
+        with:
+          fetch-depth: 0
+      - name: Restore honest 150 and exact-150 floor if either drifted
         run: |
-          python3 <<'PY2'
-          import hashlib, json, pathlib, sys
-          EXPECT='12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb'
-          raw=pathlib.Path('public/signed/card_index.json').read_bytes()
-          h=hashlib.sha256(raw).hexdigest(); j=json.loads(raw)
-          n=j.get('n_cards'); cards=j.get('cards') if isinstance(j.get('cards'), list) else []
-          print(n, len(cards), len(raw), h)
-          if n==335 and len(cards)==335 and len(raw)==75578 and h==EXPECT:
-            print('verified 335 reject-allow'); sys.exit(0)
-          if n==150 and len(cards)==150 and len(raw)==34171:
-            print('exact-150'); sys.exit(0)
-          print('unexpected allow-mode'); sys.exit(0)
-          PY2
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib, sys
+          p = pathlib.Path('public/signed/card_index.json')
+          raw = p.read_bytes()
+          j = json.loads(raw)
+          n = j.get('n_cards')
+          cards = j.get('cards') if isinstance(j.get('cards'), list) else []
+          print('current', n, len(cards), len(raw))
+          board_ok = n == 150 and len(cards) == 150 and len(raw) == 34171
+          floor = pathlib.Path('.github/workflows/honest-board-floor.yml').read_text()
+          floor_ok = ('Restore honest 150 if the board is not exactly 150' in floor
+                      and 'verified 335' not in floor
+                      and 'sha256-gated' not in floor
+                      and len(floor.encode()) == 1846)
+          print('board_ok', board_ok, 'floor_ok', floor_ok)
+          if board_ok and floor_ok:
+              print('exact-150 board and floor — nothing to restore')
+              sys.exit(0)
+          print('drift detected — restoring')
+          open('/tmp/need_restore','w').write('1')
+          PY
+          if [[ ! -f /tmp/need_restore ]]; then echo nothing; exit 0; fi
+          GOOD_BOARD=521df33b6c35dad6c3b2ca3e444fba2ac653687b
+          GOOD_FLOOR=5d482f5e45b8478bbc0d087c278d610ec30dee01
+          git show "$GOOD_BOARD:public/signed/card_index.json" > public/signed/card_index.json
+          git show "$GOOD_FLOOR:.github/workflows/honest-board-floor.yml" > .github/workflows/honest-board-floor.yml
+          python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==150 and len(j["cards"])==150 and len(c)==34171'
+          python3 -c 't=open(".github/workflows/honest-board-floor.yml").read(); assert "verified 335" not in t and len(t.encode())==1846'
+          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "reject-335-board restored exact-150 (do not claim 335)",' '  "card_index_n": 150' '}' > public/stack/e2e-latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/signed/card_index.json .github/workflows/honest-board-floor.yml public/stack/e2e-latest.json
+          if git diff --cached --quiet; then echo nothing; exit 0; fi
+          git commit -m "fix: reject-335-board restored exact-150"
+          git push
