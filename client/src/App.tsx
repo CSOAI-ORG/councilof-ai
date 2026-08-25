@@ -308,6 +308,7 @@ const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
 const BadgesPage = lazy(() => import("./pages/BadgesPage"));
+const EmbedPage = lazy(() => import("./pages/EmbedPage"));
 const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
 const PlansPage = lazy(() => import("./pages/PlansPage"));
 const OnboardOS = lazy(() => import("./pages/OnboardOS"));
@@ -355,6 +356,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
   "/gspc-verify": "GSPC Verify | CSOAI",
+  "/embed": "Embed / white-label — Powered by Council of AI | CSOAI",
   "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
@@ -637,6 +639,8 @@ function App() {
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/xrpl-attest" component={XrplAttest} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
+                  <Route path="/embed" component={EmbedPage} />
+                  <Route path="/white-label" component={EmbedPage} />
                   <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/regulator-findings" component={RegulatorFindings} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />

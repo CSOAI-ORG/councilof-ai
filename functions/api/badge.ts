@@ -1,8 +1,10 @@
-// functions/api/badge.ts — the README badge endpoint (GROWTH-300 #41).
+// functions/api/badge.ts — the README / white-label badge endpoint (GROWTH-300 #41).
 //
-// A shields.io-style badge any project can drop into its README:
+// A shields.io-style badge any project can drop into its README or its own site:
 //     ![measured](https://councilof.ai/api/badge)
 //     ![measured](https://councilof.ai/api/badge?measured=9&label=agentname)
+//     ![governance](https://councilof.ai/api/badge?axis=governance)
+//     ![card](https://councilof.ai/api/badge?card=82994353…)
 //
 // The default badge states the board's own honest count, derived from the same
 // MEASURED / UNTESTED split as GET /api/gspc totals.public_count - never a typed
@@ -11,8 +13,20 @@
 // is measured on fewer axes states its real count, and an unmeasured subject
 // renders honestly as "unmeasured" in grey - never a fabricated score.
 //
+// ?axis=<name> renders ONE axis's real live status from the same AXES data the
+// board serves, three honest states, never a fabricated number:
+//   · measured   (status MEASURED, separation determined) → "governance · measured · n=237"
+//   · untested   (status MEASURED, separation UNTESTED)    → "jail · untested · n=71"
+//   · unmeasured (status not MEASURED, or unknown axis)    → "<axis> · unmeasured"
+// SEPARATED leads render green; a TIE (still a measured axis, but the point-estimate
+// lead is not a measured advantage) renders lime — a visible, honest distinction.
+//
+// ?card=<hash> reflects one signed card's real state from /signed/card_index.json:
+// "<axis> · signed" (green) when that card carries a signature, else grey. It never
+// asserts the card verifies — that is the embed verify widget's job (real crypto).
+//
 // Formats:
-//   (default)        → SVG (image/svg+xml), embeddable directly in a README
+//   (default)        → SVG (image/svg+xml), embeddable directly in a README or <img>
 //   ?format=shields  → shields.io endpoint JSON {schemaVersion,label,message,color}
 //                      use as https://img.shields.io/endpoint?url=<this-url>&format=shields
 //   ?format=json     → the raw {measured,message,color,verify,public_count} object
@@ -40,6 +54,32 @@ const boardCounts = () => {
 
 const VERIFY_URL = "https://councilof.ai/gspc-verify";
 const GREY = "#9ca3af";
+const GREEN = "#16a34a";
+const LIME = "#65a30d";
+const AMBER = "#ca8a04";
+
+// One axis's honest live status, derived from the SAME AXES data GET /api/gspc
+// serves. Three states only; n is the axis's real bank size, never invented.
+type AxisBadge = { label: string; message: string; colour: string; state: string };
+const axisBadge = (name: string): AxisBadge => {
+  const a = AXES.find((x) => x.axis === name);
+  if (!a) {
+    // Unknown axis: honest grey, and the img still renders (a 404 would break it).
+    return { label: name.slice(0, 40) || "axis", message: "not on the board", colour: GREY, state: "unknown" };
+  }
+  const label = a.axis;
+  if (a.status !== "MEASURED") {
+    return { label, message: "unmeasured", colour: GREY, state: "unmeasured" };
+  }
+  if (a.separation === "UNTESTED") {
+    // Data present, separation test not yet run — quotable but not a measured axis.
+    return { label, message: `untested · n=${a.n}`, colour: AMBER, state: "untested" };
+  }
+  // MEASURED with a determination. A TIE is still a measured axis (it counts in
+  // public_count), but the lead is not separated — render lime, not green.
+  const colour = a.separation === "SEPARATED" ? GREEN : LIME;
+  return { label, message: `measured · n=${a.n}`, colour, state: "measured" };
+};
 
 const clampInt = (raw: string | null, fallback: number, max = 999): number => {
   const n = raw === null ? NaN : Number.parseInt(raw, 10);
@@ -91,8 +131,58 @@ const svgBadge = (label: string, message: string, colour: string): string => {
 </svg>`;
 };
 
+// One signed card's real state, read from the published card index. Never asserts
+// the card verifies (the embed verify widget does that with real crypto) — only
+// whether the index says a signature is attached.
+const cardBadge = async (origin: string, hash: string): Promise<AxisBadge> => {
+  const h = hash.toLowerCase().replace(/[^0-9a-f]/g, "").slice(0, 64);
+  const label = "card";
+  if (h.length < 6) return { label, message: "invalid ref", colour: GREY, state: "invalid" };
+  try {
+    const res = await fetch(new URL("/signed/card_index.json", origin).toString());
+    if (!res.ok) return { label, message: "index unavailable", colour: GREY, state: "unavailable" };
+    const idx = (await res.json()) as { cards?: { card: string; axis?: string; signed?: boolean }[] };
+    const entry = (idx.cards || []).find((c) => typeof c.card === "string" && c.card.toLowerCase().startsWith(h));
+    if (!entry) return { label, message: "not in index", colour: GREY, state: "not-found" };
+    const axis = (entry.axis || "card").slice(0, 40);
+    return entry.signed
+      ? { label: axis, message: "signed", colour: GREEN, state: "signed" }
+      : { label: axis, message: "unsigned", colour: GREY, state: "unsigned" };
+  } catch {
+    return { label, message: "index unavailable", colour: GREY, state: "unavailable" };
+  }
+};
+
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
+  const format = url.searchParams.get("format");
+  const svgHeaders = {
+    "cache-control": "public, max-age=300",
+    "access-control-allow-origin": "*",
+  } as Record<string, string>;
+
+  // ── Per-axis or per-card badge (real live status; never a fabricated number) ──
+  const axisParam = url.searchParams.get("axis");
+  const cardParam = url.searchParams.get("card");
+  if (axisParam || cardParam) {
+    const b = axisParam ? axisBadge(axisParam) : await cardBadge(url.origin, cardParam as string);
+    if (format === "shields") {
+      return new Response(
+        JSON.stringify({ schemaVersion: 1, label: b.label, message: b.message, color: b.colour }),
+        { headers: { ...svgHeaders, "content-type": "application/json; charset=utf-8" } },
+      );
+    }
+    if (format === "json") {
+      return new Response(
+        JSON.stringify({ label: b.label, message: b.message, color: b.colour, state: b.state, verify: VERIFY_URL }, null, 2),
+        { headers: { ...svgHeaders, "content-type": "application/json; charset=utf-8" } },
+      );
+    }
+    return new Response(svgBadge(b.label, b.message, b.colour), {
+      headers: { ...svgHeaders, "content-type": "image/svg+xml; charset=utf-8" },
+    });
+  }
+
   const board = boardCounts();
   const total = clampInt(url.searchParams.get("total"), board.quotable);
   // `measured` may be omitted (board default) or explicitly 0 for an unmeasured subject.
@@ -100,7 +190,6 @@ export const onRequestGet: PagesFunction = async (context) => {
     ? clampInt(url.searchParams.get("measured"), 0, total)
     : board.measured;
   const label = (url.searchParams.get("label") || "GSPC").slice(0, 40);
-  const format = url.searchParams.get("format");
 
   const isDefaultBoard = !url.searchParams.has("measured");
   const message = measured <= 0
@@ -110,10 +199,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       : `${measured} measured`;
   const colour = colourFor(measured, total);
 
-  const headers: Record<string, string> = {
-    "cache-control": "public, max-age=300",
-    "access-control-allow-origin": "*",
-  };
+  const headers = svgHeaders;
 
   if (format === "shields") {
     // shields.io endpoint schema — https://shields.io/badges/endpoint-badge

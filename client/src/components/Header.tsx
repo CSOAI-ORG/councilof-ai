@@ -89,6 +89,7 @@ const navigation: NavGroup[] = [
       { name: 'Industries', href: '/industries', description: 'Sector-by-sector: what applies to you and when' },
       { name: 'How the free rail works', href: '/?lobby=measured&task=pricing-overview', description: 'Verify is free. A grade is never sold. No public prices.' },
       { name: 'Integrations', href: '/integrations', description: 'Wire the measurement into the tools you already run' },
+      { name: 'Embed / white-label', href: '/embed', description: 'Drop a signed, self-verifying measurement into your own site — verify is free forever' },
     ],
   },
   {

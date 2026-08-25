@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="index,follow" />
+<title>Verify a Council of AI signed card — client-side Ed25519</title>
+<meta name="description" content="A self-contained widget that fetches a Council of AI signed measurement card and verifies its Ed25519 signature in your browser. Real crypto, no server trust. Verification is free forever." />
+<style>
+  :root {
+    --bg: #ffffff; --fg: #0b1a12; --muted: #5b6b62; --line: #e2e8e4;
+    --ok: #16a34a; --bad: #dc2626; --wait: #ca8a04; --chip: #f4f7f5; --accent: #0f766e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #05140d; --fg: #eafff4; --muted: #8fb3a3; --line: rgba(52,211,153,.18);
+      --ok: #34d399; --bad: #f87171; --wait: #fbbf24; --chip: #08201636; --accent: #34d399;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 16px;
+  }
+  .wrap { max-width: 560px; margin: 0 auto; border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px; }
+  .top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .brand { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 16px; margin: 6px 0 2px; font-weight: 800; }
+  .verdict { display: flex; align-items: center; gap: 10px; margin: 14px 0 6px; font-weight: 800; font-size: 17px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--muted); flex: none; }
+  .verdict.ok .dot { background: var(--ok); } .verdict.ok { color: var(--ok); }
+  .verdict.bad .dot { background: var(--bad); } .verdict.bad { color: var(--bad); }
+  .verdict.wait .dot { background: var(--wait); } .verdict.wait { color: var(--wait); }
+  ul.checks { list-style: none; margin: 12px 0 6px; padding: 0; }
+  ul.checks li { display: flex; gap: 8px; align-items: flex-start; padding: 5px 0; border-top: 1px dashed var(--line); }
+  ul.checks li:first-child { border-top: 0; }
+  .mark { font-weight: 800; flex: none; width: 16px; text-align: center; }
+  .mark.ok { color: var(--ok); } .mark.bad { color: var(--bad); } .mark.na { color: var(--muted); }
+  .lbl { font-weight: 700; }
+  .det { color: var(--muted); }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; word-break: break-all; }
+  .meta { margin-top: 10px; font-size: 12px; color: var(--muted); }
+  .foot { margin-top: 12px; font-size: 11.5px; color: var(--muted); }
+  a { color: var(--accent); }
+  .boundary { margin-top: 12px; font-size: 11.5px; color: var(--muted); background: var(--chip); border-radius: 10px; padding: 9px 11px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <span class="brand">Powered by Council of AI</span>
+    </div>
+    <h1>Verify this signed card</h1>
+    <div id="verdict" class="verdict wait"><span class="dot"></span><span id="verdict-text">Verifying in your browser…</span></div>
+    <ul class="checks" id="checks"></ul>
+    <div class="meta" id="meta"></div>
+    <div class="boundary">
+      This is an independently <strong>measured</strong>, Ed25519-signed record — a measurement and
+      attestation, <strong>not a certification or conformity mark</strong>. The check runs entirely in
+      your browser against the card's own bytes; whoever embeds this card cannot alter the signed
+      verdict without breaking the signature. Verification is free forever.
+    </div>
+    <div class="foot">
+      No account, no server trust — <span id="crypto-note">WebCrypto Ed25519</span>.
+      Recompute it yourself at <a id="verify-link" href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener">councilof.ai/gspc-verify</a>.
+    </div>
+  </div>
+
+<script>
+(function () {
+  var DEFAULT_CARD = "/signals/cross-border-card.signed.json";
+  var TRUST_ANCHOR = "/signed/board_living.json"; // publishes the living-board signer key
+
+  function q(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  // Canonical JSON: recursively sorted keys, no whitespace — byte-identical to the
+  // Python signer's json.dumps(sort_keys=True, separators=(',',':')) for ASCII bodies.
+  function canonical(v){
+    if (v === null || typeof v !== "object") return JSON.stringify(v);
+    if (Array.isArray(v)) return "[" + v.map(canonical).join(",") + "]";
+    var keys = Object.keys(v).sort();
+    return "{" + keys.map(function(k){ return JSON.stringify(k) + ":" + canonical(v[k]); }).join(",") + "}";
+  }
+  function b64ToBytes(s){
+    var b = atob(String(s).replace(/-/g,"+").replace(/_/g,"/"));
+    var out = new Uint8Array(b.length);
+    for (var i=0;i<b.length;i++) out[i] = b.charCodeAt(i);
+    return out;
+  }
+  function hex(buf){ return [].map.call(new Uint8Array(buf), function(b){ return b.toString(16).padStart(2,"0"); }).join(""); }
+
+  function setVerdict(state, text){
+    var el = q("verdict");
+    el.className = "verdict " + state;
+    q("verdict-text").textContent = text;
+  }
+  function row(mark, cls, lbl, det){
+    var li = document.createElement("li");
+    li.innerHTML = '<span class="mark '+cls+'">'+mark+'</span><span><span class="lbl">'+esc(lbl)+'</span> — <span class="det">'+det+'</span></span>';
+    q("checks").appendChild(li);
+  }
+
+  function cardParam(){
+    var p = new URLSearchParams(location.search).get("card");
+    if (!p) return DEFAULT_CARD;
+    // A path to a signed-card JSON (same-origin). A bare hash is not addressable as a
+    // body yet — say so honestly rather than fabricate a check.
+    if (/^\//.test(p)) return p;
+    if (/^https?:\/\//i.test(p)) return p; // CORS still applies; external hosts must opt in
+    if (/^[0-9a-f]{6,64}$/i.test(p)) return { hashOnly: p };
+    return DEFAULT_CARD;
+  }
+
+  async function run(){
+    var src = cardParam();
+    q("verify-link").href = "https://councilof.ai/gspc-verify";
+
+    if (src && src.hashOnly){
+      setVerdict("wait", "Preview — provide the signed card path");
+      row("○","na","Card reference", "A bare hash (<code>"+esc(src.hashOnly.slice(0,16))+"…</code>) was given. Individual cards are not yet addressable by hash; pass <code>?card=/path/to/card.signed.json</code> to verify a full signed body. Nothing was faked.");
+      q("meta").textContent = "";
+      return;
+    }
+
+    var card;
+    try {
+      var res = await fetch(src, { headers: { "accept": "application/json" } });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      card = await res.json();
+    } catch (e) {
+      setVerdict("bad", "Could not load the card");
+      row("✗","bad","Fetch", "The signed card at <code>"+esc(src)+"</code> could not be loaded ("+esc(e.message||e)+").");
+      return;
+    }
+
+    var sig = card.signature || {};
+    var statedId = card.content_id;
+    var body = {}; for (var k in card){ if (k!=="signature" && k!=="content_id") body[k]=card[k]; }
+
+    // Feature gate: real Ed25519 or nothing (never a fake green).
+    var edSupported = true, key = null;
+    try {
+      key = await crypto.subtle.importKey("raw", b64ToBytes(sig.pubkey||""), { name:"Ed25519" }, false, ["verify"]);
+    } catch (e) {
+      if ((e && e.name) === "NotSupportedError") edSupported = false;
+    }
+
+    // 1. Integrity — recompute content_id = sha256(canonical(body without signature+content_id)).
+    var recomputed = hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(canonical(body))));
+    var integrity = (typeof statedId === "string") && recomputed === statedId;
+    row(integrity ? "✓":"✗", integrity ? "ok":"bad", "Content hash",
+      integrity
+        ? "sha256 recomputed here matches the card's stated content_id (<code>"+esc(recomputed.slice(0,16))+"…</code>). The bytes were not altered."
+        : "MISMATCH — recomputed <code>"+esc(recomputed.slice(0,16))+"…</code> vs stated <code>"+esc(String(statedId).slice(0,16))+"…</code>. The card was edited after signing.");
+
+    // 2. Signature — Ed25519 over the content_id, by the key the card carries.
+    var sigOk = false;
+    if (!edSupported){
+      row("○","na","Signature", "This browser's WebCrypto lacks Ed25519, so the signature can't be checked here. The content hash above is still recomputed locally.");
+      q("crypto-note").textContent = "WebCrypto Ed25519 (unavailable in this browser)";
+    } else if (!key){
+      row("✗","bad","Signature", "The public key on the card is malformed — cannot verify.");
+    } else {
+      try {
+        sigOk = await crypto.subtle.verify("Ed25519", key, b64ToBytes(sig.sig||""), new TextEncoder().encode(String(statedId)));
+      } catch(e){ sigOk = false; }
+      row(sigOk ? "✓":"✗", sigOk ? "ok":"bad", "Signature",
+        sigOk
+          ? "Valid Ed25519 signature over the content_id by the key on the card (<code>"+esc(String(sig.pubkey||"").slice(0,16))+"…</code>)."
+          : "Does NOT verify — altered, or signed by a different key.");
+    }
+
+    // 3. Trust anchor — is the signing key the published living-board signer?
+    var anchorOk = null;
+    try {
+      var pubHex = hex(b64ToBytes(sig.pubkey||""));
+      var ares = await fetch(TRUST_ANCHOR);
+      if (ares.ok){
+        var anchor = await ares.json();
+        anchorOk = typeof anchor.signer === "string" && anchor.signer.toLowerCase() === pubHex.toLowerCase();
+        row(anchorOk ? "✓":"○", anchorOk ? "ok":"na", "Published key",
+          anchorOk
+            ? "The signing key is the Council of AI living-board signer published at <code>/signed/board_living.json</code> — not just the key the card names itself."
+            : "The card's key was not matched to the published living-board signer on this deploy. Signature validity above still holds for the key on the card.");
+      }
+    } catch(e){ /* anchor cross-check is best-effort */ }
+
+    q("meta").innerHTML = "Card: <code>"+esc(card.schema||src)+"</code>" + (card.title ? " — "+esc(card.title) : "");
+
+    if (integrity && sigOk && (anchorOk !== false)){
+      setVerdict("ok", "✓ signature verified");
+    } else if (!edSupported){
+      setVerdict("wait", "Content intact — signature not checkable here");
+    } else {
+      setVerdict("bad", "✗ verification failed");
+    }
+  }
+
+  if (window.crypto && crypto.subtle && crypto.subtle.digest){
+    run();
+  } else {
+    setVerdict("bad", "WebCrypto unavailable");
+    row("✗","bad","Environment", "This browser has no WebCrypto SubtleCrypto; verification cannot run.");
+  }
+})();
+</script>
+</body>
+</html>
