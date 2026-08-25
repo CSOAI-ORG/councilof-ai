@@ -1,11 +1,12 @@
 import { EUNOMIA_AXES } from "@/data/eunomia";
 
 export default function Registers() {
-  const n = EUNOMIA_AXES.length;
+  const axes = EUNOMIA_AXES;
+  const measured = axes.filter((a) => a.status === "MEASURED").length;
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
       <h1 className="text-2xl font-bold">EUNOMIA Registers — signed financial-axis rows</h1>
-      <p className="mt-1 text-sm text-emerald-300/80">{n} measured of {n} · exact-label · Wilson CI · Ed25519-signed · recompute-able</p>
+      <p className="mt-1 text-sm text-emerald-300/80">{measured} measured of {axes.length} · exact-label · Wilson CI · Ed25519-signed · recompute-able</p>
       <p className="mt-2 text-xs text-slate-400">Register endpoint: <span className="font-mono text-emerald-300">GET /api/registers</span> · measurement, not certification. Every row is Ed25519-signed (<code>did:web:csoai.org#estate-chain-1</code>) and a stranger can re-derive it.</p>
       <div className="mt-6 overflow-x-auto rounded-xl border border-emerald-400/20">
         <table className="w-full border-collapse text-sm">
