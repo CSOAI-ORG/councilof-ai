@@ -72,7 +72,7 @@ export const PRICING_RISK_SLIDES: Slide[] = [
     kicker: "The instrument",
     title: "GSPC — governance, safety, provenance, continuity",
     body:
-      "Four families, fourteen board slots, anchored to a frozen corpus of 417 statutory provisions. Thirteen slots are measured on the full fleet with a separation test; the fourteenth, jail, is measured on a smaller fleet and carries no separation test yet, so it is printed UNTESTED and never compared against the rest. Coverage on this site is read from the live board, never typed by hand.",
+      "Four families, fourteen board slots, anchored to a frozen corpus of 417 statutory provisions. All fourteen are measured on the live board (14 measured of 14 quotable per GET /api/gspc). Thirteen canonical axes carry separation on the full fleet; jail is measured on a smaller fleet at n=71 and prints separation TIE — a tie is not a separated leader, and we never rank on it or compare it against the rest. Coverage on this site is read from the live board, never typed by hand.",
     points: [
       { tag: "pain", text: "Assurance scores with no provision behind them and no n on the row" },
       { tag: "benefit", text: "Every result names its provision, its sample size and its status" },
@@ -157,7 +157,7 @@ export const PRICING_RISK_NOT_CLAIMED = [
   "We do not publish a market size for AI insurance. No premium projection, no CAGR, no carrier capacity figure appears on this page — none of it is ours to evidence. Third-party figures we do cite are served from /api/reported, dated and attributed, as reported by the source and not measured here.",
   "We do not operate an oracle, a trigger or a settlement mechanism. We publish signed rows; the tail measure, the threshold and the payout logic are computed inside the insurer's own model.",
   "We do not claim a signature proves a system is safe or lawful. It proves provenance — these bytes, unaltered, from this key. The measurement is what speaks to behaviour, and it comes with its limits attached.",
-  "We do not claim slot 14 is comparable to the canonical axes. Jail is measured on a smaller fleet with its separation UNTESTED, and we never rank on it.",
+  "We do not claim slot 14 is comparable to the canonical axes. Jail is measured at n=71 on a smaller fleet with separation TIE on the live board — a tie is not a separated leader, and we never rank on it.",
   "We do not certify, accredit or approve. There is no conformity mark here and no accreditation chain behind it.",
 ];
 
