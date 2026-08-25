@@ -63,7 +63,7 @@ const benefits = [
   { icon: HomeIcon, title: "Work From Home", description: "Flexible remote work" },
   { icon: Clock, title: "Flexible Hours", description: "Set your own schedule" },
   { icon: DollarSign, title: "Earn Money", description: "Get paid per case reviewed" },
-  { icon: Award, title: "Get Certified", description: "Free training & certification" },
+  { icon: Award, title: "Get measured", description: "Signed card — not a certificate" },
 ];
 
 export default function Landing() {
@@ -399,9 +399,9 @@ export default function Landing() {
               wanting to protect humanity, CSOAI is for you.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/">
+              <Link href="/assess">
                 <Button size="lg" className="gap-2">
-                  Start Free Trial
+                  Get measured
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
