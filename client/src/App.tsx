@@ -320,6 +320,7 @@ const ToolCommons = lazy(() => import("./pages/ToolCommons"));
 const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const StatusPage = lazy(() => import("./pages/StatusPage"));
 const Distribution = lazy(() => import("./pages/Distribution"));
+const DistributionIntegrity = lazy(() => import("./pages/DistributionIntegrity"));
 const McpFleet = lazy(() => import("./pages/McpFleet"));
 const Gone = lazy(() => import("./pages/Gone"));
 const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));import { frameworksdata } from "./data/frameworks-content";
@@ -360,6 +361,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
   "/xrpl-attest": "Ledger attestation | Council of AI",
+  "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
@@ -636,6 +638,7 @@ function App() {
                   <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/xrpl-attest" component={XrplAttest} />
+                  <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/regulator-findings" component={RegulatorFindings} />

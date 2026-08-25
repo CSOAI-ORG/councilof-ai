@@ -588,6 +588,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Distribution"
  },
  {
+  "path": "/distribution-integrity",
+  "comp": "DistributionIntegrity",
+  "title": "Distribution Integrity"
+ },
+ {
   "path": "/docs",
   "comp": "Documentation",
   "title": "Documentation"
@@ -1688,6 +1693,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Regulator Atlas"
  },
  {
+  "path": "/regulator-findings",
+  "comp": "RegulatorFindings",
+  "title": "Regulator Findings"
+ },
+ {
   "path": "/regulators",
   "comp": "RegulatorAtlas",
   "title": "Regulator Atlas"
@@ -1918,7 +1928,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Space"
  },
  {
-  "path": "/gspc-arena?view=towns",
+  "path": "/sovereign-town",
   "comp": "Redirect",
   "title": "Sovereign Town"
  },
