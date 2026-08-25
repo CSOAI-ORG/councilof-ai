@@ -148,3 +148,18 @@ Grammar stays: reference index ≠ forecast; measurement not certification.
   LANE_COORDINATION. Next campaign item.
 - **Cursor:** the /indices + /financial-axes cards can now render real signed numbers
   for 2 of 3 indices + 6 XRPL + 3 EVM control-fact sets; JMWH demo-only framing stands.
+
+## 9. META/402 PAY RAIL + PUBLISH RULE (2026-08-25) — owner review points
+- **Payments:** `/api/checkout` now two providers: `provider:"meta"` → HTTP **402**
+  (our own signed invoice - product registry incl. evidence-pack / data-license /
+  attestation-coverage / training-world, DRAFT prices until ruling 211) + `provider:"stripe"`
+  (honest 503 without owner key). `/api/fulfill` verifies Ed25519 receipts (WebCrypto) →
+  artifact URLs (API GET, machine path) + email-queue record. No Stripe price IDs needed
+  anymore for the meta rail — **the "unknown product_id" gap is closed at the registry**.
+- **Publish rule** (`docs/operations/PUBLISH_RULE_2026-08-25.md`): mjs dual-accept = single
+  enforcement; no guard-deletion war; owner final say pending. Aligned with Claude lane
+  (guard dual-accept reading) + both bots' workflows.
+- **Board artifact bug fixed:** the signed board_living totals said 13 while the api was
+  14 — stale totals block re-signed to 14-of-14; claimguard now passes board claims
+  (style-A signature support + board-derived grammar, E2E PASS).
+- **SCA:** dependabot.yml (npm/pip/actions, weekly) + corrections runbook (#674).
