@@ -1,46 +1,39 @@
-# Hugging Face dataset plan — CSOAI honesty dumps
+# Hugging Face dataset plan — honest publishes
 
-**Status:** PLAN · stub first, MEASURED only when signed  
-**Target org (intended):** `csoai` on Hugging Face  
-**Canon:** `docs/SOVOS/INDEX-METHOD-0.1.md` · `docs/EAT_PLAYBOOK.md` · `docs/RUNPOD_POLICY.md`
+Org target: `huggingface.co/csoai` (or successor). Measurement, not certification. Scores never sold.
 
-## Datasets (ordered)
+Doctrine: ship empty / cited first; MEASURED only after freeze + sign. Never dress TVL, ARR, wage %, or TAM as MEASURED. Canon: `docs/EAT_PLAYBOOK.md` · `docs/SOVOS/INDEX-METHOD-0.1.md`.
 
-| ID (proposed) | Content | Register |
-|---------------|---------|----------|
-| `csoai/gspc-measured-snapshot` | Existing GSPC axis cards / board dumps | MEASURED (when signed) |
-| `csoai/labour-economy-unmeasured` | Three indices + method pointer + null scores | **UNMEASURED** |
-| `csoai/rwa-corpus-reported` | Public issuer/contract artifacts for EAT | REPORTED (no fake grades) |
-| `csoai/east-west-sample-packs` | Crosswalk sample packs already public | as labeled |
+## Ship first (UNMEASURED / REPORTED)
 
-## `labour-economy-unmeasured` stub shape
+1. **`labour-economy-unmeasured`** — manifest for `ai-economy` / `human-labour` / `humanoid-labour` with `measured_score: null`, `fused_into_gspc: false`, firewall note, and next_gate pointers matching `GET /api/indices`.
+2. **Dated REPORTED citation tables** — ILO / AEI / WEF FoJ / OECD / Anthropic Economic Index (and peers). Labeled **REPORTED**, cited + dated, never signed as CSOAI MEASURED.
+3. **RWA public-artifact corpus** — explorer / issuer URLs and adapter keys from `client/src/data/rwaAttestationTargets.ts` **without** invented AUM or “rated” language.
 
-```json
-{
-  "schema": "csoai.labour-economy-index/0.1",
-  "indices": [
-    { "slug": "ai-economy", "status": "UNMEASURED", "measured_score": null, "fused_into_gspc": false },
-    { "slug": "human-labour", "status": "UNMEASURED", "measured_score": null, "fused_into_gspc": false },
-    { "slug": "humanoid-labour", "status": "UNMEASURED", "measured_score": null, "fused_into_gspc": false }
-  ],
-  "method": "docs/SOVOS/INDEX-METHOD-0.1.md",
-  "api": "GET /api/indices"
-}
-```
+## Ship when frozen (MEASURED)
 
-## README doctrine (must ship with every dump)
+1. **GSPC board snapshots** — Ed25519 card hashes, methodology pointer / DOI, bank freeze id, usable `n`.
+2. Only after bank freeze + Wilson discipline on frozen banks (`docs/EAT_PLAYBOOK.md`).
+3. Labour/economy indices become MEASURED dumps **only** after INDEX-METHOD promotion — never by backfilling GPU or scrapers.
 
-- Measurement, not certification.  
-- UNMEASURED is honest — absence is not zero.  
-- Labour/economy indices are a **contextual firewall** — never SHA-256/Ed25519 GSPC inputs.  
-- Do not invent TVL, ARR, wage %, displacement %, or TAM as MEASURED.  
-- Kaggle mirrors (if any) are **REPORTED only** until a bank is frozen.
+## Never
 
-## Upload gates
+- TVL / ARR / wage % / TAM / “AI economy size” as MEASURED without a frozen method
+- Fusing labour indices into GSPC cells (contextual firewall)
+- Silent zeros for empty cells (`null` ≠ 0)
+- Mixing REPORTED third-party figures into signed MEASURED averages
 
-1. Local fixture under `scripts/index-fixtures/` matches API honesty shape.  
-2. HF README cites INDEX-METHOD-0.1.  
-3. No column named `score` with invented floats for UNMEASURED rows.  
-4. Owner HF token / org access — ops, not invented here.
+## Cross-links
 
-Live probe until HF upload: `curl -sS https://councilof.ai/api/indices` (404 on prod until branch merges to `master`).
+| Surface | Role |
+|---------|------|
+| `/indices` · `GET /api/indices` · `GET /api/indices/:slug` | Live UNMEASURED register |
+| `docs/SOVOS/INDEX-METHOD-0.1.md` | Method before score |
+| Kaggle | REPORTED notebooks + offline Ed25519 verify until freeze |
+| `docs/NEXT_300_MOVES.md` #139–141, #251–256 | Execution register |
+
+## Naming sketch (subject to HF org)
+
+- `csoai/labour-economy-unmeasured` — manifests first
+- `csoai/gspc-measured-snapshots` — only when frozen
+- `csoai/rwa-public-artifacts-reported` — citations, no fake scores
