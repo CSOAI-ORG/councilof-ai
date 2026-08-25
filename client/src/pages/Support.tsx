@@ -38,10 +38,10 @@ const INITIAL_MESSAGE: ChatMessage = {
 
 I can assist you with:
 • **Account & Login Issues** - Password resets, account access
-• **Course & Training Questions** - Enrollment, progress, certificates
-• **Payment & Billing** - Subscriptions, refunds, promo codes
+• **Get measured** - What the assess function runs, and what it does not claim
+• **Verify** - How to check a signed card for free
 • **Technical Support** - Platform issues, browser compatibility
-• **Certification Exams** - Exam preparation, results, retakes
+• **Academy** - Learning the measurement rail (not a certificate)
 • **Watchdog Program** - Incident reporting, analyst applications
 
 How can I help you today?`,
@@ -66,53 +66,41 @@ Would you like me to connect you with a human support agent for further assistan
   },
   payment: {
     keywords: ['payment', 'billing', 'charge', 'refund', 'subscription', 'cancel', 'price', 'cost', 'promo', 'discount', 'founding', 'free'],
-    response: `I can help with payment and billing questions!
+    response: `There are no SaaS tiers and no public prices. Measurement and verification are free forever.
 
-**Common Payment Topics:**
-• **Free Access** - The core measurement credential training is free to everyone
-• **Refunds** - 30-day money-back guarantee on any paid add-ons
-• **Subscription Management** - Manage your account in Settings → Payment
+**The free rail:**
+• **Get measured** at /assess — a deterministic EU AI Act keyword classifier. Not a certificate. We do not remediate.
+• **Verify** any signed record at /gspc-verify/
+• **Living board** at GET /api/gspc
+• **Lobby door** /?lobby=measured&task=pricing-overview
 
-**For specific billing issues** (refunds, disputed charges, or account-specific questions), I recommend connecting with our human support team who can access your account details.
+If you have a signed report_id and no datastore is bound yet, email nicholas@csoai.org with that id.
 
 Would you like me to connect you with a human agent?`
   },
   course: {
     keywords: ['course', 'training', 'enroll', 'enrolled', 'progress', 'lesson', 'module', 'certificate', 'complete', 'finish'],
-    response: `I can help with course-related questions!
+    response: `The academy is how we explain the measurement rail. It is not a certificate and it is not sold as one.
 
-**Course Access:**
-• View your enrolled courses at **My Courses**
-• Track progress with the progress bar on each course
-• Resume where you left off - your progress is saved automatically
+**Where to start:**
+• Open the academy at /academy
+• Get measured at /assess — describe the system; we sign what we could measure
+• Empty cells stay empty. We do not remediate.
 
-**Certificates:**
-• Certificates are issued upon completing all lessons
-• Download certificates from **My Certificates** page
-• Certificates include your name, completion date, and course details
-
-**Having trouble with a specific course?** Please let me know which course and what issue you're experiencing, or I can connect you with human support.`
+**Having trouble with a specific lesson?** Tell me which page, or I can connect you with human support.`
   },
   exam: {
     keywords: ['exam', 'test', 'certification', 'pass', 'fail', 'score', 'retake', 'attempt'],
-    response: `Here's information about the certification exam:
+    response: `There is no certification exam and no passing score. A grade is never sold.
 
-**Exam Details:**
-• 50 multiple-choice questions
-• 2-hour time limit
-• 70% passing score required
-• Covers all major AI safety frameworks
+**Get measured:**
+• POST /api/assess (or use /assess) with system, purpose, and domain
+• You get a signed card: tier, gaps, and what we could not measure
+• The engine is a deterministic EU AI Act keyword classifier. It does not fetch or probe. It is not a GSPC bench.
 
-**Retakes:**
-• You can retake the exam after 24 hours
-• Review your previous attempts at **Certification → Review Past Exams**
+**Verify** the signature at /gspc-verify/. The card is not a certificate, not a conformity mark, and not legal advice.
 
-**Preparation Tips:**
-• Complete all training modules first
-• Review the framework-specific courses (EU AI Act, NIST, etc.)
-• Use the practice questions in each module
-
-Need more specific help with exam preparation?`
+Need help reading a signed card?`
   },
   watchdog: {
     keywords: ['watchdog', 'incident', 'report', 'analyst', 'safety', 'job', 'apply'],
@@ -121,11 +109,11 @@ Need more specific help with exam preparation?`
 **For the Public:**
 • Report AI safety incidents at **Watchdog → Report Incident**
 • Track your reports in your dashboard
-• All reports are reviewed by certified analysts
+• All reports are reviewed by analysts. Review is not a certificate.
 
 **Becoming an Analyst:**
-1. Complete the measurement credential training program
-2. Pass the certification exam (70% minimum)
+1. Complete the academy measurement materials
+2. Get a system measured at /assess (not an exam)
 3. Apply through **Watchdog → Analyst Jobs**
 4. Start reviewing incidents
 
@@ -317,24 +305,24 @@ Is there anything else I can help you with in the meantime?`,
       answer: 'Go to the Login page and click "Forgot Password?" Enter your email address and check your inbox for the reset link. The link expires in 1 hour.',
     },
     {
-      question: 'Is the training free?',
-      answer: 'Yes. The core measurement credential training is free to everyone — no code or checkout required. Just create an account and start learning.',
+      question: 'Is Get measured free?',
+      answer: 'Yes. Measurement and verification are free forever. There are no SaaS tiers and no public prices. Start at /assess or the lobby door /?lobby=measured&task=get-measured.',
     },
     {
-      question: 'What is the passing score for the certification exam?',
-      answer: 'You need 70% (35 out of 50 questions) to pass the certification exam. You have 2 hours to complete it, and can retake after 24 hours if needed.',
+      question: 'What does the assessment actually run?',
+      answer: 'A deterministic EU AI Act keyword classifier (Annex III / Art 5). It does not fetch or probe an endpoint and it is not a GSPC bench. You get a signed card — not a certificate. We do not remediate.',
     },
     {
       question: 'How do I become a Watchdog Analyst?',
-      answer: 'Complete the measurement credential training program, pass the assessment with at least 70%, then apply through the Watchdog → Analyst Jobs page. Analysts review AI safety incidents for compliance.',
+      answer: 'Complete the academy materials, get a system measured at /assess, then apply through the Watchdog → Analyst Jobs page. Analysts review AI safety incidents. Review is not a certificate.',
     },
     {
-      question: 'Can I get a refund?',
-      answer: 'Yes, we offer a 30-day money-back guarantee on all purchases. Contact our support team with your order details for a full refund.',
+      question: 'Do you sell plans or refunds?',
+      answer: 'No. There is nothing to buy on the public rail and nothing to refund. Measurement and verify stay free. Email nicholas@csoai.org with a report_id if you need a human.',
     },
     {
-      question: 'How do I download my certificate?',
-      answer: 'After completing a course, go to My Certificates page. Click the download button on your certificate to get a PDF version with your name, completion date, and course details.',
+      question: 'How do I verify a signed card?',
+      answer: 'Open /gspc-verify/ and paste the signed payload. Verify is free forever. A verified signature is evidence, not a certificate.',
     },
   ];
 
@@ -346,10 +334,10 @@ Is there anything else I can help you with in the meantime?`,
       link: '/how-it-works',
     },
     {
-      title: 'Training & Certification',
+      title: 'Academy',
       icon: CheckCircle,
-      description: 'Information about courses and exams',
-      link: '/courses',
+      description: 'Learn the measurement rail — not a certificate',
+      link: '/academy',
     },
     {
       title: 'Watchdog Program',
