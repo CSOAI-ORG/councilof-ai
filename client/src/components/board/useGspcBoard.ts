@@ -73,15 +73,40 @@ export interface GspcBoardState {
 
 export const GSPC_ENDPOINT = "/api/gspc";
 
+/** Live origin used only when the relative fetch returns HTML (prerender on localhost). */
+const LIVE_GSPC = "https://councilof.ai/api/gspc";
+
 let inflight: Promise<GspcPayload> | null = null;
+
+async function fetchGspcPayload(url: string): Promise<GspcPayload> {
+  const r = await fetch(url, { headers: { accept: "application/json" } });
+  if (!r.ok) throw new Error(`${url} answered HTTP ${r.status}`);
+  const text = await r.text();
+  const trimmed = text.replace(/^\uFEFF/, "").trim();
+  // Prerender serves dist/ from localhost. /api/gspc is a Pages Function, so the
+  // SPA fallback returns "<!doctype html>". Parsing that as JSON bakes
+  // "The board could not be read" into every crawler snapshot even though the
+  // live function answers JSON. Do not treat HTML as a board.
+  if (!trimmed || trimmed.startsWith("<")) {
+    throw new Error(`${url} returned HTML, not JSON`);
+  }
+  try {
+    return JSON.parse(trimmed) as GspcPayload;
+  } catch (e) {
+    throw new Error(`${url} was not JSON — ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
 
 /** One fetch per page load, shared by every board component. */
 export function loadGspcBoard(): Promise<GspcPayload> {
   if (!inflight) {
-    inflight = fetch(GSPC_ENDPOINT, { headers: { accept: "application/json" } })
-      .then(async (r) => {
-        if (!r.ok) throw new Error(`${GSPC_ENDPOINT} answered HTTP ${r.status}`);
-        return (await r.json()) as GspcPayload;
+    inflight = fetchGspcPayload(GSPC_ENDPOINT)
+      .catch((e) => {
+        const msg = String((e as Error)?.message ?? e);
+        if (/HTML|not JSON|Unexpected token/i.test(msg)) {
+          return fetchGspcPayload(LIVE_GSPC);
+        }
+        throw e;
       })
       .catch((e) => {
         inflight = null; // let a remount retry rather than cache a failure forever
