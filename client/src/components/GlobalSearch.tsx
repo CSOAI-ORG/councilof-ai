@@ -1,1 +1,1 @@
-@/tmp/push-batches/batch4/GlobalSearch.tsx
+STUB_TEST_DELETE
