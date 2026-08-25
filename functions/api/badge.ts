@@ -7,8 +7,8 @@
 //     ![card](https://councilof.ai/api/badge?card=82994353…)
 //
 // The default badge states the board's own honest count, derived from the same
-// MEASURED / UNTESTED split as GET /api/gspc totals.public_count - never a typed
-// slot count. Jail stays a measured floor when its separation is UNTESTED. The
+// MEASURED / separation split as GET /api/gspc totals.public_count - never a typed
+// slot count. Jail is MEASURED; living-board separation is TIE (not a separated lead). The
 // in-lane slot stays unnamed and visible empty. A visiting agent that enrols and
 // is measured on fewer axes states its real count, and an unmeasured subject
 // renders honestly as "unmeasured" in grey - never a fabricated score.

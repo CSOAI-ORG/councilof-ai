@@ -120,7 +120,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
     { f: "schema", d: "Always csoai.gspc-axes/0.5 — the payload contract version." },
     { f: "issuer", d: "CSOAI Ltd (GB, Companies House 16939677)." },
     { f: "doi", d: "10.5281/zenodo.21991104 — the citable dataset record. Axis counts live in the payload." },
-    { f: "totals.public_count / measured_axes / quotable_axes", d: "Derived from the payload (MEASURED axes with a completed separation test, vs all quotable MEASURED rows). Jail is a measured floor when separation is UNTESTED. Read the live numbers — do not type them here." },
+    { f: "totals.public_count / measured_axes / quotable_axes", d: "Derived from the payload (MEASURED axes with a completed separation test, vs all quotable MEASURED rows). Jail is MEASURED; living-board separation is TIE (not a separated leader). Read the live numbers — do not type them here." },
     { f: "totals.separated_leads / ties", d: "Separated (McNemar p<0.05 on discordant items), ties, and untested. A TIE is not a win. These counts move — read them from the live payload, not from this page." },
     { f: "totals.items", d: "Sum of per-axis n across the selection. Read the live number from the payload." },
     { f: "axes[].n / accuracy / interval", d: "Per-axis item count, the LEADER's accuracy, and its Wilson 95% CI where n is honestly independent." },
@@ -214,7 +214,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
                 <p>
                   <strong className="text-foreground">Axes:</strong> governance, safety, provenance,
                   continuity, conformance, openness, machinery-conformity, care, cross-reality,
-                  detector-interop, art5-safeguard, swarm, affect.
+                  detector-interop, art5-safeguard, swarm, affect, jail.
                 </p>
               </div>
             </CardContent>
