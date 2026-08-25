@@ -324,6 +324,7 @@ const McpFleet = lazy(() => import("./pages/McpFleet"));
 const Gone = lazy(() => import("./pages/Gone"));
 const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));import { frameworksdata } from "./data/frameworks-content";
 const ChallengeDoor = lazy(() => import("./pages/ChallengeDoor"));
+const RegulatorFindings = lazy(() => import("./pages/RegulatorFindings"));
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
 import { blogdata } from "./data/blog-content";
@@ -355,6 +356,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
   "/gspc-verify": "GSPC Verify | CSOAI",
   "/challenge": "Challenge a Measurement | CSOAI",
+  "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
   "/xrpl-attest": "Ledger attestation | Council of AI",
@@ -636,6 +638,7 @@ function App() {
                   <Route path="/xrpl-attest" component={XrplAttest} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/challenge" component={ChallengeDoor} />
+                  <Route path="/regulator-findings" component={RegulatorFindings} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/chat" component={AgUiBridge} />
