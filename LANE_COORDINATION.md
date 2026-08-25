@@ -132,3 +132,16 @@ MEASURED-INDEX-v0.1 (bank gaps stated), humanoid-labour UNMEASURED (bank-pending
 Word of the round: index v0.1 = reference-value index, never a forecast.
 Next: XRPL address location (Aviva/DCP/EURCV/JMWH), gold bank → HF, portable verifier,
 humanoid deployment-registry design.
+
+## 2026-08-25 · K3 notice 5 — gold bank published + verifier + round close (append)
+
+- csoai/gspc-jail-goldbank live (HF, 5 files): frozen 71-cell bank + 7×71 results +
+  deterministic runner; jail dataset field -> published (#653).
+- scripts/verify_signed.py (portable, both signature styles, #656) — all new interop
+  surfaces verify VALID from outside (zero trust, stranger-checkable end-to-end).
+- XRPL issuer location (Aviva/DCP/EURCV/JMWH): bounded public probe FAILED — stays
+  honest not-located; method: CoinPaprika symbol filter, CoinGecko search, ledger
+  account_info + Domain verification (EURCV candidate rPWe9jp... does not exist on
+  mainnet — NOT claimed).
+- Deploy: all new interop URLs live (200). 335-vs-150 publish-rule STILL owner-pending;
+  guard-deletion fight continues (owner decision point, unchanged).
