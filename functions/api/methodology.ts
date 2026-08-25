@@ -9,7 +9,7 @@ export const onRequestGet: PagesFunction = async () => {
     doctrine: "measurement-not-certification \u00b7 nobody-ranked-pays \u00b7 corrections appended not edited",
     instruments: {
       gspc: {
-        what: "16-axis governance measurement over deterministic banks",
+        what: "14-slot GSPC board (quotable); cite live totals.public_count from GET /api/gspc — do not invent 22 axes",
         grading: "exact-label classification (expected=HIGH_RISK/0/1) OR keyword matching (must_inc); no model judges another model",
         quotability: "nothing quoted below n>=30 usable items; quotable computed, never asserted",
         canaries: "banned-term canaries excluded from scoring",
@@ -27,7 +27,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
     honesty_rules: [
       "measurement, not certification — never a 'safe'/'compliant' verdict",
-      "public_count is derived from GET /api/gspc totals (measured_axes of quotable_axes); jail separation untested, stated honestly",
+      "public_count is derived from GET /api/gspc totals (measured_axes of quotable_axes); jail MEASURED with living-board separation TIE (2026-08-25) — a TIE is not a separated leader",
       "corrections appended, never edited",
       "no ranked party pays (nobody-ranked-pays)",
       "unmeasured axes stay UNMEASURED — never fabricated into a score",
