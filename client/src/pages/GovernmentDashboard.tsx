@@ -1,1 +1,0 @@
-LOAD_FROM_FILE:/tmp/gov_content_only.txt
