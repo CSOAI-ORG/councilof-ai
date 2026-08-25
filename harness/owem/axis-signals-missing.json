@@ -1,0 +1,96 @@
+{
+  "kind": "csoai.axis-signal-batch/0.1",
+  "schema": "csoai.axis-signal/0.1",
+  "total_register_axes": 13,
+  "estate_already_has": [
+    "affect",
+    "asi",
+    "care",
+    "det",
+    "gov",
+    "mach",
+    "prv",
+    "xr"
+  ],
+  "missing_axes": [
+    "agi",
+    "art5",
+    "mcp",
+    "oss",
+    "swarm"
+  ],
+  "axes": {
+    "agi": {
+      "schema": "csoai.axis-signal/0.1",
+      "axis": "agi",
+      "register": "MEASURED",
+      "majority_baseline": 0.5278,
+      "scored_items": 36,
+      "models": 19,
+      "sov_champion": "sov33-unified:latest",
+      "sov_score": 0.6667,
+      "generated": "2026-08-25T08:23:50Z",
+      "not_a_certification": true,
+      "note": "From the live axis register + free sov-router (real). Worker-measurement signal (GX.2): estate emit_sov_signal.py re-signs with the estate key before publish. Measurement, never certification.",
+      "content_id": "3e8f4f00646fa760b8ff712071b29d54543f6476c2855f2d391c440cbbb6e0e6"
+    },
+    "art5": {
+      "schema": "csoai.axis-signal/0.1",
+      "axis": "art5",
+      "register": "MEASURED",
+      "majority_baseline": 0.5278,
+      "scored_items": 36,
+      "models": 19,
+      "sov_champion": "sov33-unified:latest",
+      "sov_score": 0.25,
+      "generated": "2026-08-25T08:23:50Z",
+      "not_a_certification": true,
+      "note": "From the live axis register + free sov-router (real). Worker-measurement signal (GX.2): estate emit_sov_signal.py re-signs with the estate key before publish. Measurement, never certification.",
+      "content_id": "81279958aeac894a2326640d29ff123b96ef1048a420c8a5a777ff6dde2d7265"
+    },
+    "mcp": {
+      "schema": "csoai.axis-signal/0.1",
+      "axis": "mcp",
+      "register": "MEASURED",
+      "majority_baseline": 0.5143,
+      "scored_items": 35,
+      "models": 19,
+      "sov_champion": "sov33-unified:latest",
+      "sov_score": 0.5,
+      "generated": "2026-08-25T08:23:50Z",
+      "not_a_certification": true,
+      "note": "From the live axis register + free sov-router (real). Worker-measurement signal (GX.2): estate emit_sov_signal.py re-signs with the estate key before publish. Measurement, never certification.",
+      "content_id": "9df95980133679f9a83072e5bc2bb79cc00f9b2409300e1b04af367d435128dc"
+    },
+    "oss": {
+      "schema": "csoai.axis-signal/0.1",
+      "axis": "oss",
+      "register": "MEASURED",
+      "majority_baseline": 0.5,
+      "scored_items": 32,
+      "models": 19,
+      "sov_champion": "sov33-unified:latest",
+      "sov_score": 0.25,
+      "generated": "2026-08-25T08:23:50Z",
+      "not_a_certification": true,
+      "note": "From the live axis register + free sov-router (real). Worker-measurement signal (GX.2): estate emit_sov_signal.py re-signs with the estate key before publish. Measurement, never certification.",
+      "content_id": "6ee525b7263621326fa56ef91e52978112547087fba119813efbac5213e4bf8e"
+    },
+    "swarm": {
+      "schema": "csoai.axis-signal/0.1",
+      "axis": "swarm",
+      "register": "MEASURED",
+      "majority_baseline": 0.04,
+      "scored_items": 40,
+      "models": 19,
+      "sov_champion": "sov33-unified:latest",
+      "sov_score": 0.0,
+      "generated": "2026-08-25T08:23:50Z",
+      "not_a_certification": true,
+      "note": "From the live axis register + free sov-router (real). Worker-measurement signal (GX.2): estate emit_sov_signal.py re-signs with the estate key before publish. Measurement, never certification.",
+      "content_id": "a40f74e031b9c5ed6faaf18c861dd5b6e32cff87565e7c52c0fd49ab89e067cb"
+    }
+  },
+  "signing_note": "Worker-measurement (GX.2). The estate emit_sov_signal.py signs with /root/.sovos/city_ed25519 and publishes to /public/signals/. This batch feeds the SOV Signal index so all 13 axes render.",
+  "generated": "2026-08-25T08:23:50Z"
+}
