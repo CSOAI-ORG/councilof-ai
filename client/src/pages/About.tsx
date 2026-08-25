@@ -459,19 +459,19 @@ export default function About() {
           <Heart className="h-16 w-16 text-emerald-400 mx-auto mb-6" />
           <h2 className="text-4xl font-bold mb-6">Our Commitment to You</h2>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
-            We're building CSOAI in public. Every decision, every framework update, every certification standard
+            We're building CSOAI in public. Every decision, every framework update, every signed measurement
             is documented and transparent. We answer to the community, not shareholders. Our success is measured
             by one metric: <span className="text-emerald-300 font-semibold">Are we making AI safer while creating meaningful jobs?</span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/training">
+            <Link href="/academy">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
                 Start Training Today
               </Button>
             </Link>
-            <Link href="/certification">
+            <Link href="/academy">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                Learn About Certification
+                Open the academy
               </Button>
             </Link>
           </div>
@@ -661,14 +661,14 @@ export default function About() {
               CSOAI has the solution. Start your journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/training">
+              <Link href="/academy">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
                   Start Free Training
                 </Button>
               </Link>
-              <Link href="/enterprise">
+              <Link href="/?lobby=measured&task=enterprise-start">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                  Enterprise Solutions
+                  Enterprise lobby
                 </Button>
               </Link>
             </div>
