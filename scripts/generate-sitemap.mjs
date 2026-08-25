@@ -208,6 +208,37 @@ for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
 }
 
+// AEO regulatory-explainer blog posts (22) — /blog/:slug is a :param route (skipped above),
+// but these are prime regulator/procurement citation surface, so list each canonical URL.
+const AEO_BLOG_SLUGS = [
+  "ai-insurance-verified-measurement",
+  "ai-procurement-insurance-measured-risk",
+  "bsi-art1-ai-testing-framework",
+  "council-of-europe-ai-framework-convention",
+  "colorado-chatbot-rulemaking-timeline",
+  "colorado-ai-act-chatbot-disclosure-timeline",
+  "council-city-municipal-ai-procurement",
+  "council-signal-how-governance-measurement-works",
+  "eu-ai-act-article-5-prohibited-practices",
+  "eu-ai-act-article-50-machine-readable-marking",
+  "eu-ai-act-high-risk-provider-obligations",
+  "fedramp-oscal-september-30-mandate",
+  "fedramp-oscal-ai-procurement",
+  "iso-42001-audit-readiness",
+  "iso-42001-vs-etsi-en-304-223",
+  "what-is-monitored-containment",
+  "monitored-containment-vs-provable-isolation",
+  "nist-ai-600-1-profile-mapping",
+  "scitt-ai-supply-chain-transparency",
+  "third-party-ai-audit-standards-ss584-isae3000",
+  "uk-cyber-security-resilience-bill-ai-supply-chain",
+  "verified-measurement-credential-how-to-verify",
+];
+for (const slug of AEO_BLOG_SLUGS) {
+  const bp = `/blog/${slug}`;
+  if (!seen.has(bp)) { seen.add(bp); paths.push(bp); }
+}
+
 // --- Emit XML ---------------------------------------------------------------
 const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
