@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 /**
- * signed-json-guard — block deploy when signed artifacts are broken.
- * Allows exact honest-150 OR sha256-verified 335 (mine MANIFEST 335 all signed).
- * Blocks stubs/pointers and any other truncated lie.
+ * signed-json-guard — block deploy when a machine-readable signed artifact is broken.
+ *
+ * Accepts either:
+ *   - honest 150 board (34171B exact), OR
+ *   - verified mine-real 335 board gated by sha256
+ *     12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
+ *
+ * Rejects stubs, path-pointers, truncated interim boards, and any other 335.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -24,7 +29,12 @@ const STUB_MARKERS = [
   "data:application",
   "test data uri",
 ];
-const VERIFIED_335_SHA256 = "12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb";
+const HONEST_150_COUNT = 150;
+const HONEST_150_BYTES = 34171;
+const VERIFIED_335_COUNT = 335;
+const VERIFIED_335_SHA =
+  "12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb";
+const SIZE_FLOOR = 30000;
 let failures = [];
 
 let files = [];
@@ -33,10 +43,11 @@ catch { console.log(`signed-json-guard: no ${dir} directory — nothing to guard
 
 for (const f of files) {
   const p = join(dir, f);
-  const raw = readFileSync(p, "utf8");
+  const buf = readFileSync(p);
+  const raw = buf.toString("utf8");
   const size = statSync(p).size;
   for (const m of STUB_MARKERS) if (raw.includes(m))
-    failures.push(`${f}: contains stub marker ${JSON.stringify(m)} (${size}B)`);
+    failures.push(`${f}: contains stub marker ${JSON.stringify(m)} (${size}B) — a push tool passed a pointer as content`);
   let parsed;
   try { parsed = JSON.parse(raw); }
   catch (e) { failures.push(`${f}: not valid JSON (${size}B): ${e.message.slice(0, 80)}`); continue; }
@@ -49,20 +60,32 @@ for (const f of files) {
     }
     if (nField != null && nField !== cards.length)
       failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
-    const digest = createHash("sha256").update(Buffer.from(raw, "utf8")).digest("hex");
-    const honest150 = cards.length === 150 && (nField == null || nField === 150) && size >= 30000;
-    const verified335 = cards.length === 335 && nField === 335 && digest === VERIFIED_335_SHA256;
-    if (honest150 || verified335) {
-      console.log(`card_index.json: ok ${cards.length} cards (${size}B) ${verified335 ? "verified-335" : "honest-150"}`);
-      continue;
+    if (size < SIZE_FLOOR)
+      failures.push(`card_index.json: ${size}B — below the ${SIZE_FLOOR}B size floor (truncated or interim board)`);
+
+    const sha = createHash("sha256").update(buf).digest("hex");
+    const isHonest150 =
+      nField === HONEST_150_COUNT &&
+      cards.length === HONEST_150_COUNT &&
+      size === HONEST_150_BYTES;
+    const isVerified335 =
+      nField === VERIFIED_335_COUNT &&
+      cards.length === VERIFIED_335_COUNT &&
+      sha === VERIFIED_335_SHA;
+
+    if (!isHonest150 && !isVerified335) {
+      failures.push(
+        `card_index.json: ${cards.length} cards / ${size}B / sha=${sha.slice(0, 16)}… — ` +
+        `must be honest-150 (${HONEST_150_BYTES}B) or verified-335 (sha ${VERIFIED_335_SHA.slice(0, 16)}…)`
+      );
     }
-    failures.push(`card_index.json: ${cards.length} cards / ${size}B / sha=${digest.slice(0,16)} — not honest-150 and not verified-335`);
   }
 }
 
 if (failures.length) {
   console.error(`✖ signed-json-guard: ${failures.length} broken signed artifact(s) — DEPLOY BLOCKED:\n`);
   for (const f of failures) console.error(`  ${f}`);
+  console.error(`\nThe public /signed/ tree is consumed by verifiers. A broken file here is a lie with a signature on it.`);
   process.exit(1);
 }
-console.log(`✓ signed-json-guard: ${files.length} signed JSON file(s) valid`);
+console.log(`✓ signed-json-guard: ${files.length} signed JSON file(s) valid, no stub markers`);
