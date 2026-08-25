@@ -23,9 +23,17 @@ def verify_artifact(path: str) -> dict:
     """Recompute canonical -> content_id -> Ed25519 verify. Returns the artifact body."""
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
     d = json.load(open(path))
+    sig = d.get("signature") or {}
+    if isinstance(sig, str):
+        # style-A (living board): sign_board canonical — default separators + ensure_ascii
+        body = {k: v for k, v in d.items() if k not in ("signature", "signer", "signed", "sig_input")}
+        canon_body = json.dumps(body, sort_keys=True).encode()
+        digest = hashlib.sha256(canon_body).digest()
+        pub = Ed25519PublicKey.from_public_bytes(bytes.fromhex(d.get("signer", "")))
+        pub.verify(bytes.fromhex(sig), digest)
+        return body
     body = {k: v for k, v in d.items() if k not in ("content_id", "signature", "sha256", "sig")}
     want = hashlib.sha256(canonical(body)).hexdigest()
-    sig = d.get("signature") or {}
     if not sig.get("pubkey") or not sig.get("sig"):
         raise SystemExit(f"GATE FAIL: {path} has no signature")
     pub = Ed25519PublicKey.from_public_bytes(base64.b64decode(sig["pubkey"]))
@@ -43,6 +51,7 @@ def claim_supported(claim: str, body: dict) -> tuple[bool, str]:
         try:
             n, m = cl.split("measured of")
             want_n = int(n.split()[-1])
+            m_val = int(m.split()[0]) if m.strip() else None
             # trust the artifact's own totals (never a hardcoded number)
             totals = (body.get("totals") or {}).get("public_count")
             if totals is None and body.get("note"):
@@ -52,6 +61,20 @@ def claim_supported(claim: str, body: dict) -> tuple[bool, str]:
                     return True, "claim supported by the artifact's note"
             if totals is not None and str(totals).startswith(f"{want_n} "):
                 return True, f"claim supported (public_count {totals})"
+            # board-style artifacts: derive the grammar from the axes themselves
+            axes = body.get("axes")
+            if isinstance(axes, dict):
+                axes = list(axes.values())
+            if isinstance(axes, list) and axes:
+                measured = sum(1 for a in axes
+                               if isinstance(a, dict)
+                               and a.get("status") == "MEASURED"
+                               and a.get("separation") not in ("UNTESTED", None))
+                quotable = sum(1 for a in axes if isinstance(a, dict)
+                               and a.get("status") == "MEASURED")
+                if measured == want_n and quotable == m_val:
+                    return True, (f"claim supported (board-derived: "
+                                  f"{measured} measured of {quotable})")
         except Exception:
             return False, "grammar parse failed — cannot verify"
         return False, "claim number not supported by the artifact"
