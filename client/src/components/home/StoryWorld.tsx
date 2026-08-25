@@ -161,7 +161,7 @@ export const STORY: Slide[] = [
     // 11 Who it's for — light, trust-ecosystem video
     kicker: "Who it’s for",
     title: "One signed measurement, four fronts",
-    body: "Insurers pricing AI risk, regulators checking behaviour against the law, teams proving a model before they ship, developers measuring per call — the same signed card serves them all.",
+    body: "Insurers pricing AI risk, regulators checking behaviour against the law, teams proving a model before they ship, developers verifying a signed card — the same signed card serves them all.",
     points: [
       { tag: "pain", text: "Everyone re-runs their own half-trusted checks" },
       { tag: "benefit", text: "One signed result every side can rely on" },
