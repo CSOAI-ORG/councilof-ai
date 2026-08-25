@@ -412,3 +412,6 @@ export const FIRST_REPO_SPEC = {
   description: "Atomic unit — one COPYBOOK → one JSON → one C2PA attestation. Then scale.",
   register: "SPEC" as StackRegister,
 };
+
+/** Re-export labour/economy UNMEASURED companions */
+export { CONTEXT_FIREWALL_INDICES } from "./contextFirewallIndices";
