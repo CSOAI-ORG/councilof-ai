@@ -1,1 +1,1 @@
-@file:///tmp/App_content_only.txt
+file:///tmp/App_content_only.txt
