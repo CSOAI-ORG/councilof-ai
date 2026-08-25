@@ -1,57 +1,16 @@
 name: protect-verified-335
+# workflow_dispatch only — do not auto re-land a fabricated 335 board.
+# The honest published board is exactly 150 cards / 34171B. Do not invent the missing 185.
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
-  push:
-    paths:
-      - 'public/signed/card_index.json'
-      - '.github/workflows/**'
 permissions:
-  contents: write
-concurrency:
-  group: protect-verified-335
-  cancel-in-progress: true
+  contents: read
 jobs:
   protect:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      - name: Keep verified-335 sticky (allow honest-150)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Refuse fabricated 335 protect
         run: |
-          set -euo pipefail
-          WANT_SHA=12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
-          python3 - <<'PY'
-          import hashlib, json, pathlib, sys
-          p = pathlib.Path('public/signed/card_index.json')
-          raw = p.read_bytes()
-          j = json.loads(raw)
-          n = j.get('n_cards')
-          cards = j.get('cards') if isinstance(j.get('cards'), list) else []
-          sha = hashlib.sha256(raw).hexdigest()
-          print(f'current n={n} len={len(cards)} bytes={len(raw)} sha={sha}')
-          if n == 335 and len(cards) == 335 and sha == '12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb':
-              print('verified 335 sticky — ok')
-              sys.exit(0)
-          if n == 150 and len(cards) == 150 and len(raw) == 34171:
-              print('honest-150 present — leave (guard allows); no hostile rewrite here')
-              sys.exit(0)
-          print('unexpected board — abort without rewriting')
-          sys.exit(0)
-          PY
-          # Delete hostile floors if they reappear
-          rm -f .github/workflows/reject-335-board.yml \
-                .github/workflows/honest-board-floor.yml \
-                .github/workflows/restore-card-index-150.yml \
-                .github/workflows/restore-honest-150.yml || true
-          if git status --porcelain | grep -q .; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add -A .github/workflows/
-            git commit -m "protect-verified-335: remove hostile floor workflows" || true
-            git push || true
-          fi
+          echo "protect-verified-335 is disabled. The honest board is 150 cards."
+          echo "Do not claim 335. Do not invent the missing 185."
+          exit 1
