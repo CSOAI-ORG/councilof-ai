@@ -1,7 +1,7 @@
 # OWEM-OOWM CLUSTER — the specialist engine, aligned to the monorepo harness
 
 **Doc ID:** `csoai-owem-oowm-cluster-v1` · **Revision:** 2026-08-24
-**Aligned with:** the LIVE OOWM agent team (measure/mine/mine VMs + GPU pods), the 13-axis
+**Aligned with:** the LIVE OOWM agent team (measure/mine/mine VMs + GPU pods), the 14-axis (13 canonical + jail)
 GSPC registry, the unified grounded chat (`/api/chat`), and the verified-measurement backend.
 **Doctrine:** measurement-not-certification · nobody-ranked-pays · never fabricate ·
 no banned codenames public · pod-canonical + Oracle-backed.
@@ -37,7 +37,7 @@ councilof-ai/                        ← the monorepo (harness, deploys to counc
 ├── public/signals/*.json            ← per-axis specialist signals (each cluster publishes here)
 ├── functions/api/
 │   ├── chat.ts                      ← unified OOWM (grounded, routes to specialists)
-│   ├── axis-register.ts             ← the 13-axis honest register (live)
+│   ├── axis-register.ts             ← the 14-axis honest register (live; jail MEASURED/TIE)
 │   ├── article50.ts                 ← free Article 50 passport (LIVE)
 │   └── arena/scoreboard.ts          ← signed leaderboard API (?verify=1)
 ├── docs/OWEM-OOWM-CLUSTER/          ← this blueprint + the per-specialist design docs
