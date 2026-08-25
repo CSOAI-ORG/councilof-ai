@@ -18,9 +18,10 @@ import { toast } from "sonner";
  * /api-docs — the REAL public API.
  *
  * There is one public, keyless endpoint: councilof.ai/api/gspc. It returns the
- * GSPC 14-slot board, "13 measured of 14" (schema csoai.gspc-axes/0.5) — the exact
- * shape served by functions/api/gspc.ts. No accounts, no API keys, no /v1/* SaaS
- * surface, no tiers. Everything here is recomputable from the published harness.
+ * living GSPC board (schema csoai.gspc-axes/0.5) — the exact shape served by
+ * functions/api/gspc.ts. Slot counts live in totals.public_count. No accounts,
+ * no API keys, no /v1/* SaaS surface, no tiers. Everything here is recomputable
+ * from the published harness.
  */
 
 const BASE = "https://councilof.ai/api/gspc";
@@ -35,7 +36,7 @@ export default function ApiDocs() {
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  const curlExample = `# The whole 14-slot board (keyless — no auth header)
+  const curlExample = `# The living board (keyless — no auth header). Counts: totals.public_count
 curl https://councilof.ai/api/gspc
 
 # A single axis
@@ -79,18 +80,18 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
   "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
   "doi": "10.5281/zenodo.21991104",
   "measured_on": {
-    "model": "13 canonical axes: 19-model fleet. Jail (slot 14): 7-model fleet",
-    "date": "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
-    "grading": "deterministic grading on 15,580 per-item rows (0 transport errors)"
+    "model": "fleet and date live on the payload — not typed on this page",
+    "date": "see measured_on.date",
+    "grading": "deterministic grading; item count lives on the payload"
   },
   "totals": {
-    "axes": 14,
-    "measured_axes": 13,
-    "quotable_axes": 14,
-    "items": 887,
-    "separated_leads": 4,
-    "ties": 9,
-    "untested_separations": 1
+    "public_count": "<derived: N measured of M quotable>",
+    "measured_axes": "<derived>",
+    "quotable_axes": "<derived>",
+    "items": "<sum of per-axis n>",
+    "separated_leads": "<derived>",
+    "ties": "<derived>",
+    "untested_separations": "<derived>"
   },
   "axes": [
     {
@@ -109,24 +110,24 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
       "status": "MEASURED",
       "dataset": "csoai/gspc-gov"
     }
-    // ... 13 more axes
+    // ... remaining axes
   ],
-  "measured_in_lane": [ /* slot15 (instrument-honesty), human-vs-ai — in-lane only, not the board */ ],
-  "limitations": [ "3 of the 13 canonical axes show a statistically separated leader ...", "..." ]
+  "measured_in_lane": [ /* in-lane instrument-honesty, human-vs-ai — not the board */ ],
+  "limitations": [ "N of the measured axes show a statistically separated leader ...", "..." ]
 }`;
 
   const FIELDS = [
     { f: "schema", d: "Always csoai.gspc-axes/0.5 — the payload contract version." },
     { f: "issuer", d: "CSOAI Ltd (GB, Companies House 16939677)." },
-    { f: "doi", d: "10.5281/zenodo.21991104 — the citable dataset record (13 canonical axes)." },
-    { f: "totals.axes / measured_axes", d: "The 14-slot board: 13 canonical axes (same fleet, rows and grader) + jail (slot 14; smaller fleet, stated on the axis)." },
-    { f: "totals.separated_leads / ties", d: "4 separated (McNemar p<0.05 on discordant items), 9 ties, 1 untested (jail has no separation test yet). A TIE is not a win. These counts move — read them from the live payload, not from this page." },
-    { f: "totals.items", d: "Sum of per-axis n across the selection (890 across the 14-slot board)." },
+    { f: "doi", d: "10.5281/zenodo.21991104 — the citable dataset record. Axis counts live in the payload." },
+    { f: "totals.public_count / measured_axes / quotable_axes", d: "Derived from the payload (MEASURED axes with a completed separation test, vs all quotable MEASURED rows). Jail is a measured floor when separation is UNTESTED. Read the live numbers — do not type them here." },
+    { f: "totals.separated_leads / ties", d: "Separated (McNemar p<0.05 on discordant items), ties, and untested. A TIE is not a win. These counts move — read them from the live payload, not from this page." },
+    { f: "totals.items", d: "Sum of per-axis n across the selection. Read the live number from the payload." },
     { f: "axes[].n / accuracy / interval", d: "Per-axis item count, the LEADER's accuracy, and its Wilson 95% CI where n is honestly independent." },
     { f: "axes[].separation / separation_p", d: "SEPARATED, TIE or UNTESTED, with the McNemar exact p on discordant pairs vs the best base model where the test has run." },
     { f: "axes[].fleet_mean / mean_harm", d: "The axis's measured-fleet mean, and (canonical axes only) the severity-weighted failure mass the accuracy hides." },
     { f: "axes[].per_model", d: "Jail only: the verbatim per-model rows from the signed living board (TP/FP/TN/FN, precision, recall)." },
-    { f: "measured_in_lane", d: "slot15 (instrument-honesty) and human-vs-ai — measured in-lane on 6 models under the internal living-board convention. Served for honesty; NOT board-quotable and never counted in totals." },
+    { f: "measured_in_lane", d: "In-lane instrument-honesty and human-vs-ai — served for honesty; NOT board-quotable and never counted in totals." },
     { f: "measured_on.living_stamp", d: "The signed living-board stamp: Ed25519 signer, signature, and sig_input recipe for jail and the in-lane measurements." },
     { f: "axes[].unparsed_rate", d: "Share of responses no label could be read from — reported, never scored as a wrong answer." },
     { f: "axes[].status", d: "MEASURED / UNMEASURED / DRAFT / SPEC / PLANNED. UNMEASURED is reported with its n, never hidden." },
@@ -166,7 +167,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
             <h1 className="text-4xl font-bold mb-4">The GSPC axis API</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               One public endpoint returns the GSPC (Governance · Safety · Provenance · Continuity)
-              14-slot measurement board — 13 measured of 14 — as JSON.
+              living board as JSON. Slot counts live in totals.public_count.
               No account, no API key, no tiers. Every number is recomputable from the
               published harness.
             </p>
@@ -187,7 +188,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
                 <div className="col-span-4">Returns</div>
               </div>
               {[
-                { method: "GET", endpoint: "/api/gspc", desc: "The full 14-slot board" },
+                { method: "GET", endpoint: "/api/gspc", desc: "The living board (counts in totals.public_count)" },
                 { method: "GET", endpoint: "/api/gspc?axis=<name>", desc: "One axis (404 lists known axes)" },
               ].map((api, i) => (
                 <div key={i} className="grid grid-cols-12 gap-4 p-3 border-b last:border-0 text-sm">
@@ -313,7 +314,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
                 <strong className="text-foreground">Measurement, not certification.</strong> Every
                 score is a deterministic grade of recorded model outputs on a frozen, published
                 split. A TIE means the leader's point-estimate lead is not statistically separated —
-                ties are not wins, and we do not publish &ldquo;our models win N of 13&rdquo;.
+                ties are not wins, and we do not publish a typed win-count.
               </p>
               <p>
                 Machine consumers should prefer the registries over crawls: the MCP Registry entry
