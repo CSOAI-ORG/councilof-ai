@@ -76,9 +76,9 @@ test.describe('Homepage', () => {
     // The pre-redesign hero carried a "High-Risk AI Obligations Begin" countdown
     // chip and, after the 2026-08-01 cleanup, the SovereignConsole. Both are
     // gone in the Council OS redesign ("Sovereign" no longer appears anywhere on
-    // the homepage). The Honest Board — "13 measured of 14" — is now the live
-    // regulatory/measurement-state surface; assert that instead.
-    await expect(page.getByText(/13 measured of 14/i).first()).toBeVisible();
+    // the homepage). The Honest Board cites live totals.public_count —
+    // "14 measured of 14" as of 2026-08-25 (jail MEASURED · separation TIE).
+    await expect(page.getByText(/14 measured of 14/i).first()).toBeVisible();
   });
 
   test('CTA banners render', async ({ page }) => {
