@@ -26,11 +26,13 @@ export type LobbyTabId =
   | "models"
   | "tools"
   | "verify"
+  | "attest"
   | "space"
   | "measured"
   | "watchdog"
   | "claimguard"
   | "ras"
+  | "products"
   | "library"
   | "workbench"
   | "software"
@@ -108,6 +110,13 @@ export const LOBBY_TABS: LobbyTab[] = [
     cues: /\b(verify|verification|signature|signed|check a (?:card|record)|hash)\b/i,
   },
   {
+    id: "attest",
+    label: "Ledger attestation",
+    blurb: "Permissionless attach — attest a signed record on-ledger and check it offline. Not a badge.",
+    path: "/xrpl-attest",
+    cues: /\b(attest|attestation|ledger|permissionless|xrpl|on[- ]?chain)\b/i,
+  },
+  {
     id: "space",
     label: "Council Space",
     blurb: "The governed arena — rounds graded deterministically, never by a model jury.",
@@ -141,6 +150,13 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "Run an assessment against the rules that govern your system.",
     path: "/assess",
     cues: /\b(ras|readiness assessment|booking|human.?rail)\b/i,
+  },
+  {
+    id: "products",
+    label: "Products",
+    blurb: "The published catalog — what you can run and get. Open source first, not a marketplace.",
+    path: "/products",
+    cues: /\b(products?|catalog(?:ue)?|offerings?)\b/i,
   },
   {
     id: "library",

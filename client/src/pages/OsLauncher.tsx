@@ -47,6 +47,7 @@ const NAV: NavGroup[] = [
       { name: "Results", href: "/benchmarks", note: "every artefact-bound figure", pane: "results" },
       { name: "Models", href: "/models", note: "ranked by signed scores", pane: "models" },
       { name: "Verify a card", href: "/gspc-verify", note: "offline check", pane: "verify" },
+      { name: "Ledger attestation", href: "/xrpl-attest", note: "permissionless attach — attest a signed record", pane: "attest" },
       { name: "Methodology", href: "/methodology", note: "how we grade", task: "browse-methodology" },
     ],
   },
@@ -59,6 +60,7 @@ const NAV: NavGroup[] = [
       { name: "Library", href: "/library", pane: "library" },
       { name: "Watchdog map", href: "/watchdog-map", pane: "watchdog" },
       { name: "Get assessed", href: "/assess", note: "human-rail assessment", pane: "ras" },
+      { name: "Products", href: "/products", note: "what you can run and get", pane: "products" },
     ],
   },
   {

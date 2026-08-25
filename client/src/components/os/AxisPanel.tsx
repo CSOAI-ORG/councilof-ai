@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "wouter";
 import {
   countOf, fetchAxes, hasInterval, publicCaption, quotable, wilson,
   type Axis, type AxisStatus, type InLaneAxis,
@@ -28,7 +29,9 @@ function AxisCard({ a }: { a: Axis }) {
     <div className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-emerald-300 hover:shadow-sm">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="truncate font-semibold text-slate-900">{a.axis}</div>
+          <Link href={`/gspc/${encodeURIComponent(a.axis)}`} className="block truncate font-semibold text-slate-900 hover:text-emerald-700 hover:underline">
+            {a.axis}
+          </Link>
           <div className="font-mono text-[11px] text-slate-400">{a.bench}</div>
         </div>
         <span className={`shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${TONE[a.status] ?? TONE.PLANNED}`}>
