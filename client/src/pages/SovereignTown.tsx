@@ -25,7 +25,8 @@ function OracleFleetStrip() {
         </div>
         {f ? (
           <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-sky-100/75">
-            <span>host: {f.host}</span>
+            {/* host id is an internal machine name — never shown raw on a public surface */}
+            <span>host: measure-node</span>
             <span>evac: {f.feeds?.gcp_evac?.state}</span>
             <span>ollama: {f.feeds?.ollama?.models_loaded ?? 0} model{(f.feeds?.ollama?.models_loaded ?? 0) === 1 ? "" : "s"}</span>
             <span>disk free: {Math.round((f.disk_free_mb?.root ?? 0) / 1024)}G + {Math.round((f.disk_free_mb?.evac_bulk ?? 0) / 1024)}G bulk</span>

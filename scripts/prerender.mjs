@@ -131,7 +131,10 @@ function discover() {
     "/gspc-arena?view=arena", "/gspc-arena?view=globe", "/gspc-arena?view=towns",
   ];
   for (const p of MUST) found.add(p);
-  const routes = [...found].filter(p => !p.includes(":") && !p.includes("*"));
+  // /api/* are data endpoints served by Pages Functions — snapshotting them writes an
+  // index.html that can shadow the JSON on the static host, and (2026-08-25) bakes live
+  // data (incl. corrections-ledger text) into pages the brand gate then rejects.
+  const routes = [...found].filter(p => !p.includes(":") && !p.includes("*") && !p.startsWith("/api/"));
   // Library IA: /library/:sector is a dynamic route (filtered above), but the 8 concrete
   // sectors are prime AEO citation surface and the sitemap lists them — prerender each
   // so the static host serves them (2026-08-23 JEEVES: they were 404 on the static host
