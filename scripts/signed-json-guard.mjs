@@ -2,25 +2,39 @@
 /**
  * signed-json-guard — block deploy when a machine-readable signed artifact is broken.
  *
- * WHY THIS EXISTS (2026-08-25): an automation pushed public/signed/card_index.json
- * as the literal one-line string "__LOAD_FROM__/tmp/card_index_content.json" —
- * its push tooling passed a filename POINTER where the file CONTENT belonged.
- * The commit message claimed "ATOMIC restore card_index 335 (75578B, len=335)";
- * the actual payload was 41 bytes. It deployed, and the public signed-card index
- * served that stub to every consumer. A second automation kept reverting it and
- * the two fought on master for two days (>15 commits).
+ * WHY THIS EXISTS (2026-08-25): automations kept pushing public/signed/card_index.json
+ * as filename pointers ("__LOAD_FROM__/tmp/...", "@file:", "file://", data-URIs) or as
+ * truncated "N/335 interim" boards (50 cards / 75 cards) whose commit messages claimed
+ * an ATOMIC restore of 335 cards. The first guard only required ≥50 cards, so a valid
+ * 50-card JSON lie shipped to councilof.ai.
  *
- * The estate rule: a component must be STRUCTURALLY UNABLE to report success on
- * a path it did not complete. This guard is that structure for /signed/*.json:
- * every file must parse as JSON, must not carry stub markers, and card_index
- * must hold a sane number of card entries. A stub can no longer go live.
+ * Estate rule: a component must be STRUCTURALLY UNABLE to report success on a path
+ * it did not complete. This guard is that structure for /signed/*.json.
+ *
+ * card_index floor is the last honest published board: 150 cards, ≥30000 bytes.
+ * Do not invent the missing 185. Do not claim 335.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const dist = process.argv[2] || "dist/client";
 const dir = join(dist, "signed");
-const STUB_MARKERS = ["__LOAD_FROM__", "PLACEHOLDER_WILL_REPLACE", "LOAD_FROM__"];
+const STUB_MARKERS = [
+  "__LOAD_FROM__",
+  "PLACEHOLDER_WILL_REPLACE",
+  "LOAD_FROM__",
+  "LOAD_FROM_FILE",
+  "__CURSOR_LOAD__",
+  "__FULL_CONTENT_FROM_",
+  "$load:",
+  "@file:",
+  "@file://",
+  "file://",
+  "data:application",
+  "test data uri",
+];
+const HONEST_CARD_FLOOR = 150;
+const HONEST_SIZE_FLOOR = 30000;
 let failures = [];
 
 let files = [];
@@ -38,8 +52,17 @@ for (const f of files) {
   catch (e) { failures.push(`${f}: not valid JSON (${size}B): ${e.message.slice(0, 80)}`); continue; }
   if (f === "card_index.json") {
     const cards = Array.isArray(parsed) ? parsed : (parsed.cards ?? parsed.items ?? []);
-    if (!Array.isArray(cards) || cards.length < 50)
-      failures.push(`card_index.json: only ${Array.isArray(cards) ? cards.length : 0} cards — below the 50-card floor (stub or truncation)`);
+    const nField = (!Array.isArray(parsed) && typeof parsed.n_cards === "number") ? parsed.n_cards : null;
+    if (!Array.isArray(cards)) {
+      failures.push(`card_index.json: cards is not an array (${size}B)`);
+      continue;
+    }
+    if (nField != null && nField !== cards.length)
+      failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
+    if (cards.length < HONEST_CARD_FLOOR)
+      failures.push(`card_index.json: only ${cards.length} cards — below the ${HONEST_CARD_FLOOR}-card honest floor (interim N/335 stub or truncation)`);
+    if (size < HONEST_SIZE_FLOOR)
+      failures.push(`card_index.json: ${size}B — below the ${HONEST_SIZE_FLOOR}B honest size floor (truncated or interim board)`);
   }
 }
 
