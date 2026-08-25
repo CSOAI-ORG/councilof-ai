@@ -20,7 +20,6 @@ const STUB_MARKERS = [
   "PLACEHOLDER_WILL_REPLACE",
   "LOAD_FROM__",
   "LOAD_FROM_FILE",
-  "__CURSOR_CURSOR__",
   "__CURSOR_LOAD__",
   "__FULL_CONTENT_FROM_",
   "$load:",
