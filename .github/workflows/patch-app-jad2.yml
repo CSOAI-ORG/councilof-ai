@@ -1,0 +1,54 @@
+name: patch-app-jad2
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.align-staging/app/TRIGGER_JAD2'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: JA-D2 patch App.tsx via Contents API
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, urllib.request, os, re
+          token = os.environ['GH_TOKEN']
+          path = 'client/src/App.tsx'
+          api = f'https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/{path}'
+          headers = {
+            'Authorization': f'Bearer {token}',
+            'Accept': 'application/vnd.github+json',
+            'User-Agent': 'patch-app-jad2',
+            'X-GitHub-Api-Version': '2022-11-28',
+          }
+          meta = json.loads(urllib.request.urlopen(urllib.request.Request(api + '?ref=master', headers=headers)).read())
+          text = base64.b64decode(meta['content']).decode('utf-8')
+          old = '                  <Route path="/sovereign-town">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>'
+          new = '                  {/* JA-D2: towns alias is edge-only via public/_redirects — do not embed banned slug in client bundle */}'
+          if 'JA-D2: towns alias is edge-only' in text and 'path="/sovereign-town"' not in text:
+            print('already patched')
+            raise SystemExit(0)
+          if old not in text:
+            print('OLD LINE NOT FOUND')
+            for i,l in enumerate(text.splitlines()):
+              if 'sovereign-town' in l or 'JA-D2' in l:
+                print(i+1, l)
+            raise SystemExit(1)
+          text2 = text.replace(old, new, 1)
+          assert 'path="/sovereign-town"' not in text2
+          assert 'JA-D2: towns alias is edge-only' in text2
+          print('patched', len(text), '->', len(text2), hashlib.sha1(text2.encode()).hexdigest())
+          body = json.dumps({
+            'message': 'feat(client): JA-D2 remove /sovereign-town Route from App (edge-only redirects)',
+            'content': base64.b64encode(text2.encode('utf-8')).decode('ascii'),
+            'branch': 'master',
+            'sha': meta['sha'],
+          }).encode()
+          put = urllib.request.Request(api, data=body, method='PUT', headers={**headers, 'Content-Type': 'application/json'})
+          out = json.loads(urllib.request.urlopen(put).read())
+          print('OK', out.get('commit',{}).get('sha'))
+          PY
