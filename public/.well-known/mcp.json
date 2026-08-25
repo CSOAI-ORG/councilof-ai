@@ -1,7 +1,7 @@
 {
   "schema_version": "2026-07-28",
   "name": "csoai",
-  "description": "Council of AI measurement tools exposed over MCP. Independent AI-governance measurement body — not certification, not accreditation.",
+  "description": "Council of AI measurement tools exposed over MCP. Independent AI-governance measurement body — not certification, not accreditation. Live board: 14 measured of 14 quotable.",
   "servers": [
     {
       "name": "csoai-gspc-mcp",
@@ -9,7 +9,12 @@
       "url": "https://councilof.ai/mcp",
       "fallback_url": "https://csoai.org/mcp",
       "upstream": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
-      "auth_required": false
+      "auth_required": false,
+      "registry": {
+        "name": "io.github.CSOAI-ORG/gspc",
+        "version": "1.0.3",
+        "url": "https://registry.modelcontextprotocol.io"
+      }
     }
   ],
   "catalogue": "https://councilof.ai/mcp",
@@ -19,7 +24,7 @@
     "total_tools": 4,
     "server_count": 1,
     "tools": ["measure", "verify", "jail-probe", "enter-arena"],
-    "note": "MEASURED live from worker tools/list. Dead csoai.org/api/* routes removed 2026-08-19."
+    "note": "MEASURED live from worker tools/list. Official registry latest 1.0.3 (board 14 of 14). Worker runtime may lag until CF_API_TOKEN restored."
   },
   "provider": {
     "name": "CSOAI Ltd",
