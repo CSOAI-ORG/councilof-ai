@@ -38,6 +38,10 @@ const CRITICAL_PAGES = [
   '/east-west',
   '/east-west/verify',
   '/east-west/desks/eu',
+  '/indices',
+  '/indices/ai-economy',
+  '/products',
+  '/powered-by',
 ];
 
 for (const route of CRITICAL_PAGES) {
