@@ -1,8 +1,20 @@
 import { lazy } from "react";
 
 export const SovOS = lazy(() => import("./pages/SovOS"));
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
+import { BottomEstateNav } from "./components/BottomEstateNav";
+// Widget imports
+import WidgetLayout from "./components/widget/WidgetLayout";
+import WidgetCourses from "./components/widget/WidgetCourses";
+import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
+import { SkipNavigation } from "./components/SkipNavigation";
+// Home removed - using NewHomeV2 instead
 export const Landing = lazy(() => import("./pages/Landing"));
 export const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
+import CouncilLobby from "./components/lobby/CouncilLobby";
 export const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
 export const AgentRunbook = lazy(() => import("./pages/AgentRunbook"));
 export const ReceiptSpec = lazy(() => import("./pages/ReceiptSpec"));
@@ -41,6 +53,7 @@ export const Watchdog = lazy(() => import("./pages/Watchdog"));
 export const Reports = lazy(() => import("./pages/Reports"));
 export const Settings = lazy(() => import("./pages/Settings"));
 export const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
+// Training removed - using Training-v2 instead
 export const TrainingV2 = lazy(() => import("./pages/Training-v2"));
 export const TrainingHub = lazy(() => import("./pages/TrainingHub"));
 export const Courses = lazy(() => import("./pages/Courses"));
@@ -65,6 +78,7 @@ export const KnowledgeBase = lazy(() => import("./pages/KnowledgeBase"));
 export const EnterpriseOnboarding = lazy(() => import("./pages/EnterpriseOnboarding"));
 export const Pricing = lazy(() => import("./pages/Pricing"));
 export const Payg = lazy(() => import("./pages/Payg"));
+export const PoweredBy = lazy(() => import("./pages/PoweredBy"));
 export const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 export const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 export const Blog = lazy(() => import("./pages/Blog"));
@@ -76,7 +90,7 @@ export const About = lazy(() => import("./pages/About"));
 export const Careers = lazy(() => import("./pages/Careers"));
 export const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 export const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
-export const MotionLab = lazy(() => import("./pages/MotionLab"));
+export const MotionLab = lazy(() => import("./pages/MotionLab")); // demo-only, not in nav
 export const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 export const Login = lazy(() => import("./pages/Login"));
 export const Signup = lazy(() => import("./pages/Signup"));
@@ -160,6 +174,7 @@ export const Dispute = lazy(() => import("./pages/Dispute"));
 export const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 export const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 export const Insurers = lazy(() => import("./pages/Insurers"));
+// Deck scroll-worlds — owner decks fact-checked into shared-module scroll-world pages
 export const Coliseum = lazy(() => import("./pages/Coliseum"));
 export const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
 export const VerifiableTrust = lazy(() => import("./pages/VerifiableTrust"));
@@ -191,6 +206,7 @@ export const PDCASimulator = lazy(() => import("./pages/PDCASimulator"));
 export const CertificateVerification = lazy(() => import("./pages/CertificateVerification"));
 export const EnterpriseDashboard = lazy(() => import("./pages/EnterpriseDashboard"));
 export const Enterprise = lazy(() => import("./pages/Enterprise"));
+// New pages for CSOAI briefing requirements
 export const ProsperityFund = lazy(() => import("./pages/ProsperityFund"));
 export const Charter = lazy(() => import("./pages/Charter"));
 export const FoundingMembers = lazy(() => import("./pages/FoundingMembers"));
@@ -202,6 +218,7 @@ export const NISTAIRMFGuide = lazy(() => import("./pages/NISTAIRMFGuide"));
 export const ISO42001Guide = lazy(() => import("./pages/ISO42001Guide"));
 export const TC260Guide = lazy(() => import("./pages/TC260Guide"));
 export const WhyCSOAI = lazy(() => import("./pages/WhyCSOAI"));
+// Legal Pages
 export const MembershipAgreement = lazy(() => import("./pages/legal/MembershipAgreement"));
 export const FoundingCouncilAgreement = lazy(() => import("./pages/legal/FoundingCouncilAgreement"));
 export const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement"));
@@ -212,6 +229,7 @@ export const DataProcessingAgreement = lazy(() => import("./pages/legal/DataProc
 export const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 export const ServiceLevelAgreement = lazy(() => import("./pages/legal/ServiceLevelAgreement"));
 export const Council = lazy(() => import("./pages/Council"));
+// New competitive improvement pages
 export const GlobalRegulationTracker = lazy(() => import("./pages/GlobalRegulationTracker"));
 export const FAQ = lazy(() => import("./pages/FAQ"));
 export const Glossary = lazy(() => import("./pages/Glossary"));
@@ -273,6 +291,9 @@ export const Fedramp = lazy(() => import("./pages/Fedramp"));
 export const Readiness = lazy(() => import("./pages/Readiness"));
 export const Agents = lazy(() => import("./pages/Agents"));
 export const Academy = lazy(() => import("./pages/Academy"));
+import ArchivedBanner from "./components/ArchivedBanner";
+import PageSchema from "./components/PageSchema";
+import DemoTour from "./components/DemoTour";
 export const WatchdogMap = lazy(() => import("./pages/WatchdogMap"));
 export const IncidentReport = lazy(() => import("./pages/IncidentReport"));
 export const EuActClassifier = lazy(() => import("./pages/EuActClassifier"));
@@ -302,12 +323,16 @@ export const NetworkPage = lazy(() => import("./pages/NetworkPage"));
 export const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
 export const CyberScan = lazy(() => import("./pages/CyberScan"));
 export const Competitors = lazy(() => import("./pages/Competitors"));
-export const PoweredBy = lazy(() => import("./pages/PoweredBy"));
-export const Products = lazy(() => import("./pages/Products"));
-export const IndicesHub = lazy(() => import("./pages/IndicesHub"));
 export const ToolCommons = lazy(() => import("./pages/ToolCommons"));
 export const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 export const StatusPage = lazy(() => import("./pages/StatusPage"));
 export const Distribution = lazy(() => import("./pages/Distribution"));
 export const McpFleet = lazy(() => import("./pages/McpFleet"));
 export const Gone = lazy(() => import("./pages/Gone"));
+import { frameworksdata } from "./data/frameworks-content";
+import { sectorsdata } from "./data/sectors-content";
+import { industriesdata } from "./data/industries-content";
+import { blogdata } from "./data/blog-content";
+import { AnalyticsProvider } from "./components/Analytics";
+import CookieConsent from "./components/CookieConsent";
+
