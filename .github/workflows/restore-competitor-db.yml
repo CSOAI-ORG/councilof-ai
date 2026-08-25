@@ -1,0 +1,34 @@
+name: restore-competitor-db
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.restore/c52.json.gz.b64'
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/instruments-catalog-7fb8
+      - name: Decode gunzip verify commit
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import base64, gzip, json, hashlib
+          raw = open('.restore/c52.json.gz.b64').read().strip()
+          data = gzip.decompress(base64.b64decode(raw))
+          assert hashlib.sha256(data).hexdigest() == 'a3f642a1efd3da9baa5d3624037c3e7ad233ebf5b922a6d170c1238af6a458d6'
+          d = json.loads(data)
+          assert len(d['records']) == 52 and d['recordCount'] == 52
+          assert d['records'][-1]['slug'] == 'datarade'
+          open('client/src/data/competitorDatabase.json','wb').write(data)
+          print('OK', len(d['records']), d['records'][-1]['slug'])
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add client/src/data/competitorDatabase.json
+          git commit -m "fix: restore full competitorDatabase.json (52 records)"
+          git push
