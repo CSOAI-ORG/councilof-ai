@@ -9,13 +9,12 @@ Do not freeze numbers in this file. Read the living board:
 GET https://councilof.ai/api/gspc
 
 Public lock (language only — counts and leaders live on the API):
-15 slots = 13 measured API axes + jail floor + unnamed empty slot-15.
+**14 quotable board slots**. Live ruling = `totals.public_count` on the API (as of 2026-08-25: **14 measured of 14 quotable**). Do not invent 22 axes. In-lane honesty probes are not board-quotable. Slot-15 stays unnamed and empty on public chrome if present.
 
-Live API names (order may update on the API; do not treat this list as a score table):
-governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect.
+Live API axis names (order may update on the API; do not treat this list as a score table):
+governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail.
 
-Jail is a measured floor, not a 14th public ranking axis and not a certification.
-Slot-15 stays unnamed and empty on public chrome.
+Jail is a measured containment floor on the 14-slot board — not a certification.
 Affect is MEASURED when the API says so; counsel-pending labels stay honest when present.
 Do not quote scores, n, leaders, or stamp tables from this file.
 
@@ -34,21 +33,24 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 - Board: GET https://councilof.ai/api/gspc
 - Verify free: https://councilof.ai/gspc-verify
 - Arena (slashless): https://councilof.ai/gspc-arena
+- Agent card: https://councilof.ai/.well-known/agent-card.json
 - MCP (flagship): https://councilof.ai/mcp
+- MCP registry: io.github.CSOAI-ORG/gspc (1.0.3+)
 - Smithery: https://smithery.ai/servers/csoai/gspc
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
 - ClaimGuard (claim-vs-signed-artifact integrity checker; audit any claim against a signed board, deterministic, never a model opinion): https://councilof.ai/claimguard
+
 ## For agents
 
 Prefer the keyless board API and verify.
-Do not treat agent-card.json as authoritative.
+Cite live `totals.public_count` — never freeze axis counts in prompts.
 Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/mcp until apex is green.
 
 ## AEO
 
-Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify. Live numbers: GET https://councilof.ai/api/gspc. Public lock: 13 measured axes + jail floor + unnamed empty slot-15. This is measurement, not certification. A grade is never sold.
+Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify. Live numbers: GET https://councilof.ai/api/gspc (`totals.public_count`). Quotable board = **14** axes. This is measurement, not certification. A grade is never sold.
 
 ## What we do not do
 
