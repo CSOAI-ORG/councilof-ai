@@ -11,7 +11,7 @@ import {
  * extra axis). An unnamed reserved slot stays honestly empty.
  *
  * Honesty rules enforced here:
- *   - jail is MEASURED but separated in its own section (it has no separation test yet)
+ *   - jail is MEASURED (n=71); separation is TIE on the live board — a TIE is not a separated leader
  *   - the reserved slot is shown unnamed — no fabricated instrument label
  *   - Never type a slot count — chrome reads totals.public_count from GET /api/gspc
  *   - Every number comes from GET /api/gspc, never typed into this component
@@ -119,15 +119,18 @@ export default function CityPanel() {
             </span>
           </div>
           <p className="text-[13px] text-slate-600 max-w-2xl">
-            Can this model be talked out of its guardrails? Measured on a smaller fleet
-            ({jail.n ? `n=${jail.n} gold cells` : "pending"}) with separation <strong>UNTESTED</strong> —
-            a measured floor, never counted as an extra axis. The best detector still misses most escapes.
+            Can this model be talked out of its guardrails? Jail is <strong>MEASURED</strong>
+            {jail.n ? ` (n=${jail.n} gold cells)` : ""} on a smaller fleet; separation is{" "}
+            <strong>TIE</strong> on the live board — a TIE is not a separated leader. Never counted
+            as an extra axis. The live board reads{" "}
+            <strong>{source === "loading" ? "totals.public_count from GET /api/gspc" : caption}</strong>.
+            The best detector still misses most escapes.
           </p>
           {quotable(jail) && (
             <div className="mt-4 flex items-baseline gap-3">
               <span className="text-2xl font-bold tabular-nums text-slate-700">{jail.accuracy.toFixed(3)}</span>
               <span className="text-[11px] text-slate-400">
-                accuracy · n={jail.n} · separation UNTESTED
+                accuracy · n={jail.n} · separation TIE
               </span>
             </div>
           )}
@@ -179,20 +182,23 @@ export default function CityPanel() {
             <strong>Empty stays empty.</strong> A slot without a score is honestly unmeasured — we do not invent numbers.
           </li>
           <li>
-            <strong>Jail is a floor.</strong> Measured, but separation UNTESTED. Never called an extra axis.
+            <strong>Jail is a floor.</strong> MEASURED (n=71), separation TIE on the live board — a TIE is not a separated leader. Never called an extra axis.
           </li>
           <li>
             <strong>Ties are ties.</strong> If the lead is not statistically separated (McNemar p{"<"}0.05), it is a tie and we do not count it as a win.
           </li>
           <li>
             <strong>Live counts.</strong> Every number on this page reads from{" "}
-            <a href="/api/gspc" className="underline decoration-emerald-400 underline-offset-2 hover:text-emerald-700">GET /api/gspc</a>.
-            None is typed by hand.
+            <a href="/api/gspc" className="underline decoration-emerald-400 underline-offset-2 hover:text-emerald-700">GET /api/gspc</a>
+            {source !== "loading" && (
+              <> ({caption})</>
+            )}
+            . None is typed by hand.
           </li>
           <li>
             <strong>Verify free.</strong> Anyone can check a signed card at{" "}
-            <a href="/gspc-verify" className="underline decoration-emerald-400 underline-offset-2 hover:text-emerald-700">/gspc-verify</a> —
-            no account, no login, no fee.
+            <a href="/gspc-verify" className="underline decoration-emerald-400 underline-offset-2 hover:text-emerald-700">/gspc-verify</a>{" "}
+            — no account, no login, no fee.
           </li>
           <li>
             <strong>Paper District.</strong> The flagship research library lives at{" "}
