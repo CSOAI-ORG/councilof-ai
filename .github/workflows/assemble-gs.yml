@@ -16,8 +16,8 @@ jobs:
         run: |
           set -euo pipefail
           : > /tmp/gs.b64
-          for i in $(seq -w 0 7); do cat ".restore-gs/p$i.b64" >> /tmp/gs.b64; done
-          for i in $(seq -w 0 26); do cat ".restore-gs/s$i.b64" >> /tmp/gs.b64; done
+          for i in $(seq -f '%02g' 0 7); do cat ".restore-gs/p$i.b64" >> /tmp/gs.b64; done
+          for i in $(seq -f '%02g' 0 26); do cat ".restore-gs/s$i.b64" >> /tmp/gs.b64; done
           base64 -d /tmp/gs.b64 > client/src/components/GlobalSearch.tsx
           python3 - <<'PY'
           from pathlib import Path
