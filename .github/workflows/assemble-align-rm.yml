@@ -1,0 +1,30 @@
+name: assemble-align-rm
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.align-staging/rm/**'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble route-manifest
+        run: |
+          python3 - <<'PY'
+          import base64, pathlib, hashlib
+          parts = sorted(pathlib.Path('.align-staging/rm').glob('part*.b64'), key=lambda p: int(p.stem[4:]))
+          data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
+          pathlib.Path('client/src/data/route-manifest.ts').write_bytes(data)
+          print('wrote', len(data), hashlib.sha1(data).hexdigest())
+          PY
+      - name: Commit
+        run: |
+          git config user.name "align-bot"
+          git config user.email "align-bot@users.noreply.github.com"
+          git add client/src/data/route-manifest.ts
+          git diff --cached --quiet && echo "no change" && exit 0
+          git commit -m "align: route-manifest towns path -> gspc-arena?view=towns"
+          git push
