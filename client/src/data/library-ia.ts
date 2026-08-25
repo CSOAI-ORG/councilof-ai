@@ -69,7 +69,7 @@ export const SECTORS: Sector[] = [
     blurb: "Council OS, the arena, the globe, the watchdog map, live demos — the interactive product surfaces.",
     test: rx(/\bos\b|\bdemo\b|globe|watchdog|command|dashboard|council|network|\bpoc\b|\bcity\b|\bspace\b|\btour\b|twin|hive|galaxy|world|temple|commons|open-media|graph|minds|opengridworks|real-world|protect|personal-protection|\bei3\b|badges|authorit|\bvoice\b/) },
   { id: "company", title: "Company, About & Legal",
-    blurb: "Charter, pricing, careers, privacy, terms, contact, press, comparisons — who we are and the rules we run on.",
+    blurb: "Charter, careers, privacy, terms, contact, press, comparisons — who we are and the rules we run on. No public prices.",
     test: rx(/about|charter|pricing|\bpayg\b|privacy|terms|cookie|legal|contact|company|licens|accreditation|disclaimer|\bsla\b|\bdpa\b|data-processing|advisory|partner|case-stud|compare|comparison|competitor|\bvs\b|our-difference|usp|press|traction|founding|early-access|ecosystem|\bhelp\b|support|\bbrief\b|battlecard|resources|\broi\b|service|recommendation|accessibilit|integrations|assurance/) },
 ];
 
@@ -160,12 +160,13 @@ export interface LibraryItem extends RouteEntry { sector: string }
 // removed prosperity-fund / maternal-covenant / sov3 / codename pages from the narrative — the
 // archive keeps the record for SEO, but the public Library must not resurface retracted claims.
 const NOT_LIBRARIED =
-  /^\/(404|login|signup|register|admin|dashboard|api-keys|bulk-import|settings|me\b|my-|ab-testing|widget|egg|hatch|enter|onboard|welcome|start|analytics|outreach|marketing|reports?|brief|public|all|region-settings|regional-analytics|government-dashboard|government-portal|old-home|landing|legacy|home-v[0-9]|stripe|prosperity|maternal-covenant|covenant|sov3|sov-town|sovereign|gods-eye|horus|dragonfly|four-wings|opengridworks)/;
+  /^\/(404|login|signup|register|admin|dashboard|api-keys|bulk-import|settings|me\b|my-|ab-testing|widget|egg|hatch|enter|onboard|welcome|start|analytics|outreach|marketing|reports?|brief|public|all|region-settings|regional-analytics|government-dashboard|government-portal|old-home|landing|legacy|home-v[0-9]|stripe|prosperity|maternal-covenant|covenant|sov3|sov-town|sovereign|gods-eye|horus|dragonfly|four-wings|opengridworks|certification|certificate|ceasai|get-certified|pricing|plans|payg|billing|roi)/;
 
 /** Every non-primary, surfaced route, classified — the archive contents. */
 export function libraryItems(): LibraryItem[] {
   return ROUTE_MANIFEST
     .filter((r) => !PRIMARY_PATHS.has(r.path) && !NOT_LIBRARIED.test(r.path) && !hasForbiddenBrand(r.path) && !/\.[a-z]+$/.test(r.path))
+    .filter((r) => !/certification exam|view pricing|paid plans|get certified/i.test(`${r.title} ${r.path}`))
     .map((r) => ({ ...r, title: prettifyTitle(r.title), sector: classify(r.path, r.title).id }));
 }
 

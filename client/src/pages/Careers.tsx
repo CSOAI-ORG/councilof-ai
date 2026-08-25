@@ -38,7 +38,7 @@ const openPositions = [
     department: "Operations",
     location: "Remote / London",
     type: "Full-time",
-    description: "Help organizations achieve AI safety compliance. Conduct assessments, develop compliance strategies, and maintain certification standards."
+    description: "Help organizations get measured against the rules that govern them. Conduct assessments and publish what we cannot measure. A grade is never sold."
   },
   {
     title: "Community Manager",
