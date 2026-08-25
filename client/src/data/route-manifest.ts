@@ -558,6 +558,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Early Access Landing"
  },
  {
+  "path": "/east-west",
+  "comp": "EastWest",
+  "title": "East West"
+ },
+ {
+  "path": "/east-west/*?",
+  "comp": "EastWest",
+  "title": "East West"
+ },
+ {
   "path": "/ecosystem",
   "comp": "Integrations",
   "title": "Integrations"
@@ -591,6 +601,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/enterprise-onboarding",
   "comp": "EnterpriseOnboarding",
   "title": "Enterprise Onboarding"
+ },
+ {
+  "path": "/estate",
+  "comp": "EstateAudit",
+  "title": "Estate Audit"
  },
  {
   "path": "/eu-ai-act",
@@ -1161,6 +1176,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/live-ledger",
   "comp": "LiveLedger",
   "title": "Live Ledger"
+ },
+ {
+  "path": "/live-training",
+  "comp": "LiveTraining",
+  "title": "Live Training"
  },
  {
   "path": "/login",

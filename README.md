@@ -60,8 +60,16 @@ Public grammar: **13 measured of 14**. Product: verified measurement credential 
 | **This working branch** | `cursor/instruments-catalog-7fb8` | Council OS / East-West / MCP slice land here first |
 | **Production** | `master` only | Cloudflare Pages deploys **master**. Branch work is not live on councilof.ai until merge |
 | **Local preview** | `npm run build:client` then `npx vite preview --config client/vite.config.ts --host 127.0.0.1 --port 43217` | E2E: `BASE_URL=http://127.0.0.1:43217 npx playwright test --config e2e/playwright.config.ts` |
-| **MCP JSON-RPC** | `POST /api/mcp` and `POST /api/mcp/http` | `tools/list`, `tools/call` over measured APIs |
-| **A2A agent card** | `public/.well-known/agent-card.json` | A2A v1.0 required fields; live only after master deploy |
+| **MCP JSON-RPC** | `POST /api/mcp` and `POST /api/mcp/http` | `tools/list`, `tools/call` over measured APIs (on branch; live after master merge) |
+| **A2A agent card** | `public/.well-known/agent-card.json` | A2A v1.0 + `supportedInterfaces` on branch |
+| **Surface hits** | `POST /api/surface-hits` | Anonymous path counters only — not a MEASURED number |
+| **Pay demo** | `GET /api/east-west/pay/demo` | HTTP **402**, `amount: null` — OWNER-BLOCKED, no invented price |
+
+### Production gap (probed 2026-08-25)
+
+Live on councilof.ai today: `GET /api/gspc` (200), `GET /api/mcp` catalogue (200), `/.well-known/agent-card.json` (v1.0).
+
+Still **404 on production** until this branch merges to `master`: `GET /api/east-west`, `GET /api/ecosystem`, `POST /api/surface-hits`, `GET /api/east-west/pay/demo`, streamable MCP transport at `/api/mcp/http`. Those handlers exist on `cursor/instruments-catalog-7fb8`.
 
 ```bash
 # Unit (East-West crypto)
@@ -71,7 +79,7 @@ npx vitest run client/src/lib/eastWestCrypto.test.ts
 node public/east-west/verify-pack.mjs public/east-west/sample-pack.json
 ```
 
-Generated `public/ecosystem.json` and `public/sitemap.xml` are produced by `build:client` scripts and committed when the catalogue changes.
+Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/route-manifest.ts` are produced by `build:client` scripts and committed when the catalogue changes.
 
 ## 📖 Documentation
 
