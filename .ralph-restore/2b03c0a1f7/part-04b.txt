@@ -1,0 +1,116 @@
+        className="max-w-2xl p-0 gap-0 overflow-hidden bg-white"
+        aria-describedby="global-search-description"
+      >
+        <DialogTitle className="sr-only">Global Search</DialogTitle>
+        <span id="global-search-description" className="sr-only">
+          Search across pages, charter articles, training modules, and more
+        </span>
+
+        {/* Search Input */}
+        <div className="flex items-center border-b px-4 py-3">
+          <Search className="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Search the OS, or ask the Council anything…"
+            className="flex-1 text-base outline-none bg-transparent placeholder:text-gray-400"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery('')}
+              className="p-1 hover:bg-gray-100 rounded"
+            >
+              <X className="h-4 w-4 text-gray-400" />
+            </button>
+          )}
+          <div className="ml-3 flex items-center gap-1 text-xs text-gray-400 border-l pl-3">
+            <kbd className="px-1.5 py-0.5 bg-gray-100 rounded text-gray-500 font-mono">esc</kbd>
+            <span>to close</span>
+          </div>
+        </div>
+
+        {/* Results */}
+        <div ref={resultsRef} className="max-h-[60vh] overflow-y-auto p-2">
+          {query.trim().length >= 3 && (
+            <div className="mb-2 rounded-lg border border-emerald-200 bg-emerald-50/60 p-2">
+              <button onClick={runCouncilAsk} className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left hover:bg-emerald-100/60">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                  <Brain className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-semibold text-emerald-900">Ask the Council assistant{aiLoading ? '…' : ''}</div>
+                  <div className="truncate text-xs text-emerald-700/70">Reason live over governance — “{query.trim()}”</div>
+                </div>
+                <CornerDownLeft className="h-4 w-4 flex-shrink-0 text-emerald-500" />
+              </button>
+              {aiAnswer && (
+                <div className="mt-1 max-h-56 overflow-y-auto whitespace-pre-wrap rounded-md bg-white px-3 py-2 text-sm leading-relaxed text-gray-700">{aiAnswer}</div>
+              )}
+            </div>
+          )}
+          <AnimatePresence mode="wait">
+            {flatResults.length === 0 && query ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="py-12 text-center"
+              >
+                <Search className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                <p className="text-gray-500">No results found for "{query}"</p>
+                <p className="text-sm text-gray-400 mt-1">Try a different search term</p>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {groupedResults.map(([category, items]) => {
+                  const config = CATEGORY_CONFIG[category];
+                  const CategoryIcon = config.icon;
+
+                  return (
+                    <div key={category} className="mb-4">
+                      <div className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide">
+                        <CategoryIcon className="h-3.5 w-3.5" />
+                        {config.label}
+                      </div>
+
+                      {items.map((result) => {
+                        const itemIndex = flatResults.findIndex(r => r.id === result.id);
+                        const isSelected = itemIndex === selectedIndex;
+                        const Icon = result.icon || config.icon;
+
+                        return (
+                          <motion.button
+                            key={result.id}
+                            data-index={itemIndex}
+                            onClick={() => handleSelect(result)}
+                            onMouseEnter={() => setSelectedIndex(itemIndex)}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className={cn(
+                              "w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors",
+                              isSelected ? "bg-emerald-50 text-emerald-900" : "hover:bg-gray-50",
+                              result.highlight && "border border-emerald-200"
+                            )}
+                          >
+                            <div className={cn(
+                              "flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center",
+                              isSelected ? "bg-emerald-100 text-emerald-600" : config.color
+                            )}>
+                              <Icon className="h-5 w-5" />
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className={cn(
+                                  "font-medium truncate",
+                                  result.highlight && "text-emerald-700"
+                                )}>
+                                  {res
