@@ -1,18 +1,31 @@
 import { Suspense } from "react";
 import { Switch, Route } from "wouter";
-import SectionLoader from "@/components/SectionLoader";
+import { SectionLoader } from "./components/PageLoader";
 import NotFound from "@/pages/NotFound";
 import { AppRoutesA } from "./AppRoutesA";
 import { AppRoutesB } from "./AppRoutesB";
 
+/**
+ * Full estate Switch — AppRoutesA + AppRoutesB from AppLazy.
+ * Includes /indices /products /powered-by.
+ * CRITICAL: use {AppRoutesA()} as children — never {...AppRoutesA()} JSX spread.
+ */
 export function AppMainRoutes() {
   return (
-    <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]">
+          <SectionLoader />
+        </div>
+      }
+    >
       <Switch>
-        {...AppRoutesA()}
-        {...AppRoutesB()}
+        {AppRoutesA()}
+        {AppRoutesB()}
         <Route component={NotFound} />
       </Switch>
     </Suspense>
   );
 }
+
+export default AppMainRoutes;
