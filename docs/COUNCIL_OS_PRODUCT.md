@@ -55,6 +55,8 @@ commerce (honest): GET /api/east-west/pay/demo → HTTP 402, amount: null
 | Instruments / router | Instrument cards | `/instruments`, MCP `instruments_catalog` |
 | CobolBridge / RWA bond | Finance settle stub only | `functions/api/finance/settle.ts` — **out of Stage 1** |
 | RWA attestation (later) | Memo / EAS → signed cards | `docs/EAT_DSH_ALIGNMENT.md` — Stage 2+ testnet; no Stage 1 mainnet |
+| White-label attestation license | Engine + AG-UI “Powered by” (Option A) | Doctrine only Stage 1; meter verdicts/API/seats — never grades |
+| Tokenization-as-a-service | Partner issuer/TA only (Option B) | After design partners; never mint ownership ourselves |
 
 ## Stages
 
@@ -100,6 +102,8 @@ commerce (honest): GET /api/east-west/pay/demo → HTTP 402, amount: null
 - Invented revenue, pricing, or traction numbers
 - Vercel AI SDK RSC `streamUI` as the primary path
 - CobolBridge / XRPL bond *issuance* as Stage-1 scope (permissionless *attestation* targets live under EAT docs; mainnet attach is Stage 2+)
+- Becoming a regulated securities issuer / transfer agent near-term (partner only — Option B)
+- Marketing that equates attestation with tokenization or ownership rights
 - Insurance outreach (pack exists; **UNSENT**)
 
 ## Security edges we own
