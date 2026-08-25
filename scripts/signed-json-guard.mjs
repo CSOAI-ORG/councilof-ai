@@ -2,12 +2,19 @@
 /**
  * signed-json-guard — block deploy when a machine-readable signed artifact is broken.
  *
- * Allows exactly:
- *   - verified LIVE 335 (sha256 12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb), or
- *   - honest published 150 board (≥30000B)
- * Rejects stubs, interim N/335 boards, and fabricated/mismatched 335 blobs.
+ * WHY THIS EXISTS (2026-08-25): automations kept pushing public/signed/card_index.json
+ * as filename pointers ("__LOAD_FROM__/tmp/...", "@file:", "file://", data-URIs) or as
+ * truncated "N/335 interim" boards (50 cards / 75 cards) whose commit messages claimed
+ * an ATOMIC restore of 335 cards. The first guard only required ≥50 cards, so a valid
+ * 50-card JSON lie shipped to councilof.ai.
+ *
+ * Estate rule: a component must be STRUCTURALLY UNABLE to report success on a path
+ * it did not complete. This guard is that structure for /signed/*.json.
+ *
+ * The last honest published board is exactly 150 cards, ≥30000 bytes.
+ * Do not invent the missing 185. Do not claim 335. A fabricated 335-card
+ * JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
  */
-import { createHash } from "node:crypto";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
@@ -29,7 +36,6 @@ const STUB_MARKERS = [
 ];
 const HONEST_CARD_COUNT = 150;
 const HONEST_SIZE_FLOOR = 30000;
-const VERIFIED_335_SHA256 = "12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb";
 let failures = [];
 
 let files = [];
@@ -38,10 +44,8 @@ catch { console.log(`signed-json-guard: no ${dir} directory — nothing to guard
 
 for (const f of files) {
   const p = join(dir, f);
-  const rawBuf = readFileSync(p);
-  const raw = rawBuf.toString("utf8");
+  const raw = readFileSync(p, "utf8");
   const size = statSync(p).size;
-  const sha = createHash("sha256").update(rawBuf).digest("hex");
   for (const m of STUB_MARKERS) if (raw.includes(m))
     failures.push(`${f}: contains stub marker ${JSON.stringify(m)} (${size}B) — a push tool passed a pointer as content`);
   let parsed;
@@ -56,29 +60,12 @@ for (const f of files) {
     }
     if (nField != null && nField !== cards.length)
       failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
-
-    const isVerified335 =
-      nField === 335 &&
-      cards.length === 335 &&
-      sha === VERIFIED_335_SHA256;
-
-    const isHonest150 =
-      nField === HONEST_CARD_COUNT &&
-      cards.length === HONEST_CARD_COUNT &&
-      size >= HONEST_SIZE_FLOOR;
-
-    if (isVerified335) {
-      console.log(`✓ card_index.json: verified LIVE 335 (sha256 ${sha.slice(0, 16)}…)`);
-      continue;
-    }
-    if (isHonest150) {
-      console.log(`✓ card_index.json: honest 150 (${size}B)`);
-      continue;
-    }
     if (nField === 335 || cards.length === 335)
-      failures.push(`card_index.json: 335 claim rejected — sha256 ${sha} is not the verified LIVE blob ${VERIFIED_335_SHA256}`);
-    else
-      failures.push(`card_index.json: ${cards.length} cards / n_cards=${nField} (${size}B) — allow only verified 335 or honest ${HONEST_CARD_COUNT}`);
+      failures.push(`card_index.json: claims 335 (${size}B) — do not invent the missing 185; the honest board is ${HONEST_CARD_COUNT}`);
+    if (cards.length !== HONEST_CARD_COUNT)
+      failures.push(`card_index.json: ${cards.length} cards — honest published board is exactly ${HONEST_CARD_COUNT} (do not claim 335)`);
+    if (size < HONEST_SIZE_FLOOR)
+      failures.push(`card_index.json: ${size}B — below the ${HONEST_SIZE_FLOOR}B honest size floor (truncated or interim board)`);
   }
 }
 
