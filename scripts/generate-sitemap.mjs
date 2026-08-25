@@ -96,7 +96,7 @@ const EXCLUDE_EXACT = new Set([
   // 2026-08-13 Part CJ: legacy sovereign-class redirects — sitemap lists canonical URLs only
   "/sovereign",
   "/sovereign-network",
-  "/sovereign-town",
+  "/gspc-arena?view=towns",
   "/sovereign-space",
   "/sovereign-pricing",
   "/sovereign-twin",
