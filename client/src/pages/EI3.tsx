@@ -210,14 +210,14 @@ export default function EI3() {
         {/* CTA */}
         <section className="bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-2xl p-8 text-white text-center">
           <Shield className="w-10 h-10 mx-auto mb-3" />
-          <h2 className="text-2xl font-bold mb-2">Free until 2 Dec 2027</h2>
-          <p className="text-emerald-50 mb-6 max-w-2xl mx-auto">EU AI Act high-risk obligations begin December 2027. Get your EI3 substrate, charter compliance, and signed receipts in place now while it's free.</p>
+          <h2 className="text-2xl font-bold mb-2">Get measured</h2>
+          <p className="text-emerald-50 mb-6 max-w-2xl mx-auto">Describe the system. Get a signed card. Not a certificate. We do not remediate. Verify stays free.</p>
           <div className="flex flex-wrap justify-center gap-3">
-            <a href="https://csoai.org/certify">
-              <Button className="bg-white text-emerald-700 hover:bg-emerald-50">Get Free Certified</Button>
+            <a href="/assess">
+              <Button className="bg-white text-emerald-700 hover:bg-emerald-50">Get measured</Button>
             </a>
-            <a href="https://csoai.org/charter">
-              <Button variant="outline" className="border-white text-white hover:bg-emerald-800">Read the 52 Articles</Button>
+            <a href="/firewall-charter">
+              <Button variant="outline" className="border-white text-white hover:bg-emerald-800">Measurement / remediation firewall</Button>
             </a>
           </div>
         </section>
