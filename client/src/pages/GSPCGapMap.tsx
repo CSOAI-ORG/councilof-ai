@@ -326,7 +326,7 @@ export default function GSPCGapMap() {
               </p>
               <ul className="text-sm space-y-2 text-muted-foreground">
                 <li className="flex gap-2"><span className="text-primary">→</span> Chain integrity verified (DR-0032, DR-0033)</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> 9 refutations published (honest corrections)</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> 10 refutations published (honest corrections)</li>
                 <li className="flex gap-2"><span className="text-primary">→</span> Sample sizes labelled (n&lt;20 = lower bound)</li>
                 <li className="flex gap-2"><span className="text-primary">→</span> Methodology open (predicates are deterministic)</li>
               </ul>
@@ -362,7 +362,7 @@ export default function GSPCGapMap() {
                 <span className="text-lg">💼</span> Diligence-ready
               </h3>
               <p className="text-sm text-muted-foreground">
-                The 9 refutations are the diligence asset. A founder who publishes what killed
+                The 10 refutations are the diligence asset. A founder who publishes what killed
                 their own bets is a founder who cannot surprise an LP with a hidden failure.
                 This is the moat that ships with the team.
               </p>
