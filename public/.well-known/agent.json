@@ -1,6 +1,6 @@
 {
   "name": "Council of AI — Measurement Agent",
-  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) — 13 measured of 14 — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) — 14 measured of 14 — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
   "version": "1.0.0",
   "capabilities": {
     "streaming": false,
@@ -30,36 +30,71 @@
     {
       "id": "gspc-board",
       "name": "Signed GSPC Board",
-      "description": "Fetch the live Ed25519-signed GSPC 14-slot board (13 measured of 14): per-axis n, leader, Wilson interval, and McNemar separation. Live JSON, recomputable from published rows.",
-      "tags": ["measurement", "governance", "verification"],
-      "examples": ["GET /api/gspc — return the signed board JSON"]
+      "description": "Fetch the live Ed25519-signed GSPC 14-slot board (14 measured of 14): per-axis n, leader, Wilson interval, and McNemar separation. Live JSON, recomputable from published rows.",
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ],
+      "examples": [
+        "GET /api/gspc — return the signed board JSON"
+      ]
     },
     {
       "id": "east-west-crosswalk",
       "name": "East-West crosswalk & cross-border card",
       "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
-      "tags": ["cross-border", "crosswalk", "measurement", "verification"],
-      "examples": ["GET /api/cross — cross-border signed card"]
+      "tags": [
+        "cross-border",
+        "crosswalk",
+        "measurement",
+        "verification"
+      ],
+      "examples": [
+        "GET /api/cross — cross-border signed card"
+      ]
     },
     {
       "id": "measured-badge",
       "name": "Measured Badge",
       "description": "Shields-style README badge stating a subject's measured-axis count; unmeasured subjects render honestly as unmeasured, never a fabricated score.",
-      "tags": ["measurement", "governance", "verification"],
-      "examples": ["GET /api/badge?subject=example"]
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ],
+      "examples": [
+        "GET /api/badge?subject=example"
+      ]
     },
     {
       "id": "benchmark-quality-register",
       "name": "Benchmark-quality register",
       "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
-      "tags": ["meta-evaluation", "benchmark-quality", "reproducibility", "governance"],
-      "examples": ["GET /api/benchmark-quality"]
+      "tags": [
+        "meta-evaluation",
+        "benchmark-quality",
+        "reproducibility",
+        "governance"
+      ],
+      "examples": [
+        "GET /api/benchmark-quality"
+      ]
     }
   ],
-  "provider": {"organization": "CSOAI Ltd", "url": "https://councilof.ai"},
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
   "documentationUrl": "https://councilof.ai/.well-known/agent-card.json",
   "doi": "10.5281/zenodo.21991104",
-  "explicitly_not": ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "legal-determination",
+    "enforcement"
+  ],
   "url": "https://councilof.ai",
   "protocolVersion": "0.3.0",
   "documentation": "https://councilof.ai/.well-known/agent.json"
