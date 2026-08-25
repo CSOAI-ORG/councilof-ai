@@ -64,7 +64,9 @@ Do **not** cite: ~~568 repos~~ (use **291 MCP servers**), ~~30-framework~~ (use 
 
 Signed-in teams: `https://councilof.ai/dashboard` — same Layer 0 destinations as Council OS.
 
-**EAT parity:** competitor and (later) RWA measurement cards that appear in Council OS must be reachable from DSH without a second scoreboard. See `docs/EAT_DSH_ALIGNMENT.md`.
+**DSH into all (OWNERSHIP #80):** every measurement card that appears in Council OS must be reachable from DSH without a second scoreboard — GSPC, East-West, EAT, Estate, Instruments, Verify, and (later) RWA. Matrix: `docs/COUNCIL_OS_BUILD_PLAN.md`. Alignment: `docs/EAT_DSH_ALIGNMENT.md`.
+
+**EAT parity:** competitor and RWA measurement cards use the same rule.
 
 ## Verify
 
