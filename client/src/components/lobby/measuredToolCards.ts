@@ -18,7 +18,7 @@ export type MeasuredToolCardSpec = {
   status: string;
 };
 
-/** Canonical six measured MCP tools from functions/api/mcp-rpc.ts */
+/** Measured MCP tools + honest UNMEASURED index catalog card */
 export const MEASURED_TOOL_CARDS: Record<string, MeasuredToolCardSpec> = {
   gspc_board: {
     tool: "gspc_board",
@@ -66,6 +66,13 @@ export const MEASURED_TOOL_CARDS: Record<string, MeasuredToolCardSpec> = {
     path: "/instruments",
     pane: "routes",
     status: "Eunomia Router · MCP instruments_catalog",
+  },
+  indices_catalog: {
+    tool: "indices_catalog",
+    title: "Labour & AI-economy indices",
+    blurb: "AI-economy · human-labour · humanoid-labour — declared UNMEASURED. Contextual firewall only; never GSPC cell inputs.",
+    path: "/indices",
+    status: "UNMEASURED surfaces · GET /api/indices",
   },
 };
 
