@@ -1918,7 +1918,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Space"
  },
  {
-  "path": "/sovereign-town",
+  "path": "/gspc-arena?view=towns",
   "comp": "Redirect",
   "title": "Sovereign Town"
  },
