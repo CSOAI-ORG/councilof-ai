@@ -275,7 +275,7 @@ export default function LobbyChatBar({
           </div>
         )}
 
-        {/* ── the field ──────────────────────────────────────────────────── */}
+        {/* ── the field ────────────────────────────────────────────────── */}
         <div className="flex gap-2">
           <input
             ref={inputRef}
