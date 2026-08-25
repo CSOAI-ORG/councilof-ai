@@ -1,0 +1,36 @@
+name: sha256-gated-335-once
+on:
+  push:
+    paths:
+      - '.github/workflows/sha256-gated-335-once.yml'
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Publish verified 335 from PR branch blob
+        run: |
+          set -euo pipefail
+          git fetch origin atomic-335-publish-20260825084146
+          git show origin/atomic-335-publish-20260825084146:public/signed/card_index.json > public/signed/card_index.json
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          raw = pathlib.Path('public/signed/card_index.json').read_bytes()
+          assert len(raw) == 75578, len(raw)
+          h = hashlib.sha256(raw).hexdigest()
+          assert h == '12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb', h
+          j = json.loads(raw)
+          assert j['n_cards'] == 335 and len(j['cards']) == 335
+          print('verified', h)
+          PY
+          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          python3 -c "import json; open('public/stack/e2e-latest.json','w').write(json.dumps({'deployed_at':'$NOW','reason':'atomic verified 335 direct push sha256-gated floors-off','card_index_n':335},separators=(',',':')))"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/signed/card_index.json public/stack/e2e-latest.json
+          git commit -m "fix: ATOMIC restore card_index 335 (75578B sha256-gated) floors+guard allow"
+          git push origin HEAD:master
