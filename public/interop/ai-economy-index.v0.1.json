@@ -1,0 +1,37 @@
+{
+ "schema": "csoai.ai-economy-index/0.1",
+ "axis": "ai-economy-index",
+ "status": "MEASURED-INDEX-v0.1",
+ "fetched_at": "2026-08-25T14:07:09Z",
+ "scope_honesty": "v0.1 = EU enterprise AI-adoption reference components only. Compute-price, AI-investment and sector-output components are BANK-GAPS (no authoritative public machine series yet) — stated, not filled. Sub-index normalization claimed only when base+weights publish.",
+ "sources": [
+  "Eurostat isoc_eb_ai (E_AI_TANY, PC_ENT, EU27_2020) — live fetch 2026-08-25"
+ ],
+ "components": {
+  "all_enterprises_10plus_ai_adoption": {
+   "2023": 8.06,
+   "2024": 13.48,
+   "unit": "% of enterprises using any AI technology"
+  },
+  "large_enterprises_250plus_ai_adoption": {
+   "2023": 30.48,
+   "2024": 41.17,
+   "unit": "% of large enterprises using any AI technology"
+  }
+ },
+ "headline": "EU27 enterprises (10+ staff) using AI: 13.48% (2024), up from 8.06% (2023) — +5.42pp YoY (deterministic, citable, recomputable).",
+ "recompute": "python3 harness/rwa-attest/index_measure.py",
+ "bank_gaps": [
+  "compute-price series",
+  "AI-investment series",
+  "AI sector output"
+ ],
+ "content_id": "bbb28b5c312bfd2f7e43ea5b3b278707e8190596929599ee80a600c77e2e1c2b",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "bbb28b5c312bfd2f7e43ea5b3b278707e8190596929599ee80a600c77e2e1c2b",
+  "sig": "rZWUKWW6wUBidvLvr5CAEfedkO0HPGw8QHVUhM5NvLTSV4kxaiNKF2UTxAqukC1woYGcIJZvZ2VRGBEByW6QCg==",
+  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
+  "note": "Ed25519 over canonical content_id (recompute, verify, trust none)."
+ }
+}
