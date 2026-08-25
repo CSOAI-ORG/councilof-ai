@@ -508,6 +508,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Cra"
  },
  {
+  "path": "/cra-readiness",
+  "comp": "CraReadinessKit",
+  "title": "Cra Readiness Kit"
+ },
+ {
   "path": "/credential-training",
   "comp": "CEASAITraining",
   "title": "CEASAITraining"
@@ -941,6 +946,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/gpai",
   "comp": "GpaiObligations",
   "title": "Gpai Obligations"
+ },
+ {
+  "path": "/gpai-evidence",
+  "comp": "GpaiEvidencePack",
+  "title": "Gpai Evidence Pack"
  },
  {
   "path": "/graph",
@@ -1688,6 +1698,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Regulator Atlas"
  },
  {
+  "path": "/regulator-findings",
+  "comp": "RegulatorFindings",
+  "title": "Regulator Findings"
+ },
+ {
   "path": "/regulators",
   "comp": "RegulatorAtlas",
   "title": "Regulator Atlas"
@@ -1918,7 +1933,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Space"
  },
  {
-  "path": "/gspc-arena?view=towns",
+  "path": "/sovereign-town",
   "comp": "Redirect",
   "title": "Sovereign Town"
  },
