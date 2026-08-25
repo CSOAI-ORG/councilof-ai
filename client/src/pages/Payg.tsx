@@ -100,6 +100,8 @@ export default function Payg() {
         </p>
         <p className="text-sm mt-3">
           <a href="/east-west/pricing" className="underline">Read the East-West doctrine →</a>
+          {" · "}
+          <a href="/powered-by" className="underline">Powered by · white-label (Option A) →</a>
         </p>
       </Card>
     </div>
