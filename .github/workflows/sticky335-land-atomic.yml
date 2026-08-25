@@ -1,53 +1,16 @@
 name: sticky335-land-atomic
-# Re-land verified mine-real 335 from atomic parts (Contents API).
-# Canonical: n_cards=335 · 75578B · sha256 12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
-# Doctrine: do not invent cards; scores never sold.
+# Disabled. The honest published board is exactly 150 cards / 34171B.
+# Do not claim 335. Do not invent the missing 185.
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '2-59/10 * * * *'
 permissions:
-  contents: write
+  contents: read
 jobs:
   land:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Land verified 335 if master is not sticky
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Refuse fabricated 335 land
         run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import base64, hashlib, json, os, pathlib, urllib.request
-          WANT='12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb'
-          token=os.environ['GH_TOKEN']
-          api='https://api.github.com/repos/CSOAI-ORG/councilof-ai'
-          def req(url, data=None, method=None):
-            h={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','User-Agent':'sticky335-land-atomic'}
-            if data is not None:
-              h['Content-Type']='application/json'; data=json.dumps(data).encode()
-            r=urllib.request.Request(url, data=data, headers=h, method=method)
-            with urllib.request.urlopen(r, timeout=90) as resp:
-              return json.loads(resp.read())
-          meta=req(f'{api}/contents/public/signed/card_index.json?ref=master')
-          raw=base64.b64decode(meta['content'])
-          try:
-            j=json.loads(raw); cards=j.get('cards') or []; n=j.get('n_cards')
-          except Exception:
-            j,cards,n={},[],None
-          sha=hashlib.sha256(raw).hexdigest()
-          print(f'current n={n} len={len(cards)} bytes={len(raw)} sha={sha}')
-          if n==335 and len(cards)==335 and sha==WANT and len(raw)==75578:
-            print('already sticky'); raise SystemExit(0)
-          parts=sorted(pathlib.Path('.github/ci/card_index_335_atomic').glob('p*.txt'))
-          assert parts, 'missing atomic parts'
-          restored=base64.b64decode(''.join(p.read_text().strip() for p in parts))
-          assert hashlib.sha256(restored).hexdigest()==WANT
-          meta=req(f'{api}/contents/public/signed/card_index.json?ref=master')
-          req(f'{api}/contents/public/signed/card_index.json', data={
-            'message':'fix: sticky335-land-atomic Contents API re-land verified 335',
-            'content':base64.b64encode(restored).decode(),'sha':meta['sha'],'branch':'master'
-          }, method='PUT')
-          print('landed', WANT[:16])
-          PY
+          echo "sticky335-land-atomic is disabled. The honest board is 150 cards."
+          echo "Do not claim 335. Do not invent the missing 185."
+          exit 1
