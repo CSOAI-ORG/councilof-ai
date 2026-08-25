@@ -31,6 +31,10 @@ We are **not** an NRSRO / EU CRA. We do **not** issue, custody, or tokenize asse
 3. IOSCO Final Report on Tokenisation of Financial Assets (Nov 2025).  
 4. This repo: `docs/EAT_DSH_ALIGNMENT.md`, `docs/ESTATE_CROSSWALK.md`, `/powered-by` messaging lock.
 
+## Labour & AI-economy indices (UNMEASURED)
+
+The three labour/economy indices (`ai-economy`, `human-labour`, `humanoid-labour`) remain **declared UNMEASURED** — contextual firewall layers beside cards, never inputs to GSPC deterministic grading. Do not cite them as MEASURED scores, sell them, or blend them into attestation language as if they were signed verdicts. Live register: `GET /api/indices` · Lobby `indices_catalog`.
+
 ## HO.2 reminder
 
 Verification remains free forever. **Never** put grade prices on public marketing surfaces.
