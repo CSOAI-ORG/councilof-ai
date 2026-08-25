@@ -69,7 +69,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   let source: "cf-country" | "accept-language" | "none" = cfCountry ? "cf-country" : "none";
 
   if (!country && accept) {
-    const m = accept.split(",")[0]?.match(/-([A-Za-z]{2})\\b/);
+    const m = accept.split(",")[0]?.match(/-([A-Za-z]{2})\b/);
     if (m) {
       country = m[1].toUpperCase();
       source = "accept-language";
