@@ -24,14 +24,16 @@ export type RwaAttestationTarget = {
   notes: string;
   /** Optional cluster for EVM catalog breadth (not a grade) */
   cluster?: string;
+  /** Freshness play class (wf-15a67236) — clean first; JMWH = demo only */
+  play?: "clean" | "demo" | "caution";
 };
 
 export const RWA_EAT_DOCTRINE =
-  "Permissionless pointer to a signed measurement card. Unsolicited ≠ endorsed. Mapping/attestation ≠ determination or credit rating. Scores never sold.";
+  "Unsolicited + permissionless signed measurement (no issuer opt-in, no issuer payment). Attestation ≠ tokenization ≠ ownership. Unsolicited ≠ endorsed. Not a credit rating. Scores never sold.";
 
-/** Compass corpus framing — strategy, not MEASURED traction. */
+/** Compass corpus framing — strategy, not MEASURED traction. Freshness: wf-15a67236 Aug 2026. */
 export const RWA_CORPUS_NOTE =
-  "XRPL ~42-asset registry (Blockworks Q2 2026); EVM into hundreds (Ondo Stocks 438+, Securitize 130+, Backed 60+). Independent verification is a documented gap (IOSCO FR/17/2025). Free unsolicited reference layer first; paid index/API only after third-party citation — never sell a score.";
+  "Moat = unsolicited + permissionless — rivals claim “independent” but stay issuer-led (Moody’s TIE, S&P/Chainlink, Credora/RedStone, Particula). Weight indexes to distributed value. Free reference layer first; never sell a score.";
 
 export const RWA_ATTESTATION_TARGETS: RwaAttestationTarget[] = [
   /* ── Tier 1 — Stage-2/3 marquee ─────────────────────────────────────── */
@@ -48,8 +50,9 @@ export const RWA_ATTESTATION_TARGETS: RwaAttestationTarget[] = [
       "Freeze public regulatory/custody facts; sign measurement card; XRPL Memo hash pointer (v1). Provisional Credential only after counsel.",
     signing_state: "unsigned",
     recommended_rail: "xrpl-memo",
-    notes: "Highest credibility-borrow XRPL target; regulated security — measurement not rating. Ripple–Aviva / Licuido adjacency.",
+    notes: "CLEAN PLAY (live Jul 29 2026, CBI). Highest credibility-borrow XRPL target; regulated security — measurement not rating. Ripple–Aviva / Licuido adjacency.",
     cluster: "xrpl-mmf",
+    play: "clean",
   },
   {
     name: "BlackRock BUIDL",
@@ -64,8 +67,9 @@ export const RWA_ATTESTATION_TARGETS: RwaAttestationTarget[] = [
       "EAS off-chain attest recipient=contract with verdict_sha256; escalate on-chain EAS for marquee discoverability.",
     signing_state: "unsigned",
     recommended_rail: "eas-offchain",
-    notes: "Confirm contract on Etherscan immediately before attest — lookalikes exist. Max prestige EAS recipient.",
+    notes: "CLEAN PLAY. Confirm contract on Etherscan before attest — lookalikes exist. Note concentrated holder base as schema fact, not a withhold reason. Moody’s Aaa-mf is theirs — never echo as ours.",
     cluster: "securitize",
+    play: "clean",
   },
   {
     name: "Ondo OUSG",
@@ -80,8 +84,9 @@ export const RWA_ATTESTATION_TARGETS: RwaAttestationTarget[] = [
       "Dual-chain: Memo on XRPL + EAS off-chain on Ethereum naming the same card hash.",
     signing_state: "unsigned",
     recommended_rail: "xrpl-memo",
-    notes: "Stage-2 reference implementation alongside BUIDL and JMWH. Re-verify r-address on XRPScan before attach.",
+    notes: "CLEAN PLAY. Stage-2 ref with BUIDL (+ Aviva). Do not conflate ONDO governance token with the fund. Watch OUSG↔USDY TVL migration — cite dated primary pages only.",
     cluster: "ondo",
+    play: "clean",
   },
   {
     name: "Franklin Templeton BENJI (FOBXX)",
@@ -94,8 +99,9 @@ export const RWA_ATTESTATION_TARGETS: RwaAttestationTarget[] = [
     unsigned_to_signed_play: "EAS off-chain → optional on-chain for easscan.org index.",
     signing_state: "unsigned",
     recommended_rail: "eas-offchain",
-    notes: "AUM figures vary by source — cite dated primary pages only.",
+    notes: "CLEAN PLAY. '40 Act fund — retail-eligible footnote. Parent one-off losses are parent-level, not fund-level. Cite dated primary AUM only.",
     cluster: "tokenized-mmf",
+    play: "clean",
   },
   {
     name: "Guggenheim / Zeconomy Digital Commercial Paper",
@@ -156,8 +162,9 @@ export const RWA_ATTESTATION_TARGETS: RwaAttestationTarget[] = [
     signing_state: "unsigned",
     recommended_rail: "xrpl-memo",
     notes:
-      "Flagship proof-of-why-independent-measurement. Caveat: headline XRPL RWA overstates adoption — weight indexes to distributed value (~$386M Q2 2026).",
+      "DEMO ONLY — never endorsement. Schema MUST express represented≠distributed, holder-count, transfer-volume. Freshness wf-15a67236: minting-driven headline value; UK parent thin capital; dual custodian/auditor claims. Ideal proof of why unsolicited attestation matters.",
     cluster: "xrpl-commodities",
+    play: "demo",
   },
 
   /* ── Tier 2 — XRPL named instruments + settlement rails ─────────────── */
@@ -172,8 +179,9 @@ export const RWA_ATTESTATION_TARGETS: RwaAttestationTarget[] = [
     unsigned_to_signed_play: "Memo tagging settlement-backbone public facts; lower securities sensitivity.",
     signing_state: "unsigned",
     recommended_rail: "xrpl-memo",
-    notes: "Cash leg for XRPL RWA DvP — still not a rating.",
+    notes: "CLEAN PLAY. Cash leg for XRPL RWA DvP — still not a rating. Mint/burn cycles are routine; cite XRPScan primary.",
     cluster: "xrpl-stablecoins",
+    play: "clean",
   },
   {
     name: "OpenEden TBILL (TBL)",
@@ -311,7 +319,7 @@ export const RWA_ATTESTATION_TARGETS: RwaAttestationTarget[] = [
     public_artifact: "Backed Finance bToken/xStocks catalog; Swiss/Jersey SPV 1:1 tracker certificates",
     estate_tool: "card-issuance",
     unsigned_to_signed_play: "EAS off-chain; catalog later expands to 60+ Backed tickers.",
-    signing_state: "unsigned",
+    signing_state: "eas-offchain",
     recommended_rail: "eas-offchain",
     notes: "Tokenized-equity sub-sector seed (Backed/Ondo/Dinari).",
     cluster: "backed",
@@ -438,6 +446,7 @@ export const RWA_EVM_CATALOG_CLUSTERS: {
 ];
 
 export const RWA_STAGE =
-  "Stage 1: data+doctrine only (no mainnet attach). Stage 2: testnet Memo+EAS on OUSG/BUIDL/JMWH. Stage 3: mainnet top 10 + catalog breadth. GTM: free reference layer → cited source → paid index/API (scores never sold)." as const;
+  "Stage 1: data+doctrine only (no mainnet attach). Stage 2 testnet: clean plays first (OUSG, BUIDL, Aviva/RLUSD) + JMWH demo-only schema. Stage 3: mainnet clean top set. GTM: free unsolicited+permissionless reference → cited source → Option A license (scores never sold)." as const;
 
-export const RWA_STAGE2_REFS = ["ondo-ousg", "blackrock-buidl", "justoken-jmwh"] as const;
+export const RWA_STAGE2_REFS = ["ondo-ousg", "blackrock-buidl", "aviva-usd-liquidity-xrpl"] as const;
+export const RWA_STAGE2_DEMO = ["justoken-jmwh"] as const;
