@@ -1,1 +1,1 @@
-@file:///tmp/mcp-push/FOR_MCP_AppRoutesB.tsx
+LOAD_FROM:/tmp/mcp-push/FOR_MCP_AppRoutesB.tsx
