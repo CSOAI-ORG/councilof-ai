@@ -42,6 +42,13 @@ export default function PoweredBy() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
       <div className="mb-12 text-center">
+        <img
+          src="/badges/powered-by-council-os.svg"
+          alt="Powered by Council OS"
+          width={220}
+          height={48}
+          className="mx-auto mb-6"
+        />
         <Badge variant="secondary" className="mb-4">
           Option A · white-label attestation · not tokenization
         </Badge>
