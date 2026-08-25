@@ -1,0 +1,89 @@
+# CSOAI — OpenAPI 3.0 stub fragment for labour / AI-economy indices
+# NEXT_300 #214 · Measurement not certification · scores never sold
+# Live honesty: measured_score is always null until INDEX-METHOD freezes a bank.
+openapi: 3.0.3
+info:
+  title: CSOAI Labour & AI-economy Indices
+  version: "0.1"
+  description: |
+    Public UNMEASURED register. Absence is not zero.
+    Do not invent MEASURED labour/economy scores. Never fuse into GSPC grades.
+  contact:
+    name: CSOAI Ltd
+    url: https://councilof.ai
+servers:
+  - url: https://councilof.ai
+paths:
+  /api/indices:
+    get:
+      summary: List labour & AI-economy indices
+      operationId: listIndices
+      tags: [indices]
+      responses:
+        "200":
+          description: Catalog of index rows (status UNMEASURED; measured_score null)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndicesCatalog"
+  /api/indices/{slug}:
+    get:
+      summary: One index by slug
+      operationId: getIndex
+      tags: [indices]
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [ai-economy, human-labour, humanoid-labour]
+      responses:
+        "200":
+          description: Single index row
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndexRow"
+        "404":
+          description: Unknown slug
+components:
+  schemas:
+    IndexRow:
+      type: object
+      required: [slug, status, measured_score, fused_into_gspc]
+      properties:
+        slug:
+          type: string
+        status:
+          type: string
+          enum: [UNMEASURED, REPORTED, MEASURED]
+          description: Labour/economy indices ship as UNMEASURED until method freeze
+        measured_score:
+          nullable: true
+          description: Always null for UNMEASURED — never invent a float
+          type: number
+        fused_into_gspc:
+          type: boolean
+          description: Must remain false (contextual firewall only)
+        citations:
+          type: array
+          items:
+            type: object
+    IndicesCatalog:
+      type: object
+      required: [schema, indices]
+      properties:
+        schema:
+          type: string
+          example: csoai.labour-economy-index/0.1
+        as_of:
+          type: string
+          format: date
+        method:
+          type: string
+          example: docs/SOVOS/INDEX-METHOD-0.1.md
+        indices:
+          type: array
+          items:
+            $ref: "#/components/schemas/IndexRow"
