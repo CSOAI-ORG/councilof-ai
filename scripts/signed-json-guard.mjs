@@ -11,8 +11,9 @@
  * Estate rule: a component must be STRUCTURALLY UNABLE to report success on a path
  * it did not complete. This guard is that structure for /signed/*.json.
  *
- * card_index floor is the last honest published board: 150 cards, ≥30000 bytes.
- * Do not invent the missing 185. Do not claim 335.
+ * The last honest published board is exactly 150 cards, ≥30000 bytes.
+ * Do not invent the missing 185. Do not claim 335. A fabricated 335-card
+ * JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -33,7 +34,7 @@ const STUB_MARKERS = [
   "data:application",
   "test data uri",
 ];
-const HONEST_CARD_FLOOR = 150;
+const HONEST_CARD_COUNT = 150;
 const HONEST_SIZE_FLOOR = 30000;
 let failures = [];
 
@@ -59,8 +60,10 @@ for (const f of files) {
     }
     if (nField != null && nField !== cards.length)
       failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
-    if (cards.length < HONEST_CARD_FLOOR)
-      failures.push(`card_index.json: only ${cards.length} cards — below the ${HONEST_CARD_FLOOR}-card honest floor (interim N/335 stub or truncation)`);
+    if (nField === 335 || cards.length === 335)
+      failures.push(`card_index.json: claims 335 (${size}B) — do not invent the missing 185; the honest board is ${HONEST_CARD_COUNT}`);
+    if (cards.length !== HONEST_CARD_COUNT)
+      failures.push(`card_index.json: ${cards.length} cards — honest published board is exactly ${HONEST_CARD_COUNT} (do not claim 335)`);
     if (size < HONEST_SIZE_FLOOR)
       failures.push(`card_index.json: ${size}B — below the ${HONEST_SIZE_FLOOR}B honest size floor (truncated or interim board)`);
   }
