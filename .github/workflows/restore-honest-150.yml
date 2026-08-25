@@ -1,29 +1,8 @@
 name: restore-honest-150
-# MANUAL ONLY — auto-push trigger removed (was racing atomic 335 publish).
 on:
   workflow_dispatch:
-permissions:
-  contents: write
 jobs:
-  restore:
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Restore card_index 150 from known-good commit
-        run: |
-          set -euo pipefail
-          GOOD=521df33b6c35dad6c3b2ca3e444fba2ac653687b
-          git show "$GOOD:public/signed/card_index.json" > public/signed/card_index.json
-          python3 -c 'import json,hashlib; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==150 and len(j["cards"])==150; assert len(c)==34171; print("OK", len(c), hashlib.sha256(c.encode()).hexdigest()[:16])'
-          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "manual restore honest 150",' '  "card_index_n": 150' '}' > public/stack/e2e-latest.json
-      - name: Commit restore
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/signed/card_index.json public/stack/e2e-latest.json
-          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
-          git commit -m "fix: restore honest card_index 150 (manual)"
-          git push
+      - run: echo "NOOP — restore-honest-150 permanently neutered for LIVE 335"
