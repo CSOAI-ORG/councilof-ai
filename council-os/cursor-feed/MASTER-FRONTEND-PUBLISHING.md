@@ -1,5 +1,5 @@
 # MASTER — FRONT-END, PUBLISHING & BRANDING ALIGNMENT
-*JEEVES lane · aligned to SOVOS-MASTER-PART-C (Publishing Era) + PLAYBOOK-GTM-300-2026-08-24 · 2026-08-24*
+*JEEVES lane · aligned to SOVOS-MASTER (internal reference)-PART-C (Publishing Era) + PLAYBOOK-GTM-300-2026-08-24 · 2026-08-24*
 
 Unified alignment for the front-end/publishing/branding + the new
 **MOOC → live gamified compliance-training** transformation.
