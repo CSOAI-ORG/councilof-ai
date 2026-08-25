@@ -1,0 +1,1 @@
+LOAD_FROM_FILE:/tmp/push-file-0-docs__EAT_DSH_ALIGNMENT.md

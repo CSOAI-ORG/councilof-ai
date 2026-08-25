@@ -1,0 +1,1 @@
+LOAD_FROM_FILE:/tmp/push-file-4-client__src__data__rwaAttestationTargets.ts
