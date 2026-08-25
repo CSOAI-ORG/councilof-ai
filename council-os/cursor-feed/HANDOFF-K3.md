@@ -117,3 +117,20 @@ HF mirror **csoai/rwa-attest** (7 files) · scripts + methodology committed.
 4. **Products catalogue:** link the five products (evidence pack / data licence / attestation
    coverage / training world / payg) — pricing stays DRAFT (owner ruling).
 5. Data endpoints already public: `/interop/*.json` + `/signals/*.signed.json` + `/api/gspc`.
+
+## 7. INDEX MEASUREMENTS LIVE 2026-08-25 (round 2) — wire these
+- **`/interop/ai-economy-index.v0.1.json`** — MEASURED-INDEX-v0.1, signed (cid `bbb28b5c…`):
+  EU27 enterprises (10+) using AI **13.48% (2024)** up from 8.06% (2023); large enterprises
+  41.17%. Source Eurostat isoc_eb_ai (live-fetched). Bank gaps stated (compute price /
+  AI investment / sector output — NOT filled, honest).
+- **`/interop/human-labour-index.v0.1.json`** — MEASURED-INDEX-v0.1, signed (cid `8abf5166…`):
+  EU labour participation **57.58%** + unemployment **5.92%** (2024, World Bank live).
+- **`/interop/evm-control-facts.json`** — signed (cid `532c59c4…`): BUIDL / BENJI / ACRED
+  facts (deployed, EIP-1967, metadata) coverage 1.0 [0.51–1.0]; source_verified NOT measured.
+- **`/interop/financial-axes.json`** (0.3): 2 indexes **MEASURED-INDEX-v0.1** + humanoid-labour
+  UNMEASURED (bank-pending — render honest declared card, no numbers).
+- HF mirror updated: **csoai/rwa-attest** (10 files).
+
+**Cursor:** the `/indices` cards can now show REAL signed numbers for AI-economy +
+human-labour (render scope + bank-gap badges), humanoid = declared-UNMEASURED card.
+Grammar stays: reference index ≠ forecast; measurement not certification.
