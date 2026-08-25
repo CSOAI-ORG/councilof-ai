@@ -149,23 +149,15 @@ Pricing precedents (order-of-magnitude, third-party estimates — **not** our qu
 
 **Out of Stage 1 (unchanged):** CobolBridge SKU, XRPL bond *issuance*, becoming a regulated issuer/TA, invented AUM/revenue as MEASURED, mainnet RWA attach, insurer/Big Four paid pilots before reference-layer proof, any marketing that equates attestation with tokenization or ownership.
 
-## DSH parity checklist — all surfaces (“DSH into all”)
+## DSH parity checklist for RWA cards
 
-**Rule:** anything MEASURED in Council OS is reachable from `/dashboard` without a second scoreboard. Same card hash / Layer 0 URI. Full matrix: `docs/COUNCIL_OS_BUILD_PLAN.md`.
+When a card ships:
 
-When any card ships (GSPC, East-West, EAT, Estate, Instruments, RWA, Verify):
-
-- [ ] Openable from Council OS Lobby (tool card / pane / route)  
+- [ ] Openable from Council OS Lobby (tool card / East-West / Competitors-adjacent surface)  
 - [ ] Same card reachable from `/dashboard` (DSH sidebar or measurement hub)  
-- [ ] Verify path loginless when signed (`/gspc-verify` or pack verify)  
+- [ ] Verify path loginless (`/gspc-verify` or pack verify)  
 - [ ] Chain pointer (if any) is optional; card stands offline  
 - [ ] Grammar pill: MEASURED / UNMEASURED / provisional — never “rated”  
-- [ ] Shared links via `client/src/lib/layer0Links.ts` (extend, don’t fork)  
-
-### RWA-specific addenda
-
-- [ ] Unsigned stubs stay unsigned until Stage 2 testnet attach  
-- [ ] Attestation ≠ tokenization copy on card / `/powered-by`  
 
 ## Thresholds that change the plan
 
