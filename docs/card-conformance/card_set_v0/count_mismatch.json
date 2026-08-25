@@ -1,0 +1,35 @@
+{
+ "name": "count_mismatch",
+ "index": {
+  "n_cards": 999,
+  "cards": [
+   {
+    "card": "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c",
+    "axis": "care-refusal-protect",
+    "ts": "2026-08-19T09:24:39.152331+00:00",
+    "signed": true,
+    "kid": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+   },
+   {
+    "card": "acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4",
+    "axis": "care-refusal-help",
+    "ts": "2026-08-19T09:24:39.152824+00:00",
+    "signed": true,
+    "kid": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+   },
+   {
+    "card": "3011c3873bb018cdc9ecbad58f136e0fd3e12898adbaa107a27e8038c16bdf6c",
+    "axis": "care-refusal-protect",
+    "ts": "2026-08-19T09:24:39.152888+00:00",
+    "signed": true,
+    "kid": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+   }
+  ]
+ },
+ "expect": {
+  "conform": 3,
+  "gaps": [
+   "n_cards_declared_999_actual_3"
+  ]
+ }
+}

@@ -1,0 +1,23 @@
+{
+ "corpus": "csoai-card-conformance",
+ "version": "1.0.0",
+ "files": {
+  "VERSION": "sha256:59854984853104df5c353e2f681a15fc7924742f9a2e468c29af248dce45ce03",
+  "run.py": "sha256:bf8ad45b39a8895c57d90222d4710b5ebb1ff5ebe5473cffb7e6f354a925204f",
+  "card_set_v0/_check_independent.py": "sha256:5c36d65bd18972f8607643d8c8b8d94c0cfb1ad7b16467cdb7679124c689f6fa",
+  "card_set_v0/clean_index.json": "sha256:4b10c253bb103810764d43d69754775916562c6f18f149a4bfb4e80af2c792ee",
+  "card_set_v0/count_mismatch.json": "sha256:f3bea3ffa581bdb6f6b25a9e5acf5e5201e182bac14779b89592d4a3ea7458ad",
+  "card_set_v0/duplicate_card.json": "sha256:633febfac590d6bff46bd538e0e3f9e8ce644e2fc2806370b2354d362c32aaa9",
+  "card_set_v0/__pycache__/_check_independent.cpython-314.pyc": "sha256:9089451937b267f54bc118f6a189fac2e7690e492a71f367f680ff142b78b33c",
+  "card_v0/_check_independent.py": "sha256:c91610d10fcc76c972dbc2211d42a681e704d1fe2cb0c9c61c85c6599d87dcc2",
+  "card_v0/neg_bad_hash_len.json": "sha256:a9953b97af22a77173d6cbcb455441c61ca36d1a39ad7df75cc5134779534f89",
+  "card_v0/neg_bad_ts.json": "sha256:5d8c6faca8f4c7dec3f9602e80bf178cba9d8c567e7d07922e3ff1fe788f32f1",
+  "card_v0/neg_missing_axis.json": "sha256:fcfa74970e234f804cbdc508463cef06cd54bdfafd0281dcfa89e90274206e19",
+  "card_v0/neg_not_object.json": "sha256:c290255a3b65ff0924cc6a53b6d41a2b69f492516295265a3cdd6f3fd8233556",
+  "card_v0/neg_unsigned.json": "sha256:e73d98ff55c70d117fd152bb8905c64207a92969c2dd860ae400de818f0e26ed",
+  "card_v0/pos_live_entry.json": "sha256:8397e4134e98d570a696963cc3a2e0d192db9f91f8dddb4ea193d8a38b40390a",
+  "card_v0/__pycache__/_check_independent.cpython-314.pyc": "sha256:2fb6b91456423415379ca88fec2412c65ba70c01d749478119795634de835d68"
+ },
+ "corpusDigest": "sha256:9be3d3f1b435c6e87faf6ff9fd71f8e88858d302f4822a0b7891ddc51255bf88",
+ "note": "stdlib-only checkers; fixtures derived from the live signed card_index. Verify with: python run.py --verify"
+}
