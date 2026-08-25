@@ -22,7 +22,8 @@ jobs:
           parts=[pathlib.Path(f'.ralph-restore/ew/part-{i:02d}.b64') for i in range(6)]
           missing=[str(p) for p in parts if not p.exists()]
           assert not missing, missing
-          data=b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
+          b64=''.join(p.read_text().strip() for p in parts)
+          data=base64.b64decode(b64)
           out=pathlib.Path('client/src/pages/EastWest.tsx')
           out.parent.mkdir(parents=True, exist_ok=True)
           out.write_bytes(data)
