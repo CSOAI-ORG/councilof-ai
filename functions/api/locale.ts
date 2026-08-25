@@ -57,7 +57,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     : typeof cf.country === "string" ? cf.country : "XX";
   const regime = regimeFor(country);
   const acceptLang = context.request.headers.get("accept-language") ?? "";
-  const language = regime.language ?? acceptLang.split(",")[0]?.split("-")[0]?.trim() ?? "en";
+  const language = regime.language ?? (acceptLang.split(",")[0]?.split("-")[0]?.trim() || "en");
 
   return new Response(
     JSON.stringify(
