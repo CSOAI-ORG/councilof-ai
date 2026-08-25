@@ -70,6 +70,7 @@ export default function Academy() {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - academy</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Learn the board in an afternoon</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Short tracks through the live site. Course completion attests training, not conformity. Pick a track, follow the steps, send the link.</p>
+          <p className="mt-2 max-w-2xl text-sm text-emerald-100/80">Completion issues a measurement credential (training attestation), not a certificate of conformity or framework accreditation.</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-10 grid gap-8 lg:grid-cols-[300px_1fr] items-start">
