@@ -1,0 +1,51 @@
+{
+ "schema": "csoai.key-lifecycle/0.1",
+ "controller": "did:web:csoai.org",
+ "statement": "Key lifecycle discipline for every Council of AI signing identity. Append-only: a rotation adds a key and closes the old one's validity; nothing is deleted; a compromise is recorded in the revocation register, never silently swapped.",
+ "keys": [
+  {
+   "kid": "site-release-1",
+   "status": "active",
+   "scope": "as declared in did.json",
+   "rotation": "on schedule or on incident; successor announced in this file before first use"
+  },
+  {
+   "kid": "estate-chain-1",
+   "status": "active",
+   "scope": "as declared in did.json",
+   "rotation": "on schedule or on incident; successor announced in this file before first use"
+  },
+  {
+   "kid": "board-attestation-1",
+   "status": "active",
+   "scope": "as declared in did.json",
+   "rotation": "on schedule or on incident; successor announced in this file before first use"
+  },
+  {
+   "kid": "card-attestation-1",
+   "status": "active",
+   "scope": "as declared in did.json",
+   "rotation": "on schedule or on incident; successor announced in this file before first use"
+  },
+  {
+   "kid": "cose-interop-1",
+   "status": "active",
+   "publicKeyHex": "25456441b98690872008e303ef17bfd3864f751ca761d0402043565b1585dcea",
+   "alg": "Ed25519",
+   "scope": "COSE_Sign1 interop expressions of measurement cards ONLY. Explicitly NOT a board-, card- or chain-attestation root; nothing on the GSPC board is signed with it.",
+   "created": "2026-08-25",
+   "did_anchoring": "pending owner commit to did.json (trust-root changes are owner-gated by policy; this file may announce a key before the DID doc carries it, never the reverse for root keys)"
+  }
+ ],
+ "rotation_policy": {
+  "trigger": "scheduled rotation, scope change, or suspected compromise",
+  "procedure": "new kid announced here with scope + created date -> anchored in did.json by owner commit -> old kid marked status=retired with validUntil -> retired keys remain listed forever so old signatures stay verifiable",
+  "incident_vs_rotation": "a rotation is planned and leaves the old key valid-until-date; a revocation is an incident and voids trust from the stated compromise time (JB-D1 ruling pending owner word)"
+ },
+ "revocation_register": {
+  "entries": [],
+  "format": "{kid, revoked_at, reason, signatures_before_valid: bool}",
+  "statement": "empty at publication - an empty register is honest; this file is the place a stranger checks"
+ },
+ "updated": "2026-08-25"
+}

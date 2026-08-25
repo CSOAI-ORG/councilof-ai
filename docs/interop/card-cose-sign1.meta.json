@@ -1,0 +1,9 @@
+{
+ "schema": "csoai.card-cose-expression/0.1",
+ "file": "card-cose-sign1.cbor",
+ "cose": "COSE_Sign1 (RFC 9052), tag 18, alg EdDSA(-8), kid cose-interop-1",
+ "payload": "canonical JSON bytes of one entry from the live signed/card_index.json (card content-hash inside)",
+ "pubkeyHex": "25456441b98690872008e303ef17bfd3864f751ca761d0402043565b1585dcea",
+ "scope": "interop expression only \u2014 the card's authority remains its original Ed25519/JCS signature under the card-attestation root; this COSE form exists for cross-implementation comparison (EMILIA composition, SCITT Signed Statement shape)",
+ "sha256_of_cbor": "bdff679e1306e9f1ff7b6f5e1a4f84083a019c44d75a3ec0a0e805ee469ebfcb"
+}
