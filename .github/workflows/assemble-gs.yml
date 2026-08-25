@@ -2,7 +2,9 @@ name: assemble-gs
 on:
   workflow_dispatch:
   push:
-    paths: ['.restore-gs/s26.b64']
+    paths:
+      - '.restore-gs/s26.b64'
+      - '.github/workflows/assemble-gs.yml'
 jobs:
   a:
     runs-on: ubuntu-latest
@@ -18,9 +20,13 @@ jobs:
           : > /tmp/gs.b64
           for i in $(seq -f '%02g' 0 7); do cat ".restore-gs/p$i.b64" >> /tmp/gs.b64; done
           for i in $(seq -f '%02g' 0 26); do cat ".restore-gs/s$i.b64" >> /tmp/gs.b64; done
-          base64 -d /tmp/gs.b64 > client/src/components/GlobalSearch.tsx
           python3 - <<'PY'
           from pathlib import Path
+          import base64
+          b=Path('/tmp/gs.b64').read_bytes()
+          # strip whitespace/newlines that may have been added to touch triggers
+          b=b''.join(b.split())
+          Path('client/src/components/GlobalSearch.tsx').write_bytes(base64.b64decode(b))
           t=Path('client/src/components/GlobalSearch.tsx').read_text()
           assert t.startswith('/**'), t[:40]
           assert len(t) > 60000, len(t)
