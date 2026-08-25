@@ -54,6 +54,7 @@ const navigation: NavGroup[] = [
       { name: 'EUNOMIA board', href: '/eunomia', description: 'Financial-verification axes — signed, 2-tier (0.5b + 7b)' },
       { name: 'Sectors', href: '/sectors', description: 'White-label tooling for regulator / insurer / bond / cobol / vendor' },
       { name: 'EUNOMIA data', href: '/eunomia-data', description: 'Commercial x402 data rail — data-only, never scores' },
+      { name: 'Registers', href: '/registers', description: 'Signed financial-axis register — a stranger re-derives every row (CAT F6)' },
       { name: 'Methodology', href: '/methodology', description: 'Gold labels, n≥30, and how to recompute every number yourself' },
       { name: 'The GSPC instrument', href: '/instrument', description: 'Four deterministic lenses over frozen provisions — no model in the verdict' },
     ],
