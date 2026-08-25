@@ -1,0 +1,32 @@
+name: ralph-footer-assemble
+on:
+  push:
+    paths:
+      - '.ralph-restore/footer/**'
+      - '.github/workflows/ralph-footer-assemble.yml'
+  workflow_dispatch:
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/instruments-catalog-7fb8
+      - name: Assemble Footer.tsx
+        run: |
+          mkdir -p client/src/components
+          cat .ralph-restore/footer/part-*.txt > client/src/components/Footer.tsx
+          wc -c client/src/components/Footer.tsx
+          head -c 40 client/src/components/Footer.tsx; echo
+          grep -c PLACEHOLDER client/src/components/Footer.tsx || true
+          python3 -c "d=open('client/src/components/Footer.tsx').read(); assert d.startswith('/**'); assert 'PLACEHOLDER' not in d"
+      - name: Commit
+        run: |
+          git config user.name ralph-footer-assemble
+          git config user.email ralph@csoai.org
+          git add client/src/components/Footer.tsx
+          git diff --cached --quiet && exit 0
+          git commit -m "fix: restore full Footer.tsx from batch 1 (assembled)"
+          git push
