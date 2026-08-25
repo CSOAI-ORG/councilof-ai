@@ -87,7 +87,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 168 | Publisher `--publish` requires `CSOAI_KEY_CUSTODY` | publishers |
 | 169 | Custody decision: KMS vs Turnkey chosen | ⛔ |
 | 170 | KMS both-curves or Turnkey wired | ⛔ |
-| 171 | Testnet Memo pointer format frozen | RECEIPT-SPEC |
+| 171 | Testnet Memo pointer format frozen | RECEIPT-SPEC | ✅ |
 | 172 | EAS indexer compose (read-only) | infra |
 | 173 | W3C VC 2.0 mapping draft for cards | `docs/W3C_VC_2_0_MEASUREMENT_CARD_MAPPING.md` · ✅ |
 | 174 | Wilson only on frozen RWA banks | harness |
@@ -100,8 +100,8 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 181 | Counsel written OK for named securities | ⛔ |
 | 182 | First testnet signed RWA card | Stage 2 |
 | 183 | Verify path for RWA pack | `/gspc-verify` |
-| 184 | OS Lobby card for RWA tool | MeasuredToolCard |
-| 185 | DSH same card | dashboard |
+| 184 | OS Lobby card for RWA tool | MeasuredToolCard | ✅ |
+| 185 | DSH same card | dashboard | ✅ |
 | 186 | HF dump of testnet cards (labeled TESTNET) | HF |
 | 187 | Agent-card RWA tool entry | well-known | ✅ |
 | 188 | MCP `rwa_attestation_catalog` | mcp | ✅ |
@@ -143,7 +143,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 
 | # | Move | Field |
 |---|------|-------|
-| 231 | Keep attestation language template current | compliance |
+| 231 | Keep attestation language template current | compliance | ✅ |
 | 232 | Custody decision doc owner-signed | ⛔ |
 | 233 | No Stripe-as-grade assert in CI | `scripts/no-stripe-as-grade-lint.mjs` · ✅ |
 | 234 | Payg/products copy audit HO.2 | copy |
@@ -208,10 +208,10 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 |---|------|-------|
 | 321 | Products page linked from Payg + Pricing | nav · ✅ |
 | 322 | Pricing page: no grade SKUs | HO.2 |
-| 323 | Enterprise page cites Option A | copy |
-| 324 | Insurers page cites RWA input posture | copy |
-| 325 | Government page: regulators free forever | copy |
-| 326 | Academy: measurement credential language | copy |
+| 323 | Enterprise page cites Option A | copy | ✅ |
+| 324 | Insurers page cites RWA input posture | copy | ✅ |
+| 325 | Government page: regulators free forever | copy | ✅ |
+| 326 | Academy: measurement credential language | copy | ✅ |
 | 327 | Live training outcomes ≠ certificates | already |
 | 328 | Compare page vs incumbents (Wilson moat) | /compare |
 | 329 | Battlecards sync competitors | /battlecards |
