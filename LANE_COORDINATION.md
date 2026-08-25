@@ -145,3 +145,17 @@ humanoid deployment-registry design.
   mainnet — NOT claimed).
 - Deploy: all new interop URLs live (200). 335-vs-150 publish-rule STILL owner-pending;
   guard-deletion fight continues (owner decision point, unchanged).
+
+## 2026-08-25 · K3 notice 6 — meta/402 rail + publish rule + board totals fix (append)
+
+- Payments consolidated: /api/checkout provider:"meta" = HTTP 402 (our signed invoice,
+  product registry incl. 4 data products, DRAFT prices until ruling 211), Stripe stays
+  fallback (honest 503); /api/fulfill = Ed25519 receipt verify (WebCrypto) + artifact
+  URLs + email queue. No Stripe price IDs needed for the meta rail. (#674)
+- PUBLISH_RULE doc: mjs dual-accept = single enforcement; no guard-deletion war; owner
+  final say pending. Aligned with Claude lane's dual-accept guard reading.
+- FIX (real defect): signed board_living totals block said 13 while api = 14 — re-signed
+  to 14-of-14. claimguard now supports style-A signatures + board-derived grammar
+  (E2E PASS on the 14-of-14 claim).
+- SCA: dependabot.yml + corrections runbook in. E2E gates: signed-json-guard (built-dir
+  gated, CI) + claimguard run locally PASS.
