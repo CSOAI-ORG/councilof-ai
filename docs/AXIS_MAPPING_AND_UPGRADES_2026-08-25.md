@@ -1,7 +1,9 @@
 # AXIS MAPPING & MINED UPGRADES — dossier → GSPC governance (2026-08-25)
 
 How the pre-execution freshness/risk check (unsolicited+permissionless attestation thesis,
-2026-08-25) maps into the 16-axis system, the 8 financial/domain axes (22-axis canon),
+2026-08-25) maps into the public quotable board (**14** axes — cite live `totals.public_count`
+from GET /api/gspc: *14 measured of 14 quotable*), plus internal expansion/REGISTERING axes
+and financial/domain axes that are **not** board-quotable (never publish "22 axes" as the board),
 and the estate's benchmark governance — plus the mined upgrade list across all assets.
 
 ## A. Mapping table: dossier finding → axis/doctrine node → state
@@ -34,7 +36,7 @@ and the estate's benchmark governance — plus the mined upgrade list across all
 6. Transparency-log anchor + SCITT registration (#7–8 of NEXT-100) — RFC 6962/RFC 9942 interop already exists.
 7. e2e --json/--ids/--budget + no-LLM-judge CI hook + determinism re-run gate (NEXT-100 #3–5, #10).
 8. Correction-receipt supersede chain (#6) — the correction ledger convention from the JW final.
-9. 16-axis board exactness + counts reconciliation (NEXT-100 #1–2, #9) — one sweep after the bot war settles.
+9. 14-slot board exactness (cite live public_count; do not invent 22 axes) + counts reconciliation (NEXT-100 #1–2, #9) — one sweep after the bot war settles.
 10. Benchmarks governance: **JMWH-style "represented≠distributed" flag vocabulary** promoted into a schema standard (financial-axes 0.1 → 0.2).
 
 **OWNER-GATED (render honestly):** NRSRO/counsel analysis before risk verdicts publish at scale · pricing ruling (Move 211) · Stripe price IDs · MCP registry publish + DOI bump · issuer-pays/counsel signoff on JMWH demo card text · EU FCA/ACPR engagement for DLT Pilot route (Dowgo precedent).
