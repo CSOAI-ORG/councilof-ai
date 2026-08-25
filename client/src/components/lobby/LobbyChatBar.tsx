@@ -154,6 +154,11 @@ export default function LobbyChatBar({
     void chat.send(text, onNavigate);
   }
 
+  /** Bubbles are on screen — collapse the bar chrome so the thread is the surface.
+   *  The "Asks" button brings the chips + suggestions back; the note drops to
+   *  sr-only so the aria-describedby contract on the field still holds. */
+  const inConversation = logOpen && turns.length > 0;
+
   return (
     <div className="flex w-full shrink-0 flex-col border-t border-slate-900/10 bg-white/70">
       {/* ── the thread ──────────────────────────────────────────────────── */}
@@ -163,7 +168,7 @@ export default function LobbyChatBar({
           aria-live="polite"
           aria-relevant="additions text"
           aria-label="Council OS conversation"
-          className="max-h-[38vh] min-h-[8rem] space-y-4 overflow-y-auto px-5 py-5 sm:px-8"
+          className={`${promptsOpen ? "max-h-[38vh]" : "max-h-[56vh]"} min-h-[8rem] space-y-4 overflow-y-auto px-5 py-5 sm:px-8`}
         >
           {turns.map((t, i) => (
             <div key={i} className={`${MEASURE_CHAT} ${t.role === "user" ? "ml-auto" : ""}`}>
@@ -206,7 +211,7 @@ export default function LobbyChatBar({
         </div>
       )}
 
-      <div className="space-y-3 px-5 py-4 sm:px-8">
+      <div className={`space-y-3 px-5 sm:px-8 ${inConversation ? "py-2.5" : "py-4"}`}>
         {seeded && (
           <p
             role="status"
@@ -323,7 +328,7 @@ export default function LobbyChatBar({
           )}
         </div>
 
-        <p id="coai-lobby-chat-note" className={TYPE.fine}>
+        <p id="coai-lobby-chat-note" className={inConversation && !noteOpen ? "sr-only" : TYPE.fine}>
           A wire, not a judge: it answers from what the estate has published, or it refuses. It never
           issues a compliance verdict.{" "}
           <button
