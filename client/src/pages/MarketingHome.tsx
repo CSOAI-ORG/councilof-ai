@@ -176,7 +176,7 @@ export default function MarketingHome() {
         </div>
       </section>
 
-      {/* PLACEHOLDER_PART2 */}
+      {/* PLACEHOLDER_REST */}
     </div>
   );
 }
