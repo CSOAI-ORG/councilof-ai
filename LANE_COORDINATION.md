@@ -108,3 +108,16 @@ mint-not-distribute evidence), corpus 18 entries + intel/watch flags, doctrine f
 unsolicited:true+issuer_paid:false on all 10 targets, CRA + GPAI docs, regen SBOM.
 Links: docs/AXIS_MAPPING_AND_UPGRADES_2026-08-25.md. Owner ask: NRSRO/counsel analysis
 before risk verdicts publish at scale (verdicts UNMEASURED until then). JMWH = demo-only.
+
+## 2026-08-25 · K3 notice 3 — RWA scale + declarations + playbook (append)
+
+Merged: control-facts v2 (#637) — 6 XRPL issuers fresh mainnet + Wilson + signed
+(cid 29369542cb537f38), supersedes stale v1 (corrections appended); financial-axes
+0.2 — AI-economy / human-labour / humanoid-labour indices DECLARED UNMEASURED
+(rubric + bank NONE + surface none, never claimed before measured); EAT playbook +
+NEXT-300 refresh (#642); HF mirror csoai/rwa-attest live. rsync installed on 3090
+(Claude dispatcher pull fixed). os-production @ 0435a55 w/ Cursor wiring list
+(/financial-axes page + /indices declared cards + XrplAttest data wiring +
+grammar sweep 14-of-14).
+Next (measured lane): assemble the 3 index input banks → measure; locate Aviva/
+DCP/EURCV/JMWH XRPL issuers → extend control facts; EVM control-facts rubric.
