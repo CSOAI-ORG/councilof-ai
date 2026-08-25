@@ -299,6 +299,21 @@ export default function Pricing() {
           </div>
         </div>
 
+        {/* Catalog links */}
+        <div className="max-w-3xl mx-auto mb-12 text-center text-sm text-slate-400">
+          <p>
+            Evidence artefacts and HO.2 posture:{' '}
+            <a href="/products" className="text-emerald-400 underline hover:text-emerald-300">
+              Products catalog
+            </a>
+            {' · '}
+            <a href="/indices" className="text-emerald-400 underline hover:text-emerald-300">
+              Labour &amp; AI-economy indices
+            </a>
+            {' '}(UNMEASURED — scores never sold)
+          </p>
+        </div>
+
         {/* Final CTA */}
         <div className="text-center">
           <Card className="max-w-3xl mx-auto bg-gradient-to-r from-emerald-500/20 to-emerald-600/20 border-emerald-500/30">
