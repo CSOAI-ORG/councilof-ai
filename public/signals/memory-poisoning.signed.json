@@ -1,8 +1,9 @@
 {
  "axis": "memory-poisoning",
- "content_id": "e95b7149b02fa0e75cb38a1352dba49848c850685829aafceabd0d5f2a728c86",
+ "content_id": "1d30d0b665657c6cdc83b238a16dd913c76773cb13f96b221a37fea0b040da26",
  "environment": "LANE-REAL memory-poisoning-axis repo (deterministic scorer, no LLM judge; frozen probes; revocation test; demo run 2026-08-20T11:25:11Z)",
  "generated": "2026-08-24T14:45:18Z",
+ "hash_pin_note": "EXP 061/064 frozen-bank pin: repo_hash = sha256 over sorted (relpath, sha256(content)) pairs of the repo SOURCE tree, excluding .git/.venv/node_modules/__pycache__/.pytest_cache/dist/build; recompute and compare. Measurement, not certification.",
  "measurement": {
   "exfil_rate": 0.0,
   "n_exfiltrated": 0,
@@ -15,14 +16,19 @@
  "n": 2,
  "not_a_certification": true,
  "note": "First axes added post-launch through the replication kit. Real deterministic demo-run measurement (small n - honestly labeled, never overclaimed). Frozen bank via the LANE-REAL repo. Measurement, not certification.",
+ "pinned": "2026-08-25T10:29:24Z",
  "register": "MEASURED (demo scale, small n)",
+ "repo": "LANE-REAL local clone (pod 3090): /workspace/mac-offload/grokbot-estate/memory-poisoning-axis \u2014 GitHub publish pending",
+ "repo_bytes": 24825,
+ "repo_files": 32,
+ "repo_hash": "6fb617f5ca04a72654cfa3b369923e91918574465613113fa7de3cc33835c53f",
  "schema": "csoai.memory-poisoning-axis/0.1",
  "signature": {
   "alg": "Ed25519",
-  "content_id": "e95b7149b02fa0e75cb38a1352dba49848c850685829aafceabd0d5f2a728c86",
+  "content_id": "1d30d0b665657c6cdc83b238a16dd913c76773cb13f96b221a37fea0b040da26",
   "note": "Ed25519 over canonical content_id. Verify with PUBKEY.",
   "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
-  "sig": "LagMvoV+mr9qcNKNfdYu6MnWvTtR8dB/CueaVPuehtkGx8gzLfwaUCufISR6imQ0XHD+sJi/6lFsBu6Cooe6AQ=="
+  "sig": "Gz41DbKdeyXebkqGD86SNbJS16D80NjEbzteaj897mv4SO+vvd4yJQrUVNvRHzJip4uopBZ1+Eab451/r3kxDQ=="
  },
  "title": "Memory-poisoning axis (signed demo measurement)"
 }
