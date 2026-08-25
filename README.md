@@ -84,6 +84,7 @@ Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/ro
 ## 📖 Documentation
 
 - [Council OS cleaned product plan](docs/COUNCIL_OS_PRODUCT.md) — AG-UI / MCP / A2A research mapped to what ships
+- [Council OS build plan](docs/COUNCIL_OS_BUILD_PLAN.md) — adapters/publishers/flywheel; **DSH into all**; no CopilotKit rewrite
 - [EAT · DSH · RWA attestation alignment](docs/EAT_DSH_ALIGNMENT.md) — permissionless Memo/EAS targets under measurement doctrine
 - [Measurement body overview](https://councilof.ai/about/)
 - [Methodology — how we measure](https://councilof.ai/methodology/)
