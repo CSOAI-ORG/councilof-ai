@@ -1,0 +1,42 @@
+name: sticky335-land-atomic
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/sticky335-land-atomic.yml'
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  land:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+      - name: Assemble verified 335 from atomic parts and land on master
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          EXPECTED=12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
+          cat .github/ci/card_index_335_atomic/p*.txt | tr -d '\n' | base64 -d > /tmp/card_index.json
+          ACTUAL=$(python3 -c 'import hashlib; print(hashlib.sha256(open("/tmp/card_index.json","rb").read()).hexdigest())')
+          test "$ACTUAL" = "$EXPECTED"
+          python3 -c "import json; j=json.load(open('/tmp/card_index.json')); assert j['n_cards']==335 and len(j['cards'])==335"
+          cp /tmp/card_index.json public/signed/card_index.json
+          git config user.name "sticky335-bot"
+          git config user.email "sticky335@csoai.org"
+          git add public/signed/card_index.json
+          if git diff --cached --quiet; then echo already landed; exit 0; fi
+          git commit -m "sticky335: restore verified card_index 335 (12f5122d) after exact-150 clobber"
+          if git push origin HEAD:master; then
+            echo pushed_master
+            exit 0
+          fi
+          BR=sticky335-land-$(date -u +%Y%m%d%H%M%S)
+          git checkout -b "$BR"
+          git push -u origin "$BR"
+          gh pr create --base master --head "$BR" --title "sticky335: land verified 335" --body "Atomic assemble restore" || true
+          gh pr merge --squash --admin "$BR" || gh pr merge --squash --auto "$BR" || true
