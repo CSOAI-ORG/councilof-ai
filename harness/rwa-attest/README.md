@@ -13,12 +13,17 @@ off-chain free/signed/immutable; recipient = token contract, no consent).
 
 ## Usage
 ```
-python3 rwa_attest.py targets            # list the 10-target registry
+python3 rwa_attest.py targets            # list the 23-target registry
 python3 rwa_attest.py card <id>          # build + sign + ClaimGuard-verify a verdict card
 python3 rwa_attest.py memo <id>          # XRPL Memo hex (ready to submit from our funded account)
 python3 rwa_attest.py eas <id>           # EAS off-chain attestation payload (recipient = contract)
+python3 rwa_attest.py batch              # gen + ClaimGuard-verify all targets -> rwa-attest-index.json
 ```
-Targets: ousg, buidl, benji, acred, aviva, jmwh, dcp, rlusd, eurcv, archax (verified public addresses in code).
+Targets: ousg, rlusd, aviva, dcp, archax, tbill, eurcv, sbi, usdb, bbrl, dxb_re, jmwh, xau, dia,
+kyobo, buidl, benji, acred, usyc, ustb, centrifuge, bcspx, scope (verified public addresses in code).
+Every target card renders an honest `governance_measurement: UNMEASURED` (no GSPC bank yet) and carries a
+worker-measurement Ed25519 signature; the public board card is estate-attested at
+`did:web:csoai.org#board-attestation-1` (GX.2). See METHODOLOGY.md for the statistical/measurement canon.
 
 ## Execution plan (from the ranked target list)
 - **Stage 1 (testnet):** XRPL Devnet Memo + CredentialCreate; EAS off-chain on Sepolia/Base. Reference impls:
