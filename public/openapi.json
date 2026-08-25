@@ -1,0 +1,22 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Council of AI — public machine surfaces",
+    "version": "1.0.0",
+    "description": "Measurement, not certification. Every signed artifact verifies against did:web:csoai.org. Issuer: Council of AI (CSOAI LTD, UK #16939677).",
+    "x-canonical-dois": ["10.5281/zenodo.21991104", "10.5281/zenodo.21973002"]
+  },
+  "servers": [{"url": "https://councilof.ai"}, {"url": "https://csoai.org"}],
+  "paths": {
+    "/.well-known/did.json": {"get": {"summary": "DID document — the trust root (Ed25519 public keys)", "responses": {"200": {"description": "DID document"}}}},
+    "/.well-known/agent-card.json": {"get": {"summary": "A2A agent card, signed", "responses": {"200": {"description": "signed agent card"}}}},
+    "/api/receipts/latest": {"get": {"summary": "Latest signed measurement receipt + offline verification steps", "responses": {"200": {"description": "receipt envelope"}}}},
+    "/api/arena/rounds.jsonl": {"get": {"summary": "Live measured arena rounds (NDJSON)", "responses": {"200": {"description": "NDJSON stream"}, "503": {"description": "honest no-data state"}}}},
+    "/api/leaderboard": {"get": {"summary": "Measured leaderboard (Wilson CIs; ties are ties)", "responses": {"200": {"description": "leaderboard JSON"}}}},
+    "/api/gspc": {"get": {"summary": "GSPC axis register — live totals.public_count (14 measured of 14 quotable)", "responses": {"200": {"description": "axis register"}}}},
+    "/api/feed.xml": {"get": {"summary": "RSS state-change feed (watch-subscription)", "responses": {"200": {"description": "RSS 2.0"}}}},
+    "/badge/axes.json": {"get": {"summary": "shields.io badge endpoint", "responses": {"200": {"description": "badge JSON"}}}},
+    "/verify": {"get": {"summary": "Free in-browser verification (humans)", "responses": {"200": {"description": "verifier page"}}}},
+    "/mcp": {"get": {"summary": "MCP manifest pointer; the measurement MCP server is at registry io.github.CSOAI-ORG/gspc 1.0.3", "responses": {"200": {"description": "manifest"}}}}
+  }
+}
