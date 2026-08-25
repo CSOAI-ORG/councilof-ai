@@ -57,7 +57,7 @@ export function Footer() {
         { name: 'The accountability loop', href: '/accountability-loop' },
         { name: 'Where the record lives', href: '/where-the-record-lives' },
         { name: 'Attestation on the ledger', href: '/xrpl-attest' },
-        { name: 'Products & pricing', href: '/products' },
+        { name: 'Products', href: '/products' },
         { name: 'Council OS', href: '/os' },
         { name: 'System card', href: '/system-card' },
       ],
