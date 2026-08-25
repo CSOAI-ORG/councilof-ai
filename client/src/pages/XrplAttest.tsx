@@ -30,6 +30,11 @@ interface RunRecord {
     corpus_index: string;
     honesty: string;
   };
+  financial_axis?: {
+    status: string;
+    measured: { instrument: string; issuer: string; allowlisting: boolean; freeze: boolean; domain: boolean; tx: string; explorer: string }[];
+    honesty: string;
+  };
 }
 
 export default function XrplAttest() {
@@ -185,6 +190,42 @@ export default function XrplAttest() {
                             </span>
                           </td>
                           <td className="p-2 font-mono text-xs text-gray-600">{r.status}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {rec.financial_axis && (
+              <div className="mt-8 rounded-xl border border-emerald-700/30 bg-emerald-50/40 p-5 shadow-sm">
+                <p className="text-xs font-bold uppercase tracking-wide text-emerald-800">
+                  Financial axis — MEASURED (on-chain control facts)
+                </p>
+                <p className="mt-2 text-sm text-gray-700">
+                  Real, deterministic, re-checkable facts read from the validated ledger and signed —
+                  not a rating, not advice, not an endorsement. Regulated securities enforce
+                  allowlisting; permissionless stablecoins do not. The <em>risk</em> verdict stays
+                  UNMEASURED (an aggregate opinion on a named security needs counsel — refused here).
+                </p>
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b text-left text-gray-700">
+                        <th className="p-2">Instrument</th><th className="p-2">Allowlisting</th>
+                        <th className="p-2">Freeze</th><th className="p-2">Identity domain</th>
+                        <th className="p-2">Signed</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rec.financial_axis.measured.map((m) => (
+                        <tr key={m.tx} className="border-b last:border-0">
+                          <td className="p-2 font-medium">{m.instrument}</td>
+                          <td className="p-2">{m.allowlisting ? "enforced" : "none"}</td>
+                          <td className="p-2">{m.freeze ? "retained" : "none"}</td>
+                          <td className="p-2">{m.domain ? "declared" : "absent"}</td>
+                          <td className="p-2"><a className="font-mono text-xs text-emerald-700 underline" href={m.explorer}>tx</a></td>
                         </tr>
                       ))}
                     </tbody>

@@ -201,5 +201,65 @@
   ],
   "corpus_index": "/interop/attestation-corpus.json",
   "honesty": "Every status UNMEASURED \u2014 coverage declaration only, never a verdict/rating/advice/endorsement. On-ledger attestation exists ONLY for mainnet-verified issuer addresses; named instruments without a locatable public r-address are listed but NOT attested. Nothing is faked to reach a count."
+ },
+ "financial_axis": {
+  "status": "MEASURED (control facts) / risk UNMEASURED",
+  "measured": [
+   {
+    "instrument": "RLUSD (Ripple USD)",
+    "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+    "allowlisting": false,
+    "freeze": true,
+    "domain": true,
+    "tx": "770A7C8BAB7ED9CC9A18106851DFD14F25267FB65476937BDF8520DF84AEF5C3",
+    "explorer": "https://devnet.xrpl.org/transactions/770A7C8BAB7ED9CC9A18106851DFD14F25267FB65476937BDF8520DF84AEF5C3"
+   },
+   {
+    "instrument": "Ondo OUSG",
+    "issuer": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+    "allowlisting": true,
+    "freeze": true,
+    "domain": true,
+    "tx": "CD26E02B9A79A0A6EA993B41F70FDCEACB336AE0A4227469ED54DC0D202508D6",
+    "explorer": "https://devnet.xrpl.org/transactions/CD26E02B9A79A0A6EA993B41F70FDCEACB336AE0A4227469ED54DC0D202508D6"
+   },
+   {
+    "instrument": "OpenEden TBILL",
+    "issuer": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+    "allowlisting": true,
+    "freeze": true,
+    "domain": true,
+    "tx": "7144FD1F1F227DD76CC48DE91CA4C63AC652E9BAFE9F34F294650138EE34046A",
+    "explorer": "https://devnet.xrpl.org/transactions/7144FD1F1F227DD76CC48DE91CA4C63AC652E9BAFE9F34F294650138EE34046A"
+   },
+   {
+    "instrument": "Archax abrdn MMF",
+    "issuer": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+    "allowlisting": true,
+    "freeze": true,
+    "domain": true,
+    "tx": "F186ADA1F4A430FA1426E0DBEC01D5BB7D867BD32998F5F8A807EB89FC3F68E1",
+    "explorer": "https://devnet.xrpl.org/transactions/F186ADA1F4A430FA1426E0DBEC01D5BB7D867BD32998F5F8A807EB89FC3F68E1"
+   },
+   {
+    "instrument": "Braza USDB",
+    "issuer": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+    "allowlisting": false,
+    "freeze": true,
+    "domain": true,
+    "tx": "404DBC2932471EE1076F624642B77278FF8AE767AB8239031B5AB8ED940EC525",
+    "explorer": "https://devnet.xrpl.org/transactions/404DBC2932471EE1076F624642B77278FF8AE767AB8239031B5AB8ED940EC525"
+   },
+   {
+    "instrument": "Braza BBRL",
+    "issuer": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+    "allowlisting": false,
+    "freeze": true,
+    "domain": true,
+    "tx": "D0B72B736CA252DF15C6BDB759107FC5A9CD40DB8D5D0D0AD4AA358A382C69C7",
+    "explorer": "https://devnet.xrpl.org/transactions/D0B72B736CA252DF15C6BDB759107FC5A9CD40DB8D5D0D0AD4AA358A382C69C7"
+   }
+  ],
+  "honesty": "Financial axis MEASURED for on-chain control facts (deterministic, signed). Risk verdicts remain UNMEASURED pending counsel. Not ratings/advice/endorsements."
  }
 }

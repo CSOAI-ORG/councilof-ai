@@ -1,0 +1,68 @@
+{
+ "schema": "csoai.financial-axes/0.1",
+ "note": "The 8 financial/domain axes (22-axis canon = GSPC-14 + these 8). Same spine, same three-state grammar. A candidate axis is declared UNMEASURED with its intended deterministic rubric BEFORE any measurement \u2014 never claimed before measured.",
+ "axes": [
+  {
+   "id": "provenance-controls",
+   "name": "On-chain control facts",
+   "status": "MEASURED",
+   "rubric": "deterministic on-chain facts: allowlisting (RequireAuth), freeze capability (NoFreeze absent), identity domain, issued supply",
+   "measured_count": 6,
+   "surface": "/interop/financial-measure-run.json",
+   "risk_verdict": "UNMEASURED (needs counsel)"
+  },
+  {
+   "id": "reserve-attestation",
+   "name": "Reserve attestation present",
+   "status": "UNMEASURED",
+   "rubric": "is a third-party reserve attestation (Deloitte/PwC/etc.) publicly published and current? deterministic Y/N + date",
+   "data": "issuer disclosures + RWA.xyz API"
+  },
+  {
+   "id": "regulatory-framework",
+   "name": "Declared regulatory framework",
+   "status": "UNMEASURED",
+   "rubric": "is the governing regime declared and confirmable (MiCA/UCITS/Reg D/BVI)? deterministic Y/N",
+   "data": "RWA.xyz issuer metadata + /api/locale crosswalk"
+  },
+  {
+   "id": "distribution-integrity",
+   "name": "Represented vs distributed",
+   "status": "UNMEASURED",
+   "rubric": "RWA.xyz distributed-vs-represented classification + holder count; flag represented>>distributed (JMWH pattern) deterministically",
+   "data": "RWA.xyz API v4 + chain reads"
+  },
+  {
+   "id": "custody-disclosure",
+   "name": "Named custodian/auditor",
+   "status": "UNMEASURED",
+   "rubric": "are custodian + auditor named and confirmable? deterministic Y/N",
+   "data": "issuer disclosures"
+  },
+  {
+   "id": "ai-economy-index",
+   "name": "AI economy index",
+   "status": "UNMEASURED",
+   "candidate": true,
+   "rubric": "TO DEFINE: a deterministic index of AI's measurable economic footprint (e.g. share of tracked tokenized-RWA flows touching AI-governed systems). No rubric or data wired yet.",
+   "data": "none yet \u2014 net-new build"
+  },
+  {
+   "id": "human-labour-index",
+   "name": "Human-labour index",
+   "status": "UNMEASURED",
+   "candidate": true,
+   "rubric": "TO DEFINE: deterministic measure of human-labour displacement/augmentation signal. No rubric or data wired yet.",
+   "data": "none yet \u2014 net-new build"
+  },
+  {
+   "id": "humanoid-labour-index",
+   "name": "Humanoid-labour index",
+   "status": "UNMEASURED",
+   "candidate": true,
+   "rubric": "TO DEFINE: deterministic measure of embodied/humanoid-labour deployment signal. No rubric or data wired yet.",
+   "data": "none yet \u2014 net-new build"
+  }
+ ],
+ "honesty": "3 candidate axes (ai-economy, human-labour, humanoid-labour) have NO rubric and NO data yet \u2014 declared UNMEASURED so the slot is honest and public, never claimed as built. They become MEASURED only when a deterministic rubric + real data exist and a run is signed."
+}
