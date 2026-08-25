@@ -1,1 +1,1 @@
-LOAD_FROM_DISK_/tmp/AppLazy.tsx
+LOAD_FROM_FILE
