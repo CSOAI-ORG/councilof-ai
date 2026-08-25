@@ -50,8 +50,8 @@ export const AXES_B: AxisScore[] = [
     dataset: "csoai/gspc-swarm", colour: "#94a3b8", hue: 215,
     note: "UNGATED by owner ruling 2026-08-19: the first CI-resolved ordering on this axis. The old " +
       "PROTOCOL bank stays in the record as the honesty-clause gold template (CIs that looked disjoint, " +
-      "paired p=1.0 — why McNemar-primary exists). Jail (slot 14) remains the board's only UNTESTED " +
-      "separation, so the public count stays 13 measured of 14 until jail's separation test runs.",
+      "paired p=1.0 — why McNemar-primary exists). Jail (slot 14) separation was determined 2026-08-25 " +
+      "(TIE); live public_count is 14 measured of 14 quotable — cite totals.public_count.",
   },
   {
     axis: "affect", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
