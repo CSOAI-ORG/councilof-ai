@@ -154,6 +154,19 @@ const srv = http.createServer((q, r) => {
       return;
     }
   } catch {}
+  // Data surfaces are served by Pages Functions in production, not by files in dist/ —
+  // locally they'd fall through to the HTML catch-all, and any route that fetches them
+  // at load would snapshot with "fetch failed" baked into its static HTML (the
+  // 2026-08-25 /gspc-scoreboard defect). Proxy them to production so snapshots capture
+  // the real board state.
+  if (p.startsWith("/api/") || p.startsWith("/signed/")) {
+    fetch(PROD_ORIGIN + p).then(async res => {
+      const body = Buffer.from(await res.arrayBuffer());
+      r.writeHead(res.status, { "content-type": res.headers.get("content-type") || "application/json" });
+      r.end(body);
+    }).catch(() => { r.writeHead(502); r.end(); });
+    return;
+  }
   // the same catch-all the host uses, so the snapshot sees what production serves
   r.writeHead(200, { "content-type": "text/html" });
   r.end(shell);
@@ -195,6 +208,15 @@ async function worker(id) {
       // in the captured markup before it is written to dist.
       const html = (await page.content())
         .split(`http://localhost:${PORT}`).join(PROD_ORIGIN);
+      // A snapshot that captured a data-fetch failure must be UNABLE to ship: it would
+      // bake the error into the crawler-visible page (2026-08-25: /gspc-scoreboard went
+      // live reading "Board fetch failed"). Refuse to write it, count it as an error.
+      if (/fetch failed|HTML instead of JSON|Failed to fetch/i.test(info.text)) {
+        rec.err = "BAKED-FETCH-FAILURE refused (page text contains a fetch error)";
+        results.push(rec);
+        console.log(`ERR  ${String(rec.chars).padStart(6)}ch  ${rec.route}  ${rec.err}`);
+        continue;
+      }
       const out = route === "/" ? join(DIST, "index.html")
                                 : join(DIST, route.replace(/^\//, ""), "index.html");
       mkdirSync(dirname(out), { recursive: true });
