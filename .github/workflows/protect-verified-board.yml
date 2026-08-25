@@ -1,87 +1,16 @@
-name: protect-verified-335
-# Re-land verified 335 via Contents API if master drifts (150, stubs, or other).
-# Canonical: n_cards=335 · 75578B · sha256 12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
+name: protect-verified-board
+# Disabled. The honest published board is exactly 150 cards / 34171B.
+# Do not claim 335. Do not invent the missing 185.
 on:
-  push:
-    paths:
-      - 'public/signed/card_index.json'
-      - '.github/workflows/**'
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
   protect:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Re-land verified 335 via Contents API
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Refuse fabricated 335 protect
         run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import base64, hashlib, json, os, pathlib, urllib.error, urllib.request
-
-          WANT = "12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb"
-          token = os.environ["GH_TOKEN"]
-          api = "https://api.github.com/repos/CSOAI-ORG/councilof-ai"
-
-          def req(url, data=None, method=None):
-              headers = {
-                  "Authorization": f"Bearer {token}",
-                  "Accept": "application/vnd.github+json",
-                  "User-Agent": "protect-verified-335",
-              }
-              if data is not None:
-                  headers["Content-Type"] = "application/json"
-                  data = json.dumps(data).encode()
-              r = urllib.request.Request(url, data=data, headers=headers, method=method)
-              with urllib.request.urlopen(r, timeout=90) as resp:
-                  return json.loads(resp.read())
-
-          meta = req(f"{api}/contents/public/signed/card_index.json?ref=master")
-          raw = base64.b64decode(meta["content"])
-          try:
-              j = json.loads(raw)
-              cards = j.get("cards") if isinstance(j.get("cards"), list) else []
-              n = j.get("n_cards")
-          except Exception as e:
-              print(f"non-json/stub board ({len(raw)}B): {raw[:80]!r} err={e}")
-              j, cards, n = {}, [], None
-          sha = hashlib.sha256(raw).hexdigest()
-          print(f"current n={n} len={len(cards)} bytes={len(raw)} sha={sha}")
-          if n == 335 and len(cards) == 335 and sha == WANT and len(raw) == 75578:
-              print("verified 335 sticky — ok")
-              raise SystemExit(0)
-
-          root = pathlib.Path(".github/ci/card_index_335_atomic")
-          parts = sorted(root.glob("p*.txt"))
-          assert parts, "missing atomic parts"
-          restored = base64.b64decode("".join(p.read_text().strip() for p in parts))
-          rj = json.loads(restored)
-          rsha = hashlib.sha256(restored).hexdigest()
-          assert rj["n_cards"] == 335 and len(rj["cards"]) == 335 and rsha == WANT, (len(restored), rsha)
-          print("assembled", len(restored), rsha)
-
-          meta = req(f"{api}/contents/public/signed/card_index.json?ref=master")
-          try:
-              req(
-                  f"{api}/contents/public/signed/card_index.json",
-                  data={
-                      "message": "fix: protect-verified-335 Contents API re-land sticky 335",
-                      "content": base64.b64encode(restored).decode(),
-                      "sha": meta["sha"],
-                      "branch": "master",
-                  },
-                  method="PUT",
-              )
-              print("Contents API PUT ok")
-          except urllib.error.HTTPError as e:
-              body = e.read().decode()
-              print("PUT failed", e.code, body[:500])
-              raise
-          PY
+          echo "protect-verified-board is disabled. The honest board is 150 cards."
+          echo "Do not claim 335. Do not invent the missing 185."
+          exit 1
