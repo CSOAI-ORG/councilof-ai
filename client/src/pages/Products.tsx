@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
-import { setMetaDescription } from "@/lib/utils";
+import { setMetaDescription, setOgMeta } from "@/lib/utils";
 import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
+import { NrsroDisclaimer } from "@/components/NrsroDisclaimer";
 
 /**
  * /products — living catalog of Council OS surfaces (HO.2).
@@ -143,9 +144,14 @@ const PRODUCTS: { group: string; rows: ProductRow[] }[] = [
 export default function Products() {
   useEffect(() => {
     document.title = "Products catalog — measurement access, not grade sales | CSOAI";
-    setMetaDescription(
-      "Council OS product catalog: GSPC, East-West, UNMEASURED labour/economy indices, Option A, instruments. Scores never sold. Regulators and verify free forever.",
-    );
+    const desc =
+      "Council OS product catalog: GSPC, East-West, UNMEASURED labour/economy indices, Option A, instruments. Scores never sold. Regulators and verify free forever.";
+    setMetaDescription(desc);
+    setOgMeta({
+      title: "Products catalog | CSOAI",
+      description: desc,
+      path: "/products",
+    });
     void fetch("/api/surface-hits", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -210,6 +216,13 @@ export default function Products() {
           <code className="font-mono">docs/EAT_PLAYBOOK.md</code> · moves:{" "}
           <code className="font-mono">docs/NEXT_300_MOVES.md</code>
         </p>
+
+        <NrsroDisclaimer />
+
+        <footer className="pt-2 pb-8 text-center text-[11px] text-emerald-300/45 font-mono">
+          Council of AI · CSOAI Ltd · UK Companies House 16939677 · Measurement, not certification ·
+          scores never sold
+        </footer>
       </div>
     </CouncilOsPageShell>
   );
