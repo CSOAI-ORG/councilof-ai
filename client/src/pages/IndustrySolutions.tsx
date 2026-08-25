@@ -149,10 +149,10 @@ export default function IndustrySolutions() {
               Measure free <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/pricing"
+              href="/?lobby=measured&task=enterprise-start"
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-600 px-6 py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-100"
             >
-              Pro &amp; Business plans
+              Enterprise lobby
             </Link>
           </div>
         </div>
