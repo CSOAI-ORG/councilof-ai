@@ -347,7 +347,7 @@ function ScrollToTop() {
 
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
-  "/products": "Product catalogue — measurement, data & tooling | CSOAI",
+  "/products": "The product family — one signed rail | Council of AI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
   "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
   "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",

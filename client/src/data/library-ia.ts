@@ -24,6 +24,9 @@ export const PRIMARY_PATHS = new Set<string>([
   "/regulation-tracker", "/regulators", "/crosswalk", "/ai-act-faq",
   // Solutions
   "/enterprise", "/insurers", "/government", "/industries", "/payg", "/integrations",
+  // The product family (current products — never archive-bannered)
+  "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
+  "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/api-docs", "/status",
   "/system-card",
