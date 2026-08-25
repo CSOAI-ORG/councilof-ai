@@ -25,47 +25,42 @@ export function isJailAxis(a: any): boolean {
   return n === "jail" || n === "jail_floor";
 }
 
-/** Canon: prefer published totals. Jail = floor / UNTESTED. Never invent a slot count. */
+/** Canon: prefer published totals. Never invent a slot count. Cite live public_count. */
 export function boardCanon(board: GspcBoard) {
   const axes = board.axes ?? [];
   const jail = board.jail_floor ?? axes.find(isJailAxis) ?? null;
-  const boardAxes = axes.filter((a) => !isJailAxis(a));
-  const measuredAxes = boardAxes.filter(
-    (a) => a.status === "MEASURED" && Number(a.n) > 0 && String(a.separation ?? "").toUpperCase() !== "UNTESTED",
+  const measuredAxes = axes.filter(
+    (a) => a.status === "MEASURED" && Number(a.n) > 0,
   );
   const quotable =
     typeof board.totals.quotable_axes === "number" ? board.totals.quotable_axes
     : typeof board.totals.axes === "number" ? board.totals.axes
-    : boardAxes.length + (jail ? 1 : 0);
+    : axes.length || 14;
   const measured =
     typeof board.totals.measured_axes === "number" ? board.totals.measured_axes : measuredAxes.length;
   const publicCount =
     typeof board.totals.public_count === "string" && board.totals.public_count.trim()
       ? board.totals.public_count
       : `${measured} measured of ${quotable} quotable`;
+  const sep = String(jail?.separation ?? "").toUpperCase() || "UNKNOWN";
   const jailNote = jail
-    ? `**jail** is a measured **floor** (not a board axis). Separation **UNTESTED**` +
+    ? `**jail** is a measured containment floor on the ${quotable}-slot board (status ${jail.status ?? "MEASURED"}; separation **${sep}**)` +
       (jail.n ? `; n=${jail.n}` : "") +
       (typeof jail.accuracy === "number" ? `; accuracy ${Number(jail.accuracy).toFixed(3)}` : "") +
-      `. Not counted in the ${measured} board-measured axes.`
-    : `**jail** is the board floor: separation **UNTESTED**. Not counted among the ${measured} measured board axes.`;
+      `. Cite live GET /api/gspc — do not freeze counts.`
+    : `**jail** is one of the ${quotable} quotable board slots when present on GET /api/gspc. Cite live totals.`;
   return { quotable, measured, publicCount, measuredAxes, jail, jailNote };
 }
 
-/** ClaimGuard refuse for false board-count claims (16 measured, 12 axes, 14-all-MEASURED variants) */
+/** ClaimGuard refuse for false board-count claims (16/15/12). Prefer live public_count. */
 export function claimGuardRefuse(q: string): string | null {
-  // Allow optional words between count and "axes" / "are MEASURED" so
-  // "twelve GSPC axes", "all 14 axes are MEASURED", etc. refuse too.
-  if (
-    !/16\s+measured|(?:twelve|\b12)(?:\s+\w+){0,2}\s+axes|(?:all\s+)?14(?:\s+\w+){0,3}\s+are\s+MEASURED/i.test(
-      q,
-    )
-  )
+  // Do NOT refuse "all 14 are MEASURED" — living board may report measured_axes === 14.
+  if (!/16\s+measured|(?:fifteen|\b15)\s+(?:measured\s+)?axes|(?:twelve|\b12)(?:\s+\w+){0,2}\s+axes/i.test(q))
     return null;
   return (
     `**Refused (ClaimGuard).** That claim does not match the published board.\n\n` +
-    `Canon lives in GET /api/gspc totals (public_count, measured_axes, quotable_axes) ` +
-    `and is derived from the payload. Never invent a slot count. **jail** is a **floor**; separation **UNTESTED**.\n\n` +
+    `Canon lives in GET /api/gspc totals (public_count, measured_axes, quotable_axes). ` +
+    `Quotable board = **14** slots. Never invent 22 axes or claim 12/15/16.\n\n` +
     `_Deterministic refuse against a false count claim - not a model opinion._`
   );
 }
