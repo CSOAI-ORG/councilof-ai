@@ -7,7 +7,7 @@ import type { Slide } from "@/components/scrollworld";
  *  1. Deck slide 7: "Axis 14 (Swarm Agency) remains honestly gated and explicitly
  *     unmeasured." — WRONG TWICE. Slot 14 is JAIL (guardrail escape), and it IS
  *     MEASURED: 7 models x 71 gold items, n=71, with its SEPARATION TIE. Swarm
- *     is one of the 13 measured canonical axes, not the gap. Rewritten to the truth.
+ *     is a MEASURED board axis too (14 measured of 14 quotable live). Rewritten to the truth.
  *  2. Deck slide 9 ("The Expiry Trigger", validUntil = min(window, provision-change-event),
  *     "the pass instantly degrades", "EXPIRED - REGULATION CHANGED") — DROPPED ENTIRELY.
  *     Nothing we issue expires. When the law moves we RE-MEASURE and issue a DELTA CARD;
