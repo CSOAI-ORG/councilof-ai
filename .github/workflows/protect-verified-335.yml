@@ -67,6 +67,7 @@ jobs:
           assert rj["n_cards"] == 335 and len(rj["cards"]) == 335 and rsha == WANT, (len(restored), rsha)
           print("assembled", len(restored), rsha)
 
+          # refresh sha in case of race
           meta = req(f"{api}/contents/public/signed/card_index.json?ref=master")
           try:
               req(
