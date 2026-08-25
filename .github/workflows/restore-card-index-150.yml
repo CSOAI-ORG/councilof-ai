@@ -1,0 +1,36 @@
+name: restore-card-index-150
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'public/signed/_restore/RESTORE_150'
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore honest 150 from known commit
+        run: |
+          git show 521df33b6c35dad6c3b2ca3e444fba2ac653687b:public/signed/card_index.json > public/signed/card_index.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open("public/signed/card_index.json"))
+          assert d["n_cards"]==150 and len(d["cards"])==150
+          print("ok", len(open("public/signed/card_index.json").read()))
+          PY
+          cat > public/stack/e2e-latest.json <<EOF
+          {
+            "deployed_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "reason": "Actions restore honest 150 after stub",
+            "card_index_n": 150
+          }
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/signed/card_index.json public/stack/e2e-latest.json
+          git commit -m "fix: restore honest card_index 150 via Actions (from 521df33)"
+          git push
