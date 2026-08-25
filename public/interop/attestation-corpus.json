@@ -15,7 +15,17 @@
    "status": "UNMEASURED",
    "attestation_count": 0,
    "latest_tx": null,
-   "address_status": "not-located"
+   "address_status": "not-located",
+   "intel": {
+    "freshness_as_of": "2026-07-29",
+    "reported": "LIVE 2026-07-29 — first tokenized fund structure approved by the Central Bank of Ireland on a public blockchain (XRPL); BNY Mellon underlying; Komainu regulated digital-asset custody; Licuido tokenization (MPT standard, 1:1 legal ownership); Ripple equity stakes in Licuido + ZILO announced ~2026-08-03",
+    "watch": "clean",
+    "flags": {
+     "value_model": "distributed",
+     "issuer_paid": false,
+     "unsolicited": true
+    }
+   }
   },
   {
    "key": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
@@ -25,7 +35,17 @@
    "status": "UNMEASURED",
    "attestation_count": 1,
    "latest_tx": "1CA61A8AD75D3FB89186FF1E08025AD9AFA27B5A6D4B9F9A2BB85917BC18C01A",
-   "address_status": "mainnet-verified"
+   "address_status": "mainnet-verified",
+   "intel": {
+    "freshness_as_of": "2026-08-17",
+    "reported": "~$375M TVL (Ondo dashboard 2026-08-17), down from ~$625-680M earlier in 2026 as sister product USDY grew (~$2.1B); backed by BlackRock BUIDL + other managers; SEC investigation closed without charges (Nov 2025); ONDO acquired Oasis Pro (SEC-registered broker-dealer); note: ONDO governance token is separate and volatile — do not conflate with the fund",
+    "watch": "clean",
+    "flags": {
+     "value_model": "distributed",
+     "issuer_paid": false,
+     "unsolicited": true
+    }
+   }
   },
   {
    "key": "Guggenheim Digital Commercial Paper (DCP)",
@@ -45,7 +65,18 @@
    "status": "UNMEASURED",
    "attestation_count": 1,
    "latest_tx": "FEA76FB2B5767500291C96E8D560A777B72B2FD74F91FDAA9C48C135B69F60DA",
-   "address_status": "mainnet-verified"
+   "address_status": "located",
+   "intel": {
+    "freshness_as_of": "2026-08-17",
+    "reported": "supply 1.711B tokens / ~$1.71B market cap; ~$58M 24h volume (XRPScan/CoinGecko, 2026-08-17); BNY Mellon custodian with monthly third-party attestations; EU CASP authorization 2026-08-05; Japan (SBI) + Türkiye approvals; routine mint/burn cycles (Q1 $128M burn = redemption, not distress)",
+    "watch": "clean",
+    "flags": {
+     "value_model": "distributed",
+     "issuer_paid": false,
+     "unsolicited": true
+    },
+    "address_status": "located"
+   }
   },
   {
    "key": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
@@ -125,7 +156,18 @@
    "status": "UNMEASURED",
    "attestation_count": 0,
    "latest_tx": null,
-   "address_status": "not-located"
+   "address_status": "not-located",
+   "intel": {
+    "freshness_as_of": "2026-08",
+    "reported": "headline ~$2.23B 'represented' value (RWA.xyz) but ~19 holders, ~zero monthly transfer volume; value grown by minting not purchases (6 mints in one day 2026-04-23; 7.76M-token / ~$466M mint to one wallet 2026-05-13); UK parent Universal Demeter Ltd with minimal share capital; CAMMESA reportedly custodian AND auditor. DEMONSTRATION-ONLY (negative signal), never an endorsement",
+    "watch": "demo-only",
+    "flags": {
+     "value_model": "represented",
+     "issuer_paid": false,
+     "unsolicited": true,
+     "minted_not_distributed": true
+    }
+   }
   },
   {
    "key": "Ctrl Alt / Billiton diamonds",
@@ -166,6 +208,48 @@
    "attestation_count": 0,
    "latest_tx": null,
    "address_status": "not-located"
+  },
+  {
+   "key": "BlackRock BUIDL (USD Institutional Digital Liquidity Fund)",
+   "instrument": "BlackRock BUIDL (USD Institutional Digital Liquidity Fund)",
+   "category": "institutional-fund",
+   "chain": "EVM",
+   "status": "UNMEASURED",
+   "attestation_count": 0,
+   "latest_tx": null,
+   "address_status": "located",
+   "evm_contract": "0x7712c34205737192402172409a8f7ccef8aa2aec",
+   "intel": {
+    "freshness_as_of": "2026-08",
+    "reported": "~$2.6-2.7B AUM after two years (SpotedCrypto Aug 2026; quoted variously $2.4-2.7B across sources); Moody's Aaa-mf (May 2026); highly concentrated holder base (~109 wallets) — asset feature to note in schema, not grounds to withhold",
+    "watch": "clean",
+    "flags": {
+     "value_model": "distributed",
+     "issuer_paid": false,
+     "unsolicited": true
+    }
+   }
+  },
+  {
+   "key": "Franklin Templeton BENJI (FOBXX)",
+   "instrument": "Franklin Templeton BENJI (FOBXX)",
+   "category": "institutional-fund",
+   "chain": "EVM",
+   "status": "UNMEASURED",
+   "attestation_count": 0,
+   "latest_tx": null,
+   "address_status": "located",
+   "evm_contract": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+   "intel": {
+    "freshness_as_of": "2026-08",
+    "reported": "~$700-830M AUM across 8 chains; only one of the big four wrapping a US-registered '40 Act fund (retail-eligible); footnote: parent Franklin Resources reported a US$588.2M one-off loss — parent-level item, not fund-level",
+    "watch": "clean",
+    "flags": {
+     "value_model": "distributed",
+     "issuer_paid": false,
+     "unsolicited": true
+    }
+   }
   }
  ]
 }
