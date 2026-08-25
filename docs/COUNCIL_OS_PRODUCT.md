@@ -55,8 +55,9 @@ commerce (honest): GET /api/east-west/pay/demo → HTTP 402, amount: null
 | Instruments / router | Instrument cards | `/instruments`, MCP `instruments_catalog` |
 | CobolBridge / RWA bond | Finance settle stub only | `functions/api/finance/settle.ts` — **out of Stage 1** |
 | RWA attestation (later) | Memo / EAS → signed cards | `docs/EAT_DSH_ALIGNMENT.md` — Stage 2+ testnet; no Stage 1 mainnet |
-| White-label attestation license | Engine + AG-UI “Powered by” (Option A) | Doctrine only Stage 1; meter verdicts/API/seats — never grades |
+| White-label attestation license | Engine + AG-UI “Powered by” (Option A) | `/powered-by` · meter verdicts/API/seats — never grades |
 | Tokenization-as-a-service | Partner issuer/TA only (Option B) | After design partners; never mint ownership ourselves |
+| Build plan (adapters / publishers / flywheel) | Claude-aligned execution | `docs/COUNCIL_OS_BUILD_PLAN.md` — **no CopilotKit rewrite**; DSH=OS everywhere |
 
 ## Stages
 
@@ -70,8 +71,10 @@ commerce (honest): GET /api/east-west/pay/demo → HTTP 402, amount: null
 - [x] Explicit tool-name → card component registry in Lobby (`measuredToolCards.ts` + `MeasuredToolCard`)
 - [x] Geo → East-West desk soft default (`GET /api/geo-hint` + Lobby confirm/override; IP is proxy, not legal fact; language soft-default)
 - [x] Option A surface: `/powered-by` white-label attestation (messaging lock; pricing pending ruling)
+- [x] Build plan Claude-aligned (`docs/COUNCIL_OS_BUILD_PLAN.md`) — adapters/publishers zones; DSH into all
 - [ ] AG-UI wire online (`AGUI_WIRE_URL`) or refuse-closed
 - [ ] Router accuracy check on a labeled query set (~200)
+- [ ] DSH↔OS parity matrix green (see build plan)
 
 **Advance when:** cards render from tool calls reliably; wrong-module rate < 10%.
 
