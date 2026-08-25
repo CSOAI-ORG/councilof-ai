@@ -14,12 +14,12 @@ import {
   DOMAIN_FLYWHEELS,
   ENGINE_AXIS_DIAGRAM,
   FINANCIAL_AXES,
+  CONTEXT_FIREWALL_INDICES,
   FIRST_REPO_SPEC,
   GOVERNANCE_CAPABILITIES,
   REVENUE_PROJECTION,
   SOVOS_FLYWHEEL,
 } from "@/data/engine-axis";
-import { CONTEXT_FIREWALL_INDICES } from "@/data/contextFirewallIndices";
 import { openLobby } from "@/lib/lobbyLink";
 import CouncilOsPageShell from "@/components/os/CouncilOsPageShell";
 
@@ -150,7 +150,6 @@ export default function EngineAxis() {
                 </tr>
               ))}
             </tbody>
-
           </table>
         </div>
 
