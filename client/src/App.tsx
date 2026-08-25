@@ -330,3 +330,84 @@ import { industriesdata } from "./data/industries-content";
 import { blogdata } from "./data/blog-content";
 import { AnalyticsProvider } from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
+
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [location]);
+  return null;
+}
+
+const ROUTE_TITLES: Record<string, string> = {
+  "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
+  "/products": "Product catalogue — measurement, data & tooling | CSOAI",
+  "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
+  "/trust-center": "Trust Center — security, compliance & Layer 0 | CSOAI",
+  "/certification": "Measurement credential — how CSOAI attestation works | CSOAI",
+  "/courses": "AI governance courses & training | CSOAI",
+  "/api-docs": "API & MCP documentation | CSOAI",
+  "/academy": "Council Academy — AI governance training | CSOAI",
+  "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
+  "/models": "AI model registry & scoreboard | CSOAI",
+  "/": "Council of AI — we measure, we sign, we re-attest",
+  "/plans": "Plans | CSOAI",
+  "/gspc-arena": "GSPC Arena | CSOAI",
+  "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
+  "/gspc-verify": "GSPC Verify | CSOAI",
+  "/challenge": "Challenge a Measurement | CSOAI",
+  "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
+  "/gspc-gap-map": "GSPC Gap Map | CSOAI",
+  "/gspc-anchors": "GSPC Anchors | CSOAI",
+  "/xrpl-attest": "Ledger attestation | Council of AI",
+  "/layer0": "Layer 0 | CSOAI",
+  "/methodology": "Methodology | CSOAI",
+  "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
+  "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
+  "/refutation-ledger": "Refutation Ledger | CSOAI",
+  "/dispute": "Appeals & dispute resolution | Council of AI",
+  "/east-west": "East-West — one signed measurement, every regime mapped | Council of AI",
+  "/challenge": "Challenge a measurement — East-West redress | Council of AI",
+  "/crosswalk": "AI governance framework crosswalk | Council of AI",
+  "/live-ledger": "Live Ledger | CSOAI",
+  "/coliseum": "The Coliseum of AI | Council of AI",
+  "/open-source": "The open-source framework | Council of AI",
+  "/verifiable-trust": "The science of verifiable trust | Council of AI",
+  "/evidence-rail": "The independent evidence rail | Council of AI",
+  "/metrology": "The metrology apparatus | Council of AI",
+  "/accountability-loop": "The accountability loop — from a public report to a complaint a regulator can open | Council of AI",
+  "/where-the-record-lives": "Where the record lives — mirrored, not indestructible | Council of AI",
+  "/statute-to-predicate": "From statute to predicate — how a law becomes a test | Council of AI",
+  "/instrument": "The Instrument | CSOAI",
+  "/benchmarks": "Benchmarks | CSOAI",
+  "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
+  "/benchmark-quality": "Benchmark-quality register — deterministic predicates on third-party AI benchmarks | Council of AI",
+  "/provenance-finding": "Provenance Finding | CSOAI",
+  "/learn": "Learn | CSOAI",
+  "/article-50": "Article 50 | CSOAI",
+  "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
+  "/verify": "Verify a signed CSOAI measurement | CSOAI",
+  "/governance-layer": "Council Governance Layer | CSOAI",
+  "/status": "System Status | CSOAI",
+  "/contact": "Contact | CSOAI",
+  "/about": "About | CSOAI",
+  "/mcp": "MCP Hub | CSOAI",
+  "/mcp-fleet": "MCP Fleet | CSOAI",
+  "/tool-commons": "Tool Commons | CSOAI",
+  "/globe": "Global Regulation Globe | CSOAI",
+  "/tour": "Platform Tour | CSOAI",
+  "/demo": "Demo | CSOAI",
+  "/assess": "AI Act Assessment | CSOAI",
+  "/enterprise": "Enterprise | CSOAI",
+  "/government": "Government | CSOAI",
+  "/regulators": "Regulators | CSOAI",
+  "/blog": "Blog | CSOAI",
+};
+function RouteTitle() {
+  const [location] = useLocation();
+  useEffect(() => {
+    const t = ROUTE_TITLES[location];
+    if (t) document.title = t;
+  }, [location]);
+  return null;
+}
