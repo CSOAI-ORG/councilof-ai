@@ -88,7 +88,7 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "models",
     label: "Models",
-    blurb: "Measured models on the published board — ranked by signed scores, not tokens.",
+    blurb: "The measured-axis grid from the live board — per-axis leaders where separation is measured, honest gaps where it is not.",
     path: "/models",
     cues: /\b(models?|model registry)\b/i,
   },

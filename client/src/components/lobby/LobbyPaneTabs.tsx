@@ -115,7 +115,7 @@ export default function LobbyPaneTabs({
             role="tab"
             aria-selected={on}
             aria-controls={PANEL_ID}
-            tabIndex={on ? 0 : -1}
+            tabIndex={on || (override && t.id === tabId) ? 0 : -1}
             onClick={() => onSelect(t)}
             className={chip}
           >

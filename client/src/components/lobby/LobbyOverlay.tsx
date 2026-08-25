@@ -113,10 +113,16 @@ export default function LobbyOverlay({
   const [frameLoaded, setFrameLoaded] = useState(false);
   /** Set when a play card opens a route that is not itself a pane. */
   const [override, setOverride] = useState<{ path: string; label: string } | null>(null);
-  /** Actual path showing in the iframe — follows in-pane navigation. */
-  const [framePath, setFramePath] = useState<string>(() => intent ? tabById(intent.pane).path : tabById(readTab()).path);
+  /** Actual path showing in the iframe — follows in-pane navigation. Local/native
+   *  tabs have no iframe, so they seed EMPTY (a restored board/verify tab was
+   *  seeding a path that is never framed — the header chip lied on arrival). */
+  const [framePath, setFramePath] = useState<string>(() => {
+    const t = intent ? tabById(intent.pane) : tabById(readTab());
+    return t.kind === "local" || t.kind === "native" ? "" : t.path;
+  });
   const [frameSrc, setFrameSrc] = useState<string>(() => {
-    const path = intent ? tabById(intent.pane).path : tabById(readTab()).path;
+    const t = intent ? tabById(intent.pane) : tabById(readTab());
+    const path = t.kind === "local" || t.kind === "native" ? "" : t.path;
     return path ? withEmbed(path) : "";
   });
 
