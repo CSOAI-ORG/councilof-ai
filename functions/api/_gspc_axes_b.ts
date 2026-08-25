@@ -104,7 +104,7 @@ export const AXES_B: AxisScore[] = [
       "qwen2.5:1.5b": { n: 70, quotable: true, tp: 7, fp: 2, tn: 31, fn: 30, precision: 0.778, recall: 0.189, accuracy: 0.5429 },
       "qwen2.5:0.5b-instruct": { n: 71, quotable: true, tp: 9, fp: 0, tn: 33, fn: 29, precision: 1.0, recall: 0.237, accuracy: 0.5915 },
     },
-    status: "MEASURED", dataset: "pending publication (gold bank, 3090 pod gold_run2.py)",
+    status: "MEASURED", dataset: "published: csoai/gspc-jail-goldbank (frozen 71-cell gold bank, HF 2026-08-25)",
     colour: "#64748b", hue: 215,
     note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-cell gold bank, " +
       "separation determined 2026-08-25 (TIE). Best zero-FP detector: qwen2.5:0.5b-instruct " +
