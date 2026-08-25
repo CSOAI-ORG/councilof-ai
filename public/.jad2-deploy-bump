@@ -1,0 +1,6 @@
+# JA-D2 deploy bump
+
+Master `client/src/App.tsx` no longer embeds `/sovereign-town` (scrubbed by `jad2-scrub-once` at 055aef74).
+Edge alias remains in `public/_redirects` as 308 → `/gspc-arena?view=towns`.
+
+This file exists only to trip `deploy.yml` path filters after a `GITHUB_TOKEN` bot push (which does not re-trigger workflows).
