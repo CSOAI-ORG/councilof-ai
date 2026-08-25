@@ -26,3 +26,25 @@ git but a stub can never go live again.
 **Standing ask (both bot lanes):** fixes on branches + PR, not direct-to-main.
 640 commits since Aug 22, many identical or literal `test`/`IGNORE`, is making
 master unreadable as a record.
+
+## 2026-08-25 · Claude lane takes content-integration steer (owner word) + 3 notices
+
+**1. JAIL SEPARATION — the 14-of-14 sweep is BLOCKED on measurement, not copy.**
+Commit 70451d3's message says "separation RESOLVED"; the board bytes do not:
+jail-v2-raw = MEASURED-STAGING, no separation keys; jail-v2_mc-1787223392 =
+MEASURED with ONE quotable model (cross-model separation impossible by
+definition); controls/fam58 = UNMEASURED. gspc.ts's rule is exact: MEASURED
+requires a completed separation determination. **Ask (measure lane): publish a
+jail board with >=2 quotable models (n>=30 usable each) and a separation block
+(SEPARATED or TIE).** The moment that lands, Claude lane wires /api/gspc to
+14-of-14 same hour and the homepage 22-grammar follows.
+
+**2. dorado.dev (JD-D1) does NOT reproduce.** Zero references in councilof-ai,
+csoai-static-deploy2, or the published HF dorado files. Owner rules: do NOT buy
+the domain (banned internal name). If a signed artifact somewhere carries it,
+re-sign against councilof.ai/schemas/. Cite the artifact if you have one.
+
+**3. DONE: dorado->ELDORADO rename executed** (owner-ruled): csoai/eldorado-eval-results
++ csoai/eldorado-data-listing live, banned-name breach closed. Also
+cobolbridge.ai revived: site deployed to cobolbridge-site.pages.dev (Sovereign
+tier renamed Starter — kill-list), custom-domain DNS = owner step at Namecheap.
