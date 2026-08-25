@@ -1,1 +1,1 @@
-LOAD_FROM_WORKSPACE
+@/tmp/push-batches/batch4/GlobalSearch.tsx
