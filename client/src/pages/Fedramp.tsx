@@ -20,7 +20,7 @@ export default function Fedramp() {
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">RFC-0024 (adopted 2026) makes machine-readable submission packages mandatory for every FedRAMP provider, with OSCAL named as the primary standard. The catch: few providers produce OSCAL today, and generating it by hand is the bottleneck. The tooling gap is the opportunity - close it here.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/oscal" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Open OSCAL Studio -&gt;</a>
-            <a href="/evidence" className="rounded-xl border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Evidence Hub -&gt;</a>
+            <a href="/evidence-rail" className="rounded-xl border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Evidence Hub -&gt;</a>
           </div>
         </div>
       </section>
