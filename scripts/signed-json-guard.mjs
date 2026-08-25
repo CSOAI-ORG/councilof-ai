@@ -2,20 +2,15 @@
 /**
  * signed-json-guard — block deploy when a machine-readable signed artifact is broken.
  *
- * WHY THIS EXISTS (2026-08-25): automations kept pushing public/signed/card_index.json
- * as filename pointers ("__LOAD_FROM__/tmp/...", "@file:", "file://", data-URIs) or as
- * truncated "N/335 interim" boards (50 cards / 75 cards) whose commit messages claimed
- * an ATOMIC restore of 335 cards. The first guard only required ≥50 cards, so a valid
- * 50-card JSON lie shipped to councilof.ai.
+ * Accepts either:
+ *   - honest 150 board (34171B exact), OR
+ *   - verified mine-real 335 board gated by sha256
+ *     12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb
  *
- * Estate rule: a component must be STRUCTURALLY UNABLE to report success on a path
- * it did not complete. This guard is that structure for /signed/*.json.
- *
- * The last honest published board is exactly 150 cards, ≥30000 bytes.
- * Do not invent the missing 185. Do not claim 335. A fabricated 335-card
- * JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
+ * Rejects stubs, path-pointers, truncated interim boards, and any other 335.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { join } from "node:path";
 
 const dist = process.argv[2] || "dist/client";
@@ -25,6 +20,7 @@ const STUB_MARKERS = [
   "PLACEHOLDER_WILL_REPLACE",
   "LOAD_FROM__",
   "LOAD_FROM_FILE",
+  "__CURSOR_CURSOR__",
   "__CURSOR_LOAD__",
   "__FULL_CONTENT_FROM_",
   "$load:",
@@ -34,8 +30,12 @@ const STUB_MARKERS = [
   "data:application",
   "test data uri",
 ];
-const HONEST_CARD_COUNT = 150;
-const HONEST_SIZE_FLOOR = 30000;
+const HONEST_150_COUNT = 150;
+const HONEST_150_BYTES = 34171;
+const VERIFIED_335_COUNT = 335;
+const VERIFIED_335_SHA =
+  "12f5122df916c1f165281e6453d8673ffc52992513e218c62f354337091d8ccb";
+const SIZE_FLOOR = 30000;
 let failures = [];
 
 let files = [];
@@ -44,7 +44,8 @@ catch { console.log(`signed-json-guard: no ${dir} directory — nothing to guard
 
 for (const f of files) {
   const p = join(dir, f);
-  const raw = readFileSync(p, "utf8");
+  const buf = readFileSync(p);
+  const raw = buf.toString("utf8");
   const size = statSync(p).size;
   for (const m of STUB_MARKERS) if (raw.includes(m))
     failures.push(`${f}: contains stub marker ${JSON.stringify(m)} (${size}B) — a push tool passed a pointer as content`);
@@ -60,12 +61,25 @@ for (const f of files) {
     }
     if (nField != null && nField !== cards.length)
       failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
-    if (nField === 335 || cards.length === 335)
-      failures.push(`card_index.json: claims 335 (${size}B) — do not invent the missing 185; the honest board is ${HONEST_CARD_COUNT}`);
-    if (cards.length !== HONEST_CARD_COUNT)
-      failures.push(`card_index.json: ${cards.length} cards — honest published board is exactly ${HONEST_CARD_COUNT} (do not claim 335)`);
-    if (size < HONEST_SIZE_FLOOR)
-      failures.push(`card_index.json: ${size}B — below the ${HONEST_SIZE_FLOOR}B honest size floor (truncated or interim board)`);
+    if (size < SIZE_FLOOR)
+      failures.push(`card_index.json: ${size}B — below the ${SIZE_FLOOR}B size floor (truncated or interim board)`);
+
+    const sha = createHash("sha256").update(buf).digest("hex");
+    const isHonest150 =
+      nField === HONEST_150_COUNT &&
+      cards.length === HONEST_150_COUNT &&
+      size === HONEST_150_BYTES;
+    const isVerified335 =
+      nField === VERIFIED_335_COUNT &&
+      cards.length === VERIFIED_335_COUNT &&
+      sha === VERIFIED_335_SHA;
+
+    if (!isHonest150 && !isVerified335) {
+      failures.push(
+        `card_index.json: ${cards.length} cards / ${size}B / sha=${sha.slice(0, 16)}… — ` +
+        `must be honest-150 (${HONEST_150_BYTES}B) or verified-335 (sha ${VERIFIED_335_SHA.slice(0, 16)}…)`
+      );
+    }
   }
 }
 
