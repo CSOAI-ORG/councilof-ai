@@ -2,7 +2,7 @@
   "schema_version": "2024-11-05",
   "name": "csoai-gspc-mcp",
   "display_name": "Council of AI — GSPC Measurement Tools",
-  "description": "Independent AI-governance measurement body. Publishes the GSPC 15-slot instrument (Governance · Safety · Provenance · Continuity): 13 measured axes, jail floor, empty slot-15. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity): 14 measured of 14 quotable (13 canonical axes + jail MEASURED; living-board jail separation is TIE). Slot-15 / human-vs-ai are measured in-lane only — not board-quotable. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry io.github.CSOAI-ORG/gspc 1.0.3.",
   "icon_url": "https://councilof.ai/favicon.ico",
   "provider": {
     "name": "CSOAI Ltd",
@@ -15,12 +15,12 @@
       "primary": "https://councilof.ai/mcp",
       "fallback": "https://csoai.org/mcp",
       "current": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
-      "note": "Primary and fallback are canonical URLs once routed; current is the live worker endpoint."
+      "note": "Primary and fallback are canonical URLs once routed; current is the live worker endpoint. Registry latest 1.0.3; worker runtime may lag until CF_API_TOKEN restored."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
       "method": "GET",
-      "description": "Live GSPC 15-slot measurement board (13 measured axes + jail floor + empty slot-15): per-axis n, leader, Wilson interval, McNemar separation. No auth required."
+      "description": "Live GSPC board: 14 measured of 14 quotable. Per-axis n, leader, Wilson interval, separation (SEPARATED/TIE). Jail is MEASURED with TIE separation. Cite totals.public_count. No auth required."
     }
   },
   "capabilities": {
