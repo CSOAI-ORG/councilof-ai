@@ -14,6 +14,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: cursor/instruments-catalog-7fb8
+          fetch-depth: 0
       - name: Assemble GlobalSearch.tsx from b64 parts
         run: |
           mkdir -p client/src/components
@@ -29,6 +30,7 @@ jobs:
           print('starts', data[:40])
           assert data.startswith(b'/**')
           assert b'PLACEHOLDER_WILL_REPLACE' not in data
+          assert len(data) == 63253, len(data)
           PY
       - name: Commit
         run: |
@@ -37,4 +39,5 @@ jobs:
           git add client/src/components/GlobalSearch.tsx
           git diff --cached --quiet && exit 0
           git commit -m "Ralph overnight parity 2/10: GlobalSearch.tsx (assembled)"
-          git push
+          git pull --rebase origin cursor/instruments-catalog-7fb8 || true
+          git push origin HEAD:cursor/instruments-catalog-7fb8
