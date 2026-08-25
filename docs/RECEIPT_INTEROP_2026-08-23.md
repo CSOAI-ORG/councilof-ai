@@ -2,7 +2,7 @@
 
 **Doc ID:** `csoai-receipt-interop-v1` · **Revision:** 2026-08-23
 **Status:** interop mapping — the signed receipt, mapped into in-toto/DSSE/Sigstore/C2PA so we are
-the *measurement predicate* in the standard stack, not a proprietary island. Doctrine: nothing
+*the measurement predicate* in the standard stack, not a proprietary island. Doctrine: nothing
 below claims a capability we have not verified; attestations are measurement evidence, never a
 certification; no banned codenames; free access honest.
 
@@ -16,7 +16,7 @@ in our own tooling, we become a proprietary island that a standards-riding marke
 move: keep our Ed25519 + did:web spine, but **express the same measurement as a standard predicate**
 (in-toto Statement, DSSE envelope, C2PA claim) so standard tooling can consume + verify it.
 
-The thesis: **the measurement content is ours (the 16-axis score); the envelope is standard.**
+The thesis: **the measurement content is ours (the live GSPC board score — cite totals.public_count; 14 quotable slots); the envelope is standard.**
 
 ---
 
@@ -45,12 +45,12 @@ leaderboard (content_id matches + signature verifies).
 - We **do not** claim our Ed25519 key is a C2PA/CAI-registered trust anchor (that is owner-gated).
 - We **do** claim: the same measurement body + Ed25519 signature, expressed in a standard envelope,
   verifiable with standard tooling against our published did:web key.
-- The **measurement** (16-axis score) is ours and is not a certification; the **envelope** is standard.
+- The **measurement** (14-slot GSPC board; cite live public_count) is ours and is not a certification; the **envelope** is standard.
 
 ## 3. The predicate (what we actually measure — our value)
 
 `csoai.gspc-measurement/0.1` predicate carries:
-- `axes`: the GSPC axis registry (gov, care, jail, ... 16+ axes; no hardcoded count in prose)
+- `axes`: the GSPC axis registry (gov, care, jail, … — 14 quotable board slots; cite live public_count; do not invent 22 axes)
 - `per_axis`: { axis: { score, n, ci, separation } } — every score with n + CI
 - `register`: "MEASURED" (deterministic) or "REPORTED" (third-party context, cited) — never a
   certification
