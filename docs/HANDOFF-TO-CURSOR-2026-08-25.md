@@ -30,3 +30,32 @@ Scores never sold · regulators free forever (R8) · no token · ClaimGuard gate
 
 ## Owner-gated (Nick — not Cursor-executable)
 A100 console restart (measurement volume) · HF DOIs (web-UI) · MCP publish (GitHub OAuth) · a2aagentlist/artinet web-forms · AIUC-1/Armilla/aiSure/Testudo outreach (drafts staged).
+
+---
+
+# ADDENDUM — White-label Regulator Tooling (the "hand them a working GSPC e2e" pivot)
+
+*Built + verified live by the measurement lane. Feed to Cursor to push branded + polished into Council OS alongside the EUNOMIA surfaces above.*
+
+## Live now (verified HTTP 200, canonical build)
+| Surface | URL | What it is |
+|---|---|---|
+| Regulator findings | `/api/regulator-findings?deployment=X` | grades every EU AI Act obligation from the signed GSPC board + penalty tier |
+| Article-granularity | `/api/regulator-findings?by=article` | EU AI Act Articles 4-55, worst measured gap per article + fine exposure |
+| Sector filter | `/api/regulator-findings?sector=insurance\|bond\|cobol` | maps measured axes to that sector's frameworks (Solvency II/ESMA/AUKUS) |
+| Challenge door | `/challenge` + `POST /api/challenge` | measured-subject redress — signed receipt, resolution feeds Value Ledger |
+| Arena scoreboard | `/api/arena/scoreboard?verify=1` | the differentiator — recompute content_id, `match:true\|false` |
+| Evidence pack | `/api/evidence-pack` | the 4-class underwriter/regulator evidence set |
+
+## The toolkit (in monorepo `main`)
+`harness/regulator/` — `eu_ai_act_findings.py` · `article_findings.py` · `sector_findings.py` · `eu_ai_act_article_map.json` · `functions/api/regulator-findings.ts` · `functions/api/challenge.ts` · `harness/arena/` (elo.py, canon.py, axis_arena.py, publish_scoreboard.py, eat_compliance_board.py) · `public/signed/*.json` (signed boards).
+
+## What Cursor should do (align with Claude's Compass AG-UI/MCP architecture)
+1. **Brand + polish** `/challenge` (the redress form) and a `/regulator-findings` *page* (currently a raw API) — apply the Council OS theme/branding pass.
+2. **Render as AG-UI cards** (per Claude's Compass §1/§4): wire `regulator-findings` + `challenge` + `scoreboard` as MCP tools served over AG-UI so each returns a typed React card (Running → Done) inline in Council OS chat — the "hand them a working tool" becomes a chat card.
+3. **Add to Council OS Measure nav**: the `/challenge` + regulator-findings surfaces (and `/registers`, `/sectors`) into the menu.
+4. **E2E after polish** — extend the 5-device Playwright suite to the new surfaces.
+
+## Canon (binding — do not break)
+Same as above, plus: **regulators get the signed stream FREE forever** (R8) · the verify path (`?verify=1` recompute) is the differentiator — keep it prominent, never bury it · UNMEASURED axes/rows render as `insufficient to rank`, never a 0 · white-label = they brand it, we sign it (signer fixed `did:web:csoai.org#card-attestation-1` for the arena boards).
+
