@@ -61,6 +61,9 @@ jobs:
       - name: Brand gate — block deploy on any forbidden display string (audit §6.2)
         run: node scripts/brand-gate.mjs dist/client
 
+      - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
+        run: node scripts/signed-json-guard.mjs dist/client
+
       - name: Dist bundle guard — stranger paths + API functions present
         run: |
           set -euo pipefail
