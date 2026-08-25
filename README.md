@@ -53,6 +53,26 @@ Public grammar: **13 measured of 14**. Product: verified measurement credential 
 
 **Owner-blocked until a published ruling (honest placeholders, not fake commerce):** pricing, x402/MPP activation, first pack sale, DID root, `cibola.dev` / `getcibola.com`, UKIPO. Value Ledger published count is **0**. Empty is launch honesty.
 
+## Deploy path (branch vs production)
+
+| Surface | Branch / path | Notes |
+|---------|---------------|-------|
+| **This working branch** | `cursor/instruments-catalog-7fb8` | Council OS / East-West / MCP slice land here first |
+| **Production** | `master` only | Cloudflare Pages deploys **master**. Branch work is not live on councilof.ai until merge |
+| **Local preview** | `npm run build:client` then `npx vite preview --config client/vite.config.ts --host 127.0.0.1 --port 43217` | E2E: `BASE_URL=http://127.0.0.1:43217 npx playwright test --config e2e/playwright.config.ts` |
+| **MCP JSON-RPC** | `POST /api/mcp` and `POST /api/mcp/http` | `tools/list`, `tools/call` over measured APIs |
+| **A2A agent card** | `public/.well-known/agent-card.json` | A2A v1.0 required fields; live only after master deploy |
+
+```bash
+# Unit (East-West crypto)
+npx vitest run client/src/lib/eastWestCrypto.test.ts
+
+# Offline pack verify
+node public/east-west/verify-pack.mjs public/east-west/sample-pack.json
+```
+
+Generated `public/ecosystem.json` and `public/sitemap.xml` are produced by `build:client` scripts and committed when the catalogue changes.
+
 ## 📖 Documentation
 
 - [Measurement body overview](https://councilof.ai/about/)
