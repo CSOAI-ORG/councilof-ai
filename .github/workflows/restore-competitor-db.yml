@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '.restore/c52.json.gz.b64'
+      - '.restore/c52.b64.part04'
 jobs:
   restore:
     runs-on: ubuntu-latest
@@ -17,8 +17,10 @@ jobs:
         run: |
           set -euo pipefail
           python3 <<'PY'
-          import base64, gzip, json, hashlib
-          raw = open('.restore/c52.json.gz.b64').read().strip()
+          import base64, gzip, json, hashlib, pathlib
+          parts = sorted(pathlib.Path('.restore').glob('c52.b64.part*'))
+          assert len(parts) == 5, parts
+          raw = ''.join(p.read_text().strip() for p in parts)
           data = gzip.decompress(base64.b64decode(raw))
           assert hashlib.sha256(data).hexdigest() == 'a3f642a1efd3da9baa5d3624037c3e7ad233ebf5b922a6d170c1238af6a458d6'
           d = json.loads(data)
@@ -30,5 +32,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add client/src/data/competitorDatabase.json
-          git commit -m "fix: restore full competitorDatabase.json (52 records)"
+          git commit -m "fix: restore full competitorDatabase.json (52 records)" || echo "no change"
           git push
