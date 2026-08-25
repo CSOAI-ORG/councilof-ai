@@ -19,6 +19,11 @@ interface RunRecord {
   memo_attach_tx: string;
   credential_attach_tx: string;
   explorer: string[];
+  coverage?: {
+    xrpl: { instrument: string; issuer: string; status: string; tx: string; explorer: string }[];
+    evm: { asset: string; contract: string; status: string; uid: string }[];
+    honesty: string;
+  };
 }
 
 export default function XrplAttest() {
@@ -94,6 +99,48 @@ export default function XrplAttest() {
                 </a>
               </div>
             </div>
+
+            {rec.coverage && (
+              <div className="mt-8 rounded-xl border border-emerald-600/20 bg-white p-5 shadow-sm">
+                <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
+                  Coverage universe — every status UNMEASURED
+                </p>
+                <p className="mt-2 text-sm text-gray-600">
+                  An independent measurement body declaring its coverage across real, verified
+                  instruments on two chains — in three-state grammar, permissionlessly. UNMEASURED
+                  is a first-class answer, never hidden. Not verdicts, ratings, advice, or
+                  endorsements.
+                </p>
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b text-left text-gray-700">
+                        <th className="p-2">Chain</th><th className="p-2">Instrument</th>
+                        <th className="p-2">Issuer / contract</th><th className="p-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rec.coverage.xrpl.map((c) => (
+                        <tr key={c.tx} className="border-b last:border-0">
+                          <td className="p-2 font-mono text-xs">XRPL</td>
+                          <td className="p-2">{c.instrument}</td>
+                          <td className="p-2"><a className="font-mono text-xs text-emerald-700 underline" href={c.explorer}>{c.issuer.slice(0, 14)}…</a></td>
+                          <td className="p-2"><span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600">{c.status}</span></td>
+                        </tr>
+                      ))}
+                      {rec.coverage.evm.map((c) => (
+                        <tr key={c.uid} className="border-b last:border-0">
+                          <td className="p-2 font-mono text-xs">EVM · EAS</td>
+                          <td className="p-2">{c.asset}</td>
+                          <td className="p-2 font-mono text-xs">{c.contract.slice(0, 14)}…</td>
+                          <td className="p-2"><span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600">{c.status}</span></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
 
             <div className="mt-8 rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
               <p className="text-xs font-bold uppercase tracking-wide text-gray-700">Verify it yourself</p>
