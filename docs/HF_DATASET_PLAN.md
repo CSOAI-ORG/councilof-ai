@@ -37,3 +37,16 @@ Doctrine: ship empty / cited first; MEASURED only after freeze + sign. Never dre
 - `csoai/labour-economy-unmeasured` — manifests first
 - `csoai/gspc-measured-snapshots` — only when frozen
 - `csoai/rwa-public-artifacts-reported` — citations, no fake scores
+
+## Staging (this branch)
+
+Local pack ready to upload when a write-capable HF token is available:
+
+- `datasets/labour-economy-unmeasured/labour-economy-unmeasured.json`
+- `datasets/labour-economy-unmeasured/README.md` (UNMEASURED doctrine)
+
+```bash
+hf upload csoai/labour-economy-unmeasured datasets/labour-economy-unmeasured . --repo-type=dataset
+```
+
+This cloud agent’s HF MCP OAuth has no filesystem write tool; CLI is not logged in here. Do not invent MEASURED floats to “complete” the dataset.
