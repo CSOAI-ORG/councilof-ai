@@ -1,10 +1,9 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useLocation } from "wouter";
-import { useEffect, Suspense } from "react";
+import { useLocation, Route, Switch } from "wouter";
+import { useEffect, Suspense, lazy } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
-import { SovOS, DemoOS, CouncilConsole } from "./AppLazy";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
@@ -16,7 +15,10 @@ import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 import CouncilLobby from "./components/lobby/CouncilLobby";
 import { AppMainRoutes } from "./AppMainRoutes";
-import { Route, Switch } from "wouter";
+
+const SovOS = lazy(() => import("./pages/SovOS"));
+const DemoOS = lazy(() => import("./pages/DemoOS"));
+const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -32,7 +34,6 @@ const ROUTE_TITLES: Record<string, string> = {
   "/products": "Products catalog — scores never sold | CSOAI",
   "/powered-by": "Powered by Council OS — white-label attestation | CSOAI",
   "/engine-axis": "Engine Axis — financial extension + labour candidacy | CSOAI",
-  "/gspc-scoreboard": "GSPC scoreboard | CSOAI",
 };
 
 function RouteTitle() {
@@ -72,9 +73,7 @@ function WidgetRouter() {
 function App() {
   const [location] = useLocation();
 
-  if (location.startsWith("/widget")) {
-    return <WidgetRouter />;
-  }
+  if (location.startsWith("/widget")) return <WidgetRouter />;
 
   if (location === "/sov-os" || location === "/council-os") {
     return (
@@ -96,7 +95,9 @@ function App() {
       <ErrorBoundary>
         <ThemeProvider defaultTheme="dark">
           <TooltipProvider>
-            <DemoOS />
+            <Suspense fallback={<div className="grid h-[100dvh] place-items-center bg-[#04070d]"><SectionLoader /></div>}>
+              <DemoOS />
+            </Suspense>
             <Toaster position="top-right" />
           </TooltipProvider>
         </ThemeProvider>
