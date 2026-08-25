@@ -79,6 +79,18 @@ export const PRODUCT_TABS: ProductTab[] = [
     match: (p) => p.startsWith("/east-west") || p.startsWith("/challenge"),
   },
   {
+    id: "indices",
+    label: "Indices",
+    href: "/indices",
+    match: (p) => p.startsWith("/indices"),
+  },
+  {
+    id: "products",
+    label: "Products",
+    href: "/products",
+    match: (p) => p.startsWith("/products") || p.startsWith("/powered-by") || p.startsWith("/payg"),
+  },
+  {
     id: "docs",
     label: "Docs",
     href: "/api-docs",
