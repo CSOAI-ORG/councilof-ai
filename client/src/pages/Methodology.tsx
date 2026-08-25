@@ -110,6 +110,59 @@ export default function Methodology() {
           </div>
         </section>
 
+        {/* STATISTICAL DISCIPLINE — the differentiator */}
+        <section>
+          <h2 className="text-2xl font-bold text-emerald-50">Statistical discipline</h2>
+          <p className="mt-1 text-[13px] text-emerald-100/60">
+            The part no on-chain rating or attestation body publishes. Every number carries
+            its uncertainty, and a leader is declared only when the statistics permit it.
+          </p>
+          <div className="mt-4 space-y-4">
+            <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
+              <h3 className="text-[15px] font-bold text-emerald-50">Wilson 95% intervals — always</h3>
+              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+                Every accuracy / pass-rate carries a <strong className="text-emerald-50">Wilson
+                score 95% interval</strong>, never a Wald interval (which fails near 0 and 1).
+                Nothing is quoted below n=30. Reference: E. B. Wilson (1927), <em>JASA</em> 22(158).
+              </p>
+            </div>
+            <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
+              <h3 className="text-[15px] font-bold text-emerald-50">Separation — a deliberately conservative rule</h3>
+              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+                We declare a <strong className="text-emerald-50">leader</strong> only when its
+                Wilson interval does not overlap the fleet mean. When it does, we report
+                <strong className="text-amber-300"> TIE — statistically indistinguishable</strong>,
+                never a win. We state plainly that this rule is deliberately conservative:
+                overlapping intervals do not by themselves prove non-significance, and our rule
+                errs toward not overclaiming — the honest direction for a body whose product is
+                trust.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
+              <h3 className="text-[15px] font-bold text-emerald-50">Head-to-head — paired McNemar</h3>
+              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+                For a specific "does A beat B" claim, we use a paired <strong className="text-emerald-50">McNemar
+                test</strong> on question-level differences at α=0.05 — the field standard
+                (Miller, <em>Adding Error Bars to Evals</em>, arXiv:2411.00640), complementing the
+                conservative fleet-mean rule rather than replacing it.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
+              <h3 className="text-[15px] font-bold text-emerald-50">Why we publish this</h3>
+              <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
+                None of the on-chain rating or attestation players discloses confidence-interval
+                methodology or statistical-separation testing. Even MLPerf reports point estimates
+                with no intervals. Unsolicited + statistically-governed + cryptographically-signed
+                is a combination the field does not offer — so we state it in the open. Full
+                methodology:{" "}
+                <a className="text-emerald-300 underline" href="https://github.com/CSOAI-ORG/council-os/blob/main/methodology/METHODOLOGY.md">
+                  council-os/methodology
+                </a>.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* CARE_COST RUBRIC */}
         <section>
           <h2 className="text-2xl font-bold text-emerald-50">Care_cost scoring rubric</h2>
