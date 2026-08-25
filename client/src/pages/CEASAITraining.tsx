@@ -168,7 +168,7 @@ export default function CEASAITraining() {
             </div>
           </div>
 
-          {/* Why CEASAI? */}
+          {/* Why choose this training? */}
           <div className="mb-20">
             <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">
               Why Choose This Training?

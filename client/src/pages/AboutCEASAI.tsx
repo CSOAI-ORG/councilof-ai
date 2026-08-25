@@ -70,7 +70,7 @@ export default function AboutCEASAI() {
         </div>
       </section>
 
-      {/* CEASAI + CSOAI Integration */}
+      {/* Training + CSOAI Integration */}
       <section className="py-16 md:py-20">
         <div className="container max-w-6xl">
           <h2 className="text-3xl font-bold text-center mb-12">Training + platform: one CSOAI ecosystem</h2>
@@ -154,7 +154,7 @@ export default function AboutCEASAI() {
         </div>
       </section>
 
-      {/* Why CEASAI is Different */}
+      {/* Why the measurement credential is Different */}
       <section className="bg-gray-50 py-16 md:py-20">
         <div className="container">
           <h2 className="text-3xl font-bold text-center mb-12">Why the measurement credential is different</h2>
