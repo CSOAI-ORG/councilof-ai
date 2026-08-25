@@ -2206,5 +2206,10 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/world-data",
   "comp": "GovGraph",
   "title": "Gov Graph"
+ },
+ {
+  "path": "/xrpl-attest",
+  "comp": "XrplAttest",
+  "title": "Xrpl Attest"
  }
 ];

@@ -109,7 +109,7 @@ function discover() {
     "/east-west", "/challenge",
     // Flagship pages that were only SPA-routed (direct HTTP 404 = credibility leak:
     // crawlers + the law's visitors hit a broken page). Force-prerender them.
-    "/article-50", "/tour", "/live-ledger", "/gspc-anchors",
+    "/article-50", "/tour", "/live-ledger", "/gspc-anchors", "/xrpl-attest",
     "/gspc-gap-map",
     // Legal surface (2026-08-23 audit)
     "/legal/licensing", "/legal/privacy", "/legal/terms", "/legal/cookies",

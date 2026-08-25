@@ -162,6 +162,7 @@ const BenchmarkQuality = lazy(() => import("./pages/BenchmarkQuality"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
+const XrplAttest = lazy(() => import("./pages/XrplAttest"));
 const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
@@ -354,6 +355,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/challenge": "Challenge a Measurement | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
+  "/xrpl-attest": "Ledger attestation | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
@@ -630,6 +632,7 @@ function App() {
                   <Route path="/gspc-gap-map" component={GSPCGapMap} />
                   <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
+                  <Route path="/xrpl-attest" component={XrplAttest} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
