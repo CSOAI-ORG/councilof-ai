@@ -2,8 +2,18 @@
 /**
  * signed-json-guard — block deploy when a machine-readable signed artifact is broken.
  *
- * Verified board is 335 signed cards (mine MANIFEST n_cards=335 signed_count=335).
- * Blocks stubs/pointers/truncated boards; allows the verified 335 index.
+ * WHY THIS EXISTS (2026-08-25): automations kept pushing public/signed/card_index.json
+ * as filename pointers ("__LOAD_FROM__/tmp/...", "@file:", "file://", data-URIs) or as
+ * truncated "N/335 interim" boards (50 cards / 75 cards) whose commit messages claimed
+ * an ATOMIC restore of 335 cards. The first guard only required ≥50 cards, so a valid
+ * 50-card JSON lie shipped to councilof.ai.
+ *
+ * Estate rule: a component must be STRUCTURALLY UNABLE to report success on a path
+ * it did not complete. This guard is that structure for /signed/*.json.
+ *
+ * The last honest published board is exactly 150 cards, ≥30000 bytes.
+ * Do not invent the missing 185. Do not claim 335. A fabricated 335-card
+ * JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -24,8 +34,8 @@ const STUB_MARKERS = [
   "data:application",
   "test data uri",
 ];
-const VERIFIED_CARD_COUNT = 335;
-const VERIFIED_SIZE_FLOOR = 70000;
+const HONEST_CARD_COUNT = 150;
+const HONEST_SIZE_FLOOR = 30000;
 let failures = [];
 
 let files = [];
@@ -50,12 +60,12 @@ for (const f of files) {
     }
     if (nField != null && nField !== cards.length)
       failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
-    if (cards.length !== VERIFIED_CARD_COUNT)
-      failures.push(`card_index.json: ${cards.length} cards — verified board is exactly ${VERIFIED_CARD_COUNT}`);
-    if (nField != null && nField !== VERIFIED_CARD_COUNT)
-      failures.push(`card_index.json: n_cards=${nField} — verified board is ${VERIFIED_CARD_COUNT}`);
-    if (size < VERIFIED_SIZE_FLOOR)
-      failures.push(`card_index.json: ${size}B — below the ${VERIFIED_SIZE_FLOOR}B verified size floor`);
+    if (nField === 335 || cards.length === 335)
+      failures.push(`card_index.json: claims 335 (${size}B) — do not invent the missing 185; the honest board is ${HONEST_CARD_COUNT}`);
+    if (cards.length !== HONEST_CARD_COUNT)
+      failures.push(`card_index.json: ${cards.length} cards — honest published board is exactly ${HONEST_CARD_COUNT} (do not claim 335)`);
+    if (size < HONEST_SIZE_FLOOR)
+      failures.push(`card_index.json: ${size}B — below the ${HONEST_SIZE_FLOOR}B honest size floor (truncated or interim board)`);
   }
 }
 
