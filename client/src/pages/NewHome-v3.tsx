@@ -1,1 +1,1 @@
-PLACEHOLDER_LOAD_FROM_DISK
+LOAD_FROM_FILE:/tmp/FINAL_restore_push.json
