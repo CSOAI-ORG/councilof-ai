@@ -167,6 +167,7 @@ def answer(question):
     idx = sov_index()
     return {"question": question, "matched_axes": axes, "rows": rows,
             "sov_index_signal": idx["sov_index_signal"], "measured_axes": idx["measured_axes"],
+            "total_axes": idx["total_axes"],
             "answer": ("I run one OOWM/OWEM cluster per GSPC axis and measure each against its "
                        "regulatory baseline. On your '%s', the estate sovereign signal is %.3f "
                        "across %d/%d axes. Focused: " % (question, idx["sov_index_signal"],

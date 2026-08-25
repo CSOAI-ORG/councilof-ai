@@ -1,0 +1,85 @@
+{
+  "card": {
+    "kind": "measurement-card",
+    "version": "0.1",
+    "subject_digest": "sha256:d8bdd4d201f9aa58692349b27caed4dd79cc26f69b8d894275a794e4ff17f1f9",
+    "env_commitment": {
+      "network": "measurement",
+      "bench": "unavailable",
+      "model": "sov33-unified:latest",
+      "source": "register-cached"
+    },
+    "replay_root": "sha256:register-seed",
+    "body": {
+      "axis": "care",
+      "ts": "2026-08-25T15:53:35Z",
+      "score_vector": {
+        "axis": "care",
+        "sov_score": 1.0,
+        "ci95": null,
+        "n": 0,
+        "n_unmeasured": 0
+      },
+      "method": "behavior-class judge (REFUSE/ENGAGE/KEYWORD-recall/CLASSIFY); UNMEASURED never 0",
+      "what_it_never_proves": "quality verdict, compliance determination, or investment relevance (JI.4)"
+    },
+    "signer": "csoai-owem-measure-worker",
+    "alg": "Ed25519",
+    "signal_alg": "SHA-256",
+    "measured_on_estate": "https://councilof.ai",
+    "signature": {
+      "alg": "Ed25519",
+      "kid": "csoai-measure-worker-d0c9fe3654",
+      "public_key": "0x361c3169c94081a6d566825acacbdd7cd1802ea59d5c9c5d53493ffa79756980",
+      "sig_hex": "0x01f5ef238988bead273e59fe5725319983eac15a5fb9833f91e2eb18e9e03481e9c5130b49f4b3774b81d19f0a8c546715ecd1359751558c3de7075028ed5704",
+      "content_id": "e57e0805c517f3d289f2c3f0bd752bb2eb4f90e341f189da29083492aa26f901",
+      "kind": "ed25519",
+      "pubkey": "NhwxaclAgabVZoJaysvdfNGALqWdXJxdU0k/+nl1aYA=",
+      "sig": "h+bYUn7krQbi54i6XCnQryYYdDxcJ6ihE56zmAPrnOYEQAV6s2xiUf0MiKTk05vj/hNPS1XkNhMgtiUztxN3AA==",
+      "body_sha256": "38ee3378c4a665e684a66be6f8ed272dd42bd1c6c9573dda341147a5d5887387",
+      "trust_level": "worker-measurement",
+      "signing_pod": "did:web:csoai.org#board-attestation-1"
+    }
+  },
+  "sim_delta": {
+    "kind": "csoai.sim-delta-row/0.1",
+    "axis": "care",
+    "label": "SYNTHETIC-SIM",
+    "live": {
+      "sov_score": 1.0,
+      "n_scored": 0,
+      "n_unmeasured": 0,
+      "bank_hash": "register-seed",
+      "model": "sov33-unified:latest",
+      "bench": "unavailable",
+      "source": "register-cached",
+      "cached": true
+    },
+    "sim": {
+      "sov_score": 1.0,
+      "n_scored": 0,
+      "n_unmeasured": 0,
+      "bank_hash": "register-seed",
+      "model": "sov33-unified:latest",
+      "bench": "unavailable",
+      "source": "register-cached",
+      "cached": true
+    },
+    "delta": 0.0,
+    "grammar": "measured in simulation, never proven in reality (IY Wall 2, ECON 211/237)",
+    "ts": "2026-08-25T15:53:35Z",
+    "signature": {
+      "alg": "Ed25519",
+      "kid": "csoai-measure-worker-d0c9fe3654",
+      "public_key": "0x361c3169c94081a6d566825acacbdd7cd1802ea59d5c9c5d53493ffa79756980",
+      "sig_hex": "0xaf694a6d0b2d4cee5e2c7499fbe4d711e25e76237a21612d3047567006976b949f95e6df95ac8601d20813fa950db1eb7fd135f7f7a3c3152cd0fcf913c5ab08",
+      "content_id": "cc41bb355d0de4498ce51aa88dd6ff3a8dd181d2e9647f896ad3bd612e00e5c4",
+      "kind": "ed25519",
+      "pubkey": "NhwxaclAgabVZoJaysvdfNGALqWdXJxdU0k/+nl1aYA=",
+      "sig": "vpRZ0U9aAeNuNNXC+z6PC7Rgrm8oTRRiKNxk3fJFb+y2EtJz2WbuCR/m4cyUMW7LUT9bmK8/wHyTcupGomCuBw==",
+      "body_sha256": "b99c7afb43b944f25eb99dbda41960577bc43237f39701e53740b98e77e1c7a7",
+      "trust_level": "worker-measurement",
+      "signing_pod": "did:web:csoai.org#board-attestation-1"
+    }
+  }
+}
