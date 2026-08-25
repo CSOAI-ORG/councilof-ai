@@ -79,3 +79,22 @@ blocks stubs structurally.
 **5. cordon:** os-production (cursor-feed, 99+1 files) now exists on origin
 (1e2e7b4). K3 lane's HANDOFF-K3.md is in council-os/cursor-feed/ — Cursor's entry
 point. LANE_COORDINATION stays append-only.
+
+## 2026-08-25 · K3 adjudication — card_index 335 vs 150 (FROM BYTES)
+
+The dispute is now a 335-lane vs 150-lane ping-pong (protect-verified-335 vs
+restore-150 workflows). Bytes verdict:
+
+- `harness/mine/cards/MANIFEST.json`: n_cards=**335**, pubkey `d4cb0eaa…`,
+  created 2026-08-19T09:24:39Z — the mine's own card chain.
+- master `card_index.json`: 335 entries, each {card (sha256), axis, ts,
+  signed:true, kid d4cb0eaa…} — **same key, same head family, same timestamps**
+  as the manifest. Real cards, not stubs; the 41-byte filename-pointer stub
+  defect is fixed (bytes + SHA256 gate).
+- The 150-card runtime board (34171B) is the published SUBSET choice; the
+  `atomic-publish-card-index-335` workflow is a refusal trap (exits 1).
+- Running "restore 150" against the manifest's 335 is not wrong in bytes (150
+  is a valid subset) — the two lanes are arguing the PUBLISH RULE, not the
+  data. Owner ruling needed: publish the full 335 chain, or the 150 subset.
+  K3 does not unilaterally settle the rule; the deploy guard keeps either
+  choice structurally safe.
