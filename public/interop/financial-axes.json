@@ -1,6 +1,6 @@
 {
- "schema": "csoai.financial-axes/0.1",
- "note": "The 8 financial/domain axes (22-axis canon = GSPC-14 + these 8). Same spine, same three-state grammar. A candidate axis is declared UNMEASURED with its intended deterministic rubric BEFORE any measurement \u2014 never claimed before measured.",
+ "schema": "csoai.financial-axes/0.2",
+ "note": "The 8 financial/domain axes (22-axis canon). Same spine, same three-state grammar. The three index candidates are DECLARED with rubric + bank status; all UNMEASURED until their public input banks exist and are recomputable. Provenance-controls MEASURED (deterministic on-chain facts, v2 signed run).",
  "axes": [
   {
    "id": "provenance-controls",
@@ -44,25 +44,34 @@
    "name": "AI economy index",
    "status": "UNMEASURED",
    "candidate": true,
-   "rubric": "TO DEFINE: a deterministic index of AI's measurable economic footprint (e.g. share of tracked tokenized-RWA flows touching AI-governed systems). No rubric or data wired yet.",
-   "data": "none yet \u2014 net-new build"
+   "rubric": "Deterministic index over cited public AI-economy series (compute prices, AI investment, adoption, AI-sector output). Formula + inputs published; stranger-recomputable. Bank: declared — NOT BUILT.",
+   "data": "none yet — net-new build",
+   "bank_status": "NONE — declared only; measure when the public input bank is assembled (proposed: sources listed in the rubric doc)",
+   "surface": "none (declared; no live surface yet)",
+   "declared_as": "CANDIDATE financial-axis slot (22-axis canon extension); UNMEASURED until the public input bank + formula are published and strangers can recompute. Never claimed before measured."
   },
   {
    "id": "human-labour-index",
    "name": "Human-labour index",
    "status": "UNMEASURED",
    "candidate": true,
-   "rubric": "TO DEFINE: deterministic measure of human-labour displacement/augmentation signal. No rubric or data wired yet.",
-   "data": "none yet \u2014 net-new build"
+   "rubric": "Deterministic index over cited public labour-series (employment, hours, wages, displacement indicators). Formula + inputs published.",
+   "data": "none yet — net-new build",
+   "bank_status": "NONE — declared only; measure when the public input bank is assembled",
+   "surface": "none (declared; no live surface yet)",
+   "declared_as": "CANDIDATE financial-axis slot (22-axis canon extension); UNMEASURED until the public input bank + formula are published and strangers can recompute. Never claimed before measured."
   },
   {
    "id": "humanoid-labour-index",
    "name": "Humanoid-labour index",
    "status": "UNMEASURED",
    "candidate": true,
-   "rubric": "TO DEFINE: deterministic measure of embodied/humanoid-labour deployment signal. No rubric or data wired yet.",
-   "data": "none yet \u2014 net-new build"
+   "rubric": "Deterministic index over cited deployment/utilisation series (installed fleet, active deployments, hours worked, safety-incident rates per deployment).",
+   "data": "none yet — net-new build",
+   "bank_status": "NONE — declared only; measure when the public input bank is assembled",
+   "surface": "none (declared; no live surface yet)",
+   "declared_as": "CANDIDATE financial-axis slot (22-axis canon extension); UNMEASURED until the public input bank + formula are published and strangers can recompute. Never claimed before measured."
   }
  ],
- "honesty": "3 candidate axes (ai-economy, human-labour, humanoid-labour) have NO rubric and NO data yet \u2014 declared UNMEASURED so the slot is honest and public, never claimed as built. They become MEASURED only when a deterministic rubric + real data exist and a run is signed."
+ "honesty": "3 candidate axes (ai-economy, human-labour, humanoid-labour) have NO rubric and NO data yet — declared UNMEASURED so the slot is honest and public, never claimed as built. They become MEASURED only when a deterministic rubric + real data exist and a run is signed."
 }
