@@ -134,3 +134,17 @@ HF mirror **csoai/rwa-attest** (7 files) · scripts + methodology committed.
 **Cursor:** the `/indices` cards can now show REAL signed numbers for AI-economy +
 human-labour (render scope + bank-gap badges), humanoid = declared-UNMEASURED card.
 Grammar stays: reference index ≠ forecast; measurement not certification.
+
+## 8. ROUND 3 CLOSE 2026-08-25 — all new surfaces LIVE + verifier shipped
+- **Live + stranger-verified:** /interop/{ai-economy-index.v0.1, human-labour-index.v0.1,
+  evm-control-facts, financial-measure-run-v2}.json — all 200, all signatures VALID via
+  scripts/verify_signed.py (zero trust).
+- **Jail gold bank published:** HF **csoai/gspc-jail-goldbank** (frozen 71-cell bank +
+  7×71 results + deterministic runner); jail dataset field → "published" (#653).
+- **Portable verifier:** scripts/verify_signed.py — both estate signature styles,
+  self-tested on live artifacts (#656).
+- **XRPL address location**: bounded probe (CoinPaprika/CoinGecko/ledger-domain check)
+  failed for Aviva/DCP/EURCV/JMWH — stays honest "not-located"; method documented in
+  LANE_COORDINATION. Next campaign item.
+- **Cursor:** the /indices + /financial-axes cards can now render real signed numbers
+  for 2 of 3 indices + 6 XRPL + 3 EVM control-fact sets; JMWH demo-only framing stands.
