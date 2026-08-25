@@ -35,6 +35,8 @@ AGUI_WIRE_URL=https://<tunnel-or-agui.councilof.ai>
 | GSPC board | Lobby card + `/gspc-scoreboard` | Hub tile | Measure |
 | East-West | Lobby pane + `/east-west/*` | Same pack IDs | — |
 | EAT / Competitors / RWA stubs | `/competitors` | Same records when MEASURED | — |
+| Labour / AI-economy indices | Lobby `indices_catalog` + `/indices` | `/dashboard/measurement` UNMEASURED tile | Measure |
+| Products catalog (HO.2) | `/products` | Measurement hub tile | Solutions |
 | Verify | Lobby + `/gspc-verify` | Hub | Loginless verify |
 | Powered-by (Option A) | `/powered-by` | Partner admin later | — |
 
@@ -66,6 +68,12 @@ curl -sS https://councilof.ai/api/finance/bond-crossing | jq '.register, .attest
 
 # RECEIPT-SPEC schema
 curl -sS https://councilof.ai/.well-known/schemas/agent-measurement-card.schema.json | jq '.title'
+
+# Labour / AI-economy indices — UNMEASURED (branch until master merge; 404 on prod OK)
+curl -sS https://councilof.ai/api/indices | jq '.indices[]? | {slug, status, measured_score}'
+
+# Oracle fleet — infra status only (not a grade oracle) — see docs/ORACLE_FLEET.md
+curl -sS -o /dev/null -w "%{http_code}\n" https://councilof.ai/api/oracle-fleet
 ```
 
 ## Unit tests
