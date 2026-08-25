@@ -34,7 +34,7 @@ export default function EnforcementTimeline({ className = "" }: { className?: st
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className={className} role="img"
-      aria-label="EU AI Act staggered application timeline: Feb 2025 prohibited practices, Aug 2025 GPAI, Aug 2026 high-risk and transparency, Aug 2027 Annex I"
+      aria-label="EU AI Act staggered application timeline: Feb 2025 prohibited practices, Aug 2025 GPAI obligations, Aug 2026 GPAI enforcement, Dec 2026 Article 50 transparency, Dec 2027 Annex III high-risk (Digital Omnibus), Aug 2028 Annex I"
       xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="et-line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor={EM} /><stop offset="1" stopColor={TE} /></linearGradient>
