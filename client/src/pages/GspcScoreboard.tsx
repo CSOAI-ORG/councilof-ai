@@ -200,14 +200,44 @@ const AXIS_ALIAS: Record<string, string> = {
   xr: "cross-reality", det: "detector-interop", art5: "art5-safeguard",
 };
 
+// The 8 financial/domain axes of the 22-axis canon. These are NOT on the
+// behavioural /api/gspc board — they live in /interop/financial-axes.json with
+// their own three-state grammar. When /gspc/<financial-axis> is requested we
+// render a deep-dive from that JSON (real status, never an invented number)
+// instead of the honest "no axis on the board" note.
+const FIN_AXIS_IDS = new Set([
+  "provenance-controls", "reserve-attestation", "regulatory-framework",
+  "distribution-integrity", "custody-disclosure", "ai-economy-index",
+  "human-labour-index", "humanoid-labour-index",
+]);
+
+const FIN_CHIP: Record<string, string> = {
+  MEASURED: "bg-emerald-100 text-emerald-800 border-emerald-300",
+  UNMEASURED: "bg-gray-100 text-gray-600 border-gray-300",
+};
+
 export default function GspcScoreboard() {
   const [data, setData] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
   const [, axisParams] = useRoute("/gspc/:axis");
   const rawAxis = axisParams?.axis?.toLowerCase() ?? null;
   const wantAxis = rawAxis ? (AXIS_ALIAS[rawAxis] ?? rawAxis) : null;
+  const isFinancialAxis = !!wantAxis && FIN_AXIS_IDS.has(wantAxis);
   const focused: Axis | null =
     data && wantAxis ? ((data.axes as Axis[]).find((a) => a.axis === wantAxis) ?? null) : null;
+
+  const [finAxis, setFinAxis] = useState<any>(null);
+  const [finRun, setFinRun] = useState<any>(null);
+  useEffect(() => {
+    if (!isFinancialAxis) return;
+    Promise.all([
+      fetch("/interop/financial-axes.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
+      fetch("/interop/financial-measure-run.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    ]).then(([fa, mr]) => {
+      if (fa && Array.isArray(fa.axes)) setFinAxis(fa.axes.find((a: any) => a.id === wantAxis) ?? null);
+      if (mr && Array.isArray(mr.measured)) setFinRun(mr);
+    });
+  }, [isFinancialAxis, wantAxis]);
 
   useEffect(() => {
     document.title = "The GSPC board — live | Council of AI";
@@ -256,7 +286,77 @@ export default function GspcScoreboard() {
         {err && <p className="mt-8 text-red-600">Board fetch failed: {err} — the API at /api/gspc is the source of truth.</p>}
         {!data && !err && <p className="mt-8 text-gray-500">Loading the live board…</p>}
 
-        {wantAxis && data && !focused && (
+        {isFinancialAxis && (
+          <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
+              Financial axis · 22-axis canon
+            </p>
+            <h2 className="mt-1 text-2xl font-black text-gray-900">{finAxis?.name ?? wantAxis}</h2>
+            <p className="mt-1 font-mono text-xs text-gray-400">/gspc/{wantAxis}</p>
+            {finAxis ? (
+              <>
+                <p className="mt-3">
+                  <span
+                    className={`inline-block rounded-full border px-3 py-0.5 text-xs font-bold ${FIN_CHIP[finAxis.status] || FIN_CHIP.UNMEASURED}`}
+                  >
+                    {finAxis.status}
+                  </span>
+                  {finAxis.candidate && (
+                    <span className="ml-2 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                      candidate slot
+                    </span>
+                  )}
+                </p>
+                {finAxis.rubric && <p className="mt-3 text-sm text-gray-700"><strong>Rubric.</strong> {finAxis.rubric}</p>}
+                {finAxis.status === "MEASURED" && typeof finAxis.measured_count === "number" && (
+                  <p className="mt-2 text-sm text-emerald-800">
+                    {finAxis.measured_count} instruments measured · deterministic on-chain control facts.
+                  </p>
+                )}
+                {finAxis.data && <p className="mt-2 text-xs text-gray-500"><strong>Data.</strong> {finAxis.data}</p>}
+                {finAxis.bank_status && <p className="mt-2 text-xs text-gray-500"><strong>Input bank.</strong> {finAxis.bank_status}</p>}
+                {finAxis.declared_as && <p className="mt-2 text-xs text-gray-500">{finAxis.declared_as}</p>}
+                {finAxis.note && <p className="mt-2 text-xs italic text-gray-400">{finAxis.note}</p>}
+
+                {finAxis.id === "provenance-controls" && finRun && Array.isArray(finRun.measured) && (
+                  <div className="mt-4 overflow-x-auto rounded-lg border border-emerald-600/10 bg-white p-4">
+                    <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
+                      On-chain control facts — signed run
+                    </p>
+                    <p className="mt-1 text-xs text-gray-500">{finRun.network}. {finRun.honesty}</p>
+                    <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                      {finRun.measured.map((m: any) => (
+                        <li key={m.instrument} className="rounded-lg border border-gray-100 p-3 text-sm">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-semibold text-gray-800">{m.instrument}</span>
+                            <a className="font-mono text-[11px] text-emerald-700 underline" href={m.explorer} target="_blank" rel="noopener noreferrer">
+                              tx {m.devnet_tx.slice(0, 8)}…
+                            </a>
+                          </div>
+                          <p className="mt-1 font-mono text-[11px] text-gray-500">
+                            allowlisting {m.control_facts.facts.allowlisting_enforced ? "enforced" : "none"} · freeze {m.control_facts.facts.issuer_can_freeze ? "yes" : "no"} · domain {m.control_facts.facts.identity_domain_declared ? "declared" : "none"}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-2 text-[11px] text-gray-400">
+                      Facts only. Risk verdicts remain UNMEASURED pending counsel. Not ratings, advice, or endorsements.
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <p className="mt-3 text-sm text-gray-500">Loading the financial-axes registry…</p>
+            )}
+            <p className="mt-4 flex flex-wrap gap-4 text-sm">
+              <Link className="font-semibold text-emerald-700 underline" href="/financial-axes">All 8 financial axes</Link>
+              <a className="font-semibold text-emerald-700 underline" href="/interop/financial-axes.json">Raw JSON</a>
+              <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">The behavioural board</Link>
+            </p>
+          </div>
+        )}
+
+        {wantAxis && data && !focused && !isFinancialAxis && (
           <p className="mt-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
             No axis named <span className="font-mono">{wantAxis}</span> on the board — the full board
             is below. Every axis we publish is in GET /api/gspc; we never invent one for a URL.

@@ -175,6 +175,7 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
+const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
 const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
@@ -360,6 +361,9 @@ const ROUTE_TITLES: Record<string, string> = {
   "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
+  "/financial-axes": "Financial axes — the 8 financial slots of the 22-axis canon | Council of AI",
+  "/badges": "Governance badges — wear your measured status | CSOAI",
+  "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
   "/xrpl-attest": "Ledger attestation | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
@@ -623,6 +627,7 @@ function App() {
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
+                  <Route path="/financial-axes" component={FinancialAxes} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
