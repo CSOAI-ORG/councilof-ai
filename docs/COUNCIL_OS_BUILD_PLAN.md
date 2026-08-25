@@ -32,8 +32,10 @@
 4. **Scores never sold.** Meter verdicts / API / seats — never grades or placements.  
 5. **No CopilotKit rewrite.** Prefer prebuilt React cards (`MeasuredToolCard`) the agent fills.  
 6. **No invented AUM, ARR, or list prices as MEASURED.** Pricing pending published ruling.  
-7. **Stage gates:** Stage 1 = doctrine + stubs; Stage 2 = testnet OUSG/BUIDL/JMWH; Stage 3 = mainnet top 10.  
-8. **Legal review** of attestation templates before external risk-negative publish — real gate, not code.
+7. **Stage gates:** Stage 1 = doctrine + stubs; Stage 2 = testnet **clean plays** (OUSG, BUIDL, Aviva/RLUSD) + JMWH **demo-only**; Stage 3 = mainnet clean top set.  
+8. **Legal review** of attestation templates before external risk-negative publish — real gate, not code.  
+9. **Moat language:** always **unsolicited + permissionless** — never only “independent” (incumbents already claim that).  
+10. **Pure attestor:** no mint, no custody, no synthetic — stay outside SEC staff tokenization taxonomy.
 
 ---
 
@@ -125,12 +127,25 @@ publisher (Stage 2+) → XRPL Memo | provisional Credential | EAS off-chain
 | Cards in chat | Existing `measuredToolCards` + `MeasuredToolCard` | 1 (done) |
 | White-label | `/powered-by` Option A | 1 (surface) |
 
-### Operational blockers (not research gaps)
+## Custody path (unblocks mainnet — owner)
 
-- **Key custody** before mainnet publish (HSM/MPC or isolated signer — not laptop `.env`)  
-- **Paid/archive RPC** at hundreds-of-targets scale (`.env` overrides à la DeFiLlama)  
-- **Legal** attestation language review  
-- CopilotKit paid-tier boundary → **irrelevant** if we do not depend on CopilotKit  
+| Option | Curves | Fit |
+|--------|--------|-----|
+| **AWS KMS** | secp256k1 + **Ed25519 (Nov 2025)** | Cloud-native, FIPS, one system for XRPL+EVM |
+| **Turnkey** | secp256k1 + Ed25519 | Policy engine, agentic signing, per-sig economics |
+| Later | YubiHSM 2 · Coinbase cb-mpc (MIT) | Hardware / self-hosted MPC sovereignty |
+
+Publish **did:web** key provenance. Shamir/Vault = cold backup only. Publishers refuse `--publish` without custody. See compass `wf-7af46a56`.
+
+## Standards upgrade (verify + index)
+
+- Align cards to **W3C VC 2.0** (EdDSA for XRPL, ECDSA for EVM; Bitstring Status List).  
+- Transport stays XRPL Memo/Credential + EAS.  
+- Index: EAS Indexing Service + XRPL Credential ingest → one Postgres corpus (**build item** — no off-the-shelf dual indexer).
+
+## Estate map
+
+Full axis × regulation × SOV Signal × labour/economy gaps: `docs/ESTATE_CROSSWALK.md`.  
 
 ---
 
@@ -154,7 +169,7 @@ COBOL / CobolBridge = trust on-ramp via lineage artefacts — **out of Stage 1 p
 | **1b** | Scaffold `adapters/` + `SKILL.md`; one adapter per `rwaAttestationTargets` slug (read-only facts) | `node`/`vitest` smoke per adapter |
 | **1c** | Keep Lobby wire: `AGUI_WIRE_URL` or refuse-closed; tool→card registry complete | Cards from tool calls |
 | **1d** | Option A `/powered-by` live on branch; no invented prices | Messaging lock intact |
-| **2a** | Publishers on **testnet** (XRPL Devnet Memo + EAS Sepolia/Base off-chain) for **OUSG, BUIDL, JMWH** | Independent verify of pointers |
+| **2a** | Publishers on **testnet** (XRPL Devnet Memo + EAS Sepolia/Base) for **OUSG, BUIDL, Aviva** (clean); optional **JMWH demo** schema | Independent verify of pointers |
 | **2b** | Cards appear in OS **and** DSH | Parity checklist ✅ |
 | **3** | Mainnet top 10; Memo-first; EAS off-chain scale | Counsel + custody signed off |
 | **Later** | Corpus API · Channels · tokenize partner | After citation + pricing ruling |
