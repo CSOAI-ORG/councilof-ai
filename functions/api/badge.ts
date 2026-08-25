@@ -4,23 +4,41 @@
 //     ![measured](https://councilof.ai/api/badge)
 //     ![measured](https://councilof.ai/api/badge?measured=9&label=agentname)
 //
-// The default badge states the board's own honest count — 13 measured axes plus jail as
-// a measured floor (not a 14th scored axis). Slot-15 remains unnamed and visible empty.
-// A visiting agent that enrols and is measured on fewer axes states its real count, and an
-// unmeasured subject renders honestly as "unmeasured" in grey — never a fabricated score.
+// The default badge states the board's own honest count, derived from the same
+// MEASURED / UNTESTED split as GET /api/gspc totals.public_count - never a typed
+// slot count. Jail stays a measured floor when its separation is UNTESTED. The
+// in-lane slot stays unnamed and visible empty. A visiting agent that enrols and
+// is measured on fewer axes states its real count, and an unmeasured subject
+// renders honestly as "unmeasured" in grey - never a fabricated score.
 //
 // Formats:
 //   (default)        → SVG (image/svg+xml), embeddable directly in a README
 //   ?format=shields  → shields.io endpoint JSON {schemaVersion,label,message,color}
 //                      use as https://img.shields.io/endpoint?url=<this-url>&format=shields
-//   ?format=json     → the raw {measured,message,color,verify,ruling} object
+//   ?format=json     → the raw {measured,message,color,verify,public_count} object
 //
-// Doctrine: measurement, not certification. The badge is an image that points home to
-// /honesty, where the number is recomputable from its rows. It asserts nothing it cannot show.
+// Doctrine: measurement, not certification. The badge is an image that points home
+// to /gspc-verify, where the number is recomputable from its rows.
 
-const BOARD = { measured: 13, total: 14 }; // internal only — public chrome: 13 measured + jail floor (NOT 14-axis)
-const VERIFY_URL = "https://councilof.ai/honesty";
-const BRAND = "#4f46e5"; // indigo — matches the site
+import { AXES_A } from "./_gspc_axes_a";
+import { AXES_B } from "./_gspc_axes_b";
+
+const AXES = [...AXES_A, ...AXES_B];
+
+const boardCounts = () => {
+  const m = AXES.filter((a) => a.status === "MEASURED");
+  // Same derivation as functions/api/gspc.ts totals - never a typed slot count.
+  const measured = m.filter((a) => a.separation !== "UNTESTED").length;
+  const quotable = m.length;
+  const publicCount = `${measured} measured of ${quotable} quotable`;
+  const jailUntested = m.some((a) => a.axis === "jail" && a.separation === "UNTESTED");
+  const defaultMessage = jailUntested
+    ? `${publicCount}; jail floor untested`
+    : publicCount;
+  return { measured, quotable, publicCount, defaultMessage };
+};
+
+const VERIFY_URL = "https://councilof.ai/gspc-verify";
 const GREY = "#9ca3af";
 
 const clampInt = (raw: string | null, fallback: number, max = 999): number => {
@@ -75,20 +93,20 @@ const svgBadge = (label: string, message: string, colour: string): string => {
 
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
-  const total = clampInt(url.searchParams.get("total"), BOARD.total);
+  const board = boardCounts();
+  const total = clampInt(url.searchParams.get("total"), board.quotable);
   // `measured` may be omitted (board default) or explicitly 0 for an unmeasured subject.
   const measured = url.searchParams.has("measured")
     ? clampInt(url.searchParams.get("measured"), 0, total)
-    : BOARD.measured;
+    : board.measured;
   const label = (url.searchParams.get("label") || "GSPC").slice(0, 40);
   const format = url.searchParams.get("format");
 
-  // Board default shows "13 measured + jail floor"; custom measured values show "X measured"
   const isDefaultBoard = !url.searchParams.has("measured");
   const message = measured <= 0
     ? "unmeasured"
     : isDefaultBoard
-      ? "13 measured + jail floor"
+      ? board.defaultMessage
       : `${measured} measured`;
   const colour = colourFor(measured, total);
 
@@ -106,7 +124,14 @@ export const onRequestGet: PagesFunction = async (context) => {
   }
   if (format === "json") {
     return new Response(
-      JSON.stringify({ measured, message, color: colour, verify: VERIFY_URL, ruling: "13 measured + jail floor (SITTING 1, 2026-08-18)" }, null, 2),
+      JSON.stringify({
+        measured,
+        message,
+        color: colour,
+        verify: VERIFY_URL,
+        public_count: board.publicCount,
+        ruling: `${board.publicCount} (derived from GET /api/gspc totals; never typed)`,
+      }, null, 2),
       { headers: { ...headers, "content-type": "application/json; charset=utf-8" } },
     );
   }
