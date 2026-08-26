@@ -126,7 +126,7 @@ export default function GSPCVerify() {
               signed with <strong className="text-emerald-50">Ed25519</strong> and{" "}
               <strong className="text-emerald-50">SHA-256 hash-chained</strong>, verifiable offline
               against the published key <code className="text-emerald-300">f4b4278d…</code>{" "}
-              (<code className="text-emerald-300">did:web:csoai.org</code>).{" "}
+              <code className="text-emerald-300">did:web:csoai.org</code>).{" "}
               <strong className="text-emerald-50">OpenTimestamps (Bitcoin) anchoring is roadmap,
               not yet shipped</strong> — the label will name it in the commit it ships, as with
               ML-DSA-65. The post-quantum ML-DSA-65 (FIPS-204) signer is likewise{" "}
@@ -143,6 +143,32 @@ export default function GSPCVerify() {
               purpose.
             </li>
           </ul>
+        </section>
+
+        {/* RWA pack verify path — Stage 2 honesty (NEXT_300 #183) */}
+        <section className="rounded-2xl border border-amber-500/25 bg-amber-950/20 p-6">
+          <h2 className="text-2xl font-bold text-emerald-50">RWA attestation pack (Stage 2)</h2>
+          <p className="mt-2 text-[13px] text-emerald-100/80 leading-relaxed">
+            RWA targets ship as an <strong className="text-emerald-50">UNMEASURED</strong> catalog
+            until custody + counsel gates clear. Verify path: fetch{" "}
+            <code className="text-emerald-300">GET /api/rwa-attestation</code> — every row has{" "}
+            <code className="text-emerald-300">measured_score: null</code> and{" "}
+            <code className="text-emerald-300">signing_state: unsigned</code>. Attestation ≠
+            tokenization ≠ ownership. Testnet Memo pointers (when published) follow{" "}
+            <code className="text-emerald-300">docs/SOVOS/RECEIPT-SPEC-0.1.md</code> §12 — hash
+            pointers only; never invent AUM as MEASURED.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-4 text-[13px]">
+            <a href="/api/rwa-attestation" className="text-emerald-300 hover:underline font-mono text-xs">
+              GET /api/rwa-attestation
+            </a>
+            <Link href="/products" className="text-emerald-300 hover:underline">
+              Products · RWA posture →
+            </Link>
+            <Link href="/indices" className="text-emerald-300 hover:underline">
+              Indices · UNMEASURED →
+            </Link>
+          </div>
         </section>
 
         {/* LINKS */}
