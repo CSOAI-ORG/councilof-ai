@@ -204,3 +204,15 @@ humanoid deployment-registry design.
   is one concrete implementation of its rating recommendation, not a duplicate plan.
 - Active lanes untouched: 22-axis sweep, axis-count-derive, a4-mcp-honesty. This commit is
   isolated on master (harness/ — not the deployed client/).
+
+## 2026-08-26 · JEEVES — ARC/Ndea dual-structure blueprint delivered
+docs/CSOAI_FOUNDATION_LTD_BLUEPRINT.md — the CSOAI Foundation (neutral standard-holder) +
+CSOAI LTD (commercial) dual structure, adapted from ARC/Ndea and HARDENED to fix ARC's four
+COI gaps: (1) COI covers the internal LTD party, not just external labs; (2) no single funder
+(incl. LTD principals) > ~25% without independent oversight; (3) ≥1 independent director + an
+academic/technical oversight panel from day one; (4) neutrality provably firewalled by bytes
+(signed append-only corrections ledger + reconciliation/json guards), not promises. Doctrine-safe
+revenue (subscriptions/data-licensing/consortium-dues/metered-assurance/externally-funded-prize)
+vs off-doctrine (issuer-pays ratings, certification marks, tokenization — never). Formation of
+the entity + independent directors = OWNER/counsel acts; this doc is the governance
+pre-commitment. Owner gated, not executed by me.
