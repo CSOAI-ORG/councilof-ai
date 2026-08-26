@@ -346,18 +346,18 @@ function Boundary() {
 const VERIFY_STEPS = [
   {
     n: "01",
-    h: "Recompute the canonical JSON",
-    d: "Sort every key, strip whitespace, drop the content_id and signature fields, and take the SHA-256. That hash is the card's identity — if a single character changed, it will not match.",
+    h: "Pin our key first — this step is not optional",
+    d: "Fetch /.well-known/did.json and take the card-attestation key. Every published card must carry that exact pubkey. Verifying a card against the key it ships with proves only that the file is self-consistent — anyone can alter a body and sign it with a key they generated a second ago.",
   },
   {
     n: "02",
-    h: "Check the Ed25519 signature",
-    d: "Fetch our public key from /.well-known/did.json and verify the signature over the canonical record. The key is published, so you never have to ask us anything.",
+    h: "Recompute the id from the body",
+    d: "Canonicalise the card's body — every key sorted, no whitespace — and take the SHA-256. That hash must equal the card's id. One changed character and it will not match. One warning if you implement this outside Python: the bytes were written by CPython, which renders a float of integral value as 0.0 where JavaScript and Go write 0, so a naive verifier reports a false failure on a large minority of the set. Our verifier at /signed/verify-card.mjs handles it and the rule is written out at /signed/HOW-TO-VERIFY.md.",
   },
   {
     n: "03",
-    h: "That is it — no login, no fee",
-    d: "The whole check runs in your browser with WebCrypto, on your machine, not ours. The verifier is public and the scoring code is published, so you can also re-run the measurement itself.",
+    h: "Check the Ed25519 signature — then you are done",
+    d: "Verify the signature over those same bytes under the pinned key. The whole check runs offline on your machine, with no CSOAI code, no account and no permission — or in your browser with WebCrypto. The banks and the grader are published too, so a measurement can be re-run as well as re-checked.",
   },
 ];
 
@@ -369,17 +369,19 @@ function VerifyYourself() {
           <Kicker>Do not trust us — check</Kicker>
           <Heading>Verify a card yourself. Three steps.</Heading>
           <Body>
-            Every measurement we publish is a small signed record, roughly 3KB of scores, sample
-            sizes, intervals and hashes. You do not need an account, our servers, or our permission to
-            confirm it is genuine and unaltered. {ANCHORING_CLAIM} That signature over that hash
-            chain is exactly what you re-compute.
+            Every measurement we publish is a small signed record — under a kilobyte, carrying the
+            axis, the model, the accuracy, the issuer, the date and the hash of the card before it.
+            You do not need an account, our servers, or our permission to confirm it is genuine and
+            unaltered. Pin our key from /.well-known/did.json first: a card checked against the key
+            it ships with proves only that the file is self-consistent, not that we issued it.
+            {ANCHORING_CLAIM} That signature over that hash chain is exactly what you re-compute.
           </Body>
         </div>
 
         <Figure
           className="mt-12"
           src="/images/infographics/crop/trust-root-offline-verify.jpg"
-          alt="The trust root did:web:csoai.org anchoring signed 3KB cards through a hash-chained evidence ledger to local, offline verification on the reader's own machine"
+          alt="The trust root did:web:csoai.org anchoring signed measurement cards through a hash-chained evidence ledger to local, offline verification on the reader's own machine"
         />
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[1.15fr_1fr] lg:items-start">

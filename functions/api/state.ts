@@ -63,6 +63,7 @@
 
 import boardSigned from "../../public/signed/gspc-board.signed.json";
 import cardIndex from "../../public/signed/card_index.json";
+import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
@@ -99,6 +100,7 @@ const fact = (
 // ── sources, named once ──────────────────────────────────────────────────────
 const SRC_BOARD = "public/signed/gspc-board.signed.json";
 const SRC_CARDS = "public/signed/card_index.json";
+const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
 const SRC_CLAIMS = "public/claims-register.json";
 const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
@@ -401,6 +403,79 @@ export const onRequestGet: PagesFunction = async () => {
         "This count is the verifiable floor: it is what the published index actually contains. " +
         "Larger figures have circulated for card sets in other repos and for cards never published " +
         "here — see not_covered. A number that no published index contains is not a card count.",
+    },
+
+    // ── THE SIGNED CARD CHAIN ────────────────────────────────────────────────
+    // Included because signed_cards.count above answers a NARROWER question than
+    // the one every surface actually asks. It counts the rows in card_index.json —
+    // a subset index frozen at the verifiable floor — while the published card
+    // STORE holds more bodies than that index lists. Both facts are true, they are
+    // not the same fact, and a page that quotes one as the other is wrong either
+    // way. So the store is derived and published on its own line.
+    card_chain: {
+      authority: SRC_CHAIN,
+      manifest: "/signed/chain.json",
+      verifier: "/signed/verify-card.mjs",
+      guide: "/signed/HOW-TO-VERIFY.md",
+      bodies_published: fact(
+        (chainFacts as any).bodies.published,
+        "catalogued",
+        SRC_CHAIN + " → bodies.published",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        "Card bodies present in public/signed/cards/, counted from the directory.",
+      ),
+      bodies_verified_valid: fact(
+        (chainFacts as any).bodies.verified_valid,
+        "measured",
+        SRC_CHAIN + " → bodies.verified_valid",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        "Bodies that VERIFY: id recomputed from the canonical body and the Ed25519 signature " +
+          "checked against the pinned card-attestation key, by the same verifier we publish. " +
+          "This is a measurement, not a catalogue entry — the check was run.",
+      ),
+      distinct_signing_keys: fact(
+        (chainFacts as any).bodies.distinct_pubkeys,
+        "measured",
+        SRC_CHAIN + " → bodies.distinct_pubkeys",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        "Distinct pubkey values across the published bodies.",
+      ),
+      chain_positions: fact(
+        (chainFacts as any).chain.positions,
+        "catalogued",
+        SRC_CHAIN + " → chain.positions",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        "Positions listed in the chain manifest, recounted from links[] rather than read off its header.",
+      ),
+      bodies_withheld: fact(
+        (chainFacts as any).chain.bodies_withheld,
+        "declared",
+        SRC_CHAIN + " → chain.bodies_withheld",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        (chainFacts as any).withheld.why_withheld,
+      ),
+      withheld_attested_by_published_parent: fact(
+        (chainFacts as any).withheld.attested_by_published_parent,
+        "measured",
+        SRC_CHAIN + " → withheld.attested_by_published_parent",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        (chainFacts as any).withheld.what_this_means,
+      ),
+      manifest_signed: {
+        value: (chainFacts as any).chain.manifest_signed,
+        note: (chainFacts as any).chain.manifest_signed_note,
+      },
+      index_relationship: (chainFacts as any).index.relationship_note,
+      never_conflate:
+        "bodies_published is the STORE. signed_cards.count is the INDEX. bodies_withheld is a " +
+        "DISCLOSURE, and only withheld_attested_by_published_parent is a PROOF. Four different " +
+        "numbers about four different things — never substituted for one another.",
     },
 
     // ── THE CLAIMS REGISTER ──────────────────────────────────────────────────

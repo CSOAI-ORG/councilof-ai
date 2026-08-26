@@ -13,6 +13,7 @@ import {
   type Axis, type InLaneAxis,
 } from "../lib/gspcAxes";
 import { industriesForGrid } from "../data/industries";
+import { useEstateFacts } from "@/lib/estateFacts";
 import FaqBlock from "@/components/FaqBlock";
 import StoryWorld from "@/components/home/StoryWorld";
 import LivingStages from "@/components/home/LivingStages";
@@ -26,7 +27,7 @@ import {
 const FOUR_BUYERS = [
   { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. The living GSPC board is signed; empty cells stay empty. Verify at GET councilof.ai/api/gspc." },
   { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
-  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get measured", href: "/?lobby=measured&task=enterprise-start", desc: "Sign, ship, re-attest. No model in the verdict path. C2PA provenance integrated. The board includes the axis that catches our own models." },
+  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get measured", href: "/?lobby=measured&task=enterprise-start", desc: "Sign, ship, re-attest. No model in the verdict path. Provenance today is Ed25519 over a hash chain — C2PA conformance is not yet available (we are a Contributor member; see /claims-register CR-012). The board includes the axis that catches our own models." },
   { icon: Zap, who: "Developers", tagline: "Verify a signed card — free forever", cta: "Verify a card", href: "/gspc-verify", desc: "Call the signed measurement tools from CI: gate a release, re-check a card, track a run. Counts stay on GET /api/gspc." },
 ];
 
@@ -38,7 +39,7 @@ const PRODUCT_FAMILY = [
     name: "GPAI Evidence Pack",
     href: "/gpai-evidence",
     tag: "EU AI Act",
-    what: "Independent third-party evidence a GPAI provider can hand the AI Office. Evidence, never a conformity mark — GPAI duties have been live since 2 August 2026.",
+    what: "Independent third-party evidence a GPAI provider can hand the AI Office. Evidence, never a conformity mark — GPAI duties have been live since 2 August 2025.",
   },
   {
     name: "CRA Readiness Kit",
@@ -161,7 +162,7 @@ function ProblemStrip() {
           <h3 className="mt-2 text-2xl font-black text-gray-900">A card anyone can check</h3>
           <ul className="mt-4 space-y-3 text-sm text-gray-600">
             <li>We run the system on frozen, published instruments.</li>
-            <li>We sign the result. You keep the 3KB card.</li>
+            <li>We sign the result. You keep the card — under a kilobyte, yours to hold.</li>
             <li>Unmeasured slots stay empty. No invented scores.</li>
             <li>Re-attest is a new record, never an edit of the old one.</li>
           </ul>
@@ -172,11 +173,11 @@ function ProblemStrip() {
 }
 
 const USPS = [
-  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, 3KB. Verify stays free and loginless. A grade is never sold.", href: "/assess" },
+  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, under a kilobyte: axis, model, accuracy, issuer, date and the previous card's hash. Verify stays free and loginless. A grade is never sold.", href: "/assess" },
   { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
   { icon: Scale, title: "Honest living board", body: "Empty cells stay empty. Jail is a measured floor when the stamp says so. Live counts: GET /api/gspc.", href: "/gspc-scoreboard" },
   { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
-  { icon: Landmark, title: "Council City", body: "The living layer. Districts emit the same signed atom. Not a dashboard website.", href: "/gspc-arena?view=towns" },
+  { icon: Landmark, title: "Council City", body: "A live view over the same signed records the board is built from — a different window on the measurements, not a second source of them.", href: "/gspc-arena?view=towns" },
   { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/methodology" },
   { icon: Ban, title: "No money from what we rank", body: "We do not sell ratings and we do not take a cut from anything on the board.", href: "/methodology" },
   { icon: Shield, title: "Measurement credential", body: "Not a certification. Not a notified body. We measure, sign, and keep the evidence.", href: "/gspc-verify" },
@@ -415,6 +416,60 @@ function AxesGrid() {
   );
 }
 
+// ── the signed card chain ───────────────────────────────────────────────────
+// Every number here comes from GET /api/state -> card_chain, which is built from
+// scripts/derive-chain-facts.mjs re-verifying every published body with the same
+// verifier we ship. Nothing on this page types a count.
+//
+// The load-bearing pair is withheld / withheldAttested. Publishing "22 withheld,
+// every position accounted for" alone would present a DISCLOSURE as a PROOF: the
+// chain manifest carries no signature of its own, so only the withheld ids that a
+// published card's SIGNED body names as `prev` are actually attested. That is one
+// of the twenty-two, and the copy says one.
+function CardChainBand() {
+  const f = useEstateFacts();
+  return (
+    <Section
+      id="chain"
+      title="What you can check without asking us"
+      subtitle="The board says what we measured. This says what we published, and exactly how far the cryptography reaches."
+      bg="bg-gray-50"
+    >
+      <div className="grid gap-5 lg:grid-cols-3">
+        <div className="rounded-2xl border border-emerald-200 bg-white p-6 lg:col-span-2">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">Published and verifying</p>
+          <p className="mt-3 text-[15px] leading-relaxed text-gray-700">{f.verifiedSentence}</p>
+          <p className="mt-3 text-sm leading-relaxed text-gray-500">
+            Each card carries its own signature bytes, the public key, and the preimage rule that
+            says exactly which bytes were signed. A zero-dependency JavaScript verifier ships at{" "}
+            <code className="text-[12px]">/signed/verify-card.mjs</code> and the rule is written out at{" "}
+            <code className="text-[12px]">/signed/HOW-TO-VERIFY.md</code>. Pin our key from{" "}
+            <code className="text-[12px]">/.well-known/did.json</code> first — a card checked against
+            the key it ships with proves only that the file is self-consistent.
+          </p>
+        </div>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-6">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-amber-700">Withheld, and the limit of the proof</p>
+          <p className="mt-3 text-[15px] leading-relaxed text-gray-700">{f.withheldSentence}</p>
+          <p className="mt-3 text-sm leading-relaxed text-gray-500">
+            We would rather publish that limit than let a complete-looking manifest do work a
+            signature has not done. Read the positions yourself at{" "}
+            <code className="text-[12px]">/signed/chain.json</code>.
+          </p>
+        </div>
+      </div>
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="/gspc-verify" className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-extrabold text-white hover:bg-emerald-800">
+          Verify a card yourself <ChevronRight className="w-4 h-4" />
+        </a>
+        <a href="/api/state" className="inline-flex items-center gap-2 rounded-xl border-2 border-emerald-200 px-6 py-3 text-sm font-extrabold text-emerald-700 hover:bg-emerald-50">
+          GET /api/state — where these numbers come from
+        </a>
+      </div>
+    </Section>
+  );
+}
+
 // ── demographics ───────────────────────────────────
 function BuyerCards() {
   return (
@@ -516,11 +571,11 @@ const HOME_FAQ = [
   },
   {
     q: "What is a measurement card?",
-    a: "A measurement card is the output: a small signed record, roughly 3KB of JSON, holding the scores, the sample size behind each score, the confidence interval where one is honest, the hashes, and the signature. It is deliberately small enough to email, attach to a tender, or keep in a compliance folder. It is yours to hold, and it does not live on our server for us to quietly amend later.",
+    a: "A measurement card is the output: a small signed record — under a kilobyte of JSON — holding the axis measured, the exact model, the accuracy, who issued it, when it was created, the hash of the card before it in the chain, and the Ed25519 signature over all of that. That is the whole of it. Sample sizes, confidence intervals and separation determinations live on the board at GET councilof.ai/api/gspc, not inside the card; a card tells you a specific measurement happened and has not been altered since, and the board tells you how much weight it carries. It is small enough to email, attach to a tender, or keep in a compliance folder, and it is yours to hold — it does not live on our server for us to quietly amend later.",
   },
   {
     q: "How do I verify a measurement card myself?",
-    a: "Three steps, and none of them involve us. First, put the record into canonical form — every key sorted, no whitespace — drop the content_id and signature fields, and take the SHA-256; that hash is the card's identity. Second, fetch our public key from /.well-known/did.json and verify the Ed25519 signature over the canonical record. Third, there is no third step: it either matches or it does not. The whole check runs in your own browser with WebCrypto at councilof.ai/gspc-verify — no account, no fee, no call to our servers for permission. Note what is not in that chain: there is no RFC-3161 timestamp authority and no OpenTimestamps or blockchain anchoring, and our records say so with timestamp_authority: none. The anchor is the signature over the hash chain, and that is a smaller claim you can check in seconds rather than a larger one you have to take on faith.",
+    a: "Three steps, and none of them involve us. First, fetch our public key from /.well-known/did.json and check the card carries that exact key — a card verified against the key it ships with proves only that the file is self-consistent, not that we issued it. Second, canonicalise the card's body — every key sorted, no whitespace — and take the SHA-256; that hash must equal the card's id. Third, verify the Ed25519 signature over those same bytes. One warning that matters if you implement this outside Python: the bytes were produced by CPython, which writes a float of integral value as 0.0 where JavaScript and Go write 0, so a naive verifier reports a false failure on a large minority of the set. We publish a zero-dependency JavaScript verifier that handles it at /signed/verify-card.mjs, and the exact rule at /signed/HOW-TO-VERIFY.md. The whole check runs offline, with no CSOAI code, no account and no permission — or in your browser at councilof.ai/gspc-verify. Note what is not in that chain: there is no RFC-3161 timestamp authority and no OpenTimestamps or blockchain anchoring, and our records say so with timestamp_authority: none. The anchor is the signature over the hash chain — a smaller claim you can check in seconds rather than a larger one you have to take on faith.",
   },
   {
     q: "What does a “measured of N” figure on the board mean?",
@@ -548,7 +603,7 @@ const HOME_FAQ = [
   },
   {
     q: "Which regulations and frameworks do you cover?",
-    a: "The frozen provision bank holds 417 statutory provisions drawn from the EU AI Act, GDPR, the Cyber Resilience Act, DORA and NIS2, crosswalked to thirteen governance frameworks including NIST AI RMF and ISO/IEC 42001. That thirteen is the publicly verified count; we hold a wider internal crosswalk and deliberately do not quote it here. New instruments are added as regulation actually lands, not when it is announced.",
+    a: "Two different things, and they are worth separating. The frozen provision bank is anchored by a published corpus hash inside the signed Article 50 pack at /packs/eu-article-50/provbench.json — that anchor, not a number on this page, is what fixes how many provisions were in the bank when it was signed. The published crosswalk is narrower than the bank: /crosswalk/east-west-v1.json maps one signed measurement across four regimes — the EU AI Act, the UK DRCF alignment, Illinois SB 315 and the Chinese TC260 alignment. Mappings to NIST AI RMF and ISO/IEC 42001 are described on our framework pages but are not in that published crosswalk, so treat them as described rather than as verified. New instruments are added as regulation actually lands, not when it is announced.",
   },
   {
     q: "What happens when the law changes?",
@@ -556,7 +611,7 @@ const HOME_FAQ = [
   },
   {
     q: "How does a company get measured?",
-    a: "You send us the system — an endpoint, a model, or an agent — and we run it against the frozen instruments that apply to it. Nothing about the test is bespoke: the same items, the same grader and the same thresholds that every other subject faced, so the result is comparable. You get back the signed card, including every slot we could not fill. The first measurement costs nothing, and re-measuring after your model or the law changes is the normal case rather than an upsell.",
+    a: "Today there are two different things behind that question and we will not blur them. The free self-serve tool at /assess is a deterministic EU AI Act classifier: you describe the system in text, and a keyword decision table returns the Annex III tier and the gaps against a fixed Article 9–15/50 control set. It never contacts your endpoint and it is not a bench run, so it cannot tell you how your model behaves. A GSPC bench run — your system answering a frozen, published bank, graded deterministically, ending in a card that joins the chain — is not yet self-serve; it is arranged with us directly, and the honest reason is capacity, not policy. Both use the same items, the same grader and the same thresholds every other subject faced, so results stay comparable, and you get back what we could not fill as well as what we could.",
   },
   {
     q: "What do regulators get from a measurement card?",
@@ -564,11 +619,11 @@ const HOME_FAQ = [
   },
   {
     q: "What do insurers get from a measurement card?",
-    a: "Something to price against. Underwriting AI deployment risk currently means reading a questionnaire the applicant filled in about itself. A measurement card is instead an observed behavioural sample with a stated sample size and interval, re-issued on a schedule, so exposure can be tracked as the model drifts rather than assumed constant from binding to renewal. We are the rail, not the referee: we do not tell an insurer what to charge, and we take no share of anything written on the back of a card.",
+    a: "Something to price against. Underwriting AI deployment risk currently means reading a questionnaire the applicant filled in about itself. A measurement card is instead an observed behavioural sample, with its sample size and interval published beside it on the board, so exposure can be reasoned about from behaviour rather than from a self-declaration. Scheduled automatic re-attestation is not yet available — re-measurement today is arranged run by run — so track drift by comparing dated cards rather than by expecting a subscription feed. We are the rail, not the referee: we do not tell an insurer what to charge, and we take no share of anything written on the back of a card.",
   },
   {
     q: "How does the arena work?",
-    a: "Two systems face the same frozen items at the same time, around the clock. Each match is a subject, an instrument and a fixed rule — never an opinion. The verdict is a predicate: the answer either satisfies the provision or it does not, and ties are reported as ties. Any round can be promoted into a signed card; practice runs stay practice and are never quoted. Because it runs continuously, coverage does not depend on who happened to be at a keyboard.",
+    a: "Two systems face the same frozen items. Each match is a subject, an instrument and a fixed rule — never an opinion. The verdict is a predicate: the answer either satisfies the provision or it does not, and ties are reported as ties. Any round can be promoted into a signed card; practice runs stay practice and are never quoted. We do not publish an uptime figure for the arena and we are not going to imply one — how continuously it has actually run is unmeasured, and /api/state says so rather than us calling it round-the-clock.",
   },
   {
     q: "Why does no model ever judge another model?",
@@ -617,6 +672,8 @@ export default function NewHomeV3() {
       {/* The board first — "what is measured right now" is the claim everything
           else rests on, so it precedes anything sellable. */}
       <AxesGrid />
+      <div className="border-b border-gray-100" />
+      <CardChainBand />
       <div className="border-b border-gray-100" />
       <ProductBand />
       <div className="border-b border-gray-100" />

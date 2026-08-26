@@ -13,10 +13,10 @@ import { Link } from "wouter";
  */
 
 const ENGINE = [
-  { k: "Signed", v: "Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md) — every card verifiable offline, by strangers" },
+  { k: "Signed", v: "Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md). Every published card carries its signature bytes, the public key and the preimage rule, and verifies offline with the zero-dependency verifier at /signed/verify-card.mjs — no account, no permission." },
   { k: "Three-state", v: "pass / fail / UNMEASURED — what we cannot measure is published, not hidden" },
-  { k: "Live-sourced", v: "every public number recomputable from GET /api/gspc and the signed card chain" },
-  { k: "Method-bound", v: "unparsed counts incorrect · no model judges another · nothing quoted below n≥30" },
+  { k: "Live-sourced", v: "board numbers from GET /api/gspc, card-chain numbers from GET /api/state — both carry the artifact and the date they were read from. No page types a count." },
+  { k: "Method-bound", v: "an unparsed response is UNMEASURED, never scored wrong · no model judges another · nothing reaches the board below n=30 usable items · a lead that is not statistically separated is a tie, including when it is ours" },
 ];
 
 const FREE_RAIL = [
@@ -28,22 +28,22 @@ const FREE_RAIL = [
 
 const PRODUCTS = [
   {
-    name: "Get measured",
+    name: "Risk classification",
     href: "/assess",
-    tag: "The instrument",
-    what: "A signed assessment of your system against the rules that govern it. Three-state, reproducible, yours to publish or not.",
+    tag: "Free, self-serve",
+    what: "Describe your system in text and a deterministic EU AI Act decision table returns the Annex III tier and the gaps against a fixed Art 9–15/50 control set. It never contacts your endpoint and it is not a bench run. Free, no account, yours to publish or not.",
   },
   {
     name: "GPAI Evidence Pack",
     href: "/gpai-evidence",
     tag: "EU AI Act",
-    what: "Independent third-party evidence for the AI Office — prove, don't assert. GPAI enforcement has been live since 2 August 2026.",
+    what: "Independent third-party evidence for the AI Office — prove, don't assert. GPAI provider duties have applied since 2 August 2025.",
   },
   {
     name: "CRA Readiness Kit",
     href: "/cra-readiness",
     tag: "Cyber Resilience Act",
-    what: "The 24h / 72h / 14-day reporting runbook and SBOM workflow we run on ourselves. ENISA reporting starts 11 September 2026.",
+    what: "The 24h / 72h / 14-day ENISA reporting runbook and the signed-SBOM workflow, as a template and tooling — not legal advice. CRA reporting obligations start 11 September 2026.",
   },
   {
     name: "Distribution integrity",
@@ -67,7 +67,7 @@ const PRODUCTS = [
     name: "Council Academy",
     href: "/academy",
     tag: "Training",
-    what: "Course completion records that attest training was completed — a record of learning, never a conformity mark.",
+    what: "A record that a course was completed. It attests learning, never conformity, carries no regulatory status, and is not an accreditation.",
   },
   {
     name: "Council OS",
@@ -182,6 +182,16 @@ export default function Products() {
           <li>UNMEASURED is a first-class answer — it appears on this page and on the board wherever it is true.</li>
           <li>No public prices, here or anywhere: verification is free forever, and a grade is never sold.</li>
           <li>Determinations of legal compliance remain with the competent authorities, always.</li>
+          <li>
+            We measure against regulation; we do not enforce it. We cannot approve, ban, fine or
+            clear any system, and we are not a notified body under the EU AI Act or anything else.
+          </li>
+          <li>
+            Where a capability is not there yet we say &quot;not yet available&quot; and give the
+            reason — anchoring, C2PA conformance, post-quantum signing and XRPL mainnet are all
+            planned rather than live, and each has a row with its status at{" "}
+            <Link href="/claims-register" className="underline">the claims register</Link>.
+          </li>
         </ul>
       </section>
 
