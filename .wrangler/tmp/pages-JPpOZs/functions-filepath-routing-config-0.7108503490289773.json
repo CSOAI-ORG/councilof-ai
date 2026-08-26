@@ -1,0 +1,1317 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/arena/rounds",
+      "mountPath": "/api/arena",
+      "method": "GET",
+      "module": [
+        "api/arena/rounds.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/arena/rounds.jsonl",
+      "mountPath": "/api/arena",
+      "method": "GET",
+      "module": [
+        "api/arena/rounds.jsonl.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/arena/scoreboard",
+      "mountPath": "/api/arena",
+      "method": "GET",
+      "module": [
+        "api/arena/scoreboard.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/assess/key",
+      "mountPath": "/api/assess",
+      "method": "GET",
+      "module": [
+        "api/assess/key.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/corpus-watch/status",
+      "mountPath": "/api/corpus-watch",
+      "method": "GET",
+      "module": [
+        "api/corpus-watch/status.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/dashboard/stats",
+      "mountPath": "/api/dashboard",
+      "method": "GET",
+      "module": [
+        "api/dashboard/stats.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/evidence/github",
+      "mountPath": "/api/evidence",
+      "method": "GET",
+      "module": [
+        "api/evidence/github.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/receipts/latest",
+      "mountPath": "/api/receipts",
+      "method": "GET",
+      "module": [
+        "api/receipts/latest.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/sov-arena/rounds.jsonl",
+      "mountPath": "/api/sov-arena",
+      "method": "GET",
+      "module": [
+        "api/sov-arena/rounds.jsonl.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/sov-town/state.jsonl",
+      "mountPath": "/api/sov-town",
+      "method": "GET",
+      "module": [
+        "api/sov-town/state.jsonl.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/agui/:path*",
+      "mountPath": "/api/agui",
+      "method": "",
+      "module": [
+        "api/agui/[[path]].ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/auth/:path*",
+      "mountPath": "/api/auth",
+      "method": "",
+      "module": [
+        "api/auth/[[path]].ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/worker/:path*",
+      "mountPath": "/api/worker",
+      "method": "",
+      "module": [
+        "api/worker/[[path]].ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/_chatGrounded",
+      "mountPath": "/api",
+      "method": "OPTIONS",
+      "module": [
+        "api/_chatGrounded.ts:onRequestOptions"
+      ]
+    },
+    {
+      "routePath": "/api/_chatGrounded",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/_chatGrounded.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/article50",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/article50.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/article50",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/article50.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/assess",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/assess.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/axis-register",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/axis-register.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/badge",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/badge.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/benchmark-quality",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/benchmark-quality.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/cards",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/cards.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/challenge",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/challenge.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/challenge",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/challenge.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/chat",
+      "mountPath": "/api",
+      "method": "OPTIONS",
+      "module": [
+        "api/chat.ts:onRequestOptions"
+      ]
+    },
+    {
+      "routePath": "/api/chat",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/chat.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/checkout",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/checkout.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/clarity",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/clarity.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/comparison",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/comparison.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/contact",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/contact.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/corrections",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/corrections.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/counters",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/counters.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/cross",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/cross.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/east-west-bench",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/east-west-bench.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/eunomia-data",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/eunomia-data.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/evidence-pack",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/evidence-pack.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/feed.xml",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/feed.xml.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/fines",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/fines.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/fulfill",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/fulfill.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/gspc",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/gspc.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/health",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/health.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/interop-bulk",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/interop-bulk.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/lead",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/lead.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/lead",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/lead.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/locale",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/locale.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/mcp",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/mcp.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/methodology",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/methodology.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/og",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/og.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/registers",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/registers.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/regulation",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/regulation.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/regulator-findings",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/regulator-findings.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/reported",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/reported.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/security",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/security.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/specialists",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/specialists.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/state",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/state.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/subscribe",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/subscribe.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/tools",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/tools.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/verify-tally",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/verify-tally.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/verify-tally",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/verify-tally.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/wave-dashboard",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/wave-dashboard.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/webhooks",
+      "mountPath": "/api",
+      "method": "DELETE",
+      "module": [
+        "api/webhooks.ts:onRequestDelete"
+      ]
+    },
+    {
+      "routePath": "/api/webhooks",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/webhooks.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/webhooks",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/webhooks.ts:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/embed/verify",
+      "mountPath": "/embed",
+      "method": "GET",
+      "module": [
+        "embed/verify.ts:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/dorado",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/dorado.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/ledger",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/ledger.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/oracle-fleet",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/oracle-fleet.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/certification/exam",
+      "mountPath": "/certification/exam",
+      "method": "",
+      "module": [
+        "certification/exam/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/certification/results",
+      "mountPath": "/certification/results",
+      "method": "",
+      "module": [
+        "certification/results/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/certification/review",
+      "mountPath": "/certification/review",
+      "method": "",
+      "module": [
+        "certification/review/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/features/33-agent-council",
+      "mountPath": "/features/33-agent-council",
+      "method": "",
+      "module": [
+        "features/33-agent-council/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/features/training-certification",
+      "mountPath": "/features/training-certification",
+      "method": "",
+      "module": [
+        "features/training-certification/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/features/watchdog-jobs",
+      "mountPath": "/features/watchdog-jobs",
+      "method": "",
+      "module": [
+        "features/watchdog-jobs/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/for/enterprise",
+      "mountPath": "/for/enterprise",
+      "method": "",
+      "module": [
+        "for/enterprise/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/for/finance",
+      "mountPath": "/for/finance",
+      "method": "",
+      "module": [
+        "for/finance/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/for/healthcare",
+      "mountPath": "/for/healthcare",
+      "method": "",
+      "module": [
+        "for/healthcare/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/for/regulator",
+      "mountPath": "/for/regulator",
+      "method": "",
+      "module": [
+        "for/regulator/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/for/sec-filer",
+      "mountPath": "/for/sec-filer",
+      "method": "",
+      "module": [
+        "for/sec-filer/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/for/startup",
+      "mountPath": "/for/startup",
+      "method": "",
+      "module": [
+        "for/startup/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/how-it-works/certification",
+      "mountPath": "/how-it-works/certification",
+      "method": "",
+      "module": [
+        "how-it-works/certification/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/how-it-works/compliance",
+      "mountPath": "/how-it-works/compliance",
+      "method": "",
+      "module": [
+        "how-it-works/compliance/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/how-it-works/dashboard",
+      "mountPath": "/how-it-works/dashboard",
+      "method": "",
+      "module": [
+        "how-it-works/dashboard/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/how-it-works/enterprise",
+      "mountPath": "/how-it-works/enterprise",
+      "method": "",
+      "module": [
+        "how-it-works/enterprise/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/how-it-works/training",
+      "mountPath": "/how-it-works/training",
+      "method": "",
+      "module": [
+        "how-it-works/training/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/library/academy",
+      "mountPath": "/library/academy",
+      "method": "",
+      "module": [
+        "library/academy/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/settings/billing",
+      "mountPath": "/settings/billing",
+      "method": "",
+      "module": [
+        "settings/billing/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/watchdog/help-protect-humanity",
+      "mountPath": "/watchdog/help-protect-humanity",
+      "method": "",
+      "module": [
+        "watchdog/help-protect-humanity/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/watchdog/incident",
+      "mountPath": "/watchdog/incident",
+      "method": "",
+      "module": [
+        "watchdog/incident/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/api/:path*",
+      "mountPath": "/api",
+      "method": "",
+      "module": [
+        "api/[[path]].js:onRequest"
+      ]
+    },
+    {
+      "routePath": "/blog/:path*",
+      "mountPath": "/blog",
+      "method": "",
+      "module": [
+        "blog/[[path]].ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/mcp/:path*",
+      "mountPath": "/mcp",
+      "method": "",
+      "module": [
+        "mcp/[[path]].ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/about-ceasai",
+      "mountPath": "/about-ceasai",
+      "method": "",
+      "module": [
+        "about-ceasai/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/about-credential",
+      "mountPath": "/about-credential",
+      "method": "",
+      "module": [
+        "about-credential/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/accreditation",
+      "mountPath": "/accreditation",
+      "method": "",
+      "module": [
+        "accreditation/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/advisory",
+      "mountPath": "/advisory",
+      "method": "",
+      "module": [
+        "advisory/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/agent-council",
+      "mountPath": "/agent-council",
+      "method": "",
+      "module": [
+        "agent-council/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/article-50-kit",
+      "mountPath": "/article-50-kit",
+      "method": "",
+      "module": [
+        "article-50-kit/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/badges",
+      "mountPath": "/badges",
+      "method": "",
+      "module": [
+        "badges/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/case-studies",
+      "mountPath": "/case-studies",
+      "method": "",
+      "module": [
+        "case-studies/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/ceasai",
+      "mountPath": "/ceasai",
+      "method": "",
+      "module": [
+        "ceasai/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/ceasai-training",
+      "mountPath": "/ceasai-training",
+      "method": "",
+      "module": [
+        "ceasai-training/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/certificate-verification",
+      "mountPath": "/certificate-verification",
+      "method": "",
+      "module": [
+        "certificate-verification/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/certification",
+      "mountPath": "/certification",
+      "method": "",
+      "module": [
+        "certification/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/certified",
+      "mountPath": "/certified",
+      "method": "",
+      "module": [
+        "certified/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/charter",
+      "mountPath": "/charter",
+      "method": "",
+      "module": [
+        "charter/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/chat",
+      "mountPath": "/chat",
+      "method": "",
+      "module": [
+        "chat/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/company",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "company.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/conformity",
+      "mountPath": "/conformity",
+      "method": "",
+      "module": [
+        "conformity/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/conformity-assessment",
+      "mountPath": "/conformity-assessment",
+      "method": "",
+      "module": [
+        "conformity-assessment/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/conformity-route",
+      "mountPath": "/conformity-route",
+      "method": "",
+      "module": [
+        "conformity-route/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/corpus",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "corpus.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/council-licensing",
+      "mountPath": "/council-licensing",
+      "method": "",
+      "module": [
+        "council-licensing/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/courses",
+      "mountPath": "/courses",
+      "method": "",
+      "module": [
+        "courses/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/credential",
+      "mountPath": "/credential",
+      "method": "",
+      "module": [
+        "credential/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/credential-training",
+      "mountPath": "/credential-training",
+      "method": "",
+      "module": [
+        "credential-training/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/datasets",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "datasets.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/early-access",
+      "mountPath": "/early-access",
+      "method": "",
+      "module": [
+        "early-access/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/enterprise",
+      "mountPath": "/enterprise",
+      "method": "",
+      "module": [
+        "enterprise/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/enterprise-onboarding",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "enterprise-onboarding.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/enterprise-plans",
+      "mountPath": "/enterprise-plans",
+      "method": "",
+      "module": [
+        "enterprise-plans/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/enterprises",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "enterprises.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/eu-ai-act-urgency",
+      "mountPath": "/eu-ai-act-urgency",
+      "method": "",
+      "module": [
+        "eu-ai-act-urgency/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/evidence",
+      "mountPath": "/evidence",
+      "method": "",
+      "module": [
+        "evidence/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/faq",
+      "mountPath": "/faq",
+      "method": "",
+      "module": [
+        "faq/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/first-fine",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "first-fine.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/for",
+      "mountPath": "/for",
+      "method": "",
+      "module": [
+        "for/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/frontier-atlas",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "frontier-atlas.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/get-certified",
+      "mountPath": "/get-certified",
+      "method": "",
+      "module": [
+        "get-certified/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/get-measured",
+      "mountPath": "/get-measured",
+      "method": "",
+      "module": [
+        "get-measured/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/jobs",
+      "mountPath": "/jobs",
+      "method": "",
+      "module": [
+        "jobs/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/landing",
+      "mountPath": "/landing",
+      "method": "",
+      "module": [
+        "landing/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/my-courses",
+      "mountPath": "/my-courses",
+      "method": "",
+      "module": [
+        "my-courses/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/partners",
+      "mountPath": "/partners",
+      "method": "",
+      "module": [
+        "partners/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/payg",
+      "mountPath": "/payg",
+      "method": "",
+      "module": [
+        "payg/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/plans",
+      "mountPath": "/plans",
+      "method": "",
+      "module": [
+        "plans/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/pricing",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "pricing.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/pricing-legacy",
+      "mountPath": "/pricing-legacy",
+      "method": "",
+      "module": [
+        "pricing-legacy/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/public-watchdog",
+      "mountPath": "/public-watchdog",
+      "method": "",
+      "module": [
+        "public-watchdog/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/readiness-assessment",
+      "mountPath": "/readiness-assessment",
+      "method": "",
+      "module": [
+        "readiness-assessment/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/regulation",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "regulation.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/remediation",
+      "mountPath": "/remediation",
+      "method": "",
+      "module": [
+        "remediation/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/remediation-partners",
+      "mountPath": "/remediation-partners",
+      "method": "",
+      "module": [
+        "remediation-partners/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/roi-calculator",
+      "mountPath": "/roi-calculator",
+      "method": "",
+      "module": [
+        "roi-calculator/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/sign-in",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "sign-in.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/signal",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "signal.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/signin",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "signin.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/solutions",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "solutions.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/sov-space",
+      "mountPath": "/sov-space",
+      "method": "",
+      "module": [
+        "sov-space/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/sov3",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "sov3.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/sov3-model-card",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "sov3-model-card.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/sov3-system-card",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "sov3-system-card.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/sov3-whitepaper",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "sov3-whitepaper.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/sovereign-pricing",
+      "mountPath": "/sovereign-pricing",
+      "method": "",
+      "module": [
+        "sovereign-pricing/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/stripe-checkout.js",
+      "mountPath": "/",
+      "method": "",
+      "module": [
+        "stripe-checkout.js.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/training",
+      "mountPath": "/training",
+      "method": "",
+      "module": [
+        "training/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/training-certification",
+      "mountPath": "/training-certification",
+      "method": "",
+      "module": [
+        "training-certification/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/training-hub",
+      "mountPath": "/training-hub",
+      "method": "",
+      "module": [
+        "training-hub/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/verify-certificate",
+      "mountPath": "/verify-certificate",
+      "method": "",
+      "module": [
+        "verify-certificate/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/watchdog",
+      "mountPath": "/watchdog",
+      "method": "",
+      "module": [
+        "watchdog/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/watchdog-heatmap",
+      "mountPath": "/watchdog-heatmap",
+      "method": "",
+      "module": [
+        "watchdog-heatmap/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/watchdog-hub",
+      "mountPath": "/watchdog-hub",
+      "method": "",
+      "module": [
+        "watchdog-hub/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/watchdog-leaderboard",
+      "mountPath": "/watchdog-leaderboard",
+      "method": "",
+      "module": [
+        "watchdog-leaderboard/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/watchdog-map",
+      "mountPath": "/watchdog-map",
+      "method": "",
+      "module": [
+        "watchdog-map/index.ts:onRequest"
+      ]
+    },
+    {
+      "routePath": "/watchdog-signup",
+      "mountPath": "/watchdog-signup",
+      "method": "",
+      "module": [
+        "watchdog-signup/index.ts:onRequest"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
