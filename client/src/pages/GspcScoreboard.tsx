@@ -3,9 +3,16 @@ import { Link, useRoute } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
+import { BOARD_COUNT_OBSERVED, boardCountFromPayload } from "@/lib/boardCount";
 
 /**
  * /gspc-scoreboard — the live board, honestly displayed (NEXT-100 #2).
+ *
+ * This one component also renders every /gspc/:axis page, so every count fixed
+ * here is fixed on all of them at once. NO COUNT IS TYPED (ADR-001): the board's
+ * totals are derived from the /api/gspc payload this page already fetches, and
+ * the ARENA panel below renders the arena's own, different count — labelled as
+ * such, because the two instruments are not reconciled.
  * Every hero CTA already points here; until now it fell through to the SPA
  * catch-all. Renders LIVE from /api/gspc: per-axis n, leader accuracy with
  * Wilson CI where the n is honest, and first-class separation chips.
@@ -95,7 +102,8 @@ function ArenaEloPanel() {
           <h2 className="text-lg font-bold text-gray-900">Arena Elo — signed</h2>
           <p className="mt-1 text-sm text-gray-600">
             Per-axis winner-specific Elo from the live arena (<code>{elo.models || "—"}</code> models,{" "}
-            {elo.axes?.length || 0} axes). Every score carries n + 95% CI. This leaderboard is{" "}
+            {elo.axes?.length || 0} <strong>arena</strong> axes — the arena&apos;s own set, not the
+            board&apos;s count above). Every score carries n + 95% CI. This leaderboard is{" "}
             <strong>signed</strong> — verify it below.
           </p>
         </div>
@@ -200,7 +208,8 @@ const AXIS_ALIAS: Record<string, string> = {
   xr: "cross-reality", det: "detector-interop", art5: "art5-safeguard",
 };
 
-// The 8 financial/domain axes of the 22-axis canon. These are NOT on the
+// The financial/domain axis IDS (a routing set, not a count — the count is
+// derived from the board and never typed). These are NOT on the
 // behavioural /api/gspc board — they live in /interop/financial-axes.json with
 // their own three-state grammar. When /gspc/<financial-axis> is requested we
 // render a deep-dive from that JSON (real status, never an invented number)
@@ -225,6 +234,11 @@ export default function GspcScoreboard() {
   const isFinancialAxis = !!wantAxis && FIN_AXIS_IDS.has(wantAxis);
   const focused: Axis | null =
     data && wantAxis ? ((data.axes as Axis[]).find((a) => a.axis === wantAxis) ?? null) : null;
+
+  // The count, derived from the payload this page already holds — no second fetch
+  // and no typed literal. Before the payload lands we show the dated observation
+  // recorded in facts.json rather than a placeholder or a zero.
+  const board = boardCountFromPayload(data) ?? BOARD_COUNT_OBSERVED;
 
   const [finAxis, setFinAxis] = useState<any>(null);
   const [finRun, setFinRun] = useState<any>(null);
@@ -277,10 +291,23 @@ export default function GspcScoreboard() {
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
-          {data?.totals?.public_count ?? "Counts from GET /api/gspc"} · deterministic grading on
+          {board.public_count} · deterministic grading on
           frozen, published splits · a <strong>TIE</strong> means the leader&apos;s edge is{" "}
           <strong>statistically indistinguishable</strong> (McNemar p≥0.05) — ties are never counted
           as wins. Empty cells stay empty.
+        </p>
+        <p className="mt-2 max-w-3xl text-sm text-gray-500" data-testid="board-count-grammar">
+          {board.count_grammar}
+          {!board.live && (
+            <>
+              {" "}
+              <em>
+                (Counts shown are the last recorded observation of{" "}
+                <a className="underline" href="/api/gspc">GET /api/gspc</a>; the live endpoint is the
+                authority.)
+              </em>
+            </>
+          )}
         </p>
 
         {err && <p className="mt-8 text-red-600">Board fetch failed: {err} — the API at /api/gspc is the source of truth.</p>}
@@ -289,7 +316,7 @@ export default function GspcScoreboard() {
         {isFinancialAxis && (
           <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
-              Financial axis · 22-axis canon
+              Financial axis · {board.public_count}
             </p>
             <h2 className="mt-1 text-2xl font-black text-gray-900">{finAxis?.name ?? wantAxis}</h2>
             <p className="mt-1 font-mono text-xs text-gray-400">/gspc/{wantAxis}</p>
@@ -349,7 +376,9 @@ export default function GspcScoreboard() {
               <p className="mt-3 text-sm text-gray-500">Loading the financial-axes registry…</p>
             )}
             <p className="mt-4 flex flex-wrap gap-4 text-sm">
-              <Link className="font-semibold text-emerald-700 underline" href="/financial-axes">All 8 financial axes</Link>
+              <Link className="font-semibold text-emerald-700 underline" href="/financial-axes">
+                {board.financial_family ? `All ${board.financial_family.axes} financial axes` : "All financial axes"}
+              </Link>
               <a className="font-semibold text-emerald-700 underline" href="/interop/financial-axes.json">Raw JSON</a>
               <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">The behavioural board</Link>
             </p>

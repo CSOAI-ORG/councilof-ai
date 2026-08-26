@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
 import { fetchAxes, publicCaption, quotable } from "./gspcAxes";
+import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -9,11 +10,24 @@ describe("publicCaption", () => {
   it("prefers the living-board sentence and never invents a slot count", () => {
     expect(publicCaption("14 measured of 14 quotable", 14, 14))
       .toBe("14 measured of 14 quotable");
-    expect(publicCaption(undefined, 14, 14)).toBe("14 measured of 14");
     // Historical sitting-day wording still echoes when provided verbatim:
     expect(publicCaption("13 measured of 14 quotable", 13, 14))
       .toBe("13 measured of 14 quotable");
-    expect(publicCaption("")).toBe("Counts from GET /api/gspc");
+  });
+
+  it("falls back to the recorded board observation, not to a local family count", () => {
+    // The measured/total arguments count the LOCAL behavioural snapshot, not the
+    // board. Formatting them as the caption published a family count as the whole
+    // board. The fallback is now BOARD_COUNT_OBSERVED, so both of the board's
+    // numbers travel and neither is invented here.
+    expect(publicCaption(undefined, 14, 14)).toBe(BOARD_COUNT_OBSERVED.public_count);
+    expect(publicCaption("")).toBe(BOARD_COUNT_OBSERVED.public_count);
+    // Whatever it returns, it must carry BOTH numbers — a lone slot count would
+    // claim measurements that do not exist.
+    expect(BOARD_COUNT_OBSERVED.public_count).toContain(String(BOARD_COUNT_OBSERVED.axes));
+    expect(BOARD_COUNT_OBSERVED.public_count).toContain(String(BOARD_COUNT_OBSERVED.measured_axes));
+    expect(BOARD_COUNT_OBSERVED.axes - BOARD_COUNT_OBSERVED.measured_axes)
+      .toBe(BOARD_COUNT_OBSERVED.unmeasured_axes);
   });
 });
 

@@ -63,6 +63,7 @@ import { lazy, Suspense } from "react";
 import AnimatedParticles from "@/components/AnimatedParticles";
 import { SovereignConsole } from "@/components/SovereignConsole";
 import CesiumPortalCard from "@/components/CesiumPortalCard";
+import { useBoardCount } from "@/lib/boardCount";
 // Below-the-fold sections — lazy-loaded to keep the initial landing bundle small (defers recharts + network viz off first paint).
 const EcosystemDiagram = lazy(() => import("@/components/EcosystemDiagram"));
 const CouncilVisualization = lazy(() => import("@/components/CouncilVisualization"));
@@ -246,6 +247,8 @@ const faqJsonLd = {
 };
 
 export default function NewHomeV2() {
+  // Board counts, derived from GET /api/gspc. No count is typed on this page.
+  const board = useBoardCount();
   return (
     <div className="min-h-screen bg-white">
       {/* ============================================ */}
@@ -1070,8 +1073,11 @@ export default function NewHomeV2() {
           >
             <h3 className="text-2xl font-bold text-gray-900 mb-2">The instrument behind it</h3>
             <p className="text-gray-600 mb-6">
-              Thirteen measured axes on a 14-slot board, frozen benchmarks, open on Hugging Face and Kaggle with the scoring code —
-              so you can recompute any figure we publish, or disagree with any answer key.
+              {/* Counts derived from GET /api/gspc (ADR-001) — this read "Thirteen measured
+                  axes on a 14-slot board", typed, and went stale when the board was swept. */}
+              {board.public_count} — frozen benchmarks, open on Hugging Face and Kaggle with the scoring code,
+              so you can recompute any figure we publish, or disagree with any answer key. A slot with no run
+              behind it is published UNMEASURED, never folded into the measured count.
             </p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm border-collapse min-w-[34rem]">

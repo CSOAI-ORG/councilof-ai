@@ -368,7 +368,9 @@ const ROUTE_TITLES: Record<string, string> = {
   "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
-  "/financial-axes": "Financial axes — the 8 financial slots of the 22-axis canon | Council of AI",
+  // No count in this title: a static route title cannot derive one, and ADR-001
+  // forbids typing it. The live counts render in the page body from /api/gspc.
+  "/financial-axes": "Financial axes — the financial half of the GSPC board | Council of AI",
   "/badges": "Governance badges — wear your measured status | CSOAI",
   "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",

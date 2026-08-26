@@ -72,7 +72,10 @@ export const PRICING_RISK_SLIDES: Slide[] = [
     kicker: "The instrument",
     title: "GSPC — governance, safety, provenance, continuity",
     body:
-      "Four families, fourteen board slots, anchored to a frozen corpus of 417 statutory provisions. All fourteen are measured on the live board (14 measured of 14 quotable per GET /api/gspc). Thirteen canonical axes carry separation on the full fleet; jail is measured on a smaller fleet at n=71 and prints separation TIE — a tie is not a separated leader, and we never rank on it or compare it against the rest. Coverage on this site is read from the live board, never typed by hand.",
+      // CORRECTED 2026-08-26. This typed a slot count AND asserted every slot was
+      // measured — while its own last sentence claimed coverage is never typed by
+      // hand. The board carries declared slots with no run behind them.
+      "Four axis families, anchored to a frozen corpus of 417 statutory provisions. The board publishes a slot count and a measured count and they are different numbers — cite totals.public_count on GET /api/gspc rather than either alone, because a slot with no run behind it is published UNMEASURED and is never counted as a measurement. The behavioural axes carry separation on the full fleet; jail is measured on a smaller fleet at n=71 and prints separation TIE — a tie is not a separated leader, and we never rank on it or compare it against the rest. Coverage on this site is read from the live board, never typed by hand.",
     points: [
       { tag: "pain", text: "Assurance scores with no provision behind them and no n on the row" },
       { tag: "benefit", text: "Every result names its provision, its sample size and its status" },

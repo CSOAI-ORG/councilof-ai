@@ -1,15 +1,20 @@
 {
   "_comment": "Single source of truth for councilof.ai's ruled public invariants. The drift-guard asserts the LIVE site matches these. When a ruling changes a value (e.g. public_count moves), change it HERE in one place and the guard follows. Do not hand-edit the live site to a value that contradicts this file. Cite live GET /api/gspc for scores.",
-  "ruling": "LIVE \u00b7 2026-08-25 \u00b7 GSPC 14-slot board, 14 measured of 14 quotable",
+  "ruling": "LIVE \u00b7 2026-08-26 \u00b7 GSPC board swept under ADR-001: 22 axes \u00b7 15 measured (14 GSPC behavioural + 8 financial/domain; 7 financial slots are DECLARED and UNMEASURED)",
+  "ruling_ref": "council-os/ADR-001-axis-count.md",
   "title_contains": "Council of AI",
   "min_homepage_bytes": 20000,
   "api": {
+    "_comment": "These are the guard's EXPECTED values, not a surface. A guard has to name the number it is checking for \u2014 that is what makes drift detectable \u2014 so this is the one place in the estate where an axis count is written down, and every rendered surface derives from the endpoint instead. Read off the signed board, not typed from memory: see _provenance.",
+    "_provenance": "public/signed/gspc-board.signed.json -> totals, read 2026-08-26 after the ADR-001 sweep wired the 8 financial/domain axes into the signed payload and re-signed it. Previously 14/14/14 with public_count_contains '14 measured of 14 quotable' \u2014 that was the un-swept state, correct at the time and superseded by the data, not by copy.",
     "path": "/api/gspc",
     "schema": "csoai.gspc-axes/0.5",
-    "axes_total": 14,
-    "measured_axes": 14,
-    "quotable_axes": 14,
-    "public_count_contains": "14 measured of 14 quotable"
+    "axes_total": 22,
+    "measured_axes": 15,
+    "unmeasured_axes": 7,
+    "quotable_axes": 15,
+    "public_count_contains": "22 axes \u00b7 15 measured",
+    "_grammar": "axes_total counts SLOTS; measured_axes counts slots with a real run behind them; unmeasured_axes is published so the gap is visible. The two must always travel together in public copy \u2014 quoting axes_total alone would claim 7 measurements that do not exist."
   },
   "required_routes": {
     "/library": "reference pages across",

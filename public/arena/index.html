@@ -1,8 +1,14 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GSPC Training Arenas — 13 axes of AI governance | CSOAI</title>
-<meta name="description" content="Practise AI-governance judgement on real frozen benchmark items across thirteen axes, marked against a published key, scored against measured AI models. Training, not certification.">
+<!-- No board count in this <head>. The arenas listed below are their own set and
+     are NOT the GSPC board's axis count (the board's is derived, live, from
+     GET /api/gspc — see #board-count in the body). The title used to lead with a
+     typed axis count, which read as a board count; the retired figure is
+     DESCRIBED rather than reprinted, so the stale number is not put back on a
+     public surface. -->
+<title>GSPC Training Arenas — practise AI-governance judgement | CSOAI</title>
+<meta name="description" content="Practise AI-governance judgement on real frozen benchmark items, marked against a published key, scored against measured AI models. Training, not certification.">
 <link rel="canonical" href="https://csoai.org/arena/">
 <style>
 :root{--fg:#111;--mut:#5a5a5a;--bd:#dcdcdc;--bg:#fff;--acc:#12457a}
@@ -19,15 +25,20 @@ a{color:var(--acc)}
 footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
 </style></head><body><main>
 <h1>GSPC Training Arenas</h1>
-<p>Thirteen axes of AI-governance judgement. Each arena serves the <strong>real frozen items</strong>
+<p>One arena per axis, for the axes listed below. Each arena serves the <strong>real frozen items</strong>
 from the published benchmark, marks against the <strong>published key</strong>, shows you the
 provision behind every answer, and scores you against the AI models we measured on the identical
 items.</p>
+<p style="font-size:.93rem;color:var(--mut)">The arenas below are a training set, not the board.
+The board&rsquo;s own count is <strong><span id="board-count">read live from /api/gspc</span></strong> —
+a slot count and a measured count are different numbers and both travel together. See
+<a href="https://councilof.ai/gspc-scoreboard">the board</a>.</p>
 <div class="banner"><strong>Training, not certification.</strong> CSOAI is an independent
 measurement body and does not accredit anyone. Completing an arena confers no status and is not
 a conformity assessment.</div>
-<p style="font-size:.93rem;color:var(--mut)">All thirteen axes were measured on the same 19-model
-board (2026-08-12, per-item rows, 0 transport errors). "Board leader" is the highest point estimate —
+<p style="font-size:.93rem;color:var(--mut)">Every axis in the table below was measured on the same 19-model
+board (2026-08-12, per-item rows, 0 transport errors). That is a statement about these rows only —
+it is not a claim that every axis on the board has been measured, and several have not. "Board leader" is the highest point estimate —
 whoever leads, ours or a base model. <span class="sep">SEPARATED</span> means the lead is statistically
 real (McNemar p&lt;0.05 on discordant items); <span class="tie">TIE</span> means it is not. A tie is not a win.</p>
 <table>
@@ -53,11 +64,32 @@ scored instances); instances are not independent, so no interval is shown. ‡ A
 severity bases are <strong>counsel-pending</strong>: measurements of model behaviour against a
 counsel-pending key, not legal verdicts. Full numbers, intervals and per-axis caveats:
 <a href="/api/gspc">/api/gspc</a>.</p>
-<p>Every item set is public on <a href="https://huggingface.co/csoai">Hugging Face</a> (all 13 banks,
-org account), with the scoring code, so you can disagree with any key rather than take it on trust.
+<p>Every item set listed above is public on <a href="https://huggingface.co/csoai">Hugging Face</a>
+(org account), with the scoring code, so you can disagree with any key rather than take it on trust.
 On <a href="https://www.kaggle.com/nicktempleman">Kaggle</a> our presence is currently partial —
 DefBench live, MCPBench deprecated — under a personal account; org mirrors are owed and dated here
 (2026-08-13) rather than claimed. Measured results:
 <a href="/benchmarks">/benchmarks</a>.</p>
 <footer>CSOAI Ltd (UK 16939677) · items Apache-2.0 · measurement, not certification</footer>
-</main></body></html>
+</main>
+<script>
+/* The BOARD's axis count, derived from the signed board — never typed here
+ * (ADR-001). This page's arenas are a different, smaller set and are not
+ * reconciled to it; showing the board's own sentence is what stops a reader
+ * mistaking the arena list for the board. Both of the board's numbers travel
+ * together. On failure the pointer stands; no count is ever invented. */
+(function(){
+  var el=document.getElementById("board-count");
+  if(!el) return;
+  fetch("https://councilof.ai/api/gspc",{headers:{accept:"application/json"}})
+    .then(function(r){return r.ok?r.json():Promise.reject(new Error("HTTP "+r.status));})
+    .then(function(d){
+      var t=d&&d.totals; if(!t) return;
+      if(typeof t.public_count==="string"&&t.public_count.trim()) el.textContent=t.public_count;
+      else if(typeof t.axes==="number"&&typeof t.measured_axes==="number") el.textContent=t.axes+" axes · "+t.measured_axes+" measured";
+      if(typeof t.count_grammar==="string"&&t.count_grammar.trim()) el.title=t.count_grammar;
+    })
+    .catch(function(){});
+})();
+</script>
+</body></html>

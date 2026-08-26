@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { useBoardCount } from "@/lib/boardCount";
 
 // Animated counter component
 function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
@@ -125,6 +126,8 @@ function LiveIndicator() {
 }
 
 export default function About() {
+  // Board counts, derived from GET /api/gspc. No count is typed on this page.
+  const board = useBoardCount();
   useEffect(() => {
     document.title = "About the Council of AI — a UK measurement body | Council of AI";
     let m = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
@@ -635,7 +638,7 @@ export default function About() {
             <Card className="p-6 bg-white border-l-4 border-emerald-500 hover:shadow-lg transition-shadow">
               <h3 className="text-xl font-bold mb-3">How is CSOAI different from other AI safety organizations?</h3>
               <p className="text-gray-600 leading-relaxed">
-                Most AI safety organisations focus on research or advocacy. We publish a measurement instrument instead: thirteen measured axes on a fourteen-slot board, across frozen benchmarks, open on Hugging Face and Kaggle with the scoring code, so anyone can recompute what we claim or dispute an answer key. We also publish the results that go against us — our own model gives up 27.9 points of general reasoning to reach its refusal rate, and that number is on our homepage.
+                Most AI safety organisations focus on research or advocacy. We publish a measurement instrument instead: {board.public_count} (live from GET /api/gspc — a slot with no run behind it is published UNMEASURED and never counted as a measurement), across frozen benchmarks, open on Hugging Face and Kaggle with the scoring code, so anyone can recompute what we claim or dispute an answer key. We also publish the results that go against us — our own model gives up 27.9 points of general reasoning to reach its refusal rate, and that number is on our homepage.
               </p>
             </Card>
           </div>

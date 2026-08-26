@@ -23,7 +23,7 @@ All secrets live in the macOS keychain (service `meok-keystone`) or on designate
 
 ## The canon (CI reverts violations)
 
-- Public count: cite live **`totals.public_count`** on GET https://councilof.ai/api/gspc (currently **14 measured of 14 quotable**). Quotable board = **14**. Do not invent 22 axes.
+- Public count: cite live **`totals.public_count`** on GET https://councilof.ai/api/gspc — never a number typed here. TWO numbers travel together: `totals.axes` counts SLOTS, `totals.measured_axes` counts slots with a real run behind them, `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone claims measurements that do not exist; quote both, or quote the smaller. (This line used to read "14 measured of 14 quotable · do not invent 22 axes". That lock was correct while the 8 financial/domain axes were ruled in but absent from the signed payload; the 2026-08-26 sweep wired them in and re-signed, so the endpoint now backs the larger count. See council-os/ADR-001-axis-count.md.)
 - Jail: **MEASURED** (n=71); separation **TIE** on the living board — a TIE is not a separated leader.
 - DOI spine: HF board `10.57967/hf/10114` · bench `10.57967/hf/10116` (never remint).
 - Issuer: Council of AI (CSOAI LTD, UK #16939677). Register: **measurement, not certification**.

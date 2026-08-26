@@ -75,9 +75,16 @@
         "self_description_note": "The board is the count authority, so its own payload and signed snapshot are exonerated from being compared against themselves. The payload legitimately describes its own composition; flagging the authority against itself is a tautology, not a check.",
         "surfaces": [
           "/api/gspc",
-          "/signed/gspc-board.signed.json",
-          "/six-axes/gspc-axes.json"
-        ]
+          "/signed/gspc-board.signed.json"
+        ],
+        "surfaces_note": "/six-axes/gspc-axes.json was listed here until 2026-08-26 and has been moved to its own namespace below. It is a DATED SNAPSHOT from 2026-08-05, not the board: listing it as a board-count authority exonerated a smaller, older count from ever being checked against the board it claimed to describe. Moving it does not change a single number in it — it changes what the file is allowed to be cited as."
+      },
+      "gspc_board_snapshot_2026_08_05": {
+        "authority": "none — this is a record, not an authority. The count authority is GET /api/gspc.",
+        "status": "retired",
+        "observed": "a 2026-08-05 snapshot of the GSPC instrument, smaller than the current board",
+        "note": "The file carries superseded:true, a superseded_note and an authority pointer, so a reader or agent landing on it directly is told it is not the board's count. Its own totals legitimately describe its own contents, which is why it is exonerated here — as a snapshot of itself, NOT as a description of the live board. Open item for the owner: either regenerate it from the signed board, or retire the path. Regenerating it is a DATA task and was deliberately not done by hand, per ADR-001 — hand-writing a payload is the defect, not the fix.",
+        "surface": "/six-axes/gspc-axes.json"
       },
       "eunomia_financial_board": {
         "observed": "10 of 10 axes measured",

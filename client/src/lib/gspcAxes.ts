@@ -1,10 +1,20 @@
-// GSPC — the twelve governance axes, as measured state.
+// GSPC — the behavioural governance axes, as measured state.
+//
+// NOT A COUNT AUTHORITY. This file holds a local SNAPSHOT of the behavioural
+// family, used as an offline fallback for the axis ROWS. It is not the board and
+// its length is not the board's axis count: the board also carries the
+// financial/domain family (ADR-001). Anything that renders a COUNT must derive it
+// from GET /api/gspc — see client/src/lib/boardCount.ts. The header of this file
+// used to say "the twelve governance axes", which is how a stale snapshot count
+// ends up quoted as the board's.
 //
 // This is the single source of truth for every SOV OS panel. The invariant that
 // matters more than anything visual: an axis only carries a score when its status
 // is MEASURED. UNMEASURED / DRAFT / SPEC / PLANNED axes carry their real state and
 // NO number. `quotable()` is the structural guard — panels ask it rather than
 // deciding for themselves, so a surface cannot render a score an axis has not earned.
+
+import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 export type AxisStatus = "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
 
@@ -249,13 +259,22 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
   }
 }
 
-/** Caption for living-board chrome. Prefer the API sentence; never invent a slot count. */
-export function publicCaption(publicCount?: string, measured?: number, total?: number): string {
+/**
+ * Caption for living-board chrome. Prefer the API sentence; never invent a count.
+ *
+ * The `measured`/`total` arguments are IGNORED for the caption and kept only so
+ * existing call sites compile. They are counted from the local snapshot in this
+ * file, which is the BEHAVIOURAL family — not the board — so formatting them as
+ * the board's caption published a family count as though it were the whole board,
+ * in the retired "<measured> measured of <total>" grammar that hid the unmeasured
+ * slots entirely. The fallback is now the dated observation of the real board
+ * (client/src/lib/boardCount.ts -> BOARD_COUNT_OBSERVED, itself read out of
+ * facts.json), so both of the board's numbers travel even before the fetch lands.
+ */
+export function publicCaption(publicCount?: string, _measured?: number, _total?: number): string {
   if (publicCount && publicCount.trim()) return publicCount.trim();
-  if (typeof measured === "number" && typeof total === "number" && total > 0) {
-    return `${measured} measured of ${total}`;
-  }
-  return "Counts from GET /api/gspc";
+  const observed = BOARD_COUNT_OBSERVED.public_count;
+  return observed && observed.trim() ? observed.trim() : "Counts from GET /api/gspc";
 }
 
 export const countOf = (axes: Axis[]) => ({

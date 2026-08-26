@@ -4,9 +4,13 @@
  *
  * WHY THIS EXISTS: production is a Cloudflare Pages project. If any lane runs a direct
  * `wrangler pages deploy` it silently overwrites the gated CI build — that is how an ungated
- * 17-axis /api/gspc and a de-branded regression shipped over the ruled 14-slot build. This guard
- * runs on a schedule (and on demand) and goes RED the moment the live site drifts from canon,
- * so a clobber is visible within minutes instead of at diligence.
+ * 17-axis /api/gspc and a de-branded regression shipped over what was then the ruled build.
+ * This guard runs on a schedule (and on demand) and goes RED the moment the live site drifts
+ * from canon, so a clobber is visible within minutes instead of at diligence.
+ *
+ * The expected counts live in canon.json and NOWHERE ELSE — a guard must name the number it
+ * checks for, but no rendered surface may type one (ADR-001). If a ruling moves the count,
+ * move it in canon.json, read off the signed board, and the guard follows.
  *
  * It reads NOTHING secret and changes NOTHING. It only fetches public URLs and compares.
  *
@@ -72,6 +76,13 @@ try {
       else pass(`totals.axes ${t.axes}`);
       if (t.measured_axes !== canon.api.measured_axes) fail(`totals.measured_axes ${t.measured_axes} ≠ ruled ${canon.api.measured_axes}`);
       else pass(`totals.measured_axes ${t.measured_axes}`);
+      // UNMEASURED is a first-class published value, not a leftover. Guarding it
+      // stops the one failure that would matter most: an unmeasured slot quietly
+      // being promoted to close a gap in the measured count.
+      if (typeof canon.api.unmeasured_axes === "number") {
+        if (t.unmeasured_axes !== canon.api.unmeasured_axes) fail(`totals.unmeasured_axes ${t.unmeasured_axes} ≠ ruled ${canon.api.unmeasured_axes} (an axis was promoted or dropped)`);
+        else pass(`totals.unmeasured_axes ${t.unmeasured_axes}`);
+      }
       const pc = String(t.public_count || "");
       if (!pc.includes(canon.api.public_count_contains)) fail(`public_count lost "${canon.api.public_count_contains}" — got: ${pc.slice(0, 60)}`);
       else pass(`public_count carries the ruling`);

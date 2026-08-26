@@ -17,5 +17,6 @@
       "note": "'100 ETH instruments' is NOT in the record — aspirational (UNMEASURED); pipeline exists, coverage grows per located contract. Never counted as present."
     }
   },
-  "grammar": "Public quotable board = 14 axes (cite live totals.public_count). 22-axis universe = internal harness map only (axis-universe-22.json WARNING). Never publish '22 axes' as the board."
+  "grammar": "The board's size is not frozen here: cite live totals.public_count on GET /api/gspc, or totals.count_grammar for the long form. Two numbers travel together — totals.axes counts SLOTS, totals.measured_axes counts slots with a real run behind them, totals.unmeasured_axes is published so the gap is visible. Quoting the slot count alone claims measurements that do not exist; quote both, or quote the smaller.",
+  "grammar_correction_2026-08-26": "This field previously read 'Public quotable board = 14 axes ... Never publish 22 axes as the board.' That was accurate while the 8 financial/domain axes were ruled in (2026-08-24) but absent from the signed board payload — a guardrail against typing a number the artifact could not back, not a repeal of the ruling. The 2026-08-26 sweep wired them into the signed data and re-signed it, so the endpoint now backs the larger count. The retired guardrail is recorded rather than quietly overwritten. See council-os/ADR-001-axis-count.md."
 }
