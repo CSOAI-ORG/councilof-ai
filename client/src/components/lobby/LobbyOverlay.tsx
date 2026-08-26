@@ -357,8 +357,10 @@ export default function LobbyOverlay({
           navOverride={!!override}
         />
 
-        {/* ── three rails; centre (pane + ask) is the dominant column ───── */}
-        <div className="flex min-h-0 flex-1 gap-3">
+        {/* ── three rails; centre (pane + ask) is the dominant column ─────
+            `relative` so the reports rail can lay itself over the centre below
+            `lg`, where there is no room for a third column. */}
+        <div className="relative flex min-h-0 flex-1 gap-3">
           {!narrow && leftOpen ? (
             <LobbyPaneRail
               tabId={tabId}
@@ -453,10 +455,40 @@ export default function LobbyOverlay({
             />
           </main>
 
+          {/* ── the reports rail ──────────────────────────────────────────
+              IT USED TO BE `hidden lg:block`, AND SO DID ITS RESTORE TAB. Below
+              1024px Reports / Tasks / Chats did not exist — but the header's rail
+              control stayed enabled and kept flipping its own label, so pressing
+              "Show rail" set aria-expanded="true", relabelled itself "Hide rail",
+              and put nothing on the screen. A control that reports a state it did
+              not reach is the same defect as a stub that looks like a result.
+
+              The left rail already had this answer: below `sm` it folds into the
+              header nav. The right rail now folds into a DRAWER laid over the
+              centre column, because there is no room for a third column on a
+              phone but there is no reason to amputate the surface either. At `lg`
+              and up it is the column it always was. Either way the header control
+              means what it says. */}
           {rightOpen ? (
-            <div className="hidden w-72 shrink-0 lg:block xl:w-80">
-              <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
-            </div>
+            <>
+              {/* ≥ lg — the third column. */}
+              <div className="hidden w-72 shrink-0 lg:block xl:w-80">
+                <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
+              </div>
+              {/* < lg — a drawer over the centre. The scrim dismisses it. */}
+              <button
+                type="button"
+                aria-label="Close the reports rail"
+                onClick={() => setRightOpen(false)}
+                className="absolute inset-0 z-[1] cursor-default bg-slate-900/25 backdrop-blur-[2px] lg:hidden"
+              />
+              {/* No role/aria-label here: LobbySideRail already labels itself
+                  "Reports, tasks and chats", and a second copy on the wrapper puts
+                  two identically-named regions in the tree. */}
+              <div data-coai-rail="drawer" className="absolute inset-y-0 right-0 z-[2] w-[min(20rem,88vw)] lg:hidden">
+                <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
+              </div>
+            </>
           ) : (
             <RailRestore
               className="hidden lg:flex"
