@@ -2,19 +2,19 @@
   "schema": "csoai.card-store-verification/0.1",
   "as_of": "2026-08-26",
   "mandate": "BOARD-RULING.md (2026-08-26) rule 1: every card hash must resolve to a signed card whose bytes recompute; the number that verifies becomes the board.",
-  "method": "For every index hash (150 from master; 335 from restored history): locate card bytes in every reachable store (pod signed-cards content-index, SOVOS assets/cards, mergekit 3kb_cards, oowm cards, HF datasets csoai/gspc-*), recompute sha256(canonical body) == content_id, then Ed25519-verify the embedded signature.",
+  "method": "For every index hash (150 from master; larger historical index from restored history): locate card bytes in every reachable store (pod signed-cards content-index, local assets/cards, mergekit 3kb_cards, oowm cards, HF datasets csoai/gspc-*), recompute sha256(canonical body) == content_id, then Ed25519-verify the embedded signature.",
   "stores_searched": [
-    "pod-3090 /workspace/sovos-repo/signed-cards (content-index: 16 entries; JSON files are chessboard/clan cards, different format)",
-    "pod-3090 SOVOS/assets/cards + mergekit 3kb_cards (26 .3kb files = float32 weight VECTORS, not cards)",
-    "pod-3090 oowm_merge_v1/cards (card_id/clan/piece_type format)",
+    "pod signed-cards content-index (16 entries; JSON files are chessboard/clan cards, different format)",
+    "local assets/cards + mergekit 3kb_cards (26 .3kb files = float32 weight VECTORS, not cards)",
+    "pod oowm_merge_v1/cards (card_id/clan/piece_type format)",
     "HF csoai/gspc-board, csoai/gspc-boards (208 files: board_*.json + benchmark-register; no hash-named card files)",
     "HF csoai/gspc-signed-boards, csoai/signed-fleet-boards-v2 (board-type signed files)"
   ],
   "result": {
     "verified_of_150": 0,
-    "verified_of_335": 0,
+    "verified_of_historical_index": 0,
     "canary_checks": "8 store candidates inspected by bytes; zero content-hash-to-byte resolutions found."
   },
-  "conclusion": "The frozen 150 floor STANDS per the ruling (a freeze needs no verification to stand). The 185 remain UNMEASURED. The real card store location is UNRESOLVED: candidates = Oracle EC2 micros (uk-london-1), Kaggle kernels, RunPod sink pod 213.173.105.83, A100 (endpoint drifted this round). Next: store hunt on those hosts.",
-  "honesty": "0 verified is the honest count from the reachable record — not a claim that cards do not exist elsewhere, and never an invitation to relax the floor."
+  "conclusion": "The frozen 150 floor STANDS per the ruling (a freeze needs no verification to stand). The remaining historical hashes stay UNMEASURED. The real card store location is UNRESOLVED: candidates = Oracle EC2 micros (uk-london-1), Kaggle kernels, a RunPod sink, A100 (endpoint drifted this round). Next: store hunt on those hosts.",
+  "honesty": "0 verified is the honest count from the reachable record \u2014 not a claim that cards do not exist elsewhere, and never an invitation to relax the floor."
 }
