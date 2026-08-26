@@ -43,7 +43,7 @@ interface AccordionItem {
 interface CertificationItem {
   name: string;
   icon: React.ReactNode;
-  status: "Certified" | "Compliant" | "In Progress";
+  status: "Certified" | "Compliant" | "Self-assessed" | "In Progress";
   description: string;
 }
 
@@ -71,10 +71,10 @@ export default function TrustCenter() {
       description: "Security, Availability, and Confidentiality",
     },
     {
-      name: "GDPR Compliant",
+      name: "GDPR",
       icon: <Globe className="h-8 w-8" />,
-      status: "Compliant",
-      description: "European Data Protection Regulation",
+      status: "Self-assessed",
+      description: "European Data Protection Regulation — our own assessment of our posture. No third-party audit or certification underlies this row.",
     },
   ];
 
@@ -102,7 +102,7 @@ export default function TrustCenter() {
     },
     {
       title: "Right to Erasure",
-      description: "Full compliance with GDPR Article 17 - instant data deletion upon request",
+      description: "Erasure on request under GDPR Article 17, actioned within the statutory one-month window",
       icon: <Maximize2 className="h-6 w-6" />,
     },
     {
@@ -393,8 +393,8 @@ export default function TrustCenter() {
             progress, and we do not claim audits we have not undergone.
           </p>
           <p className="text-lg text-gray-400 leading-relaxed">
-            From encryption to incident response, from ISO certifications to compliance frameworks—we
-            take security seriously so you don't have to.
+            From encryption to incident response, this page states where each control actually
+            stands. We hold no ISO certification today; the rows below say so.
           </p>
         </div>
       </div>
@@ -423,6 +423,8 @@ export default function TrustCenter() {
                         ? "bg-green-100 text-green-700 border-green-300"
                         : cert.status === "In Progress"
                         ? "bg-amber-100 text-amber-700 border-amber-300"
+                        : cert.status === "Self-assessed"
+                        ? "bg-slate-100 text-slate-700 border-slate-300"
                         : "bg-emerald-100 text-emerald-700 border-emerald-300"
                     }
                   >

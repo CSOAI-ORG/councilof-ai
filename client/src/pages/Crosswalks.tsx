@@ -170,7 +170,7 @@ const crosswalkData: CrosswalkEntry[] = [
     nistAIRMF: "MEASURE 2.1-2.13",
     iso42001: "9.1 Monitoring",
     alignmentStrength: "Strong",
-    notes: "CASA certification framework equivalent to conformity assessment procedures",
+    notes: "CSOAI measurement maps to the same control areas as EU AI Act Art. 43 conformity assessment. It is a crosswalk, not an equivalence: CSOAI is not a notified body and issues no conformity assessment.",
   },
   {
     id: "13",

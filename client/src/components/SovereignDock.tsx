@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { LAYER0_DISAMBIGUATION } from "../data/anchoringClaim";
 import { useLocation } from "wouter";
 import AISystemNotice from "./AISystemNotice";
 import { chargeSovereign } from "../lib/sovCharge";
@@ -42,7 +43,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
 ];
 
 const KNOWLEDGE: { re: RegExp; a: string }[] = [
-  { re: /what.?s? layer ?0|explain layer ?0/i, a: "Layer 0 is the trust floor for AI: identity (did:csoai), runtime policy, agentic-finance pre-checks, a legacy bridge and cross-region handoff, plus Ed25519 attestation and A2A. Every governed agent stands on it." },
+  { re: /what.?s? layer ?0|explain layer ?0/i, a: LAYER0_DISAMBIGUATION + " Concretely it carries identity (did:csoai), runtime policy, agentic-finance pre-checks, a legacy bridge and cross-region handoff, plus Ed25519 attestation and A2A." },
   { re: /who are you|what are you/i, a: "I'm the Council assistant — I open the right surface, read the living board, and stay inside what we have actually measured." },
 ];
 

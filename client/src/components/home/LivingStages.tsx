@@ -4,6 +4,7 @@ import { RotatingHighlight } from "../type/RotatingHighlight";
 import { SECTION_TITLES } from "../type/sectionTitles";
 import LiveLeaderboard from "../board/LiveLeaderboard";
 import { VideoEmbed } from "@/components/scrollworld";
+import { ANCHORING_CLAIM } from "../../data/anchoringClaim";
 
 /**
  * LivingStages — the lower homepage. Six image-backed bands that answer the
@@ -370,9 +371,8 @@ function VerifyYourself() {
           <Body>
             Every measurement we publish is a small signed record, roughly 3KB of scores, sample
             sizes, intervals and hashes. You do not need an account, our servers, or our permission to
-            confirm it is genuine and unaltered. There is no timestamp authority in the loop and
-            nothing is anchored to a blockchain — the anchor is an Ed25519 signature over a SHA-256
-            hash chain, and that is exactly what you re-compute.
+            confirm it is genuine and unaltered. {ANCHORING_CLAIM} That signature over that hash
+            chain is exactly what you re-compute.
           </Body>
         </div>
 

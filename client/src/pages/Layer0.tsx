@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { LAYER0_DISAMBIGUATION } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { LAYER0_NODES, COUNTS, type Layer0Node, type NodeStatus } from "@/data/layer0Nodes";
 
@@ -104,11 +105,16 @@ export default function Layer0() {
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Layer 0 is the floor every other claim stands on:{" "}
             <strong className="text-emerald-50">
-              Ed25519 signing, the care-floor gate, a 33-agent council, and offline
-              verification
+              Ed25519 signing, the care-floor gate, and offline verification
             </strong>{" "}
-            — and every claim made on this floor carries either a measurement or an honest
-            status. Nothing here asks to be believed; everything here asks to be checked.
+            — plus a <strong className="text-emerald-50">designed</strong> 33-seat council, which is
+            a design figure only: when we measured how independent those seats actually were, the
+            effective number came out at n_eff 1.21 of 3, so we retracted the guarantee (DR-0007)
+            rather than reword it. Every claim made on this floor carries either a measurement or an
+            honest status. Nothing here asks to be believed; everything here asks to be checked.
+          </p>
+          <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-emerald-100/60">
+            {LAYER0_DISAMBIGUATION}
           </p>
         </div>
       </section>

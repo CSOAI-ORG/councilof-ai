@@ -21,6 +21,8 @@
  * form here removes that discrepancy.)
  */
 
+import { ANCHORING_CLAIM } from "./anchoringClaim";
+
 import type { JRecord } from "./arena";
 import { canonicalJSON, sha256Hex } from "@/lib/verify";
 
@@ -40,9 +42,8 @@ export const CHAIN_STATUS: ChainStatus = {
   chain_length: 11,
   hash_algorithm: "sha256",
   signature_algorithm: "Ed25519 + SHA-256 hash-chain",
-  note: "Records are sha256 hash-linked for tamper-evidence and signed with Ed25519, " +
-    "SHA-256 hash-chained — a ~3KB card verifiable offline against the published " +
-    "key f4b4278d… (did:web:csoai.org). OpenTimestamps anchoring is roadmap, not yet wired. " +
+  note: "Records are sha256 hash-linked for tamper-evidence. " + ANCHORING_CLAIM +
+    " OpenTimestamps anchoring is roadmap, not yet wired. " +
     "The post-quantum ML-DSA-65 (FIPS-204) signer is " +
     "built, not shipped; the label will name it in the same commit it ships.",
   last_record: {

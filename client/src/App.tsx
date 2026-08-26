@@ -166,6 +166,7 @@ const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
 const XrplAttest = lazy(() => import("./pages/XrplAttest"));
+const ClaimsRegister = lazy(() => import("./pages/ClaimsRegister"));
 const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
@@ -371,7 +372,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/badges": "Governance badges — wear your measured status | CSOAI",
   "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
-  "/xrpl-attest": "Ledger attestation | Council of AI",
+  "/xrpl-attest": "Ledger attestation — devnet-proven; mainnet planned | Council of AI",
+  "/claims-register": "Claims register — every public claim, its evidence, its status | CSOAI",
   "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
@@ -653,6 +655,7 @@ function App() {
                   <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/xrpl-attest" component={XrplAttest} />
+                  <Route path="/claims-register" component={ClaimsRegister} />
                   <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/embed" component={EmbedPage} />
