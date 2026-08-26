@@ -256,3 +256,14 @@ board, corrections, axis result, badge, did:web trust root) to a verify step, bi
 honest states (measured / untested / unmeasured), enumerates the boundaries (measurement not
 certification, R8 regulators free, never a token/claim), and lists the off-doctrine never-cite set.
 On-cite targets verified live (HTTP 200).
+
+## 2026-08-26 · JEEVES — parallel-prep key consumers (run the instant keys land)
+Built 3 self-contained consumers so each owner gate executes with zero delay once the
+key is set — and they are HONEST when the key is absent (never fabricate):
+- etherscan_source_verify.py: records REAL source_verified for an EVM address from the
+  Etherscan API (fills the deliberate gap evm_control_facts.py states as 'not measured,
+  needs Etherscan API'). No key -> exit 2 + 'NOT measured (honest)'.
+- rwa_xyz_resolve.py: resolves the 10 addr:pending RWA targets via RWA.xyz v4. No key ->
+  exit 2 + stays addr:pending (never invents an address).
+- (HF publish consumer to follow once the publish target is confirmed.)
+These run the moment ETHERSCAN_API_KEY / RWA_XYZ_API_KEY is set by the owner; I execute.
