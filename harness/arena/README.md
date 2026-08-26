@@ -26,7 +26,9 @@ is created ON the pod with the estate key, and results commit to the monorepo. N
 ## OOWM fleet (owner directive)
 
 The measured fleet is the specialist big models only — `nemotron-3-nano:30b`, `phi4:14b`,
-`gemma3:12b`, `deepseek-r1:8b`, `qwen2.5:7b`, `mistral:7b`. Tiny models (0.5b/1.5b/3b/4b)
+`gemma3:12b`, `deepseek-r1:8b`, `qwen3:8b`, `mistral:7b`. (2026-08-26: `qwen2.5:7b` was
+removed from the sampled fleet — it is not loaded on the measurement pod, so sampling it
+404'd; the loaded `qwen3:8b` takes its place.) Tiny models (0.5b/1.5b/3b/4b)
 are excluded from the board: `is_oowm()` filters them out.
 
 ## Run

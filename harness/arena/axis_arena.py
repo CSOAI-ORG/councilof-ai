@@ -18,7 +18,7 @@ OUT = Path("/workspace/arena_rounds.jsonl")
 K = 16.0
 
 # OOWM specialist fleet per owner directive.
-MODELS = ["nemotron-3-nano:30b", "phi4:14b", "gemma3:12b", "qwen2.5:7b", "mistral:7b"]
+MODELS = ["nemotron-3-nano:30b", "phi4:14b", "gemma3:12b", "qwen3:8b", "mistral:7b"]
 
 def log(*a):
     line = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()) + " " + " ".join(str(x) for x in a)
