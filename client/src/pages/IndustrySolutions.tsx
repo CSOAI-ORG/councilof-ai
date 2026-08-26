@@ -21,6 +21,47 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { industriesForGrid } from "../data/industries";
+import { useGspcBoard, type GspcAxis } from "../components/board/useGspcBoard";
+
+/**
+ * The hub chip used to read a `separation` verdict typed into the industries
+ * data file. It now derives from the live board: a sector's chip is the state
+ * of the axes that sector names. "reading the board" shows until the fetch
+ * lands — a chip is a claim about a measurement, and showing one before the
+ * measurement has been read would be asserting it.
+ */
+type SectorState = "SEPARATED" | "TIE" | "UNMEASURED" | "PENDING";
+
+function sectorState(axes: string[], rows: GspcAxis[] | null): SectorState {
+  if (!rows) return "PENDING";
+  const mine = axes.map((id) => rows.find((r) => r.axis === id)).filter(Boolean) as GspcAxis[];
+  if (!mine.length || mine.every((a) => a.status !== "MEASURED")) return "UNMEASURED";
+  if (mine.some((a) => a.separation === "SEPARATED")) return "SEPARATED";
+  return "TIE";
+}
+
+const SECTOR_CHIP: Record<SectorState, { text: string; className: string; title: string }> = {
+  SEPARATED: {
+    text: "SEPARATED",
+    className: "bg-emerald-100 text-emerald-800",
+    title: "At least one axis this sector names has a statistically separated leader (McNemar p<0.05).",
+  },
+  TIE: {
+    text: "TIE",
+    className: "bg-slate-200 text-slate-700",
+    title: "Measured, but no separated lead. A tie is never counted as a win.",
+  },
+  UNMEASURED: {
+    text: "UNMEASURED",
+    className: "bg-amber-100 text-amber-800",
+    title: "No run stands behind the axes this sector names. Published so the gap is visible.",
+  },
+  PENDING: {
+    text: "reading the board",
+    className: "bg-slate-100 text-slate-500",
+    title: "GET /api/gspc has not answered yet. No state is claimed until it does.",
+  },
+};
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Umbrella,
@@ -43,6 +84,8 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
 // Hub for /industries — one 15-card grid, one hue (emerald + neutral),
 // driven by the same data array as every per-sector page.
 export default function IndustrySolutions() {
+  const { data } = useGspcBoard();
+  const rows = (data?.axes as GspcAxis[] | undefined) ?? null;
   useEffect(() => {
     document.title = "Industries — what we measure, by sector · CSOAI";
   }, []);
@@ -59,10 +102,12 @@ export default function IndustrySolutions() {
             What we measure, by industry
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-            Fifteen sectors, each with its own bench and its own law. Pick a sector to see the
-            provisions that bind it, what we measure against the Governance · Safety · Provenance ·
-            Continuity axes, the numbers today with n and intervals — and where a corpus is thin, an
-            honest UNMEASURED label.
+            {industriesForGrid.length} sectors, each with its own law and its own named board axes.
+            Pick a sector to see the provisions that bind it, what we measure against the
+            Governance · Safety · Provenance · Continuity axes, and that sector's live rows — n,
+            interval and separation verdict, read from <code>GET /api/gspc</code> as the page loads
+            rather than written into the page. Where no run stands behind an axis, it reads
+            unmeasured.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-500">
             <span className="inline-flex items-center gap-1.5">
@@ -80,9 +125,7 @@ export default function IndustrySolutions() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {industriesForGrid.map((industry) => {
             const Icon = ICONS[industry.icon] ?? Shield;
-            const unmeasured = industry.numbers.kind === "unmeasured";
-            const separated =
-              industry.numbers.kind === "measured" && industry.numbers.separation === "SEPARATED";
+            const chip = SECTOR_CHIP[sectorState(industry.axes, rows)];
             return (
               <Link
                 key={industry.slug}
@@ -108,19 +151,12 @@ export default function IndustrySolutions() {
                   <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs font-medium text-slate-600">
                     {industry.bench}
                   </span>
-                  {unmeasured ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
-                      <CircleDot className="h-3 w-3" /> UNMEASURED
-                    </span>
-                  ) : separated ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-800">
-                      <CheckCircle2 className="h-3 w-3" /> SEPARATED
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-700">
-                      <CircleDot className="h-3 w-3" /> TIE
-                    </span>
-                  )}
+                  <span
+                    title={chip.title}
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold ${chip.className}`}
+                  >
+                    {chip.text}
+                  </span>
                 </div>
 
                 <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-emerald-700 opacity-0 transition-opacity group-hover:opacity-100">

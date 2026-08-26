@@ -18,12 +18,11 @@ import {
   Brain,
   ArrowRight,
   ArrowLeft,
-  CheckCircle2,
-  CircleDot,
   FileSignature,
   ChevronRight,
 } from "lucide-react";
 import ContentPage from "./ContentPage";
+import AxisProof from "../components/AxisProof";
 import { industriesdata } from "../data/industries-content";
 import {
   getIndustry,
@@ -50,8 +49,6 @@ const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Brain,
 };
 
-const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
-
 function SectionHeading({ n, title }: { n: number; title: string }) {
   return (
     <div className="flex items-center gap-3 mb-5">
@@ -59,66 +56,6 @@ function SectionHeading({ n, title }: { n: number; title: string }) {
         {n}
       </span>
       <h2 className="text-xl font-semibold text-slate-900">{title}</h2>
-    </div>
-  );
-}
-
-function NumbersBlock({ industry }: { industry: Industry }) {
-  const nums = industry.numbers;
-  if (nums.kind === "unmeasured") {
-    return (
-      <div className="rounded-xl border border-amber-300 bg-amber-50 p-6">
-        <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-amber-800">
-          <CircleDot className="h-3.5 w-3.5" />
-          {nums.label}
-        </div>
-        <p className="text-sm leading-relaxed text-slate-700">{nums.nearest}</p>
-      </div>
-    );
-  }
-  const separated = nums.separation === "SEPARATED";
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6">
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-lg bg-emerald-50 p-4">
-          <div className="text-2xl font-bold text-emerald-700">{pct(nums.leaderAccuracy)}</div>
-          <div className="mt-1 text-xs text-slate-600">
-            leader accuracy
-            {nums.interval ? (
-              <span className="block text-slate-500">
-                95% CI {pct(nums.interval[0])}–{pct(nums.interval[1])}
-              </span>
-            ) : (
-              <span className="block text-slate-500">interval withheld (protocol bank)</span>
-            )}
-          </div>
-        </div>
-        <div className="rounded-lg bg-slate-50 p-4">
-          <div className="text-2xl font-bold text-slate-800">{pct(nums.fleetMean)}</div>
-          <div className="mt-1 text-xs text-slate-600">19-model fleet mean</div>
-        </div>
-        <div className="rounded-lg bg-slate-50 p-4">
-          <div className="text-2xl font-bold text-slate-800">n = {nums.n}</div>
-          <div className="mt-1 text-xs text-slate-600">frozen, published split</div>
-        </div>
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${
-            separated
-              ? "bg-emerald-100 text-emerald-800"
-              : "bg-slate-200 text-slate-700"
-          }`}
-        >
-          {separated ? <CheckCircle2 className="h-3.5 w-3.5" /> : <CircleDot className="h-3.5 w-3.5" />}
-          {separated ? "SEPARATED lead" : "TIE — not a win"}
-          {typeof nums.separationP === "number" ? ` · McNemar p=${nums.separationP}` : ""}
-        </span>
-        <span className="text-xs text-slate-500">leader: {nums.leaderRole}</span>
-      </div>
-
-      <p className="mt-4 text-sm leading-relaxed text-slate-700">{nums.note}</p>
     </div>
   );
 }
@@ -139,7 +76,7 @@ function IndustryPage({ industry }: { industry: Industry }) {
             href="/industries"
             className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-800"
           >
-            <ArrowLeft className="h-4 w-4" /> All 15 industries
+            <ArrowLeft className="h-4 w-4" /> All {industriesForGrid.length} industries
           </Link>
           <div className="flex items-start gap-4">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-emerald-200 bg-white text-emerald-700 shadow-sm">
@@ -215,15 +152,26 @@ function IndustryPage({ industry }: { industry: Industry }) {
           </div>
         </section>
 
-        {/* 3. Numbers today */}
+        {/* 3. Numbers today — read live, never typed */}
         <section>
           <SectionHeading n={3} title="Numbers today" />
           <p className="mb-5 text-sm text-slate-600">
             Every score is a deterministic grade of recorded model outputs on a frozen, published
-            split. Where the sector-specific corpus is thin, it is labelled UNMEASURED — we do not
-            invent a number.
+            split. The rows below are fetched from <code>GET /api/gspc</code> when this page loads —
+            no figure is written into the page, so this page cannot drift from the board. Where a
+            slot carries no run, it reads <strong>unmeasured</strong>, never 0%.
           </p>
-          <NumbersBlock industry={industry} />
+          {industry.gap && (
+            <p className="mb-5 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm leading-relaxed text-slate-700">
+              <span className="font-semibold text-amber-900">The gap, stated first: </span>
+              {industry.gap}
+            </p>
+          )}
+          <AxisProof
+            axes={industry.axes}
+            why={`The board axes that bear on ${industry.name.toLowerCase()}. Bench, n, interval and separation verdict as the board serves them.`}
+            tone="light"
+          />
         </section>
 
         {/* 4. Artefact you leave with */}

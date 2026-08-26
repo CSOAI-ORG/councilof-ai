@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import SovereignSpot from "../components/SovereignSpot";
 import { PersonaHeroArt, Slideshow, TrustStrip } from "../components/BrandGraphics";
 import PersonaEvidence from "../components/PersonaEvidence";
+import AxisProof from "../components/AxisProof";
 
 // PersonaRouter — /for/:persona demographic landing pages. Each declared audience lands on a
 // page that speaks to them and routes them into the right EXISTING pages.
@@ -30,11 +31,32 @@ import PersonaEvidence from "../components/PersonaEvidence";
 // NO COUNT IS TYPED ON THIS PAGE. Figures come from PersonaEvidence, which reads them live
 // off /api/gspc. Axis SLUGS below are pointers into that board, not counts.
 
+// PersonaRouter — /for/:persona audience pages.
+//
+// TWO DEFECTS THIS FILE NOW CARRIES THE FIX FOR.
+//
+// 1. These pages were unreachable. Seven Pages Functions under functions/for/ answered
+//    every one of them with a 308 to the bare homepage, so all seven URLs were
+//    byte-identical and none of this differentiated content was ever served. The
+//    functions are deleted; the router below is what a reader gets.
+//
+// 2. Once reachable, they still named no axis, no n and no card — the measurement was
+//    absent from the measurement company's own audience pages. Each persona now declares
+//    the board axes that actually bear on its reader (`axes`, a list of LABELS, which is
+//    canon and safe to write down) and <AxisProof> reads their live rows from
+//    GET /api/gspc. Not one number below is typed: an axis that is an UNMEASURED slot
+//    renders as unmeasured, because a finance reader being shown only the measured axes
+//    would be shown a flattering subset rather than the board.
+
 type Link = { href: string; label: string; note: string };
 type Persona = {
   key: "sec-filer" | "finance" | "healthcare" | "regulator" | "startup" | "enterprise";
   eyebrow: string; h1: string; intro: string;
   links: Link[];
+  /** Board axis ids, exactly as GET /api/gspc names them. Labels only — never figures. */
+  axes: string[];
+  /** Why these axes are the ones this reader should check. */
+  axesWhy: string;
   slides: { title: string; body: string; tag?: string }[];
   /** Board axes this audience can actually go and check, with why each is here. */
   evidence: { lead: string; axes: { slug: string; why: string }[] };
@@ -52,6 +74,9 @@ const PERSONAS: Record<string, Persona> = {
       { href: "/compare", label: "Honest vs Vanta / Drata", note: "Where we differ, plainly" },
       { href: "/us-ai-regulation", label: "US AI regulation", note: "NIST AI RMF + federal picture" },
     ],
+    axes: ["provenance", "governance", "openness"],
+    axesWhy:
+      "An AI-washing charge turns on whether a disclosure was evidenced, and these are the axes a filer's own claims rest on: whether AI-generated output can be traced to what produced it, whether a model tiers its own regulated use correctly, and how much of the system is open to inspection. Read the rows, then recompute the signed card behind any of them.",
     slides: [
       { tag: "the risk", title: "AI is already in your filings", body: "Material AI risk belongs in Reg S-K Item 105 risk factors and in MD&A. The SEC has charged and settled AI-washing cases against investment advisers. Disclosure needs evidence behind it." },
       { tag: "the fix", title: "Sign the measurement, not the claim", body: "A measurement card records ONE run against ONE frozen bank, Ed25519-signed over its exact bytes. It evidences what was measured on a date. It is not a statement that your AI governance is adequate — nobody here can make that statement." },
@@ -79,6 +104,9 @@ const PERSONAS: Record<string, Persona> = {
       { href: "/financial-axes", label: "The financial axes", note: "One measured, the rest published empty" },
       { href: "/compare", label: "Honest vs the incumbents", note: "Vanta / Drata / Credo AI" },
     ],
+    axes: ["governance", "provenance-controls", "distribution-integrity", "reserve-attestation"],
+    axesWhy:
+      "Two of these carry a measurement and two are declared slots with no run behind them, and a finance reader is shown all four deliberately. provenance-controls is the one financial axis with a real run — a deterministic mainnet read whose n counts issuer accounts, not bank items. The empty rows are the honest state of the financial family today.",
     slides: [
       { tag: "high-risk", title: "Credit and life/health insurance AI are named uses", body: "Annex III(5) names evaluating creditworthiness or establishing a credit score for natural persons, and risk assessment and pricing in relation to life and health insurance. Article 10 data governance, Article 14 human oversight and Article 11 technical documentation follow from that classification." },
       { tag: "resilience", title: "DORA sits on top - and here is exactly what we hold on it", body: "DORA (Regulation (EU) 2022/2554) governs the ICT your models run on. In our dated corpus feed it is a baseline-seeded instrument: its provisions are hashed and watched, so a change in the text is visible. It has no rows in the published crosswalk, and we do not claim one evidenced control set discharges it." },
@@ -108,6 +136,9 @@ const PERSONAS: Record<string, Persona> = {
       { href: "/system-card", label: "Signed System Card", note: "One clinical system, one signed record" },
       { href: "/compare", label: "Honest vs the incumbents", note: "Where we differ" },
     ],
+    axes: ["care", "safety", "art5-safeguard", "affect"],
+    axesWhy:
+      "Clinical AI fails in ways a generic benchmark does not look for: whether the model gives calibrated care rather than confident care, whether it refuses a harmful instruction, whether it stays inside the Article 5 prohibitions, and how it handles a distressed user. Every row carries its own n — CareBench is the largest bank on the board and Art5Bench is one of the smallest.",
     slides: [
       { tag: "high-risk", title: "Diagnosis and triage qualify - by two different routes", body: "AI that is a safety component of a device regulated under MDR or IVDR is high-risk through Article 6(1) and Annex I. Triage of patients in emergency healthcare is listed separately in Annex III. Same tier, different conformity paths - and the route decides who assesses you." },
       { tag: "stacked", title: "Alongside MDR / IVDR / HIPAA, not instead of", body: "The AI Act applies alongside device and privacy law. Article 8 lets the AI-Act documentation be folded into a single technical file, but the AI-specific obligations are additional, not absorbed by an existing device conformity route." },
@@ -136,6 +167,9 @@ const PERSONAS: Record<string, Persona> = {
       { href: "/gspc-arena", label: "Council Space", note: "Talk to the governance AI" },
       { href: "/honesty", label: "The honesty record", note: "Corrections, published not edited" },
     ],
+    axes: ["governance", "art5-safeguard", "conformance", "regulatory-framework"],
+    axesWhy:
+      "The row that matters most to a supervisor is the empty one. regulatory-framework is a published slot with no run behind it, and it sits here beside three measured axes rather than being left off the page. That is the whole proposition: you can see what we have not measured as plainly as what we have.",
     slides: [
       { tag: "independent", title: "No single-vendor dependency", body: "MIT-licensed core, published frozen banks, and signatures that verify against a key you fetch from our DID document rather than one we hand you. You do not have to trust us in order to check us." },
       { tag: "verifiable", title: "Publish proof, not promises", body: "Each measurement card is signed over its exact bytes, and the board snapshot carries its own site attestation naming the key that signed it. Re-verification needs no account and no CSOAI code." },
@@ -164,6 +198,9 @@ const PERSONAS: Record<string, Persona> = {
       { href: "/gspc-verify", label: "Verify a card", note: "No account. Free forever." },
       { href: "/compare", label: "Honest vs the incumbents", note: "Measurement vs GRC" },
     ],
+    axes: ["conformance", "openness", "provenance", "jail"],
+    axesWhy:
+      "These are the four your enterprise buyer's security team will ask about, and each row here is a number they can recompute without an account and without asking us. Hand them the axis name and the card; they do not have to trust the vendor claiming it.",
     slides: [
       { tag: "unblock sales", title: "Hand over something specific", body: "A signed card is one run, one frozen bank, one signature - not a claim in a slide. The buyer recomputes it without an account and without asking us, which is a far better answer to a security questionnaire than a promise." },
       { tag: "no GRC team", title: "Governance without headcount, stated honestly", body: "The core is MIT-licensed and the banks are public, so a small team can produce and publish a measurement without a compliance function. That is measurement. The rest of a governance programme is still yours - we are not pretending otherwise." },
@@ -192,6 +229,9 @@ const PERSONAS: Record<string, Persona> = {
       { href: "/system-card", label: "Signed System Card", note: "Per AI system" },
       { href: "/gspc-scoreboard", label: "Living board", note: "Empty cells stay empty" },
     ],
+    axes: ["governance", "continuity", "safety", "detector-interop"],
+    axesWhy:
+      "Overlapping regimes reuse the same evidence, so the useful question is what the evidence actually says. These four rows carry the n, the interval and the separation verdict behind each figure — including where the lead is a TIE, which is not a win and is never presented as one.",
     slides: [
       { tag: "overlap", title: "One measurement, many readers", body: "The EU AI Act, the Cyber Resilience Act, DORA, NIS2 and UK GDPR sit in our dated corpus feed as hashed baselines watched for drift. That is a shared reference several teams can read from. It is not a claim that one control set satisfies those regimes, and we do not type a framework count into this page." },
       { tag: "signed", title: "Evidence that verifies itself", body: "Each measurement card is Ed25519-signed over its exact bytes, and the board snapshot carries a site attestation naming the key that signed it. Anyone can re-verify offline, which is the only property that makes evidence worth anything to a third party." },
@@ -237,7 +277,11 @@ export default function PersonaRouter({ persona }: { persona: string }) {
             <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">{p.intro}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href={p.links[0].href} className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-slate-900 hover:bg-emerald-400">{p.links[0].label} -&gt;</a>
-              <a href="/system-card" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Get a signed System Card -&gt;</a>
+              {/* Was "Get a signed System Card". Cards are signed on the measurement node and
+                  there is no self-service issuance (see /harness), so "get" promised a
+                  transaction the estate does not offer. The link goes to the page that
+                  explains what a signed card is; the verb now matches. */}
+              <a href="/system-card" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">What a signed System Card is -&gt;</a>
             </div>
           </div>
           <PersonaHeroArt persona={p.key} className="w-full max-w-md justify-self-center" />
@@ -257,7 +301,11 @@ export default function PersonaRouter({ persona }: { persona: string }) {
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 pb-4"><Slideshow slides={p.slides} /></section>
+      <section className="max-w-6xl mx-auto px-6 pb-4">
+        <AxisProof axes={p.axes} why={p.axesWhy} tone="light" />
+      </section>
+
+      <section className="max-w-6xl mx-auto px-6 py-12"><Slideshow slides={p.slides} /></section>
 
       <PersonaEvidence lead={p.evidence.lead} axes={p.evidence.axes} />
 

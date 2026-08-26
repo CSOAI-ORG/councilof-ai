@@ -106,10 +106,23 @@ function discover() {
     "/vs", "/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust",
     "/for/regulator", "/for/enterprise", "/for/finance", "/for/healthcare",
     "/for/startup", "/for/sec-filer",
-    "/industries/insurance", "/industries/finance", "/industries/healthcare",
-    "/industries/health", "/industries/care", "/industries/transport",
+    // The 15 canonical sector pages (client/src/data/industries.ts). Only four of
+    // them were listed here; the other eleven had no snapshot at all, so a crawler
+    // cold-loading /industries/media got the SPA shell — which is how "the sector
+    // pages are one shared document" became true of the rendered HTML even though
+    // the React pages differ.
+    "/industries", "/competitors",
+    "/industries/insurance", "/industries/government", "/industries/care",
+    "/industries/defence", "/industries/critical-infrastructure", "/industries/media",
+    "/industries/agent-rails", "/industries/open-source", "/industries/multi-agent-commerce",
+    "/industries/security", "/industries/machinery", "/industries/humanoid",
+    "/industries/xr", "/industries/legal", "/industries/emotion-ai",
+    // Legacy slugs kept so no existing URL 404s — these fall through to the
+    // ContentPage dataset, not the sector template.
+    "/industries/finance", "/industries/healthcare",
+    "/industries/health", "/industries/transport",
     "/industries/transportation", "/industries/retail", "/industries/education",
-    "/industries/energy", "/industries/government", "/industries/legal",
+    "/industries/energy",
     "/library/axes",
     "/verify", "/os", "/assess", "/academy", "/compare", "/layer0",
     "/trust-center", "/network", "/intel", "/hive", "/methodology", "/honesty",

@@ -23,7 +23,7 @@ function Card({ b }: { b: Battlecard }) {
           <ul className="mt-1.5 space-y-1 text-[12px] text-emerald-100/70">{b.strengths.map((s, i) => (<li key={i} className="flex gap-2"><span className="text-sky-400/60">+</span><span>{s}</span></li>))}</ul>
         </div>
         <div>
-          <div className="text-[11px] font-bold uppercase tracking-wide text-rose-300/70">Where they're beatable</div>
+          <div className="text-[11px] font-bold uppercase tracking-wide text-rose-300/70">Where our scope differs</div>
           <ul className="mt-1.5 space-y-1 text-[12px] text-emerald-100/70">{b.weaknesses.map((w, i) => (<li key={i} className="flex gap-2"><span className="text-rose-400/60">−</span><span>{w}</span></li>))}</ul>
         </div>
       </div>
@@ -48,8 +48,8 @@ export default function Competitors() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(16,185,129,.16), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · competitive battlecards</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Know the field. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Win the deal.</span></h1>
-          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Live-researched, cited intel on the AI-governance incumbents — their funding, customers, and the exact gaps where CSOAI's open, signed, council-driven OS wins.</p>
+          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Know the field. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Cite the source.</span></h1>
+          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Publicly-reported context on the AI-governance market, each figure carrying the source that published it. Every fact below is reported by that source, not measured by us — and none of it is a finding about any company.</p>
         </div>
       </section>
 
@@ -59,7 +59,7 @@ export default function Competitors() {
           <div className="mt-2 grid gap-4 sm:grid-cols-3">
             <div><div className="text-2xl font-black text-emerald-200">{MARKET.size2026}</div><div className="text-xs text-emerald-100/70">market in 2026 (up from {MARKET.size2025} in 2025)</div></div>
             <div><div className="text-2xl font-black text-emerald-200">{MARKET.cagr}</div><div className="text-xs text-emerald-100/70">CAGR as EU AI Act, NIS2, DORA, CRA bite</div></div>
-            <div><div className="text-2xl font-black text-emerald-200">30+</div><div className="text-xs text-emerald-100/70">tools crowding in — SMB segment underserved</div></div>
+            <div><div className="text-2xl font-black text-emerald-200">reported</div><div className="text-xs text-emerald-100/70">every figure in this block is the cited analyst&apos;s, not a measurement of ours</div></div>
           </div>
           <p className="mt-2 text-[13px] text-emerald-100/75">{MARKET.note}</p>
           <div className="mt-2 flex flex-wrap gap-2">{MARKET.sources.map((s, i) => (<a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="rounded-full border border-emerald-500/25 px-2.5 py-1 text-[10px] text-emerald-300/60 hover:bg-white/5">↗ {s.label}</a>))}</div>
@@ -86,7 +86,7 @@ export default function Competitors() {
 
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-6 text-center">
           <div className="text-sm font-bold text-emerald-100">The one-line pitch</div>
-          <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/75">They sell closed platforms and five-figure certificates. We give you an open-source core, free training with course-completion records (we certify nothing), a designed 33-agent council, self-scan cyber, and Layer 0 proof — value back to you, not a middleman.</p>
+          <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/75">Stated about us, not about them: verification is free forever and needs no account, a grade is never sold, every published card can be recomputed offline from bytes we publish, and what we could not measure is labelled unmeasured rather than left out. We measure against an obligation — we do not enforce one, and we certify nothing.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/why" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Why CSOAI →</a>
             <a href="/regulators" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">The Regulator Atlas →</a>

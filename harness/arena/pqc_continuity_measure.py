@@ -85,6 +85,7 @@ def main():
                   f"Scheme: {text}")
         for m in models:
             resp = ask(m, prompt)
+            print(f"  [{m}] ({it.get('category')}) got={resp[:28]!r}", file=sys.stderr)
             if resp.startswith("ERR:"):
                 per_model[m][2] += 1
                 res = {"model": m, "text": text, "expected": exp, "category": cat,
