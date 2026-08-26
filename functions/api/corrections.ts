@@ -1,1 +1,1 @@
-FILE:///workspace/functions/api/corrections.ts
+$load:/tmp/FINAL_MCP_ARGS.json#content
