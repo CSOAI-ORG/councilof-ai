@@ -43,7 +43,9 @@ export const AUDIENCES: Audience[] = [
 
 export const DEFAULT_AUDIENCE = "public";
 
-/** Base questions per audience — asked anywhere on the site. 4 × 7 = 28. */
+/** Base questions per audience — asked anywhere on the site. ASK_COUNT below is
+ *  derived from this object and the route table; no total is typed here, because
+ *  the last one said "4 × 7 = 28" beside a list that had already grown past it. */
 const BY_AUDIENCE: Record<string, string[]> = {
   public: [
     "In plain words, what does the Council of AI actually measure?",
@@ -104,10 +106,15 @@ const BY_AUDIENCE: Record<string, string[]> = {
 
 /**
  * Route-specific questions, keyed by a path test. These lead, because the pane
- * the reader is looking at is the strongest signal of what they want. 11 here,
- * 28 above — 39 in the registry.
+ * the reader is looking at is the strongest signal of what they want. The total
+ * is ASK_COUNT, derived at the bottom of this file — never typed in this comment,
+ * which is where the last stale count lived.
+ *
+ * `asks` may be a FUNCTION of the path where the route carries a segment worth
+ * naming (the `/for/:persona` doors), so a suggestion can say "for a regulator"
+ * instead of "for this sector".
  */
-const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
+const BY_ROUTE: { test: RegExp; asks: string[] | ((path: string) => string[]) }[] = [
   {
     test: /^\/(gspc-scoreboard|gspc|board)/,
     asks: [
@@ -177,11 +184,22 @@ const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
     ],
   },
   {
+    // /for/:persona is a real route (App.tsx -> PersonaRouter) covering regulator,
+    // enterprise, finance, healthcare, startup and sec-filer. It used to answer with
+    // one generic pair calling every one of them "this sector" — a regulator is not a
+    // sector — and neither question mentioned measurement, which is the only thing
+    // the deterministic chat lane can actually answer from. asks.test.ts has been red
+    // on master over exactly that. The persona is read off the path instead.
     test: /^\/for\//,
-    asks: [
-      "What is published for this sector — frameworks named, evidence signed, and gaps left empty?",
-      "What should this audience do first for AI governance with signed evidence?",
-    ],
+    asks: (path) => {
+      const seg = path.split("/").filter(Boolean)[1] ?? "";
+      const who = seg ? seg.replace(/[-_]+/g, " ") : "this reader";
+      return [
+        `What is measured and published for ${who} — which axes carry a figure, and which are published with none?`,
+        `What does the Council refuse to claim for ${who}: no certification, no badge, no conformity verdict?`,
+        `Which of this page's frameworks map onto frozen provisions, and which cells stay empty?`,
+      ];
+    },
   },
   {
     test: /^\/pricing|^\/plans/,
@@ -286,7 +304,8 @@ const BY_ROUTE: { test: RegExp; asks: string[] }[] = [
  */
 export function asksFor(pathname: string, audience: string, limit = 4): string[] {
   const path = (pathname || "/").split("?")[0];
-  const route = BY_ROUTE.find((r) => r.test.test(path))?.asks ?? [];
+  const rule = BY_ROUTE.find((r) => r.test.test(path));
+  const route = !rule ? [] : typeof rule.asks === "function" ? rule.asks(path) : rule.asks;
   const base = BY_AUDIENCE[audience] ?? BY_AUDIENCE[DEFAULT_AUDIENCE];
   const out: string[] = [];
   for (const q of [...route, ...base]) {
@@ -299,4 +318,4 @@ export function asksFor(pathname: string, audience: string, limit = 4): string[]
 /** Total questions in the registry — quoted in the UI, computed, never typed. */
 export const ASK_COUNT =
   Object.values(BY_AUDIENCE).reduce((n, a) => n + a.length, 0) +
-  BY_ROUTE.reduce((n, r) => n + r.asks.length, 0);
+  BY_ROUTE.reduce((n, r) => n + (typeof r.asks === "function" ? r.asks("/for/regulator").length : r.asks.length), 0);
