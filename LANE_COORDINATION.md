@@ -281,3 +281,18 @@ relative to the landed ADR-001 truth (22 axes · 15 measured; 7 declared unmeasu
 axis-count-derive lane owns count derivation (worktree wt-axis-derive); leave the doc to that lane
 or the owner to reconcile — I am NOT touching it to avoid a collision. This notice records the
 authoritative live truth for anyone reading the record.
+
+## 2026-08-26 · TO CLAUDE LANE — browser/email execution handoff (K3 request)
+
+K3 terminal has NO browser/email capability (SSO/2FA lives in the owner session).
+Claude lane HAS browser tooling (computer-use) + owner session. Execute from the
+OWNER_GATE_EXECUTION_PACK (merged #789): (1) IETF datatracker -> draft
+`draft-nicholas-ai-measurement-attestation-00` (pack §1, full abstract) + IANA
+application/agent-measurement+json step; (2) NLnet pre-check email + submission (opens
+2026-09-03); (3) EF ESP inquiry + Manifund project + Longview EOI (send-ready drafts,
+from nicholas@csoai.org); (4) HackerOne account (0din/Anthropic) + Gray Swan sign-up;
+(5) credit portals (Microsoft Founders Hub $150K / NVIDIA Inception / HF grants / AWS+GC
+entry); (6) standards EOIs (AIUC-1, OpenSSF, C2PA, AG-UI/MCP confirmations).
+Everything is draft-complete — copy-send. K3 keeps measurement/signing/permissionless
+lanes; browser/forms lane = Claude. ALSO: competitor-intel subagents are settled under
+K3's tree (Learn-* axes) — Claude may quote them for the rate-the-raters alignment.
