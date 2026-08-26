@@ -22,13 +22,13 @@ const articleSchema = {
     "A plain-English explainer of Article 50 of the EU AI Act, covering who is affected, what disclosures are required for chatbots, deepfakes, and AI-generated content, and how to comply.",
   datePublished: "2026-06-19",
   dateModified: "2026-08-02",
-  author: { "@type": "Organization", name: "CSOAI", url: "https://www.csoai.org" },
+  author: { "@type": "Organization", name: "CSOAI", url: "https://csoai.org" },
   publisher: {
     "@type": "Organization",
     name: "CSOAI",
-    logo: { "@type": "ImageObject", url: "https://www.csoai.org/assets/og-image.png" },
+    logo: { "@type": "ImageObject", url: "https://csoai.org/assets/og-image.png" },
   },
-  mainEntityOfPage: { "@type": "WebPage", "@id": "https://www.csoai.org/article-50-explained" },
+  mainEntityOfPage: { "@type": "WebPage", "@id": "https://csoai.org/article-50-explained" },
   about: { "@type": "Legislation", name: "Regulation (EU) 2024/1689 (EU Artificial Intelligence Act), Article 50" },
 };
 
