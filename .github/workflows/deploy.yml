@@ -37,6 +37,15 @@ jobs:
       - name: Build client
         run: npm run build:client
 
+      # Runs HERE, not next to the other dist gates, and that placement is the point:
+      # Cloudflare Pages rejects any single file over 25 MiB, and the only thing that
+      # used to notice was `wrangler pages deploy` — the last step, after a chromium
+      # install and a ~580-route prerender. vite already copied public/ into dist by
+      # now, so the cap is checkable the moment the build ends. Fail here and the
+      # wasted work is one npm build; fail at deploy and it is the whole job.
+      - name: Pages size guard — no file over Cloudflare's 25 MiB per-file cap
+        run: node scripts/pages-size-guard.mjs dist/client
+
       - name: Prerender all routes
         run: |
           npx playwright install --with-deps chromium
