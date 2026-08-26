@@ -10,7 +10,7 @@
 import { readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
-const LIMIT = 25 * 1024 * 1024;
+const LIMIT = 25 * 1024 * 1024; // Cloudflare Pages per-file cap
 const dist = process.argv[2] || "dist/client";
 const over = [];
 

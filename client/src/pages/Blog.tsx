@@ -134,13 +134,34 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function Blog() {
-  const [subscribed, setSubscribed] = useState(false);
+  // 2026-08-26: this form used to call preventDefault(), flip a boolean, and show
+  // "Thanks for subscribing! Check your email for confirmation." — while never
+  // sending the address anywhere. POST /api/subscribe already exists and carries
+  // its own honesty contract ("never a 200 that drops data silently": it answers
+  // stored:true, or stored:false with a fallback address). The form now posts to
+  // it and reports back whatever it actually says.
+  const [state, setState] = useState<"idle" | "sending" | "stored" | "queued" | "error">("idle");
+  const [errMsg, setErrMsg] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubscribed(true);
-    setTimeout(() => setSubscribed(false), 3000);
+    const email = String(new FormData(e.currentTarget).get("email") || "").trim();
+    if (!email) return;
+    setState("sending");
+    try {
+      const r = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email, source: "blog-index" }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) { setErrMsg(String(d?.error || `HTTP ${r.status}`)); setState("error"); return; }
+      setState(d?.stored ? "stored" : "queued");
+    } catch (err) {
+      setErrMsg(String((err as Error)?.message || err));
+      setState("error");
+    }
   };
 
   const filteredPosts = selectedCategory === "All"
@@ -170,28 +191,45 @@ export default function Blog() {
             <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-6 sm:p-8">
               <div className="flex items-center gap-3 mb-4">
                 <Bell className="h-6 w-6 text-emerald-300" />
-                <h3 className="text-lg font-semibold">Subscribe to our newsletter</h3>
+                <h2 className="text-lg font-semibold">Subscribe to our newsletter</h2>
               </div>
               <p className="text-slate-200 mb-6 text-sm">
                 Get weekly updates on AI safety, compliance standards, and industry developments.
               </p>
 
-              {subscribed ? (
-                <div className="bg-emerald-500/20 border border-emerald-500/50 rounded-lg p-4 text-emerald-100 font-medium flex items-center gap-2">
-                  <span className="text-lg">✓</span> Thanks for subscribing! Check your email for confirmation.
+              {state === "stored" ? (
+                <div role="status" className="bg-emerald-500/20 border border-emerald-500/50 rounded-lg p-4 text-emerald-100 font-medium flex items-center gap-2">
+                  <span className="text-lg" aria-hidden="true">✓</span> Thanks — your address is on the list.
+                </div>
+              ) : state === "queued" ? (
+                <div role="status" className="bg-amber-500/20 border border-amber-400/50 rounded-lg p-4 text-amber-50 font-medium">
+                  Received, but there is no subscriber store bound yet, so nothing was saved. Email{" "}
+                  <a className="underline" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a> to be added.
                 </div>
               ) : (
-                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="flex-1 bg-white/90 border-0 rounded-lg text-slate-900 placeholder-slate-500"
-                    required
-                  />
-                  <Button type="submit" className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8">
-                    Subscribe
-                  </Button>
-                </form>
+                <>
+                  <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3">
+                    <label htmlFor="blog-newsletter-email" className="sr-only">Email address</label>
+                    <Input
+                      id="blog-newsletter-email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="Enter your email address"
+                      className="min-h-[44px] flex-1 bg-white/90 border-0 rounded-lg text-slate-900 placeholder-slate-600"
+                      required
+                    />
+                    <Button type="submit" disabled={state === "sending"} className="min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8">
+                      {state === "sending" ? "Subscribing…" : "Subscribe"}
+                    </Button>
+                  </form>
+                  {state === "error" && (
+                    <p role="alert" className="mt-3 text-sm font-semibold text-red-200">
+                      That did not go through ({errMsg}). Nothing was saved — try again, or email{" "}
+                      <a className="underline" href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>.
+                    </p>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -247,8 +285,10 @@ export default function Blog() {
             {categories.map((category) => (
               <button
                 key={category}
+                type="button"
+                aria-pressed={selectedCategory === category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 sm:px-5 py-2 rounded-full font-medium transition-all duration-200 ${
+                className={`min-h-[44px] px-4 sm:px-5 py-2 rounded-full font-medium transition-all duration-200 ${
                   selectedCategory === category
                     ? `bg-gradient-to-r ${categoryGradients[category] || "from-slate-700 to-slate-800"} text-white shadow-lg`
                     : "bg-white border border-slate-200 text-slate-700 hover:border-slate-300"

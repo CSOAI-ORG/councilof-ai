@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { lobbyHref, openLobby } from "@/lib/lobbyLink";
+import { FOCUS } from "@/components/lobby/glass";
 
 /**
- * GameBar — the local-play strip on /os.
- * Local play only. XP and quests live in this browser. No invented global scores.
- * Modes match the public stack: CITIZEN / MAYOR / RED.
+ * GameBar — sit above Council chat on /os.
  *
  * EVERY QUEST MUST HAVE A DESTINATION. The "ask" quest used to link to
  * `#council-chat` — an anchor that has not existed on /os since the page stopped
@@ -14,21 +13,15 @@ import { lobbyHref, openLobby } from "@/lib/lobbyLink";
  * ask bar, which is where the chat actually lives, and marks itself like the
  * other two. A quest that cannot be completed is a fabricated capability in
  * miniature, and the same rule applies to it as to a score.
+ * Local play only. XP and quests live in this browser. No invented global scores.
+ * Modes match the public stack: CITIZEN / MAYOR / RED.
  */
 
 type Save = { xp: number; quests: string[] };
-type Quest = {
-  id: string;
-  label: string;
-  xp: number;
-  /** A real route, or a lobby pane. Never an anchor to something that is not on the page. */
-  href: string;
-  pane?: Parameters<typeof openLobby>[0]["pane"];
-};
 
 const KEY = "council-os-game-v1";
-const QUESTS: Quest[] = [
-  { id: "ask", label: "Ask the Council one grounded question", xp: 20, href: lobbyHref({ pane: "home", path: "/os" }), pane: "home" },
+const QUESTS: { id: string; label: string; xp: number; href: string; lobbyPane?: "home" }[] = [
+  { id: "ask", label: "Ask the Council one grounded question", xp: 20, href: lobbyHref({ pane: "home", path: "/os" }), lobbyPane: "home" },
   { id: "arena", label: "Open Council Space", xp: 15, href: "/gspc-arena" },
   { id: "verify", label: "Verify a card with no login", xp: 15, href: "/gspc-verify" },
 ];
@@ -98,27 +91,26 @@ export default function GameBar() {
         {QUESTS.map((q) => {
           const done = save.quests.includes(q.id);
           return (
-            <a
-              key={q.id}
-              href={q.href}
-              onClick={(e) => {
-                // A pane quest opens the OS in place — a real destination, and
-                // the same one the href points at for middle-click and crawlers.
-                if (q.pane) {
-                  e.preventDefault();
-                  openLobby({ pane: q.pane });
-                }
-                markQuest(q.id);
-              }}
-              className={`rounded-xl border px-3 py-2 text-[12px] ${
-                done
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-amber-300"
-              }`}
-            >
-              <span className="font-mono text-[10px] uppercase tracking-wide">{done ? "done" : `+${q.xp} xp`}</span>
-              <span className="mt-0.5 block font-semibold">{q.label}</span>
-            </a>
+            <li key={q.id} className="contents">
+              <a
+                href={q.href}
+                onClick={(e) => {
+                  markQuest(q.id);
+                  if (q.lobbyPane) {
+                    e.preventDefault();
+                    openLobby({ pane: q.lobbyPane });
+                  }
+                }}
+                className={`block min-h-[44px] rounded-xl border px-3 py-2 text-[12px] ${FOCUS} ${
+                  done
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-amber-300"
+                }`}
+              >
+                <span className="font-mono text-[10px] uppercase tracking-wide">{done ? "done" : `+${q.xp} xp`}</span>
+                <span className="mt-0.5 block font-semibold">{q.label}</span>
+              </a>
+            </li>
           );
         })}
       </ol>

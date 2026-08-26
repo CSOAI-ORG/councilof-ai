@@ -84,24 +84,29 @@ export default function Methodology() {
             decides — the predicate inspects the trace.
           </p>
           <div className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d]">
-            <table className="w-full text-[13px]">
+            {/* min-w so the overflow-x-auto wrapper scrolls on a phone instead
+                of crushing "PREDICATE" to one character per line. */}
+            <table className="w-full min-w-[40rem] text-[13px]">
               <thead>
-                <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/40">
-                  <th className="px-4 py-3">Predicate</th>
+                <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/60">
+                  <th className="whitespace-nowrap px-4 py-3">Predicate</th>
                   <th className="px-4 py-3">What it checks</th>
-                  <th className="px-4 py-3">Verdict</th>
-                  <th className="px-4 py-3">Pointer example</th>
+                  <th className="whitespace-nowrap px-4 py-3">Verdict</th>
+                  <th className="whitespace-nowrap px-4 py-3">Pointer example</th>
                 </tr>
               </thead>
               <tbody>
                 {PREDICATES.map((p) => (
                   <tr key={p.name} className="border-b border-emerald-500/10 last:border-0">
-                    <td className="px-4 py-3">
+                    {/* Identifiers and file:line pointers must never break
+                        mid-token ("actor/transcript.py:L" / "42" reads as two
+                        different pointers); the prose column keeps wrapping. */}
+                    <td className="whitespace-nowrap px-4 py-3">
                       <code className="font-mono text-emerald-300">{p.name}</code>
                     </td>
                     <td className="px-4 py-3 text-emerald-100/80">{p.checks}</td>
-                    <td className="px-4 py-3 text-emerald-100/60">{p.verdict}</td>
-                    <td className="px-4 py-3 font-mono text-[11px] text-emerald-100/40">
+                    <td className="whitespace-nowrap px-4 py-3 text-emerald-100/60">{p.verdict}</td>
+                    <td className="whitespace-nowrap px-4 py-3 font-mono text-[11px] text-emerald-100/60">
                       {p.pointer}
                     </td>
                   </tr>
@@ -186,7 +191,7 @@ export default function Methodology() {
               </p>
             </div>
           </div>
-          <p className="mt-3 font-mono text-[11px] text-emerald-100/45 leading-relaxed">
+          <p className="mt-3 font-mono text-[11px] text-emerald-100/60 leading-relaxed">
             Example: gpt-4o-mini care_cost = 0.667 × (1 − 0.00) = 0.667.
             Protection 0.667 (refused 2 of 3 harmful), over-block 0.000 (refused 0 of 4 benign).
             n=7, seed set — lower bound.
@@ -208,7 +213,7 @@ export default function Methodology() {
             <li><strong className="text-emerald-50">Read the result.</strong> What did the measurement show?</li>
             <li>
               <strong className="text-emerald-50">Check the signed record.</strong>{" "}
-              <Link href="/gspc-verify" className="text-emerald-300 hover:underline">
+              <Link href="/gspc-verify" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
                 Recompute the chain hash
               </Link>{" "}
               — tamper-evidence, not authenticity.
@@ -220,7 +225,7 @@ export default function Methodology() {
             </li>
           </ol>
           <p className="mt-4 text-[13px]">
-            <Link href="/refutation-ledger" className="text-emerald-300 hover:underline">
+            <Link href="/refutation-ledger" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
               Read the full refutation ledger →
             </Link>
           </p>
@@ -257,14 +262,14 @@ export default function Methodology() {
         </section>
 
         {/* LINKS */}
-        <div className="flex flex-wrap gap-4 pb-4 text-[13px]">
-          <Link href="/gspc-arena" className="text-emerald-300 hover:underline">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 pb-4 text-[13px]">
+          <Link href="/gspc-arena" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Enter the arena →
           </Link>
-          <Link href="/gspc-verify" className="text-emerald-300 hover:underline">
+          <Link href="/gspc-verify" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Verify the chain →
           </Link>
-          <Link href="/refutation-ledger" className="text-emerald-300 hover:underline">
+          <Link href="/refutation-ledger" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Read the refutation ledger →
           </Link>
         </div>

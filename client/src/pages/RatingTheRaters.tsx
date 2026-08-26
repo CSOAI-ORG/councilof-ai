@@ -161,7 +161,7 @@ export default function RatingTheRaters() {
         </p>
 
         {err && <p className="mt-8 text-red-600">Result fetch failed: {err}</p>}
-        {!a && !err && <p className="mt-8 text-gray-500">Loading the measured result…</p>}
+        {!a && !err && <p className="mt-8 text-gray-600">Loading the measured result…</p>}
 
         {a && (
           <>
@@ -222,16 +222,19 @@ export default function RatingTheRaters() {
             <p className="mt-3 text-gray-600">
               The benchmark&apos;s own scoring rule, in its operator&apos;s words:{" "}
               <em>“{a.finding.arc_machine_scoring_rule}”</em>{" "}
-              <span className="text-gray-400">({a.finding.arc_machine_rule_source})</span> The
+              <span className="text-gray-600">({a.finding.arc_machine_rule_source})</span> The
               published human figure is computed under <strong>unlimited</strong> submissions. Under
               the two-trial rule the benchmark applies to machines, the comparable human number is
               lower:
             </p>
 
             <div className={`mt-6 ${CARD}`}>
-              <table className="w-full text-left text-sm">
+              {/* Own scroller + min-width: at 375px this table had no overflow
+                  container at all and crushed every header to one word per line. */}
+              <div className="-mx-2 overflow-x-auto px-2">
+              <table className="w-full min-w-[32rem] text-left text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500">
+                  <tr className="border-b border-gray-200 text-xs uppercase tracking-wider text-gray-600">
                     <th className="pb-2">Scoring rule applied to humans</th>
                     <th className="pb-2 text-right">Human result</th>
                     <th className="pb-2 text-right">95% interval</th>
@@ -248,7 +251,7 @@ export default function RatingTheRaters() {
                     <td className="py-3 text-right font-bold tabular-nums">
                       {a.results_by_rule.unlimited.macro_over_tasks_pct}%
                     </td>
-                    <td className="py-3 text-right tabular-nums text-gray-500">
+                    <td className="py-3 text-right tabular-nums text-gray-600">
                       {a.results_by_rule.unlimited.macro_ci95_bootstrap_tasks.join(" – ")}
                     </td>
                   </tr>
@@ -267,16 +270,17 @@ export default function RatingTheRaters() {
                     </td>
                   </tr>
                   <tr>
-                    <td className="py-3 text-gray-500">One trial</td>
-                    <td className="py-3 text-right font-bold tabular-nums text-gray-500">
+                    <td className="py-3 text-gray-600">One trial</td>
+                    <td className="py-3 text-right font-bold tabular-nums text-gray-600">
                       {a.results_by_rule.pass_at_1.macro_over_tasks_pct}%
                     </td>
-                    <td className="py-3 text-right tabular-nums text-gray-500">
+                    <td className="py-3 text-right tabular-nums text-gray-600">
                       {a.results_by_rule.pass_at_1.macro_ci95_bootstrap_tasks.join(" – ")}
                     </td>
                   </tr>
                 </tbody>
               </table>
+              </div>
               <p className="mt-4 border-t border-gray-100 pt-4 text-sm text-gray-600">
                 Gap between the published figure and the rule-matched figure:{" "}
                 <strong className="text-slate-900">{a.finding.gap_pp} percentage points.</strong>{" "}
@@ -357,7 +361,8 @@ export default function RatingTheRaters() {
                 headline. The headline is a mean of per-task proportions, not a single binomial
                 proportion. We publish all three so the difference is visible rather than asserted.
               </p>
-              <table className="mt-4 w-full text-left text-sm">
+              <div className="-mx-2 mt-4 overflow-x-auto px-2">
+              <table className="w-full min-w-[30rem] text-left text-sm">
                 <tbody className="divide-y divide-gray-100">
                   <tr>
                     <td className="py-2">Bootstrap over tasks — <strong>published</strong></td>
@@ -366,10 +371,10 @@ export default function RatingTheRaters() {
                     </td>
                   </tr>
                   <tr>
-                    <td className="py-2 text-gray-500">
+                    <td className="py-2 text-gray-600">
                       Wilson misapplied to the per-task mean — not used
                     </td>
-                    <td className="py-2 text-right tabular-nums text-gray-500">
+                    <td className="py-2 text-right tabular-nums text-gray-600">
                       {a.results_by_rule.pass_at_2.macro_ci95_wilson_naive_DO_NOT_USE.join(" – ")}
                     </td>
                   </tr>
@@ -385,7 +390,8 @@ export default function RatingTheRaters() {
                   </tr>
                 </tbody>
               </table>
-              <p className="mt-3 text-xs text-gray-500">
+              </div>
+              <p className="mt-3 text-xs text-gray-600">
                 {a.results_by_rule.pass_at_2.macro_ci95_method}.{" "}
                 {a.results_by_rule.pass_at_2.micro_ci95_method}
               </p>
@@ -440,16 +446,17 @@ export default function RatingTheRaters() {
                 {a.n.distinct_sessions} sessions. Our floor for publication is {a.n.floor}.
               </p>
               <button
-                className="mt-4 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white"
+                className="mt-4 inline-flex min-h-[44px] items-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
                 onClick={() => setShowRows((s) => !s)}
+                aria-expanded={showRows}
                 type="button"
               >
                 {showRows ? "Hide" : "Show"} all {a.task_rows.length} task rows
               </button>
               {showRows && (
                 <div className="mt-4 max-h-[28rem] overflow-auto rounded-xl border border-gray-200">
-                  <table className="w-full text-left text-xs">
-                    <thead className="sticky top-0 bg-gray-50 text-gray-500">
+                  <table className="w-full min-w-[34rem] text-left text-xs">
+                    <thead className="sticky top-0 bg-gray-50 text-gray-600">
                       <tr>
                         <th className="p-2">Task</th>
                         <th className="p-2 text-right">Attempts</th>
@@ -469,7 +476,7 @@ export default function RatingTheRaters() {
                           <td className="p-2 text-right font-bold tabular-nums">
                             {r.rate_within_2_pct}%
                           </td>
-                          <td className="p-2 text-right tabular-nums text-gray-500">
+                          <td className="p-2 text-right tabular-nums text-gray-600">
                             {r.rate_within_1_pct}%
                           </td>
                         </tr>
@@ -478,7 +485,7 @@ export default function RatingTheRaters() {
                   </table>
                 </div>
               )}
-              <p className="mt-4 text-xs text-gray-500">
+              <p className="mt-4 text-xs text-gray-600">
                 Result {a.result_id} · subject: {a.subject} · measured {a.measured_on}. Nothing on
                 this page is signed, and it confers no status on the organisation measured. Council
                 of AI recomputes published claims and reports what reproduced; it is not a

@@ -47,7 +47,7 @@ export function DeckPage({
       {/* ————— the honesty band — what this page does NOT claim ————— */}
       <section className="border-t border-gray-200 bg-gray-50">
         <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-          <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-600">Read this before you quote us</span>
+          <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-700">Read this before you quote us</span>
           <h2 className="mt-3 text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
             What this page does not claim
           </h2>
@@ -59,7 +59,7 @@ export function DeckPage({
           <ul className="mt-6 flex flex-col gap-3">
             {notClaimed.map((t) => (
               <li key={t} className="flex items-start gap-3">
-                <span className="mt-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rose-100 text-[11px] font-black text-rose-600" aria-hidden>
+                <span className="mt-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-rose-100 text-[11px] font-black text-rose-700" aria-hidden>
                   ✕
                 </span>
                 <span className="text-[15px] leading-snug text-gray-700">{t}</span>
@@ -75,7 +75,7 @@ export function DeckPage({
 
           {related.length > 0 && (
             <div className="mt-10">
-              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-gray-500">Go deeper</h3>
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-gray-600">Go deeper</h3>
               <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                 {related.map((r) => (
                   <li key={r.href}>

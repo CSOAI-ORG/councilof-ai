@@ -29,7 +29,7 @@ const LENSES: Lens[] = [
 const TAG_BADGE: Record<Lens["tag"], string> = {
   "[MEASURED]": "border-emerald-400/40 bg-emerald-500/10 text-emerald-200",
   "[LEAD]": "border-amber-400/40 bg-amber-500/10 text-amber-200",
-  "[GREENFIELD]": "border-emerald-500/25 bg-emerald-500/5 text-emerald-100/50",
+  "[GREENFIELD]": "border-emerald-500/25 bg-emerald-500/5 text-emerald-100/60",
   "[INCOMPLETE]": "border-amber-400/40 bg-amber-500/10 text-amber-200",
 };
 
@@ -62,7 +62,7 @@ export function SpectrumView() {
             <span className="font-mono text-[13px] tabular-nums text-emerald-100/80">
               {lens.score !== null ? lens.score.toFixed(2) : "—"}
             </span>
-            <span className="font-mono text-[11px] text-emerald-100/50">
+            <span className="font-mono text-[11px] text-emerald-100/60">
               n={lens.n}
               {lens.n > 0 && lens.n < 20 && (
                 <span className="ml-1.5 rounded-full border border-amber-400/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-200">
@@ -76,7 +76,7 @@ export function SpectrumView() {
           </div>
         ))}
       </div>
-      <p className="mt-2 text-[11px] text-emerald-100/45">
+      <p className="mt-2 text-[11px] text-emerald-100/60">
         The protection (deterministic-gate) lens once read +34.84 (n=31) and was our largest
         published number. Re-measured on one self-consistent run it fires 6 times, not 31, at
         −20.00 [−65.26, +25.26] (n=6) — the +34.84 was overfitting to its own battery, now

@@ -476,7 +476,7 @@ function WidgetRouter() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <WidgetLayout>
-            <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
+            <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
               <Route path="/widget" component={WidgetCourses} />
               <Route path="/widget/course/:courseId" component={WidgetCoursePlayer} />
               <Route>
@@ -545,7 +545,7 @@ function App() {
                 <PageSchema />
                 <ArchivedBanner />
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
-                  <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
+                  <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
                   <Route path="/" component={NewHomeV3} />
                   <Route path="/home-v2" component={NewHomeV2} />
                   <Route path="/home-v3" component={NewHomeV3} />

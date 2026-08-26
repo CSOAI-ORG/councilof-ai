@@ -37,7 +37,7 @@ function AxisCard({ a }: { a: Axis }) {
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="truncate font-semibold text-slate-900">{a.axis}</div>
-          <div className="font-mono text-[11px] text-slate-400">{a.bench}</div>
+          <div className="font-mono text-[11px] text-slate-500">{a.bench}</div>
         </div>
         <span className={`shrink-0 rounded-full border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${TONE[a.status] ?? TONE.PLANNED}`}>
           {a.status}
@@ -47,7 +47,7 @@ function AxisCard({ a }: { a: Axis }) {
         <div className="mt-3">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold tabular-nums text-emerald-600">{(a.accuracy as number).toFixed(3)}</span>
-            <span className="text-[11px] text-slate-400">accuracy · n={a.n}</span>
+            <span className="text-[11px] text-slate-500">accuracy · n={a.n}</span>
           </div>
           <div className="mt-1 font-mono text-[11px] text-slate-500">
             {hasMacroF1(a) ? `macro F1 ${(a.macro_f1 as number).toFixed(3)} · ` : ""}
@@ -59,10 +59,10 @@ function AxisCard({ a }: { a: Axis }) {
       ) : (
         <div className="mt-3">
           {/* An axis with a bank but no accuracy is not an axis with no bank. */}
-          <div className="text-sm font-medium text-slate-400">
+          <div className="text-sm font-medium text-slate-500">
             {a.status === "MEASURED" && a.n > 0 ? "Measured, but no accuracy published" : "No score — not earned"}
           </div>
-          <div className="mt-0.5 text-[11px] text-slate-400">
+          <div className="mt-0.5 text-[11px] text-slate-500">
             {a.n
               ? a.status === "MEASURED"
                 ? `Item bank n=${a.n} — this axis publishes no accuracy, so none is shown`
@@ -105,9 +105,20 @@ export default function CityPanel() {
       <section>
         <div className="mb-4 flex flex-wrap items-baseline gap-x-4 gap-y-1">
           <h2 className="text-xl font-bold text-slate-900">The living board</h2>
+          {/* Same as AxisPanel: say so when this is the bundled snapshot rather
+              than a live read, instead of passing stale figures off as fresh. */}
           <p className="text-[13px] text-slate-500">
             {source === "loading" ? "Reading GET /api/gspc…" : caption}
             {" · "}MEASURED shows a number; empty stays empty.
+            {source === "snapshot" && (
+              <>
+                {" "}
+                <em className="text-amber-800">
+                  (GET /api/gspc did not answer — these are the last recorded figures bundled with
+                  the page, not a live read. The endpoint is the authority.)
+                </em>
+              </>
+            )}
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -137,7 +148,7 @@ export default function CityPanel() {
           {quotable(jail) && (
             <div className="mt-4 flex items-baseline gap-3">
               <span className="text-2xl font-bold tabular-nums text-slate-700">{(jail.accuracy as number).toFixed(3)}</span>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[11px] text-slate-500">
                 accuracy · n={jail.n} · separation TIE
               </span>
             </div>
@@ -154,8 +165,8 @@ export default function CityPanel() {
         </p>
         {inLane.length > 0 && (
           <div className="mt-4">
-            <p className="text-[11px] text-slate-400 mb-3">
-              (In-lane measurements exist on GET /api/gspc under <code className="rounded bg-slate-100 px-1">measured_in_lane</code>.
+            <p className="text-[11px] text-slate-500 mb-3">
+              (In-lane measurements exist on GET /api/gspc under <code className="rounded bg-slate-100 px-1 text-slate-700">measured_in_lane</code>.
               They are not the board — published for honesty, not quotable as axes.)
             </p>
             <ul className="grid gap-3 sm:grid-cols-2">

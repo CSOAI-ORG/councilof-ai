@@ -112,18 +112,19 @@ function EvidenceLink({ href }: { href: string }) {
   if (isFile) {
     return (
       <a
-        className="font-mono text-[12px] text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900"
+        className="inline-flex min-h-[44px] items-center font-mono text-[12px] text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900 sm:min-h-0"
         href={href}
         target="_blank"
         rel="noopener"
       >
         {href}
+        <span className="sr-only"> (opens in a new tab)</span>
       </a>
     );
   }
   return (
     <Link
-      className="font-mono text-[12px] text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900"
+      className="inline-flex min-h-[44px] items-center font-mono text-[12px] text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900 sm:min-h-0"
       href={href}
     >
       {href}
@@ -164,7 +165,10 @@ export default function ClaimsRegister() {
             {groups.map(({ s, rows }) => (
               <span key={s} className="inline-flex items-center gap-2">
                 <StatusChip status={s} />
-                <span className="text-sm text-slate-600">{rows.length}</span>
+                <span className="text-sm text-slate-600">
+                  {rows.length}
+                  <span className="sr-only"> {styleFor(s).label.toLowerCase()} claims</span>
+                </span>
               </span>
             ))}
           </div>
@@ -222,6 +226,7 @@ export default function ClaimsRegister() {
               <div className="mb-4 flex items-center gap-3">
                 <StatusChip status={s} />
                 <h2 className="text-2xl font-bold">
+                  <span className="sr-only">{styleFor(s).label} — </span>
                   {rows.length} {rows.length === 1 ? "claim" : "claims"}
                 </h2>
               </div>
@@ -233,7 +238,7 @@ export default function ClaimsRegister() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <p className="font-semibold leading-relaxed text-slate-900">{c.claim}</p>
-                      <span className="shrink-0 font-mono text-[11px] text-slate-400">{c.id}</span>
+                      <span className="shrink-0 font-mono text-[11px] text-slate-500">{c.id}</span>
                     </div>
                     {c.notes ? (
                       <p className="mt-3 text-[13px] leading-relaxed text-slate-600">{c.notes}</p>
@@ -256,7 +261,7 @@ export default function ClaimsRegister() {
                       : null}
                     {c.evidence?.length ? (
                       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
-                        <span className="font-mono text-[10px] uppercase tracking-[2px] text-slate-400">
+                        <span className="font-mono text-[10px] uppercase tracking-[2px] text-slate-500">
                           Evidence
                         </span>
                         {c.evidence.map((e) => (
@@ -280,7 +285,7 @@ export default function ClaimsRegister() {
             <Link className="font-semibold text-emerald-800 underline" href="/refutation-ledger">
               The refutation ledger →
             </Link>{" "}
-            <span className="text-emerald-900/70">
+            <span className="text-emerald-900/85">
               is where claims we withdrew are recorded, with the measurement that killed them.
             </span>
           </p>
