@@ -130,16 +130,18 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                         honest state is that nothing was measured at all. Render the unit
                         the board supplies instead, and keep the figure only where one
                         exists. Never 0. */}
-                    <td className={`px-3 py-3 font-mono ${t.cell}`}>
+                    <td className={`whitespace-nowrap px-3 py-3 font-mono ${t.cell}`}>
                       {typeof a.n === "number" && a.n > 0 ? (
                         <>
                           {a.n}
                           {(a as any).n_unit && (
-                            <span className={`ml-1 font-sans text-[10px] ${t.muted}`}>{(a as any).n_unit}</span>
+                            <span className={`mt-0.5 block max-w-[9rem] whitespace-normal font-sans text-[10px] ${t.muted}`}>
+                              {(a as any).n_unit}
+                            </span>
                           )}
                         </>
                       ) : (
-                        <span className={`font-sans text-[11px] ${t.muted}`}>
+                        <span className={`block max-w-[9rem] whitespace-normal font-sans text-[11px] ${t.muted}`}>
                           {(a as any).n_unit || "—"}
                         </span>
                       )}
