@@ -1,0 +1,21 @@
+{
+  "schema": "csoai.coverage-register/0.1",
+  "as_of": "2026-08-26",
+  "audit": "Counts from the in-repo record (attestation-corpus.json, harness/rwa-attest TARGETS, interop runs). Nothing invented; unverified claims marked.",
+  "ruling_ref": "BOARD-RULING.md (2026-08-26, corrected): card index frozen at the verifiable floor 150 until the 185 candidate hashes verify against the real card store; judged UNMEASURED before measured.",
+  "chains": {
+    "xrpl": {
+      "instruments_in_coverage_index": 16,
+      "located_issuers_with_measured_control_facts": 6,
+      "declared_not_located": 10,
+      "note": "16 XRPL entries in the coverage corpus (6 measured control facts via financial-measure-run-v2; 10 declared UNMEASURED/not-located, incl. Aviva/DCP/EURCV/JMWH pending public address location)."
+    },
+    "evm_eas": {
+      "contracts_with_measured_facts": 3,
+      "instruments_in_coverage_index": 2,
+      "rails": "EAS off-chain attestation support; contract-level facts measured for BUIDL/BENJI/ACRED",
+      "note": "'100 ETH instruments' is NOT in the record — aspirational (UNMEASURED); pipeline exists, coverage grows per located contract. Never counted as present."
+    }
+  },
+  "grammar": "Public quotable board = 14 axes (cite live totals.public_count). 22-axis universe = internal harness map only (axis-universe-22.json WARNING). Never publish '22 axes' as the board."
+}
