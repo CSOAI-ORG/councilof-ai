@@ -13,8 +13,9 @@ Full XRPL catalog: **`adapters/xrpl/README.md`**.
 | Aviva USD Liquidity | `xrpl/aviva` | xrpl | clean | #166 issuer TBD |
 | Apollo ACRED | `xrpl/apollo-acred` | ethereum | clean | Securitize feeder |
 | Archax × abrdn | `xrpl/archax-abrdn` | xrpl | clean | XRPScan issuer |
+| Guggenheim DCP | `xrpl/guggenheim-dcp` | xrpl | caution | issuer TBD |
 
-Matrix-only (caution/demo): Guggenheim DCP · JMWH = demo-only.
+Matrix-only (demo): JMWH = demo-only — never a production MEASURED stub.
 
 **Stage 3 catalog clusters (#303–308):** `adapters/evm/catalog/` — six REPORTED JSON batches (Ondo Stocks, Securitize, Backed). See `docs/STAGE3_CATALOG_CLUSTERS.md`.
 

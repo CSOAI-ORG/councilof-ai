@@ -13,14 +13,12 @@ All stubs under `adapters/xrpl/` are **unsigned**. Attestation ≠ tokenization 
 | Aviva USD Liquidity | `aviva/` | xrpl | clean | **TBD** | Issuer TBD · #166 |
 | Apollo ACRED | `apollo-acred/` | evm | clean | `0x17418038…06F27B` | Securitize · matrix |
 | Archax × abrdn | `archax-abrdn/` | xrpl | clean | `rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q` | XRPL MMF · matrix |
+| Guggenheim / Zeconomy DCP | `guggenheim-dcp/` | xrpl | caution | **null** until XRPScan | CAUTION stub |
 
 ## Matrix rows without dedicated stubs yet
 
-From `docs/RWA_CONTACT_MATRIX.md` (still REPORTED-only):
-
 | Instrument | Play | Why not stubbed here |
 |------------|------|----------------------|
-| Guggenheim / Zeconomy DCP | caution | Issuer TBD |
 | Justoken JMWH | **demo** | Demo-only — never a production MEASURED stub |
 
 Parent catalog: `adapters/README.md` · doctrine: `docs/CONTACT_PUBLIC_ARTIFACT_ONLY.md` · matrix: `docs/RWA_CONTACT_MATRIX.md`.
