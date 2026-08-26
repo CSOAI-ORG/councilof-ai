@@ -306,3 +306,12 @@ registration (scitt-interop PR — our verifier); (2) NIST CAISI input DRAFT REA
 send to Armilla / Munich Re aiSure / Testudo / AIUC WG; (4) Foundation ring-fence prep;
 (5) insurance (owner) PI + media >=1-2m US/CA — verdict-publishing hard gate. K3 owns
 measurement/signing/data lanes.
+
+## 2026-08-26 · JEEVES — RAG corpus corrected to authoritative truth (append-only)
+harness/rag_corpus.jsonl carried STALE facts: "14 measured of 14 quotable" (now 22 axes · 15
+measured, ADR-001), "17 products" (actual = 11, csoai.storefront/0.1), and 6 stale count lines.
+Audited + appended 4 corrected-truth entries (corpus-201..204: board-count grammar ADR-001;
+signed surfaces; catalog=11 products not 17; OpenSkill validated). Append-only — never silently
+rewrote the historical entries (corrections-register discipline). Fleet/owner flags: arXiv G6Y9SY
+~6h (owner submit), disk crisis returning 4.1Gi free (fleet purge), csoai.org content drift
+(fleet/owner domain).
