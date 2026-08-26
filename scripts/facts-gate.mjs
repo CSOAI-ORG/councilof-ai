@@ -103,8 +103,14 @@ const COUNT_RE =
   /\b(\d{1,3})\s+(canonical\s+|public\s+|measured\s+|quotable\s+)?(axes|axis|slots)\b/gi;
 
 // A published correction QUOTES the number it is correcting. Exonerate that.
+// Widened 2026-08-26: coverage-register.json carries a field explaining "This field
+// previously read '… 14 axes …'", and the gate flagged it for quoting the very text it
+// retired. A gate that punishes a page for documenting its own correction pushes authors
+// to delete the audit trail to get green — the opposite of the doctrine it enforces.
+// Corrections are published, never silently edited, so the wording of a correction must
+// itself be safe to publish.
 const CORRECTION_CTX =
-  /\bC-\d{4}-\d{4}-\d{2}\b|\bcorrections? ledger\b|\bwe published a correction\b|\bcount-gating canon\b/i;
+  /\bC-\d{4}-\d{4}-\d{2}\b|\bcorrections? ledger\b|\bwe published a correction\b|\bcount-gating canon\b|\bpreviously read\b|\bgrammar_correction\b|\bsupersed(?:ed|es)\b|\bwas accurate while\b|\bretired\b/i;
 
 // "1 of 4 axes resolved", "the other 10 axes are ties" — breakdowns of a whole,
 // not an assertion of the board total.
