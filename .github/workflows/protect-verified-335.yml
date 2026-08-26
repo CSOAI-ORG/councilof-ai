@@ -1,0 +1,16 @@
+name: protect-verified-335
+# workflow_dispatch only — do not auto re-land a fabricated 335 board.
+# The honest published board is exactly 150 cards / 34171B. Do not invent the missing 185.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  protect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refuse fabricated 335 protect
+        run: |
+          echo "protect-verified-335 is disabled. The honest board is 150 cards."
+          echo "Do not claim 335. Do not invent the missing 185."
+          exit 1
