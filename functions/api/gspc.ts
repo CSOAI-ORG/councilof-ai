@@ -29,6 +29,16 @@ export const onRequestGet: PagesFunction = async (context) => {
   const measuredCount = measuredSlots.filter((a) => a.separation !== "UNTESTED").length;
   const separatedNames = measuredSlots.filter((a) => a.separation === "SEPARATED").map((a) => a.axis);
   const tieCount = measuredSlots.filter((a) => a.separation === "TIE").length;
+  // Every bank is named by a bare slug (e.g. "csoai/gspc-gov"), which a stranger cannot
+  // resolve without already knowing the host. Our own rater-transparency axis measured
+  // /api/gspc as carrying ZERO resolvable URLs (2026-08-26) — the exact friction that axis
+  // exists to catch, on our own surface. Resolve every bank to a fetchable URL.
+  const BANK_HOST = "https://huggingface.co/datasets/";
+  const withResolvableBank = <T extends { dataset?: string }>(a: T) =>
+    a && typeof a.dataset === "string" && a.dataset
+      ? { ...a, dataset_url: BANK_HOST + a.dataset }
+      : a;
+
   const body = {
     schema: "csoai.gspc-axes/0.5",
     issuer: "CSOAI Ltd (GB, Companies House 16939677)",
@@ -76,7 +86,12 @@ export const onRequestGet: PagesFunction = async (context) => {
           "hides; it exists only for the measured board-v2 axes.",
       };
     })(),
-    axes: selected,
+    bank_host: BANK_HOST,
+    bank_note: "Every axis carries dataset_url — the bank resolved to a fetchable URL, so a " +
+      "stranger can retrieve the frozen split without knowing where we host it. Added " +
+      "2026-08-26 after our own rater-transparency axis measured this payload as carrying " +
+      "zero resolvable URLs.",
+    axes: selected.map(withResolvableBank),
     // In the payload for honesty; NOT the board. See the note on each entry.
     measured_in_lane: axis ? undefined : MEASURED_IN_LANE,
     domains: [

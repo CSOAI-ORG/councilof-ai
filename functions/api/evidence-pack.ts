@@ -33,7 +33,7 @@ export const onRequestGet: PagesFunction<Env> = async () => {
       measured_cells: "deterministic fleet runs on frozen splits — signed, re-runnable from the published harness",
       reported_figures: "GET /api/reported — published aggregates with attribution + timestamp (REPORTED state, never blended into MEASURED)",
       regulation: "version-pinned consolidated text (GET /api/regulation versions map) — a wrong date is a published correction, never a silent edit",
-      market: "GET /api/dorado — AI-theme index rail (AIQ/CHAT/BOTZ vs KWEB/CSI-930713), timestamped, point-in-time snapshots + RFC 3161 (roadmap)",
+      market: "GET /api/east-west-bench — AI-theme index rail (AIQ/CHAT/BOTZ vs KWEB/CSI-930713), timestamped, point-in-time snapshots + RFC 3161 (roadmap)",
     },
     // CLASS 3: ACTIVE CONTROLS — the estate's own evidence-generation is instrumented
     active_controls: {

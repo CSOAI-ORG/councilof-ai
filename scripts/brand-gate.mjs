@@ -142,6 +142,63 @@ if (!fs.existsSync(DIST)) {
   process.exit(2);
 }
 
+// PATH + PUBLIC-JSON SWEEP (added 2026-08-26 after a live breach).
+// The page-content walk above scans .html/.txt only, so an internal codename shipped
+// publicly for months as a ROUTE PATH and a JSON FILENAME: /api/dorado and
+// /arena/dorado_market.json both served 200 while this gate reported clean. A URL is a
+// public surface. So: every served path, and the body of every public .json, is checked.
+const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b/i;
+function walkAll(dir, out = []) {
+  if (!fs.existsSync(dir)) return out;
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, e.name);
+    if (e.isDirectory()) {
+      if (e.name === "assets" || e.name === "vendor") continue;
+      walkAll(full, out);
+    } else out.push(full);
+  }
+  return out;
+}
+// A codenamed path that ONLY 308s to a current page is the deliberate "library, don't
+// delete" retirement pattern — it catches old links and serves no content. That is
+// allowed. A codenamed path that serves real content is not.
+const isRedirectOnly = (raw) =>
+  /\b30[178]\b/.test(raw) && !/<body[^>]*>[\s\S]{400,}/i.test(raw);
+
+const pathFailures = [];
+for (const f of walkAll(DIST)) {
+  const rel = "/" + path.relative(DIST, f);
+  if (PATH_BANNED.test(rel)) {
+    let raw = "";
+    try { raw = fs.readFileSync(f, "utf8"); } catch { /* binary */ }
+    if (raw && isRedirectOnly(raw)) continue;   // retirement redirect — allowed
+    pathFailures.push(`${rel}  [served-path] internal codename on a PUBLIC URL that serves content — rename it`);
+    continue;
+  }
+  if (f.endsWith(".json")) {
+    let raw = "";
+    try { raw = fs.readFileSync(f, "utf8"); } catch { continue; }
+    const m = raw.match(PATH_BANNED);
+    if (m) pathFailures.push(`${rel}  [public-json] "${m[0]}" in a publicly served JSON body`);
+  }
+}
+// functions/ route files are public URLs too — check the source tree, not just dist.
+// Same carve-out: a route whose whole job is to 308 an old link is the retirement pattern.
+const FUNCS = path.join(REPO, "functions");
+for (const f of walkAll(FUNCS)) {
+  const rel = "/" + path.relative(FUNCS, f).replace(/\.(ts|js)$/, "");
+  if (!PATH_BANNED.test(rel)) continue;
+  let raw = "";
+  try { raw = fs.readFileSync(f, "utf8"); } catch { continue; }
+  if (/\b30[178]\b/.test(raw) && raw.length < 1200) continue;   // pure redirect stub — allowed
+  pathFailures.push(`functions${rel}  [route] internal codename on a content-serving public URL`);
+}
+if (pathFailures.length) {
+  console.error("✗ brand-gate: internal codename on a public surface (path/JSON sweep)");
+  for (const p of pathFailures) console.error("  " + p);
+  process.exit(1);
+}
+
 const failures = [];
 for (const file of walk(DIST)) {
   const rel = path.relative(DIST, file);

@@ -1,4 +1,4 @@
-// functions/api/dorado.ts — DORADO BENCH: the East-vs-West measurement instrument.
+// functions/api/east-west-bench.ts — EAST-WEST BENCH: the East-vs-West measurement instrument.
 //
 // What it is: the only public pairing of (1) East-vs-West AI regulation-adherence,
 // (2) the live regulation feed, (3) live market indices the AI companies trade on,
@@ -21,15 +21,15 @@ interface Env {
 
 export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
   const ts = new Date().toISOString();
-  // Live market snapshot, refreshed by dorado_market.py on a 15-min cron and
-  // published as a static file (public/arena/dorado_market.json) the same way
+  // Live market snapshot, refreshed by east-west-market.py on a 15-min cron and
+  // published as a static file (public/arena/east-west-market.json) the same way
   // elo_reference.json is served. We cannot read local files in the CF Pages
   // runtime, so the endpoint fetches the static snapshot at request time and
   // falls back to a clearly-stated placeholder that never fakes a number.
   let marketSnapshot: { rows?: unknown[]; as_of?: string } | null = null;
   let marketFetchNote: string | null = null;
   try {
-    const target = new URL("/arena/dorado_market.json", request.url);
+    const target = new URL("/arena/east-west-market.json", request.url);
     const res = await fetch(target, { headers: { accept: "application/json" } });
     if (res.ok) marketSnapshot = (await res.json()) as { rows?: unknown[]; as_of?: string };
     else marketFetchNote = `snapshot HTTP ${res.status}`;
@@ -38,7 +38,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
   }
   const marketRows = Array.isArray(marketSnapshot?.rows) ? marketSnapshot.rows : null;
   return Response.json({
-    schema: "csoai.dorado.pair-gap/0.1",
+    schema: "csoai.east-west.pair-gap/0.1",
     name: "Dorado — the measured trust gauge: East-vs-West pair-gap (regulation × measured-AI × market context, composed never fused)",
     ts,
     register: "measurement, not certification — displayed side by side, never blended",
@@ -76,10 +76,10 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     },
     // RAIL 3: LIVE MARKET (the index the AI companies trade on — live pull, timestamped)
     market: marketRows
-      ? { as_of: marketSnapshot?.as_of ?? ts, source: "yfinance live pull (Yahoo Finance), static snapshot /arena/dorado_market.json", rows: marketRows }
+      ? { as_of: marketSnapshot?.as_of ?? ts, source: "yfinance live pull (Yahoo Finance), static snapshot /arena/east-west-market.json", rows: marketRows }
       : {
           as_of: ts,
-          source: `yfinance live pull (Yahoo Finance) — snapshot /arena/dorado_market.json not readable (${marketFetchNote ?? "unknown"})`,
+          source: `yfinance live pull (Yahoo Finance) — snapshot /arena/east-west-market.json not readable (${marketFetchNote ?? "unknown"})`,
           rows: [
             { index: "Hang Seng (^HSI)", side: "east", last: null, note: "snapshot not published this deploy" },
             { index: "S&P 500 (^GSPC)", side: "west", last: null, note: "snapshot not published this deploy" },

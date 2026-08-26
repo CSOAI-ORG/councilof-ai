@@ -1,4 +1,4 @@
-// /api/cross — the divergence layer (internal codename: dorado; NOT a public name —
+// /api/cross — the divergence layer (internal codename: east-west; NOT a public name —
 // "Dorado" (the internal codename) is trademark-occupied across storage/fintech/genomics, kept internal only).
 //
 // Composes three feeds nobody else cross-references into one map: what regulation

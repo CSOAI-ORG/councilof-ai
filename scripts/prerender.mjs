@@ -189,7 +189,10 @@ function discover() {
     "/blog/ai-governance-vs-compliance",
     "/blog/nis2-compliance-critical-infrastructure",
   ]);
-  const routes = [...found].filter(p => !p.includes(":") && !p.includes("*") && !p.startsWith("/api/") && !DEAD_BLOG.has(p));
+  // Retired internal-codename URLs are owned by 308 function stubs — never prerender an
+  // HTML page for them, or the codename becomes a served public page (brand-gate fails).
+  const RETIRED_CODENAME = /^\/(sov3|sovos|ceasai|about-ceasai)\b/i;
+  const routes = [...found].filter(p => !p.includes(":") && !p.includes("*") && !p.startsWith("/api/") && !DEAD_BLOG.has(p) && !RETIRED_CODENAME.test(p));
   // Library IA: /library/:sector is a dynamic route (filtered above), but the 8 concrete
   // sectors are prime AEO citation surface and the sitemap lists them — prerender each
   // so the static host serves them (2026-08-23 JEEVES: they were 404 on the static host
