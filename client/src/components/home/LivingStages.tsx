@@ -263,7 +263,12 @@ function Body({ children }: { children: ReactNode }) {
 function Independence() {
   return (
     <HeavyBand
-      image="/images/band/anchor.png"
+      // 2026-08-26: this band shipped /images/band/anchor.png, whose largest element was a
+      // baked-in Zenodo DOI ("10.5281/zenodo.21991104") sitting over the headline. A DOI is not
+      // a statement about funding, the alt text never mentioned it, and a hard-coded identifier
+      // inside a raster is invisible to every gate this repo runs. The plate is the same artwork
+      // with that text cropped away, saved under a name that says what the band is about.
+      image="/images/band/independence.png"
       objectPosition="72% 50%"
       alt="A pale sphere held inside thin orbital rings studded with green markers"
       panelSide="left"
@@ -289,7 +294,9 @@ function Independence() {
         ]}
       />
       <Cta
-        href="/pricing"
+        // /pricing is an ARCHIVED path (library-ia REPLACEMENTS maps it forward), so this CTA
+        // was landing a front-door reader on a page carrying the "reference / archive" banner.
+        href="/?lobby=measured&task=pricing-overview"
         label="How the free rail works"
         secondary={{ href: "/about", label: "Who we are" }}
       />
