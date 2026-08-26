@@ -41,7 +41,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         return "{" + Object.keys(r).sort().map((k) => JSON.stringify(k) + ":" + canonical(r[k])).join(",") + "}";
       };
       const hex = (b: ArrayBuffer) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
-      const signedBytes = canonical({ ...clarity, site_attestation: undefined });
+      // Sign over the body WITHOUT site_attestation (the field is added below, post-sign).
+      const { site_attestation: _omit, ...bodyForSig } = clarity as Record<string, unknown>;
+      const signedBytes = canonical(bodyForSig);
       const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
       const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
       const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
