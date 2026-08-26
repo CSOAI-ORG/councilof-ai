@@ -1,0 +1,90 @@
+ed25519 backend in use: pure-python
+estate packages importable? no (ImportError) -- clean room confirmed
+
+========================================================================
+1. SHAPE CENSUS  (every signed artifact under public/, classified)
+========================================================================
+  shape A:  150  gspc-card (raw canonical body)
+            e.g. public/signed/cards/dc5a58838f690074daa309aa841b9f6a9c77ee1ea61138be434d9b987c478fdb.json
+  shape B:   27  axis-signal (sig over content_id hex)
+            e.g. public/interop/human-labour-index.v0.1.json
+  shape C:    1  custody-attested (sig over canonical payload)
+            e.g. public/signed/gspc-board.signed.json
+  shape D:    0  DSSE (sig over PAE)
+            NO PUBLISHED ARTIFACT USES THIS SHAPE (emitter + standalone verifier exist; output does not)
+  [--] shapes defined in the estate  4
+  [--] shapes with >=1 published artifact  3
+
+========================================================================
+2. EMITTER REPRODUCTION  (re-emit every published card, compare bytes)
+========================================================================
+  [ok] chain reaches every published card  150/150
+  [ok] canonical BODY bytes byte-identical  150/150
+  [ok] card id (sha256 of those bytes) identical  150/150
+  [ok] prev-chain linkage reproduced from genesis  genesis='GSPC-CARD-FACTORY-GENESIS'
+
+  [--] UNRECONSTRUCTABLE: signature  needs the estate private key (ANVIL); emitter has no signing path
+  [--] UNRECONSTRUCTABLE: accuracy provenance  pass-through input; 0.148 fits no round(k/n,4) for n<=63, so upstream rounding is heterogeneous and not recoverable from cards
+  [--] UNRECONSTRUCTABLE: measurement time  all 150 `created` stamps span 10.1ms -> batch mint, not 150 live runs; the measurement instant is not carried by the card
+  [--] UNRECONSTRUCTABLE: chain ordering rationale  order is recoverable after the fact from prev links, but nothing in a card explains why that order was chosen
+
+========================================================================
+3. CHAIN INTEGRITY  (does the index agree with the artifacts?)
+========================================================================
+  [ok] index n_cards matches artifacts on disk  150 vs 150
+  [ok] index card order == prev-chain order
+  [XX] index `head` == actual chain tail  declared=66856aca4a1f9390... actual=53bf3e8b0e9806f7...
+       ^ declared head 66856aca4a1f9390... is NOT any published card (present=False).
+         The published 150 are a PREFIX of a longer chain. The cards between the
+         published tail and the declared head are NOT published, so the chain
+         cannot be verified as complete. This is an integrity gap, not a rounding nit.
+
+========================================================================
+4. CROSS-SHAPE VERIFY  (one verifier, one real artifact of each shape)
+========================================================================
+
+  shape A  public/signed/cards/00a5218048b4ff922c9793e5d155c7c62b4be5a84de3f09e16af3df59445b3c9.json   [real artifact]
+    [ok] id == sha256(canonical body)  (00a5218048b4ff92... via ensure_ascii=True)
+    [ok] declared preimage recipe is the one used  (json.dumps(body, sort_keys=True, separators=(','...)
+    [ok] Ed25519 sig over canonical body
+  [ok] shape A verifies
+
+  shape B  public/signals/memory-poisoning.signed.json   [real artifact]
+    [ok] content_id == sha256(canonical body)  (1d30d0b665657c6c... via ensure_ascii=False)
+    [ok] Ed25519 sig over content_id hex string
+  [ok] shape B verifies
+
+  shape C  public/signed/gspc-board.signed.json   [real artifact]
+    [ok] content_id == sha256(canonical payload minus attestation)  (0c7e851074cec32b... via ensure_ascii=False)
+    [ok] keyid == sha256(public key)
+    [ok] Ed25519 sig over canonical payload
+  [ok] shape C verifies
+
+  shape D  fixtures/dsse-fixture.json   [SYNTHETIC FIXTURE (no real shape-D artifact exists)]
+    [ok] payload is valid JSON  (337 bytes)
+    [ok] envelope carries >=1 signature
+    [ok] signature[0] keyid == sha256(supplied key)
+    [ok] signature[0] Ed25519 over DSSE PAE
+  [ok] shape D verifies
+
+========================================================================
+5. TAMPER CONTROLS  (a verifier that accepts these is worthless)
+========================================================================
+  [ok] A-altered-body: REJECTED
+  [ok] A-altered-body-and-id: REJECTED
+  [ok] A-substituted-pubkey: REJECTED
+  [ok] A-flipped-signature: REJECTED
+  [ok] B-altered-body: REJECTED
+  [ok] B-altered-body-cid-recomputed: REJECTED
+  [ok] C-altered-payload: REJECTED
+  [ok] D-altered-payload: REJECTED
+  [ok] D-substituted-key: REJECTED
+
+  [ok] POSITIVE-CONTROL-untouched-card: ACCEPTED
+  [ok] POSITIVE-CONTROL-untouched-signal: ACCEPTED
+
+========================================================================
+RESULT
+========================================================================
+  FINDING: index head unreachable (chain published as prefix)
+  all assertions held; all tamper controls rejected.
