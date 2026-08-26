@@ -17,7 +17,6 @@ import WidgetCourses from "./components/widget/WidgetCourses";
 import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
-const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
 const RankingsBridge = lazy(() => import("./pages/AgUiBridge").then((m) => ({ default: m.RankingsBridge })));
@@ -1026,7 +1025,17 @@ function App() {
                   </Switch></Suspense>
                 </main>
                 <Footer />
-                <Suspense fallback={null}><CouncilConsole /></Suspense>
+                {/* 2026-08-26: CouncilConsole was still mounted here, and its own
+                    docstring says it was retired from site chrome on 2026-08-21 and that
+                    "App.tsx no longer mounts the floating bubble". It did. Both bubbles
+                    render `fixed bottom-5 right-5 z-[70] h-12 w-12` — measured live, they
+                    occupied the IDENTICAL rect (639,896)-(687,944). Which one a mouse hits
+                    was decided only by paint order, and the retired one came FIRST in the
+                    DOM, so keyboard and screen-reader users reached "Open the Council
+                    Console" before the OS badge. One control, one workspace: the Council OS
+                    badge is the launcher. The component stays on disk as the deterministic
+                    SUMMON/escort implementation, exactly as its docstring intends — it is
+                    simply not mounted as a second floating chat. */}
                 <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />

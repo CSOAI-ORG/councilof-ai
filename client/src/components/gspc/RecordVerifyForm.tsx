@@ -35,6 +35,7 @@ export default function RecordVerifyForm({
   variant = "dark",
   seed,
   seedNonce,
+  onVerdict,
 }: {
   variant?: "light" | "dark";
   /**
@@ -46,6 +47,9 @@ export default function RecordVerifyForm({
    */
   seed?: string;
   seedNonce?: number;
+  /** Told the verdict after every run. The Council OS pane uses it to mark the
+   *  "verify a published card" quest on a REAL pass rather than on a link click. */
+  onVerdict?: (v: RecordVerdict) => void;
 }) {
   const [text, setText] = useState("");
   const [verdict, setVerdict] = useState<RecordVerdict | null>(null);
@@ -61,7 +65,9 @@ export default function RecordVerifyForm({
 
   const run = async () => {
     setBusy(true);
-    setVerdict(await verifyRecord(text));
+    const v = await verifyRecord(text);
+    setVerdict(v);
+    onVerdict?.(v);
     setBusy(false);
   };
 

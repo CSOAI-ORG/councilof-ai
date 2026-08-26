@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
+import { markQuest } from "@/components/os/quests";
 import { FOCUS, SP, TYPE } from "./glass";
 
 /**
@@ -189,7 +190,14 @@ export default function LobbyVerifyPane() {
       </div>
 
       <div className="mt-4 rounded-2xl border border-slate-900/10 bg-white/90 p-5">
-        <RecordVerifyForm variant="light" seed={seed} seedNonce={nonce} />
+        <RecordVerifyForm
+          variant="light"
+          seed={seed}
+          seedNonce={nonce}
+          // The /os ladder's "verify a published card" quest is marked HERE, on a real
+          // pass — not on the click of a link, which is what used to award it.
+          onVerdict={(v) => { if (v.valid) markQuest("verify"); }}
+        />
       </div>
 
       {/* ── what a pass means, and what it does not ── */}
