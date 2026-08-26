@@ -89,7 +89,7 @@ no dependencies:
 
 ```bash
 curl -sSfO https://councilof.ai/verifier/gspc-verify.mjs
-node gspc-verify.mjs cards/ --index card_index.json --did-document did.json
+node gspc-verify.mjs cards/ --index card_index.json --chain chain.json --did-document did.json
 ```
 
 Source, JSON Schemas and the failing-case tests: `packages/gspc-card-verifier/` (Apache-2.0).
@@ -101,17 +101,23 @@ card-attestation key and have not been altered since. **It does not prove the me
 correct** — that rests on the published method, the gold labels and the rows, all separately
 available. A signature is an integrity claim, not a truth claim.
 
-**It also does not prove the set is complete.** Corrected 2026-08-26 after checking the bytes
-rather than repeating the previous wording: the head the index declares (`66856aca...`) *is*
-among the 313 published cards. The incompleteness is elsewhere, and it is real. The 313 cards
-form **two** chains, not one:
+**It also does not prove the set is complete.** `/signed/chain.json` now lists all 335
+positions, head to genesis, so a withheld card is a counted tombstone rather than an absence
+indistinguishable from a card that never existed. The walk resolves with no gaps: 313 bodies
+published and verifying, 22 withheld.
 
-* 235 cards ending at `GSPC-CARD-FACTORY-GENESIS` -- that chain reaches its declared origin.
-* 78 cards whose tip is the declared head, but whose earliest published card (`242dd99f...`)
-  names a predecessor `b77fde240e06...` that is **not published**. That chain is a suffix of a
-  longer one whose earlier cards you do not have.
+Here is the part that is worth stating precisely, because the manifest is easy to over-read.
+A published card's `prev` sits **inside the signed body**, so when a published card names a
+predecessor, that predecessor's id and position are committed to by a signature. But the
+manifest itself carries no signature. Of the 22 withheld positions, exactly **one** is named
+by a signed body; the other **21** are asserted only in an unsigned file, and in a run of
+consecutive withheld positions only the one adjoining a published successor is anchored.
+A withheld position's own signature cannot be checked at all — Ed25519 signs the message, and
+the message is the body you were not given.
 
-Each card verifies individually; completeness does not. And note that `card_index.json` carries
-no signature of its own, so entries can be added or omitted without breaking anything
-cryptographic -- the `prev` pointer inside each signed body is the only structural check, and
-`/verifier/gspc-verify.mjs` follows it and reports `CHAIN_INCOMPLETE`.
+`card_index.json` is likewise unsigned: entries can be added or omitted without breaking
+anything cryptographic. Treat it as a listing for fetching files, not as evidence of what
+exists.
+
+`/verifier/gspc-verify.mjs --chain chain.json` reports all of the above and exits 3 rather
+than 0, so the distinction cannot be lost by reading only the status.

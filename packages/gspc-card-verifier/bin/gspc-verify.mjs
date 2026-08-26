@@ -17,7 +17,7 @@
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
-import { verifyCard, analyseSet } from "../src/verify.mjs";
+import { verifyCard, analyseSet, analyseChain } from "../src/verify.mjs";
 import { pubkeyFromDidDocument } from "../src/did.mjs";
 import { defaultProfile } from "../src/index.mjs";
 
@@ -26,7 +26,10 @@ const USAGE = `gspc-verify — verify GSPC measurement cards offline
   gspc-verify <card.json | directory> ...
 
 Options
-  --index <file>          also check the card index and the prev-chain for completeness
+  --index <file>          also check the card index against the cards you hold
+  --chain <file>          walk a published chain manifest and report exactly what it
+                          attests: which positions are signed for, and which are only
+                          asserted in an unsigned file
   --profile <file>        verification profile to use (default: the bundled CSOAI profile)
   --pubkey <hex>          pin this raw Ed25519 public key instead of the profile's
   --did-document <file>   pin the key found in a LOCAL DID document
@@ -53,6 +56,7 @@ function parseArgs(argv) {
     else if (a === "--json") o.json = true;
     else if (a === "--quiet") o.quiet = true;
     else if (a === "--index") o.index = need();
+    else if (a === "--chain") o.chain = need();
     else if (a === "--profile") o.profile = need();
     else if (a === "--pubkey") o.pubkey = need();
     else if (a === "--did-document") o.did = need();
@@ -120,24 +124,35 @@ for (const f of files) {
   results.push({ file: f, ...r });
 }
 
+let chain = null;
+if (opts.chain) {
+  try { chain = JSON.parse(readFileSync(opts.chain, "utf8")); } catch (e) { die(`cannot read chain manifest: ${e.message}`); }
+}
+
 let set = null;
 if (opts.index) {
   let index;
   try { index = JSON.parse(readFileSync(opts.index, "utf8")); } catch (e) { die(`cannot read index: ${e.message}`); }
-  set = analyseSet(cards, index, profile);
-} else if (files.length > 1) {
-  set = analyseSet(cards, null, profile);
+  set = analyseSet(cards, index, profile, chain);
+} else if (files.length > 1 || chain) {
+  set = analyseSet(cards, null, profile, chain);
 }
+
+const chainReport = chain ? analyseChain(cards, chain, profile) : null;
 
 const tally = { VALID: 0, INVALID: 0, UNCHECKABLE: 0 };
 for (const r of results) tally[r.state]++;
 
-const blockingSetFindings = (set ? set.findings : []).filter((f) => f.code !== "INDEX_UNSIGNED");
+// Some findings describe the evidence; others describe only the copy you happen to hold.
+// Holding a subset is not a defect in what was published, so it does not change the exit code.
+const INFORMATIONAL = new Set(["INDEX_UNSIGNED", "CHAIN_UNSIGNED", "BODY_NOT_HELD"]);
+const allFindings = [...(set ? set.findings : []), ...(chainReport ? chainReport.findings : [])];
+const blockingSetFindings = allFindings.filter((f) => !INFORMATIONAL.has(f.code));
 
 if (opts.json) {
   process.stdout.write(JSON.stringify({
     profile: { id: profile.id, pinnedPubkeyHex: profile.pinnedPubkeyHex, pinnedKeyId: profile.pinnedKeyId },
-    tally, results, set,
+    tally, results, set, chain: chainReport,
   }, null, 2) + "\n");
 } else {
   if (!opts.quiet) {
@@ -147,13 +162,23 @@ if (opts.json) {
         process.stdout.write(`  ${r.state.padEnd(11)} ${r.code.padEnd(22)} ${r.file}\n                          ${r.reason}\n`);
   }
   process.stdout.write(`VALID ${tally.VALID} · INVALID ${tally.INVALID} · UNCHECKABLE ${tally.UNCHECKABLE}\n`);
-  if (set) {
-    process.stdout.write(`chain: ${set.nCards} cards, ${set.tips.length} tip(s), ${set.chainComplete ? "complete" : "INCOMPLETE"}\n`);
-    // Findings are grouped and capped. A verifier that buries its one interesting finding
-    // under 288 identical lines has technically reported it and practically hidden it.
-    // Nothing is dropped: --json always carries every finding.
+  if (chainReport) {
+    const c = chainReport;
+    process.stdout.write(
+      `manifest: ${c.positions} positions, walk ${c.walkLength}${c.reachesGenesis ? " to genesis" : " DID NOT REACH GENESIS"}; ` +
+        `${c.bodiesHeld}/${c.bodiesDeclaredPublished} published bodies held; ` +
+        `${c.withheld.total} withheld (${c.withheld.attestedBySignedPrev} attested by a signed prev, ` +
+        `${c.withheld.assertedOnly} asserted only)\n`,
+    );
+  }
+  if (set)
+    process.stdout.write(`held cards: ${set.nCards}, ${set.tips.length} run(s), local links ${set.chainComplete ? "all resolve" : "INCOMPLETE"}\n`);
+  // Findings are grouped and capped. A verifier that buries its one interesting finding under
+  // 288 identical lines has technically reported it and practically hidden it. Nothing is
+  // dropped: --json always carries every finding.
+  {
     const byCode = new Map();
-    for (const f of set.findings) (byCode.get(f.code) ?? byCode.set(f.code, []).get(f.code)).push(f.detail);
+    for (const f of allFindings) (byCode.get(f.code) ?? byCode.set(f.code, []).get(f.code)).push(f.detail);
     for (const [code, details] of byCode) {
       for (const d of details.slice(0, 5)) process.stdout.write(`  ${code.padEnd(22)} ${d}\n`);
       if (details.length > 5)

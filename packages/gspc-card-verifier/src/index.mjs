@@ -1,4 +1,4 @@
-export { verifyCard, analyseSet, STATES } from "./verify.mjs";
+export { verifyCard, analyseSet, analyseChain, STATES } from "./verify.mjs";
 export { canonicalise, canonicalString, preimageBytes, OutOfProfileDomain, NotSerialisable } from "./canonical.mjs";
 export { pubkeyFromDidDocument } from "./did.mjs";
 

@@ -22,25 +22,36 @@ the method, the gold labels and the graded rows — published separately, and th
 actually argue with. A perfectly valid signature over a badly-run measurement is a perfectly
 valid signature over a badly-run measurement.
 
-**It does not prove the published set is complete.** As of the set this package was built
-against, 313 cards are published and every one verifies. They form **two** chains, not one:
+**It does not prove the published set is complete — and the gap is smaller than it was, but
+it is not zero.** The chain manifest at `/signed/chain.json` lists every position, head to
+genesis, including the ones whose body is not published. That is a real improvement on
+publishing a subset: a withheld card becomes a counted, ordered tombstone instead of an
+absence indistinguishable from a card that never existed. As of this build:
 
-| chain | cards | earliest card points at | status |
-|---|---|---|---|
-| A | 235 | `GSPC-CARD-FACTORY-GENESIS` | reaches its declared origin |
-| B | 78 | `b77fde240e06…` — **not published** | dangles into history you cannot see |
+| | |
+|---|---|
+| positions declared | 335 |
+| bodies published, each verifying | 313 |
+| bodies withheld | 22 |
+| withheld positions **a signature commits to** | **1** |
+| withheld positions asserted **only by the unsigned manifest** | **21** |
 
-Chain B's tip is the head the index declares, so the *head* is present. But its far end names a
-predecessor that is not in the published set, so chain B is a **suffix of a longer chain whose
-earlier cards you do not have**. Nothing here tells you what those cards said, or whether the
-gap is innocent. `gspc-verify` reports this as `CHAIN_INCOMPLETE` and **exits 3**, not 0.
+That last row is the part to read twice. A published card's `prev` sits *inside* the signed
+body, so when a published card names a predecessor, that predecessor's id and place in the
+order are committed to by a signature — whether or not its body is published. But the manifest
+file itself carries no signature. In a run of consecutive withheld positions, only the one
+adjoining a published successor is attested that way; the rest of the run exists because an
+unsigned file says so. Nor can a withheld position's signature be checked at all: Ed25519 signs
+the message, and the message is the body you were not given.
 
-**And the index is not signed.** `card_index.json` carries no signature of its own. Adding,
-altering or omitting entries breaks nothing cryptographic. Treat it as a convenience listing for
-fetching files, never as evidence of what exists. The only structural defence against a silently
-truncated set is the `prev` pointer — which is *inside* the signed body, and which this tool
-follows. That is why completeness is reported separately from validity: they are different
-claims and they fail differently.
+So: the walk from head to genesis resolves with no gaps, every published body verifies, and 21
+of the 335 positions rest on trust rather than on cryptography. `gspc-verify --chain` reports
+exactly that split and **exits 3**, not 0.
+
+**The index is not signed either.** `card_index.json` carries no signature. Adding, altering or
+omitting entries breaks nothing cryptographic. Treat it as a convenience listing for fetching
+files, never as evidence of what exists. Completeness is therefore reported separately from
+validity throughout this tool: they are different claims and they fail differently.
 
 **This is not a certification and we do not issue one.** There is no badge, no seal, no pass
 mark, nothing to buy. There is a signature over some bytes and a tool that checks it. What you
@@ -65,8 +76,9 @@ curl -sSfO "$BASE/verifier/gspc-verify.mjs"
 # 2. The key you are going to pin, from the DID document. Fetch it ONCE, keep the copy.
 curl -sSf "$BASE/.well-known/did.json" -o did.json
 
-# 3. Some cards, and the index.
+# 3. Some cards, the index, and the chain manifest.
 curl -sSf "$BASE/signed/card_index.json" -o card_index.json
+curl -sSf "$BASE/signed/chain.json" -o chain.json
 mkdir -p cards
 curl -sSf "$BASE/signed/cards/$(python3 -c "import json;print(json.load(open('card_index.json'))['cards'][0]['card'])").json" \
   -o "cards/first.json"
@@ -85,10 +97,11 @@ import json
 for e in json.load(open('card_index.json'))['cards']: print(e['card'])
 " | xargs -P8 -I{} curl -sSf "$BASE/signed/cards/{}.json" -o "cards/{}.json"
 
-node gspc-verify.mjs cards/ --index card_index.json --did-document did.json
+node gspc-verify.mjs cards/ --index card_index.json --chain chain.json --did-document did.json
 ```
 
-Expect `VALID 313 · INVALID 0 · UNCHECKABLE 0`, a chain reported `INCOMPLETE`, and **exit 3**.
+Expect `VALID 313 · INVALID 0 · UNCHECKABLE 0`, a manifest walk of 335 positions reaching
+genesis, and **exit 3** — because 21 withheld positions are asserted rather than signed for.
 That is the correct answer for the currently published set, for the reasons given above.
 
 Everything after step 3 works with the network unplugged. That is the point: **evidence you hold
@@ -135,8 +148,20 @@ carries a distinct code:
 | UNCHECKABLE | `UNREADABLE` | the file is not parseable JSON |
 
 Set-level findings are reported separately, because a valid card in an incomplete set is still
-a valid card: `CHAIN_INCOMPLETE`, `CHAIN_FORKED`, `CHAIN_NO_PREV`, `INDEX_ENTRY_MISSING`,
-`CARD_NOT_INDEXED`, `INDEX_COUNT_MISMATCH`, `INDEX_HEAD_MISSING`, `INDEX_UNSIGNED`.
+a valid card.
+
+About the cards you hold and the index: `CHAIN_INCOMPLETE`, `CHAIN_FORKED`, `CHAIN_NO_PREV`,
+`INDEX_ENTRY_MISSING`, `CARD_NOT_INDEXED`, `INDEX_COUNT_MISMATCH`, `INDEX_HEAD_MISSING`,
+`INDEX_UNSIGNED`.
+
+About a chain manifest given with `--chain`: `CHAIN_WALK_BROKEN`, `CHAIN_ORPHAN_LINK`,
+`CHAIN_DUPLICATE_POSITION`, `CHAIN_LENGTH_MISMATCH`, `CHAIN_SIG_DIFFERS`, `CARD_NOT_IN_CHAIN`,
+`CHAIN_MANIFEST_MALFORMED`, `WITHHELD_BODY`, `WITHHELD_UNATTESTED`, `CHAIN_UNSIGNED`,
+`BODY_NOT_HELD`.
+
+Three of those describe your own copy rather than the evidence — `INDEX_UNSIGNED`,
+`CHAIN_UNSIGNED` and `BODY_NOT_HELD` — and do not change the exit code. Holding a subset is
+not a defect in what was published.
 
 ### Out of profile domain: it stops, it does not guess
 
@@ -227,8 +252,12 @@ const profile = defaultProfile();            // or your own object
 const result = await verifyCard(card, profile);
 // { state: "VALID" | "INVALID" | "UNCHECKABLE", code, reason?, id?, axis?, model? }
 
-const set = analyseSet(validCards, index, profile);
+const set = analyseSet(validCards, index, profile, chain);
 // { nCards, tips, danglingPrev, chainComplete, findings }
+
+const chainReport = analyseChain(validCards, chain, profile);
+// { ok, positions, walkLength, reachesGenesis, bodiesHeld, bodiesDeclaredPublished,
+//   withheld: { total, attestedBySignedPrev, assertedOnly }, findings }
 ```
 
 `verifyCard` never throws on bad input and never fetches anything.
@@ -245,8 +274,12 @@ node --test test/*.test.mjs
 
 The suite asserts the exact state **and** the exact code for a tampered body, a card signed
 with a foreign key, a malformed card, a non-card, unparseable bytes, out-of-domain numbers, an
-out-of-domain preimage rule, and a card whose id was recomputed to match its altered body. Two
-fixtures carry a companion assertion showing what a weaker verifier would have concluded:
+out-of-domain preimage rule, and a card whose id was recomputed to match its altered body. It
+also rejects broken chain manifests: a walk that misses genesis, a cycle, an orphan link, a
+declared length that disagrees with the listing, a manifest signature that differs from the
+card file, and — the one that matters — a withheld position that no signed body names.
+
+Two fixtures carry a companion assertion showing what a weaker verifier would have concluded:
 
 - `04-foreign-key.json` is entirely self-consistent — its id hashes correctly and its signature
   verifies under the key it carries. **A verifier that skips key pinning calls it VALID.** The
