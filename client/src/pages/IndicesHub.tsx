@@ -193,6 +193,7 @@ function Hub() {
           <Link
             key={index.slug}
             href={index.path}
+            aria-label={`${index.title} — ${index.status}`}
             className="block rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6 hover:border-emerald-400/40 transition-colors"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">

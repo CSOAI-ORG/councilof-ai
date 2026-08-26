@@ -204,7 +204,11 @@ export default function Products() {
               {g.rows.map((r) => (
                 <li key={r.path} className="bg-[#05140d] px-5 py-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                   <div>
-                    <Link href={r.path} className="font-semibold text-emerald-50 hover:text-emerald-300">
+                    <Link
+                      href={r.path}
+                      aria-label={`${r.name} — ${r.register}`}
+                      className="font-semibold text-emerald-50 hover:text-emerald-300"
+                    >
                       {r.name}
                     </Link>
                     <p className="mt-1 text-sm text-emerald-100/65">{r.blurb}</p>
