@@ -317,7 +317,6 @@ function InsurersEvidencePack() {
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
                 {(board.axes as Axis[]).map((a) => {
                   const acc = accuracyCell(a);
                   const sepNote = separationNote(a);
@@ -355,20 +354,6 @@ function InsurersEvidencePack() {
                     </tr>
                   );
                 })}
-=======
-                {(board.axes as Axis[]).map((a) => (
-                  <tr key={a.axis} className="border-b last:border-0">
-                    <td className="p-3 font-semibold whitespace-nowrap text-gray-900">{a.axis}</td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{a.n}</td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{(a.accuracy * 100).toFixed(1)}%</td>
-                    <td className="p-3 whitespace-nowrap">
-                      <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
-                        {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
->>>>>>> lane/ux-journeys-pass
               </tbody>
             </table>
           </div>
