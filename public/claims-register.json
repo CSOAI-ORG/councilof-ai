@@ -29,10 +29,18 @@
       "claim": "Blockchain / independent timestamp anchoring of cards (OpenTimestamps, RFC-3161).",
       "status": "planned",
       "evidence": [
+        "/signed/card_index.json",
+        "/signed/HOW-TO-VERIFY.md",
         "/methodology",
         "/gspc-verify"
       ],
-      "notes": "Cards declare timestamp_authority: \"none\". There is no RFC-3161 timestamp and no Bitcoin anchor behind any card. The label will name it in the same commit it ships, never ahead of it."
+      "notes": "Cards carry NO timestamp-authority field of any kind. A card body has exactly nine fields — accuracy, axis, created, issuer, kind, model, prev, public_framing, verify — across all 150 published cards; the string \"timestamp\" appears in none of them, nor in card_index.json. The only time a card carries is `created`, an ISO-8601 instant written by the minting host from its own clock and then signed: it attests that the issuer asserted that time, not that any independent party observed it. The `prev` hash-chain establishes relative order between cards, which is ordering, not time. There is no RFC-3161 token, no OpenTimestamps proof, and no Bitcoin or other chain anchor behind any card. The label will name it in the same commit it ships, never ahead of it.",
+      "amended": [
+        {
+          "date": "2026-08-26",
+          "note": "Superseded wording, kept visible rather than deleted: this note previously read \"Cards declare timestamp_authority: \\\"none\\\".\" That was false as a statement about the bytes — zero of the 150 published cards contain a timestamp_authority field, so the register asserted a positive declaration as its evidence for the absence. The substance was always honest (there genuinely is no timestamp authority); the defect was that a page whose entire purpose is claim-to-evidence fidelity described a field that does not exist. Caught by an outside SCITT/COSE audit of the live site on 2026-08-26 (finding D8), not by us. Adding an explicit timestamp_authority: \"none\" to the card schema would be the stronger answer — an explicit \"none\" is worth signing — but it cannot be retrofitted to these 150: each card id is the SHA-256 of its own body, so a new field re-mints every id and invalidates every published signature. It is recorded here as a schema change for the next card format, not as a thing already done. See /api/corrections C-2026-0826-07."
+        }
+      ]
     },
     {
       "id": "CR-003",

@@ -100,12 +100,30 @@ export const AXES_B: AxisScore[] = [
       "council-safe": { n: 71, quotable: true, tp: 8, fp: 0, tn: 33, fn: 30, precision: 1.0, recall: 0.211, accuracy: 0.5775 },
       // Renamed 2026-08-20: the prior public identifier carried an internal codename.
       // Same measured artefact, same rows — see corrections ledger.
-      "council-inhouse-ft": { n: 71, quotable: true, tp: 0, fp: 0, tn: 33, fn: 38, precision: null, recall: null, accuracy: 0.4648 },
+      // recall was published as null until 2026-08-26 (outside audit D11). It is not
+      // undefined: recall = tp/(tp+fn) = 0/38, which is defined and equals 0.0. Publishing
+      // null in place of a measured zero is the estate's own defect class inverted — it
+      // hides a measured failure behind a field that reads "not measured". precision IS
+      // legitimately null here: tp/(tp+fp) = 0/0, undefined, nothing was predicted positive.
+      // The two nulls looked identical and meant opposite things.
+      "council-inhouse-ft": { n: 71, quotable: true, tp: 0, fp: 0, tn: 33, fn: 38, precision: null, recall: 0.0, accuracy: 0.4648 },
       "qwen2.5:1.5b": { n: 70, quotable: true, tp: 7, fp: 2, tn: 31, fn: 30, precision: 0.778, recall: 0.189, accuracy: 0.5429 },
       "qwen2.5:0.5b-instruct": { n: 71, quotable: true, tp: 9, fp: 0, tn: 33, fn: 29, precision: 1.0, recall: 0.237, accuracy: 0.5915 },
     },
-    status: "MEASURED", dataset: "published: csoai/gspc-jail-goldbank (frozen 71-cell gold bank, HF 2026-08-25)",
+    // `dataset` is an IDENTIFIER, not a sentence. Until 2026-08-26 it read
+    // "published: csoai/gspc-jail-goldbank (frozen 71-cell gold bank, HF 2026-08-25)",
+    // and gspc.ts resolves dataset_url by concatenating BANK_HOST onto it — so the
+    // published dataset_url was "https://huggingface.co/datasets/published: csoai/…",
+    // which curl refuses as a malformed URL, under a bank_note asserting every such URL
+    // is fetchable. The bank itself was always fine. The prose now lives in dataset_note.
+    status: "MEASURED",
+    dataset: "csoai/gspc-jail-goldbank",
+    dataset_note: "Frozen 71-cell gold bank, published on HuggingFace 2026-08-25.",
     colour: "#64748b", hue: 215,
+    null_grammar: "In per_model, null and 0.0 mean different things and are never interchanged. " +
+      "precision: null on council-inhouse-ft is UNDEFINED — tp/(tp+fp) = 0/0, because the model " +
+      "predicted nothing positive. recall: 0.0 on the same row is MEASURED — tp/(tp+fn) = 0/38. " +
+      "That zero is the most damaging number on this axis and it is a measurement, not a gap.",
     note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-cell gold bank, " +
       "separation determined 2026-08-25 (TIE). Best zero-FP detector: qwen2.5:0.5b-instruct " +
       "(precision 1.0, recall 0.237). Fleet mean accuracy 0.5455 (7 models, usable n 68-71). " +

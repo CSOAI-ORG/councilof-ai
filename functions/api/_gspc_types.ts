@@ -59,8 +59,21 @@ export interface AxisScore {
   // absolute-on-site path to the signed run or the declaration — instead. An
   // axis with neither carries no link, which is the honest state of a slot that
   // has no evidence to point at.
+  //
+  // dataset MUST be a bare identifier — "<owner>/<name>" — and nothing else. It is
+  // concatenated onto BANK_HOST, so any prose in it mints a malformed URL. That is
+  // not hypothetical: until 2026-08-26 the jail axis carried a whole sentence here
+  // and published a dataset_url curl refuses to parse. Prose belongs in dataset_note.
+  // gspc.ts now validates the slug and marks it UNRESOLVABLE rather than concatenating
+  // blind, so the same mistake can degrade honestly but never publish a broken link
+  // under a note claiming every link resolves.
   dataset?: string;
+  dataset_note?: string;
   evidence_url?: string;
+
+  // How to read a null in per_model. null and 0.0 are different facts (undefined vs
+  // measured-zero) and an axis that carries both states which is which.
+  null_grammar?: string;
 
   // How much of the axis's own declared universe was actually covered, and on what
   // rail. An axis that measured 6 of 16 named instruments has NOT measured the
@@ -92,12 +105,68 @@ export const MEASURED_ON = {
     "GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living " +
     "board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. " +
     "slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
+  // ── living_stamp: PRESENTED AS UNVERIFIABLE, ON PURPOSE ──────────────────────
+  // Until 2026-08-26 this block carried `signed: true` and a `sig_input` recipe and
+  // nothing else — i.e. it rendered exactly like the two attestations on this site
+  // that DO verify (#card-attestation-1 over the 150 cards, #board-attestation-1 over
+  // this payload). It does not verify. An outside SCITT/COSE audit could not reproduce
+  // it under ~50 readings; a re-run in this lane on 2026-08-26 could not reproduce it
+  // under 58,184 (2 candidate signatures × 5 published keys × 9 candidate payloads ×
+  // {raw bytes, sha256 digest, sha256 hex, sha256 HEX} × {ensure_ascii True, False} ×
+  // every drop-set of up to 3 fields). Zero verified. Three separate faults:
+  //
+  //   1. TWO SIGNATURES EXIST for one stamp. /signed/board_living.json carries
+  //      53aa09fa…; this block carried bd199fd3…. Same signer, same `updated`.
+  //      At most one of them can be over the bytes the other is over.
+  //   2. THE SIGNER IS NOT ANCHORED. 8f9a00a2… is in none of the four verification
+  //      methods in /.well-known/did.json, so even a reproducing preimage would only
+  //      prove self-consistency — the exact unfalsifiable shape HOW-TO-VERIFY step 1
+  //      tells strangers to refuse.
+  //   3. THE SIGNED BYTES NO LONGER EXIST IN PUBLISHED FORM. board_living.json says
+  //      its own axes are an "axes snapshot from live /api/gspc at package time"
+  //      (packaged 2026-08-24) while the signature is dated 2026-08-18. Whatever was
+  //      signed is not what is published, so no published bytes can reproduce it.
+  //
+  // We cannot say the stamp is invalid; we can only say nobody can check it, which on
+  // a site whose thesis is "check it without our permission" is the same outcome. So
+  // it is marked UNVERIFIABLE and it is NOT removed: a row that says "we published
+  // this and it does not check out" is worth more than a quietly deleted one. The
+  // bytes are left exactly as they are — if a preimage rule is ever recovered, it must
+  // still verify against them.
+  //
+  // TO CLOSE THIS: anchor 8f9a00a2… in did.json (e.g. #living-stamp-1), publish the
+  // exact preimage (which fields are "signature fields"; raw bytes vs digest;
+  // ensure_ascii), and publish ONE signature. Owner-gated: this lane does not hold
+  // the key. Tracked at /api/corrections C-2026-0826-08.
   living_stamp: {
     source: "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
     updated: "2026-08-18T03:22:16Z",
     signed: true,
+    verification_state: "UNVERIFIABLE",
+    verifiable: false,
     signer: "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
+    signer_anchored: false,
     signature: "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
-    sig_input: "sha256(canonical board minus signature fields, sort_keys)",
+    sig_input: "sha256(canonical board minus signature fields, sort_keys) — AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
+    unverifiable_note:
+      "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes " +
+      "reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, " +
+      "all five published keys, nine candidate payloads, raw/digest/hex message forms, both " +
+      "ensure_ascii settings and every drop-set of up to three fields. None verified. Two different " +
+      "signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, " +
+      "bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, " +
+      "and board_living.json's own note says its axes were re-snapshotted from the live board six " +
+      "days after the signature date — so the signed bytes are not the published bytes. Nothing " +
+      "here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party " +
+      "is the same thing. The two attestations on this site that DO verify are the 150 measurement " +
+      "cards under #card-attestation-1 and site_attestation on this payload under " +
+      "#board-attestation-1; check those instead.",
+    supersedes_note:
+      "site_attestation on this payload signs this whole body, including this block. That " +
+      "attestation covers the INTEGRITY of these bytes as served — it does not substantiate the " +
+      "living stamp, and must not be read as doing so.",
+    reproduction_attempts: 58184,
+    reproduction_verified: 0,
+    tracked_as: "/api/corrections C-2026-0826-08",
   },
 };

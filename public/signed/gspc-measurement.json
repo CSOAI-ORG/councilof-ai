@@ -370,7 +370,8 @@
      "tn": 33,
      "fn": 38,
      "precision": null,
-     "recall": null,
+     "recall": 0.0,
+     "null_grammar": "precision is null because tp/(tp+fp) = 0/0 is UNDEFINED \u2014 this model predicted nothing positive. recall is 0.0 because tp/(tp+fn) = 0/38 is DEFINED and MEASURED. Amended 2026-08-26: recall was published here as null, which reads as \"not measured\" and hid the single most damaging measured number on this axis. See /api/corrections C-2026-0826-09.",
      "n": null,
      "quotable": false,
      "accuracy": 33.0
@@ -399,7 +400,8 @@
     }
    },
    "status": "MEASURED",
-   "dataset": "published: csoai/gspc-jail-goldbank (frozen 71-cell gold bank, HF 2026-08-25)",
+   "dataset": "csoai/gspc-jail-goldbank",
+   "dataset_note": "Frozen 71-cell gold bank, published on HuggingFace 2026-08-25. Amended 2026-08-26: `dataset` previously held a prose sentence, and consumers that resolve it against https://huggingface.co/datasets/ minted a malformed URL. An identifier field now holds an identifier. See /api/corrections C-2026-0826-10.",
    "colour": "#64748b",
    "hue": 215,
    "note": "Detection layer 2 of 2 on the frozen 71-cell gold bank (38 ESCAPE / 33 BENIGN). 7 models, all usable n>=30 (68-71); best zero-FP detector qwen2.5:0.5b-instruct (precision 1.0, recall 0.237). Separation determination 2026-08-25: TIE — the leader's Wilson 95% interval [0.475, 0.698] contains the fleet mean 0.5455; no model's interval clears it, so the point-estimate lead is not a measured advantage (stat_suite separated_leaders). Recall is the honest weakness: the best detector still misses 76% of escapes. Gold bank dataset pending publication.",
@@ -447,10 +449,27 @@
    "signed": true,
    "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
    "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
-   "sig_input": "sha256(canonical board minus signature fields, sort_keys)"
+   "sig_input": "sha256(canonical board minus signature fields, sort_keys) \u2014 AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
+   "verification_state": "UNVERIFIABLE",
+   "verifiable": false,
+   "signer_anchored": false,
+   "marked_unverifiable_on": "2026-08-26",
+   "reproduction_attempts": 58184,
+   "reproduction_verified": 0,
+   "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. No published bytes reproduce this signature: 58,184 readings were attempted on 2026-08-26 across both published signatures for this stamp, all five published keys, nine candidate payloads, raw/sha256-digest/sha256-hex message forms, both ensure_ascii settings, and every drop-set of up to three fields. Zero verified. Two different signatures are published for one stamp (53aa09fa\u2026 in /signed/board_living.json, bd199fd3\u2026 here and on /api/gspc), the signer is in none of the four verification methods in https://csoai.org/.well-known/did.json, and board_living.json states its axes were re-snapshotted six days after the signature date \u2014 so the signed bytes are not the published bytes. Nothing here is asserted to be invalid; it is asserted to be UNCHECKABLE. Verify the 150 cards under #card-attestation-1, or site_attestation on /api/gspc under #board-attestation-1, instead. See /api/corrections C-2026-0826-08."
   }
  },
  "doi": "10.5281/zenodo.21991104",
  "doi_note": "GSPC Methodology and the Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
- "packaged_at": "2026-08-25T19:35:00+00:00"
+ "packaged_at": "2026-08-25T19:35:00+00:00",
+ "amendments": [
+  {
+   "date": "2026-08-26",
+   "note": "This artifact carries no signature over itself, so it is amended in place rather than re-signed; the amendments are recorded here so the change is visible and dated. Three corrections, all triggered by an outside SCITT/COSE audit of the live site on 2026-08-26. (1) axes.jail.per_model.council-inhouse-ft.recall was published as null and is 0.0 \u2014 a measured zero, not an absent measurement. (2) axes.jail.dataset held a prose sentence in an identifier field, which minted a malformed dataset_url downstream. (3) measured_on.living_stamp is marked UNVERIFIABLE \u2014 it does not reproduce under any published rule. Nothing was removed. See /api/corrections."
+  },
+  {
+   "date": "2026-08-26",
+   "note": "KNOWN AND NOT FIXED HERE: axes.jail.per_model.council-inhouse-ft in this file also carries n: null, quotable: false and accuracy: 33.0, none of which match the live board (/api/gspc gives n: 71, quotable: true, accuracy: 0.4648), and 33.0 is not an accuracy at all \u2014 it is the tn count in the accuracy slot. This file is stale against the board on that row. The live board is the authority; the divergence is recorded rather than silently patched, because correcting it needs the underlying run, not a guess."
+  }
+ ]
 }
