@@ -33,10 +33,10 @@ SECTOR_PROFILES = {
         "note": "Credit/rating AI models face the highest-risk obligation tier; conformity gap = Article 13 exposure.",
     },
     "cobol": {
-        "label": "COBOL / defence (DEFONEOS compartment)",
+        "label": "COBOL / defence-AI",
         "frameworks": ["EU AI Act (where applicable)", "Defence AI doctrine", "AUKUS interoperability", "Ethical AI (weapon-control) prohibition"],
         "axes": ["governance", "safety", "art5-safeguard", "jail"],
-        "note": "Defence compartment — kinetic-targeting/surveillance patterns are an immutable hard stop, not a graded axis.",
+        "note": "Defence-AI compartment — kinetic-targeting/surveillance patterns are an immutable hard stop, not a graded axis.",
     },
 }
 
