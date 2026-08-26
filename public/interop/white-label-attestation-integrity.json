@@ -35,9 +35,9 @@
   },
   {
    "surface": "evm-control-facts.json",
-   "status": "SIGNED-MISMATCH",
+   "status": "SIGNED-VERIFIABLE",
    "content_id": "532c59c43ecd2db938f6bcae",
-   "verified": false
+   "verified": true
   },
   {
    "surface": "financial-axes.json",
@@ -124,6 +124,12 @@
    "verified": null
   },
   {
+   "surface": "white-label-attestation-integrity.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
    "surface": "white-label-deadline-radar.json",
    "status": "UNAUTHENTICATED",
    "content_id": null,
@@ -155,15 +161,14 @@
   }
  ],
  "summary": {
-  "total": 25,
-  "signed_verifiable": 7,
+  "total": 26,
+  "signed_verifiable": 8,
   "unsigned_or_other": 18,
   "unsigned_list": [
    "attestation-corpus.json",
    "card-store-verification.json",
    "coverage-register.json",
    "eas-attestation-batch.json",
-   "evm-control-facts.json",
    "financial-axes.json",
    "financial-measure-run.json",
    "index-reference-reverify.json",
@@ -172,6 +177,7 @@
    "rwa-registry.json",
    "sbom-councilof-ai.json",
    "surface-catalog.json",
+   "white-label-attestation-integrity.json",
    "white-label-deadline-radar.json",
    "white-label-exposure-register.json",
    "white-label-jailbreak-rating.json",
