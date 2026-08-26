@@ -26,11 +26,19 @@ except Exception:
 INTEROP = os.path.join(os.path.dirname(__file__), "..", "..", "public", "interop")
 
 def recompute_cid(d):
-    """Recompute sha256(canonical body) dropping signature/content_id fields."""
-    if cjson is None:
-        return None
+    """Recompute sha256(canonical body) dropping signature/content_id fields.
+
+    MUST match the signer: the interop artifacts were signed with
+    json.dumps(sort_keys, separators=(',',':'), ensure_ascii=False) over the body that
+    had no content_id/signature fields yet (see evm_control_facts.py / index_measure.py).
+    Using the arena cross-runtime cjson (which normalizes int-valued floats + rewrites
+    separators) produces a DIFFERENT digest -> false SIGNED-MISMATCH. This recompute
+    matches the actual signer so the audit reports the true state.
+    """
     body = {k: v for k, v in d.items() if k not in ("signature", "content_id")}
-    return hashlib.sha256(cjson(body).encode()).hexdigest()
+    payload = json.dumps(body, sort_keys=True, separators=(",", ":"),
+                         ensure_ascii=False).encode()
+    return hashlib.sha256(payload).hexdigest()
 
 def audit_one(path):
     name = os.path.basename(path)
