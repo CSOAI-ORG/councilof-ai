@@ -2,7 +2,7 @@
   "schema_version": "2024-11-05",
   "name": "csoai-gspc-mcp",
   "display_name": "Council of AI — GSPC Measurement Tools",
-  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity): 14 measured of 14 quotable (13 canonical axes + jail MEASURED; living-board jail separation is TIE). Slot-15 / human-vs-ai are measured in-lane only — not board-quotable. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry io.github.CSOAI-ORG/gspc 1.0.3.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry io.github.CSOAI-ORG/gspc 1.0.3.",
   "icon_url": "https://councilof.ai/favicon.ico",
   "provider": {
     "name": "CSOAI Ltd",
@@ -20,7 +20,7 @@
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
       "method": "GET",
-      "description": "Live GSPC board: 14 measured of 14 quotable. Per-axis n, leader, Wilson interval, separation (SEPARATED/TIE). Jail is MEASURED with TIE separation. Cite totals.public_count. No auth required."
+      "description": "Live GSPC board. Per-axis n, leader, Wilson interval, separation (SEPARATED/TIE). Quote totals.public_count. Empty cells stay empty. Ties are ties. No auth required."
     }
   },
   "capabilities": {
