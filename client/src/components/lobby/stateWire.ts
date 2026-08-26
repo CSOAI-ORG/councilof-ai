@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
  *     kind, and the endpoint says so rather than borrowing a neighbour's.
  *   · kinds are never merged. measured / probed / catalogued / declared /
  *     unmeasured are five different claims. Summing across them is exactly how
- *     6 reachable MCP servers became a published 378.
+ *     a fleet with 6 reachable servers came to be published as 378.
  *   · a failed fetch shows the failure and NO numbers. There is no bundled copy
  *     of this payload, deliberately: a state endpoint served from a stale
  *     snapshot is the defect it exists to prevent.
