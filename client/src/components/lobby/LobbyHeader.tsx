@@ -419,7 +419,7 @@ function LiveStateBar({
     );
   }
 
-  const { board, fleet, cards } = live.state;
+  const { board, fleet, cards, chain } = live.state;
   const grammar = quote(board.countGrammar);
 
   return (
@@ -455,18 +455,45 @@ function LiveStateBar({
         }
         onClick={() => onOpenHit({ route: "/mcp-fleet", label: "MCP fleet" })}
       />
+      {/* This chip said "150 published · 150 signed". /api/state gives that fact
+          kind "catalogued" and sources it from card_index.json; it is the curated
+          INDEX, not the published set. The chain — which /api/state also publishes,
+          and which the Verify pane reads straight off /signed/chain.json — carries
+          313 bodies published and 313 verified valid. So the OS read 150 "published"
+          one click from a pane reading 313. Neither number was wrong; the WORD was.
+          Each figure now carries the word its own fact gives it, and the chain gets
+          its own chip rather than being hidden behind the index. */}
       <Readout
-        label="Cards"
+        label="Card index"
         value={
           quotable(cards.count)
-            ? `${quote(cards.count)} published · ${quote(cards.signed)} signed`
+            ? `${quote(cards.count)} ${cards.count?.kind ?? "listed"} · ${quote(cards.signed)} signed`
             : UNMEASURED
         }
         ok={quotable(cards.count)}
         title={
-          "Counted from the published index, not read off its header.\n\n" +
-          `published — ${provenance(cards.count)}\n` +
+          "The curated card index, counted from its array rather than read off its header. " +
+          "It is NOT the whole published set — see the Chain chip beside it, and never add the two.\n\n" +
+          `index — ${provenance(cards.count)}\n` +
           `signed — ${provenance(cards.signed)}\n\nOpens the verifier.`
+        }
+        onClick={() => onOpenHit({ tab: tabOf("verify"), label: "Verify a card" })}
+      />
+      <Readout
+        label="Chain"
+        value={
+          quotable(chain.verified) || quotable(chain.positions)
+            ? `${quote(chain.verified)} verified · ${quote(chain.positions)} positions`
+            : UNMEASURED
+        }
+        ok={quotable(chain.verified)}
+        title={
+          "Verified: card bodies whose bytes reproduce their id and whose signature checks out. " +
+          "Positions: every link in the chain, including the ones whose body is withheld — " +
+          "listed so an absence is never invisible. Different kinds; never added together.\n\n" +
+          `verified — ${provenance(chain.verified)}\n` +
+          `published — ${provenance(chain.bodiesPublished)}\n` +
+          `positions — ${provenance(chain.positions)}\n\nOpens the verifier.`
         }
         onClick={() => onOpenHit({ tab: tabOf("verify"), label: "Verify a card" })}
       />
