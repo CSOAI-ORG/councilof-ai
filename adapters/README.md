@@ -12,6 +12,8 @@ Full XRPL catalog: **`adapters/xrpl/README.md`**.
 | Franklin BENJI | `xrpl/benji` | ethereum | clean | FOBXX adjacency |
 | Aviva USD Liquidity | `xrpl/aviva` | xrpl | clean | #166 issuer TBD |
 
-Matrix-only (no stub dir yet): Apollo ACRED, Archax×abrdn — cite `docs/RWA_CONTACT_MATRIX.md`. JMWH = demo-only.
+Matrix-only (no stub dir yet): Archax×abrdn — cite `docs/RWA_CONTACT_MATRIX.md`. JMWH = demo-only.
+
+**Stage 3 catalog clusters (#303–308):** `adapters/evm/catalog/` — six REPORTED JSON batches (Ondo Stocks, Securitize, Backed). See `docs/STAGE3_CATALOG_CLUSTERS.md`.
 
 Never invent AUM as MEASURED. Wilson only on frozen banks (`docs/WILSON_FROZEN_BANKS.md`).
