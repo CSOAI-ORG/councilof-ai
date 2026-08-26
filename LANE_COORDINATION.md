@@ -247,3 +247,12 @@ deterministic (same inputs -> same output). 8/8 pass under python 3.11 pytest + 
 Bounded exposure: a lane can rely on this module's math. Non-colliding (no active arena-lib
 lane). The estate had a private reusable verify-card workflow; the publishable Market action
 (actions/verify-card/action.yml) landed earlier as Play #3.
+
+## 2026-08-26 · JEEVES — HOW_TO_CITE_MEASUREMENT_STANDARD (be-the-cited-reference)
+docs/HOW_TO_CITE_MEASUREMENT_STANDARD.md — the canonical "how to cite / reference the GSPC
+measurement standard" guide a standards body, journalist, or AI-lab model card uses. This is the
+ARC-AGI / MLCommons be-the-cited-reference mechanism. It pins each citeable artifact (methodology,
+board, corrections, axis result, badge, did:web trust root) to a verify step, binds the three
+honest states (measured / untested / unmeasured), enumerates the boundaries (measurement not
+certification, R8 regulators free, never a token/claim), and lists the off-doctrine never-cite set.
+On-cite targets verified live (HTTP 200).
