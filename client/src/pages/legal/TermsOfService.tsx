@@ -48,6 +48,12 @@ export default function TermsOfService() {
               <FileText className="h-3 w-3 mr-1" />
               Legal Document
             </Badge>
+            <p className="mx-auto mb-4 max-w-2xl text-sm text-amber-800 dark:text-amber-200/90 border border-amber-500/30 bg-amber-500/5 rounded-lg px-4 py-3 text-left">
+              <strong>Measurement, not certification.</strong> Signed measurement cards and GSPC grades
+              are our published <em>opinions</em> on frozen instruments — not legal advice, not investment
+              advice, not NRSRO credit ratings, and not a substitute for counsel. Scores are never sold.
+              Labour and AI-economy indices stay UNMEASURED until INDEX-METHOD freezes a bank.
+            </p>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Terms of Service
             </h1>
