@@ -20,6 +20,7 @@ import {
 import { LOBBY_TASKS, type LobbyIntent } from "@/lib/lobbyLink";
 import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
 import { setOsOpen } from "@/lib/osChrome";
+import { isLibraried } from "@/data/library-ia";
 import {
   LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
 } from "./rails";
@@ -286,6 +287,14 @@ export default function LobbyOverlay({
     } catch { /* cross-origin or blocked — the outer Esc still works */ }
   }, [onClose]);
 
+  /**
+   * The framed page is one the site classifies as Library/archive. Opened directly
+   * it carries a "Reference / archive" strip; framed with ?embed=1 that strip is
+   * hidden with the rest of the site chrome, so the OS was quietly presenting an
+   * archive page as a current surface. Same classifier the Library uses, so the two
+   * can never disagree.
+   */
+  const paneIsArchive = !!framePath && isLibraried(framePath.split("?")[0]);
   /** An auth-gated destination whose frame has bounced to the sign-in form. */
   const bouncedToLogin = tab.auth === "required" && /^\/login(\/|$|\?)/.test(framePath);
   const localPane = !override && tab.kind === "local";
@@ -416,6 +425,14 @@ export default function LobbyOverlay({
               <span className={`hidden truncate md:inline ${TYPE.fine}`}>
                 {override ? "Opened in this pane — navigation stays inside the OS." : tab.blurb}
               </span>
+              {paneIsArchive && (
+                <span
+                  className="shrink-0 rounded-full border border-slate-900/15 bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-600"
+                  title="This page is kept as reference in the Library. Opened outside the OS it carries the same mark."
+                >
+                  reference · archive
+                </span>
+              )}
               {panePath && (
                 <span
                   className="ml-auto shrink-0 rounded font-mono text-[11px] text-slate-500"

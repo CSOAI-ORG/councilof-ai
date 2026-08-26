@@ -1,5 +1,6 @@
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
 import { LOBBY_TABS, routesIn, type LobbyTab } from "./tabs";
+import { isLibraried } from "@/data/library-ia";
 import LivingBoard from "./LivingBoard";
 
 /**
@@ -26,6 +27,7 @@ function Tile({
   gold,
   native,
   auth,
+  archive,
   onClick,
 }: {
   label: string;
@@ -36,6 +38,8 @@ function Tile({
   native?: boolean;
   /** The framed route is behind RequireAuth — the tile says so before the click. */
   auth?: boolean;
+  /** The site classifies this route as Library/archive (library-ia.isLibraried). */
+  archive?: boolean;
   onClick: () => void;
 }) {
   return (
@@ -64,6 +68,16 @@ function Tile({
       {auth && (
         <span className="mt-3 rounded-full border border-slate-900/15 bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-700">
           needs an account
+        </span>
+      )}
+      {/* The page carries a "Reference / archive" strip when you open it directly, and
+          the OS frames it with ?embed=1, which hides that strip. The desktop was
+          therefore presenting an archive page as a current surface. The classifier is
+          the site's own (library-ia.isLibraried), so the OS cannot disagree with the
+          Library about what is archived. */}
+      {archive && (
+        <span className="mt-3 rounded-full border border-slate-900/15 bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-600">
+          reference · archive
         </span>
       )}
     </button>
@@ -124,7 +138,13 @@ export default function LobbyHome({
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {routesIn("product").map((x) => (
           <li key={x.path}>
-            <Tile label={x.label} blurb={x.blurb} path={x.path} onClick={() => onOpenRoute(x.path, x.label)} />
+            <Tile
+              label={x.label}
+              blurb={x.blurb}
+              path={x.path}
+              archive={isLibraried(x.path)}
+              onClick={() => onOpenRoute(x.path, x.label)}
+            />
           </li>
         ))}
       </ul>
@@ -133,7 +153,13 @@ export default function LobbyHome({
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {routesIn("audience").map((x) => (
           <li key={x.path}>
-            <Tile label={x.label} blurb={x.blurb} path={x.path} onClick={() => onOpenRoute(x.path, x.label)} />
+            <Tile
+              label={x.label}
+              blurb={x.blurb}
+              path={x.path}
+              archive={isLibraried(x.path)}
+              onClick={() => onOpenRoute(x.path, x.label)}
+            />
           </li>
         ))}
       </ul>
@@ -142,7 +168,13 @@ export default function LobbyHome({
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {routesIn("record").map((x) => (
           <li key={x.path}>
-            <Tile label={x.label} blurb={x.blurb} path={x.path} onClick={() => onOpenRoute(x.path, x.label)} />
+            <Tile
+              label={x.label}
+              blurb={x.blurb}
+              path={x.path}
+              archive={isLibraried(x.path)}
+              onClick={() => onOpenRoute(x.path, x.label)}
+            />
           </li>
         ))}
       </ul>
@@ -151,7 +183,13 @@ export default function LobbyHome({
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {routesIn("analyst").map((x) => (
           <li key={x.path}>
-            <Tile label={x.label} blurb={x.blurb} path={x.path} onClick={() => onOpenRoute(x.path, x.label)} />
+            <Tile
+              label={x.label}
+              blurb={x.blurb}
+              path={x.path}
+              archive={isLibraried(x.path)}
+              onClick={() => onOpenRoute(x.path, x.label)}
+            />
           </li>
         ))}
       </ul>
@@ -160,7 +198,13 @@ export default function LobbyHome({
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {routesIn("receipts").map((x) => (
           <li key={x.path}>
-            <Tile label={x.label} blurb={x.blurb} path={x.path} onClick={() => onOpenRoute(x.path, x.label)} />
+            <Tile
+              label={x.label}
+              blurb={x.blurb}
+              path={x.path}
+              archive={isLibraried(x.path)}
+              onClick={() => onOpenRoute(x.path, x.label)}
+            />
           </li>
         ))}
       </ul>

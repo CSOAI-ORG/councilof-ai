@@ -42,6 +42,12 @@ export const PRIMARY_PATHS = new Set<string>([
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
   // Council OS
   "/os", "/workbench", "/start",
+  // The two remaining Council OS RAIL TABS. A permanent destination in the OS rail
+  // cannot also be an archive page: the OS presents it as live, and the embed hides
+  // the "Reference / archive" strip, so the reader was shown a current surface while
+  // the site classified it as archived. Verified 2026-08-26 by loading
+  // /readiness-assessment un-embedded and finding that strip.
+  "/readiness-assessment", "/dashboard",
   // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
   // registered here so it can never ship flagged "archived".
   "/report",
