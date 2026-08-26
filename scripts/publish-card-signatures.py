@@ -47,7 +47,12 @@ CHECK_ONLY = "--check" in sys.argv
 # published card stops verifying. It is stated here and in HOW-TO-VERIFY.md, and it is the
 # form the cards were actually signed under (confirmed against all 150: id == sha256 of this).
 def canonical(body: dict) -> bytes:
-    return json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    # ensure_ascii=True is stated EXPLICITLY even though it is Python's default. The cards
+    # were signed under it, and a verifier in another language does not share that default:
+    # JavaScript's JSON.stringify emits non-ASCII characters raw, so it would produce
+    # different bytes — and therefore a failed verification — for any card containing one.
+    # A canonicalisation rule that relies on one language's defaults is not a published rule.
+    return json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
 
 
 def load(p: Path):
@@ -121,7 +126,7 @@ for cid, src in verified.items():
             {
                 "id": cid,
                 "alg": "Ed25519",
-                "preimage": "json.dumps(body, sort_keys=True, separators=(',',':')).encode('utf-8')",
+                "preimage": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
                 "pubkey": src["pubkey"],
                 "signature": src["signature"],
                 "body": src["body"],
@@ -144,7 +149,7 @@ for e in idx:
 if isinstance(idx_blob, dict):
     idx_blob["verification"] = {
         "alg": "Ed25519",
-        "preimage": "json.dumps(body, sort_keys=True, separators=(',',':')).encode('utf-8')",
+        "preimage": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
         "id_rule": "id == sha256(preimage).hexdigest()",
         "howto": "/signed/HOW-TO-VERIFY.md",
     }
@@ -164,7 +169,7 @@ against the published bytes.
 ## The rule
 
     id        == sha256(preimage).hexdigest()
-    preimage  == json.dumps(body, sort_keys=True, separators=(',',':')).encode('utf-8')
+    preimage  == json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')
     signature == Ed25519(preimage) under the card's `pubkey`
 
 ## Check one card
@@ -175,7 +180,7 @@ python3 - <<'PY'
 import json, hashlib
 from nacl.signing import VerifyKey
 c = json.load(open('card.json'))
-pre = json.dumps(c['body'], sort_keys=True, separators=(',',':')).encode()
+pre = json.dumps(c['body'], sort_keys=True, separators=(',',':'), ensure_ascii=True).encode()
 assert hashlib.sha256(pre).hexdigest() == c['id'], 'id does not match its body'
 VerifyKey(bytes.fromhex(c['pubkey'])).verify(pre, bytes.fromhex(c['signature']))
 print('VALID —', c['id'][:16], c['body'].get('axis'))

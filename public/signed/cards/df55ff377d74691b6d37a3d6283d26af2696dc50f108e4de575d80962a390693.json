@@ -12,7 +12,7 @@
     "verify": "https://councilof.ai/verify"
   },
   "id": "df55ff377d74691b6d37a3d6283d26af2696dc50f108e4de575d80962a390693",
-  "preimage": "json.dumps(body, sort_keys=True, separators=(',',':')).encode('utf-8')",
+  "preimage": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
   "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
   "signature": "02af1892eae8252c03607df84e4cdb75756141556a9f4385d16948b1d17949eebf700b8b37849bee2f7fff3d4a8fc862d58d227c8428d8463bd453fd29af6f05"
 }

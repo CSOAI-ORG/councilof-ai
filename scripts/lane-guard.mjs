@@ -78,6 +78,38 @@ function gitQuiet(args, cwd) {
   }
 }
 
+// Git exports GIT_DIR / GIT_INDEX_FILE / GIT_WORK_TREE to its hooks, and a child
+// `git -C <other-repo>` INHERITS them — so probing the main checkout from a hook
+// running inside a lane worktree silently reports the LANE's branch and index.
+// (That misfire is how this function came to exist.) Scrub them for any probe
+// that deliberately targets a different working tree.
+const GIT_ENV_KEYS = [
+  "GIT_DIR",
+  "GIT_WORK_TREE",
+  "GIT_INDEX_FILE",
+  "GIT_COMMON_DIR",
+  "GIT_OBJECT_DIRECTORY",
+  "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+  "GIT_PREFIX",
+  "GIT_INDEX_VERSION",
+];
+
+function gitElsewhere(args, cwd) {
+  const env = { ...process.env };
+  for (const k of GIT_ENV_KEYS) delete env[k];
+  try {
+    return execFileSync("git", args, {
+      cwd,
+      env,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch {
+    return null;
+  }
+}
+
 // git quotes paths containing odd bytes as "..." with C escapes. Undo that so a
 // violation always prints the path a human can act on.
 function unquotePath(p) {
@@ -225,6 +257,8 @@ function repoRoot(cwd) {
 
 /** The main checkout is the one whose .git is a directory, not a `gitdir:` file. */
 function mainCheckoutPath(cwd) {
+  // Not gitElsewhere: here we WANT the inherited GIT_DIR, because it is how a
+  // hook running in a lane worktree finds the shared repo it belongs to.
   const common = gitQuiet(["rev-parse", "--path-format=absolute", "--git-common-dir"], cwd);
   if (!common) return null;
   const gitCommon = common.trim();
@@ -251,8 +285,8 @@ function readLaneClaims(root) {
 function collectCheckoutState(cwd) {
   const main = mainCheckoutPath(cwd);
   if (!main || !fs.existsSync(main)) return null;
-  const branch = (gitQuiet(["rev-parse", "--abbrev-ref", "HEAD"], main) || "").trim();
-  const status = (gitQuiet(["status", "--porcelain"], main) || "").trim();
+  const branch = (gitElsewhere(["rev-parse", "--abbrev-ref", "HEAD"], main) || "").trim();
+  const status = (gitElsewhere(["status", "--porcelain"], main) || "").trim();
   const dirty = status ? status.split("\n") : [];
   const claim = readLaneClaims(main).find((c) => c.branch === branch && c.status !== "released");
   return {
@@ -260,7 +294,8 @@ function collectCheckoutState(cwd) {
     root: main,
     branch,
     dirtyCount: dirty.length,
-    dirtySample: dirty.map((l) => l.slice(3)),
+    // porcelain v1 is "XY path"; strip exactly the two status columns and the space.
+    dirtySample: dirty.map((l) => l.replace(/^..\s/, "")),
     claimedBy: claim ? claim.lane : null,
   };
 }
@@ -430,6 +465,42 @@ function selftest() {
     false,
     ruleMainCheckoutOnMaster({ isMainCheckout: false, root: "/wt", branch: "lane/y", dirtyCount: 9, dirtySample: [] })
   );
+
+  // REGRESSION: git exports GIT_DIR / GIT_INDEX_FILE to hooks, and a child
+  // `git -C <main>` inherits them. The first version of this guard therefore
+  // read the LANE's branch and index while claiming to describe the main
+  // checkout, and failed every commit made from inside a worktree with
+  // "main checkout is on lane/hook-proof2". Drive the real collector through a
+  // real linked worktree with those variables set, exactly as a hook sees them.
+  {
+    const r = tmpRepo("envleak");
+    fs.writeFileSync(path.join(r, "a.txt"), "1\n");
+    git(["add", "-A", "-f"], r);
+    git(["commit", "-qm", "base"], r);
+    const wt = path.join(r, "..", `${path.basename(r)}-lane`);
+    git(["worktree", "add", "-q", "-b", "lane/x", wt], r);
+    fs.writeFileSync(path.join(r, "dirty.txt"), "main is dirty\n");
+
+    const saved = { GIT_DIR: process.env.GIT_DIR, GIT_INDEX_FILE: process.env.GIT_INDEX_FILE };
+    process.env.GIT_DIR = path.join(r, ".git", "worktrees", path.basename(wt));
+    process.env.GIT_INDEX_FILE = path.join(process.env.GIT_DIR, "index");
+
+    const state = collectCheckoutState(wt);
+    const leaked = state?.branch !== "master";
+    if (leaked) fail++;
+    else pass++;
+    console.log(
+      `  ${leaked ? "FAIL" : "ok  "}  must PASS   main-checkout probe ignores the hook's inherited GIT_DIR` +
+        (leaked ? `  -> reported branch '${state?.branch}' instead of 'master'` : "")
+    );
+
+    for (const [k, v] of Object.entries(saved)) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+    fs.rmSync(wt, { recursive: true, force: true });
+    fs.rmSync(r, { recursive: true, force: true });
+  }
 
   console.log(`\n  ${pass} passed, ${fail} failed`);
   if (fail) {

@@ -10,7 +10,7 @@ against the published bytes.
 ## The rule
 
     id        == sha256(preimage).hexdigest()
-    preimage  == json.dumps(body, sort_keys=True, separators=(',',':')).encode('utf-8')
+    preimage  == json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')
     signature == Ed25519(preimage) under the card's `pubkey`
 
 ## Check one card
@@ -21,7 +21,7 @@ python3 - <<'PY'
 import json, hashlib
 from nacl.signing import VerifyKey
 c = json.load(open('card.json'))
-pre = json.dumps(c['body'], sort_keys=True, separators=(',',':')).encode()
+pre = json.dumps(c['body'], sort_keys=True, separators=(',',':'), ensure_ascii=True).encode()
 assert hashlib.sha256(pre).hexdigest() == c['id'], 'id does not match its body'
 VerifyKey(bytes.fromhex(c['pubkey'])).verify(pre, bytes.fromhex(c['signature']))
 print('VALID —', c['id'][:16], c['body'].get('axis'))
