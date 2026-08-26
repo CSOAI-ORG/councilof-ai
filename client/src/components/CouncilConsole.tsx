@@ -185,8 +185,17 @@ export default function CouncilConsole() {
                   {m.axes.map((a: any) => (
                     <div key={a.axis} className="flex items-center justify-between border-t border-gray-100 py-1 text-[11px]">
                       <span className="font-semibold text-gray-800">{a.axis}</span>
-                      <span className="font-mono text-gray-600">{a.accuracy_is ? "≥" : ""}{(a.accuracy * 100).toFixed(0)}%</span>
-                      <span className={"rounded-full px-1.5 text-[9px] font-bold " + (a.separation === "SEPARATED" ? "bg-emerald-100 text-emerald-700" : a.separation === "TIE" ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-500")}>{a.separation}</span>
+                      {/* An axis with no accuracy prints the published status word, never
+                          `undefined * 100` (NaN%) and never a 0 that would assert a
+                          measurement of zero. Same rule as the board surfaces. */}
+                      <span className="font-mono text-gray-600">
+                        {typeof a.accuracy === "number" && Number.isFinite(a.accuracy)
+                          ? `${a.accuracy_is ? "≥" : ""}${(a.accuracy * 100).toFixed(0)}%`
+                          : a.kind === "deterministic-facts"
+                            ? "facts — no leader"
+                            : "unmeasured"}
+                      </span>
+                      <span className={"rounded-full px-1.5 text-[9px] font-bold " + (a.separation === "SEPARATED" ? "bg-emerald-100 text-emerald-700" : a.separation === "TIE" ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-500")}>{a.separation ?? (a.kind === "deterministic-facts" ? "N/A — no fleet" : "UNMEASURED")}</span>
                     </div>
                   ))}
                   <button onClick={() => navigate("/gspc-scoreboard")} className={CHIP_CLS + " mt-2"}>Open the full board →</button>

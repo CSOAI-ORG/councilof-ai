@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { DeckPage } from "@/components/scrollworld";
+import { accuracyCell, separationNote } from "@/lib/axisCells";
+import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import {
   PRICING_RISK_HERO,
   PRICING_RISK_SLIDES,
@@ -23,15 +25,31 @@ import {
  * the source of truth.
  */
 
+/**
+ * The board row as /api/gspc actually serves it — mirrors `AxisScore` in
+ * functions/api/_gspc_types.ts, where accuracy / leader / separation are
+ * OPTIONAL. They were declared REQUIRED here, so `(a.accuracy * 100).toFixed(1)`
+ * type-checked and printed `NaN%` for every axis that honestly carries no
+ * accuracy. An underwriter reading a board that promises recomputable numbers
+ * was being shown broken arithmetic; the correct renders are the published
+ * status word `unmeasured`, or — for a deterministic-facts axis — what it does
+ * have. Never `0%`: that would assert a measurement of zero.
+ */
 interface Axis {
   axis: string;
   bench: string;
   n: number;
-  accuracy: number;
-  leader: string;
-  separation: "SEPARATED" | "TIE" | "UNTESTED";
+  n_unit?: string;
+  family?: "gspc" | "financial";
+  kind?: "model-comparison" | "deterministic-facts" | "declared-slot";
+  accuracy?: number;
+  accuracy_is?: string;
+  leader?: string;
+  separation?: "SEPARATED" | "TIE" | "UNTESTED";
   separation_p?: number;
   interval?: [number, number];
+  coverage?: string;
+  evidence_url?: string;
   status: string;
 }
 
@@ -279,18 +297,43 @@ function InsurersEvidencePack() {
                 </tr>
               </thead>
               <tbody>
-                {(board.axes as Axis[]).map((a) => (
-                  <tr key={a.axis} className="border-b last:border-0">
-                    <td className="p-3 font-semibold text-gray-900">{a.axis}</td>
-                    <td className="p-3 font-mono">{a.n}</td>
-                    <td className="p-3 font-mono">{(a.accuracy * 100).toFixed(1)}%</td>
-                    <td className="p-3">
-                      <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
-                        {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {(board.axes as Axis[]).map((a) => {
+                  const acc = accuracyCell(a);
+                  const sepNote = separationNote(a);
+                  return (
+                    <tr key={a.axis} className="border-b last:border-0">
+                      <td className="p-3 font-semibold text-gray-900">{a.axis}</td>
+                      <td className="p-3 font-mono">
+                        {a.n}
+                        {a.n_unit && <span className="ml-1 text-[10px] text-gray-400">{a.n_unit}</span>}
+                      </td>
+                      <td className="p-3 font-mono" data-testid={`accuracy-${a.axis}`}>
+                        {acc.state === "figure" && <>{acc.prefix}{acc.text}</>}
+                        {acc.state === "facts" && (
+                          <span title={acc.title} className="text-gray-600">
+                            {acc.text}
+                            {acc.detail && (
+                              <span className="ml-1 block font-sans text-[11px] text-gray-500">{acc.detail}</span>
+                            )}
+                          </span>
+                        )}
+                        {acc.state === "unmeasured" && (
+                          <span title={acc.title} className="font-sans text-gray-500">{acc.text}</span>
+                        )}
+                      </td>
+                      <td className="p-3">
+                        {a.separation ? (
+                          <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
+                            {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
+                          </span>
+                        ) : (
+                          <StatusChip kind={chipFor(a.status, a.separation, a.kind)} />
+                        )}
+                        {sepNote && <span className="ml-2 text-[11px] text-gray-500">{sepNote}</span>}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

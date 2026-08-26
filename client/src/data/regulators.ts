@@ -23,7 +23,23 @@ export type Regime = {
   topTools: string[];          // the 7 capabilities an org needs to comply
   nextDates: { date: string; event: string }[]; // upcoming movements
   csoai: string;               // how CSOAI covers it
-  hiveSlug?: string;           // link into the Framework Hive
+
+  /**
+   * Link into the Framework Hive.
+   *
+   * INVARIANT (enforced by client/src/data/regulators.test.ts): every value set
+   * here MUST resolve against HIVE in hive-frameworks.ts. Set it only when the
+   * Hive page actually exists.
+   *
+   * ABSENT MEANS "NOT IN THE HIVE YET", and the Atlas says so in words. Until
+   * 2026-08-26 five regimes — Colorado, China, UK, Canada and Singapore, i.e.
+   * every non-EU jurisdiction on the Atlas — carried a hiveSlug for a Hive page
+   * that was never written. Nothing checked, so the Atlas rendered an
+   * "Open in the Hive →" button for each and a regulator arriving from any of
+   * those five countries hit a hard 404. A link is a claim that something is
+   * there; do not make the claim without the page.
+   */
+  hiveSlug?: string;
 };
 
 export const REGIMES: Regime[] = [
@@ -150,7 +166,9 @@ export const REGIMES: Regime[] = [
       { date: "TBD", event: "Possible federal preemption discussions — status shifting" },
     ],
     csoai: "Consequential-decision inventory, algorithmic-discrimination testing, and consumer-notice + appeal workflows — reusing your NIST/EU evidence.",
-    hiveSlug: "colorado-ai-act",
+    // No hiveSlug: there is no Framework Hive page for this regime. It used to
+    // carry hiveSlug: "colorado-ai-act", which rendered an "Open in the Hive" button
+    // onto a 404. The Atlas now states the gap instead of linking to nothing.
   },
   {
     slug: "nis2", name: "NIS2 Directive", region: "European Union", authority: "National cyber authorities · ENISA",
@@ -250,7 +268,9 @@ export const REGIMES: Regime[] = [
       { date: "ongoing", event: "Cross-border AI service restrictions evolve" },
     ],
     csoai: "Filing/registration checklist, security self-assessment, and content-labelling controls mapped to the same evidence spine as EU/US.",
-    hiveSlug: "china-ai",
+    // No hiveSlug: there is no Framework Hive page for this regime. It used to
+    // carry hiveSlug: "china-ai", which rendered an "Open in the Hive" button
+    // onto a 404. The Atlas now states the gap instead of linking to nothing.
   },
   {
     slug: "uk-ai", name: "UK AI Regulation", region: "United Kingdom", authority: "DSIT · sector regulators (ICO, FCA, CMA, Ofcom)",
@@ -275,7 +295,9 @@ export const REGIMES: Regime[] = [
       { date: "TBD", event: "Statutory footing decisions for the AI Safety Institute" },
     ],
     csoai: "The five cross-sector principles as a live checklist, regulator mapping, and assurance evidence — bridged to EU/ISO so UK-first orgs stay portable.",
-    hiveSlug: "uk-ai",
+    // No hiveSlug: there is no Framework Hive page for this regime. It used to
+    // carry hiveSlug: "uk-ai", which rendered an "Open in the Hive" button
+    // onto a 404. The Atlas now states the gap instead of linking to nothing.
   },
   {
     slug: "canada-aida", name: "Canada AIDA / AI policy", region: "Canada", authority: "ISED · Office of the AI & Data Commissioner (proposed)",
@@ -300,7 +322,9 @@ export const REGIMES: Regime[] = [
       { date: "ongoing", event: "Public-sector AI directive updates" },
     ],
     csoai: "Voluntary-Code alignment now, structured so you flip to statutory obligations the moment Canada's framework lands — no rework.",
-    hiveSlug: "canada-aida",
+    // No hiveSlug: there is no Framework Hive page for this regime. It used to
+    // carry hiveSlug: "canada-aida", which rendered an "Open in the Hive" button
+    // onto a 404. The Atlas now states the gap instead of linking to nothing.
   },
   {
     slug: "singapore-ai", name: "Singapore Model AI Governance", region: "Singapore", authority: "IMDA · PDPC",
@@ -325,7 +349,9 @@ export const REGIMES: Regime[] = [
       { date: "ongoing", event: "Public-sector AI adoption playbooks" },
     ],
     csoai: "Model Framework mapping + AI Verify-style testing evidence, bridged to ISO 42001 so a Singapore deployment ports globally.",
-    hiveSlug: "singapore-ai",
+    // No hiveSlug: there is no Framework Hive page for this regime. It used to
+    // carry hiveSlug: "singapore-ai", which rendered an "Open in the Hive" button
+    // onto a 404. The Atlas now states the gap instead of linking to nothing.
   },
 ];
 

@@ -183,7 +183,13 @@ export default function LiveLeaderboard({
 
 function Row({ a }: { a: GspcAxis }) {
   const measured = hasFigure(a);
-  const chip = chipFor(a.status, a.separation);
+  // `kind` distinguishes an axis with no run (UNMEASURED) from one that IS
+  // measured but by deterministic facts, which have no leader and so no
+  // accuracy. Without it, provenance-controls — a signed mainnet run over 6
+  // issuer accounts — rendered as UNMEASURED on this table.
+  const kind = typeof a.kind === "string" ? a.kind : undefined;
+  const chip = chipFor(a.status, a.separation, kind);
+  const facts = kind === "deterministic-facts";
 
   return (
     <tr className="border-b last:border-0 align-middle hover:bg-emerald-50/30">
@@ -204,6 +210,15 @@ function Row({ a }: { a: GspcAxis }) {
               >
                 lower bound
               </span>
+            )}
+          </span>
+        ) : facts ? (
+          // Measured, but not by a model comparison: render what it HAS (its
+          // coverage over its own declared universe), never an empty percentage.
+          <span className="text-xs text-gray-600">
+            no leader accuracy
+            {typeof a.coverage === "string" && a.coverage && (
+              <span className="mt-0.5 block text-[11px] text-gray-500">{a.coverage}</span>
             )}
           </span>
         ) : (

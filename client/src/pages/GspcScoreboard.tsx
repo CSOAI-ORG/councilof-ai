@@ -4,6 +4,8 @@ import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
 import { BOARD_COUNT_OBSERVED, boardCountFromPayload } from "@/lib/boardCount";
+import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
+import StatusChip, { chipFor } from "@/components/board/StatusChip";
 
 /**
  * /gspc-scoreboard — the live board, honestly displayed (NEXT-100 #2).
@@ -20,15 +22,31 @@ import { BOARD_COUNT_OBSERVED, boardCountFromPayload } from "@/lib/boardCount";
  * "statistically indistinguishable" — never as a ranking.
  */
 
+/**
+ * The board row as /api/gspc actually serves it.
+ *
+ * accuracy / leader / separation are OPTIONAL and must stay optional — they
+ * mirror `AxisScore` in functions/api/_gspc_types.ts. Declaring them required
+ * here (which this file used to do) is what let `(a.accuracy * 100).toFixed(1)`
+ * type-check and then print `NaN%` for the 8 financial/domain axes, which carry
+ * no accuracy at all. Absence is honest absence; it is never a zero.
+ */
 interface Axis {
   axis: string;
   bench: string;
   n: number;
-  accuracy: number;
-  leader: string;
-  separation: "SEPARATED" | "TIE" | "UNTESTED";
+  n_unit?: string;
+  family?: "gspc" | "financial";
+  kind?: "model-comparison" | "deterministic-facts" | "declared-slot";
+  accuracy?: number;
+  accuracy_is?: string;
+  leader?: string;
+  separation?: "SEPARATED" | "TIE" | "UNTESTED";
   separation_p?: number;
   interval?: [number, number];
+  coverage?: string;
+  coverage_note?: string;
+  evidence_url?: string;
   status: string;
 }
 
@@ -209,11 +227,15 @@ const AXIS_ALIAS: Record<string, string> = {
 };
 
 // The financial/domain axis IDS (a routing set, not a count — the count is
-// derived from the board and never typed). These are NOT on the
-// behavioural /api/gspc board — they live in /interop/financial-axes.json with
-// their own three-state grammar. When /gspc/<financial-axis> is requested we
-// render a deep-dive from that JSON (real status, never an invented number)
-// instead of the honest "no axis on the board" note.
+// derived from the board and never typed).
+//
+// CORRECTED 2026-08-26: this comment used to say these axes are NOT on the
+// /api/gspc board. That stopped being true when the ADR-001 sweep put all 8 into
+// the payload, and the stale assumption is exactly why the deep-dive below
+// rendered NaN% — it fetched the richer financial JSON while ALSO matching the
+// axis in `data.axes` and printing an accuracy field that does not exist there.
+// They are now on the board AND have their own registry entry; this set routes
+// /gspc/<financial-axis> to the richer deep-dive from /interop/financial-axes.json.
 const FIN_AXIS_IDS = new Set([
   "provenance-controls", "reserve-attestation", "regulatory-framework",
   "distribution-integrity", "custody-disclosure", "ai-economy-index",
@@ -396,20 +418,52 @@ export default function GspcScoreboard() {
           <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">Axis deep-dive</p>
             <h2 className="mt-1 text-2xl font-black text-gray-900">{focused.axis}</h2>
-            <p className="mt-2 text-sm text-gray-700">
-              Bench <strong>{focused.bench}</strong> · n=<span className="font-mono">{focused.n}</span> ·
-              leader accuracy <span className="font-mono">{(focused.accuracy * 100).toFixed(1)}%</span>
-              {focused.interval && (
-                <> · 95% CI <span className="font-mono">{(focused.interval[0] * 100).toFixed(1)}–{(focused.interval[1] * 100).toFixed(1)}%</span></>
-              )} · separation{" "}
-              <span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-bold ${CHIP[focused.separation]}`}>
-                {focused.separation}
-              </span>
-            </p>
+            {(() => {
+              const acc = accuracyCell(focused);
+              return (
+                <p className="mt-2 text-sm text-gray-700">
+                  Bench <strong>{focused.bench}</strong> · n=<span className="font-mono">{focused.n}</span>
+                  {focused.n_unit && <span className="text-gray-500"> {focused.n_unit}</span>} ·{" "}
+                  {acc.state === "figure" && (
+                    <>leader accuracy <span className="font-mono">{acc.prefix}{acc.text}</span></>
+                  )}
+                  {acc.state === "facts" && (
+                    <span title={acc.title}>
+                      no leader accuracy — this axis is measured by deterministic facts, not a model
+                      comparison{acc.detail ? <> · coverage <strong>{acc.detail}</strong></> : null}
+                    </span>
+                  )}
+                  {acc.state === "unmeasured" && (
+                    <span title={acc.title}>leader accuracy <strong>{acc.text}</strong></span>
+                  )}
+                  {focused.interval && (
+                    <> · 95% CI <span className="font-mono">{(focused.interval[0] * 100).toFixed(1)}–{(focused.interval[1] * 100).toFixed(1)}%</span></>
+                  )} · separation{" "}
+                  {focused.separation ? (
+                    <span className={`inline-block rounded-full border px-2 py-0.5 text-xs font-bold ${CHIP[focused.separation]}`}>
+                      {focused.separation}
+                    </span>
+                  ) : (
+                    <StatusChip kind={chipFor(focused.status, focused.separation, focused.kind)} />
+                  )}
+                </p>
+              );
+            })()}
             <p className="mt-3 flex flex-wrap gap-4 text-sm">
-              <a className="font-semibold text-emerald-700 underline" href={`https://huggingface.co/datasets/csoai/gspc-${rawAxis && AXIS_ALIAS[rawAxis] ? rawAxis : Object.entries(AXIS_ALIAS).find(([, v]) => v === focused.axis)?.[0] ?? focused.axis}`}>
-                Frozen gold bank (Hugging Face)
-              </a>
+              {/* Only an axis WITH a frozen bank gets the bank link. A financial axis has
+                  no HuggingFace bank; minting the URL anyway would publish a
+                  resolvable-looking link to a 404. It carries evidence_url instead. */}
+              {(focused as any).dataset_url || (focused as any).dataset ? (
+                <a className="font-semibold text-emerald-700 underline" href={(focused as any).dataset_url ?? `https://huggingface.co/datasets/csoai/gspc-${rawAxis && AXIS_ALIAS[rawAxis] ? rawAxis : Object.entries(AXIS_ALIAS).find(([, v]) => v === focused.axis)?.[0] ?? focused.axis}`}>
+                  Frozen gold bank (Hugging Face)
+                </a>
+              ) : focused.evidence_url ? (
+                <a className="font-semibold text-emerald-700 underline" href={focused.evidence_url}>
+                  Signed run (evidence)
+                </a>
+              ) : (
+                <span className="text-gray-500">No bank and no signed run — nothing to link.</span>
+              )}
               <Link className="font-semibold text-emerald-700 underline" href="/gspc-verify">Verify the signed chain</Link>
               <a className="font-semibold text-emerald-700 underline" href="/api/gspc">Raw JSON (GET /api/gspc)</a>
               <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">Full board</Link>
@@ -431,34 +485,60 @@ export default function GspcScoreboard() {
                 </tr>
               </thead>
               <tbody>
-                {(data.axes as Axis[]).map((a) => (
-                  <tr key={a.axis} className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
-                    <td className="p-3 font-semibold text-gray-900">
-                      <Link href={`/gspc/${a.axis}`} className="hover:underline">{a.axis}</Link>
-                    </td>
-                    <td className="p-3 text-gray-600">{a.bench}</td>
-                    <td className="p-3 font-mono">{a.n}</td>
-                    <td className="p-3 font-mono">
-                      {(a as any).accuracy_is ? "≥" : ""}{(a.accuracy * 100).toFixed(1)}%
-                      {(a as any).accuracy_is && (
-                        <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400" title={(a as any).accuracy_is}>
-                          lower bound
-                        </span>
-                      )}
-                    </td>
-                    <td className="p-3 font-mono text-gray-600">
-                      {a.interval ? `${(a.interval[0] * 100).toFixed(1)}–${(a.interval[1] * 100).toFixed(1)}%` : "withheld (n not independent)"}
-                    </td>
-                    <td className="p-3">
-                      <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
-                        {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
-                      </span>
-                      {a.separation_p !== undefined && (
-                        <span className="ml-2 font-mono text-[11px] text-gray-400">p={a.separation_p}</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {(data.axes as Axis[]).map((a) => {
+                  const acc = accuracyCell(a);
+                  const ci = intervalCell(a);
+                  const sepNote = separationNote(a);
+                  return (
+                    <tr key={a.axis} className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
+                      <td className="p-3 font-semibold text-gray-900">
+                        <Link href={`/gspc/${a.axis}`} className="hover:underline">{a.axis}</Link>
+                      </td>
+                      <td className="p-3 text-gray-600">{a.bench}</td>
+                      <td className="p-3 font-mono">
+                        {a.n}
+                        {a.n_unit && <span className="ml-1 text-[10px] text-gray-400">{a.n_unit}</span>}
+                      </td>
+                      <td className="p-3 font-mono" data-testid={`accuracy-${a.axis}`}>
+                        {acc.state === "figure" && (
+                          <>
+                            {acc.prefix}{acc.text}
+                            {acc.lowerBound && (
+                              <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400" title={acc.lowerBound}>
+                                lower bound
+                              </span>
+                            )}
+                          </>
+                        )}
+                        {acc.state === "facts" && (
+                          <span title={acc.title} className="text-gray-600">
+                            {acc.text}
+                            {acc.detail && (
+                              <span className="ml-1 block font-sans text-[11px] text-gray-500">{acc.detail}</span>
+                            )}
+                          </span>
+                        )}
+                        {acc.state === "unmeasured" && (
+                          <span title={acc.title} className="font-sans text-gray-500">{acc.text}</span>
+                        )}
+                      </td>
+                      <td className="p-3 font-mono text-gray-600" title={ci.title}>{ci.text}</td>
+                      <td className="p-3">
+                        {a.separation ? (
+                          <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
+                            {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
+                          </span>
+                        ) : (
+                          <StatusChip kind={chipFor(a.status, a.separation, a.kind)} />
+                        )}
+                        {sepNote && <span className="ml-2 text-[11px] text-gray-500">{sepNote}</span>}
+                        {a.separation_p !== undefined && (
+                          <span className="ml-2 font-mono text-[11px] text-gray-400">p={a.separation_p}</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
