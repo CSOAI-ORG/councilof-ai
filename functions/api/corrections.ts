@@ -31,6 +31,30 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0826-03",
+      date: "2026-08-26",
+      what_was_wrong: "Our own published MCP fleet was silently paywalled and self-scoring. A monetization layer injected into 318 of 363 vendored servers capped the ENTIRE fleet at 10 anonymous tool calls per day from one shared counter; past that, every tool returned a purchase link instead of a result. The injected code was spliced mid-function in 49 files, leaving original function bodies unreachable (256 undefined names). Five scorecard checks awarded points for carrying a purchase link — the system scored itself higher for being paywalled. The paywall also masked quality: a first probe found 1 stub because refusals and stubs were indistinguishable.",
+      how_caught: "Building a remote MCP server for other AI platforms; the first real tools/call returned a purchase upsell instead of a result. Verified twice independently by direct grep and by probing all 338 servers with real MCP sessions.",
+      fix: "Monetization layer removed fleet-wide: 318 -> 0 servers carrying a purchase link, 0 price strings, 0 upsell symbols. Capability preserved and proven, not assumed: all 338 servers re-probed with real initialize/tools/list/tools/call — handshakes 336/338 unchanged, 1869 tools unchanged, 0 broken; undefined names fell 256 -> 16 because removing the injected code repaired what it had broken. Honest stub register published (13 fully stubbed, 10 partial, 2 dead) determined by CALLING every tool, not grepping. scripts/no-paywall-guard.mjs added with a --selftest so the layer cannot return; it caught 48 residuals we had missed.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-02",
+      date: "2026-08-26",
+      what_was_wrong: "Five sector pages asserted, in present tense, that our measurement 'is recognised under mutual recognition agreements with' CISA, NCSC, ANSSI, BSI, BEREC, ENISA, national transport authorities and others — named public bodies, implying an endorsement we do not hold. It shipped in the deployed bundle. Separately, /layer0 served a retracted fault-tolerance claim as a live capability, contradicting our own DR-0007 retraction (measured effective independence 1.21 of 3).",
+      how_caught: "Claims-substantiation audit of the prerendered output, prompted by the FTC's own recommended exercise: inventory every public claim and map it to evidence.",
+      fix: "Replaced with: we crosswalk our measurement output to those compliance pathways, and hold no mutual-recognition agreement with, and are not endorsed or accredited by, any of these bodies. The retracted claim removed from /layer0, /poc-showcase and /competitors. A machine-readable claims register now publishes every claim with its evidence link and a live/planned/devnet/retired status.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-01",
+      date: "2026-08-26",
+      what_was_wrong: "Our own prerender verification could not observe failure. prerender-report.json records a failed route in a field named 'err', but every check in the repository read 'errored' — a field that has never existed. A run in which the browser died on 515 of 581 routes reported '0 errored' and looked clean.",
+      how_caught: "A downstream gate disagreed: brand-gate scanned 71 pages when it should have scanned 603. The upstream report was lying and the layered gate caught it.",
+      fix: "scripts/check-prerender.mjs reads the real fields AND cross-checks the report against the HTML actually written to disk, because a report is a claim and the files are the evidence. It fails loudly on the exact run that had been called clean.",
+      status: "FIXED",
+    },
+    {
       id: "C-2026-0819-01",
       date: "2026-08-19",
       what_was_wrong: "Three public surfaces stated three different item counts at once (llms.txt 819, agent card 890, live API 966). The banks grew under the hardcoded numbers.",
