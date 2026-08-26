@@ -163,7 +163,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 |---|------|-------|
 | 251 | HF org `csoai` dataset index page | HF · org live ✅ (`csoai/*` datasets) |
 | 252 | Upload GSPC MEASURED snapshot (existing) | HF · ✅ existing `csoai/gspc-boards` (MEASURED boards) |
-| 253 | Upload indices UNMEASURED manifest | HF · plan ✅ fixture local |
+| 253 | Upload indices UNMEASURED manifest | HF · local fixture ✅ · upload 🔄 `docs/HF_UPLOAD_RUNBOOK.md` |
 | 254 | Upload RWA corpus REPORTED (no fake scores) | HF · ✅ existing `csoai/rwa-attest` (REPORTED corpus) |
 | 255 | Kaggle notebook: verify Ed25519 offline | `notebooks/kaggle/ed25519_offline_verify.py` · ✅ |
 | 256 | Kaggle: refuse labour MEASURED claims | `notebooks/kaggle/refuse_labour_measured.md` · ✅ |
@@ -240,9 +240,9 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 372 | Rollback plan if App truncate | ops | ✅ |
 | 373 | MCP push_files size discipline | AGENT_COORDINATION · ✅ |
 | 374 | Single-writer tip policy | AGENT_COORDINATION · ✅ |
-| 375–390 | Sixteen contact outreach (public artifacts only) | distro · ☐ template `docs/CONTACT_OUTREACH_TEMPLATE.md` |
+| 375–390 | Sixteen contact outreach (public artifacts only) | distro · template ✅ `docs/CONTACT_OUTREACH_TEMPLATE.md` · human send ☐ |
 | 391–399 | Nine quarterly freshness reviews | ops · ✅ |
-| 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta |
+| 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta · ✅ code/docs ≥80%; remainder ⛔/🔄/human |
 
 ---
 

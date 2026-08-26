@@ -7,7 +7,7 @@
   "author": "CSOAI Team",
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:server": "NODE_ENV=development tsx watch server/index.ts",
+    "dev:server": "node scripts/dev-honesty-api.mjs",
     "dev:client": "vite --config client/vite.config.ts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "node scripts/refutation-count-lint.mjs && node scripts/value-ledger-lint.mjs && node scripts/no-stripe-as-grade-lint.mjs && node scripts/aum-not-measured-lint.mjs && node scripts/jmwh-demo-only-lint.mjs && node scripts/demo-play-refuse-lint.mjs && node scripts/no-gpu-contract-churn-lint.mjs && node scripts/wilson-frozen-banks-lint.mjs && node scripts/counter-lint.mjs && node scripts/export-ecosystem-json.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/generate-route-manifest.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\"",
