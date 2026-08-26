@@ -1,7 +1,7 @@
 /**
  * GET /agent-council - 308 to the lobby.
  * Retracted 33-agent guarantee. Do not 308 onto /agent-council/.
- * Functions bump so deploy.yml publishes restored exact-150 after 313-fat tip.
+ * Functions bump so deploy.yml publishes exact-150 after locale untype of Enterprise Solutions.
  */
 export function onRequest() {
   return new Response(null, {
