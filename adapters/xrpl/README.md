@@ -11,15 +11,15 @@ All stubs under `adapters/xrpl/` are **unsigned**. Attestation ≠ tokenization 
 | BlackRock BUIDL | `buidl/` | evm | clean | `0x7712c342…aa2aec` | Etherscan · #164 |
 | Franklin BENJI | `benji/` | evm | clean | `0x3DDc8494…50dc9` | FOBXX · #165 |
 | Aviva USD Liquidity | `aviva/` | xrpl | clean | **TBD** | Issuer TBD · #166 |
+| Apollo ACRED | `apollo-acred/` | evm | clean | `0x17418038…06F27B` | Securitize · matrix |
+| Archax × abrdn | `archax-abrdn/` | xrpl | clean | `rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q` | XRPL MMF · matrix |
 
 ## Matrix rows without dedicated stubs yet
 
-From `docs/RWA_CONTACT_MATRIX.md` (still REPORTED-only; adapters may land later):
+From `docs/RWA_CONTACT_MATRIX.md` (still REPORTED-only):
 
 | Instrument | Play | Why not stubbed here |
 |------------|------|----------------------|
-| Apollo ACRED | clean | EVM Securitize — cite Etherscan row in matrix |
-| Archax × abrdn | clean | XRPL issuer listed in matrix; stub optional |
 | Guggenheim / Zeconomy DCP | caution | Issuer TBD |
 | Justoken JMWH | **demo** | Demo-only — never a production MEASURED stub |
 
