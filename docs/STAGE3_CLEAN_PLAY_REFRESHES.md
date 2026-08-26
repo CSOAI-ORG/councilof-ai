@@ -32,12 +32,12 @@ Twenty-six refreshes = re-verify public artifacts and re-issue **counsel-cleared
 | 310 | BUIDL multi-chain legs | Confirm authoritative contract per chain | clean | ☐ custody+counsel |
 | 311 | East-West evidence pack | Re-sign crosswalk card after statute freeze | MEASURED | ☐ master merge |
 | 312 | GSPC board publish | Re-sign axes card after frozen bank review | MEASURED | ☐ scheduled |
-| 313 | RWA corrections ledger | Append any bad-card rows from refresh | honesty | ☐ ops |
-| 314 | Refutation ledger | Append index-claim rows if needed | honesty | ☐ ops |
+| 313 | RWA corrections ledger | Append any bad-card rows from refresh | honesty | ✅ N/A pre-refresh `docs/STAGE3_OPS_LEDGER_STATUS.md` |
+| 314 | Refutation ledger | Append index-claim rows if needed | honesty | ✅ N/A pre-refresh `docs/STAGE3_OPS_LEDGER_STATUS.md` |
 | 315 | HF `csoai/rwa-attest` sync | REPORTED corpus mirror — no fake scores | HF | ☐ write token |
 | 316 | HF labour UNMEASURED pack | Upload `datasets/labour-economy-unmeasured` | HF | ☐ #139 write token |
 | 317 | HF testnet RWA pack | Upload `datasets/rwa-testnet-unmeasured` | HF | ☐ #186 write token |
-| 318 | Contact registry schema | Bump `contact-registry.schema.json` if rows change | schema | ☐ ops |
+| 318 | Contact registry schema | Bump `contact-registry.schema.json` if rows change | schema | ✅ N/A `docs/STAGE3_OPS_LEDGER_STATUS.md` |
 | 319 | Option A powered-by | Partner-facing attestation language refresh | DESIGN | ☐ sales+counsel |
 | 320 | Stage 3 sign-off | Owner attestation that 295–319 complete + mainnet OK | meta | ⛔ owner |
 

@@ -10,7 +10,7 @@
     "dev:server": "node scripts/dev-honesty-api.mjs",
     "dev:client": "vite --config client/vite.config.ts",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "node scripts/refutation-count-lint.mjs && node scripts/value-ledger-lint.mjs && node scripts/no-stripe-as-grade-lint.mjs && node scripts/aum-not-measured-lint.mjs && node scripts/jmwh-demo-only-lint.mjs && node scripts/demo-play-refuse-lint.mjs && node scripts/no-gpu-contract-churn-lint.mjs && node scripts/wilson-frozen-banks-lint.mjs && node scripts/counter-lint.mjs && node scripts/export-ecosystem-json.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/generate-route-manifest.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\"",
+    "build:client": "node scripts/refutation-count-lint.mjs && node scripts/value-ledger-lint.mjs && node scripts/no-stripe-as-grade-lint.mjs && node scripts/aum-not-measured-lint.mjs && node scripts/jmwh-demo-only-lint.mjs && node scripts/demo-play-refuse-lint.mjs && node scripts/no-gpu-contract-churn-lint.mjs && node scripts/wilson-frozen-banks-lint.mjs && node scripts/evm-catalog-unmeasured-lint.mjs && node scripts/counter-lint.mjs && node scripts/export-ecosystem-json.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/generate-route-manifest.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\"",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "lint:counters": "node scripts/counter-lint.mjs",
     "lint:value-ledger": "node scripts/value-ledger-lint.mjs",
@@ -54,6 +54,7 @@
     "lint:demo-play": "node scripts/demo-play-refuse-lint.mjs",
     "lint:jmwh": "node scripts/jmwh-demo-only-lint.mjs",
     "lint:wilson-banks": "node scripts/wilson-frozen-banks-lint.mjs",
+    "lint:evm-catalog": "node scripts/evm-catalog-unmeasured-lint.mjs",
     "lint:no-gpu-churn": "node scripts/no-gpu-contract-churn-lint.mjs",
     "crawl:honesty": "node scripts/broken-link-crawl.mjs"
   },
