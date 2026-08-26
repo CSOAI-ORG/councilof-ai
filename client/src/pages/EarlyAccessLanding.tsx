@@ -208,9 +208,9 @@ export default function EarlyAccessLanding() {
                       </li>
                     ))}
                   </ul>
-                  <Button className={`w-full py-3 font-semibold ${index === 1 ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
+                  <a href="/start" className={`w-full py-3 font-semibold ${index === 1 ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-900'}`}>
                     Get Started
-                  </Button>
+                  </a>
                 </Card>
               </motion.div>
             ))}

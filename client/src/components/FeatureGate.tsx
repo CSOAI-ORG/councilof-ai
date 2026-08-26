@@ -51,7 +51,7 @@ export function FeatureGate({
         <CardDescription>{message}</CardDescription>
       </CardHeader>
       <CardContent className="text-center">
-        <Button onClick={() => navigate('/billing')} className="gap-2">
+        <Button onClick={() => navigate('/settings/billing')} className="gap-2">
           {tier === 'free' ? (
             <>
               <Sparkles className="h-4 w-4" />
@@ -98,7 +98,7 @@ export function UpgradePrompt({ feature, size = 'md' }: UpgradePromptProps) {
       <Button 
         size="sm" 
         variant="outline" 
-        onClick={() => navigate('/billing')}
+        onClick={() => navigate('/settings/billing')}
         className="shrink-0"
       >
         Upgrade

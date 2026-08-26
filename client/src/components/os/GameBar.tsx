@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 
 /**
  * GameBar — sit above Council chat on /os.
@@ -9,8 +10,12 @@ import { useEffect, useState } from "react";
 type Save = { xp: number; quests: string[] };
 
 const KEY = "council-os-game-v1";
-const QUESTS = [
-  { id: "ask", label: "Ask the Council one grounded question", xp: 20, href: "#council-chat" },
+const QUESTS: { id: string; label: string; xp: number; href: string; lobby?: boolean }[] = [
+  // NAV-INTEGRITY 2026-08-26: this pointed at "#council-chat", an anchor that exists
+  // nowhere in the codebase — the first quest on /os went nowhere. /os hosts no chat of
+  // its own; the chat is the Council OS lobby overlay, which is what the page's own
+  // "Enter Council OS" button opens. This quest now opens the same thing.
+  { id: "ask", label: "Ask the Council one grounded question", xp: 20, href: lobbyHref({ pane: "home" }), lobby: true },
   { id: "arena", label: "Open Council Space", xp: 15, href: "/gspc-arena" },
   { id: "verify", label: "Verify a card with no login", xp: 15, href: "/gspc-verify" },
 ];
@@ -83,8 +88,12 @@ export default function GameBar() {
             <a
               key={q.id}
               href={q.href}
-              onClick={() => {
-                if (q.id !== "ask") markQuest(q.id);
+              onClick={(e) => {
+                if (q.lobby) {
+                  e.preventDefault();
+                  openLobby({ pane: "home" });
+                }
+                markQuest(q.id);
               }}
               className={`rounded-xl border px-3 py-2 text-[12px] ${
                 done

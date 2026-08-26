@@ -314,10 +314,7 @@ export default function CookiePolicy() {
                       <p className="text-sm text-emerald-700 mb-3">
                         Use the cookie preferences button below to update your choices at any time.
                       </p>
-                      <Button variant="outline" className="border-emerald-300 text-emerald-700">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Manage Cookie Preferences
-                      </Button>
+                      <Button variant="outline" className="border-emerald-300 text-emerald-700" disabled title="This control is not wired to a backend action yet.">Cookie preferences not available yet</Button>
                     </CardContent>
                   </Card>
 

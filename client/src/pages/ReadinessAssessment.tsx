@@ -1143,24 +1143,22 @@ export default function ReadinessAssessment() {
                   Get expert guidance to strengthen your AI governance practices.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg rounded-lg font-semibold">
+                  <a href="/academy" className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg rounded-lg font-semibold">
                     <BookOpen className="w-5 h-5 mr-2" /> Start Free Training
-                  </Button>
-                  <Button
-                    variant="outline"
+                  </a>
+                  <a href="/contact"
+                   
                     className="border-white text-white hover:bg-white/10 px-8 py-6 text-lg rounded-lg font-semibold"
                   >
                     <Users className="w-5 h-5 mr-2" /> Talk to Advisory Team
-                  </Button>
+                  </a>
                 </div>
               </div>
             </div>
 
             {/* Download Report */}
             <div className="text-center">
-              <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-4 rounded-lg inline-flex items-center gap-2">
-                <Download className="w-5 h-5" /> Download PDF Report
-              </Button>
+              <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-4 rounded-lg inline-flex items-center gap-2" disabled title="This control is not wired to a backend action yet.">PDF report not available yet</Button>
             </div>
 
             {/* Navigation */}

@@ -549,10 +549,10 @@ const PartnersAdvisory: React.FC = () => {
 
                   {/* CTA */}
                   <div className="pt-4 border-t border-slate-200">
-                    <button className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                    <a href="/contact" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
                       <MessageSquare className="w-4 h-4" />
                       Schedule Consultation
-                    </button>
+                    </a>
                   </div>
                 </div>
               )}
@@ -684,7 +684,7 @@ const PartnersAdvisory: React.FC = () => {
                 ))}
               </div>
 
-              <button
+              <a href="/contact"
                 className={`w-full py-2 rounded-lg font-medium transition-colors ${
                   idx === 2
                     ? 'bg-purple-600 text-white hover:bg-purple-700'
@@ -692,7 +692,7 @@ const PartnersAdvisory: React.FC = () => {
                 }`}
               >
                 Learn More
-              </button>
+              </a>
             </div>
           ))}
         </div>
@@ -851,14 +851,14 @@ const PartnersAdvisory: React.FC = () => {
             Partner with an independent measurement body. Every claim on this page is checkable; every measurement is signed.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-semibold">
+            <a href="/contact" className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-semibold">
               <Hand className="w-5 h-5" />
               Become a Partner
-            </button>
-            <button className="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors font-semibold">
+            </a>
+            <a href="/contact" className="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors font-semibold">
               <MessageSquare className="w-5 h-5" />
               Request Advisory Services
-            </button>
+            </a>
           </div>
         </div>
       </section>

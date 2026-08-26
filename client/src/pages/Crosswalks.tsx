@@ -424,10 +424,7 @@ export default function Crosswalks() {
               <Button
                 size="lg"
                 className="bg-white text-emerald-700 hover:bg-emerald-50 px-8 font-semibold"
-              >
-                <Download className="mr-2 h-5 w-5" />
-                Download Crosswalk Matrix (PDF)
-              </Button>
+               disabled title="No file is published for this yet.">Matrix PDF not published yet</Button>
             </div>
           </div>
         </div>
@@ -864,20 +861,20 @@ export default function Crosswalks() {
             regimes. Get started with compliance assessment and training.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
+            <a href="/assess"
+             
               className="bg-white text-emerald-700 hover:bg-emerald-50 px-8 font-semibold"
             >
               <ArrowRight className="mr-2 h-5 w-5" />
               Start Compliance Assessment
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
+            </a>
+            <a href="/courses"
+             
+             
               className="border-white text-white hover:bg-white/10 px-8"
             >
               View Training Programs
-            </Button>
+            </a>
           </div>
         </div>
       </section>

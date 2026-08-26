@@ -77,7 +77,7 @@ function answer(q: string): Answer {
       headline: "This looks like a prohibited practice",
       provision: "EU AI Act Article 5",
       detail: "Article 5 practices cannot be remediated with controls or documentation — they may not be placed on the EU market at all. If that is not what you meant, rephrase what the system actually does.",
-      next: { label: "What Article 5 prohibits", href: "/article-50-explained" },
+      next: { label: "What Article 5 prohibits", href: "/blog/eu-ai-act-article-5-prohibited-practices" },
     };
   }
 
@@ -117,7 +117,7 @@ function answer(q: string): Answer {
       headline: "Not high-risk — but Article 50 applies",
       provision: "EU AI Act Article 50",
       detail: "Transparency obligations applied from 2 August 2026: people must be told they are interacting with an AI, and generated content must carry machine-readable marking. A limited grace period runs to 2 December 2026 for the marking duty only, and only for systems placed on the market before 2 August.",
-      next: { label: "What Article 50 requires", href: "/article-50-explained" },
+      next: { label: "What Article 50 requires", href: "/article-50" },
     };
   }
 

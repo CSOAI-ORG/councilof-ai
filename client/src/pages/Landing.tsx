@@ -434,7 +434,7 @@ export default function Landing() {
               <Link href="/watchdog-signup">
                 <span className="hover:text-foreground transition cursor-pointer">Careers</span>
               </Link>
-              <a href="https://github.com/optimobile/coai-dashboard" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">
+              <a href="https://github.com/CSOAI-ORG" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">
                 GitHub
               </a>
             </div>

@@ -273,18 +273,12 @@ export default function Charter() {
               <Button
                 size="lg"
                 className="bg-white text-emerald-700 hover:bg-emerald-50 px-8 font-semibold"
-              >
-                <Download className="mr-2 h-5 w-5" />
-                Download PDF (66 pages)
-              </Button>
+               disabled title="No file is published for this yet.">PDF not published yet</Button>
               <Button
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-white/10 px-8"
-              >
-                <FileText className="mr-2 h-5 w-5" />
-                Download DOCX
-              </Button>
+               disabled title="No file is published for this yet.">DOCX not published yet</Button>
             </div>
           </div>
         </div>
@@ -816,10 +810,10 @@ export default function Charter() {
 
           <div className="mt-10 text-center">
             <p className="text-gray-600 mb-4">Have more questions?</p>
-            <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
+            <a href="mailto:charter@csoai.org" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50">
               <HelpCircle className="mr-2 h-4 w-4" />
               Contact charter@csoai.org
-            </Button>
+            </a>
           </div>
         </div>
       </section>
@@ -884,14 +878,8 @@ export default function Charter() {
                 Download the complete 66-page Charter document with all 52 Articles and 13 Schedules
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8">
-                  <Download className="mr-2 h-5 w-5" />
-                  Download PDF
-                </Button>
-                <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50 px-8">
-                  <FileText className="mr-2 h-5 w-5" />
-                  Download DOCX
-                </Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8" disabled title="No file is published for this yet.">PDF not published yet</Button>
+                <Button variant="outline" className="border-emerald-300 text-emerald-700 hover:bg-emerald-50 px-8" disabled title="No file is published for this yet.">DOCX not published yet</Button>
               </div>
               <p className="text-sm text-gray-500 mt-6">
                 Effective Date: January 15, 2026, 09:00 GMT - Version 1.0 - CSOAI Limited, UK

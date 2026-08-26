@@ -188,9 +188,7 @@ export default function PDCACycles() {
                         View Details
                       </Button>
                       {cycle.status === "active" && (
-                        <Button size="sm">
-                          Continue
-                        </Button>
+                        <Button size="sm" disabled title="This control is not wired to a backend action yet.">Continue not available yet</Button>
                       )}
                     </div>
                   </div>

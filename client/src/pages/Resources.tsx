@@ -186,10 +186,7 @@ export default function Resources() {
                         <span>{guide.pages} pages • {guide.type}</span>
                         <span>Updated {guide.updated}</span>
                       </div>
-                      <Button className="w-full" variant="outline">
-                        <Download className="h-4 w-4 mr-2" />
-                        Download PDF
-                      </Button>
+                      <Button className="w-full" variant="outline" disabled title="No file is published for this yet.">PDF not published yet</Button>
                     </div>
                   </div>
                 </Card>
@@ -211,10 +208,7 @@ export default function Resources() {
                     <h3 className="font-semibold mb-2">{template.title}</h3>
                     <p className="text-sm text-muted-foreground mb-4">{template.description}</p>
                     <Badge variant="secondary" className="mb-4">{template.format}</Badge>
-                    <Button className="w-full" size="sm">
-                      <Download className="h-4 w-4 mr-2" />
-                      Download
-                    </Button>
+                    <Button className="w-full" size="sm" disabled title="No file is published for this yet.">File not published yet</Button>
                   </div>
                 </Card>
               ))}
@@ -275,8 +269,8 @@ export default function Resources() {
               Request custom resources or suggest new templates for the community.
             </p>
             <div className="flex gap-3 justify-center">
-              <Button size="lg">Request Resource</Button>
-              <Button size="lg" variant="outline">Contact Support</Button>
+              <a href="/contact">Request Resource</a>
+              <a href="/contact">Contact Support</a>
             </div>
           </div>
         </Card>
