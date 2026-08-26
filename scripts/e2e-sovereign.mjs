@@ -4,7 +4,12 @@
 import { chromium } from "playwright";
 import fs from "fs";
 
-const BASE = process.env.BASE || "https://csoai-v2-app.vercel.app";
+// RETARGETED 2026-08-26. The default pointed at a host this repo does not deploy, so a
+// local run measured somebody else's site (or, for the Vercel default, a host that has
+// been 402-dead since July). This repo deploys the Cloudflare Pages project `councilof-ai`
+// at https://councilof.ai, and nothing else. A test aimed elsewhere is not a weaker test —
+// it is a test of a different system, reporting on this one.
+const BASE = process.env.BASE || "https://councilof.ai";
 const DIR = "/tmp/e2e-shots";
 fs.mkdirSync(DIR, { recursive: true });
 const results = [];
@@ -147,3 +152,22 @@ console.log("console/page errors captured:", errs.length);
 if (errs.length) console.log(errs.slice(0, 12).map((e) => "  - " + e).join("\n"));
 console.log("screenshots:", DIR);
 await browser.close();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXIT CONTRACT (added 2026-08-26). This suite printed its tally and exited 0 no
+// matter what it found, so a run where every check failed — or where the harness
+// crashed before a single check ran — was indistinguishable from a clean pass to
+// CI, to a shell, and to a reader skimming the log. A suite that cannot report
+// failure is worse than no suite: it converts an unknown into a false assurance.
+// Both an empty run and any failed check now exit non-zero.
+// ─────────────────────────────────────────────────────────────────────────────
+if (!results.length) {
+  console.error("SOVEREIGN E2E: FAIL — zero checks ran; the harness died before measuring anything.");
+  process.exit(1);
+}
+const down = results.filter((r) => !r.ok);
+if (down.length) {
+  console.error(`SOVEREIGN E2E: FAIL — ${down.length}/${results.length} surface(s) failed: ${down.map((r) => r.name).join(", ")}`);
+  process.exit(1);
+}
+console.log("SOVEREIGN E2E: PASS — every persona-driven surface answered.");

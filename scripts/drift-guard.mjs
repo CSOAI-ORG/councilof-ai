@@ -32,21 +32,27 @@ const pass = (m) => console.log(`  ✓ ${m}`);
 const fail = (m) => { console.log(`  ✗ ${m}`); fails.push(m); };
 
 async function get(path) {
-  // Loop-safe fetch (2026-08-22): `redirect:"follow"` on the bare↔slash /verify fight
-  // throws TypeError (max-redirect) — a generic crash with no actionable body. Detect a
-  // self-referential 3xx and return a clean `loop:"true"` so the guard FAILS legibly.
-  const r = await fetch(HOST + path, { headers: { "user-agent": UA }, redirect: "manual" });
-  if (r.status >= 300 && r.status < 400 && r.headers.get("location")) {
+  // Loop-safe fetch. `redirect:"follow"` on a genuine bare↔slash fight throws TypeError
+  // (max-redirect) — a generic crash with no actionable body — so the chain is walked here
+  // and a repeat visit is reported as a clean `loop:true`.
+  //
+  // FIXED 2026-08-26: this used to call a redirect a LOOP whenever the Location merely
+  // added or removed a trailing slash. /library and /honesty answer 308 → /library/ and
+  // serve 200 there, which is correct behaviour, and the guard reported both as broken on
+  // a healthy site. A gate that goes red on a correct answer gets set to continue-on-error
+  // within a week and stops protecting anything — the same end state as a gate that cannot
+  // go red at all. A loop is a URL VISITED TWICE, and nothing else.
+  const visited = new Set();
+  let url = new URL(path, HOST).toString();
+  for (let hop = 0; hop < 8; hop++) {
+    if (visited.has(url)) return { status: 310, body: "", loop: true, location: url };
+    visited.add(url);
+    const r = await fetch(url, { headers: { "user-agent": UA }, redirect: "manual" });
     const loc = r.headers.get("location");
-    if (loc === path || loc === path + "/" || loc === path.replace(/\/$/, "")) {
-      return { status: r.status, body: "", loop: true, location: loc };
-    }
-    const target = new URL(loc, HOST).toString();
-    const final = await fetch(target, { headers: { "user-agent": UA }, redirect: "error" });
-    return { status: final.status, body: await final.text(), loop: false };
+    if (r.status >= 300 && r.status < 400 && loc) { url = new URL(loc, url).toString(); continue; }
+    return { status: r.status, body: await r.text(), loop: false };
   }
-  const body = await r.text();
-  return { status: r.status, body, loop: false };
+  return { status: 310, body: "", loop: true, location: url };
 }
 
 console.log(`DRIFT-GUARD — ${HOST} vs canon.json`);

@@ -6,7 +6,12 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 
-const SITE = process.env.SITE || "https://www.csoai.org";
+// RETARGETED 2026-08-26. The default pointed at a host this repo does not deploy, so a
+// local run measured somebody else's site (or, for the Vercel default, a host that has
+// been 402-dead since July). This repo deploys the Cloudflare Pages project `councilof-ai`
+// at https://councilof.ai, and nothing else. A test aimed elsewhere is not a weaker test —
+// it is a test of a different system, reporting on this one.
+const SITE = process.env.SITE || "https://councilof.ai";
 const BRAIN = process.env.BRAIN || "https://os.meok.ai/api";
 const R = [];
 const pass = (c, d) => R.push(`✅ ${c} — ${d}`);

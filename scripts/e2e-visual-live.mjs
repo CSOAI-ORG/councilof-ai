@@ -16,7 +16,12 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
 
-const BASE = process.env.E2E_BASE || 'https://www.csoai.org';
+// RETARGETED 2026-08-26. The default pointed at a host this repo does not deploy, so a
+// local run measured somebody else's site (or, for the Vercel default, a host that has
+// been 402-dead since July). This repo deploys the Cloudflare Pages project `councilof-ai`
+// at https://councilof.ai, and nothing else. A test aimed elsewhere is not a weaker test —
+// it is a test of a different system, reporting on this one.
+const BASE = process.env.E2E_BASE || 'https://councilof.ai';
 const OS_BASE = process.env.OS_BASE || 'https://os.meok.ai';
 const results = [];
 function log(name, pass, detail) {
@@ -131,4 +136,12 @@ console.log(`\n${passCount}/${results.length} checks passed`);
 fs.writeFileSync('e2e-visual-live-report.json', JSON.stringify({ base: BASE, osBase: OS_BASE, timestamp: new Date().toISOString(), results }, null, 2));
 console.log('Report written: e2e-visual-live-report.json');
 console.log('Screenshots written: e2e-screenshots/*.png');
-if (passCount < results.length) process.exitCode = 1;
+// A run that produced no results is not a clean run — before this, a harness that threw
+// before the first check printed "0/0 checks passed" and exited 0.
+if (!results.length) {
+  console.error("VISUAL-LIVE E2E: FAIL — zero checks ran; the harness died before measuring anything.");
+  process.exitCode = 1;
+} else if (passCount < results.length) {
+  console.error(`VISUAL-LIVE E2E: FAIL — ${results.length - passCount}/${results.length} check(s) failed.`);
+  process.exitCode = 1;
+}
