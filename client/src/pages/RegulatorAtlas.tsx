@@ -1,12 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
 import { REGIMES, type Regime } from "../data/regulators";
+import { getHive } from "../data/hive-frameworks";
 import { setMetaDescription } from "@/lib/utils";
 import { chargeSovereign } from "../lib/sovCharge";
 import AISystemNotice from "../components/AISystemNotice";
 
-// /regulators — the Regulator Atlas. Every major AI + cyber regime, its top-7
-// tools, and its next-7 movements — with the live Council assistant giving a current
-// read on any of them. The structured spine the Council assistant acts on.
+// /regulators (and /regulator-atlas) — the Regulator Atlas. Every major AI + cyber
+// regime, its top-7 tools, and its next-7 movements — with the live Council
+// assistant giving a current read on any of them.
+//
+// ── HIVE LINKS ARE RESOLVED, NOT ASSUMED (fixed 2026-08-26) ───────────────────
+// This page used to render `<a href={"/hive/" + r.hiveSlug}>` for any regime that
+// carried a hiveSlug, with nothing checking that the Hive page existed. Five of
+// them did not: Colorado, China, UK, Canada and Singapore — every non-EU
+// jurisdiction on the Atlas. A regulator arriving from any of those five
+// countries clicked "Open in the Hive →" and hit a hard 404.
+//
+// Every Hive link on this page now resolves through getHive() against the real
+// HIVE data before it is rendered, so a dead link is structurally impossible: no
+// entry, no link. Where there is no entry the card SAYS SO — a regime with no
+// crosswalk page is a stated gap, not a hidden one, and the card's own substance
+// (summary, tools, dates, coverage) is on the page regardless.
+//
+// No regulatory content was invented to close the gap. Writing five framework
+// pages from scratch is a content decision with legal weight; stating that the
+// pages do not exist yet is the honest interim, and it is what ships here.
 
 const GW = "/api";
 const STATUS: Record<string, { label: string; cls: string }> = {
@@ -20,6 +38,8 @@ const KINDS = [{ id: "all", label: "All regimes" }, { id: "ai", label: "AI gover
 
 function RegCard({ r }: { r: Regime }) {
   const [ans, setAns] = useState(""); const [busy, setBusy] = useState(false);
+  // The single place a Hive destination is decided. undefined => no page exists.
+  const hive = r.hiveSlug ? getHive(r.hiveSlug) : undefined;
   async function ask() {
     setBusy(true); setAns(""); chargeSovereign(6);
     try {
@@ -64,7 +84,19 @@ function RegCard({ r }: { r: Regime }) {
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <button onClick={ask} disabled={busy} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{busy ? "Reading…" : "Ask the Council assistant for a live read"}</button>
-        {r.hiveSlug && <a href={"/hive/" + r.hiveSlug} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Open in the Hive →</a>}
+        {/* Resolved against the real HIVE data. No entry, no link — never a link to nothing. */}
+        {hive ? (
+          <a href={"/hive/" + hive.slug} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Open in the Hive →</a>
+        ) : (
+          <span
+            title="This regime has no Framework Hive crosswalk page yet. We publish the gap rather than link to a page that does not exist."
+            className="rounded-lg border border-amber-400/30 bg-amber-400/5 px-3 py-1.5 text-xs font-semibold text-amber-100/80"
+            data-testid={`hive-gap-${r.slug}`}
+          >
+            Not in the Framework Hive yet
+          </span>
+        )}
+        <a href="/hive" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Browse the Hive →</a>
         <a href="/?lobby=home" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern a case →</a>
       </div>
       {ans && <div className="mt-3 whitespace-pre-wrap rounded-lg bg-black/30 p-3 text-[13px] text-emerald-50/90">{ans}</div>}
@@ -79,6 +111,16 @@ export default function RegulatorAtlas() {
     setMetaDescription("The Regulator Atlas: AI and cyber regulatory regimes — EU AI Act, NIS2, DORA, UK, US, TC260 and more — with the top tools and next enforcement dates for each, maintained by the Council of AI.");
   }, []);
   const list = useMemo(() => (kind === "all" ? REGIMES : REGIMES.filter((r) => r.kind === kind)), [kind]);
+
+  // Hive coverage, DERIVED by resolving each regime against the real HIVE data.
+  // Nothing here is a typed count: change the data and these numbers change with
+  // it. This is the surface that tells a regulator, before they click anything,
+  // whether their jurisdiction has a crosswalk page.
+  const coverage = useMemo(() => {
+    const covered = REGIMES.filter((r) => r.hiveSlug && getHive(r.hiveSlug));
+    const gaps = REGIMES.filter((r) => !r.hiveSlug || !getHive(r.hiveSlug));
+    return { total: REGIMES.length, covered: covered.length, gaps };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -96,6 +138,25 @@ export default function RegulatorAtlas() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-8">
+        {/* Coverage, stated up front. Every figure is derived from the regime list
+            resolved against the Hive — no count is typed on this page. */}
+        <div
+          className="mb-6 rounded-2xl border border-emerald-500/20 bg-white/[0.02] p-4 text-sm"
+          data-testid="atlas-hive-coverage"
+        >
+          <div className="font-bold text-emerald-100">
+            Framework Hive crosswalk: {coverage.covered} of {coverage.total} regimes on this Atlas have a Hive page.
+          </div>
+          {coverage.gaps.length > 0 && (
+            <p className="mt-1 text-[13px] text-emerald-100/70">
+              {coverage.gaps.length} do not yet —{" "}
+              <span className="text-amber-100/90">{coverage.gaps.map((g) => g.name).join(", ")}</span>. Those regimes are
+              on the Atlas in full (summary, tools, dates, coverage) but have no crosswalk page written, so no link is
+              offered. A stated gap, not a dead link. Everything on this page is compiled framework knowledge, not a
+              measurement — verify against the primary regulator before you rely on it.
+            </p>
+          )}
+        </div>
         <div className="grid gap-5 lg:grid-cols-2">{list.map((r) => <RegCard key={r.slug} r={r} />)}</div>
 
         <div className="mt-8 rounded-2xl border border-amber-400/25 bg-amber-400/5 p-4 text-center text-xs text-amber-100/70">

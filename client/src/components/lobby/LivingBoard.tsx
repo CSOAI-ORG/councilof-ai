@@ -125,7 +125,9 @@ function InLaneStrip({ rows }: { rows: InLaneAxis[] }) {
             <p className={`mt-1 ${TYPE.fine}`}>{r.bench || r.task}</p>
             {r.n > 0 && (
               <p className="mt-2 font-mono text-[12px] tabular-nums text-slate-700">
-                {(r.accuracy * 100).toFixed(0)} · n={r.n}
+                {typeof r.accuracy === "number" && Number.isFinite(r.accuracy)
+                  ? (r.accuracy * 100).toFixed(0)
+                  : "unmeasured"} · n={r.n}
               </p>
             )}
           </li>

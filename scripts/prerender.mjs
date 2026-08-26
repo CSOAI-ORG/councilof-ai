@@ -191,8 +191,36 @@ function discover() {
     "/blog/governance-benchmarking-is-broken-signed-fix",
     "/evidence-rail",
     "/datasets",
+    // The Regulator Atlas under BOTH its routes. /regulators is discovered only
+    // because App.tsx happens to spell it in a title map; /regulator-atlas — the
+    // path the atlas is linked and referred to by — is written as a JSX
+    // `path="/regulator-atlas"` attribute, which heuristic discovery does not
+    // match, so it had no snapshot at all and cold-loaded as a 404.
+    "/regulators", "/regulator-atlas",
   ];
   for (const p of MUST) found.add(p);
+
+  // ── /hive/:slug — every Framework Hive page, derived from the Hive data ──────
+  // The Regulator Atlas links here for each regime it covers. Until 2026-08-26
+  // these deep links were snapshotted only BY ACCIDENT: heuristic discovery found
+  // the handful that happen to appear as string literals in Ecosystem.tsx, and any
+  // Hive page not listed there had no snapshot, so the static host served an honest
+  // 404 on a link the Atlas was actively rendering. Derive the list from the data
+  // instead of relying on which paths another page happens to spell out.
+  //
+  // Read as slugs off the source rather than typed here, so a Hive entry added
+  // later is snapshotted without anyone remembering to edit this file.
+  try {
+    const hiveSrc = readFileSync("client/src/data/hive-frameworks.ts", "utf8");
+    const slugs = [...hiveSrc.matchAll(/^\s*slug: "([a-z0-9-]+)"/gm)].map((m) => m[1]);
+    if (slugs.length === 0) throw new Error("no slugs parsed from hive-frameworks.ts");
+    for (const s of slugs) found.add(`/hive/${s}`);
+    console.log(`hive: queued ${slugs.length} /hive/:slug deep links from hive-frameworks.ts`);
+  } catch (e) {
+    // Loud, not silent: a parse failure here means Hive deep links ship as 404s.
+    console.error(`hive: could not derive /hive/:slug routes — ${e.message}`);
+    process.exitCode = 1;
+  }
   // /api/* are data endpoints served by Pages Functions — snapshotting them writes an
   // index.html that can shadow the JSON on the static host, and (2026-08-25) bakes live
   // data (incl. corrections-ledger text) into pages the brand gate then rejects.
