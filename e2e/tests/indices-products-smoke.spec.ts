@@ -4,8 +4,11 @@ import { test, expect } from '@playwright/test';
 const ROUTES = [
   { path: '/indices', must: /UNMEASURED|indices/i },
   { path: '/indices/ai-economy', must: /UNMEASURED|AI.?economy/i },
+  { path: '/indices/human-labour', must: /UNMEASURED|labour/i },
+  { path: '/indices/humanoid-labour', must: /UNMEASURED|humanoid/i },
   { path: '/products', must: /product|catalog|HO\.2|score/i },
   { path: '/powered-by', must: /powered|white-?label|Option A/i },
+  { path: '/gspc-verify', must: /verify|RWA|recompute/i },
 ];
 
 for (const r of ROUTES) {

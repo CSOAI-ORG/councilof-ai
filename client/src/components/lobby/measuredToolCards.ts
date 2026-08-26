@@ -72,14 +72,16 @@ export const MEASURED_TOOL_CARDS: Record<string, MeasuredToolCardSpec> = {
     title: "Labour & AI-economy indices",
     blurb: "AI-economy · human-labour · humanoid-labour — declared UNMEASURED. Contextual firewall only; never GSPC cell inputs.",
     path: "/indices",
-    status: "UNMEASURED surfaces · GET /api/indices",
+    pane: "home",
+    status: "UNMEASURED surfaces · GET /api/indices · task=indices-hub",
   },
   rwa_attestation_catalog: {
     tool: "rwa_attestation_catalog",
     title: "RWA attestation catalog",
     blurb: "Stage 2 prep — OUSG, BUIDL, RLUSD, BENJI, JMWH (demo). Declared UNMEASURED; measured_score null. Attestation ≠ tokenization ≠ ownership.",
     path: "/products",
-    status: "UNMEASURED Stage 2 · GET /api/rwa-attestation",
+    pane: "home",
+    status: "UNMEASURED Stage 2 · GET /api/rwa-attestation · task=rwa-attestation",
   },
 };
 
