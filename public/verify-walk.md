@@ -8,7 +8,7 @@
 curl -s https://councilof.ai/api/gspc
 ```
 
-You get the GSPC 14-slot board: per-axis `n`, leader accuracy, Wilson intervals where the n is honestly independent, and a separation verdict (`SEPARATED` / `TIE` / `UNTESTED`) — ties are stated as ties, never counted as wins. The item count is live in `totals.items`; we never hardcode it anywhere.
+You get the GSPC board — its slot count and measured count come from `totals.public_count`, never from this page — with per-axis `n`, leader accuracy, Wilson intervals where the n is honestly independent, and a separation verdict (`SEPARATED` / `TIE` / `UNTESTED`) — ties are stated as ties, never counted as wins. The item count is live in `totals.items`; we never hardcode it anywhere.
 
 ## Step 2 — fetch the published keys (10s)
 

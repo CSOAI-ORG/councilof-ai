@@ -12,8 +12,13 @@ import type { Slide } from "@/components/scrollworld";
  *     the label names it only in the commit it ships. Rewritten to that.
  *  3. Deck slide 10 "Confidence: 99.9%" — no such field exists on any card and no source
  *     evidences it. DROPPED rather than published.
- *  4. Deck slide 4 "a rigid 14-axis instrument" / 14 lit tiles — the board is 14 SLOTS,
- *     thirteen measured axes plus jail. Coverage is read live from /api/gspc, never typed.
+ *  4. Deck slide 4 "a rigid 14-axis instrument" / 14 lit tiles — a typed count, and the
+ *     wrong one. Coverage is read live from /api/gspc (totals.public_count), never typed.
+ *     NOTE 2026-08-26: this note previously asserted "the board is 14 SLOTS". It is not:
+ *     ADR-001 rules 14 GSPC + 8 financial/domain, and the sweep of 2026-08-26 wired all
+ *     of them into the signed payload. Do not re-derive the number from this comment —
+ *     read totals off the board. That re-derivation is the exact defect ADR-001 exists
+ *     to stop, and it is why no count is typed in the copy below.
  *  5. Deck slide 3 "THE MANDATE: EU AI Office / UK DSIT / GPAI Delegates / US State
  *     Frameworks" — we hold NO mandate from any authority and no interface agreement with
  *     the named bodies. Rewritten: we measure published systems against published law, on
@@ -65,7 +70,10 @@ export const COLISEUM_SLIDES: Slide[] = [
     kicker: "From statute to instrument",
     title: "Law is turned into tests, not into adjectives",
     body:
-      "Legal text is distilled into a frozen, publicly readable corpus, then mapped onto the board's fourteen slots. Every measured claim traces back to a specific provision at a specific version, so a disagreement becomes a disagreement about a line of law rather than about a mood.",
+      // No slot count typed here (ADR-001): this string is static deck copy with no
+      // data source of its own, and the count it used to carry ("fourteen slots")
+      // went stale the moment the board was swept. The live count is on the board.
+      "Legal text is distilled into a frozen, publicly readable corpus, then mapped onto the board's slots. Every measured claim traces back to a specific provision at a specific version, so a disagreement becomes a disagreement about a line of law rather than about a mood.",
     points: [
       { tag: "pain", text: "Safety scores that cite no rulebook and answer to no one" },
       { tag: "benefit", text: "Each result names the provision it was measured against" },
@@ -198,7 +206,7 @@ export const COLISEUM_NOT_CLAIMED = [
 
 export const COLISEUM_RELATED = [
   { href: "/gspc-arena", label: "Council Space", what: "Watch models face the same frozen tests, head to head." },
-  { href: "/gspc-scoreboard", label: "The live board", what: "Fourteen slots, every sample size, every separation status." },
+  { href: "/gspc-scoreboard", label: "The live board", what: "Every slot, every sample size, every separation status — counted live from GET /api/gspc, never typed." },
   { href: "/watchdog", label: "The public watchdog", what: "Report AI behaviour that looks wrong — and see what happens next." },
   { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and what we refuse to score." },
 ];

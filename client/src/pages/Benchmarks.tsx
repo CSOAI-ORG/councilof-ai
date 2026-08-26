@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, AlertTriangle, ExternalLink, Database, Scale } from "lucide-react";
+import { useBoardCount } from "@/lib/boardCount";
 
 /**
  * Benchmarks — the whole estate on one page. Six surfaces, one shared foundation.
@@ -29,6 +30,9 @@ type State = "live" | "built" | "design";
 const AXES: {
   key: string; name: string; question: string; state: State;
   headline: string; detail: string; artefact: string; uncomfortable: string;
+  /** Append the board's live separation sentence after `uncomfortable`. Set on the
+   *  row that used to type those counts by hand. */
+  separationFromBoard?: boolean;
 }[] = [
   {
     key: "gov", name: "GOVERNANCE", question: "Does it comply with statute?", state: "live",
@@ -37,12 +41,16 @@ const AXES: {
       "The composed pipeline vs a raw base call, n=193, paired, cluster-robust across 26 " +
       "dimensions. Design effect 1.92 — honest effective n ≈ 100 of 193.",
     artefact: "results/system_analysis.json",
+    // The separation counts that used to be typed here ("13 measurement axes,
+    // 3 of 13 ... the other 10") went stale as soon as the board grew. They are
+    // now DERIVED at render time from GET /api/gspc (see boardSeparation below
+    // and client/src/lib/boardCount.ts). What stays typed is only the per-axis
+    // p-values, which name specific measured runs rather than counting anything.
     uncomfortable:
-      "On board v2 (13 measurement axes), 3 of 13 show a statistically separated leader " +
-      "(McNemar p<0.05 on discordant items): governance separates at p=0.0086, care at " +
-      "p=0.0356, affect at p=0.0078. The other 10 axes are honest ties — a point-estimate " +
-      "lead there is not a measured advantage. Ties are not wins; we do not publish 'our " +
-      "models win N of 13'.",
+      "Governance separates at p=0.0086, care at p=0.0356, affect at p=0.0078 — measured " +
+      "runs, not point-estimate leads. Ties are not wins, and we never publish a 'we win " +
+      "N of M' claim.",
+    separationFromBoard: true,
   },
   {
     key: "def", name: "DEFENCE", question: "Does it refuse what statute forbids?", state: "built",
@@ -159,6 +167,10 @@ type FlywheelRun = {
 const FLYWHEEL_BOARD_URL = "/flywheel/board.json";
 
 export default function Benchmarks() {
+  // Board counts and separation totals, derived from GET /api/gspc. This page's
+  // own doctrine is that nothing on it may be typed by hand; the separation
+  // counts were the exception, and are not any more.
+  const board = useBoardCount();
   useEffect(() => { document.title = "The benchmark estate — AI governance measurement that publishes its own failures | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
@@ -232,6 +244,14 @@ export default function Benchmarks() {
                   What this does not show
                 </p>
                 <p className="text-xs text-amber-900/90 dark:text-amber-200/90">{a.uncomfortable}</p>
+                {a.separationFromBoard && board.separation && (
+                  <p className="mt-2 text-xs text-amber-900/90 dark:text-amber-200/90">
+                    {board.separation.sentence}{" "}
+                    <span className="opacity-70">
+                      (live from <code>GET /api/gspc</code> — the board carries {board.public_count}.)
+                    </span>
+                  </p>
+                )}
               </div>
               <p className="mt-3 text-xs text-gray-400 font-mono">{a.artefact}</p>
             </Card>

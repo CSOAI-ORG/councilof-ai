@@ -10,9 +10,13 @@ import type { Slide } from "@/components/scrollworld";
  * apparatus itself is design.
  *
  * CORRECTIONS APPLIED TO THE SOURCE DECK:
- *  1. Deck slide 9 "The 15-Axis Coliseum Governance Game" — WRONG. The board is 14 SLOTS
- *     (13 measured + jail). Slot 15 is measured IN-LANE ONLY and is never board-quotable
- *     (/api/gspc measured_in_lane). Corrected throughout.
+ *  1. Deck slide 9 "The 15-Axis Coliseum Governance Game" — WRONG: slot 15 is measured
+ *     IN-LANE ONLY and is never board-quotable (/api/gspc measured_in_lane). Corrected
+ *     throughout. NOTE 2026-08-26: the correction as originally written asserted "the
+ *     board is 14 SLOTS (13 measured + jail)". That is no longer true — ADR-001 rules
+ *     14 GSPC + 8 financial/domain, and the 2026-08-26 sweep wired all of them into the
+ *     signed payload. Do NOT re-derive the board's size from this comment; read
+ *     totals.public_count off /api/gspc. The copy below now types no count at all.
  *  2. Deck slides 10/11 gloss RHAE as "Robust Hashing and Authenticity Engine", which
  *     contradicts the deck's own slide 4 ("Relative Human Action Efficiency"). The slide-4
  *     definition is used, and the predicate is labelled PROPOSED — it is not shipped.
@@ -177,9 +181,13 @@ export const METROLOGY_SLIDES: Slide[] = [
 ];
 
 export const METROLOGY_NOT_CLAIMED = [
-  "We do not claim the games apparatus is built or measuring anything today. It is a published doctrine. What runs is the fourteen-slot board, the signed cards, the verification endpoint and the swarm axis.",
+  // No slot count typed in this copy (ADR-001). This array is a static list of
+  // claims we do NOT make, rendered by a generic deck component with no data of
+  // its own, so it cannot derive a count — it therefore states the claim without
+  // one. The live count is on /gspc-scoreboard, derived from GET /api/gspc.
+  "We do not claim the games apparatus is built or measuring anything today. It is a published doctrine. What runs is the signed board (its live slot and measured counts are on the board page), the signed cards, the verification endpoint and the swarm axis.",
   "We do not claim an automatic generator that turns existing benchmarks into fresh environments. That is a research direction, and any design that puts a language model into the scoring loop is ruled out by our first design law: no model judges another model.",
-  "We do not claim a fifteen-axis board. The board is fourteen slots; slot 15 is measured in-lane only, is never board-quotable, and is never counted in any total.",
+  "We do not claim slot 15 as a board axis. It is measured in-lane only, is never board-quotable, and is never counted in any total — the board's own slot and measured counts are published on the board page and come from the signed payload, not from copy.",
   "We do not claim the ARC-AGI-3 results as our own measurement. They are third-party figures from the ARC Prize project, reported here and attributed, and they are not on our board.",
   "We do not publish other projects' saturation, contamination or timing figures as if we had measured them. The arguments on this page stand without borrowed numbers.",
   "We do not claim to host or measure any environment whose licence forbids it. Only permissively licensed environments are named as candidates for a frozen instrument.",

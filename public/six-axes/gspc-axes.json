@@ -1,7 +1,11 @@
 {
   "schema": "csoai.gspc-axes/0.1",
   "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
-  "note": "The twelve axes of the GSPC measurement instrument as of 2026-08-05. status=MEASURED where a scored frozen split exists (3 axes); UNMEASURED axes carry a live bank but no score until a clean multi-model board lands. Means are over MEASURED axes only. Measurement, not certification.",
+  "note": "A DATED SNAPSHOT of the GSPC measurement instrument as it stood on 2026-08-05, not the current board. status=MEASURED where a scored frozen split existed at that date; UNMEASURED axes carried a live bank but no score. Means are over MEASURED axes only. Measurement, not certification.",
+  "superseded": true,
+  "superseded_note": "THIS FILE IS NOT THE BOARD'S AXIS COUNT. Its totals.axes and totals.measured_axes describe the 2026-08-05 snapshot above and are smaller than the current board — the 2026-08-26 ADR-001 sweep wired the financial/domain axes into the signed payload and re-signed it. Do not quote this file's counts as the board's; read totals.public_count (or totals.count_grammar) from the authority below. Kept, rather than silently rewritten, because a dated snapshot is a record and an undated correction is not.",
+  "authority": "GET https://councilof.ai/api/gspc — the live signed board, and the only count authority. Also served as /signed/gspc-board.signed.json.",
+  "ruling": "council-os/ADR-001-axis-count.md — a public count must be backed by the signed artifact it claims to summarise, and no surface should type a count.",
   "doi": "10.5281/zenodo.21755656",
   "measured_on": "2026-08-05",
   "axes": [
@@ -22,7 +26,10 @@
       "accuracy": 0.515,
       "macro_f1": 0.381,
       "unparsed_rate": 0.0,
-      "interval": [0.451, 0.578],
+      "interval": [
+        0.451,
+        0.578
+      ],
       "metric": "macro-F1",
       "note": "The first axis over usable_n>=30, so the first with a Wilson interval: Council-34 accuracy 0.515 [0.451, 0.578], n=237 (2026-08-05). Rented frontier models cluster 0.66-0.74 with overlapping intervals — no model is clearly best at EU AI Act tiering.",
       "harness": {
@@ -232,6 +239,7 @@
     "items": 375,
     "mean_accuracy": 0.598,
     "mean_macro_f1": 0.567,
-    "mean_note": "Means are over MEASURED axes only; DRAFT axes are shown but excluded."
+    "mean_note": "Means are over MEASURED axes only; DRAFT axes are shown but excluded.",
+    "snapshot_note": "These totals count the 2026-08-05 snapshot in this file, NOT the live board. See superseded_note and authority at the top of this file."
   }
 }

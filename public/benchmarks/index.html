@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <title>GSPC Benchmarks — Council of AI</title>
-<meta name="description" content="Live GSPC board: 14 measured of 14 quotable. Jail MEASURED with separation TIE (2026-08-25). Cite councilof.ai/api/gspc. Measurement, not certification.">
+<!-- No count in this description: a count frozen into <head> cannot be derived and
+     is the first thing to go stale (this one said "14 measured of 14 quotable"
+     after the board had been swept). The live count renders into #board-count. -->
+<meta name="description" content="The live GSPC board: per-axis n, leader accuracy and separation, with UNMEASURED reported rather than hidden. Jail MEASURED with separation TIE (2026-08-25). Counts come from councilof.ai/api/gspc. Measurement, not certification.">
 <link rel="canonical" href="https://councilof.ai/benchmarks">
 <meta name="robots" content="index,follow">
 <meta property="og:title" content="GSPC Benchmarks — Council of AI">
@@ -31,12 +34,16 @@
 <body>
 <main>
 <h1>GSPC Benchmarks</h1>
-<p class="sub">Live ruling: <strong>14 measured of 14 quotable</strong> · cite <a href="https://councilof.ai/api/gspc">/api/gspc</a><br>
+<p class="sub">Live ruling: <strong><span id="board-count">counts from /api/gspc</span></strong> · cite <a href="https://councilof.ai/api/gspc">/api/gspc</a><br>
 Verified measurement credential. Not certification. Not a notified body.</p>
 <div class="note">
 <strong>Live source of truth:</strong> <a href="https://councilof.ai/api/gspc">councilof.ai/api/gspc</a>
-(<code>totals.public_count</code>). Jail (slot 14) is <strong>MEASURED</strong> with separation <strong>TIE</strong> (determined 2026-08-25).
-Do not invent 22 axes. Slot 15 / human-vs-ai stay in-lane only.
+(<code>totals.public_count</code>, or <code>totals.count_grammar</code> for the long form). No count is frozen on this page.
+Two numbers travel together: <code>totals.axes</code> counts SLOTS on the board, <code>totals.measured_axes</code> counts
+slots with a real run behind them, and <code>totals.unmeasured_axes</code> is published so the gap is visible — quoting the
+slot count alone would claim measurements that do not exist.
+Jail is <strong>MEASURED</strong> with separation <strong>TIE</strong> (determined 2026-08-25).
+Slot 15 / human-vs-ai stay in-lane only.
 </div>
 <h2>Measured axes (live board)</h2>
 <div class="wrap">
@@ -74,5 +81,24 @@ Council of AI · CSOAI Ltd · UK 16939677 ·
 <a href="https://councilof.ai/gspc-arena">arena</a>
 </footer>
 </main>
+<script>
+/* The board's axis count, DERIVED from the signed board — never typed here
+ * (ADR-001: "No surface should type a count"). Renders the SENTENCE, so the slot
+ * count and the measured count always travel together; quoting the larger alone
+ * would claim measurements that do not exist. On failure the pointer stands. */
+(function(){
+  var el=document.getElementById("board-count");
+  if(!el) return;
+  fetch("https://councilof.ai/api/gspc",{headers:{accept:"application/json"}})
+    .then(function(r){return r.ok?r.json():Promise.reject(new Error("HTTP "+r.status));})
+    .then(function(d){
+      var t=d&&d.totals; if(!t) return;
+      if(typeof t.public_count==="string"&&t.public_count.trim()) el.textContent=t.public_count;
+      else if(typeof t.axes==="number"&&typeof t.measured_axes==="number") el.textContent=t.axes+" axes · "+t.measured_axes+" measured";
+      if(typeof t.count_grammar==="string"&&t.count_grammar.trim()) el.title=t.count_grammar;
+    })
+    .catch(function(){});
+})();
+</script>
 </body>
 </html>

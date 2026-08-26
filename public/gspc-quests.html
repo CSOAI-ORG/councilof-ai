@@ -2,7 +2,14 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GSPC Quests — answer what the models answered | CSOAI</title>
-<meta name="description" content="Six axis-scoped quests drawn from the 375 banked GSPC items across 12 axes (3 measured), graded by the same deterministic rule used to measure models. Measurement, not certification.">
+<!-- No axis count in this description. ADR-001: no surface types a count, and a
+     count frozen into <head> cannot be derived. This file used to carry a typed
+     slot-and-measured pair here, frozen from a 2026-08-05 snapshot of a board
+     that has since grown. The retired figures are DESCRIBED rather than reprinted:
+     re-typing them would put the stale numbers back on a public surface, which is
+     the very thing this change removes, and facts-gate rightly matches on them.
+     The live count is rendered into #board-count below from GET /api/gspc. -->
+<meta name="description" content="Six axis-scoped quests drawn from the banked GSPC items, graded by the same deterministic rule used to measure models. Measurement, not certification.">
 <style>
 :root{--bg:#03110b;--panel:#071c14;--line:#164034;--text:#ecfdf5;--dim:#8FB3A5;--gold:#C9A84C;--green:#34d399;--red:#D0564B}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -44,8 +51,9 @@ td.n{font-variant-numeric:tabular-nums;text-align:right}
 <h1>GSPC QUESTS<small>answer the same items the models answered · graded by the same rule</small></h1>
 
 <div id="home">
-<p style="margin-top:14px;color:var(--dim);font-size:13.5px">Six quests, one per axis, drawn from the 375 banked
-GSPC items across 12 axes (3 measured). Your answer is read by the same deterministic regex and scored by the same macro-F1
+<p style="margin-top:14px;color:var(--dim);font-size:13.5px">Six quests, one per axis, drawn from the banked
+GSPC items. The board they are drawn from carries <span id="board-count">counts from GET /api/gspc</span>.
+Your answer is read by the same deterministic regex and scored by the same macro-F1
 aggregation used to measure every model — so your score and the model's sit on one scale.
 XP is highest where the model is weakest, because that is where a human answer carries the
 most information.</p>
@@ -55,7 +63,9 @@ person demonstrated a skill. It is not an attestation about any system, it decla
 conformity, and it is not legal advice. A conformity certificate needs an accreditation chain
 (a national accreditation body, then a certification body under ISO/IEC 42006). CSOAI holds none
 and does not claim to.</div>
-<p class="note">Items: 375 banked across 12 axes (3 measured), pulled from the published Hugging Face datasets on 2026-08-05.
+<p class="note">Items: 375 banked, pulled from the published Hugging Face datasets on 2026-08-05. The axis count
+is not frozen here — it is read live from <a href="/api/gspc" style="color:var(--green)">GET /api/gspc</a>
+(<code>totals.count_grammar</code>), because a slot count and a measured count are different numbers and both must travel.
 Governance is re-measured at n=237 — Council-34 accuracy 0.515, Wilson 95% [0.451, 0.578] — the first
 axis to carry an interval. The governance quest below serves the retired v1 24-item set; its v1
 model figures (macro-F1 0.386, accuracy 0.458) are retired.</p>
@@ -186,4 +196,31 @@ function result(){
 }
 window.home = home;
 home();
+
+/* ── the board's axis count, DERIVED — never typed here (ADR-001) ────────────
+ * This page is static HTML, so it cannot import the site's shared boardCount
+ * module. It does the same thing the module does: read totals from the signed
+ * board and render the SENTENCE, not a lone number. Both numbers travel — a
+ * slot count is not a measurement count, and quoting only the larger would
+ * claim measurements that do not exist. If the fetch fails, the placeholder
+ * ("counts from GET /api/gspc") stands: a pointer, never an invented figure.  */
+(function boardCount(){
+  var el = document.getElementById("board-count");
+  if(!el) return;
+  fetch("/api/gspc", {headers:{accept:"application/json"}})
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)); })
+    .then(function(d){
+      var t = d && d.totals;
+      if(!t) return;
+      if(typeof t.public_count === "string" && t.public_count.trim()){
+        el.textContent = t.public_count;
+      } else if(typeof t.axes === "number" && typeof t.measured_axes === "number"){
+        el.textContent = t.axes + " axes · " + t.measured_axes + " measured";
+      }
+      if(typeof t.count_grammar === "string" && t.count_grammar.trim()){
+        el.title = t.count_grammar;
+      }
+    })
+    .catch(function(){ /* leave the pointer in place; never invent a count */ });
+})();
 </script></body></html>

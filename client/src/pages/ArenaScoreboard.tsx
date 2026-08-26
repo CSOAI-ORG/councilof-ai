@@ -1,11 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { useBoardCount } from "@/lib/boardCount";
 
 /**
  * ArenaScoreboard — the signed, per-axis Elo leaderboard.
  *
  * Driven entirely by GET /api/arena/scoreboard (the pod-canonical signed artifact).
  * Every figure, n, and count is read from the payload — nothing hardcoded.
+ *
+ * ── WHICH COUNT IS THIS? (the reason this page used to read wrong) ────────────
+ * The arena is a DIFFERENT INSTRUMENT from the GSPC board and legitimately has
+ * its own, smaller axis set — see client/src/data/facts.json,
+ * counts.namespaces.arena_elo. The number this page renders is the length of the
+ * payload's own axis_pass_rates, and it is NOT the board's axis count. Until
+ * 2026-08-26 the page printed it as a bare "N axes measured", which a reader had
+ * no way to distinguish from the board's count and which also called thin-n axes
+ * measured. It is now named for its instrument, split into slots vs rankable,
+ * and shown beside the board's derived count so the two cannot be confused.
+ * Forcing the arena to the board's number would destroy information, not fix it.
  *
  * THE HONESTY RULES (same as LiveLeaderboard):
  *   1. No number is hardcoded. Per-axis rate, n, and model list come from the API.
@@ -41,6 +53,9 @@ const pct = (r: number) => `${Math.round(r * 100)}%`;
 const fmtAsOf = (iso?: string) => (iso ? new Date(iso).toUTCString().slice(0, 16) : "—");
 
 export default function ArenaScoreboard() {
+  // The GSPC board's own count, derived from /api/gspc — shown only to keep this
+  // page's arena count from being read as the board's. Never typed.
+  const board = useBoardCount();
   const [data, setData] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [verify, setVerify] = useState<{ content_id?: string; expected?: string; match?: boolean } | null>(null);
@@ -86,7 +101,12 @@ export default function ArenaScoreboard() {
   }
 
   const axes = Object.entries(data.axis_pass_rates || {}).sort((a, b) => b[1].n_rounds - a[1].n_rounds);
+  // Both numbers travel. axesCount counts the arena's SLOTS; rankableCount counts
+  // the ones that clear the same n_rounds >= 3 threshold this page uses below to
+  // decide whether an axis may be ranked at all. Quoting only the larger would
+  // call a thin-n axis measured.
   const axesCount = axes.length;
+  const rankableCount = axes.filter(([, entry]) => entry.n_rounds >= 3).length;
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-16">
@@ -101,11 +121,22 @@ export default function ArenaScoreboard() {
           it against the published key. That verify path is the point: it is what neither a
           usage rank nor a crowd Elo can offer.
         </p>
+        <p className="mt-3 max-w-2xl text-sm text-emerald-200/60">
+          The arena measures a different thing over a different axis set from the GSPC board, so
+          the two counts are not the same number and are not reconciled. The count on this page is
+          the arena&apos;s own, read from <code>axis_pass_rates</code>. The board&apos;s count is{" "}
+          <Link to="/gspc-scoreboard" className="underline hover:text-emerald-200">
+            {board.public_count}
+          </Link>
+          , derived from <code>GET /api/gspc</code>.
+        </p>
       </div>
 
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
-          <p className="text-[11px] uppercase tracking-wider text-emerald-300/60">{axesCount} axes measured</p>
+          <p className="text-[11px] uppercase tracking-wider text-emerald-300/60">
+            {axesCount} arena axes · {rankableCount} rankable
+          </p>
           <p className="mt-0.5 font-mono text-2xl text-emerald-100">{data.n_rounds ?? 0} rounds</p>
         </div>
         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">

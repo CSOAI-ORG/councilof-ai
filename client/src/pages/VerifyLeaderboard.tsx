@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
 import { setMetaDescription } from "@/lib/utils";
+import { useBoardCount } from "@/lib/boardCount";
 
 /**
  * /verify-leaderboard - the verify-this-leaderboard demo (the moat landing).
  * Fetch the signed per-axis Elo leaderboard, recompute the canonical body in-browser
  * (sha256 -> content_id) and verify the Ed25519 signature against the recorded pubkey.
  * Free, no records leave the machine.
+ *
+ * ── WHICH COUNT IS THIS? ─────────────────────────────────────────────────────
+ * The axis count on this page is `elo.axes.length` from /arena/elo_reference.json
+ * — the ARENA's axis set, not the GSPC board's. It is derived, never typed, but
+ * until 2026-08-26 it rendered as a bare "N axes" with nothing naming its
+ * instrument, so a reader saw a number that disagreed with the board and had no
+ * way to tell why. The arena is a distinct instrument (see facts.json,
+ * counts.namespaces.arena_elo) and is deliberately not reconciled to the board.
+ * Both are now labelled, and the board's count is derived from GET /api/gspc.
  */
 function sortKeysDeep(v: any): any {
   if (Array.isArray(v)) return v.map(sortKeysDeep);
@@ -19,6 +29,9 @@ function sortKeysDeep(v: any): any {
 }
 
 export default function VerifyLeaderboard() {
+  // The board's own count, derived from /api/gspc. Shown so the arena's axis count
+  // above cannot be mistaken for the board's. Never typed.
+  const board = useBoardCount();
   const [elo, setElo] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
   const [state, setState] = useState<"idle" | "checking" | "ok" | "bad">("idle");
@@ -76,8 +89,8 @@ export default function VerifyLeaderboard() {
               {elo ? (
                 <>
                   <span className="font-semibold text-gray-900">{elo.models ?? "—"}</span> models ·{" "}
-                  <span className="font-semibold text-gray-900">{elo.axes?.length ?? 0}</span> axes ·
-                  every score carries n + 95% CI
+                  <span className="font-semibold text-gray-900">{elo.axes?.length ?? 0}</span> arena
+                  axes · every score carries n + 95% CI
                 </>
               ) : err ? (
                 "Leaderboard not yet available."
@@ -124,7 +137,7 @@ export default function VerifyLeaderboard() {
 
         <div className="mt-6 flex flex-wrap gap-3 text-sm">
           <a href="/gspc-scoreboard" className="rounded-xl border border-emerald-600/20 px-4 py-2 font-semibold text-emerald-700 hover:bg-emerald-50">
-            The full board →
+            The full board — {board.public_count} →
           </a>
           <a href="/arena/elo_reference.json" className="rounded-xl border border-emerald-600/20 px-4 py-2 font-semibold text-emerald-700 hover:bg-emerald-50">
             Raw signed JSON

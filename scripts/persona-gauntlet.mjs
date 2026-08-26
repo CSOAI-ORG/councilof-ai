@@ -42,9 +42,21 @@ for (const p of PERSONAS) {
     if (killers.length) { fail(`${p.who} ${p.path}: kill-string hit ${killers.map(String).join(", ")}`); continue; }
     if (p.json && p.path === "/api/gspc") {
       const t = JSON.parse(body).totals || {};
-      const derived = `${t.measured_axes} measured of ${t.quotable_axes} quotable`;
+      // The sentence must DERIVE from the integers beside it, so a hand-edited
+      // count cannot survive here. Grammar per ADR-001 and the 2026-08-26 sweep:
+      // "<slots> axes · <measured> measured". This check used to require the
+      // retired "<measured> measured of <quotable> quotable" form, which hid the
+      // unmeasured slots entirely — the defect the sweep exists to correct.
+      const derived = `${t.axes} axes · ${t.measured_axes} measured`;
       if (typeof t.public_count !== "string" || !String(t.public_count).startsWith(derived)) {
-        fail(`${p.who}: public_count ${JSON.stringify(t.public_count)} does not derive from measured/quotable`);
+        fail(`${p.who}: public_count ${JSON.stringify(t.public_count)} does not derive from axes/measured_axes (want "${derived}")`);
+        continue;
+      }
+      // Both numbers must travel, and the unmeasured slots must add up. A board
+      // whose measured count equals its slot count without every slot carrying a
+      // run is the exact over-claim this gauntlet is here to catch.
+      if (t.axes - t.measured_axes !== t.unmeasured_axes) {
+        fail(`${p.who}: totals do not balance — axes ${t.axes} − measured ${t.measured_axes} ≠ unmeasured ${t.unmeasured_axes}`);
         continue;
       }
     }

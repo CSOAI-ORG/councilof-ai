@@ -7,7 +7,10 @@ import type { Slide } from "@/components/scrollworld";
  *  1. Deck slide 7: "Axis 14 (Swarm Agency) remains honestly gated and explicitly
  *     unmeasured." — WRONG TWICE. Slot 14 is JAIL (guardrail escape), and it IS
  *     MEASURED: 7 models x 71 gold items, n=71, with its SEPARATION TIE. Swarm
- *     is a MEASURED board axis too (14 measured of 14 quotable live). Rewritten to the truth.
+ *     is a MEASURED board axis too. Rewritten to the truth. NOTE 2026-08-26: this
+ *     correction originally typed a slot count and a grammar that treated every slot
+ *     as measured; the board carries declared UNMEASURED slots. Read totals off
+ *     GET /api/gspc — do not re-derive a count from this comment.
  *  2. Deck slide 9 ("The Expiry Trigger", validUntil = min(window, provision-change-event),
  *     "the pass instantly degrades", "EXPIRED - REGULATION CHANGED") — DROPPED ENTIRELY.
  *     Nothing we issue expires. When the law moves we RE-MEASURE and issue a DELTA CARD;
@@ -90,9 +93,16 @@ export const LIVING_LEDGER_SLIDES: Slide[] = [
   },
   {
     kicker: "Coverage, stated honestly",
-    title: "Fourteen measured of fourteen quotable",
+    // No count typed in this title (ADR-001). It read "Fourteen measured of
+    // fourteen quotable" — a typed slot count in a grammar that hid the
+    // unmeasured slots by construction. The live counts are on the board page.
+    title: "Coverage, stated with the unmeasured half included",
     body:
-      "Our board carries fourteen slots — all measured on the live board (14 measured of 14 quotable). Thirteen canonical axes are measured on the full fleet with separation. The fourteenth is jail — whether a model can be talked past its own guardrails — measured on a smaller seven-model fleet across 71 gold items. Its separation is TIE on the live board, so we do not treat it as a separated leader or rank on it.",
+      // CORRECTED 2026-08-26. This typed a slot count and then called every slot
+      // measured. Under the swept board that asserts runs that do not exist: some
+      // slots are declared and carry no measurement at all. Counts now come from
+      // GET /api/gspc, and both of them travel together.
+      "Our board publishes a slot count and a measured count, and they are different numbers — cite totals.public_count on GET /api/gspc rather than either alone. A slot with no run behind it is published as UNMEASURED so the gap is visible; it is never counted as a measurement. The behavioural axes are measured on the full fleet with a separation test. Jail — whether a model can be talked past its own guardrails — is measured on a smaller seven-model fleet across 71 gold items; its separation is TIE on the live board, so we do not treat it as a separated leader or rank on it.",
     points: [
       { tag: "pain", text: "Scorecards quietly omit the axis the model would fail" },
       { tag: "benefit", text: "Every slot shows its sample size and its status, including the awkward one" },
@@ -177,6 +187,6 @@ export const LIVING_LEDGER_NOT_CLAIMED = [
 export const LIVING_LEDGER_RELATED = [
   { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and what we refuse to score." },
   { href: "/refutation-ledger", label: "The refutation ledger", what: "Every correction and retraction we have published, append-only." },
-  { href: "/gspc-scoreboard", label: "The live board", what: "All fourteen slots with their sample sizes and separation status." },
+  { href: "/gspc-scoreboard", label: "The live board", what: "Every slot with its sample size and separation status — measured and unmeasured alike, counted live from GET /api/gspc." },
   { href: "/framework-crosswalks", label: "The crosswalk", what: "How statutory provisions map onto the measured axes." },
 ];

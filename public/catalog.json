@@ -4,7 +4,7 @@
   "register": "measurement, not certification — assessed, not certified",
   "updated": "2026-08-25",
   "board": {
-    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard — 14 measured of 14 quotable (13 canonical axes + jail MEASURED; jail separation TIE). Slot-15 / human-vs-ai are measured in-lane only — not board-quotable. Cite totals.public_count."
+    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard. No count is frozen here: cite totals.public_count, which carries the slot count and the measured count together — a slot with no run behind it is published UNMEASURED and is never counted as a measurement. Jail is MEASURED with separation TIE. Slot-15 / human-vs-ai are measured in-lane only — not board-quotable."
   },
   "products": [
     {
@@ -109,6 +109,6 @@
   "verify": {
     "href": "/gspc-verify",
     "status": "free",
-    "note": "Verification is always free. Cite live totals.public_count (14 measured of 14 quotable)."
+    "note": "Verification is always free. Cite live totals.public_count — no count is frozen in this catalogue."
   }
 }

@@ -38,7 +38,9 @@ import type { Slide } from "@/components/scrollworld";
  *     is what the deadline feed already does. Compilation removes ambiguity from the
  *     PREDICATE, never from the law.
  *  7. Deck slide 4 "distilled into 13 measurable axes (Governance, Security, Privacy,
- *     Commerce)" — CORRECTED. The board is fourteen slots, thirteen measured; the
+ *     Commerce)" — CORRECTED. (NOTE 2026-08-26: this correction used to state the
+ *     board's size and measured count as words. Both moved when the board was swept
+ *     under ADR-001 — read totals off GET /api/gspc, never from this comment.) The
  *     count is read live from /api/gspc and never typed into the page. "Commerce" is
  *     not one of our axes and the invented grouping is dropped.
  *  8. Deck slide 7 "Strict environment parity — matched interfaces, action-rate caps,
@@ -84,7 +86,7 @@ export const PREDICATE_SLIDES: Slide[] = [
     kicker: "The raw material",
     title: "We do not invent rules. We parse frozen ones.",
     body:
-      "The corpus is 417 published statutory provisions — the EU AI Act, GDPR and the Cyber Resilience Act, DORA and NIS2, NIST AI RMF and ISO/IEC 42001 among them. Frozen means the exact text we measured against is recorded with the result, so a disagreement can be traced to a provision rather than to an opinion. The board those predicates feed is fourteen slots; the measured count is read live from /api/gspc and is never typed into this page.",
+      "The corpus is 417 published statutory provisions — the EU AI Act, GDPR and the Cyber Resilience Act, DORA and NIS2, NIST AI RMF and ISO/IEC 42001 among them. Frozen means the exact text we measured against is recorded with the result, so a disagreement can be traced to a provision rather than to an opinion. The board those predicates feed publishes both a slot count and a measured count, read live from /api/gspc and never typed into this page.",
     points: [
       { tag: "benefit", text: "417 frozen provisions, each cited and dated" },
       { tag: "benefit", text: "When a provision changes, the mapped predicates expire and we re-measure" },
