@@ -32,5 +32,10 @@ jobs:
         run: sleep 90
       - name: Run claims verification against live site + brain
         env:
-          SITE: https://csoai-site.pages.dev
+          # Retargeted 2026-08-26. This ran against csoai-site.pages.dev, a DIFFERENT
+          # Cloudflare Pages project that does not carry this repo's functions — so
+          # /api/tools returned the SPA shell (404 text/html) and the 'live truth check'
+          # failed against a host it could never pass on. councilof.ai is the deploy
+          # target of this repo and returns 200 application/json.
+          SITE: https://councilof.ai
         run: node scripts/claims-e2e.mjs

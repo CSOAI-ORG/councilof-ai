@@ -31,5 +31,10 @@ jobs:
         run: sleep 100
       - name: Run Sov-stack E2E against live site
         env:
-          E2E_BASE: https://csoai-site.pages.dev
+          # Retargeted 2026-08-26. This ran against csoai-site.pages.dev, a DIFFERENT
+          # Cloudflare Pages project that does not carry this repo's functions — so
+          # /api/tools returned the SPA shell (404 text/html) and the 'live truth check'
+          # failed against a host it could never pass on. councilof.ai is the deploy
+          # target of this repo and returns 200 application/json.
+          E2E_BASE: https://councilof.ai
         run: node scripts/sov-stack-e2e.mjs
