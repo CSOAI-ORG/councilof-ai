@@ -11,6 +11,20 @@
  * (LobbyHome) — it must not iframe /os, or the OS nests inside itself. Play
  * is the gold local-play gallery from play.ts; routes are preview-only until live.
  *
+ * `kind: "native"` is the working surface: a pane rendered IN PROCESS because the
+ * product is a workflow, not a document. A native tab carries `path: ""` on
+ * purpose — it has no standalone URL, so `tabForPath()` cannot bounce a framed
+ * page back onto it (Live board and Verify keep their paths because the framed
+ * route and the native pane are the same thing there; Evidence pack and Embed kit
+ * are NOT the same thing as their explainer pages, and each pane links out to
+ * its page as an ordinary in-pane route).
+ *
+ * ONE DESTINATION, ONE OWNER. A path appears EITHER as a tab or as a
+ * LOBBY_ROUTE, never both — two doors onto /honesty (a tab and a route, sharing a
+ * label) is exactly the duplicate the OS audit flagged. Where a native pane owns
+ * a product, its explainer page is reached from inside the pane rather than
+ * getting a second entry in the rail.
+ *
  * Software (DSH) is the signed-in dashboard at /dashboard. The same tab
  * ids and labels are the dashboard sidebar. When /dashboard is framed here
  * it drops its own rail so we do not get two tab lists.
@@ -26,6 +40,9 @@ export type LobbyTabId =
   | "models"
   | "tools"
   | "verify"
+  | "evidence"
+  | "embed"
+  | "products"
   | "space"
   | "measured"
   | "watchdog"
@@ -51,7 +68,7 @@ export type LobbyTab = {
   cues: RegExp;
 };
 
-export type LobbyRouteGroup = "record" | "receipts" | "analyst";
+export type LobbyRouteGroup = "product" | "audience" | "record" | "receipts" | "analyst";
 
 export type LobbyRoute = {
   label: string;
@@ -108,6 +125,29 @@ export const LOBBY_TABS: LobbyTab[] = [
     cues: /\b(verify|verification|signature|signed|check a (?:card|record)|hash)\b/i,
   },
   {
+    id: "evidence",
+    label: "Evidence pack",
+    blurb: "Compile the evidence index for one system — live rows, resolvable banks, omissions named.",
+    path: "",
+    kind: "native",
+    cues: /\b(gpai evidence pack|evidence index|evidence pack|gpai evidence|gpai)\b/i,
+  },
+  {
+    id: "embed",
+    label: "Embed kit",
+    blurb: "Build the white-label badge or the self-verifying card from what is actually on the board.",
+    path: "",
+    kind: "native",
+    cues: /\b(white[- ]?label|embed kit|snippet|badge|embed)\b/i,
+  },
+  {
+    id: "products",
+    label: "Products",
+    blurb: "The shipped product family, as published — what each one measures and what it will not claim.",
+    path: "/products",
+    cues: /\b(product family|catalogue|catalog|products?)\b/i,
+  },
+  {
     id: "space",
     label: "Council Space",
     blurb: "The governed arena — rounds graded deterministically, never by a model jury.",
@@ -119,7 +159,10 @@ export const LOBBY_TABS: LobbyTab[] = [
     label: "Get measured",
     blurb: "Run an assessment against the rules that govern your system.",
     path: "/assess",
-    cues: /\b(assess|assessment|get measured|measure me|measure my|readiness)\b/i,
+    // NOT a bare "readiness": three destinations answer to that word (this
+    // assessment, the guided Readiness assessment, and the CRA Readiness Kit), so
+    // the bare cue silently swallowed the other two. Each now owns a phrase.
+    cues: /\b(assess|assessment|get measured|measure me|measure my)\b/i,
   },
   {
     id: "watchdog",
@@ -176,6 +219,72 @@ export const LOBBY_TABS: LobbyTab[] = [
 
 /** Live pages framed from Home / chat without a dedicated rail tab. */
 export const LOBBY_ROUTES: LobbyRoute[] = [
+  // ── the shipped products the rail does not have a pane for ──────────────
+  // Each is a live route the OS frames with ?embed=1, so in-pane navigation
+  // stays inside the workspace. GPAI Evidence and Embed are absent HERE on
+  // purpose: the native Evidence pack / Embed kit panes own them, and each pane
+  // opens its own explainer page. One destination, one owner.
+  {
+    label: "CRA Readiness Kit",
+    blurb: "The Cyber Resilience Act reporting runbook — 24h, 72h, 14-day, as published.",
+    path: "/cra-readiness",
+    group: "product",
+    cues: /\b(cra readiness|readiness kit|cyber resilience|cra)\b/i,
+  },
+  {
+    label: "Financial axes",
+    blurb: "The financial slots of the canon — what is UNMEASURED is stated first.",
+    path: "/financial-axes",
+    group: "product",
+    cues: /\b(financial axes|financial|finance)\b/i,
+  },
+  {
+    label: "Distribution integrity",
+    blurb: "Represented is not distributed — the published distinction, and how it is measured.",
+    path: "/distribution-integrity",
+    group: "product",
+    cues: /\b(distribution integrity|distribution|represented)\b/i,
+  },
+  {
+    label: "Legacy on-ramp",
+    blurb: "The enterprise on-ramp from legacy systems to signed measurement evidence.",
+    path: "/cobolbridge",
+    group: "product",
+    cues: /\b(legacy on[- ]?ramp|mainframe|cobol)\b/i,
+  },
+  // ── the audience doors ─────────────────────────────────────────────────
+  // These were a hard-coded array inside LobbyHome, where "Enterprises" pointed
+  // at /assess — a tile promising an audience page and delivering the assessment
+  // form the Get-measured tab already owns. They are real routes now, each at its
+  // own page, and the duplicate is gone.
+  {
+    label: "Regulators",
+    blurb: "The regulator door — every verification free, forever, with no account.",
+    path: "/regulators",
+    group: "audience",
+    cues: /\b(regulator door|regulators?)\b/i,
+  },
+  {
+    label: "Insurers",
+    blurb: "Pricing AI risk on signed evidence — what an underwriter is actually handed.",
+    path: "/insurers",
+    group: "audience",
+    cues: /\b(underwrit\w*|insurance|insurers?)\b/i,
+  },
+  {
+    label: "Enterprise",
+    blurb: "The enterprise door. The assessment itself lives on the Get-measured pane.",
+    path: "/enterprise",
+    group: "audience",
+    cues: /\b(enterprises?)\b/i,
+  },
+  {
+    label: "Government",
+    blurb: "The public-sector door, as published.",
+    path: "/government",
+    group: "audience",
+    cues: /\b(public sector|government)\b/i,
+  },
   {
     label: "Layer 0",
     blurb: "The signed trust layer the agent rail stands on.",
@@ -225,13 +334,9 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     group: "receipts",
     cues: /\b(methodology|how we grade)\b/i,
   },
-  {
-    label: "Honesty gate",
-    blurb: "What we cannot yet measure, published.",
-    path: "/honesty",
-    group: "receipts",
-    cues: /\b(honesty gate|honesty page)\b/i,
-  },
+  // /honesty is NOT listed here. It was a second door onto the same page under
+  // the same label as the Honesty-gate rail tab — the duplicate destination the
+  // OS audit flagged. The tab owns it.
   {
     label: "The instrument",
     blurb: "Four deterministic lenses over frozen provisions.",
@@ -307,25 +412,69 @@ function isNavCommand(text: string): boolean {
   return /\b(show|open|go|take me|switch|jump|load|view|bring up|let me)\b/i.test(text);
 }
 
+/**
+ * THE MOST SPECIFIC DESTINATION WINS.
+ *
+ * Both matchers used to take the FIRST entry in array order whose cue matched,
+ * which made the answer depend on list position rather than on what the reader
+ * said. "show the financial axes" hit the Live-board tab, because its cue carries
+ * a bare `axes` and the board happens to sit near the top of the rail. So the
+ * reader asked for one destination by name and silently got another.
+ *
+ * The rule now: score every candidate by HOW MUCH OF THE SENTENCE its cue
+ * matched, and let the longest literal match win — across tabs and routes
+ * together, since they are one destination space. "financial axes" (15 chars)
+ * beats "axes" (4). Nothing is guessed: a sentence no cue matches still returns
+ * null, exactly as before.
+ */
+function bestCue<T extends { cues: RegExp }>(items: T[], t: string): { item: T; len: number } | null {
+  let item: T | null = null;
+  let len = 0;
+  for (const c of items) {
+    const m = t.match(c.cues);
+    if (m && m[0].length > len) {
+      item = c;
+      len = m[0].length;
+    }
+  }
+  return item ? { item, len } : null;
+}
+
 /** Deterministic phrase -> tab. Returns null when nothing matches; never guesses. */
 export function matchTab(text: string): LobbyTab | null {
   const t = text.trim();
   if (!t || !isNavCommand(t)) return null;
-  return LOBBY_TABS.find((tab) => tab.cues.test(t)) ?? null;
+  const tab = bestCue(LOBBY_TABS, t);
+  if (!tab) return null;
+  const route = bestCue(LOBBY_ROUTES, t);
+  // A route that matched MORE of the sentence names itself more precisely than
+  // this tab does — defer, and let matchRoute answer.
+  if (route && route.len > tab.len) return null;
+  return tab.item;
 }
 
 /** Deterministic phrase -> a Home-desktop route (not a rail tab). */
 export function matchRoute(text: string): LobbyRoute | null {
   const t = text.trim();
   if (!t || !isNavCommand(t)) return null;
-  return LOBBY_ROUTES.find((r) => r.cues.test(t)) ?? null;
+  const route = bestCue(LOBBY_ROUTES, t);
+  if (!route) return null;
+  const tab = bestCue(LOBBY_TABS, t);
+  // Ties go to the rail tab: it is the surface with a permanent home.
+  if (tab && tab.len >= route.len) return null;
+  return route.item;
 }
 
 export function routesIn(group: LobbyRouteGroup): LobbyRoute[] {
   return LOBBY_ROUTES.filter((r) => r.group === group);
 }
 
-/** Same destinations as OS, minus Play, Home, and Software (this surface). */
+/**
+ * The OS destinations that have a standalone URL — the DSH sidebar links to
+ * `tab.path`, so a pane with no page of its own (Home, Play, and the native
+ * workflow panes, which carry `path: ""`) cannot appear there. That is honest:
+ * they exist only inside the OS. Software is excluded because it IS this surface.
+ */
 export function isDashboardTab(t: LobbyTab): boolean {
   return Boolean(t.path) && t.id !== "play" && t.id !== "software" && t.id !== "home";
 }
