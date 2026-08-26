@@ -216,3 +216,13 @@ revenue (subscriptions/data-licensing/consortium-dues/metered-assurance/external
 vs off-doctrine (issuer-pays ratings, certification marks, tokenization — never). Formation of
 the entity + independent directors = OWNER/counsel acts; this doc is the governance
 pre-commitment. Owner gated, not executed by me.
+
+## 2026-08-26 · JEEVES — Foundation formation checklist (owner execution map)
+docs/CSOAI_FOUNDATION_FORMATION_CHECKLIST.md — phased OWNER/counsel execution map: (1) entity-form
+decision (charity/CIC/guarantee) with the neutrality-eligibility gate; (2) register + seat ≥1
+independent director + oversight panel; (3) assign assets (Foundation owns methodology/ledger/
+did:web/CC-BY data; LTD licences SDK/products — arm's-length); (4) independence hardening
+(publish COI + funding, confirm signed-json-guard + facts-gate in CI); (5) first public actions
+(cite in model cards, UK AISI/NIST CAISI channel, externally-funded prize). No-go list (off-
+doctrine). Benchmarks to change course. Entity formation + directors = OWNER/counsel; this is the
+map, prepped for the owner to execute.
