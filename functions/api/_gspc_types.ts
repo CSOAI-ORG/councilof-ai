@@ -4,13 +4,44 @@ export interface AxisScore {
   axis: string;
   bench: string;
   task: string;
+
+  // ── family + measurement kind (added 2026-08-26, ADR-001 22-axis sweep) ──────
+  // The board carries TWO families of axis measured by TWO different kinds of
+  // instrument. Conflating them is how a count goes wrong, so both are explicit
+  // in the data rather than inferred from the id.
+  //
+  //   family "gspc"      — the 14 behavioural axes (Governance/Safety/Provenance/
+  //                        Continuity). A model fleet answers a frozen bank.
+  //   family "financial" — the 8 financial/domain axes. Not a model fleet.
+  //
+  //   kind "model-comparison"   — an accuracy against a bank, with a LEADER and a
+  //                               separation determination. Only these axes may
+  //                               contribute to separation stats or to any mean.
+  //   kind "deterministic-facts"— facts read off a public source (e.g. on-chain
+  //                               issuer flags). No fleet, no leader, no accuracy,
+  //                               and therefore NO separation test is applicable.
+  //                               Absent fields are honest absence, never a zero.
+  //   kind "declared-slot"      — the slot is published so the gap is public. No
+  //                               measurement exists. status is UNMEASURED.
+  family: "gspc" | "financial";
+  kind: "model-comparison" | "deterministic-facts" | "declared-slot";
+
+  // n is the size of whatever was actually measured (items, or instruments for a
+  // deterministic-facts axis). 0 on a declared-slot axis means "nothing measured",
+  // which is the literal truth and is never averaged into anything.
   n: number;
   n_note?: string;            // set-name caveat (e.g. swarm instances-vs-prompts)
-  accuracy: number;           // the board LEADER's accuracy (whoever leads — tuned or base)
+  n_unit?: string;            // what an n counts, when it is not bank items
+
+  // OPTIONAL from 2026-08-26. A deterministic-facts or declared-slot axis has no
+  // leader and no accuracy. Emitting 0 / "n/a" would be a fabricated measurement,
+  // so the field is simply absent. Consumers must treat absence as UNMEASURED.
+  accuracy?: number;          // the board LEADER's accuracy (whoever leads — tuned or base)
   accuracy_is?: string;       // set when accuracy is NOT a point estimate (e.g. a stated Wilson lower bound)
-  leader: string;             // which model holds the point-estimate lead
+  leader?: string;            // which model holds the point-estimate lead
   // UNTESTED = no McNemar separation test has been run on this bank yet (living-stamp axes).
-  separation: "SEPARATED" | "TIE" | "UNTESTED";
+  // Absent  = no separation test is APPLICABLE (no fleet to compare). Different facts.
+  separation?: "SEPARATED" | "TIE" | "UNTESTED";
   separation_p?: number;      // McNemar exact p on discordant pairs (leader vs best base)
   separation_basis?: string;  // stated when the determination is not McNemar (e.g. Wilson-bound non-overlap)
   interval?: [number, number];   // Wilson 95% CI on the leader — present ONLY where the n is honestly independent
@@ -22,7 +53,22 @@ export interface AxisScore {
   unparsed_rate?: number;     // board-v2 axes only
   per_model?: Record<string, Record<string, number | null>>; // living-stamp axes: verbatim per-model rows
   status: "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
-  dataset: string;
+
+  // dataset is the frozen HF bank slug; it is resolved to dataset_url against
+  // BANK_HOST. A financial axis has no HF bank, so it carries evidence_url — an
+  // absolute-on-site path to the signed run or the declaration — instead. An
+  // axis with neither carries no link, which is the honest state of a slot that
+  // has no evidence to point at.
+  dataset?: string;
+  evidence_url?: string;
+
+  // How much of the axis's own declared universe was actually covered, and on what
+  // rail. An axis that measured 6 of 16 named instruments has NOT measured the
+  // other 10, and a fact read from mainnet is not the same as a fact attested on
+  // mainnet. Both are stated on the axis rather than left for a reader to assume.
+  coverage?: string;
+  coverage_note?: string;
+  carrier?: string;
   colour: string;   // globe layer colour
   hue: number;      // 0-360, for procedural ramps
   note?: string;

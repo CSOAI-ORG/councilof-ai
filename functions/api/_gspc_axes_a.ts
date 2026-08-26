@@ -4,7 +4,7 @@ import type { AxisScore } from "./_gspc_types";
 export const AXES_A: AxisScore[] = [
 
   {
-    axis: "governance", bench: "GovBench", task: "EU AI Act risk-tier classification",
+    axis: "governance", family: "gspc", kind: "model-comparison", bench: "GovBench", task: "EU AI Act risk-tier classification",
     n: 237, accuracy: 0.700, leader: "council-embodiment-v3-light (council specialist)",
     separation: "SEPARATED", separation_p: 0.0086, interval: [0.639, 0.755],
     fleet_mean: 0.490, mean_harm: 0.510, cvar05_harm: 0.8728,
@@ -17,7 +17,7 @@ export const AXES_A: AxisScore[] = [
       "everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
   },
   {
-    axis: "safety", bench: "DefBench", task: "calibrated refusal on paired requests",
+    axis: "safety", family: "gspc", kind: "model-comparison", bench: "DefBench", task: "calibrated refusal on paired requests",
     n: 36, accuracy: 0.944, leader: "gemma3:12b (base model)",
     separation: "TIE", separation_p: 0.6875, interval: [0.819, 0.985],
     fleet_mean: 0.732, mean_harm: 0.268, cvar05_harm: null,
@@ -27,7 +27,7 @@ export const AXES_A: AxisScore[] = [
       "Honestly reported: the tuned specialists do not own this axis.",
   },
   {
-    axis: "provenance", bench: "ProvBench", task: "Article 50 marking survival by validity",
+    axis: "provenance", family: "gspc", kind: "model-comparison", bench: "ProvBench", task: "Article 50 marking survival by validity",
     n: 32, accuracy: 0.781, leader: "council-aesthetics-v3-light (council specialist)",
     separation: "TIE", separation_p: 0.7744, interval: [0.612, 0.890],
     fleet_mean: 0.549, mean_harm: 0.451, cvar05_harm: null,
@@ -37,7 +37,7 @@ export const AXES_A: AxisScore[] = [
       "NOT survived). The tuned specialist leads on points; TIE vs llama3.2:3b (p=0.77).",
   },
   {
-    axis: "continuity", bench: "PQCBench", task: "post-quantum status of a cryptographic assumption",
+    axis: "continuity", family: "gspc", kind: "model-comparison", bench: "PQCBench", task: "post-quantum status of a cryptographic assumption",
     n: 33, accuracy: 0.606, leader: "council-destruction-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.437, 0.753],
     fleet_mean: 0.450, mean_harm: 0.550, cvar05_harm: null,
@@ -47,7 +47,7 @@ export const AXES_A: AxisScore[] = [
       "flat TIE vs gemma3:12b (p=1.0).",
   },
   {
-    axis: "conformance", bench: "MCPBench", task: "MCP tool conformance",
+    axis: "conformance", family: "gspc", kind: "model-comparison", bench: "MCPBench", task: "MCP tool conformance",
     n: 35, accuracy: 0.743, leader: "council-preservation-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.579, 0.858],
     fleet_mean: 0.537, mean_harm: 0.463, cvar05_harm: null,
@@ -57,7 +57,7 @@ export const AXES_A: AxisScore[] = [
       "The tuned specialist leads on points; flat TIE vs mistral:7b (p=1.0).",
   },
   {
-    axis: "openness", bench: "OSSBench", task: "licence reasoning versus intended use",
+    axis: "openness", family: "gspc", kind: "model-comparison", bench: "OSSBench", task: "licence reasoning versus intended use",
     n: 32, accuracy: 0.875, leader: "council-preservation-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.719, 0.950],
     fleet_mean: 0.696, mean_harm: 0.304, cvar05_harm: null,
@@ -67,7 +67,7 @@ export const AXES_A: AxisScore[] = [
       "Canonical count 32 (supersedes stale 16). The tuned specialist leads on points; flat TIE vs gemma3:12b.",
   },
   {
-    axis: "machinery-conformity", bench: "MachBench",
+    axis: "machinery-conformity", family: "gspc", kind: "model-comparison", bench: "MachBench",
     task: "Machinery Reg self-evolving safety-function classification (PART_A / OUT_OF_SCOPE / NOT_SAFETY_FUNCTION)",
     n: 33, accuracy: 0.545, leader: "llama3.2:3b (base model)",
     separation: "TIE", separation_p: 0.5811, interval: [0.380, 0.702],
@@ -79,7 +79,7 @@ export const AXES_A: AxisScore[] = [
       "conformity verdict.",
   },
   {
-    axis: "care", bench: "CareBench", task: "care-cost (protect × help) under paired conduct scenarios",
+    axis: "care", family: "gspc", kind: "model-comparison", bench: "CareBench", task: "care-cost (protect × help) under paired conduct scenarios",
     n: 199, n_note: "200 bank records, one exact-duplicate pair → 199 unique scored texts (registry v2)",
     accuracy: 0.535, leader: "council-ethics-v3-light (council specialist)",
     separation: "SEPARATED", separation_p: 0.0356, interval: [0.466, 0.603],
