@@ -266,7 +266,6 @@ function CourseCard({ course }: { course: any }) {
           >
             <div className="text-xs text-muted-foreground mb-1">One-Time</div>
             <div className="font-bold text-lg">{formatPrice(course.pricing.oneTime)}</div>
-            <div className="text-xs text-green-600 font-medium">Best Value</div>
           </button>
 
           {course.pricing.threeMonth && (

@@ -46,7 +46,7 @@ export default function TrainingHowItWorks() {
     {
       level: "Measurement Credential Fundamentals",
       duration: "6-8 weeks",
-      description: "Entry-level certification covering core frameworks",
+      description: "Entry-level programme covering core frameworks",
       modules: [
         "EU AI Act Fundamentals",
         "NIST AI RMF Basics",
@@ -54,12 +54,12 @@ export default function TrainingHowItWorks() {
         "Compliance Principles",
         "Case Studies & Practice Exams"
       ],
-      price: "$99"
+      price: "Free"
     },
     {
       level: "Measurement Credential Professional",
       duration: "10-12 weeks",
-      description: "Advanced certification for experienced analysts",
+      description: "Advanced programme for experienced analysts",
       modules: [
         "Deep Dive: EU AI Act",
         "NIST AI RMF Implementation",
@@ -68,12 +68,12 @@ export default function TrainingHowItWorks() {
         "Complex Case Studies",
         "Advanced Assessment Techniques"
       ],
-      price: "$199"
+      price: "Free"
     },
     {
       level: "Measurement Credential Expert",
       duration: "14-16 weeks",
-      description: "Master-level certification for senior analysts",
+      description: "Master-level programme for senior analysts",
       modules: [
         "All Previous Modules",
         "Australia AI Governance",
@@ -83,7 +83,7 @@ export default function TrainingHowItWorks() {
         "Enterprise Compliance Strategy",
         "Capstone Project"
       ],
-      price: "$499"
+      price: "Free"
     }
   ];
 
@@ -157,20 +157,20 @@ export default function TrainingHowItWorks() {
       answer: "Absolutely! Our training is completely self-paced. Most students study 1-2 hours per day and complete modules over several weeks. You control the schedule."
     },
     {
-      question: "What if I fail the certification exam?",
-      answer: "No problem! You can retake the exam as many times as you need. We provide detailed feedback showing which topics to review. Most students pass on their second attempt."
+      question: "What if I fail the assessment?",
+      answer: "You can retake it as many times as you need, at no cost. We provide detailed feedback showing which topics to review."
     },
     {
-      question: "How long is the certification valid?",
-      answer: "Measurement credentials are valid for 2 years. You can renew by taking a 30-minute renewal exam or by completing continuing education credits."
+      question: "How long is the credential valid?",
+      answer: "Measurement credentials are valid for 2 years. You can renew by taking a 30-minute renewal assessment or by completing continuing education credits. A credential records completed training — it is not a certification and it attests nothing about a system's conformity."
     },
     {
-      question: "Can I upgrade from Fundamentals to Professional?",
-      answer: "Yes! You can upgrade at any time. You'll only pay the difference. For example, if you paid $99 for Fundamentals, upgrading to Professional costs an additional $100."
+      question: "Can I move from Fundamentals to Professional?",
+      answer: "Yes, at any time. Every programme is free, so there is nothing to pay when you move up."
     },
     {
-      question: "Is there a money-back guarantee?",
-      answer: "Yes! If you're not satisfied within 30 days of purchase, we offer a full refund. No questions asked. Our goal is your success."
+      question: "What does it cost?",
+      answer: "Nothing. The programmes, the assessments and the retakes are free, and stay free."
     },
     {
       question: "Can I download the training materials?",

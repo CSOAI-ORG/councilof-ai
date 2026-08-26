@@ -14,3 +14,11 @@ api-server/certs.jsonl
 docs/hive-recon-report.json
 e2e-screenshots/
 council-os/__pycache__/
+
+# unsigned board snapshot — intermediate for the custody re-sign, never published
+.gspc-work/
+
+# A build artifact regenerated every run. Tracking it let a stale report survive a
+# crashed build and claim 582 routes rendered when 5 files existed. Evidence of a build
+# belongs to that build, not to git history.
+prerender-report.json

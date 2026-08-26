@@ -111,26 +111,50 @@ export default function RegulatoryAuthority() {
 
               {/* Pillar 3 */}
               <Card className="p-8 border-2 border-emerald-200 hover:shadow-lg transition">
+                {/* REWRITTEN 2026-08-26. This card was headed "Mandatory Infrastructure" and
+                    listed four GREEN TICKS: "Governments mandate CSOAI compliance",
+                    "Enterprises have no choice but to integrate", plus two revenue lines.
+                    None of that is true. No government mandates CSOAI, no enterprise is
+                    obliged to integrate, and the tick icon rendered a strategic ambition as
+                    an achieved fact. It also contradicted the site's own standing disclaimer
+                    — "Not a certification. Not a notified body." — by claiming exactly the
+                    regulatory authority we elsewhere disclaim. An ambition is legitimate to
+                    publish; publishing it as a status is not. */}
                 <div className="flex items-center gap-3 mb-4">
                   <Zap className="h-8 w-8 text-emerald-600" />
-                  <h3 className="text-2xl font-bold text-gray-900">Mandatory Infrastructure</h3>
+                  <h3 className="text-2xl font-bold text-gray-900">Where we are trying to get to</h3>
                 </div>
+                <p className="mb-4 text-sm text-gray-600">
+                  An ambition, stated as one. None of the following is true today, and we will
+                  not describe it as true until it is.
+                </p>
                 <ul className="space-y-3 text-gray-700 mb-6">
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>Governments mandate CSOAI compliance</span>
+                    <span className="mt-0.5 flex-shrink-0 text-xs font-semibold uppercase tracking-wide text-amber-700">Goal</span>
+                    <span>
+                      That measurement of this kind becomes something regulators reference.
+                      <span className="block text-xs text-gray-500">
+                        Today: no government mandates or recognises CSOAI. We are not a notified body.
+                      </span>
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>Enterprises have no choice but to integrate</span>
+                    <span className="mt-0.5 flex-shrink-0 text-xs font-semibold uppercase tracking-wide text-amber-700">Goal</span>
+                    <span>
+                      That integrating an independent measurement becomes the obvious choice.
+                      <span className="block text-xs text-gray-500">
+                        Today: entirely voluntary, and it should stay a choice worth making on its merits.
+                      </span>
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>Creates switching costs and competitive moat</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5" />
-                    <span>Generates recurring infrastructure revenue</span>
+                    <span className="mt-0.5 flex-shrink-0 text-xs font-semibold uppercase tracking-wide text-amber-700">Goal</span>
+                    <span>
+                      That a continuous, signed measurement history is worth more than a one-off audit.
+                      <span className="block text-xs text-gray-500">
+                        Today: the signed history exists and is publicly verifiable — that part is real.
+                      </span>
+                    </span>
                   </li>
                 </ul>
                 <Link href="/government-portal">

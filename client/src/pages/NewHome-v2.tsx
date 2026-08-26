@@ -899,9 +899,6 @@ export default function NewHomeV2() {
             {/* AI Safety Analysts */}
             <motion.div variants={fadeInUp}>
               <Card className="h-full border-2 border-emerald-300 bg-emerald-50/50 hover:shadow-xl transition-all duration-300 group relative overflow-hidden">
-                <div className="absolute top-4 right-4">
-                  <Badge className="bg-emerald-700 text-white">Most Popular</Badge>
-                </div>
                 <CardHeader>
                   <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <UserCheck className="h-7 w-7 text-emerald-600" />

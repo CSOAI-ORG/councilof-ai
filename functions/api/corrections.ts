@@ -31,6 +31,52 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0826-05",
+      date: "2026-08-26",
+      what_was_wrong:
+        "Two published index artifacts claimed a measurement they did not have. /interop/ai-economy-index.v0.1.json and /interop/human-labour-index.v0.1.json each carry a status label of MEASURED-INDEX-v0.1, while each also states in its own body that half its input components are bank gaps and that no index value is computed. The axis register had already been reverted to UNMEASURED for both; the artifacts were not, so a live surface kept asserting the retracted status. Existing reference components are not a measured index.",
+      how_caught:
+        "Reading the evidence behind every financial axis before wiring it into the board, rather than trusting the axis register's summary of it. The register said UNMEASURED; the artifact it pointed at said MEASURED-INDEX-v0.1. Following the pointer is what surfaced the disagreement.",
+      fix:
+        "Both axes are wired into the signed board as UNMEASURED, and the board — which is the authority — states on each axis and in its limitations that the v0.1 artifacts' status label was an over-claim and is superseded. Neither index contributes to any measured count. The artifacts themselves are signed under a key this lane deliberately does not hold, so correcting them at source is a separate owner-supervised re-sign; until then the board carries the correction where a reader will meet it.",
+      status: "FIXED ON THE BOARD; ARTIFACT RE-SIGN PENDING (owner)",
+    },
+    {
+      id: "C-2026-0826-04",
+      date: "2026-08-26",
+      what_was_wrong:
+        "The public board contradicted the estate's own ruling for two days. An owner ruling of 2026-08-24 set the canonical axis count at 22 (14 behavioural + 8 financial/domain), but GET /api/gspc kept reporting '14 measured of 14 quotable' because the 8 financial axes existed only in the ruling and in a side register — never in the signed board payload the count is derived from. Downstream, the estate's own claims register recorded '22' as an internal figure that was 'not corroborated by any live surface', and a source comment instructed authors to 'not invent 22 axes'. The estate simultaneously ruled the number, forbade the number, and published a different one.",
+      how_caught:
+        "Self-reported, not discovered. The ruling document itself recorded that the sweep was authorized but unexecuted, and named the reason. The delay was deliberate and is the point of this entry: a public count must be backed by the signed artifact it summarises, so the fix could not be a copy edit on the pages. Editing the number without the data behind it would have put a figure on a public surface that the signed payload could not support — the same defect class as a score published without its measurement. The board was behind the ruling, never ahead of it.",
+      fix:
+        "The 8 financial/domain axes were wired into the board DATA and the payload re-signed. The board now derives '22 axes · 15 measured' from the axis array: 22 slots, 15 with a real run behind them, 7 declared slots with none. The ruling's own wording applied the word 'measured' to the full slot count, and the evidence does not support that word — only one of the eight financial axes (provenance-controls, a deterministic mainnet read of 6 issuer accounts) carries a measurement. Per this ledger's redaction rule the exact phrase is described rather than reproduced: it is now the forbidden form the build gate catches, and reprinting it here would republish the sentence this correction exists to retire. No axis was marked MEASURED to make the two numbers agree; the grammar changed instead, and both numbers now travel together. Separation statistics and every mean are scoped to model-comparison axes, so a financial axis can neither enter a sentence about statistical separation nor drag an absent value into an average as a zero. The claims register was re-authored from 'internal, not corroborated' to a live claim with the endpoint as its authority, and now names the forbidden form '22 measured axes' explicitly.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-03",
+      date: "2026-08-26",
+      what_was_wrong: "Our own published MCP fleet was silently paywalled and self-scoring. A monetization layer injected into 318 of 363 vendored servers capped the ENTIRE fleet at 10 anonymous tool calls per day from one shared counter; past that, every tool returned a purchase link instead of a result. The injected code was spliced mid-function in 49 files, leaving original function bodies unreachable (256 undefined names). Five scorecard checks awarded points for carrying a purchase link — the system scored itself higher for being paywalled. The paywall also masked quality: a first probe found 1 stub because refusals and stubs were indistinguishable.",
+      how_caught: "Building a remote MCP server for other AI platforms; the first real tools/call returned a purchase upsell instead of a result. Verified twice independently by direct grep and by probing all 338 servers with real MCP sessions.",
+      fix: "Monetization layer removed fleet-wide: 318 -> 0 servers carrying a purchase link, 0 price strings, 0 upsell symbols. Capability preserved and proven, not assumed: all 338 servers re-probed with real initialize/tools/list/tools/call — handshakes 336/338 unchanged, 1869 tools unchanged, 0 broken; undefined names fell 256 -> 16 because removing the injected code repaired what it had broken. Honest stub register published (13 fully stubbed, 10 partial, 2 dead) determined by CALLING every tool, not grepping. scripts/no-paywall-guard.mjs added with a --selftest so the layer cannot return; it caught 48 residuals we had missed.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-02",
+      date: "2026-08-26",
+      what_was_wrong: "Five sector pages asserted, in present tense, that our measurement 'is recognised under mutual recognition agreements with' CISA, NCSC, ANSSI, BSI, BEREC, ENISA, national transport authorities and others — named public bodies, implying an endorsement we do not hold. It shipped in the deployed bundle. Separately, /layer0 served a retracted fault-tolerance claim as a live capability, contradicting our own DR-0007 retraction (measured effective independence 1.21 of 3).",
+      how_caught: "Claims-substantiation audit of the prerendered output, prompted by the FTC's own recommended exercise: inventory every public claim and map it to evidence.",
+      fix: "Replaced with: we crosswalk our measurement output to those compliance pathways, and hold no mutual-recognition agreement with, and are not endorsed or accredited by, any of these bodies. The retracted claim removed from /layer0, /poc-showcase and /competitors. A machine-readable claims register now publishes every claim with its evidence link and a live/planned/devnet/retired status.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-01",
+      date: "2026-08-26",
+      what_was_wrong: "Our own prerender verification could not observe failure. prerender-report.json records a failed route in a field named 'err', but every check in the repository read 'errored' — a field that has never existed. A run in which the browser died on 515 of 581 routes reported '0 errored' and looked clean.",
+      how_caught: "A downstream gate disagreed: brand-gate scanned 71 pages when it should have scanned 603. The upstream report was lying and the layered gate caught it.",
+      fix: "scripts/check-prerender.mjs reads the real fields AND cross-checks the report against the HTML actually written to disk, because a report is a claim and the files are the evidence. It fails loudly on the exact run that had been called clean.",
+      status: "FIXED",
+    },
+    {
       id: "C-2026-0819-01",
       date: "2026-08-19",
       what_was_wrong: "Three public surfaces stated three different item counts at once (llms.txt 819, agent card 890, live API 966). The banks grew under the hardcoded numbers.",

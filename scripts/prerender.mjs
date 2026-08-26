@@ -40,7 +40,7 @@
  */
 import { chromium } from "playwright";
 import http from "node:http";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
 import { join, extname, dirname } from "node:path";
 
 const arg = (k, d) => {
@@ -50,12 +50,27 @@ const arg = (k, d) => {
 const DIST = arg("dist", "dist");
 const MIN = Number(arg("min", 400));       // visible chars below which a route is "thin"
 const WAIT = Number(arg("wait", 1800));    // ms after load before snapshotting
-const PORT = Number(arg("port", 4400));
+// 0 = let the OS pick a free port. It used to default to 4400, which meant two lanes
+// could not prerender at the same time: the second process failed to bind and then
+// happily rendered every route against the FIRST lane's server — a different build.
+// That is how /world "timed out" intermittently while the report showed nothing wrong.
+// A staging server is per-run private state; it must never be a shared fixed address.
+// An explicit --port is still honoured, and now fails loudly if it is taken.
+const PORT = Number(arg("port", 0));
 const CONC = Number(arg("conc", 4));
 // Production origin the prerendered canonical/og:url/twitter:url must carry (NOT the
 // localhost:PORT staging origin the snapshot runs on). Override with --prod-origin if the
 // canonical host ever changes.
 const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
+
+// Delete any previous report BEFORE doing anything. A tracked prerender-report.json
+// survived a crashed run on 2026-08-26 — Playwright's chromium had been updated away, the
+// prerender died on launch, and the stale report still claimed "582 ok" against 5 files on
+// disk. check-prerender caught it, but only because it cross-checks the filesystem; the
+// report alone would have shipped a lie about a build that never ran.
+// A run that does not finish must leave NO report, not an old one. Three outcomes, never
+// two: a fresh report, or nothing at all.
+try { if (existsSync("prerender-report.json")) unlinkSync("prerender-report.json"); } catch {}
 
 if (!existsSync(DIST)) {
   console.error(`no ${DIST}/ — run \`vite build\` first`);
@@ -237,7 +252,22 @@ const srv = http.createServer((q, r) => {
   // the same catch-all the host uses, so the snapshot sees what production serves
   r.writeHead(200, { "content-type": "text/html" });
   r.end(shell);
-}).listen(PORT);
+});
+
+// Bind before rendering anything, and refuse to continue if the requested port is busy —
+// rendering against someone else's server is worse than not rendering at all.
+srv.on("error", (e) => {
+  if (e.code === "EADDRINUSE") {
+    console.error(`prerender: port ${PORT} is already in use — another prerender is running.`);
+    console.error("Omit --port so the OS assigns a free one, or wait for the other lane.");
+    process.exit(2);
+  }
+  throw e;
+});
+const ACTIVE_PORT = await new Promise((resolve) => {
+  srv.listen(PORT, () => resolve(srv.address().port));
+});
+console.log(`prerender: staging server on http://localhost:${ACTIVE_PORT}`);
 
 // ---------------------------------------------------------------- render
 const browser = await chromium.launch();
@@ -252,8 +282,20 @@ async function worker(id) {
     const route = queue.shift();
     const rec = { route, chars: 0, ok: false };
     try {
-      await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
-      await page.waitForTimeout(WAIT);
+      // `networkidle` is the right wait for most routes but the wrong bar for a few heavy
+      // ones: /world mounts a 3D globe with ~9 large assets and intermittently needs more
+      // than 30s to go quiet, so it failed on some builds and passed on others. Excluding it
+      // would hide a real page from crawlers to keep the gate green — the wrong trade. So:
+      // retry once on timeout with a longer budget and the weaker `load` bar, which is enough
+      // for a snapshot. Only a route that fails BOTH attempts is a genuine failure.
+      try {
+        await page.goto(`http://localhost:${ACTIVE_PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
+      } catch (e) {
+        if (!/Timeout/i.test(String(e && e.message))) throw e;
+        rec.slow = true;
+        await page.goto(`http://localhost:${ACTIVE_PORT}${route}`, { waitUntil: "load", timeout: 90000 });
+      }
+      await page.waitForTimeout(rec.slow ? WAIT * 3 : WAIT);
       const info = await page.evaluate(() => {
         const root = document.getElementById("root");
         return { text: (document.body.innerText || "").replace(/\s+/g, " ").trim(),
@@ -274,7 +316,7 @@ async function worker(id) {
       // localhost:4400 canonical the 2026-08-14 audit flagged). Rewrite it to the prod origin
       // in the captured markup before it is written to dist.
       const html = (await page.content())
-        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN);
+        .split(`http://localhost:${ACTIVE_PORT}`).join(PROD_ORIGIN);
       // A snapshot that captured a data-fetch failure must be UNABLE to ship: it would
       // bake the error into the crawler-visible page (2026-08-25: /gspc-scoreboard went
       // live reading "Board fetch failed"). Refuse to write it, count it as an error.
@@ -319,6 +361,13 @@ console.log(`\n═══ ${results.length} routes`);
 console.log(`  ${ok.length} prerendered with ≥${MIN} visible characters`);
 console.log(`  ${thin.length} THIN — rendered but under threshold, or root still empty`);
 console.log(`  ${err.length} errored`);
+// A route that only rendered because it got a second, longer attempt is reported, not hidden.
+// It passed, but it is one asset away from failing, and a silent retry is how a page quietly
+// becomes unshippable without anyone noticing.
+const slow = results.filter((r) => r.slow);
+if (slow.length) {
+  console.log(`  ${slow.length} SLOW — needed a retry at the longer timeout: ${slow.map((r) => r.route).join(", ")}`);
+}
 if (thin.length) {
   console.log(`\nTHIN routes need a longer wait or real SSR — they are NOT fixed:`);
   thin.slice(0, 25).forEach(r => console.log(`  ${String(r.chars).padStart(6)}ch  ${r.route}`));

@@ -6,9 +6,13 @@ import type { AxisScore } from "./_gspc_types";
 import { MEASURED_ON } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
+import { AXES_FIN } from "./_gspc_axes_fin";
 import { MEASURED_IN_LANE } from "./_gspc_lane";
 
-const AXES: AxisScore[] = [...AXES_A, ...AXES_B];
+// 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
+// Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
+// in but absent from the data, so the board reported 14 — the un-swept state.
+const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
 
 const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 
@@ -26,13 +30,24 @@ export const onRequestGet: PagesFunction = async (context) => {
 
   const items = selected.reduce((s, a) => s + a.n, 0);
   const measuredSlots = selected.filter((a) => a.status === "MEASURED");
-  const measuredCount = measuredSlots.filter((a) => a.separation !== "UNTESTED").length;
-  const separatedNames = measuredSlots.filter((a) => a.separation === "SEPARATED").map((a) => a.axis);
-  const tieCount = measuredSlots.filter((a) => a.separation === "TIE").length;
+  // Separation is a property of a MODEL-COMPARISON axis only: it asks whether a
+  // leader's lead over a fleet is statistically real. A deterministic-facts axis
+  // has no fleet and no leader, so it is not "untested" — the test does not apply.
+  // Scoping these three counters to kind === "model-comparison" is what stops a
+  // financial axis silently entering a sentence about McNemar separation.
+  const comparisonSlots = measuredSlots.filter((a) => a.kind === "model-comparison");
+  const measuredCount = comparisonSlots.filter((a) => a.separation !== "UNTESTED").length;
+  const separatedNames = comparisonSlots.filter((a) => a.separation === "SEPARATED").map((a) => a.axis);
+  const tieCount = comparisonSlots.filter((a) => a.separation === "TIE").length;
   // Every bank is named by a bare slug (e.g. "csoai/gspc-gov"), which a stranger cannot
   // resolve without already knowing the host. Our own rater-transparency axis measured
   // /api/gspc as carrying ZERO resolvable URLs (2026-08-26) — the exact friction that axis
   // exists to catch, on our own surface. Resolve every bank to a fetchable URL.
+  // A financial axis has NO HuggingFace bank. Prefixing BANK_HOST onto a missing
+  // slug would mint a dataset_url that 404s — a resolvable-looking link to nothing,
+  // which is worse than no link. Axes without a bank are left alone; the measured
+  // one carries evidence_url to its signed run instead, and a declared slot with no
+  // evidence carries neither.
   const BANK_HOST = "https://huggingface.co/datasets/";
   const withResolvableBank = <T extends { dataset?: string }>(a: T) =>
     a && typeof a.dataset === "string" && a.dataset
@@ -53,44 +68,98 @@ export const onRequestGet: PagesFunction = async (context) => {
       "point-estimate lead is not statistically separated; we do not count ties as wins.",
     totals: (() => {
       const m = selected.filter((a) => a.status === "MEASURED");
+      const cmp = m.filter((a) => a.kind === "model-comparison");
       // Average only the axes that actually carry the field — living-stamp axes have no
       // macro_f1 / mean_harm / unparsed_rate and must not drag a fabricated 0 into the mean.
-      const avg = (f: (a: typeof m[number]) => number | undefined) => {
-        const vals = m.map(f).filter((v): v is number => typeof v === "number");
+      // Means are additionally scoped to model-comparison axes: a deterministic-facts axis
+      // has no accuracy at all, and a declared slot has no measurement to average.
+      const avg = (f: (a: typeof cmp[number]) => number | undefined) => {
+        const vals = cmp.map(f).filter((v): v is number => typeof v === "number");
         return vals.length ? round(vals.reduce((s, v) => s + v, 0) / vals.length) : null;
       };
-      // A slot is MEASURED when it has a completed separation determination (SEPARATED or TIE).
-      // Jail separation is TIE (determined 2026-08-25) — counted in measured_axes; a TIE is not a separated lead.
-      // public_count is derived from those two numbers — never a typed 13/14.
-      const measured = m.filter((a) => a.separation !== "UNTESTED").length;
-      const quotable = m.length;
+
+      // ── the count, derived, never typed ──────────────────────────────────────
+      // A SLOT ON THE BOARD IS NOT A MEASUREMENT. The 22-axis canon is a count of
+      // slots; measured_axes is the count of slots with a real run behind them.
+      // Those two numbers are different (22 and 15) and the grammar must say both,
+      // because quoting only the larger one would claim 7 measurements that do not
+      // exist. Every number below is computed from the axis array.
+      const measured = m.length;                       // status MEASURED — a run exists
+      const unmeasured = selected.length - measured;   // slot published, no run
+      const bySelectedFamily = (fam: "gspc" | "financial") => {
+        const all = selected.filter((a) => a.family === fam);
+        return { axes: all.length, measured: all.filter((a) => a.status === "MEASURED").length };
+      };
       return {
         axes: selected.length,
         measured_axes: measured,
-        quotable_axes: quotable,
-        public_count: `${measured} measured of ${quotable} quotable`,
+        unmeasured_axes: unmeasured,
+        // Retained for consumers that read it. Under the swept canon we quote only
+        // what we measured, so quotable_axes == measured_axes by construction.
+        quotable_axes: measured,
+        public_count: `${selected.length} axes · ${measured} measured`,
+        count_grammar:
+          `${selected.length} axes are on the board; ${measured} of them carry a measurement and ` +
+          `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
+          `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
+          `so the gap is visible; it is not evidence of anything having been measured.`,
+        by_family: {
+          gspc: {
+            ...bySelectedFamily("gspc"),
+            note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically.",
+          },
+          financial: {
+            ...bySelectedFamily("financial"),
+            note: "The 8 financial/domain axes (ADR-001). One is measured — provenance-controls, from a " +
+              "deterministic mainnet read of 6 issuer accounts. The other seven are declared slots with " +
+              "no run. None of the eight is a model comparison, so none has a leader, an accuracy or a " +
+              "separation determination, and none contributes to any mean below.",
+          },
+        },
+        sweep_note:
+          "Swept 2026-08-26 under ADR-001. The 8 financial/domain axes were ruled in on 2026-08-24 but " +
+          "were absent from this payload until now, so this endpoint reported 14 — the un-swept state. " +
+          // REDACTION: the ruling's phrasing applied the word 'measured' directly to the
+          // full slot count. That exact string is the forbidden form this board's own gate
+          // now catches, so it is DESCRIBED here rather than reproduced — printing it on a
+          // public surface would publish the very sentence the correction exists to retire.
+          "The ruling applied the word 'measured' to the full slot count; the evidence supports " +
+          "22 axes and 15 measurements, and the evidence wins. No axis was marked MEASURED to " +
+          "close that gap.",
         license: "CC-BY-4.0",
         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
         items,
-        separated_leads: m.filter((a) => a.separation === "SEPARATED").length,
-        ties: m.filter((a) => a.separation === "TIE").length,
-        untested_separations: m.filter((a) => a.separation === "UNTESTED").length,
+        items_note: "items sums each axis's n. The n of the one measured financial axis counts ISSUER " +
+          "ACCOUNTS, not bank items, and declared slots contribute 0 because nothing was measured. " +
+          "Read items as 'rows behind the board', not as a single comparable sample.",
+        // Separation stats are over model-comparison axes ONLY — see comparison_axes.
+        comparison_axes: cmp.length,
+        separated_leads: cmp.filter((a) => a.separation === "SEPARATED").length,
+        ties: cmp.filter((a) => a.separation === "TIE").length,
+        untested_separations: cmp.filter((a) => a.separation === "UNTESTED").length,
+        separation_scope_note:
+          "Separation asks whether a leader's lead over a fleet is statistically real, so it applies " +
+          "only to the model-comparison axes. The financial axes have no fleet and no leader: they are " +
+          "not counted as untested, because no separation test is applicable to them.",
         mean_macro_f1: avg((a) => a.macro_f1),
         mean_accuracy: avg((a) => a.accuracy),
         mean_fleet_mean: avg((a) => a.fleet_mean),
         mean_harm: avg((a) => a.mean_harm),
         mean_unparsed_rate: avg((a) => a.unparsed_rate),
-        mean_note: "Means are over MEASURED axes that carry the field. mean_accuracy averages the " +
-          "per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is " +
-          "selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy " +
-          "hides; it exists only for the measured board-v2 axes.",
+        mean_note: "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy " +
+          "averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the " +
+          "difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean " +
+          "accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any " +
+          "of these means: an axis with no accuracy contributes nothing rather than a zero.",
       };
     })(),
     bank_host: BANK_HOST,
-    bank_note: "Every axis carries dataset_url — the bank resolved to a fetchable URL, so a " +
-      "stranger can retrieve the frozen split without knowing where we host it. Added " +
+    bank_note: "Every axis WITH a frozen bank carries dataset_url — the bank resolved to a fetchable " +
+      "URL, so a stranger can retrieve the split without knowing where we host it. Added " +
       "2026-08-26 after our own rater-transparency axis measured this payload as carrying " +
-      "zero resolvable URLs.",
+      "zero resolvable URLs. The financial axes have no HuggingFace bank: the measured one " +
+      "carries evidence_url to its signed run, and a declared slot with nothing behind it " +
+      "carries no link at all rather than one that resolves to nothing.",
     axes: selected.map(withResolvableBank),
     // In the payload for honesty; NOT the board. See the note on each entry.
     measured_in_lane: axis ? undefined : MEASURED_IN_LANE,
@@ -110,7 +179,11 @@ export const onRequestGet: PagesFunction = async (context) => {
       },
     ],
     limitations: [
-      `${separatedNames.length} of the ${measuredCount} canonical axes show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage.`,
+      `${separatedNames.length} of the ${measuredCount} measured model-comparison axes show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage. This fraction is over the behavioural axes only; the financial axes are not model comparisons and are not in its denominator.`,
+      "22 axes are on the board and 15 carry a measurement. The 7 declared slots (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, and the three candidate indices) have NO run behind them — they are published so the gap is visible, and must never be quoted as measured. See totals.count_grammar.",
+      "The one measured financial axis, provenance-controls, measures on-chain CONTROL FACTS only — which flags an issuer account carries — for ONE axis family over SIX instruments. What those facts imply about an instrument's risk, solvency or creditworthiness is UNMEASURED and needs counsel. It is not a rating, not investment advice, not a ranking, and not an endorsement of any named instrument.",
+      "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
+      "Two candidate indices (ai-economy-index, human-labour-index) have partial input banks whose linked v0.1 artifacts still carry a status label of MEASURED-INDEX-v0.1. That label was an over-claim and is superseded: both axes are UNMEASURED here, and this board is the authority. Reference components existing is not an index being measured.",
       "Jail (slot 14) separation determination 2026-08-25: TIE — the leader's Wilson 95% interval [0.475, 0.698] contains the fleet mean 0.5455, so the point-estimate lead is not a measured advantage. Measured on a 7-model gold-bank fleet (all models n≥30 usable, 68–71), not the 19-model board fleet; the gold bank is published (csoai/gspc-jail-goldbank, HF 2026-08-25).",
       "jail's fleet accuracy 0.5455 is the mean of per-model accuracies across 7 models x 71 gold cells (usable n 68–71); the leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best precision 1.0, best recall 0.237 — the best detector still misses 3 of 4 escapes.",
       "measured_in_lane (slot15 instrument-honesty, human-vs-ai) is the internal 16-slot living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",

@@ -249,9 +249,6 @@ export default function GlobalAISafetyInitiative() {
             {/* National Authority */}
             <Card className="relative overflow-hidden border-emerald-200 shadow-lg">
               <div className="absolute top-0 left-0 right-0 h-2 bg-emerald-500" />
-              <Badge className="absolute top-4 right-4 bg-emerald-100 text-emerald-800">
-                Most Popular
-              </Badge>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Shield className="h-6 w-6 text-emerald-500" />

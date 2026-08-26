@@ -42,6 +42,14 @@ jobs:
           npx playwright install --with-deps chromium
           node scripts/prerender.mjs --dist dist/client --wait 900 --min 350
 
+      # The prerender's own summary cannot be trusted on its own: its failure field
+      # is `err`, and every ad-hoc check read `errored` — a field that never existed,
+      # so a run that failed 515 of 581 routes reported "0 errored". This reads the
+      # real fields AND cross-checks the report against the HTML actually on disk.
+      # A report is a claim; the files are the evidence.
+      - name: Check prerender report against the filesystem
+        run: node scripts/check-prerender.mjs dist/client
+
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
           # Living board owns /gspc-scoreboard. A leftover gspc-scoreboard.html
@@ -63,6 +71,15 @@ jobs:
 
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
+
+      # Owner ruling 2026-08-26: strip ALL public prices. Verification is free forever and
+      # a grade is never sold, so no public page carries a figure anyone pays us — a service
+      # is quoted privately. This also blocks "Most Popular"/"Best Value" badges, which are
+      # claims about other customers' choices that no published customer count supports.
+      # Blocking from day one: it flags a standalone currency amount (how a price renders),
+      # not money in prose, so EU AI Act penalties and competitor figures do not trip it.
+      - name: Price gate — no published price, no unevidenced popularity claim
+        run: node scripts/price-gate.mjs dist/client
 
       # Facts gate — WIRED BUT NON-BLOCKING pending an owner ruling on the canonical
       # axis count. It currently reports 29 real contradictions: the live board says

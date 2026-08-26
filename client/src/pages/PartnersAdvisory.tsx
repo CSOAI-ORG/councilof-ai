@@ -663,11 +663,6 @@ const PartnersAdvisory: React.FC = () => {
               key={idx}
               className="relative group bg-white rounded-lg border border-slate-200 p-8 hover:shadow-lg transition-shadow"
             >
-              {idx === 2 && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 bg-purple-600 text-white text-xs font-bold rounded-full">
-                  Most Popular
-                </div>
-              )}
 
               <div className="flex justify-center mb-4 text-purple-600">
                 {cert.icon}

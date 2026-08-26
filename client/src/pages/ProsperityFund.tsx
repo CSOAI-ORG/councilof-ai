@@ -127,9 +127,16 @@ export default function ProsperityFund() {
               <Card className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
                 <CardContent className="p-6 text-center">
                   <Wallet className="h-10 w-10 mx-auto mb-3 opacity-80" />
-                  <p className="text-sm opacity-80">Current Fund Size</p>
+                  {/* This read "Current Fund Size … Updated in real-time" over a hardcoded
+                      847293 that the code itself calls a demo value, animated upward so a
+                      visitor watched a fund appear to accumulate. No fund holds this money and
+                      nothing updates. A fabricated live counter is the most misleading thing a
+                      page can do, because motion reads as evidence. */}
+                  <p className="text-sm opacity-80">Illustrative fund size</p>
                   <p className="text-3xl font-bold mt-2">{formatCurrency(animatedSize)}</p>
-                  <p className="text-xs mt-2 opacity-70">Updated in real-time</p>
+                  <p className="text-xs mt-2 opacity-70">
+                    Worked example, not a balance. No fund holds this money and this figure does not update.
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -172,9 +179,12 @@ export default function ProsperityFund() {
               <Card className="bg-white border-2 border-emerald-100">
                 <CardContent className="p-6 text-center">
                   <Users className="h-10 w-10 mx-auto mb-3 text-cyan-600" />
-                  <p className="text-sm text-gray-600">Oversight Analysts</p>
-                  <p className="text-3xl font-bold mt-2 text-gray-900">2,847</p>
-                  <p className="text-xs mt-2 text-cyan-600">Oversight wage — pending ruling</p>
+                  <p className="text-sm text-gray-600">Oversight analysts</p>
+                  <p className="text-3xl font-bold mt-2 text-gray-900">—</p>
+                  <p className="text-xs mt-2 text-cyan-600">
+                    Unmeasured. The previous figure (2,847) counted nobody — there is no register
+                    behind it. A dash is honest where a number is not.
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>

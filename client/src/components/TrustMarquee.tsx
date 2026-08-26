@@ -8,7 +8,12 @@ function fmt(n: number) { return n >= 1e6 ? Math.round(n / 1e6) + "M" : n >= 1e3
 // Live credibility chips — real numbers pulled from the Council engine, with an
 // honest, established-fact fallback (from canon) if the endpoint is unreachable. No fabrication.
 function LiveStats({ dark }: { dark?: boolean }) {
-  const [s, setS] = useState<{ tools?: number; episodes?: number; agents?: number }>({});
+  // `kind` is carried alongside the number because /api/tools ALREADY tells us what its total
+  // means (`total_kind: "catalogue-snapshot"`) and this component used to discard that field.
+  // The endpoint was honest; the UI laundered it into "live … (deployed)". Keep the kind and
+  // let it choose the wording — a number without its provenance is how a catalogue becomes a
+  // claim about running infrastructure.
+  const [s, setS] = useState<{ tools?: number; kind?: string; episodes?: number; agents?: number }>({});
   useEffect(() => {
     let live = true;
     const grab = async (p: string) => { try { const r = await fetch(BRAIN + p, { cache: "no-store" }); return await r.json(); } catch { return null; } };
@@ -18,19 +23,36 @@ function LiveStats({ dark }: { dark?: boolean }) {
       const tools = t && (t.total || t.count || (Array.isArray(t) ? t.length : 0));
       const episodes = st && (st.cum_episodes || st.episodes || st.memory_episodes);
       const agents = st && (st.agents || st.agent_count);
-      setS({ tools: tools > 50 ? tools : undefined, episodes: episodes || undefined, agents: agents || undefined });
+      // No `tools > 50` gate. That threshold silently discarded any honest small number and
+      // kept only figures big enough to look impressive — so a truthful "6 reachable" was
+      // dropped in favour of a 291-row catalogue. A number is used because it is true, not
+      // because it is large.
+      setS({
+        tools: typeof tools === "number" && tools > 0 ? tools : undefined,
+        kind: (t && t.total_kind) || undefined,
+        episodes: episodes || undefined,
+        agents: agents || undefined,
+      });
     })();
     return () => { live = false; };
   }, []);
   // Canon-first: if live data disagrees, the canon wins; if live > canon, use live with caveat.
-  const canonTools = CANON.mcpLiveDeployed.value;
+  const canonRegistry = CANON.mcpRegistryEntries.value;
   const canonCouncil = CANON.councilAgents.value;
-  const toolsDisplay = s.tools && s.tools > 50 ? s.tools : canonTools;
   const councilDisplay = s.agents && s.agents > 0 ? s.agents : canonCouncil;
-  const toolsCaveat = s.tools && s.tools > 0 && s.tools !== canonTools ? ` (live: ${s.tools}, canon: ${canonTools})` : "";
+
+  // The label follows the provenance of the number actually shown. A catalogue snapshot says
+  // "catalogued"; only a genuine probe result may say "reachable". Neither may say "deployed",
+  // which asserts running infrastructure that no endpoint here has ever checked.
+  const isCatalogue = !s.tools || s.kind === "catalogue-snapshot";
+  const toolsDisplay = s.tools ?? canonRegistry;
+  const toolsLabel = isCatalogue
+    ? "MCP servers catalogued (registry rows, not probed)"
+    : "MCP tools reachable (probed)";
+
   const chips = [
     { v: `${councilDisplay}`, l: `seat council (design — ${councilDisplay === canonCouncil ? "canon" : "live"})` },
-    { v: `${toolsDisplay}${toolsCaveat}`, l: "governed MCP tools (deployed)" },
+    { v: `${toolsDisplay}`, l: toolsLabel },
     { v: s.episodes ? fmt(s.episodes) + "+" : "Ed25519", l: s.episodes ? "memory episodes" : "Layer 0 signing" },
     { v: "0.95", l: "care-floor" },
   ];
@@ -41,7 +63,14 @@ function LiveStats({ dark }: { dark?: boolean }) {
           <b className={dark ? "text-emerald-300" : "text-emerald-700"}>{c.v}</b> {c.l}
         </span>
       ))}
-      <span className={"text-[10px] " + (dark ? "text-emerald-200/40" : "text-gray-400")}>live from the Council engine</span>
+      {/* This read "live from the Council engine" over all four chips, of which at most one is
+          ever a live reading — the care-floor is a constant, the council seat count is a design
+          figure, and the tool count is usually a catalogue snapshot. One true caption cannot
+          cover four differently-sourced numbers, so each chip now carries its own provenance
+          and the caption only claims what it can. */}
+      <span className={"text-[10px] " + (dark ? "text-emerald-200/40" : "text-gray-400")}>
+        each figure labelled with its source
+      </span>
     </div>
   );
 }

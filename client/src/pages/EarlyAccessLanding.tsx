@@ -198,7 +198,6 @@ export default function EarlyAccessLanding() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 <Card className={`p-8 h-full flex flex-col ${index === 1 ? 'border-2 border-emerald-600 shadow-lg' : ''}`}>
-                  {index === 1 && <div className="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold w-fit mb-4">Most Popular</div>}
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
                   <p className="text-gray-600 mb-6">{plan.description}</p>
                   <ul className="space-y-3 mb-8 flex-1">

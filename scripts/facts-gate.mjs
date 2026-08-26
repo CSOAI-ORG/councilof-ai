@@ -93,8 +93,14 @@ function ruleBoundary(facts, file, text, add) {
   }
 }
 
+// Group 2 captures the qualifier so the rule can tell a BOARD-TOTAL claim
+// ("22 axes") from a MEASURED-COUNT claim ("15 measured axes"). They are different
+// assertions about different numbers and must be checked against different values;
+// comparing "15 measured axes" against the board total of 22 flags an honest
+// sentence. Measured/quotable-qualified counts are delegated to
+// ruleMeasuredOverclaim, which compares them against totals.measured_axes.
 const COUNT_RE =
-  /\b(\d{1,3})\s+(?:canonical\s+|public\s+|measured\s+|quotable\s+)?(axes|axis|slots)\b/gi;
+  /\b(\d{1,3})\s+(canonical\s+|public\s+|measured\s+|quotable\s+)?(axes|axis|slots)\b/gi;
 
 // A published correction QUOTES the number it is correcting. Exonerate that.
 const CORRECTION_CTX =
@@ -111,13 +117,35 @@ function ruleAxisCount(facts, file, text, add, liveCount) {
   if (liveCount == null) return;
   const ns = facts.counts?.namespaces || {};
   // Surfaces that legitimately carry their own instrument's count.
-  const scoped = new Set();
-  for (const v of Object.values(ns)) if (v && v.surface) scoped.add(v.surface.replace(/^\//, ""));
+  //
+  // A namespace may declare `surface` (one path) or `surfaces` (a list). Only
+  // `surface` was read until 2026-08-26, and the arena namespace had no `surface`
+  // key at all — which is the entire mechanical reason 27 arena-derived counts were
+  // flagged as contradicting the GSPC board. They never contradicted it: the arena
+  // measures a different set of axes. Supporting a list, and a trailing "/*" prefix
+  // form for a route family such as the 26 /gspc/:axis pages, lets a multi-surface
+  // instrument declare itself honestly instead of being silenced case by case.
+  const scopedExact = new Set();
+  const scopedPrefix = [];
+  const declare = (s) => {
+    if (typeof s !== "string" || !s) return;
+    const clean = s.replace(/^\//, "");
+    if (clean.endsWith("/*")) scopedPrefix.push(clean.slice(0, -2));
+    else scopedExact.add(clean);
+  };
+  for (const v of Object.values(ns)) {
+    if (!v) continue;
+    declare(v.surface);
+    if (Array.isArray(v.surfaces)) v.surfaces.forEach(declare);
+  }
 
   let m;
   while ((m = COUNT_RE.exec(text))) {
     const n = Number(m[1]);
     if (n === liveCount) continue;
+    // A measured/quotable-qualified count is a claim about the MEASURED count, not
+    // the board total. ruleMeasuredOverclaim owns it.
+    if (/^(?:measured|quotable)\s*$/i.test(m[2] || "")) continue;
     if (isProhibition(text, m.index)) continue; // "do not invent 22 axes"
     if (isNegated(text, m.index, COUNT_RE.lastIndex)) continue;
 
@@ -131,12 +159,31 @@ function ruleAxisCount(facts, file, text, add, liveCount) {
     // A published correction quotes the wrong number on purpose.
     if (CORRECTION_CTX.test(ctx(text, m.index, COUNT_RE.lastIndex, 300))) continue;
 
-    // The board legitimately describes itself as "13 canonical axes ... + jail".
+    // The board legitimately describes itself as "13 canonical axes ... + jail" —
+    // a measurement stamp recording that 13 axes were measured on one date and jail
+    // on another. That sums to the GSPC FAMILY count (14), not to the whole board.
+    // This was written as `liveCount - 1` when the board was 14 axes and the two
+    // happened to coincide; once the board became 22 the arithmetic broke and a true
+    // historical stamp started being flagged. Compare against the family count that
+    // the stamp is actually a breakdown of.
+    const familyCount = facts.counts?.axis_count?.gspc_family_axes;
     const window = ctx(text, m.index, COUNT_RE.lastIndex, 160).toLowerCase();
-    if (/\bjail\b/.test(window) && n === liveCount - 1) continue;
+    if (/\bjail\b/.test(window) && typeof familyCount === "number" && n === familyCount - 1) continue;
 
-    const base = file.replace(/\.html?$/, "").replace(/__/g, "/");
-    if ([...scoped].some((s) => base.endsWith(s))) continue;
+    // A route renders to "<route>/index.html", so the base of /gspc-gap-map is
+    // "gspc-gap-map/index" — which endsWith("gspc-gap-map") is FALSE. Every
+    // directory-index route therefore escaped its own namespace's exoneration,
+    // including eunomia and gspc-gap-map, which had declared a surface and were
+    // being flagged anyway. Strip the trailing "/index" before matching.
+    const base = file
+      .replace(/\.html?$/, "")
+      .replace(/__/g, "/")
+      .replace(/\/index$/, "");
+    if ([...scopedExact].some((s) => base === s || base.endsWith("/" + s))) continue;
+    // A prefix entry ("gspc/*") exonerates every route beneath it. Anchored on a
+    // path separator so "gspc/openness" matches but "gspc-scoreboard" does not —
+    // a bare startsWith would quietly swallow neighbouring routes.
+    if (scopedPrefix.some((p) => base === p || base.includes(p + "/"))) continue;
 
     add({
       rule: "axis-count",
@@ -148,6 +195,47 @@ function ruleAxisCount(facts, file, text, add, liveCount) {
         `facts.json: counts are a POINTER, never a typed integer.`,
       ctx: ctx(text, m.index, COUNT_RE.lastIndex),
     });
+  }
+}
+
+// ---------------------------------------------------------------- measured-overclaim
+// THE FAILURE MODE THE 22-AXIS SWEEP CREATED, and the reason this rule exists.
+//
+// ruleAxisCount only compares an integer. Once the board carries 22 axes, the
+// sentence "22 measured axes" passes that check perfectly — the integer is right.
+// But it is the single most damaging thing the estate could publish: 22 is a count
+// of SLOTS, only 15 of which have a run behind them, so it silently claims seven
+// measurements that do not exist. An axis-count rule cannot catch it, because the
+// error is in the word "measured", not in the number.
+//
+// This rule reads the live MEASURED count and fails any surface asserting that more
+// axes are measured than are measured.
+const MEASURED_RE = /\b(\d{1,3})\s+(?:of\s+\d{1,3}\s+)?measured\s+(?:axes|axis|slots)\b/gi;
+const ALL_MEASURED_RE = /\ball\s+(\d{1,3})\s+(?:axes|axis|slots)\s+(?:are|were|have\s+been)\s+measured\b/gi;
+
+function ruleMeasuredOverclaim(facts, file, text, add, liveMeasured) {
+  if (liveMeasured == null) return;
+  for (const re of [MEASURED_RE, ALL_MEASURED_RE]) {
+    re.lastIndex = 0;
+    let m;
+    while ((m = re.exec(text))) {
+      const n = Number(m[1]);
+      if (n <= liveMeasured) continue; // claiming fewer or exactly as many is safe
+      if (isProhibition(text, m.index)) continue;
+      if (isNegated(text, m.index, re.lastIndex)) continue;
+      if (CORRECTION_CTX.test(ctx(text, m.index, re.lastIndex, 300))) continue;
+      add({
+        rule: "measured-overclaim",
+        file,
+        text: m[0],
+        why:
+          `"${m[0]}" claims ${n} measured axes, but the live board reports only ${liveMeasured} ` +
+          `measured (${facts.counts.axis_count.endpoint} -> totals.measured_axes). The board's axis ` +
+          `count and its measured count are DIFFERENT NUMBERS: a published slot is not a measurement. ` +
+          `Quote totals.public_count, which carries both.`,
+        ctx: ctx(text, m.index, re.lastIndex),
+      });
+    }
   }
 }
 
@@ -229,16 +317,33 @@ function walk(dir, out = []) {
   return out;
 }
 
+// The gate compares surface counts NUMERICALLY, so it must read the numeric field.
+// facts.json declares two: `field` (totals.public_count) is the SENTENCE a surface
+// quotes and is a string; `numeric_field` (totals.axes) is the integer to compare.
+// Reading `field` here would compare a number against "22 axes · 15 measured" and
+// silently never match. Until 2026-08-26 this read totals.axes while facts.json
+// declared public_count as the authority — a latent mismatch masked only because
+// both yielded 14. The field to read is now resolved from the declaration.
+function pick(obj, path) {
+  return String(path || "").split(".").reduce((o, k) => (o == null ? o : o[k]), obj);
+}
+
 async function liveAxisCount(facts) {
-  const ep = facts.counts?.axis_count?.endpoint;
+  const ac = facts.counts?.axis_count;
+  const ep = ac?.endpoint;
+  const numericPath = ac?.numeric_field || "totals.axes";
   if (!ep || process.env.FACTS_GATE_OFFLINE === "1") {
-    return facts.counts?.axis_count?.observed?.axes ?? null;
+    return ac?.observed?.axes ?? null;
   }
   try {
     const res = await fetch(ep, { signal: AbortSignal.timeout(20000) });
     const j = await res.json();
-    const n = j?.totals?.axes;
+    const n = pick(j, numericPath);
     if (typeof n === "number") return n;
+    console.warn(
+      `facts-gate: ${ep} -> ${numericPath} is ${typeof n}, not a number; ` +
+        `falling back to the recorded observation. Check facts.json numeric_field.`
+    );
   } catch {
     console.warn(
       `facts-gate: could not reach ${ep}; falling back to recorded observation (non-binding).`
@@ -247,7 +352,22 @@ async function liveAxisCount(facts) {
   return facts.counts?.axis_count?.observed?.axes ?? null;
 }
 
-function runRules(facts, files, rootDir, liveCount) {
+async function liveMeasuredCount(facts) {
+  const ac = facts.counts?.axis_count;
+  const ep = ac?.endpoint;
+  const path = ac?.measured_numeric_field || "totals.measured_axes";
+  if (!ep || process.env.FACTS_GATE_OFFLINE === "1") return ac?.observed?.measured_axes ?? null;
+  try {
+    const res = await fetch(ep, { signal: AbortSignal.timeout(20000) });
+    const n = pick(await res.json(), path);
+    if (typeof n === "number") return n;
+  } catch {
+    console.warn(`facts-gate: could not reach ${ep} for the measured count; using the recorded observation.`);
+  }
+  return ac?.observed?.measured_axes ?? null;
+}
+
+function runRules(facts, files, rootDir, liveCount, liveMeasured) {
   const violations = [];
   const add = (v) => violations.push(v);
   for (const f of files) {
@@ -256,6 +376,7 @@ function runRules(facts, files, rootDir, liveCount) {
     const text = contentOf(f, raw);
     ruleBoundary(facts, rel, text, add);
     ruleAxisCount(facts, rel, text, add, liveCount);
+    ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
   }
   return violations;
@@ -286,9 +407,20 @@ const SELFTEST_CASES = [
   ["VIOLATION: we certify", "<p>We certify that this model meets the standard.</p>", true],
   ["VIOLATION: our certification", "<p>Ask about our certification programme for vendors.</p>", true],
   ["VIOLATION: accredited by us", "<p>Labs accredited by us receive a badge.</p>", true],
-  ["prohibition: do not invent 22 axes", "<p>Cite live totals.public_count — do not invent 22 axes.</p>", false],
-  ["VIOLATION: hardcoded 22 axes", "<p>The board measures 22 axes across the fleet.</p>", true],
-  ["board self-description: 13 canonical axes + jail", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
+  // ── the 22-axis canon (ADR-001, swept into the signed data 2026-08-26) ────────
+  // These three cases were written when the board was 14 axes and "22" was a
+  // number nobody was allowed to say. The canon moved and the signed data now
+  // backs it, so the expectations move with it. What is forbidden changed shape
+  // rather than going away: the danger is no longer saying "22", it is saying
+  // "22 MEASURED" — which would claim seven measurements that do not exist.
+  ["prohibition form still passes", "<p>Cite live totals.public_count — do not invent 22 axes.</p>", false],
+  ["22 axes is now the canon and matches the live board", "<p>The board carries 22 axes across both families.</p>", false],
+  ["stale count: the pre-sweep 14", "<p>The board measures 14 axes across the fleet.</p>", true],
+  ["board self-description: 13 canonical axes + jail (a GSPC-family stamp)", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
+  ["honest swept grammar", "<p>22 axes · 15 measured — seven slots are declared with no run behind them.</p>", false],
+  ["VIOLATION: 22 measured axes (right integer, wrong word)", "<p>The board publishes 22 measured axes.</p>", true],
+  ["VIOLATION: all 22 axes are measured", "<p>All 22 axes are measured and signed.</p>", true],
+  ["honest: 15 measured axes", "<p>The board carries 15 measured axes today.</p>", false],
   ["VIOLATION: EAS asserted live", "<p>Every attestation is anchored on EAS today.</p>", true],
   ["honest EAS label", "<p>EVM · EAS BlackRock BUIDL 0x7712c3420573… UNMEASURED</p>", false],
   ["VIOLATION: ERC-3643 asserted live", "<p>We issue ERC-3643 credentials; issuance runs on the trusted-issuer bridge.</p>", true],
@@ -298,6 +430,7 @@ const SELFTEST_CASES = [
 
 async function selftest(facts) {
   const liveCount = facts.counts?.axis_count?.observed?.axes ?? 14;
+  const liveMeasured = facts.counts?.axis_count?.observed?.measured_axes ?? null;
   let pass = 0;
   let fail = 0;
   console.log(`facts-gate --selftest  (live axis count = ${liveCount})\n`);
@@ -307,6 +440,7 @@ async function selftest(facts) {
     const text = textOf(html);
     ruleBoundary(facts, "selftest", text, add);
     ruleAxisCount(facts, "selftest", text, add, liveCount);
+    ruleMeasuredOverclaim(facts, "selftest", text, add, liveMeasured);
     ruleCapabilityTense(facts, "selftest", text, add);
     const didFail = violations.length > 0;
     const ok = didFail === shouldFail;
@@ -348,10 +482,11 @@ if (!root || !existsSync(root)) {
 }
 
 const liveCount = await liveAxisCount(facts);
+const liveMeasured = await liveMeasuredCount(facts);
 const files = walk(root);
 console.log(`facts-gate: scanning ${files.length} prerendered files in ${root} (live axis count = ${liveCount})`);
 
-const violations = runRules(facts, files, root, liveCount);
+const violations = runRules(facts, files, root, liveCount, liveMeasured);
 report(violations);
 
 if (violations.length) {
