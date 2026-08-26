@@ -1,0 +1,2209 @@
+{
+ "schema": "csoai.mcp-security-scorecard/0.1",
+ "as_of": "2026-08-26",
+ "instrument": "disclosure-integrity: 8 factual signals over the canon registry snapshot (auto-gen 2026-08-01; methodology under METHODOLOGY.md)",
+ "counts": {
+  "site": 14,
+  "server": 293,
+  "pack": 5
+ },
+ "totals": {
+  "entries": 311,
+  "k8_bands": {
+   "A": 306,
+   "B": 0,
+   "C": 5,
+   "D": 0,
+   "F": 0
+  }
+ },
+ "note": "312 canon entries; 311 unique ids (one duplicate id in the canon registry — recorded, not hidden).",
+ "honesty": "Grades the DISCLOSED facts of registry entries (factual, observable, methodology-published, signed). NOT live security posture; v0.2 = live probing. No certification, no endorsement.",
+ "scorecard": {
+  "csoai.org": {
+   "id": "csoai.org",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "accountabilityof.ai": {
+   "id": "accountabilityof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agisafe.ai": {
+   "id": "agisafe.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "asisecurity.ai": {
+   "id": "asisecurity.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ethicalgovernanceof.ai": {
+   "id": "ethicalgovernanceof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "dataprivacyof.ai": {
+   "id": "dataprivacyof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "biasdetectionof.ai": {
+   "id": "biasdetectionof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "checkoutof.ai": {
+   "id": "checkoutof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "proofof.ai": {
+   "id": "proofof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "transparencyof.ai": {
+   "id": "transparencyof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "councilof.ai": {
+   "id": "councilof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "safetyof.ai": {
+   "id": "safetyof.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "cobolbridge.ai": {
+   "id": "cobolbridge.ai",
+   "kind": "site",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "a2a-governance-bridge-mcp": {
+   "id": "a2a-governance-bridge-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ai-bom-mcp": {
+   "id": "ai-bom-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ai-incident-reporting-mcp": {
+   "id": "ai-incident-reporting-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ai-self-audit-mcp": {
+   "id": "ai-self-audit-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "api-tester-ai-mcp": {
+   "id": "api-tester-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-audit-logger-mcp": {
+   "id": "agent-audit-logger-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-content-watermark-mcp": {
+   "id": "agent-content-watermark-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-data-residency-mcp": {
+   "id": "agent-data-residency-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-incident-relay-mcp": {
+   "id": "agent-incident-relay-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-policy-enforcement-mcp": {
+   "id": "agent-policy-enforcement-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-rate-limiter-mcp": {
+   "id": "agent-rate-limiter-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-replay-debugger-mcp": {
+   "id": "agent-replay-debugger-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agriculture-robotics-mcp": {
+   "id": "agriculture-robotics-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "airspace-monitor-mcp": {
+   "id": "airspace-monitor-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "aml-ai-mcp": {
+   "id": "aml-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "basel-ai-overlay-mcp": {
+   "id": "basel-ai-overlay-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "bias-detection-mcp": {
+   "id": "bias-detection-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "blockchain-ai-mcp": {
+   "id": "blockchain-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "blockchain-verification-mcp": {
+   "id": "blockchain-verification-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "canada-aida-ai-mcp": {
+   "id": "canada-aida-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "care-home-cqc-mcp": {
+   "id": "care-home-cqc-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "concrete-pump-cpa-mcp": {
+   "id": "concrete-pump-cpa-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "construction-iso-19650-mcp": {
+   "id": "construction-iso-19650-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "coppa-ferpa-mcp": {
+   "id": "coppa-ferpa-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "cra-compliance-mcp": {
+   "id": "cra-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "crane-hire-cpcs-mcp": {
+   "id": "crane-hire-cpcs-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "credential-manager-mcp": {
+   "id": "credential-manager-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-governance-crosswalk-mcp": {
+   "id": "csoai-governance-crosswalk-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csrd-compliance-mcp": {
+   "id": "csrd-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "devops-ai-mcp": {
+   "id": "devops-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "dora-compliance-mcp": {
+   "id": "dora-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "dora-nis2-crosswalk-mcp": {
+   "id": "dora-nis2-crosswalk-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "drone-airspace-governance-mcp": {
+   "id": "drone-airspace-governance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "eu-ai-act-compliance-mcp": {
+   "id": "eu-ai-act-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "fda-samd-mcp": {
+   "id": "fda-samd-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "flight-logger-mcp": {
+   "id": "flight-logger-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "fsa-food-safety-mcp": {
+   "id": "fsa-food-safety-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "gdpr-compliance-ai-mcp": {
+   "id": "gdpr-compliance-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "gods-eye-geospatial-mcp": {
+   "id": "gods-eye-geospatial-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "haulage-uk-compliance-mcp": {
+   "id": "haulage-uk-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "healthcare-ai-governance-mcp": {
+   "id": "healthcare-ai-governance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "healthcare-fhir-mcp": {
+   "id": "healthcare-fhir-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "hipaa-compliance-mcp": {
+   "id": "hipaa-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "hr-management-ai-mcp": {
+   "id": "hr-management-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "iso-42001-ai-mcp": {
+   "id": "iso-42001-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "legal-document-ai-mcp": {
+   "id": "legal-document-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "license-checker-ai-mcp": {
+   "id": "license-checker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "llm-compliance-comparison-mcp": {
+   "id": "llm-compliance-comparison-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mcp-spec-compliance-mcp": {
+   "id": "mcp-spec-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-cra-annex-iv-classifier-mcp": {
+   "id": "csoai-cra-annex-iv-classifier-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-cra-art14-reporter-mcp": {
+   "id": "csoai-cra-art14-reporter-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-dora-tlpt-planner-mcp": {
+   "id": "csoai-dora-tlpt-planner-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-eu-ai-act-art-13-ifu-mcp": {
+   "id": "csoai-eu-ai-act-art-13-ifu-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-eu-ai-act-art-26-fria-mcp": {
+   "id": "csoai-eu-ai-act-art-26-fria-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-eu-aia-art-9-rms-mcp": {
+   "id": "csoai-eu-aia-art-9-rms-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-eu-aigc-icon-mcp": {
+   "id": "csoai-eu-aigc-icon-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-fria-generator-mcp": {
+   "id": "csoai-fria-generator-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-governance-engine-mcp": {
+   "id": "csoai-governance-engine-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-nis2-de-register-mcp": {
+   "id": "csoai-nis2-de-register-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-nis2-nl-register-mcp": {
+   "id": "csoai-nis2-nl-register-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-omnibus-tracker-mcp": {
+   "id": "csoai-omnibus-tracker-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-watermark-attest-mcp": {
+   "id": "csoai-watermark-attest-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mica-crypto-mcp": {
+   "id": "mica-crypto-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mifid-ii-ai-mcp": {
+   "id": "mifid-ii-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "nis2-compliance-mcp": {
+   "id": "nis2-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "nist-rmf-ai-mcp": {
+   "id": "nist-rmf-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "nrswa-ai-mcp": {
+   "id": "nrswa-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "pci-dss-mcp": {
+   "id": "pci-dss-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "regulatory-webhook-mcp": {
+   "id": "regulatory-webhook-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "risk-assessment-ai-mcp": {
+   "id": "risk-assessment-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "sbom-cyclonedx-mcp": {
+   "id": "sbom-cyclonedx-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "skip-hire-ai-mcp": {
+   "id": "skip-hire-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "slsa-supply-chain-mcp": {
+   "id": "slsa-supply-chain-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "soc2-compliance-ai-mcp": {
+   "id": "soc2-compliance-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "trust-chain-mcp": {
+   "id": "trust-chain-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "uk-ai-act-mcp": {
+   "id": "uk-ai-act-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "uk-ai-bill-compliance-mcp": {
+   "id": "uk-ai-bill-compliance-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "watermarking-authenticity-mcp": {
+   "id": "watermarking-authenticity-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "yaml-ai-mcp": {
+   "id": "yaml-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-prompt-injection-firewall-mcp": {
+   "id": "agent-prompt-injection-firewall-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "care-membrane-mcp": {
+   "id": "care-membrane-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ci-cd-generator-ai-mcp": {
+   "id": "ci-cd-generator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "cisa-kev-mcp": {
+   "id": "cisa-kev-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "code-executor-mcp": {
+   "id": "code-executor-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "content-calendar-ai-mcp": {
+   "id": "content-calendar-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "content-registry-mcp": {
+   "id": "content-registry-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "cybersecurity-ai-mcp": {
+   "id": "cybersecurity-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "job-description-ai-mcp": {
+   "id": "job-description-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-agents-md-lint-mcp": {
+   "id": "csoai-agents-md-lint-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-c2pa-durable-mcp": {
+   "id": "csoai-c2pa-durable-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-mcp-hardening-mcp": {
+   "id": "csoai-mcp-hardening-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mitre-atlas-mcp": {
+   "id": "mitre-atlas-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "optometry-ai-safety-mcp": {
+   "id": "optometry-ai-safety-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "owasp-agentic-mcp": {
+   "id": "owasp-agentic-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "patient-safety-ai-mcp": {
+   "id": "patient-safety-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "photography-ai-mcp": {
+   "id": "photography-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "proofof-ai-mcp": {
+   "id": "proofof-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "security-scanner-ai-mcp": {
+   "id": "security-scanner-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "writing-assistant-ai-mcp": {
+   "id": "writing-assistant-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-commerce-protocol-mcp": {
+   "id": "agent-commerce-protocol-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-delegation-mcp": {
+   "id": "agent-delegation-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-handoff-certified-mcp": {
+   "id": "agent-handoff-certified-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-identity-trust-mcp": {
+   "id": "agent-identity-trust-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-mcp-router-mcp": {
+   "id": "agent-mcp-router-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-negotiation-mcp": {
+   "id": "agent-negotiation-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-orchestrator-mcp": {
+   "id": "agent-orchestrator-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-token-budget-mcp": {
+   "id": "agent-token-budget-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "progress-council-mcp": {
+   "id": "progress-council-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "consciousness-engine-mcp": {
+   "id": "consciousness-engine-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "eudi-wallet-mcp": {
+   "id": "eudi-wallet-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "iso-42005-impact-mcp": {
+   "id": "iso-42005-impact-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-aaif-agent-card-mcp": {
+   "id": "csoai-aaif-agent-card-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-libp2p-agent-mesh-mcp": {
+   "id": "csoai-libp2p-agent-mesh-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "webhook-ai-mcp": {
+   "id": "webhook-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-commerce-payments-mcp": {
+   "id": "agent-commerce-payments-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-cost-allocator-mcp": {
+   "id": "agent-cost-allocator-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "agent-x402-paywall-mcp": {
+   "id": "agent-x402-paywall-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ecommerce-ai-mcp": {
+   "id": "ecommerce-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "invoice-generator-ai-mcp": {
+   "id": "invoice-generator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-coinbase-x402-receipt-mcp": {
+   "id": "csoai-coinbase-x402-receipt-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-stripe-acp-checkout-mcp": {
+   "id": "csoai-stripe-acp-checkout-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-x402-wrap-mcp": {
+   "id": "csoai-x402-wrap-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mortgage-calculator-ai-mcp": {
+   "id": "mortgage-calculator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "stripe-billing-mcp": {
+   "id": "stripe-billing-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "dataprivacy-ai-mcp": {
+   "id": "dataprivacy-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mdr-medical-device-mcp": {
+   "id": "mdr-medical-device-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "chas-elite-prep-mcp": {
+   "id": "chas-elite-prep-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "education-ai-mcp": {
+   "id": "education-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "insurance-verification-mcp": {
+   "id": "insurance-verification-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "landlaw-ai-mcp": {
+   "id": "landlaw-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "personal-finance-ai-mcp": {
+   "id": "personal-finance-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "price-tracker-ai-mcp": {
+   "id": "price-tracker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "real-estate-listing-mcp": {
+   "id": "real-estate-listing-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "self-healing-infrastructure-mcp": {
+   "id": "self-healing-infrastructure-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "social-media-ai-mcp": {
+   "id": "social-media-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "stock-analyzer-ai-mcp": {
+   "id": "stock-analyzer-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ai-gateway-mcp": {
+   "id": "ai-gateway-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ai-ops-mcp": {
+   "id": "ai-ops-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "api-docs-generator-ai-mcp": {
+   "id": "api-docs-generator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "backup-ai-mcp": {
+   "id": "backup-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "budget-planner-ai-mcp": {
+   "id": "budget-planner-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "changelog-ai-mcp": {
+   "id": "changelog-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "churn-predictor-ai-mcp": {
+   "id": "churn-predictor-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "competitor-monitor-ai-mcp": {
+   "id": "competitor-monitor-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csv-analytics-mcp": {
+   "id": "csv-analytics-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "currency-converter-ai-mcp": {
+   "id": "currency-converter-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "dockerfile-generator-ai-mcp": {
+   "id": "dockerfile-generator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "faker-ai-mcp": {
+   "id": "faker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "health-check-ai-mcp": {
+   "id": "health-check-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "icon-generator-ai-mcp": {
+   "id": "icon-generator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "marketing-analytics-ai-mcp": {
+   "id": "marketing-analytics-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-mcp-test-mcp": {
+   "id": "csoai-mcp-test-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mock-server-ai-mcp": {
+   "id": "mock-server-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "password-ai-mcp": {
+   "id": "password-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "pmcp-gateway": {
+   "id": "pmcp-gateway",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "pomodoro-ai-mcp": {
+   "id": "pomodoro-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "qidi-printer-mcp": {
+   "id": "qidi-printer-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "qr-code-ai-mcp": {
+   "id": "qr-code-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "quiz-generator-ai-mcp": {
+   "id": "quiz-generator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "readme-generator-ai-mcp": {
+   "id": "readme-generator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "tax-calculator-ai-mcp": {
+   "id": "tax-calculator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "test-case-generator-ai-mcp": {
+   "id": "test-case-generator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "validator-ai-mcp": {
+   "id": "validator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ad-copy-ai-mcp": {
+   "id": "ad-copy-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ascii-art-ai-mcp": {
+   "id": "ascii-art-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "deepfake-detector-mcp": {
+   "id": "deepfake-detector-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "image-metadata-ai-mcp": {
+   "id": "image-metadata-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "plagiarism-checker-ai-mcp": {
+   "id": "plagiarism-checker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "tone-rewriter-ai-mcp": {
+   "id": "tone-rewriter-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "video-editing-ai-mcp": {
+   "id": "video-editing-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "accessibility-ai-mcp": {
+   "id": "accessibility-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "accounting-ai-mcp": {
+   "id": "accounting-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "calendar-ai-mcp": {
+   "id": "calendar-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "citation-finder-ai-mcp": {
+   "id": "citation-finder-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "cli-builder-ai-mcp": {
+   "id": "cli-builder-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "clinical-trials-ai-mcp": {
+   "id": "clinical-trials-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "clipboard-ai-mcp": {
+   "id": "clipboard-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "cobol-bridge-mcp": {
+   "id": "cobol-bridge-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "code-reviewer-ai-mcp": {
+   "id": "code-reviewer-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "color-ai-mcp": {
+   "id": "color-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "commit-message-ai-mcp": {
+   "id": "commit-message-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "compression-ai-mcp": {
+   "id": "compression-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "config-validator-ai-mcp": {
+   "id": "config-validator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "contract-review-ai-mcp": {
+   "id": "contract-review-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "creativity-engine-mcp": {
+   "id": "creativity-engine-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "crm-ai-mcp": {
+   "id": "crm-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "cron-ai-mcp": {
+   "id": "cron-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "crypto-tracker-ai-mcp": {
+   "id": "crypto-tracker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csv-tools-ai-mcp": {
+   "id": "csv-tools-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "customer-support-ai-mcp": {
+   "id": "customer-support-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "data-science-ai-mcp": {
+   "id": "data-science-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "database-universal-mcp": {
+   "id": "database-universal-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "date-calculator-ai-mcp": {
+   "id": "date-calculator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "dependency-updater-ai-mcp": {
+   "id": "dependency-updater-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "diff-ai-mcp": {
+   "id": "diff-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "docker-helper-ai-mcp": {
+   "id": "docker-helper-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "document-comparison-ai-mcp": {
+   "id": "document-comparison-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "email-automation-mcp": {
+   "id": "email-automation-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "email-validator-ai-mcp": {
+   "id": "email-validator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "emoji-ai-mcp": {
+   "id": "emoji-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "encoder-ai-mcp": {
+   "id": "encoder-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "env-manager-ai-mcp": {
+   "id": "env-manager-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "event-planning-ai-mcp": {
+   "id": "event-planning-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "expense-tracker-ai-mcp": {
+   "id": "expense-tracker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "explainability-report-mcp": {
+   "id": "explainability-report-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "feedback-analyzer-ai-mcp": {
+   "id": "feedback-analyzer-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "file-organizer-ai-mcp": {
+   "id": "file-organizer-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "fishkeeper-ai-mcp": {
+   "id": "fishkeeper-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "fitness-ai-mcp": {
+   "id": "fitness-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "flashcard-ai-mcp": {
+   "id": "flashcard-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "focus-timer-ai-mcp": {
+   "id": "focus-timer-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "gardening-ai-mcp": {
+   "id": "gardening-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "geolocation-ai-mcp": {
+   "id": "geolocation-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "git-helper-ai-mcp": {
+   "id": "git-helper-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "grammar-fix-ai-mcp": {
+   "id": "grammar-fix-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "habit-tracker-ai-mcp": {
+   "id": "habit-tracker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "hash-utils-ai-mcp": {
+   "id": "hash-utils-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "html-parser-ai-mcp": {
+   "id": "html-parser-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "hydration-reminder-ai-mcp": {
+   "id": "hydration-reminder-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "inventory-management-ai-mcp": {
+   "id": "inventory-management-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "ip-network-ai-mcp": {
+   "id": "ip-network-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "iso-27001-ai-mcp": {
+   "id": "iso-27001-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "json-ai-mcp": {
+   "id": "json-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "jwt-ai-mcp": {
+   "id": "jwt-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "keyword-extractor-ai-mcp": {
+   "id": "keyword-extractor-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "korea-ai-basic-act-mcp": {
+   "id": "korea-ai-basic-act-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "lead-scoring-ai-mcp": {
+   "id": "lead-scoring-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "linkedin-outreach-mcp": {
+   "id": "linkedin-outreach-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "logistics-ai-mcp": {
+   "id": "logistics-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "lorem-ipsum-ai-mcp": {
+   "id": "lorem-ipsum-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "markdown-ai-mcp": {
+   "id": "markdown-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "math-solver-ai-mcp": {
+   "id": "math-solver-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mcp-distributor": {
+   "id": "mcp-distributor",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mcp-get": {
+   "id": "mcp-get",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mcp-servers": {
+   "id": "mcp-servers",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "meal-planner-ai-mcp": {
+   "id": "meal-planner-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "meditation-guide-ai-mcp": {
+   "id": "meditation-guide-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "meeting-summarizer-ai-mcp": {
+   "id": "meeting-summarizer-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "memory-search-mcp": {
+   "id": "memory-search-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-abci-bridge-mcp": {
+   "id": "csoai-abci-bridge-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-ap2-mandate-mcp": {
+   "id": "csoai-ap2-mandate-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-mcp-cardgen-mcp": {
+   "id": "csoai-mcp-cardgen-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-mcp-injection-scan-mcp": {
+   "id": "csoai-mcp-injection-scan-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "csoai-w3c-tdm-rights-mcp": {
+   "id": "csoai-w3c-tdm-rights-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "mitre-attack-mcp": {
+   "id": "mitre-attack-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "muckaway-ai-mcp": {
+   "id": "muckaway-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "music-production-ai-mcp": {
+   "id": "music-production-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "note-taking-ai-mcp": {
+   "id": "note-taking-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "notification-ai-mcp": {
+   "id": "notification-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "nutrition-tracker-ai-mcp": {
+   "id": "nutrition-tracker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "oasf-agent-directory-mcp": {
+   "id": "oasf-agent-directory-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "otp-ai-mcp": {
+   "id": "otp-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "pdf-document-mcp": {
+   "id": "pdf-document-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "pdf-merge-ai-mcp": {
+   "id": "pdf-merge-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "pdf-tools-ai-mcp": {
+   "id": "pdf-tools-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "performance-ai-mcp": {
+   "id": "performance-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "pet-care-ai-mcp": {
+   "id": "pet-care-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "planthire-ai-mcp": {
+   "id": "planthire-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "project-management-ai-mcp": {
+   "id": "project-management-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "rag-knowledge-mcp": {
+   "id": "rag-knowledge-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "rag-knowledge-graph-mcp": {
+   "id": "rag-knowledge-graph-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "recipe-finder-ai-mcp": {
+   "id": "recipe-finder-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "recruitment-ai-mcp": {
+   "id": "recruitment-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "regex-ai-mcp": {
+   "id": "regex-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "restaurant-ai-mcp": {
+   "id": "restaurant-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "resume-parser-ai-mcp": {
+   "id": "resume-parser-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "robotics-control-mcp": {
+   "id": "robotics-control-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "scam-detector-mcp": {
+   "id": "scam-detector-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "schema-validator-ai-mcp": {
+   "id": "schema-validator-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "sentiment-analysis-ai-mcp": {
+   "id": "sentiment-analysis-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "seo-checker-ai-mcp": {
+   "id": "seo-checker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "sigstore-cosign-mcp": {
+   "id": "sigstore-cosign-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "slack-enterprise-mcp": {
+   "id": "slack-enterprise-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "sleep-tracker-ai-mcp": {
+   "id": "sleep-tracker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "slugify-ai-mcp": {
+   "id": "slugify-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "sql-builder-ai-mcp": {
+   "id": "sql-builder-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "string-utils-ai-mcp": {
+   "id": "string-utils-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "subscription-tracker-ai-mcp": {
+   "id": "subscription-tracker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "summarizer-ai-mcp": {
+   "id": "summarizer-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "supply-chain-mcp": {
+   "id": "supply-chain-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "survey-builder-ai-mcp": {
+   "id": "survey-builder-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "text-stats-ai-mcp": {
+   "id": "text-stats-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "time-tracker-ai-mcp": {
+   "id": "time-tracker-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "translation-ai-mcp": {
+   "id": "translation-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "translator-pro-ai-mcp": {
+   "id": "translator-pro-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "unit-converter-ai-mcp": {
+   "id": "unit-converter-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "url-ai-mcp": {
+   "id": "url-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "uuid-ai-mcp": {
+   "id": "uuid-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "vector-knowledge-graph-mcp": {
+   "id": "vector-knowledge-graph-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "voice-audio-mcp": {
+   "id": "voice-audio-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "weather-ai-mcp": {
+   "id": "weather-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "web-research-mcp": {
+   "id": "web-research-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "workout-planner-ai-mcp": {
+   "id": "workout-planner-ai-mcp",
+   "kind": "server",
+   "signals_met": 7,
+   "n": 8,
+   "grade": "A"
+  },
+  "pack_eu_ai_act": {
+   "id": "pack_eu_ai_act",
+   "kind": "pack",
+   "signals_met": 5,
+   "n": 8,
+   "grade": "C"
+  },
+  "pack_growth_distribution": {
+   "id": "pack_growth_distribution",
+   "kind": "pack",
+   "signals_met": 5,
+   "n": 8,
+   "grade": "C"
+  },
+  "pack_enterprise_finance": {
+   "id": "pack_enterprise_finance",
+   "kind": "pack",
+   "signals_met": 5,
+   "n": 8,
+   "grade": "C"
+  },
+  "pack_legacy_modernization": {
+   "id": "pack_legacy_modernization",
+   "kind": "pack",
+   "signals_met": 5,
+   "n": 8,
+   "grade": "C"
+  },
+  "pack_global_governance": {
+   "id": "pack_global_governance",
+   "kind": "pack",
+   "signals_met": 5,
+   "n": 8,
+   "grade": "C"
+  }
+ },
+ "content_id": "c352dc71f3c9f0d4fc1cf9e139fceb0850a3f1a6d35fe23f8951773fb3bf4520",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "c352dc71f3c9f0d4fc1cf9e139fceb0850a3f1a6d35fe23f8951773fb3bf4520",
+  "sig": "GSCilhuowAPcizWQ1w/IRtZq/2NTcEfB+VyrrLyuAP8v8Oxxtwe5rLKszkRj/vAS3upIYe40+7+WXEz8WWKoAA==",
+  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
+  "note": "Ed25519 over canonical content_id."
+ }
+}
