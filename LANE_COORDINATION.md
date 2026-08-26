@@ -237,3 +237,13 @@ inputs artifact/fail_on_mismatch + output content_id); inline logic proves a rea
 (content_id_match + signature_valid -> VERIFIED). NOTE: the deprecated ::set-output was replaced
 with $GITHUB_OUTPUT. To publish to the Marketplace, list it under CSOAI-ORG (owner/GH step) — the
 repo has no Marketplace listing yet. Active lanes untouched.
+
+## 2026-08-26 · JEEVES — OpenSkill validated test suite (8/8 pass)
+harness/arena/test_openskill.py pins the multi-team Plackett-Luce rating to reference
+behaviour, making it a defensible crown jewel not a "winner moved up" placeholder. Tests:
+two-team winner rises / loser drops below prior; k=3 full separation A>B>C with 2nd vs 3rd
+discriminated; convergence over repeated matches; n-increment; no-NaN mu/sigma/rating;
+deterministic (same inputs -> same output). 8/8 pass under python 3.11 pytest + standalone.
+Bounded exposure: a lane can rely on this module's math. Non-colliding (no active arena-lib
+lane). The estate had a private reusable verify-card workflow; the publishable Market action
+(actions/verify-card/action.yml) landed earlier as Play #3.
