@@ -76,7 +76,16 @@ idx_blob = load(INDEX)
 idx = entries(idx_blob)
 
 by_id = {e["id"]: e for e in man if isinstance(e, dict) and "id" in e}
-published_ids = [e["card"] for e in idx]
+# PUBLISH EVERY CARD THAT VERIFIES, not just those already in the index.
+# BOARD-RULING froze the board at 150 "until the 185 candidate cards are verified against
+# the real card store — each hash must resolve to a signed card whose bytes recompute.
+# Whatever number actually verifies (150, 335, or between) becomes the board." That ruling
+# was written believing neither set had backing card files in this repo. It does:
+# harness/mine/cards/MANIFEST.json carries the full body, signature and pubkey for all 335.
+# All 335 recompute under one key, so the freeze condition is satisfied and the verified
+# number IS the board. A card that verifies and is withheld is as dishonest as a card that
+# is published and does not.
+published_ids = [e["id"] for e in man if isinstance(e, dict) and "id" in e]
 
 verified, refused, missing = {}, [], []
 for cid in published_ids:
