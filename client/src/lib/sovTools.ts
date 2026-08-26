@@ -1,7 +1,15 @@
-// sovTools - the real bridge from the front end to the live Sovereign brain.
-// Talks JSON-RPC to /api/mcp: lists the tools the brain executes
-// server-side, and actually RUNS them (governed, care-floored, Ed25519-signable).
-// This is what turns the catalogue from a directory into working tooling.
+// sovTools — the bridge from the front end to the published MCP server.
+//
+// WHAT WAS WRONG (found by operating it, 2026-08-26): every call went to POST /api/mcp,
+// which exposes only onRequestGet (the registry artifact) and answers
+//   404 {"error":"not_found","path":"/api/mcp"}
+// to a POST. listTools() swallowed that in its catch and returned [], so ToolRunner sat on
+// the badge "connecting…" forever, on /tools and in the Council OS tools pane. A control
+// that is permanently mid-connection is telling the reader a process is under way when
+// nothing is. The JSON-RPC endpoint is /mcp (functions/mcp/[[path]].ts, proxied to the
+// GSPC MCP worker); /api/mcp is the read-only registry and is not an RPC target.
+//
+// listTools() now distinguishes "no tools" from "could not ask", so the caller can say which.
 
 const GW: string =
   ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) ||
@@ -15,8 +23,11 @@ export type SovTool = {
 
 export type ToolResult = { ok: boolean; text: string; raw?: any };
 
+/** The JSON-RPC endpoint. NOT `${GW}/mcp` — that is the registry artifact, GET-only. */
+const RPC = "/mcp";
+
 async function rpc(method: string, params?: any): Promise<any> {
-  const r = await fetch(GW + "/mcp", {
+  const r = await fetch(RPC, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params }),
@@ -25,12 +36,19 @@ async function rpc(method: string, params?: any): Promise<any> {
 }
 
 // The live, server-executed governance tools (govern, sign, verify, talk, agent-card).
-export async function listTools(): Promise<SovTool[]> {
+export type ToolListing =
+  | { state: "ok"; tools: SovTool[] }
+  | { state: "unreachable"; reason: string };
+
+export async function listTools(): Promise<ToolListing> {
   try {
     const d = await rpc("tools/list");
-    return (d && d.result && d.result.tools) || [];
+    if (d && d.error) return { state: "unreachable", reason: String(d.error.message || "the server returned an error") };
+    const tools = d && d.result && d.result.tools;
+    if (!Array.isArray(tools)) return { state: "unreachable", reason: "the reply carried no tools list" };
+    return { state: "ok", tools };
   } catch (e) {
-    return [];
+    return { state: "unreachable", reason: e instanceof Error ? e.message : "the request failed" };
   }
 }
 

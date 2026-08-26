@@ -36,20 +36,42 @@
 
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
+import { AXES_FIN } from "./_gspc_axes_fin";
 
-const AXES = [...AXES_A, ...AXES_B];
+// WHAT WAS WRONG (found by operating the endpoint, 2026-08-26)
+//
+//  1. AXES omitted AXES_FIN. The 8 financial axes were swept into the 22-axis canon on
+//     2026-08-26 (see functions/api/gspc.ts) and this file was not updated with it, so
+//     /api/badge?axis=reserve-attestation — and seven more axes that ARE on the board —
+//     answered "not on the board". The badge is the artifact third parties paste into
+//     their own sites; it was denying the estate's own canon in public.
+//
+//  2. The default board badge counted `quotable` as MEASURED axes only, which makes the
+//     denominator equal the numerator by construction: it rendered "14 measured of 14
+//     quotable" and was structurally incapable of ever showing a gap. /api/gspc publishes
+//     22 axes · 15 measured · 7 unmeasured and a count_grammar that says the gap must stay
+//     visible. A badge that cannot show UNMEASURED is the opposite of this board's rule.
+//
+//  3. The ?format=json payload described itself as "derived from GET /api/gspc totals".
+//     It never called /api/gspc and did not use its derivation. The provenance sentence
+//     was itself the false claim.
+//
+// The grammar below is now character-for-character the one in functions/api/gspc.ts:
+// axes = every slot, measured = status MEASURED. If those two files ever disagree again,
+// the badge is wrong, not the board.
+const AXES = [...AXES_A, ...AXES_B, ...AXES_FIN];
 
 const boardCounts = () => {
   const m = AXES.filter((a) => a.status === "MEASURED");
-  // Same derivation as functions/api/gspc.ts totals - never a typed slot count.
-  const measured = m.filter((a) => a.separation !== "UNTESTED").length;
-  const quotable = m.length;
-  const publicCount = `${measured} measured of ${quotable} quotable`;
+  const measured = m.length;                  // a slot with a real run behind it
+  const quotable = AXES.length;               // every slot on the board, gap included
+  const unmeasured = quotable - measured;
+  const publicCount = `${quotable} axes · ${measured} measured`;
   const jailUntested = m.some((a) => a.axis === "jail" && a.separation === "UNTESTED");
   const defaultMessage = jailUntested
     ? `${publicCount}; jail floor untested`
     : publicCount;
-  return { measured, quotable, publicCount, defaultMessage };
+  return { measured, quotable, unmeasured, publicCount, defaultMessage };
 };
 
 const VERIFY_URL = "https://councilof.ai/gspc-verify";
@@ -216,7 +238,15 @@ export const onRequestGet: PagesFunction = async (context) => {
         color: colour,
         verify: VERIFY_URL,
         public_count: board.publicCount,
-        ruling: `${board.publicCount} (derived from GET /api/gspc totals; never typed)`,
+        // Says what this handler actually does. It reads the same axis arrays
+        // functions/api/gspc.ts reads and applies the same rule; it does not call the
+        // endpoint. The previous wording claimed a derivation that never happened.
+        unmeasured: board.unmeasured,
+        ruling:
+          `${board.publicCount} — computed here from the same axis arrays GET /api/gspc ` +
+          `serves (_gspc_axes_a + _gspc_axes_b + _gspc_axes_fin), under the same rule: ` +
+          `axes counts slots, measured counts slots with a run. ${board.unmeasured} are ` +
+          `declared slots with no run behind them and are never quoted as measured.`,
       }, null, 2),
       { headers: { ...headers, "content-type": "application/json; charset=utf-8" } },
     );

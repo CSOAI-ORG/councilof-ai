@@ -1,7 +1,20 @@
 /**
- * Newsletter Signup Component
- * Email subscription form for CSOAI updates
- * Connects to backend API for newsletter subscriptions
+ * Newsletter Signup — the footer email capture, on every page.
+ *
+ * WHAT WAS WRONG (found by operating it, 2026-08-26)
+ *  1. It POSTed to /api/newsletter/subscribe, which does not exist. Production answered
+ *     404 {"error":"not_found"} to every submission on every page of the site, so the
+ *     control had never worked. The real handler is POST /api/subscribe.
+ *  2. It treated any 2xx as "Thank you for subscribing! Check your email to confirm."
+ *     /api/subscribe answers {"ok":true,"stored":false,"reason":"no datastore bound yet"}
+ *     when no KV namespace is bound — a 200 that stores nothing. Thanking someone for a
+ *     subscription that was dropped, and promising a confirmation email that will never
+ *     arrive, is the exact failure this estate exists to eliminate.
+ *  3. On a network error it wrote the address to localStorage and showed the same thank-you.
+ *     Nobody reads that localStorage key. It was a success message for a discarded address.
+ *
+ * THE CONTRACT NOW: the message follows `stored`. Stored means stored. Not stored says so,
+ * and hands over the address that does work. A failure says it failed.
  */
 
 import { useState } from "react";
@@ -12,7 +25,7 @@ import { Input } from "@/components/ui/input";
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "notstored" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,37 +36,45 @@ export default function NewsletterSignup() {
     setErrorMessage("");
 
     try {
-      const response = await fetch("/api/newsletter/subscribe", {
+      const response = await fetch("/api/subscribe", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "footer-newsletter" }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}) as Record<string, unknown>);
 
-      if (response.ok) {
+      if (!response.ok) {
+        setStatus("error");
+        setErrorMessage(
+          String(data.error || data.message || `The subscribe endpoint answered ${response.status}.`),
+        );
+        setTimeout(() => setStatus("idle"), 6000);
+        return;
+      }
+
+      // A 200 is not a subscription. `stored` is.
+      if (data.stored === true) {
         setStatus("success");
         setEmail("");
-        // Reset to idle after 5 seconds
-        setTimeout(() => setStatus("idle"), 5000);
+        setTimeout(() => setStatus("idle"), 6000);
       } else {
-        setStatus("error");
-        setErrorMessage(data.message || "Failed to subscribe. Please try again.");
-        setTimeout(() => setStatus("idle"), 4000);
+        setStatus("notstored");
+        setErrorMessage(
+          String(data.reason || "the subscriber store is not connected") +
+            ". Your address was NOT saved — " +
+            String(data.fallback || "email nicholas@csoai.org") +
+            " and we will add you by hand.",
+        );
       }
     } catch (error) {
-      // If API not available, store locally and show success
-      // This allows the form to work even without backend
-      const subscribers = JSON.parse(localStorage.getItem("newsletter_subscribers") || "[]");
-      if (!subscribers.includes(email)) {
-        subscribers.push(email);
-        localStorage.setItem("newsletter_subscribers", JSON.stringify(subscribers));
-      }
-      setStatus("success");
-      setEmail("");
-      setTimeout(() => setStatus("idle"), 5000);
+      // No local shadow-store, and no thank-you. An address we could not send is an
+      // address we did not take.
+      setStatus("error");
+      setErrorMessage(
+        "Could not reach the subscribe endpoint, so nothing was sent. Email nicholas@csoai.org instead.",
+      );
+      setTimeout(() => setStatus("idle"), 8000);
     }
   };
 
@@ -104,7 +125,17 @@ export default function NewsletterSignup() {
           animate={{ opacity: 1 }}
           className="text-emerald-600 text-sm mt-2"
         >
-          Thank you for subscribing! Check your email to confirm.
+          Stored. Your address is on the list — no confirmation email is sent.
+        </motion.p>
+      )}
+      {status === "notstored" && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-amber-700 text-sm mt-2 flex items-start gap-1"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+          <span>NOT SUBSCRIBED — {errorMessage}</span>
         </motion.p>
       )}
       {status === "error" && (

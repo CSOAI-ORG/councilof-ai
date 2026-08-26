@@ -175,8 +175,25 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const question = String(messages[messages.length - 1]?.content ?? "");
   const origin = new URL(request.url).origin;
 
+  // `model` used to be stamped on EVERY reply, defaulting to "sov6-ethics-v3-light" — including
+  // the deterministic `grounded` and `refused` answers, which are computed from the published
+  // board with no model in the path at all. A client reading that field was told a model wrote
+  // an answer no model had seen. It is now null unless a model actually produced the text, and
+  // `answered_by` says which path did.
   const reply = (answer: string, signature: string, state: string, extra: Record<string, unknown> = {}) =>
-    Response.json({ answer, reply: answer, signature, state, model, message: { role: "assistant", content: answer }, ...extra }, { headers: CORS });
+    Response.json(
+      {
+        answer,
+        reply: answer,
+        signature,
+        state,
+        model: state === "live" ? model : null,
+        answered_by: state === "live" ? `model:${model}` : "deterministic (no model in the path)",
+        message: { role: "assistant", content: answer },
+        ...extra,
+      },
+      { headers: CORS },
+    );
 
   // ClaimGuard: refuse false count claims before LIVE / grounded
   const guarded = claimGuardRefuse(question);

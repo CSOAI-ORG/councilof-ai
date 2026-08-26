@@ -7,6 +7,10 @@ import { listTools, callTool, sealArtifact, TOOL_META, type SovTool } from "../l
 // working tooling for end users, not a demo.
 export default function ToolRunner() {
   const [tools, setTools] = useState<SovTool[]>([]);
+  // Three states, never two: still asking, answered, or could not be reached — each said
+  // out loud. The badge used to read "connecting…" forever whenever the listing failed.
+  const [listState, setListState] = useState<"loading" | "ok" | "unreachable">("loading");
+  const [listReason, setListReason] = useState("");
   const [active, setActive] = useState<SovTool | null>(null);
   const [args, setArgs] = useState<Record<string, string>>({});
   const [out, setOut] = useState<{ ok: boolean; text: string } | null>(null);
@@ -14,9 +18,11 @@ export default function ToolRunner() {
   const [seal, setSeal] = useState<string>("");
 
   useEffect(() => {
-    listTools().then((t) => {
-      setTools(t);
-      const first = t.find((x) => x.name === "meok_govern") || t[0] || null;
+    listTools().then((r) => {
+      if (r.state !== "ok") { setListState("unreachable"); setListReason(r.reason); return; }
+      setListState("ok");
+      setTools(r.tools);
+      const first = r.tools.find((x) => x.name === "meok_govern") || r.tools[0] || null;
       if (first) pick(first);
     });
   }, []);
@@ -58,8 +64,18 @@ export default function ToolRunner() {
             <div className="text-[11px] text-emerald-300/60">Executed by the Council engine · governed · Ed25519-signable</div>
           </div>
         </div>
-        <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-300">{tools.length ? tools.length + " live" : "connecting…"}</span>
+        <span className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (listState === "unreachable" ? "bg-amber-500/15 text-amber-300" : "bg-emerald-500/15 text-emerald-300")}>
+          {listState === "loading" ? "connecting…" : listState === "unreachable" ? "unreachable" : tools.length + " live"}
+        </span>
       </div>
+
+      {listState === "unreachable" && (
+        <p className="mt-3 rounded-lg border border-amber-400/30 bg-amber-500/5 px-3 py-2 text-[12px] text-amber-100/85">
+          The MCP server did not answer tools/list — {listReason}. Nothing is running here; this
+          panel is showing you that, rather than a spinner that never resolves. The published
+          catalogue below is unaffected.
+        </p>
+      )}
 
       {/* tool picker */}
       <div className="mt-4 flex flex-wrap gap-2">
@@ -107,7 +123,7 @@ export default function ToolRunner() {
       {out && (
         <div className={"mt-4 rounded-xl border p-4 " + (out.ok ? "border-emerald-400/30 bg-emerald-500/5" : "border-amber-400/30 bg-amber-500/5")}>
           <div className="mb-1 flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wide text-emerald-300/70">{out.ok ? "Governed result — live" : "Notice"}</span>
+            <span className="text-[11px] font-bold uppercase tracking-wide text-emerald-300/70">{out.ok ? "The server's reply, verbatim" : "Notice"}</span>
             {out.ok && active && active.name !== "meok_sign" && (
               <button onClick={doSeal} disabled={busy} className="rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold text-emerald-200 hover:bg-emerald-500/20 disabled:opacity-50">✶ Seal to Layer 0</button>
             )}

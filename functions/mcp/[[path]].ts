@@ -11,9 +11,18 @@
  *     from functions/_lib/cardVerify.ts — the same module the browser verifier at
  *     /gspc-verify uses, so the two surfaces can never disagree again.
  *
- *   tools/list — the `verify` entry's description is rewritten to match what the tool
- *     now actually does (both families, key pinned against did:web:csoai.org). A tool
- *     description that promises more than the tool does is the same defect class.
+ *   tools/call name=measure | jail-probe — the upstream implementations answered
+ *     {"ok":true,"claim":"measurement", ...} to EVERY subject, including
+ *     "totally-fake-model-zzz-9999" and the empty string, without contacting a model or
+ *     consulting the published board. `ok:true` on a measurement tool reads as "measured",
+ *     and nothing was. They also carried the sentence "Contact councilof.ai for paid signed
+ *     issuance" — a commercial claim on a public surface, in an estate whose rule is that a
+ *     grade is never sold. Both are answered here instead, saying plainly that this public
+ *     endpoint returns the CONTRACT and performs no measurement, with `measured:false`.
+ *
+ *   tools/list — the `verify`, `measure` and `jail-probe` descriptions are rewritten to
+ *     match what the tools now actually do. A tool description that promises more than the
+ *     tool does is the same defect class.
  *
  * Everything else is forwarded untouched.
  */
@@ -35,6 +44,49 @@ const VERIFY_DESCRIPTION =
   "they mean different things. Accepts the card as an object, as a JSON string, or as a " +
   "councilof.ai / csoai.org URL. Free, anonymous, no account. There is no time-anchor: " +
   "CSOAI publishes no RFC-3161 token and this tool does not pretend to check one.";
+
+const MEASURE_DESCRIPTION =
+  "Return the GSPC measurement CONTRACT for a subject: which axes exist, how they are " +
+  "graded, and where the published results live. This endpoint DOES NOT MEASURE — it " +
+  "contacts no model and grades nothing, so it always answers measured:false. Published " +
+  "measurements are at GET /api/gspc (axes) and /signed/card_index.json (signed cards); " +
+  "an axis with no card is UNMEASURED and stays UNMEASURED. Never a certification.";
+
+const JAIL_DESCRIPTION =
+  "Return the jail-probe verdict CONTRACT for a model and prompt. This endpoint DOES NOT " +
+  "RUN the probe — sandbox execution and signed card issuance happen on the measurement " +
+  "fleet, not here — so it always answers measured:false and issues no verdict. " +
+  "Never a certification.";
+
+/**
+ * The honest answer for the two contract-only tools. Three states, never two: this is the
+ * third — "not measured", which is neither a pass nor a fail.
+ */
+function contractOnly(kind: "measure" | "jail-probe", args: Record<string, unknown>) {
+  const subject = String(args.model ?? args.subject ?? "");
+  const payload = {
+    measured: false,
+    not_a_certification: true,
+    kind: `${kind}.contract`,
+    subject: subject || null,
+    subject_note: subject
+      ? "echoed back as given; it was NOT looked up, contacted, or graded by this endpoint"
+      : "no subject was given",
+    reason:
+      kind === "measure"
+        ? "this public endpoint returns the measurement contract only. It contacts no model and grades nothing."
+        : "this public endpoint returns the jail-probe verdict contract only. Sandbox execution runs on the measurement fleet, not here.",
+    where_measurements_live: {
+      axes: "https://councilof.ai/api/gspc",
+      signed_cards: "https://councilof.ai/signed/card_index.json",
+      how_to_verify: "https://councilof.ai/signed/HOW-TO-VERIFY.md",
+    },
+  };
+  const summary =
+    `NOT MEASURED — ${kind} on this endpoint returns the contract, not a measurement. ` +
+    (subject ? `Nothing was run against "${subject}".` : "No subject was given.");
+  return { content: [{ type: "text", text: `${summary}\n\n${JSON.stringify(payload, null, 2)}` }], structuredContent: payload, isError: false };
+}
 
 const HOP_BY_HOP = new Set([
   "connection",
@@ -150,6 +202,8 @@ function patchToolsList(body: unknown): unknown {
     ?.result?.tools;
   if (!Array.isArray(tools)) return body;
   for (const t of tools) {
+    if (t?.name === "measure") { t.description = MEASURE_DESCRIPTION; continue; }
+    if (t?.name === "jail-probe") { t.description = JAIL_DESCRIPTION; continue; }
     if (t?.name !== "verify") continue;
     t.description = VERIFY_DESCRIPTION;
     t.inputSchema = {
@@ -226,6 +280,10 @@ export const onRequest: PagesFunction = async (ctx) => {
   try {
     if (call?.method === "tools/call" && call.params?.name === "verify") {
       return await handleVerify(call.id, call.params.arguments ?? {}, origin);
+    }
+
+    if (call?.method === "tools/call" && (call.params?.name === "measure" || call.params?.name === "jail-probe")) {
+      return rpc(call.id, contractOnly(call.params.name as "measure" | "jail-probe", call.params.arguments ?? {}));
     }
 
     if (call?.method === "tools/list") {
