@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useBoardCount } from "@/lib/boardCount";
 
 /**
  * /products — the signed-evidence product family, packaged as ONE door.
@@ -10,13 +11,29 @@ import { Link } from "wouter";
  * a grade is never sold, and there are no public prices on this page or any
  * other. We measure — we do not certify, and no product below is a
  * conformity mark.
+ *
+ * ── THE CONTRAST BUG THIS FILE CARRIES THE FIX FOR ───────────────────────────
+ * This page was authored as a dark page — `text-slate-100`, `bg-white/[0.03]`
+ * cards, `border-slate-100/10` hairlines — on a `<main>` with NO background of
+ * its own, so it inherited the site's white body and rendered near-white text
+ * on near-white at about 1.05:1. Every word on the commercial front door was
+ * invisible. The fix is the missing half of the design: the dark ground the
+ * palette was written against. A colour scheme is two decisions, and shipping
+ * only one of them is not a style preference — it is an unreadable page.
  */
 
 const ENGINE = [
   { k: "Signed", v: "Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md) — every card verifiable offline, by strangers" },
   { k: "Three-state", v: "pass / fail / UNMEASURED — what we cannot measure is published, not hidden" },
   { k: "Live-sourced", v: "every public number recomputable from GET /api/gspc and the signed card chain" },
-  { k: "Method-bound", v: "unparsed counts incorrect · no model judges another · nothing quoted below n≥30" },
+  {
+    k: "Method-bound",
+    // WAS: "nothing quoted below n≥30". False on this board's own data. The
+    // provenance-controls axis is quoted at n=6, and its n counts issuer
+    // accounts rather than bank items — a rule the page stated and the board
+    // broke. The rule that IS kept is the one below; it is narrower, and it is true.
+    v: "unparsed counts incorrect · no model judges another · no model-comparison axis is quoted below n=30, and an axis whose n counts something other than bank items says what it counts",
+  },
 ];
 
 const FREE_RAIL = [
@@ -85,7 +102,9 @@ const AUDIENCES = [
 ];
 
 export default function Products() {
+  const board = useBoardCount();
   return (
+    <div className="min-h-screen bg-[#03110b]">
     <main className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
         Council of AI — the product family
@@ -110,6 +129,19 @@ export default function Products() {
             </div>
           ))}
         </dl>
+        <p className="mt-4 text-sm leading-relaxed text-slate-400">
+          The board this rail publishes today:{" "}
+          <span className="font-semibold text-emerald-300">{board.public_count}</span>{" "}
+          {board.live ? (
+            <span className="text-slate-500">— read from GET /api/gspc as this page loaded.</span>
+          ) : (
+            <span className="text-slate-500">
+              — the last recorded observation in the facts ledger. The live board could not be read,
+              and a dated observation is shown rather than a fabricated number; GET /api/gspc wins.
+            </span>
+          )}{" "}
+          <span className="text-slate-400">{board.count_grammar}</span>
+        </p>
       </section>
 
       {/* free rail first — the order the estate works in */}
@@ -200,5 +232,6 @@ export default function Products() {
         </Link>
       </div>
     </main>
+    </div>
   );
 }

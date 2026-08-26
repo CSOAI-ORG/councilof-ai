@@ -453,7 +453,10 @@ function IndustryGrid() {
             <h4 className="font-bold text-gray-900 group-hover:text-emerald-600">{i.name}</h4>
             <p className="mt-1 text-xs text-gray-500 leading-relaxed flex-1">{i.short}</p>
             <span className="mt-3 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
-              {i.numbers.kind === "measured" ? `${i.bench} · n=${i.numbers.n}` : "UNMEASURED"}
+              {/* Was `${i.bench} · n=${i.numbers.n}` — an n typed into client/src/data/industries.ts.
+                  That field is gone: a sector now names its axes and the sector page reads their
+                  rows live from GET /api/gspc. The bench is a name, not a figure, so it stays. */}
+              {i.bench}
             </span>
           </a>
         ))}

@@ -40,6 +40,10 @@ export const PRIMARY_PATHS = new Set<string>([
   "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
+  // Commercial comparison + audience surfaces. These were live routes that no
+  // PRIMARY_PATHS entry covered, so every one of them shipped under the
+  // "Reference / archive" banner while being the pages a buyer is sent to.
+  "/compare", "/competitors", "/vs", "/for",
   // Council OS
   "/os", "/workbench", "/start",
   // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
@@ -54,6 +58,19 @@ export const PRIMARY_PATHS = new Set<string>([
   "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
   "/faq",
 ]);
+
+/**
+ * Dynamic PRIMARY families. PRIMARY_PATHS is a Set of exact strings, so a
+ * parameterised route (/for/:persona, /industries/:slug, /vs/:slug) could never
+ * be registered in it and every one of those pages rendered the archive banner.
+ * A prefix here means "this whole family is primary" — it is the same decision
+ * PRIMARY_PATHS records, expressed for a route that has no single path.
+ */
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/"];
+
+export function isPrimaryPath(p: string): boolean {
+  return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));
+}
 
 export interface Sector {
   id: string;
@@ -113,7 +130,6 @@ export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
   "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/how-it-works": { path: "/methodology", label: "Methodology" },
   "/roi-calculator": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
-  "/compare": { path: "/about", label: "About" },
   "/our-difference": { path: "/about", label: "About" },
   // Added by the site-alignment pass 2026-08-20 — each of these had a current
   // equivalent in the new six-group nav but no forward link.
@@ -188,7 +204,7 @@ export function libraryItems(): LibraryItem[] {
     // A redirect is not a page — never list it in the Library (legacy /sov3-* rows
     // were rendering their internal-codename titles as archive links).
     .filter((r) => r.comp !== "Redirect")
-    .filter((r) => !PRIMARY_PATHS.has(r.path) && !NOT_LIBRARIED.test(r.path) && !hasForbiddenBrand(r.path) && !/\.[a-z]+$/.test(r.path))
+    .filter((r) => !isPrimaryPath(r.path) && !NOT_LIBRARIED.test(r.path) && !hasForbiddenBrand(r.path) && !/\.[a-z]+$/.test(r.path))
     .filter((r) => !/certification exam|view pricing|paid plans|get certified/i.test(`${r.title} ${r.path}`))
     .map((r) => ({ ...r, title: prettifyTitle(r.title), sector: classify(r.path, r.title).id }));
 }
@@ -212,5 +228,5 @@ export function itemsBySector(): Record<string, LibraryItem[]> {
 export function isLibraried(path: string): boolean {
   const p = path.replace(/\/$/, "") || "/";
   if (p.startsWith("/blog")) return false;
-  return !PRIMARY_PATHS.has(p) && !p.startsWith("/library") && !NOT_LIBRARIED.test(p) && !hasForbiddenBrand(p) && !/\.[a-z]+$/.test(p);
+  return !isPrimaryPath(p) && !p.startsWith("/library") && !NOT_LIBRARIED.test(p) && !hasForbiddenBrand(p) && !/\.[a-z]+$/.test(p);
 }

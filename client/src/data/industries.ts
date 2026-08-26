@@ -6,13 +6,18 @@
 //
 // HONESTY FIREWALL (read before editing):
 //   * CSOAI is a MEASUREMENT body. Nothing here is certification, accreditation
-//     or approval. Every measured number below is a deterministic grade of
-//     recorded model outputs on a frozen, published split.
-//   * Real measured values are lifted from functions/api/gspc.ts (board v2,
-//     2026-08-12, 15,580 per-item rows). Do NOT hand-edit a score — re-run the
-//     board harness and paste the result, or leave the sector UNMEASURED.
-//   * Where a sector has no dedicated measured bank, `numbers` is an
-//     `unmeasured` record. Never invent a number to fill the gap.
+//     or approval, and we do not enforce an obligation — we measure against one.
+//   * THERE IS NO NUMBER IN THIS FILE, AND ADDING ONE IS THE DEFECT. Every
+//     figure a sector page shows is read from GET /api/gspc at render time via
+//     <AxisProof>. A sector declares `axes` — axis LABELS, which are canon —
+//     and nothing else. The previous version typed n, leader accuracy, the
+//     Wilson interval, the fleet mean and the separation verdict into all 15
+//     entries, and two of them had already drifted from the board they claimed
+//     to quote. A typed figure is a copy of a measurement, and a copy goes
+//     stale silently.
+//   * Where a sector has no bank of its own, say so in `gap` — in prose, with
+//     no figure in it. Never invent a number to fill the gap, and never borrow
+//     a neighbouring sector's.
 //   * "Leader" is the highest point estimate on the board; a TIE means that
 //     lead is not statistically separated (McNemar p<0.05). Ties are not wins.
 //   * Model leaders are named by role (tuned council specialist / base model),
@@ -29,24 +34,6 @@ export interface GspcPillar {
   inSector: string; // the pillar restated in this sector's language
 }
 
-export interface MeasuredNumbers {
-  kind: "measured";
-  n: number;
-  leaderAccuracy: number; // 0..1, the board leader's accuracy on this bank
-  leaderRole: string; // "tuned council specialist" | "base model"
-  separation: "SEPARATED" | "TIE";
-  separationP?: number;
-  interval?: [number, number]; // Wilson 95% CI on the leader, where n is independent
-  fleetMean: number; // mean accuracy across the full 19-model fleet
-  note: string;
-}
-
-export interface UnmeasuredNumbers {
-  kind: "unmeasured";
-  label: string; // short honest label, e.g. "UNMEASURED — limited corpus"
-  nearest: string; // what IS measured today that this sector can lean on
-}
-
 export interface Industry {
   slug: string;
   name: string;
@@ -60,7 +47,21 @@ export interface Industry {
     summary: string;
     pillars: GspcPillar[];
   };
-  numbers: MeasuredNumbers | UnmeasuredNumbers;
+  /**
+   * Board axis ids, exactly as GET /api/gspc names them. LABELS ONLY.
+   *
+   * This field replaced a `numbers` block that typed n, leader accuracy, the
+   * Wilson interval, the fleet mean and the separation verdict into this file
+   * for all 15 sectors. Those literals had already drifted from the board they
+   * claimed to quote — /industries/government stated "one of only three
+   * statistically separated leads" while GET /api/gspc reported four, and
+   * /industries/multi-agent-commerce typed n=40 against the board's 37. A
+   * sector page now names its axes and the page reads their rows live, so the
+   * page cannot drift from the board by construction.
+   */
+  axes: string[];
+  /** Prose stated when the sector has no bank of its own. No figures — ever. */
+  gap?: string;
   artefactProves: string; // what THIS sector's signed card lets the reader prove
 }
 
@@ -118,16 +119,9 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Does the pricing behaviour hold on a frozen, re-runnable split?" },
       ],
     },
-    numbers: {
-      kind: "unmeasured",
-      label: "UNMEASURED — the insurance-specific corpus is thin",
-      nearest:
-        "No dedicated life/health underwriting bank exists yet. What an insurer " +
-        "relies on is already measured: EU AI Act risk-tiering on GovBench " +
-        "(n=237, leader 0.700 [0.639–0.755], fleet mean 0.490) and calibrated care " +
-        "on CareBench (n=199, fleet mean 0.293). The underwriting bank is on the " +
-        "build list; until it lands, we will not quote an insurance number we have not measured.",
-    },
+    axes: ["governance", "care"],
+    gap:
+      "No life/health underwriting bank exists yet, and we will not quote an insurance number we have not measured. What an underwriter can lean on today is the risk-tiering and calibrated-care work below, read live off the board.",
     artefactProves:
       "which model priced or triaged, on which frozen bank, and that the score " +
       "an insurer was shown has not been edited since the run.",
@@ -176,22 +170,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "The same tiering judgement holds on a re-runnable split." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 237,
-      leaderAccuracy: 0.7,
-      leaderRole: "tuned council specialist",
-      separation: "SEPARATED",
-      separationP: 0.0086,
-      interval: [0.639, 0.755],
-      fleetMean: 0.49,
-      note:
-        "One of only three statistically separated leads on the board (McNemar " +
-        "p=0.0086 vs the best base model). EU AI Act tiering is hard for everyone: " +
-        "the 19-model fleet mean is 0.490, and the worst 5% of items carry harm 0.873 " +
-        "(CVaR, n=237). Bank: 237 public items from the AI Act Evaluation Benchmark " +
-        "(NCSR “Demokritos”, arXiv:2603.09435, CC-BY-4.0).",
-    },
+    axes: ["governance", "art5-safeguard", "provenance", "continuity"],
     artefactProves:
       "which model tiered which use case, on the frozen 237-item bank, with the " +
       "separated lead and its interval intact.",
@@ -227,22 +206,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Care behaviour holds across a frozen scenario bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 199,
-      leaderAccuracy: 0.535,
-      leaderRole: "tuned council specialist",
-      separation: "SEPARATED",
-      separationP: 0.0356,
-      interval: [0.466, 0.603],
-      fleetMean: 0.293,
-      note:
-        "SEPARATED from the best base model (p=0.036) but NOT clear of the majority-class " +
-        "baseline — quote it only as “separated from base models”. The fleet mean is " +
-        "0.293 and the worst 5% of items carry harm 0.990 (CVaR, n=199): calibrated care " +
-        "is the fleet's weakest measured axis, and the tail is nearly total. 199 unique " +
-        "scored texts (200 records, one exact-duplicate pair removed).",
-    },
+    axes: ["care", "affect", "safety"],
     artefactProves:
       "which model was scored on the frozen 199-item care bank, with the honest " +
       "separated-from-base caveat carried on the card.",
@@ -281,19 +245,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Refusal calibration holds on a frozen paired bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 36,
-      leaderAccuracy: 0.944,
-      leaderRole: "base model",
-      separation: "TIE",
-      separationP: 0.6875,
-      interval: [0.819, 0.985],
-      fleetMean: 0.732,
-      note:
-        "A base model holds the point lead but the lead is a TIE (McNemar p=0.69). " +
-        "Honestly reported: the tuned specialists do not own this axis. Fleet mean 0.732.",
-    },
+    axes: ["safety", "jail"],
     artefactProves:
       "which model was tested on the frozen 36-pair refusal bank, and that the " +
       "lead is recorded as a TIE, not a win.",
@@ -326,19 +278,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Post-quantum reasoning on a frozen assumption bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 33,
-      leaderAccuracy: 0.606,
-      leaderRole: "tuned council specialist",
-      separation: "TIE",
-      separationP: 1.0,
-      interval: [0.437, 0.753],
-      fleetMean: 0.45,
-      note:
-        "The tuned specialist leads on points; flat TIE (p=1.0). Fleet mean 0.450 — " +
-        "post-quantum reasoning is hard across the board.",
-    },
+    axes: ["continuity", "safety"],
     artefactProves:
       "which model answered the frozen 33-item post-quantum bank, with the TIE recorded honestly.",
   },
@@ -370,20 +310,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Marking judgement holds on a frozen bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 32,
-      leaderAccuracy: 0.781,
-      leaderRole: "tuned council specialist",
-      separation: "TIE",
-      separationP: 0.7744,
-      interval: [0.612, 0.89],
-      fleetMean: 0.549,
-      note:
-        "ProvBench validity bank (n=32): tuned specialist leads on points; TIE (p=0.77), " +
-        "fleet mean 0.549. Companion DetBench cross-detector bank (n=33) leader 0.879, " +
-        "also a TIE and not clear of baseline.",
-    },
+    axes: ["provenance", "detector-interop"],
     artefactProves:
       "which model was scored on the frozen 32-item marking bank, with validity — not " +
       "mere presence — as the pass condition.",
@@ -415,19 +342,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Conformance holds on a frozen tool-contract bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 35,
-      leaderAccuracy: 0.743,
-      leaderRole: "tuned council specialist",
-      separation: "TIE",
-      separationP: 1.0,
-      interval: [0.579, 0.858],
-      fleetMean: 0.537,
-      note:
-        "Canonical bank count 35 (supersedes the stale 11 in older matrices). Tuned " +
-        "specialist leads on points; flat TIE (p=1.0), fleet mean 0.537.",
-    },
+    axes: ["conformance", "swarm"],
     artefactProves:
       "which model was scored on the frozen 35-item MCP conformance bank, with the TIE recorded.",
   },
@@ -457,19 +372,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Licence reasoning holds on a frozen bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 32,
-      leaderAccuracy: 0.875,
-      leaderRole: "tuned council specialist",
-      separation: "TIE",
-      separationP: 1.0,
-      interval: [0.719, 0.95],
-      fleetMean: 0.696,
-      note:
-        "Canonical count 32 (supersedes stale 16). Tuned specialist leads on points; " +
-        "flat TIE, fleet mean 0.696 — a comparatively strong axis for the whole fleet.",
-    },
+    axes: ["openness", "conformance"],
     artefactProves:
       "which model was scored on the frozen 32-item licence-reasoning bank, with the TIE recorded.",
   },
@@ -499,20 +402,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Coordination behaviour holds on a frozen protocol bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 40,
-      leaderAccuracy: 0.975,
-      leaderRole: "base model",
-      separation: "TIE",
-      separationP: 1.0,
-      // No interval on purpose: protocol bank, instances are not independent.
-      fleetMean: 0.372,
-      note:
-        "PROTOCOL bank: 1 anchor, 3 unique prompts, 40 scored instances — the instances " +
-        "are NOT independent, so no Wilson interval is shown (quoting n=40 would overstate " +
-        "the evidence). Raw CIs look disjoint but the paired test says p=1.0: a TIE. Fleet mean 0.372.",
-    },
+    axes: ["swarm", "conformance"],
     artefactProves:
       "which model ran the frozen coordination protocol, with the effective-n caveat and " +
       "withheld interval recorded on the card.",
@@ -545,14 +435,9 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Containment behaviour holds on a frozen bank (once built)." },
       ],
     },
-    numbers: {
-      kind: "unmeasured",
-      label: "UNMEASURED — dedicated containment bank not yet built",
-      nearest:
-        "The nearest measured signal is calibrated refusal on DefBench (safety axis, " +
-        "n=36, fleet mean 0.732, leader a TIE). We will not publish a containment score " +
-        "until a containment bank exists; the axis is on the build list.",
-    },
+    axes: ["jail", "safety", "continuity"],
+    gap:
+      "No dedicated security bank exists. The rows below are the adjacent measurements a security reader can use in the meantime, and none of them is a substitute for the bank that is missing.",
     artefactProves:
       "once the bank exists — which model was scored on which frozen containment split. " +
       "Until then the card would carry the UNMEASURED label, not a number.",
@@ -589,20 +474,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Classification holds on a frozen bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 33,
-      leaderAccuracy: 0.545,
-      leaderRole: "base model",
-      separation: "TIE",
-      separationP: 0.5811,
-      interval: [0.38, 0.702],
-      fleetMean: 0.349,
-      note:
-        "A base model leads on points; TIE. Anchor: Machinery Reg (EU) 2023/1230 Annex I " +
-        "Part A items 5–6, applies 14 Jan 2027. Gold labels remain under legal review — " +
-        "measurement, not a conformity verdict. Fleet mean 0.349.",
-    },
+    axes: ["machinery-conformity", "safety"],
     artefactProves:
       "which model classified which item on the frozen 33-item Machinery bank, with the " +
       "legal-review caveat and the TIE recorded.",
@@ -634,15 +506,9 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Action authority holds on a frozen bank (once built)." },
       ],
     },
-    numbers: {
-      kind: "unmeasured",
-      label: "UNMEASURED — dedicated embodiment bank not yet built",
-      nearest:
-        "The nearest measured signals are cross-reality action authority on XRAIV " +
-        "(n=32, leader 0.812 [0.647–0.911], a TIE) and Machinery classification on " +
-        "MachBench (n=33). A humanoid-specific bank is on the build list; until it " +
-        "lands we will not quote an embodiment number.",
-    },
+    axes: ["humanoid-labour-index", "machinery-conformity", "safety"],
+    gap:
+      "The humanoid axis is a published slot with no run behind it. It appears below as unmeasured rather than being left off this page, beside the adjacent axes that are measured.",
     artefactProves:
       "once the bank exists — which model was scored on which frozen embodiment split. " +
       "Until then the card carries the UNMEASURED label.",
@@ -673,19 +539,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Action authority holds on a frozen bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 32,
-      leaderAccuracy: 0.812,
-      leaderRole: "base model",
-      separation: "TIE",
-      separationP: 0.0654,
-      interval: [0.647, 0.911],
-      fleetMean: 0.441,
-      note:
-        "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, " +
-        "still not separated at p<0.05). Fleet mean 0.441. Bank: 32 scored (public + held-out split).",
-    },
+    axes: ["cross-reality", "provenance"],
     artefactProves:
       "which model was scored on the frozen 32-item action-authority bank, with the " +
       "near-miss recorded honestly as a TIE.",
@@ -717,19 +571,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "The safeguard fires the same way on a frozen bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 36,
-      leaderAccuracy: 0.972,
-      leaderRole: "tuned council specialist",
-      separation: "TIE",
-      separationP: 1.0,
-      interval: [0.858, 0.995],
-      fleetMean: 0.83,
-      note:
-        "Tuned specialist leads on points at 0.972; TIE (p=1.0) — the whole fleet is strong " +
-        "here (fleet mean 0.830). The prohibited NCII/CSAM corpus is never handled by CSOAI.",
-    },
+    axes: ["art5-safeguard", "governance"],
     artefactProves:
       "which model was scored on the frozen 36-item Article 5 bank, with the TIE recorded " +
       "despite the high score.",
@@ -763,22 +605,7 @@ export const industries: Industry[] = [
         { pillar: "Continuity", inSector: "Affective safety holds on a frozen bank." },
       ],
     },
-    numbers: {
-      kind: "measured",
-      n: 41,
-      leaderAccuracy: 0.878,
-      leaderRole: "tuned council specialist",
-      separation: "SEPARATED",
-      separationP: 0.0078,
-      interval: [0.745, 0.947],
-      fleetMean: 0.605,
-      note:
-        "The cleanest separation on the board: tuned 0.878 [0.745–0.947] vs base models " +
-        "0.29–0.34 (McNemar p=0.0078). COUNSEL-PENDING: the legal gold labels and 1–5 " +
-        "severity bases await counsel review — this is measurement of model behaviour, " +
-        "not a legal verdict. Finding: all 19 models over-block a lawful Article 5 self-audit " +
-        "request; that item is preserved for adjudication, not deleted.",
-    },
+    axes: ["affect", "art5-safeguard"],
     artefactProves:
       "which model was scored on the frozen 41-item affect bank, with the separated lead " +
       "and the counsel-pending caveat both carried on the card.",
