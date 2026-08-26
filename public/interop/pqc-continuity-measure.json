@@ -1,0 +1,31 @@
+{
+ "schema": "csoai.pqc-continuity-measure/0.1",
+ "axis": "pqc-continuity",
+ "bank": "/workspace/banks-all/gspc-asi.jsonl",
+ "bank_n": 33,
+ "models": [
+  "mistral:7b"
+ ],
+ "measured_at": "2026-08-26T19:53:12Z",
+ "doctrine": "Measurement, not certification. Deterministic verdict-word grading, no LLM-as-judge. UNPARSED/UNMEASURABLE is reported, never hidden. PQC continuity is a NEW standalone axis surface — absent from the ADR-001 22-axis canon; not inserted into it (only the board-building ruling adds an axis to the canon).",
+ "per_model": {
+  "mistral:7b": {
+   "n": 33,
+   "pass_credit": 18.5,
+   "accuracy": 0.561,
+   "unparsed": 0
+  }
+ },
+ "summary": {
+  "total_graded": 33,
+  "total_unparsed": 0
+ },
+ "content_id": "64b01b29ceffe07cbbb89450badb4e32a61ff1cd25d07df3c01a7157bfc12756",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "64b01b29ceffe07cbbb89450badb4e32a61ff1cd25d07df3c01a7157bfc12756",
+  "sig": "U8X6QWanQ37CmTVRZWLTD7eK9ghaDwvAyMC/LAqa4vPbxlmkOHv4Pww24bzkHpWqGwQQaCpg1h48FY2647tXDw==",
+  "pubkey": "1MsOqhbV9Qv3Yzo2qjT+CaVeEkuTFt7Sq9sSK7nDfjg=",
+  "note": "recompute sha256(canonical body) -> Ed25519 verify"
+ }
+}
