@@ -1,0 +1,29 @@
+{
+ "schema": "csoai.eas-attestation-batch/0.1",
+ "doctrine": "permissionless EAS off-chain attestation; recipient = token contract; NO issuer consent; measurement not certification",
+ "as_of": "2026-08-26",
+ "note": "Payloads ready for EAS submission (schema csoai.rwa-attest/1); submission requires the estate EAS signer key (owner-gated). Payloads are deterministic from the signed verifier/claimguard-valid cards.",
+ "attestations": [
+  {
+   "schema": "csoai.rwa-attest/1",
+   "recipient": "0x7712c34205737192402172409a8f7ccef8aa2aec",
+   "refUID": "0xbuidl",
+   "data": "{\"asset\":\"BlackRock BUIDL (USD Institutional Digital Liquidity Fund)\",\"issuer\":\"0xe498ac8ef18ecfdfdb43f8e557b2f64a3d4bf8d7\",\"verdict_sha256\":\"e96094faba3e548f16d099d84b3ac2abf82b1cdadf06e9219fbcc52f89962322\",\"ed25519_sig\":\"0x4bf1b2f1fdb0266fade62a6d57ac3403cfb06152533809dd29bef4502321f4c0e967a6f4d5788fc47976753f7abb09ceb69dc0840a30792fd42c783ccc6eac07\",\"risk_tier\":\"unmeasured\",\"report_uri\":\"https://councilof.ai/rwa-cert/buidl\"}",
+   "note": "recipient = token contract; NO issuer consent (permissionless EAS). Off-chain = free, signed, immutable."
+  },
+  {
+   "schema": "csoai.rwa-attest/1",
+   "recipient": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+   "refUID": "0xbenji",
+   "data": "{\"asset\":\"Franklin Templeton BENJI (FOBXX)\",\"issuer\":\"0x\",\"verdict_sha256\":\"20718cda3ac647c263ecddf373a8816967027ed6a4067ccae80d3e8afefb33d8\",\"ed25519_sig\":\"0xc438babf48f27ed58adc464dd26c51460574115aef8647db2d6dfd3bddd204985edfd568a18a0162962a8710ed7b321238afa0b2d631d6a2de3493e32b68010f\",\"risk_tier\":\"unmeasured\",\"report_uri\":\"https://councilof.ai/rwa-cert/benji\"}",
+   "note": "recipient = token contract; NO issuer consent (permissionless EAS). Off-chain = free, signed, immutable."
+  },
+  {
+   "schema": "csoai.rwa-attest/1",
+   "recipient": "0x17418038ecF73BA4026c4f428547BF099706F27B",
+   "refUID": "0xacred",
+   "data": "{\"asset\":\"Apollo ACRED (Diversified Credit Securitize Fund)\",\"issuer\":\"0x\",\"verdict_sha256\":\"41b9341b93768a2233b344e6db385d67109087f1fa38b6bd0543c9202ae61a4c\",\"ed25519_sig\":\"0x73115d9b9bb565e927d7dbf5e277f5e72c2a1ca0d9dce6f3c6c0d1606d748f9604a6884c64ac9cf16d92051a36025842d867bf09c7b67f6556d95a18c53f6202\",\"risk_tier\":\"unmeasured\",\"report_uri\":\"https://councilof.ai/rwa-cert/acred\"}",
+   "note": "recipient = token contract; NO issuer consent (permissionless EAS). Off-chain = free, signed, immutable."
+  }
+ ]
+}
