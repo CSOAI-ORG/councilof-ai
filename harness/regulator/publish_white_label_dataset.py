@@ -16,8 +16,9 @@ Requires: `huggingface_hub`, the tools under harness/regulator/ in the same repo
 import argparse, json, os, subprocess, sys, tempfile
 from datetime import datetime, timezone
 
-MONO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # repo root (harness/..)
-REG = os.path.join(MONO, "harness", "regulator")
+THIS = os.path.dirname(os.path.abspath(__file__))           # .../harness/regulator
+MONO = os.path.dirname(os.path.dirname(THIS))                # repo root
+REG = THIS
 API_HOST = os.environ.get("API_HOST", "https://councilof.ai")
 REPO = "csoai/white-label-eu-ai-act-regulator-findings"
 DOCS = {
