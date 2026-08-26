@@ -8,6 +8,10 @@
 // feed and the signed board, because the same body that publishes the number
 // also publishes when the number was wrong.
 //
+// NEXT_300 #293 — bad RWA attestation cards also land here (append-only). See
+// docs/RWA_BAD_CARD_CORRECTIONS.md. Never silent-edit a wrong card; expect
+// signature_state STALE until re-issue. JMWH stays demo-only.
+//
 // GRAMMAR: an entry here is a FACT about our own history, not a MEASURED figure
 // and not a claim about anyone else. New entries are appended in place; the
 // array is never reordered or trimmed.
@@ -150,6 +154,15 @@ const LEDGER = {
       status: "FIXED",
     },
     {
+    id: "C-2026-0826-01",
+    date: "2026-08-26",
+    topic: "hf-labour-index-branding",
+    surfaces: ["/indices", "GET /api/indices", "docs/HF_LABOUR_INDEX_HONESTY.md", "hf://datasets/csoai/rwa-attest"],
+    claim: "Hub files labeled MEASURED-INDEX-v0.1 for ai-economy / human-labour imply product MEASURED scores on Council OS / DSH.",
+    how_caught: "Overnight HF Hub audit vs INDEX-METHOD firewall and /api/indices UNMEASURED register.",
+    fix: "Product surfaces remain UNMEASURED (measured_score null). Hub REPORTED series snapshots are contextual — never GSPC grading inputs. See docs/HF_LABOUR_INDEX_HONESTY.md. Dedicated csoai/labour-economy-unmeasured upload still 🔄.",
+  },
+  {
       id: "C-2026-0825-01",
       date: "2026-08-25",
       topic: "index-method-errata",
@@ -166,7 +179,7 @@ const LEDGER = {
     signature: "dff4ab2c4e1c8d80c9022330343f43145af4673a0a214cf24c9e2964d204f917aa8bdcbf6bc76fec8db0ff828524f057078e087fa53d4281b448bbce44e5ac00",
     sig_input: "sha256(Python json.dumps(canonical LEDGER minus signature fields, sort_keys=True, separators=(',',':')) — ensure_ascii escapes non-ASCII as \\uXXXX)",
     key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
-    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit. C-2026-0825-01 appended 2026-08-25 — expect signature_state STALE until re-issue.",
+    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit. C-2026-0825-01 appended 2026-08-25; C-2026-0826-01 appended 2026-08-26 — expect signature_state STALE until re-issue.",
   },
 };
 
@@ -175,9 +188,9 @@ const LEDGER = {
 // than silently serving a broken signature. Doctrine: a stale signature is a
 // published defect, never a silent edit.
 // NOTE: the canonical MUST match the off-chain signer exactly. The estate signs
-// with Python json.dumps(body, sort_keys=True, separators=(",",":")) — recursive
+// with Python json.dumps(body, sort_keys=True, separators=(\",\",\":\")) — recursive
 // key sort, compact separators, and ensure_ascii=True (every non-ASCII char as
-// \uXXXX). (An earlier version used an array-replacer JSON.stringify which emits
+// \\uXXXX). (An earlier version used an array-replacer JSON.stringify which emits
 // a top-level-only key whitelist and serializes every nested entry as {} — a
 // hash no signer could ever reproduce, so the guard flagged VALID ledgers as
 // STALE forever. Fix: reproduce the signer's canonical byte-for-byte.)
@@ -191,7 +204,7 @@ function canonJson(obj: unknown): string {
     }
     return JSON.stringify(o);
   };
-  // ensure_ascii=True: escape every non-ASCII char as \uXXXX (4-digit lowercase hex)
+  // ensure_ascii=True: escape every non-ASCII char as \\uXXXX (4-digit lowercase hex)
   return j(obj).replace(/[\u0080-\uffff]/g, (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
 }
 
