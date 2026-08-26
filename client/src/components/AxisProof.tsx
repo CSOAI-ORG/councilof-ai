@@ -87,13 +87,12 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
       )}
       {loading && !error && <p className={`px-5 py-4 text-sm ${t.muted}`}>Reading the live board…</p>}
 
+      {/* The table has six columns of real content. At 375px `w-full` alone crushed
+          every one of them to a two-character column and broke words mid-character —
+          the row was on screen and unreadable, which is the same failure as not
+          publishing it. A minimum width plus this container's own horizontal scroll
+          keeps the row legible; the page body still never scrolls sideways. */}
       {data && (
-        {/* The table has six columns of real content. At 375px `w-full` alone
-            crushed every one of them to a two-character column and broke words
-            mid-character — the row was on screen and unreadable, which is the
-            same failure as not publishing it. A minimum width plus this
-            container's own horizontal scroll keeps the row legible; the page
-            body still never scrolls sideways. */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[660px] text-sm">
             <thead>

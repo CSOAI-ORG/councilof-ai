@@ -189,8 +189,15 @@ export default function ToolCommons() {
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">Install our own MCP server</p>
               <p className="mt-1 text-sm text-emerald-100/80">
-                One command adds the Council of AI governance server — board reads, card verification —
-                to Claude Code, Cursor, or any MCP client. Published on npm.
+                One command adds our published MCP server to Claude Code, Cursor, or any MCP client.
+                Its own npm description is the artifact — read it there before you install it.
+              </p>
+              {/* The package's npm description asserts a governed-tool catalogue size. That
+                  figure is not one of the probed numbers above and we have not verified it,
+                  so it is not repeated here and the reader is told why. */}
+              <p className="mt-1 text-[12px] leading-relaxed text-amber-100/70">
+                Its npm description quotes a catalogue size we have not probed. The only counts on
+                this page are the three above, and none of them is that figure.
               </p>
             </div>
             <a href="https://www.npmjs.com/package/csoai-governance-mcp" target="_blank" rel="noopener noreferrer" className="shrink-0 font-mono text-[11px] text-emerald-300/75 underline hover:text-emerald-200">npm ↗</a>
