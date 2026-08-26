@@ -117,7 +117,16 @@ export default function GSPCVerify() {
               This button recomputes the <strong className="text-emerald-50">sha256 hash
               chain</strong> — tamper-evidence, not authorship. Authorship is carried by the
               signed card: a <strong className="text-emerald-50">~3KB</strong> measurement card
-              signed against the published key <code className="text-emerald-300">f4b4278d…</code>.{" "}
+              signed against{" "}
+              <a
+                href="/.well-known/did.json"
+                className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"
+              >
+                <code>did:web:csoai.org#card-attestation-1</code>
+              </a>
+              , public key{" "}
+              <code className="text-emerald-300">d4cb0eaa16d5f50b…</code> — read it out of that
+              document yourself and compare it to the <code>pubkey</code> on any card.{" "}
               {ANCHORING_CLAIM}{" "}
               <strong className="text-emerald-50">OpenTimestamps (Bitcoin) anchoring is roadmap,
               not yet shipped</strong> — the label will name it in the commit it ships, as with
