@@ -187,6 +187,21 @@ export default function BenchmarkView() {
           Council of AI's own boards are structurally excluded (impartiality firewall).
         </p>
       </section>
+
+      {/* The pairing — measured vs reported, never fused */}
+      <section className="mt-6 rounded-2xl border border-emerald-400/10 bg-emerald-950/10 p-4">
+        <h2 className="text-sm font-bold text-emerald-100">⚖️ The pairing — measured beside reported</h2>
+        <p className="mt-2 text-xs text-emerald-200/60">
+          Our signed measured Elo sits beside the assessed third-party register — two rails, one page,
+          never one blended number. The machine-readable pairing (with the LMArena / OpenRouter REPORTED
+          context rails and the UNKNOWN-honest overlap gate) is at{" "}
+          <a href="/api/comparison" className="font-mono text-emerald-300 underline decoration-emerald-400/30 hover:text-emerald-100">
+            /api/comparison
+          </a>
+          {" "}(schema csoai.comparison/0.1). OpenRouter routes inference; CSOAI refines it into signed,
+          continuously-verifiable measurement data.
+        </p>
+      </section>
     </div>
   );
 }
