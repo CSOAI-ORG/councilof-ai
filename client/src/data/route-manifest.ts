@@ -1038,6 +1038,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "TC260 Guide"
  },
  {
+  "path": "/harness",
+  "comp": "Harness",
+  "title": "Harness"
+ },
+ {
   "path": "/healthcare-ai-act",
   "comp": "SectorAct",
   "title": "Healthcare Ai Act"
