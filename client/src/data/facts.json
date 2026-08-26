@@ -75,8 +75,10 @@
         "self_description_note": "The board is the count authority, so its own payload and signed snapshot are exonerated from being compared against themselves. The payload legitimately describes its own composition; flagging the authority against itself is a tautology, not a check.",
         "surfaces": [
           "/api/gspc",
-          "/signed/gspc-board.signed.json"
+          "/signed/gspc-board.signed.json",
+          "/board"
         ],
+        "board_navigator_note": "/board is the navigator ACROSS the sets: it renders every namespace's count on one page, each labelled with the set it belongs to. That is this estate's own rule — every count names its set — made true in the interface instead of only in this file. It is declared as a surface of each namespace it renders, so the gate exonerates a LABELLED count rather than the gate being loosened for an unlabelled one.",
         "surfaces_note": "/six-axes/gspc-axes.json was listed here until 2026-08-26 and has been moved to its own namespace below. It is a DATED SNAPSHOT from 2026-08-05, not the board: listing it as a board-count authority exonerated a smaller, older count from ever being checked against the board it claimed to describe. Moving it does not change a single number in it — it changes what the file is allowed to be cited as."
       },
       "gspc_board_snapshot_2026_08_05": {
@@ -84,17 +86,30 @@
         "status": "retired",
         "observed": "a 2026-08-05 snapshot of the GSPC instrument, smaller than the current board",
         "note": "The file carries superseded:true, a superseded_note and an authority pointer, so a reader or agent landing on it directly is told it is not the board's count. Its own totals legitimately describe its own contents, which is why it is exonerated here — as a snapshot of itself, NOT as a description of the live board. Open item for the owner: either regenerate it from the signed board, or retire the path. Regenerating it is a DATA task and was deliberately not done by hand, per ADR-001 — hand-writing a payload is the defect, not the fix.",
-        "surface": "/six-axes/gspc-axes.json"
+        "surface": "/six-axes/gspc-axes.json",
+        "surfaces": [
+          "/six-axes/gspc-axes.json",
+          "/board"
+        ]
       },
       "eunomia_financial_board": {
         "observed": "10 of 10 axes measured",
+        "observed_note": "A recorded observation. /eunomia and /board both derive the pair of numbers from the same committed array, so the rendered figure follows the data if the data changes.",
         "status": "live",
-        "surface": "/eunomia"
+        "surface": "/eunomia",
+        "surfaces": [
+          "/eunomia",
+          "/board"
+        ]
       },
       "gspc_gap_map": {
         "observed": "4 axes (G, S, P, C) + care_cost lens",
         "status": "live",
-        "surface": "/gspc-gap-map"
+        "surface": "/gspc-gap-map",
+        "surfaces": [
+          "/gspc-gap-map",
+          "/board"
+        ]
       },
       "arena_elo": {
         "status": "live",
@@ -106,7 +121,8 @@
           "/arena-scoreboard",
           "/gspc-scoreboard",
           "/verify-leaderboard",
-          "/gspc/*"
+          "/gspc/*",
+          "/board"
         ]
       },
       "surface_matching": "Each entry may carry `surface` (one path) or `surfaces` (a list). An entry ending in '/*' matches by prefix, for a route family such as the 26 /gspc/:axis pages. Trailing '/index' is stripped before matching.",
@@ -117,7 +133,22 @@
         "note": "These 8 are also carried on the GSPC board, where they count toward the axis count and NOT the measured count. This register is the per-axis detail behind those rows and legitimately states its own family's count of 8.",
         "surfaces": [
           "/interop/financial-axes.json",
-          "/financial-axes"
+          "/financial-axes",
+          "/board"
+        ]
+      },
+      "signed_card_set": {
+        "authority": "/signed/card-matrix.json — derived at build time by scripts/build-card-matrix.mjs from public/signed/cards/*.json. Every count in it is an array length; nothing is typed.",
+        "status": "live",
+        "what": "A model-by-axis matrix of benchmark measurements, one Ed25519-signed card per filled cell.",
+        "not": "NOT the public GSPC board's axes. The cards carry benchmark axes (reasoning, general-knowledge, refusal and a few governance-flavoured banks); the board carries governance axes measured by a different instrument over a different population. The two sets have different names, different sizes and different subjects, and are never added together. The board's count authority remains GET /api/gspc.",
+        "why_scoped": "This corpus was fully built, fully signed and reachable from no surface. Publishing it means rendering its own axis and model counts, which are legitimately different from the board's. It is DECLARED as its own namespace so the gate exonerates a LABELLED count, rather than the gate being loosened for an unlabelled one. The count still cannot drift silently: it is derived from the card files on every build, and scripts/build-card-matrix.mjs --check fails a build whose committed index is stale.",
+        "display_name_policy": "A model whose recorded name carries a retired internal brand is indexed under a neutral key and rendered under a neutral label. Its measured work is kept and counted; only the label is withheld. The original name stays in the card body under the signature, where editing it would invalidate every id downstream.",
+        "frozen_string_in_card_bodies": "Every card body carries a public_framing string describing a historical board state. It is frozen under the card's signature and cannot be corrected without invalidating every id. It is never rendered on a public surface and drives no count anywhere.",
+        "surfaces": [
+          "/signed/card-matrix.json",
+          "/board/models",
+          "/board"
         ]
       },
       "axis_engine_16": {
@@ -126,6 +157,11 @@
         "not": "NOT the public GSPC board count. The public board is 22 axes, 15 measured, 7 unmeasured.",
         "why_scoped": "facts-gate compares every hardcoded axis count against the live board and is right to: a typed integer that drifts from /api/gspc is this estate's signature defect. This file is a genuinely different set, so it is DECLARED as its own namespace rather than the gate being loosened. The count still cannot drift silently — it is now pinned here, and changing it means changing this declaration.",
         "surface": "/measurement/axis-engine-16.json",
+        "surfaces": [
+          "/measurement/axis-engine-16.json",
+          "/board"
+        ],
+        "no_per_axis_breakdown": "The artifact declares its axis count in its own `axes` field and publishes NO per-axis rows. /board therefore draws its published MODEL rows and says so, rather than manufacturing a breakdown that was never measured.",
         "observed": "16 axes in the fresh-benchmark engine set",
         "status": "live"
       }
