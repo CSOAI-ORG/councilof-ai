@@ -93,6 +93,25 @@ function readSize(): "comfortable" | "full" {
   return "full";
 }
 
+/**
+ * A readable name for a framed route the rail does not own.
+ *
+ * It used to be `e.data.title || path` verbatim. A page that has not set its own
+ * <title> carries the site's, so opening the Workbench pane signed out (which
+ * redirects to /login) put "Council of AI — we measure, we sign, we re-attest"
+ * in the pane header as though that were the name of the surface. A title is used
+ * only when it looks like a PAGE name: the first segment, short enough to be one,
+ * and not the estate's own brand — "Council of AI" names the whole site, so as a
+ * pane name it tells the reader strictly less than the path does.
+ */
+const SITE_NAMES = /^(council of ai|csoai|councilof\.ai)$/i;
+
+function paneNameFor(title: unknown, path: string): string {
+  const raw = typeof title === "string" ? title.split(/\s[|\u2014]\s/)[0].trim() : "";
+  if (!raw || raw.length > 40 || SITE_NAMES.test(raw)) return path;
+  return raw;
+}
+
 /** Tabbable guard that bounces focus back into the dialog. See useFocusTrap. */
 function FocusSentinel({ onFocus }: { onFocus: () => void }) {
   return <div data-focus-sentinel tabIndex={0} aria-hidden="true" onFocus={onFocus} className="sr-only" />;
@@ -250,7 +269,7 @@ export default function LobbyOverlay({
         setTabId(matched.id);
         setOverride(null);
       } else {
-        setOverride({ path, label: e.data.title || path });
+        setOverride({ path, label: paneNameFor(e.data.title, path) });
       }
     };
     window.addEventListener("message", onMsg);
@@ -267,6 +286,8 @@ export default function LobbyOverlay({
     } catch { /* cross-origin or blocked — the outer Esc still works */ }
   }, [onClose]);
 
+  /** An auth-gated destination whose frame has bounced to the sign-in form. */
+  const bouncedToLogin = tab.auth === "required" && /^\/login(\/|$|\?)/.test(framePath);
   const localPane = !override && tab.kind === "local";
   const nativePane = !override && tab.kind === "native";
   const panePath = framePath || override?.path || tab.path;
@@ -385,7 +406,13 @@ export default function LobbyOverlay({
             style={panelStyle}
           >
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-slate-900/10 px-5 py-2.5">
-              <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
+              {/* When the framed route has no page name of its own, paneNameFor falls
+                  back to the path — and the path chip on the right already shows it.
+                  Printing it twice ("/login  ...  /login") is noise, so the name is
+                  dropped rather than duplicated. */}
+              {paneLabel !== panePath && (
+                <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
+              )}
               <span className={`hidden truncate md:inline ${TYPE.fine}`}>
                 {override ? "Opened in this pane — navigation stays inside the OS." : tab.blurb}
               </span>
@@ -428,6 +455,17 @@ export default function LobbyOverlay({
                   <LobbyEmbedPane onOpenRoute={openRoute} />
                 ) : (
                   <>
+                    {/* The pane was asked for a destination behind RequireAuth and the
+                        frame has landed on /login. Say so, rather than leaving a
+                        password box under a header that promised an analyst desk. */}
+                    {bouncedToLogin && (
+                      <div className="absolute inset-x-0 top-0 z-20 border-b border-amber-300/60 bg-amber-50/95 px-4 py-2.5 text-[12.5px] leading-relaxed text-amber-900">
+                        <strong>{tab.label} needs an account.</strong> {tab.path} redirected this pane
+                        to <code className="font-mono">/login</code>. Council OS did not send you here.
+                        Everything the Council measures — the board, verification, the corrections
+                        ledger — stays readable without one.
+                      </div>
+                    )}
                     {!frameLoaded && <FrameSkeleton />}
                     <iframe
                       ref={frameRef}

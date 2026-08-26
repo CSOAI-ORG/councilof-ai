@@ -25,6 +25,7 @@ function Tile({
   path,
   gold,
   native,
+  auth,
   onClick,
 }: {
   label: string;
@@ -33,6 +34,8 @@ function Tile({
   gold?: boolean;
   /** A workflow rendered in-process — it has no page of its own, and says so. */
   native?: boolean;
+  /** The framed route is behind RequireAuth — the tile says so before the click. */
+  auth?: boolean;
   onClick: () => void;
 }) {
   return (
@@ -56,6 +59,11 @@ function Tile({
       {gold && (
         <span className="mt-3 rounded-full border border-amber-700/30 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900">
           not a measurement surface
+        </span>
+      )}
+      {auth && (
+        <span className="mt-3 rounded-full border border-slate-900/15 bg-slate-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-700">
+          needs an account
         </span>
       )}
     </button>
@@ -101,6 +109,7 @@ export default function LobbyHome({
               path={t.path || undefined}
               gold={t.accent === "gold"}
               native={t.kind === "native" && !t.path}
+              auth={t.auth === "required"}
               onClick={() => onSelect(t)}
             />
           </li>

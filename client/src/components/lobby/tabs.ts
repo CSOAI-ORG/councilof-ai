@@ -64,6 +64,18 @@ export type LobbyTab = {
   kind?: "route" | "local" | "native";
   /** Gold accent — reserved for the local-play surface, never for measurement. */
   accent?: "emerald" | "gold";
+  /**
+   * Set where the framed route is behind RequireAuth (client/src/components/
+   * RequireAuth.tsx), so a signed-out reader is REDIRECTED TO /login the moment
+   * the pane opens. The rail said nothing about it: "Workbench — the analyst desk,
+   * skills and signed artefacts" put a reader one click from a password box with
+   * no warning, under a pane header that then read the site's own <title>. The OS
+   * says so before the click now, and the pane says what happened after it.
+   *
+   * /assess is NOT flagged: RequireAuth exempts it explicitly ("Get measured is
+   * free and needs no account"), and it was driven signed-out to confirm.
+   */
+  auth?: "required";
   /** Deterministic phrases that switch to this tab from the chat bar. */
   cues: RegExp;
 };
@@ -195,8 +207,9 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "workbench",
     label: "Workbench",
-    blurb: "The analyst desk — skills and signed artefacts. Not a live certification.",
+    blurb: "The analyst desk — skills and signed artefacts. Needs an account; everything the Council measures is readable without one.",
     path: "/workbench",
+    auth: "required",
     cues: /\b(workbench|analyst desk|skills palette)\b/i,
   },
   {
