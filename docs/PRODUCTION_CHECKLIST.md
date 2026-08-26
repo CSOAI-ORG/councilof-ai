@@ -53,6 +53,8 @@ Instrument routes open Council OS with `aguiHandle=<slug>` via `openInstrumentIn
 
 ## Smoke tests (manual)
 
+Post-deploy checklist: `docs/CLOUDFLARE_PAGES_SMOKE.md` (#371)
+
 ```bash
 # GSPC board (MEASURED)
 curl -sS https://councilof.ai/api/gspc | jq '.axes | length'
