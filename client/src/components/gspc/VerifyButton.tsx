@@ -94,10 +94,15 @@ export function VerifyButton() {
               : "border-red-400/50 bg-red-500/10"
           }`}
         >
-          <p className="text-[16px] text-emerald-50">
+          {/* A failure must not render in the success colour. The headline was
+              emerald-50 in both states, so a detected tamper read green. */}
+          <p
+            data-testid="verify-result-label"
+            className={`text-[16px] ${result.ok ? "text-emerald-50" : "text-red-300 font-bold"}`}
+          >
             {result.ok ? "✓ " : "✗ "}
             <strong>{result.label}</strong>{" "}
-            <span className="font-mono text-[12px] text-emerald-100/50">
+            <span className={`font-mono text-[12px] ${result.ok ? "text-emerald-100/50" : "text-red-200/60"}`}>
               · sig_alg: {result.sig_alg}
             </span>
           </p>

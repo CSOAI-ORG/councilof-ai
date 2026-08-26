@@ -31,6 +31,28 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0826-08",
+      date: "2026-08-26",
+      what_was_wrong:
+        "For twelve days the verify page told strangers to pin a signing key that does not exist. The page's authorship note named a published key by an eight-character fingerprint beginning f4b4278d. That fingerprint matches none of the four keys in our DID document, not the card-attestation key the 150 board cards are actually signed with, not the board key, not the living-stamp key. It appears in exactly one place in the entire estate — that sentence — and in no signed artifact, no key file and no commit that produced key material. It was introduced on 2026-08-14 in a bulk copy reconciliation, alongside an OpenTimestamps anchoring claim that was itself later walked back. We cannot establish what it was, so we are not going to invent a story for it: it was a fabricated fingerprint, and a fingerprint is the one string on a page telling people which key to trust that has to be right. The real card-attestation key, beginning d4cb0eaa, appeared nowhere on that page.",
+      how_caught:
+        "An outside auditor with no CSOAI code and no CSOAI credentials grepped the fingerprint across every page, the DID document and the card index, and found one occurrence and no key. Not self-caught. The estate had published a key-pinning instruction it had never once executed against its own page.",
+      fix:
+        "The fabricated fingerprint is removed from both surfaces that carried it, the verify page and the agent registry. Both now name the anchor by its DID identifier, link the DID document so a reader can read the key out for themselves, and print the real key prefix. No provenance has been invented for the removed string, because none could be established.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-07",
+      date: "2026-08-26",
+      what_was_wrong:
+        "Our own published verifiers rejected our own genuine cards, and our tamper detector rendered its failure in green. Three separate defects on the one surface whose entire purpose is that a stranger does not have to take our word for anything. First, the single-record verifier on the verify page hashed the whole card envelope minus the signature instead of the body sub-object the signature actually covers, so it could never verify any card, ever — and it reported that preimage bug as no published key verifies this signature, which is a statement about key publication and was false, sending readers to hunt for a key that was published all along. Second, the same form fed its verdict to a public opt-in tally, so every honest visitor who verified a real card and clicked the button filed a false failure into a public counter. Third, the MCP verify tool answered unrecognized card family to every card family we publish, including the cross-border card that verifies fine under our own recipe, because it looked for a content_id field on cards that carry id. Fourth, the client-side chain verifier's headline label was a constant string reading chain intact regardless of outcome; only the tick flipped to a cross, so a successfully detected tamper announced that the chain was intact, in the success colour, on the page that promises a broken row is reported as BROKEN, visibly.",
+      how_caught:
+        "An outside SCITT implementer followed our post to the IETF list, verified a card in Python against our published recipe, then clicked our own verify button to cross-check and was told our card was invalid. Every one of these was reachable from the public site with a browser and curl. None was caught by us.",
+      fix:
+        "There is now one verification implementation, shared by the browser form and the MCP endpoint, so the two surfaces cannot disagree again. It implements the published rule exactly, including the CPython number representation that renders an integral accuracy as 0.0 rather than 0 — 56 of the 150 cards carry such a value, and a verifier without that rule reports a false failure on 37 percent of a corpus that is sound. It recognises both published card families rather than rejecting both. Critically, it reports three failures as three different failures: the bytes do not hash to the declared id, the signature does not verify over those bytes, and the signer is not a key published in our DID document mean different things and are never collapsed into each other. The signer is pinned against the live DID document, so a card carrying an attacker's own key is reported as an untrusted signer even when its signature is internally valid. The tamper label now states the outcome in words and a failure no longer renders in the success colour. All 150 published cards verify through the fixed path, a tampered card fails as a hash mismatch, and a re-signed forgery fails as an untrusted signer. Regression tests read the real published bytes so these cannot silently return.",
+      status: "FIXED",
+    },
+    {
       id: "C-2026-0826-06",
       date: "2026-08-26",
       what_was_wrong:
