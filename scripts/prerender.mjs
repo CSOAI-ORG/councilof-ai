@@ -40,7 +40,7 @@
  */
 import { chromium } from "playwright";
 import http from "node:http";
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
 import { join, extname, dirname } from "node:path";
 
 const arg = (k, d) => {
@@ -62,6 +62,15 @@ const CONC = Number(arg("conc", 4));
 // localhost:PORT staging origin the snapshot runs on). Override with --prod-origin if the
 // canonical host ever changes.
 const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
+
+// Delete any previous report BEFORE doing anything. A tracked prerender-report.json
+// survived a crashed run on 2026-08-26 — Playwright's chromium had been updated away, the
+// prerender died on launch, and the stale report still claimed "582 ok" against 5 files on
+// disk. check-prerender caught it, but only because it cross-checks the filesystem; the
+// report alone would have shipped a lie about a build that never ran.
+// A run that does not finish must leave NO report, not an old one. Three outcomes, never
+// two: a fresh report, or nothing at all.
+try { if (existsSync("prerender-report.json")) unlinkSync("prerender-report.json"); } catch {}
 
 if (!existsSync(DIST)) {
   console.error(`no ${DIST}/ — run \`vite build\` first`);
