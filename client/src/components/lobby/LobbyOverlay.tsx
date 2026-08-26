@@ -413,7 +413,11 @@ export default function LobbyOverlay({
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div
                 className={
-                  `relative min-h-0 overflow-hidden ${chatActive ? "flex-[0_1_40%]" : "flex-1"}`
+                  // The pane keeps the full centre column whether or not chat is open. It used to
+                  // collapse to flex-[0_1_40%] because the thread was stacked BELOW it in this
+                  // same column, so asking a question shrank the thing you were asking about to
+                  // two fifths of its height. The thread now lives in its own right-hand column.
+                  `relative min-h-0 flex-1 overflow-hidden`
                 }
               >
                 {localPane && tab.id === "home" ? (
@@ -443,7 +447,6 @@ export default function LobbyOverlay({
                 )}
               </div>
 
-              {chatActive && <LobbyThread chat={chat} endRef={threadEndRef} />}
             </div>
 
             <LobbyComposer
@@ -458,8 +461,8 @@ export default function LobbyOverlay({
           </main>
 
           {rightOpen ? (
-            <div className="hidden w-72 shrink-0 lg:block xl:w-80">
-              <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
+            <div className="hidden w-[21rem] shrink-0 lg:block xl:w-[25rem]">
+              <LobbySideRail chat={chat} threadEndRef={threadEndRef} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
             </div>
           ) : (
             <RailRestore

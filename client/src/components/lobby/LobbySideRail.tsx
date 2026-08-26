@@ -3,10 +3,16 @@ import { CONTROL, FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
 import LobbyReports from "./LobbyReports";
 import LobbyTaskRail from "./LobbyTaskRail";
 import LobbyChats from "./LobbyChats";
+import LobbyThread from "./LobbyThread";
 import type { LobbyChat } from "./useLobbyChat";
 
 /**
- * LobbySideRail — the RIGHT rail, with three switchable sections.
+ * LobbySideRail — the RIGHT rail. The live conversation lives here.
+ *
+ * The thread used to render inside the CENTRE column, stacked under the pane, which
+ * collapsed the pane to two fifths of its height the moment you asked a question — so
+ * asking about something shrank the thing you were asking about. The centre is the OS;
+ * this rail is the AI beside it.
  *
  *   Reports  the signed / public artefacts, with honest live-or-failed states
  *   Tasks    the running checks (the fetches this lobby makes on your behalf)
@@ -18,9 +24,10 @@ import type { LobbyChat } from "./useLobbyChat";
  * header; when it is hidden nothing here is mounted, so the fetches stop too.
  */
 
-type SectionId = "reports" | "tasks" | "chats";
+type SectionId = "ask" | "reports" | "tasks" | "chats";
 
 const SECTIONS: { id: SectionId; label: string; hint: string }[] = [
+  { id: "ask", label: "Ask", hint: "The live conversation" },
   { id: "reports", label: "Reports", hint: "Signed and public artefacts" },
   { id: "tasks", label: "Tasks", hint: "Checks running right now" },
   { id: "chats", label: "Chats", hint: "Threads in this session" },
@@ -31,15 +38,18 @@ const PANEL = "coai-lobby-section-panel";
 
 export default function LobbySideRail({
   chat,
+  threadEndRef,
   onMinimise,
   onOpenRoute,
 }: {
   chat: LobbyChat;
+  /** Scroll anchor for the live thread, owned by the overlay so it survives section switches. */
+  threadEndRef?: React.RefObject<HTMLDivElement>;
   onMinimise?: () => void;
   /** Open a route in the lobby pane instead of navigating away (session survives). */
   onOpenRoute?: (path: string, label: string) => void;
 }) {
-  const [section, setSection] = useState<SectionId>("reports");
+  const [section, setSection] = useState<SectionId>(chat.turnCount > 0 ? "ask" : "reports");
   const listRef = useRef<HTMLDivElement>(null);
 
   const move = (to: number) => {
@@ -124,6 +134,14 @@ export default function LobbySideRail({
         className={`min-h-0 flex-1 ${FOCUS}`}
       >
         <p className="sr-only">{current.hint}</p>
+        {section === "ask" && (
+          chat.turnCount > 0
+            ? <LobbyThread chat={chat} endRef={threadEndRef} />
+            : <p className={`px-4 py-6 ${TYPE.fine}`}>
+                Nothing asked yet in this session. Use the composer below the pane and the
+                conversation appears here, beside what you are asking about.
+              </p>
+        )}
         {section === "reports" && <LobbyReports onOpenRoute={onOpenRoute} />}
         {section === "tasks" && <LobbyTaskRail />}
         {section === "chats" && <LobbyChats chat={chat} />}
