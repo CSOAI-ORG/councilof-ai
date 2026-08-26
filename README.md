@@ -61,6 +61,7 @@ Public grammar: **13 measured of 14**. Product: verified measurement credential 
 | **This working branch** | `cursor/instruments-catalog-7fb8` | Council OS / East-West / MCP slice land here first |
 | **Production** | `master` only | Cloudflare Pages deploys **master**. Branch work is not live on councilof.ai until merge |
 | **Local preview** | `npm run build:client` then `npx vite preview --config client/vite.config.ts --host 127.0.0.1 --port 43217` | E2E: `BASE_URL=http://127.0.0.1:43217 npx playwright test --config e2e/playwright.config.ts` |
+| **Local dev (branch)** | `node scripts/dev-honesty-api.mjs` + `vite --config client/vite.config.ts --port 43125` | `/api/indices` + `/api/rwa-attestation` via :3001 stub (UNMEASURED fixtures) |
 | **MCP JSON-RPC** | `POST /api/mcp` and `POST /api/mcp/http` | `tools/list`, `tools/call` over measured APIs (on branch; live after master merge) |
 | **A2A agent card** | `public/.well-known/agent-card.json` | A2A v1.0 + `supportedInterfaces` on branch |
 | **Surface hits** | `POST /api/surface-hits` | Anonymous path counters only — not a MEASURED number |
@@ -89,6 +90,8 @@ Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/ro
 - [INDEX-METHOD-0.1](docs/SOVOS/INDEX-METHOD-0.1.md) — labour/economy indices stay UNMEASURED until bank freeze
 - [RunPod policy](docs/RUNPOD_POLICY.md) — GPU for model axes; not RWA churn or invented labour scores
 - [HF dataset plan](docs/HF_DATASET_PLAN.md) — honesty dumps; UNMEASURED stub first
+- [HF upload runbook](docs/HF_UPLOAD_RUNBOOK.md) — staged packs #139/#186 when `hf auth login` works
+- [Regulator indices one-pager](docs/REGULATOR_INDICES_ONE_PAGER.md) — UNMEASURED brief (markdown source; PDF owner)
 - [Oracle fleet](docs/ORACLE_FLEET.md) — infra status only; not a grade/price oracle
 - [Dataset freshness crons](docs/DATASET_FRESHNESS_CRONS.md) — ops designs; no invented MEASURED
 - [REPORTED labour/economy citations](docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md) — dated links, no scores
