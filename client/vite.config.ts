@@ -7,8 +7,24 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * /gspc-verify's "Verify a single record" box imports the PUBLISHED verifier at
+ * public/signed/verify-card.mjs so the browser runs the same rules as `node verify-card.mjs`
+ * — see client/src/lib/recordVerify.ts. That file keeps its `#!/usr/bin/env node` shebang so
+ * it stays directly executable for anyone who downloads it, and Rollup cannot parse a shebang.
+ * Blank the line (rather than delete it) so reported line numbers still match the real file.
+ */
+const stripShebang = {
+  name: 'strip-shebang',
+  enforce: 'pre' as const,
+  transform(code: string, id: string) {
+    if (!id.endsWith('.mjs') || !code.startsWith('#!')) return null;
+    return { code: code.replace(/^#![^\n]*/, ''), map: null };
+  },
+};
+
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [stripShebang, react(), tailwindcss()],
   root: path.resolve(__dirname),
   publicDir: '../public',
   resolve: {
