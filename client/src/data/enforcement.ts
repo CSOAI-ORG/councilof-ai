@@ -6,7 +6,11 @@ export const FFW = {
   counter: "EU AI Act fines: \u20ac0",
   daysSincePowers: 22,
   powersOn: "2 Aug 2026",
-  signer: "did:web:csoai.org#estate-chain-1",
+  // The signed feed (/api/fines) signs with #board-attestation-1. This advertised
+  // #estate-chain-1 — a key that IS published in did:web:csoai.org but does not sign
+  // this stream, so a verifier following the advertisement fetches the wrong key and
+  // fails. Point at the key that actually signs it.
+  signer: "did:web:csoai.org#board-attestation-1",
   note: "Systematic signed coverage of the public AI/AI-adjacent enforcement record. Not certification. Not an estimate.",
 };
 export const FINES: Fine[] = [

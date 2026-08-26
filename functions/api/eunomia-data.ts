@@ -55,7 +55,14 @@ export const onRequestGet: PagesFunction = async (context) => {
       lane: "commercial-data",
       schema: "csoai.eunomia-data/0.1",
       note: "x402 DATA product — never scores, never ranked. Regulators/public free (R8) via /first-fine-watch.",
-      signer: "did:web:csoai.org#estate-chain-1",
+      // This response is NOT signed. It previously advertised
+      // `signer: did:web:csoai.org#estate-chain-1`, which invites a reader to conclude the
+      // payload is signed by that key — it is signed by nothing. A signer field on an
+      // unsigned body is the same defect as `"signed": true` with no signature bytes:
+      // a field asserting cryptographic provenance that does not exist. State the absence
+      // and name where the signed form lives instead.
+      signed: false,
+      signature_absent: "This endpoint returns unsigned data. The signed First-Fine Watch feed is /api/fines, signed with did:web:csoai.org#board-attestation-1.",
       key_mode: key,
       gate,
       data: paid || !wantsGate ? { fines, deadlines } : undefined,

@@ -28,7 +28,7 @@ export const STORY: Slide[] = [
   {
     // 02 The problem — light, breathes
     kicker: "The problem",
-    video: { src: "/videos/council-of-ai.mp4", poster: "/videos/council-of-ai.jpg", title: "What Council of AI does — a 2-minute look" },
+    video: { src: "/videos/council-of-ai.mp4", poster: "/videos/council-of-ai.jpg", title: "What Council of AI does — a 9-minute look" },
     title: "The “trust us” PDF",
     body: "Most AI assurance is a claim on a slide — a badge, a private report, a number with no test behind it. You can’t run it, you can’t see what was skipped, and the moment the model updates the paperwork is already out of date.",
     points: [
@@ -111,7 +111,7 @@ export const STORY: Slide[] = [
     ],
     href: "/gspc-scoreboard",
     cta: "Read the scoreboard",
-    video: { src: "/videos/csoai-architecture.mp4", poster: "/videos/csoai-architecture.jpg", title: "How Council of AI is built — the architecture" },
+    video: { src: "/videos/csoai-architecture.mp4", poster: "/videos/csoai-architecture.jpg", title: "The architecture of measurement — how a signed card is made" },
   },
   {
     // 08 Council City — heavy, living layer
@@ -170,7 +170,7 @@ export const STORY: Slide[] = [
     ],
     href: "/?lobby=measured&task=get-measured",
     cta: "Prove your AI",
-    video: { src: "/videos/trust-ecosystem.mp4", poster: "/videos/trust-ecosystem.jpg", title: "The trust ecosystem — who Council of AI serves" },
+    video: { src: "/videos/trust-ecosystem.mp4", poster: "/videos/trust-ecosystem.jpg", title: "The trust lobby — who the measurement is for" },
   },
   {
     // 12 Anyone can check — heavy, the signed card in hand
