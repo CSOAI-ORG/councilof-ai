@@ -58,7 +58,17 @@ export type LobbyTaskId =
   | "sector-brief"
   | "engine-axis-brief"
   | "eunomia-router"
-  | "bond-venturi";
+  | "bond-venturi"
+  | "indices-hub"
+  | "indices-ai-economy"
+  | "indices-human-labour"
+  | "indices-humanoid-labour"
+  | "products-catalog"
+  | "powered-by"
+  | "rwa-attestation"
+  | "gspc-verify-rwa"
+  | "refutation-ledger"
+  | "corrections-ledger";
 
 export interface LobbyTask {
   pane: LobbyTabId;
@@ -214,6 +224,66 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
     label: "Bond venturi COBOL→A2A",
     prompt: () =>
       "Walk COBOL overnight batch to A2A T+0 — which steps are SPEC versus MEASURED on councilof.ai today?",
+  },
+  "indices-hub": {
+    pane: "home",
+    label: "Labour & AI-economy indices (UNMEASURED)",
+    prompt: () =>
+      "What do the three labour/AI-economy indices publish today, and why are they declared UNMEASURED rather than filled?",
+  },
+  "indices-ai-economy": {
+    pane: "home",
+    label: "AI Economy Index",
+    prompt: () =>
+      "What is published for the AI Economy Index, and what does the Council refuse to invent as MEASURED?",
+  },
+  "indices-human-labour": {
+    pane: "home",
+    label: "Human Labour Index",
+    prompt: () =>
+      "What is published for the Human Labour Index, and why must wage/displacement % never be invented as MEASURED?",
+  },
+  "indices-humanoid-labour": {
+    pane: "home",
+    label: "Humanoid Labour Index",
+    prompt: () =>
+      "What is published for the Humanoid Labour Index, and what stays UNMEASURED until INDEX-METHOD freezes a bank?",
+  },
+  "products-catalog": {
+    pane: "home",
+    label: "Products catalog (HO.2)",
+    prompt: () =>
+      "Walk the products catalog — what ships, what stays UNMEASURED, and confirm scores are never sold.",
+  },
+  "powered-by": {
+    pane: "home",
+    label: "Option A / powered-by",
+    prompt: () =>
+      "What does Option A white-label attestation license, and how is that not tokenization or a sold grade?",
+  },
+  "rwa-attestation": {
+    pane: "home",
+    label: "RWA attestation catalog",
+    prompt: () =>
+      "What does GET /api/rwa-attestation publish today (measured_score null), and what gates remain before any signed Stage 2 card?",
+  },
+  "gspc-verify-rwa": {
+    pane: "verify",
+    label: "Verify · RWA pack path",
+    prompt: () =>
+      "How do I verify an RWA pack path from /gspc-verify without claiming mainnet MEASURED — point me at /api/rwa-attestation and RECEIPT-SPEC Memo pointers?",
+  },
+  "refutation-ledger": {
+    pane: "home",
+    label: "Refutation ledger",
+    prompt: () =>
+      "What does the refutation ledger publish, including index-claim rows, and how does that differ from a grade?",
+  },
+  "corrections-ledger": {
+    pane: "home",
+    label: "Corrections ledger",
+    prompt: () =>
+      "How do bad RWA cards or index-method errata land on /api/corrections — append-only, never silent edit?",
   },
 };
 
