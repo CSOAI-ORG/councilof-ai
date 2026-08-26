@@ -132,7 +132,9 @@ export function lobbyGround(q: string): string | null {
     (/assessment/.test(t) && /actually measur/.test(t)) ||
     (/enterprise team/.test(t) && /measur/.test(t)) ||
     /how does a (company|team) get measured/.test(t) ||
-    (/what do i send/.test(t) && /measur/.test(t))
+    (/what do i send/.test(t) && /measur/.test(t)) ||
+    t.includes("get measured") ||
+    /how (do (i|we|you)|does .{0,40}) get .{0,20}measur/.test(t)
   ) {
     return GET_MEASURED;
   }
@@ -150,7 +152,7 @@ export function lobbyGround(q: string): string | null {
     return VERIFY_CARD;
   }
 
-  if (/\bwatchdog\b/.test(t) && /incident|report/.test(t)) return WATCHDOG;
+  if (t.includes("watchdog") && /incident|report/.test(t)) return WATCHDOG;
 
   if (/human baselines|reported third-party/.test(t)) return HUMAN_BASELINES;
 
@@ -164,11 +166,11 @@ export function lobbyGround(q: string): string | null {
     return HONESTY;
   }
 
-  if (/\bregulators?\b/.test(t) && /gspc|grade|crosswalk|frozen|what (should|does|is published)/.test(t)) {
+  if ((t.includes("regulator") || t.includes("regulators")) && /gspc|grade|crosswalk|frozen|what (should|does|is published)/.test(t)) {
     return REGULATOR;
   }
 
-  if (/\binsurers?\b/.test(t) || /underwrit/.test(t)) return INSURER;
+  if (t.includes("insurer") || /underwrit/.test(t)) return INSURER;
 
   if (/crosswalk/.test(t) || /frameworks are crosswalked/.test(t)) return CROSSWALK;
 
@@ -190,11 +192,11 @@ export function lobbyGround(q: string): string | null {
 
   if (/gold labels/.test(t) && /minimum n|figure graded|verdict/.test(t)) return METHOD;
 
-  if (/published in the hive/.test(t) || (/\bhive\b/.test(t) && /frameworks and groups/.test(t))) {
+  if (/published in the hive/.test(t) || (t.includes("hive") && /frameworks and groups/.test(t))) {
     return HIVE;
   }
 
-  if (/\bfinance\b/.test(t) && /governance|signed evidence/.test(t)) return FINANCE;
+  if (t.includes("finance") && /governance|signed evidence/.test(t)) return FINANCE;
 
   return null;
 }
