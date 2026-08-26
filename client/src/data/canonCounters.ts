@@ -95,11 +95,19 @@ export const CANON = {
     note: "DESIGN figure — same labelling rule as councilAgents.",
   },
   /** MCP servers live-deployable from the master registry — same measured count as MCP_SERVERS. */
-  mcpLiveDeployed: {
+  // RENAMED 2026-08-26. This was `mcpLiveDeployed`, and the name was false about its own
+  // contents: the value is `mcpRegistry.json · servers.length` — rows in a file. Nothing here
+  // was ever probed, reached, or deployed. It was rendered on 8+ pages as "governed MCP tools
+  // (deployed)" under a footer reading "live from the Council engine", which turned a file's
+  // row count into a claim about running infrastructure. It also counts SERVERS while the
+  // chip labelled it TOOLS. The live probe reaches 6 servers / 30 tools.
+  mcpRegistryEntries: {
     value: 291,
     source: "client/src/data/mcpRegistry.json · servers.length (2 test fixtures purged 2026-08-01)",
     measuredAt: "2026-08-01",
-    note: "Same artefact as MCP_SERVERS; the estate's 313 claim stays unverified until the registry shows it.",
+    note:
+      "CATALOGUED SERVERS — rows in a registry file, not reachable services and not tools. " +
+      "A catalogue entry is not a running server; never render this as live or deployed.",
   },
 } as const satisfies Record<string, CanonCounter>;
 

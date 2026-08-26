@@ -569,9 +569,16 @@ export default function GovernmentDashboard() {
       <section className="bg-amber-50 border-b border-amber-200 py-3">
         <div className="container max-w-7xl">
           <p className="text-sm text-amber-800">
-            <strong>Preview.</strong> No live national AI registry feeds this dashboard yet.
-            Headline figures are withheld rather than invented; framework and regional panels
-            below show the layout with illustrative example data, clearly not measurements.
+            {/* This sentence used to claim figures were "withheld rather than invented" and
+                then, in its own next clause, describe the illustrative data below. Both halves
+                cannot be true: the numbers on this page ARE invented placeholders. Saying
+                "withheld" while displaying them is the more damaging error, because it invites
+                a reader to treat what follows as real. */}
+            <strong>Preview — the numbers on this page are invented placeholders.</strong>{" "}
+            No live national AI registry feeds this dashboard. Every figure below — compliance
+            rates, system counts, penalties — is illustrative sample data showing the layout.
+            None of it is a measurement, and none of it should be quoted. Our real, signed
+            measurements are on the board at <a className="underline" href="/gspc-scoreboard">/gspc-scoreboard</a>.
           </p>
         </div>
       </section>
@@ -700,9 +707,19 @@ export default function GovernmentDashboard() {
                     <CardContent>
                       <div className="space-y-4">
                         <div>
+                          {/* The figure is marked AT the figure, not only in a banner at the
+                              top of the page. A reader arriving mid-page, and any answer
+                              engine extracting this card, would otherwise lift "87.3%" as a
+                              CSOAI measurement of EU AI Act compliance. A disclaimer a
+                              scraper never reaches is not a disclaimer. */}
                           <div className="flex justify-between text-sm mb-2">
                             <span className="text-gray-600">Compliance Rate</span>
-                            <span className={`font-bold ${colorClasses.text}`}>{framework.complianceRate}%</span>
+                            <span className={`font-bold ${colorClasses.text}`}>
+                              {framework.complianceRate}%
+                              <span className="ml-1.5 font-normal text-[10px] uppercase tracking-wide text-amber-700">
+                                sample data
+                              </span>
+                            </span>
                           </div>
                           <Progress value={framework.complianceRate} className="h-2" />
                         </div>

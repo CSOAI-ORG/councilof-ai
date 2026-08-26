@@ -273,8 +273,20 @@ async function worker(id) {
     const route = queue.shift();
     const rec = { route, chars: 0, ok: false };
     try {
-      await page.goto(`http://localhost:${ACTIVE_PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
-      await page.waitForTimeout(WAIT);
+      // `networkidle` is the right wait for most routes but the wrong bar for a few heavy
+      // ones: /world mounts a 3D globe with ~9 large assets and intermittently needs more
+      // than 30s to go quiet, so it failed on some builds and passed on others. Excluding it
+      // would hide a real page from crawlers to keep the gate green — the wrong trade. So:
+      // retry once on timeout with a longer budget and the weaker `load` bar, which is enough
+      // for a snapshot. Only a route that fails BOTH attempts is a genuine failure.
+      try {
+        await page.goto(`http://localhost:${ACTIVE_PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
+      } catch (e) {
+        if (!/Timeout/i.test(String(e && e.message))) throw e;
+        rec.slow = true;
+        await page.goto(`http://localhost:${ACTIVE_PORT}${route}`, { waitUntil: "load", timeout: 90000 });
+      }
+      await page.waitForTimeout(rec.slow ? WAIT * 3 : WAIT);
       const info = await page.evaluate(() => {
         const root = document.getElementById("root");
         return { text: (document.body.innerText || "").replace(/\s+/g, " ").trim(),
@@ -340,6 +352,13 @@ console.log(`\n═══ ${results.length} routes`);
 console.log(`  ${ok.length} prerendered with ≥${MIN} visible characters`);
 console.log(`  ${thin.length} THIN — rendered but under threshold, or root still empty`);
 console.log(`  ${err.length} errored`);
+// A route that only rendered because it got a second, longer attempt is reported, not hidden.
+// It passed, but it is one asset away from failing, and a silent retry is how a page quietly
+// becomes unshippable without anyone noticing.
+const slow = results.filter((r) => r.slow);
+if (slow.length) {
+  console.log(`  ${slow.length} SLOW — needed a retry at the longer timeout: ${slow.map((r) => r.route).join(", ")}`);
+}
 if (thin.length) {
   console.log(`\nTHIN routes need a longer wait or real SSR — they are NOT fixed:`);
   thin.slice(0, 25).forEach(r => console.log(`  ${String(r.chars).padStart(6)}ch  ${r.route}`));

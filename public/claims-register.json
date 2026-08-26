@@ -2,135 +2,183 @@
   "schema": "csoai.claims-register/0.1",
   "title": "CSOAI public claims register",
   "purpose": "Every material capability claim CSOAI makes on a public surface, with the evidence a stranger can check and the status that claim has actually earned. A capability we plan to build is not a capability we advertise; planned work is labelled planned.",
-  "doctrine": "live = shipped and checkable today · devnet = proven on a test network only, not production · planned = intended, not built or not shipped · retired = previously published, now withdrawn (with the reason).",
+  "doctrine": "live = shipped and checkable today · devnet = proven on a test network only, not production · unmeasured = the thing exists but we have not measured it, and we say so rather than implying we have · planned = intended, not built or not shipped · retired = previously published, now withdrawn (with the reason).",
   "how_to_challenge": "If a claim here does not match what you can verify, that is a defect. Report it at nicholas@csoai.org and it goes to the corrections feed at /api/corrections.",
   "generated_at": "2026-08-26",
-  "statuses": ["live", "devnet", "planned", "retired"],
+  "statuses": [
+    "live",
+    "devnet",
+    "unmeasured",
+    "planned",
+    "retired"
+  ],
   "claims": [
     {
       "id": "CR-001",
       "claim": "Every published measurement card is signed with Ed25519 over a SHA-256 hash chain and can be verified offline against did:web:csoai.org, without our servers or our permission.",
       "status": "live",
-      "evidence": ["/gspc-verify", "/signed/card_index.json", "/.well-known/did.json"],
+      "evidence": [
+        "/gspc-verify",
+        "/signed/card_index.json",
+        "/.well-known/did.json"
+      ],
       "notes": "This is the whole trust path. No blockchain and no timestamp authority sits in it."
     },
     {
       "id": "CR-002",
       "claim": "Blockchain / independent timestamp anchoring of cards (OpenTimestamps, RFC-3161).",
       "status": "planned",
-      "evidence": ["/methodology", "/gspc-verify"],
+      "evidence": [
+        "/methodology",
+        "/gspc-verify"
+      ],
       "notes": "Cards declare timestamp_authority: \"none\". There is no RFC-3161 timestamp and no Bitcoin anchor behind any card. The label will name it in the same commit it ships, never ahead of it."
     },
     {
       "id": "CR-003",
       "claim": "Signed measurement evidence can be attached permissionlessly to the XRP Ledger about accounts we do not control (memo + XLS-70 credential), and a stranger can verify the attachment.",
       "status": "devnet",
-      "evidence": ["/xrpl-attest", "/interop/xrpl-attest-run.json"],
+      "evidence": [
+        "/xrpl-attest",
+        "/interop/xrpl-attest-run.json"
+      ],
       "notes": "XRPL DEVNET only, with a synthetic subject. Proof of capability, never an investment, a rating or a conformity mark. Mainnet is planned, not live."
     },
     {
       "id": "CR-004",
       "claim": "XRP Ledger mainnet attestation.",
       "status": "planned",
-      "evidence": ["/xrpl-attest"],
+      "evidence": [
+        "/xrpl-attest"
+      ],
       "notes": "Not deployed. Attesting is permissionless; authorisation inside any permissioned domain still requires the relying party to trust our issuer key."
     },
     {
       "id": "CR-005",
       "claim": "\"Layer 0\" is our foundational verification layer — identity, signing and attestation beneath governed AI.",
       "status": "live",
-      "evidence": ["/layer0"],
+      "evidence": [
+        "/layer0"
+      ],
       "notes": "Disambiguation, because the term collides: this is NOT a blockchain Layer-0 protocol and NOT an interoperability substrate for blockchains. No protocol claim is made or implied by the name."
     },
     {
       "id": "CR-006",
       "claim": "Post-quantum ML-DSA-65 (FIPS-204) signing.",
       "status": "planned",
-      "evidence": ["/methodology"],
+      "evidence": [
+        "/methodology"
+      ],
       "notes": "Built, not shipped. Nothing published today is ML-DSA-65 signed."
     },
     {
       "id": "CR-007",
       "claim": "A 33-seat council with a 23-of-33 supermajority delivers fault-tolerant, decorrelated review.",
       "status": "retired",
-      "evidence": ["/refutation-ledger"],
+      "evidence": [
+        "/refutation-ledger"
+      ],
       "notes": "Retracted under DR-0007. We measured how independent the seats actually were and got n_eff 1.21 of 3 against 3 nominal legs. The 33/23 structure is a DESIGN figure and is labelled as one wherever it appears; the fault-tolerance guarantee is withdrawn, not reworded."
     },
     {
       "id": "CR-008",
       "claim": "CSOAI certifies, accredits, or issues conformity marks for AI systems.",
       "status": "retired",
-      "evidence": ["/accreditation"],
+      "evidence": [
+        "/accreditation"
+      ],
       "notes": "We measure; we never certify. The Academy issues course-completion records, which attest training and not conformity. No CSOAI output is a conformity assessment under any regulation."
     },
     {
       "id": "CR-009",
       "claim": "CSOAI measurement is recognised under mutual-recognition agreements with named regulators (CISA, NCSC, ANSSI, BSI, BEREC, ENISA, ICMM, CRMA, national transport / mining / AI oversight authorities).",
       "status": "retired",
-      "evidence": ["/accreditation"],
+      "evidence": [
+        "/accreditation"
+      ],
       "notes": "Removed 2026-08-26. This appeared on five sector pages and was never substantiable: CSOAI holds no mutual-recognition agreement with, and is not endorsed or accredited by, any of these bodies. The pages now say only that we crosswalk our measurement output to those compliance pathways, which is what we actually do."
     },
     {
       "id": "CR-010",
       "claim": "The GSPC measurement board is live, machine-readable, and reports UNMEASURED honestly rather than filling empty cells.",
       "status": "live",
-      "evidence": ["/api/gspc", "/gspc-verify"],
+      "evidence": [
+        "/api/gspc",
+        "/gspc-verify"
+      ],
       "notes": "Empty cells stay empty. Nothing is quoted below n>=30."
     },
     {
       "id": "CR-011",
       "claim": "Our own status page probes components live and marks the ones it cannot honestly check.",
       "status": "live",
-      "evidence": ["/status"],
-      "notes": "Rows with no public health endpoint are labelled \"not probed from this page\" rather than painted green, and the incident log is not backfilled."
+      "evidence": [
+        "/status"
+      ],
+      "notes": "Rows with no public health endpoint are labelled \"not probed from this page\" rather than painted green, and the incident log is not backfilled. CORRECTION 2026-08-26: this claim was briefly FALSE in a way the page itself could not see. The tool-fleet row probed /api/tools, received a real 200, and reported \"operational\" — but the number inside was a 291-row registry snapshot rendered as \"governed MCP tools (deployed)\" under a caption reading \"live from the Council engine\". The probe was real; the figure it surfaced was a catalogue. The endpoint had always labelled it total_kind=catalogue-snapshot and the UI discarded that field. Each figure now carries its own provenance and only a genuine probe result may be called reachable."
     },
     {
       "id": "CR-012",
       "claim": "C2PA / Content Authenticity conformance for published artefacts.",
       "status": "planned",
-      "evidence": ["/provenance-finding"],
+      "evidence": [
+        "/provenance-finding"
+      ],
       "notes": "Contributor, conformance in progress. Artefacts today carry Ed25519 provenance, not C2PA conformance."
     },
     {
       "id": "CR-013",
       "claim": "Grading is deterministic; no model judges another model.",
       "status": "live",
-      "evidence": ["/methodology"],
+      "evidence": [
+        "/methodology"
+      ],
       "notes": "Every verdict is a deterministic predicate on frozen splits. Not LLM-as-judge."
     },
     {
       "id": "CR-014",
       "claim": "A £20 million scholarship / scholarship fund.",
       "status": "retired",
-      "evidence": ["/accreditation"],
+      "evidence": [
+        "/accreditation"
+      ],
       "notes": "Checked 2026-08-26 across the codebase, the built bundle and the live site: no such claim is published on any CSOAI surface, and no such fund exists. Recorded here so the claim cannot quietly reappear. The Charter's diversity provision mentions scholarships as an aspiration with no monetary figure attached."
     },
     {
       "id": "CR-015",
       "claim": "CSOAI carries Professional Indemnity Insurance up to £5,000,000.",
       "status": "live",
-      "evidence": ["/trust-center"],
+      "evidence": [
+        "/trust-center"
+      ],
       "notes": "Policy number on request. CSOAI LTD, UK Companies House 16939677."
     },
     {
       "id": "CR-016",
       "claim": "ISO 27001, ISO 42001 and SOC 2 Type II certification.",
       "status": "planned",
-      "evidence": ["/trust-center"],
+      "evidence": [
+        "/trust-center"
+      ],
       "notes": "All three are marked In Progress because they are genuinely in progress. No assessor's letter exists for any of them; when one does it will be published. We are not certified to SOC 2 or ISO/IEC 42001 and do not claim to be."
     },
     {
       "id": "CR-017",
       "claim": "\"GDPR Compliant\" as an attained, badge-level status shown beside certification rows.",
       "status": "retired",
-      "evidence": ["/trust-center", "/data-processing-agreement"],
+      "evidence": [
+        "/trust-center",
+        "/data-processing-agreement"
+      ],
       "notes": "Reworded 2026-08-26. GDPR compliance is a self-assessed posture, not a certification, and a green Compliant badge sitting next to ISO and SOC 2 rows implied an audit that does not exist. The row now reads GDPR / Self-assessed and says so. The Article 17 line no longer claims \"full compliance\" or \"instant\" deletion; it states erasure on request within the statutory one-month window."
     },
     {
       "id": "CR-018",
       "claim": "Per-region data residency selection (EU / US / APAC).",
       "status": "planned",
-      "evidence": ["/trust-center"],
+      "evidence": [
+        "/trust-center"
+      ],
       "notes": "Designed, not yet offered. The public site is served from Cloudflare's edge; the measurement backend is first-party, self-hosted UK/EU. The card will name regions and safeguards on the day it ships, not before."
     }
   ]

@@ -28,12 +28,20 @@ async function apiTruth() {
   // organisation exists to catch, so the check is now on the CONTRACT: real JSON, a derived
   // total, and tools counted as tools.
   try {
+    // CONTRACT CHANGED 2026-08-26. This asserted `total > 0` for `?q=governance`, and the
+    // only reason it ever passed was that the old handler served five INVENTED tool rows
+    // exposed by no reachable server. The real fleet has 4 probed tools, none matching
+    // "governance", so 0 is the correct answer to that query — a search returning no match
+    // is a result, not a fault. The test now checks what actually matters: that the
+    // catalogue is non-empty, and that `total` is DERIVED from the array rather than
+    // asserted alongside it. Do not restore the invented rows to make this green.
     const d = await (await fetch(SITE + "/api/tools?q=governance")).json();
-    const okShape = typeof d.total === "number" && Array.isArray(d.tools) && typeof d.server_count === "number";
+    const okShape = typeof d.total === "number" && Array.isArray(d.tools) &&
+      typeof d.server_count === "number" && typeof d.catalogue_total === "number";
     const derived = okShape && d.total === d.tools.length;
-    (okShape && derived && d.total > 0)
-      ? pass('CLAIM "MCP tool catalogue"', `/api/tools total=${d.total} tools across ${d.server_count} servers (derived, not asserted)`)
-      : fail('CLAIM "MCP tool catalogue"', `shape=${okShape} derived=${derived} total=${d.total}`);
+    (okShape && derived && d.catalogue_total > 0)
+      ? pass('CLAIM "MCP tool catalogue"', `/api/tools total=${d.total} matched of catalogue_total=${d.catalogue_total}, ${d.server_count} probed server(s) (derived, not asserted)`)
+      : fail('CLAIM "MCP tool catalogue"', `shape=${okShape} derived=${derived} catalogue_total=${d.catalogue_total}`);
   } catch (e) { fail("MCP tool catalogue", e.message); }
   try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `${n} execute server-side`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
   try { const d = await rpc("tools/call", { name: "meok_govern", arguments: { industry: "a bank" } }); const t = d.result?.content?.map((c) => c.text).join(" ") || ""; /EU AI Act|DORA|GDPR/.test(t) ? pass("meok_govern executes", t.slice(0, 55)) : fail("meok_govern", "no framework output"); } catch (e) { fail("meok_govern", e.message); }

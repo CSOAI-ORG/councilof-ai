@@ -77,7 +77,14 @@ export default function StatusPage() {
           </div>
           <div className="mt-3 grid gap-2 sm:grid-cols-4 text-sm">
             <Stat label="Substrate" value="Layer 0" />
-            <Stat label="Governed tools" value={tools != null ? tools.toLocaleString() : CANON.mcpLiveDeployed.value.toString()} />
+            {/* The fallback is a count of registry ROWS (servers), so it cannot be labelled
+                "Governed tools" — that conflates catalogued servers with reachable tools and
+                is what let a 291-row file read as running tool infrastructure. Label follows
+                the source of the number actually displayed. */}
+            <Stat
+              label={tools != null ? "Tools (probed)" : "Servers catalogued"}
+              value={tools != null ? tools.toLocaleString() : CANON.mcpRegistryEntries.value.toString()}
+            />
             <Stat label="Orchestrator" value={brain.orchestrator ? "live" : "-"} ok={!!brain.orchestrator} />
             <Stat label="OpenAI-compat" value={brain.openai_compat ? "live" : "-"} ok={!!brain.openai_compat} />
             <Stat label="Groq" value={brain.groq ? "on" : "-"} ok={!!brain.groq} />
