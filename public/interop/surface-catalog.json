@@ -11,7 +11,7 @@
     "ci_action": "https://github.com/CSOAI-ORG/action-verify-attestation"
   },
   "api": [
-    "/api/gspc (14-of-14 board)", "/api/state (derived counts — the only quotable numbers)",
+    "/api/gspc (the living board — authoritative axis counts)", "/api/state (derived counts — the only quotable numbers)",
     "/api/cards", "/api/axis-register", "/api/detect (Art 50 C2PA verifier)",
     "/api/checkout (provider:meta = HTTP 402)", "/api/fulfill", "/api/interop-bulk (x402 bulk)",
     "/api/methodology (signed)"],
@@ -25,9 +25,9 @@
     "/interop/coverage-register.json (XRPL 16 / EVM 3)", "/interop/sboum-councilof-ai.json",
     "/interop/surface-catalog.json (this file)", "/interop/xrpl-attest-run.json",
     "/interop/card-store-verification.json"],
-  "signed": ["/signed/board_living.json (14-of-14, re-signed)", "/signed/gspc-measurement.json",
+  "signed": ["/signed/board_living.json (living board, re-signed)", "/signed/gspc-measurement.json",
              "/signed/card_index.json (frozen floor 150)"],
-  "signals": ["/signals/*.signed.json (13 axes + expansions + Measurement Signal Index 15 rows)"],
+  "signals": ["/signals/*.signed.json (one signed signal per axis + expansions; counts are a pointer — GET /api/state)"],
   "docs": ["/docs/MASTER_PLAN_2026-08-26.md", "/docs/INSURER_PILOT_PITCH_2026-08-26.md",
            "/docs/NIST_CAISI_INPUT_2026-08-26.md"],
   "datasets": ["csoai/rwa-attest (10 files)", "csoai/gspc-jail-goldbank (5 files)",
