@@ -38,8 +38,14 @@ const DIST = path.resolve(REPO, args[0] || "dist/client");
 // Anchored to the whole string, so it only matches a standalone display element.
 const BARE_PRICE = /^\s*(?:from\s+)?[£$€]\s?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*(?:\/\s*(?:mo|yr|month|year|seat|user))?\s*(?:\+\s*VAT)?\s*$/;
 
-// Popularity/recommendation claims — assertions about other customers' choices.
-const SOCIAL_PROOF = /^\s*(?:most\s+popular|best\s+value|recommended|most\s+chosen|customer\s+favou?rite|top\s+pick)\s*$/i;
+// Popularity claims — assertions about what OTHER CUSTOMERS chose.
+// "Recommended" was in this list and was WRONG: on /regulatory-compliance it is a
+// regulatory-status value in a framework comparison table — NIST AI RMF *recommends*
+// human oversight where the EU AI Act *requires* it. That is a true statement about a
+// framework's stance, not social proof, and flagging it would have pushed someone to
+// delete accurate information to satisfy a gate. A gate that forces a true claim off a
+// page is worse than no gate. The phrases below are unambiguous; "Recommended" is not.
+const SOCIAL_PROOF = /^\s*(?:most\s+popular|best\s+value|most\s+chosen|customer\s+favou?rite|top\s+pick)\s*$/i;
 
 // £0 / $0 / "Free" is not a price — it is the free-forever commitment, which doctrine
 // requires us to state. Never flag it.
