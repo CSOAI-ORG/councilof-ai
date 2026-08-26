@@ -1,0 +1,182 @@
+{
+ "schema": "csoai.white-label-attestation-integrity/0.1",
+ "interop_dir": "public/interop",
+ "doctrine": "Forensic, honest attestation-integrity audit. Measurement, not certification. We report the TRUE signed/unsigned state; we never fabricate a signature. A surface that recomputes to a content_id with a valid Ed25519 signature is SIGNED-VERIFIABLE; measured-but-unsigned surfaces are stated as measured, NOT attested.",
+ "surfaces": [
+  {
+   "surface": "ai-economy-index.v0.1.json",
+   "status": "SIGNED-VERIFIABLE",
+   "content_id": "bbb28b5c312bfd2f7e43ea5b",
+   "verified": true
+  },
+  {
+   "surface": "attestation-corpus.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "card-store-verification.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "coverage-register.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "eas-attestation-batch.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "evm-control-facts.json",
+   "status": "SIGNED-MISMATCH",
+   "content_id": "532c59c43ecd2db938f6bcae",
+   "verified": false
+  },
+  {
+   "surface": "financial-axes.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "financial-measure-run-v2.json",
+   "status": "SIGNED-VERIFIABLE",
+   "content_id": "29369542cb537f38331fecb2",
+   "verified": true
+  },
+  {
+   "surface": "financial-measure-run.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "human-labour-index.v0.1.json",
+   "status": "SIGNED-VERIFIABLE",
+   "content_id": "8abf5166de5a8cb80d87d9b5",
+   "verified": true
+  },
+  {
+   "surface": "index-reference-reverify.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "jail-peritem-v3.json",
+   "status": "SIGNED-VERIFIABLE",
+   "content_id": "03361526e66f1263696d2527",
+   "verified": true
+  },
+  {
+   "surface": "jailbreak-asr-evidence-pack.json",
+   "status": "SIGNED-VERIFIABLE",
+   "content_id": "dbc0bb7a3b9b037452005403",
+   "verified": true
+  },
+  {
+   "surface": "mcp-security-scorecard.json",
+   "status": "SIGNED-VERIFIABLE",
+   "content_id": "c352dc71f3c9f0d4fc1cf9e1",
+   "verified": true
+  },
+  {
+   "surface": "pqc-continuity-measure.json",
+   "status": "SIGNED-VERIFIABLE",
+   "content_id": "64b01b29ceffe07cbbb89450",
+   "verified": true
+  },
+  {
+   "surface": "rating-the-raters-001-arc.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "rwa-attest-index.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "rwa-registry.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "sbom-councilof-ai.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "surface-catalog.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "white-label-deadline-radar.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "white-label-exposure-register.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "white-label-jailbreak-rating.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "white-label-risk-register.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  },
+  {
+   "surface": "xrpl-attest-run.json",
+   "status": "UNAUTHENTICATED",
+   "content_id": null,
+   "verified": null
+  }
+ ],
+ "summary": {
+  "total": 25,
+  "signed_verifiable": 7,
+  "unsigned_or_other": 18,
+  "unsigned_list": [
+   "attestation-corpus.json",
+   "card-store-verification.json",
+   "coverage-register.json",
+   "eas-attestation-batch.json",
+   "evm-control-facts.json",
+   "financial-axes.json",
+   "financial-measure-run.json",
+   "index-reference-reverify.json",
+   "rating-the-raters-001-arc.json",
+   "rwa-attest-index.json",
+   "rwa-registry.json",
+   "sbom-councilof-ai.json",
+   "surface-catalog.json",
+   "white-label-deadline-radar.json",
+   "white-label-exposure-register.json",
+   "white-label-jailbreak-rating.json",
+   "white-label-risk-register.json",
+   "xrpl-attest-run.json"
+  ]
+ }
+}
