@@ -159,3 +159,20 @@ humanoid deployment-registry design.
   (E2E PASS on the 14-of-14 claim).
 - SCA: dependabot.yml + corrections runbook in. E2E gates: signed-json-guard (built-dir
   gated, CI) + claimguard run locally PASS.
+
+## 2026-08-26 · JEEVES — XRPL issuer-location probe (bounded, non-colliding)
+
+- Probe method VALIDATED: s1/s2.ripple.com:51234 reachable; canonical `{"method":..,"params":[{...}]}`
+  JSON-RPC works (a shell `curl -d '{"method":..}'` one-liner returns `invalidParams` = clio
+  needs explicit `ledger_index` + params wrapper; use the Python RPC form).
+- Confirmed EXIST on XRPL mainnet: RLUSD `rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De` (seq 89926295),
+  OUSG `rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p` (seq 96699793), Braza `rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc`
+  (seq 90559631), Archax `rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q`, genesis `rHb9CJA...` (seq 44196).
+- Aviva / DCP / JMWH XRPL issuer `r-address`: **NOT located** (honest). XRPL does not index
+  issuer by name/symbol globally; grounded web search confirms the projects are real + XRPL-fronted
+  (Aviva CBI-approved via Licuido/Ripple; Guggenheim DCP via Zeconomy; JMWH = YPF Luz energy,
+  ~$861M tokenized) but no citable public `r-address` surfaced. Per the lane's honesty rule
+  (JL.5 / "an honest not-located beats a guessed address"), I WILL NOT fabricate one.
+- Recommended next (owner or on-chain lane): obtain the issuers' public `r-address` from the
+  token's own published docs / a chain explorer that resolves by token symbol, then verify with
+  the validated account_info probe before writing into rwa_attest.py `addr:`.
