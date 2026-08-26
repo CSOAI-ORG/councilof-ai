@@ -143,6 +143,7 @@ function discover() {
     "/products", "/catalog", "/gpai-evidence", "/cra-readiness", "/cobolbridge",
     "/benchmark-quality", "/benchmark-index", "/benchmarks", "/compare", "/leaderboard",
     "/gspc-arena?view=benchmarks",
+    "/gspc-arena?view=training",
     "/gspc-arena?view=arena", "/gspc-arena?view=globe", "/gspc-arena?view=towns",
     // Dead homepage blog slugs already 308 to /blog/. Do not snapshot them —
     // prerendered HTML shadows the 308 and brand-gate rejects leftover
