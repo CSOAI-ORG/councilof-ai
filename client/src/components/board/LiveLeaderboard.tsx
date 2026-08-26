@@ -65,15 +65,15 @@ export default function LiveLeaderboard({
 
   return (
     <section className={`w-full ${className}`}>
-      <div className="mx-auto max-w-5xl px-6">
-        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-600">
+      <div className="section-shell">
+        <p className="t-kicker text-primary">
           Live from GET /api/gspc — recompute anything, free
         </p>
-        <h2 className="mt-3 text-4xl font-black tracking-tight text-gray-900 sm:text-5xl">
+        <h2 className="t-section mt-4 text-foreground">
           {heading}
         </h2>
-        <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-gray-600">
-          {count ? <><strong className="font-bold text-gray-900">{count}</strong> · </> : null}
+        <p className="t-lede measure mt-4 text-muted-foreground">
+          {count ? <><strong className="font-bold text-foreground">{count}</strong> · </> : null}
           deterministic grading on frozen, published splits. A <strong>TIE</strong> means the
           leader&apos;s edge is statistically indistinguishable — ties are never counted as wins. A
           slot with no measurement says so in words; it is never shown as a zero.
@@ -81,17 +81,17 @@ export default function LiveLeaderboard({
 
         {/* ── unreachable: say it plainly, render no figures at all ────── */}
         {error && (
-          <div className="mt-8 rounded-2xl border border-red-200 bg-red-50 p-6">
-            <p className="text-lg font-black tracking-tight text-red-900">
+          <div className="mt-8 rounded-2xl border border-rose-500/30 bg-rose-500/[0.07] p-6">
+            <p className="text-lg font-black tracking-tight text-rose-700 dark:text-rose-200">
               The board could not be read.
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-red-800">
+            <p className="measure mt-2 text-sm leading-relaxed text-foreground/80">
               <code className="font-mono">/api/gspc</code> did not answer — {error}. No figures are
               shown, because none were read. Nothing on this page is standing in for the live board.
             </p>
             <a
               href="/api/gspc"
-              className="mt-4 inline-block text-sm font-bold text-red-900 underline underline-offset-2"
+              className="mt-4 inline-block text-sm font-bold text-rose-700 underline underline-offset-2 dark:text-rose-200"
             >
               Try the endpoint directly →
             </a>
@@ -101,14 +101,14 @@ export default function LiveLeaderboard({
         {loading && !error && (
           <div className="mt-8 space-y-2" aria-hidden="true">
             {Array.from({ length: DEFAULT_ROWS }).map((_, i) => (
-              <div key={i} className="h-14 animate-pulse rounded-xl bg-emerald-50" />
+              <div key={i} className="h-14 animate-pulse rounded-xl bg-primary/[0.07]" />
             ))}
           </div>
         )}
 
         {data && !error && (
           <>
-            <div className="mt-8 overflow-x-auto rounded-2xl border border-emerald-600/15 bg-white shadow-sm">
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-card shadow-sm">
               <table className="w-full min-w-[46rem] text-sm">
                 <caption className="sr-only">
                   The live GSPC board, ordered by measured figure. Ordering is presentation, not a
@@ -116,7 +116,7 @@ export default function LiveLeaderboard({
                   meaning the lead is not statistically separated.
                 </caption>
                 <thead>
-                  <tr className="border-b bg-emerald-50/60 text-left text-[12px] font-bold uppercase tracking-wide text-gray-700">
+                  <tr className="border-b border-border bg-primary/[0.07] text-left text-[12px] font-bold uppercase tracking-wide text-foreground/80">
                     <th scope="col" className="p-4">Axis</th>
                     <th scope="col" className="p-4">Measured figure</th>
                     <th scope="col" className="p-4">n</th>
@@ -139,11 +139,11 @@ export default function LiveLeaderboard({
                   type="button"
                   onClick={() => setExpanded((v) => !v)}
                   aria-expanded={expanded}
-                  className="rounded-full border border-emerald-600/25 bg-white px-5 py-2.5 text-sm font-bold text-emerald-700 transition hover:bg-emerald-50"
+                  className="rounded-full border border-primary/30 bg-card px-5 py-2.5 text-sm font-bold text-primary transition hover:bg-primary/10"
                 >
                   {expanded ? `Show top ${DEFAULT_ROWS}` : `Show all ${rows.length} slots`}
                   {!expanded && hidden > 0 && (
-                    <span className="ml-1.5 font-normal text-emerald-600/70">
+                    <span className="ml-1.5 font-normal text-primary/70">
                       (+{hidden} more)
                     </span>
                   )}
@@ -153,20 +153,20 @@ export default function LiveLeaderboard({
               <a
                 href={lobbyTaskHref("read-the-board")}
                 onClick={(e) => { e.preventDefault(); openLobby({ task: "read-the-board" }); }}
-                className="rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-500"
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
               >
                 Open in the Council Lobby →
               </a>
 
               <a
                 href="/gspc-scoreboard"
-                className="text-sm font-semibold text-emerald-700 underline-offset-2 hover:underline"
+                className="text-sm font-semibold text-primary underline-offset-2 hover:underline"
               >
                 The full board, with intervals and harm tails
               </a>
             </div>
 
-            <p className="mt-5 max-w-3xl text-xs leading-relaxed text-gray-500">
+            <p className="measure mt-6 text-xs leading-relaxed text-muted-foreground">
               Measurement, not certification. Rows are ordered by the measured figure; that is
               layout, not a claim — read the status chip, not the position. Counts, figures and n
               all come from <code className="font-mono">GET /api/gspc</code>, which serves its own
@@ -186,21 +186,21 @@ function Row({ a }: { a: GspcAxis }) {
   const chip = chipFor(a.status, a.separation);
 
   return (
-    <tr className="border-b last:border-0 align-middle hover:bg-emerald-50/30">
+    <tr className="border-b border-border align-middle last:border-0 hover:bg-primary/[0.05]">
       <td className="p-4">
-        <div className="font-bold tracking-tight text-gray-900">{a.axis}</div>
-        {a.bench && <div className="text-xs text-gray-500">{a.bench}</div>}
+        <div className="font-bold tracking-tight text-foreground">{a.axis}</div>
+        {a.bench && <div className="mt-0.5 text-xs text-muted-foreground">{a.bench}</div>}
       </td>
 
       <td className="p-4">
         {measured ? (
-          <span className="font-mono text-[15px] font-bold tabular-nums text-gray-900">
+          <span className="font-mono text-[15px] font-bold tabular-nums text-foreground">
             {a.accuracy_is ? "≥" : ""}
             {pct(a.accuracy as number)}
             {a.accuracy_is && (
               <span
                 title={a.accuracy_is}
-                className="ml-1.5 align-middle text-[10px] font-semibold uppercase tracking-wide text-gray-400"
+                className="ml-1.5 align-middle text-[10px] font-semibold uppercase tracking-wide text-muted-foreground"
               >
                 lower bound
               </span>
@@ -214,12 +214,12 @@ function Row({ a }: { a: GspcAxis }) {
 
       <td className="p-4">
         {typeof a.n === "number" && Number.isFinite(a.n) ? (
-          <span className="font-mono tabular-nums text-gray-700" title={a.n_note}>
+          <span className="font-mono tabular-nums text-foreground/80" title={a.n_note}>
             {a.n}
-            {a.n_note && <span className="ml-1 text-gray-400">*</span>}
+            {a.n_note && <span className="ml-1 text-muted-foreground">*</span>}
           </span>
         ) : (
-          <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             no n published
           </span>
         )}
@@ -228,7 +228,7 @@ function Row({ a }: { a: GspcAxis }) {
       <td className="p-4">
         <StatusChip kind={chip} />
         {typeof a.separation_p === "number" && (
-          <span className="ml-2 font-mono text-[11px] text-gray-400">p={a.separation_p}</span>
+          <span className="ml-2 font-mono text-[11px] text-muted-foreground">p={a.separation_p}</span>
         )}
       </td>
 
@@ -236,7 +236,7 @@ function Row({ a }: { a: GspcAxis }) {
         <a
           href={lobbyTaskHref("explain-axis", { ctx: a.axis })}
           onClick={(e) => { e.preventDefault(); openLobby({ task: "explain-axis", ctx: a.axis }); }}
-          className="whitespace-nowrap rounded-full border border-emerald-600/20 px-3 py-1.5 text-xs font-bold text-emerald-700 transition hover:bg-emerald-50"
+          className="whitespace-nowrap rounded-full border border-primary/25 px-3 py-1.5 text-xs font-bold text-primary transition hover:bg-primary/10"
           aria-label={`Ask the Council Lobby about the ${a.axis} axis`}
         >
           Explain →

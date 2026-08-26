@@ -122,13 +122,36 @@ const RECENT: Post[] = [
 ];
 
 // ── sections ───────────────────────────────────────────────
-function Section({ id, title, subtitle, children, bg }: { id?: string; title?: string; subtitle?: string; children: ReactNode; bg?: string }) {
+/**
+ * Section — the ONE band primitive for this page.
+ *
+ * Every band was previously writing its own `py-20 px-6 bg-white` (or
+ * `bg-gray-50`, or `bg-slate-950`) plus its own `max-w-*`, so nothing lined up
+ * and three different neutral families were on screen at once. Now a band picks
+ * a `tone` and inherits the shared rhythm (.section-y), shell (.section-shell)
+ * and type scale (.t-section/.t-lede) — all defined once in styles/index.css.
+ *
+ * Colours come from tokens, never from hard-coded greys, so the page is correct
+ * in BOTH themes instead of being a white page wearing a dark header.
+ */
+type Tone = "base" | "raised" | "sunken";
+const TONE: Record<Tone, string> = {
+  base: "surface-base",
+  raised: "surface-raised",
+  sunken: "surface-sunken",
+};
+
+function Section({
+  id, title, subtitle, children, tone = "raised",
+}: { id?: string; title?: string; subtitle?: string; children: ReactNode; tone?: Tone }) {
   return (
-    <section id={id} className={`py-20 px-6 ${bg ?? ""}`}>
-      <div className="mx-auto max-w-6xl">
-        {title && <h2 className="text-3xl font-extrabold text-center text-gray-900 sm:text-4xl">{title}</h2>}
-        {subtitle && <p className="mt-3 text-center text-lg text-gray-500 max-w-2xl mx-auto">{subtitle}</p>}
-        <div className="mt-12">{children}</div>
+    <section id={id} className={`section-y ${TONE[tone]}`}>
+      <div className="section-shell">
+        {title && <h2 className="t-section text-center text-foreground">{title}</h2>}
+        {subtitle && (
+          <p className="t-lede measure measure-center mt-4 text-center text-muted-foreground">{subtitle}</p>
+        )}
+        <div className="mt-10 sm:mt-12">{children}</div>
       </div>
     </section>
   );
@@ -143,23 +166,23 @@ function ProblemStrip() {
       id="problem"
       title="The problem we fix"
       subtitle="Assertions are cheap. Proof is not. Buyers and regulators are asked to trust a PDF."
-      bg="bg-white"
+      tone="raised"
     >
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border border-rose-100 bg-rose-50/70 p-7">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-rose-600">What they sell you</p>
-          <h3 className="mt-2 text-2xl font-black text-gray-900">A claim you cannot recompute</h3>
-          <ul className="mt-4 space-y-3 text-sm text-gray-600">
+      <div className="grid gap-5 md:grid-cols-2 md:gap-6">
+        <div className="rounded-2xl border border-rose-500/25 bg-rose-500/[0.06] p-6 sm:p-8">
+          <p className="t-kicker text-rose-600 dark:text-rose-300">What they sell you</p>
+          <h3 className="mt-3 text-xl font-black leading-tight tracking-tight text-foreground sm:text-2xl">A claim you cannot recompute</h3>
+          <ul className="t-body mt-5 space-y-3 text-muted-foreground">
             <li>A vendor says the model is safe, aligned, or compliant.</li>
             <li>The evidence is a slide, a badge, or a private report.</li>
             <li>You cannot run the same test. You cannot see what was left unmeasured.</li>
             <li>Six months later the model has changed and the PDF has not.</li>
           </ul>
         </div>
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-7">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">What we issue</p>
-          <h3 className="mt-2 text-2xl font-black text-gray-900">A card anyone can check</h3>
-          <ul className="mt-4 space-y-3 text-sm text-gray-600">
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] p-6 sm:p-8">
+          <p className="t-kicker text-emerald-700 dark:text-emerald-300">What we issue</p>
+          <h3 className="mt-3 text-xl font-black leading-tight tracking-tight text-foreground sm:text-2xl">A card anyone can check</h3>
+          <ul className="t-body mt-5 space-y-3 text-muted-foreground">
             <li>We run the system on frozen, published instruments.</li>
             <li>We sign the result. You keep the 3KB card.</li>
             <li>Unmeasured slots stay empty. No invented scores.</li>
@@ -188,14 +211,14 @@ function UspGrid() {
       id="usps"
       title="What you actually get"
       subtitle="The product is the stack: measure, sign, live contest, living layer. The scoreboard is how people cite it."
-      bg="bg-gray-50"
+      tone="raised"
     >
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {USPS.map(u => (
-          <a key={u.title} href={u.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-lg hover:border-emerald-200 transition-all">
-            <u.icon className="w-8 h-8 text-emerald-500 mb-3" />
-            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-600">{u.title}</h3>
-            <p className="mt-2 text-sm text-gray-500 leading-relaxed flex-1">{u.body}</p>
+          <a key={u.title} href={u.href} className="card-quiet group flex flex-col p-5 sm:p-6">
+            <u.icon className="mb-4 h-7 w-7 text-primary" />
+            <h3 className="t-card text-foreground transition-colors group-hover:text-primary">{u.title}</h3>
+            <p className="t-body mt-2 flex-1 text-muted-foreground">{u.body}</p>
           </a>
         ))}
       </div>
@@ -212,29 +235,25 @@ function ProductBand() {
       id="products"
       title="What you can actually get"
       subtitle="Six products, one engine: Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md), three-state verdicts (pass / fail / UNMEASURED), every public number recomputable from a live API. Verification is free forever, a grade is never sold, and there are no public prices."
-      bg="bg-white"
+      tone="raised"
     >
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {PRODUCT_FAMILY.map(p => (
-          <a
-            key={p.href}
-            href={p.href}
-            className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-lg hover:border-emerald-200 transition-all"
-          >
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600">{p.tag}</span>
-            <h3 className="mt-2 text-lg font-extrabold text-gray-900 group-hover:text-emerald-600 leading-snug">{p.name}</h3>
-            <p className="mt-2 text-sm text-gray-500 leading-relaxed flex-1">{p.what}</p>
-            <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-emerald-600 group-hover:gap-2 transition-all">
-              Open <ChevronRight className="w-3 h-3" />
+          <a key={p.href} href={p.href} className="card-quiet group flex flex-col p-5 sm:p-6">
+            <span className="t-kicker text-primary">{p.tag}</span>
+            <h3 className="mt-3 text-lg font-extrabold leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary">{p.name}</h3>
+            <p className="t-body mt-2 flex-1 text-muted-foreground">{p.what}</p>
+            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+              Open <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
             </span>
           </a>
         ))}
       </div>
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a href="/products" className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-extrabold text-white hover:bg-emerald-800">
-          All products, one page <ChevronRight className="w-4 h-4" />
+      <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
+        <a href="/products" className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-extrabold text-primary-foreground transition-opacity hover:opacity-90">
+          All products, one page <ChevronRight className="h-4 w-4" />
         </a>
-        <a href="/assess" className="inline-flex items-center gap-2 rounded-xl border-2 border-emerald-200 px-6 py-3 text-sm font-extrabold text-emerald-700 hover:bg-emerald-50">
+        <a href="/assess" className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/40 px-6 py-3.5 text-sm font-extrabold text-primary transition-colors hover:bg-primary/10">
           Get a free signed assessment
         </a>
       </div>
@@ -249,61 +268,65 @@ function RefusalBand() {
       id="refusals"
       title="What we refuse to do"
       subtitle="The limits are the product. An instrument that will say anything measures nothing."
-      bg="bg-gray-50"
+      tone="sunken"
     >
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {REFUSALS.map(r => (
-          <div key={r.no} className="rounded-2xl border border-gray-200 bg-white p-6">
-            <div className="flex items-start gap-2">
+          <div key={r.no} className="card-quiet p-5 sm:p-6">
+            <div className="flex items-start gap-2.5">
               <Ban className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" aria-hidden />
-              <h3 className="text-base font-extrabold text-gray-900 leading-snug">{r.no}</h3>
+              <h3 className="t-card text-foreground">{r.no}</h3>
             </div>
-            <p className="mt-2 text-sm text-gray-500 leading-relaxed">{r.why}</p>
+            <p className="t-body mt-3 text-muted-foreground">{r.why}</p>
           </div>
         ))}
       </div>
-      <div className="mt-8 text-center">
-        <a href="/honesty" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <Eye className="w-4 h-4" /> The honesty gate — everything we cannot yet measure
+      <div className="mt-10 text-center">
+        <a href="/honesty" className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline">
+          <Eye className="h-4 w-4" /> The honesty gate — everything we cannot yet measure
         </a>
       </div>
     </Section>
   );
 }
 
-// ── Council OS ─────────────────────────────────────────
+// ── Council OS + ledger: ONE ink region, not two competing darks ───────────
+//
+// These two bands used to be `bg-slate-950` (#020617, a BLUE-black) stacked
+// directly on `bg-emerald-900` (#064e3b, a muddy mid-green). Two unrelated dark
+// hues touching each other, neither of them the ink the rest of the estate uses
+// (#04120c, which is what EnterpriseTrust and the deck heroes already ship).
+// That is the "black sections don't match branding" complaint, exactly.
+//
+// They are now one continuous `.surface-ink` region divided by an emerald
+// hairline, so the page reads as ONE dark chapter between two light ones
+// instead of two clashing slabs.
 function CouncilOsBand() {
   return (
-    <section className="py-20 px-6 bg-slate-950">
-      <div className="mx-auto max-w-6xl">
-        <p className="text-center text-[11px] font-bold uppercase tracking-widest text-emerald-400">
-          Council OS
-        </p>
-        <h2 className="mt-3 text-center text-3xl font-extrabold text-white sm:text-4xl">
-          One workspace over the whole rail
-        </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-lg text-slate-400">
+    <section className="section-y surface-ink">
+      <div className="section-shell">
+        <p className="t-kicker ink-kicker text-center">Council OS</p>
+        <h2 className="t-section mt-4 text-center">One workspace over the whole rail</h2>
+        <p className="t-lede measure measure-center ink-muted mt-4 text-center">
           The OS does not reimplement any page — each pane frames the live one, so a pane can
           never drift from the surface it shows. The concierge answers from published
           measurement or it refuses.
         </p>
-        <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {/* 10 panes. A 3-column grid left a ragged 1-of-3 final row and a slab of
+            dead space under it; 5 columns resolves to two clean rows of five. */}
+        <div className="mt-10 grid gap-3 sm:mt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
           {OS_PANES.map(t => (
-            <a
-              key={t.href}
-              href={t.href}
-              className="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-colors hover:border-emerald-400/40 hover:bg-white/[0.08]"
-            >
-              <h3 className="text-sm font-extrabold text-white group-hover:text-emerald-300">{t.name}</h3>
-              <p className="mt-1 text-xs leading-relaxed text-slate-400">{t.what}</p>
+            <a key={t.href} href={t.href} className="ink-card group flex flex-col rounded-2xl p-4 sm:p-5">
+              <h3 className="text-sm font-extrabold leading-snug transition-colors group-hover:text-emerald-300">{t.name}</h3>
+              <p className="ink-muted mt-1.5 text-xs leading-relaxed">{t.what}</p>
             </a>
           ))}
         </div>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a href="/os" className="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-6 py-3 text-sm font-extrabold text-emerald-950 hover:bg-emerald-300">
-            Open Council OS <ChevronRight className="w-4 h-4" />
+        <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
+          <a href="/os" className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-6 py-3.5 text-sm font-extrabold text-[#04120c] transition-colors hover:bg-emerald-300">
+            Open Council OS <ChevronRight className="h-4 w-4" />
           </a>
-          <a href="/?lobby=home" className="inline-flex items-center gap-2 rounded-xl border-2 border-white/25 px-6 py-3 text-sm font-extrabold text-white hover:bg-white/10">
+          <a href="/?lobby=home" className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-400/35 px-6 py-3.5 text-sm font-extrabold text-emerald-100 transition-colors hover:bg-emerald-400/10">
             Start in the lobby
           </a>
         </div>
@@ -315,21 +338,21 @@ function CouncilOsBand() {
 // ── ledger attestation / evidence-that-travels ────────────────
 function LedgerAttestBand() {
   return (
-    <section className="py-14 px-6 bg-emerald-900">
-      <div className="mx-auto max-w-5xl flex flex-col items-center gap-6 text-center sm:flex-row sm:justify-between sm:text-left">
-        <div className="max-w-2xl">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-300">Interop — evidence that travels</p>
-          <h3 className="mt-2 text-2xl font-black text-white sm:text-3xl">Attach a signed card to a public ledger</h3>
-          <p className="mt-3 text-sm leading-relaxed text-emerald-100/90">
+    <section className="section-y-sm surface-ink border-t" style={{ borderColor: "var(--ink-border)" }}>
+      <div className="section-shell flex flex-col items-start gap-7 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        <div className="measure">
+          <p className="t-kicker ink-kicker">Interop — evidence that travels</p>
+          <h3 className="mt-3 text-2xl font-black leading-tight tracking-tight sm:text-3xl">Attach a signed card to a public ledger</h3>
+          <p className="t-body ink-muted mt-3">
             Permissionless attach: we bind signed measurement evidence to accounts we do not control,
             so a stranger can verify it without us. A devnet-proven capability — never a rating, never an investment.
           </p>
         </div>
         <a
           href="/xrpl-attest"
-          className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-6 py-3 text-base font-extrabold text-emerald-950 transition-colors hover:bg-emerald-300"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-400 px-6 py-3.5 text-sm font-extrabold text-[#04120c] transition-colors hover:bg-emerald-300 sm:text-base"
         >
-          Attestation on the ledger <ChevronRight className="w-4 h-4" />
+          Attestation on the ledger <ChevronRight className="h-4 w-4" />
         </a>
       </div>
     </section>
@@ -352,7 +375,7 @@ function AxesGrid() {
   }, []);
 
   return (
-    <Section title="The GSPC measurement slots" subtitle={subtitle} bg="bg-white">
+    <Section title="The GSPC measurement slots" subtitle={subtitle} tone="sunken">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {axes.map(a => {
           const q = quotable(a);
@@ -362,53 +385,56 @@ function AxesGrid() {
           // it lives in ONE place, functions/api/gspc.ts.
           const href = a.dataset_url || (a.dataset ? `https://huggingface.co/datasets/${a.dataset}` : "/gspc-scoreboard");
           return (
-            <a key={a.axis} href={href}
-               className="group rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-lg hover:border-emerald-200 transition-all">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-bold text-gray-800">{a.bench}</span>
-                <span className={`text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full ${q ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-500"}`}>
+            <a key={a.axis} href={href} className="card-quiet group block p-5">
+              <div className="mb-2.5 flex items-center justify-between gap-2">
+                <span className="text-sm font-bold text-foreground/80">{a.bench}</span>
+                {/* `unmeasured` is a first-class published status — it keeps a real
+                    badge here, legible in both themes, never dimmed out of view. */}
+                <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                  q ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground ring-1 ring-border"
+                }`}>
                   {a.status}
                 </span>
               </div>
-              <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-600">{a.axis}</h3>
-              <p className="mt-1 text-xs text-gray-400 line-clamp-2">{a.task || a.seat}</p>
+              <h3 className="t-card text-foreground transition-colors group-hover:text-primary">{a.axis}</h3>
+              <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{a.task || a.seat}</p>
               {q && (
                 <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-emerald-500">{(a.accuracy * 100).toFixed(0)}</span>
-                  <span className="text-[11px] text-gray-400">n={a.n}{ci ? ` · [${(ci[0]*100).toFixed(0)}–${(ci[1]*100).toFixed(0)}%]` : ""}</span>
+                  <span className="text-2xl font-black tabular-nums text-primary">{(a.accuracy * 100).toFixed(0)}</span>
+                  <span className="text-[11px] tabular-nums text-muted-foreground">n={a.n}{ci ? ` · [${(ci[0]*100).toFixed(0)}–${(ci[1]*100).toFixed(0)}%]` : ""}</span>
                 </div>
               )}
-              {!q && <div className="mt-3 text-xs text-gray-400 italic">no score on this stamp</div>}
+              {!q && <div className="mt-3 text-xs italic text-muted-foreground">no score on this stamp</div>}
             </a>
           );
         })}
       </div>
       {inLane.length > 0 && (
-        <div className="mt-6 rounded-2xl border border-dashed border-gray-200 bg-gray-50/70 p-5">
-          <h3 className="text-sm font-extrabold text-gray-800">In-lane — not board rows</h3>
-          <p className="mt-1 text-xs text-gray-500">Published as measured_in_lane on GET /api/gspc. Not counted in totals.public_count.</p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div className="mt-6 rounded-2xl border border-dashed border-border bg-muted/60 p-5 sm:p-6">
+          <h3 className="t-card text-foreground">In-lane — not board rows</h3>
+          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">Published as measured_in_lane on GET /api/gspc. Not counted in totals.public_count.</p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
             {inLane.map((e) => (
-              <div key={e.axis} className="rounded-2xl border border-gray-100 bg-white p-5">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-bold text-gray-800">{e.bench}</span>
-                  <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
+              <div key={e.axis} className="card-quiet p-5">
+                <div className="mb-2.5 flex items-center justify-between gap-2">
+                  <span className="text-sm font-bold text-foreground/80">{e.bench}</span>
+                  <span className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground ring-1 ring-border">
                     {e.status}
                   </span>
                 </div>
-                <h3 className="text-base font-extrabold text-gray-900">{e.axis}</h3>
-                <p className="mt-1 text-xs text-gray-400 line-clamp-2">{e.task}</p>
+                <h3 className="t-card text-foreground">{e.axis}</h3>
+                <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{e.task}</p>
                 {e.n > 0 && (
-                  <div className="mt-3 text-xs text-gray-500">n={e.n} · {(e.accuracy * 100).toFixed(0)}</div>
+                  <div className="mt-3 text-xs tabular-nums text-muted-foreground">n={e.n} · {(e.accuracy * 100).toFixed(0)}</div>
                 )}
               </div>
             ))}
           </div>
         </div>
       )}
-      <div className="mt-8 text-center">
-        <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline">
-          <BarChart3 className="w-4 h-4" /> Open the live scoreboard — counts from GET /api/gspc
+      <div className="mt-10 text-center">
+        <a href="/gspc-scoreboard" className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline">
+          <BarChart3 className="h-4 w-4" /> Open the live scoreboard — counts from GET /api/gspc
         </a>
       </div>
     </Section>
@@ -418,16 +444,16 @@ function AxesGrid() {
 // ── demographics ───────────────────────────────────
 function BuyerCards() {
   return (
-    <Section title="Built for the people who get audited" subtitle="One instrument, four audiences. Pick your path — every CTA leads to the same measurement, signed." bg="bg-gray-50">
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <Section title="Built for the people who get audited" subtitle="One instrument, four audiences. Pick your path — every CTA leads to the same measurement, signed." tone="raised">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {FOUR_BUYERS.map(b => (
-          <a key={b.who} href={b.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 hover:shadow-lg hover:border-emerald-200 transition-all">
-            <b.icon className="w-8 h-8 text-emerald-500 mb-3" />
-            <h3 className="text-lg font-extrabold text-gray-900">{b.who}</h3>
-            <p className="mt-1 text-sm font-semibold text-emerald-600">{b.tagline}</p>
-            <p className="mt-2 text-sm text-gray-500 leading-relaxed flex-1">{b.desc}</p>
-            <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-emerald-600 group-hover:gap-2 transition-all">
-              {b.cta} <ChevronRight className="w-3 h-3" />
+          <a key={b.who} href={b.href} className="card-quiet group flex flex-col p-5 sm:p-6">
+            <b.icon className="mb-4 h-7 w-7 text-primary" />
+            <h3 className="text-lg font-extrabold tracking-tight text-foreground">{b.who}</h3>
+            <p className="mt-1 text-sm font-semibold text-primary">{b.tagline}</p>
+            <p className="t-body mt-2.5 flex-1 text-muted-foreground">{b.desc}</p>
+            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+              {b.cta} <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
             </span>
           </a>
         ))}
@@ -446,29 +472,31 @@ function IndustryGrid() {
   const shown = industriesForGrid.slice(0, 7);
   const rest = industriesForGrid.length - shown.length;
   return (
-    <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous machinery, underwrite insurance, or run agents that transact. Measure once, evidence everywhere." bg="bg-white">
+    <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous machinery, underwrite insurance, or run agents that transact. Measure once, evidence everywhere." tone="sunken">
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {shown.map(i => (
-          <a key={i.slug} href={`/industries/${i.slug}`} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-md hover:border-emerald-200 transition-all">
-            <h4 className="font-bold text-gray-900 group-hover:text-emerald-600">{i.name}</h4>
-            <p className="mt-1 text-xs text-gray-500 leading-relaxed flex-1">{i.short}</p>
-            <span className="mt-3 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+          <a key={i.slug} href={`/industries/${i.slug}`} className="card-quiet group flex flex-col p-5">
+            <h4 className="t-card text-foreground transition-colors group-hover:text-primary">{i.name}</h4>
+            <p className="mt-1.5 flex-1 text-xs leading-relaxed text-muted-foreground">{i.short}</p>
+            {/* UNMEASURED must stay as visible as a measured figure — same size,
+                same weight, same slot. It is a published status, not an absence. */}
+            <span className="mt-4 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
               {i.numbers.kind === "measured" ? `${i.bench} · n=${i.numbers.n}` : "UNMEASURED"}
             </span>
           </a>
         ))}
         {rest > 0 && (
-          <a href="/industries" className="group flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 p-5 hover:shadow-md hover:border-emerald-200 transition-all text-center">
-            <span className="text-3xl text-gray-400">+</span>
-            <h4 className="mt-3 font-bold text-gray-500">{rest} more sectors</h4>
-            <p className="mt-1 text-xs text-gray-400">
+          <a href="/industries" className="group flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/40 p-5 text-center transition-colors hover:border-primary/40 hover:bg-muted/70">
+            <span className="text-3xl leading-none text-muted-foreground">+</span>
+            <h4 className="t-card mt-3 text-foreground">{rest} more sectors</h4>
+            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
               {industriesForGrid.slice(7).map(i => i.name).join(", ")}
             </p>
           </a>
         )}
       </div>
-      <div className="mt-6 text-center">
-        <a href="/sectors" className="text-emerald-600 font-bold hover:underline">
+      <div className="mt-10 text-center">
+        <a href="/sectors" className="text-sm font-bold text-primary hover:underline">
           Sector tooling — regulator, insurer, bond, legacy, vendor →
         </a>
       </div>
@@ -479,21 +507,21 @@ function IndustryGrid() {
 // ── blog strip ───────────────────────────────
 function BlogStrip() {
   return (
-    <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." bg="bg-white">
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." tone="sunken">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {RECENT.slice(0, 6).map(p => (
-          <a key={p.href} href={p.href} className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-5 hover:shadow-lg hover:border-emerald-200 transition-all">
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600">{p.date}</span>
-            <h4 className="mt-2 text-base font-extrabold text-gray-900 group-hover:text-emerald-600 leading-snug">{p.title}</h4>
-            <p className="mt-2 text-sm text-gray-500 line-clamp-2 flex-1">{p.desc}</p>
-            <span className="mt-4 text-sm font-bold text-emerald-600 group-hover:gap-2 transition-all inline-flex items-center gap-1">
-              Read <ChevronRight className="w-3 h-3" />
+          <a key={p.href} href={p.href} className="card-quiet group flex flex-col p-5 sm:p-6">
+            <span className="text-[10px] font-semibold uppercase tracking-wide tabular-nums text-primary">{p.date}</span>
+            <h4 className="mt-2.5 text-base font-extrabold leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary">{p.title}</h4>
+            <p className="t-body mt-2 line-clamp-3 flex-1 text-muted-foreground">{p.desc}</p>
+            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+              Read <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
             </span>
           </a>
         ))}
       </div>
-      <div className="mt-6 text-center">
-        <a href="/blog" className="text-emerald-600 font-bold hover:underline">All posts →</a>
+      <div className="mt-10 text-center">
+        <a href="/blog" className="text-sm font-bold text-primary hover:underline">All posts →</a>
       </div>
     </Section>
   );
@@ -608,35 +636,40 @@ const HOME_FAQ = [
 // ── export ───────────────────────────────
 export default function NewHomeV3() {
   return (
-    <main>
+    /* Surface rhythm: raised → sunken → raised → sunken, so each band is
+       separated by a ground change rather than by a stray hairline <div>.
+       The old `border-b border-gray-100` spacers sat BETWEEN sections that
+       often shared a background, which read as an arbitrary line across an
+       otherwise continuous field. They are gone; where two same-tone bands
+       meet, the tone alternation does the work. */
+    <main className="surface-base">
 
       <StoryWorld />
-      <div className="border-b border-gray-100" />
       <ProblemStrip />
-      <div className="border-b border-gray-100" />
       {/* The board first — "what is measured right now" is the claim everything
           else rests on, so it precedes anything sellable. */}
       <AxesGrid />
-      <div className="border-b border-gray-100" />
       <ProductBand />
-      <div className="border-b border-gray-100" />
       <RefusalBand />
-      <div className="border-b border-gray-100" />
       <UspGrid />
       <CouncilOsBand />
       <LedgerAttestBand />
-      <div className="border-b border-gray-100" />
       <BuyerCards />
-      <div className="border-b border-gray-100" />
       <IndustryGrid />
       <LivingStages />
-      <div className="border-b border-gray-100" />
       <BlogStrip />
 
       {/* existing trust strip with C2PA/OIN/LOT badges */}
       <EnterpriseTrust />
-      {/* keep the region-detection banner */}
-      <RegionBanner />
+      {/* Keep the region-detection banner — but ON the ink ground it was designed
+          for. It is a dark-styled card (emerald-100 type, black/40 pills) and it
+          was floating on the light page with a stray 143px gap above it, reading
+          as an orphan. It now continues the trust band's ink region. */}
+      <div className="surface-ink pb-12 sm:pb-16">
+        <div className="section-shell">
+          <RegionBanner />
+        </div>
+      </div>
 
       {/* FAQ — 21 answers, native <details> accordion + FAQPage JSON-LD (AEO) */}
       <FaqBlock

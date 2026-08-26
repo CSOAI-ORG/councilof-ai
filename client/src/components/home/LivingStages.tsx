@@ -89,7 +89,7 @@ type Point = { tag: "pain" | "benefit" | "usp"; text: string };
 const TAG_STYLE: Record<Point["tag"], string> = {
   pain: "bg-rose-100 text-rose-700",
   benefit: "bg-emerald-100 text-emerald-700",
-  usp: "bg-amber-100 text-amber-800",
+  usp: "bg-emerald-600/15 text-emerald-800 ring-1 ring-inset ring-emerald-600/25",
 };
 const TAG_LABEL: Record<Point["tag"], string> = {
   pain: "pain",
@@ -99,7 +99,7 @@ const TAG_LABEL: Record<Point["tag"], string> = {
 
 function Points({ points }: { points: Point[] }) {
   return (
-    <ul className="mt-7 space-y-3">
+    <ul className="measure mt-7 space-y-3">
       {points.map((p) => (
         <li key={p.text} className="flex items-start gap-3">
           <span
@@ -107,7 +107,7 @@ function Points({ points }: { points: Point[] }) {
           >
             {TAG_LABEL[p.tag]}
           </span>
-          <span className="text-[15px] font-medium leading-relaxed text-gray-700">{p.text}</span>
+          <span className="text-[15px] font-medium leading-[1.6] text-gray-700">{p.text}</span>
         </li>
       ))}
     </ul>
@@ -116,17 +116,17 @@ function Points({ points }: { points: Point[] }) {
 
 function Cta({ href, label, secondary }: { href: string; label: string; secondary?: { href: string; label: string } }) {
   return (
-    <div className="mt-8 flex flex-wrap items-center gap-3">
+    <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
       <Link
         href={href}
-        className="inline-flex items-center rounded-xl bg-emerald-600 px-6 py-3 text-sm font-extrabold text-white transition-colors hover:bg-emerald-500"
+        className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-6 py-3.5 text-sm font-extrabold text-white transition-colors hover:bg-emerald-700"
       >
         {label}
       </Link>
       {secondary && (
         <Link
           href={secondary.href}
-          className="inline-flex items-center rounded-xl border-2 border-emerald-200 bg-white px-6 py-3 text-sm font-extrabold text-emerald-700 transition-colors hover:border-emerald-400 hover:bg-emerald-50"
+          className="inline-flex items-center justify-center rounded-xl border border-emerald-600/35 bg-white px-6 py-3.5 text-sm font-extrabold text-emerald-700 transition-colors hover:border-emerald-600/60 hover:bg-emerald-50"
         >
           {secondary.label}
         </Link>
@@ -154,7 +154,7 @@ function HeavyBand({
       ? "bg-gradient-to-l from-white/75 via-white/25 to-transparent"
       : "bg-gradient-to-r from-white/75 via-white/25 to-transparent";
   return (
-    <section className="relative flex min-h-[68svh] items-center overflow-hidden bg-white">
+    <section className="surface-raised relative flex min-h-[68svh] items-center overflow-hidden">
       <img
         src={image}
         alt={alt}
@@ -164,9 +164,9 @@ function HeavyBand({
         style={objectPosition ? { objectPosition } : undefined}
       />
       <div className={`absolute inset-0 ${wash}`} />
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24">
+      <div className="section-shell section-y relative z-10">
         <div className={`max-w-xl ${panelSide === "right" ? "ml-auto" : ""}`}>
-          <div className="rounded-3xl border border-white/70 bg-white/85 p-8 shadow-[0_24px_70px_-30px_rgba(4,18,12,.55)] backdrop-blur-md sm:p-10">
+          <div className="rounded-3xl border border-white/70 bg-white/88 p-6 shadow-[0_24px_70px_-30px_rgba(4,18,12,.55)] backdrop-blur-md sm:p-9 lg:p-10">
             {children}
           </div>
         </div>
@@ -189,9 +189,9 @@ function Figure({ src, alt, caption, className = "" }: { src: string; alt: strin
         alt={alt}
         loading="lazy"
         decoding="async"
-        className="w-full rounded-3xl bg-white shadow-xl ring-1 ring-black/10"
+        className="w-full rounded-3xl bg-card shadow-xl ring-1 ring-border"
       />
-      {caption && <figcaption className="mt-3 text-xs leading-relaxed text-gray-400">{caption}</figcaption>}
+      {caption && <figcaption className="measure mt-3 text-xs leading-relaxed text-muted-foreground">{caption}</figcaption>}
     </figure>
   );
 }
@@ -203,7 +203,7 @@ function SplitBand({
   video,
   poster,
   mediaSide = "right",
-  tint = "bg-white",
+  tint = "surface-raised",
   caption,
   children,
 }: {
@@ -219,7 +219,7 @@ function SplitBand({
 }) {
   return (
     <section className={`relative ${tint}`}>
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-20 sm:py-24 lg:grid-cols-2 lg:gap-16">
+      <div className="section-shell section-y grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div className={mediaSide === "right" ? "lg:order-1" : "lg:order-2"}>{children}</div>
         {video ? (
           <VideoEmbed
@@ -244,18 +244,18 @@ function SplitBand({
 
 function Kicker({ children }: { children: ReactNode }) {
   return (
-    <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-700">{children}</span>
+    <span className="t-kicker text-emerald-700">{children}</span>
   );
 }
 function Heading({ children }: { children: ReactNode }) {
   return (
-    <h2 className="mt-3 text-4xl font-black leading-[1.05] tracking-tight text-gray-900 sm:text-5xl">
+    <h2 className="t-band mt-4 text-gray-900">
       {children}
     </h2>
   );
 }
 function Body({ children }: { children: ReactNode }) {
-  return <p className="mt-5 text-lg font-medium leading-relaxed text-gray-700">{children}</p>;
+  return <p className="t-lede measure mt-5 font-medium text-gray-700">{children}</p>;
 }
 
 /* ─── 1 · independence ──────────────────────────────────────────────────── */
@@ -306,7 +306,7 @@ function Boundary() {
       poster="/videos/council-of-ai.jpg"
       alt="What the Council of AI is, and the line it does not cross"
       mediaSide="right"
-      tint="bg-gray-50"
+      tint="surface-sunken"
       caption="Two minutes on what we measure and what we refuse to claim. Nothing in it issues a verdict."
     >
       <Kicker>The boundary</Kicker>
@@ -426,7 +426,7 @@ function OwnErrors() {
       image="/images/infographics/crop/report-to-deterministic-test.jpg"
       alt="A report entering the intake, being mapped to frozen statutory provisions, then tested by deterministic predicates in a sandbox"
       mediaSide="left"
-      tint="bg-gray-50"
+      tint="surface-sunken"
       caption="Cropped to the honest half of the journey: report, provision mapping, deterministic sandbox test. Verdicts come from code, never from one model judging another."
     >
       <Kicker>Self-correction</Kicker>
@@ -446,8 +446,8 @@ function OwnErrors() {
           </>
         )}
       </Body>
-      <p className="mt-5 rounded-2xl border border-amber-200 bg-amber-50/80 p-5 text-[15px] leading-relaxed text-gray-700">
-        <strong className="font-black text-amber-800">The hardest one:</strong> we withdrew our own
+      <p className="measure mt-5 rounded-2xl border border-gray-200 border-l-4 border-l-gray-400 bg-gray-50 p-5 text-[15px] leading-[1.65] text-gray-700">
+        <strong className="font-black text-gray-900">The hardest one:</strong> we withdrew our own
         consensus claim. Our council architecture is a <strong>designed</strong> 33-seat structure with
         a designed 23-of-33 threshold — and when we actually measured how independent those seats
         were, the effective number came out at n_eff 1.21 of 3. The guarantee we had published did not
@@ -601,11 +601,11 @@ function LiveBoard() {
       )}
 
       {humans.length > 0 && (
-        <div className="mt-7 rounded-2xl border border-sky-200 bg-sky-50/80 p-5">
-          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-sky-800">
+        <div className="mt-7 rounded-2xl border border-gray-200 border-l-4 border-l-gray-400 bg-gray-50 p-5">
+          <p className="t-kicker font-black text-gray-600">
             Humans, beside the AI — labelled REPORTED
           </p>
-          <p className="mt-2 text-[14px] leading-relaxed text-gray-700">
+          <p className="measure mt-2.5 text-[14px] leading-[1.65] text-gray-700">
             AI numbers mean little without a human figure next to them. These are published aggregates
             from other people's studies — cited, dated and unsigned. They are <strong>not</strong> our
             own human collection, they never enter our board, and we never average them together with
@@ -646,7 +646,7 @@ export default function LivingStages() {
       <LivingLaw />
       <LiveBoard />
       {/* the board as a grid, read live from /api/gspc — the section above says what it means */}
-      <LiveLeaderboard className="bg-white py-16 sm:py-24" />
+      <LiveLeaderboard className="surface-raised section-y" />
     </div>
   );
 }

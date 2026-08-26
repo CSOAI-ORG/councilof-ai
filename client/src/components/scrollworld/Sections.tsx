@@ -14,7 +14,7 @@ export function HeavySection({ slide, contentRight }: { slide: Slide; contentRig
     ? "bg-gradient-to-l from-white/70 via-white/25 to-transparent"
     : "bg-gradient-to-r from-white/70 via-white/25 to-transparent";
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-white">
+    <section className="surface-raised relative flex min-h-[92svh] items-center overflow-hidden">
       {slide.bg && (
         <img
           ref={bgRef}
@@ -26,14 +26,14 @@ export function HeavySection({ slide, contentRight }: { slide: Slide; contentRig
         />
       )}
       <div className={`absolute inset-0 ${wash}`} />
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24">
+      <div className="section-shell section-y relative z-10">
         <Reveal className={`max-w-xl ${contentRight ? "ml-auto" : ""}`}>
-          <div className="rounded-3xl border border-white/70 bg-white/80 p-8 text-left shadow-[0_24px_70px_-30px_rgba(4,18,12,.55)] backdrop-blur-md sm:p-10">
-            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-700">{slide.kicker}</span>
-            <h2 className="mt-3 text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl lg:text-[3.4rem]">
+          <div className="rounded-3xl border border-white/70 bg-white/85 p-6 text-left shadow-[0_24px_70px_-30px_rgba(4,18,12,.55)] backdrop-blur-md sm:p-9 lg:p-10">
+            <span className="t-kicker text-emerald-700">{slide.kicker}</span>
+            <h2 className="t-band mt-4 text-gray-900">
               {slide.title}
             </h2>
-            <p className="mt-5 text-lg font-medium leading-relaxed text-gray-700 sm:text-xl">{slide.body}</p>
+            <p className="t-lede measure mt-5 font-medium text-gray-700">{slide.body}</p>
             {slide.points && <Points points={slide.points} />}
             {slide.video && (
               <VideoEmbed src={slide.video.src} poster={slide.video.poster} title={slide.video.title} className="mt-8 !mx-0" />
@@ -59,16 +59,16 @@ export function LightSection({
   /** consumer-supplied inline figure for media-less light sections (optional) */
   renderFigure?: (figureIndex: number) => ReactNode;
 }) {
-  const bg = index % 2 === 0 ? "bg-gray-50" : "bg-white";
+  const bg = index % 2 === 0 ? "surface-sunken" : "surface-raised";
   const hasMedia = Boolean(slide.image || slide.video);
   if (hasMedia) {
     return (
       <section className={`relative ${bg}`}>
-        <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-20 sm:py-24 lg:grid-cols-2 lg:gap-16">
+        <div className="section-shell section-y grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <Reveal className={mediaRight ? "lg:order-1" : "lg:order-2"}>
-            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-600">{slide.kicker}</span>
-            <h2 className="mt-3 text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl">{slide.title}</h2>
-            <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-gray-600 sm:text-xl">{slide.body}</p>
+            <span className="t-kicker text-primary">{slide.kicker}</span>
+            <h2 className="t-band mt-4 text-foreground">{slide.title}</h2>
+            <p className="t-lede measure mt-5 font-medium text-muted-foreground">{slide.body}</p>
             {slide.points && <Points points={slide.points} />}
             <Cta slide={slide} />
           </Reveal>
@@ -78,7 +78,7 @@ export function LightSection({
                 src={slide.image.src}
                 alt={slide.image.alt}
                 loading="lazy"
-                className="w-full rounded-2xl object-cover shadow-xl ring-1 ring-black/10"
+                className="w-full rounded-2xl object-cover shadow-xl ring-1 ring-border"
               />
             )}
             {slide.video && (
@@ -93,11 +93,11 @@ export function LightSection({
   const figure = renderFigure?.(slide.figure ?? index);
   return (
     <section className={`relative ${bg}`}>
-      <div className="mx-auto flex max-w-3xl flex-col items-center px-6 py-20 text-center sm:py-24">
+      <div className="section-shell-narrow section-y flex flex-col items-center text-center">
         {figure && <div className="hidden sm:block">{figure}</div>}
-        <span className={`${figure ? "mt-4" : ""} text-xs font-bold uppercase tracking-[0.22em] text-emerald-600`}>{slide.kicker}</span>
-        <h2 className="mt-3 max-w-3xl text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl">{slide.title}</h2>
-        <p className="mt-5 max-w-2xl text-lg font-medium leading-relaxed text-gray-600 sm:text-xl">{slide.body}</p>
+        <span className={`${figure ? "mt-5" : ""} t-kicker text-primary`}>{slide.kicker}</span>
+        <h2 className="t-band mt-4 text-foreground">{slide.title}</h2>
+        <p className="t-lede measure measure-center mt-5 font-medium text-muted-foreground">{slide.body}</p>
         {slide.points && <Points points={slide.points} center />}
         <Cta slide={slide} />
       </div>

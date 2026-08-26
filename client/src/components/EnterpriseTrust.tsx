@@ -13,49 +13,56 @@ const SIGNALS: { icon: string; label: string; sub: string; href?: string }[] = [
 
 export default function EnterpriseTrust() {
   return (
-    <section className="border-y border-emerald-500/15 bg-[#04120c]">
-      <div className="mx-auto max-w-6xl px-6 py-8">
-        <p className="text-center font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/80">Built for the people who get audited</p>
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+    // `bg-[#04120c]` was already the correct brand ink — it is now the shared
+    // `.surface-ink` token so it stays locked to the Council OS band above it.
+    <section className="section-y-sm surface-ink border-y" style={{ borderColor: "var(--ink-border)" }}>
+      <div className="section-shell">
+        <p className="t-kicker ink-kicker text-center font-mono">Built for the people who get audited</p>
+        {/* h-full on the anchor as well as the card: without it the grid items
+            stretched but the cards inside did not, so the row read ragged. */}
+        <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {SIGNALS.map((s) => {
             const Inner = (
-              <div className="flex h-full flex-col items-center rounded-xl border border-emerald-500/20 bg-black/20 px-3 py-4 text-center transition hover:border-emerald-400/40">
-                <span className="text-xl">{s.icon}</span>
-                <span className="mt-2 text-[13px] font-bold text-emerald-50">{s.label}</span>
-                <span className="mt-1 text-[11px] leading-snug text-emerald-100/70">{s.sub}</span>
+              <div className="ink-card flex h-full flex-col items-center rounded-xl px-3 py-5 text-center">
+                <span className="text-xl leading-none text-emerald-300/90" aria-hidden>{s.icon}</span>
+                <span className="mt-2.5 text-[13px] font-bold leading-snug">{s.label}</span>
+                <span className="ink-muted mt-1.5 text-[11px] leading-snug">{s.sub}</span>
               </div>
             );
-            return s.href ? <a key={s.label} href={s.href} className="block">{Inner}</a> : <div key={s.label}>{Inner}</div>;
+            return s.href ? <a key={s.label} href={s.href} className="block h-full">{Inner}</a> : <div key={s.label} className="h-full">{Inner}</div>;
           })}
         </div>
         {/* Memberships & registrations — only EXECUTED agreements badge as members.
             C2PA: docusign 7C9592DB executed 2026-08-06 · OIN: signed 2026-08-15 ·
             LOT Network: application submitted, membership pending (labelled). */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-          <a href="/about" className="flex items-center gap-2 rounded-full border border-emerald-500/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-emerald-50 hover:border-emerald-400/50">
+        {/* The pending badge was amber — a fourth accent hue on a page that owns
+            exactly one. Pending now reads as pending through WEIGHT (a dashed
+            border and muted text), not through a borrowed colour. */}
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
+          <a href="/about" className="ink-card flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold">
             <span aria-hidden>🪪</span> C2PA Contributor Member
-            <span className="text-emerald-300/80 font-normal">· Linux Foundation project</span>
+            <span className="ink-muted font-normal">· Linux Foundation project</span>
           </a>
-          <a href="/about" className="flex items-center gap-2 rounded-full border border-emerald-500/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-emerald-50 hover:border-emerald-400/50">
+          <a href="/about" className="ink-card flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold">
             <span aria-hidden>🛡</span> Open Invention Network
-            <span className="text-emerald-300/80 font-normal">· member</span>
+            <span className="ink-muted font-normal">· member</span>
           </a>
-          <a href="/about" className="flex items-center gap-2 rounded-full border border-amber-400/25 bg-black/30 px-4 py-1.5 text-[12px] font-semibold text-amber-50 hover:border-amber-300/50">
+          <a href="/about" className="ink-card flex items-center gap-2 rounded-full border-dashed px-4 py-2 text-[12px] font-semibold">
             <span aria-hidden>🤝</span> LOT Network
-            <span className="text-amber-300/80 font-normal">· application submitted</span>
+            <span className="ink-muted font-normal">· application submitted</span>
           </a>
         </div>
         {/* One CTA, not two, and the honesty line folded into it. This band previously
             stacked five rows — signals, memberships, a pricing slogan, a CTA pair and a
             disclaimer — directly under UpsellStrip's three cards, which repeated the same
             two links again. UpsellStrip is gone and this is one row. */}
-        <div className="mt-7 flex flex-col items-center gap-3">
-          <a href="/assess" className="rounded-xl bg-emerald-500 px-7 py-3 text-sm font-black text-[#03110b] hover:bg-emerald-400">
+        <div className="mt-9 flex flex-col items-center gap-4">
+          <a href="/assess" className="rounded-xl bg-emerald-400 px-7 py-3.5 text-sm font-black text-[#04120c] transition-colors hover:bg-emerald-300">
             Get your first signed measurement — free →
           </a>
-          <p className="max-w-2xl text-center text-[11px] leading-relaxed text-emerald-100/60">
+          <p className="ink-muted measure measure-center text-center text-[12px] leading-relaxed">
             We show what is verifiable, not badges we do not hold. We are not certified to
-            SOC 2 or ISO/IEC 42001 and we do not claim to be. <a href="/?lobby=measured&task=pricing-overview" className="underline hover:text-emerald-200">How the free rail works</a>.
+            SOC 2 or ISO/IEC 42001 and we do not claim to be. <a href="/?lobby=measured&task=pricing-overview" className="underline underline-offset-2 hover:text-emerald-200">How the free rail works</a>.
           </p>
         </div>
       </div>

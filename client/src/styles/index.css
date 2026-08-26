@@ -118,53 +118,81 @@
   --sidebar-accent-foreground: #0c1a12;
   --sidebar-border: #e8e8e3;
   --sidebar-ring: #10b981;
+
+  /* ── INK: the one dark ground the brand owns ──────────────────────────
+     Derived from what already shipped: EnterpriseTrust's #04120c and the
+     DeckHero's #05130d. It is GREEN-black, never blue-black. Any band that
+     goes dark uses these five tokens and nothing else — that is what stops
+     a `slate-950` here and an `emerald-900` there reading as two brands. */
+  --ink: #04120c;
+  --ink-raised: rgba(255, 255, 255, 0.045);
+  --ink-raised-hover: rgba(255, 255, 255, 0.085);
+  --ink-foreground: #ecf7f1;
+  --ink-muted: #a3c0b0;
+  --ink-kicker: #6ee7b7;
+  --ink-border: rgba(16, 185, 129, 0.18);
+  --ink-border-hover: rgba(52, 211, 153, 0.42);
 }
 
-/* Dark theme - CSOAI Professional */
+/* Dark theme — the SAME warm-green family as light, inverted.
+   It used to be a pure neutral oklch(x 0 0) grey ramp, which is why any
+   surface that did have a dark treatment read as a different product from
+   the green-black ink bands. Every step below is hue-matched to --ink. */
 .dark {
-  --background: oklch(0.10 0 0);
-  --foreground: oklch(0.93 0 0);
-  
-  --card: oklch(0.15 0 0);
-  --card-foreground: oklch(0.93 0 0);
-  
-  --popover: oklch(0.15 0 0);
-  --popover-foreground: oklch(0.93 0 0);
-  
+  --background: #050f0a;
+  --foreground: #e9f4ee;
+
+  --card: #0a1a13;
+  --card-foreground: #e9f4ee;
+
+  --popover: #0a1a13;
+  --popover-foreground: #e9f4ee;
+
   /* Lighter green for dark mode readability */
   --primary: #34d399;
-  --primary-foreground: #0c1a12;
-  
-  --secondary: oklch(0.20 0 0);
-  --secondary-foreground: oklch(0.93 0 0);
-  
-  --muted: oklch(0.20 0 0);
-  --muted-foreground: oklch(0.63 0 0);
-  
-  --accent: oklch(0.20 0 0);
-  --accent-foreground: oklch(0.93 0 0);
-  
+  --primary-foreground: #04120c;
+
+  --secondary: #0f241a;
+  --secondary-foreground: #e9f4ee;
+
+  --muted: #0f241a;
+  --muted-foreground: #9ab8a8;
+
+  --accent: #0f241a;
+  --accent-foreground: #e9f4ee;
+
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(1 0 0);
-  
-  --border: oklch(0.25 0 0);
-  --input: oklch(0.20 0 0);
+
+  --border: #1c3627;
+  --input: #1c3627;
   --ring: #34d399;
-  
+
   --chart-1: #34d399;
   --chart-2: #10b981;
   --chart-3: #059669;
   --chart-4: #6ee7b7;
   --chart-5: oklch(0.60 0.2 25);
   
-  --sidebar: oklch(0.10 0 0);
-  --sidebar-foreground: oklch(0.93 0 0);
+  --sidebar: #050f0a;
+  --sidebar-foreground: #e9f4ee;
   --sidebar-primary: #34d399;
-  --sidebar-primary-foreground: #0c1a12;
-  --sidebar-accent: oklch(0.15 0 0);
-  --sidebar-accent-foreground: oklch(0.93 0 0);
-  --sidebar-border: oklch(0.20 0 0);
+  --sidebar-primary-foreground: #04120c;
+  --sidebar-accent: #0a1a13;
+  --sidebar-accent-foreground: #e9f4ee;
+  --sidebar-border: #1c3627;
   --sidebar-ring: #34d399;
+
+  /* In dark the ink band must still read as a distinct band, so it sits one
+     step BELOW the page ground rather than above it. Same hue, same family. */
+  --ink: #020a06;
+  --ink-raised: rgba(255, 255, 255, 0.05);
+  --ink-raised-hover: rgba(255, 255, 255, 0.09);
+  --ink-foreground: #ecf7f1;
+  --ink-muted: #9ab8a8;
+  --ink-kicker: #6ee7b7;
+  --ink-border: rgba(52, 211, 153, 0.2);
+  --ink-border-hover: rgba(52, 211, 153, 0.45);
 }
 
 @layer base {
@@ -250,6 +278,135 @@
       max-width: 1280px;
     }
   }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     MARKETING SURFACE PRIMITIVES
+     Four grounds, one vertical rhythm, one shell, one type scale, one
+     measure. Every band on a public page composes from these and adds no
+     ad-hoc py-/max-w-/bg- of its own. Inconsistent vertical space between
+     sections is the single loudest "unfinished" signal on a page, so the
+     rhythm lives here and not in 30 separate className strings.
+     ══════════════════════════════════════════════════════════════════════ */
+
+  /* ── Rhythm ────────────────────────────────────────────────────────── */
+  .section-y { padding-block: 4rem; }
+  .section-y-sm { padding-block: 2.75rem; }
+  .section-y-lg { padding-block: 5rem; }
+
+  @media (min-width: 640px) {
+    .section-y { padding-block: 5.5rem; }
+    .section-y-sm { padding-block: 3.5rem; }
+    .section-y-lg { padding-block: 7rem; }
+  }
+  @media (min-width: 1024px) {
+    .section-y { padding-block: 7rem; }
+    .section-y-sm { padding-block: 4.5rem; }
+    .section-y-lg { padding-block: 9rem; }
+  }
+
+  /* ── Shell: identical max-width and gutters on every band ──────────── */
+  .section-shell {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 72rem;
+    padding-inline: 1.25rem;
+  }
+  .section-shell-narrow {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 56rem;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .section-shell, .section-shell-narrow { padding-inline: 2rem; }
+  }
+  @media (min-width: 1024px) {
+    .section-shell, .section-shell-narrow { padding-inline: 2.5rem; }
+  }
+
+  /* ── Grounds ───────────────────────────────────────────────────────── */
+  .surface-base { background-color: var(--background); color: var(--foreground); }
+  .surface-raised { background-color: var(--card); color: var(--card-foreground); }
+  .surface-sunken { background-color: var(--muted); color: var(--foreground); }
+  .surface-ink { background-color: var(--ink); color: var(--ink-foreground); }
+
+  /* Cards ON an ink ground — the only permitted dark card treatment. */
+  .ink-card {
+    background-color: var(--ink-raised);
+    border: 1px solid var(--ink-border);
+    color: var(--ink-foreground);
+    transition: background-color .18s ease, border-color .18s ease;
+  }
+  .ink-card:hover {
+    background-color: var(--ink-raised-hover);
+    border-color: var(--ink-border-hover);
+  }
+  .ink-muted { color: var(--ink-muted); }
+  .ink-kicker { color: var(--ink-kicker); }
+
+  /* ── The house card. One treatment, used everywhere a card is a card. ── */
+  .card-quiet {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    color: var(--card-foreground);
+    transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+  }
+  a.card-quiet:hover,
+  .card-quiet-hover:hover {
+    border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+    box-shadow: 0 12px 32px -18px color-mix(in srgb, var(--foreground) 55%, transparent);
+  }
+
+  /* ── Type scale ────────────────────────────────────────────────────── */
+  /* Section heading: the h2 that opens a band. */
+  .t-section {
+    font-size: clamp(1.75rem, 1.25rem + 1.6vw, 2.5rem);
+    line-height: 1.14;
+    letter-spacing: -0.022em;
+    font-weight: 800;
+    text-wrap: balance;
+  }
+  /* Band heading: the big statement on a hero/story band. */
+  .t-band {
+    font-size: clamp(2.125rem, 1.4rem + 2.6vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.028em;
+    font-weight: 900;
+    text-wrap: balance;
+  }
+  /* Standfirst under a heading. */
+  .t-lede {
+    font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+  /* Card title. */
+  .t-card {
+    font-size: 1rem;
+    line-height: 1.35;
+    letter-spacing: -0.011em;
+    font-weight: 800;
+  }
+  /* Long-form body inside a card or list. */
+  .t-body {
+    font-size: 0.9375rem;
+    line-height: 1.62;
+    text-wrap: pretty;
+  }
+  /* Eyebrow / kicker. */
+  .t-kicker {
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  /* ── Measure: cap line length so long-form actually reads ──────────── */
+  .measure { max-width: 68ch; }
+  .measure-tight { max-width: 54ch; }
+  .measure-center { margin-inline: auto; }
 
   /* Typography scale — editorial, generous, flat */
   .font-primary {
