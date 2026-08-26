@@ -156,3 +156,29 @@ Sep 30 · ⏰ I-D -01 Oct · ⏰ Art 50(2) retrofit Dec 2 · ⏰ watermark machi
 **Worktree caveat:** `master` is mid-merge of a CONCURRENT lane's `design/homepage-revamp` (4 design-lane UU files: `scrollworld/*`, `NewHome-v3`, `index.css` — NOT mine; per doctrine "never pick a side" I did not resolve them). My `axis_arena.py`/`README.md` fleet fix is staged + clean but git refuses a partial commit mid-merge. The FIX IS DEPLOYED TO THE POD (the thing that matters). To land the 2 repo files once the design merge resolves: `git commit -- harness/arena/axis_arena.py harness/arena/README.md`.
 
 **Blocked-not-fabricated:** `reserve-attestation` / `distribution-integrity` / `regulatory-framework` / `custody-disclosure` financial axes need RWA.xyz / Etherscan API keys (absent) — the estate honestly reports "pending / UNMEASURED" rather than guessing. `humanoid-labour-index` has no authoritative public machine series (stated, not filled).
+
+---
+
+## Round 2 evidence (2026-08-26 ~20:55 UTC) — PQC-continuity axis mined + signed artifact on master
+
+**Objective status:** armed, 2/20 rounds. Engine healthy (900 rounds, 15 axes, signed).
+
+**PQC-continuity measured (genuinely-new axis, objective #2/#4)**
+- Mined the `asi` (post-quantum) bank (33 items, deterministic QUANTUM_SAFE / QUANTUM_VULNERABLE /
+  NOT_APPLICABLE grading) into a standalone **PQC-continuity measurement**. This axis is ABSENT from
+  the ADR-001 22-axis canon (14 behavioural + 8 financial/domain), so it is published as a standalone
+  stranger-verifiable finding, NOT inserted into the canon (only the board-building ruling adds an
+  axis there).
+- Result: `mistral:7b` accuracy **0.561** across 33 graded items (0 unparsed) on deterministic PQC
+  classification — a real, honest measured finding (the model is inconsistent on PQC).
+- Artifact `public/interop/pqc-continuity-measure.json` signed (Ed25519, cross-runtime canon),
+  **content_id `64b01b29ceffe07cbbb8`**, recomputed MATCH True on both pod and Mac.
+- Landing: committed `45692165` on origin/master (clean cherry-pick avoiding the entangled
+  design/commercial-surfaces lane merges). The reproducible harness `harness/arena/pqc_continuity_measure.py`
+  is in master's history.
+
+**Honest blockers (not fabricated):** financial axes (`reserve-attestation`, `distribution-integrity`,
+`regulatory-framework`, `custody-disclosure`) need RWA.xyz / Etherscan API keys (absent) — estate stays
+`UNMEASURED` (pending), never guesses. `humanoid-labour-index` has no authoritative public machine series.
+The repo is being reshaped by concurrent lanes (design/commercial-surfaces merges); I cherry-picked only my
+clean PQC commit to master and left the entangled lane conflicts for their owners (never pick a side).
