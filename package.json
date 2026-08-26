@@ -6,11 +6,11 @@
   "license": "MIT",
   "author": "CSOAI Team",
   "scripts": {
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev": "concurrently \u005c"npm run dev:server\u005c" \u005c"npm run dev:client\u005c"",
     "dev:server": "NODE_ENV=development tsx watch server/index.ts",
     "dev:client": "vite --config client/vite.config.ts",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "node scripts/refutation-count-lint.mjs && node scripts/value-ledger-lint.mjs && node scripts/no-stripe-as-grade-lint.mjs && node scripts/aum-not-measured-lint.mjs && node scripts/jmwh-demo-only-lint.mjs && node scripts/demo-play-refuse-lint.mjs && node scripts/counter-lint.mjs && node scripts/export-ecosystem-json.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/generate-route-manifest.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\"",
+    "build:client": "node scripts/refutation-count-lint.mjs && node scripts/value-ledger-lint.mjs && node scripts/no-stripe-as-grade-lint.mjs && node scripts/aum-not-measured-lint.mjs && node scripts/jmwh-demo-only-lint.mjs && node scripts/demo-play-refuse-lint.mjs && node scripts/no-gpu-contract-churn-lint.mjs && node scripts/wilson-frozen-banks-lint.mjs && node scripts/counter-lint.mjs && node scripts/export-ecosystem-json.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/generate-route-manifest.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \u005c"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\u005c"",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "lint:counters": "node scripts/counter-lint.mjs",
     "lint:value-ledger": "node scripts/value-ledger-lint.mjs",
@@ -51,7 +51,10 @@
     "deploy": "bash scripts/deploy-verified.sh",
     "redirects": "node scripts/generate-redirects.mjs",
     "lint:demo-play": "node scripts/demo-play-refuse-lint.mjs",
-    "lint:jmwh": "node scripts/jmwh-demo-only-lint.mjs"
+    "lint:jmwh": "node scripts/jmwh-demo-only-lint.mjs",
+    "lint:wilson-banks": "node scripts/wilson-frozen-banks-lint.mjs",
+    "lint:no-gpu-churn": "node scripts/no-gpu-contract-churn-lint.mjs",
+    "crawl:honesty": "node scripts/broken-link-crawl.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
