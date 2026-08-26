@@ -31,6 +31,28 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0826-05",
+      date: "2026-08-26",
+      what_was_wrong:
+        "Two published index artifacts claimed a measurement they did not have. /interop/ai-economy-index.v0.1.json and /interop/human-labour-index.v0.1.json each carry a status label of MEASURED-INDEX-v0.1, while each also states in its own body that half its input components are bank gaps and that no index value is computed. The axis register had already been reverted to UNMEASURED for both; the artifacts were not, so a live surface kept asserting the retracted status. Existing reference components are not a measured index.",
+      how_caught:
+        "Reading the evidence behind every financial axis before wiring it into the board, rather than trusting the axis register's summary of it. The register said UNMEASURED; the artifact it pointed at said MEASURED-INDEX-v0.1. Following the pointer is what surfaced the disagreement.",
+      fix:
+        "Both axes are wired into the signed board as UNMEASURED, and the board — which is the authority — states on each axis and in its limitations that the v0.1 artifacts' status label was an over-claim and is superseded. Neither index contributes to any measured count. The artifacts themselves are signed under a key this lane deliberately does not hold, so correcting them at source is a separate owner-supervised re-sign; until then the board carries the correction where a reader will meet it.",
+      status: "FIXED ON THE BOARD; ARTIFACT RE-SIGN PENDING (owner)",
+    },
+    {
+      id: "C-2026-0826-04",
+      date: "2026-08-26",
+      what_was_wrong:
+        "The public board contradicted the estate's own ruling for two days. An owner ruling of 2026-08-24 set the canonical axis count at 22 (14 behavioural + 8 financial/domain), but GET /api/gspc kept reporting '14 measured of 14 quotable' because the 8 financial axes existed only in the ruling and in a side register — never in the signed board payload the count is derived from. Downstream, the estate's own claims register recorded '22' as an internal figure that was 'not corroborated by any live surface', and a source comment instructed authors to 'not invent 22 axes'. The estate simultaneously ruled the number, forbade the number, and published a different one.",
+      how_caught:
+        "Self-reported, not discovered. The ruling document itself recorded that the sweep was authorized but unexecuted, and named the reason. The delay was deliberate and is the point of this entry: a public count must be backed by the signed artifact it summarises, so the fix could not be a copy edit on the pages. Editing the number without the data behind it would have put a figure on a public surface that the signed payload could not support — the same defect class as a score published without its measurement. The board was behind the ruling, never ahead of it.",
+      fix:
+        "The 8 financial/domain axes were wired into the board DATA and the payload re-signed. The board now derives '22 axes · 15 measured' from the axis array: 22 slots, 15 with a real run behind them, 7 declared slots with none. The ruling's own wording applied the word 'measured' to the full slot count, and the evidence does not support that word — only one of the eight financial axes (provenance-controls, a deterministic mainnet read of 6 issuer accounts) carries a measurement. Per this ledger's redaction rule the exact phrase is described rather than reproduced: it is now the forbidden form the build gate catches, and reprinting it here would republish the sentence this correction exists to retire. No axis was marked MEASURED to make the two numbers agree; the grammar changed instead, and both numbers now travel together. Separation statistics and every mean are scoped to model-comparison axes, so a financial axis can neither enter a sentence about statistical separation nor drag an absent value into an average as a zero. The claims register was re-authored from 'internal, not corroborated' to a live claim with the endpoint as its authority, and now names the forbidden form '22 measured axes' explicitly.",
+      status: "FIXED",
+    },
+    {
       id: "C-2026-0819-01",
       date: "2026-08-19",
       what_was_wrong: "Three public surfaces stated three different item counts at once (llms.txt 819, agent card 890, live API 966). The banks grew under the hardcoded numbers.",

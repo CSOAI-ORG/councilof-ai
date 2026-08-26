@@ -3,7 +3,7 @@ import type { AxisScore } from "./_gspc_types";
 
 export const AXES_B: AxisScore[] = [
   {
-    axis: "cross-reality", bench: "XRAIV", task: "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
+    axis: "cross-reality", family: "gspc", kind: "model-comparison", bench: "XRAIV", task: "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
     n: 32, accuracy: 0.812, leader: "mistral:7b (base model)",
     separation: "TIE", separation_p: 0.0654, interval: [0.647, 0.911],
     fleet_mean: 0.441, mean_harm: 0.559, cvar05_harm: null,
@@ -13,7 +13,7 @@ export const AXES_B: AxisScore[] = [
       "not separated at p<0.05). Bank: 32 scored (public + held-out split per the bank card).",
   },
   {
-    axis: "detector-interop", bench: "DetBench", task: "cross-detector watermark interoperability matrix",
+    axis: "detector-interop", family: "gspc", kind: "model-comparison", bench: "DetBench", task: "cross-detector watermark interoperability matrix",
     n: 33, accuracy: 0.879, leader: "deepseek-r1:8b (base model)",
     separation: "TIE", separation_p: 0.4531, interval: [0.727, 0.952],
     fleet_mean: 0.563, mean_harm: 0.437, cvar05_harm: null,
@@ -23,7 +23,7 @@ export const AXES_B: AxisScore[] = [
       "POAI detector-interop. Code-of-Practice target 2 Feb 2027.",
   },
   {
-    axis: "art5-safeguard", bench: "Art5Bench", task: "EU AI Act Article 5 prohibited-practice trip",
+    axis: "art5-safeguard", family: "gspc", kind: "model-comparison", bench: "Art5Bench", task: "EU AI Act Article 5 prohibited-practice trip",
     n: 36, accuracy: 0.972, leader: "council-relationality-v3-light (council specialist)",
     separation: "TIE", separation_p: 1.0, interval: [0.858, 0.995],
     fleet_mean: 0.830, mean_harm: 0.170, cvar05_harm: null,
@@ -33,7 +33,7 @@ export const AXES_B: AxisScore[] = [
       "here (fleet mean 0.830). The NCII/CSAM corpus is never handled by CSOAI.",
   },
   {
-    axis: "swarm", bench: "SwarmBench v2b", task: "multi-agent coordination safety",
+    axis: "swarm", family: "gspc", kind: "model-comparison", bench: "SwarmBench v2b", task: "multi-agent coordination safety",
     n: 37, n_note: "wave-2b bank: 37 independent items × 5-model fleet, n≥36 graded per cell. Replaces " +
       "the PROTOCOL bank (40 non-independent instances, interval withheld by our own effective-n rule) — " +
       "the withholding retired because this bank earns its interval, not because the rule changed",
@@ -54,7 +54,7 @@ export const AXES_B: AxisScore[] = [
       "(TIE); live public_count is 14 measured of 14 quotable — cite totals.public_count.",
   },
   {
-    axis: "affect", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
+    axis: "affect", family: "gspc", kind: "model-comparison", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
     n: 41, accuracy: 0.878, leader: "council-preservation-v3-light (council specialist)",
     separation: "SEPARATED", separation_p: 0.0078, interval: [0.745, 0.947],
     fleet_mean: 0.605, mean_harm: 0.782, cvar05_harm: null,
@@ -77,7 +77,7 @@ export const AXES_B: AxisScore[] = [
   // Every per-model number is verbatim from the signed artifact; fleet_mean is the plain mean
   // of the per-model rates (recomputable from the rows below).
   {
-    axis: "jail", bench: "GoldBank-Detector",
+    axis: "jail", family: "gspc", kind: "model-comparison", bench: "GoldBank-Detector",
     task: "escape-attempt detection on 71-cell gold bank (38 ESCAPE / 33 BENIGN) — layer 2 of 2",
     n: 71, n_note: "7 models × 71 gold items; TP/FP/TN/FN per model; accuracy shown is the best " +
       "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71)",
