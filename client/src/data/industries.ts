@@ -70,7 +70,7 @@ export interface Industry {
   artefactProves: string; // what THIS sector's signed card lets the reader prove
 }
 
-// Shared artefact language — the same signed 3KB card ships from every bank.
+// Shared artefact language — the same signed card ships from every bank.
 export const ARTEFACT_CARD =
   "A signed result card, under a kilobyte: Ed25519 signature over a canonical JSON body " +
   "carrying the axis measured, the exact model, the accuracy, the issuer, the creation date " +
