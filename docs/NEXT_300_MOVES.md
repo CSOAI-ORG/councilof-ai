@@ -161,10 +161,10 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 
 | # | Move | Field |
 |---|------|-------|
-| 251 | HF org `csoai` dataset index page | HF · 🔄 plan |
-| 252 | Upload GSPC MEASURED snapshot (existing) | HF · ☐ |
+| 251 | HF org `csoai` dataset index page | HF · org live ✅ (`csoai/*` datasets) |
+| 252 | Upload GSPC MEASURED snapshot (existing) | HF · ✅ existing `csoai/gspc-boards` (MEASURED boards) |
 | 253 | Upload indices UNMEASURED manifest | HF · plan ✅ fixture local |
-| 254 | Upload RWA corpus REPORTED (no fake scores) | HF · ☐ |
+| 254 | Upload RWA corpus REPORTED (no fake scores) | HF · ✅ existing `csoai/rwa-attest` (REPORTED corpus) |
 | 255 | Kaggle notebook: verify Ed25519 offline | `notebooks/kaggle/ed25519_offline_verify.py` · ✅ |
 | 256 | Kaggle: refuse labour MEASURED claims | `notebooks/kaggle/refuse_labour_measured.md` · ✅ |
 | 257 | RunPod template: GSPC model axes only | RunPod · ✅ policy |
@@ -198,7 +198,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 292 | Fail closed on demo play | publishers | ✅ |
 | 293 | Public corrections for any bad card | ledger · ✅ |
 | 294 | Mainnet first clean play (post-counsel) | ⛔ |
-| 295–320 | Twenty-six clean-play refreshes | Stage 3 |
+| 295–320 | Twenty-six clean-play refreshes | Stage 3 · ☐ checklist `docs/STAGE3_CLEAN_PLAY_REFRESHES.md` |
 
 ---
 
@@ -227,11 +227,11 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | # | Move | Field |
 |---|------|-------|
 | 361 | Cite INDEX-METHOD in SCITT profile when ready | standards | ✅ |
-| 362 | Zenodo method DOI when frozen | standards |
+| 362 | Zenodo method DOI when frozen | standards · ☐ blocked until INDEX-METHOD freeze |
 | 363 | IETF differentiation note vs other receipts | standards | ✅ |
 | 364 | Press kit: UNMEASURED honesty | `docs/PRESS_KIT_UNMEASURED.md` · ✅ |
-| 365 | HF paper card for methodology | HF |
-| 366 | Kaggle competition? only if method frozen | later |
+| 365 | HF paper card for methodology | HF · ☐ paper card after method freeze |
+| 366 | Kaggle competition? only if method frozen | later · ☐ method freeze first |
 | 367 | Partner Option A first design partner | sales ⛔ |
 | 368 | Child keys issued | eng ⛔ |
 | 369 | Public status page: indices UNMEASURED | StatusPage · ✅ |
@@ -240,7 +240,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 372 | Rollback plan if App truncate | ops | ✅ |
 | 373 | MCP push_files size discipline | AGENT_COORDINATION · ✅ |
 | 374 | Single-writer tip policy | AGENT_COORDINATION · ✅ |
-| 375–390 | Sixteen contact outreach (public artifacts only) | distro |
+| 375–390 | Sixteen contact outreach (public artifacts only) | distro · ☐ template `docs/CONTACT_OUTREACH_TEMPLATE.md` |
 | 391–399 | Nine quarterly freshness reviews | ops · ✅ |
 | 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta |
 
