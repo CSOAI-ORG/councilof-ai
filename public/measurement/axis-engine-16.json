@@ -2,7 +2,7 @@
   "schema": "csoai.axis-engine-16/0.1",
   "title": "Axis-engine-16 measurement — fresh benchmark, model fleet",
   "source": "RunPod measurement engine (RTX 3090 pod), 2026-08-26",
-  "note": "This is a SEPARATE, harder fresh-benchmark set (16 axes) from the public 22-axis GSPC board. It is NOT the board count. The public board is '22 axes · 15 measured'. Every count names its set. Measurement, not certification.",
+  "note": "This is a separate fresh-benchmark engine set, not the public GSPC board. Live board counts: GET /api/gspc. Measurement, not certification.",
   "measured": "2026-08-23T16:40:54Z",
   "axes": 16,
   "models": [
@@ -11,7 +11,7 @@
     { "model": "mistral:7b", "n": 16, "accuracy": 0.0, "pass": 0 },
     { "model": "qwen2.5:0.5b", "n": 16, "accuracy": 0.0, "pass": 0 }
   ],
-  "honest_note": "Best tuned local model clears 7 of 16 axes (0.438). The frontier gap is measured, not asserted. Items below n=30 are stated and not quotable as a final score.",
+  "honest_note": "Best tuned local model accuracy 0.438 on this engine set. The frontier gap is measured, not asserted. Items below n=30 are stated and not quotable as a final score.",
   "gold_bank_jail": { "total": 71, "escape": 38, "benign": 33, "quotable": true, "updated": "2026-08-17T11:00:00Z" },
   "sov_index_signal": 0.2821,
   "clusters_measured": 13,
