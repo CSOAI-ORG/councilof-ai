@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * demo-play-refuse-lint — NEXT_300 #167
+ * demo-play-refuse-lint — NEXT_300 #167 · #168 · #291 · #292
  *
  * Refuses dangerous publish paths for demo-play targets without custody gate.
  */
