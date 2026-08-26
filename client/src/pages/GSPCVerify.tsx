@@ -81,7 +81,7 @@ export default function GSPCVerify() {
           <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
             <div className="flex flex-wrap gap-8">
               <div>
-                <span className="text-[12px] text-emerald-100/50">Status</span>
+                <span className="text-[12px] text-emerald-100/60">Status</span>
                 <div
                   className={`text-lg font-bold ${CHAIN_STATUS.chain_valid ? "text-emerald-300" : "text-red-300"}`}
                 >
@@ -89,20 +89,20 @@ export default function GSPCVerify() {
                 </div>
               </div>
               <div>
-                <span className="text-[12px] text-emerald-100/50">Records</span>
+                <span className="text-[12px] text-emerald-100/60">Records</span>
                 <div className="font-mono text-lg text-emerald-50">{CHAIN_STATUS.chain_length}</div>
               </div>
               <div>
-                <span className="text-[12px] text-emerald-100/50">Hash algorithm</span>
+                <span className="text-[12px] text-emerald-100/60">Hash algorithm</span>
                 <div className="font-mono text-lg text-emerald-50">{CHAIN_STATUS.hash_algorithm}</div>
               </div>
               <div>
-                <span className="text-[12px] text-emerald-100/50">Signature algorithm</span>
+                <span className="text-[12px] text-emerald-100/60">Signature algorithm</span>
                 <div className="font-mono text-lg text-emerald-50">{CHAIN_STATUS.signature_algorithm}</div>
               </div>
             </div>
-            <p className="mt-4 text-[12px] text-emerald-100/50">{CHAIN_STATUS.note}</p>
-            <p className="mt-2 text-[12px] text-emerald-100/45">
+            <p className="mt-4 text-[12px] text-emerald-100/60">{CHAIN_STATUS.note}</p>
+            <p className="mt-2 text-[12px] text-emerald-100/60">
               Last record: <span className="font-mono">{CHAIN_STATUS.last_record.id}</span> —{" "}
               {CHAIN_STATUS.last_record.claim}
             </p>
@@ -147,14 +147,14 @@ export default function GSPCVerify() {
         </section>
 
         {/* LINKS */}
-        <div className="flex flex-wrap gap-4 pb-4 text-[13px]">
-          <Link href="/gspc-arena" className="text-emerald-300 hover:underline">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 pb-4 text-[13px]">
+          <Link href="/gspc-arena" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             See the records in the arena →
           </Link>
-          <Link href="/methodology" className="text-emerald-300 hover:underline">
+          <Link href="/methodology" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Read the methodology →
           </Link>
-          <Link href="/refutation-ledger" className="text-emerald-300 hover:underline">
+          <Link href="/refutation-ledger" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Read the refutation ledger →
           </Link>
         </div>

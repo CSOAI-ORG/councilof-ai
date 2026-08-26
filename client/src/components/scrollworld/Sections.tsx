@@ -66,7 +66,7 @@ export function LightSection({
       <section className={`relative ${bg}`}>
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 py-20 sm:py-24 lg:grid-cols-2 lg:gap-16">
           <Reveal className={mediaRight ? "lg:order-1" : "lg:order-2"}>
-            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-600">{slide.kicker}</span>
+            <span className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-700">{slide.kicker}</span>
             <h2 className="mt-3 text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl">{slide.title}</h2>
             <p className="mt-5 max-w-xl text-lg font-medium leading-relaxed text-gray-600 sm:text-xl">{slide.body}</p>
             {slide.points && <Points points={slide.points} />}
@@ -95,7 +95,7 @@ export function LightSection({
     <section className={`relative ${bg}`}>
       <div className="mx-auto flex max-w-3xl flex-col items-center px-6 py-20 text-center sm:py-24">
         {figure && <div className="hidden sm:block">{figure}</div>}
-        <span className={`${figure ? "mt-4" : ""} text-xs font-bold uppercase tracking-[0.22em] text-emerald-600`}>{slide.kicker}</span>
+        <span className={`${figure ? "mt-4" : ""} text-xs font-bold uppercase tracking-[0.22em] text-emerald-700`}>{slide.kicker}</span>
         <h2 className="mt-3 max-w-3xl text-4xl font-black leading-[1.04] tracking-tight text-gray-900 sm:text-5xl">{slide.title}</h2>
         <p className="mt-5 max-w-2xl text-lg font-medium leading-relaxed text-gray-600 sm:text-xl">{slide.body}</p>
         {slide.points && <Points points={slide.points} center />}

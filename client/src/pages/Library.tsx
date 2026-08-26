@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { Link, useParams } from "wouter";
 import { SECTORS, itemsBySector, libraryItems, type LibraryItem } from "../data/library-ia";
 import { setMetaDescription } from "@/lib/utils";
@@ -9,6 +9,7 @@ import { setMetaDescription } from "@/lib/utils";
 // query. The primary experience stays lean; nothing is lost.
 export default function Library() {
   const params = useParams();
+  const searchId = useId();
   const activeSector = (params as any)?.sector as string | undefined;
   const [q, setQ] = useState("");
   const bySector = useMemo(() => itemsBySector(), []);
@@ -49,12 +50,13 @@ export default function Library() {
     !q.trim() ? items : items.filter((i) => (i.title + " " + i.path).toLowerCase().includes(q.toLowerCase()));
 
   const shownSectors = activeSector ? SECTORS.filter((s) => s.id === activeSector) : SECTORS;
+  const matchCount = shownSectors.reduce((n, s) => n + filter(bySector[s.id] ?? []).length, 0);
 
   return (
     <div className="min-h-screen bg-[#fafaf7] text-[#0c1a12]">
       <header className="border-b border-[#e6e8e2] bg-white">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-700/70">Reference archive</p>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-700">Reference archive</p>
           <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">The Council of AI Library</h1>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
             Everything we have published — measured axes, EU AI Act statute, governance frameworks,
@@ -64,14 +66,23 @@ export default function Library() {
             this is the record behind it. {all.length} reference pages across {SECTORS.length} sectors.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search the library…"
-              className="w-full max-w-sm rounded-lg border border-[#e6e8e2] bg-white px-3 py-2 text-sm text-slate-800 placeholder-slate-400 focus:border-emerald-400 focus:outline-none"
-            />
+            <div className="w-full max-w-sm">
+              <label htmlFor={searchId} className="sr-only">Search the library</label>
+              <input
+                id={searchId}
+                type="search"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search the library…"
+                aria-describedby={`${searchId}-count`}
+                className="min-h-[44px] w-full rounded-lg border border-[#e6e8e2] bg-white px-3 py-2 text-sm text-slate-800 placeholder-slate-500 focus:border-emerald-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
+              />
+              <p id={`${searchId}-count`} className="sr-only" role="status" aria-live="polite">
+                {q.trim() ? `${matchCount} of ${all.length} reference pages match` : `${all.length} reference pages`}
+              </p>
+            </div>
             {activeSector && (
-              <Link href="/library" className="rounded-full border border-emerald-500/40 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-50">
+              <Link href="/library" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-500/40 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 sm:min-h-0">
                 ← All sectors
               </Link>
             )}
@@ -80,8 +91,8 @@ export default function Library() {
             <nav className="mt-5 flex flex-wrap gap-2" aria-label="Library sectors">
               {SECTORS.map((s) => (
                 <Link key={s.id} href={`/library/${s.id}`}
-                  className="rounded-full border border-[#e6e8e2] bg-white px-3 py-1 text-[12px] font-semibold text-slate-700 hover:border-emerald-400 hover:text-emerald-700">
-                  {s.title} <span className="text-slate-400">{bySector[s.id]?.length ?? 0}</span>
+                  className="inline-flex min-h-[44px] items-center gap-1 rounded-full border border-[#e6e8e2] bg-white px-3 py-1 text-[12px] font-semibold text-slate-700 hover:border-emerald-500 hover:text-emerald-800 sm:min-h-0">
+                  {s.title} <span className="text-slate-500">{bySector[s.id]?.length ?? 0}</span>
                 </Link>
               ))}
             </nav>
@@ -97,15 +108,15 @@ export default function Library() {
             <section key={s.id} className="mb-10" id={s.id}>
               <div className="flex items-baseline justify-between gap-3 border-b border-[#e6e8e2] pb-2">
                 <h2 className="text-xl font-bold tracking-tight">{s.title}</h2>
-                <span className="font-mono text-[11px] text-slate-400">{items.length} pages</span>
+                <span className="font-mono text-[11px] text-slate-500">{items.length} pages</span>
               </div>
-              <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-slate-500">{s.blurb}</p>
+              <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-slate-600">{s.blurb}</p>
               <ul className="mt-4 grid gap-x-6 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((it) => (
                   <li key={it.path}>
-                    <Link href={it.path} className="group flex items-baseline gap-2 rounded px-1 py-1 text-sm hover:bg-emerald-50">
+                    <Link href={it.path} className="group flex min-h-[44px] items-center gap-2 rounded px-1 py-1 text-sm hover:bg-emerald-50 sm:min-h-0 sm:items-baseline">
                       <span className="truncate text-slate-800 group-hover:text-emerald-800">{it.title}</span>
-                      <span className="ml-auto shrink-0 font-mono text-[10px] text-slate-400">{it.path}</span>
+                      <span className="ml-auto shrink-0 font-mono text-[10px] text-slate-500">{it.path}</span>
                     </Link>
                   </li>
                 ))}
@@ -113,8 +124,12 @@ export default function Library() {
             </section>
           );
         })}
-        {shownSectors.every((s) => !filter(bySector[s.id] ?? []).length) && (
-          <p className="py-16 text-center text-sm text-slate-500">No reference pages match “{q}”.</p>
+        {matchCount === 0 && (
+          <p className="py-16 text-center text-sm text-slate-600">
+            {q.trim()
+              ? <>No reference pages match “{q}”. <Link href="/library" className="font-semibold text-emerald-700 underline">Clear the search</Link>.</>
+              : <>This sector is empty. <Link href="/library" className="font-semibold text-emerald-700 underline">Back to all sectors</Link>.</>}
+          </p>
         )}
       </main>
     </div>
