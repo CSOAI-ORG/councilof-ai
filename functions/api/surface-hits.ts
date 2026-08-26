@@ -41,7 +41,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     path = String((await request.json() as { path?: string }).path ?? "");
   } catch {
-    return new Response('{"error":"body must be {\"path\":\"/api/east-west\"}"}', { status: 400 });
+    return new Response('{"error":"body must be {\\"path\\":\\"/api/east-west\\"}"}', { status: 400 });
   }
   if (!ALLOWED.has(path)) {
     return new Response(JSON.stringify({ error: "path_not_allowed", allowed: [...ALLOWED] }), {
