@@ -36,13 +36,26 @@ describe("tabForPath", () => {
     expect(tabForPath("/workbench")?.id).toBe("workbench");
   });
 
+  // These two cases were written against a rail that no longer exists: they asked
+  // for an `academy` tab (there is none — /academy is opened from the Play gallery
+  // as an ordinary in-pane route) and for the Watchdog tab to own `/watchdog`
+  // (it owns `/report`; /watchdog is a separate live page). Both had been RED ON
+  // MASTER. The behaviour each was guarding is still worth guarding, so they are
+  // re-pointed at destinations the rail actually has rather than deleted.
   it("matches a nested path under a pane", () => {
-    expect(tabForPath("/academy/foundations")?.id).toBe("academy");
+    // /library/:sector is a real route under the Library pane.
+    expect(tabForPath("/library/finance")?.id).toBe("library");
+    expect(tabForPath("/gspc-scoreboard/anything")?.id).toBe("board");
   });
 
-  it("does not treat /watchdog-map as the Watchdog pane", () => {
+  it("does not let a pane path swallow a longer sibling route", () => {
+    // The Report-an-incident pane owns /report. /reports is a DIFFERENT live page
+    // (App.tsx) and a naive startsWith would hand it to that pane.
+    expect(tabForPath("/report")?.id).toBe("watchdog");
+    expect(tabForPath("/reports")).toBeNull();
+    // /watchdog and /watchdog-map are live pages that no pane owns.
+    expect(tabForPath("/watchdog")).toBeNull();
     expect(tabForPath("/watchdog-map")).toBeNull();
-    expect(tabForPath("/watchdog")?.id).toBe("watchdog");
   });
 
   it("returns null for a page that is not a pane", () => {
