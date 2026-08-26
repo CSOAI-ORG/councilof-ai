@@ -490,7 +490,6 @@ export default function GspcScoreboard() {
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
                 {(data.axes as Axis[]).map((a) => {
                   const acc = accuracyCell(a);
                   const ci = intervalCell(a);
@@ -545,38 +544,6 @@ export default function GspcScoreboard() {
                     </tr>
                   );
                 })}
-=======
-                {(data.axes as Axis[]).map((a) => (
-                  <tr key={a.axis} className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
-                    <td className="p-3 font-semibold whitespace-nowrap text-gray-900">
-                      {/* -m-3 p-3 makes the link fill its cell, so the touch
-                          target is the whole row cell rather than a 17px line. */}
-                      <Link href={`/gspc/${a.axis}`} className="-m-3 block p-3 hover:underline">{a.axis}</Link>
-                    </td>
-                    <td className="p-3 whitespace-nowrap text-gray-600">{a.bench}</td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{a.n}</td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">
-                      {(a as any).accuracy_is ? "≥" : ""}{(a.accuracy * 100).toFixed(1)}%
-                      {(a as any).accuracy_is && (
-                        <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-600" title={(a as any).accuracy_is}>
-                          lower bound
-                        </span>
-                      )}
-                    </td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap text-gray-600">
-                      {a.interval ? `${(a.interval[0] * 100).toFixed(1)}–${(a.interval[1] * 100).toFixed(1)}%` : "withheld (n not independent)"}
-                    </td>
-                    <td className="p-3 whitespace-nowrap">
-                      <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
-                        {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
-                      </span>
-                      {a.separation_p !== undefined && (
-                        <span className="ml-2 font-mono text-[11px] text-gray-600">p={a.separation_p}</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
->>>>>>> lane/ux-journeys-pass
               </tbody>
             </table>
           </div>
