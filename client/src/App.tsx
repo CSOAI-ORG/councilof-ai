@@ -86,6 +86,8 @@ const About = lazy(() => import("./pages/About"));
 const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
 const EunomiaData = lazy(() => import("./pages/EunomiaData"));
 const Eunomia = lazy(() => import("./pages/Eunomia"));
+const EunomiaCatalog = lazy(() => import("./pages/EunomiaCatalog"));
+const EunomiaCrosswalk = lazy(() => import("./pages/EunomiaCrosswalk"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
@@ -697,6 +699,8 @@ function App() {
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
                   <Route path="/eunomia-data" component={EunomiaData} />
                   <Route path="/eunomia" component={Eunomia} />
+                  <Route path="/eunomia-catalog" component={EunomiaCatalog} />
+                  <Route path="/eunomia-crosswalk" component={EunomiaCrosswalk} />
                   <Route path="/careers" component={Careers} />
                   <Route path="/charter" component={Charter} />
                   <Route path="/maternal-covenant" component={MaternalCovenant} />

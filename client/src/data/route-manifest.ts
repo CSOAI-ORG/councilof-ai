@@ -738,6 +738,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eunomia"
  },
  {
+  "path": "/eunomia-catalog",
+  "comp": "EunomiaCatalog",
+  "title": "Eunomia Catalog"
+ },
+ {
+  "path": "/eunomia-crosswalk",
+  "comp": "EunomiaCrosswalk",
+  "title": "Eunomia Crosswalk"
+ },
+ {
   "path": "/eunomia-data",
   "comp": "EunomiaData",
   "title": "Eunomia Data"

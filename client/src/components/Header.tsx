@@ -78,6 +78,9 @@ const navigation: NavGroup[] = [
       { name: 'EUNOMIA board', href: '/eunomia', description: 'Financial-verification axes, signed, across a two-tier fleet' },
       { name: 'Signed registers', href: '/registers', description: 'The financial-axis register — a stranger can re-derive every row' },
       { name: 'First-Fine Watch', href: '/first-fine-watch', description: 'Signed enforcement record: EU AI Act fines and the deadlines behind them' },
+      { name: 'EUNOMIA data (commercial)', href: '/eunomia-data', description: 'x402 data-only lane — enforcement record + deadline calendar, never scores' },
+      { name: 'EUNOMIA catalog', href: '/eunomia-catalog', description: 'Every surface, API, HF mirror, A2A card and MCP tool — catalogued and linked' },
+      { name: 'EU AI Act × CRA watch', href: '/eunomia-crosswalk', description: 'Statute → axis → requirement → exposure, with live source links' },
     ],
   },
   {
