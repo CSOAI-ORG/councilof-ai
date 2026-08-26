@@ -143,7 +143,6 @@ export default function RecordVerifyForm({ variant = "dark" }: { variant?: "ligh
         )}
       </div>
       {verdict && (
-<<<<<<< HEAD
         <div className="mt-4 space-y-2">
           {/* Headline states the verdict in words, not only a glyph. A reader who takes
               nothing else from the panel must still leave knowing which way it went. */}
@@ -161,15 +160,6 @@ export default function RecordVerifyForm({ variant = "dark" }: { variant?: "ligh
           {verdict.lines.map((l, i) => (
             <div key={`${l.code}-${i}`} className="flex items-start gap-2 text-[13px]">
               <span className={l.ok === true ? "text-emerald-600" : l.ok === false ? "text-red-600" : light ? "text-slate-500" : "text-emerald-100/50"}>
-=======
-        <div className="mt-4 space-y-2" role="status">
-          {verdict.lines.map((l) => (
-            <div key={l.label} className="flex items-start gap-2 text-[13px]">
-              <span
-                aria-hidden="true"
-                className={l.ok === true ? (light ? "text-emerald-700" : "text-emerald-300") : l.ok === false ? (light ? "text-red-700" : "text-red-300") : light ? "text-slate-600" : "text-emerald-100/70"}
-              >
->>>>>>> lane/ux-journeys-pass
                 {l.ok === true ? "✓" : l.ok === false ? "✗" : "○"}
               </span>
               <span className={light ? "text-slate-800" : "text-emerald-100/80"}>
