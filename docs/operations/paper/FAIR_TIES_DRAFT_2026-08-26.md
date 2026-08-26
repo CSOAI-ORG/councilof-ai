@@ -5,7 +5,7 @@
 
 ## Abstract
 Ranking AI systems by human preference (the LMArena model) is the field's de facto
-authority metric, yet Bradley–Teryy estimates over private, un-audited vote streams
+authority metric, yet Bradley–Terry estimates over private, un-audited vote streams
 are vulnerable to three documented abuses: private best-of-N variant testing,
 selective disclosure, and silent deprecation ("The Leaderboard Illusion", 2025).
 We propose FAIR TIES: a ranking protocol where (1) two systems are reported as
@@ -48,7 +48,7 @@ reason; strangers verify both survive.
   the gate functioning as designed).
 
 ## 4. Discussion
-Versus Bradley–Teryy: BT optimizes point estimates; FAIR TIES refuses to rank
+Versus Bradley–Terry: BT optimizes point estimates; FAIR TIES refuses to rank
 what the evidence cannot separate — directly answering the Illusion paper's
 "prohibit score retraction / cap private variants / auditable deprecation".
 The anti-gaming core makes each item of evidence impossible to double-spend —
