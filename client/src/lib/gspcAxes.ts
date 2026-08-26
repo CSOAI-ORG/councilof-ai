@@ -28,6 +28,11 @@ export interface Axis {
    *  `gspc-gov`/`gspc-agi`, so a constructed link 401s. Always use what /api/gspc
    *  publishes; when it is absent the UI shows no link rather than a broken one. */
   dataset?: string;
+  /** The resolved, fetchable bank URL. /api/gspc derives it from `dataset` and a single
+   *  BANK_HOST constant (functions/api/gspc.ts), so the host lives in ONE place and a
+   *  surface never concatenates its own. Prefer this over `dataset`; fall back only when
+   *  the wire has not shipped it yet. */
+  dataset_url?: string;
 }
 
 export const MEASURED_ON = { date: "2026-08-12", model: "Council-34" };
@@ -202,6 +207,7 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
         task: w.task ?? base?.task ?? "",
         note: w.note ?? base?.note,
         dataset: w.dataset ?? base?.dataset,
+        dataset_url: typeof w.dataset_url === "string" ? w.dataset_url : undefined,
       };
     });
 
