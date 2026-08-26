@@ -82,7 +82,18 @@ curl -sS -o /dev/null -w "%{http_code}\n" https://councilof.ai/api/oracle-fleet
 
 ```bash
 cd client && npx vitest run src/components/lobby/aguiStream.test.ts src/components/lobby/tabs.test.ts
+npx vitest run client/src/data/labourIndices.test.ts
 ```
+
+## Branch honesty lints (pre-merge)
+
+```bash
+npm run lint:refutations && npm run lint:value-ledger && npm run lint:stripe-grade
+npm run lint:wilson-banks && npm run lint:evm-catalog && npm run lint:demo-play
+BASE_URL=http://127.0.0.1:43125 npm run crawl:honesty
+```
+
+Indices stay **UNMEASURED**; Stage 3 catalog JSON stays **unsigned** (`lint:evm-catalog`).
 
 ## End-user persona tests (Playwright)
 

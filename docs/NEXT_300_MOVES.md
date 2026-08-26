@@ -198,7 +198,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 292 | Fail closed on demo play | publishers | ✅ |
 | 293 | Public corrections for any bad card | ledger · ✅ |
 | 294 | Mainnet first clean play (post-counsel) | ⛔ |
-| 295–320 | Twenty-six clean-play refreshes | Stage 3 · catalog #303–308 ✅ `docs/STAGE3_CATALOG_CLUSTERS.md` · signed mainnet ☐ custody+counsel |
+| 295–320 | Twenty-six clean-play refreshes | Stage 3 · catalog #303–308 ✅ · ops #313–314/#318 N/A ✅ · signed mainnet ☐ custody+counsel |
 
 ---
 
