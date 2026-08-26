@@ -1,0 +1,21 @@
+{
+  "$comment": "The verification profile: everything a verifier must be TOLD, in one file, so it can be swapped for your own without editing code. Pass a different one with --profile.",
+  "id": "csoai-gspc-1",
+  "description": "Council of AI GSPC measurement cards, card-attestation key 1.",
+  "alg": "Ed25519",
+  "pinnedPubkeyHex": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+  "pinnedKeyId": "did:web:csoai.org#card-attestation-1",
+  "pinnedKeySource": "https://csoai.org/.well-known/did.json — fetch ONCE, out of band, and keep a copy. It is not fetched at verification time.",
+  "preimageRules": [
+    "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')"
+  ],
+  "bodyKinds": ["gspc.measurement-card"],
+  "genesisMarkers": ["GSPC-CARD-FACTORY-GENESIS"],
+  "numbers": {
+    "$comment": "JavaScript cannot tell 0 from 0.0. These lists are how the schema tells it. An integral number in an unlisted field is OUT_OF_PROFILE_DOMAIN, not a guess.",
+    "floatFields": ["accuracy", "ci_low", "ci_high", "precision", "recall", "f1"],
+    "floatSuffixes": ["_ci_low", "_ci_high", "_accuracy"],
+    "intFields": ["n", "n_items", "n_cards", "n_cells", "count"],
+    "intSuffixes": ["_count", "_n"]
+  }
+}

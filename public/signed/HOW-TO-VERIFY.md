@@ -79,8 +79,7 @@ are loud.
 
 ```bash
 curl -s https://councilof.ai/signed/card_index.json -o index.json
-# each index entry carries: card (the id), axis, ts, signed, kid
-# (the full signed payload — pubkey, signature, preimage — is in the card payload, not the index row)
+# each entry carries: card (the id), axis, ts, kid, signed, sig, pubkey, card_url
 ```
 
 Fetch each `card_url`, then run step 4 against every one with the same pinned key.

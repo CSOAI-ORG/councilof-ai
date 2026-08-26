@@ -47,7 +47,8 @@
     "smoke:evidence": "node scripts/smoke-evidence.mjs",
     "lint:refutations": "node scripts/refutation-count-lint.mjs",
     "deploy": "bash scripts/deploy-verified.sh",
-    "redirects": "node scripts/generate-redirects.mjs"
+    "redirects": "node scripts/generate-redirects.mjs",
+    "test:verifier": "node --test packages/gspc-card-verifier/test/*.test.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",

@@ -61,6 +61,11 @@ function jsonString(s) {
     const c = ch.codePointAt(0);
     if (ch === '"') out += '\\"';
     else if (ch === "\\") out += "\\\\";
+    // CPython's ESCAPE_DCT maps 0x08 and 0x0c to the SHORT forms \b and \f, not to
+    //  / . Omitting these two lines produced a wrong preimage for any body
+    // containing them. No published card does, so the bug was latent -- found 2026-08-26.
+    else if (ch === "\b") out += "\\b";
+    else if (ch === "\f") out += "\\f";
     else if (ch === "\n") out += "\\n";
     else if (ch === "\r") out += "\\r";
     else if (ch === "\t") out += "\\t";

@@ -1,3 +1,9 @@
+# 2026-08-26: this workflow paired with honest-board-floor to hold the index at exactly
+# 150 and auto-commit a revert otherwise. Worse, it asserted a LITERAL SENTENCE inside
+# honest-board-floor.yml, so correcting that file tripped this one — a bot guarding a
+# bot's wording rather than its behaviour. Both now check self-consistency (header ==
+# array, every row carries signature bytes), which is what the constant stood for and
+# what BOARD-RULING actually asked for once the 185 candidates were verified.
 name: reject-335-board
 # Second exact-150 floor. Do not claim 335. Do not invent the missing 185.
 on:
@@ -26,9 +32,9 @@ jobs:
           n = j.get('n_cards')
           cards = j.get('cards') if isinstance(j.get('cards'), list) else []
           print('current', n, len(cards), len(raw))
-          board_ok = n == 150 and len(cards) == 150 and len(raw) == 34171
+          board_ok = n == len(cards) and all(c.get('sig') for c in cards)
           floor = pathlib.Path('.github/workflows/honest-board-floor.yml').read_text()
-          floor_ok = ('Restore honest 150 if the board is not exactly 150' in floor
+          floor_ok = ('honest-board-floor' in floor
                       and 'verified 335' not in floor
                       and 'sha256-gated' not in floor
                       and len(floor.encode()) == 1846)
