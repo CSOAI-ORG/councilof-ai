@@ -145,6 +145,7 @@ function discover() {
     // lists all 8 honestly from /interop/financial-axes.json; each /gspc/<financial-axis>
     // now renders a deep-dive from the same JSON. Static host needs a real snapshot per URL.
     "/financial-axes",
+    "/harness",
     "/gspc/provenance-controls", "/gspc/reserve-attestation", "/gspc/regulatory-framework",
     "/gspc/distribution-integrity", "/gspc/custody-disclosure", "/gspc/ai-economy-index",
     "/gspc/human-labour-index", "/gspc/humanoid-labour-index",
