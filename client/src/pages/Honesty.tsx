@@ -191,7 +191,6 @@ export default function Honesty() {
           fine-tunes are the proof — they are signed, and they still lose.
         </p>
 
-<<<<<<< HEAD
         {/* ── 2. what the chain does not prove ───────────────────────── */}
         <h2 className="mt-12 text-xl font-bold">2. Where our cryptography stops</h2>
         <p className="mt-3 leading-relaxed text-slate-700">{facts.verifiedSentence}</p>
@@ -205,39 +204,6 @@ export default function Honesty() {
             <code>/signed/chain.json</code>; the derivation behind these two numbers is at{" "}
             <code>GET /api/state → card_chain</code>.
           </p>
-=======
-        <h2 className="mt-10 text-xl font-bold">The numbers (live from the arena league, 2026-08-18)</h2>
-        <div className="mt-4 overflow-x-auto">
-          {/* min-w so the wrapper scrolls on a phone rather than crushing cells. */}
-          <table className="w-full min-w-[34rem] text-left text-sm">
-            <thead>
-              <tr className="border-b border-slate-300 text-xs uppercase tracking-wide text-slate-500">
-                <th className="py-2 pr-4">Model</th>
-                <th className="py-2 pr-4">Elo</th>
-                <th className="py-2 pr-4">Games</th>
-                <th className="py-2">Note</th>
-              </tr>
-            </thead>
-            <tbody>
-              {LADDER.map((r) => (
-                <tr
-                  key={r.model}
-                  className={
-                    "border-b border-slate-200 " + (r.kind === "our fine-tune" ? "bg-amber-50" : "")
-                  }
-                >
-                  <td className="py-2 pr-4 font-mono">
-                    {r.model}
-                    <span className="ml-2 text-[10px] uppercase tracking-wide text-slate-500">{r.kind}</span>
-                  </td>
-                  <td className="py-2 pr-4 font-mono tabular-nums font-semibold whitespace-nowrap">{r.elo.toFixed(1)}</td>
-                  <td className="py-2 pr-4 font-mono tabular-nums whitespace-nowrap">{r.games}</td>
-                  <td className="py-2 text-slate-600">{r.note}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
->>>>>>> lane/ux-journeys-pass
         </div>
         <p className="mt-4 leading-relaxed text-slate-700">
           Two more limits in the same family. There is no RFC-3161 timestamp authority and no
