@@ -126,7 +126,7 @@ export default function GSPCVerify() {
               signed with <strong className="text-emerald-50">Ed25519</strong> and{" "}
               <strong className="text-emerald-50">SHA-256 hash-chained</strong>, verifiable offline
               against the published key <code className="text-emerald-300">f4b4278d…</code>{" "}
-              <code className="text-emerald-300">did:web:csoai.org</code>).{" "}
+              (<code className="text-emerald-300">did:web:csoai.org</code>).{" "}
               <strong className="text-emerald-50">OpenTimestamps (Bitcoin) anchoring is roadmap,
               not yet shipped</strong> — the label will name it in the commit it ships, as with
               ML-DSA-65. The post-quantum ML-DSA-65 (FIPS-204) signer is likewise{" "}
