@@ -8,6 +8,26 @@ import AISystemNotice from "../components/AISystemNotice";
 
 type Loc = { city: string; country: string; cc: string; lat: number; lon: number };
 
+// The live regulation pulse reads the estate's OWN signed feed, GET /api/regulation
+// (schema csoai.regulation-deadlines/0.1) — the same endpoint the Council OS Reports
+// rail and Live Training read. It used to fetch a regulation-deltas.json off a branch
+// of a repo this project does not control, cross-origin to raw.githubusercontent.com,
+// and swallowed every failure into an empty list: a stale or deleted upstream file
+// rendered as "nothing is happening" rather than as a fault. Same doctrine as the rest
+// of the estate — a feed we cannot read is REPORTED AS UNREAD, never as no news.
+type Deadline = {
+  date: string;
+  instrument: string;
+  what: string;
+  basis?: string;
+  status: "IN_FORCE" | "UPCOMING";
+};
+
+type Pulse =
+  | { state: "loading" }
+  | { state: "ok"; deadlines: Deadline[]; verifiedAsOf: string | null; disputed: number }
+  | { state: "failed"; reason: string };
+
 const EU = ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE"];
 
 function jurisdiction(cc: string): { region: string; fw: string[] } {
@@ -31,15 +51,27 @@ export default function OsEnter() {
   const [phase, setPhase] = useState(0);
   const [loc, setLoc] = useState<Loc | null>(null);
   const [err, setErr] = useState(false);
-  const [deltas, setDeltas] = useState<any[]>([]);
+  const [pulse, setPulse] = useState<Pulse>({ state: "loading" });
 
   useEffect(() => {
     document.title = "Enter the CSOAI World";
     const boot = setTimeout(() => setPhase(1), 1500);
-    fetch("https://raw.githubusercontent.com/CSOAI-ORG/csoai-dashboard/main/client/public/data/regulation-deltas.json", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setDeltas(d.slice(-40).reverse()); })
-      .catch(() => {});
+    fetch("/api/regulation", { headers: { accept: "application/json" }, cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((j) => {
+        const all: Deadline[] = Array.isArray(j?.deadlines) ? j.deadlines : [];
+        if (all.length === 0) throw new Error("the feed carried no deadlines");
+        // What is about to bind leads; what already binds follows, most recent first.
+        const upcoming = all.filter((d) => d.status === "UPCOMING").sort((a, b) => a.date.localeCompare(b.date));
+        const inForce = all.filter((d) => d.status === "IN_FORCE").sort((a, b) => b.date.localeCompare(a.date));
+        setPulse({
+          state: "ok",
+          deadlines: [...upcoming, ...inForce],
+          verifiedAsOf: typeof j?.verified_as_of === "string" ? j.verified_as_of : null,
+          disputed: Array.isArray(j?.disputed) ? j.disputed.length : 0,
+        });
+      })
+      .catch((e) => setPulse({ state: "failed", reason: String(e?.message ?? e) }));
     // Ship gate (audit P1-2): no third-party IP geolocation on public surfaces.
     // Open on a neutral global view; the visitor picks a region manually if they want one.
     setLoc({ city: "Global", country: "", cc: "", lat: 20, lon: 0 });
@@ -103,15 +135,45 @@ export default function OsEnter() {
               </div>
               <p className="mt-3 text-[13px] leading-snug text-emerald-50/70">Pre-loaded: the regulations and crosswalks that apply to you, with sample scenarios for your region on Council Town. No setup, no training required {"\u2014"} your Council assistant helps automatically. Prefer to learn? Immersive courses are inside.</p>
               <div className="mt-4 border-t border-emerald-400/15 pt-3">
-                <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Live regulation pulse \u00b7 synced from the grid</div>
-                {deltas.length === 0 ? (
-                  <div className="mt-1 text-[12px] text-emerald-50/50">Syncing the latest moves\u2026</div>
-                ) : (
-                  <ul className="mt-2 space-y-1.5">
-                    {deltas.slice(0, 3).map((d, i) => (
-                      <li key={i} className="text-[12px] leading-snug text-emerald-50/75"><span className="font-semibold text-emerald-300/80">{d.frameworkSlug || d.kind || "update"}</span> \u00b7 {d.summary}</li>
-                    ))}
-                  </ul>
+                <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">
+                  Live regulation pulse {"\u00b7"} from the signed deadline feed
+                </div>
+
+                {pulse.state === "loading" && (
+                  <div className="mt-1 text-[12px] text-emerald-50/50">Reading /api/regulation{"\u2026"}</div>
+                )}
+
+                {/* A feed we could not read is reported as a fault, not as an empty list.
+                    The reader gets the reason and the raw endpoint to check for themselves. */}
+                {pulse.state === "failed" && (
+                  <div className="mt-1 text-[12px] leading-snug text-amber-300/90">
+                    Regulation feed unavailable {"\u2014"} {pulse.reason}. This pane is not saying
+                    there is no news; it is saying it could not read the feed. Read it directly at{" "}
+                    <a href="/api/regulation" className="underline decoration-amber-300/40 underline-offset-2 hover:text-amber-200">/api/regulation</a>
+                    {" "}or open the{" "}
+                    <a href="/regulation-tracker" className="underline decoration-amber-300/40 underline-offset-2 hover:text-amber-200">regulation tracker</a>.
+                  </div>
+                )}
+
+                {pulse.state === "ok" && (
+                  <>
+                    <ul className="mt-2 space-y-1.5">
+                      {pulse.deadlines.slice(0, 3).map((d) => (
+                        <li key={d.instrument + "-" + d.date} className="text-[12px] leading-snug text-emerald-50/75">
+                          <span className="font-semibold text-emerald-300/80">{d.instrument}</span>
+                          {" "}{"\u00b7"} {d.what}
+                          <span className="text-emerald-50/45">
+                            {" "}{"\u00b7"} {d.date} {d.status === "UPCOMING" ? "(upcoming)" : "(in force)"}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-2 font-mono text-[10px] text-emerald-300/40">
+                      {pulse.deadlines.length} verified deadline{pulse.deadlines.length === 1 ? "" : "s"}
+                      {pulse.verifiedAsOf ? ` \u00b7 verified as of ${pulse.verifiedAsOf}` : ""}
+                      {pulse.disputed ? ` \u00b7 ${pulse.disputed} openly disputed` : ""}
+                    </div>
+                  </>
                 )}
               </div>
             </div>
