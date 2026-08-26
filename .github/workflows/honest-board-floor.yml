@@ -1,5 +1,4 @@
 name: honest-board-floor
-# DISABLED for wave-11 restore (was exact-150 floor).
 on:
   push:
     paths:
@@ -9,7 +8,6 @@ permissions:
   contents: write
 jobs:
   floor:
-    if: false  # wave-11 restore
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,4 +16,26 @@ jobs:
       - name: Restore honest 150 if the board is not exactly 150
         run: |
           set -euo pipefail
-          echo "disabled for wave-11 restore"
+          python3 - <<'PY'
+          import json, pathlib, sys
+          p = pathlib.Path('public/signed/card_index.json')
+          raw = p.read_bytes()
+          j = json.loads(raw)
+          n = j.get('n_cards')
+          cards = j.get('cards') if isinstance(j.get('cards'), list) else []
+          print('current', n, len(cards), len(raw))
+          if n == 150 and len(cards) == 150 and len(raw) == 34171:
+              print('honest 150 — nothing to restore')
+              sys.exit(0)
+          print('not the honest 150 board — restoring')
+          PY
+          GOOD=521df33b6c35dad6c3b2ca3e444fba2ac653687b
+          git show "$GOOD:public/signed/card_index.json" > public/signed/card_index.json
+          python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==150 and len(j["cards"])==150 and len(c)==34171'
+          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "honest-board-floor restored 150 (do not claim 335)",' '  "card_index_n": 150' '}' > public/stack/e2e-latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/signed/card_index.json public/stack/e2e-latest.json
+          if git diff --cached --quiet; then echo nothing; exit 0; fi
+          git commit -m "fix: honest-board-floor restored card_index 150"
+          git push
