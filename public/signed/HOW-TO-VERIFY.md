@@ -53,7 +53,7 @@ const canon = (v) => Array.isArray(v) ? "[" + v.map(canon).join(",") + "]"
 at runtime — both are the same IEEE-754 double. A JS verifier therefore needs the schema to
 tell it which fields are floats. The fields that are floats in our cards are `accuracy` and
 any field ending `_ci_low` / `_ci_high`. A future card format should use JCS so this note is
-unnecessary; these 150 cannot be migrated without invalidating their ids.
+unnecessary; these 313 cannot be migrated without invalidating their ids.
 
 ## 4. Check one card
 
@@ -84,6 +84,16 @@ curl -s https://councilof.ai/signed/card_index.json -o index.json
 
 Fetch each `card_url`, then run step 4 against every one with the same pinned key.
 
+Or use the packaged verifier, which does all of the above plus the chain check, offline, with
+no dependencies:
+
+```bash
+curl -sSfO https://councilof.ai/verifier/gspc-verify.mjs
+node gspc-verify.mjs cards/ --index card_index.json --did-document did.json
+```
+
+Source, JSON Schemas and the failing-case tests: `packages/gspc-card-verifier/` (Apache-2.0).
+
 ## What this does and does not prove
 
 It proves these exact measurement bodies were signed by the holder of the published
@@ -91,6 +101,17 @@ card-attestation key and have not been altered since. **It does not prove the me
 correct** — that rests on the published method, the gold labels and the rows, all separately
 available. A signature is an integrity claim, not a truth claim.
 
-**It also does not prove the set is complete.** The index declares a chain head that is not
-among these 313 cards: they are a prefix of a longer chain. Each card verifies
-individually; completeness does not.
+**It also does not prove the set is complete.** Corrected 2026-08-26 after checking the bytes
+rather than repeating the previous wording: the head the index declares (`66856aca...`) *is*
+among the 313 published cards. The incompleteness is elsewhere, and it is real. The 313 cards
+form **two** chains, not one:
+
+* 235 cards ending at `GSPC-CARD-FACTORY-GENESIS` -- that chain reaches its declared origin.
+* 78 cards whose tip is the declared head, but whose earliest published card (`242dd99f...`)
+  names a predecessor `b77fde240e06...` that is **not published**. That chain is a suffix of a
+  longer one whose earlier cards you do not have.
+
+Each card verifies individually; completeness does not. And note that `card_index.json` carries
+no signature of its own, so entries can be added or omitted without breaking anything
+cryptographic -- the `prev` pointer inside each signed body is the only structural check, and
+`/verifier/gspc-verify.mjs` follows it and reports `CHAIN_INCOMPLETE`.
