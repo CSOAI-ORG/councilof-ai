@@ -5,40 +5,199 @@
   "updated": "2026-08-25",
   "this_file_has_no_secret_values": true,
   "measurement_instrument": {
-    "banks": {"n_banks": 18, "n_items": 16110, "source": "harness/mine/bank-coverage.json (bank-coverage-map-v1)", "purpose": "the frozen GSPC probe banks each axis is measured against"},
-    "carded_datasets": {"n": 25, "green": 20, "source": "harness/mine/carded-datasets.json (gspc.carder)", "note": "25 mined datasets carded; 20 green = signatures verified"},
+    "banks": {
+      "n_banks": 18,
+      "n_items": 16110,
+      "source": "harness/mine/bank-coverage.json (bank-coverage-map-v1)",
+      "purpose": "the frozen GSPC probe banks each axis is measured against"
+    },
+    "carded_datasets": {
+      "n": 25,
+      "green": 20,
+      "source": "harness/mine/carded-datasets.json (gspc.carder)",
+      "note": "25 mined datasets carded; 20 green = signatures verified"
+    },
     "axes_measured": 14,
     "axes_candidates_unmeasured": 11,
     "sov_index_signal": 0.2821
   },
   "competitor_landscape": [
-    {"player":"Moody's Token Integration Engine","model":"issuer-solicited/paid","on_chain":["Canton (Mar 2026)","Solana via Alphaledger (Jun 17 2026)"],"stats_rigor":"no CI/separation disclosure","gap":"no unsolicited","source":"appraisal 2026-08-25"},
-    {"player":"S&P Global (on-chain SSAs)","model":"issuer-solicited","on_chain":["Chainlink DataLink, Base (Oct 2025)"],"stats_rigor":"no CI disclosure","gap":"no unsolicited","source":"appraisal 2026-08-25"},
-    {"player":"Chainlink ACE","model":"compliance-enforcement infra (KYC/AML/policy)","on_chain":["ERC-3643"],"stats_rigor":"n/a (not a rating)","gap":"not independent opinion","source":"appraisal 2026-08-25"},
-    {"player":"Credora by RedStone","model":"oracle risk ratings, adoption/integration","on_chain":["Morpho pulls ratings"],"stats_rigor":"no CI disclosure","gap":"solicited/adoption","source":"appraisal 2026-08-25"},
-    {"player":"Particula","model":"cooperative, mandate-based; PDARF AAA-D","on_chain":["rules-based, 90+ metrics"],"stats_rigor":"no CI disclosure","gap":"solicited/mandate","source":"appraisal 2026-08-25"}
+    {
+      "player": "Moody's Token Integration Engine",
+      "model": "issuer-solicited/paid",
+      "on_chain": [
+        "Canton (Mar 2026)",
+        "Solana via Alphaledger (Jun 17 2026)"
+      ],
+      "stats_rigor": "no CI/separation disclosure",
+      "gap": "no unsolicited",
+      "source": "appraisal 2026-08-25"
+    },
+    {
+      "player": "S&P Global (on-chain SSAs)",
+      "model": "issuer-solicited",
+      "on_chain": [
+        "Chainlink DataLink, Base (Oct 2025)"
+      ],
+      "stats_rigor": "no CI disclosure",
+      "gap": "no unsolicited",
+      "source": "appraisal 2026-08-25"
+    },
+    {
+      "player": "Chainlink ACE",
+      "model": "compliance-enforcement infra (KYC/AML/policy)",
+      "on_chain": [
+        "ERC-3643"
+      ],
+      "stats_rigor": "n/a (not a rating)",
+      "gap": "not independent opinion",
+      "source": "appraisal 2026-08-25"
+    },
+    {
+      "player": "Credora by RedStone",
+      "model": "oracle risk ratings, adoption/integration",
+      "on_chain": [
+        "Morpho pulls ratings"
+      ],
+      "stats_rigor": "no CI disclosure",
+      "gap": "solicited/adoption",
+      "source": "appraisal 2026-08-25"
+    },
+    {
+      "player": "Particula",
+      "model": "cooperative, mandate-based; PDARF AAA-D",
+      "on_chain": [
+        "rules-based, 90+ metrics"
+      ],
+      "stats_rigor": "no CI disclosure",
+      "gap": "solicited/mandate",
+      "source": "appraisal 2026-08-25"
+    }
   ],
-  "our_moat": "unsolicited + permissionless (no issuer opt-in/payment) + statistically-governed (Wilson/separation/McNemar) + cryptographically signed — no incumbent offers that combination",
+  "our_moat": "unsolicited + permissionless (no issuer opt-in/payment) + statistically-governed (Wilson/separation/McNemar) + cryptographically signed \u2014 no incumbent offers that combination",
   "contacts": [
-    {"id":"chipzen","name":"Dave (chipzen.ai)","status":"DRAFT-OWNER-SEND","window":"Season 3","warmth":"warmest external (reached out twice)","content":"harness/OUTREACH_CONTENT.md #1"},
-    {"id":"insurer","name":"Underwriting AI-risk insurer","status":"DRAFT-OWNER-SEND","window":"09-30","content":"harness/OUTREACH_CONTENT.md #2"},
-    {"id":"counsel","name":"Law firm (securities/AI)","status":"DRAFT-OWNER-CONFIRM","window":"09-11","content":"harness/OUTREACH_CONTENT.md #3"},
-    {"id":"uk-grant","name":"UK AI Sovereign Fund (~£160M)","status":"WATCH","window":"£160M window","note":"AI Trust Integrity and Assurance"},
-    {"id":"press","name":"Press (one-to-one)","status":"DRAFT-OWNER-SEND","content":"harness/OUTREACH_CONTENT.md #4"},
-    {"id":"rwa-issuers","name":"Tokenized RWA issuers (23-target universe)","status":"ENGINE-READY","link":"harness/rwa-attest/","note":"attestation, not solicitation"}
+    {
+      "id": "chipzen",
+      "name": "Dave (chipzen.ai)",
+      "status": "DRAFT-OWNER-SEND",
+      "window": "Season 3",
+      "warmth": "warmest external (reached out twice)",
+      "content": "harness/OUTREACH_CONTENT.md #1"
+    },
+    {
+      "id": "insurer",
+      "name": "Underwriting AI-risk insurer",
+      "status": "DRAFT-OWNER-SEND",
+      "window": "09-30",
+      "content": "harness/OUTREACH_CONTENT.md #2"
+    },
+    {
+      "id": "counsel",
+      "name": "Law firm (securities/AI)",
+      "status": "DRAFT-OWNER-CONFIRM",
+      "window": "09-11",
+      "content": "harness/OUTREACH_CONTENT.md #3"
+    },
+    {
+      "id": "uk-grant",
+      "name": "UK AI Sovereign Fund (~\u00a3160M)",
+      "status": "WATCH",
+      "window": "\u00a3160M window",
+      "note": "AI Trust Integrity and Assurance"
+    },
+    {
+      "id": "press",
+      "name": "Press (one-to-one)",
+      "status": "DRAFT-OWNER-SEND",
+      "content": "harness/OUTREACH_CONTENT.md #4"
+    },
+    {
+      "id": "rwa-issuers",
+      "name": "Tokenized RWA issuers (23-target universe)",
+      "status": "ENGINE-READY",
+      "link": "harness/rwa-attest/",
+      "note": "attestation, not solicitation"
+    }
   ],
-  "surfaces_connected": ["councilof.ai (LIVE)","csoai-verify.pages.dev (LIVE revenue rail)","monorepo (os-production)","XRPL att-rail (engine-ready)","EAS att-rail (engine-ready)","HF (unlisted, owner)"],
+  "surfaces_connected": [
+    "councilof.ai (LIVE)",
+    "csoai-verify.pages.dev (LIVE revenue rail)",
+    "monorepo (os-production)",
+    "XRPL att-rail (engine-ready)",
+    "EAS att-rail (engine-ready)",
+    "HF (unlisted, owner)"
+  ],
   "connections": [
-    {"from":"harness/mine","to":"measurement instrument","via":"banks + carded datasets","status":"LIVE"},
-    {"from":"harness/arena","to":"axis measurement","via":"elo.py + axis_arena.py","status":"LIVE"},
-    {"from":"harness/owem","to":"SOV Signal index","via":"emit_sov_signal.py","status":"LIVE (15 axes)"},
-    {"from":"harness/rwa-attest","to":"XRPL + EAS","via":"Memo/CRED + off-chain EAS","status":"ENGINE-READY"},
-    {"from":"harness/COORDINATION_DB","to":"accounts/surfaces/outreach","via":"living registry","status":"LIVE"}
+    {
+      "from": "harness/mine",
+      "to": "measurement instrument",
+      "via": "banks + carded datasets",
+      "status": "LIVE"
+    },
+    {
+      "from": "harness/arena",
+      "to": "axis measurement",
+      "via": "elo.py + axis_arena.py",
+      "status": "LIVE"
+    },
+    {
+      "from": "harness/owem",
+      "to": "SOV Signal index",
+      "via": "emit_sov_signal.py",
+      "status": "LIVE (15 axes)"
+    },
+    {
+      "from": "harness/rwa-attest",
+      "to": "XRPL + EAS",
+      "via": "Memo/CRED + off-chain EAS",
+      "status": "ENGINE-READY"
+    },
+    {
+      "from": "harness/COORDINATION_DB",
+      "to": "accounts/surfaces/outreach",
+      "via": "living registry",
+      "status": "LIVE"
+    }
   ],
   "honest_measurements": {
-    "measured": ["governance","safety","provenance","continuity","conformance","openness","machinery-conformity","care","cross-reality","detector-interop","art5-safeguard","swarm","affect","jail"],
-    "unmeasured_candidates": ["memory-poisoning","oversight","agent-identity","economic-behavior","collusion","deception","sycophancy","long-horizon-reliability","ai-economy-index","human-labour","humanoid-labour"],
-    "rule": "JL.5 — a thing is MEASURED only when its signed card exists with a frozen, hash-pinned bank. UNMEASURED candidates are NOT flipped to measured by assertion; they become measured when measured + signed."
+    "measured": [
+      "governance",
+      "safety",
+      "provenance",
+      "continuity",
+      "conformance",
+      "openness",
+      "machinery-conformity",
+      "care",
+      "cross-reality",
+      "detector-interop",
+      "art5-safeguard",
+      "swarm",
+      "affect",
+      "jail"
+    ],
+    "unmeasured_candidates": [
+      "memory-poisoning",
+      "oversight",
+      "agent-identity",
+      "economic-behavior",
+      "collusion",
+      "deception",
+      "sycophancy",
+      "long-horizon-reliability",
+      "ai-economy-index",
+      "human-labour",
+      "humanoid-labour"
+    ],
+    "rule": "JL.5 \u2014 a thing is MEASURED only when its signed card exists with a frozen, hash-pinned bank. UNMEASURED candidates are NOT flipped to measured by assertion; they become measured when measured + signed."
   },
-  "no_duplicate_rule": "Every asset here is keyed + source-cited. Before adding anything new, check this master + COORDINATION_DB.json + the honest register; update in place, never create a parallel copy. Audit before publish (harness/AUDIT.md)."
+  "no_duplicate_rule": "Every asset here is keyed + source-cited. Before adding anything new, check this master + COORDINATION_DB.json + the honest register; update in place, never create a parallel copy. Audit before publish (harness/AUDIT.md).",
+  "improvements_2026_08_26": {
+    "s3_card_store": "csoai-cards bucket (hf profile): 744 objects \u2014 boards-signed (150 JWS cards), living/ (kernel_results, sim_cards, units \u2014 actively written), archive-mlx (44). THE external card store BOARD-RULING referenced.",
+    "jws_verification_gap": "The 150 board cards are JWS-signed (did:web:csoai.org#estate-chain-1, EdDSA). did:web resolves (key found) but the estate's verifiers return UNKNOWN SHAPE - NOT VERIFIED; exact payload construction is on the signing node (GX.2) \u2014 needs signing-lane confirmation before the floor is stranger-checkable (JL.5).",
+    "keystone": "~/.csoai/keystone.json (600, never in git) mirrored to RunPod volume: 6 CONFIGURED (runpod_api, runpod_ssh, cloudflare, kaggle, x402_receiver, hf_s3), 6 PENDING-OWNER.",
+    "live_catalog": "harness/LIVE_CATALOG_OF_ALL.json: 17 products, 10 planned (T1-T5 + chipzen/insurer/counsel/HF/registers/XRPL-EAS), 6 surfaces, payment rails (x402 live; Stripe disabled per CEO directive).",
+    "rag_corpus": "harness/rag_corpus.jsonl: 15 source-cited knowledge units (RAG-ready).",
+    "audit_verdict": "All keyless in-lane scope verified green (serving layer live, 22/22 attestations, JSON valid, S3 + living DB located). Real gaps surfaced honestly: JWS verifiability (signing-lane), 5 owner keys (browser), counsel gate (named-security verdicts)."
+  }
 }
