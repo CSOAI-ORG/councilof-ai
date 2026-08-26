@@ -57,7 +57,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 136 | n≥ threshold for any future Wilson on indices | method § · ✅ |
 | 137 | JSON Schema for index snapshot | `/.well-known/schemas/labour-economy-index.schema.json` · ✅ |
 | 138 | Empty snapshot fixtures (all null scores) | `scripts/index-fixtures/` · ✅ |
-| 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF · plan + local fixture ✅ · upload 🔄 (needs write token) |
+| 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF · fixture ✅ · upload 🔄 `npm run hf:upload-staged` (needs write token) |
 | 140 | HF README: UNMEASURED doctrine | `datasets/labour-economy-unmeasured/README.md` · ✅ staged |
 | 141 | Kaggle mirror policy (REPORTED only) | docs · ✅ in HF plan |
 | 142 | Oracle-fleet adjacency note (not grade oracle) | `docs/ORACLE_FLEET.md` · ✅ |
@@ -227,11 +227,11 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | # | Move | Field |
 |---|------|-------|
 | 361 | Cite INDEX-METHOD in SCITT profile when ready | standards | ✅ |
-| 362 | Zenodo method DOI when frozen | standards · ☐ blocked until INDEX-METHOD freeze |
+| 362 | Zenodo method DOI when frozen | standards · gate ✅ `docs/METHOD_FREEZE_GATE.md` · DOI ☐ freeze |
 | 363 | IETF differentiation note vs other receipts | standards | ✅ |
 | 364 | Press kit: UNMEASURED honesty | `docs/PRESS_KIT_UNMEASURED.md` · ✅ |
-| 365 | HF paper card for methodology | HF · ☐ paper card after method freeze |
-| 366 | Kaggle competition? only if method frozen | later · ☐ method freeze first |
+| 365 | HF paper card for methodology | HF · draft ✅ `docs/HF_METHOD_PAPER_CARD_DRAFT.md` · publish ☐ freeze |
+| 366 | Kaggle competition? only if method frozen | later · gate ✅ `docs/METHOD_FREEZE_GATE.md` · competition ☐ freeze |
 | 367 | Partner Option A first design partner | sales ⛔ |
 | 368 | Child keys issued | eng ⛔ |
 | 369 | Public status page: indices UNMEASURED | StatusPage · ✅ |

@@ -16,6 +16,7 @@
     "lint:value-ledger": "node scripts/value-ledger-lint.mjs",
     "lint:stripe-grade": "node scripts/no-stripe-as-grade-lint.mjs",
     "lint:aum": "node scripts/aum-not-measured-lint.mjs",
+    "hf:upload-staged": "node scripts/hf-upload-staged.mjs",
     "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/server",
     "start": "NODE_ENV=production node dist/server/index.js",
     "check": "tsc --noEmit",

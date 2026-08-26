@@ -46,7 +46,6 @@ Local pack ready to upload when a write-capable HF token is available:
 - `datasets/labour-economy-unmeasured/README.md` (UNMEASURED doctrine)
 
 ```bash
-hf upload csoai/labour-economy-unmeasured datasets/labour-economy-unmeasured . --repo-type=dataset
+npm run hf:upload-staged   # both packs when HF_TOKEN or hf auth login works
+# or per-pack: see docs/HF_UPLOAD_RUNBOOK.md
 ```
-
-This cloud agent’s HF MCP OAuth has no filesystem write tool; CLI is not logged in here. Do not invent MEASURED floats to “complete” the dataset.
