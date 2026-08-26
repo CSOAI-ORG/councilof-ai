@@ -3,7 +3,7 @@ import { Link } from "wouter";
 /**
  * /products — the signed-evidence product family, packaged as ONE door.
  *
- * Everything here rides the same engine: Ed25519 over RFC 8785 JCS,
+ * Everything here rides the same engine: Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md),
  * three-state verdicts (pass / fail / UNMEASURED), every public number from
  * a live API. The free rail is stated before anything sellable, because that
  * is the order the estate actually works in: verification is free forever,
@@ -13,7 +13,7 @@ import { Link } from "wouter";
  */
 
 const ENGINE = [
-  { k: "Signed", v: "Ed25519 over RFC 8785 JCS — every card verifiable offline, by strangers" },
+  { k: "Signed", v: "Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md) — every card verifiable offline, by strangers" },
   { k: "Three-state", v: "pass / fail / UNMEASURED — what we cannot measure is published, not hidden" },
   { k: "Live-sourced", v: "every public number recomputable from GET /api/gspc and the signed card chain" },
   { k: "Method-bound", v: "unparsed counts incorrect · no model judges another · nothing quoted below n≥30" },

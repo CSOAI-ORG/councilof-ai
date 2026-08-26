@@ -211,7 +211,7 @@ function ProductBand() {
     <Section
       id="products"
       title="What you can actually get"
-      subtitle="Six products, one engine: Ed25519 over RFC 8785 JCS, three-state verdicts (pass / fail / UNMEASURED), every public number recomputable from a live API. Verification is free forever, a grade is never sold, and there are no public prices."
+      subtitle="Six products, one engine: Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md), three-state verdicts (pass / fail / UNMEASURED), every public number recomputable from a live API. Verification is free forever, a grade is never sold, and there are no public prices."
       bg="bg-white"
     >
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

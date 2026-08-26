@@ -33,9 +33,20 @@ export default function ArchivedBanner() {
               <Link href={repl.path} className="font-semibold underline hover:text-amber-950">{repl.label} →</Link>
             </>
           ) : (
+            /* This branch used to read "A dated reference page… start at the measurement
+               board" and link to "/". Three things wrong with that, and 236 of the 251
+               archived pages saw it: it called itself DATED while showing no date; it
+               labelled the link "the measurement board" while pointing at the HOMEPAGE, so
+               the label named a page the link did not go to; and by offering a destination
+               at all it implied the homepage supersedes this page, when in fact nothing
+               does — only 5 replacements are mapped. Saying "no current version" plainly is
+               more useful to a reader than a confident pointer to the wrong place. */
             <>
-              A dated reference page, kept for the record. For the current experience, start at{" "}
-              <Link href="/" className="font-semibold underline hover:text-amber-950">the measurement board</Link>.
+              A reference page, kept for the record.{" "}
+              <span className="text-amber-800/70">No current version supersedes it.</span>{" "}
+              <Link href="/gspc-scoreboard" className="font-semibold underline hover:text-amber-950">
+                See the measurement board →
+              </Link>
             </>
           )}
         </span>
