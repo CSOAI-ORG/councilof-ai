@@ -1,0 +1,567 @@
+/**
+ * GET /api/state — the ONE live state surface every lane quotes instead of asserting.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * WHY THIS EXISTS
+ * In one week twelve lane reports each published their own counts and they did
+ * not agree. The axis count was reported as 14, 15, 16, 22 and 25. The MCP fleet
+ * was reported as 6, 216, 271, 291, 338, 348, 377 and 378. The card count as 150,
+ * 335 and 3,851. RWA instruments as 6 and 19. Some of those differences are real
+ * (they count different things in different repos); most were stale figures that
+ * nothing ever retired, because nothing in the estate had the job of retiring them.
+ * The board already derives its counts from signed data. Nothing else did.
+ *
+ * This endpoint is the thing that retires a number: if a figure is not here, it is
+ * not established, and a lane may not publish it as if it were.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * THE FOUR RULES THIS FILE KEEPS
+ *
+ * 1. EVERY VALUE IS DERIVED FROM AN ARTIFACT, NEVER TYPED.
+ *    There is not one hand-written count below. Each number is computed from a
+ *    committed file at build time (counted from an array, or read from a totals
+ *    block that was itself derived). Grep this file for a bare integer standing in
+ *    for a count and you will not find one.
+ *
+ * 2. THERE IS NO `new Date()` IN THIS FILE.
+ *    This is the defect that made this endpoint necessary. /api/mcp used to stamp
+ *    every server with `last_checked: new Date().toISOString()` — so the endpoint
+ *    told every caller that six servers had been verified moments earlier while
+ *    nothing had ever been contacted. Two real requests three seconds apart came
+ *    back 11:43:53.111Z and 11:43:56.233Z: the field was simply following the
+ *    clock, and it was reported as a measurement. Here, `as_of` is always read
+ *    FROM the artifact, and `as_of_field` names the exact key it was read from so
+ *    a stranger can open the file and check. Two calls to this endpoint an hour
+ *    apart return byte-identical timestamps, because a timestamp here describes
+ *    when something happened, not when someone asked.
+ *
+ * 3. AN ABSENT TIMESTAMP IS NULL, NEVER SUBSTITUTED.
+ *    public/interop/rwa-registry.json carries no timestamp of any kind. Its facts
+ *    therefore carry `as_of: null` with `as_of_field: null` and a note saying so.
+ *    Borrowing a neighbouring file's timestamp, or the deploy time, would assert a
+ *    freshness nobody established. Unknown is null.
+ *
+ * 4. `kind` IS NEVER COLLAPSED.
+ *      measured    — a run happened against a frozen bank/source and was graded.
+ *      probed      — something was contacted and answered, at as_of.
+ *      catalogued  — it is listed in a register. Nothing was contacted or run.
+ *      declared    — a slot/claim published so a gap is visible. No run behind it.
+ *      unmeasured  — it exists and we have NOT measured it, and we say so.
+ *    A catalogue entry is not a reachable server. A declared slot is not a
+ *    measurement. Summing across kinds is how 6 became 378.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * BOUNDED AUTHORITY
+ * See `not_covered` in the payload. This endpoint speaks for THIS repo's committed
+ * artifacts and nothing else. The separate csoai-static-deploy2 estate has its own
+ * card count, which is a different number about a different set of bytes; quoting
+ * one as the other is the single most common way these figures got mixed.
+ *
+ * Refresh path: edit the artifact, re-run its producer (scripts/mcp-probe.mjs for
+ * the fleet), commit, deploy. This endpoint has no state of its own.
+ */
+
+import boardSigned from "../../public/signed/gspc-board.signed.json";
+import cardIndex from "../../public/signed/card_index.json";
+import claimsRegister from "../../public/claims-register.json";
+import rwaRegistry from "../../public/interop/rwa-registry.json";
+import mcpRegistry from "../../evidence/mcp-registry.json";
+
+import type { AxisScore } from "./_gspc_types";
+import { AXES_A } from "./_gspc_axes_a";
+import { AXES_B } from "./_gspc_axes_b";
+import { AXES_FIN } from "./_gspc_axes_fin";
+
+/** How a number was obtained. Never collapsed, never inferred from the value. */
+type Kind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
+
+interface Fact {
+  value: unknown;
+  kind: Kind;
+  /** The file (repo-relative) or endpoint the value came from. */
+  source: string;
+  /** A timestamp read OUT OF that artifact. Null when the artifact has none. */
+  as_of: string | null;
+  /** The exact key inside the artifact that as_of was read from. Null with as_of. */
+  as_of_field: string | null;
+  note?: string;
+}
+
+const fact = (
+  value: unknown,
+  kind: Kind,
+  source: string,
+  as_of: string | null,
+  as_of_field: string | null,
+  note?: string,
+): Fact => ({ value, kind, source, as_of, as_of_field, ...(note ? { note } : {}) });
+
+// ── sources, named once ──────────────────────────────────────────────────────
+const SRC_BOARD = "public/signed/gspc-board.signed.json";
+const SRC_CARDS = "public/signed/card_index.json";
+const SRC_CLAIMS = "public/claims-register.json";
+const SRC_RWA = "public/interop/rwa-registry.json";
+const SRC_MCP = "evidence/mcp-registry.json";
+const SRC_AXES = "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)";
+
+// ── board: as_of comes from the payload's own measurement stamp ──────────────
+// This artifact carries no ISO timestamp. Its honest date-of-record is the
+// measurement stamp it was signed over, so that string is quoted verbatim rather
+// than parsed into something that looks more precise than it is.
+const boardTotals = (boardSigned as any).totals ?? {};
+const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
+const boardCustody = (boardSigned as any).custody_attestation ?? {};
+
+// ── live derivation, so snapshot drift is visible rather than silent ─────────
+// /api/gspc computes its totals from these arrays at request time. The signed
+// file above is a snapshot of that computation. If the two ever disagree, the
+// number a lane quotes depends on which surface it happened to read — exactly the
+// failure this endpoint exists to end. So both are computed and compared here,
+// and the disagreement (if any) is published rather than resolved silently.
+const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
+const liveAxisSlots = LIVE_AXES.length;
+const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
+const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;
+const boardAgrees =
+  boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
+
+// ── cards: counted from the index, not read off a header ─────────────────────
+const cards: Array<{ signed?: boolean }> = (cardIndex as any).cards ?? [];
+const cardsCounted = cards.length;
+const cardsSigned = cards.filter((c) => c.signed === true).length;
+const cardsHeaderCount = (cardIndex as any).n_cards ?? null;
+
+// ── claims register: rows tallied by status ──────────────────────────────────
+const claimRows: Array<{ status?: string }> = (claimsRegister as any).claims ?? [];
+const declaredStatuses: string[] = (claimsRegister as any).statuses ?? [];
+const claimsByStatus: Record<string, number> = {};
+for (const s of declaredStatuses) claimsByStatus[s] = 0;
+const undeclaredStatuses: string[] = [];
+for (const row of claimRows) {
+  const s = row.status ?? "(missing)";
+  if (!(s in claimsByStatus)) {
+    claimsByStatus[s] = 0;
+    if (!declaredStatuses.includes(s)) undeclaredStatuses.push(s);
+  }
+  claimsByStatus[s] += 1;
+}
+
+// ── MCP fleet: the probe's own counts, never summed across kinds ─────────────
+const mcpCounts = (mcpRegistry as any).counts ?? {};
+const mcpFinished: string | null = mcpCounts.finished ?? null;
+
+// ── RWA instruments: recounted from the array, then compared to the header ───
+const instruments: Array<{ address_status?: string; status?: string }> =
+  (rwaRegistry as any).instruments ?? [];
+const rwaNamed = instruments.length;
+const rwaAttested = instruments.filter((i) => i.address_status === "mainnet-verified").length;
+const rwaNotLocated = instruments.filter((i) => i.address_status === "not-located").length;
+const rwaUnmeasuredRisk = instruments.filter((i) => i.status === "UNMEASURED").length;
+const rwaHeader = (rwaRegistry as any).counts ?? {};
+const rwaHeaderAgrees =
+  rwaHeader.named === rwaNamed &&
+  rwaHeader.mainnet_verified_and_attested === rwaAttested &&
+  rwaHeader.not_located === rwaNotLocated;
+
+export const onRequestGet: PagesFunction = async () => {
+  const body = {
+    schema: "csoai.live-state/1",
+    title: "CSOAI live state — the numbers a lane may quote",
+
+    contract: {
+      quote_this: "Every count a lane publishes must come from this endpoint, by field name.",
+      not_here_not_established:
+        "If a number is not in this payload, it is NOT established. Do not publish it as a fact, " +
+        "do not carry it forward from an older report, and do not reconcile two stale figures by " +
+        "picking one. Measure it, or say it is unmeasured.",
+      derivation:
+        "Every value below is computed from a committed artifact. No count in this endpoint's " +
+        "source is typed by hand.",
+      freshness:
+        "as_of is read OUT OF the artifact and as_of_field names the key it came from. There is no " +
+        "new Date() in this endpoint. Two calls any interval apart return identical as_of values; " +
+        "if they ever differ, this endpoint has the defect it was built to prevent.",
+      freshness_self_test:
+        "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/a; sleep 5; " +
+        "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/b; diff /tmp/a /tmp/b && echo IDENTICAL",
+      kinds: {
+        measured: "A run happened against a frozen bank or source and was graded.",
+        probed: "Something was contacted and answered, at as_of.",
+        catalogued: "It is listed in a register. Nothing was contacted and nothing was run.",
+        declared: "A slot or claim published so a gap is visible. No run behind it.",
+        unmeasured: "It exists and we have not measured it — stated, not implied.",
+      },
+      kinds_rule:
+        "These are never collapsed and never summed together. A catalogue entry is not a reachable " +
+        "server; a declared slot is not a measurement. Adding across kinds is how a fleet of 1 " +
+        "reachable server got published as 378.",
+    },
+
+    // ── THE BOARD ────────────────────────────────────────────────────────────
+    board: {
+      authority: SRC_BOARD,
+      live_endpoint: "/api/gspc",
+      axis_slots: fact(
+        boardTotals.axes ?? null,
+        "declared",
+        SRC_BOARD + " → totals.axes",
+        boardMeasuredOn,
+        "measured_on.date",
+        "A count of SLOTS on the board. A slot is published so a gap is visible; it is not " +
+          "evidence that anything was measured. Never quote this number alone.",
+      ),
+      measured_axes: fact(
+        boardTotals.measured_axes ?? null,
+        "measured",
+        SRC_BOARD + " → totals.measured_axes",
+        boardMeasuredOn,
+        "measured_on.date",
+        "Slots with a real graded run behind them. This is the number to quote if you quote only one.",
+      ),
+      unmeasured_axes: fact(
+        boardTotals.unmeasured_axes ?? null,
+        "declared",
+        SRC_BOARD + " → totals.unmeasured_axes",
+        boardMeasuredOn,
+        "measured_on.date",
+        "Declared slots with no run behind them. Published so the gap is visible.",
+      ),
+      public_count: fact(
+        boardTotals.public_count ?? null,
+        "declared",
+        SRC_BOARD + " → totals.public_count",
+        boardMeasuredOn,
+        "measured_on.date",
+        "The short sentence. Safe to quote verbatim because it carries both numbers.",
+      ),
+      count_grammar: fact(
+        boardTotals.count_grammar ?? null,
+        "declared",
+        SRC_BOARD + " → totals.count_grammar",
+        boardMeasuredOn,
+        "measured_on.date",
+        "The long form, verbatim from the signed payload. Quote this when a report has room for it.",
+      ),
+      by_family: fact(
+        boardTotals.by_family ?? null,
+        "declared",
+        SRC_BOARD + " → totals.by_family",
+        boardMeasuredOn,
+        "measured_on.date",
+        "The two families are measured by two different instruments and their counts are not " +
+          "interchangeable. A behavioural-family figure is not a board figure.",
+      ),
+      live_derivation_crosscheck: {
+        note:
+          "The signed file is a snapshot of what /api/gspc computes from the axis arrays. Both are " +
+          "computed here so a drift between them is published rather than silently inherited by " +
+          "whichever surface a lane happened to read.",
+        source: SRC_AXES,
+        live_axis_slots: liveAxisSlots,
+        live_measured_axes: liveMeasuredAxes,
+        live_unmeasured_axes: liveUnmeasuredAxes,
+        signed_snapshot_agrees: boardAgrees,
+        on_disagreement:
+          "If signed_snapshot_agrees is false, NEITHER number is quotable until the snapshot is " +
+          "re-derived and re-signed. Do not pick the one you prefer.",
+      },
+      signature: {
+        signer: boardCustody.signer ?? null,
+        alg: boardCustody.alg ?? null,
+        keyid: boardCustody.keyid ?? null,
+        content_id: boardCustody.content_id ?? null,
+        custody: boardCustody.custody ?? null,
+        verify: boardCustody.verify ?? null,
+        sig_input: boardCustody.sig_input ?? null,
+      },
+      caveat:
+        "Measurement, not certification. A score describes a measured run on a frozen split on a " +
+        "date; it does not describe anyone's compliance with anything.",
+    },
+
+    // ── THE MCP FLEET ────────────────────────────────────────────────────────
+    mcp_fleet: {
+      authority: SRC_MCP,
+      live_endpoint: "/api/mcp",
+      produced_by: (mcpRegistry as any).generated_by ?? null,
+      probe_method: (mcpRegistry as any).probe_method ?? null,
+      probe_host: (mcpRegistry as any).probe_host ?? null,
+      reachable_distinct_servers: fact(
+        mcpCounts.reachable_distinct_servers ?? null,
+        "probed",
+        SRC_MCP + " → counts.reachable_distinct_servers",
+        mcpFinished,
+        "counts.finished",
+        "Servers that answered MCP initialize from probe_host. Alias endpoints for the same server " +
+          "are excluded, so this is the honest fleet size.",
+      ),
+      reachable_endpoints: fact(
+        mcpCounts.reachable_endpoints ?? null,
+        "probed",
+        SRC_MCP + " → counts.reachable_endpoints",
+        mcpFinished,
+        "counts.finished",
+        "URLs that answered. Larger than the distinct server count when a server is behind an alias.",
+      ),
+      unreachable_endpoints: fact(
+        mcpCounts.unreachable_endpoints ?? null,
+        "probed",
+        SRC_MCP + " → counts.unreachable_endpoints",
+        mcpFinished,
+        "counts.finished",
+        "Contacted and did not answer. This is a result, not an absence of one.",
+      ),
+      catalogued_not_probed: fact(
+        mcpCounts.catalogued_not_probed ?? null,
+        "catalogued",
+        SRC_MCP + " → counts.catalogued_not_probed",
+        mcpFinished,
+        "counts.finished",
+        "Ids with no published endpoint. NEVER contacted. Adding this to a reachable count is the " +
+          "specific arithmetic that produced the inflated fleet figures.",
+      ),
+      tools_probed: fact(
+        mcpCounts.tools_probed ?? null,
+        "probed",
+        SRC_MCP + " → counts.tools_probed",
+        mcpFinished,
+        "counts.finished",
+        "Derived from the length of a tools array a server actually returned.",
+      ),
+      tools_catalogued_not_probed: fact(
+        mcpCounts.tools_catalogued_not_probed ?? null,
+        "unmeasured",
+        SRC_MCP + " → counts.tools_catalogued_not_probed",
+        mcpFinished,
+        "counts.finished",
+        "Null is the honest value: a catalogue's asserted tool count is never adopted as a probed one.",
+      ),
+      external_catalogues_not_probed: fact(
+        mcpCounts.external_catalogues_not_probed ?? [],
+        "catalogued",
+        SRC_MCP + " → counts.external_catalogues_not_probed",
+        mcpFinished,
+        "counts.finished",
+        "Directory listings in other repos. Each entry states why its number is unverifiable from " +
+          "this machine. These counts are NOT part of any fleet figure and must not be quoted as one.",
+      ),
+      never_sum:
+        "reachable and catalogued-not-probed are different kinds and are never added. A directory " +
+        "listing is not a fleet.",
+    },
+
+    // ── PUBLISHED SIGNED CARDS ───────────────────────────────────────────────
+    signed_cards: {
+      authority: SRC_CARDS,
+      live_endpoint: "/api/cards",
+      count: fact(
+        cardsCounted,
+        "catalogued",
+        SRC_CARDS + " → cards[].length",
+        (cardIndex as any).created ?? null,
+        "created",
+        "Counted from the index array, not read off its n_cards header, so a header that drifts from " +
+          "its own contents cannot become the published number.",
+      ),
+      signed_entries: fact(
+        cardsSigned,
+        "catalogued",
+        SRC_CARDS + " → cards[].filter(signed === true).length",
+        (cardIndex as any).created ?? null,
+        "created",
+        "Entries carrying a signature. signed=true means the card carries a JWS signature under kid.",
+      ),
+      header_agrees: {
+        n_cards_header: cardsHeaderCount,
+        agrees: cardsHeaderCount === cardsCounted,
+        note: "If agrees is false the artifact is internally inconsistent and neither number is quotable.",
+      },
+      packaged_at: fact(
+        (cardIndex as any).packaged_at ?? null,
+        "declared",
+        SRC_CARDS + " → packaged_at",
+        (cardIndex as any).packaged_at ?? null,
+        "packaged_at",
+        "When the bundle was packaged. Later than `created`, and not a measurement date.",
+      ),
+      chain_head: (cardIndex as any).head ?? null,
+      pubkey: (cardIndex as any).pubkey ?? null,
+      how_to_verify: {
+        steps: [
+          "1. Fetch /signed/card_index.json — the index and its chain head.",
+          "2. Fetch /.well-known/did.json — the estate's published keys. Trust anchors HERE, not in the payload.",
+          "3. Verify each card's Ed25519 signature against the kid on its entry.",
+          "4. Re-walk the SHA-256 hash chain and check it terminates at `head`.",
+        ],
+        offline: "The whole path runs offline. It needs neither our servers nor our permission.",
+        guide: "/signed/HOW-TO-VERIFY.md",
+        page: "/gspc-verify",
+      },
+      floor_note:
+        "This count is the verifiable floor: it is what the published index actually contains. " +
+        "Larger figures have circulated for card sets in other repos and for cards never published " +
+        "here — see not_covered. A number that no published index contains is not a card count.",
+    },
+
+    // ── THE CLAIMS REGISTER ──────────────────────────────────────────────────
+    claims_register: {
+      authority: SRC_CLAIMS,
+      page: "/claims-register",
+      corrections_feed: "/api/corrections",
+      rows_total: fact(
+        claimRows.length,
+        "declared",
+        SRC_CLAIMS + " → claims[].length",
+        (claimsRegister as any).generated_at ?? null,
+        "generated_at",
+        "Every material capability claim made on a public surface, with its evidence.",
+      ),
+      rows_by_status: fact(
+        claimsByStatus,
+        "declared",
+        SRC_CLAIMS + " → claims[] tallied by .status",
+        (claimsRegister as any).generated_at ?? null,
+        "generated_at",
+        "Tallied from the rows. A status declared in the register's vocabulary but used by no row " +
+          "reports 0 rather than being omitted, so the absence is visible.",
+      ),
+      status_vocabulary: (claimsRegister as any).doctrine ?? null,
+      undeclared_statuses_found: undeclaredStatuses,
+      undeclared_note:
+        "Non-empty means a row uses a status the register never declared — an artifact defect, not a " +
+        "new category. Fix the artifact; do not invent a meaning for it here.",
+      how_to_challenge: (claimsRegister as any).how_to_challenge ?? null,
+    },
+
+    // ── RWA INSTRUMENTS ──────────────────────────────────────────────────────
+    // Included because this is a live disagreement: 6 and 19 have both been
+    // published as "the instrument count". Neither is what the registry says.
+    rwa_instruments: {
+      authority: SRC_RWA,
+      chain: (rwaRegistry as any).chain ?? null,
+      named: fact(
+        rwaNamed,
+        "catalogued",
+        SRC_RWA + " → instruments[].length",
+        null,
+        null,
+        "Instruments the registry NAMES. Naming is not attesting and is not measuring.",
+      ),
+      mainnet_verified_and_attested: fact(
+        rwaAttested,
+        "probed",
+        SRC_RWA + " → instruments[].filter(address_status === 'mainnet-verified').length",
+        null,
+        null,
+        "Issuer accounts read from XRPL MAINNET with a locatable public r-address. This is a read of " +
+          "on-chain CONTROL FACTS only.",
+      ),
+      not_located: fact(
+        rwaNotLocated,
+        "unmeasured",
+        SRC_RWA + " → instruments[].filter(address_status === 'not-located').length",
+        null,
+        null,
+        "No independently confirmable public r-address. Accounted for, never attested. This gap is " +
+          "SCOPE, not staleness.",
+      ),
+      risk_status: fact(
+        { UNMEASURED: rwaUnmeasuredRisk, of: rwaNamed },
+        "unmeasured",
+        SRC_RWA + " → instruments[].status",
+        null,
+        null,
+        "What the control facts imply about any instrument's risk, solvency or creditworthiness is " +
+          "UNMEASURED and needs counsel. Not a rating, not advice, not an endorsement.",
+      ),
+      no_timestamp_note:
+        "This artifact carries NO timestamp of any kind, so every as_of above is null and " +
+        "as_of_field is null with it. A neighbouring file's date is not this file's date, and the " +
+        "deploy time is nobody's measurement time. Unknown stays null.",
+      header_agrees: {
+        header: rwaHeader,
+        agrees: rwaHeaderAgrees,
+        note: "The header block is recomputed from the instruments array rather than trusted.",
+      },
+      rail_honesty: (rwaRegistry as any).honesty ?? null,
+    },
+
+    // ── BOUNDED AUTHORITY ────────────────────────────────────────────────────
+    not_covered: {
+      rule:
+        "This endpoint speaks ONLY for the committed artifacts named above, in this repo " +
+        "(CSOAI-ORG/councilof-ai). For anything below, /api/state is silent — and silence here is " +
+        "not permission to quote a figure from somewhere else as if it were.",
+      items: [
+        {
+          subject: "csoai-static-deploy2 (the separate static estate)",
+          why_not:
+            "A different repo with its own card set and its own card count, which is a DIFFERENT " +
+            "NUMBER about a different set of bytes. Conflating it with signed_cards.count above is " +
+            "the single most common source of the competing card figures.",
+          where: "That estate's own signed index. Quote it as that estate's number, never as this one's.",
+        },
+        {
+          subject: "gspc-os vendored server directories",
+          why_not:
+            "A private, pod-only checkout. Its server directories have never been contacted from any " +
+            "machine that publishes this endpoint, so its size is a directory listing, not a fleet.",
+          where:
+            "Probe with scripts/mcp-stdio-probe.py on a host where the repo exists, commit the output, " +
+            "then it becomes quotable — as a probed count, on its own line.",
+        },
+        {
+          subject: "arena / leaderboard axis counts",
+          why_not:
+            "The arena measures a different set of axes with a different instrument. Its figures are " +
+            "not board figures and were mistaken for contradictions of the board before now.",
+          where: "/api/arena surfaces, labelled as arena figures.",
+        },
+        {
+          subject: "benchmark-results/ working files in coai-dashboard",
+          why_not:
+            "In-flight run state, not published evidence. Nothing there has been signed or gated, and " +
+            "an in-lane honesty probe is explicitly not board-quotable.",
+          where: "Only after a result is promoted into a signed artifact in this repo.",
+        },
+        {
+          subject: "MEOK / SOVOS / sov34 model figures",
+          why_not:
+            "A different estate with a different boundary. CSOAI measures; it does not host that model. " +
+            "Its numbers never belong in a CSOAI count.",
+          where: "That estate's own surfaces.",
+        },
+        {
+          subject: "the csoai.org static site",
+          why_not: "A separate deploy with separate content and its own figures.",
+          where: "That site's own artifacts.",
+        },
+        {
+          subject: "traffic, users, customers, revenue",
+          why_not:
+            "Not measured and not published. There is no counter behind these anywhere in this repo, " +
+            "so any figure would be invented.",
+          where: "Nowhere. UNPUBLISHED is the honest answer, and it is the whole answer.",
+        },
+      ],
+    },
+
+    doctrine: {
+      instruction_for_lanes: "council-os/QUOTING-NUMBERS.md",
+      one_line:
+        "Quote /api/state by field name. Never assert a count in a report. If it is not here, it is " +
+        "not established.",
+    },
+  };
+
+  return new Response(JSON.stringify(body, null, 2), {
+    status: 200,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      // Short cache only. The payload is deterministic for a given deploy, so a
+      // cache cannot make it stale in the way a serve-time stamp could.
+      "cache-control": "public, max-age=300",
+      "access-control-allow-origin": "*",
+    },
+  });
+};

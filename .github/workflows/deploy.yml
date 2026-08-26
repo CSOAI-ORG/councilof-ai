@@ -102,7 +102,7 @@ jobs:
             fi
             echo "ok dist/client/$p ($(wc -c < dist/client/$p) bytes)"
           done
-          for fn in functions/api/receipts/latest.ts functions/api/east-west-bench.ts functions/api/evidence-pack.ts functions/api/cards.ts functions/api/axis-register.ts functions/api/auth/[[path]].ts functions/api/dashboard/stats.ts functions/api/_authCrypto.ts functions/api/challenge.ts functions/api/wave-dashboard.ts functions/api/counters.ts functions/api/eunomia-data.ts functions/api/_chatLobby.ts functions/enterprise.ts functions/enterprises.ts functions/chat.ts functions/pricing.ts; do
+          for fn in functions/api/receipts/latest.ts functions/api/east-west-bench.ts functions/api/evidence-pack.ts functions/api/cards.ts functions/api/axis-register.ts functions/api/auth/[[path]].ts functions/api/dashboard/stats.ts functions/api/_authCrypto.ts functions/api/challenge.ts functions/api/wave-dashboard.ts functions/api/counters.ts functions/api/state.ts functions/api/eunomia-data.ts functions/api/_chatLobby.ts functions/enterprise.ts functions/enterprises.ts functions/chat.ts functions/pricing.ts; do
             test -f "$fn" || (echo "missing $fn" && exit 1)
           done
 
