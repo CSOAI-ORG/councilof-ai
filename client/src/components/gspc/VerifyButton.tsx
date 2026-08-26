@@ -122,11 +122,7 @@ export function VerifyButton() {
           >
             {result.ok ? "✓ " : "✗ "}
             <strong>{result.label}</strong>{" "}
-<<<<<<< HEAD
             <span className={`font-mono text-[12px] ${result.ok ? "text-emerald-100/50" : "text-red-200/60"}`}>
-=======
-            <span className="font-mono text-[12px] text-emerald-100/60">
->>>>>>> lane/ux-journeys-pass
               · sig_alg: {result.sig_alg}
             </span>
           </p>
