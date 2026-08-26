@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   DASHBOARD_TABS, isDashboardTab, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, routesIn, tabById,
 } from "./tabs";
+import { PRIMARY_PATHS } from "../../data/library-ia";
 
 describe("Council OS tabs", () => {
   it("keeps Home as a native desktop, not an /os iframe", () => {
@@ -150,5 +151,69 @@ describe("Council OS tabs", () => {
     expect(ids).toContain("library");
     expect(ids).toContain("workbench");
     expect(ids).toEqual(LOBBY_TABS.filter(isDashboardTab).map((t) => t.id));
+  });
+});
+
+describe("every OS destination is a CURRENT page — the archived-banner trap", () => {
+  /**
+   * ArchivedBanner mounts globally and renders on any path not in PRIMARY_PATHS,
+   * telling the reader (and every answer engine) that the page is a dated
+   * reference superseded by something else. A Council OS rail tab or Home tile
+   * pointing at such a path therefore promotes a destination that denies its own
+   * currency the moment it loads.
+   *
+   * A sweep on 2026-08-26 found NINE live OS destinations in exactly that state:
+   * /readiness-assessment /layer0 /network /hive /intel /benchmark-quality
+   * /mcp-fleet /mcps /feed. This test is the guard, so the tenth cannot be added
+   * quietly: adding a tab without registering its path fails right here.
+   */
+  const NOT_LIBRARIED_PREFIX =
+    /^\/(404|login|signup|register|admin|dashboard|api-keys|bulk-import|settings|me\b|my-|ab-testing|widget|egg|hatch|enter|onboard|welcome|start|analytics|outreach|marketing|reports?|brief|public|all|region-settings|regional-analytics|government-dashboard|government-portal|old-home|landing|legacy|home-v[0-9]|stripe|prosperity|maternal-covenant|covenant|sov3|sov-town|sovereign|gods-eye|horus|dragonfly|four-wings|opengridworks|certification|certificate|ceasai|get-certified|pricing|plans|payg|billing|roi)/;
+
+  const wouldShowBanner = (p: string) => !PRIMARY_PATHS.has(p) && !NOT_LIBRARIED_PREFIX.test(p);
+
+  it("no rail tab opens a page flagged archived", () => {
+    const bad = LOBBY_TABS.map((t) => t.path).filter(Boolean).filter(wouldShowBanner);
+    expect(bad).toEqual([]);
+  });
+
+  it("no Home-desktop route opens a page flagged archived", () => {
+    const bad = LOBBY_ROUTES.map((r) => r.path).filter(wouldShowBanner);
+    expect(bad).toEqual([]);
+  });
+
+  it("a native pane has no URL, so it cannot be flagged at all", () => {
+    for (const t of LOBBY_TABS.filter((x) => x.kind === "native" || x.kind === "local")) {
+      if (t.id === "board" || t.id === "verify") continue; // these frame a real page too
+      expect(t.path).toBe("");
+    }
+  });
+});
+
+describe("the two panes added by the OS-tools sweep", () => {
+  it("registers Signed cards and Estate state as native panes with no standalone URL", () => {
+    for (const id of ["cards", "state"] as const) {
+      const t = LOBBY_TABS.find((x) => x.id === id)!;
+      expect(t).toBeDefined();
+      expect(t.kind).toBe("native");
+      expect(t.path).toBe("");
+    }
+  });
+
+  it("routes their names to them from the chat bar", () => {
+    expect(matchTab("show the signed cards")?.id).toBe("cards");
+    expect(matchTab("open the card index")?.id).toBe("cards");
+    expect(matchTab("show the estate state")?.id).toBe("state");
+  });
+
+  it("keeps them out of the DSH sidebar, which lists only destinations with a URL", () => {
+    const ids = DASHBOARD_TABS.map((t) => t.id);
+    expect(ids).not.toContain("cards");
+    expect(ids).not.toContain("state");
+  });
+
+  it("gives the newly-opened pages a real route to open", () => {
+    expect(matchRoute("show rating the raters")?.path).toBe("/rating-the-raters");
+    expect(matchRoute("open the first-fine watch")?.path).toBe("/first-fine-watch");
   });
 });

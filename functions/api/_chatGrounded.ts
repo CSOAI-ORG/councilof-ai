@@ -18,7 +18,15 @@ export const onRequestOptions: PagesFunction = async () =>
 
 async function grounded(q: string, origin: string): Promise<string | null> {
   const t = q.toLowerCase().trim();
-  const refused = claimGuardRefuse(q);
+  // ClaimGuard needs the LIVE board to know what is true, so the board is loaded
+  // before the guard runs rather than after it. The old order let the guard fire
+  // from a hardcoded count with no board in hand — which is how it came to refuse
+  // "15 axes carry a measurement" while the board published exactly that.
+  const board = await loadBoard(origin);
+  const axes = board.axes;
+  const canon = boardCanon(board);
+
+  const refused = claimGuardRefuse(q, canon);
   if (refused) return refused;
 
   const door = lobbyGround(q);
@@ -32,10 +40,6 @@ async function grounded(q: string, origin: string): Promise<string | null> {
         `_Classified by a deterministic rule, not by a model._`;
     }
   }
-
-  const board = await loadBoard(origin);
-  const axes = board.axes;
-  const canon = boardCanon(board);
 
   if (/\b(pricing|plans?|how much|grade cost|is (it|verify|verification) free)\b/i.test(q)) {
     return `No SaaS tiers. Measurement and verification are free forever. See GET /api/gspc, /gspc-verify/, /assess/, or the lobby door /?lobby=measured&task=pricing-overview.\n\n_Grounded in the published free rail, not by a model._`;
@@ -105,17 +109,22 @@ async function grounded(q: string, origin: string): Promise<string | null> {
     (axes.length || canon.quotable)
   ) {
     const mAxes = canon.measuredAxes;
+    // Both numbers travel, in the API's own published grammar. The previous
+    // wording ("N quotable axes. N measured of N") printed the measured count
+    // twice and dropped the declared slots entirely.
     return (
-      `The GSPC board has **${canon.quotable}** quotable axes. ` +
-      `**${canon.measured} measured of ${canon.quotable}**` +
-      (canon.publicCount ? ` (${canon.publicCount})` : "") +
-      `.\n\n` +
-      `Cite live totals.public_count — never invent 22 axes. Jail is MEASURED; a TIE is not a separated leader.\n\n` +
+      `**${canon.publicCount}**` +
+      (canon.unmeasured !== null
+        ? ` — ${canon.unmeasured} of the slots are declared with no run behind them.`
+        : ".") +
+      `\n\n` +
+      (canon.countGrammar ? `${canon.countGrammar}\n\n` : "") +
       `${canon.jailNote}\n\n` +
-      `The ${mAxes.length} measured axes:\n` +
-      mAxes.map((a: any) => `- **${a.axis}** ${Number(a.accuracy).toFixed(3)} (n=${a.n}` +
-        (a.separation ? `, ${a.separation}` : "") + `)`).join("\n") +
-      `\n\n_Grounded in GET /api/gspc totals (measured_axes / public_count), not by a model._`
+      `The ${mAxes.length} rows that carry a measurement:\n` +
+      mAxes.map((a: any) => `- **${a.axis}** ` +
+        (typeof a.accuracy === "number" ? Number(a.accuracy).toFixed(3) : "no accuracy published") +
+        ` (n=${a.n}` + (a.separation ? `, ${a.separation}` : "") + `)`).join("\n") +
+      `\n\n_Grounded in GET /api/gspc totals (axes / measured_axes / unmeasured_axes / public_count), not by a model._`
     );
   }
 
@@ -137,7 +146,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   if (/\b(who are you|what (is|are|s) (this|you|council|csoai|the council of ai)|what do you do|tell me about (council|csoai|this|you)|about (council|csoai|you)|explain (council|csoai|this)|are you (an? )?(ai|bot|chatbot))\b/i.test(t)) {
     return (
       `The **Council of AI** is an independent measurement instrument: it measures how AI systems behave against the rules that govern them, signs each result with Ed25519, and publishes what it cannot yet measure. It does **not** certify and issues no conformity mark.\n\n` +
-      `The GSPC board carries **${canon.measured} measured of ${canon.quotable}** quotable axes (${openNames.slice(0, 6).join(", ")}${openNames.length > 6 ? ", ..." : ""}). Verification is free forever; a grade is never sold.\n\n` +
+      `The GSPC board reads **${canon.publicCount}** (${openNames.slice(0, 6).join(", ")}${openNames.length > 6 ? ", ..." : ""}). Verification is free forever; a grade is never sold.\n\n` +
       `Ask me a named axis, the method, Article 5, or how to get measured.\n\n_Grounded in the published board, not by a model._`
     );
   }
@@ -145,7 +154,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
     return (
       `Here's what I can answer from published facts:\n\n` +
       `- **A named board axis** - its measured accuracy, Wilson interval and n (or UNMEASURED, honestly).\n` +
-      `- **The board** - how many axes are measured of the quotable set.\n` +
+      `- **The board** - how many slots it carries, how many of them are measured, and how many are declared with no run.\n` +
       `- **EU AI Act Article 5** - the prohibited practices, by a deterministic rule.\n` +
       `- **The measurement method** - unparsed counted wrong, n>=30 to quote, three outcomes.\n` +
       `- **Pricing** - no SaaS tiers; verification is free forever.\n` +
@@ -178,11 +187,8 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   const reply = (answer: string, signature: string, state: string, extra: Record<string, unknown> = {}) =>
     Response.json({ answer, reply: answer, signature, state, model, message: { role: "assistant", content: answer }, ...extra }, { headers: CORS });
 
-  // ClaimGuard: refuse false count claims before LIVE / grounded
-  const guarded = claimGuardRefuse(question);
-  if (guarded) return reply(guarded, "claimguard - refused false count claim", "refused");
-
-  // Prefer published board canon over SOV LIVE (sales-blocker fix)
+  // ClaimGuard runs INSIDE grounded(), where the live board is in hand. It used
+  // to run here as well, with no board — so it answered from a frozen literal.
   const g = await grounded(question, origin);
   if (g) return reply(g, "grounded in published measurement - deterministic - recomputable", "grounded");
 

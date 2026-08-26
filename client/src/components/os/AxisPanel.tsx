@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  countOf, fetchAxes, hasInterval, publicCaption, quotable, wilson,
+  countOf, fetchAxes, hasInterval, hasMacroF1, publicCaption, quotable, wilson,
   type Axis, type AxisStatus, type InLaneAxis,
 } from "@/lib/gspcAxes";
 
@@ -23,7 +23,8 @@ const TONE: Record<AxisStatus, string> = {
 function AxisCard({ a }: { a: Axis }) {
   const scored = quotable(a);
   const withCI = hasInterval(a);
-  const [lo, hi] = scored ? wilson(a.accuracy, a.n) : [0, 0];
+  // `scored` guarantees a.accuracy is a real number — see quotable() in gspcAxes.
+  const [lo, hi] = scored ? wilson(a.accuracy as number, a.n) : [0, 0];
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-emerald-300 hover:shadow-sm">
       <div className="flex items-start justify-between gap-2">
@@ -39,11 +40,12 @@ function AxisCard({ a }: { a: Axis }) {
       {scored ? (
         <div className="mt-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold tabular-nums text-emerald-600">{a.accuracy.toFixed(3)}</span>
+            <span className="text-2xl font-bold tabular-nums text-emerald-600">{(a.accuracy as number).toFixed(3)}</span>
             <span className="text-[11px] text-slate-400">accuracy · n={a.n}</span>
           </div>
           <div className="mt-1 font-mono text-[11px] text-slate-500">
-            macro F1 {a.macro_f1.toFixed(3)}
+            {/* No macro F1 published (jail, swarm) prints nothing — never 0.000. */}
+            {hasMacroF1(a) ? `macro F1 ${(a.macro_f1 as number).toFixed(3)}` : "no macro F1 published"}
             {withCI
               ? ` · Wilson 95% [${lo.toFixed(3)}, ${hi.toFixed(3)}]`
               : " · n<30 usable — no interval"}
@@ -51,9 +53,18 @@ function AxisCard({ a }: { a: Axis }) {
         </div>
       ) : (
         <div className="mt-3">
-          <div className="text-sm font-medium text-slate-400">No score — not earned</div>
+          {/* Two different absences, and they are not the same fact. An axis with
+              a bank but no accuracy (provenance-controls: MEASURED, n=6, a mainnet
+              read, not a model comparison) is not an axis with no bank at all. */}
+          <div className="text-sm font-medium text-slate-400">
+            {a.status === "MEASURED" && a.n > 0 ? "Measured, but no accuracy published" : "No score — not earned"}
+          </div>
           <div className="mt-0.5 text-[11px] text-slate-400">
-            {a.n ? `Item bank n=${a.n}` : "No item bank yet (n=0)"}
+            {a.n
+              ? a.status === "MEASURED"
+                ? `Item bank n=${a.n} — this axis publishes no accuracy, so none is shown`
+                : `Item bank n=${a.n}`
+              : "No item bank yet (n=0)"}
           </div>
         </div>
       )}
@@ -111,7 +122,7 @@ export default function AxisPanel() {
                 <p className="mt-1 text-[12px] text-slate-500">{r.bench || r.task}</p>
                 {r.n > 0 && (
                   <p className="mt-2 font-mono text-[13px] tabular-nums text-slate-700">
-                    {r.accuracy.toFixed(3)} · n={r.n}
+                    {typeof r.accuracy === "number" ? `${r.accuracy.toFixed(3)} · ` : "no accuracy published · "}n={r.n}
                   </p>
                 )}
               </li>
