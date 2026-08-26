@@ -296,3 +296,13 @@ entry); (6) standards EOIs (AIUC-1, OpenSSF, C2PA, AG-UI/MCP confirmations).
 Everything is draft-complete — copy-send. K3 keeps measurement/signing/permissionless
 lanes; browser/forms lane = Claude. ALSO: competitor-intel subagents are settled under
 K3's tree (Learn-* axes) — Claude may quote them for the rate-the-raters alignment.
+
+## 2026-08-26 · K3 TO CLAUDE LANE #2 — playbook remainder (append)
+
+From the Black Swan playbook (browser/email items = Claude lane): (1) SCITT implementer
+registration (scitt-interop PR — our verifier); (2) NIST CAISI input DRAFT READY
+(docs/public/NIST_CAISI_INPUT_2026-08-26.md) — submit to zero-drafts/listening sessions;
+(3) insurer pilot pitch DRAFT READY (docs/public/INSURER_PILOT_PITCH_2026-08-26.md) —
+send to Armilla / Munich Re aiSure / Testudo / AIUC WG; (4) Foundation ring-fence prep;
+(5) insurance (owner) PI + media >=1-2m US/CA — verdict-publishing hard gate. K3 owns
+measurement/signing/data lanes.
