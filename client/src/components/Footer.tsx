@@ -88,7 +88,6 @@ export function Footer() {
         { name: 'Cookie Policy', href: '/cookie-policy' },
         { name: 'Data Processing (GDPR)', href: '/dpa' },
         { name: 'Service Level Agreement', href: '/sla' },
-        { name: 'Insurance Certificate (on request)', href: 'mailto:nicholas@csoai.org?subject=Certificate%20of%20Insurance%20request', external: true },
       ],
     },
   ];
