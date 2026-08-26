@@ -91,7 +91,7 @@ export function DeckHero({
                 href={a.href}
                 className={
                   a.primary
-                    ? "inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
+                    ? "inline-flex min-h-[44px] items-center rounded-xl bg-emerald-700 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-800"
                     : "inline-flex items-center rounded-xl border-2 border-white/40 bg-white/5 px-6 py-3 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
                 }
               >

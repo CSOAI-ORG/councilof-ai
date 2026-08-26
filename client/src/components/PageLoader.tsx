@@ -87,7 +87,7 @@ export function SectionLoader({ className = "" }: { className?: string }) {
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        className="w-8 h-8 border-3 border-emerald-500 border-t-transparent rounded-full"
+        className="w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full"
       />
     </div>
   );

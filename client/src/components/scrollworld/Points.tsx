@@ -3,7 +3,7 @@ import type { Point, Slide } from "./types";
 /* ————— benefit-led bullets: PAIN · BENEFIT · USP ————— */
 const TAG_LABEL: Record<Point["tag"], string> = { pain: "Pain", benefit: "You get", usp: "Only here" };
 const TAG_LIGHT: Record<Point["tag"], string> = {
-  pain: "bg-rose-50 text-rose-600 ring-1 ring-rose-100",
+  pain: "bg-rose-50 text-rose-700 ring-1 ring-rose-200",
   benefit: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100",
   usp: "bg-amber-50 text-amber-700 ring-1 ring-amber-100",
 };
@@ -33,7 +33,7 @@ export function Cta({ slide }: { slide: Slide }) {
   return (
     <a
       href={slide.href}
-      className="mt-7 inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
+      className="mt-7 inline-flex min-h-[44px] items-center rounded-xl bg-emerald-700 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-800"
     >
       {slide.cta}
     </a>

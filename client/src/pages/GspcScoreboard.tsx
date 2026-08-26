@@ -109,26 +109,26 @@ function ArenaEloPanel() {
         </div>
         <button
           onClick={verifySigned}
-          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700"
+          className="inline-flex min-h-[44px] items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-800"
           data-testid="verify-arena-elo"
         >
           {verifyState === "checking" ? "Verifying…" : "Verify the signature"}
         </button>
       </div>
       {verifyState === "ok" && (
-        <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700" data-testid="verify-arena-elo-ok">
+        <p role="status" className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800" data-testid="verify-arena-elo-ok">
           ✓ Signature verified — this leaderboard matches the signed body.
         </p>
       )}
       {verifyState === "bad" && (
-        <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700" data-testid="verify-arena-elo-bad">
+        <p role="alert" className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700" data-testid="verify-arena-elo-bad">
           ✗ Signature does NOT verify — content may have been altered.
         </p>
       )}
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-emerald-600/10 pt-4">
         <a
           href="/legal/licensing"
-          className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-700"
+          className="inline-flex min-h-[44px] items-center rounded-xl bg-emerald-700 px-4 py-2 text-sm font-bold text-white hover:bg-emerald-800"
           data-testid="researcher-access"
         >
           Researcher access — verified rankings
@@ -139,29 +139,32 @@ function ArenaEloPanel() {
         >
           Enterprise data license
         </a>
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-gray-600">
           Free access is permanent and unconditional (researchers, journalists, fact-checkers) —
           see the licensing tiers for the license legs. Pricing lives on the legal surface.
         </span>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        <a href="/compliance/eu-ai-act" className="rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50">EU AI Act pack</a>
-        <a href="/compliance/nist-ai-rmf" className="rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50">NIST RMF pack</a>
-        <a href="/compliance/uk-ai-bill" className="rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50">UK AI Bill pack</a>
-        <a href="/compliance/canada-ai-act" className="rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50">Canada AI Act pack</a>
+        <Link href="/compliance/eu-ai-act" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">EU AI Act pack</Link>
+        <Link href="/compliance/nist-ai-rmf" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">NIST RMF pack</Link>
+        <Link href="/compliance/uk-ai-bill" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">UK AI Bill pack</Link>
+        <Link href="/compliance/canada-ai-act" className="inline-flex min-h-[44px] items-center rounded-full border border-emerald-600/20 px-3 py-1 text-xs text-emerald-700 hover:bg-emerald-50 sm:min-h-0">Canada AI Act pack</Link>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        <button onClick={() => setAxis("overall")} className={`rounded-full px-3 py-1 text-xs font-semibold ${axis === "overall" ? "bg-emerald-600 text-white" : "border border-emerald-600/20 text-emerald-700 hover:bg-emerald-50"}`}>
+        <button type="button" aria-pressed={axis === "overall"} onClick={() => setAxis("overall")} className={`inline-flex min-h-[44px] items-center rounded-full px-3 py-1 text-xs font-semibold sm:min-h-0 ${axis === "overall" ? "bg-emerald-700 text-white" : "border border-emerald-600/20 text-emerald-700 hover:bg-emerald-50"}`}>
           Overall
         </button>
         {(elo?.axes || []).map((a: string) => (
-          <button key={a} onClick={() => setAxis(a)} className={`rounded-full px-3 py-1 text-xs font-semibold ${axis === a ? "bg-emerald-600 text-white" : "border border-emerald-600/20 text-emerald-700 hover:bg-emerald-50"}`}>
+          <button type="button" key={a} aria-pressed={axis === a} onClick={() => setAxis(a)} className={`inline-flex min-h-[44px] items-center rounded-full px-3 py-1 text-xs font-semibold sm:min-h-0 ${axis === a ? "bg-emerald-700 text-white" : "border border-emerald-600/20 text-emerald-700 hover:bg-emerald-50"}`}>
             {a}
           </button>
         ))}
       </div>
       <div className="mt-4 overflow-x-auto">
-        <table className="w-full text-sm">
+        {/* min-w so the wrapper actually SCROLLS on a phone. `w-full` alone made
+            the wrapper never overflow and crushed every cell to one character
+            per line at 375px ("Ga\nme\ns"). */}
+        <table className="w-full min-w-[38rem] text-sm">
           <thead>
             <tr className="border-b">
               <th className="py-2 px-3 text-left font-semibold">Model</th>
@@ -174,11 +177,11 @@ function ArenaEloPanel() {
           <tbody>
             {(rows as any[]).slice(0, 12).map((r: any) => (
               <tr key={r.model} className="border-b border-gray-100">
-                <td className="py-2 px-3 font-medium text-gray-800">{r.model}</td>
+                <td className="py-2 px-3 font-medium whitespace-nowrap text-gray-800">{r.model}</td>
                 <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-900">{r.elo}</td>
-                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-500">{r.games}</td>
-                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-500">{r.winrate}</td>
-                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-500">
+                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-600">{r.games}</td>
+                <td className="py-2 px-3 text-right font-mono tabular-nums text-gray-600">{r.winrate}</td>
+                <td className="py-2 px-3 text-right font-mono tabular-nums whitespace-nowrap text-gray-600">
                   {r.ci ? `${r.ci[0]}–${r.ci[1]}` : "—"}
                 </td>
               </tr>
@@ -286,7 +289,7 @@ export default function GspcScoreboard() {
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(DATASET_LD) }} />
       <div className="mx-auto max-w-5xl px-6 py-14">
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
           Live from GET /api/gspc — recompute anything, free
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
@@ -296,7 +299,7 @@ export default function GspcScoreboard() {
           <strong>statistically indistinguishable</strong> (McNemar p≥0.05) — ties are never counted
           as wins. Empty cells stay empty.
         </p>
-        <p className="mt-2 max-w-3xl text-sm text-gray-500" data-testid="board-count-grammar">
+        <p className="mt-2 max-w-3xl text-sm text-gray-600" data-testid="board-count-grammar">
           {board.count_grammar}
           {!board.live && (
             <>
@@ -311,7 +314,7 @@ export default function GspcScoreboard() {
         </p>
 
         {err && <p className="mt-8 text-red-600">Board fetch failed: {err} — the API at /api/gspc is the source of truth.</p>}
-        {!data && !err && <p className="mt-8 text-gray-500">Loading the live board…</p>}
+        {!data && !err && <p className="mt-8 text-gray-600">Loading the live board…</p>}
 
         {isFinancialAxis && (
           <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
@@ -319,7 +322,7 @@ export default function GspcScoreboard() {
               Financial axis · {board.public_count}
             </p>
             <h2 className="mt-1 text-2xl font-black text-gray-900">{finAxis?.name ?? wantAxis}</h2>
-            <p className="mt-1 font-mono text-xs text-gray-400">/gspc/{wantAxis}</p>
+            <p className="mt-1 font-mono text-xs text-gray-600">/gspc/{wantAxis}</p>
             {finAxis ? (
               <>
                 <p className="mt-3">
@@ -340,17 +343,17 @@ export default function GspcScoreboard() {
                     {finAxis.measured_count} instruments measured · deterministic on-chain control facts.
                   </p>
                 )}
-                {finAxis.data && <p className="mt-2 text-xs text-gray-500"><strong>Data.</strong> {finAxis.data}</p>}
-                {finAxis.bank_status && <p className="mt-2 text-xs text-gray-500"><strong>Input bank.</strong> {finAxis.bank_status}</p>}
-                {finAxis.declared_as && <p className="mt-2 text-xs text-gray-500">{finAxis.declared_as}</p>}
-                {finAxis.note && <p className="mt-2 text-xs italic text-gray-400">{finAxis.note}</p>}
+                {finAxis.data && <p className="mt-2 text-xs text-gray-600"><strong>Data.</strong> {finAxis.data}</p>}
+                {finAxis.bank_status && <p className="mt-2 text-xs text-gray-600"><strong>Input bank.</strong> {finAxis.bank_status}</p>}
+                {finAxis.declared_as && <p className="mt-2 text-xs text-gray-600">{finAxis.declared_as}</p>}
+                {finAxis.note && <p className="mt-2 text-xs italic text-gray-600">{finAxis.note}</p>}
 
                 {finAxis.id === "provenance-controls" && finRun && Array.isArray(finRun.measured) && (
                   <div className="mt-4 overflow-x-auto rounded-lg border border-emerald-600/10 bg-white p-4">
                     <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
                       On-chain control facts — signed run
                     </p>
-                    <p className="mt-1 text-xs text-gray-500">{finRun.network}. {finRun.honesty}</p>
+                    <p className="mt-1 text-xs text-gray-600">{finRun.network}. {finRun.honesty}</p>
                     <ul className="mt-3 grid gap-2 sm:grid-cols-2">
                       {finRun.measured.map((m: any) => (
                         <li key={m.instrument} className="rounded-lg border border-gray-100 p-3 text-sm">
@@ -360,20 +363,20 @@ export default function GspcScoreboard() {
                               tx {m.devnet_tx.slice(0, 8)}…
                             </a>
                           </div>
-                          <p className="mt-1 font-mono text-[11px] text-gray-500">
+                          <p className="mt-1 font-mono text-[11px] text-gray-600">
                             allowlisting {m.control_facts.facts.allowlisting_enforced ? "enforced" : "none"} · freeze {m.control_facts.facts.issuer_can_freeze ? "yes" : "no"} · domain {m.control_facts.facts.identity_domain_declared ? "declared" : "none"}
                           </p>
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-2 text-[11px] text-gray-400">
+                    <p className="mt-2 text-[11px] text-gray-600">
                       Facts only. Risk verdicts remain UNMEASURED pending counsel. Not ratings, advice, or endorsements.
                     </p>
                   </div>
                 )}
               </>
             ) : (
-              <p className="mt-3 text-sm text-gray-500">Loading the financial-axes registry…</p>
+              <p className="mt-3 text-sm text-gray-600">Loading the financial-axes registry…</p>
             )}
             <p className="mt-4 flex flex-wrap gap-4 text-sm">
               <Link className="font-semibold text-emerald-700 underline" href="/financial-axes">
@@ -419,42 +422,46 @@ export default function GspcScoreboard() {
 
         {data && (
           <div className="mt-8 overflow-x-auto rounded-xl border border-emerald-600/15 bg-white shadow-sm">
-            <table className="w-full text-sm">
+            {/* See note on the Elo table above: without a min-width the board
+                crushed at 375px and rendered n=237 as "23 / 7" on two lines. */}
+            <table className="w-full min-w-[46rem] text-sm">
               <thead>
                 <tr className="border-b bg-emerald-50/60 text-left text-gray-700">
-                  <th className="p-3">Axis</th>
-                  <th className="p-3">Bench</th>
-                  <th className="p-3">n</th>
-                  <th className="p-3">Leader accuracy</th>
-                  <th className="p-3">95% CI</th>
-                  <th className="p-3">Separation</th>
+                  <th className="p-3 whitespace-nowrap">Axis</th>
+                  <th className="p-3 whitespace-nowrap">Bench</th>
+                  <th className="p-3 whitespace-nowrap">n</th>
+                  <th className="p-3 whitespace-nowrap">Leader accuracy</th>
+                  <th className="p-3 whitespace-nowrap">95% CI</th>
+                  <th className="p-3 whitespace-nowrap">Separation</th>
                 </tr>
               </thead>
               <tbody>
                 {(data.axes as Axis[]).map((a) => (
                   <tr key={a.axis} className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
-                    <td className="p-3 font-semibold text-gray-900">
-                      <Link href={`/gspc/${a.axis}`} className="hover:underline">{a.axis}</Link>
+                    <td className="p-3 font-semibold whitespace-nowrap text-gray-900">
+                      {/* -m-3 p-3 makes the link fill its cell, so the touch
+                          target is the whole row cell rather than a 17px line. */}
+                      <Link href={`/gspc/${a.axis}`} className="-m-3 block p-3 hover:underline">{a.axis}</Link>
                     </td>
-                    <td className="p-3 text-gray-600">{a.bench}</td>
-                    <td className="p-3 font-mono">{a.n}</td>
-                    <td className="p-3 font-mono">
+                    <td className="p-3 whitespace-nowrap text-gray-600">{a.bench}</td>
+                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{a.n}</td>
+                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">
                       {(a as any).accuracy_is ? "≥" : ""}{(a.accuracy * 100).toFixed(1)}%
                       {(a as any).accuracy_is && (
-                        <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400" title={(a as any).accuracy_is}>
+                        <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-600" title={(a as any).accuracy_is}>
                           lower bound
                         </span>
                       )}
                     </td>
-                    <td className="p-3 font-mono text-gray-600">
+                    <td className="p-3 font-mono tabular-nums whitespace-nowrap text-gray-600">
                       {a.interval ? `${(a.interval[0] * 100).toFixed(1)}–${(a.interval[1] * 100).toFixed(1)}%` : "withheld (n not independent)"}
                     </td>
-                    <td className="p-3">
+                    <td className="p-3 whitespace-nowrap">
                       <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
                         {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
                       </span>
                       {a.separation_p !== undefined && (
-                        <span className="ml-2 font-mono text-[11px] text-gray-400">p={a.separation_p}</span>
+                        <span className="ml-2 font-mono text-[11px] text-gray-600">p={a.separation_p}</span>
                       )}
                     </td>
                   </tr>
@@ -477,9 +484,9 @@ export default function GspcScoreboard() {
                 <li key={r.axis} className="rounded-xl border border-emerald-600/10 bg-white p-4">
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-semibold text-gray-900">{r.axis}</span>
-                    <span className="font-mono text-[10px] uppercase tracking-wide text-gray-500">{r.status}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wide text-gray-600">{r.status}</span>
                   </div>
-                  <p className="mt-1 text-xs text-gray-500">{r.bench || r.task}</p>
+                  <p className="mt-1 text-xs text-gray-600">{r.bench || r.task}</p>
                   {typeof r.n === "number" && (
                     <p className="mt-2 font-mono text-sm tabular-nums text-gray-700">
                       {typeof r.accuracy === "number" ? (r.accuracy * 100).toFixed(0) : "—"} · n={r.n}
@@ -491,19 +498,19 @@ export default function GspcScoreboard() {
           </div>
         )}
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-3 text-sm">
-          <a href="/gspc-verify" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
+        <div className="mt-8 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+          <Link href="/gspc-verify" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
             Verify a card — free, in your browser →
-          </a>
-          <a href="/honesty" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
+          </Link>
+          <Link href="/honesty" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
             The honesty gate — our own losses →
-          </a>
+          </Link>
           <a href="/api/reported" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
             REPORTED — third-party context, cited →
           </a>
         </div>
 
-        <p className="mt-8 text-xs text-gray-500">
+        <p className="mt-8 text-xs text-gray-600">
           Measurement, not certification. Leaders shown are point estimates (swarm quotes its 95%
           lower bound); only SEPARATED leads are statistically real — the live count is
           totals.separated_leads on GET /api/gspc. Jail is a measured floor when the stamp

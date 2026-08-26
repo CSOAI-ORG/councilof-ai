@@ -104,14 +104,23 @@ function InsurersEvidencePack() {
   useEffect(() => {
     document.title = "Evidence an underwriter can verify | Council of AI";
     setMetaDescription("Evidence an underwriter can verify: Ed25519-signed AI measurement cards, recomputable from published rows. Council of AI (CSOAI LTD, UK 16939677) — measurement, not certification. Live board: GET /api/gspc.");
+    // Both reads validate the SHAPE before storing. Previously an unexpected
+    // payload (an HTML error page parsed as JSON, a renamed key) reached
+    // `board.axes.map(...)` and took the whole page down with a blank screen.
     fetch("/api/gspc")
-      .then((r) => r.json())
-      .then(setBoard)
-      .catch((e) => setBoardErr(String(e)));
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((d) => {
+        if (!d || !Array.isArray(d.axes)) throw new Error("not a GSPC payload");
+        setBoard(d);
+      })
+      .catch((e) => setBoardErr(String(e?.message || e)));
     fetch("/api/reported")
-      .then((r) => r.json())
-      .then(setReported)
-      .catch((e) => setReportedErr(String(e)));
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((d) => {
+        if (!d || !Array.isArray(d.entries)) throw new Error("not a REPORTED payload");
+        setReported(d);
+      })
+      .catch((e) => setReportedErr(String(e?.message || e)));
   }, []);
 
   return (
@@ -119,24 +128,27 @@ function InsurersEvidencePack() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PAGE_LD) }} />
       <div className="mx-auto max-w-5xl px-6 py-14">
         {/* 1 — Hero */}
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
           For insurers &amp; underwriters — verify everything, free
         </p>
-        <h1 className="mt-3 text-4xl font-black text-gray-900">
+        {/* Was an <h1>: the DeckPage hero above already carries this page's h1,
+            so two h1s were competing. Demoted, with the section headings below
+            demoted one level to match. */}
+        <h2 className="mt-3 text-4xl font-black text-gray-900">
           Evidence an underwriter can verify
-        </h1>
+        </h2>
         <p className="mt-4 max-w-3xl text-lg text-gray-600">
           We measure AI systems against the rules that govern them, sign the result, and publish
           what we cannot measure. Every number on this page is either fetched live from a signed
           endpoint or labelled with its third-party source and capture date — nothing is blended.
         </p>
-        <p className="mt-3 max-w-3xl text-sm text-gray-500">
+        <p className="mt-3 max-w-3xl text-sm text-gray-600">
           What this is <strong>not</strong>: not a certification, not a conformity mark, not a
           legal determination — it is a measurement record you can recompute yourself.
         </p>
 
         {/* Three data states */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-3 text-sm">
+        <div className="mt-8 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-xl border border-emerald-600/20 bg-white p-4">
             <p className="font-bold text-emerald-700">MEASURED</p>
             <p className="mt-1 text-gray-600">
@@ -160,9 +172,9 @@ function InsurersEvidencePack() {
         </div>
 
         {/* 2 — Card anatomy */}
-        <h2 className="mt-14 text-2xl font-bold text-gray-900">
+        <h3 className="mt-14 text-2xl font-bold text-gray-900">
           What a signed measurement card gives you
-        </h2>
+        </h3>
         <p className="mt-2 max-w-3xl text-gray-600">
           A measurement card is a small (~3KB) signed record. Each part exists so an actuary can
           check it without trusting the issuer:
@@ -177,7 +189,7 @@ function InsurersEvidencePack() {
         </ul>
 
         {/* 3 — Verify one yourself */}
-        <h2 className="mt-14 text-2xl font-bold text-gray-900">Verify one yourself, offline</h2>
+        <h3 className="mt-14 text-2xl font-bold text-gray-900">Verify one yourself, offline</h3>
         <p className="mt-2 max-w-3xl text-gray-600">
           A stranger with a terminal can check us. No account, no key exchange, no permission:
         </p>
@@ -202,12 +214,12 @@ function InsurersEvidencePack() {
             — client-side, nothing leaves your machine.
           </li>
         </ol>
-        <p className="mt-4 text-sm text-gray-500">
+        <p className="mt-4 text-sm text-gray-600">
           Verification is free, requires no account, and always will be.
         </p>
 
         {/* 4 — Loss context */}
-        <h2 className="mt-14 text-2xl font-bold text-gray-900">Loss context</h2>
+        <h3 className="mt-14 text-2xl font-bold text-gray-900">Loss context</h3>
         <p className="mt-2 max-w-3xl text-gray-600">
           Why a measurement record maps onto an underwriting file:
         </p>
@@ -253,7 +265,7 @@ function InsurersEvidencePack() {
         </div>
 
         {/* 5 — Live board strip (MEASURED) */}
-        <h2 className="mt-14 text-2xl font-bold text-gray-900">The live board — MEASURED</h2>
+        <h3 className="mt-14 text-2xl font-bold text-gray-900">The live board — MEASURED</h3>
         <p className="mt-2 max-w-3xl text-sm text-gray-600">
           Fetched live from <code>GET /api/gspc</code> (the live count lives there, not here). A{" "}
           <strong>TIE</strong> means the leader&apos;s edge is statistically indistinguishable —
@@ -265,11 +277,19 @@ function InsurersEvidencePack() {
             Board fetch failed: {boardErr} — the API at /api/gspc is the source of truth.
           </p>
         )}
-        {!board && !boardErr && <p className="mt-6 text-gray-500">Loading the live board…</p>}
+        {!board && !boardErr && <p className="mt-6 text-gray-600">Loading the live board…</p>}
 
-        {board && (
+        {board && board.axes.length === 0 && (
+          <p className="mt-6 rounded-xl border border-gray-300 bg-white p-4 text-sm text-gray-700">
+            The board returned no axes. That is the endpoint&apos;s answer, not a rendering
+            failure — check <code>GET /api/gspc</code> directly.
+          </p>
+        )}
+
+        {board && board.axes.length > 0 && (
           <div className="mt-6 overflow-x-auto rounded-xl border border-emerald-600/15 bg-white shadow-sm">
-            <table className="w-full text-sm">
+            {/* min-w so the wrapper scrolls on a phone instead of crushing cells. */}
+            <table className="w-full min-w-[36rem] text-sm">
               <thead>
                 <tr className="border-b bg-emerald-50/60 text-left text-gray-700">
                   <th className="p-3">Axis</th>
@@ -281,10 +301,10 @@ function InsurersEvidencePack() {
               <tbody>
                 {(board.axes as Axis[]).map((a) => (
                   <tr key={a.axis} className="border-b last:border-0">
-                    <td className="p-3 font-semibold text-gray-900">{a.axis}</td>
-                    <td className="p-3 font-mono">{a.n}</td>
-                    <td className="p-3 font-mono">{(a.accuracy * 100).toFixed(1)}%</td>
-                    <td className="p-3">
+                    <td className="p-3 font-semibold whitespace-nowrap text-gray-900">{a.axis}</td>
+                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{a.n}</td>
+                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{(a.accuracy * 100).toFixed(1)}%</td>
+                    <td className="p-3 whitespace-nowrap">
                       <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
                         {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
                       </span>
@@ -295,7 +315,7 @@ function InsurersEvidencePack() {
             </table>
           </div>
         )}
-        <p className="mt-3 text-xs text-gray-500">
+        <p className="mt-3 text-xs text-gray-600">
           Full per-axis detail — Wilson intervals, fleet means, harm tails, the signature:{" "}
           <Link href="/gspc-scoreboard" className="font-semibold text-emerald-700 underline">
             /gspc-scoreboard
@@ -304,9 +324,9 @@ function InsurersEvidencePack() {
         </p>
 
         {/* 6 — REPORTED */}
-        <h2 className="mt-14 text-2xl font-bold text-gray-900">
+        <h3 className="mt-14 text-2xl font-bold text-gray-900">
           REPORTED — third-party context, never blended
-        </h2>
+        </h3>
         <p className="mt-2 max-w-3xl text-sm text-gray-600">
           Figures published by others, cited with their capture date. Each entry is{" "}
           <strong>reported by the source, not measured here</strong> — unsigned, and never enters
@@ -319,10 +339,17 @@ function InsurersEvidencePack() {
           </p>
         )}
         {!reported && !reportedErr && (
-          <p className="mt-6 text-gray-500">Loading REPORTED entries…</p>
+          <p className="mt-6 text-gray-600">Loading REPORTED entries…</p>
         )}
 
-        {reported && (
+        {reported && reported.entries.length === 0 && (
+          <p className="mt-6 rounded-xl border border-amber-300/60 bg-amber-50/40 p-4 text-sm text-gray-700">
+            No third-party figures are currently carried. An empty REPORTED set is the honest
+            answer, not a missing section.
+          </p>
+        )}
+
+        {reported && reported.entries.length > 0 && (
           <ul className="mt-6 space-y-3">
             {(reported.entries as ReportedEntry[]).map((e) => (
               <li key={e.id} className="rounded-xl border border-amber-300/60 bg-amber-50/40 p-4">
@@ -343,7 +370,7 @@ function InsurersEvidencePack() {
         )}
 
         {/* 7 — Footer CTA row */}
-        <div className="mt-14 grid gap-4 sm:grid-cols-4 text-sm">
+        <div className="mt-14 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
           <Link
             href="/gspc-scoreboard"
             className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50"
@@ -370,7 +397,7 @@ function InsurersEvidencePack() {
           </a>
         </div>
 
-        <p className="mt-10 text-xs text-gray-500">
+        <p className="mt-10 text-xs text-gray-600">
           Measurement, not certification. CSOAI Ltd · UK Companies House 16939677 ·{" "}
           <a href="mailto:nicholas@csoai.org" className="underline">
             nicholas@csoai.org

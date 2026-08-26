@@ -63,7 +63,8 @@ export default function Honesty() {
 
         <h2 className="mt-10 text-xl font-bold">The numbers (live from the arena league, 2026-08-18)</h2>
         <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          {/* min-w so the wrapper scrolls on a phone rather than crushing cells. */}
+          <table className="w-full min-w-[34rem] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-300 text-xs uppercase tracking-wide text-slate-500">
                 <th className="py-2 pr-4">Model</th>
@@ -82,10 +83,10 @@ export default function Honesty() {
                 >
                   <td className="py-2 pr-4 font-mono">
                     {r.model}
-                    <span className="ml-2 text-[10px] uppercase tracking-wide text-slate-400">{r.kind}</span>
+                    <span className="ml-2 text-[10px] uppercase tracking-wide text-slate-500">{r.kind}</span>
                   </td>
-                  <td className="py-2 pr-4 font-mono tabular-nums font-semibold">{r.elo.toFixed(1)}</td>
-                  <td className="py-2 pr-4 font-mono tabular-nums">{r.games}</td>
+                  <td className="py-2 pr-4 font-mono tabular-nums font-semibold whitespace-nowrap">{r.elo.toFixed(1)}</td>
+                  <td className="py-2 pr-4 font-mono tabular-nums whitespace-nowrap">{r.games}</td>
                   <td className="py-2 text-slate-600">{r.note}</td>
                 </tr>
               ))}

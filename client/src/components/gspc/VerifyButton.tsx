@@ -15,13 +15,19 @@ import type { JRecord } from "@/data/arena";
 
 export function VerifyButton() {
   const [records, setRecords] = useState<JRecord[] | null>(null);
+  const [loadErr, setLoadErr] = useState<string | null>(null);
   const [result, setResult] = useState<VerifyResult | null>(null);
   const [running, setRunning] = useState(false);
   const [tampering, setTampering] = useState(false);
 
+  // 2026-08-26: a rejected load left the button disabled, forever, reading
+  // "Verify 0 records client-side" — indistinguishable from a working button on
+  // an empty set. The load now has a visible pending state and a visible failure.
   useEffect(() => {
     let cancelled = false;
-    loadReplayRecords().then((r) => { if (!cancelled) setRecords(r); });
+    loadReplayRecords()
+      .then((r) => { if (!cancelled) setRecords(r); })
+      .catch((e) => { if (!cancelled) setLoadErr(String(e?.message || e)); });
     return () => { cancelled = true; };
   }, []);
 
@@ -65,24 +71,38 @@ export function VerifyButton() {
       <div className="mt-4 flex flex-wrap items-center gap-4">
         <button
           onClick={runVerify}
-          disabled={!records || running}
+          disabled={!records || running || !!loadErr}
           data-testid="verify-button"
-          className="rounded-lg border border-amber-400/60 bg-emerald-600 px-5 py-2.5 text-[14px] font-semibold text-emerald-50 transition-colors cursor-pointer hover:bg-emerald-500 disabled:cursor-wait disabled:opacity-50"
+          className="inline-flex min-h-[44px] items-center rounded-lg border border-amber-400/60 bg-emerald-500 px-5 py-2.5 text-[14px] font-bold text-[#03110b] transition-colors cursor-pointer hover:bg-emerald-400 disabled:cursor-wait disabled:opacity-50"
         >
-          {running ? "Verifying…" : `Verify ${records?.length ?? 0} records client-side`}
+          {running
+            ? "Verifying…"
+            : loadErr
+              ? "Replay set unavailable"
+              : records
+                ? `Verify ${records.length} records client-side`
+                : "Loading the replay set…"}
         </button>
 
-        <label className="flex items-center gap-2 text-[13px] text-emerald-100/70 cursor-pointer">
+        <label className="flex min-h-[44px] items-center gap-2 text-[13px] text-emerald-100/70 cursor-pointer">
           <input
             type="checkbox"
             checked={tampering}
             onChange={(e) => setTampering(e.target.checked)}
             data-testid="tamper-checkbox"
-            className="accent-amber-400"
+            className="h-5 w-5 accent-amber-400 [color-scheme:dark]"
           />
           Inject a tampered record (proves detection)
         </label>
       </div>
+
+      {loadErr && (
+        <p className="mt-3 text-[13px] font-semibold text-red-300" role="alert">
+          The public replay set could not be loaded ({loadErr}). Nothing has been verified — do not
+          read this as a pass. Reload, or fetch the records yourself from{" "}
+          <a className="underline" href="/api/gspc">GET /api/gspc</a>.
+        </p>
+      )}
 
       {result && (
         <div
@@ -97,7 +117,7 @@ export function VerifyButton() {
           <p className="text-[16px] text-emerald-50">
             {result.ok ? "✓ " : "✗ "}
             <strong>{result.label}</strong>{" "}
-            <span className="font-mono text-[12px] text-emerald-100/50">
+            <span className="font-mono text-[12px] text-emerald-100/60">
               · sig_alg: {result.sig_alg}
             </span>
           </p>
@@ -120,9 +140,10 @@ export function VerifyButton() {
               Per-record results ({result.lines.length})
             </summary>
             <div className="mt-2 overflow-x-auto rounded-lg border border-emerald-500/20">
-              <table className="w-full text-[12px]">
+              {/* min-w so the wrapper scrolls: these are 64-char hashes. */}
+              <table className="w-full min-w-[40rem] text-[12px]">
                 <thead>
-                  <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/40">
+                  <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/60">
                     <th className="px-3 py-2">Record</th>
                     <th className="px-3 py-2">Body hash match?</th>
                     <th className="px-3 py-2">Stored</th>
@@ -136,8 +157,8 @@ export function VerifyButton() {
                       <td className={`px-3 py-2 font-semibold ${l.body_hash_ok ? "text-emerald-300" : "text-red-300"}`}>
                         {l.body_hash_ok ? "✓ ok" : "✗ BROKEN"}
                       </td>
-                      <td className="px-3 py-2 font-mono text-emerald-100/40">{l.chain_hash_stored}</td>
-                      <td className="px-3 py-2 font-mono text-emerald-100/40">{l.body_hash_computed}</td>
+                      <td className="px-3 py-2 font-mono text-emerald-100/60">{l.chain_hash_stored}</td>
+                      <td className="px-3 py-2 font-mono text-emerald-100/60">{l.body_hash_computed}</td>
                     </tr>
                   ))}
                 </tbody>

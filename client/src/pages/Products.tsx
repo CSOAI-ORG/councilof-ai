@@ -86,6 +86,11 @@ const AUDIENCES = [
 
 export default function Products() {
   return (
+    // This page is authored on the estate's DARK surface (emerald-950 cards,
+    // white/[0.03] tiles, slate-100 body copy). The app shell's own background is
+    // LIGHT (--background: #fafaf7), so the surface must be declared here or the
+    // whole page renders near-white-on-near-white. 2026-08-26: it was, at 1.05:1.
+    <div className="min-h-screen bg-[#03110b]">
     <main className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
         Council of AI — the product family
@@ -200,5 +205,6 @@ export default function Products() {
         </Link>
       </div>
     </main>
+    </div>
   );
 }

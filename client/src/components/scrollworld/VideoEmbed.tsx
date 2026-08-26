@@ -61,7 +61,7 @@ export function VideoEmbed({
         )}
       </div>
       {caption && (
-        <figcaption className="mt-2 text-center text-xs text-gray-400">{caption}</figcaption>
+        <figcaption className="mt-2 text-center text-xs text-gray-600">{caption}</figcaption>
       )}
     </figure>
   );
