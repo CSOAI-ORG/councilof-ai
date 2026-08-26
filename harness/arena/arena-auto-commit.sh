@@ -4,7 +4,10 @@
 # sync side, triggered after arena-auto-loop publishes.
 export PATH="/opt/homebrew/bin:$PATH"
 KEY="$HOME/.runpod/ssh/runpodctl-ssh-key"
-A100_PORT=23166; A100_IP=38.128.232.57
+A100_IP=38.128.232.57
+# RunPod reassigns ephemeral SSH ports on restart — resolve the LIVE port, never hardcode.
+A100_PORT=$(bash "$(dirname "$0")/runpod-port.sh" l7g747oivyq6ab "$A100_IP" 2>/dev/null)
+[ -z "${A100_PORT:-}" ] || [ "$A100_PORT" = "0" ] && A100_PORT=23166  # fallback (never silently 0)
 REPO=/tmp/coai-arena-sync
 STAGE=/tmp/arena-scoreboards
 mkdir -p "$STAGE" "$REPO" 2>/dev/null
