@@ -1,15 +1,17 @@
 // functions/api/methodology.ts — MEASUREMENT METHODOLOGY (honest, deterministic).
-// Advertised in llms.txt since 08-22 but never built (audit 2026-08-23 caught the 404).
 // States HOW every instrument measures + the honesty rules + claims it refuses.
 // Register: methodology is REFERENCE (how we measure), never a measurement itself.
+// Signed (gspc pattern): canonical JCS over the body WITHOUT the attestation field.
 
-export const onRequestGet: PagesFunction = async () => {
-  const methodology = {
+interface Env { BOARD_SIGN_KEY_PKCS8_B64?: string }
+
+export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const body: Record<string, unknown> = {
     schema: "csoai.methodology/0.1",
     doctrine: "measurement-not-certification \u00b7 nobody-ranked-pays \u00b7 corrections appended not edited",
     instruments: {
       gspc: {
-        what: "14-slot GSPC board (quotable); cite live totals.public_count from GET /api/gspc — do not invent 22 axes",
+        what: "22-slot GSPC board (14 GSPC + 8 financial/domain); cite live totals.public_count from GET /api/gspc — 22 slots, measured subset only is quotable",
         grading: "exact-label classification (expected=HIGH_RISK/0/1) OR keyword matching (must_inc); no model judges another model",
         quotability: "nothing quoted below n>=30 usable items; quotable computed, never asserted",
         canaries: "banned-term canaries excluded from scoring",
@@ -27,7 +29,7 @@ export const onRequestGet: PagesFunction = async () => {
     },
     honesty_rules: [
       "measurement, not certification — never a 'safe'/'compliant' verdict",
-      "public_count is derived from GET /api/gspc totals (measured_axes of quotable_axes); jail MEASURED with living-board separation TIE (2026-08-25) — a TIE is not a separated leader",
+      "public_count is derived from GET /api/gspc totals (measured of quotable); jail MEASURED with living-board separation TIE (2026-08-25) — a TIE is not a separated leader",
       "corrections appended, never edited",
       "no ranked party pays (nobody-ranked-pays)",
       "unmeasured axes stay UNMEASURED — never fabricated into a score",
@@ -40,7 +42,36 @@ export const onRequestGet: PagesFunction = async () => {
     ],
     generated_at: new Date().toISOString(),
   };
-  return Response.json(methodology, {
+
+  const b64 = context.env.BOARD_SIGN_KEY_PKCS8_B64;
+  if (b64) {
+    try {
+      const canonical = (o: unknown): string => {
+        if (o === null || typeof o !== "object") return JSON.stringify(o);
+        if (Array.isArray(o)) return "[" + o.map(canonical).join(",") + "]";
+        const r = o as Record<string, unknown>;
+        return "{" + Object.keys(r).sort().map((k) => JSON.stringify(k) + ":" + canonical(r[k])).join(",") + "}";
+      };
+      const hex = (b: ArrayBuffer) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
+      const signedBytes = canonical(body);
+      const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+      const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
+      const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
+      const jwk = (await crypto.subtle.exportKey("jwk", key)) as JsonWebKey;
+      body.site_attestation = {
+        attests: "integrity of this methodology as published by the site (NOT a re-measurement)",
+        signer: "did:web:csoai.org#board-attestation-1",
+        alg: "Ed25519",
+        sig,
+        public_key_x: jwk.x,
+        sig_input: "canonical JSON (recursively sorted keys, no whitespace) of this payload with the site_attestation field removed",
+        verify: "fetch /.well-known/did.json → #board-attestation-1 public key → verify sig over canonical(payload minus site_attestation)",
+      };
+    } catch {
+      body.site_attestation = { error: "signing key present but unusable — no signature emitted" };
+    }
+  }
+  return Response.json(body, {
     headers: { "content-type": "application/json; charset=utf-8" },
   });
 };
