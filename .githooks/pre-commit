@@ -1,0 +1,28 @@
+#!/bin/sh
+# pre-commit — lane discipline, enforced at the moment the mistake is made.
+#
+# Blocks:
+#   * a symlink staged where a directory belongs (the node_modules incident)
+#   * the shared main checkout sitting off master with uncommitted work
+#     (the branch-flip that rewound 3e5116ac)
+#
+# Hooks are NOT shared by clone, so the same checks also run in CI via
+# .github/workflows/lane-guard.yml. This hook is the fast local copy.
+#
+# Escape hatch, deliberately loud and deliberately per-commit:
+#   LANE_GUARD_SKIP=1 git commit ...
+set -e
+
+if [ -n "$LANE_GUARD_SKIP" ]; then
+  printf '\n  lane-guard SKIPPED via LANE_GUARD_SKIP — you own what lands.\n\n' >&2
+else
+  ROOT="$(git rev-parse --show-toplevel)"
+  if command -v node >/dev/null 2>&1 && [ -f "$ROOT/scripts/lane-guard.mjs" ]; then
+    ( cd "$ROOT" && node scripts/lane-guard.mjs --staged ) || exit 1
+  fi
+fi
+
+# Chain the git-lfs pre-commit if this repo uses LFS and a global hook existed.
+if command -v git-lfs >/dev/null 2>&1; then
+  git lfs pre-commit "$@" 2>/dev/null || true
+fi

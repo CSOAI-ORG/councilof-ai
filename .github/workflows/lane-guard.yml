@@ -1,0 +1,36 @@
+name: lane-guard
+
+# Git hooks are not shared by clone, so the pre-commit copy of this guard only
+# protects machines that ran `node scripts/lane.mjs install-hooks`. This job is
+# the copy nobody can skip.
+#
+# What it blocks: a symlink committed where a directory belongs. A worktree
+# merge once committed a self-referential node_modules symlink (mode 120000 on
+# a path that is a tree everywhere else); the checkout replaced the real
+# directory with a link to itself and every build died. Nothing noticed,
+# because nothing looked at file modes.
+#
+# The main-checkout-off-master rule is deliberately NOT enforced here: a CI
+# runner has exactly one checkout and no sibling lanes to collide with, so the
+# guard skips that rule when CI is set. It runs locally, in the hook.
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  lane-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Selftest first, always. A guard that has stopped working must fail
+      # loudly rather than pass everything silently.
+      - name: Selftest — prove the guard catches the violation and passes its negation
+        run: node scripts/lane-guard.mjs --selftest
+
+      - name: No symlink where a directory belongs
+        run: node scripts/lane-guard.mjs

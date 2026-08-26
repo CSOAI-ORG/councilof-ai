@@ -1,0 +1,5 @@
+#!/bin/sh
+# Mirrored from the user's global core.hooksPath so that pointing this repo at
+# .githooks does not silently disable Git LFS. Nothing lane-related lives here.
+command -v git-lfs >/dev/null 2>&1 || exit 0
+git lfs post-checkout "$@"
