@@ -267,3 +267,17 @@ key is set — and they are HONEST when the key is absent (never fabricate):
   exit 2 + stays addr:pending (never invents an address).
 - (HF publish consumer to follow once the publish target is confirmed.)
 These run the moment ETHERSCAN_API_KEY / RWA_XYZ_API_KEY is set by the owner; I execute.
+
+## 2026-08-26 · JEEVES — LIVE count now 22/15 (authoritative); COUNT_GRAMMAR doc is stale on the governing record
+Verified against the LIVE board (not copy): https://councilof.ai/api/gspc returns
+`public_count: "22 axes · 15 measured"`, `count_grammar: "22 axes are on the board; 15 of them
+carry a measurement and 7 are declared slots with no run behind them. The larger number counts
+slots, the smaller counts measurements — quote both or quote the smaller."` Source: functions/api
+/gspc.ts ADR-001 (line 100 `public_count = ${selected.length} axes · ${measured} measured`, line
+183 the 7-declared-slots honesty note). The 22-axis sweep LANDED.
+NOTE (flag, do NOT auto-fix): docs/operations/COUNT_GRAMMAR_2026-08-26.md still says "Public
+quotable board = 14" and "22 not corroborated (commit 2bdbac34 nonexistent)". That is now STALE
+relative to the landed ADR-001 truth (22 axes · 15 measured; 7 declared unmeasured slots). The
+axis-count-derive lane owns count derivation (worktree wt-axis-derive); leave the doc to that lane
+or the owner to reconcile — I am NOT touching it to avoid a collision. This notice records the
+authoritative live truth for anyone reading the record.
