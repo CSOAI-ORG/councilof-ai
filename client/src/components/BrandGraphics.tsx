@@ -127,11 +127,16 @@ export function Slideshow({ slides, interval = 5000 }: { slides: { title: string
 
 // ---- Branded trust strip (the honest, verifiable cues) ----
 export function TrustStrip({ className = "" }: { className?: string }) {
+  // Each cue names an artifact a reader can go and open. "Ed25519-signed / every governed
+  // action" used to sit in the first slot and was scope creep: what is signed is each
+  // published measurement card and the board snapshot, not an unbounded set of "actions".
+  // A cue on a trust strip is a capability claim like any other and is held to the same
+  // standard as the prose beside it.
   const items = [
-    { k: "Ed25519-signed", v: "every governed action" },
-    { k: "Offline-verifiable", v: "in any browser" },
-    { k: "Empty cells stay empty", v: "live counts on /api/gspc" },
-    { k: "Open-source core", v: "no vendor lock-in" },
+    { k: "Ed25519-signed", v: "every published measurement card" },
+    { k: "Verify without an account", v: "pin our key, recompute the bytes" },
+    { k: "Empty cells stay empty", v: "unmeasured is published, not hidden" },
+    { k: "MIT-licensed core", v: "no vendor lock-in" },
   ];
   return (
     <div className={`grid grid-cols-2 gap-3 sm:grid-cols-4 ${className}`}>

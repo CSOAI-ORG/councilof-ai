@@ -74,7 +74,12 @@ const EXISTING = [
   "/enterprises            /?lobby=measured&task=enterprise-start  308",
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
+  // /for is an index with no page of its own — send it to the default audience. The
+  // trailing-slash form needs its own rule: it used to be swallowed by a Pages Function
+  // at functions/for/index.ts (deleted with the rest of the /for/* suppression), and
+  // without a rule here it falls through the catch-all to the SPA shell instead.
   "/for                    /for/enterprise/             308",
+  "/for/                   /for/enterprise/             308",
 
   // --- Stage 39/40 top-down align (J-D1 · J-D2 · J-D5 · datasets) ---
   "/regulation             /library/regulation/         308",
