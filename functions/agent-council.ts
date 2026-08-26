@@ -1,7 +1,7 @@
 /**
  * GET /agent-council - 308 to the lobby.
  * Retracted 33-agent guarantee. Do not 308 onto /agent-council/.
- * Functions bump after 313-fat merge c271d32 / eb894c23. Card restored exact-150.
+ * Functions bump after untyping well-known 14-slot / 14-of-14 copy.
  */
 export function onRequest() {
   return new Response(null, {
