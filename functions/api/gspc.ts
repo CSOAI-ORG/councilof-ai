@@ -49,10 +49,34 @@ export const onRequestGet: PagesFunction = async (context) => {
   // one carries evidence_url to its signed run instead, and a declared slot with no
   // evidence carries neither.
   const BANK_HOST = "https://huggingface.co/datasets/";
-  const withResolvableBank = <T extends { dataset?: string }>(a: T) =>
-    a && typeof a.dataset === "string" && a.dataset
-      ? { ...a, dataset_url: BANK_HOST + a.dataset }
-      : a;
+  // A bank slug is "<owner>/<name>" and nothing else. Concatenating BANK_HOST onto
+  // whatever `dataset` happens to hold is how the jail axis published
+  // "https://huggingface.co/datasets/published: csoai/gspc-jail-goldbank (frozen 71-cell
+  // gold bank, HF 2026-08-25)" — a string curl rejects as a malformed URL, sitting
+  // directly under a bank_note asserting that every dataset_url resolves (outside audit
+  // D10, 2026-08-26). The slug is now validated. A slug that does not match is NOT
+  // silently dropped and NOT concatenated anyway: the axis publishes
+  // dataset_url: null with dataset_url_state UNRESOLVABLE and the raw value, so the
+  // fault is visible on the surface that carries it. bank_note below is derived from
+  // this same predicate, so the sentence and the bytes cannot disagree again.
+  const SLUG = /^[A-Za-z0-9][A-Za-z0-9._-]*\/[A-Za-z0-9][A-Za-z0-9._-]*$/;
+  const withResolvableBank = <T extends { dataset?: string }>(a: T) => {
+    if (!a || typeof a.dataset !== "string" || !a.dataset) return a;
+    if (SLUG.test(a.dataset)) return { ...a, dataset_url: BANK_HOST + a.dataset };
+    return {
+      ...a,
+      dataset_url: null,
+      dataset_url_state: "UNRESOLVABLE",
+      dataset_url_note:
+        "This axis's `dataset` value is not a bare <owner>/<name> bank slug, so no URL is " +
+        "minted for it. The raw value is published verbatim above rather than concatenated " +
+        "into a link that would not resolve.",
+    };
+  };
+  // Counted, not asserted: how many axes carry a bank, and how many of those resolved.
+  const banked = selected.filter((a) => typeof a.dataset === "string" && a.dataset);
+  const bankResolved = banked.filter((a) => SLUG.test(a.dataset as string));
+  const bankUnresolvable = banked.filter((a) => !SLUG.test(a.dataset as string));
 
   const body = {
     schema: "csoai.gspc-axes/0.5",
@@ -154,12 +178,23 @@ export const onRequestGet: PagesFunction = async (context) => {
       };
     })(),
     bank_host: BANK_HOST,
-    bank_note: "Every axis WITH a frozen bank carries dataset_url — the bank resolved to a fetchable " +
-      "URL, so a stranger can retrieve the split without knowing where we host it. Added " +
-      "2026-08-26 after our own rater-transparency axis measured this payload as carrying " +
-      "zero resolvable URLs. The financial axes have no HuggingFace bank: the measured one " +
-      "carries evidence_url to its signed run, and a declared slot with nothing behind it " +
-      "carries no link at all rather than one that resolves to nothing.",
+    // Counted from the axes array immediately above, never typed. The previous wording
+    // ("Every axis WITH a frozen bank carries dataset_url — the bank resolved to a
+    // fetchable URL") was a blanket assertion with nothing behind it, and it was false
+    // for the jail axis for as long as it stood.
+    banked_axes: banked.length,
+    banked_axes_resolvable: bankResolved.length,
+    banked_axes_unresolvable: bankUnresolvable.map((a) => a.axis),
+    bank_note:
+      `${bankResolved.length} of the ${banked.length} axes carrying a frozen bank resolve to a ` +
+      "dataset_url built as bank_host + the axis's bare <owner>/<name> slug, so a stranger can " +
+      "retrieve the split without knowing where we host it. Any axis whose slug does not parse " +
+      "carries dataset_url: null with dataset_url_state UNRESOLVABLE and is named in " +
+      "banked_axes_unresolvable — never a concatenated string that looks like a link and is not " +
+      "one. Both counts are derived from the axes array in this payload. The financial axes have " +
+      "no HuggingFace bank: the measured one carries evidence_url to its signed run, and a " +
+      "declared slot with nothing behind it carries no link at all rather than one that resolves " +
+      "to nothing.",
     axes: selected.map(withResolvableBank),
     // In the payload for honesty; NOT the board. See the note on each entry.
     measured_in_lane: axis ? undefined : MEASURED_IN_LANE,
@@ -227,8 +262,35 @@ export const onRequestGet: PagesFunction = async (context) => {
         // on the SAME key as published independently in /.well-known/did.json — the
         // payload never vouches for its own key.
         public_key_x: jwk.x,
-        sig_input: "canonical JSON (recursively sorted keys, no whitespace) of this payload with the site_attestation field removed",
-        verify: "fetch /.well-known/did.json → #board-attestation-1 public key → verify sig over canonical(payload minus site_attestation)",
+        // BE EXACT ABOUT THE BYTES. "canonical JSON" alone is not a preimage rule:
+        // an implementer's first reading in a Python-flavoured estate is
+        // json.dumps(sort_keys=True, separators=(',',':')), whose default is
+        // ensure_ascii=True — and that FAILS here, because this payload carries 81
+        // non-ASCII code points (· × – — → ≥) and the signer emits them literally.
+        // The two readings differ by ~256 bytes, so a correct implementer reports a
+        // bad signature on a good artefact (outside audit A2, 2026-08-26). The bytes
+        // are not changed to suit the description; the description is made exact.
+        //
+        // NOTE THE CARDS ARE DIFFERENT AND MUST STAY DIFFERENT. The 150 measurement
+        // cards under /signed/cards/ were minted with ensure_ascii=TRUE (each card
+        // states so in its own `preimage` field), and their ids are SHA-256 over
+        // exactly those bytes. This board is signed with ensure_ascii=FALSE. Neither
+        // can be "harmonised" to the other without invalidating signatures over bytes
+        // that already exist, so both rules are stated wherever each is published.
+        sig_input:
+          "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of this payload " +
+          "with the site_attestation field removed. Canonical JSON here means: object keys " +
+          "sorted by code point, recursively; no whitespace (separators ',' and ':'); non-ASCII " +
+          "emitted LITERALLY as UTF-8, never as \\uXXXX escapes (Python ensure_ascii=FALSE — " +
+          "ensure_ascii=True is the wrong reading and will fail, this payload contains non-ASCII " +
+          "characters); numbers serialised by ECMAScript Number::toString, so an integral float " +
+          "renders 0, not 0.0. This is NOT the rule used by the signed measurement cards under " +
+          "/signed/cards/, which were minted with ensure_ascii=TRUE and whose ids are SHA-256 " +
+          "over those bytes — see /signed/HOW-TO-VERIFY.md. The two are deliberately different " +
+          "and are each signed over the bytes they were signed over.",
+        sig_input_ensure_ascii: false,
+        sig_input_is_digest: false,
+        verify: "fetch /.well-known/did.json → #board-attestation-1 public key → verify sig over the raw UTF-8 bytes of canonical(payload minus site_attestation), with ensure_ascii=False as specified in sig_input",
       };
     } catch {
       // A provisioned-but-broken key must not degrade to a fake pass: omit the

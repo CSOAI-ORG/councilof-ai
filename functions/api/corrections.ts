@@ -30,6 +30,89 @@ const LEDGER = {
   license: "CC-BY-4.0",
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
+    // ── 2026-08-26: six entries from an outside SCITT/COSE audit ───────────────
+    // Not self-caught. A working SCITT implementer with no CSOAI code, no CSOAI
+    // credentials and no prior knowledge of the estate ran the published recipe
+    // against the live site and reported what did not hold. The findings below are
+    // theirs; the fixes are ours. An estate that publishes its own corrections has
+    // to publish the ones someone else found, or the ledger is a highlight reel.
+    {
+      id: "C-2026-0826-12",
+      date: "2026-08-26",
+      what_was_wrong:
+        "The board attestation's sig_input was ambiguous, and the ambiguity was live rather than theoretical. It read \"canonical JSON (recursively sorted keys, no whitespace) of this payload with the site_attestation field removed\" — six words that do not pin a preimage. The natural first reading in a Python-flavoured estate is json.dumps(sort_keys=True, separators=(',',':')), whose default is ensure_ascii=True, and that FAILS: the signer emits non-ASCII literally, i.e. ensure_ascii=False. The signed payload carries 81 non-ASCII code points (middle dot, multiplication sign, en dash, em dash, right arrow, greater-than-or-equal), and the two readings differ by about 256 bytes. Two implementers reading the same sentence get two different preimages and one of them reports a bad signature on a good artefact. The sentence also never said whether the signature is over the raw bytes or over a digest of them.",
+      how_caught:
+        "Outside audit of the live site, 2026-08-26 (finding A2). The auditor's first and more natural reading failed; the signature verified on the second attempt, after guessing.",
+      fix:
+        "sig_input now states the rule as bytes: Ed25519 over the RAW UTF-8 bytes (not a digest) of canonical JSON with keys sorted by code point recursively, no whitespace, non-ASCII emitted literally as UTF-8 and never as \\\\uXXXX escapes (ensure_ascii=False, with ensure_ascii=True named explicitly as the wrong reading), and numbers serialised by ECMAScript Number::toString so an integral float renders 0 and not 0.0. Two machine-readable fields, sig_input_ensure_ascii: false and sig_input_is_digest: false, carry the same facts for a parser. CRITICALLY, THE CARDS ARE THE OPPOSITE AND STAY THAT WAY: the 150 measurement cards were minted with ensure_ascii=TRUE and CPython float repr, and each card states so in its own preimage field. Neither rule can be migrated to the other without invalidating signatures over bytes that already exist, so nothing was harmonised — both rules are now stated explicitly wherever each is published, and /signed/HOW-TO-VERIFY.md carries a table putting them side by side so a reader who verifies both is not burnt by the difference.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-11",
+      date: "2026-08-26",
+      what_was_wrong:
+        "The public MCP `measure` tool returned ok:true for every subject, including subjects that do not exist. Passing a nonsense model name produced {\"ok\":true,\"claim\":\"measurement\",\"subject\":\"<the nonsense name>\"} with a note explaining that nothing had actually been measured. No measurement ran, no axes came back, no credential was issued, and the tool's own description promised \"a signed measurement credential\". A measurement tool that succeeds on a nonexistent subject cannot distinguish MEASURED from DID NOTHING — which is exactly what our own /api/mcp honesty_contract forbids: unknown is null or unmeasured, never a plausible-looking value. We applied that doctrine to the registry and not to the tool.",
+      how_caught:
+        "Outside audit of the live site, 2026-08-26 (finding P1). The auditor called the tool with THIS-MODEL-DOES-NOT-EXIST-xyz and got the same ok:true as for gpt-4o. Nothing on our side was checking; the tool was listed as `probed` because tools/list returned its name, and `probed` was reading as `works`.",
+      fix:
+        "`measure` now returns ok:false with a named state on every call, because no call to it ever succeeds: INVALID_ARGUMENT when no subject is given, NOT_MEASURED otherwise, each with the reason and a pointer to where published measurements actually live (/signed/card_index.json and /api/gspc). It also states plainly that it did NOT check whether the subject exists rather than implying it did. The tool description in tools/list is rewritten to what the endpoint does — return the contract — so an honest result no longer sits behind a description that over-promises. PARTIAL, AND SAID SO: the upstream worker's source is not in this repository, so the correction is applied at councilof.ai/mcp, the address published in .well-known/mcp.json and agent-card.json. The worker's own workers.dev origin still returns ok:true and needs an owner-side deploy to close.",
+      status: "FIXED AT THE PUBLISHED ENDPOINT; UPSTREAM WORKER FIX PENDING (owner)",
+    },
+    {
+      id: "C-2026-0826-10",
+      date: "2026-08-26",
+      what_was_wrong:
+        "The jail axis published a dataset_url that is not a URL, directly beneath a note asserting that every such URL is fetchable. The axis's `dataset` field — an identifier field, resolved to a link by string concatenation against https://huggingface.co/datasets/ — held a prose sentence: \"published: csoai/gspc-jail-goldbank (frozen 71-cell gold bank, HF 2026-08-25)\". The resulting dataset_url contained a colon, spaces and parentheses and was rejected by curl as malformed. Twelve other banked axes resolved fine, and the bank itself was always fine and always public. The bank_note above it read \"Every axis WITH a frozen bank carries dataset_url — the bank resolved to a fetchable URL\": a blanket assertion with nothing deriving it, false for as long as it stood.",
+      how_caught:
+        "Outside audit of the live site, 2026-08-26 (finding D10). The auditor fetched all fourteen; thirteen returned HTTP 200 and one would not parse.",
+      fix:
+        "`dataset` now holds the bare slug csoai/gspc-jail-goldbank and the prose moved to dataset_note. The resolver no longer concatenates blind: a value that is not a bare <owner>/<name> slug now publishes dataset_url: null with dataset_url_state UNRESOLVABLE and the raw value, so the fault is visible on the surface that carries it instead of shipping a string that looks like a link. bank_note is now derived from that same predicate and reports counted totals (banked_axes, banked_axes_resolvable, banked_axes_unresolvable), so the sentence and the bytes cannot disagree again. The same correction is applied to the packaged /signed/gspc-measurement.json, which carried the identical prose.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-09",
+      date: "2026-08-26",
+      what_was_wrong:
+        "We published recall: null for council-inhouse-ft on the jail axis where the measured value is 0.0. That model has tp=0 and fn=38, so recall = tp/(tp+fn) = 0/38 = 0.0 — defined, measured, and the single most damaging number on the axis: our own fine-tune detected zero of 38 escapes. null reads as NOT MEASURED. Publishing it in place of a real zero is this estate's own defect class inverted: instead of inventing a number where none exists, we erased a number that did. It sat on a row whose note says \"published, not hidden\". precision on the same row is legitimately null (0/0 is undefined, nothing was predicted positive), so two fields carrying the identical value meant opposite things with nothing distinguishing them.",
+      how_caught:
+        "Outside audit of the live site, 2026-08-26 (finding D11). Every other cell of the jail axis reproduced to the item — seven confusion matrices, precision, recall, accuracy and the fleet mean — and this was the one arithmetic exception the auditor found.",
+      fix:
+        "recall is 0.0 on /api/gspc and in /signed/gspc-measurement.json. The axis now carries a null_grammar field stating which null means UNDEFINED and which zero means MEASURED, so the distinction is published rather than left to be inferred. The frozen /signed/gspc-board.signed.json still contains recall: null and is NOT edited: its MPC custody signature is over those exact bytes, so correcting it at source is an owner-supervised re-sign. Until then this ledger and the live board carry the correction where a reader will meet it.",
+      status: "FIXED ON THE LIVE BOARD; FROZEN SIGNED SNAPSHOT AWAITS RE-SIGN (owner)",
+    },
+    {
+      id: "C-2026-0826-08",
+      date: "2026-08-26",
+      what_was_wrong:
+        "The living_stamp was presented as a valid attestation and cannot be checked by anyone. It shipped signed: true and a sig_input recipe, rendering exactly like the two attestations on this site that do verify. It does not verify. Three faults compound: TWO different signatures are published for one stamp, with the same signer and the same `updated` — one in /signed/board_living.json, a different one in /api/gspc measured_on.living_stamp, and at most one can be over the bytes the other is over; the signer is in NONE of the four verification methods in our own did.json, so even a reproducing preimage would prove only self-consistency, the unfalsifiable shape our own HOW-TO-VERIFY tells strangers to refuse; and board_living.json states in its own note that its axes were re-snapshotted from the live board at package time, six days after the signature date, so the signed bytes are not the published bytes.",
+      how_caught:
+        "Outside audit of the live site, 2026-08-26 (finding A3): roughly fifty readings attempted, none verified. Re-run in this lane the same day at wider scope — both published signatures, all five published keys, nine candidate payloads, raw/sha256-digest/sha256-hex message forms, both ensure_ascii settings, every drop-set of up to three fields: 58,184 attempts, 0 verified.",
+      fix:
+        "The stamp is marked UNVERIFIABLE wherever it is published — /api/gspc, /signed/board_living.json and /signed/gspc-measurement.json — carrying verification_state UNVERIFIABLE, verifiable: false, signer_anchored: false, the attempt count, and a note stating that it must not be treated as a valid attestation and pointing at the two attestations that do verify. It is NOT withdrawn and its bytes are NOT altered: a row saying \"we published this and nobody can check it\" is worth more than a quietly deleted one, and if a preimage rule is ever recovered it must still verify against these bytes. We do not claim the stamp is invalid — only that it is uncheckable, which for a relying party is the same outcome. To close: anchor the signer in did.json, publish the exact preimage (which fields are signature fields, raw bytes versus digest, encoding), and publish ONE signature. Owner-gated; this lane does not hold the key.",
+      status: "MARKED UNVERIFIABLE; REPRODUCIBLE SIGNATURE PENDING (owner)",
+    },
+    {
+      id: "C-2026-0826-07",
+      date: "2026-08-26",
+      what_was_wrong:
+        "The claims register described bytes that do not exist. CR-002 gave as its evidence \"Cards declare timestamp_authority: 'none'\". Zero of the 150 published cards contain that field; the string \"timestamp\" appears in no card, not in card_index.json and not in the cross-border card. The substance was honest — there genuinely is no timestamp authority behind any card — but the register asserted a positive declaration as its evidence for an absence, and the claims register is the one page whose entire purpose is claim-to-evidence fidelity. A correction that misdescribes the thing it corrects is worse than the original gap.",
+      how_caught:
+        "Outside audit of the live site, 2026-08-26 (finding D8). One grep over the published cards.",
+      fix:
+        "CR-002 now describes what the cards actually declare: nine body fields, none of them a timestamp authority; the only time a card carries is `created`, an instant the issuer asserted from its own clock and then signed, which attests assertion and not independent observation; and `prev` gives ordering, not time. The superseded wording is kept on the row under a dated `amended` note and rendered on /claims-register — a published claim is amended in the open, never rewritten in silence. Adding an explicit timestamp_authority: \"none\" to the card schema would be the stronger answer and is recorded as a change for the NEXT card format, not as a thing already done: each card id is the SHA-256 of its own body, so a new field re-mints every id and invalidates every published signature.",
+      status: "FIXED",
+    },
+    {
+      id: "C-2026-0826-06b",
+      date: "2026-08-26",
+      what_was_wrong:
+        "/claims-register announced \"20 claims\" and rendered 19, immediately beneath its own sentence \"This page renders that exact file — there is no second copy to drift.\" The header printed claims.length while the sections were built from a hardcoded four-status order — live, devnet, planned, retired — and claims-register.json declares five. The fifth is `unmeasured`, and the one claim carrying it (CR-020) had no case in the renderer, so it was silently filtered out of the page and out of the legend. On a site whose banner is \"UNMEASURED shown honestly\", the register dropped the only unmeasured row. The wrong count was the visible defect; the dropped row was the worse one.",
+      how_caught:
+        "Outside audit of the live site, 2026-08-26 (finding D9). The auditor diffed the rendered ids against the JSON. Nothing on our side compared the two — the drift the sentence rules out was never checked.",
+      fix:
+        "The page now derives its status order from the file's own statuses[] and appends any status that appears on a claim but was not declared, so a row can never be dropped for wearing an unexpected label; `unmeasured` has a real chip and a real legend entry. The header count is the length of the rows actually rendered, not claims.length — a number on that page is now derived from what a reader can scroll to. If a row ever does fall out, the page says so in a visible RENDER DEFECT banner naming the id. scripts/claims-register-lint.mjs re-derives the grouping at build time and fails the build on any drift between the file and the page, including a declared status with no legend entry or a typed number back in the header.",
+      status: "FIXED",
+    },
     {
       id: "C-2026-0826-06",
       date: "2026-08-26",

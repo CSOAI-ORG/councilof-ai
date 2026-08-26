@@ -66,8 +66,20 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   const count = cards.length;
   const signed = cards.filter((c) => c.signed).length;
 
+  // A present signature is not a checkable one. board_living.json's stamp was marked
+  // UNVERIFIABLE on 2026-08-26 (it does not reproduce under any published rule; see the
+  // file's own unverifiable_note and /api/corrections C-2026-0826-08). Carry that state
+  // through verbatim rather than reporting a bare present:true, which reads as "verified".
   const signature = board.signature
-    ? { present: true, signer: board.signer, sig_input: board.sig_input }
+    ? {
+        present: true,
+        signer: board.signer,
+        sig_input: board.sig_input,
+        verification_state: board.verification_state ?? "UNSTATED",
+        verifiable: board.verifiable ?? null,
+        signer_anchored: board.signer_anchored ?? null,
+        unverifiable_note: board.unverifiable_note ?? null,
+      }
     : { present: false, signer: board.signer };
 
   const crossBorderEntry = crossBorder
@@ -106,6 +118,9 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     },
     note:
       "count = signed measurement cards in the living registry plus cross-border East-West card when published. " +
-      "kid identifies the signing key; signed=true means the card carries a JWS signature.",
+      "kid identifies the signing key; signed=true means the card carries a signature — it does NOT mean anyone " +
+      "has checked it. Read board.signature.verification_state: the living board's stamp is UNVERIFIABLE (it does " +
+      "not reproduce under any published rule and its signer is not in did.json). The 150 cards in this index DO " +
+      "verify against did:web:csoai.org#card-attestation-1 — see /signed/HOW-TO-VERIFY.md.",
   });
 };

@@ -128,7 +128,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
     { f: "axes[].fleet_mean / mean_harm", d: "The axis's measured-fleet mean, and (canonical axes only) the severity-weighted failure mass the accuracy hides." },
     { f: "axes[].per_model", d: "Jail only: the verbatim per-model rows from the signed living board (TP/FP/TN/FN, precision, recall)." },
     { f: "measured_in_lane", d: "In-lane instrument-honesty and human-vs-ai — served for honesty; NOT board-quotable and never counted in totals." },
-    { f: "measured_on.living_stamp", d: "The signed living-board stamp: Ed25519 signer, signature, and sig_input recipe for jail and the in-lane measurements." },
+    { f: "measured_on.living_stamp", d: "The living-board stamp for jail and the in-lane measurements. MARKED UNVERIFIABLE 2026-08-26: it carries an Ed25519 signature, but no published bytes reproduce it (58,184 readings attempted, 0 verified), two different signatures exist for the same stamp, and its signer is not among the keys in did.json. It publishes verification_state UNVERIFIABLE and must not be treated as a valid attestation. The attestations that DO verify are site_attestation on this payload (#board-attestation-1) and the 150 cards (#card-attestation-1)." },
     { f: "axes[].unparsed_rate", d: "Share of responses no label could be read from — reported, never scored as a wrong answer." },
     { f: "axes[].status", d: "MEASURED / UNMEASURED / DRAFT / SPEC / PLANNED. UNMEASURED is reported with its n, never hidden." },
   ];

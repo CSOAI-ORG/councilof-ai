@@ -507,8 +507,10 @@ export default function GspcScoreboard() {
           Measurement, not certification. Leaders shown are point estimates (swarm quotes its 95%
           lower bound); only SEPARATED leads are statistically real — the live count is
           totals.separated_leads on GET /api/gspc. Jail is a measured floor when the stamp
-          publishes one, never a hidden score. Full per-axis notes, fleet means,
-          harm tails and the signed living stamp: <code>GET /api/gspc</code>.
+          publishes one, never a hidden score. Full per-axis notes, fleet means and harm tails:{" "}
+          <code>GET /api/gspc</code>. The living stamp carried there is marked UNVERIFIABLE — it
+          does not reproduce under any published rule and is not a checkable attestation; the
+          attestation over that payload that does verify is <code>site_attestation</code>.
         </p>
       </div>
     </div>
