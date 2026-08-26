@@ -39,8 +39,10 @@ import { useNarrowViewport } from "./useNarrowViewport";
  * glass.ts for the floor that keeps text above WCAG AA at every setting.
  *
  * THE LAYOUT.
- *   header   full width, at the very top — the mark, the name, transparency and
- *            the window controls. NOT inside the centre pane.
+ *   header   full width, at the very top — a dense utility bar: the mark, SEARCH
+ *            over the OS's real index, four named destinations, the live state
+ *            read from /api/state, and the window controls. NOT inside the
+ *            centre pane. See LobbyHeader.tsx.
  *   left     Destinations — a real vertical tablist. Hideable; `[` toggles it.
  *   centre   the dominant column: the live pane PLUS the ask thread. This is
  *            the readable surface. Hiding both rails gives it the workspace.
@@ -384,6 +386,8 @@ export default function LobbyOverlay({
           showHeaderNav={narrow}
           tabId={tabId}
           onSelectTab={go}
+          onOpenRoute={openRoute}
+          activePath={panePath}
           navOverride={!!override}
         />
 
@@ -455,7 +459,11 @@ export default function LobbyOverlay({
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
               <div
                 className={
-                  `relative min-h-0 overflow-hidden ${chatActive ? "flex-[0_1_40%]" : "flex-1"}`
+                  // The pane keeps the full centre column whether or not chat is open. It used to
+                  // collapse to flex-[0_1_40%] because the thread was stacked BELOW it in this
+                  // same column, so asking a question shrank the thing you were asking about to
+                  // two fifths of its height. The thread now lives in its own right-hand column.
+                  `relative min-h-0 flex-1 overflow-hidden`
                 }
               >
                 {localPane && tab.id === "home" ? (
@@ -496,7 +504,6 @@ export default function LobbyOverlay({
                 )}
               </div>
 
-              {chatActive && <LobbyThread chat={chat} endRef={threadEndRef} />}
             </div>
 
             <LobbyComposer
@@ -526,11 +533,12 @@ export default function LobbyOverlay({
               means what it says. */}
           {rightOpen ? (
             <>
-              {/* ≥ lg — the third column. */}
-              <div className="hidden w-72 shrink-0 lg:block xl:w-80">
-                <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
+              {/* >= lg — the third column, at master's width (the rail carries the
+                  chat thread now, so it is wider than it was). */}
+              <div className="hidden w-[21rem] shrink-0 lg:block xl:w-[25rem]">
+                <LobbySideRail chat={chat} threadEndRef={threadEndRef} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
               </div>
-              {/* < lg — a drawer over the centre. The scrim dismisses it. */}
+              {/* < lg — the same rail as a drawer over the centre. The scrim dismisses it. */}
               <button
                 type="button"
                 aria-label="Close the reports rail"
@@ -540,8 +548,8 @@ export default function LobbyOverlay({
               {/* No role/aria-label here: LobbySideRail already labels itself
                   "Reports, tasks and chats", and a second copy on the wrapper puts
                   two identically-named regions in the tree. */}
-              <div data-coai-rail="drawer" className="absolute inset-y-0 right-0 z-[2] w-[min(20rem,88vw)] lg:hidden">
-                <LobbySideRail chat={chat} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
+              <div data-coai-rail="drawer" className="absolute inset-y-0 right-0 z-[2] w-[min(22rem,92vw)] lg:hidden">
+                <LobbySideRail chat={chat} threadEndRef={threadEndRef} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
               </div>
             </>
           ) : (

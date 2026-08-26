@@ -1,0 +1,91 @@
+{
+ "schema": "csoai.index-reference-reverify/0.1",
+ "fetched_at": "2026-08-26T18:34:43Z",
+ "doctrine": "Reference-series re-verification. This is NOT a measured index and does NOT change board status: both index axes remain UNMEASURED (ADR 2026-08-26). It grounds the white-label quote in verified-not-assumed live public data.",
+ "components": [
+  {
+   "axis": "ai-economy-index",
+   "component": "all_enterprises_10plus",
+   "unit": "%",
+   "published": {
+    "value": 13.48,
+    "year": 2024
+   },
+   "live_fetch": {
+    "value": 13.48,
+    "year": 2024
+   },
+   "match": true,
+   "status": "REFERENCE-SERIES-VERIFIED"
+  },
+  {
+   "axis": "ai-economy-index",
+   "component": "large_enterprises_250plus",
+   "unit": "%",
+   "published": {
+    "value": 41.17,
+    "year": 2024
+   },
+   "live_fetch": {
+    "value": 41.17,
+    "year": 2024
+   },
+   "match": true,
+   "status": "REFERENCE-SERIES-VERIFIED"
+  },
+  {
+   "axis": "human-labour-index",
+   "component": "industry_employment",
+   "unit": "%",
+   "published": {
+    "value": 24.1839958391028,
+    "year": 2024
+   },
+   "live_fetch": {
+    "value": 24.1839958391028,
+    "year": 2024
+   },
+   "match": true,
+   "status": "REFERENCE-SERIES-VERIFIED"
+  },
+  {
+   "axis": "human-labour-index",
+   "component": "labour_force_participation",
+   "unit": "%",
+   "published": {
+    "value": 57.5769911220536,
+    "year": 2024
+   },
+   "live_fetch": {
+    "value": 57.5769911220536,
+    "year": 2024
+   },
+   "match": true,
+   "status": "REFERENCE-SERIES-VERIFIED"
+  },
+  {
+   "axis": "human-labour-index",
+   "component": "unemployment",
+   "unit": "%",
+   "published": {
+    "value": 5.92300803762815,
+    "year": 2024
+   },
+   "live_fetch": {
+    "value": 5.92300803762815,
+    "year": 2024
+   },
+   "match": true,
+   "status": "REFERENCE-SERIES-VERIFIED"
+  }
+ ],
+ "summary": {
+  "verified": 5,
+  "drift_or_error": 0,
+  "board_status": "UNMEASURED (declared slot — reference bank exists, index not built)"
+ },
+ "sources": [
+  "Eurostat isoc_eb_ai (E_AI_TANY, PC_ENT, EU27_2020)",
+  "World Bank SL.IND.EMPL.ZS / SL.TLF.CACT.ZS / SL.UEM.TOTL.ZS (EU)"
+ ]
+}

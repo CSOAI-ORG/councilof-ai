@@ -17,29 +17,27 @@ is not.
 
 ## Structure (two legs, gated)
 - **CSOAI LTD** (commercial + measurement engine): metered workflow/scale/assurance,
-  insurer/RWA feeds, the measurement pipeline.
+  insurer/RWA feeds, the measurement pipeline. Service is quoted privately. No public prices.
+  A grade is never sold. Verify stays free.
 - **CSOAI Foundation** (neutrality; free trust engine, methodology, standards
-  relationships): **gated — incorporated once ≥1 grant lands or revenue ≥£50K.**
+  relationships): **gated — incorporated once a grant lands or operating revenue supports it.**
 
 ## The product/rail map (free forever vs metered)
 Trust engine (verification, offline verifier, corrections ledger) **free forever**.
-Metered: workflow, scale, assurance, volume feeds, historical API (the
-MSCI/Bureau-van-Dijk append-only profile).
+Metered work is quoted privately. No public prices. A grade is never sold.
 
 ## Sequence (fast → durable → decades)
-1. **0–6 mo:** non-dilutive grants + credits (NLnet Sept 3; Microsoft/NVIDIA/HF ~$30K);
-   SCITT implementer registration; master plan published (this doc).
-2. **6–18 mo:** metered enterprise workflow (EU AI Act GPAI documentation demand;
-   enforcement live since 2026-08-02, ≤3% turnover fines).
-3. **12–36 mo:** insurer/procurement/RWA **feeds** — independent measurement input that
+1. **Near term:** non-dilutive grants + credits; SCITT implementer registration; master plan published (this doc).
+2. **Next:** metered enterprise workflow (EU AI Act GPAI documentation demand;
+   enforcement live since 2026-08-02). Quoted privately.
+3. **Later:** insurer/procurement/RWA **feeds** — independent measurement input that
    never underwrites (the anti-AIUC position); ERC-3643 attester role (never issuer).
-4. **3+ yr:** corrections-ledger historical API — the uncopyable asset.
+4. **Longer:** corrections-ledger historical API — the uncopyable asset.
 
 ## Risk gates (non-negotiable)
 1. **Insurance BEFORE the first named negative verdict** — professional indemnity +
-   standalone media liability, ≥£1–2M, US/Canada extended. (Owner action; gates the
-   verdict product. UK PI entry ~£111/yr consultancy, but named-verdict publishing
-   prices materially higher — directional figures.)
+   standalone media liability, US/Canada extended. (Owner action; gates the
+   verdict product. Figures quoted privately.)
 2. **Key compromise drill** — published rotation/revocation via the ledger; multi-rail
    anchors so past attestations stay provable.
 3. **No conflicted capital** — never take issuer/insurer equity; a funded competitor
@@ -47,5 +45,5 @@ MSCI/Bureau-van-Dijk append-only profile).
 4. **Right of reply + corrections** — both designed in; each published correction
    compounds credibility.
 
-*Verification: councilof.ai/verify · github.com/CSOAI-ORG/action-verify-attestation ·
-offline verifier in-repo. All numbers on the board are signed and recomputable.*
+*Verification: councilof.ai/gspc-verify · github.com/CSOAI-ORG/action-verify-attestation ·
+offline verifier in-repo. Board counts come from GET /api/gspc. Empty cells stay empty.*

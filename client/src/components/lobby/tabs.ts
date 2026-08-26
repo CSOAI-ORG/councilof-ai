@@ -45,6 +45,7 @@ export type LobbyTabId =
   | "products"
   | "space"
   | "measured"
+  | "harness"
   | "watchdog"
   | "claimguard"
   | "ras"
@@ -158,6 +159,13 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "The shipped product family, as published — what each one measures and what it will not claim.",
     path: "/products",
     cues: /\b(product family|catalogue|catalog|products?)\b/i,
+  },
+  {
+    id: "harness",
+    label: "The harness",
+    blurb: "The measurement machinery itself — how a run becomes a signed card, and which capabilities are not yet available.",
+    path: "/harness",
+    cues: /\b(harness|measurement harness|how (it|this) is measured|card factory|instrumentation)\b/i,
   },
   {
     id: "space",

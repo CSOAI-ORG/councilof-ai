@@ -1,7 +1,7 @@
 {
   "schema_version": "2026-07-28",
   "name": "csoai",
-  "description": "Council of AI measurement tools exposed over MCP. Independent AI-governance measurement body — not certification, not accreditation. Live board: 14 measured of 14 quotable.",
+  "description": "Council of AI measurement tools exposed over MCP. Independent AI-governance measurement body — not certification, not accreditation. Live board: GET /api/gspc (quote totals.public_count).",
   "servers": [
     {
       "name": "csoai-gspc-mcp",
@@ -24,7 +24,7 @@
     "total_tools": 4,
     "server_count": 1,
     "tools": ["measure", "verify", "jail-probe", "enter-arena"],
-    "note": "MEASURED live from worker tools/list. Official registry latest 1.0.3 (board 14 of 14). Worker runtime may lag until CF_API_TOKEN restored."
+    "note": "MEASURED live from worker tools/list. Official registry latest 1.0.3. Board counts from GET /api/gspc. Worker runtime may lag until CF_API_TOKEN restored."
   },
   "provider": {
     "name": "CSOAI Ltd",

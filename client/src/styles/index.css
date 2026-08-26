@@ -72,7 +72,17 @@
 
 :root {
   --radius: 0.75rem;
-  
+
+  /*
+   * Council OS header ground. The lobby's glass surfaces are white by design
+   * (see client/src/components/lobby/glass.ts and its measured-contrast note);
+   * the HEADER is the one lobby surface that must read correctly on either
+   * theme, because it is the chrome a reader lands on. It composites this RGB
+   * triple with --lobby-alpha (the transparency slider), so one variable flips
+   * the ground and the slider keeps working in both themes.
+   */
+  --lobby-ground: 255 255 255;
+
   /* Light theme — CSOAI Editorial: warm white + single green accent */
   --background: #fafaf7;
   --foreground: #0c1a12;
@@ -122,6 +132,9 @@
 
 /* Dark theme - CSOAI Professional */
 .dark {
+  /* slate-950 — the Council OS header ground under the dark theme. */
+  --lobby-ground: 2 6 23;
+
   --background: oklch(0.10 0 0);
   --foreground: oklch(0.93 0 0);
   

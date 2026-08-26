@@ -2,15 +2,26 @@
   "kind": "gspc.kernel-anchor",
   "card_id": "895940efbb6c06d7a1706d00ce9a0a9f63efc886420be6af5b786fe72d3c74fb",
   "tsa": {
-    "status": "ok",
+    "status": "err",
     "tsa": "https://freetsa.org/tsr",
-    "tsr": "/Users/nicholas/.grokbot/harness/mine/cards/tsr-895940efbb6c06d7.tsr",
-    "bytes": 50
+    "tsr": "tsr-895940efbb6c06d7.tsr",
+    "bytes": 50,
+    "pki_status": 2,
+    "pki_status_text": "rejection",
+    "status_string": "Bad request format or system error.",
+    "fail_info": [
+      "badDataFormat"
+    ],
+    "token_present": false,
+    "token_signature_checked": false,
+    "status_derived_by": "harness/mine/tsr_status.py: DER parse of the response, not byte count",
+    "note": "No RFC 3161 token was issued: the TSA rejected the request. This record is NOT an external time anchor."
   },
   "rekor": {
     "status": "err",
     "rekor": "https://rekor.sigstore.dev",
     "error": "HTTP Error 422: unknown"
   },
-  "anchored_at": "2026-08-19T10:36:32.851101+00:00"
+  "anchored_at": "2026-08-19T10:36:32.851101+00:00",
+  "external_anchor": false
 }

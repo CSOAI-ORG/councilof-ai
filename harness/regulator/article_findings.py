@@ -8,18 +8,13 @@ those axes, and the exact fine exposure. Deterministic, no model consulted.
 Usage:
   python3 article_findings.py [--json] [--article "Article 6"]
 """
-import argparse, json, os, urllib.request
+import argparse, json, sys
 from pathlib import Path
 
-API = os.environ.get("API_HOST", "https://councilof.ai")
-MAP = json.loads(Path(__file__).with_name("eu_ai_act_article_map.json").read_text())
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from board import get, load_board_or_die, guard_axis_keys  # noqa: E402
 
-def get(path):
-    try:
-        with urllib.request.urlopen(urllib.request.Request(API + path, headers={"User-Agent": "csoai-article-findings/0.1"}), timeout=20) as r:
-            return json.loads(r.read())
-    except Exception as e:
-        return {"error": str(e)}
+MAP = json.loads(Path(__file__).with_name("eu_ai_act_article_map.json").read_text())
 
 def grade(rate):
     if rate is None: return ("UNMEASURED", "insufficient data — not a ranking")
@@ -34,19 +29,18 @@ def main():
     ap.add_argument("--article", default=None)
     args = ap.parse_args()
 
-    board = get("/api/gspc")
-    reg = get("/api/regulation")
-    # measured accuracy per axis
-    acc = {}
-    axes = board.get("axes", [])
-    if isinstance(axes, list):
-        for a in axes:
-            acc[a.get("axis")] = a.get("accuracy")
-    elif isinstance(axes, dict):
-        for k, v in axes.items():
-            acc[k] = v.get("accuracy") if isinstance(v, dict) else v
-
+    # The board must load, and every axis this map names must exist on it. An
+    # unresolvable axis name would silently become UNMEASURED - a false negative in a
+    # compliance tool - so it aborts the run instead.
+    axis_idx = load_board_or_die("article_findings")
     articles = MAP["articles"]
+    guard_axis_keys({ax for a in articles.values() for ax in a["measured_axes"]},
+                    axis_idx, "eu_ai_act_article_map.json:articles[].measured_axes",
+                    "article_findings")
+    acc = {k: v.get("accuracy") for k, v in axis_idx.items()}
+    status = {k: v.get("status") for k, v in axis_idx.items()}
+
+    reg = get("/api/regulation")
     penalties = MAP.get("penalty_tiers", {}) or reg.get("penalty_tiers_eu_ai_act", {})
     order = {"CRITICAL":0,"HIGH":1,"MEDIUM":2,"LOW":3,"UNMEASURED":4}
 
@@ -65,6 +59,7 @@ def main():
             "obligation": a["obligation"],
             "measured_axes": axes_for_art,
             "axis_rates": {ax: acc.get(ax) for ax in axes_for_art},
+            "axis_board_status": {ax: status.get(ax) for ax in axes_for_art},
             "worst_measured_rate": worst_rate,
             "grade": g,
             "note": note,
@@ -88,7 +83,8 @@ def main():
         print(json.dumps(out, indent=2, default=str))
     else:
         print(f"EU AI ACT ARTICLE-LEVEL FINDINGS  (basis: {MAP['source']})")
-        print(f"  verify: {out['verify_path']}\n")
+        print(f"  verify: {out['verify_path']}")
+        print(f"  axis-map check: PASS (every measured_axes key resolves against /api/gspc)\n")
         for r in rep:
             print(f"  [{r['grade']:8s}] {r['article']:12s} {r['title'][:32]:34s} worst={r['worst_measured_rate']}")
             print(f"             {r['obligation'][:70]}")

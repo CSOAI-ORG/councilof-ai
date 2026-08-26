@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/gspc-measurement-card-0.1.json",
+  "title": "GSPC measurement card",
+  "description": "A single signed measurement result. The envelope carries the signature; `body` is the only part that is signed, and `id` is the SHA-256 of the body's canonical preimage. Schema validity is necessary but NOT sufficient: a schema-valid card can still be a forgery. Run the verifier.",
+  "type": "object",
+  "required": ["body", "id", "pubkey", "signature"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "sha256(preimage).hexdigest(), where preimage is the canonicalised body. Also the card's permanent identifier: it cannot be reassigned without changing the bytes."
+    },
+    "pubkey": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Raw Ed25519 public key. A verifier MUST compare this against a key it obtained independently. Verifying against the key the card carries proves only self-consistency."
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{128}$",
+      "description": "Ed25519 signature over the preimage bytes."
+    },
+    "alg": { "const": "Ed25519" },
+    "preimage_rule": {
+      "type": "string",
+      "description": "How the preimage bytes were produced. A verifier that does not implement the stated rule MUST stop and report that it could not check the card, rather than canonicalising on a best-effort basis.",
+      "examples": ["json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')"]
+    },
+    "body": { "$ref": "#/$defs/body" }
+  },
+  "$defs": {
+    "body": {
+      "type": "object",
+      "required": ["axis", "created", "issuer", "kind", "model", "prev"],
+      "additionalProperties": true,
+      "properties": {
+        "kind": { "const": "gspc.measurement-card" },
+        "axis": {
+          "type": "string",
+          "description": "The governance axis measured. Names are published alongside the board; this schema does not enumerate them, because the axis set changes by ruling and a frozen list here would silently invalidate future cards."
+        },
+        "model": { "type": "string", "description": "Identifier of the system that was measured." },
+        "accuracy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Proportion of items graded correct on this axis. A FLOAT: an integral value was serialised as `0.0` in the signed preimage, not `0`. See the canonicalisation note in the README."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["measured", "unmeasured"],
+          "description": "`unmeasured` is a first-class published value, not an absence. A cell with no measurement is published as unmeasured rather than omitted, imputed, or left to be read as zero."
+        },
+        "created": { "type": "string", "format": "date-time" },
+        "issuer": { "type": "string", "description": "The legal person accountable for the measurement." },
+        "prev": {
+          "type": "string",
+          "description": "The id of the preceding card, or a genesis marker. This is the only structural defence against a silently truncated published set: the index is not signed, but `prev` is inside the signed body."
+        },
+        "public_framing": { "type": "string", "description": "How the issuer described the board's coverage at the time of signing. Historical: it is fixed at signing time and does not track later rulings." },
+        "verify": { "type": "string", "format": "uri", "description": "A convenience pointer to published verification instructions. NOT required to verify: verification is offline and needs no service." }
+      }
+    }
+  }
+}

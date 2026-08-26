@@ -1,6 +1,8 @@
 /**
  * Client-side chain verification — WebCrypto only.
- * Honest label: "chain intact — tamper-evidence", NOT "verified authentic".
+ * The PASS label is "chain intact — tamper-evidence", NOT "verified authentic";
+ * the FAIL label says the chain is broken. The label tracks the state — it is never
+ * a constant with only a glyph flipping in front of it.
  * Ed25519 / ML-DSA upgrades happen in the same commit as the capability.
  *
  * What this does:
@@ -185,10 +187,17 @@ export async function verifyChain(records: JRecord[]): Promise<VerifyResult> {
   }
 
   const sig_alg = records[0]?.sigil.sig_alg ?? "sha256";
+  const broken = lines.filter((l) => !l.body_hash_ok);
   return {
     ok,
     sig_alg,
-    label: "chain intact — tamper-evidence",
+    // The label MUST state the outcome. It used to be the constant string
+    // "chain intact — tamper-evidence" with only the ✓/✗ glyph flipping, so the
+    // FAILURE state of a tamper detector read "chain intact", in green, on the page
+    // whose entire pitch is that a broken row is "reported as BROKEN, visibly".
+    label: ok
+      ? "chain intact — tamper-evidence"
+      : `CHAIN BROKEN — ${broken.length} record${broken.length === 1 ? "" : "s"} altered after signing`,
     what_was_verified:
       "sha256(canonical JSON of each record body) recomputed locally and compared to the stored chain_hash. " +
       "Mismatch on any row would mean the record was edited after signing.",

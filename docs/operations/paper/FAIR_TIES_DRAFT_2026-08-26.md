@@ -5,7 +5,7 @@
 
 ## Abstract
 Ranking AI systems by human preference (the LMArena model) is the field's de facto
-authority metric, yet Bradley–Teryy estimates over private, un-audited vote streams
+authority metric, yet Bradley–Terry estimates over private, un-audited vote streams
 are vulnerable to three documented abuses: private best-of-N variant testing,
 selective disclosure, and silent deprecation ("The Leaderboard Illusion", 2025).
 We propose FAIR TIES: a ranking protocol where (1) two systems are reported as
@@ -17,7 +17,9 @@ guarantees that re-publishing identical evidence mints no new verdicts, and any
 correction is **appended** to a public ledger, never edited. We report a worked
 example from a 7-model × 71-item containment run: the leader's Wilson 95%
 [0.475, 0.698] contains the fleet mean 0.5455 → determined TIE, and the board
-renders "14 measured of 14 quotable" without a single unverified number.
+renders "22 axes · 15 measured" (15 measured of 15 quotable, 7 candidacy axes
+honestly UNMEASURED) without a single unverified number. (The worked example
+predates the 22-axis sweep; the tie verdict is unchanged by it.)
 
 ## 1. Motivation
 (IL-policy body) — the market validated independent scorekeepers in 2026
@@ -40,13 +42,13 @@ reason; strangers verify both survive.
 - Jail containment (7 models × 71 gold cells): leader qwen2.5:0.5b-instruct
   acc 0.5915, Wilson 95% [0.475, 0.698] ∋ fleet mean 0.5455 → **TIE**; 7 models
   all n≥30; best recall 0.237 (published, not hidden).
-- Board grammar: 14 measured of 14 quotable (TIE counts as measured; ties are
-  never counted as wins).
+- Board grammar: 22 axes · 15 measured of 15 quotable (7 candidacy axes honestly
+  UNMEASURED; TIE counts as measured; ties are never counted as wins).
 - Scorecard honesty: 311 entries, 306 A / 5 C (the C's = fewer disclosed facts —
   the gate functioning as designed).
 
 ## 4. Discussion
-Versus Bradley–Teryy: BT optimizes point estimates; FAIR TIES refuses to rank
+Versus Bradley–Terry: BT optimizes point estimates; FAIR TIES refuses to rank
 what the evidence cannot separate — directly answering the Illusion paper's
 "prohibit score retraction / cap private variants / auditable deprecation".
 The anti-gaming core makes each item of evidence impossible to double-spend —

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/gspc-card-index-0.1.json",
+  "title": "GSPC card index",
+  "description": "A listing of published cards. IT IS NOT SIGNED AND IT IS NOT EVIDENCE. Entries can be added, altered or omitted without breaking any signature, so an index is a convenience for fetching, never a proof of what exists. Completeness is argued from the `prev` chain inside the signed card bodies, not from this file.",
+  "type": "object",
+  "required": ["cards", "kind"],
+  "additionalProperties": true,
+  "properties": {
+    "kind": { "const": "card_index" },
+    "schema": { "type": "string" },
+    "head": { "type": "string", "description": "The id the issuer declares as the chain tip. Unsigned, so treat it as a claim to be checked against the cards, not as a fact." },
+    "n_cards": { "type": "integer", "minimum": 0 },
+    "n_cells": { "type": "integer", "minimum": 0 },
+    "created": { "type": "string", "format": "date-time" },
+    "packaged_at": { "type": "string", "format": "date-time" },
+    "pubkey": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "verification": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "alg": { "const": "Ed25519" },
+        "id_rule": { "type": "string" },
+        "preimage_rule": { "type": "string" },
+        "howto": { "type": "string" }
+      }
+    },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["card"],
+        "additionalProperties": true,
+        "properties": {
+          "card": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "card_url": { "type": "string" },
+          "axis": { "type": "string" },
+          "ts": { "type": "string", "format": "date-time" },
+          "alg": { "const": "Ed25519" },
+          "kid": { "type": "string" },
+          "pubkey": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "sig": { "type": "string", "pattern": "^[0-9a-f]{128}$" },
+          "signed": { "type": "boolean", "description": "The index's own claim. Believe the verifier, not this field." }
+        }
+      }
+    }
+  }
+}

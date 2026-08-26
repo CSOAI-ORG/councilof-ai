@@ -164,6 +164,7 @@ const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const BenchmarkIndex = lazy(() => import("./pages/BenchmarkIndex"));
 const BenchmarkQuality = lazy(() => import("./pages/BenchmarkQuality"));
 const Instrument = lazy(() => import("./pages/Instrument"));
+const Harness = lazy(() => import("./pages/Harness"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
 const XrplAttest = lazy(() => import("./pages/XrplAttest"));
@@ -398,6 +399,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/where-the-record-lives": "Where the record lives — mirrored, not indestructible | Council of AI",
   "/statute-to-predicate": "From statute to predicate — how a law becomes a test | Council of AI",
   "/instrument": "The Instrument | CSOAI",
+  "/harness": "The measurement harness | Council of AI",
   "/benchmarks": "Benchmarks | CSOAI",
   "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
   "/benchmark-quality": "Benchmark-quality register — deterministic predicates on third-party AI benchmarks | Council of AI",
@@ -652,6 +654,7 @@ function App() {
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
+                  <Route path="/harness" component={Harness} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/coliseum" component={Coliseum} />

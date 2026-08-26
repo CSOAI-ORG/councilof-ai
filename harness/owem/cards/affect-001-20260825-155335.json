@@ -37,6 +37,9 @@
       "pubkey": "NhwxaclAgabVZoJaysvdfNGALqWdXJxdU0k/+nl1aYA=",
       "sig": "uYyTsY9jKc64JPPm56YY7TMi/r0O42Mgkk55LdHuqf2Awp2J4XFh11dn3iRuZb8O52IoagyUPhPMVhEwhD61Dg==",
       "body_sha256": "cb151dcd981755263bab39aeeae3716b34ce0a38a0aecc6b23fb2187827479db",
+      "sig_hex_preimage": "json of the card WITHOUT `signature`, keys recursively sorted, separators (',',':'), ensure_ascii=True; content_id = sha256 of it",
+      "sig_preimage": "json of the card WITHOUT top-level `signature`/`sha256`/`sig`, keys in INSERTION order, integral floats written as ints, separators (',',':'), ensure_ascii=False; body_sha256 = sha256 of it",
+      "preimage_note": "Both preimages exclude the `signature` object, so naming them here changes neither signature. Verify with harness/owem/verify_cards.py.",
       "trust_level": "worker-measurement",
       "signing_pod": "did:web:csoai.org#board-attestation-1"
     }
@@ -78,6 +81,9 @@
       "pubkey": "NhwxaclAgabVZoJaysvdfNGALqWdXJxdU0k/+nl1aYA=",
       "sig": "2967Rhc2RzSlFbES6JojLRnkZtHeCFw8qqtPHnmwUSPZOFDvRbV3fXfgfHUhqqn8l1o8QHXlpY7iNPq+nSB4DQ==",
       "body_sha256": "f6fa696faddf407f760ce0049342dbfd1fed464d1164fb9b48d29a095f230768",
+      "sig_hex_preimage": "json of the card WITHOUT `signature`, keys recursively sorted, separators (',',':'), ensure_ascii=True; content_id = sha256 of it",
+      "sig_preimage": "json of the card WITHOUT top-level `signature`/`sha256`/`sig`, keys in INSERTION order, integral floats written as ints, separators (',',':'), ensure_ascii=False; body_sha256 = sha256 of it",
+      "preimage_note": "Both preimages exclude the `signature` object, so naming them here changes neither signature. Verify with harness/owem/verify_cards.py.",
       "trust_level": "worker-measurement",
       "signing_pod": "did:web:csoai.org#board-attestation-1"
     }

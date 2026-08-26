@@ -35,3 +35,10 @@ jobs:
         with: { node-version: 20 }
       - name: One-door guard
         run: node scripts/one-door-guard.mjs
+
+      # This workflow already triggers on public/_redirects and generate-redirects.mjs,
+      # so it is the cheapest place to catch a rule-cap regression at PR time.
+      - name: Redirects guard (selftest + file)
+        run: |
+          node scripts/redirects-guard.mjs --selftest
+          node scripts/redirects-guard.mjs public/_redirects

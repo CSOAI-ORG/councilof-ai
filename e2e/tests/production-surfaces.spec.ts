@@ -88,7 +88,8 @@ test.describe('BuiltOnFooter — License Attribution', () => {
 // ─── 2. HONESTY CARDS (no false claims) ───
 test.describe('Honesty Cards — No False Claims', () => {
   test('no "ISO 17065 certified" claim on compliance pages', async ({ page }) => {
-    const complianceRoutes = [
+    const catalogRoutes = ["/interop/surface-catalog.json", "/docs/MASTER_PLAN_2026-08-26.md", "/docs/INSURER_PILOT_PITCH_2026-08-26.md", "/docs/NIST_CAISI_INPUT_2026-08-26.md"];
+  const complianceRoutes = [
       '/compliance/eu-ai-act', '/compliance/nist-ai-rmf', '/compliance/tc260',
       '/compliance/uk-ai-bill', '/compliance/canada-ai-act', '/compliance/australia-ai-governance',
     ];

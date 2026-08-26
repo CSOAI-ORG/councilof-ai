@@ -1,0 +1,29 @@
+name: regulator axis map (false-UNMEASURED guard)
+
+# The regulator findings tools grade EU AI Act obligations by looking axis names up on
+# the live GSPC board. Five of those names never existed on the board, so the tools
+# reported UNMEASURED for axes that ARE measured. In a compliance tool a false UNMEASURED
+# is the dangerous direction: it tells a regulator we did not check something we did.
+# This job fails if any axis name in any of the three maps stops resolving.
+
+on:
+  push:
+    branches: [master, main]
+    paths: ['harness/regulator/**', '.github/workflows/regulator-axis-map.yml']
+  pull_request:
+    paths: ['harness/regulator/**', '.github/workflows/regulator-axis-map.yml']
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  axis-map:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Selftest (offline — proves the check can fail)
+        run: python3 harness/regulator/axis_map_check.py --selftest
+      - name: Every mapped axis key resolves against the live board
+        run: python3 harness/regulator/axis_map_check.py

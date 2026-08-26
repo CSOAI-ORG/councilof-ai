@@ -29,13 +29,13 @@ export const PRIMARY_PATHS = new Set<string>([
   "/",
   // Measure
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
-  "/methodology", "/instrument", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
+  "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/report",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
-  "/regulation-tracker", "/regulators", "/crosswalk", "/ai-act-faq",
+  "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
   // Products — the family, and who it is for
   "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",
@@ -59,6 +59,15 @@ export const PRIMARY_PATHS = new Set<string>([
   // Company
   "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
   "/faq",
+  // Who it is for — the six /for/:persona audience pages (PersonaRouter).
+  // These are DYNAMIC routes, so they never appear in ROUTE_MANIFEST and cannot be
+  // registered by the manifest sweep; they have to be listed by hand or every one of
+  // them renders the ArchivedBanner ("reference / archive") on a current page. That is
+  // the known trap this file's header warns about, and it bit these six directly: they
+  // were suppressed behind /for/* redirect Functions on 2026-08-24 and, on restoration,
+  // would have shipped flagged archived. Registered here so they cannot.
+  "/for/regulator", "/for/enterprise", "/for/finance",
+  "/for/healthcare", "/for/startup", "/for/sec-filer",
 ]);
 
 export interface Sector {

@@ -3,7 +3,8 @@
 You do not need our code, our permission, or our word for any of this. Everything below runs
 against the published bytes.
 
-**Cards published:** 313 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
+**Cards published:** read `n_cards` on GET /signed/card_index.json — do not type a count here.
+**Algorithm:** Ed25519 · **Distinct signing keys:** 1
 
 ## 1. Pin the key first — this step is not optional
 
@@ -33,9 +34,9 @@ Every published card MUST carry that exact `pubkey`. If one does not, stop.
 
 The preimage was produced by CPython's `json.dumps`, which renders a float of integral value
 as **`0.0`**. ECMAScript `JSON.stringify`, Go's `encoding/json`, and RFC 8785 (JCS) all render
-the same value as **`0`**. 116 of our 313 cards contain such a value, so a
+the same value as **`0`**. Some published cards contain such a value, so a
 naive JavaScript or Go verifier computes a different preimage and reports a **false failure**
-on roughly a third of the set.
+on a subset of the set.
 
 This is a property of the bytes that were signed; we cannot change it without re-signing every
 card and breaking every id, which are hashes of these exact bytes. So it is specified here
@@ -53,7 +54,28 @@ const canon = (v) => Array.isArray(v) ? "[" + v.map(canon).join(",") + "]"
 at runtime — both are the same IEEE-754 double. A JS verifier therefore needs the schema to
 tell it which fields are floats. The fields that are floats in our cards are `accuracy` and
 any field ending `_ci_low` / `_ci_high`. A future card format should use JCS so this note is
-unnecessary; these 150 cannot be migrated without invalidating their ids.
+unnecessary; the signed card ids cannot be migrated without invalidating them.
+
+## 3a. `ensure_ascii` — the cards and the board are NOT the same rule
+
+Two different signed artefacts on this site use two different canonicalisations. Both are
+stated; neither is being changed, because each signature is over the bytes it is over.
+
+| artefact | key | canonicalisation | signature is over |
+|---|---|---|---|
+| the 150 cards under `/signed/cards/` | `#card-attestation-1` | `sort_keys=True, separators=(',',':')`, **`ensure_ascii=True`**, CPython float `repr` (integral floats render `0.0`) | the raw UTF-8 preimage bytes of `body` |
+| `site_attestation` on `/api/gspc` | `#board-attestation-1` | keys sorted by code point recursively, no whitespace, **`ensure_ascii=False`** (non-ASCII emitted literally as UTF-8), ECMAScript number rendering (integral floats render `0`) | the raw UTF-8 bytes of the whole payload minus `site_attestation` — **not** a digest |
+
+The board payload currently carries 81 non-ASCII code points (`·` `×` `–` `—` `→` `≥`). Reading
+its rule as `ensure_ascii=True` produces a preimage ~256 bytes different and reports a bad
+signature on a good artefact. The card bodies happen to contain no non-ASCII today, so the
+card rule's `ensure_ascii=True` is not currently load-bearing — but it is what was signed, and
+a single `—` in a future card body would make it so.
+
+Neither can be migrated to the other. The card ids **are** SHA-256 over their exact preimage
+bytes, so changing the rule re-mints every id. The board attestation is produced at the edge in
+JavaScript, where `ensure_ascii=False` is what `JSON.stringify` does. The honest answer is to
+say which is which, in each place, and that is what `sig_input` on `/api/gspc` and this table do.
 
 ## 4. Check one card
 
@@ -84,6 +106,7 @@ curl -s https://councilof.ai/signed/card_index.json -o index.json
 ```
 
 Fetch each `card_url`, then run step 4 against every one with the same pinned key.
+The honest count is `n_cards` on that index file. Empty cells stay empty. Do not invent extras.
 
 ## What this does and does not prove
 
@@ -92,6 +115,5 @@ card-attestation key and have not been altered since. **It does not prove the me
 correct** — that rests on the published method, the gold labels and the rows, all separately
 available. A signature is an integrity claim, not a truth claim.
 
-**It also does not prove the set is complete.** The index declares a chain head that is not
-among these 313 cards: they are a prefix of a longer chain. Each card verifies
-individually; completeness does not.
+**It also does not prove the set is complete.** Completeness is the published `n_cards` field
+on the index, not a number typed in this document. Each card verifies individually.
