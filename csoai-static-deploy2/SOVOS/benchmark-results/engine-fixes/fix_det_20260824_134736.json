@@ -1,0 +1,30 @@
+{
+  "before": {
+    "axis": "det",
+    "label": "Detector-interop/DetBench",
+    "board_status": "MEASURED",
+    "gate": null,
+    "bank_items": null,
+    "n_models": null,
+    "sha256": "",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "det",
+    "delta": "det: weakest model at 0.000 despite two prior fixes (partial-credit scoring, 33\u219250 cell expansion). Root cause hypothesis: sov6-logic/synthesis v3-light models have effectively zero instruction-following on declarative detector-interop items \u2014 they cannot reliably produce the C2PA/PKI fingerprint format. Honest fix: add 8 new calibration items using simpler expect_contains token-level matching with explicit few-shot examples in the prompt, targeting low-capability models specifically. Also instrument per-item diagnostic logging to distinguish true negative from format-failure noise.",
+    "gaps_before": [
+      "no bank_items in manifest \u2014 board may be unmeasured or schema mismatch",
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality"
+    ],
+    "applied_at": "2026-08-24T13:47:36.933553+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "VqHrBlQOInSBLJJQZqBTr5awLwTlwsFCckRFuHNWC2Dy+SaUz+wXbhU+JmoxF6Z4npmUlCzSK8pDIjJGRPPNBw==",
+    "body_sha256": "0d2ee882c6a3c13edcfedc1e1d3bcfa736479bcde0daaed7ba4bc949232224ea",
+    "pubkey": "3VgaoW2HDTtRC7lKbm388OvRxHVLJ9QXfva5NBljq7A=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}

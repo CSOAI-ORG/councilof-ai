@@ -1,0 +1,29 @@
+{
+  "before": {
+    "axis": "det",
+    "label": "Detector-interop/DetBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 33,
+    "n_models": 19,
+    "sha256": "384b28480f21",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "det",
+    "delta": "sov6-logic-v3-light on DetBench: 0.000 \u2192 candidate fix: reweigh logic-interop items to separate true-negative signal from no-op noise. Light models exhibit floor effect on 7/33 items where any response triggers a pass. Apply graded partial-credit scoring (0.0-1.0) instead of binary pass/fail for non-declarative items. Root cause: binary gate flattens variance on light models.",
+    "gaps_before": [
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality"
+    ],
+    "applied_at": "2026-08-15T02:19:39.143677+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "b5ufKL+iNmObe5JPS99MeBoo1KyDHozx/UMNh5VxIR+od4Nvon+ZaSlXk6EZe/cRbPJV+4/xKSXpM9XP7xgjAg==",
+    "body_sha256": "d320ceaf86b7730b0872e78abb04ee703dc06da1bc13acd150a436fa31f4596f",
+    "pubkey": "ZnF3DZUFc5QOoy+y07rvzNUyxJgza2kUQmn1nv4S9SY=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}

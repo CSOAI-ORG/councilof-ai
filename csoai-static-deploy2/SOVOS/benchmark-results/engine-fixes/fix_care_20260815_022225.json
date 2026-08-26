@@ -1,0 +1,29 @@
+{
+  "before": {
+    "axis": "care",
+    "label": "Care/CareBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 200,
+    "n_models": 19,
+    "sha256": "d7c87834b10f",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "care",
+    "delta": "llama3.2:3b on CareBench: 0.035 \u2192 candidate fix: small models exhibit floor effect on long-context care scenarios (patient-history > 800 tokens). Apply length-normalised scoring for models under 3B params \u2014 partial credit for correct triage despite incomplete context extraction. Root cause: binary pass/fail on multi-turn care scenarios where small models lose coherence past 600 tokens.",
+    "gaps_before": [
+      "weakest model llama3.2:3b at 0.035 \u2014 near-chance floor, check bank quality"
+    ],
+    "applied_at": "2026-08-15T02:22:25.583722+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "XIZrGvNtXnv+Vre7T6Mqhf9bPTshmM9+w666k6GbCr+YILn6Tr779jdctPw1XbrrNGYAzPkcU2/DVXY/yJA/Aw==",
+    "body_sha256": "879e5b1af01bbdb41c0925a7b93031007fcd404c1adbe81a9ccebd38b91df5b1",
+    "pubkey": "ZnF3DZUFc5QOoy+y07rvzNUyxJgza2kUQmn1nv4S9SY=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}

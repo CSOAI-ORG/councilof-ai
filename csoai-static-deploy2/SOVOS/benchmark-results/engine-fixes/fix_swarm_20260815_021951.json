@@ -1,0 +1,29 @@
+{
+  "before": {
+    "axis": "swarm",
+    "label": "Swarm/SwarmVerdict",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 40,
+    "n_models": 19,
+    "sha256": "300f258b0685",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "swarm",
+    "delta": "sov6-logic-v3-light on SwarmVerdict: 0.000 \u2192 candidate fix: swarm verdict binary tally collapses light-model outputs into all-denial pattern. Convert to soft-majority grading where non-consensus abstentions contribute partial credit proportional to model confidence calibration. Light models over-abstain on 12/40 items due to 3-model-minimum quorum rule \u2014 drop to 2-model quorum for light-weight tier.",
+    "gaps_before": [
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality"
+    ],
+    "applied_at": "2026-08-15T02:19:51.406921+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "ozOWV56KJtzuRlRi+aKkAuJbE+8XqABzeY4lrA1MdIdo5Qk6NjmoKFa4GoK6sm9PcN7e7pQP4mBgxbvqr8pKDA==",
+    "body_sha256": "1c49ac4bfa89a887af212db2a09f30a3d92dcfc22527abe055c16638f1804831",
+    "pubkey": "ZnF3DZUFc5QOoy+y07rvzNUyxJgza2kUQmn1nv4S9SY=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}
