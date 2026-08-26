@@ -1,0 +1,16 @@
+gspc-card-verifier
+Copyright 2024-2026 CSOAI Ltd (UK company 16939677)
+
+This product includes software developed by CSOAI Ltd.
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+WHAT IS AND IS NOT IN THIS PACKAGE
+  Included:  the verifier, the canonicalisation rule, the card and index JSON Schemas,
+             the verification profile, and the failing-case tests.
+  Excluded:  the measurement harness that produces the cards. It is not open source and is
+             not distributed here.
+
+That split is deliberate and is the point of the package. Verification must not depend on
+the verifier trusting, or having access to, the party being verified. Anyone can check a
+published card with nothing but these files and a runtime; nobody needs our permission,
+our servers, or our cooperation to do it.

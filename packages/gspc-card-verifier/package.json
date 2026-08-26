@@ -1,0 +1,44 @@
+{
+  "name": "gspc-card-verifier",
+  "version": "1.0.0",
+  "description": "Offline, zero-dependency verifier for GSPC measurement cards. Three states, never two.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./canonical": "./src/canonical.mjs",
+    "./profile": "./profile/csoai-gspc-1.json",
+    "./schema/card": "./schema/gspc-measurement-card.schema.json",
+    "./schema/index": "./schema/gspc-card-index.schema.json"
+  },
+  "bin": {
+    "gspc-verify": "./bin/gspc-verify.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "schema",
+    "profile",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=19"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "fixtures": "node test/make-fixtures.mjs",
+    "bundle": "node scripts/bundle.mjs ../../public/verifier/gspc-verify.mjs"
+  },
+  "keywords": [
+    "ed25519",
+    "verification",
+    "transparency",
+    "attestation",
+    "offline",
+    "scitt"
+  ]
+}
