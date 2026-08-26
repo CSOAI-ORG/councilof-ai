@@ -148,6 +148,7 @@ export default function DataProcessingAgreement() {
                     <li>Managing user accounts and access</li>
                     <li>Processing payments and subscriptions</li>
                     <li>Issuing and verifying certifications</li>
+                    <li>Publishing signed measurement cards (Ed25519) — path/metadata for verification surfaces; card bodies are measurement artefacts, not sold scores</li>
                     <li>Sending service-related communications</li>
                     <li>Improving platform functionality</li>
                   </ul>
