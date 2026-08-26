@@ -211,8 +211,11 @@ export default function Compare({ focus }: { focus?: string }) {
           )}
         </p>
 
+        {/* min-w + this container's own scroll: at 375px a two-column table of
+            prose with no minimum collapses to two-character columns. The page
+            body still never scrolls sideways. */}
         <div className="mt-6 overflow-x-auto rounded-2xl border border-gray-200">
-          <table className="w-full border-collapse text-sm">
+          <table className="w-full min-w-[480px] border-collapse text-sm">
             <thead>
               <tr className="bg-emerald-50/60 text-left">
                 <th className="px-4 py-3 font-bold text-gray-900">What Council of AI publishes</th>

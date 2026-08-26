@@ -88,16 +88,22 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
       {loading && !error && <p className={`px-5 py-4 text-sm ${t.muted}`}>Reading the live board…</p>}
 
       {data && (
+        {/* The table has six columns of real content. At 375px `w-full` alone
+            crushed every one of them to a two-character column and broke words
+            mid-character — the row was on screen and unreadable, which is the
+            same failure as not publishing it. A minimum width plus this
+            container's own horizontal scroll keeps the row legible; the page
+            body still never scrolls sideways. */}
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[660px] text-sm">
             <thead>
               <tr className={`text-left ${t.sub}`}>
-                <th className="px-5 py-2 font-semibold">Axis</th>
-                <th className="px-3 py-2 font-semibold">Bench</th>
-                <th className="px-3 py-2 font-semibold">n</th>
-                <th className="px-3 py-2 font-semibold">Leader accuracy</th>
-                <th className="px-3 py-2 font-semibold">95% CI</th>
-                <th className="px-5 py-2 font-semibold">Separation</th>
+                <th className="whitespace-nowrap px-5 py-2 font-semibold">Axis</th>
+                <th className="whitespace-nowrap px-3 py-2 font-semibold">Bench</th>
+                <th className="whitespace-nowrap px-3 py-2 font-semibold">n</th>
+                <th className="whitespace-nowrap px-3 py-2 font-semibold">Leader accuracy</th>
+                <th className="whitespace-nowrap px-3 py-2 font-semibold">95% CI</th>
+                <th className="whitespace-nowrap px-5 py-2 font-semibold">Separation</th>
               </tr>
             </thead>
             <tbody>
@@ -105,7 +111,7 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                 if ("missing" in r) {
                   return (
                     <tr key={r.axis} className="border-t border-current/10">
-                      <td className={`px-5 py-3 font-semibold ${t.axis}`}>{r.axis}</td>
+                      <td className={`whitespace-nowrap px-5 py-3 font-semibold ${t.axis}`}>{r.axis}</td>
                       <td className={`px-3 py-3 ${t.muted}`} colSpan={5}>
                         not on the board — this page names an axis GET /api/gspc does not carry
                       </td>
@@ -118,8 +124,8 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                 const sep = separationNote(a);
                 return (
                   <tr key={a.axis} className="border-t border-current/10">
-                    <td className={`px-5 py-3 font-semibold ${t.axis}`}>{a.axis}</td>
-                    <td className={`px-3 py-3 ${t.cell}`}>{a.bench || "—"}</td>
+                    <td className={`whitespace-nowrap px-5 py-3 font-semibold ${t.axis}`}>{a.axis}</td>
+                    <td className={`whitespace-nowrap px-3 py-3 ${t.cell}`}>{a.bench || "—"}</td>
                     {/* A declared slot serves n:0. Printing "0" in an n column reads as
                         "we measured zero items", which is a measurement claim; the slot's
                         honest state is that nothing was measured at all. Render the unit
@@ -151,7 +157,7 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                         <span title={acc.title} className={`font-sans ${t.muted}`}>{acc.text}</span>
                       )}
                     </td>
-                    <td className={`px-3 py-3 font-mono text-[12px] ${t.cell}`}>
+                    <td className={`whitespace-nowrap px-3 py-3 font-mono text-[12px] ${t.cell}`}>
                       <span title={iv.title} className={iv.text.includes("%") ? "" : `font-sans ${t.muted}`}>{iv.text}</span>
                     </td>
                     <td className={`px-5 py-3 ${t.cell}`}>
@@ -159,7 +165,7 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                         <span className="text-[12px] font-semibold">
                           {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
                           {typeof a.separation_p === "number" && (
-                            <span className={`ml-1 font-normal ${t.muted}`}>p={a.separation_p}</span>
+                            <span className={`ml-1 font-normal ${t.muted}`}>{" "}p={a.separation_p}</span>
                           )}
                         </span>
                       ) : (
