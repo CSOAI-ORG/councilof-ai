@@ -64,6 +64,15 @@ jobs:
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
 
+      # Facts gate — WIRED BUT NON-BLOCKING pending an owner ruling on the canonical
+      # axis count. It currently reports 29 real contradictions: the live board says
+      # 14, 26 gspc/* pages say 17, /arena-scoreboard says 15. Those are not typos,
+      # they are a canon question. Flip `continue-on-error` to false the moment the
+      # number is ruled — a blocking gate on an unruled fact just breaks every deploy.
+      - name: Facts gate — no claim may contradict facts.json
+        continue-on-error: true
+        run: node scripts/facts-gate.mjs dist/client
+
       - name: Dist bundle guard — stranger paths + API functions present
         run: |
           set -euo pipefail
