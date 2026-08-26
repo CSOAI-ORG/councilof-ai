@@ -191,3 +191,16 @@ humanoid deployment-registry design.
   board was a retraction; this is the honesty discipline). Do NOT build a competing scorecard.
 - Atlas Play #1's "SSL Labs graded the web uninvited" precedent is intact as DOCTRINE, but the asset
   count + the build owner must be corrected before any revenue plan leans on it.
+
+## 2026-08-26 · JEEVES — ARC/Ndea playbook: OpenSkill rating delivered (non-colliding)
+
+- Added harness/arena/openskill.py — permissive multi-team Bayesian (Plackett-Luce) rating,
+  the ARC-AGI-3 Business-Model Catapult playbook's recommended default for swarm/team/mixed
+  populations (Elo is pairwise-only; TrueSkill is the cross-check). Verified: k=3 swarm
+  separates A>B>C; 2nd vs 3rd discriminated; k=2 winner up. Doctrine: measurement-not-
+  certification, thin-n = insufficient-data-to-rank. Elo stays for 1v1 (non-colliding).
+- NOTE: the estate ALREADY has execution alignment to this playbook (commit 26294811,
+  "execution alignment (ARC/Ndea catapult + benchmark/competition playbook)"). This module
+  is one concrete implementation of its rating recommendation, not a duplicate plan.
+- Active lanes untouched: 22-axis sweep, axis-count-derive, a4-mcp-honesty. This commit is
+  isolated on master (harness/ — not the deployed client/).
