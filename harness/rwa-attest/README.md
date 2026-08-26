@@ -13,16 +13,36 @@ off-chain free/signed/immutable; recipient = token contract, no consent).
 
 ## Usage
 ```
-python3 rwa_attest.py targets            # list the 22-target registry
+python3 rwa_attest.py targets            # list the 22-issuer registry
 python3 rwa_attest.py card <id>          # build + sign + ClaimGuard-verify a verdict card
 python3 rwa_attest.py memo <id>          # XRPL Memo hex (ready to submit from our funded account)
 python3 rwa_attest.py eas <id>           # EAS off-chain attestation payload (recipient = contract)
-python3 rwa_attest.py batch              # gen + ClaimGuard-verify all targets -> rwa-attest-index.json
+python3 rwa_attest.py batch              # gen + signature-check all issuers -> rwa-attest-index.json
+python3 rwa_attest.py reindex            # rebuild the index from the committed signed cards (no key needed)
+python3 rwa_attest.py --selftest         # prove the signature check can fail
 ```
 Targets: ousg, buidl, benji, acred, aviva, jmwh, dcp, rlusd, eurcv, archax + 12 deep-universe
 adapters (usdy, ondo_stk, haml_scope, kkr_hc, vaneck, backed_nvda, backed_bib01, superstate_uscc,
 circle_usyc, plume, blochome, schuman_eurp). Verified public addresses are in code; the adapters are
 cataloged from research and carry `addr:pending` until RWA.xyz/Etherscan-verified.
+
+### What the index establishes, and what it does not
+
+`rwa-attest-index.json` used to publish `"verdict": "VALID"` on all 22 rows beside
+`n_valid: 22`. "VALID" only ever meant *this card's own Ed25519 signature verifies* — a
+check on our own bytes. Beside `register: UNMEASURED` it read as an assessment of the
+asset, which it never was. The field is now `signature_check`, and every row carries
+`asset_assessment` and `address_state`. The honest counts today:
+
+| count | value | meaning |
+|---|---|---|
+| `n_catalogued` | 22 | issuers in the registry |
+| `n_targets` / `n_addresses_published` | 6 | issuers with a real public chain address |
+| `n_addresses_placeholder` | 16 | `0x` / `r` / `pending` — **not** presented as targets |
+| `n_signature_verifies` | 22 | our own cards' signatures verify |
+| `n_assets_measured` | **0** | no GSPC bank exists for any of these issuers |
+
+Zero assets have been measured. Nothing here is a rating, a verdict on an asset, or advice.
 
 ## Execution plan (from the ranked target list)
 - **Stage 1 (testnet):** XRPL Devnet Memo + CredentialCreate; EAS off-chain on Sepolia/Base. Reference impls:

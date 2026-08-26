@@ -90,6 +90,24 @@ def bank_hash(axis, n):
     rows = bank(axis, n)
     return hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest()
 
+def _scored(m):
+    """A score computed from zero graded items is not a score.
+
+    The register-cached fallback used to copy a `sov_score` out of the register while
+    `n_scored` stayed 0, so 13 emitted cards carried a number - two of them 1.0 - derived
+    from n=0 with bench "unavailable". A perfect score from zero graded items must never
+    reach a customer surface. UNMEASURED is a real published status; a number is not.
+    """
+    n = m.get("n_scored") or 0
+    if n <= 0 and m.get("sov_score") is not None:
+        m["score_withheld"] = m["sov_score"]
+        m["score_withheld_reason"] = (f"score dropped: n_scored={n}. A score from zero graded "
+                                      "items is UNMEASURED, never a number.")
+        m["sov_score"] = None
+    m["status"] = "MEASURED" if (n > 0 and m.get("sov_score") is not None) else "UNMEASURED"
+    return m
+
+
 def measure(axis, n, model=CHAMPION):
     """Measure against the bench; if the bench/bank is unavailable (GPU pod reclaimed), fall
     back to the REGISTER's real last-known-measured score (honest: cached, not freshly measured)."""
@@ -102,21 +120,23 @@ def measure(axis, n, model=CHAMPION):
             if s is None: notes.append(note)
             else: scores.append(s)
         sc = round(sum(scores) / len(scores), 4) if scores else None
-        return {"sov_score": sc, "n_scored": len(scores), "n_unmeasured": len(notes),
-                "bank_hash": bank_hash(axis, n), "model": model, "bench": OLLAMA, "source": "bench"}
+        return _scored({"sov_score": sc, "n_scored": len(scores), "n_unmeasured": len(notes),
+                        "bank_hash": bank_hash(axis, n), "model": model, "bench": OLLAMA,
+                        "source": "bench"})
     # fall back to the real register measurement (no fabrication)
     try:
         reg = json.load(open(os.environ.get("REGISTER", "/workspace/axis_clusters.json")))
         c = reg.get("clusters", {}).get(axis, {})
-        sc = c.get("owem", {}).get("sov_score")
-        return {"sov_score": sc, "n_scored": c.get("owem", {}).get("n_scored", 0),
-                "n_unmeasured": c.get("owem", {}).get("unmeasured", 0),
-                "bank_hash": c.get("owem", {}).get("bank_hash", "register-seed"),
-                "model": c.get("owem", {}).get("sov_model", CHAMPION), "bench": "unavailable",
-                "source": "register-cached", "cached": True}
+        owem = c.get("owem", {})
+        return _scored({"sov_score": owem.get("sov_score"), "n_scored": owem.get("n_scored", 0),
+                        "n_unmeasured": owem.get("unmeasured", 0),
+                        "bank_hash": owem.get("bank_hash", "register-seed"),
+                        "model": owem.get("sov_model", CHAMPION), "bench": "unavailable",
+                        "source": "register-cached", "cached": True})
     except Exception as e:
-        return {"sov_score": None, "n_scored": 0, "n_unmeasured": 0, "bank_hash": "none",
-                "model": model, "bench": "unavailable", "source": "unmeasured", "err": str(e)[:40]}
+        return _scored({"sov_score": None, "n_scored": 0, "n_unmeasured": 0, "bank_hash": "none",
+                        "model": model, "bench": "unavailable", "source": "unmeasured",
+                        "err": str(e)[:40]})
 
 def load_or_gen_key():
     if os.path.exists(KEYPATH):
@@ -172,6 +192,19 @@ def sign_card(key, card):
                              # LIVE /verify-compatible block (deployed page reads kind/pubkey/sig, base64):
                              "kind": "ed25519", "pubkey": base64.b64encode(pubraw).decode(),
                              "sig": v_sig_b64, "body_sha256": v_sha,
+                             # Self-describing preimages. Both fields below are inside
+                             # `signature`, which BOTH canonicalisations strip, so naming
+                             # them changes neither signature. Without them a stranger
+                             # implementing the obvious verifier (base64 `sig` over the
+                             # `body` object) gets INVALID on a genuinely signed card.
+                             "sig_hex_preimage": ("json of the card WITHOUT `signature`, keys "
+                                                  "recursively sorted, separators (',',':'), "
+                                                  "ensure_ascii=True; content_id = sha256 of it"),
+                             "sig_preimage": ("json of the card WITHOUT top-level "
+                                              "`signature`/`sha256`/`sig`, keys in INSERTION "
+                                              "order, integral floats written as ints, "
+                                              "separators (',',':'), ensure_ascii=False; "
+                                              "body_sha256 = sha256 of it"),
                              "trust_level": "worker-measurement",   # GX.2: public card is estate-attested separately
                              "signing_pod": "did:web:csoai.org#board-attestation-1"}
     else:
@@ -260,6 +293,7 @@ def run(axis, n=4):
     # replay_merkle_root · method · timestamps · alg self-description (Ed25519 / SHA-256, NIST IR 8547).
     score = m.get("sov_score")
     score_vector = {"axis": axis, "sov_score": score,
+                    "status": m.get("status", "UNMEASURED" if score is None else "MEASURED"),
                     "ci95": wilson_ci(score, m.get("n_scored")), "n": m.get("n_scored"),
                     "n_unmeasured": m.get("n_unmeasured")}
     card_body = {"axis": axis, "ts": NOW(), "score_vector": score_vector,

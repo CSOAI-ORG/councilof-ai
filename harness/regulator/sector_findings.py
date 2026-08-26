@@ -10,17 +10,12 @@ issues + exposure before anyone contacts the party. Never a blog post.
 Usage:
   python3 sector_findings.py --sector insurance|bond|cobol --deployment "X" [--json]
 """
-import argparse, json, os, urllib.request
+import argparse, json, sys
 from datetime import datetime, timezone
+from pathlib import Path
 
-API = os.environ.get("API_HOST", "https://councilof.ai")
-
-def get(path):
-    try:
-        with urllib.request.urlopen(urllib.request.Request(API + path, headers={"User-Agent": "csoai-wl/0.1"}), timeout=20) as r:
-            return json.loads(r.read())
-    except Exception as e:
-        return {"error": str(e)}
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from board import get, load_board_or_die, guard_axis_keys  # noqa: E402
 
 # Per-sector: which GSPC axes matter most, and the sector-specific obligations/frameworks
 # the deployment is judged against. Maps measured axes -> the sector's own regulatory lens.
@@ -28,19 +23,19 @@ SECTOR_PROFILES = {
     "insurance": {
         "label": "Insurance / underwriting",
         "frameworks": ["EU AI Act Art 5 + high-risk", "Solvency II (AI-risk)", "EIOPA AI principles", "FCA AI guidance"],
-        "axes": ["governance", "safety", "provenance", "continuity", "care", "prohibited-practices"],
+        "axes": ["governance", "safety", "provenance", "continuity", "care", "art5-safeguard"],
         "note": "Underwriters licensed against the signed evidence pack; a measured care/safety gap is exposure.",
     },
     "bond": {
         "label": "Bond market / structured credit",
         "frameworks": ["EU AI Act high-risk (credit-scoring)", "ESMA AI governance", "CRA regulation (AI models)", "Basel Pillar 3 (model-risk)"],
-        "axes": ["governance", "conformance", "provenance", "continuity", "det"],
+        "axes": ["governance", "conformance", "provenance", "continuity", "detector-interop"],
         "note": "Credit/rating AI models face the highest-risk obligation tier; conformity gap = Article 13 exposure.",
     },
     "cobol": {
         "label": "COBOL / defence (DEFONEOS compartment)",
         "frameworks": ["EU AI Act (where applicable)", "Defence AI doctrine", "AUKUS interoperability", "Ethical AI (weapon-control) prohibition"],
-        "axes": ["governance", "safety", "prohibited-practices", "jailbreak-resistance"],
+        "axes": ["governance", "safety", "art5-safeguard", "jail"],
         "note": "Defence compartment — kinetic-targeting/surveillance patterns are an immutable hard stop, not a graded axis.",
     },
 }
@@ -60,21 +55,13 @@ def main():
     args = ap.parse_args()
 
     prof = SECTOR_PROFILES[args.sector]
-    gspc = get("/api/gspc")
+    # Board must load; every sector axis name must resolve against it. An axis name the
+    # board does not carry would print as UNMEASURED - a false negative - so it aborts.
+    acc = load_board_or_die("sector_findings")
+    guard_axis_keys({ax for p in SECTOR_PROFILES.values() for ax in p["axes"]}, acc,
+                    "sector_findings.SECTOR_PROFILES[].axes", "sector_findings")
     reg = get("/api/regulation")
     pep = get("/api/evidence-pack")
-
-    # GSPC measured accuracy per axis.
-    acc = {}
-    axes = gspc.get("axes", [])
-    if isinstance(axes, list):
-        for a in axes:
-            acc[a.get("axis")] = {"accuracy": a.get("accuracy"), "n": a.get("n"),
-                                  "leader": a.get("leader"), "interval": a.get("interval")}
-    elif isinstance(axes, dict):
-        for k, v in axes.items():
-            if isinstance(v, dict):
-                acc[k] = {"accuracy": v.get("accuracy"), "n": v.get("n"), "leader": v.get("leader")}
 
     penalties = reg.get("penalty_tiers_eu_ai_act", {})
 
@@ -82,12 +69,13 @@ def main():
     for axis in prof["axes"]:
         info = acc.get(axis) or {}
         measured = info.get("accuracy")
-        tier_key = "prohibited_practices" if axis in ("safety", "affect", "det", "xsr", "prohibited-practices", "jailbreak-resistance") else "most_obligations_incl_art50_and_gpai"
+        tier_key = "prohibited_practices" if axis in ("safety", "affect", "art5-safeguard", "jail") else "most_obligations_incl_art50_and_gpai"
         findings.append({
             "axis": axis,
             "measured": measured,
             "n": info.get("n"),
             "leader": info.get("leader"),
+            "board_status": info.get("status"),
             "grade": grade(measured) if isinstance(measured, (int, float)) else "UNMEASURED",
             "penalty_exposure": penalties.get(tier_key, "see /api/regulation"),
         })
@@ -112,9 +100,11 @@ def main():
     else:
         print(f"WHITE-LABEL {prof['label'].upper()} FINDINGS — '{args.deployment}'")
         print(f"  frameworks: {', '.join(prof['frameworks'])}")
-        print(f"  verify: {report['verify_path']}\n")
+        print(f"  verify: {report['verify_path']}")
+        print("  axis-map check: PASS (every sector axis key resolves against /api/gspc)\n")
         for f in findings:
-            print(f"  [{f['grade']:8s}] {f['axis']:20s} measured={f['measured']} (n={f['n']})")
+            print(f"  [{f['grade']:8s}] {f['axis']:22s} measured={f['measured']} "
+                  f"(n={f['n']}, board={f['board_status']})")
             print(f"              exposure: {f['penalty_exposure']}")
         if report["immutable_hard_stops"]:
             print("\n  IMMUTABLE HARD STOPS (defence): " + "; ".join(report["immutable_hard_stops"]))
