@@ -16,12 +16,12 @@ conflict**. That is us.
   nothing edited.
 - Three-state verdicts (measured / unmeasured / refused) with disclosed methodology
   (Wilson 95% + significance-gated separation; paper: FAIR TIES).
-- Live board: 14 of 14 axes measured and signed (councilof.ai/api/gspc).
+- Live board: GET /api/gspc (quote `totals.public_count`; empty cells stay empty).
 
 ## Pilot ask
 One named pilot: a signed measurement feed for your model portfolio (metrics +
-intervals + corrections history) as an underwriting-grade input — priced per feed,
-never per verdict, never issuer-paid.
+intervals + corrections history) as an underwriting-grade input. Quoted privately.
+No public prices. A grade is never sold. Verify stays free.
 
 ## Doctrine (contractual)
 We measure, sign, re-attest — never certify, accredit, enforce, endorse, or tokenize.

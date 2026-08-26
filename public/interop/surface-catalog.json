@@ -1,7 +1,7 @@
 {
   "schema": "csoai.surface-catalog/1",
   "as_of": "2026-08-26",
-  "purpose": "Every live public surface, machine-readable — the single catalog of all sites, endpoints, datasets and rails. Strangers and lanes quote from here; /api/state holds the counts.",
+  "purpose": "Every live public surface, machine-readable — the single catalog of all sites, endpoints, datasets and rails. Strangers and lanes quote from here; GET /api/gspc and GET /api/state hold the counts. Counts are a pointer, never a typed integer.",
   "doctrine": "measurement not certification; never certify/accredit/enforce/endorse/tokenize.",
   "sites": {
     "web": ["https://councilof.ai", "https://csoai.org", "https://www.csoai.org"],
@@ -11,35 +11,35 @@
     "ci_action": "https://github.com/CSOAI-ORG/action-verify-attestation"
   },
   "api": [
-    "/api/gspc (the living board — authoritative axis counts)", "/api/state (derived counts — the only quotable numbers)",
+    "/api/gspc (living board; quote totals.public_count from the endpoint)", "/api/state (derived counts — the only quotable numbers)",
     "/api/cards", "/api/axis-register", "/api/detect (Art 50 C2PA verifier)",
-    "/api/checkout (provider:meta = HTTP 402)", "/api/fulfill", "/api/interop-bulk (x402 bulk)",
+    "/api/checkout (configured:false, public_prices:false)", "/api/fulfill", "/api/interop-bulk",
     "/api/methodology (signed)"],
   "interop": [
-    "/interop/attestation-corpus.json (18 entries + intel flags)",
-    "/interop/financial-measure-run-v2.json (6 XRPL, signed)", "/interop/evm-control-facts.json (3, signed)",
-    "/interop/ai-economy-index.v0.1.json (signed)", "/interop/human-labour-index.v0.1.json (signed)",
-    "/interop/mcp-security-scorecard.json (311 signed)", "/interop/rwa-attest-index.json (22/22 valid)",
-    "/interop/eas-attestation-batch.json (3 payloads)", "/interop/jail-peritem-v3.json (signed)",
-    "/interop/jailbreak-asr-evidence-pack.json (8 models, signed)",
-    "/interop/coverage-register.json (XRPL 16 / EVM 3)", "/interop/sboum-councilof-ai.json",
+    "/interop/attestation-corpus.json",
+    "/interop/financial-measure-run-v2.json", "/interop/evm-control-facts.json",
+    "/interop/ai-economy-index.v0.1.json", "/interop/human-labour-index.v0.1.json",
+    "/interop/mcp-security-scorecard.json", "/interop/rwa-attest-index.json",
+    "/interop/eas-attestation-batch.json", "/interop/jail-peritem-v3.json",
+    "/interop/jailbreak-asr-evidence-pack.json",
+    "/interop/coverage-register.json", "/interop/sboum-councilof-ai.json",
     "/interop/surface-catalog.json (this file)", "/interop/xrpl-attest-run.json",
     "/interop/card-store-verification.json"],
-  "signed": ["/signed/board_living.json (living board, re-signed)", "/signed/gspc-measurement.json",
-             "/signed/card_index.json (frozen floor 150)"],
-  "signals": ["/signals/*.signed.json (one signed signal per axis + expansions; counts are a pointer — GET /api/state)"],
+  "signed": ["/signed/board_living.json", "/signed/gspc-measurement.json",
+             "/signed/card_index.json (n_cards is the file's own field; do not type it here)"],
+  "signals": ["/signals/*.signed.json (axis count from GET /api/gspc, not from this catalog)"],
   "docs": ["/docs/MASTER_PLAN_2026-08-26.md", "/docs/INSURER_PILOT_PITCH_2026-08-26.md",
            "/docs/NIST_CAISI_INPUT_2026-08-26.md"],
-  "datasets": ["csoai/rwa-attest (10 files)", "csoai/gspc-jail-goldbank (5 files)",
-               "csoai/gspc-board", "csoai/gspc-boards (208)", "csoai/gspc-signed-boards",
-               "csoai/mcp-scoreboard", "csoai/gspc-* (axis banks)"],
+  "datasets": ["csoai/rwa-attest", "csoai/gspc-jail-goldbank",
+               "csoai/gspc-board", "csoai/gspc-boards", "csoai/gspc-signed-boards",
+               "csoai/mcp-scoreboard", "csoai/gspc-*"],
   "rails": ["EAS off-chain (payloads ready)", "XRPL (devnet proof; mainnet facts measured)",
             "OpenTimestamps (planned)", "x402/HTTP 402 (meta rail live)"],
   "public_artifacts": {
-    "paper": "docs/operations/paper/FAIR_TIES_DRAFT_2026-08-26.md (v3)",
+    "paper": "docs/operations/paper/FAIR_TIES_DRAFT_2026-08-26.md",
     "verifier": "scripts/verify_signed.py + action-verify-attestation",
-    "scorecard_engine": "harness/mcp/security-scorecard/{score.py,stat_suite.py,gate_sim.py}",
-    "rwa_engine": "harness/rwa-attest/{rwa_attest.py,control_facts_measure.py,index_measure.py}"
+    "scorecard_engine": "harness/mcp/security-scorecard",
+    "rwa_engine": "harness/rwa-attest"
   },
-  "honesty": "Catalog is live-verified as of 2026-08-26; unverified items are marked (OpenTimestamps/XRPL mainnet anchoring = planned)."
+  "honesty": "Catalog is a pointer. If a count here disagrees with GET /api/gspc or card_index.json, the endpoint and the signed file win. Unverified rails stay planned."
 }
