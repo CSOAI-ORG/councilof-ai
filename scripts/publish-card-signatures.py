@@ -169,6 +169,25 @@ for cid, src in verified.items():
 
 # Enrich the index in place: keep every existing field so nothing downstream breaks, and add
 # the bytes that make it checkable. `signed` stays, but it is now the least of the evidence.
+# Add an index row for every card we publish that the index does not already list. Without
+# this the loop below only ever enriched the 150 rows that were already there, so the extra
+# published cards existed on disk and were UNREACHABLE by anyone following the published
+# recipe — which tells a reader to walk the index and fetch each card_url. A card that is
+# published but unlisted is indistinguishable from one that was never published.
+_listed = {e["card"] for e in idx}
+for _cid in published_ids:
+    if _cid in _listed:
+        continue
+    _src = by_id[_cid]
+    _b = _src.get("body", {})
+    idx.append({
+        "card": _cid,
+        "axis": _b.get("axis", ""),
+        "ts": _b.get("ts") or _b.get("measured_on") or "",
+        "signed": True,
+        "kid": _src.get("kid", "card-attestation-1"),
+    })
+
 for e in idx:
     src = verified[e["card"]]
     e["alg"] = "Ed25519"
@@ -177,6 +196,11 @@ for e in idx:
     e["card_url"] = f"/signed/cards/{e['card']}.json"
 
 if isinstance(idx_blob, dict):
+    # Derive the header count from the array we just wrote. It said 150 while the array held
+    # 313 — signed-json-guard calls that a "header lie" and is exactly right: a count typed
+    # beside the data it counts is the estate's signature defect, and here it sat in the file
+    # verifiers read first.
+    idx_blob["n_cards"] = len(idx)
     idx_blob["verification"] = {
         "alg": "Ed25519",
         "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
