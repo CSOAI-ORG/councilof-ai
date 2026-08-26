@@ -24,6 +24,7 @@ const SURFACES = [
   "/interop/white-label-attestation-integrity.json",
   "/interop/white-label-sector-crosswalk.json",
   "/interop/white-label-findings-index.json",
+  "/interop/white-label-coherence-audit.json",
   "/interop/pqc-continuity-measure.json",
   "/interop/index-reference-reverify.json",
 ];

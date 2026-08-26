@@ -1,0 +1,35 @@
+{
+ "schema": "csoai.white-label-coherence-audit/0.1",
+ "as_of": "2026-08-26",
+ "doctrine": "Deterministic coherence audit of estate white-label findings. Disagreements are REPORTED with their cause, never silently reconciled. Measurement, not certification.",
+ "exposure_vs_risk_top3": {
+  "exposure": [
+   "swarm",
+   "jail",
+   "care"
+  ],
+  "risk": [
+   "care",
+   "machinery-conformity",
+   "continuity"
+  ],
+  "overlap": [
+   "care"
+  ]
+ },
+ "exposure_registers_inflated_by_missing_harm": [
+  "swarm",
+  "jail"
+ ],
+ "explanation": "exposure-register uses (1-accuracy)*harm with harm=1.0 fallback when a mean_harm is missing -> inflates swarm/jail (no measured harm) to top; risk-register ranks only axes WITH measured harm -> ranks by real harm. Both are honest; the difference is a reporting choice, not a contradiction.",
+ "jail_grade_note": "8 models graded; 1 CRITICAL",
+ "jailbreadth": "2026-08-26",
+ "content_id": "8dc6bf56b251ca675375b7ae28b73fa207dc607916c8936cb29bfce142e2d27f",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "8dc6bf56b251ca675375b7ae28b73fa207dc607916c8936cb29bfce142e2d27f",
+  "sig": "HjnBFxIWBf6pIBZUv3Vc8Vw6AitLeaxM6tUpuzmzpaNIF7tRPkP+SU+G9zzUaWny211FgvIG2gN0PzlJaRlOBQ==",
+  "pubkey": "1MsOqhbV9Qv3Yzo2qjT+CaVeEkuTFt7Sq9sSK7nDfjg=",
+  "note": "signer-consistent canon"
+ }
+}
