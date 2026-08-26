@@ -65,6 +65,19 @@ export default function Competitors() {
           <div className="mt-2 flex flex-wrap gap-2">{MARKET.sources.map((s, i) => (<a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="rounded-full border border-emerald-500/25 px-2.5 py-1 text-[10px] text-emerald-300/60 hover:bg-white/5">↗ {s.label}</a>))}</div>
         </div>
 
+        {/* Required, and it was absent. This page names four live companies and compares
+            them to us. UK comparative-advertising rules (BPMMR 2008) require the comparison
+            to be of objectively verifiable features and to not discredit a competitor, and
+            nominative trademark use needs the relationship stated. An earlier audit recorded
+            a disclaimer here; there was none — the only one in the estate sits on a
+            different component. */}
+        <p className="mx-auto mt-6 max-w-3xl rounded-lg border border-emerald-500/20 bg-white/[0.02] px-4 py-3 text-center text-[11px] leading-relaxed text-emerald-100/60">
+          Vanta, Drata, Credo AI and OneTrust are trademarks of their respective owners. Council of AI is
+          not affiliated with, endorsed by, or partnered with any of them. Comparisons below describe
+          published product scope and are sourced where cited; where a company does not publish its
+          pricing we say so rather than repeat an unverified figure. Anything here that is wrong is a
+          defect — tell us at nicholas@csoai.org and the correction is published in our ledger.
+        </p>
         <div className="mt-6 grid gap-5 lg:grid-cols-3">{BATTLECARDS.map((b) => <Card key={b.slug} b={b} />)}</div>
 
         <div className="mt-6 rounded-2xl border border-amber-400/25 bg-amber-400/5 p-4 text-center text-xs text-amber-100/70">

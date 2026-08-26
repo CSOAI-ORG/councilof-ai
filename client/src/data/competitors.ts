@@ -31,8 +31,8 @@ export const BATTLECARDS: Battlecard[] = [
     strengths: ["Fastest path to SOC 2 / ISO 27001 / ISO 42001 audit readiness", "Huge integration + evidence-automation ecosystem", "Strong brand + enterprise trust"],
     weaknesses: [
       "Evidence-collection model doesn't map cleanly to EU AI Act documentation + classification obligations (they aren't observable from infrastructure).",
-      "Closed SaaS, per-seat pricing (~$10k–50k+/yr) — prices out most SMBs.",
-      "Security-first DNA; AI-governance depth is bolted on, not native.",
+      "Closed SaaS. Pricing is not published; figures circulating in third-party write-ups are unverified and we do not repeat them.",
+      "Founded as a security-compliance platform; AI governance was added later — see their own product history.",
     ],
     wedge: "CSOAI is AI-governance-native and open-source: we cover the EU AI Act documentation/classification duties Vanta's infra-evidence model can't, the designed council reasons rather than checklists, and the open core + free tier reaches the SMBs Vanta's pricing excludes. Every verdict is Ed25519-signed, not just evidence-collected.",
     sources: [
@@ -54,7 +54,7 @@ export const BATTLECARDS: Battlecard[] = [
     ],
     strengths: ["Genuine AI-governance focus + policy→control mapping", "Strong analyst + brand recognition", "Deep EU AI Act / NIST / ISO content"],
     weaknesses: [
-      "Enterprise-only pricing (~$75k+) — no realistic path for SMBs or startups.",
+      "Enterprise sales motion. Pricing is not published; we do not repeat unverified third-party figures.",
       "US-headquartered / CLOUD Act exposure raised as a concern for EU-sovereignty buyers.",
       "Closed platform; governance you can't fork or self-host.",
     ],
@@ -79,7 +79,7 @@ export const BATTLECARDS: Battlecard[] = [
     weaknesses: [
       "Reviewers: not very user-friendly; heavy post-implementation work left to the client.",
       "Requires internal governance maturity + training to realise value; complex for non-technical stakeholders.",
-      "AI governance is a module bolted onto a privacy platform, not purpose-built; add-on pricing on top of an already-costly base.",
+      "AI governance is offered as a module within a broader privacy platform, priced as an add-on — see their published product pages.",
     ],
     wedge: "CSOAI is purpose-built for AI + cyber governance, not a privacy-platform add-on — and it's usable without a consulting project. The Council assistant does the work (classify, assess, sign) instead of leaving 'after-implementation work' to the client, and the open-source core + free tier means no stacked add-on bills. Cyber self-scan lets teams test their own systems too — one OS, not three modules.",
     sources: [
