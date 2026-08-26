@@ -1,0 +1,82 @@
+{
+  "schema": "csoai.mcp-targets/1",
+  "note": "Input to scripts/mcp-probe.mjs. Endpoints listed under `probe` are contacted over the wire. Entries under `catalogued` have NO published endpoint and therefore CANNOT be probed — they are emitted as status `catalogued-not-probed` and are never counted as reachable. Adding an id here does not make it real; only a probe does.",
+  "probe": [
+    {
+      "id": "csoai-gspc-mcp",
+      "endpoint": "https://councilof.ai/mcp",
+      "transport": "streamable-http",
+      "role": "primary",
+      "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.primary"
+    },
+    {
+      "id": "csoai-gspc-mcp-fallback",
+      "endpoint": "https://csoai.org/mcp",
+      "transport": "streamable-http",
+      "role": "fallback",
+      "alias_of": "csoai-gspc-mcp",
+      "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.fallback"
+    },
+    {
+      "id": "csoai-gspc-mcp-worker",
+      "endpoint": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
+      "transport": "streamable-http",
+      "role": "current",
+      "alias_of": "csoai-gspc-mcp",
+      "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current"
+    }
+  ],
+  "catalogued": [
+    {
+      "id": "csoai-assess",
+      "name": "CSOAI Assess",
+      "description": "EU AI Act / GDPR / SOC2 / HIPAA / ISO 42001 / NIST AI RMF risk checks.",
+      "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
+      "catalogue_claim": { "tools_count": 6, "status": "LIVE" }
+    },
+    {
+      "id": "csoai-anchors",
+      "name": "CSOAI Anchors",
+      "description": "Statute and standard watchers - UK legislation, EU AI Act, C2PA, NIST IR 8547, RFC 9964.",
+      "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
+      "catalogue_claim": { "tools_count": 3, "status": "LIVE" }
+    },
+    {
+      "id": "csoai-ledger",
+      "name": "CSOAI Ledger",
+      "description": "Refutation ledger - the signed refutations and contested decision records.",
+      "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
+      "catalogue_claim": { "tools_count": 4, "status": "LIVE" }
+    },
+    {
+      "id": "csoai-watchdog",
+      "name": "CSOAI Watchdog",
+      "description": "Detection and alert - never intervention. Signed alerts only, no kill switch.",
+      "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
+      "catalogue_claim": { "tools_count": 5, "status": "LIVE" }
+    },
+    {
+      "id": "csoai-spectrum",
+      "name": "CSOAI Spectrum",
+      "description": "8 lenses over 5 predicates. No composite score.",
+      "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
+      "catalogue_claim": { "tools_count": 8, "status": "LIVE" }
+    },
+    {
+      "id": "csoai-drift",
+      "name": "CSOAI Drift",
+      "description": "When the law changes, each anchored evidence pack's corpus_hash shows which pack is stale.",
+      "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
+      "catalogue_claim": { "tools_count": 4, "status": "LIVE" }
+    }
+  ],
+  "catalogues_not_probed": [
+    {
+      "id": "gspc-os-vendored",
+      "count": 363,
+      "unit": "server directories",
+      "source": "CSOAI-ORG/gspc-os servers/ (private, pod-only)",
+      "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
+    }
+  ]
+}
