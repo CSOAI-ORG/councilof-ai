@@ -1,0 +1,69 @@
+{
+ "schema": "csoai.white-label-sector-crosswalk/0.1",
+ "doctrine": "Deterministic sector-granularity crosswalk over the signed GSPC board via the estate sector_findings tool. Measurement, not certification. NOT legal opinion, NOT a fine prediction, NOT advice. A sector with no measured exposure data is UNMEASURED, never coerced to LOW.",
+ "sectors": [
+  {
+   "sector": "insurance",
+   "label": "Insurance / underwriting",
+   "frameworks": [
+    "EU AI Act Art 5 + high-risk",
+    "Solvency II (AI-risk)",
+    "EIOPA AI principles",
+    "FCA AI guidance"
+   ],
+   "note": "Underwriters licensed against the signed evidence pack; a measured care/safety gap is exposure.",
+   "worst_grade": "MEDIUM",
+   "CRITICAL": 0,
+   "HIGH": 0,
+   "MEDIUM": 3,
+   "LOW": 3,
+   "n_findings": 6
+  },
+  {
+   "sector": "bond",
+   "label": "Bond market / structured credit",
+   "frameworks": [
+    "EU AI Act high-risk (credit-scoring)",
+    "ESMA AI governance",
+    "CRA regulation (AI models)",
+    "Basel Pillar 3 (model-risk)"
+   ],
+   "note": "Credit/rating AI models face the highest-risk obligation tier; conformity gap = Article 13 exposure.",
+   "worst_grade": "MEDIUM",
+   "CRITICAL": 0,
+   "HIGH": 0,
+   "MEDIUM": 3,
+   "LOW": 2,
+   "n_findings": 5
+  },
+  {
+   "sector": "cobol",
+   "label": "COBOL / defence-AI",
+   "frameworks": [
+    "EU AI Act (where applicable)",
+    "Defence AI doctrine",
+    "AUKUS interoperability",
+    "Ethical AI (weapon-control) prohibition"
+   ],
+   "note": "Defence-AI compartment — kinetic-targeting/surveillance patterns are an immutable hard stop, not a graded axis.",
+   "worst_grade": "MEDIUM",
+   "CRITICAL": 0,
+   "HIGH": 0,
+   "MEDIUM": 2,
+   "LOW": 2,
+   "n_findings": 4
+  }
+ ],
+ "summary": {
+  "sectors": 3,
+  "worst_grade_across": "MEDIUM"
+ },
+ "content_id": "9787ebb0f024022fe4c2f254b3365ea1b98250b81ce3a0a05b0a2584b0f42f93",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "9787ebb0f024022fe4c2f254b3365ea1b98250b81ce3a0a05b0a2584b0f42f93",
+  "sig": "tx3yAE9HR5QrVDSvJYue2tPdvg/p+GhOPo2Iso9BDWR7uJHc9y8h4r4eW+LlhlVYh3eoZV8V4Cxl5vf3s67GDg==",
+  "pubkey": "1MsOqhbV9Qv3Yzo2qjT+CaVeEkuTFt7Sq9sSK7nDfjg=",
+  "note": "signer-consistent canon"
+ }
+}
