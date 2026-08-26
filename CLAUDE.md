@@ -1,11 +1,31 @@
 # CLAUDE.md — CSOAI / councilof-ai agent coordination
 
-Shared working agreement for ALL Claude agents on this repo (cloud + M4 local). Read this first; update the work-claim list when you take or finish a lane.
+Shared working agreement for ALL agents on this repo. Read this first.
 
-## Deployed truth (verified 2026-07-22 — supersedes 2026-06-25)
-- THIS repo CSOAI-ORG/councilof-ai -> Vercel project **csoai-v2-app** -> live at **https://csoai.org + https://www.csoai.org** (owner-confirmed canonical 2026-07-22, domains moved via API; apex 308→www) plus os.csoai.org and csoai-v2-app.vercel.app. App builds from client/ (Vite + React + wouter + Tailwind). Root src/ is DEAD — ignore it.
-- app.csoai.org = the emerald OS from a SEPARATE repo (csoai-dashboard / csoai-v2-master).
-- The old static apex site (csoai-static-deploy2) is RETIRED: its index.html was a cross-wired DEFONEOS page, now in _quarantine/; its good tools (article50 passport, realtime dashboard, heatmap, BFT pages) were consolidated into the clawd/csoai-org-v2 dark platform at /tools (reachable at csoai-org-v2.vercel.app). Local worktree for THIS repo: ~/councilof-ai-wt.
+## Deployed truth (verified 2026-08-26 — supersedes 2026-07-22)
+- THIS repo CSOAI-ORG/councilof-ai -> **Cloudflare Pages project `councilof-ai`** -> live at
+  **https://councilof.ai**. Vercel is DEAD (402 on every csoai host) — ignore any Vercel reference below.
+- Build from `client/` (Vite + React + wouter + Tailwind). Root `src/` is DEAD — ignore it.
+- **Deploy pipeline (all four steps, in order):**
+  `npm run build:client` → `node scripts/prerender.mjs --dist dist/client --wait 900 --min 350`
+  → `node scripts/brand-gate.mjs dist/client` + `node scripts/signed-json-guard.mjs dist/client`
+  → push to master (GHA `deploy.yml` ships it; it also runs on a 3h cron).
+- **Never** `npx vite build` bare — it picks up the dead root `src/` and fails.
+- Port 4400 orphans cause EADDRINUSE: `lsof -tiTCP:4400 -sTCP:LISTEN | xargs kill -9`.
+
+## Standing doctrine (binding — the gates enforce it)
+- We **measure**; we never "certify". No conformity marks. The Academy issues completion records.
+- **UNMEASURED is first-class** — never claim MEASURED before it is measured, and never invent a number.
+- No public $ prices. Verification is free forever; a grade is never sold.
+- Banned public strings are enforced by `scripts/brand-gate.mjs` (incl. internal codenames).
+- Board card index is **frozen at the verifiable floor of 150** — see `BOARD-RULING.md`.
+
+## How we work (see council-os/PLAYBOOK.md for the evidence)
+- **One lane = one writer = one branch/worktree.** Never a shared checkout. Claim in council-os/LANES.md.
+- **A push rejection means pull-and-reconcile — never counter-revert.** Counter-push wars cost this repo
+  19+ waves and 898 commits in a day and shipped no product.
+- Land work in **one gated merge**, not a stream of `fix:` commits.
+- **Bytes adjudicate.** Verify the underlying bytes, not the structure or the commit message.
 
 ## The OS ('OpenGridWorks OS')
 - Home: client/src/pages/OsLauncher.tsx -> route /os. 18 app tiles + hero 'Get certified' CTA + live Sovereign Town heartbeat + Layer 0 readiness ring.
