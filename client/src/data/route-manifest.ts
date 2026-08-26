@@ -1648,6 +1648,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Rankings Bridge"
  },
  {
+  "path": "/rating-the-raters",
+  "comp": "RatingTheRaters",
+  "title": "Rating The Raters"
+ },
+ {
   "path": "/readiness",
   "comp": "Readiness",
   "title": "Readiness"

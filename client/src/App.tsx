@@ -166,6 +166,7 @@ const Instrument = lazy(() => import("./pages/Instrument"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
 const XrplAttest = lazy(() => import("./pages/XrplAttest"));
+const RatingTheRaters = lazy(() => import("./pages/RatingTheRaters"));
 const ClaimsRegister = lazy(() => import("./pages/ClaimsRegister"));
 const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
@@ -657,6 +658,7 @@ function App() {
                   <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/xrpl-attest" component={XrplAttest} />
+                  <Route path="/rating-the-raters" component={RatingTheRaters} />
                   <Route path="/claims-register" component={ClaimsRegister} />
                   <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />

@@ -180,6 +180,26 @@
         "/trust-center"
       ],
       "notes": "Designed, not yet offered. The public site is served from Cloudflare's edge; the measurement backend is first-party, self-hosted UK/EU. The card will name regions and safeguards on the day it ships, not before."
+    },
+    {
+      "id": "CR-019",
+      "claim": "Rating the Raters, result 001: the ARC Prize project's published human baseline for ARC-AGI-2 public evaluation has been independently recomputed from ARC's own MIT-licensed participant rows, on a single methodology criterion (RTR-A1, human-reference rule match).",
+      "status": "live",
+      "evidence": [
+        "/rating-the-raters",
+        "/interop/rating-the-raters-001-arc.json",
+        "https://huggingface.co/datasets/arcprize/arc_agi_2_human_testing"
+      ],
+      "notes": "Deterministic arithmetic, no model in the loop. ARC's published figure reconciles exactly and its calibration claim reproduces on every pair the rows cover; the finding is that the figure computed under ARC's own two-trial machine rule is materially lower and is not published upstream. ARC never claimed otherwise and the artifact says so. Scoped to the 115 of 120 public-eval tasks the released rows cover; the rest are unmeasured. ARC's semi-private results are cited where relevant and are never restated as CSOAI-measured. Nothing here is signed, confers no status on ARC, and is not on the board."
+    },
+    {
+      "id": "CR-020",
+      "claim": "Comparative rating-the-raters coverage across the evaluation landscape — LMArena, Vals AI, Artificial Analysis and other rating organisations.",
+      "status": "unmeasured",
+      "evidence": [
+        "/rating-the-raters"
+      ],
+      "notes": "One organisation has been measured, on one criterion, on one benchmark. No survey of raters exists and no cross-rater comparison is published. These organisations are named on the result page solely to record that they have NOT been measured; that listing is not a ranking, a shortlist or a queue, and no finding about any of them is expressed or implied. A prior internal strategy draft asserted a figure about how many raters publish a corrections record; that figure was never measured, never appeared on any public surface, and is not published here."
     }
   ]
 }
