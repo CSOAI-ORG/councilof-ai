@@ -40,7 +40,7 @@ jobs:
       - name: Prerender all routes
         run: |
           npx playwright install --with-deps chromium
-          node scripts/prerender.mjs --dist dist/client --wait 900 --min 350
+          bash scripts/prerender-run.sh --dist dist/client --wait 900 --min 350
 
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |

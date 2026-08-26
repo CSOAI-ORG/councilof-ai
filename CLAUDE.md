@@ -7,11 +7,16 @@ Shared working agreement for ALL agents on this repo. Read this first.
   **https://councilof.ai**. Vercel is DEAD (402 on every csoai host) — ignore any Vercel reference below.
 - Build from `client/` (Vite + React + wouter + Tailwind). Root `src/` is DEAD — ignore it.
 - **Deploy pipeline (all four steps, in order):**
-  `npm run build:client` → `node scripts/prerender.mjs --dist dist/client --wait 900 --min 350`
+  `npm run build:client` → `bash scripts/prerender-run.sh --dist dist/client --wait 900 --min 350`
   → `node scripts/brand-gate.mjs dist/client` + `node scripts/signed-json-guard.mjs dist/client`
   → push to master (GHA `deploy.yml` ships it; it also runs on a 3h cron).
 - **Never** `npx vite build` bare — it picks up the dead root `src/` and fails.
-- Port 4400 orphans cause EADDRINUSE: `lsof -tiTCP:4400 -sTCP:LISTEN | xargs kill -9`.
+- **Prerender is lane-safe — never kill browsers or ports machine-wide.** `bash scripts/prerender-run.sh
+  --dist dist/client --wait 900 --min 350` takes a free OS-assigned port and closes its own browser and
+  server on every exit path. `pkill -f chrome-headless-shell` and a hardcoded `lsof -tiTCP:4400 | xargs kill -9`
+  kill OTHER lanes' runs (2026-08-26: a concurrent lane died at 143 of 582 routes, 439 "Target page,
+  context or browser has been closed"). Pass `--port N` only when you need a fixed port; it then fails
+  loudly if N is taken rather than drifting onto someone else's.
 
 ## Standing doctrine (binding — the gates enforce it)
 - We **measure**; we never "certify". No conformity marks. The Academy issues completion records.

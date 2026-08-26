@@ -85,7 +85,9 @@ const RULES = [
   },
   {
     id: "infra_leak",
-    pattern: /localhost:4400|os\.meok\.ai|oracle-micro/i,
+    // Any localhost:<port>, not just 4400: prerender binds an OS-assigned port unless --port
+    // is passed, so a missed canonical rewrite can now bake ANY port into the shipped HTML.
+    pattern: /localhost:\d+|os\.meok\.ai|oracle-micro/i,
     why: "Infra hostname / staging origin must not ship. Use the public API councilof.ai/api/gspc.",
   },
 ];
