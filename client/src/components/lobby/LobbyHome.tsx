@@ -6,31 +6,33 @@ import LivingBoard from "./LivingBoard";
  * LobbyHome — the Council OS desktop.
  *
  * Living board first (every published axis from GET /api/gspc, in-lane kept
- * separate). Rail tabs then the extra live routes those tabs do not own.
+ * separate). Rail tabs, then the shipped products, then the audience doors, then
+ * the extra live routes those tabs do not own.
+ *
+ * EVERY TILE READS ITS LABEL, BLURB AND PATH FROM tabs.ts. The audience row used
+ * to be a hard-coded array in this file, and it had drifted: the "Enterprises"
+ * tile pointed at /assess — the assessment form the Get-measured tab already
+ * owns — so the desktop offered two doors, one of them mislabelled. The array is
+ * gone; audiences are LOBBY_ROUTES like everything else, which makes a duplicate
+ * destination visible in one list instead of hidden in two.
  */
 
 const DESKTOP = LOBBY_TABS.filter((t) => t.id !== "home");
-
-/** Existing public landings — not new audiences. Each is a live route. */
-const PEOPLE: { label: string; blurb: string; path: string }[] = [
-  { label: "Regulators", blurb: "The regulator door — everything free, forever.", path: "/regulators" },
-  { label: "Insurers", blurb: "Price AI risk on signed evidence.", path: "/insurers" },
-  { label: "Enterprises", blurb: "Prove the system before you ship.", path: "/assess" },
-  { label: "Finance", blurb: "The financial axes — UNMEASURED stated first.", path: "/financial-axes" },
-  { label: "Compare vendors", blurb: "What we publish versus GRC platforms.", path: "/compare" },
-];
 
 function Tile({
   label,
   blurb,
   path,
   gold,
+  native,
   onClick,
 }: {
   label: string;
   blurb: string;
   path?: string;
   gold?: boolean;
+  /** A workflow rendered in-process — it has no page of its own, and says so. */
+  native?: boolean;
   onClick: () => void;
 }) {
   return (
@@ -46,6 +48,11 @@ function Tile({
       <span className="text-[14px] font-semibold text-slate-900">{label}</span>
       <span className={`mt-1.5 ${TYPE.muted}`}>{blurb}</span>
       {path && <span className={`mt-3 ${TYPE.mono}`}>{path}</span>}
+      {native && (
+        <span className="mt-3 rounded-full border border-emerald-700/25 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-900">
+          works in this pane
+        </span>
+      )}
       {gold && (
         <span className="mt-3 rounded-full border border-amber-700/30 bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-900">
           not a measurement surface
@@ -93,16 +100,30 @@ export default function LobbyHome({
               blurb={t.blurb}
               path={t.path || undefined}
               gold={t.accent === "gold"}
+              native={t.kind === "native" && !t.path}
               onClick={() => onSelect(t)}
             />
           </li>
         ))}
       </ul>
 
+      <h3 className={`${TYPE.section} mt-8 mb-3`}>Products</h3>
+      <p className={`-mt-1 mb-3 ${MEASURE} ${TYPE.muted}`}>
+        The shipped products the rail has no pane for. Evidence pack and Embed kit are panes above —
+        they take input and hand you an artefact, so they are not listed twice here.
+      </p>
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {routesIn("product").map((x) => (
+          <li key={x.path}>
+            <Tile label={x.label} blurb={x.blurb} path={x.path} onClick={() => onOpenRoute(x.path, x.label)} />
+          </li>
+        ))}
+      </ul>
+
       <h3 className={`${TYPE.section} mt-8 mb-3`}>Who you are</h3>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {PEOPLE.map((x) => (
-          <li key={x.label}>
+        {routesIn("audience").map((x) => (
+          <li key={x.path}>
             <Tile label={x.label} blurb={x.blurb} path={x.path} onClick={() => onOpenRoute(x.path, x.label)} />
           </li>
         ))}

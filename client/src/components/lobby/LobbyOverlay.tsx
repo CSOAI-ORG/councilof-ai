@@ -7,6 +7,8 @@ import LobbyComposer from "./LobbyComposer";
 import LobbyThread from "./LobbyThread";
 import LobbyBoardPane from "./LobbyBoardPane";
 import LobbyVerifyPane from "./LobbyVerifyPane";
+import LobbyEvidencePane from "./LobbyEvidencePane";
+import LobbyEmbedPane from "./LobbyEmbedPane";
 import LobbyPlay from "./LobbyPlay";
 import LobbyHome from "./LobbyHome";
 import { useLobbyChat } from "./useLobbyChat";
@@ -418,6 +420,10 @@ export default function LobbyOverlay({
                   <LobbyBoardPane />
                 ) : nativePane && tab.id === "verify" ? (
                   <LobbyVerifyPane />
+                ) : nativePane && tab.id === "evidence" ? (
+                  <LobbyEvidencePane onOpenRoute={openRoute} />
+                ) : nativePane && tab.id === "embed" ? (
+                  <LobbyEmbedPane onOpenRoute={openRoute} />
                 ) : (
                   <>
                     {!frameLoaded && <FrameSkeleton />}

@@ -27,6 +27,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // The product family (current products — never archive-bannered)
   "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",
+  // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
+  // registered here so it can never ship flagged "archived".
+  "/report",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/api-docs", "/status",
   "/system-card",

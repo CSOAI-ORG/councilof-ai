@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { DASHBOARD_TABS, isDashboardTab, LOBBY_TABS, matchRoute, matchTab, tabById } from "./tabs";
+import {
+  DASHBOARD_TABS, isDashboardTab, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, routesIn, tabById,
+} from "./tabs";
 
 describe("Council OS tabs", () => {
   it("keeps Home as a native desktop, not an /os iframe", () => {
@@ -60,6 +62,79 @@ describe("Council OS tabs", () => {
   it("lists every pane exactly once", () => {
     const ids = LOBBY_TABS.map((t) => t.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  // ── one destination, one owner ───────────────────────────────────────────
+  it("never serves the same path from two destinations", () => {
+    const paths = [
+      ...LOBBY_TABS.filter((t) => t.path).map((t) => t.path),
+      ...LOBBY_ROUTES.map((r) => r.path),
+    ];
+    const seen = new Map<string, number>();
+    for (const p of paths) seen.set(p, (seen.get(p) ?? 0) + 1);
+    expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([]);
+  });
+
+  it("keeps /honesty on the rail tab only — the audited duplicate is gone", () => {
+    expect(tabById("claimguard").path).toBe("/honesty");
+    expect(LOBBY_ROUTES.some((r) => r.path === "/honesty")).toBe(false);
+  });
+
+  it("no longer sends an audience tile to the assessment form", () => {
+    expect(routesIn("audience").some((r) => r.path === "/assess")).toBe(false);
+    expect(routesIn("audience").map((r) => r.path)).toContain("/regulators");
+    expect(tabById("measured").path).toBe("/assess");
+  });
+
+  // ── the shipped products are real OS destinations ────────────────────────
+  it("gives every shipped product a destination inside the OS", () => {
+    const owned = new Set([
+      ...LOBBY_TABS.filter((t) => t.path).map((t) => t.path),
+      ...LOBBY_ROUTES.map((r) => r.path),
+    ]);
+    // Framed product routes.
+    for (const p of ["/products", "/report", "/honesty", "/regulators", "/cra-readiness",
+      "/financial-axes", "/distribution-integrity", "/cobolbridge"]) {
+      expect(owned.has(p)).toBe(true);
+    }
+    // …and the two whose product IS a workflow are native panes, not framed pages.
+    expect(tabById("evidence").kind).toBe("native");
+    expect(tabById("embed").kind).toBe("native");
+  });
+
+  it("gives a native workflow pane no standalone path, so a framed page cannot bounce onto it", () => {
+    expect(tabById("evidence").path).toBe("");
+    expect(tabById("embed").path).toBe("");
+    // Board and Verify keep theirs: there the framed route and the pane are the same thing.
+    expect(tabById("board").kind).toBe("native");
+    expect(tabById("board").path).toBe("/gspc-scoreboard");
+  });
+
+  it("opens the two workflow panes from a chat command", () => {
+    expect(matchTab("open the evidence pack")?.id).toBe("evidence");
+    expect(matchTab("show the embed kit")?.id).toBe("embed");
+    expect(matchTab("open products")?.id).toBe("products");
+  });
+
+  // ── the most specific destination wins, not the first one listed ─────────
+  it("sends 'financial axes' to the financial axes, not to the board's bare 'axes' cue", () => {
+    expect(matchTab("show the financial axes")).toBeNull();
+    expect(matchRoute("show the financial axes")?.path).toBe("/financial-axes");
+    // The bare word still belongs to the board.
+    expect(matchTab("show the axes")?.id).toBe("board");
+  });
+
+  it("no longer lets a bare 'readiness' swallow the CRA kit", () => {
+    expect(matchRoute("open the cra readiness kit")?.path).toBe("/cra-readiness");
+    expect(matchTab("open the readiness assessment")?.id).toBe("ras");
+    expect(matchTab("open the assessment")?.id).toBe("measured");
+  });
+
+  it("frames the remaining product pages from a chat command", () => {
+    expect(matchRoute("open distribution integrity")?.path).toBe("/distribution-integrity");
+    expect(matchRoute("show the legacy on-ramp")?.path).toBe("/cobolbridge");
+    expect(matchRoute("open the regulators page")?.path).toBe("/regulators");
+    expect(matchRoute("show insurers")?.path).toBe("/insurers");
   });
 
   it("gives DSH the same destinations, minus Play, Home, and Software", () => {
