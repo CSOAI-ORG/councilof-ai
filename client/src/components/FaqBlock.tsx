@@ -48,44 +48,46 @@ export default function FaqBlock({
   };
 
   return (
-    <section className={`bg-slate-50 py-14 sm:py-16 ${className}`}>
+    // Ground was `bg-slate-50` (#f8fafc) — a COOL blue-grey under a warm-white,
+    // green-accented brand. It is now the shared sunken token, so it matches the
+    // rest of the estate and inverts correctly in dark.
+    <section className={`section-y surface-sunken ${className}`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: ldSafe(jsonLd) }}
       />
-      <div className="mx-auto w-full max-w-4xl px-6">
-        <div className="mb-7 text-center">
-          <span className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700">
+      <div className="section-shell-narrow">
+        <div className="mb-9 text-center sm:mb-10">
+          <span className="t-kicker inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary">
             FAQ
           </span>
-          <h2 className="mt-3 text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
-            {title}
-          </h2>
+          <h2 className="t-section mt-4 text-foreground">{title}</h2>
           {intro ? (
-            <p className="mx-auto mt-3 max-w-2xl text-[15px] leading-relaxed text-gray-500">{intro}</p>
+            <p className="t-lede measure measure-center mt-4 text-muted-foreground">{intro}</p>
           ) : null}
         </div>
 
-        <div className="divide-y divide-gray-200 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
           {items.map((i, n) => (
             <details
               key={i.q}
               open={n < openCount}
-              className="group open:bg-emerald-50/40"
+              className="group open:bg-primary/[0.045]"
             >
+              {/* py-2.5 was under the 44px minimum tap target on mobile. */}
               <summary
-                className="flex cursor-pointer list-none items-center gap-3 px-4 py-2.5 outline-none transition-colors hover:bg-emerald-50/60 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-inset sm:px-5 sm:py-3 [&::-webkit-details-marker]:hidden"
+                className="flex cursor-pointer list-none items-center gap-3 px-4 py-3.5 outline-none transition-colors hover:bg-primary/[0.07] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:px-6 sm:py-4 [&::-webkit-details-marker]:hidden"
               >
-                <h3 className="flex-1 text-[14px] font-semibold leading-snug text-gray-900 sm:text-[15px]">
+                <h3 className="flex-1 text-[14.5px] font-semibold leading-snug text-foreground sm:text-[15px]">
                   {i.q}
                 </h3>
                 <ChevronDown
                   aria-hidden="true"
-                  className="h-4 w-4 shrink-0 text-emerald-600 transition-transform duration-200 group-open:rotate-180"
+                  className="h-4 w-4 shrink-0 text-primary transition-transform duration-200 group-open:rotate-180"
                 />
               </summary>
-              <div className="px-4 pb-4 sm:px-5 sm:pb-4">
-                <p className="max-w-none border-l-2 border-emerald-400 pl-3 text-[13.5px] leading-relaxed text-gray-600">
+              <div className="px-4 pb-5 sm:px-6 sm:pb-6">
+                <p className="measure border-l-2 border-primary/60 pl-4 text-[14px] leading-[1.68] text-muted-foreground">
                   {i.a}
                 </p>
               </div>
