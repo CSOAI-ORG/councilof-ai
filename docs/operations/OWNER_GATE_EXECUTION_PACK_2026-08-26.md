@@ -95,3 +95,18 @@ session or the Claude lane's browser tool (SSO/2FA).
 
 **Total: ~2 hours of your clicks → unlocks £150K+ credits + £30K+ grant pipeline + the
 IETF standards lane.**
+
+## 5. KEY-DROP-IN → PARALLEL EXECUTION (JEEVES, 2026-08-26)
+
+The scripted execution is ready — each key lands and the matching consumer runs immediately.
+| Key | I execute (instant, parallel) | Consumer (ready, committed) |
+|-----|------------------------------|------------------------------|
+| `ETHERSCAN_API_KEY` | source_verified for BUIDL/BENJI/ACRED → signed control-facts update | `harness/rwa-attest/etherscan_source_verify.py` |
+| `RWA_XYZ_API_KEY` | resolve the 10 addr:pending RWA targets → move card to verified | `harness/rwa-attest/rwa_xyz_resolve.py` |
+| `HF_TOKEN` | publish/refresh `csoai/gspc-*` datasets + cards (huggingface_hub 1.19.0) | (HF consumer — buildable now) |
+| `GITHUB_PAT` | repo API edits (branches/PRs) per one-lane doctrine | (estate) |
+| Cloudflare secrets set | `/api/fulfill` + payment provider wired | (estate) |
+
+All consumers are HONEST when the key is absent (exit 2 + "NOT measured (honest)") — they
+never fabricate. [BROWSER]/[SSO] items above stay yours; the moment a key pastes back, the
+matching consumer runs. Parallel: paste ALL keys in one message, I run all consumers at once.
