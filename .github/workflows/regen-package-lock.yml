@@ -1,0 +1,27 @@
+name: regen-package-lock
+on:
+  push:
+    paths:
+      - '.github/trigger-regen-lock'
+permissions:
+  contents: write
+jobs:
+  regen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Regenerate package-lock.json
+        run: |
+          set -euo pipefail
+          rm -f package-lock.json
+          npm install --package-lock-only
+          test -f package-lock.json
+          grep -q '@axe-core/playwright' package-lock.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore: sync package-lock for axe-core playwright (#219)" || exit 0
+          git push
