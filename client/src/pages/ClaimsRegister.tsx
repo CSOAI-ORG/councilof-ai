@@ -165,13 +165,7 @@ export default function ClaimsRegister() {
             {groups.map(({ s, rows }) => (
               <span key={s} className="inline-flex items-center gap-2">
                 <StatusChip status={s} />
-<<<<<<< HEAD
                 <span className="text-sm text-slate-600">{rows.length}</span>
-=======
-                <span className="text-sm text-slate-600">
-                  {n}<span className="sr-only"> {STATUS_STYLE[s].label.toLowerCase()} claims</span>
-                </span>
->>>>>>> lane/ux-journeys-pass
               </span>
             ))}
           </div>
