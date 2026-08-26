@@ -31,6 +31,17 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0826-06",
+      date: "2026-08-26",
+      what_was_wrong:
+        "We repeated a human-versus-machine benchmark contrast without checking whether both sides were scored under the same rule. The metrology deck cites the ARC Prize project's ARC-AGI-3 result — a human panel solving essentially all environments while frontier systems average well under one percent. The attribution was correct and careful: labelled reported-not-measured, never placed on the board. The number is not the defect. The defect is that we published a comparison between a human figure and a machine figure without asking the question our own first rating-the-raters result exists to ask, which is whether the two figures were produced under the same scoring rule. Having now recomputed ARC's published participant rows for ARC-AGI-2, we know that on that benchmark the human figure is computed under unlimited submissions while machines are scored at two trials, and that the rule-matched human figure is about eleven points lower. We had no basis to assume ARC-AGI-3 was free of the same gap, and no basis to assume it had it.",
+      how_caught:
+        "Self-caught, by our own instrument, on its first run. Building the RTR-A1 human-reference rule-match measurement against ARC-AGI-2 meant asking of another organisation a question we had not asked of our own published page. Sweeping our surfaces for prior statements about the same publisher is what surfaced it. This is the intended failure mode of a rating-the-raters programme: the first thing a new instrument should catch is its owner.",
+      fix:
+        "The deck passage now carries the caveat, stated as a limit rather than a finding: a human-versus-machine contrast only means what it appears to mean if both sides were scored under the same rule; on ARC-AGI-2 we measured that gap; whether ARC-AGI-3 shares it is UNMEASURED because its scoring formula is not published, so we cannot check and will not assume either way. The general rule this establishes for every surface: CSOAI does not republish a human-versus-machine comparison without either verifying rule-match or marking it unverified. Nothing was removed and no third-party number was restated as ours.",
+      status: "FIXED",
+    },
+    {
       id: "C-2026-0826-05",
       date: "2026-08-26",
       what_was_wrong:
