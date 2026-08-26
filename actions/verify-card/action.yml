@@ -1,0 +1,64 @@
+name: 'Verify signed measurement card'
+description: 'Recompute an AI-measurement card, verify its Ed25519 signature, fail-closed on tamper. Stranger-verifiable, zero trust, offline. Measurement, not certification.'
+author: 'CSOAI (Council of AI)'
+branding:
+  icon: 'shield-check'
+  color: 'green'
+inputs:
+  artifact:
+    description: 'Path to the signed JSON artifact (card / signal / leaderboard), or a URL.'
+    required: true
+  fail_on_mismatch:
+    description: 'Exit non-zero on a signature mismatch (fail-closed). Default true.'
+    required: false
+    default: 'true'
+outputs:
+  content_id:
+    description: 'The verified content_id (or "unverified").'
+runs:
+  using: 'composite'
+  steps:
+    - name: Verify the signed artifact (recompute canonical -> content_id -> Ed25519)
+      shell: bash
+      run: |
+        python3 - "${{ inputs.artifact }}" "${{ inputs.fail_on_mismatch }}" <<'PY'
+        import json, hashlib, base64, sys, urllib.request
+
+        artifact = sys.argv[1]
+        fail_on_mismatch = sys.argv[2].lower() != 'false'
+
+        # Load: a local path or a URL (stranger-verifiable from anywhere).
+        if artifact.startswith('http://') or artifact.startswith('https://'):
+            with urllib.request.urlopen(artifact, timeout=15) as r:
+                d = json.loads(r.read().decode())
+        else:
+            with open(artifact) as f:
+                d = json.load(f)
+
+        # Style B (cards/signals/leaderboards): canonical body sans meta ->
+        # sha256 == content_id -> Ed25519 verifies against the embedded pubkey.
+        meta = ('content_id', 'signature', 'pubkey', 'key_id', 'verification_method', 'did_resolver')
+        body = {k: v for k, v in d.items() if k not in meta}
+        canonical = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+        cid = hashlib.sha256(canonical).hexdigest()
+        cid_match = (cid == d.get('content_id'))
+
+        sig_ok = False
+        try:
+            from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+            pub = bytes.fromhex(d['pubkey'])
+            sig = base64.b64decode(d['signature'])
+            Ed25519PublicKey.from_public_bytes(pub).verify(sig, d['content_id'].encode())
+            sig_ok = True
+        except Exception as e:
+            sig_ok = False
+
+        valid = cid_match and sig_ok
+        print(f"content_id_recomputed={cid[:16]}  content_id_match={cid_match}  signature_valid={sig_ok}  valid={valid}")
+        with open(__import__('os').environ.get('GITHUB_OUTPUT') or '/dev/null', 'a') as o:
+            o.write(f"content_id={'verified' if valid else 'unverified'}\n")
+
+        # Fail-closed on tamper (measurement-not-certification: the badge verifies, never ranks).
+        if not valid and fail_on_mismatch:
+            sys.exit(1)
+        PY

@@ -226,3 +226,14 @@ did:web/CC-BY data; LTD licences SDK/products — arm's-length); (4) independenc
 (cite in model cards, UK AISI/NIST CAISI channel, externally-funded prize). No-go list (off-
 doctrine). Benchmarks to change course. Entity formation + directors = OWNER/counsel; this is the
 map, prepped for the owner to execute.
+
+## 2026-08-26 · JEEVES — Play #3: publishable verify-card GitHub Action (non-colliding)
+actions/verify-card/action.yml (composite, fail-closed) + README (usage + badge). The estate
+had a PRIVATE reusable verify-card.yml workflow (EXP 125/126) but no public `uses:`-able
+Marketplace Action — the ipinfo.io-style developer-distribution the revenue atlas Play #3 wants.
+Added the publishable form: recompute canonical -> content_id -> Ed25519, fail-closed (measurement,
+never ranks), zero-trust/offline, accepts path or URL. Verified: action.yml parses (composite +
+inputs artifact/fail_on_mismatch + output content_id); inline logic proves a real signed card
+(content_id_match + signature_valid -> VERIFIED). NOTE: the deprecated ::set-output was replaced
+with $GITHUB_OUTPUT. To publish to the Marketplace, list it under CSOAI-ORG (owner/GH step) — the
+repo has no Marketplace listing yet. Active lanes untouched.
