@@ -828,10 +828,10 @@ const PartnersAdvisory: React.FC = () => {
                     </div>
                   ))}
                 </div>
-                <button className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
+                <a href="/contact" className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium">
                   {opportunity.cta}
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </a>
               </div>
             ))}
           </div>

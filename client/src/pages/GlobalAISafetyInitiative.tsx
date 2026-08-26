@@ -237,9 +237,9 @@ export default function GlobalAISafetyInitiative() {
                     <span>Access to CSOAI knowledge base</span>
                   </li>
                 </ul>
-                <Button className="w-full" variant="outline">
+                <a href="/about" className="w-full">
                   Learn More
-                </Button>
+                </a>
               </CardContent>
             </Card>
 
