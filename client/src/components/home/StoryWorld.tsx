@@ -250,13 +250,13 @@ function LiveCoverage() {
       : "reading GET /api/gspc…";
 
   return (
-    <div className="mt-8 w-full max-w-3xl rounded-2xl border border-white/20 bg-black/35 px-5 py-4 backdrop-blur-sm">
-      <dl className="grid gap-4 text-left sm:grid-cols-3">
+    <div className="mt-9 w-full max-w-3xl rounded-2xl border border-emerald-300/20 bg-black/40 px-5 py-5 backdrop-blur-sm sm:px-6">
+      <dl className="grid gap-5 text-left sm:grid-cols-3 sm:gap-6">
         <div>
-          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300">
+          <dt className="t-kicker text-emerald-300">
             Measured right now
           </dt>
-          <dd className="mt-1 text-sm font-bold text-white">
+          <dd className="mt-1.5 text-sm font-bold leading-snug text-white">
             {measured}
             {state.done && state.live && state.date && (
               <span className="ml-1 font-medium text-white/60">· stamped {state.date}</span>
@@ -289,33 +289,33 @@ function HeroActions() {
   return (
     <>
       <LiveCoverage />
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+      <div className="mt-9 grid w-full max-w-md grid-cols-1 gap-3 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center">
         <a
           href="/?lobby=measured&task=get-measured"
-          className="inline-flex items-center rounded-xl bg-emerald-500 px-6 py-3 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
+          className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3.5 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
         >
           Get measured
         </a>
         <a
           href="/gspc-verify"
-          className="inline-flex items-center rounded-xl border-2 border-white/40 bg-white/5 px-6 py-3 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
+          className="inline-flex items-center justify-center rounded-xl border border-white/45 bg-white/10 px-6 py-3.5 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
         >
           Verify a card — free
         </a>
         <a
           href="/gspc-scoreboard"
-          className="inline-flex items-center rounded-xl border-2 border-white/40 bg-white/5 px-6 py-3 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/15"
+          className="inline-flex items-center justify-center rounded-xl border border-white/45 bg-white/10 px-6 py-3.5 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
         >
           Open the live board
         </a>
       </div>
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
         {PERSONAS.map((p) => (
           <a
             key={p.who}
             href={p.href}
             title={p.hook}
-            className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[13px] font-semibold text-white backdrop-blur-sm transition hover:border-emerald-300 hover:bg-white/20"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur-sm transition hover:border-emerald-300 hover:bg-white/20"
           >
             {p.who} <span aria-hidden className="text-emerald-300">→</span>
           </a>
@@ -389,7 +389,7 @@ function HeroSection({ slide }: { slide: Slide }) {
     return () => window.clearInterval(t);
   }, [reduced]);
   return (
-    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-[#05130d]">
+    <section className="surface-ink relative flex min-h-[100svh] items-center justify-center overflow-hidden">
       <style>{`@keyframes coaiKenBurns{from{transform:scale(1.03) translate3d(0,0,0)}to{transform:scale(1.16) translate3d(0,-1.8%,0)}}`}</style>
       {HERO_REEL.map((img, n) => (
         <img
@@ -410,17 +410,17 @@ function HeroSection({ slide }: { slide: Slide }) {
       {/* lighter scrim — the world stays visible; type carries its own shadow */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/65" />
       <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 62% 50% at 50% 46%, rgba(0,0,0,.52) 0%, rgba(0,0,0,.28) 45%, transparent 78%)" }} />
-      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-6 py-24 text-center">
-        <span className="rounded-full border border-emerald-300/30 bg-black/25 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-200 backdrop-blur-sm">
+      <div className="section-shell relative z-10 flex max-w-5xl flex-col items-center py-20 text-center sm:py-24">
+        <span className="measure-tight rounded-full border border-emerald-300/30 bg-black/25 px-4 py-2 text-[10px] font-bold uppercase leading-[1.5] tracking-[0.16em] text-emerald-200 backdrop-blur-sm sm:text-[11px] sm:tracking-[0.24em]">
           {slide.kicker}
         </span>
-        <h1 className="mt-8 max-w-[22ch] text-[2.6rem] font-black leading-[1.05] tracking-tight text-white [text-shadow:0_3px_22px_rgba(0,0,0,.85)] sm:text-6xl lg:text-7xl">
+        <h1 className="mt-7 max-w-[20ch] text-[clamp(1.95rem,1.1rem+3.6vw,4.5rem)] font-black leading-[1.06] tracking-tight text-white text-balance [text-shadow:0_3px_22px_rgba(0,0,0,.85)] sm:mt-8">
           See how your AI behaves.<br />
           Get proof you can trust.<br />
           Kept current as the rules change.<br />
           <span className="text-emerald-300">Anyone can check — free.</span>
         </h1>
-        <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-white [text-shadow:0_2px_16px_rgba(0,0,0,.9)] sm:text-xl">
+        <p className="t-lede measure measure-center mt-6 font-medium text-white [text-shadow:0_2px_16px_rgba(0,0,0,.9)]">
           {slide.body}
         </p>
         <HeroActions />

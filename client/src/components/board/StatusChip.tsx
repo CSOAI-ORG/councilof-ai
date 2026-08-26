@@ -2,9 +2,14 @@
  * The board's chip vocabulary — one component, one set of words, estate-wide.
  *
  * The point of these chips is that an unmeasured cell is a DESIGNED state, not
- * an absence. A slot with no number renders a labelled slate chip that says so
+ * an absence. A slot with no number renders a labelled NEUTRAL chip that says so
  * in words. It never renders as blank, and it never renders as zero: a zero is a
  * measurement, and we do not have one.
+ *
+ * Colours are alpha-over-token, not fixed Tailwind swatches, so every chip is
+ * legible on a warm-white ground AND on the green-black ink ground without a
+ * second set of rules. The neutral states use the estate's own muted/border
+ * tokens (warm) rather than `slate-*` (cool) — same intent, right hue.
  *
  * TIE is amber and says "indistinguishable". A TIE is never dressed as a win.
  */
@@ -15,32 +20,32 @@ export type BoardChipKind =
 const CHIP: Record<BoardChipKind, { text: string; className: string; title: string }> = {
   SEPARATED: {
     text: "SEPARATED",
-    className: "border-emerald-300 bg-emerald-50 text-emerald-800",
+    className: "border-emerald-600/35 bg-emerald-500/12 text-emerald-800 dark:text-emerald-200",
     title: "The leader's edge is statistically separated (McNemar p<0.05 on discordant items).",
   },
   TIE: {
     text: "TIE — indistinguishable",
-    className: "border-amber-300 bg-amber-50 text-amber-800",
+    className: "border-amber-500/40 bg-amber-500/12 text-amber-800 dark:text-amber-200",
     title: "A point-estimate lead that is not statistically separated. A tie is not a win.",
   },
   UNTESTED: {
     text: "UNTESTED — no separation test",
-    className: "border-slate-300 bg-slate-100 text-slate-700",
+    className: "border-border bg-muted text-muted-foreground",
     title: "This slot carries data but no separation test has been run on it yet.",
   },
   UNMEASURED: {
     text: "UNMEASURED — not yet gated",
-    className: "border-slate-300 bg-slate-100 text-slate-700",
+    className: "border-border bg-muted text-muted-foreground",
     title: "No measured figure exists for this slot yet. Reported as absent, never as zero.",
   },
   REPORTED: {
     text: "REPORTED — cited, not ours",
-    className: "border-sky-300 bg-sky-50 text-sky-800",
+    className: "border-sky-500/35 bg-sky-500/12 text-sky-800 dark:text-sky-200",
     title: "A cited third-party figure carried as context. Not measured by this instrument.",
   },
   "IN-LANE": {
     text: "IN-LANE — not board-quotable",
-    className: "border-violet-300 bg-violet-50 text-violet-800",
+    className: "border-violet-500/35 bg-violet-500/12 text-violet-800 dark:text-violet-200",
     title: "Measured in-lane on a smaller fleet with no separation test. Served for honesty; not part of the board.",
   },
   // A deterministic-facts axis IS measured — it just is not a model comparison,
@@ -61,7 +66,7 @@ export default function StatusChip({ kind, className = "" }: { kind: BoardChipKi
   return (
     <span
       title={c.title}
-      className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11px] font-bold tracking-tight ${c.className} ${className}`}
+      className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-bold tracking-tight ${c.className} ${className}`}
     >
       {c.text}
     </span>

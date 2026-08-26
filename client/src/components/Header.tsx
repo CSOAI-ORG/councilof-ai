@@ -244,7 +244,7 @@ export function Header() {
   if (hideChrome) return null;
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 shadow-sm backdrop-blur-md">
       <nav id="navigation" className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -283,7 +283,7 @@ export function Header() {
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                   location === '/'
                     ? 'text-emerald-700 bg-emerald-50'
-                    : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
+                    : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
                 }`}
               >
                 Home
@@ -305,7 +305,7 @@ export function Header() {
                     className={`px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${
                       isActive(item.href) || activeDropdown === item.name
                         ? 'text-emerald-700 bg-emerald-50'
-                        : 'text-gray-600 hover:text-emerald-700 hover:bg-gray-50'
+                        : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
                     }`}
                     onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
                     onFocus={() => handleMouseEnter(item.name)}
@@ -326,14 +326,14 @@ export function Header() {
                       onMouseEnter={() => handleMouseEnter(item.name)}
                       onMouseLeave={handleMouseLeave}
                     >
-                      <div className="w-72 max-h-[min(72vh,40rem)] overflow-y-auto bg-white rounded-xl shadow-xl border border-gray-100">
+                      <div className="w-72 max-h-[min(72vh,40rem)] overflow-y-auto rounded-xl border border-border bg-popover shadow-xl">
                         {/* Header */}
-                        <div className="px-4 py-3 bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-gray-100">
+                        <div className="border-b border-border bg-primary/[0.07] px-4 py-3">
                           <div className="flex items-center gap-2">
                             <item.icon className="h-5 w-5 text-emerald-600" />
                             <div>
-                              <div className="font-semibold text-gray-900">{item.name}</div>
-                              <div className="text-xs text-gray-500">{item.description}</div>
+                              <div className="font-semibold text-foreground">{item.name}</div>
+                              <div className="text-xs text-muted-foreground">{item.description}</div>
                             </div>
                           </div>
                         </div>
@@ -342,7 +342,7 @@ export function Header() {
                           {item.submenu.map((subItem) => (
                             <div key={subItem.href + subItem.name}>
                               {subItem.section && (
-                                <div className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                                <div className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                                   {subItem.section}
                                 </div>
                               )}
@@ -350,18 +350,18 @@ export function Header() {
                                 href={subItem.href}
                                 target={subItem.external ? '_blank' : undefined}
                                 rel={subItem.external ? 'noreferrer' : undefined}
-                                className="block px-4 py-2.5 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 transition-colors group"
+                                className="block px-4 py-2.5 hover:bg-muted focus:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 transition-colors group"
                                 onClick={() => setActiveDropdown(null)}
                               >
-                                <div className="font-medium text-gray-800 group-hover:text-emerald-700 text-sm">
+                                <div className="font-medium text-foreground group-hover:text-emerald-700 text-sm">
                                   {subItem.name}
                                   {subItem.external && (
-                                    <span className="ml-1.5 align-middle text-[9px] font-bold uppercase tracking-wide text-gray-400">
+                                    <span className="ml-1.5 align-middle text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
                                       JSON
                                     </span>
                                   )}
                                 </div>
-                                <div className="text-xs text-gray-500 mt-0.5">
+                                <div className="text-xs text-muted-foreground mt-0.5">
                                   {subItem.description}
                                 </div>
                               </a>
@@ -369,7 +369,7 @@ export function Header() {
                           ))}
                         </div>
                         {/* Footer Link */}
-                        <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
+                        <div className="px-4 py-2 bg-muted border-t border-border">
                           <a
                             href={item.href}
                             className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
@@ -391,7 +391,7 @@ export function Header() {
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-colors"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
@@ -416,7 +416,7 @@ export function Header() {
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-gray-600 h-9 w-9 rounded-full bg-emerald-50 hover:bg-emerald-100">
+                    <Button variant="ghost" size="icon" className="text-muted-foreground h-9 w-9 rounded-full bg-emerald-50 hover:bg-emerald-100">
                       <User className="h-4 w-4 text-emerald-700" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -424,7 +424,7 @@ export function Header() {
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium">{user.name || 'User'}</p>
-                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
@@ -463,7 +463,7 @@ export function Header() {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-gray-600 font-medium">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground font-medium">
                     Sign In
                   </Button>
                 </Link>
@@ -480,14 +480,14 @@ export function Header() {
           <div className="xl:hidden flex items-center gap-2">
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+              className="p-2 rounded-lg text-muted-foreground hover:bg-muted"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+              className="p-2 rounded-lg text-muted-foreground hover:bg-muted"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -497,12 +497,12 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="xl:hidden py-4 border-t border-gray-100 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="space-y-1">
               <a
                 href="/"
                 className={`block px-4 py-3 rounded-lg font-medium ${
-                  location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-gray-700'
+                  location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -522,7 +522,7 @@ export function Header() {
                   <a
                     href={item.href}
                     className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium ${
-                      isActive(item.href) ? 'text-emerald-700 bg-emerald-50' : 'text-gray-700'
+                      isActive(item.href) ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -533,7 +533,7 @@ export function Header() {
                     {item.submenu.map((subItem) => (
                       <div key={subItem.href + subItem.name}>
                         {subItem.section && (
-                          <div className="px-4 pt-3 pb-0.5 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                          <div className="px-4 pt-3 pb-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                             {subItem.section}
                           </div>
                         )}
@@ -541,11 +541,11 @@ export function Header() {
                           href={subItem.href}
                           target={subItem.external ? '_blank' : undefined}
                           rel={subItem.external ? 'noreferrer' : undefined}
-                          className="block px-4 py-2 text-sm text-gray-600 hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded"
+                          className="block px-4 py-2 text-sm text-muted-foreground hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           {subItem.name}
-                          {subItem.external && <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400">JSON</span>}
+                          {subItem.external && <span className="ml-1 text-[10px] uppercase tracking-wide text-muted-foreground">JSON</span>}
                         </a>
                       </div>
                     ))}
@@ -553,7 +553,7 @@ export function Header() {
                 </div>
               ))}
 
-              <div className="pt-4 mt-4 border-t border-gray-100 space-y-2 px-4">
+              <div className="pt-4 mt-4 border-t border-border space-y-2 px-4">
                 <a href="/library" className="block" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full">Browse the full Library</Button>
                 </a>
