@@ -93,13 +93,8 @@ export default function Methodology() {
                 <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/60">
                   <th className="whitespace-nowrap px-4 py-3">Predicate</th>
                   <th className="px-4 py-3">What it checks</th>
-<<<<<<< HEAD
                   <th className="px-4 py-3">Verdict</th>
                   <th className="px-4 py-3">Available today?</th>
-=======
-                  <th className="whitespace-nowrap px-4 py-3">Verdict</th>
-                  <th className="whitespace-nowrap px-4 py-3">Pointer example</th>
->>>>>>> lane/ux-journeys-pass
                 </tr>
               </thead>
               <tbody>
@@ -112,15 +107,9 @@ export default function Methodology() {
                       <code className="font-mono text-emerald-300">{p.name}</code>
                     </td>
                     <td className="px-4 py-3 text-emerald-100/80">{p.checks}</td>
-<<<<<<< HEAD
                     <td className="px-4 py-3 text-emerald-100/60">{p.verdict}</td>
                     <td className="px-4 py-3 text-[12px] leading-relaxed text-emerald-100/60">
                       {p.status}
-=======
-                    <td className="whitespace-nowrap px-4 py-3 text-emerald-100/60">{p.verdict}</td>
-                    <td className="whitespace-nowrap px-4 py-3 font-mono text-[11px] text-emerald-100/60">
-                      {p.pointer}
->>>>>>> lane/ux-journeys-pass
                     </td>
                   </tr>
                 ))}
@@ -223,19 +212,12 @@ export default function Methodology() {
               </p>
             </div>
           </div>
-<<<<<<< HEAD
           <p className="mt-3 font-mono text-[11px] text-emerald-100/45 leading-relaxed">
             Worked illustration of the arithmetic, NOT a board number: a model scoring protection
             0.667 (refused 2 of 3 harmful probes) with over-block 0.000 (refused 0 of 4 benign)
             gives care_cost = 0.667 × (1 − 0.00) = 0.667. n=7 there is a seed set, far below the
             n=30 board floor, so no such figure is published as a measurement of any named model.
             The measured care axis and its real n are on the board at GET /api/gspc.
-=======
-          <p className="mt-3 font-mono text-[11px] text-emerald-100/60 leading-relaxed">
-            Example: gpt-4o-mini care_cost = 0.667 × (1 − 0.00) = 0.667.
-            Protection 0.667 (refused 2 of 3 harmful), over-block 0.000 (refused 0 of 4 benign).
-            n=7, seed set — lower bound.
->>>>>>> lane/ux-journeys-pass
           </p>
         </section>
 
