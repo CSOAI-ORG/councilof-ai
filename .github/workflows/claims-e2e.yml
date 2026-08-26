@@ -1,18 +1,35 @@
 name: Claims E2E (live truth check)
 
 # Verifies every claim on the live site is functionally true — tools execute,
-# seals are real Ed25519, counts match copy. Runs after each push to master
-# (waits for Vercel deploy), nightly, and on demand. Fails if any claim fails.
-
+# seals are real Ed25519, counts match copy. Fails if any claim fails.
+#
+# TRIGGER CHANGED 2026-08-26 (push -> workflow_run). This used to fire on EVERY push
+# to master, and it was wrong on its own terms as well as expensive:
+#   * It checks the LIVE site, then waited a flat `sleep 90` for the deploy. The deploy
+#     workflow takes 20+ minutes (playwright install, ~580-route prerender, and 230s of
+#     deliberate anti-clobber sleeps). So on push this measured the PREVIOUS build and
+#     called it a live truth check.
+#   * It held a runner for ~5 minutes (chromium install + the sleep) per push, while the
+#     deploy it was supposedly validating sat in the queue behind it. On 2026-08-26 that
+#     starvation put 14 workflows in the queue with 0 running and the deploy never ran.
+# Running it when deploy.yml actually COMPLETES makes it both cheaper and true.
 on:
-  push:
-    branches: [master, main, counter-canon-enforcement]
+  workflow_run:
+    workflows: ["Build + deploy site (prerender + fields + tour → both domains)"]
+    types: [completed]
   schedule:
     - cron: "0 6 * * *" # daily 06:00 UTC
   workflow_dispatch:
 
+# Collapse a burst: only the newest run of a deploy sequence needs to check live.
+concurrency: { group: claims-e2e, cancel-in-progress: true }
+
 jobs:
   verify:
+    # workflow_run fires on 'completed' regardless of conclusion. Without this the
+    # e2e would run against a stale site after a FAILED deploy and report a red that
+    # says nothing about the code — a false alarm is a guard that trains you to ignore it.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -27,9 +44,11 @@ jobs:
           npm init -y >/dev/null 2>&1 || true
           npm i -D playwright@1.61.1 >/dev/null 2>&1
           npx playwright install --with-deps chromium
-      - name: Wait for Cloudflare Pages deploy (push only)
-        if: github.event_name == 'push'
-        run: sleep 90
+      # workflow_run fires when deploy.yml has finished, so the only wait needed is
+      # Cloudflare's alias propagation, not the whole build.
+      - name: Let the Pages alias settle
+        if: github.event_name == 'workflow_run'
+        run: sleep 30
       - name: Run claims verification against live site + brain
         env:
           # Retargeted 2026-08-26. This ran against csoai-site.pages.dev, a DIFFERENT

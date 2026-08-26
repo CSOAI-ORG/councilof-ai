@@ -31,6 +31,15 @@ jobs:
       - name: No committed conflict markers (blocks the 2026-08-24 build break)
         run: node scripts/no-conflict-markers.mjs
 
+      # _redirects guard. Cloudflare stops parsing the file after 100 DYNAMIC rules and
+      # only warns; on 2026-08-26 that silently dropped the last 53 lines including the
+      # SPA catch-all, and the deploy still went green. Selftest first so a guard that
+      # has stopped biting fails loudly instead of passing everything.
+      - name: Redirects guard — selftest, then the real file
+        run: |
+          node scripts/redirects-guard.mjs --selftest
+          node scripts/redirects-guard.mjs public/_redirects
+
       - name: Install deps
         run: npm install --no-audit --no-fund
 

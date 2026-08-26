@@ -2,18 +2,29 @@ name: Sov Stack E2E (agentic globe/sim/hive)
 
 # Verifies the unified agentic Sovereign stack on the live site: every surface loads
 # console-clean, interactions fire, and the globe actually RECEIVES its drive commands
-# (postMessage spy). Runs after each push to master (waits for Vercel deploy), nightly,
-# and on demand. Fails if any surface or drive-path regresses.
-
+# (postMessage spy). Fails if any surface or drive-path regresses.
+#
+# TRIGGER CHANGED 2026-08-26 (push -> workflow_run), same reasoning as claims-e2e.yml:
+# a live-site check fired on push tested the PREVIOUS build (its `sleep 100` cannot
+# outwait a 20-minute prerender deploy) while holding a runner that the deploy needed.
+# Two such workflows on every push were the largest single contributor to the queue
+# starvation that stopped deploy.yml from running at all on 2026-08-26.
 on:
-  push:
-    branches: [master, main, counter-canon-enforcement]
+  workflow_run:
+    workflows: ["Build + deploy site (prerender + fields + tour → both domains)"]
+    types: [completed]
   schedule:
     - cron: "30 6 * * *" # daily 06:30 UTC (after claims-e2e)
   workflow_dispatch:
 
+concurrency: { group: sov-stack-e2e, cancel-in-progress: true }
+
 jobs:
   sov-stack:
+    # workflow_run fires on 'completed' regardless of conclusion. Without this the
+    # e2e would run against a stale site after a FAILED deploy and report a red that
+    # says nothing about the code — a false alarm is a guard that trains you to ignore it.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -26,9 +37,10 @@ jobs:
           npm init -y >/dev/null 2>&1 || true
           npm i -D playwright@1.61.1 >/dev/null 2>&1
           npx playwright install --with-deps chromium
-      - name: Wait for Cloudflare Pages deploy (push only)
-        if: github.event_name == 'push'
-        run: sleep 100
+      # deploy.yml has already finished; wait only for alias propagation.
+      - name: Let the Pages alias settle
+        if: github.event_name == 'workflow_run'
+        run: sleep 30
       - name: Run Sov-stack E2E against live site
         env:
           # Retargeted 2026-08-26. This ran against csoai-site.pages.dev, a DIFFERENT
