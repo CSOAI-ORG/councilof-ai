@@ -102,20 +102,38 @@ async function grounded(q: string, origin: string): Promise<string | null> {
 
   if (
     /\b(board|scoreboard|axes|axis|gspc|coverage|how many axes|walk me through|overview|live board|how many.*measured|measured of)\b/.test(t) &&
-    (axes.length || canon.quotable)
+    (axes.length || canon.slots)
   ) {
     const mAxes = canon.measuredAxes;
+    const uAxes = canon.unmeasuredAxes;
+    // A MEASURED axis does not always carry an accuracy: the deterministic-facts
+    // financial axes (provenance-controls) have an n and a status and no score, and
+    // /api/gspc says so explicitly ("an axis with no accuracy contributes nothing
+    // rather than a zero"). This used to print `Number(undefined).toFixed(3)` and
+    // hand the reader the literal string **NaN**.
+    const row = (a: any) => {
+      const acc = Number(a.accuracy);
+      const head = Number.isFinite(acc) ? `${acc.toFixed(3)} ` : "";
+      const tail = Number.isFinite(acc)
+        ? (a.separation ? `, ${a.separation}` : "")
+        : ", no accuracy on this axis — it is a deterministic-facts row, not a model comparison";
+      return `- **${a.axis}** ${head}(n=${a.n}${tail})`;
+    };
     return (
-      `The GSPC board has **${canon.quotable}** quotable axes. ` +
-      `**${canon.measured} measured of ${canon.quotable}**` +
-      (canon.publicCount ? ` (${canon.publicCount})` : "") +
-      `.\n\n` +
-      `Cite live totals.public_count — never invent 22 axes. Jail is MEASURED; a TIE is not a separated leader.\n\n` +
+      `${canon.publicCount}. ` +
+      `**${canon.measured}** of the **${canon.slots}** published slots carry a measurement; ` +
+      `**${canon.unmeasured}** are declared slots with no run behind them.\n\n` +
+      `Quote both numbers or quote the smaller one — the larger counts slots, not measurements. ` +
+      `A published slot exists so the gap is visible; it is not evidence of anything having been measured. ` +
+      `Jail is MEASURED; a TIE is not a separated leader.\n\n` +
       `${canon.jailNote}\n\n` +
-      `The ${mAxes.length} measured axes:\n` +
-      mAxes.map((a: any) => `- **${a.axis}** ${Number(a.accuracy).toFixed(3)} (n=${a.n}` +
-        (a.separation ? `, ${a.separation}` : "") + `)`).join("\n") +
-      `\n\n_Grounded in GET /api/gspc totals (measured_axes / public_count), not by a model._`
+      `The ${mAxes.length} measured:\n` +
+      mAxes.map(row).join("\n") +
+      (uAxes.length
+        ? `\n\nThe ${uAxes.length} carrying no number — UNMEASURED is a published status, not an omission:\n` +
+          uAxes.map((a: any) => `- **${a.axis}** — ${String(a.status ?? "UNMEASURED")}, no score on this stamp`).join("\n")
+        : "") +
+      `\n\n_Grounded in GET /api/gspc totals (axes / measured_axes / unmeasured_axes / public_count), not by a model._`
     );
   }
 
@@ -137,7 +155,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   if (/\b(who are you|what (is|are|s) (this|you|council|csoai|the council of ai)|what do you do|tell me about (council|csoai|this|you)|about (council|csoai|you)|explain (council|csoai|this)|are you (an? )?(ai|bot|chatbot))\b/i.test(t)) {
     return (
       `The **Council of AI** is an independent measurement instrument: it measures how AI systems behave against the rules that govern them, signs each result with Ed25519, and publishes what it cannot yet measure. It does **not** certify and issues no conformity mark.\n\n` +
-      `The GSPC board carries **${canon.measured} measured of ${canon.quotable}** quotable axes (${openNames.slice(0, 6).join(", ")}${openNames.length > 6 ? ", ..." : ""}). Verification is free forever; a grade is never sold.\n\n` +
+      `The GSPC board publishes **${canon.publicCount}** — ${canon.unmeasured} of its ${canon.slots} slots carry no number, and say so (${openNames.slice(0, 6).join(", ")}${openNames.length > 6 ? ", ..." : ""}). Verification is free forever; a grade is never sold.\n\n` +
       `Ask me a named axis, the method, Article 5, or how to get measured.\n\n_Grounded in the published board, not by a model._`
     );
   }
@@ -145,7 +163,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
     return (
       `Here's what I can answer from published facts:\n\n` +
       `- **A named board axis** - its measured accuracy, Wilson interval and n (or UNMEASURED, honestly).\n` +
-      `- **The board** - how many axes are measured of the quotable set.\n` +
+      `- **The board** - how many of its published slots carry a measurement, and how many carry none.\n` +
       `- **EU AI Act Article 5** - the prohibited practices, by a deterministic rule.\n` +
       `- **The measurement method** - unparsed counted wrong, n>=30 to quote, three outcomes.\n` +
       `- **Pricing** - no SaaS tiers; verification is free forever.\n` +

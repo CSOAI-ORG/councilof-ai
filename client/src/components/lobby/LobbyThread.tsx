@@ -1,6 +1,7 @@
 import type { RefObject } from "react";
 import { MEASURE_CHAT, TYPE, TONE } from "./glass";
 import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
+import { AnswerText } from "./answerText";
 
 const STATE_TONE: Record<string, string> = {
   live: TONE.ok,
@@ -42,13 +43,16 @@ export default function LobbyThread({
           </p>
           <div
             className={
-              "whitespace-pre-wrap rounded-2xl px-5 py-3.5 text-[15.5px] leading-[1.65] " +
+              "rounded-2xl px-5 py-3.5 text-[15.5px] leading-[1.65] " +
               (t.role === "user"
-                ? "bg-emerald-700 text-white"
+                ? "whitespace-pre-wrap bg-emerald-700 text-white"
                 : "border border-slate-900/10 bg-white text-slate-900")
             }
           >
-            {t.text}
+            {/* The user's own words are shown verbatim — never re-interpreted.
+                The Council answers in Markdown, so its turn is rendered (see
+                answerText.tsx: React nodes, whitelist, never innerHTML). */}
+            {t.role === "user" ? t.text : <AnswerText text={t.text} />}
           </div>
           {t.role === "council" && (t.state || t.signature) && (
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
