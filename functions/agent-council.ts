@@ -1,7 +1,7 @@
 /**
  * GET /agent-council - 308 to the lobby.
  * Retracted 33-agent guarantee. Do not 308 onto /agent-council/.
- * Functions bump after untyping well-known 14-slot / 14-of-14 copy.
+ * Functions bump after 717f7462 re-landed 313 + chain.json; floor restored 150.
  */
 export function onRequest() {
   return new Response(null, {
