@@ -176,3 +176,18 @@ humanoid deployment-registry design.
 - Recommended next (owner or on-chain lane): obtain the issuers' public `r-address` from the
   token's own published docs / a chain explorer that resolves by token symbol, then verify with
   the validated account_info probe before writing into rwa_attest.py `addr:`.
+
+## 2026-08-26 · JEEVES — revenue-atlas asset numbers are STALE, corrected
+
+- The "338 servers / 1,869 tools" asset claim is OUT OF DATE. Current honest numbers:
+  - **291 governed_mcp_servers** = catalog count from `client/src/data/mcpRegistry...` (VERIFIED).
+  - **9 probed servers** = the A4 lane's real, honesty-contracted probe fixture (evidence/mcp-registry.json).
+  - These are NOT the same thing and must never be summed (the mcp.ts rule: "reachable and
+    catalogued-not-probed are reported as separate counts and never summed. A directory listing
+    is not a fleet.").
+- MCP security scorecard (atlas Play #1) is **already in an active lane** (A4 honesty, lane/a4-mcp-honesty,
+  worktree wt-a4-mcp). security.ts reports the security surface as IN_PROGRESS — it refuses to publish
+  a red/blue score before its dual grader is validated against the 36-cell gold worksheet (the v1
+  board was a retraction; this is the honesty discipline). Do NOT build a competing scorecard.
+- Atlas Play #1's "SSL Labs graded the web uninvited" precedent is intact as DOCTRINE, but the asset
+  count + the build owner must be corrected before any revenue plan leans on it.
