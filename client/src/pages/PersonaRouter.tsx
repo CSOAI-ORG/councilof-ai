@@ -1,10 +1,34 @@
 import { useEffect } from "react";
 import SovereignSpot from "../components/SovereignSpot";
 import { PersonaHeroArt, Slideshow, TrustStrip } from "../components/BrandGraphics";
+import PersonaEvidence from "../components/PersonaEvidence";
 
-// PersonaRouter — /for/:persona demographic landing pages. Closes the "discovery is flat"
-// gap: each demographic (from the SME KB personas) lands on a page that speaks to them and
-// routes them into the right EXISTING pages. Branded custom visuals, FAQPage JSON-LD.
+// PersonaRouter — /for/:persona demographic landing pages. Each declared audience lands on a
+// page that speaks to them and routes them into the right EXISTING pages.
+//
+// ── THE CLAIM RULE THAT GOVERNS THIS FILE (read before editing a single string) ───────────
+// Every sentence here is one of two kinds, and they are held to different standards.
+//
+//   (a) A statement about the LAW. Keep it only if it is accurate to the instrument, and
+//       name the article. "Credit scoring is high-risk" is fine; "insurance is high-risk"
+//       was not — the AI Act names LIFE AND HEALTH insurance specifically (Annex III(5)(c)).
+//
+//   (b) A statement about what CSOAI DOES. Keep it only if a PUBLISHED artifact backs it.
+//       The artifacts are: the signed measurement cards under /signed/ (index at
+//       /signed/card_index.json, method at /signed/HOW-TO-VERIFY.md), the living board at
+//       GET /api/gspc, the published crosswalk at /crosswalk/east-west-v1.json, and the
+//       dated corpus feed at /corpus-watch/status.json.
+//
+// WHAT WAS CUT, AND WHY IT MATTERS. These pages used to say CSOAI "maps one control set
+// across DORA, the EU AI Act, and NIST". The only published crosswalk maps the EU AI Act
+// against the UK DRCF principles, Illinois SB 315 and TC260 — four regimes. It contains NO
+// DORA rows and NO NIST rows. DORA is real here, but only as a hashed baseline instrument in
+// the corpus feed, which is a much smaller thing and is now described as the smaller thing.
+// A capability sentence with no artifact behind it is the exact defect this estate measures
+// other people for. Do not reintroduce one; rewrite to what is true, or cut it.
+//
+// NO COUNT IS TYPED ON THIS PAGE. Figures come from PersonaEvidence, which reads them live
+// off /api/gspc. Axis SLUGS below are pointers into that board, not counts.
 
 type Link = { href: string; label: string; note: string };
 type Persona = {
@@ -12,6 +36,8 @@ type Persona = {
   eyebrow: string; h1: string; intro: string;
   links: Link[];
   slides: { title: string; body: string; tag?: string }[];
+  /** Board axes this audience can actually go and check, with why each is here. */
+  evidence: { lead: string; axes: { slug: string; why: string }[] };
   faqs: { q: string; a: string }[];
 };
 
@@ -19,87 +45,119 @@ const PERSONAS: Record<string, Persona> = {
   "sec-filer": {
     key: "sec-filer", eyebrow: "CSOAI - for US public companies",
     h1: "AI governance your 10-K can stand behind",
-    intro: "You disclose material AI risk and face AI-washing scrutiny. CSOAI turns AI-governance claims into signed, offline-verifiable evidence - so your filings rest on proof, not assertion.",
+    intro: "You disclose material AI risk and face AI-washing scrutiny. CSOAI publishes signed measurement runs on frozen, public banks — evidence a reader can recompute from the bytes rather than take on trust. What is signed is the measurement, not your compliance.",
     links: [
       { href: "/sec-disclosure", label: "SEC AI disclosure", note: "What filers must evidence now" },
-      { href: "/system-card", label: "Signed System Card", note: "Board-ready, per AI system" },
+      { href: "/system-card", label: "Signed System Card", note: "One AI system, one signed record" },
       { href: "/compare", label: "Honest vs Vanta / Drata", note: "Where we differ, plainly" },
       { href: "/us-ai-regulation", label: "US AI regulation", note: "NIST AI RMF + federal picture" },
     ],
     slides: [
-      { tag: "the risk", title: "AI is already in your filings", body: "Material AI risks belong in Reg S-K Item 105 risk factors and MD&A. The SEC has settled AI-washing charges. Disclosure needs evidence." },
-      { tag: "the fix", title: "Sign what you claim", body: "A signed System Card per AI system means every capability claim is backed by verifiable proof - the antidote to AI-washing." },
-      { tag: "the reuse", title: "One control set, every regime", body: "Map NIST AI RMF, ISO 42001, and the EU AI Act once. Comply once, evidence everywhere." },
+      { tag: "the risk", title: "AI is already in your filings", body: "Material AI risk belongs in Reg S-K Item 105 risk factors and in MD&A. The SEC has charged and settled AI-washing cases against investment advisers. Disclosure needs evidence behind it." },
+      { tag: "the fix", title: "Sign the measurement, not the claim", body: "A measurement card records ONE run against ONE frozen bank, Ed25519-signed over its exact bytes. It evidences what was measured on a date. It is not a statement that your AI governance is adequate — nobody here can make that statement." },
+      { tag: "the honest limit", title: "What is actually crosswalked", body: "The published crosswalk maps the EU AI Act against the UK DRCF principles, Illinois SB 315 and TC260, row by row. NIST AI RMF and ISO 42001 are not in it. We publish the map we have, not the map that would sell better." },
     ],
+    evidence: {
+      lead: "Two board axes bear directly on disclosure: whether a model can place an AI system in the right risk tier at all, and whether provenance marking survives.",
+      axes: [
+        { slug: "governance", why: "EU AI Act risk-tier classification — the judgement a disclosure about 'our high-risk AI systems' depends on being made correctly." },
+        { slug: "provenance", why: "Article 50 marking survival: does a provenance mark still read after ordinary handling? A disclosure about labelled AI output rests on this." },
+      ],
+    },
     faqs: [
       { q: "Does the SEC require AI disclosure?", a: "No standalone rule yet, but material AI risks already belong in 10-K risk factors and MD&A, and misleading AI claims can trigger enforcement. Treat it as material disclosure now." },
-      { q: "How does CSOAI reduce AI-washing risk?", a: "By backing every AI-governance claim with a signed, offline-verifiable System Card - so disclosures are evidenced, not asserted." },
+      { q: "How does CSOAI reduce AI-washing risk?", a: "By giving you something checkable to point at. Each measurement card is Ed25519-signed over its exact bytes and its id is the sha256 of those bytes, so a reader re-verifies it against the key published in our DID document — no account, no trust in us required. That converts one class of statement, 'this model was measured, here is the result on this bank', from assertion into evidence. It evidences nothing we did not measure." },
     ],
   },
   finance: {
     key: "finance", eyebrow: "CSOAI - for financial services",
-    h1: "Model risk, DORA, and the EU AI Act - evidenced once",
-    intro: "Credit, insurance, and lending AI are named high-risk. CSOAI maps one control set across DORA, the EU AI Act, and NIST - with signed evidence your regulators and auditors can verify.",
+    h1: "Model risk, DORA, and the EU AI Act - what we actually hold",
+    intro: "Credit scoring and life and health insurance pricing are named high-risk uses under the EU AI Act, and DORA's operational-resilience duties reach the ICT your models run on. CSOAI does not sell one control set that satisfies all of that. What we publish is a signed measurement board and a dated corpus feed that carries DORA's provisions as a hashed baseline alongside the AI Act's.",
     links: [
       { href: "/dora", label: "DORA readiness", note: "Operational resilience for AI" },
       { href: "/finance-ai-act", label: "Finance + EU AI Act", note: "High-risk uses + obligations" },
-      { href: "/system-card", label: "Signed System Card", note: "Per model, verifiable" },
+      { href: "/financial-axes", label: "The financial axes", note: "One measured, the rest published empty" },
       { href: "/compare", label: "Honest vs the incumbents", note: "Vanta / Drata / Credo AI" },
     ],
     slides: [
-      { tag: "high-risk", title: "Credit + insurance AI are named uses", body: "Creditworthiness scoring and insurance pricing are explicit high-risk uses under the EU AI Act - bias testing, explainability, and oversight all apply." },
-      { tag: "resilience", title: "DORA on top", body: "Operational-resilience duties layer over your AI. One evidenced control set satisfies the overlap instead of three parallel programs." },
-      { tag: "proof", title: "Signed, auditor-checkable", body: "Every governed action is Ed25519-signed and verifiable offline - your auditor checks it in a browser, no vendor account." },
+      { tag: "high-risk", title: "Credit and life/health insurance AI are named uses", body: "Annex III(5) names evaluating creditworthiness or establishing a credit score for natural persons, and risk assessment and pricing in relation to life and health insurance. Article 10 data governance, Article 14 human oversight and Article 11 technical documentation follow from that classification." },
+      { tag: "resilience", title: "DORA sits on top - and here is exactly what we hold on it", body: "DORA (Regulation (EU) 2022/2554) governs the ICT your models run on. In our dated corpus feed it is a baseline-seeded instrument: its provisions are hashed and watched, so a change in the text is visible. It has no rows in the published crosswalk, and we do not claim one evidenced control set discharges it." },
+      { tag: "proof", title: "Signed, and re-checkable without an account", body: "Each measurement card is Ed25519-signed over its exact bytes. Your auditor pins our key from the published DID document, fetches the card, and recomputes the hash and the signature themselves. If it does not verify, it is not ours." },
     ],
+    evidence: {
+      lead: "One axis on the financial half of the board carries a real run; the rest of that family is published as open slots so the gap is visible rather than quietly missing.",
+      axes: [
+        { slug: "provenance-controls", why: "On-chain issuer control facts for tokenised instruments — a deterministic read, no model and no score. Read its own limits carefully: what these facts imply about risk or solvency is not measured." },
+        { slug: "reserve-attestation", why: "Published as an open slot with no run behind it. It is here precisely because an empty cell is a first-class published status, not something to hide from a finance reader." },
+        { slug: "governance", why: "EU AI Act risk-tier classification — whether a model places a credit or insurance use in the tier the statute puts it in." },
+        { slug: "continuity", why: "Post-quantum status of a cryptographic assumption — the resilience question DORA's ICT duties eventually reach." },
+      ],
+    },
     faqs: [
-      { q: "Is credit scoring high-risk under the EU AI Act?", a: "Yes - evaluating creditworthiness or setting credit scores for individuals is explicitly listed as high-risk, triggering bias testing, oversight, and documentation." },
-      { q: "Does CSOAI cover DORA?", a: "Yes. CSOAI maps DORA operational-resilience controls alongside the EU AI Act and NIST so financial firms evidence the overlap once." },
+      { q: "Is credit scoring high-risk under the EU AI Act?", a: "Yes. Annex III(5)(b) lists AI intended to evaluate the creditworthiness of natural persons or establish their credit score as high-risk, with a carve-out for systems used to detect financial fraud. Bias examination, human oversight and technical documentation duties follow." },
+      { q: "Does CSOAI cover DORA?", a: "Not as a mapped control set, and we will not say otherwise. DORA is one of the instruments in our dated corpus feed, seeded and hashed so drift in its text is detectable. The published crosswalk maps the EU AI Act against the UK DRCF principles, Illinois SB 315 and TC260 — DORA is not among its rows, and neither is NIST AI RMF." },
     ],
   },
   healthcare: {
     key: "healthcare", eyebrow: "CSOAI - for healthcare + life sciences",
-    h1: "Prove your clinical AI is safe - and evidenced",
-    intro: "Clinical AI is squarely high-risk under the EU AI Act, on top of MDR/IVDR and HIPAA. CSOAI gives you signed, verifiable evidence of oversight, bias testing, and traceability.",
+    h1: "Clinical AI, measured - and the measurement signed",
+    intro: "Clinical AI is squarely high-risk under the EU AI Act, on top of MDR/IVDR and, in the US, HIPAA. CSOAI measures how models behave on frozen, published banks and signs each run. We do not assess your device, and we issue nothing.",
     links: [
       { href: "/healthcare-ai-act", label: "Healthcare + EU AI Act", note: "High-risk uses + obligations" },
       { href: "/high-risk-ai", label: "High-risk AI systems", note: "What triggers the regime" },
-      { href: "/system-card", label: "Signed System Card", note: "Per clinical system" },
+      { href: "/system-card", label: "Signed System Card", note: "One clinical system, one signed record" },
       { href: "/compare", label: "Honest vs the incumbents", note: "Where we differ" },
     ],
     slides: [
-      { tag: "high-risk", title: "Diagnosis + triage AI qualify", body: "AI for diagnosis, triage, or as a medical-device safety component is high-risk - conformity, oversight, and documentation duties apply." },
-      { tag: "stacked", title: "On top of MDR / IVDR / HIPAA", body: "The AI Act sits alongside device and privacy law. Align the work, but the AI-specific obligations are additional - CSOAI maps them." },
-      { tag: "traceable", title: "Signed clinical audit trail", body: "Every governed decision is logged and Ed25519-signed - traceability a regulator or safety officer can verify." },
+      { tag: "high-risk", title: "Diagnosis and triage qualify - by two different routes", body: "AI that is a safety component of a device regulated under MDR or IVDR is high-risk through Article 6(1) and Annex I. Triage of patients in emergency healthcare is listed separately in Annex III. Same tier, different conformity paths - and the route decides who assesses you." },
+      { tag: "stacked", title: "Alongside MDR / IVDR / HIPAA, not instead of", body: "The AI Act applies alongside device and privacy law. Article 8 lets the AI-Act documentation be folded into a single technical file, but the AI-specific obligations are additional, not absorbed by an existing device conformity route." },
+      { tag: "traceable", title: "What is signed here, precisely", body: "The measurement run is signed, over its exact bytes, with the id being the sha256 of those bytes. That is a traceable record of what a model did on a published bank on a date. It is not a clinical audit trail of your system, and nothing here is a safety case." },
     ],
+    evidence: {
+      lead: "Two behavioural axes speak to clinical conduct — whether a model refuses in a calibrated way, and what it costs in care terms when protecting and helping pull against each other.",
+      axes: [
+        { slug: "care", why: "Care-cost under paired conduct scenarios: protecting and helping traded off against each other, which is the shape of most clinical edge cases." },
+        { slug: "safety", why: "Calibrated refusal on paired requests — refusing the harmful sibling of a request without refusing the benign one. Over-refusal is a clinical failure too." },
+        { slug: "affect", why: "Emotional and embodied safety: manipulation, disclosure and handling of vulnerability. Its legal gold labels are counsel-pending, which the board states on the row." },
+      ],
+    },
     faqs: [
-      { q: "Is medical AI high-risk under the EU AI Act?", a: "Yes - AI for diagnosis, triage, or as a medical-device safety component is high-risk, triggering conformity, oversight, and documentation duties." },
-      { q: "Does the AI Act replace MDR/IVDR?", a: "No - it applies alongside them. Conformity work can be aligned, but the AI-specific obligations are additional." },
+      { q: "Is medical AI high-risk under the EU AI Act?", a: "Yes. AI that is a safety component of a product covered by the device legislation in Annex I - MDR and IVDR - is high-risk under Article 6(1), and AI used for triage of patients in emergency healthcare is separately listed in Annex III. Both trigger conformity, oversight and documentation duties." },
+      { q: "Does the AI Act replace MDR/IVDR?", a: "No - it applies alongside them. Documentation can be aligned into a single technical file, but the AI-specific obligations are additional." },
     ],
   },
   regulator: {
     key: "regulator", eyebrow: "CSOAI - for regulators + policy bodies",
     h1: "An assurance baseline you can verify - and publish",
-    intro: "You need to evidence, not just assert, an AI-assurance posture. CSOAI is the independent, open-source layer where every governed action is signed and offline-verifiable by anyone.",
+    intro: "You need something you can check without trusting the party who published it. The core here is MIT-licensed, the banks are public, and each measurement is Ed25519-signed against a key you fetch yourself - so anyone can recompute a number and challenge it.",
     links: [
       { href: "/regulator-atlas", label: "Regulator atlas", note: "The global regulation map" },
-      { href: "/government-dashboard", label: "Government dashboard", note: "Posture at a glance" },
+      { href: "/crosswalk", label: "The published crosswalk", note: "Four regimes, mapped row by row" },
       { href: "/gspc-arena", label: "Council Space", note: "Talk to the governance AI" },
-      { href: "/globe", label: "The governance globe", note: "Live, signed, worldwide" },
+      { href: "/honesty", label: "The honesty record", note: "Corrections, published not edited" },
     ],
     slides: [
-      { tag: "independent", title: "No single-vendor dependency", body: "Open-source core, offline-verifiable signatures - assurance that does not rest on trusting one commercial vendor." },
-      { tag: "verifiable", title: "Publish proof, not promises", body: "Every governed action is Ed25519-signed and checkable in a browser - the assurance baseline can be independently verified." },
-      { tag: "mapped", title: "Crosswalked provisions, published as measured", body: "EU AI Act, NIST AI RMF, ISO 42001 and the dated regulation feed — a shared reference you can recompute. We do not type a framework count into this page." },
+      { tag: "independent", title: "No single-vendor dependency", body: "MIT-licensed core, published frozen banks, and signatures that verify against a key you fetch from our DID document rather than one we hand you. You do not have to trust us in order to check us." },
+      { tag: "verifiable", title: "Publish proof, not promises", body: "Each measurement card is signed over its exact bytes, and the board snapshot carries its own site attestation naming the key that signed it. Re-verification needs no account and no CSOAI code." },
+      { tag: "mapped", title: "Crosswalked provisions, and the honest edge of the map", body: "The published crosswalk maps the EU AI Act against the UK DRCF principles, Illinois SB 315 and TC260. A separate dated corpus feed carries the AI Act, the CRA, DORA, NIS2 and UK GDPR as hashed baselines watched for drift. NIST AI RMF and ISO 42001 are in neither. We do not type a framework count into this page." },
     ],
+    evidence: {
+      lead: "The two axes a supervisory reader usually wants first: can a model recognise a prohibited practice, and can it place a system in the right risk tier.",
+      axes: [
+        { slug: "art5-safeguard", why: "EU AI Act Article 5 prohibited-practice trip: does the model recognise a prohibited practice when it sees one." },
+        { slug: "governance", why: "EU AI Act risk-tier classification. The largest bank on the board, and the judgement most downstream duties hang off." },
+        { slug: "machinery-conformity", why: "Machinery Regulation self-evolving safety-function classification — a second statute, graded deterministically the same way." },
+      ],
+    },
     faqs: [
-      { q: "How is CSOAI independent?", a: "The core is open-source and its governance signatures are offline-verifiable, so assurance does not depend on trusting a single commercial vendor." },
-      { q: "Can our claims be independently verified?", a: "Yes. Every governed action is Ed25519-signed and can be checked in any browser without a CSOAI account." },
+      { q: "How is CSOAI independent?", a: "The core is MIT-licensed and every published measurement verifies against a key you fetch from our own DID document, so the assurance does not rest on trusting a single commercial vendor. We measure; determination stays with authorities." },
+      { q: "Can these numbers be independently verified?", a: "Yes - that is the design, and the method is published rather than described. Pin the key from /.well-known/did.json, fetch a card from the published index, recompute the sha256 of the exact signed bytes and check the Ed25519 signature. If the bytes do not verify, the card is not ours." },
     ],
   },
   startup: {
     key: "startup", eyebrow: "CSOAI - for AI startups + scale-ups",
-    h1: "Enterprise-grade AI governance without a GRC team",
-    intro: "Your enterprise buyers ask for AI governance you do not have staff to run. CSOAI gives you a signed System Card and a mapped control set - fast, open-source, and honest.",
+    h1: "A signed measurement your buyer can re-check",
+    intro: "Your enterprise buyers ask for AI-governance evidence you have no staff to produce. CSOAI gives you one artifact that travels: a signed measurement on a published bank, which the buyer verifies for themselves. It is not a compliance programme and it is not a certificate.",
     links: [
       { href: "/assess", label: "Get measured", note: "What the run attests — and does not" },
       { href: "/system-card", label: "Signed System Card", note: "The artifact buyers can recompute" },
@@ -107,19 +165,27 @@ const PERSONAS: Record<string, Persona> = {
       { href: "/compare", label: "Honest vs the incumbents", note: "Measurement vs GRC" },
     ],
     slides: [
-      { tag: "unblock sales", title: "Answer the security questionnaire", body: "A signed System Card is the artifact enterprise buyers ask for - hand it over instead of stalling the deal." },
-      { tag: "no GRC team", title: "Governance without headcount", body: "Open-source core + a mapped control set means you evidence governance without hiring a compliance function." },
-      { tag: "honest", title: "Verify without an account", body: "A grade is never sold. Recompute a card at /gspc-verify. Honest about what we do versus Vanta and Drata." },
+      { tag: "unblock sales", title: "Hand over something specific", body: "A signed card is one run, one frozen bank, one signature - not a claim in a slide. The buyer recomputes it without an account and without asking us, which is a far better answer to a security questionnaire than a promise." },
+      { tag: "no GRC team", title: "Governance without headcount, stated honestly", body: "The core is MIT-licensed and the banks are public, so a small team can produce and publish a measurement without a compliance function. That is measurement. The rest of a governance programme is still yours - we are not pretending otherwise." },
+      { tag: "honest", title: "Verify without an account", body: "A grade is never sold and verification is free forever. Recompute a card at /gspc-verify, and read /compare for a plain account of where we differ from Vanta and Drata." },
     ],
+    evidence: {
+      lead: "The axes a technical buyer tends to open first — licence reasoning, tool conformance, and whether an agent knows when to stop and ask.",
+      axes: [
+        { slug: "openness", why: "Licence reasoning versus intended use: does the model get the licence question right for the use it is actually being put to." },
+        { slug: "conformance", why: "MCP tool conformance — whether a model uses a declared tool interface the way the interface declares itself." },
+        { slug: "cross-reality", why: "Autonomous agent action authority: PROCEED, CONFIRM or REFUSE. The question every enterprise buyer of an agent asks second." },
+      ],
+    },
     faqs: [
-      { q: "We have no compliance team - can we still use CSOAI?", a: "Yes. The open-source core plus a mapped control set lets a small team produce a signed System Card without a dedicated GRC function." },
-      { q: "Will this unblock enterprise deals?", a: "Often - a signed System Card is exactly the governance artifact enterprise security teams request." },
+      { q: "We have no compliance team - can we still use CSOAI?", a: "Yes, for measurement. The MIT-licensed core and the published banks let a small team produce a signed measurement card. It does not replace a compliance function and it is not a certificate - we issue none." },
+      { q: "What exactly does a buyer receive?", a: "A JSON card and its id. The id is the sha256 of the exact signed bytes; the signature is Ed25519 under the key published at /.well-known/did.json. /signed/HOW-TO-VERIFY.md gives them the commands, including the one number-formatting quirk a JavaScript verifier has to handle. They never need an account with us." },
     ],
   },
   enterprise: {
     key: "enterprise", eyebrow: "CSOAI - for enterprises",
     h1: "Measure once. Show the signed card.",
-    intro: "You face overlapping AI regimes across regions and business units. CSOAI maps one signed control set across all of them - so you stop rebuilding the same evidence for every framework.",
+    intro: "You face overlapping AI regimes across regions and business units. CSOAI does not sell one control set that satisfies all of them - no one honestly can. What we publish is a signed measurement board with its unmeasured slots left visible, and a dated feed of the regime texts underneath it.",
     links: [
       { href: "/industries", label: "Industry solutions", note: "Your sector, mapped" },
       { href: "/methodology", label: "The method", note: "Deterministic grading, published n" },
@@ -127,13 +193,22 @@ const PERSONAS: Record<string, Persona> = {
       { href: "/gspc-scoreboard", label: "Living board", note: "Empty cells stay empty" },
     ],
     slides: [
-      { tag: "overlap", title: "One measurement, many regimes", body: "EU AI Act, NIST, ISO 42001, DORA, NIS2 — measure once, show the signed card. We do not type a control-set count into this page." },
-      { tag: "signed", title: "Evidence that verifies itself", body: "Every governed action is Ed25519-signed and offline-verifiable - defensible in front of auditors and regulators." },
-      { tag: "honest", title: "Independent + transparent", body: "No vendor lock-in, open-source core, and honest positioning vs Vanta, Drata, Credo AI, and OneTrust." },
+      { tag: "overlap", title: "One measurement, many readers", body: "The EU AI Act, the Cyber Resilience Act, DORA, NIS2 and UK GDPR sit in our dated corpus feed as hashed baselines watched for drift. That is a shared reference several teams can read from. It is not a claim that one control set satisfies those regimes, and we do not type a framework count into this page." },
+      { tag: "signed", title: "Evidence that verifies itself", body: "Each measurement card is Ed25519-signed over its exact bytes, and the board snapshot carries a site attestation naming the key that signed it. Anyone can re-verify offline, which is the only property that makes evidence worth anything to a third party." },
+      { tag: "honest", title: "Empty cells stay empty", body: "The board publishes its unmeasured slots as UNMEASURED rather than hiding them, and prints both its slot count and its measured count so neither can be quoted alone. A published slot is not a measurement." },
     ],
+    evidence: {
+      lead: "A cross-regime reader usually wants the classification axis, the resilience axis, and one that is deliberately empty.",
+      axes: [
+        { slug: "governance", why: "EU AI Act risk-tier classification — the judgement that decides which duties apply to which system in your estate." },
+        { slug: "continuity", why: "Post-quantum status of a cryptographic assumption: the long-horizon resilience question behind CRA and DORA reasoning." },
+        { slug: "conformance", why: "MCP tool conformance — how models behave against a declared tool interface, which is where most agent integrations actually break." },
+        { slug: "regulatory-framework", why: "Published as an open slot with no run behind it. It is on this page on purpose: you should be able to see where the board is empty before you rely on it." },
+      ],
+    },
     faqs: [
       { q: "How does CSOAI handle overlapping frameworks?", a: "We measure against frozen provisions and publish the card. Overlapping regimes can reuse the same signed evidence. We do not claim a single control set satisfies every regime by itself — regulators decide conformity." },
-      { q: "Is CSOAI locked to one vendor?", a: "No - the core is open-source and signatures are offline-verifiable, avoiding single-vendor dependency." },
+      { q: "Is CSOAI locked to one vendor?", a: "No - the core is MIT-licensed and signatures are offline-verifiable against a key you fetch yourself, so nothing here depends on a single commercial vendor staying in business." },
     ],
   },
 };
@@ -183,6 +258,8 @@ export default function PersonaRouter({ persona }: { persona: string }) {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 pb-4"><Slideshow slides={p.slides} /></section>
+
+      <PersonaEvidence lead={p.evidence.lead} axes={p.evidence.axes} />
 
       <section className="max-w-6xl mx-auto px-6 py-10">
         <TrustStrip className="[&_div]:!bg-emerald-50/60 [&_.text-emerald-300]:!text-emerald-700 [&_.text-emerald-50\\/60]:!text-emerald-600/70 [&_div]:!border-emerald-200" />

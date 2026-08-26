@@ -53,6 +53,15 @@ export const PRIMARY_PATHS = new Set<string>([
   // Company
   "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
   "/faq",
+  // Who it is for — the six /for/:persona audience pages (PersonaRouter).
+  // These are DYNAMIC routes, so they never appear in ROUTE_MANIFEST and cannot be
+  // registered by the manifest sweep; they have to be listed by hand or every one of
+  // them renders the ArchivedBanner ("reference / archive") on a current page. That is
+  // the known trap this file's header warns about, and it bit these six directly: they
+  // were suppressed behind /for/* redirect Functions on 2026-08-24 and, on restoration,
+  // would have shipped flagged archived. Registered here so they cannot.
+  "/for/regulator", "/for/enterprise", "/for/finance",
+  "/for/healthcare", "/for/startup", "/for/sec-filer",
 ]);
 
 export interface Sector {
