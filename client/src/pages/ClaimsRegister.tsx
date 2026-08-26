@@ -165,13 +165,13 @@ export default function ClaimsRegister() {
             {groups.map(({ s, rows }) => (
               <span key={s} className="inline-flex items-center gap-2">
                 <StatusChip status={s} />
-<<<<<<< HEAD
-                <span className="text-sm text-slate-600">{rows.length}</span>
-=======
+                {/* The bare number beside a chip reads as "12" with no noun to a
+                    screen reader. styleFor() (never STATUS_STYLE[s] directly) so an
+                    undeclared status names itself instead of throwing on undefined. */}
                 <span className="text-sm text-slate-600">
-                  {n}<span className="sr-only"> {STATUS_STYLE[s].label.toLowerCase()} claims</span>
+                  {rows.length}
+                  <span className="sr-only"> {styleFor(s).label.toLowerCase()} claims</span>
                 </span>
->>>>>>> lane/ux-journeys-pass
               </span>
             ))}
           </div>
@@ -229,7 +229,7 @@ export default function ClaimsRegister() {
               <div className="mb-4 flex items-center gap-3">
                 <StatusChip status={s} />
                 <h2 className="text-2xl font-bold">
-                  <span className="sr-only">{STATUS_STYLE[s].label} — </span>
+                  <span className="sr-only">{styleFor(s).label} — </span>
                   {rows.length} {rows.length === 1 ? "claim" : "claims"}
                 </h2>
               </div>

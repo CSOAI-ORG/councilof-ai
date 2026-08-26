@@ -143,14 +143,16 @@ export default function RecordVerifyForm({ variant = "dark" }: { variant?: "ligh
         )}
       </div>
       {verdict && (
-<<<<<<< HEAD
-        <div className="mt-4 space-y-2">
-          {/* Headline states the verdict in words, not only a glyph. A reader who takes
-              nothing else from the panel must still leave knowing which way it went. */}
+        <div className="mt-4 space-y-2" role="status">
+          {/* role="status" announces the panel when it appears, and the headline is
+              the first thing in that live region — so a screen-reader user hears the
+              outcome in words before the per-check list. The headline states the
+              verdict in words, not only a glyph: a reader who takes nothing else from
+              the panel must still leave knowing which way it went. */}
           <p
             data-testid="record-verdict-headline"
             className={`text-[14px] font-bold ${
-              verdict.valid ? (light ? "text-emerald-800" : "text-emerald-300") : "text-red-500"
+              verdict.valid ? (light ? "text-emerald-800" : "text-emerald-300") : light ? "text-red-700" : "text-red-300"
             }`}
           >
             {verdict.valid ? "✓ VERIFIED" : "✗ NOT VERIFIED"} —{" "}
@@ -158,18 +160,14 @@ export default function RecordVerifyForm({ variant = "dark" }: { variant?: "ligh
               ? "this record reproduces its own id and its signature checks out against a published key."
               : "see which check failed below; each failure is reported for what it is."}
           </p>
+          {/* Keyed by code+index, not by label: two checks can carry the same label
+              and a duplicate React key silently drops a reported failure. */}
           {verdict.lines.map((l, i) => (
             <div key={`${l.code}-${i}`} className="flex items-start gap-2 text-[13px]">
-              <span className={l.ok === true ? "text-emerald-600" : l.ok === false ? "text-red-600" : light ? "text-slate-500" : "text-emerald-100/50"}>
-=======
-        <div className="mt-4 space-y-2" role="status">
-          {verdict.lines.map((l) => (
-            <div key={l.label} className="flex items-start gap-2 text-[13px]">
               <span
                 aria-hidden="true"
                 className={l.ok === true ? (light ? "text-emerald-700" : "text-emerald-300") : l.ok === false ? (light ? "text-red-700" : "text-red-300") : light ? "text-slate-600" : "text-emerald-100/70"}
               >
->>>>>>> lane/ux-journeys-pass
                 {l.ok === true ? "✓" : l.ok === false ? "✗" : "○"}
               </span>
               <span className={light ? "text-slate-800" : "text-emerald-100/80"}>

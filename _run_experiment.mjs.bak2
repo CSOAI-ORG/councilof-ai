@@ -1,0 +1,32 @@
+import { chromium } from 'playwright-core';
+const BASE='http://localhost:5301';
+const b=await chromium.launch();
+const ctx=await b.newContext({viewport:{width:1440,height:1100}});
+const p=await ctx.newPage();
+const reqs=[]; const errs=[];
+p.on('request', r=>{ if(!/\.(js|css|png|jpg|jpeg|svg|woff2?|ico|webp|map)(\?|$)/.test(r.url())) reqs.push(`${r.method()} ${r.url().replace(BASE,'')}`); });
+p.on('console',m=>{if(m.type()==='error')errs.push(m.text().slice(0,160));});
+await p.goto(BASE+'/gspc-arena',{waitUntil:'domcontentloaded',timeout:60000});
+await p.waitForTimeout(2000);
+// find the experiment input
+const ta = p.locator('textarea, input[type=text]').first();
+const n = await p.locator('textarea').count();
+console.log('textareas:', n, 'placeholder:', await p.locator('textarea').first().getAttribute('placeholder').catch(()=>null));
+reqs.length=0;
+await p.locator('textarea').first().fill('A city council wants to deploy live facial recognition in a public square to reduce theft.');
+const btn = p.getByRole('button',{name:/Run experiment/i});
+console.log('run button count:', await btn.count());
+const before = await p.evaluate(()=>document.body.innerText);
+await btn.first().click();
+await p.waitForTimeout(9000);
+const after = await p.evaluate(()=>document.body.innerText);
+console.log('=== NETWORK AFTER CLICK ===');
+console.log([...new Set(reqs)].join('\n') || '(none)');
+console.log('=== CONSOLE ERRORS ===\n'+errs.slice(0,8).join('\n'));
+// diff the text
+const bl=before.split('\n'), al=after.split('\n');
+const added = al.filter(l=>!bl.includes(l));
+console.log('=== NEW TEXT AFTER CLICK ('+added.length+' lines) ===');
+console.log(added.join('\n').slice(0,4000));
+await p.screenshot({path:'/tmp/claude-501/-Users-nicholas/34f0c79c-80a5-4c86-9f75-90b79401a44a/scratchpad/shot-experiment.png', fullPage:false});
+await b.close();

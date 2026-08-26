@@ -25,7 +25,7 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    proxy: { '^/api/': { target: 'http://localhost:3001', changeOrigin: true } },
+    proxy: { '^/api/': { target: 'http://localhost:8901', changeOrigin: true } },
     watch: { usePolling: true, interval: 1000 },
   },
   build: {

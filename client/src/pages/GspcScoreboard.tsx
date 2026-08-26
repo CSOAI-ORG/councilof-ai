@@ -426,7 +426,7 @@ export default function GspcScoreboard() {
               return (
                 <p className="mt-2 text-sm text-gray-700">
                   Bench <strong>{focused.bench}</strong> · n=<span className="font-mono">{focused.n}</span>
-                  {focused.n_unit && <span className="text-gray-500"> {focused.n_unit}</span>} ·{" "}
+                  {focused.n_unit && <span className="text-gray-600"> {focused.n_unit}</span>} ·{" "}
                   {acc.state === "figure" && (
                     <>leader accuracy <span className="font-mono">{acc.prefix}{acc.text}</span></>
                   )}
@@ -465,7 +465,7 @@ export default function GspcScoreboard() {
                   Signed run (evidence)
                 </a>
               ) : (
-                <span className="text-gray-500">No bank and no signed run — nothing to link.</span>
+                <span className="text-gray-600">No bank and no signed run — nothing to link.</span>
               )}
               <Link className="font-semibold text-emerald-700 underline" href="/gspc-verify">Verify the signed chain</Link>
               <a className="font-semibold text-emerald-700 underline" href="/api/gspc">Raw JSON (GET /api/gspc)</a>
@@ -490,93 +490,70 @@ export default function GspcScoreboard() {
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
+                {/* RECONCILED: the accuracy/CI/separation cells are the corrected
+                    renderers (accuracyCell / intervalCell / separationNote) that
+                    replaced `(a.accuracy * 100).toFixed(1)` and its NaN%. The
+                    whitespace-nowrap / tabular-nums / full-cell link are the 375px
+                    layout fix — they are applied to the corrected cells, not to the
+                    arithmetic that was removed. nowrap is deliberately NOT on the
+                    accuracy or separation cells: both can carry a prose line
+                    (coverage detail, separation note) that must still wrap. */}
                 {(data.axes as Axis[]).map((a) => {
                   const acc = accuracyCell(a);
                   const ci = intervalCell(a);
                   const sepNote = separationNote(a);
                   return (
                     <tr key={a.axis} className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
-                      <td className="p-3 font-semibold text-gray-900">
-                        <Link href={`/gspc/${a.axis}`} className="hover:underline">{a.axis}</Link>
+                      <td className="whitespace-nowrap p-3 font-semibold text-gray-900">
+                        {/* -m-3 p-3 makes the link fill its cell, so the touch
+                            target is the whole row cell rather than a 17px line. */}
+                        <Link href={`/gspc/${a.axis}`} className="-m-3 block p-3 hover:underline">{a.axis}</Link>
                       </td>
-                      <td className="p-3 text-gray-600">{a.bench}</td>
-                      <td className="p-3 font-mono">
+                      <td className="whitespace-nowrap p-3 text-gray-600">{a.bench}</td>
+                      <td className="whitespace-nowrap p-3 font-mono tabular-nums">
                         {a.n}
-                        {a.n_unit && <span className="ml-1 text-[10px] text-gray-400">{a.n_unit}</span>}
+                        {a.n_unit && <span className="ml-1 text-[10px] text-gray-600">{a.n_unit}</span>}
                       </td>
-                      <td className="p-3 font-mono" data-testid={`accuracy-${a.axis}`}>
+                      <td className="p-3 font-mono tabular-nums" data-testid={`accuracy-${a.axis}`}>
                         {acc.state === "figure" && (
-                          <>
+                          <span className="whitespace-nowrap">
                             {acc.prefix}{acc.text}
                             {acc.lowerBound && (
-                              <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400" title={acc.lowerBound}>
+                              <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-600" title={acc.lowerBound}>
                                 lower bound
                               </span>
                             )}
-                          </>
+                          </span>
                         )}
                         {acc.state === "facts" && (
                           <span title={acc.title} className="text-gray-600">
                             {acc.text}
                             {acc.detail && (
-                              <span className="ml-1 block font-sans text-[11px] text-gray-500">{acc.detail}</span>
+                              <span className="ml-1 block font-sans text-[11px] text-gray-600">{acc.detail}</span>
                             )}
                           </span>
                         )}
                         {acc.state === "unmeasured" && (
-                          <span title={acc.title} className="font-sans text-gray-500">{acc.text}</span>
+                          <span title={acc.title} className="font-sans text-gray-600">{acc.text}</span>
                         )}
                       </td>
-                      <td className="p-3 font-mono text-gray-600" title={ci.title}>{ci.text}</td>
+                      <td className="whitespace-nowrap p-3 font-mono tabular-nums text-gray-600" title={ci.title}>{ci.text}</td>
                       <td className="p-3">
                         {a.separation ? (
-                          <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
+                          <span className={`inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
                             {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
                           </span>
                         ) : (
                           <StatusChip kind={chipFor(a.status, a.separation, a.kind)} />
                         )}
-                        {sepNote && <span className="ml-2 text-[11px] text-gray-500">{sepNote}</span>}
+                        {sepNote && <span className="ml-2 text-[11px] text-gray-600">{sepNote}</span>}
                         {a.separation_p !== undefined && (
-                          <span className="ml-2 font-mono text-[11px] text-gray-400">p={a.separation_p}</span>
+                          <span className="ml-2 whitespace-nowrap font-mono text-[11px] text-gray-600">p={a.separation_p}</span>
                         )}
                       </td>
                     </tr>
                   );
                 })}
-=======
-                {(data.axes as Axis[]).map((a) => (
-                  <tr key={a.axis} className={`border-b last:border-0 ${focused?.axis === a.axis ? "bg-emerald-50" : ""}`}>
-                    <td className="p-3 font-semibold whitespace-nowrap text-gray-900">
-                      {/* -m-3 p-3 makes the link fill its cell, so the touch
-                          target is the whole row cell rather than a 17px line. */}
-                      <Link href={`/gspc/${a.axis}`} className="-m-3 block p-3 hover:underline">{a.axis}</Link>
-                    </td>
-                    <td className="p-3 whitespace-nowrap text-gray-600">{a.bench}</td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{a.n}</td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">
-                      {(a as any).accuracy_is ? "≥" : ""}{(a.accuracy * 100).toFixed(1)}%
-                      {(a as any).accuracy_is && (
-                        <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-600" title={(a as any).accuracy_is}>
-                          lower bound
-                        </span>
-                      )}
-                    </td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap text-gray-600">
-                      {a.interval ? `${(a.interval[0] * 100).toFixed(1)}–${(a.interval[1] * 100).toFixed(1)}%` : "withheld (n not independent)"}
-                    </td>
-                    <td className="p-3 whitespace-nowrap">
-                      <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
-                        {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
-                      </span>
-                      {a.separation_p !== undefined && (
-                        <span className="ml-2 font-mono text-[11px] text-gray-600">p={a.separation_p}</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
->>>>>>> lane/ux-journeys-pass
               </tbody>
             </table>
           </div>

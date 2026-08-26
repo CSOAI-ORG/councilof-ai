@@ -317,58 +317,48 @@ function InsurersEvidencePack() {
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
+                {/* RECONCILED: corrected accuracy/separation renderers (they replaced
+                    `(a.accuracy * 100).toFixed(1)`, which printed NaN% for every axis
+                    that honestly carries no accuracy) wearing the 375px layout fix.
+                    nowrap is on the numeric cells only — the accuracy and separation
+                    cells can carry a prose line that must still wrap. */}
                 {(board.axes as Axis[]).map((a) => {
                   const acc = accuracyCell(a);
                   const sepNote = separationNote(a);
                   return (
                     <tr key={a.axis} className="border-b last:border-0">
-                      <td className="p-3 font-semibold text-gray-900">{a.axis}</td>
-                      <td className="p-3 font-mono">
+                      <td className="whitespace-nowrap p-3 font-semibold text-gray-900">{a.axis}</td>
+                      <td className="whitespace-nowrap p-3 font-mono tabular-nums">
                         {a.n}
-                        {a.n_unit && <span className="ml-1 text-[10px] text-gray-400">{a.n_unit}</span>}
+                        {a.n_unit && <span className="ml-1 text-[10px] text-gray-600">{a.n_unit}</span>}
                       </td>
-                      <td className="p-3 font-mono" data-testid={`accuracy-${a.axis}`}>
-                        {acc.state === "figure" && <>{acc.prefix}{acc.text}</>}
+                      <td className="p-3 font-mono tabular-nums" data-testid={`accuracy-${a.axis}`}>
+                        {acc.state === "figure" && <span className="whitespace-nowrap">{acc.prefix}{acc.text}</span>}
                         {acc.state === "facts" && (
                           <span title={acc.title} className="text-gray-600">
                             {acc.text}
                             {acc.detail && (
-                              <span className="ml-1 block font-sans text-[11px] text-gray-500">{acc.detail}</span>
+                              <span className="ml-1 block font-sans text-[11px] text-gray-600">{acc.detail}</span>
                             )}
                           </span>
                         )}
                         {acc.state === "unmeasured" && (
-                          <span title={acc.title} className="font-sans text-gray-500">{acc.text}</span>
+                          <span title={acc.title} className="font-sans text-gray-600">{acc.text}</span>
                         )}
                       </td>
                       <td className="p-3">
                         {a.separation ? (
-                          <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
+                          <span className={`inline-block whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
                             {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
                           </span>
                         ) : (
                           <StatusChip kind={chipFor(a.status, a.separation, a.kind)} />
                         )}
-                        {sepNote && <span className="ml-2 text-[11px] text-gray-500">{sepNote}</span>}
+                        {sepNote && <span className="ml-2 text-[11px] text-gray-600">{sepNote}</span>}
                       </td>
                     </tr>
                   );
                 })}
-=======
-                {(board.axes as Axis[]).map((a) => (
-                  <tr key={a.axis} className="border-b last:border-0">
-                    <td className="p-3 font-semibold whitespace-nowrap text-gray-900">{a.axis}</td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{a.n}</td>
-                    <td className="p-3 font-mono tabular-nums whitespace-nowrap">{(a.accuracy * 100).toFixed(1)}%</td>
-                    <td className="p-3 whitespace-nowrap">
-                      <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-bold ${CHIP[a.separation]}`}>
-                        {a.separation === "TIE" ? "TIE — indistinguishable" : a.separation}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
->>>>>>> lane/ux-journeys-pass
               </tbody>
             </table>
           </div>
