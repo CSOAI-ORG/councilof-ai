@@ -21,6 +21,7 @@ const SURFACES = [
   "/interop/white-label-exposure-register.json",
   "/interop/white-label-deadline-radar.json",
   "/interop/white-label-jailbreak-rating.json",
+  "/interop/white-label-attestation-integrity.json",
   "/interop/pqc-continuity-measure.json",
   "/interop/index-reference-reverify.json",
 ];
