@@ -5,6 +5,8 @@ Checklist for `/indices`, `/indices/:slug`, `/products`, `/powered-by`:
 - [x] Page titles set in `useEffect`
 - [x] Meta descriptions via `setMetaDescription` / `setOgMeta`
 - [x] Status communicated in text + pill (not color alone)
+- [x] Index hub links carry `aria-label` with title + status
+- [x] Products catalog links carry `aria-label` with name + register
 - [x] FaqBlock on `/indices` (keyboard-focusable headings)
 - [x] NrsroDisclaimer as `role="note"`
 - [ ] Full axe CI suite (open — extend e2e when bandwidth)
