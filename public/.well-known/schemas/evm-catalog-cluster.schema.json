@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/.well-known/schemas/evm-catalog-cluster.schema.json",
+  "title": "CSOAI EVM catalog cluster manifest 0.1",
+  "description": "Stage 3 breadth stubs (#303–308). REPORTED only — never MEASURED product scores.",
+  "type": "object",
+  "required": ["schema", "cluster", "batch", "move", "status", "measured_score", "as_of", "entries"],
+  "properties": {
+    "schema": { "const": "csoai.evm-catalog-cluster/0.1" },
+    "cluster": { "type": "string", "minLength": 1 },
+    "batch": { "type": "string", "enum": ["a", "b"] },
+    "move": { "type": "string", "pattern": "^30[3-8]$" },
+    "status": { "type": "string", "const": "REPORTED" },
+    "measured_score": { "type": "null" },
+    "as_of": { "type": "string" },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/catalogEntry" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "catalogEntry": {
+      "type": "object",
+      "required": [
+        "slug",
+        "name",
+        "chain",
+        "public_id",
+        "public_artifact",
+        "source_url",
+        "as_of",
+        "signing_state",
+        "measured_score",
+        "play"
+      ],
+      "properties": {
+        "slug": { "type": "string", "minLength": 1 },
+        "ticker": { "type": ["string", "null"] },
+        "name": { "type": "string", "minLength": 1 },
+        "chain": { "type": "string", "enum": ["ethereum", "solana", "bnb"] },
+        "public_id": { "type": ["string", "null"] },
+        "public_artifact": { "type": "string", "minLength": 1 },
+        "source_url": { "type": "string", "format": "uri" },
+        "as_of": { "type": "string" },
+        "signing_state": { "type": "string", "const": "unsigned" },
+        "measured_score": { "type": "null" },
+        "play": { "type": "string", "const": "clean" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

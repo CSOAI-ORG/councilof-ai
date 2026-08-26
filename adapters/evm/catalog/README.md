@@ -30,3 +30,5 @@ npx tsx adapters/evm/catalog/index.ts securitize-batch-a
 ```
 
 Crosswalk: `docs/STAGE3_CATALOG_CLUSTERS.md` · matrix: `docs/RWA_CONTACT_MATRIX.md`
+
+Schema: `public/.well-known/schemas/evm-catalog-cluster.schema.json`

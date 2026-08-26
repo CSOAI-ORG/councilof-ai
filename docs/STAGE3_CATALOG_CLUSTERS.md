@@ -31,3 +31,5 @@ npx tsx adapters/evm/catalog/index.ts backed-batch-a
 ```
 
 Crosswalk: `docs/STAGE3_CLEAN_PLAY_REFRESHES.md` · `client/src/data/rwaAttestationTargets.ts` (`RWA_EVM_CATALOG_CLUSTERS`)
+
+JSON Schema: `public/.well-known/schemas/evm-catalog-cluster.schema.json` · lint: `npm run lint:evm-catalog`
