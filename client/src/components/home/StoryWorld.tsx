@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ScrollWorld, usePrefersReducedMotion, type Slide } from "@/components/scrollworld";
+import { fetchAxes } from "@/lib/gspcAxes";
 
 /**
  * StoryWorld — the councilof.ai homepage as an EPIC but ROBUST scroll-world.
@@ -195,23 +196,99 @@ export const STORY: Slide[] = [
       { tag: "benefit", text: "A public place to report AI behaviour that looks wrong" },
       { tag: "usp", text: "What we act on is measured and signed — in the open" },
     ],
-    href: "/watchdog",
-    cta: "Open the watchdog",
+    // Was /watchdog (the map). The real intake is the incident-report form at
+    // /report — the CTA said "report it" and landed on something you cannot report on.
+    href: "/report",
+    cta: "Report an incident",
     image: { src: "/images/public_watchdog_intake.jpg", alt: "The public watchdog reporting funnel, open to everyone" },
   },
 ];
 
 // The four doors, folded into the hero.
 const PERSONAS: { who: string; hook: string; href: string }[] = [
-  { who: "Insurers", hook: "price AI risk on signed evidence", href: "/industries/insurance" },
+  // /insurers is the current audience page; /industries/insurance is the sector page
+  // behind it. The hero door should open the audience page, not a sector leaf.
+  { who: "Insurers", hook: "price AI risk on signed evidence", href: "/insurers" },
   { who: "Regulators", hook: "check behaviour against the law", href: "/regulators" },
   { who: "Enterprises", hook: "prove your AI before you ship", href: "/?lobby=measured&task=enterprise-start" },
   { who: "Developers", hook: "verify a signed card — free forever", href: "/gspc-verify" },
 ];
 
+/**
+ * The first screen has to answer "what is measured RIGHT NOW" — and it has to answer
+ * it from the wire, never from a number typed into this file.
+ *
+ * fetchAxes() reports its own `source`. On "wire" we print totals.public_count from
+ * GET /api/gspc verbatim, plus the stamp date. On "snapshot" (the API was unreachable)
+ * we say the live read failed and point at the endpoint — we do NOT quietly render the
+ * bundled snapshot's count as if it were live. A surface that looks live while reading
+ * a stale local copy is the same defect as reporting an unearned score.
+ */
+function LiveCoverage() {
+  const [state, setState] = useState<{ count?: string; date?: string; live: boolean; done: boolean }>({
+    live: false,
+    done: false,
+  });
+
+  useEffect(() => {
+    const ac = new AbortController();
+    fetchAxes(ac.signal).then((r) => {
+      setState({
+        count: r.publicCount,
+        date: r.measuredOn,
+        live: r.source === "wire",
+        done: true,
+      });
+    });
+    return () => ac.abort();
+  }, []);
+
+  const measured = state.done && state.live && state.count
+    ? state.count
+    : state.done
+      ? "live count unavailable — read GET /api/gspc"
+      : "reading GET /api/gspc…";
+
+  return (
+    <div className="mt-8 w-full max-w-3xl rounded-2xl border border-white/20 bg-black/35 px-5 py-4 backdrop-blur-sm">
+      <dl className="grid gap-4 text-left sm:grid-cols-3">
+        <div>
+          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300">
+            Measured right now
+          </dt>
+          <dd className="mt-1 text-sm font-bold text-white">
+            {measured}
+            {state.done && state.live && state.date && (
+              <span className="ml-1 font-medium text-white/60">· stamped {state.date}</span>
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300">
+            What it costs to check
+          </dt>
+          <dd className="mt-1 text-sm font-bold text-white">
+            Nothing, forever <span className="font-medium text-white/60">· no account, no fee</span>
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-300">
+            What we refuse to do
+          </dt>
+          <dd className="mt-1 text-sm font-bold text-white">
+            Certify anything{" "}
+            <span className="font-medium text-white/60">· no marks, no badges, no seals</span>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  );
+}
+
 function HeroActions() {
   return (
     <>
+      <LiveCoverage />
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <a
           href="/?lobby=measured&task=get-measured"

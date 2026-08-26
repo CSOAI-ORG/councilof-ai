@@ -12,30 +12,44 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 
 /** The lean current experience — kept in primary nav, never shown an "archived" banner. */
 // Kept in lockstep with the six master-nav groups in components/Header.tsx
-// (Measure · Regulation · Solutions · Evidence · Academy · Company) plus the
-// always-current surfaces the footer needs. A path here renders NO archive banner.
+// (Measure · Products · Regulation · Council OS · Evidence · Company) plus the
+// always-current surfaces the footer and the home page need. A path here renders
+// NO archive banner.
+//
+// THE INVARIANT: every internal href in Header.tsx and on the home page must appear
+// below. It is not decoration — an unregistered path renders the ArchivedBanner
+// ("reference / archive") under a link the primary nav is actively promoting, which
+// tells a reader and an answer engine that a current page is superseded.
+//
+// Audit 2026-08-26 found EIGHT such paths already live in the header and shipping
+// the archive banner: /models /tools /sectors /registers /eunomia /eunomia-data
+// /first-fine-watch /xrpl-attest. They are registered below, along with the
+// surfaces this front-door pass promotes (/report, /workbench, /start).
 export const PRIMARY_PATHS = new Set<string>([
   "/",
   // Measure
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
   "/methodology", "/instrument", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
+  "/models", "/tools", "/report",
+  // Specialist boards + signed registers (all live in Measure)
+  "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/crosswalk", "/ai-act-faq",
-  // Solutions
-  "/enterprise", "/insurers", "/government", "/industries", "/payg", "/integrations",
-  // The product family (current products — never archive-bannered)
+  // Products — the family, and who it is for
   "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",
+  "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
+  // Council OS
+  "/os", "/workbench", "/start",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/api-docs", "/status",
-  "/system-card",
-  // Academy
+  "/system-card", "/xrpl-attest",
+  // Academy (folded into Company in the nav; the pages are still current)
   "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",
   // Company
   "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
-  // Current product surfaces reachable off-nav (not superseded, so not archived)
-  "/os", "/faq",
+  "/faq",
 ]);
 
 export interface Sector {
@@ -183,8 +197,17 @@ export function itemsBySector(): Record<string, LibraryItem[]> {
   return out;
 }
 
-/** True when a page should show the "reference / archive" banner. */
+/** True when a page should show the "reference / archive" banner.
+ *
+ *  Blog posts are excluded (2026-08-26). The banner asserts "a dated reference page,
+ *  superseded by a current home" — which is simply false of a post published this week,
+ *  and every /blog/<slug> was carrying it, including the ones the home page promotes as
+ *  "Latest insights". A post is a dated publication by design; that is not the same thing
+ *  as a superseded page. Note this changes the BANNER only: blog posts stay listed in the
+ *  Library archive (libraryItems below), which is a record of what we have published, not
+ *  a claim that a page is stale. */
 export function isLibraried(path: string): boolean {
   const p = path.replace(/\/$/, "") || "/";
+  if (p.startsWith("/blog")) return false;
   return !PRIMARY_PATHS.has(p) && !p.startsWith("/library") && !NOT_LIBRARIED.test(p) && !hasForbiddenBrand(p) && !/\.[a-z]+$/.test(p);
 }
