@@ -35,7 +35,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
-  "/regulation-tracker", "/regulators", "/crosswalk", "/ai-act-faq",
+  "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
   // Products — the family, and who it is for
   "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",

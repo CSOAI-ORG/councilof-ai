@@ -19,6 +19,23 @@ export interface GspcAxis {
   task?: string;
   n?: number;
   n_note?: string;
+  /** What an n counts, when it is not bank items (e.g. "issuer accounts"). */
+  n_unit?: string;
+  /** "gspc" (the behavioural axes) or "financial" (the financial/domain axes). */
+  family?: "gspc" | "financial" | string;
+  /**
+   * The measurement KIND. Load-bearing for display: a `deterministic-facts` axis
+   * is measured but has no fleet and therefore no leader, no accuracy and no
+   * applicable separation test — which is a different fact from a `declared-slot`
+   * axis, which has no measurement at all. Reading absence without reading kind
+   * is what let a signed mainnet run render as "UNMEASURED".
+   */
+  kind?: "model-comparison" | "deterministic-facts" | "declared-slot" | string;
+  /** How much of the axis's own declared universe was covered. The figure a facts axis HAS. */
+  coverage?: string;
+  coverage_note?: string;
+  /** Absolute on-site path to the signed run, for an axis with no HuggingFace bank. */
+  evidence_url?: string;
   /** The board LEADER's figure on this axis, 0–1. Absent on a slot with no measurement. */
   accuracy?: number;
   /** Set when `accuracy` is NOT a point estimate (e.g. a stated Wilson lower bound). */

@@ -9,7 +9,8 @@
  * TIE is amber and says "indistinguishable". A TIE is never dressed as a win.
  */
 
-export type BoardChipKind = "SEPARATED" | "TIE" | "UNTESTED" | "UNMEASURED" | "REPORTED" | "IN-LANE";
+export type BoardChipKind =
+  | "SEPARATED" | "TIE" | "UNTESTED" | "UNMEASURED" | "REPORTED" | "IN-LANE" | "FACTS";
 
 const CHIP: Record<BoardChipKind, { text: string; className: string; title: string }> = {
   SEPARATED: {
@@ -42,6 +43,17 @@ const CHIP: Record<BoardChipKind, { text: string; className: string; title: stri
     className: "border-violet-300 bg-violet-50 text-violet-800",
     title: "Measured in-lane on a smaller fleet with no separation test. Served for honesty; not part of the board.",
   },
+  // A deterministic-facts axis IS measured — it just is not a model comparison,
+  // so it has no fleet, no leader and no accuracy. Rendering it as UNMEASURED
+  // would under-claim a real signed run; rendering a percentage would invent one.
+  // It gets its own word.
+  FACTS: {
+    text: "MEASURED — deterministic facts",
+    className: "border-emerald-300 bg-emerald-50 text-emerald-800",
+    title:
+      "Facts read deterministically off a public source. There is no model fleet and no leader, " +
+      "so there is no accuracy and no separation test is applicable — those fields are absent, not zero.",
+  },
 };
 
 export default function StatusChip({ kind, className = "" }: { kind: BoardChipKind; className?: string }) {
@@ -56,11 +68,21 @@ export default function StatusChip({ kind, className = "" }: { kind: BoardChipKi
   );
 }
 
-/** Map an axis's declared state onto a chip. Anything unrecognised reads UNMEASURED. */
-export function chipFor(status?: string, separation?: string): BoardChipKind {
+/**
+ * Map an axis's declared state onto a chip. Anything unrecognised reads UNMEASURED.
+ *
+ * `kind` is the axis's measurement kind from /api/gspc (model-comparison /
+ * deterministic-facts / declared-slot). It matters because a MEASURED axis with
+ * no `separation` field is TWO different facts depending on kind: on a
+ * model-comparison axis the test has not been run, on a deterministic-facts axis
+ * no test is applicable. Before this argument existed, both fell through to
+ * UNMEASURED — which called a signed mainnet run "unmeasured" on every surface.
+ */
+export function chipFor(status?: string, separation?: string, kind?: string): BoardChipKind {
   if (status !== "MEASURED") return "UNMEASURED";
   if (separation === "SEPARATED") return "SEPARATED";
   if (separation === "TIE") return "TIE";
   if (separation === "UNTESTED") return "UNTESTED";
+  if (kind === "deterministic-facts") return "FACTS";
   return "UNMEASURED";
 }
