@@ -135,7 +135,15 @@ for cid, src in verified.items():
             {
                 "id": cid,
                 "alg": "Ed25519",
-                "preimage": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
+                # RENAMED from "preimage" 2026-08-26. The field held the 89-byte RULE STRING,
+                # not the 337-byte preimage those bytes describe — so sha256(card["preimage"])
+                # != card["id"], and a reviewer doing the obvious thing got a MISMATCH ON A
+                # VALID CARD. That is precisely the defect class this estate publishes about:
+                # a field whose name promises what its content does not deliver.
+                # The fix is the name, not the value: putting the real preimage in would
+                # duplicate the whole body in every card for no gain. It is envelope-level,
+                # so this changes no id and no signature.
+                "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
                 "pubkey": src["pubkey"],
                 "signature": src["signature"],
                 "body": src["body"],
@@ -158,7 +166,7 @@ for e in idx:
 if isinstance(idx_blob, dict):
     idx_blob["verification"] = {
         "alg": "Ed25519",
-        "preimage": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
+        "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
         "id_rule": "id == sha256(preimage).hexdigest()",
         "howto": "/signed/HOW-TO-VERIFY.md",
     }
