@@ -31,11 +31,33 @@ function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" })
   );
 }
 
-export default function RecordVerifyForm({ variant = "dark" }: { variant?: "light" | "dark" }) {
+export default function RecordVerifyForm({
+  variant = "dark",
+  seed,
+  seedNonce,
+}: {
+  variant?: "light" | "dark";
+  /**
+   * Text a HOST surface wants loaded into the box — the Council OS pane uses it to
+   * hand the reader a real published card off /signed/chain.json so the tool can be
+   * exercised without first going and finding one. `seedNonce` changes on every
+   * load so the same card can be re-seeded after the reader has edited it. The box
+   * stays fully editable: seeding fills it, it never locks it.
+   */
+  seed?: string;
+  seedNonce?: number;
+}) {
   const [text, setText] = useState("");
   const [verdict, setVerdict] = useState<RecordVerdict | null>(null);
   const [busy, setBusy] = useState(false);
   const light = variant === "light";
+
+  useEffect(() => {
+    if (typeof seed === "string" && seed) {
+      setText(seed);
+      setVerdict(null); // a new record has not been checked yet — never show the old verdict beside it
+    }
+  }, [seed, seedNonce]);
 
   const run = async () => {
     setBusy(true);
@@ -71,8 +93,21 @@ export default function RecordVerifyForm({ variant = "dark" }: { variant?: "ligh
       </div>
       {verdict && (
         <div className="mt-4 space-y-2">
-          {verdict.lines.map((l) => (
-            <div key={l.label} className="flex items-start gap-2 text-[13px]">
+          {/* Headline states the verdict in words, not only a glyph. A reader who takes
+              nothing else from the panel must still leave knowing which way it went. */}
+          <p
+            data-testid="record-verdict-headline"
+            className={`text-[14px] font-bold ${
+              verdict.valid ? (light ? "text-emerald-800" : "text-emerald-300") : "text-red-500"
+            }`}
+          >
+            {verdict.valid ? "✓ VERIFIED" : "✗ NOT VERIFIED"} —{" "}
+            {verdict.valid
+              ? "this record reproduces its own id and its signature checks out against a published key."
+              : "see which check failed below; each failure is reported for what it is."}
+          </p>
+          {verdict.lines.map((l, i) => (
+            <div key={`${l.code}-${i}`} className="flex items-start gap-2 text-[13px]">
               <span className={l.ok === true ? "text-emerald-600" : l.ok === false ? "text-red-600" : light ? "text-slate-500" : "text-emerald-100/50"}>
                 {l.ok === true ? "✓" : l.ok === false ? "✗" : "○"}
               </span>
@@ -81,7 +116,10 @@ export default function RecordVerifyForm({ variant = "dark" }: { variant?: "ligh
               </span>
             </div>
           ))}
-          <TallyOptIn ok={verdict.lines.every((l) => l.ok !== false)} variant={variant} />
+          {/* The tally follows the ACTUAL verdict. It used to be fed a value derived from
+              a verifier that failed every genuine card, so every honest visitor who
+              clicked it filed a false failure into a public counter. */}
+          <TallyOptIn ok={verdict.valid} variant={variant} />
         </div>
       )}
     </div>

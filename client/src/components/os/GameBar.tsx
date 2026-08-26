@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { lobbyHref, openLobby } from "@/lib/lobbyLink";
+import { FOCUS } from "@/components/lobby/glass";
 
 /**
  * GameBar — sit above Council chat on /os.
@@ -9,8 +11,13 @@ import { useEffect, useState } from "react";
 type Save = { xp: number; quests: string[] };
 
 const KEY = "council-os-game-v1";
-const QUESTS = [
-  { id: "ask", label: "Ask the Council one grounded question", xp: 20, href: "#council-chat" },
+// 2026-08-26: quest 1 pointed at `#council-chat`, an anchor that has not existed
+// on /os since the second chat was removed — the link went nowhere and the quest
+// could never be completed, so the bar could never leave CITIZEN. It now opens the
+// Council OS lobby (the surface that actually holds the ask bar) and marks itself
+// like the other two.
+const QUESTS: { id: string; label: string; xp: number; href: string; lobbyPane?: "home" }[] = [
+  { id: "ask", label: "Ask the Council one grounded question", xp: 20, href: lobbyHref({ pane: "home" }), lobbyPane: "home" },
   { id: "arena", label: "Open Council Space", xp: 15, href: "/gspc-arena" },
   { id: "verify", label: "Verify a card with no login", xp: 15, href: "/gspc-verify" },
 ];
@@ -80,21 +87,26 @@ export default function GameBar() {
         {QUESTS.map((q) => {
           const done = save.quests.includes(q.id);
           return (
-            <a
-              key={q.id}
-              href={q.href}
-              onClick={() => {
-                if (q.id !== "ask") markQuest(q.id);
-              }}
-              className={`rounded-xl border px-3 py-2 text-[12px] ${
-                done
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                  : "border-slate-200 bg-white text-slate-700 hover:border-amber-300"
-              }`}
-            >
-              <span className="font-mono text-[10px] uppercase tracking-wide">{done ? "done" : `+${q.xp} xp`}</span>
-              <span className="mt-0.5 block font-semibold">{q.label}</span>
-            </a>
+            <li key={q.id} className="contents">
+              <a
+                href={q.href}
+                onClick={(e) => {
+                  markQuest(q.id);
+                  if (q.lobbyPane) {
+                    e.preventDefault();
+                    openLobby({ pane: q.lobbyPane });
+                  }
+                }}
+                className={`block min-h-[44px] rounded-xl border px-3 py-2 text-[12px] ${FOCUS} ${
+                  done
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    : "border-slate-200 bg-white text-slate-700 hover:border-amber-300"
+                }`}
+              >
+                <span className="font-mono text-[10px] uppercase tracking-wide">{done ? "done" : `+${q.xp} xp`}</span>
+                <span className="mt-0.5 block font-semibold">{q.label}</span>
+              </a>
+            </li>
           );
         })}
       </ol>
