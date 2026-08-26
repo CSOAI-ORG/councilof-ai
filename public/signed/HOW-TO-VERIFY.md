@@ -3,7 +3,7 @@
 You do not need our code, our permission, or our word for any of this. Everything below runs
 against the published bytes.
 
-**Cards published:** 335 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
+**Cards published:** 313 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
 
 ## 1. Pin the key first — this step is not optional
 
@@ -33,7 +33,7 @@ Every published card MUST carry that exact `pubkey`. If one does not, stop.
 
 The preimage was produced by CPython's `json.dumps`, which renders a float of integral value
 as **`0.0`**. ECMAScript `JSON.stringify`, Go's `encoding/json`, and RFC 8785 (JCS) all render
-the same value as **`0`**. 117 of our 335 cards contain such a value, so a
+the same value as **`0`**. 116 of our 313 cards contain such a value, so a
 naive JavaScript or Go verifier computes a different preimage and reports a **false failure**
 on roughly a third of the set.
 
@@ -92,5 +92,5 @@ correct** — that rests on the published method, the gold labels and the rows, 
 available. A signature is an integrity claim, not a truth claim.
 
 **It also does not prove the set is complete.** The index declares a chain head that is not
-among these 335 cards: they are a prefix of a longer chain. Each card verifies
+among these 313 cards: they are a prefix of a longer chain. Each card verifies
 individually; completeness does not.

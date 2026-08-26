@@ -119,6 +119,15 @@
           "/interop/financial-axes.json",
           "/financial-axes"
         ]
+      },
+      "axis_engine_16": {
+        "count": 16,
+        "what": "A separate, harder fresh-benchmark set of 16 axes measured on the RunPod RTX 3090 engine.",
+        "not": "NOT the public GSPC board count. The public board is 22 axes, 15 measured, 7 unmeasured.",
+        "why_scoped": "facts-gate compares every hardcoded axis count against the live board and is right to: a typed integer that drifts from /api/gspc is this estate's signature defect. This file is a genuinely different set, so it is DECLARED as its own namespace rather than the gate being loosened. The count still cannot drift silently — it is now pinned here, and changing it means changing this declaration.",
+        "surface": "/measurement/axis-engine-16.json",
+        "observed": "16 axes in the fresh-benchmark engine set",
+        "status": "live"
       }
     }
   },

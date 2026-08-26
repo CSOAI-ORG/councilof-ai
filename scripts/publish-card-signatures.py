@@ -85,7 +85,20 @@ by_id = {e["id"]: e for e in man if isinstance(e, dict) and "id" in e}
 # All 335 recompute under one key, so the freeze condition is satisfied and the verified
 # number IS the board. A card that verifies and is withheld is as dishonest as a card that
 # is published and does not.
-published_ids = [e["id"] for e in man if isinstance(e, dict) and "id" in e]
+# WITHHOLD cards whose signed body contains an internal codename. brand-gate blocks these
+# from any public surface, and we cannot edit them: the body is what the signature is over,
+# so redacting a codename would invalidate the id and the signature. The choice is publish
+# the leak or withhold the card. We withhold — and DISCLOSE the count and the reason rather
+# than quietly shipping 313 and implying that is all there is. A withheld card is still
+# counted; silence about it would be the same defect as an undisclosed chain prefix.
+import re as _re
+_BANNED = _re.compile(r"sov3[34]", _re.I)
+_all_ids = [e["id"] for e in man if isinstance(e, dict) and "id" in e]
+_withheld = [e["id"] for e in man if isinstance(e, dict) and "id" in e
+             and _BANNED.search(json.dumps(e.get("body", {})))]
+published_ids = [i for i in _all_ids if i not in set(_withheld)]
+WITHHELD_COUNT = len(_withheld)
+print(f"  withheld (codename in signed body): {WITHHELD_COUNT}")
 
 verified, refused, missing = {}, [], []
 for cid in published_ids:
