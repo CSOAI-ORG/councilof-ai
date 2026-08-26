@@ -3,8 +3,23 @@
 You do not need our code, our permission, or our word for any of this. Everything below runs
 against the published bytes.
 
-**Cards published:** read `n_cards` on GET /signed/card_index.json — do not type a count here.
 **Algorithm:** Ed25519 · **Distinct signing keys:** 1
+
+## 0. Two different sets — do not read one as the other
+
+This directory publishes two files that are easy to confuse, and quoting either as the other
+is wrong in both directions. They are counted separately and neither count is typed here.
+
+| File | What it is | Read the count from |
+|---|---|---|
+| `/signed/card_index.json` | **The curated index.** A deliberately frozen SUBSET, held at the verifiable floor described in `BOARD-RULING.md`. Every row resolves to a published body. | its `n_cards` field |
+| `/signed/chain.json` | **The chain manifest.** Every position in the card chain, head to genesis, in order — including positions whose body we do not publish (`body_published:false`). | its `links[]`, recounted |
+
+The published card **store** — the bodies actually on disk under `/signed/cards/` — is larger
+than the curated index and smaller than the chain. All three numbers, each recounted from the
+bytes rather than typed, are published at `/signed/chain-facts.json` and `GET /api/state →
+card_chain`. Quoting the index as "cards published" understates the store; quoting the chain's
+position count as "cards published" overstates it, because withheld positions have no body.
 
 ## 1. Pin the key first — this step is not optional
 
@@ -78,14 +93,27 @@ are loud.
 
 ## 5. Check every card
 
+To check **the curated index** (the frozen subset):
+
 ```bash
 curl -s https://councilof.ai/signed/card_index.json -o index.json
 # each index entry carries: card (the id), axis, ts, signed, kid
 # (the full signed payload — pubkey, signature, preimage — is in the card payload, not the index row)
 ```
 
+To check **the whole published store**, walk the chain manifest instead — it lists every
+position, so a card we withhold shows up as a withheld position rather than as an absence you
+cannot distinguish from a card that never existed:
+
+```bash
+curl -s https://councilof.ai/signed/chain.json -o chain.json
+# walk `prev` from `head` to `genesis_prev`: every id must appear exactly once.
+# links with body_published:true carry a card_url you can fetch and check with step 4.
+# links with body_published:false have no body — you get the id and the signature, nothing more.
+```
+
 Fetch each `card_url`, then run step 4 against every one with the same pinned key.
-The honest count is `n_cards` on that index file. Empty cells stay empty. Do not invent extras.
+Empty cells stay empty. Do not invent extras.
 
 ## What this does and does not prove
 
@@ -94,5 +122,12 @@ card-attestation key and have not been altered since. **It does not prove the me
 correct** — that rests on the published method, the gold labels and the rows, all separately
 available. A signature is an integrity claim, not a truth claim.
 
-**It also does not prove the set is complete.** Completeness is the published `n_cards` field
-on the index, not a number typed in this document. Each card verifies individually.
+**It also does not prove the set is complete.** Each card verifies individually; completeness is
+a separate question, and the honest answer is in the bytes rather than in a number typed here.
+`chain.json` lists every position in order, which is what lets you see that nothing was silently
+dropped — but **the manifest carries no signature of its own.** Each LINK is signed; the list is
+not. So the ordering, and the assertion that no position was removed from it, rest on our word
+and not on cryptography. A withheld position is cryptographically attested only when some
+PUBLISHED card's signed body names it as `prev` — that count is derived, published, and much
+smaller than the number of withheld positions. Both travel together at
+`/signed/chain-facts.json`; quoting the withheld count alone would present a disclosure as a proof.

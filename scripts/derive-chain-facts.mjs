@@ -35,7 +35,20 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const signedDir = join(root, "public", "signed");
 const cardsDir = join(signedDir, "cards");
 
-const chain = JSON.parse(readFileSync(join(signedDir, "chain.json"), "utf8"));
+let chain;
+try {
+  chain = JSON.parse(readFileSync(join(signedDir, "chain.json"), "utf8"));
+} catch {
+  console.error(
+    "derive-chain-facts: public/signed/chain.json is missing — cannot derive.\n" +
+      "  chain-facts.json and /api/state → card_chain are BUILT FROM IT, and /api/state\n" +
+      "  publishes /signed/chain.json as a manifest URL. Deleting it strands published counts\n" +
+      "  that nobody can re-derive and leaves that URL returning 404. Restore it (it is in git\n" +
+      "  history) rather than deleting the facts — and see the SCOPE note in\n" +
+      "  scripts/signed-json-guard.mjs before assuming its 335 positions are the banned 335.",
+  );
+  process.exit(1);
+}
 const index = JSON.parse(readFileSync(join(signedDir, "card_index.json"), "utf8"));
 
 // ── every published body, verified with the SHIPPED verifier ────────────────
@@ -140,12 +153,39 @@ const out = {
 };
 
 const json = JSON.stringify(out, null, 2) + "\n";
+const targets = [
+  join(signedDir, "chain-facts.json"),
+  join(root, "client", "src", "data", "chain-facts.json"),
+];
+
+// --check derives into memory and compares, writing nothing. This is the mode the
+// build runs: it proves the committed facts are still RE-DERIVABLE from the bytes.
+// A published count whose input has gone missing, or which no longer matches what
+// the bytes say, is precisely the defect this file exists to prevent.
+if (process.argv.includes("--check")) {
+  let drift = 0;
+  for (const t of targets) {
+    let have;
+    try { have = readFileSync(t, "utf8"); }
+    catch { console.error(`chain-facts --check: ${t} is MISSING`); drift++; continue; }
+    if (have !== json) {
+      console.error(`chain-facts --check: ${t} does not match a fresh derivation from the bytes`);
+      drift++;
+    }
+  }
+  if (drift || out.bodies.verified_invalid > 0) {
+    console.error("chain-facts --check: FAILED — run `node scripts/derive-chain-facts.mjs` and commit the result");
+    process.exit(1);
+  }
+  console.log(`chain-facts --check: OK — both copies re-derive exactly from the published bytes`);
+  process.exit(0);
+}
+
 // Two copies, one derivation. public/ is what a stranger fetches and what /api/state
 // is built from; client/src/data/ is what the front end imports as its pre-fetch
 // fallback, because Vite's root is client/ and cannot reach public/ at build time.
 // Writing both HERE is what stops them drifting: neither is ever hand-edited.
-writeFileSync(join(signedDir, "chain-facts.json"), json);
-writeFileSync(join(root, "client", "src", "data", "chain-facts.json"), json);
+for (const t of targets) writeFileSync(t, json);
 console.log(
   `chain-facts: ${out.bodies.verified_valid}/${out.bodies.published} bodies VALID · ` +
     `${out.chain.positions} positions · ${out.withheld.count} withheld ` +

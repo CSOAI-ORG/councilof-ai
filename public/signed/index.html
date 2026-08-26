@@ -51,11 +51,12 @@ ships with proves only that the file is self-consistent, which is not authentici
 <h2>Artifacts</h2>
 <table>
 <tr><th>File</th><th>Size</th><th>What it is</th></tr>
-<tr><td><a href="/signed/HOW-TO-VERIFY.md"><code>HOW-TO-VERIFY.md</code></a></td><td class="n">6.3 KB</td><td>Step-by-step verification, starting with pinning the key against /.well-known/did.json. Served as text/plain so it renders in a browser instead of downloading.</td></tr>
+<tr><td><a href="/signed/HOW-TO-VERIFY.md"><code>HOW-TO-VERIFY.md</code></a></td><td class="n">4.6 KB</td><td>Step-by-step verification, starting with pinning the key against /.well-known/did.json. Served as text/plain so it renders in a browser instead of downloading.</td></tr>
 <tr><td><a href="/signed/arena_scoreboard.json"><code>arena_scoreboard.json</code></a></td><td class="n">9.4 KB</td><td>Arena scoreboard artifact.</td></tr>
 <tr><td><a href="/signed/board_living.json"><code>board_living.json</code></a></td><td class="n">7.5 KB</td><td>The living board state.</td></tr>
 <tr><td><a href="/signed/card_index.json"><code>card_index.json</code></a></td><td class="n">33.4 KB</td><td>Index of published measurement cards. Each row carries card id, axis, timestamp, signed flag and key id — the full payload (pubkey, signature, preimage) lives in the per-card file.</td></tr>
-<tr><td><a href="/signed/chain-facts.json"><code>chain-facts.json</code></a></td><td class="n">2.6 KB</td><td></td></tr>
+<tr><td><a href="/signed/chain-facts.json"><code>chain-facts.json</code></a></td><td class="n">2.6 KB</td><td>Counts re-derived from these bytes by scripts/derive-chain-facts.mjs — card bodies published, how many actually verify, and how much of the withheld set is attested by a signature rather than only by the manifest. Regenerated, never typed.</td></tr>
+<tr><td><a href="/signed/chain.json"><code>chain.json</code></a></td><td class="n">188.4 KB</td><td>The card chain manifest: every position listed head to genesis, in order. A card whose body is not published appears as a position with body_published:false — visible and counted — rather than as an absence. Each LINK carries a signature; the manifest itself carries none, so it is not proof that no position was removed.</td></tr>
 <tr><td><a href="/signed/eat_compliance_board.json"><code>eat_compliance_board.json</code></a></td><td class="n">1.3 KB</td><td>Compliance board artifact.</td></tr>
 <tr><td><a href="/signed/gspc-board.signed.json"><code>gspc-board.signed.json</code></a></td><td class="n">37.9 KB</td><td>The signed board snapshot.</td></tr>
 <tr><td><a href="/signed/gspc-measurement.json"><code>gspc-measurement.json</code></a></td><td class="n">20.0 KB</td><td>Measurement output behind the board.</td></tr>

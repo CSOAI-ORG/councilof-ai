@@ -33,7 +33,8 @@ const sizeOf = (p) => { try { return statSync(p).size; } catch { return null; } 
 // One line each, describing what the FILE is — not what we would like it to prove.
 const BLURB = {
   "card_index.json": "Index of published measurement cards. Each row carries card id, axis, timestamp, signed flag and key id — the full payload (pubkey, signature, preimage) lives in the per-card file.",
-  "chain.json": "Append-only signature chain over the published record.",
+  "chain.json": "The card chain manifest: every position listed head to genesis, in order. A card whose body is not published appears as a position with body_published:false — visible and counted — rather than as an absence. Each LINK carries a signature; the manifest itself carries none, so it is not proof that no position was removed.",
+  "chain-facts.json": "Counts re-derived from these bytes by scripts/derive-chain-facts.mjs — card bodies published, how many actually verify, and how much of the withheld set is attested by a signature rather than only by the manifest. Regenerated, never typed.",
   "gspc-board.signed.json": "The signed board snapshot.",
   "gspc-measurement.json": "Measurement output behind the board.",
   "board_living.json": "The living board state.",

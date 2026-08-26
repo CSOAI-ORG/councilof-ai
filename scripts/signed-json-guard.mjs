@@ -12,8 +12,19 @@
  * it did not complete. This guard is that structure for /signed/*.json.
  *
  * The last honest published board is exactly 150 cards, ≥30000 bytes.
- * Do not invent the missing 185. Do not claim 335. A fabricated 335-card
- * JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
+ * Do not invent the missing 185. A fabricated 335-card card_index.json (even
+ * SHA-gated and well-formed) is still a lie and must not deploy.
+ *
+ * SCOPE — READ BEFORE "FIXING" ANYTHING ELSE THAT SAYS 335 (2026-08-26):
+ * The 150 floor and the 335 rejection below apply to card_index.json ONLY, and
+ * card_index.json is a CURATED SUBSET index. They are not a rule that the number
+ * 335 is dishonest wherever it appears. /signed/chain.json legitimately carries
+ * 335 POSITIONS (313 published bodies + 22 withheld); that is a different set,
+ * counted from different bytes, and it verifies. Five separate lanes have now read
+ * this header as a blanket ban and deleted chain.json, each time breaking the
+ * manifest URL that /api/state publishes and stranding chain-facts.json with
+ * numbers nobody could re-derive. If a file other than card_index.json says 335,
+ * check it against the bytes before deleting it — see scripts/chain-manifest-guard.mjs.
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
