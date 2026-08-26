@@ -20,6 +20,25 @@ type ProductRow = {
 
 const PRODUCTS: { group: string; rows: ProductRow[] }[] = [
   {
+    group: "RAS — run/access SKUs (HO.2)",
+    rows: [
+      {
+        name: "RAS · pay-per-call (PAYG)",
+        path: "/payg",
+        register: "LIVE",
+        blurb: "Metered machine-access — one key, signed cards per call",
+        monetize: "Access / runs only — no grade SKUs · pricing pending ruling",
+      },
+      {
+        name: "East-West evidence packs",
+        path: "/east-west/pricing",
+        register: "LIVE",
+        blurb: "Crosswalk packs as data — bridge tooling as license",
+        monetize: "Scores and rankings £0 forever · no grade SKUs",
+      },
+    ],
+  },
+  {
     group: "Measurement board",
     rows: [
       {
@@ -101,13 +120,6 @@ const PRODUCTS: { group: string; rows: ProductRow[] }[] = [
         register: "PARTIAL",
         blurb: "Financial extension slots 18–25 + labour candidacy",
       },
-      {
-        name: "Pay as you go",
-        path: "/payg",
-        register: "LIVE",
-        blurb: "Per-measurement access — RAS alias until metered SKUs publish",
-        monetize: "Access / runs — never the grade",
-      },
     ],
   },
   {
@@ -177,9 +189,9 @@ export default function Products() {
             </span>
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            Access to cards, runs, tooling, and training may be metered. Grades and placements are
-            never sold. Regulators and offline verify stay free forever. No invented list prices on
-            this page.
+            Access to cards, runs, tooling, and training may be metered via <strong className="text-emerald-100">RAS</strong>{" "}
+            (run/access SKUs). Grades and placements are never sold. Regulators and offline verify stay free forever. No
+            invented list prices on this page.
           </p>
         </div>
       </section>
