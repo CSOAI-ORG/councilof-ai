@@ -22,12 +22,12 @@ Twenty-six refreshes = re-verify public artifacts and re-issue **counsel-cleared
 | 300 | Apollo ACRED | Re-verify Securitize fund pages + signed card | clean | ☐ custody+counsel |
 | 301 | Archax × abrdn MMF | Re-verify XRPScan issuer + signed card | clean | ☐ custody+counsel |
 | 302 | Guggenheim / Zeconomy DCP | Re-verify Moody's + XRPL issuer when listed | caution | ☐ custody+counsel |
-| 303 | Ondo Stocks cluster (batch A) | Catalog public tickers → adapter stubs only | clean | ☐ Stage 3 catalog |
-| 304 | Ondo Stocks cluster (batch B) | Same — no invented MEASURED | clean | ☐ Stage 3 catalog |
-| 305 | Securitize cluster (batch A) | EVM security tokens — REPORTED cites | clean | ☐ Stage 3 catalog |
-| 306 | Securitize cluster (batch B) | EVM security tokens — REPORTED cites | clean | ☐ Stage 3 catalog |
-| 307 | Backed cluster (batch A) | Tokenized equity catalog — Stage 3+ | clean | ☐ Stage 3 catalog |
-| 308 | Backed cluster (batch B) | Tokenized equity catalog — Stage 3+ | clean | ☐ Stage 3 catalog |
+| 303 | Ondo Stocks cluster (batch A) | Catalog public tickers → adapter stubs only | clean | ✅ `adapters/evm/catalog/ondo-stocks-batch-a.json` |
+| 304 | Ondo Stocks cluster (batch B) | Same — no invented MEASURED | clean | ✅ `adapters/evm/catalog/ondo-stocks-batch-b.json` |
+| 305 | Securitize cluster (batch A) | EVM security tokens — REPORTED cites | clean | ✅ `adapters/evm/catalog/securitize-batch-a.json` |
+| 306 | Securitize cluster (batch B) | EVM security tokens — REPORTED cites | clean | ✅ `adapters/evm/catalog/securitize-batch-b.json` |
+| 307 | Backed cluster (batch A) | Tokenized equity catalog — Stage 3+ | clean | ✅ `adapters/evm/catalog/backed-batch-a.json` |
+| 308 | Backed cluster (batch B) | Tokenized equity catalog — Stage 3+ | clean | ✅ `adapters/evm/catalog/backed-batch-b.json` |
 | 309 | RLUSD settlement rail | Quarterly public-artifact refresh | clean | ☐ custody+counsel |
 | 310 | BUIDL multi-chain legs | Confirm authoritative contract per chain | clean | ☐ custody+counsel |
 | 311 | East-West evidence pack | Re-sign crosswalk card after statute freeze | MEASURED | ☐ master merge |
