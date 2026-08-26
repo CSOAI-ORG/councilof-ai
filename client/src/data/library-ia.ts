@@ -44,7 +44,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/os", "/workbench", "/start",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/api-docs", "/status",
-  "/system-card", "/xrpl-attest",
+  "/system-card", "/xrpl-attest", "/claims-register",
   // Academy (folded into Company in the nav; the pages are still current)
   "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",
   // Company

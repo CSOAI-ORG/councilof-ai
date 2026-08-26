@@ -73,7 +73,7 @@ export default function Competitors() {
 
         <div className="mt-6 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-6 text-center">
           <div className="text-sm font-bold text-emerald-100">The one-line pitch</div>
-          <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/75">They sell closed platforms and five-figure certificates. We give you an open-source core, free training + certification, a 33-agent council, self-scan cyber, and Layer 0 proof — value back to you, not a middleman.</p>
+          <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/75">They sell closed platforms and five-figure certificates. We give you an open-source core, free training with course-completion records (we certify nothing), a designed 33-agent council, self-scan cyber, and Layer 0 proof — value back to you, not a middleman.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/why" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Why CSOAI →</a>
             <a href="/regulators" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">The Regulator Atlas →</a>

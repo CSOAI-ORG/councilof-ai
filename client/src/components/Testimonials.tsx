@@ -25,7 +25,7 @@ const personas: Persona[] = [
   },
   {
     headline: "Learn it, then govern it",
-    body: "Free open-source training plus the AI Safety Analyst certification — build the skills, then run real assessments inside the OS.",
+    body: "Free open-source training plus the AI Safety Analyst course — build the skills, then run real assessments inside the OS. The Academy issues course-completion records; it certifies nothing and is not a conformity mark.",
     role: "For practitioners",
     category: "analyst",
   },

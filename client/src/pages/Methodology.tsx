@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { SpectrumView } from "@/components/gspc/SpectrumView";
 import { setMetaDescription } from "@/lib/utils";
@@ -248,10 +249,9 @@ export default function Methodology() {
             <li>Not LLM-as-judge. Every verdict is a deterministic predicate.</li>
             <li>
               Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
-              tamper-evidence; authorship is carried by the ~3KB card, signed with Ed25519 and
-              SHA-256 hash-chained (published key f4b4278d…, did:web:csoai.org) (OpenTimestamps
-              anchoring is roadmap, not yet wired). The post-quantum ML-DSA-65 (FIPS-204) signer
-              is built, not shipped.
+              tamper-evidence; authorship is carried by the ~3KB card. {ANCHORING_CLAIM}{" "}
+              OpenTimestamps anchoring is roadmap, not yet wired. The post-quantum ML-DSA-65
+              (FIPS-204) signer is built, not shipped.
             </li>
           </ul>
         </section>
