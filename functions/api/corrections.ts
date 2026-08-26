@@ -1,1 +1,1 @@
-workspace:/workspace/functions/api/corrections.ts
+$(python3 -c "print(open('/workspace/functions/api/corrections.ts').read(), end='')")
