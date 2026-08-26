@@ -1,5 +1,21 @@
 name: app-router-floor
-on: { push: { branches: [master, main] }, pull_request: {} }
+
+# This job reads exactly one file: client/src/App.tsx. It fired on every push to
+# master and every pull_request regardless, which is a whole runner spent to `wc -c`
+# a file the push never touched. Path-filtered 2026-08-26 to cut per-push fan-out.
+# Nothing about the check itself changed — it still blocks a truncated router.
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - 'client/src/App.tsx'
+      - 'scripts/resolve-app-tsx.mjs'
+      - '.github/workflows/app-router-floor.yml'
+  pull_request:
+    paths:
+      - 'client/src/App.tsx'
+      - 'scripts/resolve-app-tsx.mjs'
+      - '.github/workflows/app-router-floor.yml'
 jobs:
   floor:
     runs-on: ubuntu-latest

@@ -39,3 +39,21 @@
 /.well-known/agent-card.json
   Content-Type: application/a2a+json
   Cache-Control: public, max-age=3600
+
+# Evidence tree. /signed/HOW-TO-VERIFY.md was served as text/markdown, which every
+# browser DOWNLOADS rather than renders — so the one document we point IETF
+# implementers at arrived as a file in their Downloads folder instead of a page.
+# text/plain renders inline and is still perfectly machine-readable. The bytes are
+# untouched; only the Content-Type changes.
+/signed/HOW-TO-VERIFY.md
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: no-cache, must-revalidate
+
+# The generated human indexes for the evidence tree (scripts/generate-signed-index.mjs).
+# Must revalidate: a stale index that lists artifacts the tree no longer serves is worse
+# than no index, because it reads as evidence.
+/signed/index.html
+  Cache-Control: no-cache, must-revalidate
+
+/signed/cards/index.html
+  Cache-Control: no-cache, must-revalidate

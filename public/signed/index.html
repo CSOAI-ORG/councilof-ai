@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Published evidence · /signed/ · Council of AI</title>
+<meta name="robots" content="index,follow">
+<style>
+:root{--bg:#fff;--fg:#111;--dim:#5a5a5a;--line:#e3e3e3;--accent:#12467b;--code:#f5f6f8}
+@media (prefers-color-scheme:dark){:root{--bg:#12141a;--fg:#e8e8ea;--dim:#a0a4ad;--line:#2a2e37;--accent:#8ab4f8;--code:#1b1e26}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:56rem;margin:0 auto;padding:2.5rem 1.25rem 5rem}
+h1{font-size:1.6rem;margin:0 0 .25rem}
+h2{font-size:1.05rem;margin:2.25rem 0 .6rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+p{margin:.6rem 0}
+a{color:var(--accent)}
+.lede{color:var(--dim);margin-bottom:1.5rem}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--dim);font-weight:600;white-space:nowrap}
+td.n{white-space:nowrap;color:var(--dim);font-variant-numeric:tabular-nums}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86rem}
+pre{background:var(--code);padding:.9rem;border-radius:6px;overflow-x:auto;border:1px solid var(--line)}
+.note{background:var(--code);border-left:3px solid var(--accent);padding:.8rem 1rem;border-radius:0 6px 6px 0;margin:1.25rem 0}
+.mono-list{columns:3 14rem;column-gap:1.5rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;list-style:none;padding:0;margin:0}
+.mono-list li{break-inside:avoid;margin:0 0 .2rem}
+footer{margin-top:3rem;color:var(--dim);font-size:.85rem;border-top:1px solid var(--line);padding-top:1rem}
+</style>
+</head>
+<body><main>
+
+<h1>Published evidence — <code>/signed/</code></h1>
+<p class="lede">Every artifact this directory serves, with its size and what it is. Nothing here asks you to trust us: the verification procedure runs against these bytes with a pinned key.</p>
+
+<div class="note">
+<strong>Start here:</strong> <a href="/signed/HOW-TO-VERIFY.md">HOW-TO-VERIFY.md</a> — pin the signing key against
+<a href="/.well-known/did.json"><code>/.well-known/did.json</code></a> <em>first</em>. A card that verifies against the key it
+ships with proves only that the file is self-consistent, which is not authenticity.
+</div>
+
+<h2>What the counts actually say</h2>
+<table>
+<tr><th>Source</th><th>Count</th></tr>
+<tr><td>files in <code>cards/</code></td><td class="n">313</td></tr>
+<tr><td>rows in <code>card_index.json</code></td><td class="n">150</td></tr>
+<tr><td><code>n_cards</code> declared in <code>card_index.json</code></td><td class="n">150</td></tr>
+<tr><td>cards claimed by <code>HOW-TO-VERIFY.md</code></td><td class="n">313</td></tr>
+</table>
+<p><strong>These numbers do not agree.</strong> They are printed as read, from the files named. Reconciling them is a change to the artifacts, not to this index, so this page reports the disagreement rather than hiding it behind whichever number reads best.</p>
+
+<h2>Artifacts</h2>
+<table>
+<tr><th>File</th><th>Size</th><th>What it is</th></tr>
+<tr><td><a href="/signed/HOW-TO-VERIFY.md"><code>HOW-TO-VERIFY.md</code></a></td><td class="n">4.5 KB</td><td>Step-by-step verification, starting with pinning the key against /.well-known/did.json. Served as text/plain so it renders in a browser instead of downloading.</td></tr>
+<tr><td><a href="/signed/arena_scoreboard.json"><code>arena_scoreboard.json</code></a></td><td class="n">9.4 KB</td><td>Arena scoreboard artifact.</td></tr>
+<tr><td><a href="/signed/board_living.json"><code>board_living.json</code></a></td><td class="n">5.1 KB</td><td>The living board state.</td></tr>
+<tr><td><a href="/signed/card_index.json"><code>card_index.json</code></a></td><td class="n">33.4 KB</td><td>Index of published measurement cards. Each row carries card id, axis, timestamp, signed flag and key id — the full payload (pubkey, signature, preimage) lives in the per-card file.</td></tr>
+<tr><td><a href="/signed/chain.json"><code>chain.json</code></a></td><td class="n">188.4 KB</td><td>Append-only signature chain over the published record.</td></tr>
+<tr><td><a href="/signed/eat_compliance_board.json"><code>eat_compliance_board.json</code></a></td><td class="n">1.3 KB</td><td>Compliance board artifact.</td></tr>
+<tr><td><a href="/signed/gspc-board.signed.json"><code>gspc-board.signed.json</code></a></td><td class="n">37.9 KB</td><td>The signed board snapshot.</td></tr>
+<tr><td><a href="/signed/gspc-measurement.json"><code>gspc-measurement.json</code></a></td><td class="n">16.7 KB</td><td>Measurement output behind the board.</td></tr>
+<tr><td><a href="/signed/verify-card.mjs"><code>verify-card.mjs</code></a></td><td class="n">6.6 KB</td><td>Standalone verifier. Runs on plain Node with no dependencies and no network beyond fetching the card and the DID document.</td></tr>
+<tr><td><a href="/signed/cards/"><code>cards/</code></a></td><td class="n">313 files</td><td>One JSON per measurement card, named by its own content id. <a href="/signed/cards/">Browse the index</a>.</td></tr>
+</table>
+
+<h2>Verify one card, end to end</h2>
+<pre><code># 1. pin the key
+curl -s https://councilof.ai/.well-known/did.json
+
+# 2. fetch a card and check it against the pinned key
+curl -s https://councilof.ai/signed/verify-card.mjs -o verify-card.mjs
+node verify-card.mjs 00a5218048b4ff922c9793e5d155c7c62b4be5a84de3f09e16af3df59445b3c9</code></pre>
+<p>The rule the whole tree rests on: <code>id == sha256(preimage)</code>, where <code>preimage</code> is the body
+serialised with sorted keys and no whitespace, and <code>signature</code> is Ed25519 over that preimage under the pinned key.
+<a href="/signed/HOW-TO-VERIFY.md">The full procedure, with the exact serialisation, is here.</a></p>
+
+<footer>Generated from the published bytes by <code>scripts/generate-signed-index.mjs</code>. Every count on this page was read from the files in this directory at build time.</footer>
+</main></body>
+</html>
