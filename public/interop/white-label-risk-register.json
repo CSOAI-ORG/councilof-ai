@@ -1,0 +1,111 @@
+{
+ "schema": "csoai.white-label-risk-register/0.1",
+ "source_api": "https://councilof.ai/api/gspc",
+ "measured_axes": 15,
+ "total_axes": 22,
+ "mean_accuracy": 0.7318,
+ "generated_at": "2026-08-26",
+ "doctrine": "Deterministic risk-grading register over the estate's OWN signed board. Measurement, not certification. NOT investment or liability advice. risk_score = mean_harm * (1 - accuracy): the higher the severity-weighted measured harm and the lower the measured accuracy, the higher the ranked risk exposure. Axes without a measured mean_harm are NOT ranked — reported, never coerced.",
+ "risk_ranked": [
+  {
+   "axis": "care",
+   "accuracy": 0.535,
+   "mean_harm": 0.707,
+   "risk_score": 0.329,
+   "n": 199,
+   "leader": "council-ethics-v3-light (council specialist)"
+  },
+  {
+   "axis": "machinery-conformity",
+   "accuracy": 0.545,
+   "mean_harm": 0.651,
+   "risk_score": 0.296,
+   "n": 33,
+   "leader": "llama3.2:3b (base model)"
+  },
+  {
+   "axis": "continuity",
+   "accuracy": 0.606,
+   "mean_harm": 0.55,
+   "risk_score": 0.217,
+   "n": 33,
+   "leader": "council-destruction-v3-light (council specialist)"
+  },
+  {
+   "axis": "governance",
+   "accuracy": 0.7,
+   "mean_harm": 0.51,
+   "risk_score": 0.153,
+   "n": 237,
+   "leader": "council-embodiment-v3-light (council specialist)"
+  },
+  {
+   "axis": "conformance",
+   "accuracy": 0.743,
+   "mean_harm": 0.463,
+   "risk_score": 0.119,
+   "n": 35,
+   "leader": "council-preservation-v3-light (council specialist)"
+  },
+  {
+   "axis": "cross-reality",
+   "accuracy": 0.812,
+   "mean_harm": 0.559,
+   "risk_score": 0.105,
+   "n": 32,
+   "leader": "mistral:7b (base model)"
+  },
+  {
+   "axis": "provenance",
+   "accuracy": 0.781,
+   "mean_harm": 0.451,
+   "risk_score": 0.099,
+   "n": 32,
+   "leader": "council-aesthetics-v3-light (council specialist)"
+  },
+  {
+   "axis": "affect",
+   "accuracy": 0.878,
+   "mean_harm": 0.782,
+   "risk_score": 0.095,
+   "n": 41,
+   "leader": "council-preservation-v3-light (council specialist)"
+  },
+  {
+   "axis": "detector-interop",
+   "accuracy": 0.879,
+   "mean_harm": 0.437,
+   "risk_score": 0.053,
+   "n": 33,
+   "leader": "deepseek-r1:8b (base model)"
+  },
+  {
+   "axis": "openness",
+   "accuracy": 0.875,
+   "mean_harm": 0.304,
+   "risk_score": 0.038,
+   "n": 32,
+   "leader": "council-preservation-v3-light (council specialist)"
+  },
+  {
+   "axis": "safety",
+   "accuracy": 0.944,
+   "mean_harm": 0.268,
+   "risk_score": 0.015,
+   "n": 36,
+   "leader": "gemma3:12b (base model)"
+  },
+  {
+   "axis": "art5-safeguard",
+   "accuracy": 0.972,
+   "mean_harm": 0.17,
+   "risk_score": 0.005,
+   "n": 36,
+   "leader": "council-relationality-v3-light (council specialist)"
+  }
+ ],
+ "harm_missing_not_ranked": [
+  "swarm",
+  "jail"
+ ]
+}
