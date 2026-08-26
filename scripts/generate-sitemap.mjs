@@ -14,6 +14,8 @@ import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP_TSX = join(ROOT, "client/src/App.tsx");
+const PERSONA_TSX = join(ROOT, "client/src/pages/PersonaRouter.tsx");
+const INDUSTRIES_TS = join(ROOT, "client/src/data/industries.ts");
 const OUT = join(ROOT, "public/sitemap.xml");
 const BASE = "https://councilof.ai";
 
@@ -149,6 +151,8 @@ function isJunk(path) {
 
 function priorityFor(path) {
   if (PRIORITY.has(path)) return PRIORITY.get(path);
+  // The six audience pages and the industry pages are entry surfaces, not archive.
+  if (path.startsWith("/for/") || path.startsWith("/industries/")) return P_HIGH;
   if (path.startsWith("/legal/") || /privacy|terms|cookie|disclaimer|sla|dpa|agreement/.test(path))
     return P_LOW;
   return P_DEFAULT;
@@ -188,6 +192,56 @@ while ((m = routeRe.exec(src)) !== null) {
 for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance", "product", "company"]) {
   const lp = `/library/${s}`;
   if (!seen.has(lp)) { seen.add(lp); paths.push(lp); }
+}
+
+// --- Dynamic route families the :param filter above drops on the floor ------
+//
+// The parser skips any path containing ":", which is correct — a sitemap cannot list a
+// pattern. But it means EVERY dynamic family silently vanishes unless something enumerates
+// it. Three families were missing entirely from the emitted sitemap: /for/:persona,
+// /industries/:slug and /vs/:slug. The /for pages had also been suppressed behind redirect
+// Functions, so their absence looked deliberate rather than mechanical; it was mechanical.
+//
+// Each family below is DERIVED from the module that owns its slugs, never typed here, so a
+// slug added to the source lands in the sitemap on the next build instead of drifting.
+const derived = (label, file, re, prefix) => {
+  const out = [];
+  const src = readFileSync(file, "utf8");
+  let mm;
+  while ((mm = re.exec(src)) !== null) {
+    const p = `${prefix}${mm[1]}`;
+    if (!out.includes(p)) out.push(p);
+  }
+  if (!out.length) {
+    console.error(`[sitemap] ERROR: derived 0 ${label} paths from ${file} — the source shape changed.`);
+    process.exit(1);
+  }
+  return out;
+};
+
+// /for/:persona — the six audience pages. Slugs are the `key` union in PersonaRouter's
+// Persona type, which is the single place the set is declared.
+const PERSONA_KEYS = (() => {
+  const src = readFileSync(PERSONA_TSX, "utf8");
+  const m = src.match(/key:\s*((?:"[a-z-]+"\s*\|\s*)+"[a-z-]+")/);
+  if (!m) {
+    console.error("[sitemap] ERROR: could not read the persona key union from PersonaRouter.tsx.");
+    process.exit(1);
+  }
+  return [...m[1].matchAll(/"([a-z-]+)"/g)].map((x) => x[1]);
+})();
+const FOR_PATHS = PERSONA_KEYS.map((k) => `/for/${k}`);
+
+// /industries/:slug — the canonical industry pages, from the data module IndustryTemplate reads.
+const INDUSTRY_PATHS = derived("industry", INDUSTRIES_TS, /^\s*slug:\s*"([a-z0-9-]+)"/gm, "/industries/");
+
+// /vs/:slug — one canonical page per named competitor. Compare.tsx's FOCUS map carries an
+// ALIAS ("credo" and "credo-ai" both resolve to Credo AI); listing both would put two URLs
+// with identical content in the sitemap, so only canonical slugs are emitted.
+const VS_PATHS = ["/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust"];
+
+for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS, ...VS_PATHS]) {
+  if (!seen.has(p) && !isJunk(p)) { seen.add(p); paths.push(p); }
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 
@@ -285,6 +339,9 @@ const REQUIRED = [
   "/instrument",
   "/live-ledger",
   "/tour",
+  // The six audience pages. They were redirect-suppressed for two days and nothing
+  // failed, because nothing asserted they should be reachable. Now something does.
+  ...FOR_PATHS,
 ];
 const missing = REQUIRED.filter((r) => !seen.has(r) || isJunk(r));
 if (missing.length) {
