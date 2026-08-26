@@ -536,7 +536,10 @@ function IndustryGrid() {
             {/* UNMEASURED must stay as visible as a measured figure — same size,
                 same weight, same slot. It is a published status, not an absence. */}
             <span className="mt-4 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              {i.numbers.kind === "measured" ? `${i.bench} · n=${i.numbers.n}` : "UNMEASURED"}
+              {/* `numbers` was removed from industries.ts deliberately — the sector data file
+                  is not allowed to carry a typed n. This reads what the file DOES carry: the
+                  bench, and the axis count from the axes array. Neither is typed by hand. */}
+              {i.bench ? `${i.bench} · ${i.axes.length} ${i.axes.length === 1 ? "axis" : "axes"}` : "UNMEASURED"}
             </span>
           </a>
         ))}
