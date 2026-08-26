@@ -1,8 +1,9 @@
 /**
  * /api/surface-hits — anonymous measurement-surface hit counters.
  *
- * PRIVACY: counters only (path → count). No IP, no UA, no record content.
- * Not a MEASURED number — self-reported traffic signal for data earning.
+ * PRIVACY (NEXT_300 #235): path-only counters. No IP, no UA, no cookies, no
+ * record content, no score bodies. Not a MEASURED number — self-reported
+ * traffic signal for data earning. DSH = OS (same allowlist honesty).
  */
 interface Env {
   SOV_ARENA_STATE: KVNamespace;
@@ -13,9 +14,14 @@ const KEY = "surface_hits_v1";
 const ALLOWED = new Set([
   "/api/east-west",
   "/api/gspc",
+  "/api/indices",
+  "/api/rwa-attestation",
+  "/api/mcp",
   "/east-west/verify",
   "/gspc-verify",
-  "/api/mcp",
+  "/indices",
+  "/products",
+  "/powered-by",
 ]);
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
@@ -35,7 +41,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     path = String((await request.json() as { path?: string }).path ?? "");
   } catch {
-    return new Response('{"error":"body must be {\\"path\\":\\"/api/east-west\\"}"}', { status: 400 });
+    return new Response('{"error":"body must be {\"path\":\"/api/east-west\"}"}', { status: 400 });
   }
   if (!ALLOWED.has(path)) {
     return new Response(JSON.stringify({ error: "path_not_allowed", allowed: [...ALLOWED] }), {
