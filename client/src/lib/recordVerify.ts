@@ -1,4 +1,31 @@
-/** Client-side estate envelope verification — shared by /gspc-verify and Council OS. */
+/**
+ * Client-side verification — shared by /gspc-verify and the Council OS Verify pane.
+ *
+ * TWO FAMILIES, AND THE DIFFERENCE MATTERS.
+ *
+ *   estate envelope   { …fields, content_id, signature }
+ *   measurement card  { id, pubkey, signature, alg, body }
+ *
+ * Until 2026-08-26 this module knew only the first. A genuine, published,
+ * correctly signed MEASUREMENT CARD pasted into the pane called "Verify a card"
+ * came back:
+ *
+ *     content_id:  ○  Absent — hash check not applicable.
+ *     Signature:   ✗  INVALID — no published key verifies this signature.
+ *
+ * The card was fine. The verifier hashed the wrong object with the wrong
+ * canonicaliser and then reported the shortfall as forgery. Reproduced against
+ * every card in public/signed/card_index.json before the fix.
+ *
+ * The card path now lives in lib/cardVerify.ts (which is cross-checked against
+ * the published public/signed/verify-card.mjs by cardVerify.test.ts), and the
+ * dispatch below routes by SHAPE before anything is hashed. An input this module
+ * does not recognise is reported as UNRECOGNISED — never as INVALID. "I do not
+ * know this family" and "this is forged" are different claims and a verifier
+ * that collapses them is worse than one that refuses.
+ */
+
+import { fetchPinnedCardKey, looksLikeCard, verifyCard } from "./cardVerify";
 
 export interface RecordVerdict {
   lines: { label: string; ok: boolean | null; detail: string }[];
@@ -42,7 +69,60 @@ export async function verifyRecord(raw: string): Promise<RecordVerdict> {
   }
   lines.push({ label: "Parse", ok: true, detail: "Valid JSON." });
 
+  // ── family dispatch, by SHAPE, before anything is hashed ──────────────────
+  if (looksLikeCard(rec)) {
+    lines.push({
+      label: "Family",
+      ok: true,
+      detail: "Measurement card (id + pubkey + signature over a canonical body).",
+    });
+    const key = await fetchPinnedCardKey();
+    const v = await verifyCard(rec, key);
+    lines.push({
+      label: "Card id",
+      ok: v.digest ? v.digest === (rec as any).id : null,
+      detail: v.digest
+        ? v.digest === (rec as any).id
+          ? `Recomputed sha256 of the canonical body matches (${v.digest.slice(0, 16)}…).`
+          : `MISMATCH — the body hashes to ${v.digest.slice(0, 16)}….`
+        : "Not reached — see below.",
+    });
+    lines.push({
+      label: "Signature",
+      ok: v.state === "VALID" ? true : v.state === "INVALID" ? false : null,
+      detail: v.state === "VALID" ? `VALID against ${v.keyId}.` : `${v.state} — ${v.reason}`,
+    });
+    if (typeof (rec as any).body?.public_framing === "string") {
+      // A card is frozen at its signing date and cannot be edited without
+      // re-signing, so a stale framing inside one is expected. Say so, rather
+      // than letting a reader take a card's wording as the current board.
+      lines.push({
+        label: "Framing",
+        ok: null,
+        detail:
+          `The card carries public_framing "${(rec as any).body.public_framing}" as at ${
+            (rec as any).body.created ?? "its signing date"
+          }. A signed card is frozen — read the live count from GET /api/gspc, not from a card.`,
+      });
+    }
+    return { lines };
+  }
+
   const { signature, content_id, ...body } = rec as Record<string, unknown>;
+
+  if (content_id === undefined && signature === undefined) {
+    lines.push({
+      label: "Family",
+      ok: null,
+      detail:
+        "UNRECOGNISED — this is neither an estate envelope (content_id + signature) nor a " +
+        "measurement card (id + pubkey + signature + body). Nothing was checked, and nothing " +
+        "is claimed about it: not recognising a document is not the same as finding it forged.",
+    });
+    return { lines };
+  }
+
+  lines.push({ label: "Family", ok: true, detail: "Estate envelope (content_id + signature)." });
   if (typeof content_id === "string") {
     const withSig = signature !== undefined ? { ...body, signature } : body;
     const candA = await sha256hex(canonical(withSig));

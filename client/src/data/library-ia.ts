@@ -42,6 +42,21 @@ export const PRIMARY_PATHS = new Set<string>([
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
   // Council OS
   "/os", "/workbench", "/start",
+  // ── Council OS destinations (2026-08-26 OS-tools sweep) ────────────────────
+  // THE SAME INVARIANT AS THE HEADER, APPLIED TO THE OS RAIL. Every path the
+  // Council OS rail or the Home desktop opens must appear here, for exactly the
+  // reason stated above: an unregistered path renders the ArchivedBanner
+  // ("a dated reference page… superseded") under a destination the OS is
+  // actively promoting as live. A measured sweep of client/src/components/lobby/
+  // tabs.ts against this set found NINE such paths — the OS was shipping its own
+  // rail tabs and desktop tiles flagged as archived to every reader and every
+  // answer engine. They are the OS's current surfaces and are registered here.
+  //
+  // client/src/components/lobby/tabs.test.ts now asserts this set covers every
+  // LOBBY_TABS path and every LOBBY_ROUTES path, so the next tab someone adds
+  // cannot reintroduce the trap silently.
+  "/readiness-assessment", "/layer0", "/network", "/hive", "/intel",
+  "/benchmark-quality", "/mcp-fleet", "/mcps", "/feed",
   // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
   // registered here so it can never ship flagged "archived".
   "/report",

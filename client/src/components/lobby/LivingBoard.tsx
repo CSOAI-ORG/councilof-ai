@@ -87,13 +87,20 @@ export default function LivingBoard({
                 <span className={`mt-1 ${TYPE.fine}`}>{a.bench || a.task}</span>
                 {scored ? (
                   <span className="mt-2 font-mono text-[13px] tabular-nums text-emerald-800">
-                    {(a.accuracy * 100).toFixed(0)}
+                    {((a.accuracy as number) * 100).toFixed(0)}
                     <span className="ml-1 text-[11px] text-slate-600">
                       n={a.n}{hasInterval(a) ? "" : " · no interval"}
                     </span>
                   </span>
                 ) : (
-                  <span className={`mt-2 ${TYPE.fine}`}>no score on this stamp</span>
+                  // An axis MEASURED with a bank but no published accuracy
+                  // (provenance-controls) must not read the same as an axis with
+                  // no run at all, and must never be given a 0.
+                  <span className={`mt-2 ${TYPE.fine}`}>
+                    {a.status === "MEASURED" && a.n > 0
+                      ? `measured · n=${a.n} · no accuracy published`
+                      : "no score on this stamp"}
+                  </span>
                 )}
               </button>
             </li>
@@ -125,7 +132,7 @@ function InLaneStrip({ rows }: { rows: InLaneAxis[] }) {
             <p className={`mt-1 ${TYPE.fine}`}>{r.bench || r.task}</p>
             {r.n > 0 && (
               <p className="mt-2 font-mono text-[12px] tabular-nums text-slate-700">
-                {(r.accuracy * 100).toFixed(0)} · n={r.n}
+                {typeof r.accuracy === "number" ? `${(r.accuracy * 100).toFixed(0)} · ` : "no accuracy published · "}n={r.n}
               </p>
             )}
           </li>

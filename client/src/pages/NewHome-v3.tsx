@@ -356,7 +356,8 @@ function AxesGrid() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {axes.map(a => {
           const q = quotable(a);
-          const ci = hasInterval(a) ? wilson(a.accuracy, a.n) : null;
+          // `hasInterval` implies `quotable`, which guarantees a real accuracy.
+          const ci = hasInterval(a) ? wilson(a.accuracy as number, a.n) : null;
           // Prefer the resolved bank URL the API now publishes (dataset_url); fall back to
           // the slug only while the wire has not shipped it. Never build the host here —
           // it lives in ONE place, functions/api/gspc.ts.
@@ -374,11 +375,17 @@ function AxesGrid() {
               <p className="mt-1 text-xs text-gray-400 line-clamp-2">{a.task || a.seat}</p>
               {q && (
                 <div className="mt-3 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-emerald-500">{(a.accuracy * 100).toFixed(0)}</span>
+                  <span className="text-2xl font-black text-emerald-500">{((a.accuracy as number) * 100).toFixed(0)}</span>
                   <span className="text-[11px] text-gray-400">n={a.n}{ci ? ` · [${(ci[0]*100).toFixed(0)}–${(ci[1]*100).toFixed(0)}%]` : ""}</span>
                 </div>
               )}
-              {!q && <div className="mt-3 text-xs text-gray-400 italic">no score on this stamp</div>}
+              {!q && (
+                <div className="mt-3 text-xs text-gray-400 italic">
+                  {a.status === "MEASURED" && a.n > 0
+                    ? `measured · n=${a.n} · no accuracy published`
+                    : "no score on this stamp"}
+                </div>
+              )}
             </a>
           );
         })}
@@ -399,7 +406,7 @@ function AxesGrid() {
                 <h3 className="text-base font-extrabold text-gray-900">{e.axis}</h3>
                 <p className="mt-1 text-xs text-gray-400 line-clamp-2">{e.task}</p>
                 {e.n > 0 && (
-                  <div className="mt-3 text-xs text-gray-500">n={e.n} · {(e.accuracy * 100).toFixed(0)}</div>
+                  <div className="mt-3 text-xs text-gray-500">n={e.n}{typeof e.accuracy === "number" ? ` · ${(e.accuracy * 100).toFixed(0)}` : " · no accuracy published"}</div>
                 )}
               </div>
             ))}

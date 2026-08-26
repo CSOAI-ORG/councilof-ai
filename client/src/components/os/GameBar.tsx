@@ -1,16 +1,34 @@
 import { useEffect, useState } from "react";
+import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 
 /**
- * GameBar — sit above Council chat on /os.
+ * GameBar — the local-play strip on /os.
  * Local play only. XP and quests live in this browser. No invented global scores.
  * Modes match the public stack: CITIZEN / MAYOR / RED.
+ *
+ * EVERY QUEST MUST HAVE A DESTINATION. The "ask" quest used to link to
+ * `#council-chat` — an anchor that has not existed on /os since the page stopped
+ * hosting a second chat ("it no longer hosts a second chat", OsLauncher's own
+ * header). Clicking it moved nothing and awarded nothing: an unearnable quest on
+ * a progress bar that therefore could never fill. It now opens the Council OS
+ * ask bar, which is where the chat actually lives, and marks itself like the
+ * other two. A quest that cannot be completed is a fabricated capability in
+ * miniature, and the same rule applies to it as to a score.
  */
 
 type Save = { xp: number; quests: string[] };
+type Quest = {
+  id: string;
+  label: string;
+  xp: number;
+  /** A real route, or a lobby pane. Never an anchor to something that is not on the page. */
+  href: string;
+  pane?: Parameters<typeof openLobby>[0]["pane"];
+};
 
 const KEY = "council-os-game-v1";
-const QUESTS = [
-  { id: "ask", label: "Ask the Council one grounded question", xp: 20, href: "#council-chat" },
+const QUESTS: Quest[] = [
+  { id: "ask", label: "Ask the Council one grounded question", xp: 20, href: lobbyHref({ pane: "home", path: "/os" }), pane: "home" },
   { id: "arena", label: "Open Council Space", xp: 15, href: "/gspc-arena" },
   { id: "verify", label: "Verify a card with no login", xp: 15, href: "/gspc-verify" },
 ];
@@ -83,8 +101,14 @@ export default function GameBar() {
             <a
               key={q.id}
               href={q.href}
-              onClick={() => {
-                if (q.id !== "ask") markQuest(q.id);
+              onClick={(e) => {
+                // A pane quest opens the OS in place — a real destination, and
+                // the same one the href points at for middle-click and crawlers.
+                if (q.pane) {
+                  e.preventDefault();
+                  openLobby({ pane: q.pane });
+                }
+                markQuest(q.id);
               }}
               className={`rounded-xl border px-3 py-2 text-[12px] ${
                 done
