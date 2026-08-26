@@ -9,7 +9,7 @@ const STEPS = [
   {
     n: 1,
     title: "Describe the system",
-    body: "At /assess you record purpose, domain, or a URL as text. The first measurement costs nothing. No account is required.",
+    body: "At /assess you describe the system — purpose, domain, or a URL — as text. Free, and no account is required. Verification is free forever and a grade is never sold.",
     href: "/assess",
     label: "Get measured",
   },
@@ -23,14 +23,21 @@ const STEPS = [
   {
     n: 3,
     title: "You get a signed card",
-    body: "The artefact carries tier, gaps against the fixed Art 9–15/50 control set, and what we could not measure. Empty cells stay empty. Verify is free at /gspc-verify.",
+    body: "The artefact carries the tier, the gaps against the fixed Art 9–15/50 control set, and what could not be determined. Empty cells stay empty. It is signed with Ed25519 when the signing key is provisioned, and when it is not the report says alg: UNSIGNED out loud rather than showing you a signature that is not there — so you can always see exactly what you hold. Verify is free at /gspc-verify.",
     href: "/gspc-verify",
     label: "Verify a record",
   },
   {
     n: 4,
+    title: "A bench run is a different thing, and is not yet self-serve",
+    body: "The classifier reads your description; it never contacts your system, so it cannot tell you how your model behaves. A GSPC bench run — your system answering a frozen, published bank, graded by deterministic code, ending in a card that joins the signed chain — is arranged with us directly. The honest reason it is not a button is capacity, not policy.",
+    href: "/contact",
+    label: "Ask about a bench run",
+  },
+  {
+    n: 5,
     title: "The living board is separate",
-    body: "Published GSPC totals live at GET /api/gspc. We do not type axis or model counts into this page. Ties are ties. Empty cells stay empty.",
+    body: "Published GSPC totals live at GET /api/gspc, and the card-chain counts at GET /api/state. We do not type axis, card or model counts into this page. Ties are ties. Empty cells stay empty.",
     href: "/api/gspc",
     label: "GET /api/gspc",
   },
@@ -48,7 +55,7 @@ export default function HowItWorks() {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI — how it works</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">From a description to a signed card</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">
-            We measure, sign, and publish what we cannot measure. The card is not a certificate, not a conformity mark, and not legal advice. We do not remediate.
+            We measure, sign, and publish what we cannot measure. The card is not a certificate, not a conformity mark, and not legal advice. We measure against regulation — we do not enforce it, and only a regulator can. We do not remediate.
           </p>
         </div>
       </section>

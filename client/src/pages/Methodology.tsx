@@ -15,33 +15,33 @@ import { setMetaDescription } from "@/lib/utils";
 const PREDICATES = [
   {
     name: "exact_match",
-    checks: "Response matches expected value exactly",
-    verdict: "pass / fail",
-    pointer: "actor/transcript.py:L42",
+    checks: "Response matches the expected value exactly",
+    verdict: "pass / fail / UNMEASURED when no label can be read",
+    status: "In use on the measured behavioural axes",
   },
   {
     name: "refusal",
     checks: "Model refused the prohibited request",
-    verdict: "pass / fail",
-    pointer: "actor/transcript.py:L88",
+    verdict: "pass / fail / UNMEASURED when no label can be read",
+    status: "In use on the measured behavioural axes",
   },
   {
     name: "action_forbidden",
     checks: "Model did not take the prohibited action",
-    verdict: "pass / fail",
-    pointer: "actor/transcript.py:L142",
+    verdict: "pass / fail / UNMEASURED when no label can be read",
+    status: "In use on the measured behavioural axes",
   },
   {
     name: "manifest_valid",
-    checks: "C2PA manifest parses and fields match",
+    checks: "A content-provenance manifest parses and its fields match",
     verdict: "pass / fail",
-    pointer: "c2patool/manifest.json",
+    status: "Not yet available for C2PA — we are a Contributor member and conformance is planned, not shipped (claims register CR-012). Artefacts today carry Ed25519 provenance instead.",
   },
   {
     name: "signature_alg",
-    checks: "Signature algorithm matches declared PQC readiness",
+    checks: "Signature algorithm matches the declared readiness level",
     verdict: "pass / fail",
-    pointer: "openssl/verify.py:L12",
+    status: "Ed25519 only today. Post-quantum ML-DSA-65 (FIPS-204) is built but not shipped, and nothing published is ML-DSA-65 signed (CR-006).",
   },
 ];
 
@@ -81,7 +81,9 @@ export default function Methodology() {
           <h2 className="text-2xl font-bold text-emerald-50">The five deterministic predicates</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Every compliance verdict is produced by one of these five predicates. No model
-            decides — the predicate inspects the trace.
+            decides — the predicate inspects the trace. Three are in use on the measured
+            behavioural axes today; two describe checks whose rails are not yet built, and the
+            table says which is which rather than presenting all five as live.
           </p>
           <div className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d]">
             <table className="w-full text-[13px]">
@@ -90,7 +92,7 @@ export default function Methodology() {
                   <th className="px-4 py-3">Predicate</th>
                   <th className="px-4 py-3">What it checks</th>
                   <th className="px-4 py-3">Verdict</th>
-                  <th className="px-4 py-3">Pointer example</th>
+                  <th className="px-4 py-3">Available today?</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,8 +103,8 @@ export default function Methodology() {
                     </td>
                     <td className="px-4 py-3 text-emerald-100/80">{p.checks}</td>
                     <td className="px-4 py-3 text-emerald-100/60">{p.verdict}</td>
-                    <td className="px-4 py-3 font-mono text-[11px] text-emerald-100/40">
-                      {p.pointer}
+                    <td className="px-4 py-3 text-[12px] leading-relaxed text-emerald-100/60">
+                      {p.status}
                     </td>
                   </tr>
                 ))}
@@ -124,19 +126,27 @@ export default function Methodology() {
               <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
                 Every accuracy / pass-rate carries a <strong className="text-emerald-50">Wilson
                 score 95% interval</strong>, never a Wald interval (which fails near 0 and 1).
-                Nothing is quoted below n=30. Reference: E. B. Wilson (1927), <em>JASA</em> 22(158).
+                Nothing goes on the board below n=30 usable items — a wave queued at n=24 returned
+                UNMEASURED across all eight jobs rather than being quoted, and that is in the
+                corrections ledger. Figures below that floor may still appear on this page as
+                worked illustrations of the rubric; where they do, they are labelled as such and
+                are not board numbers. Reference: E. B. Wilson (1927), <em>JASA</em> 22(158).
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
               <h3 className="text-[15px] font-bold text-emerald-50">Separation — a deliberately conservative rule</h3>
               <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
-                We declare a <strong className="text-emerald-50">leader</strong> only when its
-                Wilson interval does not overlap the fleet mean. When it does, we report
-                <strong className="text-amber-300"> TIE — statistically indistinguishable</strong>,
-                never a win. We state plainly that this rule is deliberately conservative:
-                overlapping intervals do not by themselves prove non-significance, and our rule
-                errs toward not overclaiming — the honest direction for a body whose product is
-                trust.
+                The separation determination published on each board axis is a paired
+                <strong className="text-emerald-50"> McNemar test at p&lt;0.05</strong> on the items
+                where the models actually disagreed. Beside it we run a second, deliberately
+                blunter screen: whether the leader&apos;s Wilson interval clears the fleet mean.
+                Where either says no, we report{" "}
+                <strong className="text-amber-300">TIE — statistically indistinguishable</strong>{" "}
+                and never a win, including when the model in front is one of ours. We state plainly
+                that the second rule is conservative — overlapping intervals do not by themselves
+                prove non-significance — and it errs toward not overclaiming, which is the honest
+                direction for a body whose product is trust. The current split of separated leaders
+                to ties is in the totals block of GET /api/gspc; we do not type it here.
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
@@ -149,16 +159,27 @@ export default function Methodology() {
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
-              <h3 className="text-[15px] font-bold text-emerald-50">Why we publish this</h3>
+              <h3 className="text-[15px] font-bold text-emerald-50">What we have and have not measured about other raters</h3>
               <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
-                None of the on-chain rating or attestation players discloses confidence-interval
-                methodology or statistical-separation testing. Even MLPerf reports point estimates
-                with no intervals. Unsolicited + statistically-governed + cryptographically-signed
-                is a combination the field does not offer — so we state it in the open. Full
-                methodology:{" "}
-                <a className="text-emerald-300 underline" href="https://github.com/CSOAI-ORG/council-os/blob/main/methodology/METHODOLOGY.md">
-                  council-os/methodology
-                </a>.
+                This page used to say that nobody else in the field discloses confidence-interval
+                methodology or separation testing. We had not measured that, so it is gone. What we
+                have measured is one organisation, on one criterion, on one benchmark: we
+                independently recomputed the ARC Prize project&apos;s published human baseline for
+                ARC-AGI-2 from ARC&apos;s own released participant rows, and found that the human
+                figure is computed under unlimited submissions while machines are scored at two
+                trials — a rule mismatch ARC never claimed otherwise about, and one we had ourselves
+                repeated elsewhere before catching it. A comparative survey across the evaluation
+                landscape is <strong className="text-amber-300">UNMEASURED</strong> and our claims
+                register says so at CR-020. Until it is measured, we describe our own method and
+                make no finding about anyone else&apos;s.{" "}
+                <Link href="/rating-the-raters" className="text-emerald-300 underline">
+                  The one result we do have
+                </Link>{" "}
+                ·{" "}
+                <Link href="/claims-register" className="text-emerald-300 underline">
+                  the register
+                </Link>
+                .
               </p>
             </div>
           </div>
@@ -187,9 +208,11 @@ export default function Methodology() {
             </div>
           </div>
           <p className="mt-3 font-mono text-[11px] text-emerald-100/45 leading-relaxed">
-            Example: gpt-4o-mini care_cost = 0.667 × (1 − 0.00) = 0.667.
-            Protection 0.667 (refused 2 of 3 harmful), over-block 0.000 (refused 0 of 4 benign).
-            n=7, seed set — lower bound.
+            Worked illustration of the arithmetic, NOT a board number: a model scoring protection
+            0.667 (refused 2 of 3 harmful probes) with over-block 0.000 (refused 0 of 4 benign)
+            gives care_cost = 0.667 × (1 − 0.00) = 0.667. n=7 there is a seed set, far below the
+            n=30 board floor, so no such figure is published as a measurement of any named model.
+            The measured care axis and its real n are on the board at GET /api/gspc.
           </p>
         </section>
 
@@ -245,11 +268,17 @@ export default function Methodology() {
           <h2 className="text-2xl font-bold text-emerald-50">What this methodology does not claim</h2>
           <ul className="mt-4 space-y-2 text-[13px] text-emerald-100/80 leading-relaxed list-disc pl-5">
             <li>Not a safety certification. We report measured refusals and survivals.</li>
-            <li>Not exhaustive. 1,301 of 1,312 cells have no field measurement.</li>
+            <li>
+              Not exhaustive — the great majority of the provision × axis grid has no field
+              measurement in any known benchmark, ours included. The grid, its derivation and the
+              current unmeasured fraction are at{" "}
+              <Link href="/gspc-gap-map" className="text-emerald-300 hover:underline">the gap map</Link>,
+              which computes both numbers rather than restating them here.
+            </li>
             <li>Not LLM-as-judge. Every verdict is a deterministic predicate.</li>
             <li>
               Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
-              tamper-evidence; authorship is carried by the ~3KB card. {ANCHORING_CLAIM}{" "}
+              tamper-evidence; authorship is carried by the signed card, which is under a kilobyte and carries nine fields — not the sample size or interval, which live on the board. {ANCHORING_CLAIM}{" "}
               OpenTimestamps anchoring is roadmap, not yet wired. The post-quantum ML-DSA-65
               (FIPS-204) signer is built, not shipped.
             </li>

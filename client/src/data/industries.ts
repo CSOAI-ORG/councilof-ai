@@ -17,6 +17,12 @@
 //     lead is not statistically separated (McNemar p<0.05). Ties are not wins.
 //   * Model leaders are named by role (tuned council specialist / base model),
 //     never by internal codename.
+//   * DATES come from functions/api/regulation.ts, which carries the Digital Omnibus
+//     correction. Stand-alone Annex III high-risk is 2 Dec 2027 and Annex I is
+//     2 Aug 2028 — NOT 2 Aug 2026. GPAI provider duties are 2 Aug 2025. Art 50 is
+//     2 Aug 2026. Getting these wrong is in our own corrections ledger twice.
+//   * ARTEFACT_CARD must describe the fields a published card ACTUALLY carries.
+//     n, the interval and the split hash are on the board, not in the card.
 
 export interface LawProvision {
   provision: string;
@@ -64,13 +70,17 @@ export interface Industry {
   artefactProves: string; // what THIS sector's signed card lets the reader prove
 }
 
-// Shared artefact language — the same signed 3KB card ships from every bank.
+// Shared artefact language — the same signed card ships from every bank.
 export const ARTEFACT_CARD =
-  "A signed 3KB result card (Ed25519 signature + SHA-256 hash-chain). It " +
-  "records the bench, the exact model, the frozen split hash, n, the score with " +
-  "its interval, and the run date — so anyone can recompute the number from the " +
-  "public harness and check the signature offline. The card proves a measurement " +
-  "happened and has not been altered. It is not certification, accreditation or approval.";
+  "A signed result card, under a kilobyte: Ed25519 signature over a canonical JSON body " +
+  "carrying the axis measured, the exact model, the accuracy, the issuer, the creation date " +
+  "and the SHA-256 of the previous card in the chain. That is the whole of the card \u2014 the " +
+  "sample size, the confidence interval and the separation determination live on the board at " +
+  "GET /api/gspc, not inside the card, and this sentence used to claim otherwise. The card " +
+  "proves a specific measurement happened and has not been altered since; the board tells you " +
+  "how much weight it carries. Verify it offline with the zero-dependency verifier at " +
+  "/signed/verify-card.mjs \u2014 no account, no permission. It is not certification, " +
+  "accreditation or approval.";
 
 export const industries: Industry[] = [
   // 2 — INSURANCE / UNDERWRITING — beachhead, featured first
@@ -89,13 +99,13 @@ export const industries: Industry[] = [
         provision:
           "EU AI Act Annex III §5(c) — AI used for risk assessment and pricing in " +
           "life and health insurance is high-risk.",
-        date: "obligations phase in from 2 Aug 2026",
+        date: "2 Dec 2027 (deferred from 2 Aug 2026 by the Digital Omnibus, Reg (EU) 2026/1744)",
         live: false,
       },
       {
         provision:
           "EU AI Act Annex III §5(b) — AI evaluating creditworthiness (bancassurance) is high-risk.",
-        date: "from 2 Aug 2026",
+        date: "2 Dec 2027 (deferred from 2 Aug 2026 by the Digital Omnibus, Reg (EU) 2026/1744)",
         live: false,
       },
       {
@@ -401,7 +411,7 @@ export const industries: Industry[] = [
       "model follows the tool contract rather than improvising.",
     law: [
       { provision: "EU AI Act Art 50 — disclosure of AI interaction in agentic flows.", date: "live 2 Aug 2026", live: true },
-      { provision: "EU AI Act Art 53–55 — general-purpose model obligations that agent stacks inherit.", date: "live 2 Aug 2026", live: true },
+      { provision: "EU AI Act Art 53–55 — general-purpose model obligations that agent stacks inherit.", date: "live 2 Aug 2025", live: true },
       { provision: "MCP tool conformance is voluntary interop — there is no statute; we measure it because buyers rely on it.", date: "n/a", live: true },
     ],
     whatMeasure: {
@@ -444,7 +454,7 @@ export const industries: Industry[] = [
       "about a licence against how the code will actually be used.",
     law: [
       { provision: "EU AI Act — partial open-source exemptions for free and open-source components (recitals + Art 2).", date: "in force", live: true },
-      { provision: "EU AI Act Art 53 — GPAI obligations still bite for open-weight models above the compute threshold.", date: "live 2 Aug 2026", live: true },
+      { provision: "EU AI Act Art 53 — GPAI obligations still bite for open-weight models above the compute threshold.", date: "live 2 Aug 2025", live: true },
     ],
     whatMeasure: {
       summary:

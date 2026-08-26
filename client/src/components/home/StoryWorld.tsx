@@ -40,19 +40,19 @@ export const STORY: Slide[] = [
     figure: 1,
   },
   {
-    // 03 Your proof — heavy, the vault + 3KB credential
+    // 03 Your proof — heavy, the vault + the signed credential
     kicker: "Your proof",
     title: "One small card, signed and yours",
-    body: "We run your system on frozen, published tests, sign the result, and give you the card — about 3KB of scores, sample sizes, intervals, hashes and a signature. Anyone can recompute it in their own browser, and the signing key is public.",
+    body: "We run your system on frozen, published tests, sign the result, and give you the card — under a kilobyte holding the axis, the model, the accuracy, the issuer, the date, the previous card's hash and the signature. Sample sizes and intervals live on the board beside it, not inside it. Anyone can recompute the card in their own browser, and the signing key is public.",
     points: [
       { tag: "pain", text: "Reports sit on someone else’s server and can quietly change" },
-      { tag: "benefit", text: "You hold a ~3KB card — recheck the hash chain in any browser" },
-      { tag: "benefit", text: "Scores, sample size and intervals all travel with it" },
+      { tag: "benefit", text: "You hold a sub-kilobyte card — recheck the signature and hash in any browser" },
+      { tag: "benefit", text: "The score travels in the card; its sample size and interval stay on the live board" },
       { tag: "usp", text: "Public signing key — anyone verifies without asking us" },
     ],
     href: "/gspc-verify",
     cta: "Verify a card",
-    bg: { src: "/images/secure_evidence_vault.jpg", alt: "Clay figures holding a glowing 3KB credential card before a vault door" },
+    bg: { src: "/images/secure_evidence_vault.jpg", alt: "Clay figures holding a glowing signed measurement card before a vault door" },
   },
   {
     // 04 The honest board — light, proving-ground video
@@ -347,7 +347,7 @@ function Infographic({ index }: { index: number }) {
           {[16, 28, 40].map((y) => <line key={y} x1="10" x2="60" y1={y} y2={y} stroke={ink} strokeWidth="1.2" opacity="0.5" />)}
           <path d="M14 60 l6 6 l12 -12" {...common} strokeWidth="2.2" />
           <text x="44" y="66" fontSize="8.5" fill={ink} fontWeight="700">signed</text>
-          <text x="35" y="92" textAnchor="middle" fontSize="9" fill={ink} fontWeight="700">3KB card</text>
+          <text x="35" y="92" textAnchor="middle" fontSize="9" fill={ink} fontWeight="700">signed card</text>
         </g>
       </svg>
     );
