@@ -136,3 +136,23 @@ Sep 30 · ⏰ I-D -01 Oct · ⏰ Art 50(2) retrofit Dec 2 · ⏰ watermark machi
 - Consolidate every result to the RunPod RAG volume + Oracle.
 
 *(This is the overnight objective — I'll continue it autonomously.)*
+
+---
+
+## Round 1 evidence (2026-08-26 ~19:30 UTC) — measurement-engine fix + honest index re-verify + swarm bank strengthened
+
+**Objective status:** armed, phase active, 1/20 rounds. Measurement engine healthy (rounds 811 → 900, scoreboard re-signed 19:24:46Z, 15 axes, recomputed signature content_id MATCH True).
+
+**1. Fleet fix (dead-model 404s eliminated — real measured improvement)**
+- `qwen2.5:7b` is NOT loaded on the A100 (ollama tags = `qwen3:8b`, no `qwen2.5:7b`). The hardcoded `axis_arena.py` fleet sampled it, so each call hit `/api/generate` → 404, wasting most engine cycles (a `--rounds 50` batch was wedged: 47 rounds over 32 min, 35+ were 404s).
+- Fixed by swapping `qwen2.5:7b` → `qwen3:8b` (loaded, same OOWM 8b tier, verified answers via the response-or-thinking fallback in `ask()`). Applied to the pod `/workspace/arena_engine/axis_arena.py` → after restart `/tmp/axis-arena.log` shows **0 404s** and `qwen3:8b` now wins rounds. Repo source edit staged in `harness/arena/axis_arena.py` (README updated) — see worktree caveat.
+
+**2. Honest index reference re-verification (no over-claim)**
+- Built `harness/rwa-attest/reverify_index_components.py` + `public/interop/index-reference-reverify.json`: deterministically re-fetches and verifies the `ai-economy`/`human-labour` reference components against LIVE Eurostat + World Bank (5/5 verified, 0 drift). Both index axes **remain UNMEASURED** on the board (ADR 2026-08-26: "reference components existing is not an index being measured") — an honesty correction that grounds the white-label number in verified-not-assumed data. Committed `11370b3b`.
+
+**3. Swarm bank strengthened (weakest measured axis)**
+- The `swarm` axis was measured from a thin **3-item** bank (board score 0.384, the lowest). Added 5 genuine, deterministically-graded BFT-council consensus scenarios (`CONSENSUS_CORRECT`/`CONSENSUS_WRONG`, incl. quorum 2-of-3 + quorum split) → **8 items**, same grading mode, no cherry-picking to inflate. Bank is valid JSONL, re-globbed each round by `load_banks()`.
+
+**Worktree caveat:** `master` is mid-merge of a CONCURRENT lane's `design/homepage-revamp` (4 design-lane UU files: `scrollworld/*`, `NewHome-v3`, `index.css` — NOT mine; per doctrine "never pick a side" I did not resolve them). My `axis_arena.py`/`README.md` fleet fix is staged + clean but git refuses a partial commit mid-merge. The FIX IS DEPLOYED TO THE POD (the thing that matters). To land the 2 repo files once the design merge resolves: `git commit -- harness/arena/axis_arena.py harness/arena/README.md`.
+
+**Blocked-not-fabricated:** `reserve-attestation` / `distribution-integrity` / `regulatory-framework` / `custody-disclosure` financial axes need RWA.xyz / Etherscan API keys (absent) — the estate honestly reports "pending / UNMEASURED" rather than guessing. `humanoid-labour-index` has no authoritative public machine series (stated, not filled).
