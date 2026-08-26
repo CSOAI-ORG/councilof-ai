@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/.well-known/schemas/contact-registry.schema.json",
+  "title": "CSOAI public contact registry entry",
+  "type": "object",
+  "required": ["id", "register", "public_artifact", "as_of"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "register": { "type": "string", "enum": ["REPORTED", "UNMEASURED", "MEASURED"] },
+    "public_artifact": {
+      "type": "object",
+      "required": ["url"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "address": { "type": ["string", "null"] },
+        "label": { "type": "string" }
+      }
+    },
+    "axis_touch": { "type": "array", "items": { "type": "string" } },
+    "rwa_adjacency": { "type": "array", "items": { "type": "string" } },
+    "index_context": {
+      "type": "string",
+      "description": "Contextual only — never a GSPC grade input"
+    },
+    "measured_score": { "type": "null" },
+    "as_of": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}
