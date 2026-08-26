@@ -1,3 +1,8 @@
+// PRICES REMOVED 2026-08-26 (owner ruling: strip ALL public prices).
+// This page published a full annual fee table and was linked from the footer, so a
+// "contract terms" carve-out in the price gate was functioning as the site's price
+// list. Tier structure and revenue BANDS stay — a band says which tier applies to a
+// reader, and is their revenue, not our charge. The figures are quoted privately.
 import { motion } from "framer-motion";
 import { Shield, FileCheck, Layers, CreditCard, ClipboardCheck, AlertTriangle, Clock, Scale, Eye, Building2, CheckCircle, XCircle, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +25,7 @@ const licenseTiers = [
     frequency: "Annual self-assessment",
     color: "bg-green-500",
     baseFee: "Included",
-    perSystem: "£500"
+    perSystem: "On enquiry"
   },
   {
     tier: "Tier 2",
@@ -29,7 +34,7 @@ const licenseTiers = [
     frequency: "Annual + random audits",
     color: "bg-blue-500",
     baseFee: "Included",
-    perSystem: "£2,000"
+    perSystem: "On enquiry"
   },
   {
     tier: "Tier 3",
@@ -38,7 +43,7 @@ const licenseTiers = [
     frequency: "Quarterly review",
     color: "bg-orange-500",
     baseFee: "Included",
-    perSystem: "£10,000"
+    perSystem: "On enquiry"
   },
   {
     tier: "Tier 4",
@@ -47,7 +52,7 @@ const licenseTiers = [
     frequency: "Continuous monitoring",
     color: "bg-red-500",
     baseFee: "Included",
-    perSystem: "£25,000+"
+    perSystem: "On enquiry"
   }
 ];
 
@@ -77,14 +82,14 @@ const dataLicenseTiers = [
     tier: "Research",
     audience: "Academics / independent researchers",
     term: "Quarterly",
-    fee: "£250",
+    fee: "On enquiry",
     note: "Verified ranking access + longitudinal axis signal. Measurement data only — never certification."
   },
   {
     tier: "Enterprise",
     audience: "AI teams / model providers",
     term: "Annual",
-    fee: "£5,000",
+    fee: "On enquiry",
     note: "Licenses the signed GSPC axis corpus (drift/consistency signal over generations). Buyer is a data licensee, not a ranked party."
   },
   {

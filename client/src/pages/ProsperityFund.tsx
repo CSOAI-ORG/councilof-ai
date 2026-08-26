@@ -53,30 +53,15 @@ const fundProjections = [
 ];
 
 export default function ProsperityFund() {
-  const [currentFundSize, setCurrentFundSize] = useState(0);
-  const [animatedSize, setAnimatedSize] = useState(0);
-
-  // Simulate real-time fund growth
-  useEffect(() => {
-    const targetSize = 847293; // £847,293 demo value
-    setCurrentFundSize(targetSize);
-
-    const duration = 2000;
-    const startTime = Date.now();
-
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setAnimatedSize(Math.floor(targetSize * eased));
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-
-    animate();
-  }, []);
+  // The count-up animation is REMOVED, not relabelled. It ran requestAnimationFrame up to a
+  // hardcoded 847293 while the caption said "this figure does not update" — so the page was
+  // asserting something its own code contradicted, which is worse than the original
+  // unqualified counter. The prerenderer proved it: /prosperity shipped £758,479 and
+  // /prosperity-fund shipped £777,067, two different frames of the same fake climb.
+  // A static illustrative figure can be honestly labelled. A moving one cannot, because
+  // motion reads as live data no matter what the caption says.
+  const ILLUSTRATIVE_FUND_SIZE = 847293;
+  const animatedSize = ILLUSTRATIVE_FUND_SIZE;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-GB', {

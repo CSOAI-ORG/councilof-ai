@@ -1,3 +1,8 @@
+// PRICES REMOVED 2026-08-26 (owner ruling: strip ALL public prices).
+// This page published a full annual fee table and was linked from the footer, so a
+// "contract terms" carve-out in the price gate was functioning as the site's price
+// list. Tier structure and revenue BANDS stay — a band says which tier applies to a
+// reader, and is their revenue, not our charge. The figures are quoted privately.
 import { motion } from "framer-motion";
 import { FileText, Users, Shield, CreditCard, Scale, Clock, AlertTriangle, Building2, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,10 +19,10 @@ const fadeInUp = {
 
 const membershipTiers = [
   { tier: "Startup", revenue: "<£1M", fee: "Free (Year 1)", highlight: true },
-  { tier: "SME", revenue: "£1M - £50M", fee: "£2,500" },
-  { tier: "Enterprise", revenue: "£50M - £500M", fee: "£10,000" },
-  { tier: "Large Enterprise", revenue: "£500M - £5B", fee: "£25,000" },
-  { tier: "Global", revenue: ">£5B", fee: "£50,000" }
+  { tier: "SME", revenue: "£1M - £50M", fee: "On enquiry" },
+  { tier: "Enterprise", revenue: "£50M - £500M", fee: "On enquiry" },
+  { tier: "Large Enterprise", revenue: "£500M - £5B", fee: "On enquiry" },
+  { tier: "Global", revenue: ">£5B", fee: "On enquiry" }
 ];
 
 const incidentTimelines = [

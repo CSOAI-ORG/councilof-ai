@@ -75,13 +75,17 @@ const ALLOW = [
       "Calculator slider bounds and the reader's own inputs echoed back. The page charges " +
       "nothing; the money on it belongs to the visitor's business, not to us.",
   },
-  {
-    pages: /^(legal\/licensing|legal\/membership|licensing-agreement|membership-agreement)\//,
-    why:
-      "Contractual fee schedules inside a published legal agreement. A contract that hides " +
-      "its own fees is worse than one that states them; the doctrine bans marketing a price, " +
-      "not disclosing the terms of an agreement a party is being asked to sign.",
-  },
+  // EXEMPTION WITHDRAWN 2026-08-26. It read: "contractual fee schedules inside a published
+  // legal agreement… the doctrine bans marketing a price, not disclosing the terms of an
+  // agreement a party is being asked to sign." That reasoning was defensible and the outcome
+  // was not. A front-end audit found the four exempted pages publishing full annual fee
+  // tables (£2,500 / £10,000 / £25,000 / £50,000 by revenue band; £500–£25,000+ per system;
+  // "Expedited +50% premium"), two of them linked from the footer bottom bar — so the
+  // "contract terms" carve-out was functioning as the site's price list. Worse,
+  // /licensing-agreement priced "Verified ranking access", which is selling a grade: the one
+  // thing the doctrine names outright. The owner ruled "strip ALL public prices" and I
+  // introduced this hole on my own judgement. A carve-out that reproduces the thing the rule
+  // forbids is not a carve-out.
 ];
 const allowedFor = (rel) => ALLOW.find((a) => a.pages.test(rel));
 
