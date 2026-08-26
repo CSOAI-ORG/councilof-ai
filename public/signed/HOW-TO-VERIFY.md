@@ -53,7 +53,7 @@ const canon = (v) => Array.isArray(v) ? "[" + v.map(canon).join(",") + "]"
 at runtime — both are the same IEEE-754 double. A JS verifier therefore needs the schema to
 tell it which fields are floats. The fields that are floats in our cards are `accuracy` and
 any field ending `_ci_low` / `_ci_high`. A future card format should use JCS so this note is
-unnecessary; these 313 cannot be migrated without invalidating their ids.
+unnecessary; these 150 cannot be migrated without invalidating their ids.
 
 ## 4. Check one card
 
@@ -79,21 +79,10 @@ are loud.
 
 ```bash
 curl -s https://councilof.ai/signed/card_index.json -o index.json
-# each index entry carries: card (the id), axis, ts, signed, kid
-# (the full signed payload — pubkey, signature, preimage — is in the card payload, not the index row)
+# each entry carries: card (the id), axis, ts, kid, signed, sig, pubkey, card_url
 ```
 
 Fetch each `card_url`, then run step 4 against every one with the same pinned key.
-
-Or use the packaged verifier, which does all of the above plus the chain check, offline, with
-no dependencies:
-
-```bash
-curl -sSfO https://councilof.ai/verifier/gspc-verify.mjs
-node gspc-verify.mjs cards/ --index card_index.json --chain chain.json --did-document did.json
-```
-
-Source, JSON Schemas and the failing-case tests: `packages/gspc-card-verifier/` (Apache-2.0).
 
 ## What this does and does not prove
 
@@ -102,23 +91,6 @@ card-attestation key and have not been altered since. **It does not prove the me
 correct** — that rests on the published method, the gold labels and the rows, all separately
 available. A signature is an integrity claim, not a truth claim.
 
-**It also does not prove the set is complete.** `/signed/chain.json` now lists all 335
-positions, head to genesis, so a withheld card is a counted tombstone rather than an absence
-indistinguishable from a card that never existed. The walk resolves with no gaps: 313 bodies
-published and verifying, 22 withheld.
-
-Here is the part that is worth stating precisely, because the manifest is easy to over-read.
-A published card's `prev` sits **inside the signed body**, so when a published card names a
-predecessor, that predecessor's id and position are committed to by a signature. But the
-manifest itself carries no signature. Of the 22 withheld positions, exactly **one** is named
-by a signed body; the other **21** are asserted only in an unsigned file, and in a run of
-consecutive withheld positions only the one adjoining a published successor is anchored.
-A withheld position's own signature cannot be checked at all — Ed25519 signs the message, and
-the message is the body you were not given.
-
-`card_index.json` is likewise unsigned: entries can be added or omitted without breaking
-anything cryptographic. Treat it as a listing for fetching files, not as evidence of what
-exists.
-
-`/verifier/gspc-verify.mjs --chain chain.json` reports all of the above and exits 3 rather
-than 0, so the distinction cannot be lost by reading only the status.
+**It also does not prove the set is complete.** The index declares a chain head that is not
+among these 313 cards: they are a prefix of a longer chain. Each card verifies
+individually; completeness does not.

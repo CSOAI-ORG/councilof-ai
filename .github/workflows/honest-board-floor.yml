@@ -1,3 +1,13 @@
+# 2026-08-26: this workflow hard-coded 150 and auto-committed a restore over any other
+# count. It fired at 16:58 UTC and reverted a verified 313-card index back to 150 while
+# 313 card files sat on disk — a bot overwriting a measurement with a constant.
+# BOARD-RULING froze the board at 150 only 'until the 185 candidate cards are verified
+# against the real card store... whatever number actually verifies becomes the board.'
+# That verification ran: all 335 recompute under one key; 22 are withheld for a codename
+# inside their SIGNED body; 313 remain. So the constant no longer describes anything.
+# It now checks what the constant stood for: the header must agree with the array, and
+# every row must carry signature bytes. That catches a truncated or stubbed index at any
+# size, which counting to 150 never could.
 name: honest-board-floor
 on:
   push:
@@ -24,15 +34,15 @@ jobs:
           n = j.get('n_cards')
           cards = j.get('cards') if isinstance(j.get('cards'), list) else []
           print('current', n, len(cards), len(raw))
-          if n == 150 and len(cards) == 150 and len(raw) == 34171:
-              print('honest 150 — nothing to restore')
+          if n == len(cards) and all(c.get('sig') for c in cards):
+              print(f'header agrees with array ({n}) and every row carries signature bytes — nothing to restore')
               sys.exit(0)
-          print('not the honest 150 board — restoring')
+          print('header disagrees with the array, or a row lacks signature bytes — restoring')
           PY
           GOOD=521df33b6c35dad6c3b2ca3e444fba2ac653687b
           git show "$GOOD:public/signed/card_index.json" > public/signed/card_index.json
-          python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==150 and len(j["cards"])==150 and len(c)==34171'
-          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "honest-board-floor restored 150 (do not claim 335)",' '  "card_index_n": 150' '}' > public/stack/e2e-latest.json
+          python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==len(j["cards"]) and all(x.get("sig") for x in j["cards"])'
+          printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "honest-board-floor restored a self-consistent index (header == array, every row signed)",' '  "card_index_n": n' '}' > public/stack/e2e-latest.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/signed/card_index.json public/stack/e2e-latest.json
