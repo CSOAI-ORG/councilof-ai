@@ -252,18 +252,17 @@ export default function DriftProduct() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { tier: "Single regulation", price: "£5k", scope: "1 instrument (e.g. EU AI Act)", probes: "Daily", reports: "Delta reports only", featured: false },
-              { tier: "Multi-jurisdiction", price: "£10k", scope: "Up to 5 instruments", probes: "Daily", reports: "Delta + quarterly summary", featured: true },
-              { tier: "Estate-wide", price: "£15k", scope: "All watched instruments", probes: "Daily", reports: "Delta + summary + evidence review", featured: false },
+              // No published price. Doctrine: verification is free forever and a grade is
+              // never sold, so no public surface carries a number anyone pays us. Scope is
+              // what a reader actually needs to choose; the figure is quoted privately.
+              { tier: "Single regulation", scope: "1 instrument (e.g. EU AI Act)", probes: "Daily", reports: "Delta reports only", featured: false },
+              { tier: "Multi-jurisdiction", scope: "Up to 5 instruments", probes: "Daily", reports: "Delta + quarterly summary", featured: true },
+              { tier: "Estate-wide", scope: "All watched instruments", probes: "Daily", reports: "Delta + summary + evidence review", featured: false },
             ].map((p) => (
               <Card key={p.tier} className={`relative ${p.featured ? "border-2 border-emerald-400 bg-emerald-50/30" : ""}`}>
-                {p.featured && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600">Most Popular</Badge>
-                )}
                 <CardContent className="p-6 text-center">
                   <h3 className="font-bold text-gray-900 mb-1">{p.tier}</h3>
-                  <div className="text-3xl font-black text-emerald-600 my-3">{p.price}</div>
-                  <div className="text-sm text-gray-600 mb-1">{p.scope}</div>
+                  <div className="text-sm text-gray-600 mb-1 mt-3">{p.scope}</div>
                   <div className="text-xs text-gray-500 mb-4">{p.probes} probes · {p.reports}</div>
                   <Link href="/contact?subject=drift-audit">
                     <Button className="w-full" variant={p.featured ? "default" : "outline"}>Request audit</Button>

@@ -256,11 +256,6 @@ export default function EnterpriseHowItWorks() {
               <Card key={idx} className={`p-8 border-2 transition-colors ${
                 idx === 1 ? "border-emerald-600 bg-emerald-50" : "border-emerald-200 hover:border-emerald-600"
               }`}>
-                {idx === 1 && (
-                  <div className="mb-4 inline-block bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-bold">
-                    Most Popular
-                  </div>
-                )}
                 <h3 className="text-2xl font-bold text-emerald-900 mb-2">{tier.tier}</h3>
                 <p className="text-gray-700 mb-4">{tier.description}</p>
                 <div className="text-3xl font-bold text-emerald-600 mb-6">{tier.price}</div>

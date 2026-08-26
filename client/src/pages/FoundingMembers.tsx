@@ -63,22 +63,16 @@ const foundingMemberBenefits = [
 const membershipTiers = [
   {
     tier: "Individual",
-    price: "£500",
-    period: "one-time",
     description: "For AI safety professionals and advocates",
     features: ["2x voting rights", "Board nomination rights", "Lifetime recognition", "Exclusive network access"]
   },
   {
     tier: "Organization",
-    price: "£5,000",
-    period: "one-time",
     description: "For companies committed to AI safety",
     features: ["5 individual memberships", "Corporate recognition", "Early pilot program access", "Direct board liaison"]
   },
   {
     tier: "Founding Patron",
-    price: "£50,000",
-    period: "one-time",
     description: "For major supporters of the mission",
     features: ["25 individual memberships", "Permanent plaque", "Named program sponsorship", "Strategic advisory role"]
   },
@@ -231,17 +225,13 @@ export default function FoundingMembers() {
                 transition={{ duration: 0.3, delay: idx * 0.1 }}
               >
                 <Card className={`h-full ${idx === 1 ? 'border-2 border-amber-500 relative' : ''}`}>
-                  {idx === 1 && (
-                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white">
-                      Most Popular
-                    </Badge>
-                  )}
                   <CardContent className="p-8">
                     <h3 className="font-bold text-xl mb-2">{tier.tier}</h3>
                     <p className="text-sm text-gray-600 mb-4">{tier.description}</p>
                     <div className="mb-6">
-                      <span className="text-4xl font-bold">{tier.price}</span>
-                      <span className="text-gray-500 ml-2">{tier.period}</span>
+                      {/* No published price. Doctrine: no public surface carries a
+                          figure anyone pays us — membership terms are quoted on enquiry. */}
+                      <span className="text-gray-500">Terms on enquiry</span>
                     </div>
                     <ul className="space-y-3 mb-6">
                       {tier.features.map((feature, fIdx) => (

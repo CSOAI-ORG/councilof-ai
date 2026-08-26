@@ -165,11 +165,6 @@ export default function CouncilLicensingLanding() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 <Card className={`p-8 h-full flex flex-col ${tier.highlighted ? 'border-2 border-purple-600 shadow-xl' : ''}`}>
-                  {tier.highlighted && (
-                    <div className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold w-fit mb-4">
-                      Most Popular
-                    </div>
-                  )}
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">{tier.name}</h3>
                   <p className="text-gray-600 mb-2">{tier.description}</p>
                   <p className="text-sm text-gray-500 mb-6">{tier.decisions}</p>

@@ -840,16 +840,16 @@ export default function Charter() {
 
           <div className="grid md:grid-cols-3 gap-6 mb-10">
             {[
-              { label: "Individual", price: "£500", desc: "For AI safety professionals" },
-              { label: "Organization", price: "£5,000", desc: "For companies" },
-              { label: "Founding Patron", price: "£50,000", desc: "For major supporters" },
+              // No published price — see /founding-members. Doctrine: no public surface
+              // carries a figure anyone pays us; membership terms are quoted on enquiry.
+              { label: "Individual", desc: "For AI safety professionals" },
+              { label: "Organization", desc: "For companies" },
+              { label: "Founding Patron", desc: "For major supporters" },
             ].map((tier, idx) => (
               <Card key={idx} className={`bg-white/10 border-white/20 ${idx === 1 ? 'ring-2 ring-emerald-400' : ''}`}>
                 <CardContent className="p-6 text-center">
-                  {idx === 1 && <Badge className="mb-2 bg-emerald-500 text-white">Most Popular</Badge>}
                   <h3 className="font-bold text-lg text-white">{tier.label}</h3>
-                  <p className="text-3xl font-bold text-emerald-300 my-2">{tier.price}</p>
-                  <p className="text-sm text-gray-300">{tier.desc}</p>
+                  <p className="text-sm text-gray-300 mt-2">{tier.desc}</p>
                 </CardContent>
               </Card>
             ))}

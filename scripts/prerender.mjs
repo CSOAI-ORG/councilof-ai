@@ -50,7 +50,13 @@ const arg = (k, d) => {
 const DIST = arg("dist", "dist");
 const MIN = Number(arg("min", 400));       // visible chars below which a route is "thin"
 const WAIT = Number(arg("wait", 1800));    // ms after load before snapshotting
-const PORT = Number(arg("port", 4400));
+// 0 = let the OS pick a free port. It used to default to 4400, which meant two lanes
+// could not prerender at the same time: the second process failed to bind and then
+// happily rendered every route against the FIRST lane's server — a different build.
+// That is how /world "timed out" intermittently while the report showed nothing wrong.
+// A staging server is per-run private state; it must never be a shared fixed address.
+// An explicit --port is still honoured, and now fails loudly if it is taken.
+const PORT = Number(arg("port", 0));
 const CONC = Number(arg("conc", 4));
 // Production origin the prerendered canonical/og:url/twitter:url must carry (NOT the
 // localhost:PORT staging origin the snapshot runs on). Override with --prod-origin if the
@@ -237,7 +243,22 @@ const srv = http.createServer((q, r) => {
   // the same catch-all the host uses, so the snapshot sees what production serves
   r.writeHead(200, { "content-type": "text/html" });
   r.end(shell);
-}).listen(PORT);
+});
+
+// Bind before rendering anything, and refuse to continue if the requested port is busy —
+// rendering against someone else's server is worse than not rendering at all.
+srv.on("error", (e) => {
+  if (e.code === "EADDRINUSE") {
+    console.error(`prerender: port ${PORT} is already in use — another prerender is running.`);
+    console.error("Omit --port so the OS assigns a free one, or wait for the other lane.");
+    process.exit(2);
+  }
+  throw e;
+});
+const ACTIVE_PORT = await new Promise((resolve) => {
+  srv.listen(PORT, () => resolve(srv.address().port));
+});
+console.log(`prerender: staging server on http://localhost:${ACTIVE_PORT}`);
 
 // ---------------------------------------------------------------- render
 const browser = await chromium.launch();
@@ -252,7 +273,7 @@ async function worker(id) {
     const route = queue.shift();
     const rec = { route, chars: 0, ok: false };
     try {
-      await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
+      await page.goto(`http://localhost:${ACTIVE_PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
       await page.waitForTimeout(WAIT);
       const info = await page.evaluate(() => {
         const root = document.getElementById("root");
@@ -274,7 +295,7 @@ async function worker(id) {
       // localhost:4400 canonical the 2026-08-14 audit flagged). Rewrite it to the prod origin
       // in the captured markup before it is written to dist.
       const html = (await page.content())
-        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN);
+        .split(`http://localhost:${ACTIVE_PORT}`).join(PROD_ORIGIN);
       // A snapshot that captured a data-fetch failure must be UNABLE to ship: it would
       // bake the error into the crawler-visible page (2026-08-25: /gspc-scoreboard went
       // live reading "Board fetch failed"). Refuse to write it, count it as an error.
