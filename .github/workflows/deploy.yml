@@ -81,13 +81,15 @@ jobs:
       - name: Price gate — no published price, no unevidenced popularity claim
         run: node scripts/price-gate.mjs dist/client
 
-      # Facts gate — WIRED BUT NON-BLOCKING pending an owner ruling on the canonical
-      # axis count. It currently reports 29 real contradictions: the live board says
-      # 14, 26 gspc/* pages say 17, /arena-scoreboard says 15. Those are not typos,
-      # they are a canon question. Flip `continue-on-error` to false the moment the
-      # number is ruled — a blocking gate on an unruled fact just breaks every deploy.
+      # Facts gate — NOW BLOCKING (2026-08-26). It was advisory pending an owner ruling on
+      # the canonical axis count, because a blocking gate on an unruled fact just breaks
+      # every deploy. ADR-001 set the exact condition for flipping it: "the moment
+      # /api/gspc reports the swept number". That condition is met — the live board returns
+      # `22 axes · 15 measured · 7 unmeasured` — and the gate passes cleanly on a full
+      # 582-route build. The 29 contradictions it used to report are resolved: the 17 and 15
+      # were arena figures that needed labelling not changing, the 12 was the only genuinely
+      # typed literal, and no rendered surface types a count any more.
       - name: Facts gate — no claim may contradict facts.json
-        continue-on-error: true
         run: node scripts/facts-gate.mjs dist/client
 
       - name: Dist bundle guard — stranger paths + API functions present
