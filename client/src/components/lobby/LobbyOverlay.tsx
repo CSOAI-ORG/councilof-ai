@@ -38,8 +38,10 @@ import { useNarrowViewport } from "./useNarrowViewport";
  * glass.ts for the floor that keeps text above WCAG AA at every setting.
  *
  * THE LAYOUT.
- *   header   full width, at the very top — the mark, the name, transparency and
- *            the window controls. NOT inside the centre pane.
+ *   header   full width, at the very top — a dense utility bar: the mark, SEARCH
+ *            over the OS's real index, four named destinations, the live state
+ *            read from /api/state, and the window controls. NOT inside the
+ *            centre pane. See LobbyHeader.tsx.
  *   left     Destinations — a real vertical tablist. Hideable; `[` toggles it.
  *   centre   the dominant column: the live pane PLUS the ask thread. This is
  *            the readable surface. Hiding both rails gives it the workspace.
@@ -354,6 +356,8 @@ export default function LobbyOverlay({
           showHeaderNav={narrow}
           tabId={tabId}
           onSelectTab={go}
+          onOpenRoute={openRoute}
+          activePath={panePath}
           navOverride={!!override}
         />
 

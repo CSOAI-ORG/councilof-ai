@@ -104,6 +104,80 @@ export const PRIMARY =
 /** Every panel reads its ground from the single `--lobby-alpha` custom property. */
 export const panelStyle: CSSProperties = { background: "rgba(255,255,255,var(--lobby-alpha))" };
 
+/**
+ * ─── THE HEADER'S TOKENS — the one lobby surface correct in BOTH themes ───────
+ *
+ * Everything above this line is white-on-white by design, and the contrast note
+ * at the top of this file is the measurement that justifies it. The HEADER is
+ * different: it is the chrome a reader arrives on, it is the surface most likely
+ * to be lifted into another shell, and `.dark` is a real class on this app
+ * (client/src/contexts/ThemeContext.tsx puts it on <html>). So the header carries
+ * its own ground and its own ink, each with a dark counterpart, and it stays
+ * legible whichever theme is on.
+ *
+ * The ground is ONE variable — `--lobby-ground`, an RGB triple defined for both
+ * themes in client/src/styles/index.css — composited with `--lobby-alpha`, so the
+ * transparency slider keeps working in dark exactly as it does in light.
+ *
+ * These tokens are deliberately NOT retrofitted onto the panes: a dark pane with
+ * light-theme slate-700 body copy would be the light-on-light failure this file
+ * exists to prevent, in reverse. Widening them is a separate, measured pass.
+ */
+export const headerGroundStyle: CSSProperties = {
+  background: "rgb(var(--lobby-ground) / var(--lobby-alpha))",
+};
+
+/** The header type ramp. Same sizes as TYPE, with an ink for each theme. */
+export const HEAD = {
+  /** The wordmark. */
+  mark: "text-[15px] font-semibold leading-none tracking-tight text-slate-900 dark:text-slate-50",
+  /** A navigation noun or a control label. */
+  nav: "text-[12.5px] font-semibold leading-none text-slate-700 dark:text-slate-300",
+  /** The label on a state readout. */
+  key: "text-[10.5px] font-semibold uppercase tracking-[0.13em] text-slate-500 dark:text-slate-400",
+  /** A quoted figure. Tabular so the bar does not reflow as numbers change. */
+  val: "font-mono text-[11.5px] tabular-nums leading-none text-slate-900 dark:text-slate-100",
+  /** Fine print: shortcuts, provenance, the endpoint link. */
+  fine: "text-[11px] leading-relaxed text-slate-600 dark:text-slate-400",
+} as const;
+
+/** The header's hairline, in both themes. */
+export const HEAD_EDGE = "border-slate-900/10 dark:border-white/12";
+
+/**
+ * A quiet header control — window buttons, rail toggles.
+ *
+ * NO DISPLAY UTILITY HERE, deliberately. The old CONTROL token opened with
+ * `inline-flex`, so a caller that wanted the control hidden on small screens
+ * wrote `${CONTROL} hidden sm:inline-flex` and got two unprefixed display
+ * utilities of equal specificity fighting in the stylesheet — `inline-flex` won,
+ * and "Hide panes" / "Show rail" shipped VISIBLE on mobile, where both rails are
+ * already hidden and neither button does anything. The display class now belongs
+ * to the caller, which is the only place that knows when the control should show.
+ */
+export const HEAD_CONTROL =
+  "items-center justify-center gap-1.5 rounded-lg border border-slate-900/10 " +
+  "bg-white/60 text-slate-700 transition hover:bg-white hover:text-slate-900 " +
+  "dark:border-white/12 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white " +
+  "motion-reduce:transition-none " + FOCUS + " dark:focus-visible:ring-offset-slate-950";
+
+/** The header's one dark control — Close. */
+export const HEAD_CLOSE =
+  "inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-900/10 " +
+  "bg-slate-900 text-white transition hover:bg-slate-800 " +
+  "dark:border-white/15 dark:bg-white/90 dark:text-slate-900 dark:hover:bg-white " +
+  "motion-reduce:transition-none " + FOCUS + " dark:focus-visible:ring-offset-slate-950";
+
+/** The search field and the listbox that drops from it. */
+export const HEAD_FIELD =
+  "w-full rounded-lg border border-slate-900/12 bg-white/80 text-slate-900 placeholder:text-slate-500 " +
+  "dark:border-white/12 dark:bg-white/5 dark:text-slate-100 dark:placeholder:text-slate-400 " +
+  FOCUS + " dark:focus-visible:ring-offset-slate-950";
+
+export const HEAD_MENU =
+  "rounded-xl border border-slate-900/10 bg-white shadow-[0_20px_50px_-18px_rgba(15,23,42,0.45)] " +
+  "dark:border-white/12 dark:bg-slate-900 dark:shadow-[0_20px_50px_-18px_rgba(0,0,0,0.8)]";
+
 /** A slightly cooler inset (a card inside a panel) so nesting stays legible. */
 export const insetStyle: CSSProperties = { background: "rgba(248,250,252,0.72)" };
 
