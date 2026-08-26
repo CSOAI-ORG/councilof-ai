@@ -16,6 +16,12 @@ const SURFACES = [
   "/interop/mcp-security-scorecard.json",
   "/interop/rwa-attest-index.json",
   "/interop/eas-attestation-batch.json",
+  // 2026-08-26 white-label findings (measured, not certified; see each card's doctrine).
+  "/interop/white-label-risk-register.json",
+  "/interop/white-label-exposure-register.json",
+  "/interop/white-label-deadline-radar.json",
+  "/interop/pqc-continuity-measure.json",
+  "/interop/index-reference-reverify.json",
 ];
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
