@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
-"""MINE TEST SUITE — 100% target. Tests: ingest, signatures, honesty, hygiene,
-consistency, coverage. Exit non-zero on any failure."""
+"""MINE TEST SUITE. Tests: ingest, signatures, honesty, hygiene, consistency, coverage.
+Exit non-zero on any failure.
+
+The suite used to CRASH at T5 on a missing fixture, so T6 (replication) and T7 (canon
+coverage) never executed while `mine_ci.sh` still printed "tests 23/23". A check whose
+fixture is absent is UNMEASURABLE, not a pass and not a crash: it is now recorded as a
+SKIP with its reason, counted separately, and the run continues. The final RESULT line
+carries all three counts, and mine_ci.sh reads them from there instead of hardcoding.
+"""
 import json
 import os
 import subprocess
@@ -8,7 +15,7 @@ import sys
 
 MINE = os.path.expanduser("~/.grokbot/harness/mine")
 A17 = os.path.expanduser("~/.grokbot/harness/measure/axis17")
-PASS, FAIL = 0, []
+PASS, FAIL, SKIP = 0, [], []
 
 
 def check(name, cond, detail=""):
@@ -19,6 +26,12 @@ def check(name, cond, detail=""):
     else:
         FAIL.append((name, detail))
         print(f"  ✗ {name} — {detail}")
+
+
+def skip(name, reason):
+    """UNMEASURABLE: the fixture this check needs is not on this machine. Never a pass."""
+    SKIP.append((name, reason))
+    print(f"  - {name} — SKIPPED (unmeasurable): {reason}")
 
 
 def load(p):
@@ -90,9 +103,16 @@ for f in ["mine-summary.md", "mine-learnt.csv"]:
     if os.path.exists(p) and "16 axes" in open(p).read().lower():
         leaks.append(f)
 check("no '16 axes' leak in mine artifacts", not leaks, str(leaks))
-# mapping flagged INTERNAL-ONLY
-mp = load(os.path.expanduser("~/clawd/csoai-static-deploy2/SOVOS/c2pa-catapult/gspc-c2pa-mapping.json"))
-check("mapping flagged INTERNAL-ONLY", "INTERNAL ONLY" in json.dumps(mp.get("canon_compliance", {})).upper() or "INTERNAL-ONLY" in json.dumps(mp.get("canon_compliance", {})).upper())
+# mapping flagged INTERNAL-ONLY (only checkable where the mapping artifact exists;
+# if it is absent there is no artifact to leak, so this is UNMEASURABLE, not a failure —
+# and crashing here is what stopped T6/T7 from ever running)
+mapping_path = os.path.expanduser("~/clawd/csoai-static-deploy2/SOVOS/c2pa-catapult/gspc-c2pa-mapping.json")
+if not os.path.exists(mapping_path):
+    skip("mapping flagged INTERNAL-ONLY", f"artifact absent: {mapping_path}")
+else:
+    mp = load(mapping_path)
+    cc = json.dumps(mp.get("canon_compliance", {})).upper()
+    check("mapping flagged INTERNAL-ONLY", "INTERNAL ONLY" in cc or "INTERNAL-ONLY" in cc)
 # 13-of-14 framing present
 check("13-of-14 framing present", "13 measured of 14" in json.dumps(learnt.get("public_framing", "")) or "13 of 14" in json.dumps(learnt))
 
@@ -115,9 +135,15 @@ aff = cc.get("affect", {})
 check("affect publish-GATED noted", True, "publication gated to 11 Sep counsel")
 
 print()
-print(f"RESULT: {PASS} passed, {len(FAIL)} failed")
+print(f"RESULT: {PASS} passed, {len(FAIL)} failed, {len(SKIP)} unmeasurable")
+for name, reason in SKIP:
+    print(f"  SKIP: {name} — {reason}")
 if FAIL:
     for name, detail in FAIL:
         print(f"  FAIL: {name} — {detail}")
     sys.exit(1)
-print("ALL TESTS PASS — MINE 100%")
+if SKIP:
+    print(f"TESTS PASS with {len(SKIP)} check(s) UNMEASURABLE on this machine — "
+          "not a clean sheet, and not counted as one.")
+    sys.exit(0)
+print("ALL TESTS PASS")
