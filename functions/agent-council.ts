@@ -1,6 +1,7 @@
 /**
  * GET /agent-council - 308 to the lobby.
  * Retracted 33-agent guarantee. Do not 308 onto /agent-council/.
+ * Functions bump so deploy.yml publishes the restored exact-150 card_index.
  */
 export function onRequest() {
   return new Response(null, {
