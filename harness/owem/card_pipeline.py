@@ -179,35 +179,39 @@ def sign_card(key, card):
     return card
 
 def claimguard_verify(card):
-    """ClaimGuard claim-vs-signed-artifact. Verifies BOTH the spec canonical (content_id) AND the
-    LIVE /verify canonical (signature.kind/pubkey/sig) so the card proves on the deployed /verify page."""
+    """ClaimGuard claim-vs-signed-artifact. Verifies BOTH the spec canonical (content_id, over
+    signature.sig_hex) AND the LIVE /verify canonical (over signature.sig, base64) so a card
+    proves on the deployed /verify page. Axis is read from card.body.axis (it is not top-level)."""
     sig = card.get("signature", {})
     body = {k: v for k, v in card.items() if k != "signature"}
+    axis = card.get("body", {}).get("axis") or card.get("axis")
     recomputed = hashlib.sha256(canonical(body).encode()).hexdigest()
     if recomputed != sig.get("content_id"):
-        return {"verdict": "INVALID", "reason": "content_id mismatch", "claim": card.get("axis")}
+        return {"verdict": "INVALID", "reason": "content_id mismatch", "claim": axis}
     if sig.get("alg") == "Ed25519" and HAVE_CRYPTO:
         pub = bytes.fromhex(sig["public_key"][2:])
         pk = ed25519.Ed25519PublicKey.from_public_bytes(pub)
+        # spec-canonical signature is signature.sig_hex (0x hex over canonical(body)); signature.sig is
+        # the base64 LIVE /verify-canonical signature. Verify the SPEC one first (matches content_id).
         try:
-            pk.verify(bytes.fromhex(sig["sig"][2:]), canonical(body).encode())
+            pk.verify(bytes.fromhex(sig["sig_hex"][2:]), canonical(body).encode())
         except Exception:
-            return {"verdict": "INVALID", "reason": "Ed25519 signature does not verify", "claim": card.get("axis")}
+            return {"verdict": "INVALID", "reason": "Ed25519 signature does not verify (spec canonical)", "claim": axis}
         # LIVE /verify facade (deployed page reads signature.kind/pubkey + base64 sig):
-        if sig.get("kind") == "ed25519" and sig.get("verify_sig"):
+        if sig.get("kind") == "ed25519" and sig.get("sig"):
             vb = verify_canon(card)
             if sig.get("body_sha256") and hashlib.sha256(vb).hexdigest() != sig.get("body_sha256"):
-                return {"verdict": "INVALID", "reason": "/verify body_sha256 mismatch", "claim": card.get("axis")}
+                return {"verdict": "INVALID", "reason": "/verify body_sha256 mismatch", "claim": axis}
             try:
-                pk.verify(base64.b64decode(sig["verify_sig"]), vb)
+                pk.verify(base64.b64decode(sig["sig"]), vb)
             except Exception:
-                return {"verdict": "INVALID", "reason": "/verify Ed25519 does not verify", "claim": card.get("axis")}
+                return {"verdict": "INVALID", "reason": "/verify Ed25519 does not verify", "claim": axis}
             return {"verdict": "VALID", "reason": "Ed25519 verifies over spec canonical AND live /verify canonical",
-                    "claim": card.get("axis"), "content_id": recomputed,
+                    "claim": axis, "content_id": recomputed,
                     "verify_content_id": sig.get("body_sha256")}
         return {"verdict": "VALID", "reason": "Ed25519 verifies over canonical body (no /verify facade)",
-                "claim": card.get("axis"), "content_id": recomputed}
-    return {"verdict": "UNVERIFIABLE", "reason": "alg none / no crypto", "claim": card.get("axis")}
+                "claim": axis, "content_id": recomputed}
+    return {"verdict": "UNVERIFIABLE", "reason": "alg none / no crypto", "claim": axis}
 
 def sim_delta(axis, live):
     """④ scenario-measurement (SYNTHETIC-SIM): a governed-variant re-measure + signed delta row."""

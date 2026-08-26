@@ -219,7 +219,7 @@ export default function AgentCouncil() {
               <div>
                 <div className="font-semibold text-emerald-700 mb-2">3. Human Escalation</div>
                 <p className="text-gray-600">
-                  If AIs disagree or detect something complex, it gets escalated to certified
+                  If AIs disagree or detect something complex, it gets escalated to trained
                   human analysts for final review. AI assists, humans decide.
                 </p>
               </div>

@@ -38,7 +38,7 @@ export default function EarlyAccessLanding() {
               🚀 Limited Early Access Available
             </div>
             <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Be First to Access AI Safety Certification
+              Be First to Access AI Safety Analyst Training
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
               Join the movement. Get exclusive early access to the CSOAI measurement credential, Council training, and our complete AI safety platform.
@@ -120,7 +120,7 @@ export default function EarlyAccessLanding() {
               {
                 icon: <Shield className="h-8 w-8" />,
                 title: 'Measurement Credential',
-                description: 'Professional certification in AI safety, compliance frameworks, and incident analysis. Valid for 3 years.'
+                description: 'Professional training in AI safety, compliance frameworks, and incident analysis. Course completion attests training, not conformity. Valid for 3 years.'
               },
               {
                 icon: <Users className="h-8 w-8" />,
