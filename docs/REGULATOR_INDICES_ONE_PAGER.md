@@ -41,4 +41,4 @@ Some Hugging Face `csoai/*` experiment files may label `MEASURED-INDEX-v0.1`. Th
 
 Public artifacts only — no cold harvest. Outreach template: `docs/CONTACT_OUTREACH_TEMPLATE.md`.
 
-**PDF layout / counsel sign-off:** owner gate — this markdown is the source text only.
+**PDF layout / counsel sign-off:** owner gate. Print-ready HTML (browser Print → PDF): `/regulator-indices-one-pager.html`. This markdown remains the source text.

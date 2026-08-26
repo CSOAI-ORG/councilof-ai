@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Regulator brief — labour &amp; AI-economy indices (UNMEASURED) · CSOAI</title>
+  <meta name="description" content="Council of AI regulator one-pager: GSPC MEASURED board vs UNMEASURED labour/economy indices. Measurement, not certification. UK 16939677." />
+  <style>
+    :root {
+      --ink: #0b1f17;
+      --muted: #3d5a4c;
+      --rule: #c5d4cb;
+      --accent: #0f6b4c;
+      --paper: #f7faf8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      color: var(--ink);
+      background: linear-gradient(165deg, #e8f2ec 0%, var(--paper) 40%, #f0f5f2 100%);
+      line-height: 1.45;
+    }
+    .sheet {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2.5rem 1.75rem 3rem;
+    }
+    .brand {
+      font-size: 1.65rem;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 0.25rem;
+    }
+    .meta {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin: 0 0 1.25rem;
+    }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin: 0 0 0.75rem;
+      line-height: 1.25;
+    }
+    h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      border-top: 1px solid var(--rule);
+      padding-top: 0.85rem;
+      margin: 1.35rem 0 0.55rem;
+    }
+    p, li { font-size: 0.95rem; color: var(--ink); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 0.5rem 0 0.75rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    code, .mono {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.82em;
+    }
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin: 1rem 0 1.5rem;
+    }
+    .actions a, .actions button {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.85rem;
+      padding: 0.45rem 0.9rem;
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+    .actions a.secondary {
+      background: transparent;
+      color: var(--accent);
+    }
+    ul { padding-left: 1.2rem; margin: 0.4rem 0; }
+    footer {
+      margin-top: 1.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--rule);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    @media print {
+      body { background: #fff; }
+      .sheet { padding: 0; max-width: none; }
+      .actions { display: none; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <p class="brand">Council of AI</p>
+    <p class="meta">CSOAI Ltd · UK Companies House 16939677 · Measurement, not certification · NEXT_300 #149</p>
+    <h1>Regulator brief — labour &amp; AI-economy indices remain UNMEASURED</h1>
+    <p>Not a compliance determination. Scores are never sold. Regulators verify free forever (HO.2).</p>
+
+    <div class="actions">
+      <button type="button" onclick="window.print()">Print / Save as PDF</button>
+      <a class="secondary" href="/indices">Open /indices</a>
+      <a class="secondary" href="/government">Government dashboard</a>
+    </div>
+
+    <h2>What we publish today</h2>
+    <table>
+      <thead>
+        <tr><th>Surface</th><th>Register</th><th><span class="mono">measured_score</span></th></tr>
+      </thead>
+      <tbody>
+        <tr><td>GSPC scoreboard (<span class="mono">GET /api/gspc</span>)</td><td><strong>MEASURED</strong> (13 of 14 axes)</td><td>Per-axis, signed Ed25519</td></tr>
+        <tr><td>AI Economy Index</td><td><strong>UNMEASURED</strong></td><td><span class="mono">null</span></td></tr>
+        <tr><td>Human Labour Index</td><td><strong>UNMEASURED</strong></td><td><span class="mono">null</span></td></tr>
+        <tr><td>Humanoid Labour Index</td><td><strong>UNMEASURED</strong></td><td><span class="mono">null</span></td></tr>
+      </tbody>
+    </table>
+    <p>Catalog API: <span class="mono">GET /api/indices</span> — <span class="mono">register: UNMEASURED</span>, all scores <span class="mono">null</span>.</p>
+
+    <h2>What we refuse</h2>
+    <ul>
+      <li>Invent wage %, displacement %, TVL, or TAM as MEASURED labour/economy scores.</li>
+      <li>Fuse index numbers into GSPC grading cells.</li>
+      <li>Certify compliance, issue badges, or sell grades.</li>
+    </ul>
+
+    <h2>Why empty cells are honest</h2>
+    <p>Absence is not zero. Until INDEX-METHOD-0.1 freezes an input bank and usable n, the product stays UNMEASURED. Contextual citations may appear as REPORTED labels only — never as MEASURED inputs.</p>
+
+    <h2>Verify without an account</h2>
+    <ul>
+      <li>Board: <a href="https://councilof.ai/gspc-scoreboard">/gspc-scoreboard</a> · offline recompute: <a href="/gspc-verify">/gspc-verify</a></li>
+      <li>Indices hub: <a href="/indices">/indices</a></li>
+      <li>Corrections (append-only): <span class="mono">GET /api/corrections</span></li>
+    </ul>
+
+    <h2>Hub vs product honesty</h2>
+    <p>Some Hugging Face <span class="mono">csoai/*</span> experiment files may label <span class="mono">MEASURED-INDEX-v0.1</span>. The Council OS product surface remains UNMEASURED. See correction <span class="mono">C-2026-0826-01</span>.</p>
+
+    <footer>
+      Print-ready HTML for #149 · designed PDF layout / counsel sign-off remain owner gates · public artifacts only.
+    </footer>
+  </main>
+</body>
+</html>
