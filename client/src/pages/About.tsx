@@ -1,5 +1,5 @@
 import {
-  Users, Target, Shield, Globe, Award, Building2, Heart, Zap, CheckCircle2, FileCheck, Download,
+  Users, Target, Shield, Globe, Award, Building2, Heart, Zap, CheckCircle2, FileCheck,
   TrendingUp, Clock, MapPin, BarChart2
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -552,15 +552,6 @@ export default function About() {
                     <p className="text-gray-500">FCA Registration</p>
                     <p className="font-semibold">No: 313348</p>
                   </div>
-                </div>
-                <div className="mt-6">
-                  <a
-                    href="mailto:security@csoai.ai?subject=Certificate%20of%20Insurance%20request"
-                    className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
-                  >
-                    <Download className="h-4 w-4" />
-                    Certificate of Insurance — available on request
-                  </a>
                 </div>
               </div>
             </div>
