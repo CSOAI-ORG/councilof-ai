@@ -157,7 +157,8 @@ const MEASURE_DESCRIPTION =
   "Returns the GSPC measurement CONTRACT for a subject. It does NOT run a measurement, " +
   "does NOT check that the subject exists, and NEVER returns a credential: it always " +
   "returns ok:false with a reason. Published measurements live in /signed/card_index.json " +
-  "(150 Ed25519-signed cards) and GET /api/gspc; measurement itself is arranged at " +
+  "(Ed25519-signed cards; the index is the count, never a number typed here) and GET /api/gspc; " +
+  "measurement itself is arranged at " +
   "councilof.ai/get-measured. Measurement, never certification.";
 
 /** The distinct failure states. `ok` is never true here, because nothing ever succeeds here. */
