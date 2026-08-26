@@ -30,7 +30,7 @@ export default function Payg() {
         <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
           100 free calls a day, then metered machine-access. {PRICING_STATUS}.
           Every call returns a 3KB Ed25519-signed, hash-chained card your auditor verifies
-          independently. Metered, balance never expires, no monthly seat.
+          independently. Metered RAS access — never grade SKUs. Balance never expires, no monthly seat.
         </p>
         <div className="mt-5 flex flex-wrap justify-center gap-2">
           {INSTRUMENTS.map((m) => (
@@ -88,7 +88,8 @@ export default function Payg() {
       </div>
 
       <p className="text-center text-sm text-muted-foreground mt-10">
-        Prefer a fixed monthly plan for humans? See the <a href="/pricing" className="underline">Council rail →</a>
+        HO.2 — no grade SKUs sold on this rail. Prefer a fixed monthly plan for humans? See the{" "}
+        <a href="/pricing" className="underline">Council rail →</a>
         {" · "}
         <a href="/products" className="underline">Products catalog →</a>
         {" · "}
