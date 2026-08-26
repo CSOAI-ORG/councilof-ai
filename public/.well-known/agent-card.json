@@ -1,6 +1,6 @@
 {
   "name": "Council of AI — Measurement Agent",
-  "description": "Independent AI-governance MEASUREMENT body. Publishes the GSPC 14-slot instrument (Governance · Safety · Provenance · Continuity) — 14 measured of 14 — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
   "version": "1.0.0",
   "capabilities": {
     "streaming": false,
@@ -30,7 +30,7 @@
     {
       "id": "gspc-board",
       "name": "Signed GSPC Board",
-      "description": "Fetch the live Ed25519-signed GSPC 14-slot board (14 measured of 14): per-axis n, leader, Wilson interval, and McNemar separation. Live JSON, recomputable from published rows.",
+      "description": "Fetch the live Ed25519-signed GSPC board from GET /api/gspc: per-axis n, leader, Wilson interval, and McNemar separation. Quote totals.public_count. Empty cells stay empty. Live JSON, recomputable from published rows.",
       "tags": [
         "measurement",
         "governance",
