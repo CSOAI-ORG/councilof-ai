@@ -48,7 +48,7 @@ export default function MCPRegistry() {
         <div className="container max-w-6xl py-2.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
           <span className="font-semibold">⏱ EU AI Act GPAI obligations are live (2 Aug 2026).</span>
           <span className="text-rose-100">Get audit-ready with the fleet —</span>
-          <a href="https://cal.com/csoai/august-audit" target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-white">
+          <a href="/contact" className="underline font-medium hover:text-white">
             book a free 15-min diagnostic →
           </a>
         </div>
@@ -223,7 +223,7 @@ export default function MCPRegistry() {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="https://cal.com/csoai/august-audit" target="_blank" rel="noopener noreferrer">
+            <a href="/contact">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
                 Book a free 15-min EU AI Act diagnostic <ArrowRight className="ml-2 h-4 w-4" />
               </Button>

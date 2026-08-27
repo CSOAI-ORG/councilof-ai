@@ -68,10 +68,10 @@ export default function PublicDashboard() {
             </Link>
             <div className="flex items-center gap-4">
               <Link href="/watchdog">
-                <Button variant="outline" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
+                <a href="/watchdog" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
                   <AlertTriangle className="w-4 h-4 mr-2" />
                   Report Incident
-                </Button>
+                </a>
               </Link>
               <Link href="/login">
                 <Button className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500">

@@ -265,9 +265,9 @@ export default function HelpCenter() {
             <p className="text-xl text-green-100 mb-8">
               Contact our support team and we'll help you get the answers you need.
             </p>
-            <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100">
+            <a href="/contact" className="bg-white text-green-600 hover:bg-gray-100">
               Contact Support
-            </Button>
+            </a>
           </motion.div>
         </div>
       </section>

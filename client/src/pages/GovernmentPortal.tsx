@@ -23,9 +23,9 @@ export default function GovernmentPortal() {
               Real-time compliance monitoring and enforcement for AI safety regulators worldwide
             </p>
             <div className="flex justify-center gap-4">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+              <a href="/contact" className="bg-emerald-600 hover:bg-emerald-700">
                 Request Portal Access
-              </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -217,9 +217,7 @@ export default function GovernmentPortal() {
                     <p className="text-gray-700 text-sm mb-4">
                       Upload new compliance requirements. Changes will be propagated to all enterprises in real-time.
                     </p>
-                    <Button className="bg-emerald-600 hover:bg-emerald-700">
-                      Submit Compliance Update
-                    </Button>
+                    <Button className="bg-emerald-600 hover:bg-emerald-700" disabled title="This control is not wired to a backend action yet.">Submission not available yet</Button>
                   </div>
                 </Card>
               </TabsContent>
@@ -282,9 +280,7 @@ export default function GovernmentPortal() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600">Action: {enforcement.action}</span>
-                          <Button variant="outline" size="sm" className="border-emerald-600 text-emerald-600">
-                            View Details
-                          </Button>
+                          <Button variant="outline" size="sm" className="border-emerald-600 text-emerald-600" disabled title="This control is not wired to a backend action yet.">Detail view not available yet</Button>
                         </div>
                       </div>
                     ))}
@@ -319,9 +315,9 @@ export default function GovernmentPortal() {
 }`}
                   </div>
                 </div>
-                <Button variant="outline" className="border-emerald-600 text-emerald-600">
+                <a href="/api-docs" className="border-emerald-600 text-emerald-600">
                   View Full API Docs
-                </Button>
+                </a>
               </Card>
 
               <Card className="p-8 border-2 border-emerald-200">
@@ -344,9 +340,9 @@ export default function GovernmentPortal() {
 }`}
                   </div>
                 </div>
-                <Button variant="outline" className="border-emerald-600 text-emerald-600">
+                <a href="/api-docs" className="border-emerald-600 text-emerald-600">
                   View Full API Docs
-                </Button>
+                </a>
               </Card>
 
               <Card className="p-8 border-2 border-emerald-200">
@@ -363,9 +359,9 @@ export default function GovernmentPortal() {
 }`}
                   </div>
                 </div>
-                <Button variant="outline" className="border-emerald-600 text-emerald-600">
+                <a href="/api-docs" className="border-emerald-600 text-emerald-600">
                   View Full API Docs
-                </Button>
+                </a>
               </Card>
             </div>
           </div>
@@ -443,9 +439,9 @@ export default function GovernmentPortal() {
             <p className="text-lg text-emerald-100 mb-8">
               Request access to the Government Portal and start monitoring AI compliance in your jurisdiction.
             </p>
-            <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100">
+            <a href="/contact" className="bg-white text-emerald-600 hover:bg-gray-100">
               Request Portal Access
-            </Button>
+            </a>
           </div>
         </div>
       </section>

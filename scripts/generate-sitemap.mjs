@@ -19,6 +19,38 @@ const INDUSTRIES_TS = join(ROOT, "client/src/data/industries.ts");
 const OUT = join(ROOT, "public/sitemap.xml");
 const BASE = "https://councilof.ai";
 
+// --- Reconcile against _redirects (nav-integrity audit, 2026-08-26) -------------
+// A sitemap URL that answers 3xx is a defect: 42 of 423 did on the last count — 4 of
+// them 308'd to the homepage, 36 to their own trailing-slash canonical. The sitemap
+// must list what the edge actually SERVES, so read the rules and either rewrite the
+// entry to its canonical target or drop it. generate-redirects.mjs runs FIRST in
+// build:client so the file read here is this build's, never the previous one's.
+const REDIRECTS_FILE = join(ROOT, "public/_redirects");
+const redirectRules = new Map();
+try {
+  for (const raw of readFileSync(REDIRECTS_FILE, "utf8").split("\n")) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const [from, to, code] = line.split(/\s+/);
+    if (!from || !to || !from.startsWith("/") || from.includes("*")) continue;
+    if (Number(code) >= 300 && Number(code) < 400) redirectRules.set(from, to);
+  }
+} catch {
+  console.warn("[sitemap] no public/_redirects to reconcile against");
+}
+
+/**
+ * "/pricing" -> "/pricing/"  (canonical trailing-slash prerender: keep, rewritten)
+ * "/enterprise" -> "/?lobby=..."  (lands somewhere else entirely: drop)
+ * anything else: keep as-is.
+ */
+function canonicalise(path) {
+  const to = redirectRules.get(path);
+  if (!to) return path;
+  if (to === path + "/") return to;
+  return null;
+}
+
 // --- Priority tiers -------------------------------------------------------
 const P_TOP = 0.9; // flagship public surfaces
 const P_HIGH = 0.8; // high-value product/learn pages
@@ -262,35 +294,22 @@ for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
 }
 
-// AEO regulatory-explainer blog posts (22) — /blog/:slug is a :param route (skipped above),
-// but these are prime regulator/procurement citation surface, so list each canonical URL.
-const AEO_BLOG_SLUGS = [
-  "ai-insurance-verified-measurement",
-  "ai-procurement-insurance-measured-risk",
-  "bsi-art1-ai-testing-framework",
-  "council-of-europe-ai-framework-convention",
-  "colorado-chatbot-rulemaking-timeline",
-  "colorado-ai-act-chatbot-disclosure-timeline",
-  "council-city-municipal-ai-procurement",
-  "council-signal-how-governance-measurement-works",
-  "eu-ai-act-article-5-prohibited-practices",
-  "eu-ai-act-article-50-machine-readable-marking",
-  "eu-ai-act-high-risk-provider-obligations",
-  "fedramp-oscal-september-30-mandate",
-  "fedramp-oscal-ai-procurement",
-  "iso-42001-audit-readiness",
-  "iso-42001-vs-etsi-en-304-223",
-  "what-is-monitored-containment",
-  "monitored-containment-vs-provable-isolation",
-  "nist-ai-600-1-profile-mapping",
-  "scitt-ai-supply-chain-transparency",
-  "third-party-ai-audit-standards-ss584-isae3000",
-  "uk-cyber-security-resilience-bill-ai-supply-chain",
-  "verified-measurement-credential-how-to-verify",
-  "governance-benchmarking-is-broken-signed-fix",
-];
-for (const slug of AEO_BLOG_SLUGS) {
+// Every blog article that is actually reachable. /blog/:slug is a :param route (skipped
+// above), and the previous hand-maintained list of 22 slugs left 26 real articles out of
+// the sitemap entirely. Read the dataset instead; skip any slug that _redirects sends
+// elsewhere, because a sitemap URL that 308s away is exactly the defect being fixed.
+const BLOG_TS = join(ROOT, "client/src/data/blog-content.ts");
+let blogSlugs = [];
+try {
+  const bsrc = readFileSync(BLOG_TS, "utf8");
+  blogSlugs = [...bsrc.matchAll(/^\s{4}"slug":\s*"([^"]+)"/gm)].map((m) => m[1]);
+} catch {
+  console.warn("[sitemap] blog-content.ts unreadable — no /blog/:slug entries emitted");
+}
+let blogSkipped = 0;
+for (const slug of blogSlugs) {
   const bp = `/blog/${slug}`;
+  if (redirectRules.has(bp) || redirectRules.has(bp + "/")) { blogSkipped++; continue; }
   if (!seen.has(bp)) { seen.add(bp); paths.push(bp); }
 }
 
@@ -298,7 +317,17 @@ for (const slug of AEO_BLOG_SLUGS) {
 const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
-const urls = paths
+let rewritten = 0;
+let droppedRedirect = 0;
+const finalPaths = [];
+for (const p of paths) {
+  const c = canonicalise(p);
+  if (c === null) { droppedRedirect++; continue; }
+  if (c !== p) rewritten++;
+  finalPaths.push(c);
+}
+
+const urls = finalPaths
   .map((p) => {
     const loc = p === "/" ? BASE : `${BASE}${esc(p)}`;
     const m = MACHINE.get(p);
@@ -323,8 +352,11 @@ ${urls}
 
 writeFileSync(OUT, xml);
 console.log(
-  `[sitemap] ${paths.length} URLs -> public/sitemap.xml ` +
-    `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, lastmod=${today})`
+  `[sitemap] ${finalPaths.length} URLs -> public/sitemap.xml ` +
+    `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, ` +
+    `${droppedRedirect} redirect-to-elsewhere, ${blogSkipped} redirected blog slugs; ` +
+    `${rewritten} rewritten to their trailing-slash canonical; ` +
+    `${blogSlugs.length - blogSkipped} blog articles; lastmod=${today})`
 );
 
 // Flagship sanity check — these MUST be present.

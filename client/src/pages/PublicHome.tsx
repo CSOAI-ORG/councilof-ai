@@ -309,7 +309,7 @@ export default function PublicHome() {
                   Fully transparent, MIT licensed. Audit our code, contribute improvements, 
                   build trust through openness.
                 </p>
-                <a href="https://github.com/optimobile/coai-dashboard" target="_blank" rel="noopener noreferrer" className="text-sm text-primary flex items-center gap-1 hover:underline">
+                <a href="https://github.com/CSOAI-ORG" target="_blank" rel="noopener noreferrer" className="text-sm text-primary flex items-center gap-1 hover:underline">
                   View on GitHub <ChevronRight className="w-4 h-4" />
                 </a>
               </CardContent>
@@ -453,7 +453,7 @@ export default function PublicHome() {
               Together, we're building the safety infrastructure that AI companies need and humanity deserves.
             </p>
             <a 
-              href="https://github.com/optimobile/coai-dashboard" 
+              href="https://github.com/CSOAI-ORG" 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-primary hover:underline"
@@ -584,7 +584,7 @@ export default function PublicHome() {
             <div>
               <h4 className="font-semibold mb-4">Resources</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="https://github.com/optimobile/coai-dashboard" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">GitHub</a></li>
+                <li><a href="https://github.com/CSOAI-ORG" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">GitHub</a></li>
                 <li><Link href="/landing" className="hover:text-foreground">About</Link></li>
                 <li><a href="mailto:contact@coai.org" className="hover:text-foreground">Contact</a></li>
               </ul>

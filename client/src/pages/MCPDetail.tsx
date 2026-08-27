@@ -95,7 +95,7 @@ export default function MCPDetail() {
           <a href={server.url} target="_blank" rel="noopener noreferrer">
             <Button variant="outline"><Github className="h-4 w-4 mr-2" /> View source <ExternalLink className="h-3 w-3 ml-1.5" /></Button>
           </a>
-          <a href="https://cal.com/csoai/august-audit" target="_blank" rel="noopener noreferrer">
+          <a href="/contact">
             <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Book a free diagnostic <ArrowRight className="h-4 w-4 ml-2" /></Button>
           </a>
         </div>

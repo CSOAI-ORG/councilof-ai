@@ -51,7 +51,7 @@ export default function FrameworkDetail() {
         <div className="bg-rose-600 text-white text-sm">
           <div className="container max-w-5xl py-2.5 flex flex-wrap items-center justify-center gap-x-3 text-center">
             <span className="font-semibold">⏱ {fw.name} is binding — effective {fw.effective}.</span>
-            <a href="https://cal.com/csoai/august-audit" target="_blank" rel="noopener noreferrer" className="underline font-medium">
+            <a href="/contact" className="underline font-medium">
               Book a free diagnostic →
             </a>
           </div>
@@ -128,7 +128,7 @@ export default function FrameworkDetail() {
             Book a free 15-minute diagnostic and we'll map your AI systems to {fw.name} — then put the MCP fleet to work generating audit-ready evidence.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="https://cal.com/csoai/august-audit" target="_blank" rel="noopener noreferrer">
+            <a href="/contact">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">Book a free diagnostic <ArrowRight className="h-4 w-4 ml-2" /></Button>
             </a>
             {fw.pdfName && (

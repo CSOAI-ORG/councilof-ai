@@ -36,13 +36,13 @@ const checklistItems = [
     title: "Conformity assessment procedures",
     description:
       "Establish internal or third-party processes to verify that high-risk AI systems meet all essential requirements before deployment or market entry.",
-    link: "/compliance-how-it-works",
+    link: "/conformity-assessment",
   },
   {
     title: "Technical documentation",
     description:
       "Compile system architecture, training data provenance, performance benchmarks, risk mitigation measures, and intended-use declarations.",
-    link: "/documentation",
+    link: "/docs",
   },
   {
     title: "Post-market monitoring system",

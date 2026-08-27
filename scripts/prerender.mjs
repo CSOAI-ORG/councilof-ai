@@ -279,7 +279,49 @@ function discover() {
   return [...new Set(routes)].sort();
 }
 
-const routes = discover();
+// --- Two guards the snapshot queue was missing (nav-integrity audit, 2026-08-26) ---
+//
+// (1) HAND-AUTHORED STATIC PAGES. /arena is not a wouter route — it is an 8 KB static
+//     page in public/arena/index.html. Heuristic discovery finds the string "/arena" in
+//     the bundle, the SPA renders its honest-404 for it, and the snapshot (3.8k visible
+//     chars, comfortably over --min) was written straight over the real page. The gate
+//     could not see it: the 404 page is not thin. Never write into a path public/ already
+//     owns.
+// (2) PATHS _redirects SENDS SOMEWHERE ELSE. /gspc and /verify are 308s in _redirects
+//     AND entries in MUST — a snapshot at those paths is a static file competing with a
+//     redirect for the same URL. The file has no business existing.
+const PUBLIC_DIR = join(DIST, "..", "..", "public");
+function publicOwns(route) {
+  const rel = route.replace(/^\//, "").split("?")[0];
+  if (!rel) return false;
+  return existsSync(join(PUBLIC_DIR, rel, "index.html")) || existsSync(join(PUBLIC_DIR, rel + ".html"));
+}
+// Only a rule that lands the visitor on a DIFFERENT page disqualifies a snapshot.
+// The 36 "/pricing -> /pricing/" canonicalisers are the opposite: the 308 exists
+// precisely so the bare path reaches the snapshot, which lives at /pricing/index.html.
+const REDIRECTED_ELSEWHERE = new Set();
+try {
+  const rf = join(PUBLIC_DIR, "_redirects");
+  const norm = (x) => (x.split("?")[0].replace(/\/$/, "") || "/");
+  for (const raw of readFileSync(rf, "utf8").split("\n")) {
+    const line = raw.trim();
+    if (!line || line.startsWith("#")) continue;
+    const [from, to, code] = line.split(/\s+/);
+    if (!from || !to || !from.startsWith("/") || from.includes("*")) continue;
+    if (!(Number(code) >= 300 && Number(code) < 400)) continue;
+    if (norm(from) === norm(to)) continue;          // trailing-slash canonicaliser: keep
+    REDIRECTED_ELSEWHERE.add(norm(from));
+  }
+} catch {}
+
+const discovered = discover();
+const skippedStatic = discovered.filter(publicOwns);
+const skippedRedirect = discovered.filter((r) => !publicOwns(r) && REDIRECTED_ELSEWHERE.has(r.split("?")[0].replace(/\/$/, "") || "/"));
+const routes = discovered.filter((r) => !skippedStatic.includes(r) && !skippedRedirect.includes(r));
+if (skippedStatic.length)
+  console.log(`prerender: ${skippedStatic.length} route(s) skipped — public/ already owns the file: ${skippedStatic.join(", ")}`);
+if (skippedRedirect.length)
+  console.log(`prerender: ${skippedRedirect.length} route(s) skipped — _redirects sends them elsewhere: ${skippedRedirect.join(", ")}`);
 console.log(`${routes.length} routes to prerender from ${DIST}/\n`);
 
 // ---------------------------------------------------------------- static server
@@ -466,6 +508,21 @@ async function worker(id) {
         console.log(`ERR  ${String(rec.chars).padStart(6)}ch  ${rec.route}  ${rec.err}`);
         continue;
       }
+      // A snapshot of the honest-404 catch-all is worse than no snapshot: the route has
+      // no page, and writing one turns a soft in-app 404 into a hard, crawler-visible
+      // 200 that SAYS "Page Not Found" — and, at /arena, silently replaced a real page.
+      // The 404 body is ~3.8k visible chars, so --min can never catch it. Refuse it.
+      if (/Page Not Found/i.test(info.text) && /\b404\b/.test(info.text) && route !== "/404") {
+        // NOT an error — a refusal. Heuristic discovery scrapes every "/x"-shaped string
+        // in the bundle, so paths with no route reach the queue; writing their snapshot
+        // turns a soft in-app 404 into a hard static page that answers 200 and says
+        // "Page Not Found" (and at /arena it silently replaced a real page). The 404 body
+        // is ~3.8k visible chars, so --min can never catch it. Skip and list it instead.
+        rec.skipped404 = true;
+        results.push(rec);
+        console.log(`SKIP ${String(rec.chars).padStart(6)}ch  ${rec.route}  no route — honest-404, nothing written`);
+        continue;
+      }
       const out = route === "/" ? join(DIST, "index.html")
                                 : join(DIST, route.replace(/^\//, ""), "index.html");
       mkdirSync(dirname(out), { recursive: true });
@@ -494,7 +551,7 @@ async function worker(id) {
       rec.err = e.message.slice(0, 80);
     }
     results.push(rec);
-    const mark = rec.err ? "ERR  " : rec.ok ? "ok   " : "THIN ";
+    const mark = rec.err ? "ERR  " : rec.skipped404 ? "SKIP " : rec.ok ? "ok   " : "THIN ";
     console.log(`${mark}${String(rec.chars).padStart(6)}ch  ${rec.route}` +
                 (rec.err ? `  ${rec.err}` : "") +
                 (rec.rootEmpty ? "  ROOT STILL EMPTY" : "") +
@@ -518,7 +575,8 @@ try {
 
 // ---------------------------------------------------------------- report
 const ok = results.filter(r => r.ok);
-const thin = results.filter(r => !r.ok && !r.err);
+const skipped404 = results.filter(r => r.skipped404);
+const thin = results.filter(r => !r.ok && !r.err && !r.skipped404);
 const err = results.filter(r => r.err);
 const noDesc = ok.filter(r => !r.hasDesc);
 const dupTitle = {};
@@ -528,6 +586,12 @@ console.log(`\n═══ ${results.length} routes`);
 console.log(`  ${ok.length} prerendered with ≥${MIN} visible characters`);
 console.log(`  ${thin.length} THIN — rendered but under threshold, or root still empty`);
 console.log(`  ${err.length} errored`);
+if (skipped404.length) {
+  console.log(`  ${skipped404.length} SKIPPED — no route, renders the honest-404; nothing written:`);
+  console.log(`     ${skipped404.map(r => r.route).join(", ")}`);
+  console.log(`     (these are strings heuristic discovery scraped from the bundle, not links —`);
+  console.log(`      prune them from discovery or give them a real route.)`);
+}
 // A route that only rendered because it got a second, longer attempt is reported, not hidden.
 // It passed, but it is one asset away from failing, and a silent retry is how a page quietly
 // becomes unshippable without anyone noticing.

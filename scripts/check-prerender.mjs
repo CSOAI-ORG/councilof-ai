@@ -22,7 +22,11 @@ if (!fs.existsSync(reportPath)) {
 const raw = JSON.parse(fs.readFileSync(reportPath, "utf8"));
 const rows = Array.isArray(raw) ? raw : (raw.routes || []);
 const errored = rows.filter((r) => r.err);
-const thin = rows.filter((r) => !r.ok && !r.err);
+// A route the prerenderer deliberately REFUSED (it renders the honest-404, so writing a
+// snapshot would ship a hard "Page Not Found" that answers 200) is not thin and not an
+// error — it is the prerenderer working. Count it separately and name it.
+const skipped404 = rows.filter((r) => r.skipped404);
+const thin = rows.filter((r) => !r.ok && !r.err && !r.skipped404);
 const ok = rows.filter((r) => r.ok);
 
 const countHtml = (d) => {
@@ -39,7 +43,8 @@ const countHtml = (d) => {
 };
 const onDisk = countHtml(dist);
 
-console.log(`  routes ${rows.length} | ok ${ok.length} | thin ${thin.length} | errored ${errored.length}`);
+console.log(`  routes ${rows.length} | ok ${ok.length} | thin ${thin.length} | errored ${errored.length} | refused-404 ${skipped404.length}`);
+if (skipped404.length) console.log(`  refused (no route, honest-404, nothing written): ${skipped404.map((r) => r.route).join(", ")}`);
 console.log(`  html on disk ${onDisk}`);
 if (errored.length) {
   console.error(`✗ prerender: ${errored.length} route(s) FAILED. First 3:`);

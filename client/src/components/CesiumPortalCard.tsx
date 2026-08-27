@@ -58,7 +58,7 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
       { label: "Open Council Space", href: "/gspc-arena", tour: true },
       { label: "Council OS", href: "/?lobby=home" },
       { label: "Tool Commons (published MCP)", href: "/tools" },
-      { label: "Your Council assistant Twin", href: "/emergence" },
+      { label: "Your Council assistant Twin", href: "/sovereign-twin" },
     ],
   },
 };

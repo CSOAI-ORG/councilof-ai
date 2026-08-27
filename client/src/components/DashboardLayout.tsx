@@ -122,19 +122,25 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label="Toggle light/dark theme"
-              className="h-8 w-8"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </Button>
+            {/* Nav-integrity 2026-08-26: ThemeProvider is mounted without `switchable`,
+                so `toggleTheme` is undefined and this control did nothing on 8 public
+                routes. A button that says "toggle" and does not toggle is a lie — it is
+                only rendered when a real toggle exists. */}
+            {toggleTheme ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                aria-label="Toggle light/dark theme"
+                className="h-8 w-8"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+              </Button>
+            ) : null}
             <Link href="/settings">
               <Button aria-label="Settings" variant="ghost" size="icon" className="h-8 w-8">
                 <Settings className="h-4 w-4" />

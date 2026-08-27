@@ -355,9 +355,7 @@ function BundleCard({ bundle }: { bundle: any }) {
         </div>
       </div>
 
-      <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-        Get Bundle
-      </Button>
+      <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700" disabled title="This control is not wired to a backend action yet.">Bundle checkout not available yet</Button>
     </Card>
   );
 }

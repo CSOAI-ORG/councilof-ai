@@ -120,10 +120,7 @@ export default function Standards() {
 
                 {/* Actions */}
                 <div className="flex gap-3">
-                  <Button className="flex items-center gap-2">
-                    <Download className="h-4 w-4" />
-                    Download Implementation Guide
-                  </Button>
+                  <Button className="flex items-center gap-2" disabled title="No file is published for this yet.">Guide not published yet</Button>
                   {framework.externalUrl && (
                     <Button variant="outline" className="flex items-center gap-2" asChild>
                       <a href={framework.externalUrl} target="_blank" rel="noopener noreferrer">
@@ -230,8 +227,8 @@ export default function Standards() {
               Our team provides expert guidance on implementing these frameworks for your AI systems.
             </p>
             <div className="flex gap-3 justify-center">
-              <Button size="lg">Schedule Consultation</Button>
-              <Button size="lg" variant="outline">Download All Guides</Button>
+              <a href="/contact">Schedule Consultation</a>
+              <Button size="lg" variant="outline" disabled title="No file is published for this yet.">Guides not published yet</Button>
             </div>
           </div>
         </Card>

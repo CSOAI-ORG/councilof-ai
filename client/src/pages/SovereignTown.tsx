@@ -88,7 +88,7 @@ const EXPLAINERS = [
   {
     t: "Verify a Council passport",
     d: "Offline-verify any agent's identity and governance state directly on the chain.",
-    href: "https://proofof.ai/passport",
+    href: "https://proofof.ai",
   },
 ];
 
@@ -224,8 +224,8 @@ export default function SovereignTown() {
         <p className="mt-6 text-sm text-gray-500">
           Research-grade, predictive output. Public data sources are cited and OGL-UK-3.0 /
           public-domain where applicable. Verify any passport offline at{" "}
-          <a className="text-emerald-700 underline" href="https://proofof.ai/passport">
-            proofof.ai/passport
+          <a className="text-emerald-700 underline" href="https://proofof.ai">
+            proofof.ai
           </a>
           .
         </p>

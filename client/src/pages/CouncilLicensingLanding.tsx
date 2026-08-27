@@ -180,7 +180,7 @@ export default function CouncilLicensingLanding() {
                       </li>
                     ))}
                   </ul>
-                  <Button
+                  <a href="/contact"
                     className={`w-full py-3 font-semibold ${
                       tier.highlighted
                         ? 'bg-purple-600 hover:bg-purple-700 text-white'
@@ -188,7 +188,7 @@ export default function CouncilLicensingLanding() {
                     }`}
                   >
                     Get Started
-                  </Button>
+                  </a>
                 </Card>
               </motion.div>
             ))}

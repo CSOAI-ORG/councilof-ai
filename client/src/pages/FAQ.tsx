@@ -794,9 +794,7 @@ export default function FAQ() {
               <p className="text-sm text-gray-600 mb-4">
                 Chat with our support team in real-time
               </p>
-              <Button variant="outline" className="w-full rounded-lg">
-                Start Chat
-              </Button>
+              <Button variant="outline" className="w-full rounded-lg" disabled title="This control is not wired to a backend action yet.">Live chat not available</Button>
             </Card>
 
             {/* Email Card */}
@@ -808,9 +806,9 @@ export default function FAQ() {
               <p className="text-sm text-gray-600 mb-4">
                 support@csoai.org - Typically responds in 2-4 hours
               </p>
-              <Button variant="outline" className="w-full rounded-lg">
+              <a href="mailto:support@csoai.org" className="w-full rounded-lg">
                 Send Email
-              </Button>
+              </a>
             </Card>
 
             {/* Phone Card */}
@@ -824,9 +822,9 @@ export default function FAQ() {
               <p className="text-sm text-gray-600 mb-4">
                 Book time with an expert for personalized help
               </p>
-              <Button variant="outline" className="w-full rounded-lg">
+              <a href="/contact" className="w-full rounded-lg">
                 Schedule Now
-              </Button>
+              </a>
             </Card>
           </div>
 
@@ -834,9 +832,9 @@ export default function FAQ() {
             <p className="text-gray-600 mb-4">
               Enterprise customers have 24/7 support available
             </p>
-            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 rounded-lg">
+            <a href="/pricing" className="bg-emerald-600 hover:bg-emerald-700 rounded-lg">
               View Support Plans
-            </Button>
+            </a>
           </div>
         </div>
       </div>

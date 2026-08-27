@@ -180,10 +180,7 @@ export default function ComplianceMonitoring() {
             {autoRefresh ? 'Auto-Refresh On' : 'Auto-Refresh Off'}
           </Button>
 
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export Report
-          </Button>
+          <Button variant="outline" size="sm" disabled title="This control is not wired to a backend action yet.">Export not available yet</Button>
         </div>
       </div>
 
@@ -274,9 +271,7 @@ export default function ComplianceMonitoring() {
                       <Badge variant="destructive">{system.alerts} Alerts</Badge>
                     )}
 
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
+                    <Button variant="outline" size="sm" disabled title="This control is not wired to a backend action yet.">Detail view not available yet</Button>
                   </div>
                 </div>
               </CardContent>
@@ -305,12 +300,8 @@ export default function ComplianceMonitoring() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm">
-                      Acknowledge
-                    </Button>
-                    <Button size="sm">
-                      Investigate
-                    </Button>
+                    <Button variant="outline" size="sm" disabled title="This control is not wired to a backend action yet.">Acknowledge not available yet</Button>
+                    <Button size="sm" disabled title="This control is not wired to a backend action yet.">Investigate not available yet</Button>
                   </div>
                 </div>
               </CardContent>
@@ -390,7 +381,7 @@ export default function ComplianceMonitoring() {
                     <p className="text-sm text-gray-600">Receive alerts via email</p>
                   </div>
                 </div>
-                <Button variant="outline">Configure</Button>
+                <Button variant="outline" disabled title="This control is not wired to a backend action yet.">Configure not available yet</Button>
               </div>
 
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -401,7 +392,7 @@ export default function ComplianceMonitoring() {
                     <p className="text-sm text-gray-600">Send alerts to Slack channels</p>
                   </div>
                 </div>
-                <Button variant="outline">Connect Slack</Button>
+                <Button variant="outline" disabled title="This control is not wired to a backend action yet.">Slack connect not available yet</Button>
               </div>
 
               <div className="flex items-center justify-between p-4 border rounded-lg">
@@ -412,7 +403,7 @@ export default function ComplianceMonitoring() {
                     <p className="text-sm text-gray-600">Show alerts in the dashboard</p>
                   </div>
                 </div>
-                <Button variant="outline">Manage</Button>
+                <Button variant="outline" disabled title="This control is not wired to a backend action yet.">Manage not available yet</Button>
               </div>
             </CardContent>
           </Card>

@@ -456,10 +456,10 @@ export default function PDCASimulator() {
                     <RefreshCw className="mr-2 h-5 w-5" />
                     Try Another Cycle
                   </Button>
-                  <Button size="lg" className="bg-green-600 hover:bg-green-700">
+                  <a href="/start" className="bg-green-600 hover:bg-green-700">
                     Get Started with Your AI System
                     <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
+                  </a>
                 </div>
               </div>
             </CardContent>

@@ -12,14 +12,18 @@ import {
   formatDateLabel,
   formatPeriod,
   periodGradient,
+  REDIRECTED_AWAY,
 } from "./blogIndex";
 
 const cards = buildBlogIndex();
 
+/** Everything except the slugs whose own URL 308s back to /blog — see REDIRECTED_AWAY. */
+const expectedEntries = blogdata.filter((e) => !REDIRECTED_AWAY.has(e.slug));
+
 describe("buildBlogIndex — one card per real article", () => {
   it("emits exactly one card per dataset entry, and invents none", () => {
-    expect(cards).toHaveLength(blogdata.length);
-    expect(cards.map((c) => c.slug).sort()).toEqual(blogdata.map((e) => e.slug).sort());
+    expect(cards).toHaveLength(expectedEntries.length);
+    expect(cards.map((c) => c.slug).sort()).toEqual(expectedEntries.map((e) => e.slug).sort());
   });
 
   it("links every card at /blog/<slug>", () => {

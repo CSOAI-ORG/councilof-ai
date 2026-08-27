@@ -582,20 +582,20 @@ export default function TrustCenter() {
           <Card className="p-8 bg-teal-50 border-2 border-teal-200">
             <h3 className="text-2xl font-bold mb-6">Important Links</h3>
             <div className="grid md:grid-cols-2 gap-4">
-              <Button variant="outline" className="justify-start gap-2 h-auto py-3">
+              <a href="/privacy-policy" className="justify-start gap-2 h-auto py-3">
                 <Book className="h-5 w-5" />
                 <div className="text-left">
                   <div className="font-semibold">Privacy Policy</div>
                   <div className="text-xs text-gray-600">View our complete privacy policy</div>
                 </div>
-              </Button>
-              <Button variant="outline" className="justify-start gap-2 h-auto py-3">
+              </a>
+              <a href="/cookie-policy" className="justify-start gap-2 h-auto py-3">
                 <Eye className="h-5 w-5" />
                 <div className="text-left">
                   <div className="font-semibold">Cookie Policy</div>
                   <div className="text-xs text-gray-600">Manage your cookie preferences</div>
                 </div>
-              </Button>
+              </a>
               <a href="/legal/dpa">
                 <Button variant="outline" className="justify-start gap-2 h-auto py-3 w-full">
                   <FileText className="h-5 w-5" />

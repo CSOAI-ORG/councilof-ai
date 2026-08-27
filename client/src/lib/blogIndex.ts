@@ -131,12 +131,34 @@ export function formatPeriod(iso: string): string | null {
 }
 
 /**
- * Every entry in the dataset becomes exactly one card — no filtering, no
- * hand-picking, no placeholder fallback. Newest first; undated posts last;
+ * Six slugs are 308'd straight back to /blog by public/_redirects, so a deep link to
+ * one of them bounces the reader to the page they came from. Listing them would be
+ * advertising a destination that does not arrive. They stay out of the index until
+ * whoever set those redirects lifts them — at which point deleting a line here is the
+ * whole change. Found by lane/nav-integrity, which tested every link on the site.
+ *
+ * This is the ONLY reason an entry may be withheld. It is not editorial: the rule is
+ * "the link must arrive", checked against the redirect table, not against taste.
+ */
+export const REDIRECTED_AWAY = new Set([
+  "ai-governance-vs-compliance",
+  "choosing-ai-compliance-vendor",
+  "dora-compliance-uk-financial-services",
+  "eu-ai-act-article-50-countdown",
+  "layer-0-agent-economy-trust",
+  "nis2-compliance-critical-infrastructure",
+]);
+
+/**
+ * Every entry in the dataset becomes exactly one card — no hand-picking and no
+ * placeholder fallback; the only entries withheld are the ones whose own URL
+ * redirects away (see REDIRECTED_AWAY). Newest first; undated posts last;
  * slug breaks ties so the order is stable between renders and in tests.
  */
 export function buildBlogIndex(entries: BlogDataEntry[] = blogdata): BlogCard[] {
-  const withDates = entries.map((entry) => {
+  const withDates = entries
+    .filter((entry) => !REDIRECTED_AWAY.has(entry.slug))
+    .map((entry) => {
     const posting = firstBlogPosting(entry);
     const rawDate = typeof posting?.datePublished === "string" ? posting.datePublished : null;
     const dateLabel = rawDate ? formatDateLabel(rawDate) : null;

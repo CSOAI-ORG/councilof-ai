@@ -508,14 +508,14 @@ export default function GovernmentDashboard() {
                 transparency and coordination.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="bg-white text-emerald-900 hover:bg-emerald-50">
+                <a href="/government-portal" className="bg-white text-emerald-900 hover:bg-emerald-50">
                   <Eye className="mr-2 h-5 w-5" />
                   Access Dashboard
-                </Button>
-                <Button size="lg" variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10">
+                </a>
+                <a href="/contact" className="bg-transparent border-white/30 text-white hover:bg-white/10">
                   <FileText className="mr-2 h-5 w-5" />
                   Request Access
-                </Button>
+                </a>
               </div>
             </div>
 
@@ -650,14 +650,8 @@ export default function GovernmentDashboard() {
               </SelectContent>
             </Select>
             <div className="ml-auto flex gap-2">
-              <Button variant="outline" className="border-emerald-200 text-emerald-700 hover:bg-emerald-50">
-                <Download className="mr-2 h-4 w-4" />
-                Export Report
-              </Button>
-              <Button className="bg-emerald-600 hover:bg-emerald-700">
-                <Bell className="mr-2 h-4 w-4" />
-                Alert Settings
-              </Button>
+              <Button variant="outline" className="border-emerald-200 text-emerald-700 hover:bg-emerald-50" disabled title="This control is not wired to a backend action yet.">Export not available yet</Button>
+              <Button className="bg-emerald-600 hover:bg-emerald-700" disabled title="This control is not wired to a backend action yet.">Alert settings not available yet</Button>
             </div>
           </div>
         </div>
@@ -894,10 +888,7 @@ export default function GovernmentDashboard() {
                     </div>
                   </div>
                 ))}
-                <Button variant="outline" className="w-full border-amber-200 text-amber-700 hover:bg-amber-50">
-                  View All Investigations
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
+                <Button variant="outline" className="w-full border-amber-200 text-amber-700 hover:bg-amber-50" disabled title="This control is not wired to a backend action yet.">No investigation list yet</Button>
               </CardContent>
             </Card>
 
@@ -934,10 +925,7 @@ export default function GovernmentDashboard() {
                     </div>
                   </div>
                 ))}
-                <Button variant="outline" className="w-full border-red-200 text-red-700 hover:bg-red-50">
-                  View All Actions
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
+                <Button variant="outline" className="w-full border-red-200 text-red-700 hover:bg-red-50" disabled title="This control is not wired to a backend action yet.">No action list yet</Button>
               </CardContent>
             </Card>
 
@@ -975,10 +963,7 @@ export default function GovernmentDashboard() {
                     </div>
                   </div>
                 ))}
-                <Button variant="outline" className="w-full border-blue-200 text-blue-700 hover:bg-blue-50">
-                  View All Appeals
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
+                <Button variant="outline" className="w-full border-blue-200 text-blue-700 hover:bg-blue-50" disabled title="This control is not wired to a backend action yet.">No appeals list yet</Button>
               </CardContent>
             </Card>
           </div>
@@ -1180,14 +1165,14 @@ export default function GovernmentDashboard() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" className="bg-white text-emerald-900 hover:bg-emerald-50">
+              <a href="/contact" className="bg-white text-emerald-900 hover:bg-emerald-50">
                 <Mail className="mr-2 h-5 w-5" />
                 Request Partnership Access
-              </Button>
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
+              </a>
+              <a href="/contact" className="border-white/30 text-white hover:bg-white/10">
                 <Phone className="mr-2 h-5 w-5" />
                 Schedule Consultation
-              </Button>
+              </a>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-6 pt-8 border-t border-white/20">

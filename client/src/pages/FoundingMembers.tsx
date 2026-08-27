@@ -120,20 +120,20 @@ export default function FoundingMembers() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
+              <a href="/contact"
+               
                 className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8"
               >
                 <Crown className="mr-2 h-5 w-5" />
                 Become a Founding Member
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
+              </a>
+              <a href="/about"
+               
+               
                 className="border-white text-white hover:bg-white/10 px-8"
               >
                 Learn More
-              </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -241,12 +241,12 @@ export default function FoundingMembers() {
                         </li>
                       ))}
                     </ul>
-                    <Button
+                    <a href="/contact"
                       className={`w-full ${idx === 1 ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
                       variant={idx === 1 ? 'default' : 'outline'}
                     >
                       Select {tier.tier}
-                    </Button>
+                    </a>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -348,13 +348,13 @@ export default function FoundingMembers() {
             closes forever. The deadline is March 31, 2026—but spots may fill sooner.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
+            <a href="/contact"
+             
               className="bg-white text-amber-600 hover:bg-amber-50 font-bold px-8"
             >
               <Crown className="mr-2 h-5 w-5" />
               Become a Founding Member
-            </Button>
+            </a>
             <Link href="/charter">
               <Button
                 size="lg"

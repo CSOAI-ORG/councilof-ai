@@ -238,10 +238,10 @@ export default function Careers() {
                           </span>
                         </div>
                       </div>
-                      <Button>
+                      <a href="mailto:nicholas@csoai.org?subject=Application">
                         Apply Now
                         <Send className="ml-2 h-4 w-4" />
-                      </Button>
+                      </a>
                     </div>
                   </CardContent>
                 </Card>

@@ -1315,9 +1315,9 @@ export default function Glossary() {
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Learn AI governance through CSOAI's comprehensive free courses covering all major frameworks.
               </p>
-              <Button variant="outline" size="sm" className="hover:bg-blue-50 hover:text-blue-700">
+              <a href="/courses" className="hover:bg-blue-50 hover:text-blue-700">
                 Browse Courses
-              </Button>
+              </a>
             </Card>
 
             <Card className="p-8 border-none shadow-md hover:shadow-xl rounded-xl transition-all duration-300 hover:-translate-y-0.5">
@@ -1333,9 +1333,9 @@ export default function Glossary() {
                 Free courses in AI governance, safety and compliance. Completion produces a signed
                 training record — it attests training, not conformity.
               </p>
-              <Button variant="outline" size="sm" className="hover:bg-purple-50 hover:text-purple-700">
+              <a href="/certification" className="hover:bg-purple-50 hover:text-purple-700">
                 View Certifications
-              </Button>
+              </a>
             </Card>
 
             <Card className="p-8 border-none shadow-md hover:shadow-xl rounded-xl transition-all duration-300 hover:-translate-y-0.5">
@@ -1350,9 +1350,9 @@ export default function Glossary() {
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Find answers to common questions about CSOAI, governance, and compliance.
               </p>
-              <Button variant="outline" size="sm" className="hover:bg-emerald-50 hover:text-emerald-700">
+              <a href="/faq" className="hover:bg-emerald-50 hover:text-emerald-700">
                 View FAQs
-              </Button>
+              </a>
             </Card>
 
             <Card className="p-8 border-none shadow-md hover:shadow-xl rounded-xl transition-all duration-300 hover:-translate-y-0.5">
@@ -1367,9 +1367,9 @@ export default function Glossary() {
               <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                 Get help from CSOAI experts and the community. Always free, always responsive.
               </p>
-              <Button variant="outline" size="sm" className="hover:bg-orange-50 hover:text-orange-700">
+              <a href="/contact" className="hover:bg-orange-50 hover:text-orange-700">
                 Contact Us
-              </Button>
+              </a>
             </Card>
           </div>
         </div>

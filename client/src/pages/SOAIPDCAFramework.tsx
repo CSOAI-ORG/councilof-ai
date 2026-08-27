@@ -657,10 +657,13 @@ export default function SOAIPDCAFramework() {
                       <div className="flex-grow">
                         <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
                         <p className="text-gray-600 mb-4">{item.description}</p>
-                        <Button variant="outline" size="sm">
-                          {item.action}
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
+                        {/* nav-integrity: each step already carried a `link`; the button ignored it. */}
+                        <a href={item.link}>
+                          <Button variant="outline" size="sm">
+                            {item.action}
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </a>
                       </div>
                     </div>
                   </CardContent>

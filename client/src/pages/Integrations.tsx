@@ -233,18 +233,18 @@ export default function Integrations() {
               Seamlessly integrate CSOAI with your enterprise platforms and tools. Connect your AI systems, configure compliance rules, and monitor governance in real-time.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button
+              <a href="/mcps"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center gap-2"
               >
                 <Plug className="w-5 h-5" />
                 Browse Integrations
-              </Button>
-              <Button
+              </a>
+              <a href="/api-docs"
                 className="bg-white/20 hover:bg-white/30 text-white px-8 py-3 rounded-lg font-semibold border border-white/30 flex items-center gap-2"
               >
                 <Code className="w-5 h-5" />
                 View API Docs
-              </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -370,10 +370,10 @@ export default function Integrations() {
                   </div>
                   <h3 className="text-xl font-semibold text-slate-900 mb-3">{tool.title}</h3>
                   <p className="text-slate-600 mb-6">{tool.description}</p>
-                  <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2 group">
+                  <a href="/mcps" className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2 group">
                     Learn more
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  </a>
                 </Card>
               );
             })}
@@ -526,10 +526,10 @@ export default function Integrations() {
               <p className="text-slate-600 mb-4">
                 Our integration specialists are here to help you connect CSOAI to your stack.
               </p>
-              <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
+              <a href="/contact" className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
                 Contact Support
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </a>
             </div>
             <div>
               <h3 className="font-semibold text-slate-900 mb-4">API Documentation</h3>
@@ -548,10 +548,10 @@ export default function Integrations() {
               <p className="text-slate-600 mb-4">
                 Code samples and integration examples for common use cases.
               </p>
-              <button className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
+              <a href="/docs" className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2">
                 Explore Examples
                 <Code className="w-4 h-4" />
-              </button>
+              </a>
             </div>
           </div>
         </div>

@@ -382,9 +382,9 @@ export default function RegulatoryAuthority() {
                 </Button>
               </Link>
               <Link href="/academy">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-emerald-700">
+                <a href="/contact" className="border-white text-white hover:bg-emerald-700">
                   Become an Analyst
-                </Button>
+                </a>
               </Link>
             </div>
           </div>

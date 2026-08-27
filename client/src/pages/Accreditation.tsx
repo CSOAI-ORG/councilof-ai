@@ -123,10 +123,7 @@ export default function Accreditation() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-blue-800">
-                <Download className="mr-2 h-5 w-5" />
-                Download Standards
-              </Button>
+              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-blue-800" disabled title="No file is published for this yet.">Standards file not published yet</Button>
             </div>
           </div>
         </div>

@@ -62,8 +62,8 @@ const productSchema = {
     price: "0",
     priceCurrency: "GBP",
     availability: "https://schema.org/InStock",
-    url: "https://www.csoai.org/article-50-kit",
-    seller: { "@type": "Organization", name: "CSOAI LTD", url: "https://www.csoai.org" },
+    url: "https://csoai.org/article-50-kit",
+    seller: { "@type": "Organization", name: "CSOAI LTD", url: "https://csoai.org" },
   },
 };
 
