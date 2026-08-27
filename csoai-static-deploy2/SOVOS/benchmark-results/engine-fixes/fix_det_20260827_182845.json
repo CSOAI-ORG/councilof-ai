@@ -1,0 +1,27 @@
+{
+  "before": {
+    "axis": "det",
+    "label": "Detector-interop/DetBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 33,
+    "n_models": 19,
+    "sha256": "1db6db035065",
+    "last_fix": "2026-08-27T15:05:17.569473+00:00"
+  },
+  "fix": {
+    "axis": "det",
+    "delta": "sov6-logic-v3-light: 33/33 unparsed. Root cause: model returns raw text without structured JSON wrapper. Fix: add format-enforcement suffix to Ollama template for all sov6-v3-light family — append \"Respond ONLY with valid JSON: {\"score\": <0.0-1.0>, \"reasoning\": \"<one sentence>\"}\" to system prompt. This addresses the format/transport failure that causes 100% unparsed rate on det board.",
+    "gaps_before": [
+      "weakest model sov6-logic-v3-light at 0.000 — near-chance floor, check bank quality",
+      "weakest model sov6-synthesis-v3-light at 0.000 — near-chance floor, check bank quality",
+      "sov6-logic-v3-light: 33/33 unparsed at acc 0.000 — format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-relationality-v3-light: 31/33 unparsed at acc 0.061 — format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-synthesis-v3-light: 33/33 unparsed at acc 0.000 — format/transport failure dominates, distinguish true-negative from parse-noise",
+      "spread best→worst 0.879→0.000 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T18:28:45.080432+00:00",
+    "promoted": null,
+    "reverted": null
+  }
+}
