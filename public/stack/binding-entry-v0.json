@@ -31,8 +31,13 @@
     },
     {
       "venue": "mcp_registry",
-      "state": "LISTED_DEGRADED",
-      "gap": "zero_trust_dimension"
+      "state": "LISTED_WITH_TRUST_PATH",
+      "gap": "zero_trust_dimension",
+      "trust_path": "/mcps",
+      "machine_path": "/api/mcp",
+      "protocol_path": "/mcp",
+      "did_path": "/.well-known/did.json",
+      "note": "Human registry + probed machine artefact + production MCP; signer pin via did:web"
     },
     {
       "venue": "a2a",
