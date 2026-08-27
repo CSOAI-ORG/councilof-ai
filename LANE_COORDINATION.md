@@ -315,3 +315,17 @@ signed surfaces; catalog=11 products not 17; OpenSkill validated). Append-only �
 rewrote the historical entries (corrections-register discipline). Fleet/owner flags: arXiv G6Y9SY
 ~6h (owner submit), disk crisis returning 4.1Gi free (fleet purge), csoai.org content drift
 (fleet/owner domain).
+
+## 2026-08-27 · K3 alignment note — state authority + sink verification result (append)
+
+- /api/state is THE count authority: board 22 axes · 15 measured · 7 unmeasured
+  (signed gspc-board-22axis-2026, live cross-check true). Earlier 14/22 readings in
+  this lane's docs are SUPERSEDED (corrected in COUNT_GRAMMAR doc, append-only).
+- Sink pod (55664) REACHED: durability volume holds h3k-cards-20260819 + cards-incoming
+  DIRECTORY NAMES but 0 backing files at reachable depth — the card store is NOT in the
+  durability backup; frozen 150 stands per ruling (7294a9a5, 6657a4da). Verification
+  closed honestly: no store found in any reachable surface; not claimed found.
+- New facts adopted: NLnet UK eligibility confirmed in writing (director); AIRR Rapid
+  Access (20k GPU hrs, no deadline); sign-ups = stage-only for agents, Nick submits
+  (fleet paste honesty boundary). Sink port 55664, A100-measurement 13440 (14-model
+  ollama fleet) — updated in this notice for all lanes.

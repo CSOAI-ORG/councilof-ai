@@ -10,7 +10,7 @@ const SPEAK_PLAY: Record<string, string> = {
   align: "You set the rules; we make them provable.",
   absorb: "No governance tooling yet — CSOAI from zero.",
   integrate: "The signed governance layer under your stack.",
-  displace: "Side by side against your current tool, on the axes it's weak.",
+  displace: "Side by side against your current tool, on the axis it's weak.",
 };
 
 // /intel — the Distribution Hive command view. Renders the ecosystem dataset as

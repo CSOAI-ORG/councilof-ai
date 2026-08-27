@@ -13,7 +13,7 @@ import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
  * literal in a data file, which is the other half of the same defect.
  *
  * ── WHAT IT DOES ─────────────────────────────────────────────────────────────
- * A page names the axes that bear on its reader — a LABEL, which is canon and
+ * A page names the axis that bear on its reader — a LABEL, which is canon and
  * safe to write down — and this component reads their live rows from
  * GET /api/gspc. Every number on screen (n, leader accuracy, interval,
  * separation) comes off that payload. Nothing here is typed, and when the

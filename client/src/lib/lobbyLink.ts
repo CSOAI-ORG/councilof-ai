@@ -88,7 +88,7 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
     pane: "board",
     label: "Open the live board in the Council Lobby",
     prompt: () =>
-      "Walk me through the live GSPC board: which axes carry a measured figure, which carry none, and what a TIE means.",
+      "Walk me through the live GSPC board: which axis carry a measured figure, which carry none, and what a TIE means.",
   },
   "explain-axis": {
     pane: "board",

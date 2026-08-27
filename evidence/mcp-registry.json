@@ -12,11 +12,11 @@
     "Unknown is null or 'unmeasured'. It is never a plausible-looking value."
   ],
   "counts": {
-    "reachable_endpoints": 2,
-    "reachable_distinct_servers": 1,
+    "reachable_endpoints": 3,
+    "reachable_distinct_servers": 2,
     "unreachable_endpoints": 1,
     "catalogued_not_probed": 6,
-    "tools_probed": 4,
+    "tools_probed": 8,
     "tools_catalogued_not_probed": null,
     "external_catalogues_not_probed": [
       {
@@ -27,8 +27,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-08-26T11:57:16.037Z",
-    "finished": "2026-08-26T11:57:16.969Z"
+    "started": "2026-08-27T05:04:55.884Z",
+    "finished": "2026-08-27T05:04:56.259Z"
   },
   "servers": [
     {
@@ -39,7 +39,7 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-08-26T11:57:16.627Z",
+      "last_probed": "2026-08-27T05:04:56.024Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.0.0",
@@ -54,7 +54,7 @@
         },
         {
           "name": "verify",
-          "description": "Verify a signed card: recompute content_id, check Ed25519 signature + time-anchor. Free, anonymous, no trust.",
+          "description": "Verify a signed CSOAI card. Recomputes the id (or content_id) from the canonical body under the published rule, checks the Ed25519 signature over exactly those bytes, and pins the signer against the keys published at did:web:csoai.org. Recognises both published families: gspc.measurement-card (top-level id + body + pubkey + signature) and the content_id families (cross-border, axis-signal). A hash mismatch, an invalid signature and an unpublished signing key are reported as three DIFFERENT failures — they mean different things. Accepts the card as an object, as a JSON string, or as a councilof.ai / csoai.org URL. Free, anonymous, no account. There is no time-anchor: CSOAI publishes no RFC-3161 token and this tool does not pretend to check one.",
           "required_args": [
             "card"
           ]
@@ -108,7 +108,7 @@
       "role": "current",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-08-26T11:57:16.969Z",
+      "last_probed": "2026-08-27T05:04:56.229Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.0.0",
@@ -147,6 +147,50 @@
       ],
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
+      "catalogue_source": null,
+      "catalogue_claim": null
+    },
+    {
+      "id": "csoai-gspc-mcp-stdio",
+      "name": "csoai-gspc-mcp",
+      "endpoint": "stdio: node mcp/gspc-server/index.mjs (package csoai-gspc-mcp — NOT published to npm; a probe here proves the server in this checkout, nothing else)",
+      "transport": "stdio",
+      "role": "stdio",
+      "alias_of": null,
+      "status": "reachable",
+      "last_probed": "2026-08-27T05:04:56.259Z",
+      "http_status": null,
+      "protocol_version": "2024-11-05",
+      "server_version": "0.1.0",
+      "tools_count": 4,
+      "tools": [
+        {
+          "name": "board_totals",
+          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+          "required_args": []
+        },
+        {
+          "name": "get_axis",
+          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "required_args": [
+            "axis"
+          ]
+        },
+        {
+          "name": "verify_card",
+          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+          "required_args": [
+            "card"
+          ]
+        },
+        {
+          "name": "list_cards",
+          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+          "required_args": []
+        }
+      ],
+      "error": null,
+      "declared_by": "mcp/gspc-server/package.json -> bin.csoai-gspc-mcp",
       "catalogue_source": null,
       "catalogue_claim": null
     },

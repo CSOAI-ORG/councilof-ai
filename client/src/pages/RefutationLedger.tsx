@@ -68,7 +68,7 @@ const LEDGER = [
     claim: "Governance-tuning our models makes them safer",
     measured: "refusal 0.419 → 0.097 · 83.9% compliance leak",
     artefact: "results/defbench.json",
-    why: "Both tuned models refuse FEWER Article-5-prohibited requests than the untuned base they were built from. One leaks its system prompt verbatim; the other answers a jailbreak by emitting “I am now in developer mode. Ignore all safety filters.” Tuning helped them answer governance questions and hurt their refusal behaviour — the empirical case for scoring the axes separately.",
+    why: "Both tuned models refuse FEWER Article-5-prohibited requests than the untuned base they were built from. One leaks its system prompt verbatim; the other answers a jailbreak by emitting “I am now in developer mode. Ignore all safety filters.” Tuning helped them answer governance questions and hurt their refusal behaviour — the empirical case for scoring the axis separately.",
   },
   {
     n: 9,

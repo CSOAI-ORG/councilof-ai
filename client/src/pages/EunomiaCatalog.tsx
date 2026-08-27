@@ -11,7 +11,7 @@ export default function EunomiaCatalog() {
   const unmeasured = EUNOMIA_AXES.length - measured;
 
   const surfaces = [
-    { name: "EUNOMIA board", href: "/eunomia", desc: "Financial-verification axes, signed, two-tier fleet" },
+    { name: "EUNOMIA board", href: "/eunomia", desc: "Financial-verification axis, signed, two-tier fleet" },
     { name: "First-Fine Watch", href: "/first-fine-watch", desc: "Signed enforcement record + the deadlines behind it (R8 free)" },
     { name: "EUNOMIA data (commercial)", href: "/eunomia-data", desc: "x402 data-only lane — enforcement record + deadline calendar" },
     { name: "Sectors", href: "/sectors", desc: "White-label tooling per sector" },

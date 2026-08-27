@@ -85,7 +85,7 @@ function AxisRow({
       ) : a.dataset ? (
         // The bank is named but not yet resolved to a URL by /api/gspc. Show the
         // slug — it is what the board published — and never build a link from it:
-        // the axes are `governance`/`safety` while the banks are `gspc-gov`/`gspc-agi`,
+        // the axis are `governance`/`safety` while the banks are `gspc-gov`/`gspc-agi`,
         // so a constructed URL 401s.
         <span className={`mt-1.5 ml-[26px] block ${TYPE.fine}`}>
           bank <code className="font-mono text-[11px] text-slate-700">{a.dataset}</code> · no
@@ -148,7 +148,7 @@ export default function LobbyEvidencePane({
   return (
     <div className={`${SP.panel} h-full overflow-y-auto`}>
       <PaneHead eyebrow="Evidence pack" title="Compile the evidence index for one system">
-        Name the system, tick the axes that bear on the claim, and this pane compiles a real index
+        Name the system, tick the axis that bear on the claim, and this pane compiles a real index
         from the live board — bank URL, item count, leader, and whether the lead is statistically
         separated or a tie. Every axis you leave out is named in the output, so an omission is never
         invisible. We measure; we do not certify.
@@ -186,7 +186,7 @@ export default function LobbyEvidencePane({
             <div>
               <h3 className={TYPE.section}>Axes on the live board</h3>
               <p className={`mt-1 ${MEASURE} ${TYPE.muted}`}>
-                Seeded to the axes the board can quote today. Untested and unmeasured axes are listed
+                Seeded to the axis the board can quote today. Untested and unmeasured axis are listed
                 too — include one and the artefact carries its state and its reason, never a number.
               </p>
             </div>

@@ -402,7 +402,7 @@ export default function GspcScoreboard() {
             )}
             <p className="mt-4 flex flex-wrap gap-4 text-sm">
               <Link className="font-semibold text-emerald-700 underline" href="/financial-axes">
-                {board.financial_family ? `All ${board.financial_family.axes} financial axes` : "All financial axes"}
+                {board.financial_family ? `All ${board.financial_family.axes} financial axis` : "All financial axis"}
               </Link>
               <a className="font-semibold text-emerald-700 underline" href="/interop/financial-axes.json">Raw JSON</a>
               <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">The behavioural board</Link>

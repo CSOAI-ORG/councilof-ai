@@ -245,7 +245,7 @@ function InsurersEvidencePack() {
           <div className="rounded-xl border border-emerald-600/15 bg-white p-5">
             <p className="font-bold text-gray-900">Frequency</p>
             <p className="mt-1 text-sm text-gray-600">
-              The board shows which axes a system fails, with the n behind each result. A failure
+              The board shows which axis a system fails, with the n behind each result. A failure
               rate with a sample size and a Wilson interval is a frequency input, not a marketing
               claim.
             </p>

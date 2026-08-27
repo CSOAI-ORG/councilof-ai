@@ -70,7 +70,7 @@ export default function LobbyTaskRail() {
       // Prefer the API's own published phrasing when it ships one — it is the
       // ruling, not our paraphrase of it.
       if (typeof t.public_count === "string") bits.push(t.public_count);
-      else if (typeof t.axes === "number") bits.push(`${t.axes} axes`);
+      else if (typeof t.axes === "number") bits.push(`${t.axes} axis`);
       if (typeof t.measured_axes === "number" && typeof t.public_count !== "string")
         bits.push(`${t.measured_axes} measured`);
       if (typeof t.items === "number") bits.push(`${t.items.toLocaleString()} items`);

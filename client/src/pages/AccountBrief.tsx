@@ -16,7 +16,7 @@ const PITCH: Record<string, string> = {
   align: "CSOAI implements your regime — you set the rules, we make them provable.",
   absorb: "No AI-governance tooling yet? CSOAI is your platform from zero — OS, tools, signed attestations.",
   integrate: "You have a stack — CSOAI is the signed governance layer under it (the MCP, Layer 0, the crosswalk). We prove, we don't replace.",
-  displace: "Side-by-side against your current tool on the axes it's weak: agentic-native, verifiable Ed25519 proof, one-command integration.",
+  displace: "Side-by-side against your current tool on the axis it's weak: agentic-native, verifiable Ed25519 proof, one-command integration.",
 };
 
 export default function AccountBrief() {

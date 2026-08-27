@@ -28,6 +28,10 @@
  */
 
 import { verifyCard, anchorsFromDid, type Anchor } from "../_lib/cardVerify";
+// The ONE tool-definition source, shared byte-for-byte with the stdio server
+// (mcp/gspc-server — npm: csoai-gspc-mcp). Neither surface defines these four
+// tools anywhere else, so the two cannot drift.
+import GSPC_TOOLS from "./gspc-tools.json";
 
 const UPSTREAM = "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp";
 
@@ -86,6 +90,250 @@ function contractOnly(kind: "measure" | "jail-probe", args: Record<string, unkno
     `NOT MEASURED — ${kind} on this endpoint returns the contract, not a measurement. ` +
     (subject ? `Nothing was run against "${subject}".` : "No subject was given.");
   return { content: [{ type: "text", text: `${summary}\n\n${JSON.stringify(payload, null, 2)}` }], structuredContent: payload, isError: false };
+}
+
+/* ------------------------------------------------------------------------------
+ * The four shared GSPC tools — board_totals, get_axis, verify_card, list_cards.
+ * Definitions come from ./gspc-tools.json (the ONE source, shared with the stdio
+ * server in mcp/gspc-server); the handlers below mirror mcp/gspc-server/index.mjs
+ * shape-for-shape so a client can switch transports without re-learning anything.
+ * ---------------------------------------------------------------------------- */
+
+async function fetchOriginJson(origin: string, path: string): Promise<unknown> {
+  const r = await fetch(`${origin}${path}`, { headers: { accept: "application/json" } });
+  if (!r.ok) throw new Error(`GET ${origin}${path} returned HTTP ${r.status}`);
+  return r.json();
+}
+
+/** The distinct unreachable state — never a cached number presented as live. */
+function unreachablePayload(origin: string, path: string, e: unknown) {
+  return {
+    state: "UNREACHABLE",
+    reachable: false,
+    source: `${origin}${path}`,
+    error: e instanceof Error ? e.message : String(e),
+    attempted_at: new Date().toISOString(),
+    note:
+      "The live source could not be fetched. No cached or remembered number is " +
+      "substituted — an unreachable board is a different claim from any count.",
+  };
+}
+
+async function boardTotalsTool(origin: string) {
+  let d: Record<string, unknown>;
+  try {
+    d = (await fetchOriginJson(origin, "/api/gspc")) as Record<string, unknown>;
+  } catch (e) {
+    return unreachablePayload(origin, "/api/gspc", e);
+  }
+  const t = (d.totals ?? {}) as Record<string, unknown>;
+  return {
+    state: "LIVE",
+    reachable: true,
+    kind: "live-board-totals",
+    source: `${origin}/api/gspc`,
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    counts: [
+      {
+        name: "axis_slots",
+        value: t.axes ?? null,
+        kind: "declared slot count — a slot is a position on the board, not evidence anything was measured",
+      },
+      {
+        name: "measured",
+        value: t.measured_axes ?? null,
+        kind: "measurement count — slots with a real run behind them",
+      },
+      {
+        name: "unmeasured",
+        value: t.unmeasured_axes ?? null,
+        kind: "declared slots with no run behind them — published so the gap is visible; first-class, not an error",
+      },
+    ],
+    count_grammar: t.count_grammar ?? null,
+    public_count: t.public_count ?? null,
+    by_family: t.by_family ?? null,
+    not_a_certification: true,
+  };
+}
+
+async function getAxisTool(origin: string, args: Record<string, unknown>) {
+  const wanted = String(args.axis ?? "").trim().toLowerCase();
+  if (!wanted) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  let d: Record<string, unknown>;
+  try {
+    d = (await fetchOriginJson(origin, "/api/gspc")) as Record<string, unknown>;
+  } catch (e) {
+    return unreachablePayload(origin, "/api/gspc", e);
+  }
+  const rows = (d.axes ?? []) as Record<string, unknown>[];
+  const row = rows.find((r) => String(r.axis ?? "").toLowerCase() === wanted);
+  if (!row) {
+    return {
+      state: "NOT_ON_BOARD",
+      axis: wanted,
+      note: "This name is not a row on the live board. That is a fact about the board, not a verdict about the subject.",
+      board_carries: rows.map((r) => r.axis),
+      as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    };
+  }
+  const measured = String(row.status ?? "").toUpperCase() === "MEASURED";
+  return {
+    state: "LIVE",
+    axis: row.axis,
+    family: row.family ?? null,
+    status: row.status ?? null,
+    measured,
+    measured_note: measured
+      ? "a real run stands behind this row"
+      : "a declared slot with no run behind it — published so the gap is visible; first-class, not an error and not a zero",
+    n: row.n ?? null,
+    accuracy: row.accuracy ?? null,
+    interval: row.interval ?? null,
+    leader: row.leader ?? null,
+    dataset: row.dataset ?? null,
+    note: row.note ?? null,
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    source: `${origin}/api/gspc`,
+    not_a_certification: true,
+  };
+}
+
+async function listCardsTool(origin: string, args: Record<string, unknown>) {
+  const out: Record<string, unknown> = {
+    doctrine:
+      "Two labelled numbers from two surfaces, reported separately and never reconciled by this tool. If they disagree, the disagreement is the finding.",
+    index: null,
+    card_store_count_endpoint: null,
+    rows: null,
+    not_a_certification: true,
+  };
+  try {
+    const idx = (await fetchOriginJson(origin, "/signed/card_index.json")) as Record<string, unknown>;
+    const rows = (Array.isArray(idx.cards) ? idx.cards : []) as Record<string, unknown>[];
+    out.index = {
+      source: `${origin}/signed/card_index.json`,
+      n_cards_declared: idx.n_cards ?? null,
+      rows_carried: rows.length,
+      head: idx.head ?? null,
+      packaged_at: idx.packaged_at ?? null,
+      pubkey: idx.pubkey ?? null,
+    };
+    const wanted = args.axis ? String(args.axis).toLowerCase() : null;
+    const limit = Number.isInteger(args.limit) ? (args.limit as number) : 10;
+    out.rows = rows
+      .filter((r) => !wanted || String(r.axis ?? "").toLowerCase() === wanted)
+      .slice()
+      .sort((a, b) => String(b.ts ?? "").localeCompare(String(a.ts ?? "")))
+      .slice(0, limit)
+      .map((r) => ({ card: r.card, axis: r.axis, ts: r.ts, signed: r.signed }));
+  } catch (e) {
+    out.index = unreachablePayload(origin, "/signed/card_index.json", e);
+  }
+  try {
+    const api = (await fetchOriginJson(origin, "/api/cards")) as {
+      cards?: { count?: number; signed?: number };
+    };
+    out.card_store_count_endpoint = {
+      source: `${origin}/api/cards`,
+      count: api?.cards?.count ?? null,
+      signed: api?.cards?.signed ?? null,
+    };
+  } catch (e) {
+    out.card_store_count_endpoint = unreachablePayload(origin, "/api/cards", e);
+  }
+  return out;
+}
+
+/**
+ * verify_card — the shared three-state verdict (VALID / INVALID+reason /
+ * UNCHECKABLE), same contract as the stdio server. Runs on cardVerify, the same
+ * module as the `verify` tool and /gspc-verify, so the verdict can never
+ * disagree with those surfaces; the summary shape matches the stdio tool.
+ */
+async function verifyCardThreeState(args: Record<string, unknown>, origin: string) {
+  const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
+  const { card, error } = await coerceCard(raw);
+  if (error) {
+    return { state: "UNCHECKABLE", reason: error, not_a_certification: true };
+  }
+  const anchors = await loadAnchors(origin);
+  if (!anchors.length) {
+    return {
+      state: "UNCHECKABLE",
+      reason: "did.json unreachable — the signer could not be pinned",
+      not_a_certification: true,
+      note: "'Could not check' is a different claim from 'forged'.",
+    };
+  }
+  const v = await verifyCard(card, anchors);
+  const c = card as Record<string, unknown>;
+  return {
+    state: v.valid ? "VALID" : "INVALID",
+    id: v.id ?? c?.id ?? null,
+    family: v.family ?? null,
+    reason: v.valid ? null : v.reasons.join(", "),
+    reasons: v.reasons,
+    checks: v.checks.map((ch) => ({ check: ch.label, ok: ch.ok, code: ch.code, detail: ch.detail })),
+    rule: `${origin}/signed/HOW-TO-VERIFY.md`,
+    pinned_key: "did:web:csoai.org#card-attestation-1",
+    not_a_certification: true,
+    note: v.valid
+      ? "The body reproduces its own id and the signature verifies under a published key. This is a verified measurement card — not a certification of anything."
+      : "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.",
+  };
+}
+
+function sharedToolSummary(name: string, payload: Record<string, unknown>): string {
+  const idx = payload.index as Record<string, unknown> | null;
+  if (payload.state === "UNREACHABLE" || (idx && idx.state === "UNREACHABLE"))
+    return "UNREACHABLE — the live source could not be fetched; no cached number is substituted.";
+  switch (name) {
+    case "board_totals":
+      return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).`;
+    case "get_axis":
+      return payload.state === "NOT_ON_BOARD"
+        ? `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`
+        : `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}).`;
+    case "verify_card":
+      return `${payload.state}${payload.reason ? " — " + payload.reason : ""}${payload.state === "VALID" ? ` — ${String(payload.id).slice(0, 16)}… verifies under the published key.` : ""}`;
+    case "list_cards": {
+      const store = payload.card_store_count_endpoint as Record<string, unknown> | null;
+      return `index declares ${idx?.n_cards_declared ?? "?"} card rows; the store's count endpoint reports ${store?.count ?? "?"}. Two labelled numbers, not reconciled here.`;
+    }
+    default:
+      return name;
+  }
+}
+
+const SHARED_TOOL_NAMES = new Set(
+  (GSPC_TOOLS as { tools: { name: string }[] }).tools.map((t) => t.name),
+);
+
+async function handleSharedTool(
+  id: unknown,
+  name: string,
+  args: Record<string, unknown>,
+  origin: string,
+): Promise<Response> {
+  const payload =
+    name === "board_totals"
+      ? await boardTotalsTool(origin)
+      : name === "get_axis"
+        ? await getAxisTool(origin, args)
+        : name === "list_cards"
+          ? await listCardsTool(origin, args)
+          : await verifyCardThreeState(args, origin);
+  return rpc(id, {
+    content: [
+      {
+        type: "text",
+        text: `${sharedToolSummary(name, payload as Record<string, unknown>)}\n\n${JSON.stringify(payload, null, 2)}`,
+      },
+    ],
+    structuredContent: payload,
+    isError: false,
+  });
 }
 
 const HOP_BY_HOP = new Set([
@@ -218,6 +466,13 @@ function patchToolsList(body: unknown): unknown {
       required: ["card"],
     };
   }
+  // Append the four shared GSPC tools (board_totals, get_axis, verify_card,
+  // list_cards) from gspc-tools.json — the same definitions the stdio server
+  // serves, so the two transports list identical contracts.
+  const present = new Set(tools.map((t) => t?.name));
+  for (const t of (GSPC_TOOLS as { tools: { name: string }[] }).tools) {
+    if (!present.has(t.name)) tools.push(t as (typeof tools)[number]);
+  }
   return body;
 }
 
@@ -262,6 +517,35 @@ export const onRequest: PagesFunction = async (ctx) => {
 
   const origin = new URL(ctx.request.url).origin;
 
+  // A plain GET /mcp used to proxy the upstream's 404 — so the very link llms.txt
+  // hands to agents answered "not found" unless they already knew to POST. Answer
+  // browsers and probes with a discovery document instead. An SSE-capable MCP
+  // client asking for an event stream is still proxied untouched.
+  {
+    const url = new URL(ctx.request.url);
+    const isRoot = url.pathname.replace(/\/+$/, "") === "/mcp";
+    const wantsSse = (ctx.request.headers.get("accept") ?? "").includes("text/event-stream");
+    if ((ctx.request.method === "GET" || ctx.request.method === "HEAD") && isRoot && !wantsSse) {
+      return Response.json(
+        {
+          ok: true,
+          protocol: "MCP (JSON-RPC 2.0). POST this URL: initialize -> tools/list -> tools/call.",
+          transport: "streamable-http",
+          server: "csoai-gspc-mcp",
+          doctrine:
+            "We measure, never certify. Verdicts are three-state (VALID / INVALID / UNCHECKABLE). An unmeasured axis is a first-class answer. This GET is a discovery document, not the protocol.",
+          stdio_alternative:
+            "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — same four board/card tools, one shared definitions file.",
+          board: `${origin}/api/gspc`,
+          signed_cards: `${origin}/signed/card_index.json`,
+          how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,
+          registry_evidence: "evidence/mcp-registry.json in the repo — probed, never asserted",
+        },
+        { headers: { ...CORS, "cache-control": "public, max-age=300" } },
+      );
+    }
+  }
+
   // Only POSTed JSON-RPC is inspected; everything else streams through untouched.
   let bodyText: string | null = null;
   let call: { method?: string; id?: unknown; params?: { name?: string; arguments?: Record<string, unknown> } } | null =
@@ -284,6 +568,10 @@ export const onRequest: PagesFunction = async (ctx) => {
 
     if (call?.method === "tools/call" && (call.params?.name === "measure" || call.params?.name === "jail-probe")) {
       return rpc(call.id, contractOnly(call.params.name as "measure" | "jail-probe", call.params.arguments ?? {}));
+    }
+
+    if (call?.method === "tools/call" && call.params?.name && SHARED_TOOL_NAMES.has(call.params.name)) {
+      return await handleSharedTool(call.id, call.params.name, call.params.arguments ?? {}, origin);
     }
 
     if (call?.method === "tools/list") {

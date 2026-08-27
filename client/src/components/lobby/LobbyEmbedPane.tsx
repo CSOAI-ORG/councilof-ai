@@ -177,7 +177,7 @@ export default function LobbyEmbedPane({
                 The published card index did not answer.
               </p>
               <p className={`mt-1.5 ${MEASURE} text-[12px] leading-relaxed text-amber-900/90`}>
-                Card paths are never derived from an axis name — the axes are{" "}
+                Card paths are never derived from an axis name — the axis are{" "}
                 <code className="font-mono text-[11px]">governance</code> while the cards are{" "}
                 <code className="font-mono text-[11px]">gov</code>, so a constructed path 404s. Until
                 the index answers, no card is offered.

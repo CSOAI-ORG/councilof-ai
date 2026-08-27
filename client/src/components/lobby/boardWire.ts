@@ -136,7 +136,7 @@ export async function fetchBoard(signal?: AbortSignal): Promise<WireBoard> {
   const rows: WireAxis[] = (Array.isArray(j?.axes) ? j.axes : [])
     .map(readAxis)
     .filter((a: WireAxis | null): a is WireAxis => a !== null);
-  if (!rows.length) throw new Error("GET /api/gspc carried no axes");
+  if (!rows.length) throw new Error("GET /api/gspc carried no axis");
 
   const lane: WireLane[] = (Array.isArray(j?.measured_in_lane) ? j.measured_in_lane : [])
     .filter((w: any) => w && typeof w.axis === "string")

@@ -871,7 +871,7 @@ const PartnersAdvisory: React.FC = () => {
           </p>
           <div className="grid md:grid-cols-4 gap-6 text-center">
             {[
-              { label: 'Measurement axes on the signed board', value: 'live at /api/gspc' },
+              { label: 'Measurement axis on the signed board', value: 'live at /api/gspc' },
               { label: 'Industries', value: '8' },
               { label: 'Employees Trained', value: '50K+' },
             ].map((stat, idx) => (

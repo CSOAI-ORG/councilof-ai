@@ -12,7 +12,7 @@ import { useBoardCount } from "@/lib/boardCount";
  * ── WHICH COUNT IS THIS? ─────────────────────────────────────────────────────
  * The axis count on this page is `elo.axes.length` from /arena/elo_reference.json
  * — the ARENA's axis set, not the GSPC board's. It is derived, never typed, but
- * until 2026-08-26 it rendered as a bare "N axes" with nothing naming its
+ * until 2026-08-26 it rendered as a bare "N axis" with nothing naming its
  * instrument, so a reader saw a number that disagreed with the board and had no
  * way to tell why. The arena is a distinct instrument (see facts.json,
  * counts.namespaces.arena_elo) and is deliberately not reconciled to the board.
@@ -90,7 +90,7 @@ export default function VerifyLeaderboard() {
                 <>
                   <span className="font-semibold text-gray-900">{elo.models ?? "—"}</span> models ·{" "}
                   <span className="font-semibold text-gray-900">{elo.axes?.length ?? 0}</span> arena
-                  axes · every score carries n + 95% CI
+                  axis · every score carries n + 95% CI
                 </>
               ) : err ? (
                 "Leaderboard not yet available."

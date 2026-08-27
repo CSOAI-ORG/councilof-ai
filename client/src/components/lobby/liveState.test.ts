@@ -18,8 +18,8 @@ const fact = (value: unknown, kind: string, extra: Record<string, unknown> = {})
 
 const payload = {
   board: {
-    public_count: fact("22 axes · 15 measured", "declared"),
-    count_grammar: fact("22 axes are on the board; 15 of them carry a measurement.", "declared"),
+    public_count: fact("22 axis · 15 measured", "declared"),
+    count_grammar: fact("22 axis are on the board; 15 of them carry a measurement.", "declared"),
     measured_axes: fact(15, "measured"),
     axis_slots: fact(22, "declared"),
   },
@@ -36,7 +36,7 @@ const payload = {
 describe("liveState — reading /api/state", () => {
   it("quotes the board sentence verbatim rather than recomposing it", () => {
     const s = readLiveState(payload);
-    expect(quote(s.board.publicCount)).toBe("22 axes · 15 measured");
+    expect(quote(s.board.publicCount)).toBe("22 axis · 15 measured");
     expect(quotable(s.board.publicCount)).toBe(true);
   });
 

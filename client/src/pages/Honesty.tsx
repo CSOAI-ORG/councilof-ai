@@ -288,7 +288,7 @@ export default function Honesty() {
           <li>
             <strong>Our own board contradicted our own ruling for two days.</strong> An owner ruling
             set the canonical axis count; the endpoint kept reporting the pre-sweep number because
-            the new axes existed in the ruling and not in the payload the count is derived from. No
+            the new axis existed in the ruling and not in the payload the count is derived from. No
             axis was marked measured to close that gap.
           </li>
           <li>

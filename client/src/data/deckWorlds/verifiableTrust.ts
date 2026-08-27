@@ -95,7 +95,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     kicker: "Slot fourteen, precisely",
     title: "The awkward slot is measured. Its separation is a tie.",
     body:
-      "It would be tidier to say the fourteenth slot is gated and unmeasured. It is not true. Jail — whether a model can be talked past its own guardrails — is measured across 71 gold items on a seven-model fleet. Its separation is TIE on the live board, so we refuse to rank on it and never compare it against the canonical axes measured on the full fleet. A tie is not a separated leader — the discipline is in the label, not in the blank.",
+      "It would be tidier to say the fourteenth slot is gated and unmeasured. It is not true. Jail — whether a model can be talked past its own guardrails — is measured across 71 gold items on a seven-model fleet. Its separation is TIE on the live board, so we refuse to rank on it and never compare it against the canonical axis measured on the full fleet. A tie is not a separated leader — the discipline is in the label, not in the blank.",
     points: [
       { tag: "pain", text: "\"Gated\" is an easier story than \"measured, but not yet separable\"" },
       { tag: "benefit", text: "You see the sample size, the fleet and the exact status on the slot" },

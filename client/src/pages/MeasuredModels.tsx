@@ -131,7 +131,7 @@ export default function MeasuredModels() {
   const focusAxis = params.get("axis");
   const { matrix, error } = useMatrix();
 
-  const [view, setView] = useState<"models" | "axes" | "matrix">("models");
+  const [view, setView] = useState<"models" | "axis" | "matrix">("models");
   const [query, setQuery] = useState("");
   const [axisFilter, setAxisFilter] = useState<string>("all");
   const [sortKey, setSortKey] = useState<"cards" | "name" | "best" | "mean">("cards");
@@ -226,7 +226,7 @@ export default function MeasuredModels() {
           measured {m.as_of?.slice(0, 10) ?? "no date"}
         </p>
         <div className="mt-4">
-          <SetWarning what="These are the axes this model was actually run against." />
+          <SetWarning what="These are the axis this model was actually run against." />
         </div>
 
         <div className="mt-6 overflow-x-auto rounded-xl border border-gray-200 bg-white">
@@ -396,7 +396,7 @@ export default function MeasuredModels() {
       <dl className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           ["Models measured", c.models, "each run against at least one axis"],
-          ["Axes in this set", c.axes, "benchmark axes, not board axes"],
+          ["Axes in this set", c.axes, "benchmark axis, not board axis"],
           ["Cells filled", c.cells, `of ${c.possible_cells} possible pairs`],
           ["Cells with a signature", c.signed_cells, "each re-checkable offline"],
         ].map(([label, value, hint]) => (
@@ -420,7 +420,7 @@ export default function MeasuredModels() {
           {(
             [
               ["models", `Models · ${c.models}`],
-              ["axes", `Axes · ${c.axes}`],
+              ["axis", `Axes · ${c.axes}`],
               ["matrix", `Coverage map · ${c.cells}/${c.possible_cells}`],
             ] as const
           ).map(([v, label]) => (
@@ -487,7 +487,7 @@ export default function MeasuredModels() {
                 <th className="px-4 py-2 text-right font-semibold">Axes measured</th>
                 <th className="px-4 py-2 text-right font-semibold">Best score</th>
                 <th className="px-4 py-2 text-right font-semibold">Average</th>
-                <th className="px-4 py-2 font-semibold">Which axes</th>
+                <th className="px-4 py-2 font-semibold">Which axis</th>
               </tr>
             </thead>
             <tbody>
@@ -528,7 +528,7 @@ export default function MeasuredModels() {
         </div>
       )}
 
-      {view === "axes" && (
+      {view === "axis" && (
         <div className="mt-4 overflow-x-auto rounded-xl border border-gray-200 bg-white">
           <table className="w-full min-w-[600px] text-left text-sm" data-testid="axes-table">
             <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wide text-gray-600">

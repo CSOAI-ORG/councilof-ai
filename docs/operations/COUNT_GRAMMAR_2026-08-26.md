@@ -1,4 +1,4 @@
-# COUNT GRAMMAR — three surfaces, three precise counting rules (2026-08-26)
+# COUNT GRAMMAR — SUPERSEDED 2026-08-27 (see below) — three surfaces, three precise counting rules (2026-08-26)
 
 Per the owner-locked record (5477ef62 "lock public board at 14 (no 16/22 invent)",
 ebec824e "warn not to invent 22 axes", BOARD-RULING.md "frozen at verifiable floor 150"),
@@ -20,3 +20,7 @@ Rules:
 4. Alignment audit 2026-08-26: "22 ruled at 2bdbac34" NOT corroborated (commit nonexistent).
    Operative rulings = 5477ef62 + ebec824e (board 14; 22 internal) + BOARD-RULING.md
    (card index 150 floor; auto-restore workflows removed; signed-json-guard = sole gate).
+
+
+## SUPERSEDED 2026-08-27 (append-only correction)
+The signed board is now `gspc-board-22axis-2026` (did:web:csoai.org#gspc-board-22axis-2026, content_id 0c7e8510…): **22 axes · 15 measured · 7 unmeasured** with live cross-check (`signed_snapshot_agrees: true`) at `/api/state` — THE authority. `by_family`: gspc 14/14 measured; financial 8/1 (provenance-controls from the 6-account mainnet run; 7 declared slots incl. the 3 interop-measured indexes — declared-slots-published-as-gaps, never hidden). Earlier reading (public board 14) is this author's record, superseded by ADR-001 + the signed board; K3's index/interop measurements remain compatible. Quote ONLY /api/state by field name.

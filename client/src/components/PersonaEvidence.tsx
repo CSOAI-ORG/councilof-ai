@@ -4,7 +4,7 @@
  * WHY THIS EXISTS. A persona-audit of /for/* found that not one line on a
  * measurement company's audience pages named an axis, an n, or a card. The pages
  * asserted; nothing on them could be checked. This component is the correction:
- * each persona declares the board axes that actually speak to it, and this
+ * each persona declares the board axis that actually speak to it, and this
  * renders those rows LIVE off GET /api/gspc.
  *
  * NOTHING HERE TYPES A NUMBER. The axis SLUGS below are pointers — identifiers

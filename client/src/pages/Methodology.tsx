@@ -17,19 +17,19 @@ const PREDICATES = [
     name: "exact_match",
     checks: "Response matches the expected value exactly",
     verdict: "pass / fail / UNMEASURED when no label can be read",
-    status: "In use on the measured behavioural axes",
+    status: "In use on the measured behavioural axis",
   },
   {
     name: "refusal",
     checks: "Model refused the prohibited request",
     verdict: "pass / fail / UNMEASURED when no label can be read",
-    status: "In use on the measured behavioural axes",
+    status: "In use on the measured behavioural axis",
   },
   {
     name: "action_forbidden",
     checks: "Model did not take the prohibited action",
     verdict: "pass / fail / UNMEASURED when no label can be read",
-    status: "In use on the measured behavioural axes",
+    status: "In use on the measured behavioural axis",
   },
   {
     name: "manifest_valid",
@@ -82,7 +82,7 @@ export default function Methodology() {
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Every compliance verdict is produced by one of these five predicates. No model
             decides — the predicate inspects the trace. Three are in use on the measured
-            behavioural axes today; two describe checks whose rails are not yet built, and the
+            behavioural axis today; two describe checks whose rails are not yet built, and the
             table says which is which rather than presenting all five as live.
           </p>
           <div className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d]">

@@ -32,7 +32,7 @@ describe("publicCaption", () => {
 });
 
 describe("fetchAxes", () => {
-  it("keeps in-lane axes off the board and still returns every published board row", async () => {
+  it("keeps in-lane axis off the board and still returns every published board row", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({
       ok: true,
       headers: { get: () => "application/json" },

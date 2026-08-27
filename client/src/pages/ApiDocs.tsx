@@ -42,7 +42,7 @@ curl https://councilof.ai/api/gspc
 # A single axis
 curl "https://councilof.ai/api/gspc?axis=governance"
 
-# An unknown axis returns 404 with the list of known axes
+# An unknown axis returns 404 with the list of known axis
 curl "https://councilof.ai/api/gspc?axis=nope"
 # => { "error": "unknown axis", "known": [ "governance", "safety", ... ] }`;
 
@@ -54,13 +54,13 @@ with urllib.request.urlopen("https://councilof.ai/api/gspc") as r:
 
 print(board["schema"])            # csoai.gspc-axes/0.5
 print(board["doi"])               # 10.5281/zenodo.21991104
-print(board["totals"]["axes"], "axes")
+print(board["totals"]["axis"], "axis")
 print(board["totals"]["separated_leads"], "separated,",
       board["totals"]["ties"], "ties")
 
 # A separated lead is a real, statistically distinguished result;
 # a TIE is a point-estimate lead only. Ties are not wins.
-for a in board["axes"]:
+for a in board["axis"]:
     if a["separation"] == "SEPARATED":
         print(a["axis"], a["accuracy"], "p=", a["separation_p"])`;
 
@@ -68,7 +68,7 @@ for a in board["axes"]:
 const board = await fetch("https://councilof.ai/api/gspc").then((r) => r.json());
 
 console.log(board.schema);        // "csoai.gspc-axes/0.5"
-console.log(board.totals);        // { axes, measured_axes, items, separated_leads, ties, ... }
+console.log(board.totals);        // { axis, measured_axes, items, separated_leads, ties, ... }
 
 // One axis:
 const gov = await fetch("https://councilof.ai/api/gspc?axis=governance")
@@ -93,7 +93,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
     "ties": "<derived>",
     "untested_separations": "<derived>"
   },
-  "axes": [
+  "axis": [
     {
       "axis": "governance",
       "bench": "GovBench",
@@ -110,22 +110,22 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
       "status": "MEASURED",
       "dataset": "csoai/gspc-gov"
     }
-    // ... remaining axes
+    // ... remaining axis
   ],
   "measured_in_lane": [ /* in-lane instrument-honesty, human-vs-ai — not the board */ ],
-  "limitations": [ "N of the measured axes show a statistically separated leader ...", "..." ]
+  "limitations": [ "N of the measured axis show a statistically separated leader ...", "..." ]
 }`;
 
   const FIELDS = [
     { f: "schema", d: "Always csoai.gspc-axes/0.5 — the payload contract version." },
     { f: "issuer", d: "CSOAI Ltd (GB, Companies House 16939677)." },
     { f: "doi", d: "10.5281/zenodo.21991104 — the citable dataset record. Axis counts live in the payload." },
-    { f: "totals.public_count / measured_axes / quotable_axes", d: "Derived from the payload (MEASURED axes with a completed separation test, vs all quotable MEASURED rows). Jail is MEASURED; living-board separation is TIE (not a separated leader). Read the live numbers — do not type them here." },
+    { f: "totals.public_count / measured_axes / quotable_axes", d: "Derived from the payload (MEASURED axis with a completed separation test, vs all quotable MEASURED rows). Jail is MEASURED; living-board separation is TIE (not a separated leader). Read the live numbers — do not type them here." },
     { f: "totals.separated_leads / ties", d: "Separated (McNemar p<0.05 on discordant items), ties, and untested. A TIE is not a win. These counts move — read them from the live payload, not from this page." },
     { f: "totals.items", d: "Sum of per-axis n across the selection. Read the live number from the payload." },
     { f: "axes[].n / accuracy / interval", d: "Per-axis item count, the LEADER's accuracy, and its Wilson 95% CI where n is honestly independent." },
     { f: "axes[].separation / separation_p", d: "SEPARATED, TIE or UNTESTED, with the McNemar exact p on discordant pairs vs the best base model where the test has run." },
-    { f: "axes[].fleet_mean / mean_harm", d: "The axis's measured-fleet mean, and (canonical axes only) the severity-weighted failure mass the accuracy hides." },
+    { f: "axes[].fleet_mean / mean_harm", d: "The axis's measured-fleet mean, and (canonical axis only) the severity-weighted failure mass the accuracy hides." },
     { f: "axes[].per_model", d: "Jail only: the verbatim per-model rows from the signed living board (TP/FP/TN/FN, precision, recall)." },
     { f: "measured_in_lane", d: "In-lane instrument-honesty and human-vs-ai — served for honesty; NOT board-quotable and never counted in totals." },
     { f: "measured_on.living_stamp", d: "The living-board stamp for jail and the in-lane measurements. MARKED UNVERIFIABLE 2026-08-26: it carries an Ed25519 signature, but no published bytes reproduce it (58,184 readings attempted, 0 verified), two different signatures exist for the same stamp, and its signer is not among the keys in did.json. It publishes verification_state UNVERIFIABLE and must not be treated as a valid attestation. The attestations that DO verify are site_attestation on this payload (#board-attestation-1) and the 150 cards (#card-attestation-1)." },
@@ -189,7 +189,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
               </div>
               {[
                 { method: "GET", endpoint: "/api/gspc", desc: "The living board (counts in totals.public_count)" },
-                { method: "GET", endpoint: "/api/gspc?axis=<name>", desc: "One axis (404 lists known axes)" },
+                { method: "GET", endpoint: "/api/gspc?axis=<name>", desc: "One axis (404 lists known axis)" },
               ].map((api, i) => (
                 <div key={i} className="grid grid-cols-12 gap-4 p-3 border-b last:border-0 text-sm">
                   <div className="col-span-2">

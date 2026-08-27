@@ -5,7 +5,7 @@
 // its length is not the board's axis count: the board also carries the
 // financial/domain family (ADR-001). Anything that renders a COUNT must derive it
 // from GET /api/gspc — see client/src/lib/boardCount.ts. The header of this file
-// used to say "the twelve governance axes", which is how a stale snapshot count
+// used to say "the twelve governance axis", which is how a stale snapshot count
 // ends up quoted as the board's.
 //
 // This is the single source of truth for every SOV OS panel. The invariant that
@@ -230,7 +230,7 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
       j = await readGspcJson(signal);
     }
     const live: any[] = Array.isArray(j?.axes) ? j.axes : [];
-    if (!live.length) throw new Error("no axes in payload");
+    if (!live.length) throw new Error("no axis in payload");
 
     const bySlug = new Map(AXES.map((a) => [a.axis, a]));
     const merged: Axis[] = live.map((w) => {

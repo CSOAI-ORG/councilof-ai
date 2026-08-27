@@ -173,7 +173,7 @@ const TOOLS: Tool[] = [
     family: "Open to everyone",
     name: "Report an incident",
     what:
-      "A public form for AI behaviour that looks wrong. It goes into the record, and whatever we act on is measured and signed like everything else here.",
+      "A public form for AI behaviour that looks wrong. The intake hands you a signed acknowledgement of exactly what you filed, and whatever we act on is measured and signed like everything else here.",
     pain:
       "Otherwise a harm disappears into a supplier's private support queue and nobody outside it ever learns it happened.",
     note: "Anyone can file one. No account, and no charge.",

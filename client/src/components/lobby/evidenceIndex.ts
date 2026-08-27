@@ -26,7 +26,7 @@ export const NO_SCORE_REASON = {
 
 export interface EvidenceInput {
   board: WireBoard;
-  /** The axes the reader ticked. Must be a subset of `board.axes`. */
+  /** The axis the reader ticked. Must be a subset of `board.axes`. */
   included: WireAxis[];
   system: string;
   provider: string;
@@ -65,7 +65,7 @@ function evidenceRow(a: WireAxis): Record<string, unknown> {
   }
 
   // The bank is the frozen split a stranger recomputes from. NEVER construct the
-  // URL from `bank`: the axes are `governance`/`safety` while the banks are
+  // URL from `bank`: the axis are `governance`/`safety` while the banks are
   // `gspc-gov`/`gspc-agi`, so a constructed link 401s. Report the absence instead
   // — /api/gspc resolves `dataset_url` itself, and until it does, saying so is the
   // honest answer.

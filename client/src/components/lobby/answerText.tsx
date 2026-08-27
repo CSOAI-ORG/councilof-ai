@@ -27,7 +27,7 @@ import type { ReactNode } from "react";
  *
  * THE ITALIC RULE IS THE FIDDLY ONE, and getting it wrong is visible: a naive
  * `_[^_]+_` ate the underscores out of the grounding footer's own field names and
- * printed "(measured axes / public count)" for `(measured_axes / public_count)` —
+ * printed "(measured axis / public count)" for `(measured_axes / public_count)` —
  * turning the exact JSON keys a reader would grep for into prose. A `_` counts as
  * a delimiter only where it is NOT word-internal (nothing alphanumeric on the
  * outside), which leaves snake_case identifiers alone while still italicising a

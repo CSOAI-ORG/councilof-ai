@@ -26,7 +26,7 @@ import { useGspcBoard, type GspcAxis } from "../components/board/useGspcBoard";
 /**
  * The hub chip used to read a `separation` verdict typed into the industries
  * data file. It now derives from the live board: a sector's chip is the state
- * of the axes that sector names. "reading the board" shows until the fetch
+ * of the axis that sector names. "reading the board" shows until the fetch
  * lands — a chip is a claim about a measurement, and showing one before the
  * measurement has been read would be asserting it.
  */
@@ -54,7 +54,7 @@ const SECTOR_CHIP: Record<SectorState, { text: string; className: string; title:
   UNMEASURED: {
     text: "UNMEASURED",
     className: "bg-amber-100 text-amber-800",
-    title: "No run stands behind the axes this sector names. Published so the gap is visible.",
+    title: "No run stands behind the axis this sector names. Published so the gap is visible.",
   },
   PENDING: {
     text: "reading the board",
@@ -104,7 +104,7 @@ export default function IndustrySolutions() {
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
             {industriesForGrid.length} sectors, each with its own law and its own named board axes.
             Pick a sector to see the provisions that bind it, what we measure against the
-            Governance · Safety · Provenance · Continuity axes, and that sector's live rows — n,
+            Governance · Safety · Provenance · Continuity axis, and that sector's live rows — n,
             interval and separation verdict, read from <code>GET /api/gspc</code> as the page loads
             rather than written into the page. Where no run stands behind an axis, it reads
             unmeasured.

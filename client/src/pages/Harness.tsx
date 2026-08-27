@@ -77,7 +77,7 @@ const CAPABILITIES: Capability[] = [
     what:
       "A deterministic report that maps measured axes to the obligations they bear on, grades the gap on a fixed scale, and states the penalty tier the obligation sits in. No model is consulted to produce it.",
     limit:
-      "The obligation map currently names a subset of the board's axes, and several of its names no longer match the board's. Where a name does not match, the report says UNMEASURED for an axis that has in fact been measured — it under-reports coverage rather than over-reporting it. Read it beside the live board until the map is re-pointed.",
+      "The obligation map currently names a subset of the board's axis, and several of its names no longer match the board's. Where a name does not match, the report says UNMEASURED for an axis that has in fact been measured — it under-reports coverage rather than over-reporting it. Read it beside the live board until the map is re-pointed.",
   },
   {
     name: "Surface probe",

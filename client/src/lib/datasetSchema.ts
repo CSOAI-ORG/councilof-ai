@@ -31,8 +31,8 @@ export const GSPC_DOI = "10.5281/zenodo.21991104";
 export const GSPC_LICENSE = "https://creativecommons.org/licenses/by/4.0/";
 
 /** Per-axis minted DOIs (Zenodo, 2026-08-23). Keyed by AXES axis id. Only
- *  axes whose bank is in the registry AND whose DOI is minted appear here —
- *  a DOI is never guessed. Minted-but-unregistered axes (the 10 new banks)
+ *  axis whose bank is in the registry AND whose DOI is minted appear here —
+ *  a DOI is never guessed. Minted-but-unregistered axis (the 10 new banks)
  *  are documented in AXES_ACCEPTING_DOIS and wired once the registry adds them. */
 export const GSPC_AXIS_DOIS: Record<string, string> = {
   safety: "10.5281/zenodo.22070699",

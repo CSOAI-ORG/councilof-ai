@@ -8,12 +8,12 @@
  *
  * ── THE GRAMMAR RULE (the one that matters most) ─────────────────────────────
  * TWO numbers, and they always travel together.
- *   `axes`          counts SLOTS on the board.
+ *   `axis`          counts SLOTS on the board.
  *   `measured_axes` counts slots with a real run behind them.
  * Quoting the larger number alone would claim measurements that do not exist.
- * That is why nothing here exposes a lone "how many axes" integer for copy:
+ * That is why nothing here exposes a lone "how many axis" integer for copy:
  * render `public_count` (the short sentence) or `count_grammar` (the long one).
- * `axes` and `measured_axes` are exported for arithmetic and gates, not prose.
+ * `axis` and `measured_axes` are exported for arithmetic and gates, not prose.
  *
  * ── PROVENANCE ───────────────────────────────────────────────────────────────
  * Authority:  GET /api/gspc -> totals.{axes,measured_axes,unmeasured_axes,
@@ -34,9 +34,9 @@ import { useEffect, useState } from "react";
 import facts from "../data/facts.json";
 
 /**
- * Separation over the MODEL-COMPARISON axes only. A separation test asks whether
+ * Separation over the MODEL-COMPARISON axis only. A separation test asks whether
  * a leader's lead over a fleet is statistically real, so it does not apply to an
- * axis with no fleet — which is why `comparison_axes` is smaller than `axes` and
+ * axis with no fleet — which is why `comparison_axes` is smaller than `axis` and
  * must never be quoted as the board's size. A TIE is not a win.
  */
 export interface SeparationCount {
@@ -52,7 +52,7 @@ export interface SeparationCount {
 export interface FamilyCount {
   axes: number;
   measured: number;
-  /** e.g. "14 axes · 13 measured" — the family's own sentence. */
+  /** e.g. "14 axis · 13 measured" — the family's own sentence. */
   sentence: string;
 }
 
@@ -63,7 +63,7 @@ export interface BoardCount {
   measured_axes: number;
   /** Slots published so the gap is visible, with no run behind them. */
   unmeasured_axes: number;
-  /** The short sentence a surface quotes, e.g. "22 axes · 15 measured". */
+  /** The short sentence a surface quotes, e.g. "22 axis · 15 measured". */
   public_count: string;
   /** The long sentence that explains why both numbers are printed. */
   count_grammar: string;
@@ -71,7 +71,7 @@ export interface BoardCount {
   gspc_family: FamilyCount | null;
   /** The financial/domain half, when the board publishes the breakdown. */
   financial_family: FamilyCount | null;
-  /** Separation over the model-comparison axes, when the board publishes it. */
+  /** Separation over the model-comparison axis, when the board publishes it. */
   separation: SeparationCount | null;
   /** true when these numbers came off the live board; false for the recorded observation. */
   live: boolean;
@@ -79,12 +79,12 @@ export interface BoardCount {
 
 /** Format the count as a sentence. Never emit one of these numbers on its own. */
 export function publicCountSentence(axes: number, measured: number): string {
-  return `${axes} axes · ${measured} measured`;
+  return `${axes} axis · ${measured} measured`;
 }
 
 function grammarSentence(axes: number, measured: number, unmeasured: number): string {
   return (
-    `${axes} axes are on the board; ${measured} of them carry a measurement and ${unmeasured} are ` +
+    `${axes} axis are on the board; ${measured} of them carry a measurement and ${unmeasured} are ` +
     `declared slots with no run behind them. The larger number counts slots, the smaller counts ` +
     `measurements — quote both or quote the smaller.`
   );
@@ -171,10 +171,10 @@ function separationFrom(t: any): SeparationCount | null {
     ties,
     untested,
     sentence:
-      `${separated} of the ${comparison_axes} model-comparison axes show a statistically separated ` +
+      `${separated} of the ${comparison_axes} model-comparison axis show a statistically separated ` +
       `leader (McNemar p<0.05 on discordant items); ${ties} are honest ties and ${untested} are ` +
       `untested. A point-estimate lead on a tied axis is not a measured advantage, and a tie is ` +
-      `never counted as a win. This denominator is the model-comparison axes only — it is not the ` +
+      `never counted as a win. This denominator is the model-comparison axis only — it is not the ` +
       `board's size.`,
   };
 }

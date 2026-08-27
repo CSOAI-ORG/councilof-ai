@@ -38,6 +38,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/models", "/tools", "/report",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
+  "/eunomia-catalog", "/eunomia-crosswalk",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
@@ -129,7 +130,7 @@ export const SECTORS: Sector[] = [
   { id: "tech", title: "Layer-0, MCP & Verification",
     blurb: "Compliance MCPs, C2PA / Article-50 watermarking, Ed25519 signature verification, the agent (A2A) API, drift and provenance.",
     test: rx(/\bmcps?\b|layer-?0|c2pa|watermark|signature|\bverify\b|\bapi\b|distribution|sigstore|attest|did-|ed25519|oscal|\bagents?\b|registry|drift|provenance|\bledger\b|architecture|cobol|integrat|webhook|vulnerabilit|\bscan\b|cyber|deepfake|instrument|systemcard|technolog|\bdocs?\b|ontolog|\bmodels?\b|transparency|\bvoice\b/) },
-  { id: "axes", title: "GSPC Axes & Benchmarks",
+  { id: "axis", title: "GSPC Axes & Benchmarks",
     blurb: "The living GSPC board — the flagship. Counts come from GET /api/gspc. Every number recomputable from its rows; UNMEASURED reported, never hidden.",
     test: rx(/gspc|benchmark|\barena\b|\bboard\b|leaderboard|provbench|govbench|\baxis\b|\baxes\b|scorecard|\bmeasured?\b|evidence|anchors|gap-map|\bassess/) },
   { id: "governance", title: "Governance & Frameworks",

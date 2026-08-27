@@ -102,7 +102,7 @@ export const LIVING_LEDGER_SLIDES: Slide[] = [
       // measured. Under the swept board that asserts runs that do not exist: some
       // slots are declared and carry no measurement at all. Counts now come from
       // GET /api/gspc, and both of them travel together.
-      "Our board publishes a slot count and a measured count, and they are different numbers — cite totals.public_count on GET /api/gspc rather than either alone. A slot with no run behind it is published as UNMEASURED so the gap is visible; it is never counted as a measurement. The behavioural axes are measured on the full fleet with a separation test. Jail — whether a model can be talked past its own guardrails — is measured on a smaller seven-model fleet across 71 gold items; its separation is TIE on the live board, so we do not treat it as a separated leader or rank on it.",
+      "Our board publishes a slot count and a measured count, and they are different numbers — cite totals.public_count on GET /api/gspc rather than either alone. A slot with no run behind it is published as UNMEASURED so the gap is visible; it is never counted as a measurement. The behavioural axis are measured on the full fleet with a separation test. Jail — whether a model can be talked past its own guardrails — is measured on a smaller seven-model fleet across 71 gold items; its separation is TIE on the live board, so we do not treat it as a separated leader or rank on it.",
     points: [
       { tag: "pain", text: "Scorecards quietly omit the axis the model would fail" },
       { tag: "benefit", text: "Every slot shows its sample size and its status, including the awkward one" },

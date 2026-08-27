@@ -11,7 +11,7 @@ import type { Slide } from "@/components/scrollworld";
  *  2. Deck slide 4 "Expire: ... automatically transition a pass to
  *     EXPIRED-REGULATION-CHANGED", echoed on slide 12 — DROPPED ENTIRELY. Nothing expires.
  *     When the law moves we re-measure and issue a DELTA CARD; the old card stays.
- *  3. Deck slide 4 "417 frozen provisions across 4 axes" — four axis FAMILIES (GSPC), on a
+ *  3. Deck slide 4 "417 frozen provisions across 4 axis" — four axis FAMILIES (GSPC), on a
  *     board. Coverage read live from /api/gspc, never typed. NOTE 2026-08-26: this
  *     note used to state the board's size as an integer; it is now larger (ADR-001,
  *     swept 2026-08-26). Read totals off the board — do not re-derive a count here.
@@ -92,7 +92,7 @@ export const EVIDENCE_RAIL_SLIDES: Slide[] = [
       // with no run behind them, and calling every slot measured asserts runs that
       // do not exist. Both counts now come from GET /api/gspc, and the unmeasured
       // half is stated rather than omitted.
-      "Not every slot on the board is measured, and the board says which are not: a slot with no run behind it is published as UNMEASURED so the gap is visible, never quietly folded into the measured count. The behavioural axes run on the full fleet with a separation test; jail — whether a model can be talked past its guardrails — is measured on a smaller fleet across 71 gold items, with living-board separation TIE (a TIE is not a separated leader). Cite live totals.public_count from GET /api/gspc for the slot count and the measured count together. Where a leader is not statistically separated we print a tie. Where a response cannot be parsed by a rule we report it unmeasured rather than scoring it wrong.",
+      "Not every slot on the board is measured, and the board says which are not: a slot with no run behind it is published as UNMEASURED so the gap is visible, never quietly folded into the measured count. The behavioural axis run on the full fleet with a separation test; jail — whether a model can be talked past its guardrails — is measured on a smaller fleet across 71 gold items, with living-board separation TIE (a TIE is not a separated leader). Cite live totals.public_count from GET /api/gspc for the slot count and the measured count together. Where a leader is not statistically separated we print a tie. Where a response cannot be parsed by a rule we report it unmeasured rather than scoring it wrong.",
     points: [
       { tag: "pain", text: "Grids filled in by converting ambiguity into failure" },
       { tag: "benefit", text: "Sample size, interval and status visible on every slot" },
