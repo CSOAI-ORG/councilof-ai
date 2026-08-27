@@ -123,6 +123,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
       `${canon.publicCount}. ` +
       `**${canon.measured}** of the **${canon.slots}** published slots carry a measurement; ` +
       `**${canon.unmeasured}** are declared slots with no run behind them.\n\n` +
+      (canon.countGrammar ? `${canon.countGrammar}\n\n` : "") +
       `Quote both numbers or quote the smaller one — the larger counts slots, not measurements. ` +
       `A published slot exists so the gap is visible; it is not evidence of anything having been measured. ` +
       `Jail is MEASURED; a TIE is not a separated leader.\n\n` +

@@ -40,6 +40,8 @@ export type LobbyTabId =
   | "models"
   | "tools"
   | "verify"
+  | "cards"
+  | "state"
   | "evidence"
   | "embed"
   | "products"
@@ -136,6 +138,22 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "/gspc-verify",
     kind: "native",
     cues: /\b(verify|verification|signature|signed|check a (?:card|record)|hash)\b/i,
+  },
+  {
+    id: "cards",
+    label: "Signed cards",
+    blurb: "Every card the published index declares — fetch one and check its hash and signature here.",
+    path: "",
+    kind: "native",
+    cues: /\b(signed cards?|card index|published cards?|browse cards?|measurement cards?)\b/i,
+  },
+  {
+    id: "state",
+    label: "Estate state",
+    blurb: "Every count the estate publishes, each with the kind that produced it and the date it was read from.",
+    path: "",
+    kind: "native",
+    cues: /\b(estate state|state endpoint|which number|counts?|how many (?:of )?(?:everything|things)|derived state|api\/state)\b/i,
   },
   {
     id: "evidence",
@@ -378,6 +396,27 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     path: "/firewall-charter",
     group: "receipts",
     cues: /\b(firewall charter)\b/i,
+  },
+  {
+    label: "Rating the raters",
+    blurb: "The same deterministic predicates turned on the benchmarks themselves — including ours.",
+    path: "/rating-the-raters",
+    group: "analyst",
+    cues: /\b(rating the raters?|rate the raters?|who rates)\b/i,
+  },
+  {
+    label: "First-Fine Watch",
+    blurb: "Signed coverage of the public AI enforcement record. REPORTED public record, never our own measurement.",
+    path: "/first-fine-watch",
+    group: "analyst",
+    cues: /\b(first[- ]?fine|enforcement record|fines?|penalt\w*)\b/i,
+  },
+  {
+    label: "Signed registers",
+    blurb: "The published registers behind the specialist and coverage feeds.",
+    path: "/registers",
+    group: "record",
+    cues: /\b(registers?|specialist feed|signed register)\b/i,
   },
   {
     label: "Meta-benchmark index",

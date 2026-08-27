@@ -61,6 +61,16 @@ export function boardCanon(board: GspcBoard) {
   /** How many carry a figure that may be quoted. Equal to `measured` today. */
   const quotable =
     typeof board.totals.quotable_axes === "number" ? board.totals.quotable_axes : measured;
+  /**
+   * The endpoint publishes the rule for quoting these two numbers in its own words
+   * (`totals.count_grammar`). Carried verbatim from lane/os-tools-real: the chat
+   * repeating the published ruling is strictly better than the chat paraphrasing it,
+   * because a paraphrase is a second place the grammar can drift.
+   */
+  const countGrammar =
+    typeof board.totals.count_grammar === "string" && board.totals.count_grammar.trim()
+      ? board.totals.count_grammar.trim()
+      : null;
   const publicCount =
     typeof board.totals.public_count === "string" && board.totals.public_count.trim()
       ? board.totals.public_count
@@ -72,7 +82,7 @@ export function boardCanon(board: GspcBoard) {
       (typeof jail.accuracy === "number" ? `; accuracy ${Number(jail.accuracy).toFixed(3)}` : "") +
       `. Cite live GET /api/gspc \u2014 do not freeze counts.`
     : `**jail** is one of the ${slots} board slots when present on GET /api/gspc. Cite live totals.`;
-  return { slots, quotable, measured, unmeasured, publicCount, measuredAxes, unmeasuredAxes, jail, jailNote };
+  return { slots, quotable, measured, unmeasured, publicCount, countGrammar, measuredAxes, unmeasuredAxes, jail, jailNote };
 }
 
 /** ClaimGuard refuse for false board-count claims (16/15/12). Prefer live public_count. */

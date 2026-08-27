@@ -51,12 +51,25 @@ export const PRIMARY_PATHS = new Set<string>([
   "/compare", "/competitors", "/vs", "/for",
   // Council OS
   "/os", "/workbench", "/start",
-  // The two remaining Council OS RAIL TABS. A permanent destination in the OS rail
-  // cannot also be an archive page: the OS presents it as live, and the embed hides
-  // the "Reference / archive" strip, so the reader was shown a current surface while
-  // the site classified it as archived. Verified 2026-08-26 by loading
-  // /readiness-assessment un-embedded and finding that strip.
-  "/readiness-assessment", "/dashboard",
+  // The Council OS RAIL TABS and Home desktop tiles. A permanent destination in the OS
+  // rail cannot also be an archive page: the OS presents it as live, and the embed hides
+  // the "Reference / archive" strip, so the reader was shown a current surface while the
+  // site classified it as archived. Verified 2026-08-26 by loading /readiness-assessment
+  // un-embedded and finding that strip.
+  //
+  // THE SAME INVARIANT AS THE HEADER, APPLIED TO THE OS RAIL. Every path the Council OS
+  // rail or the Home desktop opens must appear here, for exactly the reason above: an
+  // unregistered path renders the ArchivedBanner ("a dated reference page… superseded")
+  // under a destination the OS is actively promoting as live. A measured sweep of
+  // client/src/components/lobby/tabs.ts against this set found NINE such paths — the OS
+  // was shipping its own rail tabs and desktop tiles flagged as archived to every reader
+  // and every answer engine.
+  //
+  // client/src/components/lobby/tabs.test.ts asserts this set covers every LOBBY_TABS
+  // path and every LOBBY_ROUTES path, so the next tab someone adds cannot reintroduce
+  // the trap silently.
+  "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
+  "/benchmark-quality", "/mcp-fleet", "/mcps", "/feed",
   // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
   // registered here so it can never ship flagged "archived".
   "/report",
