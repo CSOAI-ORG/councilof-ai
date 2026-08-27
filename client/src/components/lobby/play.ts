@@ -75,12 +75,32 @@ export const PLAY_CARDS: PlayCard[] = [
   {
     id: "literacy",
     title: "Literacy Training Arena",
-    blurb: "Learning how these systems behave, and what a measurement does and does not say.",
+    blurb: "Learning how these systems behave, and what a measurement does and what a measurement does not say.",
     image: "/images/literacy_training_arena.jpg",
     alt: "People learning how AI behaves inside a training arena",
     status: "route",
     route: "/academy",
     reality: "Opens Council Academy in the centre pane. Course completion attests training, not conformity.",
+  },
+  {
+    id: "compliance-training",
+    title: "Compliance Training World",
+    blurb: "Industry quests — bank, insurance, equity, bond, cross-border — with signed attestations.",
+    image: "/images/literacy_training_arena.jpg",
+    alt: "Compliance training quests across regulated industries",
+    status: "route",
+    route: "/compliance-training-world/catalog.html",
+    reality: "Opens the live quest catalog in the centre pane. Training attests completion — not certification.",
+  },
+  {
+    id: "council-town",
+    title: "Council Town",
+    blurb: "The agent-town simulation — citizens, quests, and local play on a separate deploy.",
+    image: "/images/coliseum_hero_arena.jpg",
+    alt: "A stylised town square for Council Town",
+    status: "route",
+    route: "https://council-town.pages.dev",
+    reality: "Opens Council Town in the centre pane (external deploy). Local XP on /os stays in this browser only.",
   },
 ];
 
