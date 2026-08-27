@@ -1,0 +1,27 @@
+{
+  "before": {
+    "axis": "det",
+    "label": "Detector-interop/DetBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 33,
+    "n_models": 19,
+    "sha256": "1db6db035065",
+    "last_fix": "2026-08-27T11:35:50.886018+00:00"
+  },
+  "fix": {
+    "axis": "det",
+    "delta": "sov6-*-v3-light models show 33/33 unparsed outputs on DetBench (structured JSON required) \u2014 format/transport failure, not capability failure. These models need a JSON parsing adaptor or explicit format coaching in prompt. Honest fix: flag these as format-incompatible with structured benchmarks; they should not be benchmarked against structured-output axes without a formatter layer.",
+    "gaps_before": [
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "weakest model sov6-synthesis-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "sov6-logic-v3-light: 33/33 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-relationality-v3-light: 31/33 unparsed at acc 0.061 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-synthesis-v3-light: 33/33 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "spread best\u2192worst 0.879\u21920.000 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T15:05:17.569473+00:00",
+    "promoted": null,
+    "reverted": null
+  }
+}
