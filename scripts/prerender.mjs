@@ -37,11 +37,27 @@
  *   node prerender.mjs                      # dist/, all discovered routes
  *   node prerender.mjs --dist build --min 400 --wait 2500
  *   node prerender.mjs --routes routes.txt  # explicit list, one per line
+ *
+ * CONCURRENCY. With no --port the local server takes an OS-assigned free port, so two agent
+ * lanes can prerender at the same time without touching each other. The browser and the server
+ * are closed on every exit path, so a run leaves nothing behind. Never clean up after a run
+ * with `pkill -f chrome-headless-shell` or a hardcoded `lsof -tiTCP:4400` — both are
+ * machine-wide and kill other lanes' runs (2026-08-26: a lane died at 143 of 582 routes with
+ * 439 "Target page, context or browser has been closed"). Use scripts/prerender-run.sh, which
+ * scopes every kill to the pids this run reports via --run-state.
+ *
+ * Concurrency is now SAFE, not free: two full lanes on one machine are 2 × --conc browser
+ * contexts competing for CPU, and a route that loses that race snapshots whatever had painted
+ * by --wait. Measured 2026-08-26 on this repo: /about came out 245KB and 171KB in two parallel
+ * lanes against 260KB solo — same routes, same pass, less late-injected CSS. If THIN rises when
+ * you run lanes in parallel, lower --conc per lane or raise --wait; it is not a fault in the
+ * routes.
  */
 import { chromium } from "playwright";
 import http from "node:http";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
 import { join, extname, dirname } from "node:path";
+import { execFileSync } from "node:child_process";
 
 const arg = (k, d) => {
   const i = process.argv.indexOf("--" + k);
@@ -50,13 +66,16 @@ const arg = (k, d) => {
 const DIST = arg("dist", "dist");
 const MIN = Number(arg("min", 400));       // visible chars below which a route is "thin"
 const WAIT = Number(arg("wait", 1800));    // ms after load before snapshotting
-// 0 = let the OS pick a free port. It used to default to 4400, which meant two lanes
-// could not prerender at the same time: the second process failed to bind and then
-// happily rendered every route against the FIRST lane's server — a different build.
-// That is how /world "timed out" intermittently while the report showed nothing wrong.
-// A staging server is per-run private state; it must never be a shared fixed address.
-// An explicit --port is still honoured, and now fails loudly if it is taken.
-const PORT = Number(arg("port", 0));
+// LANE ISOLATION (2026-08-26). With no --port this binds an OS-assigned free port, so two
+// agent lanes prerendering at once never contend by default. `--port N` still binds exactly N
+// and fails loudly if N is taken — it never silently drifts onto someone else's port.
+const PORT_ARG = arg("port", null);
+const REQUESTED_PORT = PORT_ARG === null ? 0 : Number(PORT_ARG);
+// Optional path to record THIS run's node pid / browser pid / bound port. A wrapper reads it
+// to clean up this run and nothing else — never `pkill -f chrome-headless-shell`, which kills
+// every headless browser on the box regardless of which run launched it.
+const RUN_STATE = arg("run-state", null);
+let PORT = REQUESTED_PORT;   // the real bound port; filled in after listen() resolves
 const CONC = Number(arg("conc", 4));
 // Production origin the prerendered canonical/og:url/twitter:url must carry (NOT the
 // localhost:PORT staging origin the snapshot runs on). Override with --prod-origin if the
@@ -296,30 +315,107 @@ const srv = http.createServer((q, r) => {
   r.end(shell);
 });
 
-// Bind before rendering anything, and refuse to continue if the requested port is busy —
-// rendering against someone else's server is worse than not rendering at all.
-srv.on("error", (e) => {
-  if (e.code === "EADDRINUSE") {
-    console.error(`prerender: port ${PORT} is already in use — another prerender is running.`);
-    console.error("Omit --port so the OS assigns a free one, or wait for the other lane.");
-    process.exit(2);
-  }
-  throw e;
-});
-const ACTIVE_PORT = await new Promise((resolve) => {
-  srv.listen(PORT, () => resolve(srv.address().port));
-});
-console.log(`prerender: staging server on http://localhost:${ACTIVE_PORT}`);
+// Bind before anything else starts, and learn the port actually assigned — every URL below
+// (and the canonical rewrite) must use it, not the requested one.
+await new Promise((resolve, reject) => {
+  const onErr = e => {
+    if (e.code === "EADDRINUSE")
+      reject(new Error(`port ${REQUESTED_PORT} is already in use. Another lane is on it — ` +
+        `omit --port to take a free one automatically, or pass a different --port.`));
+    else reject(e);
+  };
+  srv.once("error", onErr);
+  srv.listen(REQUESTED_PORT, () => { srv.off("error", onErr); resolve(); });
+}).catch(e => { console.error(e.message); process.exit(1); });
+PORT = srv.address().port;
+
+// The pid of the browser THIS run launched. Playwright's JS driver spawns it as a direct
+// child of this node process, so it can be read straight off our own children — scoped by
+// ppid, which is the exact opposite of `pkill -f chrome-headless-shell` matching every lane's
+// browser at once. Used only to report the pid; the run closes its own browser regardless.
+function findBrowserPid() {
+  try {
+    for (const line of execFileSync("ps", ["-eo", "pid=,ppid=,comm="], { encoding: "utf8" }).split("\n")) {
+      const m = line.trim().match(/^(\d+)\s+(\d+)\s+(.*)$/);
+      if (!m || m[2] !== String(process.pid)) continue;
+      if (/chrome|chromium|headless|firefox|webkit/i.test(m[3])) return Number(m[1]);
+    }
+  } catch {}
+  return null;
+}
+
+// ---------------------------------------------------------------- lifecycle
+// Nothing this run starts may outlive it. The browser and the HTTP server close on EVERY exit
+// path — clean finish, thrown error, or signal — so a run never leaves an orphan that some
+// other lane has to kill. This is what makes concurrent lanes safe: no run ever reaches for a
+// machine-wide `pkill`, because there is nothing machine-wide left to kill.
+let browser = null;
+let closed = false;
+async function shutdown() {
+  if (closed) return;
+  closed = true;
+  try { if (browser) await browser.close(); } catch {}
+  try { srv.close(); } catch {}
+  if (RUN_STATE) { try { unlinkSync(RUN_STATE); } catch {} }
+}
+for (const sig of ["SIGINT", "SIGTERM", "SIGHUP"]) {
+  process.once(sig, () => { shutdown().finally(() => process.exit(130)); });
+}
+process.on("exit", () => { try { srv.close(); } catch {} });
 
 // ---------------------------------------------------------------- render
-const browser = await chromium.launch();
 const results = [];
 const queue = routes.slice();
 
+// SURVIVING A FOREIGN KILL. Closing our own browser cleanly stops us harming other lanes, but
+// it cannot stop another lane's `pkill -f chrome-headless-shell` from killing OURS — and that
+// is not hypothetical: it happened again mid-verification on 2026-08-26, killing two runs at
+// route 406 of 581. A run that just records 175 "browser has been closed" errors is worse than
+// it looks: every errored route keeps whatever HTML was in dist/ from the LAST build, so a
+// stale page ships and the report calls it an error rather than a snapshot. So: when the
+// browser disappears underneath us, relaunch it, put the route back in the queue and carry on.
+// Loud, bounded, and it never invents a snapshot.
+const MAX_RELAUNCH = Number(arg("max-relaunch", 3));
+const RETRIES_PER_ROUTE = 2;
+const retried = new Map();
+let browserGen = 0;
+let relaunches = 0;
+let relaunching = null;
+const browserGone = e =>
+  /Target (?:page, context or browser|closed)|browser has been closed|Browser closed|has been closed/i
+    .test(e?.message || "");
+
+async function relaunchBrowser(seenGen) {
+  if (browserGen !== seenGen) return;        // another worker already replaced it
+  if (relaunching) { await relaunching; return; }
+  if (relaunches >= MAX_RELAUNCH)
+    throw new Error(`browser died ${relaunches}× from outside this run — giving up`);
+  relaunching = (async () => {
+    relaunches++;
+    try { await browser.close(); } catch {}
+    browser = await chromium.launch();
+    browserGen++;
+    const pid = findBrowserPid();
+    console.log(`\n!!  browser was closed from OUTSIDE this run (someone's machine-wide kill). ` +
+                `Relaunched ${relaunches}/${MAX_RELAUNCH}, new browser pid ${pid ?? "unknown"}. ` +
+                `Affected routes are requeued, not failed.\n`);
+    if (RUN_STATE)
+      writeFileSync(RUN_STATE,
+        JSON.stringify({ pid: process.pid, browserPid: pid, port: PORT, dist: DIST }, null, 1));
+  })();
+  try { await relaunching; } finally { relaunching = null; }
+}
+
 async function worker(id) {
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  let gen = browserGen;
   const errs = [];
-  page.on("pageerror", e => errs.push(e.message.slice(0, 100)));
+  const openPage = async () => {
+    gen = browserGen;
+    const pg = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    pg.on("pageerror", e => errs.push(e.message.slice(0, 100)));
+    return pg;
+  };
+  let page = await openPage();
   while (queue.length) {
     const route = queue.shift();
     const rec = { route, chars: 0, ok: false };
@@ -331,11 +427,11 @@ async function worker(id) {
       // retry once on timeout with a longer budget and the weaker `load` bar, which is enough
       // for a snapshot. Only a route that fails BOTH attempts is a genuine failure.
       try {
-        await page.goto(`http://localhost:${ACTIVE_PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
+        await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "networkidle", timeout: 30000 });
       } catch (e) {
         if (!/Timeout/i.test(String(e && e.message))) throw e;
         rec.slow = true;
-        await page.goto(`http://localhost:${ACTIVE_PORT}${route}`, { waitUntil: "load", timeout: 90000 });
+        await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "load", timeout: 90000 });
       }
       await page.waitForTimeout(rec.slow ? WAIT * 3 : WAIT);
       const info = await page.evaluate(() => {
@@ -353,12 +449,14 @@ async function worker(id) {
       // The snapshot keeps <script> tags so the app still hydrates on top of it. Only the
       // rendered markup is added — nothing is removed.
       // Canonical fix: the per-route self-canonical script in index.html sets canonical/og:url/
-      // twitter:url to `location.origin` — which, DURING PRERENDER, is http://localhost:4400.
+      // twitter:url to `location.origin` — which, DURING PRERENDER, is http://localhost:<PORT>.
       // Left unrewritten it bakes the staging origin into every static page (the sitewide
-      // localhost:4400 canonical the 2026-08-14 audit flagged). Rewrite it to the prod origin
-      // in the captured markup before it is written to dist.
+      // localhost canonical the 2026-08-14 audit flagged). Rewrite it to the prod origin in the
+      // captured markup before it is written to dist. PORT is the port actually bound, which is
+      // OS-assigned unless --port was passed — brand-gate's infra_leak rule matches any
+      // localhost:<port>, not just 4400, so a missed rewrite still fails the build.
       const html = (await page.content())
-        .split(`http://localhost:${ACTIVE_PORT}`).join(PROD_ORIGIN);
+        .split(`http://localhost:${PORT}`).join(PROD_ORIGIN);
       // A snapshot that captured a data-fetch failure must be UNABLE to ship: it would
       // bake the error into the crawler-visible page (2026-08-25: /gspc-scoreboard went
       // live reading "Board fetch failed"). Refuse to write it, count it as an error.
@@ -376,6 +474,23 @@ async function worker(id) {
       rec.bytes = html.length;
       rec.errs = errs.splice(0).slice(0, 1);
     } catch (e) {
+      // The browser vanished under us. That is not this route's fault — requeue it.
+      const n = retried.get(route) || 0;
+      if (browserGone(e) && n < RETRIES_PER_ROUTE) {
+        retried.set(route, n + 1);
+        queue.push(route);
+        try {
+          await relaunchBrowser(gen);
+          try { await page.close(); } catch {}
+          page = await openPage();
+        } catch (fatal) {
+          rec.err = fatal.message.slice(0, 80);
+          results.push(rec);
+          console.log(`ERR  ${String(rec.chars).padStart(6)}ch  ${rec.route}  ${rec.err}`);
+          return;
+        }
+        continue;
+      }
       rec.err = e.message.slice(0, 80);
     }
     results.push(rec);
@@ -385,11 +500,21 @@ async function worker(id) {
                 (rec.rootEmpty ? "  ROOT STILL EMPTY" : "") +
                 (rec.errs?.length ? `  js: ${rec.errs[0]}` : ""));
   }
-  await page.close();
+  try { await page.close(); } catch {}
 }
-await Promise.all(Array.from({ length: CONC }, (_, i) => worker(i)));
-await browser.close();
-srv.close();
+try {
+  browser = await chromium.launch();
+  const browserPid = findBrowserPid();
+  // Printed so a supervising wrapper can scope any kill to THIS run's own processes.
+  console.log(`run: node pid ${process.pid} · browser pid ${browserPid ?? "unknown"} · ` +
+              `server http://localhost:${PORT}\n`);
+  if (RUN_STATE)
+    writeFileSync(RUN_STATE,
+      JSON.stringify({ pid: process.pid, browserPid, port: PORT, dist: DIST }, null, 1));
+  await Promise.all(Array.from({ length: CONC }, (_, i) => worker(i)));
+} finally {
+  await shutdown();
+}
 
 // ---------------------------------------------------------------- report
 const ok = results.filter(r => r.ok);
