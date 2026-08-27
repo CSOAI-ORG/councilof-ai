@@ -151,7 +151,10 @@ export default function LobbyWorkspaceMenu({
             // Esc closes the MENU, not the OS behind it.
             if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(); }
           }}
-          className={`absolute right-0 top-[calc(100%+0.4rem)] z-30 max-h-[70vh] w-[19rem] overflow-y-auto p-3 ${HEAD_MENU}`}
+          // On a phone the trigger sits mid-header, so a right-anchored 19rem panel
+          // would clip off the left edge — below `sm` the panel goes fixed and
+          // spans the viewport instead.
+          className={`fixed inset-x-3 top-[3.6rem] z-30 max-h-[70vh] overflow-y-auto p-3 sm:absolute sm:inset-x-auto sm:right-0 sm:top-[calc(100%+0.4rem)] sm:w-[19rem] ${HEAD_MENU}`}
         >
           {/* ── identity, stated truthfully ─────────────────────────────── */}
           <div className="flex items-start gap-2.5">
