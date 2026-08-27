@@ -85,8 +85,6 @@ const About = lazy(() => import("./pages/About"));
 const FirstFineWatch = lazy(() => import("./pages/FirstFineWatch"));
 const EunomiaData = lazy(() => import("./pages/EunomiaData"));
 const Eunomia = lazy(() => import("./pages/Eunomia"));
-const EunomiaCatalog = lazy(() => import("./pages/EunomiaCatalog"));
-const EunomiaCrosswalk = lazy(() => import("./pages/EunomiaCrosswalk"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
@@ -164,12 +162,9 @@ const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const BenchmarkIndex = lazy(() => import("./pages/BenchmarkIndex"));
 const BenchmarkQuality = lazy(() => import("./pages/BenchmarkQuality"));
 const Instrument = lazy(() => import("./pages/Instrument"));
-const Harness = lazy(() => import("./pages/Harness"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const LiveLedger = lazy(() => import("./pages/LiveLedger"));
 const XrplAttest = lazy(() => import("./pages/XrplAttest"));
-const RatingTheRaters = lazy(() => import("./pages/RatingTheRaters"));
-const ClaimsRegister = lazy(() => import("./pages/ClaimsRegister"));
 const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
 const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
@@ -179,8 +174,6 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
-const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
-const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
 const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
@@ -301,7 +294,6 @@ const IncidentReport = lazy(() => import("./pages/IncidentReport"));
 const EuActClassifier = lazy(() => import("./pages/EuActClassifier"));
 const Crosswalk = lazy(() => import("./pages/Crosswalk"));
 const EastWest = lazy(() => import("./pages/EastWest"));
-const Challenge = lazy(() => import("./pages/Challenge"));
 const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
 const AgentRegistry = lazy(() => import("./pages/AgentRegistry"));
 const GlobalAIRegulation = lazy(() => import("./pages/GlobalAIRegulation"));
@@ -373,18 +365,11 @@ const ROUTE_TITLES: Record<string, string> = {
   "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
-  // No count in this title. A static title cannot derive one, and ADR-001 forbids
-  // typing it — every count on /board renders in the body from the artifact that owns it.
-  "/board": "The measurement board — every set, what it measures, what it does not | Council of AI",
-  "/board/models": "Measured models — the signed card set | Council of AI",
-  // No count in this title: a static route title cannot derive one, and ADR-001
-  // forbids typing it. The live counts render in the page body from /api/gspc.
-  "/financial-axes": "Financial axis — the financial half of the GSPC board | Council of AI",
+  "/financial-axes": "Financial axes — the 8 financial slots of the 22-axis canon | Council of AI",
   "/badges": "Governance badges — wear your measured status | CSOAI",
   "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
-  "/xrpl-attest": "Ledger attestation — devnet-proven; mainnet planned | Council of AI",
-  "/claims-register": "Claims register — every public claim, its evidence, its status | CSOAI",
+  "/xrpl-attest": "Ledger attestation | Council of AI",
   "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
@@ -405,7 +390,6 @@ const ROUTE_TITLES: Record<string, string> = {
   "/where-the-record-lives": "Where the record lives — mirrored, not indestructible | Council of AI",
   "/statute-to-predicate": "From statute to predicate — how a law becomes a test | Council of AI",
   "/instrument": "The Instrument | CSOAI",
-  "/harness": "The measurement harness | Council of AI",
   "/benchmarks": "Benchmarks | CSOAI",
   "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
   "/benchmark-quality": "Benchmark-quality register — deterministic predicates on third-party AI benchmarks | Council of AI",
@@ -481,7 +465,7 @@ function WidgetRouter() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <WidgetLayout>
-            <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
+            <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
               <Route path="/widget" component={WidgetCourses} />
               <Route path="/widget/course/:courseId" component={WidgetCoursePlayer} />
               <Route>
@@ -509,14 +493,7 @@ function App() {
   if (location.startsWith('/widget')) {
     return <WidgetRouter />;
   }
-  // /council-os is NOT handled here. public/_redirects sends it 308 -> /os (the
-  // crawlable launcher) while this branch sent it to /?lobby=home (the overlay),
-  // so the same URL resolved to two different destinations depending on whether
-  // Cloudflare Pages or the SPA answered it — 308 in production, client redirect
-  // on an in-app navigation. Production is the authority; the SPA now agrees by
-  // not claiming the path at all, and wouter falls through to the /os route.
-  // /console and /sov-os both 308 -> /?lobby=home, which is what this branch does.
-  if (path === '/sov-os') {
+  if (path === '/sov-os' || path === '/council-os') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="dark">
@@ -557,7 +534,7 @@ function App() {
                 <PageSchema />
                 <ArchivedBanner />
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
-                  <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
+                  <Suspense fallback={<div className="flex min-h-[60vh] items-center justify-center bg-[#03110b]"><SectionLoader /></div>}><Switch>
                   <Route path="/" component={NewHomeV3} />
                   <Route path="/home-v2" component={NewHomeV2} />
                   <Route path="/home-v3" component={NewHomeV3} />
@@ -653,16 +630,12 @@ function App() {
                   <Route path="/honesty" component={Honesty} />
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/east-west" component={EastWest} />
-                  <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
-                  <Route path="/board/models" component={MeasuredModels} />
-                  <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
                   <Route path="/financial-axes" component={FinancialAxes} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
-                  <Route path="/harness" component={Harness} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
                   <Route path="/live-ledger" component={LiveLedger} />
                   <Route path="/coliseum" component={Coliseum} />
@@ -677,8 +650,6 @@ function App() {
                   <Route path="/gspc-arena" component={CouncilSpace} />
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/xrpl-attest" component={XrplAttest} />
-                  <Route path="/rating-the-raters" component={RatingTheRaters} />
-                  <Route path="/claims-register" component={ClaimsRegister} />
                   <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/embed" component={EmbedPage} />
@@ -718,8 +689,6 @@ function App() {
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
                   <Route path="/eunomia-data" component={EunomiaData} />
                   <Route path="/eunomia" component={Eunomia} />
-                  <Route path="/eunomia-catalog" component={EunomiaCatalog} />
-                  <Route path="/eunomia-crosswalk" component={EunomiaCrosswalk} />
                   <Route path="/careers" component={Careers} />
                   <Route path="/charter" component={Charter} />
                   <Route path="/maternal-covenant" component={MaternalCovenant} />
@@ -749,9 +718,6 @@ function App() {
                   <Route path="/policy-generator" component={PolicyGenerator} />
                   <Route path="/mcp-fleet" component={McpFleet} />
                   <Route path="/os" component={OsLauncher} />
-                  {/* Same destination as the 308 in public/_redirects, so an in-app
-                      navigation and a cold load of /council-os land in the same place. */}
-                  <Route path="/council-os">{() => <Redirect to="/os" />}</Route>
                   <Route path="/sov3">{() => <Redirect to="/workbench" />}</Route>
                   <Route path="/demo" component={DemoOS} />
                   <Route path="/os-demo" component={DemoOS} />
@@ -1046,17 +1012,6 @@ function App() {
                   </Switch></Suspense>
                 </main>
                 <Footer />
-                {/* 2026-08-26: CouncilConsole was still mounted here, and its own
-                    docstring says it was retired from site chrome on 2026-08-21 and that
-                    "App.tsx no longer mounts the floating bubble". It did. Both bubbles
-                    render `fixed bottom-5 right-5 z-[70] h-12 w-12` — measured live, they
-                    occupied the IDENTICAL rect (639,896)-(687,944). Which one a mouse hits
-                    was decided only by paint order, and the retired one came FIRST in the
-                    DOM, so keyboard and screen-reader users reached "Open the Council
-                    Console" before the OS badge. One control, one workspace: the Council OS
-                    badge is the launcher. The component stays on disk as the deterministic
-                    SUMMON/escort implementation, exactly as its docstring intends — it is
-                    simply not mounted as a second floating chat. */}
                 <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />
