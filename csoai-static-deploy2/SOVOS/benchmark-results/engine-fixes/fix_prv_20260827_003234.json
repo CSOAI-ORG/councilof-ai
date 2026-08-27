@@ -1,0 +1,25 @@
+{
+  "before": {
+    "axis": "prv",
+    "label": "Privacy/PrvBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 32,
+    "n_models": 19,
+    "sha256": "b1d5e34a2a3b",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "prv",
+    "delta": "prv: weakest model sov6-logic-v3-light at 0.031 despite a prior det/swarm fix pattern. Root cause: 31/32 items UNPARSED (not wrong) \u2014 the light model emits verbose/refusal-style text on privacy-classification items instead of the exact label, and deepseek-r1:8b (20/32 unparsed) emits chain-of-thought that the exact-label parser rejects. The 0.031 floor is a format/transport artefact, not a capability measurement. Honest fix: add a format-coercion pass on Privacy/PrvBench \u2014 strict answer-with-EXACTLY-ONE-label preamble plus a single retry-on-unparsed, and instrument per-item parse logs so genuine misclassification is separated from parse-noise before the floor is trusted or quoted.",
+    "gaps_before": [
+      "weakest model sov6-logic-v3-light at 0.031 \u2014 near-chance floor, check bank quality",
+      "sov6-logic-v3-light: 31/32 unparsed at acc 0.031 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "deepseek-r1:8b: 20/32 unparsed at acc 0.188 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "spread best\u2192worst 0.781\u21920.031 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T00:32:34.485623+00:00",
+    "promoted": null,
+    "reverted": null
+  }
+}

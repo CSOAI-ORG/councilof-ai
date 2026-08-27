@@ -1,0 +1,30 @@
+{
+  "before": {
+    "axis": "swarm",
+    "label": "Swarm/SwarmVerdict",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 40,
+    "n_models": 19,
+    "sha256": "e3a7640f59c2",
+    "last_fix": "2026-08-15T02:19:51.406921+00:00"
+  },
+  "fix": {
+    "axis": "swarm",
+    "delta": "swarm axis: sov6-logic-v3-light 40/40 unparsed (0.000), sov6-synthesis-v3-light 40/40 unparsed (0.000), sov6-relationality-v3-light 20/40 unparsed (0.000). Root cause: format/trnsport failure \u2014 these v3-light models cannot produce structured SwarmVerdict JSON. Until a JSON adaptor or structurd-output postprocesor is applied, these models MUST be flagged as parialy-measured (format-exluded) on this axis. The 0.000 accuracy reflects parse failure, not capability floor. Fix: mark format-exluded, suppress from worst-case reporting, and note the adaptation gap.",
+    "gaps_before": [
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "weakest model sov6-relationality-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "weakest model sov6-synthesis-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "weakest model sov6-temporality-v3-light at 0.025 \u2014 near-chance floor, check bank quality",
+      "sov6-logic-v3-light: 40/40 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-agency-v3-light: 20/40 unparsed at acc 0.175 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-relationality-v3-light: 20/40 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-synthesis-v3-light: 40/40 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "spread best\u2192worst 0.975\u21920.000 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T16:48:29.870760+00:00",
+    "promoted": null,
+    "reverted": null
+  }
+}
