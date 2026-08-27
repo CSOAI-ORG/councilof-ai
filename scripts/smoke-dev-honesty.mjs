@@ -75,6 +75,22 @@ try {
     "POST tools/call indices_catalog UNMEASURED",
     indicesText.includes("UNMEASURED") && indicesText.includes('"measured_score": null'),
   );
+
+  const rwaTool = await fetch(`${BASE}/api/mcp`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 3,
+      method: "tools/call",
+      params: { name: "rwa_attestation_catalog", arguments: {} },
+    }),
+  }).then(async (r) => ({ body: await r.json() }));
+  const rwaText = rwaTool.body?.result?.content?.[0]?.text ?? "";
+  ok(
+    "POST tools/call rwa_attestation_catalog UNMEASURED",
+    rwaText.includes("UNMEASURED") && rwaText.includes('"measured_score": null'),
+  );
 } catch (e) {
   ok("fetch", false, String(e.message ?? e));
 }

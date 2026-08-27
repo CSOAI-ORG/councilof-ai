@@ -216,6 +216,8 @@ S3 keystone path: RunPod volume S3 API — keys minted in console (owner step).
 - `HF_TOKEN` in `~/.env` is **DEAD** — use `hf auth login` (org `csoai`)
 - MCP OAuth may be read-only
 - Staged UNMEASURED packs: `datasets/labour-economy-unmeasured/`, `datasets/rwa-testnet-unmeasured/`
+- Pre-upload verify (no token): `npm run verify:staged-hf`
+- Local dev smoke: `npm run smoke:dev-honesty` (indices / RWA / MCP registry + JSON-RPC)
 - Upload when auth works: `npm run hf:upload-staged` — see `docs/HF_UPLOAD_RUNBOOK.md`
 
 ---

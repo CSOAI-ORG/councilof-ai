@@ -11,7 +11,9 @@ Observed Hub repos (2026-08-26), admin: Nicholastempleman:
 
 **Labour/economy product surface** on councilof.ai remains **UNMEASURED** (`GET /api/indices`). See `docs/HF_LABOUR_INDEX_HONESTY.md` — Hub `MEASURED-INDEX-v0.1` files must not be read as GSPC cells or permission to invent labour MEASURED product scores.
 
-Still 🔄: dedicated uploads when write token available — see `docs/HF_UPLOAD_RUNBOOK.md`:
+Still 🔄: dedicated uploads when write token available — see `docs/HF_UPLOAD_RUNBOOK.md`.
+
+Pre-upload (no token): `npm run verify:staged-hf`
 
 | Staged pack | Target repo |
 |-------------|-------------|
