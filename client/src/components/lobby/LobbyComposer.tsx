@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AUDIENCES, DEFAULT_AUDIENCE, asksFor } from "./asks";
+import { AUDIENCES, AUDIENCE_DOORS, DEFAULT_AUDIENCE, asksFor } from "./asks";
 import { FOCUS, MEASURE, PRIMARY, TYPE } from "./glass";
 import type { LobbyTab } from "./tabs";
 import type { LobbyChat } from "./useLobbyChat";
@@ -20,6 +20,7 @@ export default function LobbyComposer({
   seedPrompt,
   seedNonce,
   onFirstReply,
+  onClose,
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
@@ -30,6 +31,9 @@ export default function LobbyComposer({
   seedNonce?: number;
   /** Called once when the reader gets their first council reply. */
   onFirstReply?: () => void;
+  /** Folds the composer dock away. The overlay passed this for months while the
+   *  composer silently dropped it — once opened, the dock could never be closed. */
+  onClose?: () => void;
 }) {
   const [q, setQ] = useState("");
   const [audience, setAudience] = useState<string>(() => {
@@ -152,6 +156,11 @@ export default function LobbyComposer({
             className={`rounded-xl border border-slate-900/12 bg-white/90 px-3 py-2.5 text-[12px] font-semibold text-slate-700 transition hover:bg-white motion-reduce:transition-none ${FOCUS}`}
           >
             Asks
+            {audience !== DEFAULT_AUDIENCE && (
+              <span className="ml-1.5 rounded-full border border-emerald-700/30 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-900">
+                {AUDIENCES.find((a) => a.id === audience)?.label ?? audience}
+              </span>
+            )}
           </button>
           {asksOpen && (
             <div
@@ -182,6 +191,21 @@ export default function LobbyComposer({
                   );
                 })}
               </div>
+              {AUDIENCE_DOORS[audience] && onOpenRoute && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAsksOpen(false);
+                    onOpenRoute(
+                      AUDIENCE_DOORS[audience].href,
+                      AUDIENCES.find((a) => a.id === audience)?.label ?? audience,
+                    );
+                  }}
+                  className={`mt-2 w-full rounded-lg border border-emerald-700/30 bg-emerald-50 px-3 py-1.5 text-left text-[12px] font-semibold text-emerald-900 transition hover:bg-emerald-100 motion-reduce:transition-none ${FOCUS}`}
+                >
+                  {AUDIENCE_DOORS[audience].label} → {AUDIENCE_DOORS[audience].href}
+                </button>
+              )}
               <p className={`${TYPE.section} mt-3`}>For “{paneLabel}”</p>
               <p className={TYPE.fine}>Tap to fill — never auto-send</p>
               <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto">
@@ -200,6 +224,17 @@ export default function LobbyComposer({
             </div>
           )}
         </div>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close the composer"
+            title="Close the composer"
+            className={`shrink-0 rounded-xl border border-slate-900/12 bg-white/90 px-3 py-2.5 text-[12px] font-semibold text-slate-500 transition hover:bg-white hover:text-slate-800 motion-reduce:transition-none ${FOCUS}`}
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       {/* In conversation the sentence folds away — bubbles get the room — but the

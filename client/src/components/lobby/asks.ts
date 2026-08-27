@@ -57,17 +57,17 @@ const BY_AUDIENCE: Record<string, string[]> = {
     "Which endpoints can my system call to read the published board, and what shape do they return?",
     "How is a measurement card signed, and how do I verify one without trusting you?",
     "What does the assessment actually run, and what does it explicitly not claim?",
-    "Which axes have a published bank I can reproduce, and where do the items live?",
+    "Which axis have a published bank I can reproduce, and where do the items live?",
     "What models are published on the living board, and which cells are still empty?",
   ],
   compliance: [
     "Which EU AI Act provisions are crosswalked, and what is the frozen text they were measured against?",
     "What does the published regulation feed say is in force today versus deferred?",
-    "Which axes are measured today, and which carry no number at all?",
+    "Which axis are measured today, and which carry no number at all?",
     "What is the difference between measuring a system and certifying it?",
   ],
   procurement: [
-    "Walk me through the board — which axes carry a measured figure?",
+    "Walk me through the board — which axis carry a measured figure?",
     "How would I check a supplier's claim against the published board myself?",
     "What is published about the method — deterministic grading, gold labels, minimum n?",
     "Which figures are the Council's own measurement and which are reported third-party context?",
@@ -75,7 +75,7 @@ const BY_AUDIENCE: Record<string, string[]> = {
   board: [
     "What is the one-paragraph summary of what is measured and what is not?",
     "Where is the corrections ledger, and what has the Council got wrong so far?",
-    "How many axes are measured of the quotable set right now?",
+    "How many axis are measured of the quotable set right now?",
     "How do we get measured, and what does the result actually say?",
   ],
   researcher: [
@@ -307,13 +307,30 @@ export function asksFor(pathname: string, audience: string, limit = 4): string[]
   const rule = BY_ROUTE.find((r) => r.test.test(path));
   const route = !rule ? [] : typeof rule.asks === "function" ? rule.asks(path) : rule.asks;
   const base = BY_AUDIENCE[audience] ?? BY_AUDIENCE[DEFAULT_AUDIENCE];
+  // Route questions lead, but the audience must always show through: with the
+  // old [...route, ...base] order, any pane with `limit` route questions made the
+  // audience chips a placebo — you could switch from Insurer to Regulator and the
+  // list would not move. At most half the slots go to the route; the audience's
+  // own questions take the rest, then any remaining route questions backfill.
+  const routeLead = route.slice(0, Math.floor(limit / 2));
   const out: string[] = [];
-  for (const q of [...route, ...base]) {
+  for (const q of [...routeLead, ...base, ...route]) {
     if (!out.includes(q)) out.push(q);
     if (out.length >= limit) break;
   }
   return out;
 }
+
+/**
+ * The real doors that exist for an audience — a lobby chip may point at one, and
+ * only at one that answers. /for/regulator is a live PersonaRouter page and
+ * /insurers is a live route; no other audience has a door today, so no other
+ * audience gets a link (an unmapped audience renders no door, not a dead one).
+ */
+export const AUDIENCE_DOORS: Record<string, { href: string; label: string }> = {
+  regulator: { href: "/for/regulator", label: "Open the regulator door" },
+  insurer: { href: "/insurers", label: "Open the insurer rail" },
+};
 
 /** Total questions in the registry — quoted in the UI, computed, never typed. */
 export const ASK_COUNT =

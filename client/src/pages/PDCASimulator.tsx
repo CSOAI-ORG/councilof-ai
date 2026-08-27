@@ -53,8 +53,8 @@ const PHASES: PhaseData[] = [
     title: 'Phase 1: PLAN',
     description: 'Define objectives and establish safety requirements',
     icon: Target,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
+    color: 'text-emerald-700',
+    bgColor: 'bg-emerald-50',
     scenario:
       'HealthBot AI is a medical symptom checker used by 500,000 patients monthly. Recent user feedback indicates potential bias in diagnostic suggestions for certain demographics.',
     tasks: [
@@ -89,8 +89,8 @@ const PHASES: PhaseData[] = [
     title: 'Phase 2: DO',
     description: 'Implement safety controls and safeguards',
     icon: TrendingUp,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50',
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-50',
     scenario:
       'Implementation phase: Deploy bias mitigation controls, enhance data privacy measures, and establish monitoring systems for HealthBot AI.',
     tasks: [
@@ -124,8 +124,8 @@ const PHASES: PhaseData[] = [
     title: 'Phase 3: CHECK',
     description: 'Monitor performance and assess compliance',
     icon: BarChart3,
-    color: 'text-yellow-600',
-    bgColor: 'bg-yellow-50',
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-50',
     scenario:
       'Monitoring phase: After 8 weeks of operation, collect performance data, review incident reports, and assess control effectiveness.',
     tasks: [
@@ -159,8 +159,8 @@ const PHASES: PhaseData[] = [
     title: 'Phase 4: ACT',
     description: 'Implement improvements and plan next cycle',
     icon: RefreshCw,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
+    color: 'text-teal-700',
+    bgColor: 'bg-teal-50',
     scenario:
       'Improvement phase: Address identified gaps, implement corrective actions, and prepare for the next PDCA cycle iteration.',
     tasks: [
@@ -229,6 +229,11 @@ export default function PDCASimulator() {
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Walk through a complete SOAI-PDCA cycle with a fictional AI system and see how the
             designed 33-Agent Council provides recommendations at each phase.
+          </p>
+          <p className="mt-3 inline-block rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900 max-w-3xl">
+            Everything on this page — the system, the figures, and every &ldquo;council
+            recommendation&rdquo; — is a scripted illustration written in advance. No council
+            deliberates when you click, and no number here is a measurement.
           </p>
         </div>
 

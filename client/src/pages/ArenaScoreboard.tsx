@@ -135,7 +135,7 @@ export default function ArenaScoreboard() {
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
           <p className="text-[11px] uppercase tracking-wider text-emerald-300/60">
-            {axesCount} arena axes · {rankableCount} rankable
+            {axesCount} arena axis · {rankableCount} rankable
           </p>
           <p className="mt-0.5 font-mono text-2xl text-emerald-100">{data.n_rounds ?? 0} rounds</p>
         </div>
