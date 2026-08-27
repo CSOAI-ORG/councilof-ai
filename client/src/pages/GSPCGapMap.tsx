@@ -16,7 +16,7 @@ const FIELD_EVIDENCED_CELLS = 11;
 const FIELD_BLIND_CELLS = TOTAL_CELLS - FIELD_EVIDENCED_CELLS;
 const BLIND_PERCENTAGE = ((FIELD_BLIND_CELLS / TOTAL_CELLS) * 100).toFixed(1);
 
-const GAP_BY_AXIS: Record<string, { evidenced: number; blind: number }> = {
+export const GAP_BY_AXIS: Record<string, { evidenced: number; blind: number }> = {
   G: { evidenced: 4, blind: 324 },
   S: { evidenced: 3, blind: 325 },
   P: { evidenced: 2, blind: 326 },

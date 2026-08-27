@@ -180,6 +180,8 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
+const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
+const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
 const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
@@ -372,6 +374,10 @@ const ROUTE_TITLES: Record<string, string> = {
   "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
+  // No count in this title. A static title cannot derive one, and ADR-001 forbids
+  // typing it — every count on /board renders in the body from the artifact that owns it.
+  "/board": "The measurement board — every set, what it measures, what it does not | Council of AI",
+  "/board/models": "Measured models — the signed card set | Council of AI",
   // No count in this title: a static route title cannot derive one, and ADR-001
   // forbids typing it. The live counts render in the page body from /api/gspc.
   "/financial-axes": "Financial axes — the financial half of the GSPC board | Council of AI",
@@ -643,6 +649,8 @@ function App() {
                   <Route path="/east-west" component={EastWest} />
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
+                  <Route path="/board/models" component={MeasuredModels} />
+                  <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
                   <Route path="/financial-axes" component={FinancialAxes} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />

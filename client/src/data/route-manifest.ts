@@ -238,6 +238,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Blog"
  },
  {
+  "path": "/board",
+  "comp": "MeasurementBoard",
+  "title": "Measurement Board"
+ },
+ {
+  "path": "/board/models",
+  "comp": "MeasuredModels",
+  "title": "Measured Models"
+ },
+ {
   "path": "/brief",
   "comp": "AccountBrief",
   "title": "Account Brief"

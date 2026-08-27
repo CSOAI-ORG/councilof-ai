@@ -28,6 +28,11 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 export const PRIMARY_PATHS = new Set<string>([
   "/",
   // Measure
+  // /board is the navigator ACROSS every axis set — the one route that is allowed
+  // to render more than one set's count, because it labels every count with the set
+  // it belongs to. Registered here or it ships flagged "archived" (see the invariant
+  // above), which would tell a reader the estate's own index page is superseded.
+  "/board", "/board/models",
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/report",
