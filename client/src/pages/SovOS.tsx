@@ -1,1 +1,1 @@
-PLACEHOLDER_WILL_LOAD
+LOAD_FROM_DISK:/tmp/sovos_final_fix.json:content
