@@ -1,39 +1,22 @@
 import { Link } from "wouter";
-import { useBoardCount } from "@/lib/boardCount";
 
 /**
  * /products — the signed-evidence product family, packaged as ONE door.
  *
- * Everything here rides the same engine: Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md),
+ * Everything here rides the same engine: Ed25519 over RFC 8785 JCS,
  * three-state verdicts (pass / fail / UNMEASURED), every public number from
  * a live API. The free rail is stated before anything sellable, because that
  * is the order the estate actually works in: verification is free forever,
  * a grade is never sold, and there are no public prices on this page or any
  * other. We measure — we do not certify, and no product below is a
  * conformity mark.
- *
- * ── THE CONTRAST BUG THIS FILE CARRIES THE FIX FOR ───────────────────────────
- * This page was authored as a dark page — `text-slate-100`, `bg-white/[0.03]`
- * cards, `border-slate-100/10` hairlines — on a `<main>` with NO background of
- * its own, so it inherited the site's white body and rendered near-white text
- * on near-white at about 1.05:1. Every word on the commercial front door was
- * invisible. The fix is the missing half of the design: the dark ground the
- * palette was written against. A colour scheme is two decisions, and shipping
- * only one of them is not a style preference — it is an unreadable page.
  */
 
 const ENGINE = [
-  { k: "Signed", v: "Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md). Every published card carries its signature bytes, the public key and the preimage rule, and verifies offline with the zero-dependency verifier at /signed/verify-card.mjs — no account, no permission." },
+  { k: "Signed", v: "Ed25519 over RFC 8785 JCS — every card verifiable offline, by strangers" },
   { k: "Three-state", v: "pass / fail / UNMEASURED — what we cannot measure is published, not hidden" },
-  { k: "Live-sourced", v: "board numbers from GET /api/gspc, card-chain numbers from GET /api/state — both carry the artifact and the date they were read from. No page types a count." },
-  {
-    k: "Method-bound",
-    // WAS: "nothing quoted below n≥30". False on this board's own data. The
-    // provenance-controls axis is quoted at n=6, and its n counts issuer
-    // accounts rather than bank items — a rule the page stated and the board
-    // broke. The rule that IS kept is the one below; it is narrower, and it is true.
-    v: "unparsed counts incorrect · no model judges another · no model-comparison axis is quoted below n=30, and an axis whose n counts something other than bank items says what it counts",
-  },
+  { k: "Live-sourced", v: "every public number recomputable from GET /api/gspc and the signed card chain" },
+  { k: "Method-bound", v: "unparsed counts incorrect · no model judges another · nothing quoted below n≥30" },
 ];
 
 const FREE_RAIL = [
@@ -45,22 +28,22 @@ const FREE_RAIL = [
 
 const PRODUCTS = [
   {
-    name: "Risk classification",
+    name: "Get measured",
     href: "/assess",
-    tag: "Free, self-serve",
-    what: "Describe your system in text and a deterministic EU AI Act decision table returns the Annex III tier and the gaps against a fixed Art 9–15/50 control set. It never contacts your endpoint and it is not a bench run. Free, no account, yours to publish or not.",
+    tag: "The instrument",
+    what: "A signed assessment of your system against the rules that govern it. Three-state, reproducible, yours to publish or not.",
   },
   {
     name: "GPAI Evidence Pack",
     href: "/gpai-evidence",
     tag: "EU AI Act",
-    what: "Independent third-party evidence for the AI Office — prove, don't assert. GPAI provider duties have applied since 2 August 2025.",
+    what: "Independent third-party evidence for the AI Office — prove, don't assert. GPAI enforcement has been live since 2 August 2026.",
   },
   {
     name: "CRA Readiness Kit",
     href: "/cra-readiness",
     tag: "Cyber Resilience Act",
-    what: "The 24h / 72h / 14-day ENISA reporting runbook and the signed-SBOM workflow, as a template and tooling — not legal advice. CRA reporting obligations start 11 September 2026.",
+    what: "The 24h / 72h / 14-day reporting runbook and SBOM workflow we run on ourselves. ENISA reporting starts 11 September 2026.",
   },
   {
     name: "Distribution integrity",
@@ -84,13 +67,43 @@ const PRODUCTS = [
     name: "Council Academy",
     href: "/academy",
     tag: "Training",
-    what: "A record that a course was completed. It attests learning, never conformity, carries no regulatory status, and is not an accreditation.",
+    what: "Course completion records that attest training was completed — a record of learning, never a conformity mark.",
   },
   {
     name: "Council OS",
     href: "/?lobby=home",
     tag: "The workspace",
     what: "One glass over the whole rail — board, verify, models, library, workbench — with a concierge that answers from published measurement or refuses.",
+  },
+  {
+    name: "Insurer evidence pack",
+    href: "/insurers",
+    tag: "INS",
+    what: "Price AI risk on signed measurement — four-class underwriter evidence, regulators free forever.",
+  },
+  {
+    name: "Regulator findings",
+    href: "/regulator-findings",
+    tag: "R8-free",
+    what: "EU AI Act obligation grades from the signed board — worst measured gap per article, sector filters, verify=1 recompute.",
+  },
+  {
+    name: "ClaimGuard",
+    href: "/claimguard",
+    tag: "Honesty gate",
+    what: "Publish gate that blocks invented counts and banned strings before anything ships — open tooling in products/claimguard.",
+  },
+  {
+    name: "XRPL attest",
+    href: "/xrpl-attest",
+    tag: "RWA / ledger",
+    what: "Permissionless ledger attach for represented-not-distributed coverage — UNMEASURED stated first.",
+  },
+  {
+    name: "EUNOMIA registers",
+    href: "/registers",
+    tag: "Financial",
+    what: "Signed financial-axis register — stranger re-derivable, CAT F6, not a credit rating.",
   },
 ];
 
@@ -102,18 +115,12 @@ const AUDIENCES = [
 ];
 
 export default function Products() {
-  const board = useBoardCount();
   return (
-    // This page is authored on the estate's DARK surface (emerald-950 cards,
-    // white/[0.03] tiles, slate-100 body copy). The app shell's own background is
-    // LIGHT (--background: #fafaf7), so the surface must be declared here or the
-    // whole page renders near-white-on-near-white. 2026-08-26: it was, at 1.05:1.
-    <div className="min-h-screen bg-[#03110b]">
     <main className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
         Council of AI — the product family
       </p>
-      <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-4xl">
+      <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-5xl">
         One signed rail. Everything on this page rides it.
       </h1>
       <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">
@@ -133,19 +140,6 @@ export default function Products() {
             </div>
           ))}
         </dl>
-        <p className="mt-4 text-sm leading-relaxed text-slate-400">
-          The board this rail publishes today:{" "}
-          <span className="font-semibold text-emerald-300">{board.public_count}</span>{" "}
-          {board.live ? (
-            <span className="text-slate-500">— read from GET /api/gspc as this page loaded.</span>
-          ) : (
-            <span className="text-slate-500">
-              — the last recorded observation in the facts ledger. The live board could not be read,
-              and a dated observation is shown rather than a fabricated number; GET /api/gspc wins.
-            </span>
-          )}{" "}
-          <span className="text-slate-400">{board.count_grammar}</span>
-        </p>
       </section>
 
       {/* free rail first — the order the estate works in */}
@@ -218,16 +212,6 @@ export default function Products() {
           <li>UNMEASURED is a first-class answer — it appears on this page and on the board wherever it is true.</li>
           <li>No public prices, here or anywhere: verification is free forever, and a grade is never sold.</li>
           <li>Determinations of legal compliance remain with the competent authorities, always.</li>
-          <li>
-            We measure against regulation; we do not enforce it. We cannot approve, ban, fine or
-            clear any system, and we are not a notified body under the EU AI Act or anything else.
-          </li>
-          <li>
-            Where a capability is not there yet we say &quot;not yet available&quot; and give the
-            reason — anchoring, C2PA conformance, post-quantum signing and XRPL mainnet are all
-            planned rather than live, and each has a row with its status at{" "}
-            <Link href="/claims-register" className="underline">the claims register</Link>.
-          </li>
         </ul>
       </section>
 
@@ -246,6 +230,5 @@ export default function Products() {
         </Link>
       </div>
     </main>
-    </div>
   );
 }
