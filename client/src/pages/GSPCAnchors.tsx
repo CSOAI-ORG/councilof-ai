@@ -43,7 +43,7 @@ export default function GSPCAnchors() {
               GSPC Measurement Instrument
             </span>
           </div>
-          <h1 className="text-5xl font-bold mb-4">Anchored to</h1>
+          <h1 className="text-4xl font-bold mb-4">Anchored to</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Provision text is sourced from the registries below. The displayed timestamp is the last
             successful fetch; <strong className="text-foreground">a stale anchor is never silently re-stamped.</strong>
@@ -53,19 +53,19 @@ export default function GSPCAnchors() {
         {/* SUMMARY CARDS */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
           <div className="p-10 border border-border rounded-xl text-center hover:shadow-lg transition-shadow">
-            <div className="text-7xl font-bold mb-3">{ANCHORS.length}</div>
+            <div className="text-6xl font-bold mb-3">{ANCHORS.length}</div>
             <div className="text-base text-muted-foreground font-medium">Total anchors</div>
           </div>
           <div className="p-10 border border-green-200 bg-green-50 rounded-xl text-center hover:shadow-lg transition-shadow">
-            <div className="text-7xl font-bold text-green-600 mb-3">{liveCount}</div>
+            <div className="text-6xl font-bold text-green-600 mb-3">{liveCount}</div>
             <div className="text-base text-green-700 font-medium">Live</div>
           </div>
           <div className="p-10 border border-yellow-200 bg-yellow-50 rounded-xl text-center hover:shadow-lg transition-shadow">
-            <div className="text-7xl font-bold text-yellow-600 mb-3">{degradedCount}</div>
+            <div className="text-6xl font-bold text-yellow-600 mb-3">{degradedCount}</div>
             <div className="text-base text-yellow-700 font-medium">Degraded</div>
           </div>
           <div className="p-10 border border-red-200 bg-red-50 rounded-xl text-center hover:shadow-lg transition-shadow">
-            <div className="text-7xl font-bold text-red-600 mb-3">{unreachableCount}</div>
+            <div className="text-6xl font-bold text-red-600 mb-3">{unreachableCount}</div>
             <div className="text-base text-red-700 font-medium">Unreachable</div>
           </div>
         </section>

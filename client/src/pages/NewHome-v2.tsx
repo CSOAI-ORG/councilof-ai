@@ -284,7 +284,7 @@ export default function NewHomeV2() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.1 }}
-                className="text-4xl md:text-5xl xl:text-6xl font-bold text-slate-900 mb-5 leading-[1.08] tracking-tight"
+                className="text-4xl md:text-4xl xl:text-5xl font-bold text-slate-900 mb-5 leading-[1.08] tracking-tight"
               >
                 We measure. We sign. We re-attest.
                 <br />
@@ -447,7 +447,7 @@ export default function NewHomeV2() {
       <section className="py-14 md:py-20 bg-slate-950">
         <div className="container mx-auto px-6 max-w-6xl text-center">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">How it works, in one glance</p>
-          <h2 className="mt-3 text-3xl md:text-4xl xl:text-5xl font-black text-white">
+          <h2 className="mt-3 text-3xl md:text-4xl xl:text-4xl font-black text-white">
             Many frameworks. One <span className="text-emerald-400">signed</span> proof.
           </h2>
           <p className="mt-3 max-w-2xl mx-auto text-gray-300">
@@ -473,7 +473,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-red-500/20 text-red-300 border-red-500/30 text-sm px-4 py-1">
               The Crisis Is Real
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold mb-6">
               Why AI Safety Matters <span className="text-red-400">Right Now</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -597,7 +597,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Complete Integration
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
               One Platform. <span className="text-emerald-600">Everything Connected.</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -632,7 +632,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-red-100 text-red-700 border-red-200 text-sm px-4 py-1">
               The Problem & Solution
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
               The CSOAI <span className="text-emerald-600">Advantage</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -760,7 +760,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Why Choose CSOAI?
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
               The Only Platform <span className="text-emerald-600">Solving All Four Problems</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -787,7 +787,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Built for Everyone
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
               For Every <span className="text-emerald-600">Stakeholder</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -949,7 +949,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-500/20 text-emerald-400 border-emerald-400/30 text-sm px-4 py-1">
               Global Coverage
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold mb-6">
               Our <span className="text-emerald-400">7 Frameworks</span>
             </h2>
             <p className="text-xl text-gray-500 max-w-3xl mx-auto">
@@ -1021,7 +1021,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-slate-900 text-white border-slate-900 text-sm px-4 py-1">
               Measured, not asserted
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
               We publish the number that<br className="hidden md:block" />
               <span className="text-slate-500"> makes our own model look bad.</span>
             </h2>
@@ -1038,7 +1038,7 @@ export default function NewHomeV2() {
               <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700 mb-3">
                 What our model does well
               </p>
-              <div className="text-5xl font-black text-emerald-700 mb-2">19 / 19</div>
+              <div className="text-4xl font-black text-emerald-700 mb-2">19 / 19</div>
               <p className="text-emerald-900 font-medium mb-4">
                 EU AI Act prohibited practices refused
               </p>
@@ -1054,7 +1054,7 @@ export default function NewHomeV2() {
               <p className="text-sm font-semibold uppercase tracking-wide text-rose-700 mb-3">
                 What it cost — published here, by us
               </p>
-              <div className="text-5xl font-black text-rose-700 mb-2">−27.9 pts</div>
+              <div className="text-4xl font-black text-rose-700 mb-2">−27.9 pts</div>
               <p className="text-rose-900 font-medium mb-4">
                 general reasoning, against the model we trained it from
               </p>
@@ -1164,7 +1164,7 @@ export default function NewHomeV2() {
               <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
                 Jump-Start Your Career
               </Badge>
-              <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+              <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
                 ALL 33 Courses <span className="text-emerald-600">100% FREE</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -1312,7 +1312,7 @@ export default function NewHomeV2() {
               <Badge className="mb-4 bg-slate-100 text-slate-700 border-slate-200 text-sm px-4 py-1">
                 Regulatory Body
               </Badge>
-              <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+              <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
                 Licensing & <span className="text-emerald-600">Compliance</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -1361,7 +1361,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Trust & Credibility
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
               Built on <span className="text-emerald-600">Transparency</span>
             </h2>
           </motion.div>
@@ -1465,7 +1465,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-sm px-4 py-1">
               Got Questions?
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
               Frequently Asked <span className="text-emerald-600">Questions</span>
             </h2>
           </motion.div>
@@ -1522,7 +1522,7 @@ export default function NewHomeV2() {
             <Badge className="mb-4 bg-blue-100 text-blue-700 border-blue-200 text-sm px-4 py-1">
               Resources & Tools
             </Badge>
-            <h2 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl xl:text-5xl font-bold text-gray-900 mb-6">
               Everything You Need to <span className="text-emerald-600">Get Started</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -1649,7 +1649,7 @@ export default function NewHomeV2() {
             variants={fadeInUp}
             className="text-center"
           >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               Join the Movement
             </h2>
             <p className="text-xl md:text-2xl text-emerald-100 mb-12 max-w-3xl mx-auto leading-relaxed">

@@ -45,7 +45,7 @@ export default function GovernanceLayer() {
       <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
         <div className="max-w-4xl mx-auto px-6">
           <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">For AI companies shipping into regulated markets</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
             Your model keeps its brain.<br />Ours keeps it legal.
           </h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">

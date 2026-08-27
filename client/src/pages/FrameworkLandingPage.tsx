@@ -52,7 +52,7 @@ export function FrameworkLandingPage({
           <div className="flex items-center justify-between mb-6">
             <div>
               <Badge className="mb-4 bg-white/20 text-white border-white/30">{region}</Badge>
-              <h1 className="text-5xl font-bold mb-4">{frameworkName}</h1>
+              <h1 className="text-4xl font-bold mb-4">{frameworkName}</h1>
               <p className="text-xl text-blue-100 max-w-2xl">{description}</p>
             </div>
           </div>

@@ -102,7 +102,7 @@ export default function Accreditation() {
             <div className="flex justify-center mb-8">
               <div className="h-32 w-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-4xl font-bold mb-6">
               AI Safety Training &amp; Attestation
             </h1>
             <p className="text-xl text-blue-100 mb-8">

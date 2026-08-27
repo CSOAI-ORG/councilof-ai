@@ -155,7 +155,7 @@ export default function About() {
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
         <div className="container max-w-4xl">
           <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Our Story</Badge>
-          <h1 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
             We measure AI systems, sign the result, and publish what we could not measure
           </h1>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">

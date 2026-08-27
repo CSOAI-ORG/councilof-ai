@@ -34,7 +34,7 @@ export default function WhyCsoai() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(16,185,129,.16), transparent 60%)" }} />
         <div className="relative mx-auto max-w-5xl px-6 pt-14 pb-9 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI · measurement body</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Measure it. Sign it. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Leave the cell empty if we cannot.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Measure it. Sign it. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Leave the cell empty if we cannot.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Council of AI is a measurement body. A grade is never sold. Verify is free. We do not certify. We do not remediate. The living board stays honest.</p>
           <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/why-csoai" /></div>
         </div>

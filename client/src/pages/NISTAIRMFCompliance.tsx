@@ -19,7 +19,7 @@ export default function NISTAIRMFCompliance() {
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
       <div className="bg-emerald-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">NIST AI RMF Compliance</h1>
+          <h1 className="text-4xl font-bold mb-4">NIST AI RMF Compliance</h1>
           <p className="text-xl text-emerald-100">
             Understand NIST AI Risk Management Framework requirements and how CSOAI ensures compliance using SOAI-PDCA methodology
           </p>

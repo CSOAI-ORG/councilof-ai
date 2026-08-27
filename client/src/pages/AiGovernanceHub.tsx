@@ -63,7 +63,7 @@ export default function AiGovernanceHub() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the complete guide</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">AI governance, end to end</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">AI governance, end to end</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every regulation, framework, sector, and tool in one map - from the EU AI Act to US state laws, NIST, and ISO 42001. Start anywhere; everything connects.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/ai-act-summary" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Start with the 5-minute guide -&gt;</a>

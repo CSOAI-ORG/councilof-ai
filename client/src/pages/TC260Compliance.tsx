@@ -18,7 +18,7 @@ export default function TC260Compliance() {
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
       <div className="bg-emerald-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">TC260 Compliance</h1>
+          <h1 className="text-4xl font-bold mb-4">TC260 Compliance</h1>
           <p className="text-xl text-emerald-100">
             Achieve compliance with China's technical standards for AI security and algorithm governance
           </p>

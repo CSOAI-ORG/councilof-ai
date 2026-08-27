@@ -185,7 +185,7 @@ export default function HeroSlides() {
         <p className="mb-5 font-mono text-xs uppercase tracking-[0.35em] text-emerald-300/70">
           {slide.kicker}
         </p>
-        <h2 className="text-5xl font-black leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
+        <h2 className="text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
           {slide.headline[0]}{" "}
           <span className="bg-gradient-to-r from-emerald-300 via-teal-300 to-amber-200 bg-clip-text text-transparent">
             {slide.headline[1]}

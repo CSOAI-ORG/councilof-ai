@@ -81,7 +81,7 @@ export default function ProsperityFund() {
             <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-base px-4 py-1">
               Article 8: The Prosperity Covenant
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               AI Prosperity Fund
             </h1>
             <p className="text-2xl text-gray-300 leading-relaxed mb-4 max-w-4xl mx-auto">

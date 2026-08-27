@@ -110,7 +110,7 @@ export default function Technology() {
       {/* Hero Section */}
       <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
             The Technology Behind <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Trustworthy AI Governance</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 leading-relaxed">

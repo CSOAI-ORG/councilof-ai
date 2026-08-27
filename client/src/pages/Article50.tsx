@@ -82,7 +82,7 @@ export default function Article50() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <div className="mx-auto max-w-4xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">EU AI Act · Article 50 · transparency</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The transparency <span className="bg-gradient-to-r from-amber-300 to-emerald-300 bg-clip-text text-transparent">cliff.</span></h1>
+        <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The transparency <span className="bg-gradient-to-r from-amber-300 to-emerald-300 bg-clip-text text-transparent">cliff.</span></h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">If your AI talks to people or generates content, Article 50 lands on you. Disclosure and machine-readable marking of AI content — with real fines (up to <b>€15M or 3%</b> of turnover) and enforcement from day one.</p>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-3">

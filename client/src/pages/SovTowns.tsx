@@ -46,7 +46,7 @@ export default function SovTowns() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">ONE OS · the learning multiplication engine</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Council Towns</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Council Towns</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Living governed worlds. Each town ingests white papers and regulations, simulates the scenarios for its industry and region, accumulates its own dataset — and spawns specialised child towns. One town becomes a civilization; the data compounds toward true governance of all.</p>
           <div className="mt-7 flex flex-wrap gap-3 text-sm">
             <span className="rounded-xl bg-white/10 px-4 py-2 font-semibold">{totalTowns} towns live</span>
@@ -87,7 +87,7 @@ export default function SovTowns() {
           </div>
           <div className="rounded-2xl border border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-50 p-6 flex flex-col justify-center">
             <div className="text-sm font-semibold text-emerald-800">After {gens} generations</div>
-            <div className="mt-2 text-5xl font-black text-emerald-700">{fmt(towns)}</div>
+            <div className="mt-2 text-4xl font-black text-emerald-700">{fmt(towns)}</div>
             <div className="text-sm text-emerald-700/80">governed towns in the network</div>
             <div className="mt-5 text-4xl font-black text-teal-700">{fmt(data)}</div>
             <div className="text-sm text-teal-700/80">white-paper-units of governed data accumulated</div>

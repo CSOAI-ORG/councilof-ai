@@ -174,7 +174,7 @@ export default function MaternalCovenant() {
               Article 1: The Core Innovation
             </Badge>
 
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               The Maternal Covenant
             </h1>
 

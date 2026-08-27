@@ -48,7 +48,7 @@ export default function Competitors() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(16,185,129,.16), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · competitive battlecards</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Know the field. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Cite the source.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Know the field. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Cite the source.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Publicly-reported context on the AI-governance market, each figure carrying the source that published it. Every fact below is reported by that source, not measured by us — and none of it is a finding about any company.</p>
         </div>
       </section>

@@ -40,7 +40,7 @@ export default function PlansPage() {
       <section className="relative overflow-hidden border-b border-emerald-500/15 mx-auto max-w-6xl px-6 pt-16 pb-10 text-center">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Council of AI — the rail is free</p>
-        <h1 className="relative mt-3 text-4xl sm:text-6xl font-black tracking-tight">
+        <h1 className="relative mt-3 text-4xl sm:text-5xl font-black tracking-tight">
           The rail is free. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Verification is free forever.</span>
         </h1>
         <p className="relative mt-4 mx-auto max-w-3xl text-emerald-100/80">

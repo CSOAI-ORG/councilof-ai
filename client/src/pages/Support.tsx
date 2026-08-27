@@ -353,7 +353,7 @@ Is there anything else I can help you with in the meantime?`,
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-emerald-50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div {...fadeInUp}>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+            <h1 className="text-4xl md:text-4xl font-bold mb-4 text-gray-900">
               24/7 Support Center
             </h1>
             <p className="text-xl text-gray-600 mb-2">

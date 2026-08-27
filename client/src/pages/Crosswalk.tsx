@@ -103,7 +103,7 @@ export default function Crosswalk() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <div className="mx-auto max-w-5xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Open · crawlable · citable · East-West v1</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The AI governance <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">framework crosswalk.</span></h1>
+        <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The AI governance <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">framework crosswalk.</span></h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How published AI-governance and adjacent compliance frameworks map to a shared control set. Map once, evidence everywhere. The signed, article-level version runs inside <a href="/?lobby=home" className="text-emerald-300 underline">Council OS</a>.</p>
 
         <div className="mt-5 rounded-xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">

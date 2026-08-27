@@ -112,7 +112,7 @@ export default function GovBench() {
       <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950 py-20">
         <div className="container max-w-5xl">
           <Badge className="mb-4 bg-emerald-600 hover:bg-emerald-600">Open benchmark · Apache-2.0</Badge>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter mb-6 text-gray-900 dark:text-white">
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tighter mb-6 text-gray-900 dark:text-white">
             GovBench
           </h1>
           <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mb-8">

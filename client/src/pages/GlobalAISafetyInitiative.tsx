@@ -97,7 +97,7 @@ export default function GlobalAISafetyInitiative() {
               <Globe className="mr-2 h-4 w-4" />
               Global AI Safety Initiative
             </Badge>
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
               AI Governance for{" "}
               <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                 Every Nation

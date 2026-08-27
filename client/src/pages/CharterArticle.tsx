@@ -3023,7 +3023,7 @@ export default function CharterArticle() {
             <div className="text-emerald-600 font-mono text-sm font-semibold mb-2">
               ARTICLE {articleId}
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
+            <h1 className="text-4xl sm:text-4xl font-bold text-slate-900 mb-4">
               {article.title}
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl">

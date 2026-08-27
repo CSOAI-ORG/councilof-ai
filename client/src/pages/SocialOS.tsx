@@ -59,7 +59,7 @@ export default function SocialOS() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">ONE OS · the social layer · second missing key</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Social OS</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Social OS</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Your Council assistant AI character <em>is</em> your social presence. One unified inbox across 50+ platforms, a cross-post engine, an AI content generator — and social governance (DSA, GDPR, C2PA) woven into compliance. You speak once; the world hears, on every network the user cares about.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/enter" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Enter the OS →</a>

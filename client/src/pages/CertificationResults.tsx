@@ -142,7 +142,7 @@ export default function CertificationResults() {
                   transition={{ delay: 0.5 }}
                   className="mb-6"
                 >
-                  <div className={cn("text-6xl font-bold mb-2", getScoreColor())}>
+                  <div className={cn("text-5xl font-bold mb-2", getScoreColor())}>
                     {score}%
                   </div>
                   <div className="text-muted-foreground">

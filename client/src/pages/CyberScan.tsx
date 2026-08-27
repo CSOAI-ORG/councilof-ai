@@ -85,7 +85,7 @@ export default function CyberScan() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(34,211,238,.16), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · cyber self-scan</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Scan your own business. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">The Council assistant fixes it.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Scan your own business. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">The Council assistant fixes it.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">A CISO-grade stack of reputable open-source tools to test your own cyber — network, web, cloud, containers, code, supply chain. Run them, bring the findings, and the Council assistant triages, maps them to the regulations that bite, and guides the fix. Signed to Layer 0.</p>
         </div>
       </section>

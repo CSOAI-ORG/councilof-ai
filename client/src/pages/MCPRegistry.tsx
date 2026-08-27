@@ -58,7 +58,7 @@ export default function MCPRegistry() {
       <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 text-gray-900 py-20">
         <div className="container max-w-5xl">
           <Badge className="mb-6 bg-emerald-500/20 text-emerald-700 border-emerald-500/30">A2A Substrate</Badge>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
             The <span className="text-emerald-600">{registry.total}-MCP</span> Governance Fleet
           </h1>
           <p className="text-xl text-gray-700 leading-relaxed max-w-3xl mb-8">

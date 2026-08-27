@@ -53,7 +53,7 @@ export default function NetworkPage() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 420px at 50% -10%, rgba(34,211,238,.14), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-9 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-cyan-300/70">CSOAI OS · the Council network</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">One crown. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">Signed measurement surfaces.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">One crown. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">Signed measurement surfaces.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">The public Council of AI surfaces — what each one does, and where to find it. Personal and side-trade domains are not listed here.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             <span className={"inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold " + (live ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200" : "border-emerald-500/20 text-emerald-200/60")}>

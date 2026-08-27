@@ -179,7 +179,7 @@ export default function Blog() {
           <div className="max-w-4xl mx-auto">
             {/* Hero Title and Subtitle */}
             <div className="mb-12 text-center">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-tight">
+              <h1 className="text-4xl sm:text-4xl md:text-5xl font-bold mb-6 tracking-tight">
                 AI Safety News & Insights
               </h1>
               <p className="text-lg sm:text-xl text-slate-200 max-w-2xl mx-auto leading-relaxed">
@@ -250,7 +250,7 @@ export default function Blog() {
                     {featuredPost.category}
                   </Badge>
                 </div>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
+                <h2 className="text-3xl sm:text-4xl md:text-4xl font-bold mb-4 leading-tight">
                   {featuredPost.title}
                 </h2>
                 <p className="text-lg text-white/90 mb-8 max-w-2xl leading-relaxed">

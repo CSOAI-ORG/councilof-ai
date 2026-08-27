@@ -24,7 +24,7 @@ export default function LegacyBridge() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Layer 0 · control H · the legacy bridge</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Legacy Bridge</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Legacy Bridge</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">COBOL and mainframe systems — securely tunneled into the agentic economy and governed by Layer 0. The trillions of lines still running the world, finally able to act through trusted AI without a rewrite.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Open CobolBridge →</a>

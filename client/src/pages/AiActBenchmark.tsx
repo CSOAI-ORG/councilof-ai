@@ -93,7 +93,7 @@ export default function AiActBenchmark() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
             External benchmark · 170/170 held-out scenarios · losses published
           </p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
             Measured against the EU AI Act Benchmark —{" "}
             <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
               including where we fail.

@@ -104,7 +104,7 @@ export default function ToolCommons() {
           {!framed && (
             <a href="/?lobby=tools" className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70 hover:text-emerald-200">Council OS · tools</a>
           )}
-          <h1 className="mt-3 text-5xl font-black tracking-tight sm:text-6xl">
+          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
             The open <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">tool commons.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100/80">

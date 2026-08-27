@@ -133,7 +133,7 @@ export default function TrainingCertificationFeature() {
               <GraduationCap className="h-4 w-4 mr-2" />
               Professional Certification
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold">
+            <h1 className="text-4xl md:text-5xl font-bold">
               Become an AI Safety
               <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent"> Expert</span>
             </h1>
@@ -186,7 +186,7 @@ export default function TrainingCertificationFeature() {
               >
                 <Card className="h-full hover:shadow-xl transition-shadow">
                   <CardHeader>
-                    <div className="text-5xl mb-4">{framework.icon}</div>
+                    <div className="text-4xl mb-4">{framework.icon}</div>
                     <CardTitle className="text-2xl mb-2">{framework.name}</CardTitle>
                     <div className="flex flex-wrap gap-2 mb-4">
                       <Badge variant="secondary">{framework.modules} Modules</Badge>

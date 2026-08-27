@@ -36,7 +36,7 @@ export default function Ontology() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · the ontology</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The semantic layer for <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">AI governance.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The semantic layer for <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">AI governance.</span></h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             What Palantir's Ontology did for enterprise data — turning scattered records into <b className="text-emerald-200">objects,
             links and actions</b> you can reason over — the Council Ontology does for AI governance. Every framework, agent,

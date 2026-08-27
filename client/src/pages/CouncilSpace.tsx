@@ -610,7 +610,7 @@ export default function CouncilSpace() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 30% -10%, rgba(16,185,129,.18), transparent 60%)" }} />
         <div className="relative"><CouncilNav /><ViewSwitcher view={view} /></div>
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Council Space</p>
-        <h1 className="relative mt-2 text-5xl sm:text-6xl font-black tracking-tight">Measure. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Record.</span></h1>
+        <h1 className="relative mt-2 text-4xl sm:text-5xl font-black tracking-tight">Measure. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Record.</span></h1>
         <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the multi-agent council deliberate live while your Council assistant narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
         <div className="relative mt-4 max-w-2xl"><AISystemNotice route="/simulate" /></div>
         <div className="relative mt-4 inline-flex max-w-2xl flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-emerald-500/20 bg-black/25 px-3 py-2 text-sm">

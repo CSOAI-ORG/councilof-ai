@@ -176,7 +176,7 @@ export default function Harness() {
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
           The measurement body
         </p>
-        <h1 className="mt-3 text-4xl font-black text-gray-900 sm:text-5xl">The measurement harness</h1>
+        <h1 className="mt-3 text-4xl font-black text-gray-900 sm:text-4xl">The measurement harness</h1>
         <p className="mt-4 max-w-3xl text-lg text-gray-600">
           The harness is the machinery that turns a question bank and a fleet of models into a
           signed record a stranger can check without asking us anything. This page describes what

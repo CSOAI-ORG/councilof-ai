@@ -108,7 +108,7 @@ export default function PDCAFrameworkFeature() {
               <RefreshCw className="h-4 w-4 mr-2" />
               Continuous Improvement
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold">
+            <h1 className="text-4xl md:text-5xl font-bold">
               The SOAI-PDCA
               <span className="bg-gradient-to-r from-blue-600 to-orange-600 bg-clip-text text-transparent"> Framework</span>
             </h1>

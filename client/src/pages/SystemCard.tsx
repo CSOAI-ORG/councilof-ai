@@ -60,7 +60,7 @@ export default function SystemCard() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · signed assurance</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Prove any AI was governed. <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Verify it offline. Forever.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Prove any AI was governed. <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Verify it offline. Forever.</span></h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Assurance regimes — UK <b className="text-emerald-200">JSP 936</b>, the EU AI Act, NIST — all require proof that a
             high-risk AI system was governed across its lifecycle. But there's a missing primitive: an <b className="text-emerald-200">independent,

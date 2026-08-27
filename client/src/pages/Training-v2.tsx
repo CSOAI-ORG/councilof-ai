@@ -457,7 +457,7 @@ export default function TrainingV2() {
               <span className="text-white text-sm font-semibold">No Credit Card Required</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
               7 Live Courses with Quizzes<br />
               <span className="text-yellow-300">100% FREE</span>
             </h1>
@@ -750,7 +750,7 @@ export default function TrainingV2() {
             <span className="text-white text-sm font-semibold">All 33 Courses - 100% FREE</span>
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-4xl md:text-4xl font-bold mb-6">
             Ready to Become an AI Safety Analyst?
           </h2>
           <p className="text-xl text-green-50 mb-6 max-w-2xl mx-auto">

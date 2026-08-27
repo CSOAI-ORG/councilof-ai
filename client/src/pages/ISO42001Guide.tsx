@@ -14,7 +14,7 @@ export default function ISO42001Guide() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI — ISO/IEC 42001</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">We measure. We do not certify.</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">We measure. We do not certify.</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">
             ISO/IEC 42001 is a certifiable AI management-system standard. Certificates are issued by accredited certification bodies. CSOAI is not one of them. A signed card is not an ISO 42001 certificate.
           </p>

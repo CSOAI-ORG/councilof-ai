@@ -42,7 +42,7 @@ export default function SovereignRegistry() {
       <div className="pointer-events-none fixed inset-0" style={{ background: "radial-gradient(900px 520px at 50% -10%, rgba(16,185,129,.18), transparent 60%)" }} />
       <section className="relative z-10 mx-auto max-w-5xl px-6 py-16">
         <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/70">The grid grows by one</p>
-        <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">Join the Council assistant Grid</h1>
+        <h1 className="mt-2 text-4xl sm:text-4xl font-black tracking-tight">Join the Council assistant Grid</h1>
         <p className="mt-4 max-w-2xl text-lg text-emerald-50/80">Every Council agent that registers \u2014 a humanoid agent, an enterprise, a government \u2014 makes the grid smarter for all. CSOAI frameworks bridge each one to accountable governance without overwhelm. One by one, this becomes governance of all.</p>
 
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-3xl">

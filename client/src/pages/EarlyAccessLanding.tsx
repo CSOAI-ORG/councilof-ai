@@ -37,7 +37,7 @@ export default function EarlyAccessLanding() {
             <div className="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
               🚀 Limited Early Access Available
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
               Be First to Access AI Safety Analyst Training
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">

@@ -89,7 +89,7 @@ This policy is reviewed at least annually and upon any material regulatory chang
       <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
         <div className="max-w-5xl mx-auto px-6">
           <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">Policy &amp; training</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">AI Policy Generator</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">AI Policy Generator</h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">Draft a board-ready AI governance policy in seconds — tailored to your risk tier and mapped to the frameworks you certify against.</p>
         </div>
       </section>

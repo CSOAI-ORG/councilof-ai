@@ -112,7 +112,7 @@ export default function ProvBench() {
           <p className="font-mono text-[11px] uppercase tracking-widest text-emerald-500">
             ProvBench · EU AI Act Article 50 / C2PA marking survival · 17.14% durability
           </p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-bold leading-tight tracking-tight">
+          <h1 className="mt-3 text-4xl sm:text-4xl font-bold leading-tight tracking-tight">
             Does provenance survive{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-green-300 bg-clip-text text-transparent">
               the real world?

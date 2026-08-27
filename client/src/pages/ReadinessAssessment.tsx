@@ -235,7 +235,7 @@ export default function ReadinessAssessment() {
               <Shield className="w-8 h-8 text-blue-400" />
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               AI Governance Readiness Assessment
             </h1>
 
@@ -829,7 +829,7 @@ export default function ReadinessAssessment() {
                       </defs>
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <div className="text-5xl font-bold text-white">{results.overallScore}</div>
+                      <div className="text-4xl font-bold text-white">{results.overallScore}</div>
                       <div className="text-sm text-blue-300">/ 100</div>
                     </div>
                   </div>

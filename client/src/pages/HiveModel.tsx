@@ -39,7 +39,7 @@ export default function HiveModel() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the hive model</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Hive - how consensus is reached</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The Hive - how consensus is reached</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every tool in the OS is a hive with an inner Council queen. Workers gather, the queen proposes, the swarm debates, and a designed multi-agent review vote decides - so no single agent can corrupt the whole. The hive attests, learns, and never gets stuck.</p>
         </div>
       </section>

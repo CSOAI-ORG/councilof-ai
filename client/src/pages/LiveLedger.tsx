@@ -85,7 +85,7 @@ function LiveLedgerTool() {
         <span className="inline-block rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400">
           Live · signed · queryable
         </span>
-        <h1 className="mt-5 text-4xl font-black tracking-tight text-white sm:text-5xl">
+        <h1 className="mt-5 text-4xl font-black tracking-tight text-white sm:text-4xl">
           Live Refutation Ledger
         </h1>
         <p className="mt-4 max-w-2xl text-slate-400">

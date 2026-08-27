@@ -65,7 +65,7 @@ export default function PublicHome() {
               The Western AI Safety Governance Platform
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
               Council of AIs
               <span className="block text-primary">Transparent. Accountable. Human-Verified.</span>
             </h1>

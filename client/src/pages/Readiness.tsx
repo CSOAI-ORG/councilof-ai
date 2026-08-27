@@ -16,7 +16,7 @@ export default function Readiness() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - readiness</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The 2 Aug 2026 transparency cliff is here</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The 2 Aug 2026 transparency cliff is here</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">EU AI Act transparency duties, GPAI penalty powers, and market-surveillance authority have applied since 2 Aug 2026. Legacy generative systems have a marking grace period to 2 Dec 2026. (High-risk obligations were deferred to Dec 2027 / Aug 2028 by the Digital Omnibus - but transparency is now.)</p>
           <div className="mt-6 inline-flex items-baseline gap-2 rounded-2xl bg-white/10 px-5 py-3">
             <span className="text-4xl font-black text-emerald-300">{d}</span><span className="text-sm text-emerald-100">days to the 2 Dec 2026 legacy-marking cliff</span>

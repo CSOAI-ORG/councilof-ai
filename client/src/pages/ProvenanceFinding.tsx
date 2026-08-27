@@ -62,7 +62,7 @@ export default function ProvenanceFinding() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
             Measured finding · Apache-2.0 · 17.14% watermark durability
           </p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
             The marking that proves content is AI-generated{" "}
             <span className="bg-gradient-to-r from-rose-300 to-amber-300 bg-clip-text text-transparent">
               does not survive one ordinary save.

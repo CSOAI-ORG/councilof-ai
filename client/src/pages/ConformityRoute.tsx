@@ -139,7 +139,7 @@ export default function ConformityRoute() {
           <span className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white">
             <Scale className="h-3.5 w-3.5" /> Free · no account · runs in your browser
           </span>
-          <h1 className="mt-4 text-4xl sm:text-5xl font-black tracking-tight text-gray-900">
+          <h1 className="mt-4 text-4xl sm:text-4xl font-black tracking-tight text-gray-900">
             Annex VI or Annex VII?
           </h1>
           <p className="mt-4 text-lg text-gray-700">

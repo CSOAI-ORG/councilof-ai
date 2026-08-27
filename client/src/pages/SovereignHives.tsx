@@ -45,7 +45,7 @@ export default function SovereignHives() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.25), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">One queen per hive · ensembled · Layer 0 governed</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Hive Grid</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The Hive Grid</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Every tool is its own hive with an inner Council queen that learns from how you use the OS, self-improves, stays aware, and never gets stuck. Each queen is governed by Layer 0, so it can evolve safely. Together they ensemble into one mind.</p>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl">
             <Stat v={String(HIVES.length)} l="Feature hives" />

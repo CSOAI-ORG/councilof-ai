@@ -358,7 +358,7 @@ export default function CaseStudies() {
 
         <div className="container max-w-6xl relative z-10">
           <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Illustrative Scenarios</Badge>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
             How Organizations Can Govern AI with CSOAI
           </h1>
           <p className="text-xl text-gray-300 leading-relaxed max-w-3xl">
@@ -782,7 +782,7 @@ export default function CaseStudies() {
         <div className="absolute -bottom-32 left-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-15"></div>
 
         <div className="container max-w-4xl text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-4xl md:text-4xl font-bold mb-6">
             Ready to Govern Your AI Systems?
           </h2>
           <p className="text-xl text-gray-300 mb-10 leading-relaxed">

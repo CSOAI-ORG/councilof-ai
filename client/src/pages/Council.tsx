@@ -108,7 +108,7 @@ export default function Council() {
               <Shield className="h-3.5 w-3.5 mr-1" />
               designed multi-agent review
             </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="text-4xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               The <span className="text-emerald-400">Council</span>
             </h1>
             <p className="text-xl text-gray-300 mb-4 leading-relaxed">

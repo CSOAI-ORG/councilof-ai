@@ -226,7 +226,7 @@ export default function Integrations() {
 
         <div className="relative container max-w-6xl">
           <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Connect CSOAI to Your Entire AI Stack
             </h1>
             <p className="text-xl text-slate-300 mb-8">
@@ -495,7 +495,7 @@ export default function Integrations() {
         </div>
 
         <div className="relative container max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Connect?</h2>
+          <h2 className="text-4xl md:text-4xl font-bold mb-6">Ready to Connect?</h2>
           <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
             Start integrating CSOAI with your AI stack today. Get started for free or contact us for enterprise integration support.
           </p>

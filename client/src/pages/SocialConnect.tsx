@@ -26,7 +26,7 @@ export default function SocialConnect() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI + MEOK - social OS</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Give your AI character a face and a voice</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Give your AI character a face and a voice</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Connect your platforms, pick an avatar, name your character. It governs and posts as you - across 12 networks. Set it up here now; live posting switches on with the Layer 0 backend.</p>
         </div>
       </section>

@@ -242,7 +242,7 @@ export default function OscalStudio() {
           <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">
             Standards interoperability
           </p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">OSCAL Studio</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">OSCAL Studio</h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">
             Import any NIST OSCAL 1.x document and export CSOAI&rsquo;s cross-framework control
             implementation as machine-readable OSCAL. Built for the FedRAMP 20x direction, where

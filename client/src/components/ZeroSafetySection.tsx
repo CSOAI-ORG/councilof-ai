@@ -96,7 +96,7 @@ export default function ZeroSafetySection() {
             <AlertOctagon className="h-3.5 w-3.5 mr-1" />
             The Problem
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Zero AI Safety Solutions
             <span className="block text-emerald-400">Until Now.</span>
           </h2>

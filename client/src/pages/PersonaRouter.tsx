@@ -273,7 +273,7 @@ export default function PersonaRouter({ persona }: { persona: string }) {
         <div className="relative max-w-6xl mx-auto px-6 grid gap-8 lg:grid-cols-[1.2fr_1fr] items-center">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">{p.eyebrow}</p>
-            <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">{p.h1}</h1>
+            <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">{p.h1}</h1>
             <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">{p.intro}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href={p.links[0].href} className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-slate-900 hover:bg-emerald-400">{p.links[0].label} -&gt;</a>

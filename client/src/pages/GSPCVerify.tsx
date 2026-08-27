@@ -29,7 +29,7 @@ export default function GSPCVerify() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
             Chain verification · client-side · no server involved
           </p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
             Don&apos;t take our word for it.{" "}
             <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
               Recompute the chain.

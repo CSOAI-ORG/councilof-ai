@@ -42,7 +42,7 @@ export default function Dragonfly() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the architecture</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Dragonfly - 4-Wing Model</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The Dragonfly - 4-Wing Model</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The dragonfly has four wings; so does CSOAI — by design. Four independent subsystems - Governance, Intelligence, Safety, Cybersecurity - are designed so all must agree for any major decision. Council cross-checking applied to AI.</p>
           <p className="mt-3 max-w-2xl text-sm text-amber-200/90">Design model — not yet a live system. Measured status is published on the <a href="/refutation-ledger" className="underline">Refutation Ledger</a> (DR-0007).</p>
           <p className="mt-3 max-w-2xl text-emerald-100/75 text-sm">360-degree vision, reacts in milliseconds, 300 million years of survival. The metaphor is the architecture.</p>

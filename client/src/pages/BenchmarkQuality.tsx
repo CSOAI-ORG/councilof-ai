@@ -225,7 +225,7 @@ export default function BenchmarkQuality() {
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-indigo-700 dark:text-indigo-400">
             Benchmark-quality register{reg ? ` · assessed ${reg.assessed_on}` : ""}
           </p>
-          <h1 className="mt-3 text-4xl font-black tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+          <h1 className="mt-3 text-4xl font-black tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             We measure the instruments too.
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-700 dark:text-gray-300">

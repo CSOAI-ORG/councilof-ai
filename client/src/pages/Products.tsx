@@ -113,7 +113,7 @@ export default function Products() {
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
         Council of AI — the product family
       </p>
-      <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-5xl">
+      <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-4xl">
         One signed rail. Everything on this page rides it.
       </h1>
       <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">

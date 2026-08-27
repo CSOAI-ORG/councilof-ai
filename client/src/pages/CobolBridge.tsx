@@ -40,7 +40,7 @@ export default function CobolBridge() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(720px 380px at 82% -12%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Enterprise on-ramp · legacy modernization → continuous compliance evidence</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">From a COBOL migration to signed, continuous compliance evidence</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">From a COBOL migration to signed, continuous compliance evidence</h1>
           <p className="mt-5 max-w-3xl text-lg text-emerald-50/90">
             Banks and insurers modernizing legacy COBOL have to prove data-lineage and control continuity for DORA, Basel III/IV, SOX and Solvency II — exactly while the core systems are changing. The migration itself produces that evidence. <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="underline decoration-emerald-400/60 underline-offset-2 hover:text-white">cobolbridge.ai</a> modernizes the code and emits audit-ready lineage; Council of AI turns that lineage into an independent, signed measurement pack.
           </p>

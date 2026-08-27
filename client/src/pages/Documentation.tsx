@@ -41,7 +41,7 @@ export default function Documentation() {
         <div className="max-w-6xl mx-auto text-center">
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <Book className="w-20 h-20 mx-auto mb-6" />
-            <h1 className="text-5xl font-bold mb-6">Technical Documentation</h1>
+            <h1 className="text-4xl font-bold mb-6">Technical Documentation</h1>
             <p className="text-xl opacity-90 max-w-3xl mx-auto">
               Comprehensive guides, API references, and architecture documentation for developers and system integrators.
             </p>
@@ -428,7 +428,7 @@ print(f"System ID: {system.id}")`}</pre>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
-                    <div className="text-5xl font-bold text-emerald-600 mb-2">99.9%</div>
+                    <div className="text-4xl font-bold text-emerald-600 mb-2">99.9%</div>
                     <p className="text-gray-600">Guaranteed uptime</p>
                     <p className="text-sm text-gray-500 mt-2">Max 8.76 hours downtime/year</p>
                   </div>
@@ -443,7 +443,7 @@ print(f"System ID: {system.id}")`}</pre>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
-                    <div className="text-5xl font-bold text-blue-600 mb-2">&lt;300ms</div>
+                    <div className="text-4xl font-bold text-blue-600 mb-2">&lt;300ms</div>
                     <p className="text-gray-600">95th percentile latency</p>
                     <p className="text-sm text-gray-500 mt-2">Measured globally</p>
                   </div>
@@ -458,7 +458,7 @@ print(f"System ID: {system.id}")`}</pre>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
-                    <div className="text-5xl font-bold text-purple-600 mb-2">&lt;2h</div>
+                    <div className="text-4xl font-bold text-purple-600 mb-2">&lt;2h</div>
                     <p className="text-gray-600">Average response time</p>
                     <p className="text-sm text-gray-500 mt-2">24/7 support available</p>
                   </div>

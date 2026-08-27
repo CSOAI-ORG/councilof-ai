@@ -115,7 +115,7 @@ export default function Ed25519Verify() {
         <p className="text-center font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
           Client-side · WebCrypto · no server involved
         </p>
-        <h1 className="mt-3 mb-4 text-center text-4xl sm:text-5xl font-black tracking-tight">
+        <h1 className="mt-3 mb-4 text-center text-4xl sm:text-4xl font-black tracking-tight">
           Offline{" "}
           <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
             Ed25519 Verification

@@ -59,7 +59,7 @@ export default function SOAIPDCAFramework() {
             <div className="flex justify-center mb-8">
               <div className="h-32 w-32 bg-gradient-to-br from-green-400 to-green-600 rounded-lg" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-4xl font-bold mb-6">
               SOAI-PDCA Continuous Improvement Framework
             </h1>
             <p className="text-xl text-green-100 mb-8">

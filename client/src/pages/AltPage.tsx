@@ -68,7 +68,7 @@ export default function AltPage({ comp }: { comp: string }) {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the {c.name} alternative</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Looking for a {c.name} alternative for AI governance?</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Looking for a {c.name} alternative for AI governance?</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">{c.name} is known for {c.their}. CSOAI is purpose-built for AI governance - EU AI Act readiness, multi-framework crosswalks, and consensus-based decision governance. Here is the honest comparison.</p>
         </div>
       </section>

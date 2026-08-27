@@ -450,7 +450,7 @@ export default function ComparisonPage() {
               <Shield className="h-3 w-3 mr-1" />
               Comparison
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Why Organizations Choose CSOAI
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">

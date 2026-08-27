@@ -91,7 +91,7 @@ export default function ComplianceCommandCenter() {
         <div className="max-w-6xl mx-auto px-6 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">Executive view</p>
-            <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Compliance Command Center</h1>
+            <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Compliance Command Center</h1>
             <p className="mt-4 text-emerald-50 max-w-2xl">Your entire AI governance program — coverage, evidence, model risk and the signed moat — on one screen.</p>
           </div>
           <button onClick={boardReport} className="rounded-lg bg-emerald-400 px-5 py-3 font-bold text-emerald-950 hover:bg-emerald-300">↓ Board report</button>

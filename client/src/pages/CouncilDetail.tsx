@@ -21,7 +21,7 @@ export default function CouncilDetail() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-800 hover:bg-emerald-200">
               Multi-Agent Council
             </Badge>
-            <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl font-bold text-gray-900 mb-6">
               The 33-Agent Council
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">

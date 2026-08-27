@@ -40,7 +40,7 @@ export default function SovereignMinds() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">ONE OS · the cognition &amp; voice layer</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Council Minds</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Council Minds</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">Every Council Town, humanoid and node is inhabited by a mind. It perceives, remembers, reflects, plans and acts — governed end to end. Memory that compounds, a voice that speaks, a character that walks you through the world and does the work so you don't have to.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/towns" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">See the Towns they inhabit →</a>

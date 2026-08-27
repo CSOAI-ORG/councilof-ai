@@ -384,7 +384,7 @@ export default function TrustCenter() {
           <Badge className="mb-6 bg-blue-500/20 text-blue-300 border-blue-500/30">
             Security & Compliance
           </Badge>
-          <h1 className="text-5xl md:text-6xl font-bold mb-8 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
             Trust Built Into Every Layer
           </h1>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">

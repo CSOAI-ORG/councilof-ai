@@ -37,7 +37,7 @@ function Hero() {
     <section className="border-b border-emerald-500/15 bg-[#03110b]">
       <div className="mx-auto max-w-6xl px-6 pt-14 pb-8 text-center">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · the framework hive</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight text-emerald-50">Every framework. <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Everything collected.</span></h1>
+        <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight text-emerald-50">Every framework. <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Everything collected.</span></h1>
         <p className="mx-auto mt-3 max-w-2xl text-emerald-100/75">Click any framework and your Council assistant brings the whole hive together — who must comply, the obligations, penalties, sectors, cyber threats, crosswalks, and the deadline clock. Then it helps you simulate, get compliant, and get trained.</p>
       </div>
     </section>

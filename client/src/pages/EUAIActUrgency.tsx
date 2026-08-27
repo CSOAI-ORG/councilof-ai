@@ -199,7 +199,7 @@ export default function EUAIActUrgency() {
                 Enforcement Deadline Approaching
               </Badge>
 
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
                 <span className="text-red-600 dark:text-red-500">
                   {daysLeft}
                 </span>{" "}

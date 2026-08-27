@@ -144,7 +144,7 @@ export default function DashboardHowItWorks() {
       {/* Header */}
       <div className="bg-emerald-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">Dashboard Guide</h1>
+          <h1 className="text-4xl font-bold mb-4">Dashboard Guide</h1>
           <p className="text-xl text-emerald-100">
             Master your personal dashboard to track progress, manage certifications, and find high-paying AI safety jobs
           </p>

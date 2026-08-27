@@ -498,7 +498,7 @@ export default function GovernmentDashboard() {
                 <Landmark className="h-3 w-3 mr-1" />
                 Government & Regulator Portal
               </Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+              <h1 className="text-4xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
                 Global AI Compliance
                 <span className="text-emerald-300"> Monitoring</span>
               </h1>

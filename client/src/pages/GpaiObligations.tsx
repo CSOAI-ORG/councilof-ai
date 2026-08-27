@@ -37,7 +37,7 @@ export default function GpaiObligations() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - GPAI obligations</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">If you ship a model, this is your 2 Aug 2026 list</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">If you ship a model, this is your 2 Aug 2026 list</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">General-purpose AI provider obligations have applied since 2 August 2025 - and since 2 August 2026 the AI Office can enforce them with penalties. Here is exactly what every model provider owes - and the extra duties if your model carries systemic risk.</p>
           <div className="mt-6 max-w-2xl"><AISystemNotice route="/foundation-models" /></div>
         </div>

@@ -304,19 +304,19 @@
      ══════════════════════════════════════════════════════════════════════ */
 
   /* ── Rhythm ────────────────────────────────────────────────────────── */
-  .section-y { padding-block: 4rem; }
-  .section-y-sm { padding-block: 2.75rem; }
-  .section-y-lg { padding-block: 5rem; }
+  .section-y { padding-block: 4.5rem; }
+  .section-y-sm { padding-block: 3.25rem; }
+  .section-y-lg { padding-block: 6rem; }
 
   @media (min-width: 640px) {
-    .section-y { padding-block: 5.5rem; }
-    .section-y-sm { padding-block: 3.5rem; }
-    .section-y-lg { padding-block: 7rem; }
+    .section-y { padding-block: 6.5rem; }
+    .section-y-sm { padding-block: 4.25rem; }
+    .section-y-lg { padding-block: 8.5rem; }
   }
   @media (min-width: 1024px) {
-    .section-y { padding-block: 7rem; }
-    .section-y-sm { padding-block: 4.5rem; }
-    .section-y-lg { padding-block: 9rem; }
+    .section-y { padding-block: 8rem; }
+    .section-y-sm { padding-block: 5.5rem; }
+    .section-y-lg { padding-block: 11rem; }
   }
 
   /* ── Shell: identical max-width and gutters on every band ──────────── */
@@ -373,10 +373,24 @@
     box-shadow: 0 12px 32px -18px color-mix(in srgb, var(--foreground) 55%, transparent);
   }
 
+
+  /* ── Scale note, 2026-08-27 ──────────────────────────────────────────────
+     Every heading step came down and every section band went up. The site was
+     set like a poster — 52px band headings over 4rem of padding — which reads
+     as loud rather than authoritative, and leaves nothing for the white space
+     to do. A measurement instrument should look composed.
+       .t-band     52 -> 40px      .section-y     4    -> 4.5rem  (to 8rem)
+       .t-section  40 -> 32px      .section-y-sm  2.75 -> 3.25rem
+       .t-lede     19 -> 17px      .section-y-lg  5    -> 6rem   (to 11rem)
+       .t-card     16 -> 15px      .measure       68   -> 62ch
+       .t-body     15 -> 14px      .measure-tight 54   -> 48ch
+     Nothing below 14px, so nothing gets harder to read; the gain is in the
+     ratio between the type and the room around it. Every page inherits this —
+     that is the point of the scale living here rather than in the components. */
   /* ── Type scale ────────────────────────────────────────────────────── */
   /* Section heading: the h2 that opens a band. */
   .t-section {
-    font-size: clamp(1.75rem, 1.25rem + 1.6vw, 2.5rem);
+    font-size: clamp(1.5rem, 1.1rem + 1.15vw, 2rem);
     line-height: 1.14;
     letter-spacing: -0.022em;
     font-weight: 800;
@@ -384,7 +398,7 @@
   }
   /* Band heading: the big statement on a hero/story band. */
   .t-band {
-    font-size: clamp(2.125rem, 1.4rem + 2.6vw, 3.25rem);
+    font-size: clamp(1.75rem, 1.25rem + 1.7vw, 2.5rem);
     line-height: 1.06;
     letter-spacing: -0.028em;
     font-weight: 900;
@@ -392,21 +406,21 @@
   }
   /* Standfirst under a heading. */
   .t-lede {
-    font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+    font-size: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
     line-height: 1.65;
     text-wrap: pretty;
   }
   /* Card title. */
   .t-card {
-    font-size: 1rem;
-    line-height: 1.35;
+    font-size: 0.9375rem;
+    line-height: 1.4;
     letter-spacing: -0.011em;
     font-weight: 800;
   }
   /* Long-form body inside a card or list. */
   .t-body {
-    font-size: 0.9375rem;
-    line-height: 1.62;
+    font-size: 0.875rem;
+    line-height: 1.65;
     text-wrap: pretty;
   }
   /* Eyebrow / kicker. */
@@ -419,8 +433,8 @@
   }
 
   /* ── Measure: cap line length so long-form actually reads ──────────── */
-  .measure { max-width: 68ch; }
-  .measure-tight { max-width: 54ch; }
+  .measure { max-width: 62ch; }
+  .measure-tight { max-width: 48ch; }
   .measure-center { margin-inline: auto; }
 
   /* Typography scale — editorial, generous, flat */

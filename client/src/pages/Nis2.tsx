@@ -26,7 +26,7 @@ export default function Nis2() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <div className="mx-auto max-w-4xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Cybersecurity · NIS2 Directive</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Network security, <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">with the board on the hook.</span></h1>
+        <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Network security, <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">with the board on the hook.</span></h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">NIS2 raises cybersecurity duties for essential and important entities across the EU — with 24/72-hour incident reporting and <b>personal management accountability</b>. The transposition deadline was 17 October 2024; national implementation is still being completed.</p>
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2">

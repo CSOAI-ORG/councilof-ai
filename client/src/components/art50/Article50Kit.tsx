@@ -151,14 +151,14 @@ export default function Article50Kit() {
           <span className="mb-4 inline-block rounded-full bg-rose-500 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-white">
             Deadline response
           </span>
-          <h1 className="mb-4 text-5xl font-black tracking-tighter text-rose-300 sm:text-6xl">
+          <h1 className="mb-4 text-4xl font-black tracking-tighter text-rose-300 sm:text-5xl">
             ARTICLE 50 KIT
           </h1>
           <p className="mb-2 text-2xl font-bold uppercase tracking-widest text-emerald-100/80">
             EU AI Act transparency cliff
           </p>
           <div className="mt-4 inline-block rounded-2xl border border-rose-400/40 bg-rose-500/10 px-8 py-4">
-            <div className="text-6xl font-black tabular-nums text-rose-300">{days}</div>
+            <div className="text-5xl font-black tabular-nums text-rose-300">{days}</div>
             <div className="mt-1 text-sm uppercase tracking-widest text-emerald-100/60">
               {days === 0 ? "Article 50 applies since 2 August 2026" : "days until 2 August 2026"}
             </div>

@@ -259,7 +259,7 @@ export default function Charter() {
               <Scroll className="inline h-4 w-4 mr-2" />
               Version 1.0 - Effective January 15, 2026
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               CSOAI Partnership Charter
             </h1>
             <p className="text-2xl text-emerald-100 leading-relaxed mb-4 max-w-4xl mx-auto">

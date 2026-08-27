@@ -35,7 +35,7 @@ export default function Accessibility() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-green-50 to-white">
         <div className="max-w-4xl mx-auto">
           <motion.div {...fadeInUp}>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+            <h1 className="text-4xl md:text-4xl font-bold mb-6 text-gray-900">
               Accessibility Statement
             </h1>
             <p className="text-lg text-gray-600">

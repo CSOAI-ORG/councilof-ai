@@ -71,7 +71,7 @@ export default function FrameworkDetail() {
             <Badge className={fw.binding ? "bg-rose-100 text-rose-800" : "bg-amber-100 text-amber-800"}>{fw.binding ? "Binding" : "Voluntary"}</Badge>
             <Badge variant="outline">Phase {fw.phase} · {fw.phaseLabel}</Badge>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{fw.name}</h1>
+          <h1 className="text-4xl md:text-4xl font-bold mb-4">{fw.name}</h1>
           <p className="text-xl text-gray-700 leading-relaxed max-w-3xl">{fw.description}</p>
           {fw.effective && (
             <div className="flex items-center gap-1.5 text-sm text-rose-700 mt-4">

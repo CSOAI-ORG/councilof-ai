@@ -411,7 +411,7 @@ export default function Crosswalks() {
               <Globe2 className="inline h-4 w-4 mr-2" />
               International Framework Alignment
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               Framework Crosswalks
             </h1>
             <p className="text-2xl text-emerald-100 leading-relaxed mb-6 max-w-4xl mx-auto">

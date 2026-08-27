@@ -263,7 +263,7 @@ export default function LiveTVHero() {
                 />
               </svg>
               <div className="absolute top-1/2 left-1/2 text-center" style={{ transform: "translate(-50%,-50%)" }}>
-                <div className="text-7xl font-black" style={{ color: "#10b981", letterSpacing: "-2px" }}>
+                <div className="text-6xl font-black" style={{ color: "#10b981", letterSpacing: "-2px" }}>
                   {score.toFixed(1)}
                 </div>
                 <div className="text-xs uppercase tracking-[3px] mt-1" style={{ color: "rgba(16,185,129,0.6)" }}>

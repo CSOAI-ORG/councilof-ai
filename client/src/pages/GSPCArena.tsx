@@ -274,7 +274,7 @@ export default function GSPCArena() {
             </p>
 
             {/* Headline */}
-            <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1]">
+            <h1 className="mt-4 text-4xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.1]">
               Which model refuses{" "}
               <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
                 the prohibited practice?

@@ -45,7 +45,7 @@ export default function RemediationPartners() {
           <span className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-600">
             Measurement body, not a remediation shop
           </span>
-          <h1 className="mt-4 text-4xl font-black text-gray-900 sm:text-5xl">
+          <h1 className="mt-4 text-4xl font-black text-gray-900 sm:text-4xl">
             We measure.<br />
             <span className="text-emerald-500">You choose who fixes it.</span>
           </h1>

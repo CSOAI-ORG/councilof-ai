@@ -103,7 +103,7 @@ export default function SectorAct({ sector }: { sector: string }) {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">{s.eyebrow}</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">{s.title}</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">{s.title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">{s.intro}</p>
           {s.callout && (
             <div className="mt-5 max-w-2xl rounded-xl border border-amber-300/40 bg-amber-400/10 px-4 py-3 text-sm text-amber-100">

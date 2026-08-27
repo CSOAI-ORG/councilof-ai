@@ -34,7 +34,7 @@ export default function NistVsEuAct() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - framework comparison</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">NIST AI RMF vs the EU AI Act</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">NIST AI RMF vs the EU AI Act</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">One is a voluntary US framework; the other is binding EU law with 35m EUR teeth. Here is how they differ - and how a single program covers both.</p>
         </div>
       </section>

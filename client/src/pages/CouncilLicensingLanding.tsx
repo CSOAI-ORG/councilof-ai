@@ -25,7 +25,7 @@ export default function CouncilLicensingLanding() {
             <div className="inline-block bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
               🏛️ Multi-Stakeholder Governance
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
               Council Licensing
             </h1>
             <p className="text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">

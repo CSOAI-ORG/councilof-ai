@@ -84,7 +84,7 @@ export default function SectorsAtlas() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - sector atlas</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Every sector, mapped onto the OS</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Every sector, mapped onto the OS</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The 47-industry classifier made visible. Pick a domain, click a sector, and see the frameworks that bind it and the risk tier it carries. From clinical AI to predictive policing to recommender systems - the whole CASA taxonomy in one place.</p>
         </div>
       </section>

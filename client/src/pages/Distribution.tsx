@@ -43,7 +43,7 @@ export default function Distribution() {
       <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">The distribution surface</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Governed everywhere we ship</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Governed everywhere we ship</h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">
             Every endpoint CSOAI distributes to — source, package registries, MCP directories and edge deploys —
             mapped to its Layer 0 conformance. One signed floor, reaching every channel.

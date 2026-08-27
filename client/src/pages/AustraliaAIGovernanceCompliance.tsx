@@ -18,7 +18,7 @@ export default function AustraliaAIGovernanceCompliance() {
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
       <div className="bg-emerald-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">Australia AI Governance Compliance</h1>
+          <h1 className="text-4xl font-bold mb-4">Australia AI Governance Compliance</h1>
           <p className="text-xl text-emerald-100">
             Achieve compliance with Australia's principles-based AI governance framework
           </p>

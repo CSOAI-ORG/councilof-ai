@@ -49,7 +49,7 @@ export default function FoundingCouncilAgreement() {
               <Crown className="h-3 w-3 mr-1" />
               Founding Council
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-4xl font-bold mb-6">
               Founding Council Agreement
             </h1>
             <p className="text-xl text-muted-foreground mb-4">

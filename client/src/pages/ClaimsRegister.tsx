@@ -153,7 +153,7 @@ export default function ClaimsRegister() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-700">
             Claims register · {rendered.length} claims · generated {register.generated_at}
           </p>
-          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-4xl">
             Every claim we make,{" "}
             <span className="bg-gradient-to-r from-emerald-600 to-amber-600 bg-clip-text text-transparent">
               and what backs it.

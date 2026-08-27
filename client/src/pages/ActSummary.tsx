@@ -29,7 +29,7 @@ export default function ActSummary() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the 5-minute version</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The EU AI Act, explained</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The EU AI Act, explained</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The first comprehensive AI law, in plain English. It sorts AI into four risk tiers and regulates each differently. Here is the whole thing in five minutes.</p>
           <div className="mt-6 max-w-2xl"><AISystemNotice route="/ai-act-summary" /></div>
         </div>

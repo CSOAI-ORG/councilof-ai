@@ -91,7 +91,7 @@ export default function RefutationLedger() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
             Refutation ledger · {LEDGER.length} entries · all of them ours
           </p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
             The experiments that{" "}
             <span className="bg-gradient-to-r from-rose-300 to-amber-300 bg-clip-text text-transparent">
               refuted us.

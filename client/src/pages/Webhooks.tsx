@@ -72,7 +72,7 @@ export default function Webhooks() {
       <section className="bg-gradient-to-br from-emerald-900 via-teal-900 to-green-900 text-white py-20">
         <div className="max-w-5xl mx-auto px-6">
           <p className="text-emerald-300 font-semibold tracking-wide uppercase text-sm">Integration mesh</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Webhooks</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Webhooks</h1>
           <p className="mt-5 text-lg text-emerald-50 max-w-2xl">
             Push governance events to Slack, Jira, ServiceNow or any endpoint in real time — HMAC-signed,
             retried with backoff. The connective tissue enterprise buyers require.

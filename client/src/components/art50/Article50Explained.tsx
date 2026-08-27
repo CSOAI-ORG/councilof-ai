@@ -121,7 +121,7 @@ export default function Article50Explained() {
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
             Regulation (EU) 2024/1689 · transparency
           </p>
-          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-4xl">
             EU AI Act <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Article 50</span> Explained
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-emerald-100/75">

@@ -225,7 +225,7 @@ export default function ComplianceScorecard() {
                 <div>
                   <p className="text-white/60 text-sm mb-1">Overall Compliance Score</p>
                   <div className="flex items-baseline gap-3">
-                    <span className={`text-6xl font-bold ${getScoreColor(overallScore)}`}>
+                    <span className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>
                       {overallScore}
                     </span>
                     <span className="text-2xl text-white/40">/100</span>

@@ -77,7 +77,7 @@ export default function Contact() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-green-50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div {...fadeInUp}>
-            <h1 className="text-lg sm:text-xl md:text-2xl sm:text-3xl md:text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+            <h1 className="text-lg sm:text-xl md:text-2xl sm:text-3xl md:text-4xl md:text-4xl font-bold mb-6 text-gray-900">
               Get in Touch
             </h1>
             <p className="text-xl text-gray-600">

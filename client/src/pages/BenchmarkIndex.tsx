@@ -389,7 +389,7 @@ export default function BenchmarkIndex() {
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400">
             Meta-benchmark index · dated snapshot {SNAPSHOT}
           </p>
-          <h1 className="mt-3 text-4xl font-black tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+          <h1 className="mt-3 text-4xl font-black tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             This index composes. It never fuses.
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-relaxed text-gray-700 dark:text-gray-300">

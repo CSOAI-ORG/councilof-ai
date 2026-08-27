@@ -80,7 +80,7 @@ export default function Traction() {
             <span aria-hidden>·</span>
             <span>third-party-recomputable</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
             Published. Installable. <span className="text-slate-500">Being pulled.</span>
           </h1>
           <p className="text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto">

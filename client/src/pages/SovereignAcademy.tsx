@@ -42,7 +42,7 @@ export default function SovereignAcademy() {
             <div className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-300/50 bg-emerald-500/15 text-xl">{"\u25C9"}</div>
             <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Learn by living it</p>
           </div>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Council Academy</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Council Academy</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">No manuals. Your Council assistant walks you through governance as a journey — from the Layer 0 floor to the frameworks and law that apply to you, into the tools, then into a signed training record. We attest training — never conformity. Every step flows into the real OS.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/tour" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Take the guided tour {"\u2192"}</a>

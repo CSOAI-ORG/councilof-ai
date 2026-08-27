@@ -50,7 +50,7 @@ export default function EI3() {
             <Heart className="w-3 h-3 mr-1" />
             EI3 Substrate · v1.0
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
+          <h1 className="text-4xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white mb-4">
             MEOK ONE EI3
           </h1>
           <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl leading-relaxed">

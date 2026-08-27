@@ -410,11 +410,11 @@ function HeroSection({ slide }: { slide: Slide }) {
       {/* lighter scrim — the world stays visible; type carries its own shadow */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/65" />
       <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 62% 50% at 50% 46%, rgba(0,0,0,.52) 0%, rgba(0,0,0,.28) 45%, transparent 78%)" }} />
-      <div className="section-shell relative z-10 flex max-w-5xl flex-col items-center py-20 text-center sm:py-24">
+      <div className="section-shell relative z-10 flex max-w-4xl flex-col items-center py-24 text-center sm:py-28">
         <span className="measure-tight rounded-full border border-emerald-300/30 bg-black/25 px-4 py-2 text-[10px] font-bold uppercase leading-[1.5] tracking-[0.16em] text-emerald-200 backdrop-blur-sm sm:text-[11px] sm:tracking-[0.24em]">
           {slide.kicker}
         </span>
-        <h1 className="mt-7 max-w-[20ch] text-[clamp(1.95rem,1.1rem+3.6vw,4.5rem)] font-black leading-[1.06] tracking-tight text-white text-balance [text-shadow:0_3px_22px_rgba(0,0,0,.85)] sm:mt-8">
+        <h1 className="mt-7 max-w-[22ch] text-[clamp(1.7rem,1.05rem+2.4vw,3.25rem)] font-black leading-[1.1] tracking-tight text-white text-balance [text-shadow:0_3px_22px_rgba(0,0,0,.85)] sm:mt-8">
           See how your AI behaves.<br />
           Get proof you can trust.<br />
           Kept current as the rules change.<br />

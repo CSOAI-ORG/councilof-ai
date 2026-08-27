@@ -22,7 +22,7 @@ export default function OnboardOS() {
       <section className="relative overflow-hidden mx-auto max-w-4xl px-6 pt-20 pb-10 text-center">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Council of AI — start here</p>
-        <h1 className="relative mt-3 text-4xl sm:text-6xl font-black tracking-tight">
+        <h1 className="relative mt-3 text-4xl sm:text-5xl font-black tracking-tight">
           Get a signed<br />
           <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">measurement card.</span>
         </h1>

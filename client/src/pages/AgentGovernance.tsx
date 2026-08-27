@@ -32,7 +32,7 @@ export default function AgentGovernance() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <div className="mx-auto max-w-5xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">The agentic era · governance that acts</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Govern the <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">AI agents</span>, not just the models.</h1>
+        <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Govern the <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">AI agents</span>, not just the models.</h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">Agents plan, call tools and act. That's a new risk surface — and CSOAI was built agentic-native for it: <b>signed agent cards</b>, a <b>designed 33-agent Council of AI</b>, and <b>Ed25519 Layer-0 attestations</b>, mapped to EU AI Act Art. 14 &amp; 50. Not documentation — control.</p>
 
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

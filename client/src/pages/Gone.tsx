@@ -9,7 +9,7 @@ export default function Gone() {
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50 flex items-center justify-center">
       <div className="text-center px-6 max-w-lg">
-        <h1 className="text-6xl font-black text-emerald-400">410</h1>
+        <h1 className="text-5xl font-black text-emerald-400">410</h1>
         <p className="mt-4 text-xl font-semibold text-emerald-100">Gone</p>
         <p className="mt-2 text-emerald-100/70">
           This resource has been permanently removed and is no longer available.

@@ -415,7 +415,7 @@ export default function Certification() {
                   }
                 </p>
 
-                <div className="text-6xl font-bold mb-2">
+                <div className="text-5xl font-bold mb-2">
                   {score?.toFixed(0)}%
                 </div>
                 <p className="text-sm text-muted-foreground mb-6">

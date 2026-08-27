@@ -108,7 +108,7 @@ export default function FoundingMembers() {
               <Crown className="inline h-4 w-4 mr-2" />
               Founding Members Program
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               Be Among the First 100
             </h1>
             <p className="text-2xl text-amber-100 leading-relaxed mb-4 max-w-4xl mx-auto">

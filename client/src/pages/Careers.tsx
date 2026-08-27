@@ -93,7 +93,7 @@ export default function Careers() {
               <Briefcase className="h-3 w-3 mr-1" />
               Join Our Team
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-4xl font-bold mb-6">
               Build the Future of AI Safety
             </h1>
             <p className="text-xl text-muted-foreground mb-8">

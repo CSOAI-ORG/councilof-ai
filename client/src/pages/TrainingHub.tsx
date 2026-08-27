@@ -505,7 +505,7 @@ export default function TrainingHub() {
               </Badge>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
               Play to <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent">Govern</span>
             </h1>
 

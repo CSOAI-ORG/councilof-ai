@@ -44,7 +44,7 @@ export default function EUActChecklist() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - free readiness checklist</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">EU AI Act: the 2 August 2026 duties are live. Are you ready?</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">EU AI Act: the 2 August 2026 duties are live. Are you ready?</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Article 50 transparency and the enforcement regime have applied since 2 Aug 2026. Legacy generative systems have <b>{left} days</b> left of the machine-readable-marking grace period (to 2 Dec 2026). Tick off what you have done and see your readiness score - then close the gaps with the Council.</p>
           <div className="mt-6 inline-flex items-center gap-3 rounded-2xl bg-white/10 px-5 py-3">
             <span className="text-3xl font-black text-emerald-300">{left}</span>

@@ -52,7 +52,7 @@ export default function Protect() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-5xl px-6 pt-14 pb-8 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · personal protection</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Your Council assistant <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">protects you.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Your Council assistant <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">protects you.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Deepfakes, impersonation and AI-driven scams target executives, governments and people of influence — but everyone deserves the shield. The Council assistant signs what's really you, so a fake fails, and watches your name across the world. One stop. For all people of the earth.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             {["Executives & boards", "Governments & officials", "Creators & influencers", "Families", "Everyone"].map((t) => <span key={t} className="rounded-full border border-emerald-500/25 bg-emerald-500/5 px-3 py-1 text-xs font-semibold text-emerald-100/80">{t}</span>)}

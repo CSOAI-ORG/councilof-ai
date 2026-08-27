@@ -39,7 +39,7 @@ export default function GovernancePulse() {
             <span className="relative flex h-2.5 w-2.5"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70" /><span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" /></span>
             <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Live · synced daily from the grid</p>
           </div>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Governance Pulse</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Governance Pulse</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every regulation, guidance and enforcement move worldwide — as it happens. Streamed from the CSOAI intelligence agent and surfaced live in the OS.</p>
           <div className="mt-6 max-w-md">
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search jurisdiction, framework, topic…" className="w-full rounded-xl border border-emerald-300/30 bg-white/[0.06] px-4 py-3 text-sm text-white placeholder-emerald-200/50 focus:border-emerald-300 focus:outline-none" />

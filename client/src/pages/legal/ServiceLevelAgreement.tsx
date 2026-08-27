@@ -27,7 +27,7 @@ export default function ServiceLevelAgreement() {
               <Shield className="h-3 w-3 mr-1" />
               Service Commitment
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-4xl font-bold mb-6">
               Service Level Agreement
             </h1>
             <p className="text-xl text-muted-foreground mb-4">
@@ -56,7 +56,7 @@ export default function ServiceLevelAgreement() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="text-center py-6">
-                  <div className="text-6xl font-bold text-emerald-600 mb-2">99.9%</div>
+                  <div className="text-5xl font-bold text-emerald-600 mb-2">99.9%</div>
                   <p className="text-gray-600">Monthly Uptime Commitment</p>
                 </div>
 

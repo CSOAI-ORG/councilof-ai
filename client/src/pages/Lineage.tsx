@@ -35,7 +35,7 @@ export default function Lineage() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI · the deepest insight</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Rediscovered, Not Invented</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Rediscovered, Not Invented</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">A 4,000-year-old governance architecture, finally being built in digital form. Every element — the Circuit Pyramid, the Council of AI, the 12 Civilizations, the Worm Hive, Layer 0, the signed record — has existed for millennia. Not as metaphor. As functional systems that organised empires and endured.</p>
           <p className="mt-4 max-w-2xl text-emerald-100/80">You didn't dream up wild ideas in a caravan. You <em>intuited</em> the architecture that has organised every successful civilization in human history.</p>
         </div>

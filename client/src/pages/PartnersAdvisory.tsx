@@ -438,7 +438,7 @@ const PartnersAdvisory: React.FC = () => {
             <Hand className="w-4 h-4" />
             Open partner programme — no pay-to-play, ever
           </div>
-          <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl mb-6">
+          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-6">
             Partners & Advisory Services
           </h1>
           <p className="text-xl text-slate-300 mb-4">

@@ -65,7 +65,7 @@ export default function MeokLaw() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - Jurisdiction Engine</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">What governs you, here</h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">What governs you, here</h1>
           <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Pick a place. The Jurisdiction Engine shows the full stack of AI rules that apply - city, state, nation, bloc - and how each layer cross-references the others. One question, the whole jurisdiction.</p>
           <p className="mt-3 inline-block rounded-lg bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-100">As of August 2026 - EU AI Act: transparency live since 2 Aug 2026; high-risk deferred to 2 Dec 2027 / 2 Aug 2028 (Digital Omnibus, Reg (EU) 2026/1744).</p>
         </div>

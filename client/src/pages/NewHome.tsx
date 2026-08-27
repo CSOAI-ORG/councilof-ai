@@ -51,7 +51,7 @@ export default function NewHome() {
           </Badge>
           
           {/* Hero Headline */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-8xl font-black text-white mb-6 leading-tight">
             AI is Taking Jobs.<br />
             <span className="bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
               We're Creating Them.
@@ -120,7 +120,7 @@ export default function NewHome() {
             <Badge className="mb-6 bg-green-100 text-green-800 border-green-300">
               Our Mission
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+            <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mb-8">
               What is CSOAI?
             </h2>
             <p className="text-xl text-gray-700 leading-relaxed mb-6">
@@ -170,7 +170,7 @@ export default function NewHome() {
       <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mb-6">
               Turn AI Anxiety Into AI Income
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -276,7 +276,7 @@ export default function NewHome() {
             <Badge className="mb-4 bg-green-600 text-white">
               Trusted by Thousands
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mb-6">
               Real Stories. Real Results.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -339,22 +339,22 @@ export default function NewHome() {
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-white">
             <div className="grid md:grid-cols-4 gap-8 text-center">
               <div>
-                <div className="text-5xl font-black mb-2">3</div>
+                <div className="text-4xl font-black mb-2">3</div>
                 <div className="text-white">Major Frameworks</div>
                 <div className="text-sm text-gray-100 mt-1">EU AI Act, NIST, ISO</div>
               </div>
               <div>
-                <div className="text-5xl font-black mb-2">33</div>
+                <div className="text-4xl font-black mb-2">33</div>
                 <div className="text-white">AI Agents</div>
                 <div className="text-sm text-gray-100 mt-1">Multi-Agent Council</div>
               </div>
               <div>
-                <div className="text-5xl font-black mb-2">100%</div>
+                <div className="text-4xl font-black mb-2">100%</div>
                 <div className="text-white">Transparent</div>
                 <div className="text-sm text-gray-100 mt-1">Public Dashboard</div>
               </div>
               <div>
-                <div className="text-5xl font-black mb-2">24/7</div>
+                <div className="text-4xl font-black mb-2">24/7</div>
                 <div className="text-white">Monitoring</div>
                 <div className="text-sm text-gray-100 mt-1">Real-time Oversight</div>
               </div>
@@ -380,7 +380,7 @@ export default function NewHome() {
             <Badge className="mb-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
               Complete AI Safety Ecosystem
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mb-6">
               One Platform. <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Complete AI Safety Coverage.</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -575,7 +575,7 @@ export default function NewHome() {
       <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-4xl font-bold text-white mb-6">
               Join the Founding Members
             </h2>
             <p className="text-xl text-white mb-8">
@@ -624,7 +624,7 @@ export default function NewHome() {
               <Shield className="w-3 h-3 mr-1" />
               Transparent AI Oversight
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-4xl font-bold mb-6">
               33-Agent Council: <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Human Oversight Meets AI Efficiency</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -759,7 +759,7 @@ export default function NewHome() {
             <Badge className="mb-4 bg-green-100 text-green-800 text-sm px-4 py-2">
               Independent measurement body
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mb-6">
               Measured governance, published with its limits
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -853,7 +853,7 @@ export default function NewHome() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mb-6">
               See It All. In Real-Time.
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -887,7 +887,7 @@ export default function NewHome() {
               <Badge className="mb-4 bg-gray-500/20 text-purple-300 border-purple-400/30">
                 For Enterprises
               </Badge>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              <h2 className="text-4xl md:text-4xl font-bold mb-6">
                 Prove Your AI is Safe. Publicly.
               </h2>
               <p className="text-xl text-gray-300 mb-8">
@@ -935,7 +935,7 @@ export default function NewHome() {
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-4xl font-bold text-gray-900 mb-6">
               Trusted Globally
             </h2>
             <p className="text-xl text-gray-600">
@@ -945,15 +945,15 @@ export default function NewHome() {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-5xl font-black text-green-600 mb-2">Global</div>
+              <div className="text-4xl font-black text-green-600 mb-2">Global</div>
               <div className="text-gray-600">AI Safety Standards</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-black text-green-600 mb-2">Proven</div>
+              <div className="text-4xl font-black text-green-600 mb-2">Proven</div>
               <div className="text-gray-600">Multi-Agent Council</div>
             </div>
             <div className="text-center">
-              <div className="text-5xl font-black text-gray-900 mb-2">Leading</div>
+              <div className="text-4xl font-black text-gray-900 mb-2">Leading</div>
               <div className="text-gray-600">Certification Platform</div>
             </div>
           </div>
@@ -963,7 +963,7 @@ export default function NewHome() {
       {/* Final CTA Section */}
       <section className="py-24 bg-gradient-to-r from-blue-900 to-purple-900 text-white">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-4xl md:text-4xl font-bold mb-6">
             Ready to Protect Humanity?
           </h2>
           <p className="text-xl text-white mb-12 max-w-2xl mx-auto">

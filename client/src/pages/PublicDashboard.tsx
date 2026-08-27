@@ -90,7 +90,7 @@ export default function PublicDashboard() {
             <Globe className="w-3 h-3 mr-1" />
             Real-Time AI Safety Monitoring
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Global AI Safety <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Transparency</span>
           </h1>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-8">

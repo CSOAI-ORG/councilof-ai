@@ -27,7 +27,7 @@ export default function EastWest() {
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <div className="mx-auto max-w-4xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">East-West · M4 flagship</p>
-        <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+        <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-4xl">
           One signed measurement, <span className="text-emerald-300">every regime it touches, mapped.</span>
         </h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">

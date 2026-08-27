@@ -43,7 +43,7 @@ export default function Article50Calculator() {
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
           EU AI Act · Article 50 · rule-based estimate
         </p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
+        <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
           Article 50{" "}
           <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
             Calculator
@@ -56,13 +56,13 @@ export default function Article50Calculator() {
 
         <div className="mt-10 mb-10 grid gap-4 md:grid-cols-2">
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6 text-center">
-            <div className="mb-2 text-5xl font-black tabular-nums text-emerald-300">{days}</div>
+            <div className="mb-2 text-4xl font-black tabular-nums text-emerald-300">{days}</div>
             <div className="text-[13px] text-emerald-100/60">
               {days === 0 ? "Article 50 applies since 2 August 2026" : "Days until 2 August 2026"}
             </div>
           </div>
           <div className="rounded-2xl border border-amber-400/30 bg-amber-500/[0.06] p-6 text-center">
-            <div className="mb-2 text-5xl font-black tabular-nums text-amber-300">{grandDays}</div>
+            <div className="mb-2 text-4xl font-black tabular-nums text-amber-300">{grandDays}</div>
             <div className="text-[13px] text-emerald-100/60">
               {grandDays === 0
                 ? "Grandfathering closed 2 December 2026"

@@ -1088,7 +1088,7 @@ export default function Glossary() {
       <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-20">
         <div className="container max-w-5xl">
           <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
               AI Governance Glossary
             </h1>
             <p className="text-xl text-gray-300">

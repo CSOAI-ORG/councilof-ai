@@ -87,7 +87,7 @@ export default function PocShowcase() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 400px at 50% -10%, rgba(16,185,129,.18), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-8 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - proof of concept</p>
-          <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">One OS for <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">agents & humanoids.</span></h1>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">One OS for <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">agents & humanoids.</span></h1>
           <p className="mt-3 mx-auto max-w-2xl text-emerald-100/80">The Council assistant tracks every agent and humanoid, live and global. It maps environments by <b className="text-emerald-200">WiFi sensing, LoRa and Bluetooth mesh</b> - consent-first, no cameras - runs <b className="text-emerald-200">PDCA auto-simulation</b> for every decision, and if it sees one about to <b className="text-emerald-200">ungovern</b>, it stops it before it happens.</p>
           <div className="mt-5 mx-auto max-w-2xl text-left"><AISystemNotice route="/humanoids-poc" /></div>
         </div>

@@ -181,7 +181,7 @@ export default function Compare({ focus }: { focus?: string }) {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">
             Council of AI — comparison
           </p>
-          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-4xl">
             {fname ? `Council of AI vs ${fname}` : "Council of AI vs Vanta, Drata, Credo AI, OneTrust"}
           </h1>
           <p className="mt-4 max-w-3xl text-lg text-emerald-50/90">

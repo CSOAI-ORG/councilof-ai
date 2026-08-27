@@ -322,7 +322,7 @@ export default function CertificationV2() {
               <span className="text-green-400 text-sm font-medium">Signed, Verifiable Measurement Records</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-4xl lg:text-5xl font-bold mb-6">
               Council Academy
             </h1>
 

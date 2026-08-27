@@ -29,7 +29,7 @@ export default function Cra() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <div className="mx-auto max-w-4xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Cybersecurity · EU Cyber Resilience Act</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">Secure by design, <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">and evidenced.</span></h1>
+        <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Secure by design, <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">and evidenced.</span></h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">The CRA makes cybersecurity binding for every product with digital elements sold in the EU — secure-by-design, SBOM, vulnerability reporting and CE marking, with fines up to <b>€15M or 2.5%</b> of turnover.</p>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">

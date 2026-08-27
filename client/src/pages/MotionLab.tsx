@@ -121,7 +121,7 @@ export default function MotionLab() {
       <section className="px-6 py-20 md:py-28" style={{ background: WHITE }}>
         <div className="mx-auto max-w-3xl">
           <Label>Motion lab</Label>
-          <h1 className="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight">
+          <h1 className="text-4xl md:text-4xl font-semibold text-slate-900 tracking-tight">
             Scroll-world motion &amp; graphics kit
           </h1>
           <p className="mt-5 text-lg leading-relaxed text-slate-700">

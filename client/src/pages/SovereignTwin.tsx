@@ -63,7 +63,7 @@ export default function SovereignTwin() {
         <canvas ref={cv} className="block h-[72vh] w-full" />
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-10 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS \u00b7 your Council assistant Twin (DESIGN)</p>
-          <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">{personalised ? "Your Council assistant Twin is personalised." : "Your Council assistant Twin."}</h1>
+          <h1 className="mt-2 text-4xl sm:text-4xl font-black tracking-tight">{personalised ? "Your Council assistant Twin is personalised." : "Your Council assistant Twin."}</h1>
           <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{personalised ? "Your personalisation record is signed. The Twin reflects your Council assistant's view of the world — it does not make behavioural claims." : "An illustrative mirror of Earth — day, night, every connector lit. Use the OS to personalise. No claims about emergent behaviour."}</p>
           <div className="pointer-events-auto mt-4 flex flex-wrap items-center justify-center gap-3 px-6">
             {!personalised && <button onClick={addCharge} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Personalise ({charge}%)</button>}

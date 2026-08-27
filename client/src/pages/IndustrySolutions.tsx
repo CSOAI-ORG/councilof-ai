@@ -98,7 +98,7 @@ export default function IndustrySolutions() {
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
             Measurement, not certification
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             What we measure, by industry
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">

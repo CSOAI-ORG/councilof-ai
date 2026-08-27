@@ -194,7 +194,7 @@ export default function EnterpriseHowItWorks() {
       {/* Header */}
       <div className="bg-emerald-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-5xl font-bold mb-4">Enterprise Solutions</h1>
+          <h1 className="text-4xl font-bold mb-4">Enterprise Solutions</h1>
           <p className="text-xl text-emerald-100">
             Integrate CSOAI's compliance framework and Council oversight into your enterprise AI operations
           </p>

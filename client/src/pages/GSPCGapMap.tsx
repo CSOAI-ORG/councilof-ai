@@ -99,7 +99,7 @@ export default function GSPCGapMap() {
               GSPC Measurement Instrument
             </span>
           </div>
-          <h1 className="text-5xl font-bold mb-4">The coverage gap map</h1>
+          <h1 className="text-4xl font-bold mb-4">The coverage gap map</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             349 enumerated provisions × 4 axes (G, S, P, C) + care_cost lens ={" "}
             <strong className="text-foreground">{TOTAL_CELLS.toLocaleString()}</strong> cells. The finding: the field has measured
@@ -112,7 +112,7 @@ export default function GSPCGapMap() {
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
             Field coverage — the headline
           </p>
-          <p className="text-7xl font-bold text-destructive leading-none mb-4">
+          <p className="text-6xl font-bold text-destructive leading-none mb-4">
             {FIELD_BLIND_CELLS.toLocaleString()}
             <span className="text-4xl text-muted-foreground"> of </span>
             {TOTAL_CELLS.toLocaleString()}
