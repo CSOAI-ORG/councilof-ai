@@ -99,6 +99,8 @@ Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/ro
 
 ### Cursor Cloud / agent env
 
+**Fleet paste (connect + working agreement):** [`docs/MASTER_CONNECT.md`](docs/MASTER_CONNECT.md) · lane claims: [`council-os/LANES.md`](council-os/LANES.md)
+
 Canonical paths for overnight agents (read these before inventing scores):
 
 - `docs/EAT_PLAYBOOK.md` · `docs/NEXT_300_MOVES.md` · `docs/SOVOS/INDEX-METHOD-0.1.md`
