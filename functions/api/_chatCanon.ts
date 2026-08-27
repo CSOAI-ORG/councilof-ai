@@ -42,6 +42,8 @@ export function isJailAxis(a: any): boolean {
  * smaller." Slots and measurements are separate fields here now, named for what
  * they are, and `unmeasured` is carried as a first-class figure.
  */
+export type BoardCanon = ReturnType<typeof boardCanon>;
+
 export function boardCanon(board: GspcBoard) {
   const axes = board.axes ?? [];
   const jail = board.jail_floor ?? axes.find(isJailAxis) ?? null;
@@ -49,18 +51,20 @@ export function boardCanon(board: GspcBoard) {
     (a) => a.status === "MEASURED" && Number(a.n) > 0,
   );
   const unmeasuredAxes = axes.filter((a) => a.status !== "MEASURED");
-  /** Slots on the board — the LARGER number. totals.axes, never quotable_axes. */
-  const slots =
-    typeof board.totals.axes === "number" ? board.totals.axes : axes.length;
-  const measured =
-    typeof board.totals.measured_axes === "number" ? board.totals.measured_axes : measuredAxes.length;
+  const int = (v: unknown): number | null =>
+    typeof v === "number" && Number.isFinite(v) ? v : null;
+  /**
+   * Slots on the board — the LARGER number. totals.axes, never quotable_axes.
+   * An UNREADABLE board yields null, and every sentence below drops the number
+   * rather than substituting one: a board we could not reach is not evidence of
+   * any particular size, and a fallback here is how a typed literal gets born.
+   */
+  const slots = int(board.totals.axes) ?? (axes.length || null);
+  const measured = int(board.totals.measured_axes) ?? measuredAxes.length;
   const unmeasured =
-    typeof board.totals.unmeasured_axes === "number"
-      ? board.totals.unmeasured_axes
-      : Math.max(0, slots - measured);
+    int(board.totals.unmeasured_axes) ?? (slots !== null ? Math.max(0, slots - measured) : null);
   /** How many carry a figure that may be quoted. Equal to `measured` today. */
-  const quotable =
-    typeof board.totals.quotable_axes === "number" ? board.totals.quotable_axes : measured;
+  const quotable = int(board.totals.quotable_axes) ?? measured;
   /**
    * The endpoint publishes the rule for quoting these two numbers in its own words
    * (`totals.count_grammar`). Carried verbatim from lane/os-tools-real: the chat
@@ -73,28 +77,66 @@ export function boardCanon(board: GspcBoard) {
       : null;
   const publicCount =
     typeof board.totals.public_count === "string" && board.totals.public_count.trim()
-      ? board.totals.public_count
-      : `${slots} axes \u00b7 ${measured} measured`;
+      ? board.totals.public_count.trim()
+      : slots !== null
+        ? `${slots} axes \u00b7 ${measured} measured`
+        : `${measured} measured`;
   const sep = String(jail?.separation ?? "").toUpperCase() || "UNKNOWN";
   const jailNote = jail
-    ? `**jail** is a measured containment floor on the ${slots}-slot board (status ${jail.status ?? "MEASURED"}; separation **${sep}**)` +
+    ? `**jail** is a measured containment floor on the board (status ${jail.status ?? "MEASURED"}; separation **${sep}**)` +
       (jail.n ? `; n=${jail.n}` : "") +
       (typeof jail.accuracy === "number" ? `; accuracy ${Number(jail.accuracy).toFixed(3)}` : "") +
       `. Cite live GET /api/gspc \u2014 do not freeze counts.`
-    : `**jail** is one of the ${slots} board slots when present on GET /api/gspc. Cite live totals.`;
+    : `**jail** appears on the board only when GET /api/gspc publishes it. Cite live totals.`;
   return { slots, quotable, measured, unmeasured, publicCount, countGrammar, measuredAxes, unmeasuredAxes, jail, jailNote };
 }
 
-/** ClaimGuard refuse for false board-count claims (16/15/12). Prefer live public_count. */
-export function claimGuardRefuse(q: string): string | null {
-  // Do NOT refuse "all 14 are MEASURED" — living board may report measured_axes === 14.
-  if (!/16\s+measured|(?:fifteen|\b15)\s+(?:measured\s+)?axes|(?:twelve|\b12)(?:\s+\w+){0,2}\s+axes/i.test(q))
-    return null;
+/**
+ * ClaimGuard — refuse a count the LIVE board contradicts, and nothing else.
+ *
+ * THE REGRESSION THIS CLOSES (2026-08-26, lane/os-tools-real). The old guard matched
+ * "15 axes" / "12 axes" / "16 measured" with a hardcoded regex and answered with a
+ * hardcoded sentence: "Quotable board = **14** slots. Never invent 22 axes." By then
+ * the board published 22 axes and 15 measured — so the honesty gate REFUSED THE TRUTH
+ * and asserted a stale figure while doing it. A gate that refuses the truth is worse
+ * than no gate. Every number below is read from the board that was just fetched;
+ * none is typed into this function, so it cannot go stale again.
+ */
+export function claimGuardRefuse(q: string, canon?: BoardCanon): string | null {
+  // An unreachable board is not evidence that a reader is wrong. Refuse nothing.
+  if (!canon || canon.slots === null) return null;
+
+  const WORDS: Record<string, number> = {
+    ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15,
+    sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20,
+    "twenty-one": 21, "twenty-two": 22, "twenty-three": 23, "twenty-four": 24, "twenty-five": 25,
+  };
+  // "<number> axes", "<number> measured", "<number> ... slots" — the shapes a count
+  // claim actually takes. Anything else is not a count claim and is not this gate's business.
+  const re = /\b(\d{1,3}|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|twenty-[a-z]+)\b(?:\s+\w+){0,2}?\s+(?:axes|axis|measured|slots?)\b/gi;
+  const claimed: number[] = [];
+  for (const m of q.matchAll(re)) {
+    const raw = m[1].toLowerCase();
+    const n = /^\d+$/.test(raw) ? Number(raw) : WORDS[raw];
+    if (typeof n === "number" && Number.isFinite(n)) claimed.push(n);
+  }
+  if (!claimed.length) return null;
+
+  const truthful = new Set<number>([canon.slots, canon.measured, canon.quotable]);
+  if (canon.unmeasured !== null) truthful.add(canon.unmeasured);
+  const wrong = claimed.filter((n) => !truthful.has(n));
+  if (!wrong.length) return null;
+
   return (
-    `**Refused (ClaimGuard).** That claim does not match the published board.\n\n` +
-    `Canon lives in GET /api/gspc totals (public_count, measured_axes, quotable_axes). ` +
-    `Quotable board = **14** slots. Never invent 22 axes or claim 12/15/16.\n\n` +
-    `_Deterministic refuse against a false count claim - not a model opinion._`
+    `**Refused (ClaimGuard).** ${wrong.map((n) => `**${n}**`).join(" and ")} ` +
+    `${wrong.length === 1 ? "does" : "do"} not match the published board.\n\n` +
+    `Live now: **${canon.publicCount}**` +
+    (canon.unmeasured !== null ? ` \u2014 ${canon.unmeasured} declared slots carry no run.` : ".") +
+    `\n\n` +
+    (canon.countGrammar ? `${canon.countGrammar}\n\n` : "") +
+    `Canon lives in GET /api/gspc totals (axes, measured_axes, unmeasured_axes, public_count). ` +
+    `Every number in this refusal was read from there just now; none is typed into the guard.\n\n` +
+    `_Deterministic refuse against a count the live board does not carry \u2014 not a model opinion._`
   );
 }
 
