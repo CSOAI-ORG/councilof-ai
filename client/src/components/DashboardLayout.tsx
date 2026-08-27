@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { isEmbedded } from "@/lib/embed";
 import { DASHBOARD_TABS } from "@/components/lobby/tabs";
+import { dashboardCrumbs } from "@/components/lobby/breadcrumbs";
 import { openLobby } from "@/lib/lobbyLink";
 
 interface DashboardLayoutProps {
@@ -116,9 +117,32 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 )}
               />
             </Button>
-            <span className="text-sm font-medium">
-              {current?.label || "Council software"}
-            </span>
+            {/* Route-derived breadcrumbs (see lobby/breadcrumbs.ts): the trail
+                says where this page sits, each non-current crumb is a real link,
+                and the current one is text. The sidebar tab's label names the
+                current destination when it owns this exact route. */}
+            <nav aria-label="You are here" className="flex min-w-0 items-center gap-1 text-sm">
+              {dashboardCrumbs(location).map((c, i, all) => {
+                const label =
+                  c.current && current?.path && location.startsWith(current.path) && i === all.length - 1 && current.path === location
+                    ? current.label
+                    : c.label;
+                return (
+                  <span key={`${c.label}-${i}`} className="flex min-w-0 items-center gap-1">
+                    {i > 0 && <span aria-hidden="true" className="text-muted-foreground">›</span>}
+                    {c.current ? (
+                      <span aria-current="page" className="truncate font-medium">{label}</span>
+                    ) : c.path ? (
+                      <Link href={c.path} className="truncate text-muted-foreground hover:text-foreground hover:underline">
+                        {label}
+                      </Link>
+                    ) : (
+                      <span className="truncate text-muted-foreground">{label}</span>
+                    )}
+                  </span>
+                );
+              })}
+            </nav>
           </div>
 
           <div className="flex items-center gap-2">
