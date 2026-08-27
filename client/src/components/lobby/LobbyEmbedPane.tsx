@@ -47,7 +47,7 @@ export default function LobbyEmbedPane({
   const [axis, setAxis] = useState<string>("");
   const [cardPath, setCardPath] = useState<string>("");
 
-  const axis = wire.phase === "ready" ? wire.board.axes : [];
+  const axes = wire.phase === "ready" ? wire.board.axes : [];
   const chosen = axes.find((a) => a.axis === axis) ?? null;
 
   const badgeSrc = axis ? `/api/badge?axis=${encodeURIComponent(axis)}` : "/api/badge";
