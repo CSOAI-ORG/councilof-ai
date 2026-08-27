@@ -86,9 +86,12 @@ const EXPLAINERS = [
     href: "/regulation-tracker",
   },
   {
-    t: "Verify a Council passport",
-    d: "Offline-verify any agent's identity and governance state directly on the chain.",
-    href: "https://proofof.ai",
+    // proofof.ai now lands on the councilof.ai homepage — no passport verifier
+    // answers there. Point at the verifier that actually exists and say what it
+    // verifies (signed measurement cards), not what it does not (passports).
+    t: "Verify a signed measurement card",
+    d: "Recompute a published card's hash and check its Ed25519 signature in the browser — no login. Agent-passport verification is not republished yet.",
+    href: "/gspc-verify",
   },
 ];
 
@@ -113,7 +116,9 @@ export default function SovereignTown() {
     { value: String(s.governedCrimes), label: "Governed crimes", good: true },
     { value: formatCount(s.ungovernedCrimes) + "+", label: "Ungoverned crimes" },
     { value: String(s.hives), label: "Autonomous hives" },
-    { value: "140", label: "Personas" },
+    // No typed counts: "140 Personas" was a hardcoded string with no feed field
+    // behind it. models_trained IS a feed field, so it earns the tile instead.
+    { value: String(s.modelsTrained), label: "Models trained" },
     { value: String(s.passports), label: "Ed25519 passports" },
   ];
 
@@ -167,15 +172,15 @@ export default function SovereignTown() {
             planned, not yet live</span> &mdash; today the ledger is verifiable offline against the
             published key.
           </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <a
-              href="https://proofof.ai/towns"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg bg-emerald-400 px-5 py-3 font-bold text-emerald-950 hover:bg-emerald-300"
-            >
-              Verify the chain →
-            </a>
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            {/* "Verify the chain -> proofof.ai/towns" was a loop: that host 301s to
+                councilof.ai/towns, which 308s back to THIS page. Until the ledger
+                endpoint is republished there is nothing to verify against, and the
+                surface says so instead of sending the reader in a circle. */}
+            <span className="rounded-lg border border-amber-300/50 bg-amber-400/10 px-5 py-3 text-sm font-semibold text-amber-100">
+              Chain verification: not yet available — the towns ledger endpoint is offline, so
+              there is no live chain to check. Figures above are last-known and labelled.
+            </span>
             <a
               href="mailto:nicholas@csoai.org?subject=Council%20Town%20pilot"
               className="rounded-lg border border-emerald-300/50 px-5 py-3 font-semibold text-emerald-100 hover:bg-white/5"
@@ -215,19 +220,22 @@ export default function SovereignTown() {
       <section className="max-w-5xl mx-auto px-6 py-16 text-gray-700">
         <h2 className="text-2xl font-bold text-gray-900">Same agents. Two futures.</h2>
         <p className="mt-3 max-w-3xl">
-          Toggle governance on or off and watch the identical population of 140 agents diverge.
-          One side maintains commons, trust and legal boundaries; the other collapses into crime,
-          scarcity and contagion. The simulation ingests live public data (EU aggregates, CISA KEV,
-          OFAC SDN, UK Companies House PSC, FRED, FAOSTAT, EIA, NOAA) so stress events reflect the
-          real economy, climate, threats and regulatory environment.
+          The simulation runs the identical agent population twice — once governed, once
+          ungoverned. One side maintains commons, trust and legal boundaries; the other collapses
+          into crime, scarcity and contagion. The simulation ingests live public data (EU
+          aggregates, CISA KEV, OFAC SDN, UK Companies House PSC, FRED, FAOSTAT, EIA, NOAA) so
+          stress events reflect the real economy, climate, threats and regulatory environment.
+          The interactive toggle world itself is not embedded on this page — what you are reading
+          here is its signed ledger record, and this page says so rather than miming a control
+          that is not wired.
         </p>
         <p className="mt-6 text-sm text-gray-500">
           Research-grade, predictive output. Public data sources are cited and OGL-UK-3.0 /
-          public-domain where applicable. Verify any passport offline at{" "}
-          <a className="text-emerald-700 underline" href="https://proofof.ai">
-            proofof.ai
+          public-domain where applicable. What is verifiable today is a signed measurement card at{" "}
+          <a className="text-emerald-700 underline" href="/gspc-verify">
+            /gspc-verify
           </a>
-          .
+          ; passport verification is not republished yet.
         </p>
       </section>
 
@@ -305,12 +313,10 @@ export default function SovereignTown() {
               Request a pilot
             </a>
             <a
-              href="https://proofof.ai/towns"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/gspc-verify"
               className="rounded-lg border border-emerald-300/50 px-5 py-3 font-semibold text-emerald-100 hover:bg-white/5"
             >
-              Verify the chain →
+              Verify a signed measurement card →
             </a>
           </div>
         </div>

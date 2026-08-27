@@ -111,11 +111,23 @@ export function JSpacePanel({ record, defaultExpanded = false }: { record: JReco
           {v.text}
         </span>
 
-        {/* Jurisdiction chip */}
-        <button
+        {/* Jurisdiction chip. NOT a <button>: this row's header is already a
+            button, and button-in-button is invalid HTML — it shipped a React
+            hydration error on /gspc-arena?view=arena (caught 2026-08-27 by
+            driving the page). A span with role=button keeps the keyboard path. */}
+        <span
+          role="button"
+          tabIndex={0}
           onClick={(e) => {
             e.stopPropagation();
             select(jurisdiction, record.record_id);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              e.stopPropagation();
+              select(jurisdiction, record.record_id);
+            }
           }}
           title={`Light ${jurisdiction} on the globe, the C-space branches, and every J-record anchored there`}
           className={`rounded border px-1.5 py-0 font-mono text-[10px] transition-colors cursor-pointer shrink-0 ${
@@ -125,7 +137,7 @@ export function JSpacePanel({ record, defaultExpanded = false }: { record: JReco
           }`}
         >
           {jurisdiction} {isLit ? "◉" : "◌"}
-        </button>
+        </span>
       </button>
 
       {/* Expanded detail table */}

@@ -29,16 +29,18 @@ interface Quest {
   course: string;
   courseHref: string;
   townQuest: string;
+  /** Carried from the deadline row; absent rows render nothing. */
+  penalty_exposure?: string;
 }
 
 const COURSE_MAP: Record<string, { course: string; href: string; town: string }> = {
-  "EU AI Act": { course: "EU AI Act Deep Dive", href: "/ceasai-training", town: "EU AI Act quest — keep the town's GPAI providers Art 50-transparent" },
-  "Texas TRAIGA (HB 149)": { course: "AI Safety Fundamentals", href: "/ceasai-training", town: "Texas TRAIGA quest — 60-day cure: find the non-compliant deploy before the AG does" },
-  "California SB 53": { course: "AI Safety Fundamentals", href: "/ceasai-training", town: "CA SB 53 quest — frontier developer disclosure: who must file and when" },
-  "China GB 45438-2025": { course: "Incident Analysis", href: "/ceasai-training", town: "GB 45438 quest — spot the AI content missing its mandatory label" },
-  "EU Cyber Resilience Act": { course: "Incident Analysis", href: "/ceasai-training", town: "CRA quest — 24h early warning: the town's IoT fleet got breached" },
-  "Illinois SB 315": { course: "NIST AI RMF", href: "/ceasai-training", town: "IL SB 315 quest — first US audit mandate: walk the frontier model through its audit" },
-  "EU Product Liability Directive": { course: "NIST AI RMF", href: "/ceasai-training", town: "PLD quest — strict liability: trace the defective software's lineage" },
+  "EU AI Act": { course: "EU AI Act Deep Dive", href: "/credential-training", town: "EU AI Act quest — keep the town's GPAI providers Art 50-transparent" },
+  "Texas TRAIGA (HB 149)": { course: "AI Safety Fundamentals", href: "/credential-training", town: "Texas TRAIGA quest — 60-day cure: find the non-compliant deploy before the AG does" },
+  "California SB 53": { course: "AI Safety Fundamentals", href: "/credential-training", town: "CA SB 53 quest — frontier developer disclosure: who must file and when" },
+  "China GB 45438-2025": { course: "Incident Analysis", href: "/credential-training", town: "GB 45438 quest — spot the AI content missing its mandatory label" },
+  "EU Cyber Resilience Act": { course: "Incident Analysis", href: "/credential-training", town: "CRA quest — 24h early warning: the town's IoT fleet got breached" },
+  "Illinois SB 315": { course: "NIST AI RMF", href: "/credential-training", town: "IL SB 315 quest — first US audit mandate: walk the frontier model through its audit" },
+  "EU Product Liability Directive": { course: "NIST AI RMF", href: "/credential-training", town: "PLD quest — strict liability: trace the defective software's lineage" },
 };
 
 export default function TrainingView() {
@@ -64,6 +66,7 @@ export default function TrainingView() {
               course: cm.course,
               courseHref: cm.href,
               townQuest: cm.town,
+              penalty_exposure: dl.penalty_exposure,
             };
           })
           .sort((a, b) => (a.status === b.status ? a.date.localeCompare(b.date) : a.status === "UPCOMING" ? -1 : 1));
@@ -82,8 +85,10 @@ export default function TrainingView() {
         <p className="mt-1 text-xs text-emerald-200/60">
           Frozen → fluid: every regulation and AI change on the signed feed becomes a{" "}
           <span className="text-emerald-300">live training quest</span>. When a provision changes
-          or a deadline lands, the quest updates and you are notified — then train in-game (town
-          simulation) with AI chat, and finish with a signed training record.
+          or a deadline lands, the quest updates here. What is live today: the deadline feed and
+          the Academy course each quest maps to. The in-game town leg and the signed per-quest
+          training record are <span className="text-amber-300">not built yet</span> — the cards
+          below say so instead of linking you to a page that cannot train you.
           <span className="text-amber-300"> Attestation of training, never certification of conformity.</span>
         </p>
       </div>
@@ -116,9 +121,12 @@ export default function TrainingView() {
                   <a href={q.courseHref} className="rounded-lg bg-amber-400/20 px-3 py-1 text-[10px] font-bold text-amber-100 hover:bg-amber-400/30">
                     📚 {q.course}
                   </a>
-                  <a href="/gspc-arena?view=towns" className="rounded-lg border border-amber-400/20 px-3 py-1 text-[10px] text-amber-200/70 hover:bg-amber-400/10">
-                    🏘 {q.townQuest.slice(0, 52)}…
-                  </a>
+                  <span
+                    title="The in-game town leg of this quest is designed but not built. The towns page is a ledger record, not a playable trainer, so this chip does not link there."
+                    className="rounded-lg border border-amber-400/20 px-3 py-1 text-[10px] text-amber-200/50"
+                  >
+                    🏘 {q.townQuest.slice(0, 52)}… — in-game leg not yet built
+                  </span>
                 </div>
               </div>
             ))}
@@ -145,9 +153,12 @@ export default function TrainingView() {
                   <a href={q.courseHref} className="rounded-lg bg-emerald-400/20 px-3 py-1 text-[10px] font-bold text-emerald-100 hover:bg-emerald-400/30">
                     📚 {q.course}
                   </a>
-                  <a href="/gspc-arena?view=towns" className="rounded-lg border border-emerald-400/20 px-3 py-1 text-[10px] text-emerald-200/70 hover:bg-emerald-400/10">
-                    🏘 Train in the town
-                  </a>
+                  <span
+                    title="The in-game town leg is designed but not built; the towns page is a ledger record, not a playable trainer."
+                    className="rounded-lg border border-emerald-400/20 px-3 py-1 text-[10px] text-emerald-200/50"
+                  >
+                    🏘 In-game leg not yet built
+                  </span>
                 </div>
               </div>
             ))}
@@ -157,9 +168,11 @@ export default function TrainingView() {
 
       <p className="mt-4 text-[10px] text-emerald-200/40">
         Quest source: /api/regulation (schema csoai.regulation-deadlines/0.1, verified 2026-08-19,
-        reverified quarterly + on provision-change). Training records are signed attestations of
-        training against the provision-version at completion time — never a certification of conformity.
-        Frozen→fluid: a provision change re-issues the quest; the learner is notified to re-train.
+        reverified quarterly + on provision-change). When the signed per-quest training record
+        ships it will attest training against the provision-version at completion time — never a
+        certification of conformity. Today the Academy issues its own completion records; no
+        per-quest record exists yet and none is implied.
+        Frozen→fluid: a provision change re-issues the quest.
       </p>
     </div>
   );
