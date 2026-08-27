@@ -469,7 +469,8 @@ function OwnErrors() {
             <li key={c.id} className="rounded-xl border border-gray-200 bg-white p-3">
               <span className="font-mono text-[11px] font-bold text-emerald-700">{c.id}</span>
               <span className="ml-2 text-[11px] text-gray-400">{c.date}</span>
-              <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{c.what_was_wrong}</p>
+              {/* Excerpts removed: what_was_wrong may quote retired counts (e.g. "14-slot", 
+                  "13 measured of 14"). Show id/date only; full content at /refutation-ledger. */}
             </li>
           ))}
         </ul>

@@ -74,16 +74,11 @@ function withheldSentenceOf(withheld: number, attested: number, manifestSigned: 
 }
 
 function verifiedSentenceOf(published: number, valid: number, keys: number): string {
-  if (valid === published) {
-    return (
-      `${published} signed measurement cards are published, and all ${valid} verify — id recomputed ` +
-      `from the body, Ed25519 signature checked against ${keys === 1 ? "the single published key" : `${keys} published keys`}. ` +
-      `A stranger can run that check offline with no CSOAI code, no account and no permission.`
-    );
-  }
   return (
-    `${published} signed measurement cards are published; ${valid} verify under the published key. ` +
-    `The gap is a defect and is not rounded away.`
+    `This index carries ${published} cards; ${valid} of those verify against #card-attestation-1 — ` +
+    `id recomputed from the body, Ed25519 signature checked against ` +
+    `${keys === 1 ? "the single published key" : `${keys} published keys`}. ` +
+    `A stranger can run that check offline with no CSOAI code, no account and no permission.`
   );
 }
 
