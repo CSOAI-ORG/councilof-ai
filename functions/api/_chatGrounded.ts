@@ -18,8 +18,6 @@ export const onRequestOptions: PagesFunction = async () =>
 
 async function grounded(q: string, origin: string): Promise<string | null> {
   const t = q.toLowerCase().trim();
-  const refused = claimGuardRefuse(q);
-  if (refused) return refused;
 
   const door = lobbyGround(q);
   if (door) return door;
@@ -36,6 +34,13 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   const board = await loadBoard(origin);
   const axes = board.axes;
   const canon = boardCanon(board);
+
+  // ClaimGuard runs HERE, not at the top: it now refuses only what the LIVE board
+  // contradicts, so it cannot run before the board has been read. Calling it without
+  // a canon returns null by design — an unreachable board is not evidence a reader is
+  // wrong — so hoisting it back above loadBoard would silently disable the gate.
+  const refused = claimGuardRefuse(q, canon);
+  if (refused) return refused;
 
   if (/\b(pricing|plans?|how much|grade cost|is (it|verify|verification) free)\b/i.test(q)) {
     return `No SaaS tiers. Measurement and verification are free forever. See GET /api/gspc, /gspc-verify/, /assess/, or the lobby door /?lobby=measured&task=pricing-overview.\n\n_Grounded in the published free rail, not by a model._`;
@@ -121,8 +126,13 @@ async function grounded(q: string, origin: string): Promise<string | null> {
     };
     return (
       `${canon.publicCount}. ` +
-      `**${canon.measured}** of the **${canon.slots}** published slots carry a measurement; ` +
-      `**${canon.unmeasured}** are declared slots with no run behind them.\n\n` +
+      (canon.slots !== null
+        ? `**${canon.measured}** of the **${canon.slots}** published slots carry a measurement; `
+        : `**${canon.measured}** rows carry a measurement; `) +
+      (canon.unmeasured !== null
+        ? `**${canon.unmeasured}** are declared slots with no run behind them.\n\n`
+        : `the slot count could not be read from the board just now.\n\n`) +
+      (canon.countGrammar ? `${canon.countGrammar}\n\n` : "") +
       `Quote both numbers or quote the smaller one — the larger counts slots, not measurements. ` +
       `A published slot exists so the gap is visible; it is not evidence of anything having been measured. ` +
       `Jail is MEASURED; a TIE is not a separated leader.\n\n` +
@@ -155,7 +165,11 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   if (/\b(who are you|what (is|are|s) (this|you|council|csoai|the council of ai)|what do you do|tell me about (council|csoai|this|you)|about (council|csoai|you)|explain (council|csoai|this)|are you (an? )?(ai|bot|chatbot))\b/i.test(t)) {
     return (
       `The **Council of AI** is an independent measurement instrument: it measures how AI systems behave against the rules that govern them, signs each result with Ed25519, and publishes what it cannot yet measure. It does **not** certify and issues no conformity mark.\n\n` +
-      `The GSPC board publishes **${canon.publicCount}** — ${canon.unmeasured} of its ${canon.slots} slots carry no number, and say so (${openNames.slice(0, 6).join(", ")}${openNames.length > 6 ? ", ..." : ""}). Verification is free forever; a grade is never sold.\n\n` +
+      `The GSPC board publishes **${canon.publicCount}**` +
+      (canon.unmeasured !== null && canon.slots !== null
+        ? ` \u2014 ${canon.unmeasured} of its ${canon.slots} slots carry no number, and say so`
+        : ``) +
+      ` (${openNames.slice(0, 6).join(", ")}${openNames.length > 6 ? ", ..." : ""}). Verification is free forever; a grade is never sold.\n\n` +
       `Ask me a named axis, the method, Article 5, or how to get measured.\n\n_Grounded in the published board, not by a model._`
     );
   }
@@ -213,10 +227,9 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       { headers: CORS },
     );
 
-  // ClaimGuard: refuse false count claims before LIVE / grounded
-  const guarded = claimGuardRefuse(question);
-  if (guarded) return reply(guarded, "claimguard - refused false count claim", "refused");
-
+  // ClaimGuard used to run here, ahead of everything, against a hardcoded count.
+  // It is now board-relative and lives inside grounded(), immediately after the board
+  // is fetched — the earliest point at which it has anything true to compare against.
   // Prefer published board canon over SOV LIVE (sales-blocker fix)
   const g = await grounded(question, origin);
   if (g) return reply(g, "grounded in published measurement - deterministic - recomputable", "grounded");

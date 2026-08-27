@@ -347,7 +347,8 @@ function AxesGrid() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {axes.map(a => {
           const q = quotable(a);
-          const ci = hasInterval(a) ? wilson(a.accuracy, a.n) : null;
+          // `hasInterval` implies `quotable`, which guarantees a real accuracy.
+          const ci = hasInterval(a) ? wilson(a.accuracy as number, a.n) : null;
           // Prefer the resolved bank URL the API now publishes (dataset_url); fall back to
           // the slug only while the wire has not shipped it. Never build the host here —
           // it lives in ONE place, functions/api/gspc.ts.
@@ -372,7 +373,16 @@ function AxesGrid() {
                   <span className="text-[11px] tabular-nums text-muted-foreground">n={a.n}{ci ? ` · [${(ci[0]*100).toFixed(0)}–${(ci[1]*100).toFixed(0)}%]` : ""}</span>
                 </div>
               )}
-              {!q && <div className="mt-3 text-xs italic text-muted-foreground">no score on this stamp</div>}
+              {/* Two different absences. An axis that is MEASURED with a bank but publishes
+                  no accuracy (the deterministic-facts financial rows) is not an axis with
+                  no stamp at all — lane/os-tools-real's distinction, in master's tokens. */}
+              {!q && (
+                <div className="mt-3 text-xs italic text-muted-foreground">
+                  {a.status === "MEASURED" && a.n > 0
+                    ? `measured · n=${a.n} · no accuracy published`
+                    : "no score on this stamp"}
+                </div>
+              )}
             </a>
           );
         })}
@@ -393,7 +403,7 @@ function AxesGrid() {
                 <h3 className="t-card text-foreground">{e.axis}</h3>
                 <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{e.task}</p>
                 {e.n > 0 && (
-                  <div className="mt-3 text-xs tabular-nums text-muted-foreground">n={e.n} · {(e.accuracy * 100).toFixed(0)}</div>
+                  <div className="mt-3 text-xs tabular-nums text-muted-foreground">n={e.n}{typeof e.accuracy === "number" ? ` · ${(e.accuracy * 100).toFixed(0)}` : " · no accuracy published"}</div>
                 )}
               </div>
             ))}

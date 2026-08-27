@@ -294,9 +294,9 @@ const FAMILY_LABEL: Record<Family, string> = {
   // verify tool. public/signed/cards/ holds 313 card files and the packaged verifier reports
   // VALID 313 · INVALID 0 · UNCHECKABLE 0 over them, so the label contradicted the bytes it
   // was describing. Counts belong in /api/state (signed_cards.count), which derives them.
-  "gspc.measurement-card": "gspc.measurement-card (top-level id + body + pubkey + signature)",
-  "csoai.content-id-card": "content_id card (cross-border / axis-signal family)",
-  "csoai.estate-envelope": "estate envelope (content_id, unsigned or flat signature)",
+  "gspc.measurement-card": "Measurement card — a signed GSPC board card.",
+  "csoai.content-id-card": "Content_id card (cross-border / axis-signal family).",
+  "csoai.estate-envelope": "Estate envelope (content_id, unsigned or flat signature).",
   unknown: "unrecognised",
 };
 
@@ -313,11 +313,12 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
 
   if (family === "unknown") {
     checks.push({
-      label: "Card family",
-      ok: false,
+      label: "Family",
+      ok: null,
       code: "unrecognised_family",
       detail:
-        "Not a shape CSOAI publishes. Expected either a gspc.measurement-card " +
+        "UNRECOGNISED — not a shape CSOAI publishes, so nothing was checked. This is not a " +
+        "claim that the document is forged. Expected either a gspc.measurement-card " +
         "(top-level id + body + pubkey + signature) or a content_id card " +
         "(top-level content_id + signature).",
     });
@@ -326,7 +327,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
 
   const r = rec as Record<string, unknown>;
   checks.push({
-    label: "Card family",
+    label: "Family",
     ok: true,
     code: "family",
     detail: `${family} — ${FAMILY_LABEL[family]}.`,
@@ -342,7 +343,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
 
   try {
     if (family === "gspc.measurement-card") {
-      idLabel = "id";
+      idLabel = "Card id";
       declaredId = r.id as string;
       preimage = utf8(pyCanonical(r.body, GSPC_FLOAT_FIELDS));
       sigOver = preimage; // Ed25519 over the preimage bytes themselves
@@ -393,6 +394,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
   /* ---- 2. is the signer a key published in did.json? ---- */
   const keyBytes = keyRaw ? decodeKey(keyRaw) : null;
   const keyHex = keyBytes ? bytesToHex(keyBytes) : null;
+  let anchorId: string | null = null;
   if (!keyHex) {
     checks.push({
       label: "Signing key",
@@ -411,6 +413,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
   } else {
     const hit = anchors.find((a) => a.hex === keyHex);
     if (hit) {
+      anchorId = hit.id;
       checks.push({
         label: "Trust anchor",
         ok: true,
@@ -462,9 +465,9 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
           ok: sigOk,
           code: sigOk ? "signature_valid" : "signature_invalid",
           detail: sigOk
-            ? `Ed25519 verifies over ${
+            ? `VALID against ${anchorId ?? `an unpublished key ${keyHex?.slice(0, 8)}…`} — Ed25519 verifies over ${
                 family === "gspc.measurement-card" ? "the canonical body bytes" : "the content_id"
-              } under ${keyHex?.slice(0, 8)}….`
+              }.`
             : `INVALID — the signature does not verify over ${
                 family === "gspc.measurement-card" ? "the canonical body bytes" : "the content_id"
               } under the key the card carries. The bytes and the signature disagree; ` +
@@ -489,5 +492,18 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
   }
 
   const valid = reasons.length === 0 && checks.every((c) => c.ok !== false);
+  const framing = (rec as { body?: { public_framing?: unknown } })?.body?.public_framing;
+  if (typeof framing === "string") {
+    checks.push({
+      label: "Framing",
+      ok: null,
+      code: "framing_frozen",
+      detail:
+        `The card carries public_framing "${framing}". A card is signed over its own bytes and ` +
+        `cannot be re-signed, so this string is frozen — read the live count from GET /api/gspc, ` +
+        `never from inside a card.`,
+    });
+  }
+
   return { family, family_label: FAMILY_LABEL[family], valid, reasons, checks, id: declaredId };
 }

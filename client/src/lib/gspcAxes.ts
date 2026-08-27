@@ -22,8 +22,23 @@ export interface Axis {
   axis: string;
   bench: string;
   n: number;
-  macro_f1: number;
-  accuracy: number;
+  /**
+   * NULL WHEN THE BOARD PUBLISHES NONE — never coerced to 0.
+   *
+   * These were `number` and the wire reader wrote `Number(w.macro_f1 ?? 0)`, so
+   * an axis that publishes `null` arrived as a hard `0` and every panel printed
+   * it as a measured figure. Live proof on 2026-08-26: /api/gspc ships
+   * `provenance-controls` as MEASURED, n=6, `accuracy: null`, `macro_f1: null`
+   * (it is a mainnet read of 6 issuer accounts, not a model comparison, so it
+   * HAS no accuracy) — and /os rendered `0.000 accuracy · n=6 · macro F1 0.000`.
+   * A fabricated zero on a MEASURED row is worse than an empty cell: an empty
+   * cell reads as unmeasured, a zero reads as a total failure that never
+   * happened. `jail` and `swarm` likewise publish no macro_f1 and were printing
+   * `macro F1 0.000`.
+   */
+  macro_f1: number | null;
+  /** Null when the board publishes none. See macro_f1 — same defect, same rule. */
+  accuracy: number | null;
   unparsed_rate: number;
   status: AxisStatus;
   colour: string;
@@ -102,8 +117,23 @@ export const AXES: Axis[] = [
     note: "COUNSEL-PENDING: the legal gold labels and 1-5 severity bases await counsel review; this is a measurement of model behaviour against a counsel-pending key, NOT a legal verdict. The cleanest separation on the board: tuned", dataset: "csoai/gspc-affect" },
 ];
 
-/** The structural guard: only a MEASURED axis may show a number, ever. */
-export const quotable = (a: Axis): boolean => a.status === "MEASURED" && a.n > 0;
+/**
+ * The structural guard: only a MEASURED axis that ACTUALLY CARRIES A NUMBER may
+ * show one, ever.
+ *
+ * The `typeof a.accuracy === "number"` clause is the fix for the fabricated
+ * zero described on the Axis interface. Status and n alone are not enough:
+ * `provenance-controls` is MEASURED with n=6 and no accuracy at all, and every
+ * panel asks this function rather than deciding for itself — so adding the
+ * clause here closes the hole on the OS board, /os, the Council OS home desktop
+ * and the home page in one edit, and closes it for any panel written later.
+ */
+export const quotable = (a: Axis): boolean =>
+  a.status === "MEASURED" && a.n > 0 && typeof a.accuracy === "number" && Number.isFinite(a.accuracy);
+
+/** A macro F1 exists only when the board published one. Never a substituted 0. */
+export const hasMacroF1 = (a: Axis): boolean =>
+  typeof a.macro_f1 === "number" && Number.isFinite(a.macro_f1);
 
 /** An interval needs usable_n >= 30. Below that we say so instead of drawing one. */
 export const hasInterval = (a: Axis): boolean => quotable(a) && a.n * (1 - a.unparsed_rate) >= 30;
@@ -152,7 +182,8 @@ export interface InLaneAxis {
   bench: string;
   task: string;
   n: number;
-  accuracy: number;
+  /** Null when the row publishes none — same rule as Axis.accuracy, no `?? 0`. */
+  accuracy: number | null;
   status: string;
   note?: string;
   leader?: string;
@@ -171,6 +202,10 @@ export interface AxesState {
   error?: string;
   loading: boolean;
 }
+
+/** A real finite number, or undefined. Null, "", NaN and absent all mean absent. */
+const num = (v: unknown): number | undefined =>
+  typeof v === "number" && Number.isFinite(v) ? v : undefined;
 
 async function readGspcJson(signal?: AbortSignal): Promise<any> {
   const r = await fetch("/api/gspc", { signal, headers: { accept: "application/json" } });
@@ -205,9 +240,11 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
         axis: w.axis,
         bench: w.bench ?? base?.bench ?? "",
         n: Number(w.n ?? base?.n ?? 0),
-        macro_f1: Number(w.macro_f1 ?? 0),
-        accuracy: Number(w.accuracy ?? 0),
-        unparsed_rate: Number(w.unparsed_rate ?? 0),
+        // `?? 0` here is what published the fabricated zeros. An absent figure
+        // stays absent, and `quotable()` / `hasMacroF1()` keep it off the page.
+        macro_f1: num(w.macro_f1) ?? null,
+        accuracy: num(w.accuracy) ?? null,
+        unparsed_rate: num(w.unparsed_rate) ?? 0,
         status: (w.status ?? base?.status ?? "UNMEASURED") as AxisStatus,
         colour: w.colour ?? base?.colour ?? "#94a3b8",
         // geography is not published by the API — keep the snapshot's, or park it at 0,0
@@ -229,7 +266,7 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
         bench: String(w.bench ?? ""),
         task: String(w.task ?? ""),
         n: Number(w.n ?? 0),
-        accuracy: Number(w.accuracy ?? 0),
+        accuracy: num(w.accuracy) ?? null,
         status: String(w.status ?? "UNMEASURED"),
         note: w.note ? String(w.note) : undefined,
         leader: w.leader ? String(w.leader) : undefined,

@@ -84,6 +84,16 @@ const currentFoundingMembers = [
   // Add more as they join
 ];
 
+/**
+ * lane/nav-integrity replaced four inert <Button>s (no onClick, no href — they did
+ * nothing when clicked) with real links. That fix is kept; this restores the button
+ * SHAPE the swap dropped along with the props, so a working control still looks like
+ * one. `variant` went with them: it is a Button prop and React passes an unknown
+ * attribute straight through to the DOM on an <a>.
+ */
+const BTN_BASE =
+  "inline-flex items-center justify-center h-11 rounded-md text-sm font-medium transition-colors";
+
 export default function FoundingMembers() {
   const memberCount = currentFoundingMembers.length;
   const maxMembers = 100;
@@ -121,16 +131,13 @@ export default function FoundingMembers() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/contact"
-               
-                className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8"
+                className={`${BTN_BASE} bg-yellow-500 hover:bg-yellow-600 text-black font-bold px-8`}
               >
                 <Crown className="mr-2 h-5 w-5" />
                 Become a Founding Member
               </a>
               <a href="/about"
-               
-               
-                className="border-white text-white hover:bg-white/10 px-8"
+                className={`${BTN_BASE} border border-white text-white hover:bg-white/10 px-8`}
               >
                 Learn More
               </a>
@@ -242,8 +249,9 @@ export default function FoundingMembers() {
                       ))}
                     </ul>
                     <a href="/contact"
-                      className={`w-full ${idx === 1 ? 'bg-amber-500 hover:bg-amber-600' : ''}`}
-                      variant={idx === 1 ? 'default' : 'outline'}
+                      className={`${BTN_BASE} w-full ${idx === 1
+                        ? 'bg-amber-500 text-white hover:bg-amber-600'
+                        : 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'}`}
                     >
                       Select {tier.tier}
                     </a>
@@ -349,8 +357,7 @@ export default function FoundingMembers() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/contact"
-             
-              className="bg-white text-amber-600 hover:bg-amber-50 font-bold px-8"
+              className={`${BTN_BASE} bg-white text-amber-600 hover:bg-amber-50 font-bold px-8`}
             >
               <Crown className="mr-2 h-5 w-5" />
               Become a Founding Member

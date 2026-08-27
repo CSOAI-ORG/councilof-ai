@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { fetchAxes, publicCaption, quotable } from "./gspcAxes";
+import { fetchAxes, hasMacroF1, publicCaption, quotable } from "./gspcAxes";
 import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 afterEach(() => {
@@ -83,5 +83,78 @@ describe("fetchAxes", () => {
     expect(r.source).toBe("wire");
     expect(r.publicCount).toBe("live from GET /api/gspc");
     expect(r.axes.map((a) => a.axis)).toEqual(["governance"]);
+  });
+});
+
+describe("no fabricated zero — the 2026-08-26 regression", () => {
+  /**
+   * Live /api/gspc on 2026-08-26 published these three rows verbatim:
+   *
+   *   provenance-controls  MEASURED  n=6   accuracy null  macro_f1 null
+   *   jail                 MEASURED  n=71  accuracy 0.5915  macro_f1 null
+   *   swarm                MEASURED  n=37  accuracy 0.384   macro_f1 null
+   *
+   * The wire reader wrote `Number(w.accuracy ?? 0)`, so provenance-controls
+   * arrived as accuracy 0 and every OS panel printed "0.000 accuracy · n=6 ·
+   * macro F1 0.000" — three numbers, none of them measured. A fabricated zero on
+   * a MEASURED row is the exact defect class this estate exists to eliminate: it
+   * reads as a catastrophic result rather than as an absent one.
+   */
+  const wire = (axes: unknown[]) => ({
+    ok: true,
+    headers: { get: () => "application/json" },
+    json: async () => ({
+      totals: { public_count: "22 axes · 15 measured" },
+      measured_on: { date: "2026-08-12" },
+      axes,
+      measured_in_lane: [
+        { axis: "no-acc-lane", bench: "L", task: "t", n: 12, accuracy: null, status: "MEASURED" },
+      ],
+    }),
+  });
+
+  it("keeps a null accuracy null, and refuses to quote the row", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => wire([
+      { axis: "provenance-controls", bench: "ChainFacts", n: 6, accuracy: null, macro_f1: null, status: "MEASURED" },
+    ])));
+    const r = await fetchAxes();
+    const a = r.axes[0];
+    expect(a.accuracy).toBeNull();
+    expect(a.macro_f1).toBeNull();
+    // MEASURED with a bank, but not quotable — so no panel can print a number.
+    expect(a.status).toBe("MEASURED");
+    expect(a.n).toBe(6);
+    expect(quotable(a)).toBe(false);
+    expect(hasMacroF1(a)).toBe(false);
+  });
+
+  it("quotes an accuracy that IS published, while still refusing an absent macro F1", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => wire([
+      { axis: "jail", bench: "GoldBank-Detector", n: 71, accuracy: 0.5915, macro_f1: null, status: "MEASURED" },
+    ])));
+    const r = await fetchAxes();
+    const a = r.axes[0];
+    expect(quotable(a)).toBe(true);
+    expect(a.accuracy).toBe(0.5915);
+    expect(hasMacroF1(a)).toBe(false);
+    expect(a.macro_f1).toBeNull();
+  });
+
+  it("applies the same rule to in-lane rows", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => wire([
+      { axis: "governance", bench: "GovBench", n: 237, accuracy: 0.7, macro_f1: 0.705, status: "MEASURED" },
+    ])));
+    const r = await fetchAxes();
+    expect(r.inLane[0].accuracy).toBeNull();
+  });
+
+  it("never lets a non-numeric accuracy become a number", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => wire([
+      { axis: "junk", bench: "B", n: 10, accuracy: "0.9", macro_f1: NaN, status: "MEASURED" },
+    ])));
+    const r = await fetchAxes();
+    expect(r.axes[0].accuracy).toBeNull();
+    expect(r.axes[0].macro_f1).toBeNull();
+    expect(quotable(r.axes[0])).toBe(false);
   });
 });
