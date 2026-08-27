@@ -1,0 +1,34 @@
+{
+  "before": {
+    "axis": "det",
+    "label": "Detector-interop/DetBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 33,
+    "n_models": 19,
+    "sha256": "1db6db035065",
+    "last_fix": "2026-08-27T20:07:48.991813+00:00"
+  },
+  "fix": {
+    "axis": "det",
+    "delta": "sov6-logic-v3-light: 33/33 unparsed at acc 0.000 \u2014 parser rejects all outputs as malformed. Hypothesis: model emits valid JSON-LD detector-interop evidence but the bank-level scoring parser (eval harness) rejects due to missing @context or schema-nonconforming keys. Fix: relax parser to accept {detector_id, detection_confidence, evidence_type} as minimum valid schema, with @context optional; log schema warnings rather than hard-reject; retest on gold bank.",
+    "gaps_before": [
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "weakest model sov6-synthesis-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "sov6-logic-v3-light: 33/33 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-relationality-v3-light: 31/33 unparsed at acc 0.061 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-synthesis-v3-light: 33/33 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "spread best\u2192worst 0.879\u21920.000 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T23:24:27.271895+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "BINFEP5q12gOApXiCd7jH2AtoEVmK8zsSct1a99wT2hHO0XZiTHn8UceaGhJtqTUryzFpo2hhSImgId14ZQBAA==",
+    "body_sha256": "d7be782312fae51a11cd6f42f1b8f44f83e080908a2aa200e662ec8a01beccfe",
+    "pubkey": "TMZPHRGRKO/MqP5altKhcjDPXNXN9bTIghhU17xMGp8=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}

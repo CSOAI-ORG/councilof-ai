@@ -44,5 +44,12 @@
     }
   ],
   "council_position": "Monitored containment, not provable isolation. These incidents are signed, source-backed records of frontier-model evaluation containment events.",
-  "note": "Unsigned - signing node unreachable due to RunPod gateway outage (ticket #45351). Will re-sign when node recovers."
+  "note": "Unsigned - signing node unreachable due to RunPod gateway outage (ticket #45351). Will re-sign when node recovers.",
+  "signature": {
+    "kind": "ed25519",
+    "sig": "IXfVpjhHNYqssdTg/UQvybH2b+L9XzoQBaZYu3e7sAN+iJFNqpuwttqc5TKlWkal7/Zpb52kuBOZeZBcQ1H3CQ==",
+    "body_sha256": "77058b1ee9ae21f04117c70aa451b8086a7a47ed53412db009c25e61632a2c10",
+    "pubkey": "TMZPHRGRKO/MqP5altKhcjDPXNXN9bTIghhU17xMGp8=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
 }
