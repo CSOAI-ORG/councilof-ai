@@ -1,1 +1,1 @@
-LOAD_FROM_PAYLOAD_FILE
+LOAD_FROM_DISK:/tmp/gov_content.txt
