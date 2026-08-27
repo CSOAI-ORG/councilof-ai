@@ -11,7 +11,7 @@
  * Estate rule: a component must be STRUCTURALLY UNABLE to report success on a path
  * it did not complete. This guard is that structure for /signed/*.json.
  *
- * The last honest published board is exactly 150 cards, ≥30000 bytes.
+ * OWNER RULING 2026-08-27: the index lists every verifying published card — no constant. The honest floor is self-consistency: n_cards == rows == files, every row signature-bound, ≥30000 bytes.
  * Do not invent the missing 185. Do not claim 335. A fabricated 335-card
  * JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
  *
