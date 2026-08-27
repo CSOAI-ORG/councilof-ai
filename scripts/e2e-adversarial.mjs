@@ -96,3 +96,22 @@ const browser = await chromium.launch();
 const pass = results.filter((r) => r.ok).length;
 console.log(`\n=== ADVERSARIAL E2E: ${pass}/${results.length} PASS ===`);
 await browser.close();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXIT CONTRACT (added 2026-08-26). This suite printed its tally and exited 0 no
+// matter what it found, so a run where every check failed — or where the harness
+// crashed before a single check ran — was indistinguishable from a clean pass to
+// CI, to a shell, and to a reader skimming the log. A suite that cannot report
+// failure is worse than no suite: it converts an unknown into a false assurance.
+// Both an empty run and any failed check now exit non-zero.
+// ─────────────────────────────────────────────────────────────────────────────
+if (!results.length) {
+  console.error("ADVERSARIAL E2E: FAIL — zero checks ran; the harness died before measuring anything.");
+  process.exit(1);
+}
+const broke = results.filter((r) => !r.ok);
+if (broke.length) {
+  console.error(`ADVERSARIAL E2E: FAIL — ${broke.length}/${results.length} resilience check(s) failed: ${broke.map((r) => r.n).join(", ")}`);
+  process.exit(1);
+}
+console.log("ADVERSARIAL E2E: PASS — every adversarial and offline path degraded gracefully.");

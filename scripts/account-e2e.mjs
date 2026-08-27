@@ -14,7 +14,12 @@ const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const SITE = "https://www.csoai.org";
+// RETARGETED 2026-08-26. The default pointed at a host this repo does not deploy, so a
+// local run measured somebody else's site (or, for the Vercel default, a host that has
+// been 402-dead since July). This repo deploys the Cloudflare Pages project `councilof-ai`
+// at https://councilof.ai, and nothing else. A test aimed elsewhere is not a weaker test —
+// it is a test of a different system, reporting on this one.
+const SITE = process.env.SITE || "https://councilof.ai";
 const GW = "https://os.meok.ai/api";
 
 // region → emulated timezone/locale (drives the "loads local" detection)
@@ -104,3 +109,29 @@ md += `\n## Gap themes (polish backlog)\n` + (Object.keys(allGaps).length ? Obje
 writeFileSync(resolve(ROOT, "docs/handoff/account-experience-report.md"), md);
 const avg = (reports.reduce((s, r) => s + r.score / r.of, 0) / reports.length * 100).toFixed(0);
 console.log(`\n=== ${reports.length} accounts · avg experience ${avg}% · report: docs/handoff/account-experience-report.md ===`);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXIT CONTRACT (added 2026-08-26). This suite printed its tally and exited 0 no
+// matter what it found, so a run where every check failed — or where the harness
+// crashed before a single check ran — was indistinguishable from a clean pass to
+// CI, to a shell, and to a reader skimming the log. A suite that cannot report
+// failure is worse than no suite: it converts an unknown into a false assurance.
+// Both an empty run and any failed check now exit non-zero.
+// ─────────────────────────────────────────────────────────────────────────────
+if (!reports.length) {
+  console.error("ACCOUNT E2E: FAIL — zero accounts were walked. An empty sample scores 100% of nothing.");
+  process.exit(1);
+}
+// This lane produces a polish BACKLOG, so a partial score is a finding, not a break. But an
+// account that scored ZERO was not served at all, and a run where none scored is a broken
+// harness rather than a broken product — either way it must not report success.
+const dead = reports.filter((r) => r.score === 0);
+if (dead.length === reports.length) {
+  console.error(`ACCOUNT E2E: FAIL — all ${reports.length} account(s) scored 0/${reports[0].of}. Nothing was measured.`);
+  process.exit(1);
+}
+if (dead.length) {
+  console.error(`ACCOUNT E2E: FAIL — ${dead.length} account(s) scored 0: ${dead.map((r) => r.id).join(", ")}`);
+  process.exit(1);
+}
+console.log("ACCOUNT E2E: every sampled account was served on at least one dimension; gaps are in the report.");

@@ -4,7 +4,12 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 
-const BASE = process.env.AUDIT_BASE || "https://www.csoai.org";
+// RETARGETED 2026-08-26. The default pointed at a host this repo does not deploy, so a
+// local run measured somebody else's site (or, for the Vercel default, a host that has
+// been 402-dead since July). This repo deploys the Cloudflare Pages project `councilof-ai`
+// at https://councilof.ai, and nothing else. A test aimed elsewhere is not a weaker test —
+// it is a test of a different system, reporting on this one.
+const BASE = process.env.AUDIT_BASE || "https://councilof.ai";
 const AXE = "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js";
 const ROUTES = ["/", "/intel", "/brief?id=jpmorgan", "/crosswalk?fw=eu-ai-act,dora", "/pricing", "/assess", "/os", "/tool-commons"];
 

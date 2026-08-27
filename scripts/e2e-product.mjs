@@ -82,3 +82,22 @@ try {
 const passed = results.filter(r => r.pass).length;
 console.log('\n=== PRODUCT E2E: ' + passed + '/' + results.length + ' features working ===');
 await browser.close();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXIT CONTRACT (added 2026-08-26). This suite printed its tally and exited 0 no
+// matter what it found, so a run where every check failed — or where the harness
+// crashed before a single check ran — was indistinguishable from a clean pass to
+// CI, to a shell, and to a reader skimming the log. A suite that cannot report
+// failure is worse than no suite: it converts an unknown into a false assurance.
+// Both an empty run and any failed check now exit non-zero.
+// ─────────────────────────────────────────────────────────────────────────────
+if (!results.length) {
+  console.error("PRODUCT E2E: FAIL — zero checks ran. The harness died before it measured anything; that is not a pass.");
+  process.exit(1);
+}
+const failedFeatures = results.filter((r) => !r.pass);
+if (failedFeatures.length) {
+  console.error(`PRODUCT E2E: FAIL — ${failedFeatures.length}/${results.length} feature(s) broken: ${failedFeatures.map((r) => r.name).join(", ")}`);
+  process.exit(1);
+}
+console.log("PRODUCT E2E: PASS — every feature working.");
