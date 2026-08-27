@@ -238,16 +238,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Blog"
  },
  {
-  "path": "/board",
-  "comp": "MeasurementBoard",
-  "title": "Measurement Board"
- },
- {
-  "path": "/board/models",
-  "comp": "MeasuredModels",
-  "title": "Measured Models"
- },
- {
   "path": "/brief",
   "comp": "AccountBrief",
   "title": "Account Brief"
@@ -329,8 +319,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/challenge",
-  "comp": "Challenge",
-  "title": "Challenge"
+  "comp": "ChallengeDoor",
+  "title": "Challenge Door"
  },
  {
   "path": "/charter",
@@ -351,11 +341,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/china-ai-law",
   "comp": "JurisdictionAct",
   "title": "China Ai Law"
- },
- {
-  "path": "/claims-register",
-  "comp": "ClaimsRegister",
-  "title": "Claims Register"
  },
  {
   "path": "/classifier",
@@ -501,11 +486,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/council-model-card",
   "comp": "CouncilModelCard",
   "title": "Council Model Card"
- },
- {
-  "path": "/council-os",
-  "comp": "Redirect",
-  "title": "Council Os"
  },
  {
   "path": "/council-system-card",
@@ -751,16 +731,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/eunomia",
   "comp": "Eunomia",
   "title": "Eunomia"
- },
- {
-  "path": "/eunomia-catalog",
-  "comp": "EunomiaCatalog",
-  "title": "Eunomia Catalog"
- },
- {
-  "path": "/eunomia-crosswalk",
-  "comp": "EunomiaCrosswalk",
-  "title": "Eunomia Crosswalk"
  },
  {
   "path": "/eunomia-data",
@@ -1051,11 +1021,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/guides/tc260",
   "comp": "TC260Guide",
   "title": "TC260 Guide"
- },
- {
-  "path": "/harness",
-  "comp": "Harness",
-  "title": "Harness"
  },
  {
   "path": "/healthcare-ai-act",
@@ -1676,11 +1641,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/rankings",
   "comp": "RankingsBridge",
   "title": "Rankings Bridge"
- },
- {
-  "path": "/rating-the-raters",
-  "comp": "RatingTheRaters",
-  "title": "Rating The Raters"
  },
  {
   "path": "/readiness",
