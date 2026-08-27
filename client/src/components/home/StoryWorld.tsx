@@ -72,14 +72,14 @@ export const STORY: Slide[] = [
   {
     // 05 Council Space — heavy, AI vs AI
     kicker: "Council Space",
-    title: "AI versus AI, 24/7",
+    title: "AI versus AI",
     body: "Models face the same frozen tests, head to head. Each match is two systems and one instrument, and the verdict is a fixed rule — never one AI grading another. Any round can become a signed card.",
     points: [
       { tag: "pain", text: "Leaderboards run on vibes and vote-brigading" },
       { tag: "benefit", text: "Every match is a fixed pass/fail rule you can audit" },
       { tag: "benefit", text: "Ties are ties — never counted as a win" },
       { tag: "usp", text: "No model ever judges another — grading is deterministic" },
-      { tag: "usp", text: "Runs 24/7, so coverage never depends on who is awake" },
+      { tag: "usp", text: "Coverage is measured when a run exists — empty is stated, never hidden" },
     ],
     href: "/gspc-arena",
     cta: "Watch Council Space",
