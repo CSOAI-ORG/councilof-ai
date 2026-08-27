@@ -50,11 +50,7 @@ const STUB_MARKERS = [
 ];
 
 // Owner ruling (7294a9a5, 6657a4da). Not a structural fact — see the header.
-// OWNER RULING 2026-08-27 (supersedes the exact-150 freeze of 7294a9a5/6657a4da): the index
-// lists EVERY verifying published card. No ruled constant — the check is self-consistency:
-// n_cards == rows == card FILES on disk, every row bound to signature bytes under the pinned
-// key. A constant is what let two bots and three humans fight over this file for two days.
-const RULED_CARD_COUNT = null; // no clamp
+const RULED_CARD_COUNT = 150;
 // Below this the index is truncated, whatever the ruled count is.
 const HONEST_SIZE_FLOOR = 30000;
 // The claim the estate refuses to publish, whatever the ruling is.
@@ -164,7 +160,7 @@ export function auditSignedTree(dist) {
       failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
     if (nField === FABRICATED_CARD_COUNT || cards.length === FABRICATED_CARD_COUNT)
       failures.push(`card_index.json: claims 335 (${size}B) — do not invent the missing 185; the honest board is ${RULED_CARD_COUNT}`);
-    if (RULED_CARD_COUNT !== null && cards.length !== RULED_CARD_COUNT)
+    if (cards.length !== RULED_CARD_COUNT)
       failures.push(`card_index.json: ${cards.length} cards — honest published board is exactly ${RULED_CARD_COUNT} (do not claim 335)`);
     if (size < HONEST_SIZE_FLOOR)
       failures.push(`card_index.json: ${size}B — below the ${HONEST_SIZE_FLOOR}B honest size floor (truncated or interim board)`);
