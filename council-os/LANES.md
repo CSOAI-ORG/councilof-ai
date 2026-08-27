@@ -8,7 +8,7 @@
 | gspc-mcp | claude (agent) | functions/mcp/, new mcp server package, /llms.txt, mcp-registry | RUNNING |
 | axis-language | claude (main) | DONE — display "axes"->"axis", 205 strings, 71 files, commit 07983d01 | DONE |
 | final-build-deploy | claude (main) | dist/, deploy — SINGLE builder; nobody else builds into dist/ | PENDING |
-| harness-measurement | GROK BOT | harness/arena, benchmark banks (ARC-AGI, RWA, XRPL, EVM axis work), A100 pod | CLAIM IT |
+| harness-measurement | grok (cursor bc-54c88537) | harness/arena, /api/arena/scoreboard HEAD, living-door aliases (rwa/xrpl/evm/arc-agi/overlay/ins) | RUNNING |
 | dsh-sessions | DSH | its own session work; consume gspc-mcp when published | — |
 
 RULES (all agents): master only, no worktrees, no dev servers left running, stage-by-name,

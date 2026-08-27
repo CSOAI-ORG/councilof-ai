@@ -29,6 +29,12 @@ function canonize(o: unknown): string {
   return JSON.stringify(o);
 }
 
+/** HEAD must not 404 when GET is 200 — probes and MCP hosts send HEAD first. */
+export async function onRequestHead(ctx) {
+  const r = await onRequestGet(ctx);
+  return new Response(null, { status: r.status, headers: r.headers });
+}
+
 export async function onRequestGet({ request }) {
   const url = new URL(request.url);
   const wantVerify = url.searchParams.get("verify") === "1";

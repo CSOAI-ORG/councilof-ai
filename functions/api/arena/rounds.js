@@ -2,6 +2,11 @@
 // Do NOT re-export from another Function module: Pages often fails to bind
 // cross-file re-exports, and then functions/api/[[path]].js answers 404 JSON.
 // The published static feed at /api/arena/rounds.jsonl is the reliable source.
+export async function onRequestHead(context) {
+  const r = await onRequestGet(context);
+  return new Response(null, { status: r.status, headers: r.headers });
+}
+
 export async function onRequestGet(context) {
   const target = new URL("/api/arena/rounds.jsonl", context.request.url);
   const res = await fetch(target, {

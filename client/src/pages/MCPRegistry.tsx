@@ -100,6 +100,33 @@ export default function MCPRegistry() {
         </div>
       </div>
 
+      {/* Trust dimensions — JI.2: probed fleet vs catalogue; signer pin; production MCP */}
+      <div className="border-b bg-white">
+        <div className="container max-w-5xl py-6">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Trust, not catalogue alone</h2>
+          <div className="grid sm:grid-cols-3 gap-4 text-sm text-gray-700">
+            <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-4">
+              <p className="font-semibold text-emerald-800">Probed vs catalogued</p>
+              <p className="mt-1 text-gray-600">
+                Reachable servers come from <code className="text-xs">/api/mcp</code> probes — never summed with directory-only ids.
+              </p>
+            </div>
+            <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-4">
+              <p className="font-semibold text-emerald-800">Signer pin</p>
+              <p className="mt-1 text-gray-600">
+                Cards verify against <a href="/.well-known/did.json" className="text-emerald-700 underline">did:web</a> — an unpublished key fails even when signature bytes parse.
+              </p>
+            </div>
+            <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-4">
+              <p className="font-semibold text-emerald-800">Production MCP</p>
+              <p className="mt-1 text-gray-600">
+                <code className="text-xs">POST /mcp</code> exposes measure · verify · jail-probe · enter-arena for Cursor, Claude, and other agents.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* How they run */}
       <div className="border-b bg-gray-50">
         <div className="container max-w-5xl py-8">
