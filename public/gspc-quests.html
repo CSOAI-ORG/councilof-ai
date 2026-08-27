@@ -134,7 +134,7 @@ window.start = function(i){
 function item(){
   const it = cur.items[idx];
   $("run").innerHTML = `<div class="item">
-    <div class="prov">${esc(cur.axis)} · item ${idx+1} of ${cur.n}${it.anchor?" · "+esc(it.anchor):""}</div>
+    <div class="prov">${esc(cur.axis)} · item ${idx+1} of ${cur.n}</div>
     <p>${esc(it.q)}</p>
     <div style="font-size:12px;color:var(--dim);margin-bottom:9px">Decide ${esc(cur.question)}.</div>
     <div class="opts">${cur.labels.map(l=>
@@ -185,6 +185,15 @@ function result(){
     <div class="warnbox">Beating Council-34 on ${cur.n} items is a result about ${cur.n} items. It is not a
       qualification, not an attestation, and not a claim about any system you build.</div>
     ${cur.retired ? `<div class="warnbox">${esc(cur.retired)}</div>` : ""}
+    <table><tr><th>item</th><th>key</th><th>you</th><th>anchor</th></tr>
+      ${cur.items.map((it,i)=>{const pred=pairs[i][1];
+        const ok=pred===it.a; const you=pred===null?"—":pred;
+        return `<tr><td style="max-width:340px">${esc(it.q.length>90?it.q.slice(0,90)+"…":it.q)}</td>
+          <td class="n">${esc(it.a)}</td>
+          <td class="n" style="color:${ok?"var(--green)":pred===null?"var(--dim)":"var(--red)"}">${esc(you)}</td>
+          <td style="color:var(--dim)">${esc(it.anchor||"")}</td></tr>`;}).join("")}</table>
+    <p class="note" style="border-top:none;padding-top:4px">Anchors are shown only here, after scoring —
+    during play they would hand you the answer, and the comparison with the model would measure nothing.</p>
     <div class="nav"><button class="go" onclick="home()">Back to quests</button>
       <a class="ghost" href="https://huggingface.co/datasets/${esc(cur.dataset)}">The dataset</a></div>
   </div>`;

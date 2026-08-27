@@ -62,7 +62,7 @@ export default function LobbyPlay({
                         : "border-amber-700/35 bg-amber-100 text-amber-900")
                     }
                   >
-                    {live ? "opens a page" : "in build"}
+                    {live ? (c.chip ?? "opens a page") : "in build"}
                   </span>
                 </div>
 
@@ -84,7 +84,7 @@ export default function LobbyPlay({
                     onClick={() => onOpenRoute(c.route!, c.title)}
                     className={`mt-3 inline-flex items-center gap-1.5 rounded-xl bg-amber-800 px-4 py-2 text-[12.5px] font-semibold text-white transition hover:bg-amber-900 motion-reduce:transition-none ${FOCUS}`}
                   >
-                    Open {c.route} in the centre pane
+                    {c.chip === "playable now" ? "Play" : "Open"} {c.route} in the centre pane
                   </button>
                 ) : (
                   <p className={`mt-3 ${TYPE.fine}`} aria-hidden="false">

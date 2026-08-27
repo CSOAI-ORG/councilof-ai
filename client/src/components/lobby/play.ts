@@ -6,8 +6,10 @@
  * only as a local package; no match, duel or swarm run is running on this site
  * for anyone to join. So:
  *
- *   - `route` is set ONLY where a real route in client/src/App.tsx already
- *     serves a real page. It is a page you READ, never a match you play.
+ *   - `route` is set ONLY where a real destination already answers on this site
+ *     (an App.tsx route, or a real static page like /gspc-quests.html). Most are
+ *     pages you READ; a card may claim "playable now" only when its destination
+ *     was actually played end-to-end (quests: played and graded 2026-08-27).
  *   - Everything else is `status: "in-build"` and renders as
  *     "Not yet playable — in build". It gets no link, because a link would
  *     imply a destination that does not exist.
@@ -30,6 +32,9 @@ export interface PlayCard {
   status: PlayStatus;
   /** Present only when status === "route". Framed in the centre pane. */
   route?: string;
+  /** Status-chip wording for a live route. Defaults to "opens a page"; a card may
+   *  say "playable now" ONLY when the destination is genuinely interactive. */
+  chip?: string;
   /** The honest caption under the status chip. Always rendered. */
   reality: string;
 }
@@ -44,6 +49,24 @@ export const PLAY_CARDS: PlayCard[] = [
     status: "route",
     route: "/coliseum",
     reality: "Opens the real page in the centre pane. It is a story surface you read — not a match you play.",
+  },
+  {
+    id: "gspc-quests",
+    title: "GSPC Quests — answer what the models answered",
+    blurb:
+      "Six axis-scoped quests from the banked GSPC items. Your answers are read by the same " +
+      "deterministic regex and scored by the same macro-F1 rule used to measure every model.",
+    // Reuses the duel art deliberately: this is the graded-items half of that idea,
+    // playable today — the live match half stays honestly in-build below.
+    image: "/images/coliseum_logic_duel.jpg",
+    alt: "A human and an AI facing each other across a chessboard in the arena",
+    status: "route",
+    route: "/gspc-quests.html",
+    chip: "playable now",
+    reality:
+      "Opens the real quest page in the centre pane. You actually play: pick a quest, answer its " +
+      "items, and the page grades you with the model's own grader, beside the model's published " +
+      "figure. Your score stays in this browser — nothing is recorded or sent anywhere.",
   },
   {
     id: "logic-duel",
@@ -90,6 +113,7 @@ export const PLAY_CARDS: PlayCard[] = [
 
 /** The standing notice above the gallery. Rendered every time, never dismissible. */
 export const PLAY_NOTICE =
-  "Play gallery previews on councilof.ai. Where a card opens a route, that route is a " +
-  "page to read. Cards marked “Not yet playable — in build” have no live destination yet, and are " +
-  "shown so the roadmap is visible rather than implied.";
+  "Play gallery previews on councilof.ai. Where a card opens a route, the card says what kind of " +
+  "destination it is — one is a quest page you actually play, the rest are pages you read. Cards " +
+  "marked “Not yet playable — in build” have no live destination yet, and are shown so the roadmap " +
+  "is visible rather than implied.";
