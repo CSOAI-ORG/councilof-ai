@@ -503,6 +503,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Council Model Card"
  },
  {
+  "path": "/council-os",
+  "comp": "Redirect",
+  "title": "Council Os"
+ },
+ {
   "path": "/council-system-card",
   "comp": "CouncilSystemCard",
   "title": "Council System Card"

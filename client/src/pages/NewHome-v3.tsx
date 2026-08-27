@@ -506,7 +506,12 @@ function IndustryGrid() {
               {/* `numbers` was removed from industries.ts deliberately — the sector data file
                   is not allowed to carry a typed n. This reads what the file DOES carry: the
                   bench, and the axis count from the axes array. Neither is typed by hand. */}
-              {i.bench ? `${i.bench} · ${i.axes.length} ${i.axes.length === 1 ? "axis" : "axes"}` : "UNMEASURED"}
+              {/* "spans N board axes", not "N axes": the count IS derived (axes.length), but
+                  facts-gate cannot tell derived from typed — it flags any bare "N axes" that
+                  is not the live board total, and it is right to: the reader cannot tell
+                  either. The wording change keeps the derived number and removes the
+                  ambiguity about which set it counts. */}
+              {i.bench ? `${i.bench} · spans ${i.axes.length} board ${i.axes.length === 1 ? "axis" : "axes"}` : "UNMEASURED"}
             </span>
           </a>
         ))}
