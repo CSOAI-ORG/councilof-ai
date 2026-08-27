@@ -64,7 +64,12 @@ function OurFineTunes() {
         setGenerated(typeof d?.generated === "string" ? d.generated : null);
         setMethod(typeof d?.method === "string" ? d.method : null);
       })
-      .catch(() => setFailed(true));
+      // An aborted fetch is NOT a failed fetch. React StrictMode runs this effect twice in
+      // development and aborts the first one, so `catch(() => setFailed(true))` latched the
+      // failure state permanently and the page rendered "The signed arena reference could not
+      // be loaded" over an artifact that had answered 200 with a 12-row leaderboard. On the
+      // honesty page, of all places, a false "could not load" is the defect it documents.
+      .catch((e) => { if ((e as { name?: string })?.name !== "AbortError") setFailed(true); });
     return () => ac.abort();
   }, []);
 
@@ -204,8 +209,12 @@ export default function Honesty() {
           <p className="mt-2">
             We publish that distinction because the alternative is letting a complete-looking
             manifest do work a signature has not done — which is the exact class of defect this
-            estate keeps finding in itself. Walk the positions yourself at{" "}
-            <code>/signed/chain.json</code>; the derivation behind these two numbers is at{" "}
+            estate keeps finding in itself. The full position manifest{" "}
+            <code>/signed/chain.json</code> is <strong>not currently published</strong> — it was
+            withdrawn with the 335-position merge (see <code>BOARD-RULING.md</code>) and the
+            build no longer emits it, so this page names what does ship rather than a URL that
+            404s: the derived counts are at <code>/signed/chain-facts.json</code>, each one
+            recomputed from the bytes, and the derivation behind these two numbers is at{" "}
             <code>GET /api/state → card_chain</code>.
           </p>
         </div>

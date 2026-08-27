@@ -45,9 +45,11 @@ export const CARD_ATTESTATION_HEX =
 /**
  * Fields that CPython held as FLOATS when the preimage was produced. JavaScript
  * cannot tell 0 from 0.0 at runtime — both are the same IEEE-754 double — so the
- * schema has to say which fields are floats. This is the whole of D4: 56 of the
- * 150 published cards carry an integral `accuracy`, and a verifier that renders it
- * `0` instead of `0.0` reports a false failure on 37% of a corpus that is fine.
+ * schema has to say which fields are floats. This is the whole of D4: measured
+ * 2026-08-26, 116 of the 313 card files under public/signed/cards/ carry an integral
+ * declared-float, and a verifier that renders it `0` instead of `0.0` reports a false
+ * failure on 37% of a corpus that is fine. (Recount, do not trust this number:
+ *   python3 -c "import json,glob; print(sum(any(isinstance(v,float) and v==int(v) for k,v in json.load(open(f))['body'].items() if k=='accuracy' or k.endswith('_ci_low') or k.endswith('_ci_high')) for f in glob.glob('public/signed/cards/*.json')))")
  *
  * HOW-TO-VERIFY.md §3 names exactly this set: `accuracy`, and any `_ci_low`/`_ci_high`.
  */
@@ -287,7 +289,12 @@ export function detectFamily(rec: unknown): Family {
 }
 
 const FAMILY_LABEL: Record<Family, string> = {
-  "gspc.measurement-card": "gspc.measurement-card (the 150 signed board cards)",
+  // A family label names a SHAPE. It used to carry "(the 150 signed board cards)" — a typed
+  // census inside a type name, shown on /gspc-verify and returned as `family_label` by the MCP
+  // verify tool. public/signed/cards/ holds 313 card files and the packaged verifier reports
+  // VALID 313 · INVALID 0 · UNCHECKABLE 0 over them, so the label contradicted the bytes it
+  // was describing. Counts belong in /api/state (signed_cards.count), which derives them.
+  "gspc.measurement-card": "gspc.measurement-card (top-level id + body + pubkey + signature)",
   "csoai.content-id-card": "content_id card (cross-border / axis-signal family)",
   "csoai.estate-envelope": "estate envelope (content_id, unsigned or flat signature)",
   unknown: "unrecognised",
