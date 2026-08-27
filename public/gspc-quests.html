@@ -2,14 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GSPC Quests — answer what the models answered | CSOAI</title>
-<!-- No axis count in this description. ADR-001: no surface types a count, and a
-     count frozen into <head> cannot be derived. This file used to carry a typed
-     slot-and-measured pair here, frozen from a 2026-08-05 snapshot of a board
-     that has since grown. The retired figures are DESCRIBED rather than reprinted:
-     re-typing them would put the stale numbers back on a public surface, which is
-     the very thing this change removes, and facts-gate rightly matches on them.
-     The live count is rendered into #board-count below from GET /api/gspc. -->
-<meta name="description" content="Six axis-scoped quests drawn from the banked GSPC items, graded by the same deterministic rule used to measure models. Measurement, not certification.">
+<meta name="description" content="Six axis-scoped quests over the frozen GSPC quest sets published on Hugging Face, graded by the same deterministic rule used to measure models. Counts are read live from /api/gspc, never typed. Measurement, not certification.">
 <style>
 :root{--bg:#03110b;--panel:#071c14;--line:#164034;--text:#ecfdf5;--dim:#8FB3A5;--gold:#C9A84C;--green:#34d399;--red:#D0564B}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -51,9 +44,8 @@ td.n{font-variant-numeric:tabular-nums;text-align:right}
 <h1>GSPC QUESTS<small>answer the same items the models answered · graded by the same rule</small></h1>
 
 <div id="home">
-<p style="margin-top:14px;color:var(--dim);font-size:13.5px">Six quests, one per axis, drawn from the banked
-GSPC items. The board they are drawn from carries <span id="board-count">counts from GET /api/gspc</span>.
-Your answer is read by the same deterministic regex and scored by the same macro-F1
+<p style="margin-top:14px;color:var(--dim);font-size:13.5px">Six quests, one per axis, over the frozen GSPC
+quest sets shipped with this page. Your answer is read by the same deterministic regex and scored by the same macro-F1
 aggregation used to measure every model — so your score and the model's sit on one scale.
 XP is highest where the model is weakest, because that is where a human answer carries the
 most information.</p>
@@ -63,9 +55,13 @@ person demonstrated a skill. It is not an attestation about any system, it decla
 conformity, and it is not legal advice. A conformity certificate needs an accreditation chain
 (a national accreditation body, then a certification body under ISO/IEC 42006). CSOAI holds none
 and does not claim to.</div>
-<p class="note">Items: 375 banked, pulled from the published Hugging Face datasets on 2026-08-05. The axis count
-is not frozen here — it is read live from <a href="/api/gspc" style="color:var(--green)">GET /api/gspc</a>
-(<code>totals.count_grammar</code>), because a slot count and a measured count are different numbers and both must travel.
+<p class="note"><b>What this page counts.</b> It serves <span id="questItems">…</span> quest items over
+<span id="questAxes">…</span> axis-scoped sets — a frozen selection shipped inside this page and counted from it,
+pulled from the published Hugging Face datasets on 2026-08-05. That is <b>not</b> the GSPC board and must not be read
+as one.<br>
+<b>The board</b> is <span id="boardCount">reading /api/gspc…</span><span id="boardItems"></span> — read live from
+<a href="/api/gspc" style="color:inherit">/api/gspc</a> (<code>totals.public_count</code>, <code>totals.items</code>),
+never typed here.<br>
 Governance is re-measured at n=237 — Council-34 accuracy 0.515, Wilson 95% [0.451, 0.578] — the first
 axis to carry an interval. The governance quest below serves the retired v1 24-item set; its v1
 model figures (macro-F1 0.386, accuracy 0.458) are retired.</p>
@@ -197,30 +193,56 @@ function result(){
 window.home = home;
 home();
 
-/* ── the board's axis count, DERIVED — never typed here (ADR-001) ────────────
- * This page is static HTML, so it cannot import the site's shared boardCount
- * module. It does the same thing the module does: read totals from the signed
- * board and render the SENTENCE, not a lone number. Both numbers travel — a
- * slot count is not a measurement count, and quoting only the larger would
- * claim measurements that do not exist. If the fetch fails, the placeholder
- * ("counts from GET /api/gspc") stands: a pointer, never an invented figure.  */
-(function boardCount(){
-  var el = document.getElementById("board-count");
-  if(!el) return;
-  fetch("/api/gspc", {headers:{accept:"application/json"}})
-    .then(function(r){ return r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)); })
-    .then(function(d){
-      var t = d && d.totals;
-      if(!t) return;
-      if(typeof t.public_count === "string" && t.public_count.trim()){
-        el.textContent = t.public_count;
-      } else if(typeof t.axes === "number" && typeof t.measured_axes === "number"){
-        el.textContent = t.axes + " axes · " + t.measured_axes + " measured";
-      }
-      if(typeof t.count_grammar === "string" && t.count_grammar.trim()){
-        el.title = t.count_grammar;
-      }
-    })
-    .catch(function(){ /* leave the pointer in place; never invent a count */ });
-})();
+/* ---- counts. Never typed. ------------------------------------------------
+ * Two different things get counted on this page and they must not be confused:
+ *
+ *   THIS PAGE  — the frozen quest sets in PACK. Counted FROM PACK at runtime, so
+ *                the number cannot drift away from what is actually served.
+ *   THE BOARD  — GET /api/gspc. Read live; totals.public_count and totals.items
+ *                are the only authority. Same contract as
+ *                client/src/components/board/useGspcBoard.ts: no fallback payload,
+ *                no seeded sample. If the endpoint does not answer we say so in
+ *                words. A placeholder number is a lie with a nice font.
+ *
+ * HISTORY, so this is not re-broken: this page once read "375 banked GSPC items
+ * across 12 axes (3 measured)". That was never its own instrument — commit
+ * 0ae87ec copied it out of /api/gspc as the payload stood on 2026-08-05. The board
+ * moved; the copy did not. Hence the pointer.
+ */
+$("questItems").textContent = PACK.reduce((s,p)=>s+p.n,0);
+$("questAxes").textContent  = new Set(PACK.map(p=>p.axis)).size;
+
+const GSPC_ENDPOINT = "/api/gspc";
+/* Used only when the relative fetch returns HTML (a local static server has no
+ * Pages Function, so the SPA fallback answers "<!doctype html>"). */
+const LIVE_GSPC = "https://councilof.ai/api/gspc";
+
+async function readBoard(url){
+  const r = await fetch(url, { headers: { accept: "application/json" } });
+  if(!r.ok) throw new Error(url + " answered HTTP " + r.status);
+  const t = (await r.text()).replace(/^\uFEFF/, "").trim();
+  if(!t || t[0] === "<") throw new Error(url + " returned HTML, not JSON");
+  return JSON.parse(t);
+}
+
+readBoard(GSPC_ENDPOINT)
+  .catch(e => /HTML|not JSON|Unexpected token/i.test(String(e && e.message)) ? readBoard(LIVE_GSPC) : Promise.reject(e))
+  .then(d => {
+    const t = (d && d.totals) || {};
+    /* Render only what the payload actually carries. A missing field renders as
+     * nothing, never as a zero or an invented total. */
+    if(typeof t.public_count === "string" && t.public_count){
+      $("boardCount").textContent = t.public_count;
+    } else {
+      $("boardCount").textContent = "carrying no public_count — cite /api/gspc directly";
+    }
+    if(Number.isFinite(t.items)){
+      $("boardItems").textContent = ", over " + t.items + " banked items";
+    }
+  })
+  .catch(e => {
+    $("boardCount").textContent = "not readable from here (" + String(e && e.message || e) +
+      ") — cite /api/gspc for the live count";
+    $("boardItems").textContent = "";
+  });
 </script></body></html>
