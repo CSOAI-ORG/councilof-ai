@@ -1,1 +1,1 @@
-LOAD_FROM:/tmp/push_files_gov_restore_final.json:0
+LOAD_FROM_DISK_TEST_STUB
