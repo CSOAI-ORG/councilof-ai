@@ -135,7 +135,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "Recompute a record's hash and check its Ed25519 signature in your browser.",
     path: "/gspc-verify",
     kind: "native",
-    cues: /\b(verify|verification|signature|signed|check a (?:card|record)|hash)\b/i,
+    cues: /\b(verify|verifier|verification|signature|signed|check a (?:card|record)|hash)\b/i,
   },
   {
     id: "evidence",
