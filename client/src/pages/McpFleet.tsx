@@ -67,12 +67,12 @@ export default function McpFleet() {
   const [liveTotal, setLiveTotal] = useState(TOTAL);
 
   useEffect(() => {
-    if (!API) return;
-    fetch(`${API}/api/mcp`)
-      .then((r) => r.json())
+    const base = API.replace(/\/$/, "");
+    fetch(`${base}/api/mcp`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
       .then((d) => {
         if (Array.isArray(d.servers)) {
-          setLiveServers(d.servers.map((s: any) => ({ n: s.name, h: (s.hive || "").replace("meok-", "") })));
+          setLiveServers(d.servers.map((s: any) => ({ n: s.name, h: (s.hive || "").replace(/^meok-/, "") })));
           if (d.total) setLiveTotal(d.total);
         }
       })

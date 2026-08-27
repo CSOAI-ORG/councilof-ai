@@ -172,7 +172,7 @@ function Hub() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Net-new axes · aspirational · honest empty
+            Net-new measurement slots · aspirational · honest empty
           </p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">
             Three indices.{" "}
@@ -239,7 +239,7 @@ export default function IndicesHub() {
       return (
         <CouncilOsPageShell title="Index not found" className="min-h-screen bg-[#03110b] text-emerald-50">
           <div className="mx-auto max-w-4xl px-6 py-16">
-            <p className="text-emerald-100/80">No index named “{params.slug}”.</p>
+            <p className="text-emerald-100/80">No index named "{params.slug}".</p>
             <Link href="/indices" className="mt-4 inline-block text-emerald-300 hover:underline">
               ← Indices hub
             </Link>
