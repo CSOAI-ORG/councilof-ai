@@ -20,6 +20,7 @@ import {
 import { LOBBY_TASKS, type LobbyIntent } from "@/lib/lobbyLink";
 import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
 import { setOsOpen } from "@/lib/osChrome";
+import { isLibraried } from "@/data/library-ia";
 import {
   LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
 } from "./rails";
@@ -93,6 +94,25 @@ function readSize(): "comfortable" | "full" {
     if (v === "comfortable" || v === "full") return v;
   } catch { /* ignore */ }
   return "full";
+}
+
+/**
+ * A readable name for a framed route the rail does not own.
+ *
+ * It used to be `e.data.title || path` verbatim. A page that has not set its own
+ * <title> carries the site's, so opening the Workbench pane signed out (which
+ * redirects to /login) put "Council of AI — we measure, we sign, we re-attest"
+ * in the pane header as though that were the name of the surface. A title is used
+ * only when it looks like a PAGE name: the first segment, short enough to be one,
+ * and not the estate's own brand — "Council of AI" names the whole site, so as a
+ * pane name it tells the reader strictly less than the path does.
+ */
+const SITE_NAMES = /^(council of ai|csoai|councilof\.ai)$/i;
+
+function paneNameFor(title: unknown, path: string): string {
+  const raw = typeof title === "string" ? title.split(/\s[|\u2014]\s/)[0].trim() : "";
+  if (!raw || raw.length > 40 || SITE_NAMES.test(raw)) return path;
+  return raw;
 }
 
 /** Tabbable guard that bounces focus back into the dialog. See useFocusTrap. */
@@ -254,7 +274,7 @@ export default function LobbyOverlay({
         setTabId(matched.id);
         setOverride(null);
       } else {
-        setOverride({ path, label: e.data.title || path });
+        setOverride({ path, label: paneNameFor(e.data.title, path) });
       }
     };
     window.addEventListener("message", onMsg);
@@ -271,6 +291,16 @@ export default function LobbyOverlay({
     } catch { /* cross-origin or blocked — the outer Esc still works */ }
   }, [onClose]);
 
+  /**
+   * The framed page is one the site classifies as Library/archive. Opened directly
+   * it carries a "Reference / archive" strip; framed with ?embed=1 that strip is
+   * hidden with the rest of the site chrome, so the OS was quietly presenting an
+   * archive page as a current surface. Same classifier the Library uses, so the two
+   * can never disagree.
+   */
+  const paneIsArchive = !!framePath && isLibraried(framePath.split("?")[0]);
+  /** An auth-gated destination whose frame has bounced to the sign-in form. */
+  const bouncedToLogin = tab.auth === "required" && /^\/login(\/|$|\?)/.test(framePath);
   const localPane = !override && tab.kind === "local";
   const nativePane = !override && tab.kind === "native";
   const panePath = framePath || override?.path || tab.path;
@@ -363,8 +393,10 @@ export default function LobbyOverlay({
           navOverride={!!override}
         />
 
-        {/* ── three rails; centre (pane + ask) is the dominant column ───── */}
-        <div className="flex min-h-0 flex-1 gap-3">
+        {/* ── three rails; centre (pane + ask) is the dominant column ─────
+            `relative` so the reports rail can lay itself over the centre below
+            `lg`, where there is no room for a third column. */}
+        <div className="relative flex min-h-0 flex-1 gap-3">
           {!narrow && leftOpen ? (
             <LobbyPaneRail
               tabId={tabId}
@@ -389,10 +421,24 @@ export default function LobbyOverlay({
             style={panelStyle}
           >
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-slate-900/10 px-5 py-2.5">
-              <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
+              {/* When the framed route has no page name of its own, paneNameFor falls
+                  back to the path — and the path chip on the right already shows it.
+                  Printing it twice ("/login  ...  /login") is noise, so the name is
+                  dropped rather than duplicated. */}
+              {paneLabel !== panePath && (
+                <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
+              )}
               <span className={`hidden truncate md:inline ${TYPE.fine}`}>
                 {override ? "Opened in this pane — navigation stays inside the OS." : tab.blurb}
               </span>
+              {paneIsArchive && (
+                <span
+                  className="shrink-0 rounded-full border border-slate-900/15 bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-600"
+                  title="This page is kept as reference in the Library. Opened outside the OS it carries the same mark."
+                >
+                  reference · archive
+                </span>
+              )}
               {panePath && (
                 <span
                   className="ml-auto shrink-0 rounded font-mono text-[11px] text-slate-500"
@@ -436,6 +482,17 @@ export default function LobbyOverlay({
                   <LobbyEmbedPane onOpenRoute={openRoute} />
                 ) : (
                   <>
+                    {/* The pane was asked for a destination behind RequireAuth and the
+                        frame has landed on /login. Say so, rather than leaving a
+                        password box under a header that promised an analyst desk. */}
+                    {bouncedToLogin && (
+                      <div className="absolute inset-x-0 top-0 z-20 border-b border-amber-300/60 bg-amber-50/95 px-4 py-2.5 text-[12.5px] leading-relaxed text-amber-900">
+                        <strong>{tab.label} needs an account.</strong> {tab.path} redirected this pane
+                        to <code className="font-mono">/login</code>. Council OS did not send you here.
+                        Everything the Council measures — the board, verification, the corrections
+                        ledger — stays readable without one.
+                      </div>
+                    )}
                     {!frameLoaded && <FrameSkeleton />}
                     <iframe
                       ref={frameRef}
@@ -482,10 +539,41 @@ export default function LobbyOverlay({
             )}
           </main>
 
+          {/* ── the reports rail ──────────────────────────────────────────
+              IT USED TO BE `hidden lg:block`, AND SO DID ITS RESTORE TAB. Below
+              1024px Reports / Tasks / Chats did not exist — but the header's rail
+              control stayed enabled and kept flipping its own label, so pressing
+              "Show rail" set aria-expanded="true", relabelled itself "Hide rail",
+              and put nothing on the screen. A control that reports a state it did
+              not reach is the same defect as a stub that looks like a result.
+
+              The left rail already had this answer: below `sm` it folds into the
+              header nav. The right rail now folds into a DRAWER laid over the
+              centre column, because there is no room for a third column on a
+              phone but there is no reason to amputate the surface either. At `lg`
+              and up it is the column it always was. Either way the header control
+              means what it says. */}
           {rightOpen ? (
-            <div className="hidden w-[21rem] shrink-0 lg:block xl:w-[25rem]">
-              <LobbySideRail chat={chat} threadEndRef={threadEndRef} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
-            </div>
+            <>
+              {/* >= lg — the third column, at master's width (the rail carries the
+                  chat thread now, so it is wider than it was). */}
+              <div className="hidden w-[21rem] shrink-0 lg:block xl:w-[25rem]">
+                <LobbySideRail chat={chat} threadEndRef={threadEndRef} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
+              </div>
+              {/* < lg — the same rail as a drawer over the centre. The scrim dismisses it. */}
+              <button
+                type="button"
+                aria-label="Close the reports rail"
+                onClick={() => setRightOpen(false)}
+                className="absolute inset-0 z-[1] cursor-default bg-slate-900/25 backdrop-blur-[2px] lg:hidden"
+              />
+              {/* No role/aria-label here: LobbySideRail already labels itself
+                  "Reports, tasks and chats", and a second copy on the wrapper puts
+                  two identically-named regions in the tree. */}
+              <div data-coai-rail="drawer" className="absolute inset-y-0 right-0 z-[2] w-[min(22rem,92vw)] lg:hidden">
+                <LobbySideRail chat={chat} threadEndRef={threadEndRef} onMinimise={() => setRightOpen(false)} onOpenRoute={openRoute} />
+              </div>
+            </>
           ) : (
             <RailRestore
               className="hidden lg:flex"

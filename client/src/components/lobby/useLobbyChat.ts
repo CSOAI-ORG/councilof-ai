@@ -184,6 +184,13 @@ export function useLobbyChat(): LobbyChat {
           return;
         }
         push({ role: "council", text: answer, state: j.state, signature: j.signature });
+        // The /os quest is called "Ask the Council one grounded question". It used to be
+        // awarded for CLICKING it. It is awarded here instead — only once an answer has
+        // actually come back grounded in published measurement. A refusal is not a
+        // grounded answer and does not count.
+        if (j.state === "grounded" || j.state === "live") {
+          import("@/components/os/quests").then((q) => q.markQuest("ask")).catch(() => { /* local play only */ });
+        }
       } catch (e: any) {
         push({
           role: "council",

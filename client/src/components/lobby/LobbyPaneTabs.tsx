@@ -125,6 +125,13 @@ export default function LobbyPaneTabs({
                 Local play · in build
               </span>
             )}
+            {/* A destination behind RequireAuth says so on the rail, BEFORE the click.
+                Without this the reader picks "Workbench" and lands on a password box. */}
+            {t.auth === "required" && variant === "rail" && (
+              <span className="mt-0.5 block text-[10.5px] font-medium text-slate-600">
+                Needs an account
+              </span>
+            )}
           </button>
         );
       })}

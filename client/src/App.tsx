@@ -17,7 +17,6 @@ import WidgetCourses from "./components/widget/WidgetCourses";
 import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
-const CouncilConsole = lazy(() => import("./components/CouncilConsole"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
 const RankingsBridge = lazy(() => import("./pages/AgUiBridge").then((m) => ({ default: m.RankingsBridge })));
@@ -510,7 +509,14 @@ function App() {
   if (location.startsWith('/widget')) {
     return <WidgetRouter />;
   }
-  if (path === '/sov-os' || path === '/council-os') {
+  // /council-os is NOT handled here. public/_redirects sends it 308 -> /os (the
+  // crawlable launcher) while this branch sent it to /?lobby=home (the overlay),
+  // so the same URL resolved to two different destinations depending on whether
+  // Cloudflare Pages or the SPA answered it — 308 in production, client redirect
+  // on an in-app navigation. Production is the authority; the SPA now agrees by
+  // not claiming the path at all, and wouter falls through to the /os route.
+  // /console and /sov-os both 308 -> /?lobby=home, which is what this branch does.
+  if (path === '/sov-os') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="dark">
@@ -743,6 +749,9 @@ function App() {
                   <Route path="/policy-generator" component={PolicyGenerator} />
                   <Route path="/mcp-fleet" component={McpFleet} />
                   <Route path="/os" component={OsLauncher} />
+                  {/* Same destination as the 308 in public/_redirects, so an in-app
+                      navigation and a cold load of /council-os land in the same place. */}
+                  <Route path="/council-os">{() => <Redirect to="/os" />}</Route>
                   <Route path="/sov3">{() => <Redirect to="/workbench" />}</Route>
                   <Route path="/demo" component={DemoOS} />
                   <Route path="/os-demo" component={DemoOS} />
@@ -1037,7 +1046,17 @@ function App() {
                   </Switch></Suspense>
                 </main>
                 <Footer />
-                <Suspense fallback={null}><CouncilConsole /></Suspense>
+                {/* 2026-08-26: CouncilConsole was still mounted here, and its own
+                    docstring says it was retired from site chrome on 2026-08-21 and that
+                    "App.tsx no longer mounts the floating bubble". It did. Both bubbles
+                    render `fixed bottom-5 right-5 z-[70] h-12 w-12` — measured live, they
+                    occupied the IDENTICAL rect (639,896)-(687,944). Which one a mouse hits
+                    was decided only by paint order, and the retired one came FIRST in the
+                    DOM, so keyboard and screen-reader users reached "Open the Council
+                    Console" before the OS badge. One control, one workspace: the Council OS
+                    badge is the launcher. The component stays on disk as the deterministic
+                    SUMMON/escort implementation, exactly as its docstring intends — it is
+                    simply not mounted as a second floating chat. */}
                 <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />

@@ -84,16 +84,44 @@ function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" })
   );
 }
 
-export default function RecordVerifyForm({ variant = "dark" }: { variant?: "light" | "dark" }) {
+export default function RecordVerifyForm({
+  variant = "dark",
+  seed,
+  seedNonce,
+  onVerdict,
+}: {
+  variant?: "light" | "dark";
+  /**
+   * Text a HOST surface wants loaded into the box — the Council OS pane uses it to
+   * hand the reader a real published card off /signed/chain.json so the tool can be
+   * exercised without first going and finding one. `seedNonce` changes on every
+   * load so the same card can be re-seeded after the reader has edited it. The box
+   * stays fully editable: seeding fills it, it never locks it.
+   */
+  seed?: string;
+  seedNonce?: number;
+  /** Told the verdict after every run. The Council OS pane uses it to mark the
+   *  "verify a published card" quest on a REAL pass rather than on a link click. */
+  onVerdict?: (v: RecordVerdict) => void;
+}) {
   const [text, setText] = useState("");
   const [verdict, setVerdict] = useState<RecordVerdict | null>(null);
   const [busy, setBusy] = useState(false);
   const light = variant === "light";
   const fieldId = useId();
 
+  useEffect(() => {
+    if (typeof seed === "string" && seed) {
+      setText(seed);
+      setVerdict(null); // a new record has not been checked yet — never show the old verdict beside it
+    }
+  }, [seed, seedNonce]);
+
   const run = async () => {
     setBusy(true);
-    setVerdict(await verifyRecord(text));
+    const v = await verifyRecord(text);
+    setVerdict(v);
+    onVerdict?.(v);
     setBusy(false);
   };
 

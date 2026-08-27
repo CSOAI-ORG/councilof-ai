@@ -131,7 +131,14 @@ export default function LobbySideRail({
         role="tabpanel"
         aria-labelledby={domId(section)}
         tabIndex={0}
-        className={`min-h-0 flex-1 ${FOCUS}`}
+        // `flex flex-col` is load-bearing: LobbyThread's root is `min-h-0 flex-1
+        // overflow-y-auto`, and flex-1 does nothing under a non-flex parent — so a
+        // long answer grew past the panel and painted over the "move between
+        // sections" footer and out through the bottom of the rail. Seen at 375px
+        // in the drawer, but the desktop column has the same shape. The Reports /
+        // Tasks / Chats sections use `flex h-full flex-col` with their own scroll
+        // container and are unaffected either way.
+        className={`flex min-h-0 flex-1 flex-col ${FOCUS}`}
       >
         <p className="sr-only">{current.hint}</p>
         {section === "ask" && (

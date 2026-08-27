@@ -129,6 +129,20 @@ export interface LiveState {
     count: StateFact | null;
     signed: StateFact | null;
   };
+  /**
+   * The signed chain, which is NOT the same set as the card index. /api/state
+   * publishes both: signed_cards.count is the curated index (150, kind
+   * "catalogued") and card_chain carries the chain itself (335 positions, 313
+   * bodies published, 313 verified valid). The OS header quoted only the first
+   * and called it "published", which put "150 published" one click from a Verify
+   * pane reading 313 off /signed/chain.json. Both are read now, each with the
+   * word the endpoint gives it.
+   */
+  chain: {
+    verified: StateFact | null;
+    positions: StateFact | null;
+    bodiesPublished: StateFact | null;
+  };
 }
 
 export type LiveStateResult =
@@ -141,6 +155,7 @@ export function readLiveState(payload: unknown): LiveState {
   const board = obj(root.board) ?? {};
   const fleet = obj(root.mcp_fleet) ?? {};
   const cards = obj(root.signed_cards) ?? {};
+  const chain = obj(root.card_chain) ?? {};
   return {
     board: {
       publicCount: readFact(board.public_count),
@@ -155,6 +170,11 @@ export function readLiveState(payload: unknown): LiveState {
     cards: {
       count: readFact(cards.count),
       signed: readFact(cards.signed_entries),
+    },
+    chain: {
+      verified: readFact(chain.bodies_verified_valid),
+      positions: readFact(chain.chain_positions),
+      bodiesPublished: readFact(chain.bodies_published),
     },
   };
 }
