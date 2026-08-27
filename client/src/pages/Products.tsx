@@ -65,7 +65,7 @@ const PRODUCTS = [
   {
     name: "Distribution integrity",
     href: "/distribution-integrity",
-    tag: "Financial axes",
+    tag: "Financial axis",
     what: "Represented is not distributed. The coverage layer over tokenized real-world assets — UNMEASURED stated first, never a credit rating.",
   },
   {
