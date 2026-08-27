@@ -1,0 +1,100 @@
+{
+  "$schema": "csoai-agent-fleet/v1",
+  "generated_at": "2026-08-27T00:00:00Z",
+  "note": "Machine-readable companion to FLEET_CONNECT_MASTER.md. Hosts + ports live-verified; re-resolve pods via the RunPod API (port MOVE on restart).",
+  "fleet": [
+    {
+      "name": "sovos-light-master-mine-20260816",
+      "kind": "runpod",
+      "host": "38.128.232.57",
+      "ssh_port": 13440,
+      "gpu": "A100-class",
+      "role": "measurement-engine",
+      "models": 14,
+      "running": ["axis-engine.sh", "arena-auto-loop.sh"],
+      "warning": "API shows gpu=0% BETWEEN batches; check nvidia-smi + pgrep before stopping."
+    },
+    {
+      "name": "sov-repull-20260808",
+      "kind": "runpod",
+      "host": "194.26.196.156",
+      "ssh_port": 12473,
+      "gpu": "RTX3090",
+      "role": "build-box",
+      "note": "Site builds run here. Repo at /workspace/councilof-ai."
+    },
+    {
+      "name": "oowm-agent-01-hub",
+      "kind": "runpod",
+      "host": "38.80.152.147",
+      "ssh_port": 39331,
+      "role": "oowm-hub"
+    },
+    {
+      "name": "oowm-agent-03-mine",
+      "kind": "runpod",
+      "host": "213.173.105.92",
+      "ssh_port": 53390,
+      "role": "oowm-miner"
+    },
+    {
+      "name": "oowm-agent-04-route",
+      "kind": "runpod",
+      "host": "213.173.105.102",
+      "ssh_port": 33035,
+      "role": "oowm-router"
+    },
+    {
+      "name": "oowm-agent-05-product",
+      "kind": "runpod",
+      "host": "103.196.86.88",
+      "ssh_port": 41054,
+      "role": "oowm-product"
+    },
+    {
+      "name": "sov-volume-sink-cpu",
+      "kind": "runpod",
+      "host": "213.173.105.83",
+      "ssh_port": 55664,
+      "role": "durability-sink",
+      "volume": "sovos-merge-800 (800GB, EU-RO-1)"
+    },
+    {
+      "name": "oracle-micro-1",
+      "kind": "oracle",
+      "host": "145.241.232.16",
+      "ssh_user": "ubuntu",
+      "ssh_key": "~/.ssh/id_ed25519",
+      "role": "owem-model-fleet",
+      "models": 145,
+      "local_tunnel": "11436",
+      "critical": "This is the OWEM router / pipeline backend. NOT the measurement engine."
+    },
+    {
+      "name": "oracle-micro-2",
+      "kind": "oracle",
+      "host": "141.147.73.85",
+      "ssh_user": "ubuntu",
+      "ssh_key": "~/.ssh/id_ed25519",
+      "role": "rag-mirror",
+      "models": 2,
+      "local_tunnel": "11437"
+    }
+  ],
+  "local_ollama_tunnels": {
+    "11436": "oracle-micro-1 (145 models — OWEM fleet)",
+    "11437": "oracle-micro-2 (2 models)",
+    "11439": "runpod (5 models)"
+  },
+  "cloudflare": {
+    "pages_canonical_project": "councilof-ai",
+    "canonical_domain": "councilof.ai",
+    "csoai_site_project": "csoai-site",
+    "csoai_redirect": "csoai.org 301s to councilof.ai",
+    "www_csoai_org": "cert PENDING — DNS zone is in a SECOND Cloudflare account (owner step to repoint CNAME to councilof-ai.pages.dev)"
+  },
+  "pypi": {
+    "cap": "~5 new project names/day per account (HTTP 429 'too many new projects created')",
+    "note": "Space sovos-* publishes; schedule retries for the next daily window on 429."
+  }
+}
