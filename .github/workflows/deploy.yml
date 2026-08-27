@@ -40,6 +40,18 @@ jobs:
           node scripts/redirects-guard.mjs --selftest
           node scripts/redirects-guard.mjs public/_redirects
 
+      # ROOT CAUSE of the failed deploys on 2026-08-26. Commit 2591f61e ("swap in the two
+      # new 720p videos") added public/videos/csoai-architecture.mp4 (32.6 MiB) and
+      # trust-ecosystem.mp4 (28.3 MiB). Cloudflare Pages rejects any file over 25 MiB, so
+      # `wrangler pages deploy` failed — AFTER a 20-minute prerender, with an error that
+      # looks nothing like "your video is too big". The apex still serves the OLD 12.4/9.8
+      # MiB versions; the new ones have never once reached production.
+      #
+      # scripts/pages-size-guard.mjs already existed and was wired into NOTHING. It is wired
+      # here, on public/, so the answer arrives in two seconds instead of twenty minutes.
+      - name: Pages size guard — 25 MiB per-file limit (source assets)
+        run: node scripts/pages-size-guard.mjs public
+
       - name: Install deps
         run: npm install --no-audit --no-fund
 
@@ -120,6 +132,11 @@ jobs:
       # published a fat preview (2026-08-22, 42596ad2.…) while production
       # kept a thin Vite shell + honest 404 catch-all. Ship the same tree
       # to both names the dashboard has used as production_branch.
+      # Same limit, checked again on the tree that is actually uploaded — the build itself
+      # can emit a large asset that never existed in public/.
+      - name: Pages size guard — 25 MiB per-file limit (built tree)
+        run: node scripts/pages-size-guard.mjs dist/client
+
       - name: Deploy → councilof.ai
         timeout-minutes: 8
         env: { CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}', CLOUDFLARE_ACCOUNT_ID: '${{ secrets.CLOUDFLARE_ACCOUNT_ID }}' }
