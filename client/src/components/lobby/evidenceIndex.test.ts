@@ -30,7 +30,7 @@ const axis = (over: Partial<WireAxis>): WireAxis => ({
 });
 
 const board = (axes: WireAxis[]): WireBoard => ({
-  axis,
+  axes,
   inLane: [{ axis: "slot15", bench: "", task: "", n: 6, status: "MEASURED" }],
   publicCount: "13 measured of 14 quotable",
   measuredOn: "2026-08-12",

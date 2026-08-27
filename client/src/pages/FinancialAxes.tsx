@@ -60,7 +60,7 @@ const STATUS_CHIP: Record<string, string> = {
 export default function FinancialAxes() {
   // The board's own totals, derived from GET /api/gspc. Never typed on this page.
   const board = useBoardCount();
-  const [axis, setAxes] = useState<FinAxis[] | null>(null);
+  const [axes, setAxes] = useState<FinAxis[] | null>(null);
   const [axesNote, setAxesNote] = useState<string>("");
   const [honesty, setHonesty] = useState<string>("");
   const [run, setRun] = useState<{ measured: MeasuredInstrument[]; network?: string; honesty?: string } | null>(null);
@@ -91,8 +91,8 @@ export default function FinancialAxes() {
       .catch((e) => setErr(String(e)));
   }, []);
 
-  const measuredCount = axis ? axes.filter((a) => a.status === "MEASURED").length : 0;
-  const unmeasuredCount = axis ? axes.filter((a) => a.status !== "MEASURED").length : 0;
+  const measuredCount = axes ? axes.filter((a) => a.status === "MEASURED").length : 0;
+  const unmeasuredCount = axes ? axes.filter((a) => a.status !== "MEASURED").length : 0;
   // The family's own size — counted from the register this page is rendering,
   // never typed. If the register has not loaded, no count is shown at all.
   const familySize = axes ? axes.length : null;

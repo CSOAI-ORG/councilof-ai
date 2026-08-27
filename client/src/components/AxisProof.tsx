@@ -61,7 +61,7 @@ const T = {
   },
 } as const;
 
-export default function AxisProof({ axis, why, tone = "light", className = "" }: AxisProofProps) {
+export default function AxisProof({ axes, why, tone = "light", className = "" }: AxisProofProps) {
   const { data, error, loading } = useGspcBoard();
   const t = T[tone];
   const rows: (GspcAxis | { axis: string; missing: true })[] = axes.map((id) => {

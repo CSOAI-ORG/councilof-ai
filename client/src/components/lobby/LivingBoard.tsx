@@ -12,7 +12,7 @@ import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
  * the caption is totals.public_count. Empty / unearned cells stay empty.
  */
 
-const EMPTY: Pick<AxesState, "axis" | "source" | "measuredOn" | "publicCount" | "inLane" | "loading"> = {
+const EMPTY: Pick<AxesState, "axes" | "source" | "measuredOn" | "publicCount" | "inLane" | "loading"> = {
   axes: [],
   source: "snapshot",
   measuredOn: "",

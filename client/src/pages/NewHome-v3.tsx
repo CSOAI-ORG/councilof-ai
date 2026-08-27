@@ -328,7 +328,7 @@ function LedgerAttestBand() {
 }
 
 function AxesGrid() {
-  const [axis, setAxes] = useState<Axis[]>([]);
+  const [axes, setAxes] = useState<Axis[]>([]);
   const [inLane, setInLane] = useState<InLaneAxis[]>([]);
   const [subtitle, setSubtitle] = useState("GSPC (Governance · Safety · Provenance · Continuity). Slot counts are live on GET /api/gspc — we do not type them into this page.");
 
