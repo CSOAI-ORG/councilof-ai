@@ -1,0 +1,27 @@
+{
+  "before": {
+    "axis": "care",
+    "label": "Care/CareBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 200,
+    "n_models": 19,
+    "sha256": "bc54e3121662",
+    "last_fix": "2026-08-15T02:22:25.583722+00:00"
+  },
+  "fix": {
+    "axis": "care",
+    "delta": "care: llama3.2:3b at 0.035 (below FLOOR 0.05) with 114/200 unparsed \u2014 format/transport failure dominates. Fix: re-benchmark with structured output parser (JSON mode) to eliminate unparse noise; isolate true-negative failures from format errors. Also: sov6-logic, relationality, synthesis all >50% unparsed \u2014 same root cause. Recommending re-measure of all 4 models with forced JSON schema output.",
+    "gaps_before": [
+      "weakest model llama3.2:3b at 0.035 \u2014 near-chance floor, check bank quality",
+      "sov6-logic-v3-light: 133/200 unparsed at acc 0.105 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-relationality-v3-light: 116/200 unparsed at acc 0.120 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-synthesis-v3-light: 123/200 unparsed at acc 0.160 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "llama3.2:3b: 114/200 unparsed at acc 0.035 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "spread best\u2192worst 0.535\u21920.035 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T02:18:10.116573+00:00",
+    "promoted": null,
+    "reverted": null
+  }
+}
