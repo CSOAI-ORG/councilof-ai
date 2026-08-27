@@ -26,7 +26,7 @@ npx -y @smithery/cli@latest install councilof-ai --client claude
 - **UNMEASURED is a first-class outcome** — gaps are reported with their n and limits, never hidden, never scored as a fail
 - **Labour / AI-economy indices** — `/indices` declares AI-economy · human-labour · humanoid-labour as **UNMEASURED** first (contextual firewall; never fused into GSPC grades)
 - **Signed credentials** — Ed25519 over SHA-256, chain-linked, time-anchored, offline-verifiable
-- **Live axis data**: `GET https://councilof.ai/api/gspc` (schema `csoai.gspc-axes/0.3`)
+- **Live axis data**: `GET https://councilof.ai/api/gspc` (schema `csoai.gspc-axes/0.5`)
 
 ## 🔍 Verify
 
@@ -96,6 +96,7 @@ Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/ro
 - [Dataset freshness crons](docs/DATASET_FRESHNESS_CRONS.md) — ops designs; no invented MEASURED
 - [REPORTED labour/economy citations](docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md) — dated links, no scores
 - [Estate crosswalk](docs/ESTATE_CROSSWALK.md) — RWA × GSPC × SOV Signal × regulation × labour/economy
+- [Council OS harmony register](docs/COUNCIL_OS_HARMONY.md) — sims, games, overlay, MCP E2E status
 
 ### Cursor Cloud / agent env
 
