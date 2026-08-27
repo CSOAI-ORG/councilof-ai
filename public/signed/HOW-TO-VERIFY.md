@@ -3,7 +3,8 @@
 You do not need our code, our permission, or our word for any of this. Everything below runs
 against the published bytes.
 
-**Cards published:** 313 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
+**Cards published:** read `n_cards` on GET /signed/card_index.json — do not type a count here.
+**Algorithm:** Ed25519 · **Distinct signing keys:** 1
 
 ## 1. Pin the key first — this step is not optional
 
@@ -33,9 +34,9 @@ Every published card MUST carry that exact `pubkey`. If one does not, stop.
 
 The preimage was produced by CPython's `json.dumps`, which renders a float of integral value
 as **`0.0`**. ECMAScript `JSON.stringify`, Go's `encoding/json`, and RFC 8785 (JCS) all render
-the same value as **`0`**. 116 of our 313 cards contain such a value, so a
+the same value as **`0`**. Some published cards contain such a value, so a
 naive JavaScript or Go verifier computes a different preimage and reports a **false failure**
-on roughly a third of the set.
+on a subset of the set.
 
 This is a property of the bytes that were signed; we cannot change it without re-signing every
 card and breaking every id, which are hashes of these exact bytes. So it is specified here
@@ -53,7 +54,7 @@ const canon = (v) => Array.isArray(v) ? "[" + v.map(canon).join(",") + "]"
 at runtime — both are the same IEEE-754 double. A JS verifier therefore needs the schema to
 tell it which fields are floats. The fields that are floats in our cards are `accuracy` and
 any field ending `_ci_low` / `_ci_high`. A future card format should use JCS so this note is
-unnecessary; these 150 cannot be migrated without invalidating their ids.
+unnecessary; the signed card ids cannot be migrated without invalidating them.
 
 ## 4. Check one card
 
@@ -79,10 +80,12 @@ are loud.
 
 ```bash
 curl -s https://councilof.ai/signed/card_index.json -o index.json
-# each entry carries: card (the id), axis, ts, kid, signed, sig, pubkey, card_url
+# each index entry carries: card (the id), axis, ts, signed, kid
+# (the full signed payload — pubkey, signature, preimage — is in the card payload, not the index row)
 ```
 
 Fetch each `card_url`, then run step 4 against every one with the same pinned key.
+The honest count is `n_cards` on that index file. Empty cells stay empty. Do not invent extras.
 
 ## What this does and does not prove
 
@@ -91,6 +94,5 @@ card-attestation key and have not been altered since. **It does not prove the me
 correct** — that rests on the published method, the gold labels and the rows, all separately
 available. A signature is an integrity claim, not a truth claim.
 
-**It also does not prove the set is complete.** The index declares a chain head that is not
-among these 313 cards: they are a prefix of a longer chain. Each card verifies
-individually; completeness does not.
+**It also does not prove the set is complete.** Completeness is the published `n_cards` field
+on the index, not a number typed in this document. Each card verifies individually.
