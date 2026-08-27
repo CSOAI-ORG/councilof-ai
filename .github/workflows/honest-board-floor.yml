@@ -1,3 +1,4 @@
+# OWNER RULING 2026-08-27: no clamp to a constant. Check = header==rows, every row signature-bound.
 name: honest-board-floor
 on:
   push:
@@ -24,14 +25,14 @@ jobs:
           n = j.get('n_cards')
           cards = j.get('cards') if isinstance(j.get('cards'), list) else []
           print('current', n, len(cards), len(raw))
-          if n == 150 and len(cards) == 150 and len(raw) == 34171:
+          if n == len(cards) and all(c.get('sig') for c in cards):
               print('honest 150 — nothing to restore')
               sys.exit(0)
           print('not the honest 150 board — restoring')
           PY
           GOOD=521df33b6c35dad6c3b2ca3e444fba2ac653687b
           git show "$GOOD:public/signed/card_index.json" > public/signed/card_index.json
-          python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==150 and len(j["cards"])==150 and len(c)==34171'
+          python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==len(j["cards"]) and all(x.get("sig") for x in j["cards"])'
           printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "honest-board-floor restored 150 (do not claim 335)",' '  "card_index_n": 150' '}' > public/stack/e2e-latest.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

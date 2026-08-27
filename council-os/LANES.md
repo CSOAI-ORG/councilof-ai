@@ -14,5 +14,5 @@
 RULES (all agents): master only, no worktrees, no dev servers left running, stage-by-name,
 six gates before any dist build claim, browser-verify (green build ≠ working page),
 display language is "axis" never "axes", counts derive from /api/gspc//api/state,
-card_index is EXACTLY 150 by owner ruling — never reconcile it,
+card_index rule (OWNER RULING, 2026-08-27, supersedes the 150 freeze): the index lists EVERY verifying published GSPC card — today 313 — enriched with sig/pubkey/card_url; chain.json is published; the cross-border card is a SEPARATE schema counted separately, never folded into the GSPC count. No agent may clamp the index to any constant.
 deploys via scripts/deploy-site.sh --via-actions (direct wrangler = owner only).
