@@ -89,7 +89,7 @@ export function axisHits(axes: WireAxis[]): OsHit[] {
     return {
       id: `axis:${a.axis}`,
       kind: "axis" as const,
-      group: "Board axes",
+      group: "Board axis",
       label: a.axis,
       detail,
       tab: board,
@@ -205,12 +205,12 @@ export function useOsSearch(query: string): OsSearchIndex {
   const results = useMemo(() => rank(query, all), [query, all]);
 
   const pending = [
-    axes.phase === "loading" ? "board axes" : null,
+    axes.phase === "loading" ? "board axis" : null,
     cards.phase === "loading" ? "signed cards" : null,
   ].filter((x): x is string => x !== null);
 
   const failures = [
-    axes.phase === "failed" ? `board axes — ${axes.error}` : null,
+    axes.phase === "failed" ? `board axis — ${axes.error}` : null,
     cards.phase === "failed" ? `signed cards — ${cards.error}` : null,
   ].filter((x): x is string => x !== null);
 

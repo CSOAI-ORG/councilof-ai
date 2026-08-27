@@ -42,7 +42,7 @@ const NAV: NavGroup[] = [
   {
     label: "Measure",
     items: [
-      { name: "GSPC axes", href: "#axes", note: "living board · counts from /api/gspc" },
+      { name: "GSPC axis", href: "#axis", note: "living board · counts from /api/gspc" },
       { name: "Live board", href: "/gspc-scoreboard", note: "signed scores", pane: "board" },
       { name: "Results", href: "/benchmarks", note: "every artefact-bound figure", pane: "results" },
       { name: "Models", href: "/models", note: "ranked by signed scores", pane: "models" },
@@ -228,8 +228,8 @@ export default function OsLauncher() {
               </div>
             </div>
           </section>
-          <section id="axes" className="scroll-mt-8"><AxisPanel /></section>
-          <footer className="border-t border-slate-100 pt-6 text-[12px] text-slate-500">One measured surface — the game, the arena, the axes and the Council together.</footer>
+          <section id="axis" className="scroll-mt-8"><AxisPanel /></section>
+          <footer className="border-t border-slate-100 pt-6 text-[12px] text-slate-500">One measured surface — the game, the arena, the axis and the Council together.</footer>
         </main>
       </div>
     </div>

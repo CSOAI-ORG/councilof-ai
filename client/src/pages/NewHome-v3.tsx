@@ -49,7 +49,7 @@ const PRODUCT_FAMILY = [
     what: "The 24h / 72h / 14-day ENISA reporting runbook and the signed SBOM workflow we run on ourselves. Template and tooling — not legal advice.",
   },
   {
-    name: "Financial axes",
+    name: "Financial axis",
     href: "/financial-axes",
     tag: "Declared slots",
     what: "The declared financial slots of the register. Measured where measured, UNMEASURED and stated where not. Never a credit rating.",
@@ -328,7 +328,7 @@ function LedgerAttestBand() {
 }
 
 function AxesGrid() {
-  const [axes, setAxes] = useState<Axis[]>([]);
+  const [axis, setAxes] = useState<Axis[]>([]);
   const [inLane, setInLane] = useState<InLaneAxis[]>([]);
   const [subtitle, setSubtitle] = useState("GSPC (Governance · Safety · Provenance · Continuity). Slot counts are live on GET /api/gspc — we do not type them into this page.");
 
@@ -506,12 +506,12 @@ function IndustryGrid() {
               {/* `numbers` was removed from industries.ts deliberately — the sector data file
                   is not allowed to carry a typed n. This reads what the file DOES carry: the
                   bench, and the axis count from the axes array. Neither is typed by hand. */}
-              {/* "spans N board axes", not "N axes": the count IS derived (axes.length), but
-                  facts-gate cannot tell derived from typed — it flags any bare "N axes" that
+              {/* "spans N board axis", not "N axis": the count IS derived (axes.length), but
+                  facts-gate cannot tell derived from typed — it flags any bare "N axis" that
                   is not the live board total, and it is right to: the reader cannot tell
                   either. The wording change keeps the derived number and removes the
                   ambiguity about which set it counts. */}
-              {i.bench ? `${i.bench} · spans ${i.axes.length} board ${i.axes.length === 1 ? "axis" : "axes"}` : "UNMEASURED"}
+              {i.bench ? `${i.bench} · spans ${i.axes.length} board ${i.axes.length === 1 ? "axis" : "axis"}` : "UNMEASURED"}
             </span>
           </a>
         ))}
@@ -594,7 +594,7 @@ const HOME_FAQ = [
   },
   {
     q: "Why do you report a tie instead of naming a winner?",
-    a: "Because most leads on a leaderboard are noise. When one model scores a little higher than another, we run a McNemar test on the items where the two actually disagreed. If the difference is not statistically separated, we call it a tie and we do not count it as a win — even when the model in front is one of ours. On the current board most axes are ties, and the exact split of separated leads to ties is published in the totals block of GET /api/gspc. A ranking that promotes every point-estimate lead to a victory is selling you a decimal point.",
+    a: "Because most leads on a leaderboard are noise. When one model scores a little higher than another, we run a McNemar test on the items where the two actually disagreed. If the difference is not statistically separated, we call it a tie and we do not count it as a win — even when the model in front is one of ours. On the current board most axis are ties, and the exact split of separated leads to ties is published in the totals block of GET /api/gspc. A ranking that promotes every point-estimate lead to a victory is selling you a decimal point.",
   },
   {
     q: "Who pays Council of AI, and who never pays?",

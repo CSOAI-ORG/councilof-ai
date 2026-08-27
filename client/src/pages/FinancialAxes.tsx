@@ -11,7 +11,7 @@ import { useBoardCount } from "@/lib/boardCount";
  * from GET /api/gspc via useBoardCount. Both numbers of a count always travel
  * together — see client/src/lib/boardCount.ts.
  *
- * Half the canon was invisible: the 8 financial axes 404'd at /gspc/<axis> and were absent
+ * Half the canon was invisible: the 8 financial axis 404'd at /gspc/<axis> and were absent
  * from the board. This page reads /interop/financial-axes.json (the three-state grammar for
  * all 8) and /interop/financial-measure-run.json (the MEASURED on-chain control facts for
  * provenance-controls) and renders each axis with its real status — MEASURED or UNMEASURED —
@@ -60,7 +60,7 @@ const STATUS_CHIP: Record<string, string> = {
 export default function FinancialAxes() {
   // The board's own totals, derived from GET /api/gspc. Never typed on this page.
   const board = useBoardCount();
-  const [axes, setAxes] = useState<FinAxis[] | null>(null);
+  const [axis, setAxes] = useState<FinAxis[] | null>(null);
   const [axesNote, setAxesNote] = useState<string>("");
   const [honesty, setHonesty] = useState<string>("");
   const [run, setRun] = useState<{ measured: MeasuredInstrument[]; network?: string; honesty?: string } | null>(null);
@@ -70,9 +70,9 @@ export default function FinancialAxes() {
     // No count in the title or description: the count belongs to the board, and a
     // number frozen into <head> is exactly the literal ADR-001 forbids. The live
     // counts render in the body, derived.
-    document.title = "Financial axes — the financial half of the GSPC board | Council of AI";
+    document.title = "Financial axis — the financial half of the GSPC board | Council of AI";
     setMetaDescription(
-      "The financial and domain axes of the GSPC board, honestly displayed. Provenance-controls is MEASURED (deterministic on-chain control facts, signed run). The rest are UNMEASURED — rubric declared, never claimed as built. Counts come from GET /api/gspc.",
+      "The financial and domain axis of the GSPC board, honestly displayed. Provenance-controls is MEASURED (deterministic on-chain control facts, signed run). The rest are UNMEASURED — rubric declared, never claimed as built. Counts come from GET /api/gspc.",
     );
     Promise.all([
       fetch("/interop/financial-axes.json").then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))),
@@ -91,8 +91,8 @@ export default function FinancialAxes() {
       .catch((e) => setErr(String(e)));
   }, []);
 
-  const measuredCount = axes ? axes.filter((a) => a.status === "MEASURED").length : 0;
-  const unmeasuredCount = axes ? axes.filter((a) => a.status !== "MEASURED").length : 0;
+  const measuredCount = axis ? axes.filter((a) => a.status === "MEASURED").length : 0;
+  const unmeasuredCount = axis ? axes.filter((a) => a.status !== "MEASURED").length : 0;
   // The family's own size — counted from the register this page is rendering,
   // never typed. If the register has not loaded, no count is shown at all.
   const familySize = axes ? axes.length : null;
@@ -103,7 +103,7 @@ export default function FinancialAxes() {
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
           The GSPC board{board.live || board.axes ? ` — ${board.public_count}` : ""} — financial half
         </p>
-        <h1 className="mt-3 text-4xl font-black text-gray-900">Financial axes</h1>
+        <h1 className="mt-3 text-4xl font-black text-gray-900">Financial axis</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
           The financial and domain axes of the board{familySize === null ? "" : ` — ${familySize} of them, ${measuredCount} measured`}. Same spine, same
           three-state grammar as the behavioural half: <strong>MEASURED</strong> means a deterministic rubric

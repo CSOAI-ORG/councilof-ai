@@ -41,7 +41,7 @@ const AXES: {
       "The composed pipeline vs a raw base call, n=193, paired, cluster-robust across 26 " +
       "dimensions. Design effect 1.92 — honest effective n ≈ 100 of 193.",
     artefact: "results/system_analysis.json",
-    // The separation counts that used to be typed here ("13 measurement axes,
+    // The separation counts that used to be typed here ("13 measurement axis,
     // 3 of 13 ... the other 10") went stale as soon as the board grew. They are
     // now DERIVED at render time from GET /api/gspc (see boardSeparation below
     // and client/src/lib/boardCount.ts). What stays typed is only the per-axis
@@ -54,7 +54,7 @@ const AXES: {
   },
   {
     key: "def", name: "DEFENCE", question: "Does it refuse what statute forbids?", state: "built",
-    headline: "1 of 4 axes resolved",
+    headline: "1 of 4 axis resolved",
     detail:
       "45 adversarial items with should-refuse labels, 24 prompt-injection items, 175 held-out " +
       "XSTest. Under-refusal and over-refusal reported separately, both with intervals. " +

@@ -250,7 +250,7 @@ export default function Instrument() {
 
             <div className="mt-4 flex flex-col gap-1.5 text-xs">
               <Link href="/benchmarks" className="text-emerald-700 dark:text-emerald-400 hover:underline">
-                <BarChart3 className="inline h-3.5 w-3.5 mr-1" />All four axes →
+                <BarChart3 className="inline h-3.5 w-3.5 mr-1" />All four axis →
               </Link>
               <Link href="/conformity-route" className="text-emerald-700 dark:text-emerald-400 hover:underline">
                 <Scale className="inline h-3.5 w-3.5 mr-1" />Annex VI or Annex VII? →

@@ -11,7 +11,7 @@
  *
  * GRAMMAR (binding, inherited from client/src/lib/lobbyLink.ts). Every question
  * here is a request for PUBLISHED material — "what does the board publish",
- * "which axes carry no number" — never a prompt that implies a live expert is
+ * "which axis carry no number" — never a prompt that implies a live expert is
  * standing by, and never a request for a compliance verdict. The lobby's chat
  * bar is deterministic-first and refuses rather than improvises; the questions it
  * suggests have to be answerable in that world.
@@ -118,7 +118,7 @@ const BY_ROUTE: { test: RegExp; asks: string[] | ((path: string) => string[]) }[
   {
     test: /^\/(gspc-scoreboard|gspc|board)/,
     asks: [
-      "Walk me through this board: which axes carry a measured figure and which carry none?",
+      "Walk me through this board: which axis carry a measured figure and which carry none?",
       "What does a TIE mean on this board, and why is a point lead not an advantage?",
       "When was this board last measured, and what is the signature attached to it?",
     ],
@@ -151,8 +151,8 @@ const BY_ROUTE: { test: RegExp; asks: string[] | ((path: string) => string[]) }[
   {
     test: /^\/models/,
     asks: [
-      "Which axes are measured on the live board, and who leads where?",
-      "How many axes are measured of the quotable set right now?",
+      "Which axis are measured on the live board, and who leads where?",
+      "How many axis are measured of the quotable set right now?",
     ],
   },
   {
@@ -165,7 +165,7 @@ const BY_ROUTE: { test: RegExp; asks: string[] | ((path: string) => string[]) }[
   {
     test: /^\/dashboard/,
     asks: [
-      "How many axes are measured of the quotable set right now?",
+      "How many axis are measured of the quotable set right now?",
       "Where do these dashboard numbers come from — what does GET /api/gspc publish?",
     ],
   },
@@ -195,7 +195,7 @@ const BY_ROUTE: { test: RegExp; asks: string[] | ((path: string) => string[]) }[
       const seg = path.split("/").filter(Boolean)[1] ?? "";
       const who = seg ? seg.replace(/[-_]+/g, " ") : "this reader";
       return [
-        `What is measured and published for ${who} — which axes carry a figure, and which are published with none?`,
+        `What is measured and published for ${who} — which axis carry a figure, and which are published with none?`,
         `What does the Council refuse to claim for ${who}: no certification, no badge, no conformity verdict?`,
         `Which of this page's frameworks map onto frozen provisions, and which cells stay empty?`,
       ];

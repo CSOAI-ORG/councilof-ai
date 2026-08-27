@@ -231,7 +231,7 @@ export function SovereignConsole() {
         </div>
         <div className="mt-2 flex flex-wrap gap-3 text-[11px]">
           <Link href="/instrument" className="text-emerald-700 hover:underline">Full instrument <ArrowRight className="inline h-3 w-3" /></Link>
-          <Link href="/benchmarks" className="text-emerald-700 hover:underline">All four axes</Link>
+          <Link href="/benchmarks" className="text-emerald-700 hover:underline">All four axis</Link>
           {/* Figure must match benchmark-results/provbench.json (n_assets_marked).
               It said 0/108 — the superseded 12-asset run — while /provenance-finding
               said 0 of 20. Two different numbers for one result, on one site. */}

@@ -73,7 +73,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         "into a link that would not resolve.",
     };
   };
-  // Counted, not asserted: how many axes carry a bank, and how many of those resolved.
+  // Counted, not asserted: how many axis carry a bank, and how many of those resolved.
   const banked = selected.filter((a) => typeof a.dataset === "string" && a.dataset);
   const bankResolved = banked.filter((a) => SLUG.test(a.dataset as string));
   const bankUnresolvable = banked.filter((a) => !SLUG.test(a.dataset as string));
@@ -93,7 +93,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     totals: (() => {
       const m = selected.filter((a) => a.status === "MEASURED");
       const cmp = m.filter((a) => a.kind === "model-comparison");
-      // Average only the axes that actually carry the field — living-stamp axes have no
+      // Average only the axis that actually carry the field — living-stamp axis have no
       // macro_f1 / mean_harm / unparsed_rate and must not drag a fabricated 0 into the mean.
       // Means are additionally scoped to model-comparison axes: a deterministic-facts axis
       // has no accuracy at all, and a declared slot has no measurement to average.
@@ -121,9 +121,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         // Retained for consumers that read it. Under the swept canon we quote only
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
-        public_count: `${selected.length} axes · ${measured} measured`,
+        public_count: `${selected.length} axis · ${measured} measured`,
         count_grammar:
-          `${selected.length} axes are on the board; ${measured} of them carry a measurement and ` +
+          `${selected.length} axis are on the board; ${measured} of them carry a measurement and ` +
           `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
           `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
           `so the gap is visible; it is not evidence of anything having been measured.`,
@@ -134,21 +134,21 @@ export const onRequestGet: PagesFunction = async (context) => {
           },
           financial: {
             ...bySelectedFamily("financial"),
-            note: "The 8 financial/domain axes (ADR-001). One is measured — provenance-controls, from a " +
+            note: "The 8 financial/domain axis (ADR-001). One is measured — provenance-controls, from a " +
               "deterministic mainnet read of 6 issuer accounts. The other seven are declared slots with " +
               "no run. None of the eight is a model comparison, so none has a leader, an accuracy or a " +
               "separation determination, and none contributes to any mean below.",
           },
         },
         sweep_note:
-          "Swept 2026-08-26 under ADR-001. The 8 financial/domain axes were ruled in on 2026-08-24 but " +
+          "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but " +
           "were absent from this payload until now, so this endpoint reported 14 — the un-swept state. " +
           // REDACTION: the ruling's phrasing applied the word 'measured' directly to the
           // full slot count. That exact string is the forbidden form this board's own gate
           // now catches, so it is DESCRIBED here rather than reproduced — printing it on a
           // public surface would publish the very sentence the correction exists to retire.
           "The ruling applied the word 'measured' to the full slot count; the evidence supports " +
-          "22 axes and 15 measurements, and the evidence wins. No axis was marked MEASURED to " +
+          "22 axis and 15 measurements, and the evidence wins. No axis was marked MEASURED to " +
           "close that gap.",
         license: "CC-BY-4.0",
         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
@@ -156,7 +156,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         items_note: "items sums each axis's n. The n of the one measured financial axis counts ISSUER " +
           "ACCOUNTS, not bank items, and declared slots contribute 0 because nothing was measured. " +
           "Read items as 'rows behind the board', not as a single comparable sample.",
-        // Separation stats are over model-comparison axes ONLY — see comparison_axes.
+        // Separation stats are over model-comparison axis ONLY — see comparison_axes.
         comparison_axes: cmp.length,
         separated_leads: cmp.filter((a) => a.separation === "SEPARATED").length,
         ties: cmp.filter((a) => a.separation === "TIE").length,
@@ -178,7 +178,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       };
     })(),
     bank_host: BANK_HOST,
-    // Counted from the axes array immediately above, never typed. The previous wording
+    // Counted from the axis array immediately above, never typed. The previous wording
     // ("Every axis WITH a frozen bank carries dataset_url — the bank resolved to a
     // fetchable URL") was a blanket assertion with nothing behind it, and it was false
     // for the jail axis for as long as it stood.
@@ -186,7 +186,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     banked_axes_resolvable: bankResolved.length,
     banked_axes_unresolvable: bankUnresolvable.map((a) => a.axis),
     bank_note:
-      `${bankResolved.length} of the ${banked.length} axes carrying a frozen bank resolve to a ` +
+      `${bankResolved.length} of the ${banked.length} axis carrying a frozen bank resolve to a ` +
       "dataset_url built as bank_host + the axis's bare <owner>/<name> slug, so a stranger can " +
       "retrieve the split without knowing where we host it. Any axis whose slug does not parse " +
       "carries dataset_url: null with dataset_url_state UNRESOLVABLE and is named in " +
@@ -214,11 +214,11 @@ export const onRequestGet: PagesFunction = async (context) => {
       },
     ],
     limitations: [
-      `${separatedNames.length} of the ${measuredCount} measured model-comparison axes show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage. This fraction is over the behavioural axes only; the financial axes are not model comparisons and are not in its denominator.`,
+      `${separatedNames.length} of the ${measuredCount} measured model-comparison axis show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage. This fraction is over the behavioural axis only; the financial axis are not model comparisons and are not in its denominator.`,
       "22 axes are on the board and 15 carry a measurement. The 7 declared slots (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, and the three candidate indices) have NO run behind them — they are published so the gap is visible, and must never be quoted as measured. See totals.count_grammar.",
       "The one measured financial axis, provenance-controls, measures on-chain CONTROL FACTS only — which flags an issuer account carries — for ONE axis family over SIX instruments. What those facts imply about an instrument's risk, solvency or creditworthiness is UNMEASURED and needs counsel. It is not a rating, not investment advice, not a ranking, and not an endorsement of any named instrument.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
-      "Two candidate indices (ai-economy-index, human-labour-index) have partial input banks whose linked v0.1 artifacts still carry a status label of MEASURED-INDEX-v0.1. That label was an over-claim and is superseded: both axes are UNMEASURED here, and this board is the authority. Reference components existing is not an index being measured.",
+      "Two candidate indices (ai-economy-index, human-labour-index) have partial input banks whose linked v0.1 artifacts still carry a status label of MEASURED-INDEX-v0.1. That label was an over-claim and is superseded: both axis are UNMEASURED here, and this board is the authority. Reference components existing is not an index being measured.",
       "Jail (slot 14) separation determination 2026-08-25: TIE — the leader's Wilson 95% interval [0.475, 0.698] contains the fleet mean 0.5455, so the point-estimate lead is not a measured advantage. Measured on a 7-model gold-bank fleet (all models n≥30 usable, 68–71), not the 19-model board fleet; the gold bank is published (csoai/gspc-jail-goldbank, HF 2026-08-25).",
       "jail's fleet accuracy 0.5455 is the mean of per-model accuracies across 7 models x 71 gold cells (usable n 68–71); the leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best precision 1.0, best recall 0.237 — the best detector still misses 3 of 4 escapes.",
       "measured_in_lane (slot15 instrument-honesty, human-vs-ai) is the internal 16-slot living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",

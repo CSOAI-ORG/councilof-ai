@@ -268,7 +268,7 @@ function loadEngine16(raw: unknown): LoadedSet {
   const models: any[] = Array.isArray(d.models) ? d.models : [];
 
   // THE HONEST SHAPE OF THIS ARTIFACT, and the page must not paper over it:
-  // the file declares a number of axes but publishes NO per-axis breakdown.
+  // the file declares a number of axis but publishes NO per-axis breakdown.
   // Its published rows are MODELS, each answering the whole set. Rendering
   // invented per-axis rows here would manufacture a breakdown that was never
   // measured, so the rows are the models and the page says why.
@@ -305,7 +305,7 @@ function loadEngine16(raw: unknown): LoadedSet {
   if (typeof d.axes === "number")
     aside.push({
       label: "Axes declared by this artifact",
-      value: `${d.axes} — declared in the file's own \`axes\` field. The file publishes no per-axis breakdown, so no per-axis row can honestly be drawn.`,
+      value: `${d.axes} — declared in the file's own \`axis\` field. The file publishes no per-axis breakdown, so no per-axis row can honestly be drawn.`,
     });
   if (typeof d.clusters_measured === "number")
     aside.push({ label: "Clusters measured", value: String(d.clusters_measured) });
@@ -367,7 +367,7 @@ function loadArena(raw: unknown): LoadedSet {
           label: "the live pass-rate scoreboard",
           href: "/api/arena/scoreboard",
           kind: "api",
-          what: "the other arena surface — which carries a different set of axes",
+          what: "the other arena surface — which carries a different set of axis",
         },
       ],
       note: null,
@@ -567,7 +567,7 @@ function loadSnapshot(raw: unknown): LoadedSet {
 // ──────────────────────────────────────────── 8. the signed card corpus set
 
 /** The card corpus is a MODEL-BY-AXIS matrix: one signed card per measured cell.
- *  Its axes are benchmark axes and are NOT the public board's governance axes —
+ *  Its axes are benchmark axes and are NOT the public board's governance axis —
  *  a different set, measured by a different instrument, carrying its own count
  *  on purpose. It is included here because it is a separately-counted axis set
  *  that had no route from the board, which is the exact complaint this page
@@ -715,7 +715,7 @@ export const AXIS_SETS: AxisSet[] = [
     doesNotEstablish: [
       "Accuracy against a right answer. A rating says who won more rounds, not who was correct; a field of weak models still produces a leader.",
       "Any board figure. This set has its own axis list — some of its topics are not board axes at all, and two of them are measured in-lane and deliberately never counted in board totals.",
-      "A settled count. This set's own two surfaces still disagree about how many axes it has, and several axes named in the signed reference carry no rows. That gap is open and flagged, not resolved.",
+      "A settled count. This set's own two surfaces still disagree about how many axis it has, and several axis named in the signed reference carry no rows. That gap is open and flagged, not resolved.",
     ],
     relation:
       "A different instrument over a different axis list. It was mistaken for a stale copy of the board for a long time; it is not one, and forcing its number to match the board's would destroy information rather than fix a contradiction.",

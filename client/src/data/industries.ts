@@ -9,7 +9,7 @@
 //     or approval, and we do not enforce an obligation — we measure against one.
 //   * THERE IS NO NUMBER IN THIS FILE, AND ADDING ONE IS THE DEFECT. Every
 //     figure a sector page shows is read from GET /api/gspc at render time via
-//     <AxisProof>. A sector declares `axes` — axis LABELS, which are canon —
+//     <AxisProof>. A sector declares `axis` — axis LABELS, which are canon —
 //     and nothing else. The previous version typed n, leader accuracy, the
 //     Wilson interval, the fleet mean and the separation verdict into all 15
 //     entries, and two of them had already drifted from the board they claimed
@@ -518,7 +518,7 @@ export const industries: Industry[] = [
     },
     axes: ["humanoid-labour-index", "machinery-conformity", "safety"],
     gap:
-      "The humanoid axis is a published slot with no run behind it. It appears below as unmeasured rather than being left off this page, beside the adjacent axes that are measured.",
+      "The humanoid axis is a published slot with no run behind it. It appears below as unmeasured rather than being left off this page, beside the adjacent axis that are measured.",
     artefactProves:
       "once the bank exists — which model was scored on which frozen embodiment split. " +
       "Until then the card carries the UNMEASURED label.",

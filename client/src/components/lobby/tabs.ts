@@ -253,7 +253,7 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(cra readiness|readiness kit|cyber resilience|cra)\b/i,
   },
   {
-    label: "Financial axes",
+    label: "Financial axis",
     blurb: "The financial slots of the canon — what is UNMEASURED is stated first.",
     path: "/financial-axes",
     group: "product",
@@ -438,14 +438,14 @@ function isNavCommand(text: string): boolean {
  *
  * Both matchers used to take the FIRST entry in array order whose cue matched,
  * which made the answer depend on list position rather than on what the reader
- * said. "show the financial axes" hit the Live-board tab, because its cue carries
- * a bare `axes` and the board happens to sit near the top of the rail. So the
+ * said. "show the financial axis" hit the Live-board tab, because its cue carries
+ * a bare `axis` and the board happens to sit near the top of the rail. So the
  * reader asked for one destination by name and silently got another.
  *
  * The rule now: score every candidate by HOW MUCH OF THE SENTENCE its cue
  * matched, and let the longest literal match win — across tabs and routes
- * together, since they are one destination space. "financial axes" (15 chars)
- * beats "axes" (4). Nothing is guessed: a sentence no cue matches still returns
+ * together, since they are one destination space. "financial axis" (15 chars)
+ * beats "axis" (4). Nothing is guessed: a sentence no cue matches still returns
  * null, exactly as before.
  */
 function bestCue<T extends { cues: RegExp }>(items: T[], t: string): { item: T; len: number } | null {

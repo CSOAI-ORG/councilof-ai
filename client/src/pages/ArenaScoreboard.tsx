@@ -13,8 +13,8 @@ import { useBoardCount } from "@/lib/boardCount";
  * its own, smaller axis set — see client/src/data/facts.json,
  * counts.namespaces.arena_elo. The number this page renders is the length of the
  * payload's own axis_pass_rates, and it is NOT the board's axis count. Until
- * 2026-08-26 the page printed it as a bare "N axes measured", which a reader had
- * no way to distinguish from the board's count and which also called thin-n axes
+ * 2026-08-26 the page printed it as a bare "N axis measured", which a reader had
+ * no way to distinguish from the board's count and which also called thin-n axis
  * measured. It is now named for its instrument, split into slots vs rankable,
  * and shown beside the board's derived count so the two cannot be confused.
  * Forcing the arena to the board's number would destroy information, not fix it.

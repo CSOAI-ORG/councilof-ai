@@ -30,7 +30,7 @@ const axis = (over: Partial<WireAxis>): WireAxis => ({
 });
 
 const board = (axes: WireAxis[]): WireBoard => ({
-  axes,
+  axis,
   inLane: [{ axis: "slot15", bench: "", task: "", n: 6, status: "MEASURED" }],
   publicCount: "13 measured of 14 quotable",
   measuredOn: "2026-08-12",
@@ -180,7 +180,7 @@ describe("boardWire — the failure path reports, it does not paper over", () =>
     withFetch(async () => new Response(JSON.stringify({ axes: [] }), {
       status: 200, headers: { "content-type": "application/json" },
     }));
-    await expect(fetchBoard()).rejects.toThrow(/no axes/);
+    await expect(fetchBoard()).rejects.toThrow(/no axis/);
   });
 
   it("keeps dataset_url off the wire and drops a malformed interval", async () => {

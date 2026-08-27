@@ -1074,7 +1074,7 @@ export default function NewHomeV2() {
             <h3 className="text-2xl font-bold text-gray-900 mb-2">The instrument behind it</h3>
             <p className="text-gray-600 mb-6">
               {/* Counts derived from GET /api/gspc (ADR-001) — this read "Thirteen measured
-                  axes on a 14-slot board", typed, and went stale when the board was swept. */}
+                  axis on a 14-slot board", typed, and went stale when the board was swept. */}
               {board.public_count} — frozen benchmarks, open on Hugging Face and Kaggle with the scoring code,
               so you can recompute any figure we publish, or disagree with any answer key. A slot with no run
               behind it is published UNMEASURED, never folded into the measured count.

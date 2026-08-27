@@ -55,7 +55,7 @@ export default function EmbedPage() {
     `       alt="governance — measured by Council of AI" height="20">\n` +
     `</a>`;
 
-  const overallSnippet = `<img src="${ORIGIN}/api/badge" alt="Council of AI — measured axes" height="20">`;
+  const overallSnippet = `<img src="${ORIGIN}/api/badge" alt="Council of AI — measured axis" height="20">`;
 
   const iframeSnippet =
     `<!-- Self-verifying signed card — Ed25519 checked in the visitor's browser -->\n` +
@@ -130,7 +130,7 @@ export default function EmbedPage() {
               <div className="mt-3 flex flex-wrap items-center gap-4">
                 <img src="/api/badge?axis=governance" alt="governance — measured by Council of AI" height={20} />
                 <img src="/api/badge?axis=affect" alt="affect — measured by Council of AI" height={20} />
-                <img src="/api/badge" alt="Council of AI — measured axes overall" height={20} />
+                <img src="/api/badge" alt="Council of AI — measured axis overall" height={20} />
               </div>
               <p className="mt-2 text-[12px] text-emerald-100/50">
                 (If the board changes, every embedded badge changes with it — the SVG is generated

@@ -42,10 +42,10 @@ import AxisProof from "../components/AxisProof";
 //
 // 2. Once reachable, they still named no axis, no n and no card — the measurement was
 //    absent from the measurement company's own audience pages. Each persona now declares
-//    the board axes that actually bear on its reader (`axes`, a list of LABELS, which is
+//    the board axis that actually bear on its reader (`axis`, a list of LABELS, which is
 //    canon and safe to write down) and <AxisProof> reads their live rows from
 //    GET /api/gspc. Not one number below is typed: an axis that is an UNMEASURED slot
-//    renders as unmeasured, because a finance reader being shown only the measured axes
+//    renders as unmeasured, because a finance reader being shown only the measured axis
 //    would be shown a flattering subset rather than the board.
 
 type Link = { href: string; label: string; note: string };
@@ -55,10 +55,10 @@ type Persona = {
   links: Link[];
   /** Board axis ids, exactly as GET /api/gspc names them. Labels only — never figures. */
   axes: string[];
-  /** Why these axes are the ones this reader should check. */
+  /** Why these axis are the ones this reader should check. */
   axesWhy: string;
   slides: { title: string; body: string; tag?: string }[];
-  /** Board axes this audience can actually go and check, with why each is here. */
+  /** Board axis this audience can actually go and check, with why each is here. */
   evidence: { lead: string; axes: { slug: string; why: string }[] };
   faqs: { q: string; a: string }[];
 };
@@ -76,7 +76,7 @@ const PERSONAS: Record<string, Persona> = {
     ],
     axes: ["provenance", "governance", "openness"],
     axesWhy:
-      "An AI-washing charge turns on whether a disclosure was evidenced, and these are the axes a filer's own claims rest on: whether AI-generated output can be traced to what produced it, whether a model tiers its own regulated use correctly, and how much of the system is open to inspection. Read the rows, then recompute the signed card behind any of them.",
+      "An AI-washing charge turns on whether a disclosure was evidenced, and these are the axis a filer's own claims rest on: whether AI-generated output can be traced to what produced it, whether a model tiers its own regulated use correctly, and how much of the system is open to inspection. Read the rows, then recompute the signed card behind any of them.",
     slides: [
       { tag: "the risk", title: "AI is already in your filings", body: "Material AI risk belongs in Reg S-K Item 105 risk factors and in MD&A. The SEC has charged and settled AI-washing cases against investment advisers. Disclosure needs evidence behind it." },
       { tag: "the fix", title: "Sign the measurement, not the claim", body: "A measurement card records ONE run against ONE frozen bank, Ed25519-signed over its exact bytes. It evidences what was measured on a date. It is not a statement that your AI governance is adequate — nobody here can make that statement." },
@@ -101,7 +101,7 @@ const PERSONAS: Record<string, Persona> = {
     links: [
       { href: "/dora", label: "DORA readiness", note: "Operational resilience for AI" },
       { href: "/finance-ai-act", label: "Finance + EU AI Act", note: "High-risk uses + obligations" },
-      { href: "/financial-axes", label: "The financial axes", note: "One measured, the rest published empty" },
+      { href: "/financial-axes", label: "The financial axis", note: "One measured, the rest published empty" },
       { href: "/compare", label: "Honest vs the incumbents", note: "Vanta / Drata / Credo AI" },
     ],
     axes: ["governance", "provenance-controls", "distribution-integrity", "reserve-attestation"],
@@ -302,12 +302,12 @@ export default function PersonaRouter({ persona }: { persona: string }) {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 pb-4">
-        <AxisProof axes={p.axes} why={p.axesWhy} tone="light" />
+        <AxisProof axis={p.axes} why={p.axesWhy} tone="light" />
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-12"><Slideshow slides={p.slides} /></section>
 
-      <PersonaEvidence lead={p.evidence.lead} axes={p.evidence.axes} />
+      <PersonaEvidence lead={p.evidence.lead} axis={p.evidence.axes} />
 
       <section className="max-w-6xl mx-auto px-6 py-10">
         <TrustStrip className="[&_div]:!bg-emerald-50/60 [&_.text-emerald-300]:!text-emerald-700 [&_.text-emerald-50\\/60]:!text-emerald-600/70 [&_div]:!border-emerald-200" />

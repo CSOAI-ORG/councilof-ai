@@ -343,7 +343,7 @@ const PAGE_LD = {
       // this licence. Nothing else about it is asserted here.
       "@type": "Dataset",
       "@id": "https://councilof.ai/api/gspc#dataset",
-      name: "GSPC board — Council of AI measured axes",
+      name: "GSPC board — Council of AI measured axis",
       description:
         "Council of AI's own measured board: deterministic grading of recorded model outputs on frozen, published splits, served as signed JSON. Counts and scores are read live from the endpoint.",
       url: "https://councilof.ai/api/gspc",
@@ -489,7 +489,7 @@ export default function BenchmarkIndex() {
             <div className="mt-6 overflow-x-auto rounded-lg border border-emerald-300 bg-white dark:border-emerald-800 dark:bg-gray-900">
               <table className="w-full text-sm">
                 <caption className="sr-only">
-                  Council of AI measured axes, live from /api/gspc
+                  Council of AI measured axis, live from /api/gspc
                 </caption>
                 <thead>
                   <tr className="border-b border-emerald-200 text-left text-xs uppercase tracking-wider text-emerald-800 dark:border-emerald-900 dark:text-emerald-300">

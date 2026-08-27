@@ -37,8 +37,8 @@ export const AUDIENCES: { id: Audience; label: string; blurb: string }[] = [
 /** Questions by audience — each answerable from published, checkable material. */
 export const BY_AUDIENCE: Record<Audience, Ask[]> = {
   regulator: [
-    { label: "What do you actually measure?", prompt: "Which axes do you measure, and which provision does each one map to?", intent: "board" },
-    { label: "What is left unmeasured?", prompt: "Show me the axes that are UNMEASURED or untested, and say why.", intent: "board" },
+    { label: "What do you actually measure?", prompt: "Which axis do you measure, and which provision does each one map to?", intent: "board" },
+    { label: "What is left unmeasured?", prompt: "Show me the axis that are UNMEASURED or untested, and say why.", intent: "board" },
     { label: "Can I check this without trusting you?", prompt: "Walk me through verifying one of your records myself, without an account.", intent: "verify" },
     { label: "What have you got wrong?", prompt: "Show me your corrections ledger, including anything you have retracted.", intent: "corrections" },
     { label: "Is this a certification?", prompt: "Is a measurement card a certification or conformity assessment? What is the difference?" },

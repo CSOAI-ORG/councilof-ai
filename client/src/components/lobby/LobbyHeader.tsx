@@ -563,7 +563,7 @@ function Readout({
  * SEARCH
  *
  * A WAI-ARIA combobox over the OS's real index (osSearch.ts). Destinations and
- * pages answer from the first keystroke; the board axes and the published signed
+ * pages answer from the first keystroke; the board axis and the published signed
  * cards load on first activation, and while they are on the wire the listbox SAYS
  * so — a short list is never passed off as the whole one, and a set that fails is
  * named with its error rather than silently omitted.
@@ -660,8 +660,8 @@ function OsSearchField({
         aria-controls={listId}
         aria-autocomplete="list"
         aria-activedescendant={open && results.length ? optionId(at) : undefined}
-        aria-label="Search Council OS — destinations, board axes and signed cards"
-        placeholder="Search destinations, board axes, signed cards"
+        aria-label="Search Council OS — destinations, board axis and signed cards"
+        placeholder="Search destinations, board axis, signed cards"
         value={query}
         disabled={disabled}
         onFocus={() => { setFocused(true); activate(); }}

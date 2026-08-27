@@ -117,11 +117,11 @@ describe("Council OS tabs", () => {
   });
 
   // ── the most specific destination wins, not the first one listed ─────────
-  it("sends 'financial axes' to the financial axes, not to the board's bare 'axes' cue", () => {
-    expect(matchTab("show the financial axes")).toBeNull();
-    expect(matchRoute("show the financial axes")?.path).toBe("/financial-axes");
+  it("sends 'financial axis' to the financial axis, not to the board's bare 'axis' cue", () => {
+    expect(matchTab("show the financial axis")).toBeNull();
+    expect(matchRoute("show the financial axis")?.path).toBe("/financial-axes");
     // The bare word still belongs to the board.
-    expect(matchTab("show the axes")?.id).toBe("board");
+    expect(matchTab("show the axis")?.id).toBe("board");
   });
 
   it("no longer lets a bare 'readiness' swallow the CRA kit", () => {

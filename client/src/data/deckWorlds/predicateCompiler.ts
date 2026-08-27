@@ -37,7 +37,7 @@ import type { Slide } from "@/components/scrollworld";
  *     genuinely disputed we record the dispute rather than resolving it silently, which
  *     is what the deadline feed already does. Compilation removes ambiguity from the
  *     PREDICATE, never from the law.
- *  7. Deck slide 4 "distilled into 13 measurable axes (Governance, Security, Privacy,
+ *  7. Deck slide 4 "distilled into 13 measurable axis (Governance, Security, Privacy,
  *     Commerce)" — CORRECTED. (NOTE 2026-08-26: this correction used to state the
  *     board's size and measured count as words. Both moved when the board was swept
  *     under ADR-001 — read totals off GET /api/gspc, never from this comment.) The

@@ -321,7 +321,7 @@ export default function MotionLab() {
           <div className="mt-12 grid gap-8 sm:grid-cols-3">
             {[
               { k: "Axes on the board", v: board.axes },
-              { k: "Measured axes", v: board.measured },
+              { k: "Measured axis", v: board.measured },
               { k: "Items behind them", v: board.items },
             ].map((cell) => (
               <div key={cell.k} className="rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-6">

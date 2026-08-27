@@ -32,7 +32,7 @@ export default function Library() {
       "@type": "CollectionPage",
       name: "Council of AI — Library",
       description:
-        "The reference archive of Council of AI: measured axes, EU AI Act statute, governance frameworks, jurisdictions, verification tech, and company records — organized by sector.",
+        "The reference archive of Council of AI: measured axis, EU AI Act statute, governance frameworks, jurisdictions, verification tech, and company records — organized by sector.",
       url: "https://councilof.ai/library",
       isPartOf: { "@id": "https://councilof.ai/#org" },
       hasPart: SECTORS.map((s) => ({

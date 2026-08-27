@@ -15,7 +15,7 @@ describe("withEmbed", () => {
   });
 
   it("leaves hash-only and mailto links alone", () => {
-    expect(withEmbed("#axes")).toBe("#axes");
+    expect(withEmbed("#axis")).toBe("#axis");
     expect(withEmbed("mailto:nicholas@csoai.org")).toBe("mailto:nicholas@csoai.org");
   });
 

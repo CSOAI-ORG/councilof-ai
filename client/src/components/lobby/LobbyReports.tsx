@@ -35,7 +35,7 @@ const INITIAL: Report[] = [
   {
     id: "board",
     label: "The board",
-    what: "Measured axes, the ones that carry no number, and the stamp on both.",
+    what: "Measured axis, the ones that carry no number, and the stamp on both.",
     endpoint: "/api/gspc",
     page: "/gspc-scoreboard",
     state: "idle",
@@ -121,7 +121,7 @@ export default function LobbyReports({
       // Prefer the API's own published phrasing when it ships one — it is the
       // ruling, not our paraphrase of it.
       if (typeof t.public_count === "string") bits.push(t.public_count);
-      else if (typeof t.axes === "number") bits.push(`${t.axes} axes`);
+      else if (typeof t.axes === "number") bits.push(`${t.axes} axis`);
       if (typeof t.items === "number") bits.push(`${t.items.toLocaleString()} items`);
       const stamp = stampOf(j);
       if (stamp) bits.push(`measured ${stamp}`);

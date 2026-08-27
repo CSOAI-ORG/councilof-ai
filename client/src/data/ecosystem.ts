@@ -123,7 +123,7 @@ export const ECOSYSTEM: Account[] = [
   { id: "reliance", name: "Reliance Industries", type: "global2000", region: "APAC", country: "India", hq: [72.83, 19.06], jurisdictions: ["in"], frameworks: ["iso-42001"], sector: "energy", posture: "unknown", currentVendor: "unknown", play: "integrate", source: "search returned only AI-investment/strategy stories ($110B AI investment plan, new AI subsidiary with Google/Meta partnerships per TechCrunch/CDO Magazine) -- no AI-governance-program-specific citation found, stays honestly unknown. [NOTE: search-result plaintext not independently traceable in the persisted transcript -- URL/company is real and on-topic, treat specific named-body/quoted claims as unverified-but-not-contradicted, not confirmed]" },
 ];
 
-// The fixed testing rubric axes (see DISTRIBUTION_HIVE.md §4).
+// The fixed testing rubric axis (see DISTRIBUTION_HIVE.md §4).
 export const RUBRIC = [
   "Framework coverage", "Agentic governance", "Verifiable proof",
   "Live tooling", "Enforcement timing", "Sovereignty / data", "Integration effort",

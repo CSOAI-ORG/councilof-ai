@@ -169,7 +169,7 @@ function IndustryPage({ industry }: { industry: Industry }) {
           )}
           <AxisProof
             axes={industry.axes}
-            why={`The board axes that bear on ${industry.name.toLowerCase()}. Bench, n, interval and separation verdict as the board serves them.`}
+            why={`The board axis that bear on ${industry.name.toLowerCase()}. Bench, n, interval and separation verdict as the board serves them.`}
             tone="light"
           />
         </section>
