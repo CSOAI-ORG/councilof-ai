@@ -45,7 +45,7 @@ const PRODUCTS: { group: string; rows: ProductRow[] }[] = [
         name: "GSPC scoreboard",
         path: "/gspc-scoreboard",
         register: "MEASURED",
-        blurb: "13 measured of 14 axes · GET /api/gspc · Ed25519",
+        blurb: "14-slot board · GET /api/gspc · Ed25519",
         monetize: "Verify free forever · grades never sold",
       },
       {
