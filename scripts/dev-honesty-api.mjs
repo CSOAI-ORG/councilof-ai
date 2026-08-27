@@ -18,6 +18,9 @@ const labourFixture = JSON.parse(
 const rwaFixture = JSON.parse(
   readFileSync(join(root, "datasets/rwa-testnet-unmeasured/catalog.json"), "utf8"),
 );
+const mcpRegistry = JSON.parse(
+  readFileSync(join(root, "client/src/data/mcpRegistry.json"), "utf8"),
+);
 
 const INDICES = labourFixture.indices.map((row) => ({
   slug: row.slug,
@@ -82,6 +85,35 @@ function handleIndices(url, res) {
   });
 }
 
+function hiveFromCategory(category) {
+  const c = String(category || "").toLowerCase();
+  if (c.includes("compliance") || c.includes("regulatory")) return "compliance-gateway";
+  if (c.includes("agent")) return "governance-engine";
+  if (c.includes("payment") || c.includes("commerce")) return "keystone";
+  if (c.includes("vertical")) return "verticals";
+  if (c.includes("developer") || c.includes("ops")) return "distribution";
+  return "api-gateway";
+}
+
+function handleMcp(res) {
+  const servers = (mcpRegistry.servers || []).map((s) => ({
+    name: s.slug || s.name,
+    hive: hiveFromCategory(s.category),
+    status: s.meokLabs ? "LIVE" : "UNMEASURED",
+    description: s.description,
+    category: s.category,
+  }));
+  return json(res, 200, {
+    total: mcpRegistry.total ?? servers.length,
+    count: servers.length,
+    generated_at: mcpRegistry.generatedAt,
+    source: "client/src/data/mcpRegistry.json",
+    register: "REPORTED",
+    note: "Public registry catalogue for local dev — not live gateway probe. Production: functions/api/mcp.ts.",
+    servers,
+  });
+}
+
 function handleRwa(url, res) {
   const slug = url.pathname.replace(/^\/api\/rwa-attestation\/?/, "").replace(/\/$/, "");
   const targets = rwaFixture.targets;
@@ -115,6 +147,7 @@ const server = http.createServer((req, res) => {
   }
   if (url.pathname.startsWith("/api/indices")) return handleIndices(url, res);
   if (url.pathname.startsWith("/api/rwa-attestation")) return handleRwa(url, res);
+  if (url.pathname === "/api/mcp") return handleMcp(res);
   if (url.pathname === "/api/health") return json(res, 200, { ok: true, lane: "dev-honesty-api" });
   json(res, 404, { error: "not_found", path: url.pathname });
 });

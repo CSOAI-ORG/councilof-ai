@@ -40,7 +40,7 @@ Canon: `docs/MASTER_CONNECT.md` · `docs/ESTATE_CROSSWALK.md` · `council-os/GAM
 | GSPC Arena (`?view=arena`) | REAL (fixture) | Wire to live arena API when ready |
 | Council Space console sim | PARTIAL | Gateway banner; narrated ≠ MEASURED |
 | SovOS games arcade | 1 live + 5 DESIGN | Slots 2–6 registered with DESIGN panels |
-| MCP fleet page | PARTIAL | Live list when `VITE_API_BASE` set |
+| MCP fleet page | REAL (dev) | Live list via `/api/mcp` — registry in dev, gateway in prod |
 | Training / flywheel | PARTIAL | Needs `/flywheel/*.json` on deploy |
 | Dashboard framework % | FIXED | UNMEASURED until org assessment |
 | 9 product SKUs (GPAI, INS, COBOL…) | MIXED | See `/products` + `engine-axis.ts` |
