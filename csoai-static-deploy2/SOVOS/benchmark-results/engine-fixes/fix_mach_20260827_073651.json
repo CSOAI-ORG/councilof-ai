@@ -1,0 +1,29 @@
+{
+  "before": {
+    "axis": "mach",
+    "label": "Machine-verif/MachBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 33,
+    "n_models": 19,
+    "sha256": "83897d0e9d5f",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "mach",
+    "delta": "mach (Machine-verif/MachBench): weakest model sov6-temporality-v3-light at 0.121 (4/33 correct) with ZERO unparsed - unlike care/det/prv where the floor is parse/transport noise, this transport is clean so the gap is a genuine below-chance capability floor (3-label chance ~0.333, majority baseline 0.364). Honest fix: (1) add a per-item confusion pass to identify which label the below-chance model collapses to (a NOT_SAFETY_FUNCTION-vs-PART_A collapse would signal the model cannot distinguish safety-function scope); (2) inject explicit label-definition plus 3-shot examples into the mach prompt and re-measure the five weakest models to separate instruction-limitation from capability-limitation; (3) keep the below-chance result QUOTED as a documented floor, flagged below-majority-baseline rather than re-bucketed.",
+    "gaps_before": [
+      "spread best\u2192worst 0.545\u21920.121 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T07:36:51.350859+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "O2GitXcxWxOvQpwD3sLztPWeLAnrgFZlh9p+ht/HmAyDtM0vbsXrlojBNXK+0xVHUfrzRJvjeQb6mtPq8kkQBg==",
+    "body_sha256": "77b9340101345a5913b6cfb738369e9638038fc0f474aa1f72d670076f87303a",
+    "pubkey": "xjXEC2qL8Vbv276CGtCMxcYUTRnKvOBmafjP4TF4SVU=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}
