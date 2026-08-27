@@ -1,0 +1,27 @@
+{
+  "before": {
+    "axis": "det",
+    "label": "Detector-interop/DetBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 33,
+    "n_models": 19,
+    "sha256": "1db6db035065",
+    "last_fix": "2026-08-27T18:28:45.080432+00:00"
+  },
+  "fix": {
+    "axis": "det",
+    "delta": "Add JSON schema enforcement in sovos-engine detector parser with retry-on-parse-failure (max 3 attempts) before scoring as unparsed. Unparsed responses score as 0.0 with separate format-violation metric to distinguish transport failures from true capability gaps. Apply to all sov6-v3-light models with unparsed>50% first.",
+    "gaps_before": [
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "weakest model sov6-synthesis-v3-light at 0.000 \u2014 near-chance floor, check bank quality",
+      "sov6-logic-v3-light: 33/33 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-relationality-v3-light: 31/33 unparsed at acc 0.061 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-synthesis-v3-light: 33/33 unparsed at acc 0.000 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "spread best\u2192worst 0.879\u21920.000 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T20:07:48.991813+00:00",
+    "promoted": null,
+    "reverted": null
+  }
+}
