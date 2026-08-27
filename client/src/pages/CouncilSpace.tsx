@@ -160,12 +160,33 @@ async function ssGovern(ind: string): Promise<any | null> {
   try { const r = await fetch(GW + "/govern?q=" + encodeURIComponent(ind)); if (r.ok) { const d = await r.json(); if (d && d.matched && d.frameworks && d.frameworks.length) return d; } } catch (e) {}
   return null;
 }
-async function ssVerdict(scenario: string): Promise<string> {
+/**
+ * Ask the honest /api/chat lane about the scenario. Three outcomes, and the UI
+ * must keep them apart:
+ *   string — the lane answered with usable grounded text (labelled, never "signed")
+ *   ""     — the lane answered but refused / could not ground. That is its DESIGNED
+ *            state for a hypothetical scenario: it answers from published measurement
+ *            only and will not improvise a legal opinion.
+ *   null   — the lane did not answer at all (network / 5xx).
+ * HISTORY (2026-08-27, found by playing the page): this used to read `d.response`,
+ * a field /api/chat has never returned — so the verdict was ALWAYS empty, and the
+ * caller papered over it with a hardcoded "Permitted with conditions…" shown to
+ * every visitor as "Council verdict". The fabricated fallback is deleted; an empty
+ * verdict now renders as the honest "no live verdict" state.
+ */
+async function ssVerdict(scenario: string): Promise<string | null> {
   try {
     const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI multi-agent governance council. In 3 sentences, deliver a verdict on this AI system: is it permitted, and under what key conditions (risk tier, human oversight, transparency, data duties)? System: " + scenario }) });
-    if (r.ok) { const d = await r.json(); if (d && d.response && d.model !== "idle" && !/travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(String(d.response))) return String(d.response); }
-  } catch (e) {}
-  return "";
+    if (!r.ok) return null;
+    const d = await r.json();
+    const text = String((d && (d.answer ?? d.response)) ?? "").trim();
+    if (!text) return "";
+    // The grounded lane's designed refusal, or persona bleed-through: no verdict.
+    if (/could not ground|will not invent|not legal advice|travell?er|companion|walks beside|i'?m sorry|can'?t help|on your journey|dear friend|kindred|as an ai language|remembering/i.test(text)) return "";
+    return text;
+  } catch (e) {
+    return null;
+  }
 }
 
 type KbMatch = { dimension: string; question: string; delta: number; sha256: string; source_clan?: string };
@@ -294,6 +315,11 @@ export default function CouncilSpace() {
   useEffect(() => {
     let alive = true;
     let timer: ReturnType<typeof setTimeout> | null = null;
+    // Back-off, not flood: /sov-time is not deployed on this origin today, and the
+    // old fixed 5s loop hammered a permanent 404 from every open tab, forever.
+    // "Ledger: offline" is the honest state either way — after 3 straight failures
+    // we re-check once a minute instead of every 5 seconds.
+    let fails = 0;
     async function tick() {
       try {
         const r = await fetch(LOCAL_GW + "/sov-time");
@@ -302,13 +328,15 @@ export default function CouncilSpace() {
           const d = await r.json();
           setLedgerCount(d.total ?? 0);
           setLedgerOnline(true);
+          fails = 0;
         } else {
           setLedgerOnline(false);
+          fails += 1;
         }
       } catch {
-        if (alive) setLedgerOnline(false);
+        if (alive) { setLedgerOnline(false); fails += 1; }
       }
-      if (alive) timer = setTimeout(tick, 5000);
+      if (alive) timer = setTimeout(tick, fails >= 3 ? 60000 : 5000);
     }
     tick();
     return () => { alive = false; if (timer) clearTimeout(timer); };
@@ -345,11 +373,14 @@ export default function CouncilSpace() {
   useEffect(() => {
     let alive = true;
     let timer: ReturnType<typeof setTimeout> | null = null;
+    // Same back-off as the count poller above: no 5s flood against a permanent 404.
+    let fails = 0;
     async function tick() {
       try {
         const r = await fetch(LOCAL_GW + "/sov-time");
         if (!alive) return;
         if (r.ok) {
+          fails = 0;
           const d = await r.json();
           const events = Array.isArray(d.events) ? d.events : [];
           const mapped = events.map((e: any) => {
@@ -383,11 +414,12 @@ export default function CouncilSpace() {
           }
         } else {
           setLedgerOnline(false);
+          fails += 1;
         }
       } catch {
-        if (alive) setLedgerOnline(false);
+        if (alive) { setLedgerOnline(false); fails += 1; }
       }
-      if (alive) timer = setTimeout(tick, 5000);
+      if (alive) timer = setTimeout(tick, fails >= 3 ? 60000 : 5000);
     }
     tick();
     return () => { alive = false; if (timer) clearTimeout(timer); };
@@ -485,7 +517,7 @@ export default function CouncilSpace() {
           ts: Date.now(),
           tag: "ACTION",
           verdict: "COMPLETE",
-          claim: verdict ? verdict.slice(0, 140) : "Run completed — verdict pending",
+          claim: verdict ? verdict.slice(0, 140) : "Narrated simulation completed — no live verdict was issued",
           evidence: "C-space: council verdict reached.",
           weight: 0.95,
           space: "C",
@@ -544,11 +576,14 @@ export default function CouncilSpace() {
   function buildLiveRun(scenario: string, region: string, fwNames: string[], bridges: string[], ind: string | null): Step[] {
     const s = (scenario || "").trim() || SAMPLE;
     const head = s.slice(0, 88) + (s.length > 88 ? "..." : "");
-    const fwList = fwNames.length ? fwNames.join(", ") : "EU AI Act, NIST AI RMF, ISO 42001";
+    const fromLive = fwNames.length > 0;
+    const fwList = fromLive ? fwNames.join(", ") : "EU AI Act, NIST AI RMF, ISO 42001";
     return [
       { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
       { t: "Classifying the system - jurisdiction: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
-      { t: "Applicable regimes detected: " + fwList + ".", phase: 1 },
+      // "Detected" only when the live /govern lookup actually returned; otherwise say
+      // plainly that these are the site's standing defaults, not a per-scenario match.
+      { t: (fromLive ? "Applicable regimes detected: " : "Framework context (standing defaults — no live per-scenario lookup): ") + fwList + ".", phase: 1 },
       { t: "Convening the council - council agents, designed multi-agent review. Quorum forming...", phase: 2 },
       { t: "Agents deliberating - risk tier, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
       { t: "Crosswalking once -> " + fwList + " satisfied from one evidence set." + (bridges.length ? " Legacy bridge: " + bridges.join(", ") + "." : ""), phase: 3 },
@@ -569,17 +604,22 @@ export default function CouncilSpace() {
     stampPresence("scenario-run", { scenario: scen.slice(0, 140), region, ind });
     try {
       const [gov, verdict] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssVerdict(scen), kbP]);
-      setGwOnline(true);
+      // Honest state: the badge says LIVE only when the chat lane actually answered.
+      // A refusal ("") is still an answer; a network failure (null) is not.
+      setGwOnline(verdict !== null);
       const fwNames: string[] = gov && Array.isArray(gov.frameworks) ? gov.frameworks.map((f: any) => f.name) : [];
       const bridges: string[] = gov && Array.isArray(gov.bridges) ? gov.bridges : [];
       setLog([]);
-      playSteps(buildLiveRun(scen, region, fwNames, bridges, ind), verdict || "Permitted with conditions - high-risk controls, human oversight, and transparency required.");
+      // No fabricated fallback verdict. The old hardcoded "Permitted with
+      // conditions…" shipped to every visitor because the live verdict was
+      // always empty — the exact defect this estate exists to eliminate.
+      playSteps(buildLiveRun(scen, region, fwNames, bridges, ind), verdict || undefined);
       return;
     } catch (e) {
       setGwOnline(false);
       setLog((l) => l.concat("Live gateway unavailable - running local simulation."));
     }
-    playSteps(buildRun(scen), "Compliant with conditions - signed and ledgered.");
+    playSteps(buildRun(scen));
   }
   function reset() { timers.current.forEach(clearTimeout); stopVoice(); phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); }
 
@@ -651,7 +691,7 @@ export default function CouncilSpace() {
           <div className="mt-3 flex-1 space-y-2 overflow-y-auto rounded-xl border border-emerald-500/10 bg-black/20 p-3 text-sm" style={{ minHeight: 180 }}>
             {log.length === 0 && <div className="text-emerald-300/40">The Council assistant will narrate here as your experiment runs.</div>}
             {log.map((m, i) => (<div key={i} className="flex gap-2"><span className="text-emerald-400">{String.fromCharCode(9673)}</span><span className="text-emerald-50/90">{m}</span></div>))}
-            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council verdict:</b> {verdictText}</div> : <div className="mb-2"><b>Verdict:</b> simulation complete.</div>}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
+            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council answer (grounded lane):</b> {verdictText}</div> : <div className="mb-2 leading-relaxed"><b className="text-emerald-200">No live verdict.</b> The Council&rsquo;s grounded lane answers only from published measurement — it does not adjudicate a hypothetical scenario, and this page will not invent a ruling. The run above is a narrated simulation of how a review proceeds.</div>}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
             <div ref={endRef} />
           </div>
         </div>

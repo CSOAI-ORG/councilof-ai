@@ -109,17 +109,17 @@ export default function LobbyEvidencePane({
   /** axis -> included. Seeded once, from the board, to every quotable+determined axis. */
   const [picked, setPicked] = useState<Record<string, boolean> | null>(null);
 
-  const axes = wire.phase === "ready" ? wire.board.axes : [];
+  const axis = wire.phase === "ready" ? wire.board.axes : [];
   const selection = useMemo<Record<string, boolean>>(() => {
     if (picked) return picked;
     const seed: Record<string, boolean> = {};
-    for (const a of axes) seed[a.axis] = quotableWire(a) && determined(a);
+    for (const a of axis) seed[a.axis] = quotableWire(a) && determined(a);
     return seed;
   }, [picked, axes]);
 
   const setAll = (v: boolean) => {
     const next: Record<string, boolean> = {};
-    for (const a of axes) next[a.axis] = v;
+    for (const a of axis) next[a.axis] = v;
     setPicked(next);
   };
   const toggle = (axis: string, v: boolean) => setPicked({ ...selection, [axis]: v });

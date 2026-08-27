@@ -91,8 +91,8 @@ export default function FinancialAxes() {
       .catch((e) => setErr(String(e)));
   }, []);
 
-  const measuredCount = axes ? axes.filter((a) => a.status === "MEASURED").length : 0;
-  const unmeasuredCount = axes ? axes.filter((a) => a.status !== "MEASURED").length : 0;
+  const measuredCount = axis ? axes.filter((a) => a.status === "MEASURED").length : 0;
+  const unmeasuredCount = axis ? axes.filter((a) => a.status !== "MEASURED").length : 0;
   // The family's own size — counted from the register this page is rendering,
   // never typed. If the register has not loaded, no count is shown at all.
   const familySize = axes ? axes.length : null;

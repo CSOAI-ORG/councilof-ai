@@ -54,13 +54,13 @@ with urllib.request.urlopen("https://councilof.ai/api/gspc") as r:
 
 print(board["schema"])            # csoai.gspc-axes/0.5
 print(board["doi"])               # 10.5281/zenodo.21991104
-print(board["totals"]["axis"], "axis")
+print(board["totals"]["axes"], "axes")
 print(board["totals"]["separated_leads"], "separated,",
       board["totals"]["ties"], "ties")
 
 # A separated lead is a real, statistically distinguished result;
 # a TIE is a point-estimate lead only. Ties are not wins.
-for a in board["axis"]:
+for a in board["axes"]:
     if a["separation"] == "SEPARATED":
         print(a["axis"], a["accuracy"], "p=", a["separation_p"])`;
 

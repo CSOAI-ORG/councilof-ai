@@ -106,7 +106,7 @@ describe("no fabricated zero — the 2026-08-26 regression", () => {
     json: async () => ({
       totals: { public_count: "22 axes · 15 measured" },
       measured_on: { date: "2026-08-12" },
-      axes,
+      axis,
       measured_in_lane: [
         { axis: "no-acc-lane", bench: "L", task: "t", n: 12, accuracy: null, status: "MEASURED" },
       ],

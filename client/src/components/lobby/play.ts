@@ -52,7 +52,11 @@ export const PLAY_CARDS: PlayCard[] = [
     image: "/images/coliseum_logic_duel.jpg",
     alt: "A human and an AI facing each other across a chessboard in the arena",
     status: "in-build",
-    reality: "In build — no live match route on councilof.ai yet.",
+    reality:
+      "In build — no live match route on councilof.ai yet, and no real human-vs-AI play trial has " +
+      "been recorded by anyone. The board's in-lane human-vs-ai figure measures how often a MODEL " +
+      "agrees with a human answer key — not a human playing live. Until a human actually plays, " +
+      "this card stays honest and unplayable.",
   },
   {
     id: "swarm-clash",
