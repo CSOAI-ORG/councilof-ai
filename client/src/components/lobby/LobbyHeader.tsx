@@ -333,7 +333,7 @@ export default function LobbyHeader({
               aria-valuetext={`${pct}% opaque`}
               className={`h-1.5 w-20 cursor-pointer accent-emerald-700 sm:w-28 dark:accent-emerald-400 ${FOCUS} dark:focus-visible:ring-offset-slate-950`}
             />
-            <span className={`w-9 text-right ${HEAD.val}`}>{pct}%</span>
+            {/* pct stays in aria-valuetext above; it does not need a visible slot. */}
           </label>
         </span>
       </div>
@@ -357,15 +357,28 @@ export default function LobbyHeader({
         </nav>
       )}
 
-      {/* ── row 4 · the shortcuts, printed ──────────────────────────────── */}
-      <p className={`hidden w-full border-t sm:block ${HEAD_EDGE} px-4 py-1.5 ${HEAD.fine}`}>
-        <kbd className={KBD}>⌘/Ctrl K</kbd> search ·{" "}
-        <kbd className={KBD}>Esc</kbd> close ·{" "}
-        <kbd className={KBD}>[</kbd> panes ·{" "}
-        <kbd className={KBD}>]</kbd> rail ·{" "}
-        <kbd className={KBD}>⌘/Ctrl .</kbd> minimise ·{" "}
-        <kbd className={KBD}>↑ ↓</kbd> panes
-      </p>
+      {/* ── row 4 · the shortcuts, on demand ────────────────────────────
+          These were printed permanently across the foot of the bar: six shortcuts, always
+          on screen, read once and then furniture forever. A reference belongs where someone
+          goes looking for it, not in the space a live readout could use. The shortcuts all
+          still work; this is a disclosure, so the keys are discoverable without being
+          resident. Native <details> so it needs no state and stays keyboard-reachable. */}
+      <details className={`hidden w-full border-t sm:block ${HEAD_EDGE}`}>
+        <summary
+          className={`cursor-pointer list-none px-4 py-1 ${HEAD.fine} ${FOCUS} hover:text-slate-700 dark:hover:text-slate-200`}
+          title="Keyboard shortcuts"
+        >
+          <kbd className={KBD}>?</kbd> shortcuts
+        </summary>
+        <p className={`px-4 pb-1.5 ${HEAD.fine}`}>
+          <kbd className={KBD}>⌘/Ctrl K</kbd> search ·{" "}
+          <kbd className={KBD}>Esc</kbd> close ·{" "}
+          <kbd className={KBD}>[</kbd> panes ·{" "}
+          <kbd className={KBD}>]</kbd> rail ·{" "}
+          <kbd className={KBD}>⌘/Ctrl .</kbd> minimise ·{" "}
+          <kbd className={KBD}>↑ ↓</kbd> panes
+        </p>
+      </details>
     </header>
   );
 }

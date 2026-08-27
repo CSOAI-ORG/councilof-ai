@@ -112,6 +112,8 @@ export default function LobbyOverlay({
   const [tabId, setTabId] = useState<LobbyTabId>(() => intent?.pane ?? readTab());
   const [leftOpen, setLeftOpen] = useState(() => readOpen(LEFT_KEY, LEFT_DEFAULT));
   const [rightOpen, setRightOpen] = useState(() => readOpen(RIGHT_KEY, RIGHT_DEFAULT));
+  // The composer is opened on demand, and stays open once a conversation exists.
+  const [composerOpen, setComposerOpen] = useState(false);
   const [size, setSize] = useState<"comfortable" | "full">(readSize);
   const [minimised, setMinimised] = useState(false);
   const [frameLoaded, setFrameLoaded] = useState(false);
@@ -449,15 +451,35 @@ export default function LobbyOverlay({
 
             </div>
 
-            <LobbyComposer
-              chat={chat}
-              onNavigate={go}
-              onOpenRoute={openRoute}
-              paneLabel={paneLabel}
-              panePath={panePath || "/"}
-              seedPrompt={intent?.prompt}
-              seedNonce={intent?.nonce}
-            />
+            {/* The composer used to sit here permanently, a dock across the foot of the centre
+                column carrying audience chips and suggested asks. Two bars competing for the
+                same edge, and the OS surface shrank to make room for a thing most visits never
+                used. It is now behind one control: press Ask, the rail opens on its conversation,
+                and the composer appears there beside the thread rather than under the pane. */}
+            {composerOpen ? (
+              <LobbyComposer
+                chat={chat}
+                onNavigate={go}
+                onOpenRoute={openRoute}
+                paneLabel={paneLabel}
+                panePath={panePath || "/"}
+                seedPrompt={intent?.prompt}
+                seedNonce={intent?.nonce}
+                onClose={() => setComposerOpen(false)}
+              />
+            ) : (
+              <div className="flex shrink-0 items-center justify-end gap-2 px-4 py-2">
+                <button
+                  type="button"
+                  onClick={() => { setRightOpen(true); setComposerOpen(true); }}
+                  className={`inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-slate-900/10 bg-white/90 px-4 py-2 text-[13px] font-semibold text-slate-800 shadow-sm transition hover:bg-white ${FOCUS}`}
+                  title="Ask the Council — opens the conversation in the right rail"
+                >
+                  Ask the Council
+                  <span className="text-[11px] font-normal text-slate-500">the conversation opens on the right</span>
+                </button>
+              </div>
+            )}
           </main>
 
           {rightOpen ? (
