@@ -1,1 +1,1 @@
-PLACEHOLDER_WILL_REPLACE
+LOAD_FROM_/tmp/insurers-content.txt
