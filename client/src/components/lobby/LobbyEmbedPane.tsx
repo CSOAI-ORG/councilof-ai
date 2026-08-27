@@ -47,7 +47,10 @@ export default function LobbyEmbedPane({
   const [axis, setAxis] = useState<string>("");
   const [cardPath, setCardPath] = useState<string>("");
 
-  const axis = wire.phase === "ready" ? wire.board.axes : [];
+  // A LIST of axes, not the selected one. The axes->axis display sweep renamed this
+  // identifier into a collision with the `axis` state above, and line 2 still reads
+  // `axes`. Identifiers are not display text.
+  const axes = wire.phase === "ready" ? wire.board.axes : [];
   const chosen = axes.find((a) => a.axis === axis) ?? null;
 
   const badgeSrc = axis ? `/api/badge?axis=${encodeURIComponent(axis)}` : "/api/badge";
