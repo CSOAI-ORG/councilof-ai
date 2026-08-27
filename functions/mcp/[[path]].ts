@@ -144,12 +144,21 @@ async function handleVerify(id: unknown, args: Record<string, unknown>, origin: 
   });
 }
 
-/** Rewrite the upstream `verify` tool entry so its description matches this handler. */
+/** Rewrite upstream tool copy so it matches what we serve and uses "axis", not "axes". */
 function patchToolsList(body: unknown): unknown {
   const tools = (body as { result?: { tools?: { name?: string; description?: string; inputSchema?: unknown }[] } })
     ?.result?.tools;
   if (!Array.isArray(tools)) return body;
   for (const t of tools) {
+    if (t?.name === "measure") {
+      t.description =
+        "Run a subject through the GSPC measurement axis and return a signed measurement record (NOT a certificate). " +
+        "An unmeasured axis stays UNMEASURED. Board counts live at GET /api/gspc — do not type a count here.";
+      const schema = t.inputSchema as { properties?: { axes?: { description?: string } } } | undefined;
+      if (schema?.properties?.axes) {
+        schema.properties.axes.description = "GSPC axis ids to include. Omit to use the live board.";
+      }
+    }
     if (t?.name !== "verify") continue;
     t.description = VERIFY_DESCRIPTION;
     t.inputSchema = {
@@ -205,6 +214,27 @@ async function proxy(ctx: Parameters<PagesFunction>[0], bodyText: string | null)
 
 export const onRequest: PagesFunction = async (ctx) => {
   if (ctx.request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+
+  // GET is discovery for MCP hosts that probe the URL before JSON-RPC.
+  // POST initialize / tools/list / tools/call stay on the worker. No typed board count.
+  if (ctx.request.method === "GET") {
+    return Response.json(
+      {
+        name: "csoai-gspc-mcp",
+        display_name: "Council of AI — GSPC measurement tools",
+        transport: "JSON-RPC 2.0 over HTTP POST",
+        initialize: "POST this URL with method initialize, then tools/list",
+        tools: ["measure", "verify", "jail-probe", "enter-arena"],
+        board: "https://councilof.ai/api/gspc",
+        verify: "https://councilof.ai/gspc-verify",
+        server_card: "https://councilof.ai/.well-known/mcp/server-card.json",
+        well_known: "https://councilof.ai/.well-known/mcp.json",
+        not_a_certificate: true,
+        note: "Quote totals.public_count from GET /api/gspc. Empty cells stay empty. We measure, we do not certify.",
+      },
+      { headers: { ...CORS, "content-type": "application/json" } },
+    );
+  }
 
   const origin = new URL(ctx.request.url).origin;
 
