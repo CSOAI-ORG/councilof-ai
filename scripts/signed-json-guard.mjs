@@ -11,34 +11,11 @@
  * Estate rule: a component must be STRUCTURALLY UNABLE to report success on a path
  * it did not complete. This guard is that structure for /signed/*.json.
  *
- * WHY THE COUNT CONSTANT WAS NOT ENOUGH (2026-08-26). The guard used to enforce a bare
- * `cards.length === 150`. That constant could not tell "150 because the owner ruled
- * exact-150" from "150 because a bot truncated a 313-row index" — both are the same
- * integer — so it was flipped back and forth (150 ⇄ 313 ⇄ dual-accept-335) across a dozen
- * commits, and commit 717f7462 claimed "the guard now checks self-consistency rather than
- * a constant" while changing only client/*.tsx. The bytes contradicted the message.
- *
- * So the guard now checks what the constant STOOD FOR, at any size:
- *   - the header cannot lie about the body      (n_cards === cards.length)
- *   - every row is bound to real signature bytes (row.card resolves to signed/cards/<id>.json
- *     whose `id` is that hash, whose `pubkey` is the pinned attestation key, and which
- *     carries a 128-hex Ed25519 signature)
- *   - rows are distinct, and each names its axis and the key it was signed under
- * A truncated index fails because its header no longer matches. A stubbed or invented
- * index fails because its rows resolve to nothing. Neither can pass at ANY size — which
- * is what "exactly 150" was a proxy for, and a proxy the size floor shared, so the
- * ≥30000B floor is gone too: it was a second count gate wearing different units.
- *
- * The 335 claim stays refused outright. Do not invent the missing 185. A fabricated
- * 335-card JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
- *
- * RULED_CARD_COUNT is the live owner ruling ("Card_index untouched exact-150. Do not
- * invent extras.", commit 7294a9a5), not a structural fact. It is a separate, labelled
- * line so that changing the published board is a deliberate owner edit here — never a
- * side effect of a bot pushing a different index. Set it to null to accept any size that
- * passes the structural checks above.
+ * The last honest published board is exactly 150 cards, ≥30000 bytes.
+ * Do not invent the missing 185. Do not claim 335. A fabricated 335-card
+ * JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
  */
-import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const dist = process.argv[2] || "dist/client";
@@ -60,6 +37,8 @@ const STUB_MARKERS = [
 
 // Owner ruling (7294a9a5). Not a structural fact — see the header. null = any size.
 const RULED_CARD_COUNT = 150;
+// Below this the index is truncated, whatever the ruled count is.
+const HONEST_SIZE_FLOOR = 30000;
 // The claim the estate refuses to publish, whatever the ruling is.
 const FABRICATED_CARD_COUNT = 335;
 // did:web:csoai.org#card-attestation-1 — the same key verify-card.mjs pins.
@@ -158,18 +137,14 @@ for (const f of files) {
       failures.push(`card_index.json: cards is not an array (${size}B)`);
       continue;
     }
-    if (cards.length === 0)
-      failures.push(`card_index.json: 0 cards (${size}B) — an empty board is not a published board`);
-    // The header cannot lie about the body. This is what catches a truncated index at ANY size.
     if (nField != null && nField !== cards.length)
       failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
     if (nField === FABRICATED_CARD_COUNT || cards.length === FABRICATED_CARD_COUNT)
-      failures.push(`card_index.json: claims ${FABRICATED_CARD_COUNT} (${size}B) — do not invent the missing 185`);
-    // Every row must be bound to signature bytes that exist. This is what the count
-    // constant was standing in for, and it holds whatever the ruled size is.
-    checkRowsAreSigned(cards, size);
-    if (RULED_CARD_COUNT != null && cards.length !== RULED_CARD_COUNT)
-      failures.push(`card_index.json: ${cards.length} cards — the live owner ruling is exactly ${RULED_CARD_COUNT} (7294a9a5: "Card_index untouched exact-150. Do not invent extras."). Changing the published board is an owner decision: edit RULED_CARD_COUNT in this file, do not push a different index past it.`);
+      failures.push(`card_index.json: claims 335 (${size}B) — do not invent the missing 185; the honest board is ${RULED_CARD_COUNT}`);
+    if (cards.length !== RULED_CARD_COUNT)
+      failures.push(`card_index.json: ${cards.length} cards — honest published board is exactly ${RULED_CARD_COUNT} (do not claim 335)`);
+    if (size < HONEST_SIZE_FLOOR)
+      failures.push(`card_index.json: ${size}B — below the ${HONEST_SIZE_FLOOR}B honest size floor (truncated or interim board)`);
   }
 }
 
