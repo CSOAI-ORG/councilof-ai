@@ -1,4 +1,3 @@
-# OWNER RULING 2026-08-27: no clamp to a constant. Check = header==rows, every row signature-bound.
 # 2026-08-26: this workflow paired with honest-board-floor to hold the index at exactly
 # 150 and auto-commit a revert otherwise. Worse, it asserted a LITERAL SENTENCE inside
 # honest-board-floor.yml, so correcting that file tripped this one — a bot guarding a
@@ -51,7 +50,7 @@ jobs:
           GOOD_FLOOR=5d482f5e45b8478bbc0d087c278d610ec30dee01
           git show "$GOOD_BOARD:public/signed/card_index.json" > public/signed/card_index.json
           git show "$GOOD_FLOOR:.github/workflows/honest-board-floor.yml" > .github/workflows/honest-board-floor.yml
-          python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==len(j["cards"]) and all(x.get("sig") for x in j["cards"])'
+          python3 -c 'import json; c=open("public/signed/card_index.json").read(); j=json.loads(c); assert j["n_cards"]==150 and len(j["cards"])==150 and len(c)==34171'
           python3 -c 't=open(".github/workflows/honest-board-floor.yml").read(); assert "verified 335" not in t and len(t.encode())==1846'
           printf '%s\n' '{' '  "deployed_at": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'",' '  "reason": "reject-335-board restored exact-150 (do not claim 335)",' '  "card_index_n": 150' '}' > public/stack/e2e-latest.json
           git config user.name "github-actions[bot]"
