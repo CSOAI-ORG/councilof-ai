@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_TAB, LOBBY_TABS, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
 import LobbyHeader, { ColiseumGlyph } from "./LobbyHeader";
 import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
@@ -26,6 +26,8 @@ import { isLibraried } from "@/data/library-ia";
 import {
   LEFT_DEFAULT, LEFT_KEY, RIGHT_DEFAULT, RIGHT_KEY, readOpen, writeOpen,
 } from "./rails";
+import { paneCrumbs } from "./breadcrumbs";
+import { recordActivity } from "./workspace";
 import { useNarrowViewport } from "./useNarrowViewport";
 
 /**
@@ -246,6 +248,7 @@ export default function LobbyOverlay({
   }, [intent?.nonce, intent?.pane, intent?.route, loadPane, intent?.task]);
 
   const go = useCallback((t: LobbyTab) => {
+    recordActivity({ kind: "pane", label: t.label, tabId: t.id });
     setOverride(null);
     setTabId(t.id);
     if (t.kind === "local" || t.kind === "native") {
@@ -258,6 +261,7 @@ export default function LobbyOverlay({
   }, [loadPane]);
 
   const openRoute = useCallback((path: string, label: string) => {
+    recordActivity({ kind: "route", label, path });
     setOverride({ path, label });
     loadPane(path);
   }, [loadPane]);
@@ -308,6 +312,21 @@ export default function LobbyOverlay({
   const panePath = framePath || override?.path || tab.path;
   const paneLabel = override ? override.label : tab.label;
   const chatActive = chat.turnCount > 0;
+
+  /**
+   * The pane's breadcrumb trail (OpenRouter-style inner-page chrome), derived
+   * from the live pane state — the owning tab and the path the frame actually
+   * reported. When a human name for the current surface exists (the tab label,
+   * an override's label, a framed page's own title) the trailing crumb prints
+   * it in place of the raw slug; the trail itself never invents a link — see
+   * breadcrumbs.ts.
+   */
+  const crumbs = useMemo(() => {
+    const list = paneCrumbs(tab, panePath, !!override);
+    const last = list[list.length - 1];
+    if (last && paneLabel && paneLabel !== panePath) last.label = paneLabel;
+    return list;
+  }, [tab, panePath, override, paneLabel]);
 
   useEffect(() => {
     if (!chatActive) return;
@@ -423,13 +442,34 @@ export default function LobbyOverlay({
             style={panelStyle}
           >
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-slate-900/10 px-5 py-2.5">
-              {/* When the framed route has no page name of its own, paneNameFor falls
-                  back to the path — and the path chip on the right already shows it.
-                  Printing it twice ("/login  ...  /login") is noise, so the name is
-                  dropped rather than duplicated. */}
-              {paneLabel !== panePath && (
-                <span className="text-[12.5px] font-semibold text-slate-900">{paneLabel}</span>
-              )}
+              {/* Route-derived breadcrumbs. Every crumb comes from the live pane
+                  state; a crumb is a link only when the OS can really open it
+                  (breadcrumbs.ts). The last crumb is where you are — when the
+                  surface has no name of its own it prints the path's final
+                  segment, and the mono chip on the right still shows the full
+                  path. */}
+              <nav aria-label="You are here" className="flex min-w-0 items-center gap-1 text-[12.5px]">
+                {crumbs.map((c, i) => (
+                  <span key={`${c.label}-${i}`} className="flex min-w-0 items-center gap-1">
+                    {i > 0 && <span aria-hidden="true" className="text-slate-400">›</span>}
+                    {c.current ? (
+                      <span aria-current="page" className="truncate font-semibold text-slate-900">
+                        {c.label}
+                      </span>
+                    ) : c.tab || c.route ? (
+                      <button
+                        type="button"
+                        onClick={() => (c.tab ? go(c.tab) : openRoute(c.route!, c.label))}
+                        className={`truncate rounded font-medium text-slate-600 transition hover:text-emerald-800 hover:underline motion-reduce:transition-none ${FOCUS}`}
+                      >
+                        {c.label}
+                      </button>
+                    ) : (
+                      <span className="truncate font-medium text-slate-500">{c.label}</span>
+                    )}
+                  </span>
+                ))}
+              </nav>
               <span className={`hidden truncate md:inline ${TYPE.fine}`}>
                 {override ? "Opened in this pane — navigation stays inside the OS." : tab.blurb}
               </span>

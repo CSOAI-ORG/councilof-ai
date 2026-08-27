@@ -4,6 +4,7 @@ import {
   SURFACE, headerGroundStyle,
 } from "./glass";
 import LobbyPaneTabs, { NAV_ID } from "./LobbyPaneTabs";
+import LobbyWorkspaceMenu from "./LobbyWorkspaceMenu";
 import { LOBBY_TABS, type LobbyTab, type LobbyTabId } from "./tabs";
 import { useOsSearch, type OsHit } from "./osSearch";
 import { UNMEASURED, provenance, quotable, quote, useLiveState, STATE_ENDPOINT } from "./liveState";
@@ -230,6 +231,20 @@ export default function LobbyHeader({
           inputRef={searchRef}
           onOpenHit={go}
           disabled={!onSelectTab && !onOpenRoute}
+        />
+
+        {/* The workspace menu — the honest account surface. See LobbyWorkspaceMenu. */}
+        <LobbyWorkspaceMenu
+          alpha={alpha}
+          onAlpha={onAlpha}
+          size={size}
+          onToggleSize={onToggleSize}
+          leftOpen={leftOpen}
+          onToggleLeft={onToggleLeft}
+          rightOpen={rightOpen}
+          onToggleRight={onToggleRight}
+          onSelectTab={onSelectTab}
+          onOpenRoute={onOpenRoute}
         />
 
         <span className="flex shrink-0 items-center gap-1.5">
@@ -715,7 +730,7 @@ function OsSearchField({
             {results.length === 0 && (
               <p className={`px-2 py-2.5 ${HEAD.fine}`}>
                 Nothing in the OS index matches “{query.trim()}”. The index covers this workspace's
-                destinations and pages, the live board axes and the published signed cards — nothing else.
+                destinations and pages, every live board axis and the published signed cards — nothing else.
               </p>
             )}
 
