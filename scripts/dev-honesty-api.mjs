@@ -8,6 +8,13 @@ import http from "node:http";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import {
+  MEASURED_TOOLS,
+  jsonRpcResult,
+  jsonRpcError,
+  toolPath,
+  isDevLocalTool,
+} from "./mcp-rpc-dev.mjs";
 
 const PORT = Number(process.env.PORT || 3001);
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -140,8 +147,128 @@ function handleRwa(url, res) {
   });
 }
 
-const server = http.createServer((req, res) => {
+function readBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on("data", (c) => chunks.push(c));
+    req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+    req.on("error", reject);
+  });
+}
+
+function handleJsonRpc(body, res) {
+  let msg;
+  try {
+    msg = JSON.parse(body);
+  } catch {
+    return json(res, 400, jsonRpcError(null, -32700, "Parse error"));
+  }
+  if (msg.jsonrpc !== "2.0" || !msg.method) {
+    return json(res, 400, jsonRpcError(msg.id ?? null, -32600, "Invalid Request"));
+  }
+  const { id, method, params } = msg;
+  switch (method) {
+    case "initialize":
+      return json(res, 200, jsonRpcResult(id, {
+        protocolVersion: "2024-11-05",
+        capabilities: { tools: {} },
+        serverInfo: { name: "csoai-dev-honesty", version: "0.1.0", description: "Local UNMEASURED fixtures only" },
+      }));
+    case "notifications/initialized":
+      res.writeHead(204, { "access-control-allow-origin": "*" });
+      return res.end();
+    case "tools/list":
+      return json(res, 200, jsonRpcResult(id, { tools: MEASURED_TOOLS }));
+    case "tools/call": {
+      const name = String(params?.name ?? "");
+      const args = params?.arguments ?? {};
+      if (!isDevLocalTool(name)) {
+        return json(res, 200, jsonRpcResult(id, {
+          content: [{
+            type: "text",
+            text: `Tool ${name} not on dev-honesty-api — use https://councilof.ai/api/mcp or branch Pages functions.`,
+          }],
+          isError: true,
+        }));
+      }
+      const path = toolPath(name, args);
+      const payload = path.startsWith("/api/indices")
+        ? captureIndices(path)
+        : captureRwa(path);
+      if (payload.error) {
+        return json(res, 200, jsonRpcResult(id, {
+          content: [{ type: "text", text: JSON.stringify(payload.error) }],
+          isError: true,
+        }));
+      }
+      return json(res, 200, jsonRpcResult(id, {
+        content: [{ type: "text", text: JSON.stringify(payload.body, null, 2) }],
+      }));
+    }
+    default:
+      return json(res, 200, jsonRpcError(id, -32601, `Method not found: ${method}`));
+  }
+}
+
+function captureIndices(path) {
+  const url = new URL(path, "http://127.0.0.1");
+  const slug = url.pathname.replace(/^\/api\/indices\/?/, "").replace(/\/$/, "");
+  if (slug && slug !== "indices") {
+    const row = INDICES.find((i) => i.slug === slug);
+    if (!row) return { error: { error: "unknown_index", slug, known: INDICES.map((i) => i.slug) } };
+    return {
+      body: {
+        schema: "csoai.labour-economy-index/0.1",
+        register: "UNMEASURED",
+        index: row,
+        note: "No measured_score. Do not treat absence as zero.",
+      },
+    };
+  }
+  return {
+    body: {
+      schema: "csoai.labour-economy-index-catalog/0.1",
+      register: "UNMEASURED",
+      count: INDICES.length,
+      indices: INDICES,
+    },
+  };
+}
+
+function captureRwa(path) {
+  const url = new URL(path, "http://127.0.0.1");
+  const slug = url.pathname.replace(/^\/api\/rwa-attestation\/?/, "").replace(/\/$/, "");
+  const targets = rwaFixture.targets;
+  if (slug && slug !== "rwa-attestation") {
+    const row = targets.find((t) => t.slug === slug);
+    if (!row) return { error: { error: "unknown_target", slug } };
+    return { body: { schema: "csoai.rwa-attestation/0.1", register: "UNMEASURED", target: row } };
+  }
+  return {
+    body: {
+      schema: rwaFixture.schema,
+      register: rwaFixture.status,
+      measured_score: rwaFixture.measured_score,
+      count: targets.length,
+      targets,
+    },
+  };
+}
+
+const server = http.createServer(async (req, res) => {
   const url = new URL(req.url || "/", `http://127.0.0.1:${PORT}`);
+  if (req.method === "OPTIONS") {
+    res.writeHead(204, {
+      "access-control-allow-origin": "*",
+      "access-control-allow-methods": "GET, POST, HEAD, OPTIONS",
+      "access-control-allow-headers": "content-type",
+    });
+    return res.end();
+  }
+  if (url.pathname === "/api/mcp" && req.method === "POST") {
+    const body = await readBody(req);
+    return handleJsonRpc(body, res);
+  }
   if (req.method !== "GET" && req.method !== "HEAD") {
     return json(res, 405, { error: "method_not_allowed" });
   }

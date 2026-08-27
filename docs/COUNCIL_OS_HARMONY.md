@@ -38,14 +38,14 @@ Canon: `docs/MASTER_CONNECT.md` · `docs/ESTATE_CROSSWALK.md` · `council-os/GAM
 | `GET /api/gspc` + verify | REAL | — |
 | Council City signed runs | REAL | `public/city/board.json` |
 | GSPC Arena (`?view=arena`) | REAL (fixture) | Wire to live arena API when ready |
-| Council Space console sim | PARTIAL | Gateway banner; narrated ≠ MEASURED |
+| Council Space console sim | REAL (honest) | Gateway banner live/offline; narrated sim labelled ≠ MEASURED |
 | SovOS games arcade | 1 live + 5 DESIGN | Slots 2–6 registered with DESIGN panels |
 | MCP fleet page | REAL (dev) | Live list via `/api/mcp` — registry in dev, gateway in prod |
 | Training / flywheel | REAL (branch) | `public/flywheel/board.json` + `sim-board.json` on branch deploy |
 | Dashboard framework % | FIXED | UNMEASURED until org assessment |
 | 9 product SKUs (GPAI, INS, COBOL…) | MIXED | See `/products` + `engine-axis.ts` |
 | HF living datasets | 🔄 | `npm run hf:upload-staged` when write token |
-| Real MCP in all AI platforms | PARTIAL | `POST /api/mcp` + `agent-card.json` on branch |
+| Real MCP in all AI platforms | PARTIAL | `POST /api/mcp` on branch + dev-honesty (indices/RWA tools); full fleet on Pages |
 
 ---
 

@@ -55,6 +55,7 @@ Do **not** cite: ~~568 repos~~ (use **291 MCP servers**), ~~30-framework~~ (use 
 | `GET /api/indices` | Labour / AI-economy indices (UNMEASURED) |
 | `GET /api/indices/:slug` | Per-index honesty shape (`measured_score: null`) |
 | `GET /api/mcp` | MCP fleet catalogue (291 registry entries; 6 measured tools on POST JSON-RPC) |
+| `POST /api/mcp` | JSON-RPC `tools/list` / `tools/call` — dev: indices + RWA UNMEASURED only |
 | `GET /api/finance/anatomy` | Engine axis map |
 | `GET /api/finance/bond-crossing` | Axis 18 synthetic crossing |
 | `POST /api/finance/settle` | Settlement envelope (stub until wired) |

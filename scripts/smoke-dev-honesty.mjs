@@ -48,6 +48,33 @@ try {
     mcp.body?.register === "REPORTED" && Array.isArray(mcp.body?.servers) && mcp.body.servers.length >= 200,
     `servers=${mcp.body?.servers?.length}`,
   );
+
+  const toolsList = await fetch(`${BASE}/api/mcp`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
+  }).then(async (r) => ({ status: r.status, body: await r.json() }));
+  ok(
+    "POST /api/mcp tools/list",
+    toolsList.status === 200 && Array.isArray(toolsList.body?.result?.tools),
+    `tools=${toolsList.body?.result?.tools?.length}`,
+  );
+
+  const indicesTool = await fetch(`${BASE}/api/mcp`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 2,
+      method: "tools/call",
+      params: { name: "indices_catalog", arguments: {} },
+    }),
+  }).then(async (r) => ({ body: await r.json() }));
+  const indicesText = indicesTool.body?.result?.content?.[0]?.text ?? "";
+  ok(
+    "POST tools/call indices_catalog UNMEASURED",
+    indicesText.includes("UNMEASURED") && indicesText.includes('"measured_score": null'),
+  );
 } catch (e) {
   ok("fetch", false, String(e.message ?? e));
 }
