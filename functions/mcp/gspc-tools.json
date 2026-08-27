@@ -1,0 +1,65 @@
+{
+  "schema": "csoai.gspc-mcp-tools/1",
+  "note": "ONE source of tool definitions for the GSPC MCP tools, shared by the stdio server (mcp/gspc-server/index.mjs) and the HTTP endpoint (functions/mcp/[[path]].ts) so the two surfaces cannot drift. Display text uses 'axis', never the plural — owner language ruling; code identifiers are exempt.",
+  "tools": [
+    {
+      "name": "board_totals",
+      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_axis",
+      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "axis": {
+            "type": "string",
+            "description": "The axis name as it appears on the board, e.g. governance, safety, jail, provenance-controls. Case-insensitive. An unknown name returns the list of names the board actually carries."
+          }
+        },
+        "required": ["axis"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "verify_card",
+      "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "card": {
+            "description": "The signed card: an object, a JSON string, or a councilof.ai / csoai.org URL to one.",
+            "anyOf": [{ "type": "object" }, { "type": "string" }]
+          }
+        },
+        "required": ["card"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_cards",
+      "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "axis": {
+            "type": "string",
+            "description": "Only list rows whose axis matches this name (case-insensitive)."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 150,
+            "description": "How many rows to include in the listing (newest first). Default 10. The two counts are always reported in full regardless of this limit."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  ]
+}

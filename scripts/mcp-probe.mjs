@@ -28,6 +28,7 @@
  * Requires Node 18+ (global fetch). No npm dependencies.
  */
 import { readFileSync, writeFileSync } from "node:fs";
+import { spawn } from "node:child_process";
 import { hostname } from "node:os";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
@@ -145,6 +146,109 @@ async function probeOne(target) {
   return rec;
 }
 
+/**
+ * Probe a LOCAL stdio MCP server: spawn its command from the repo root, run the
+ * same initialize -> tools/list conversation over newline-delimited JSON-RPC,
+ * and apply the identical honesty rules — last_probed is written only after the
+ * process actually answered, tools_count only from a returned tools array.
+ * A stdio probe proves the server in THIS checkout runs; it says nothing about
+ * any npm-published copy.
+ */
+async function probeStdioOne(target) {
+  const rec = {
+    id: target.id,
+    name: null,
+    endpoint: target.endpoint,
+    transport: "stdio",
+    role: target.role || null,
+    alias_of: target.alias_of || null,
+    status: "unreachable",
+    last_probed: null,
+    http_status: null, // not an HTTP transport; stays null by construction
+    protocol_version: null,
+    server_version: null,
+    tools_count: null,
+    tools: [],
+    error: null,
+    declared_by: target.declared_by || null,
+    catalogue_source: null,
+    catalogue_claim: null,
+  };
+
+  const [cmd, ...args] = target.command;
+  const child = spawn(cmd === "node" ? process.execPath : cmd, args, {
+    cwd: REPO,
+    stdio: ["pipe", "pipe", "ignore"],
+  });
+
+  const replies = new Map();
+  let buffered = "";
+  child.stdout.on("data", (chunk) => {
+    buffered += chunk;
+    let nl;
+    while ((nl = buffered.indexOf("\n")) >= 0) {
+      const line = buffered.slice(0, nl).trim();
+      buffered = buffered.slice(nl + 1);
+      if (!line) continue;
+      try {
+        const msg = JSON.parse(line);
+        const waiter = replies.get(msg.id);
+        if (waiter) waiter(msg);
+      } catch {
+        /* non-JSON line: ignore */
+      }
+    }
+  });
+
+  const ask = (id, method, params) =>
+    new Promise((res, rej) => {
+      const timer = setTimeout(() => rej(new Error(`timeout after ${TIMEOUT_MS}ms`)), TIMEOUT_MS);
+      replies.set(id, (msg) => {
+        clearTimeout(timer);
+        replies.delete(id);
+        msg.error ? rej(new Error(`rpc error ${msg.error.code}: ${msg.error.message}`)) : res(msg);
+      });
+      child.stdin.write(JSON.stringify({ jsonrpc: "2.0", id, method, params: params || {} }) + "\n");
+    });
+
+  try {
+    const init = await ask(1, "initialize", {
+      protocolVersion: PROTOCOL_VERSION,
+      capabilities: {},
+      clientInfo: { name: "csoai-mcp-probe", version: "1" },
+    });
+    if (!init.result) {
+      rec.error = "initialize returned no result";
+      return rec;
+    }
+    rec.status = "reachable";
+    rec.last_probed = new Date().toISOString();
+    rec.protocol_version = init.result.protocolVersion || null;
+    rec.name = init.result.serverInfo?.name || null;
+    rec.server_version = init.result.serverInfo?.version || null;
+
+    const list = await ask(2, "tools/list", {});
+    if (!Array.isArray(list.result?.tools)) {
+      rec.error = "tools/list returned no tools array";
+      return rec;
+    }
+    rec.tools = list.result.tools.map((t) => ({
+      name: t.name,
+      description: t.description || null,
+      required_args: t.inputSchema?.required || [],
+    }));
+    rec.tools_count = rec.tools.length; // derived, never asserted
+    rec.last_probed = new Date().toISOString();
+    return rec;
+  } catch (e) {
+    if (rec.status !== "reachable") rec.error = `${e.message}`;
+    else rec.error = rec.error || `${e.message}`;
+    return rec;
+  } finally {
+    child.kill();
+  }
+}
+
 function catalogueRecord(entry) {
   return {
     id: entry.id,
@@ -203,7 +307,7 @@ async function run(outPath) {
   const probed = [];
   for (const t of targets.probe) {
     process.stdout.write(`probing ${t.endpoint} ... `);
-    const rec = await probeOne(t);
+    const rec = t.transport === "stdio" ? await probeStdioOne(t) : await probeOne(t);
     console.log(rec.status === "reachable" ? `reachable (${rec.tools_count ?? "tools unmeasured"})` : `unreachable — ${rec.error}`);
     probed.push(rec);
   }

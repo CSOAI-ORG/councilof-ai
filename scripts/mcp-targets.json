@@ -24,6 +24,14 @@
       "role": "current",
       "alias_of": "csoai-gspc-mcp",
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current"
+    },
+    {
+      "id": "csoai-gspc-mcp-stdio",
+      "endpoint": "stdio: node mcp/gspc-server/index.mjs (package csoai-gspc-mcp — NOT published to npm; a probe here proves the server in this checkout, nothing else)",
+      "transport": "stdio",
+      "command": ["node", "mcp/gspc-server/index.mjs"],
+      "role": "stdio",
+      "declared_by": "mcp/gspc-server/package.json -> bin.csoai-gspc-mcp"
     }
   ],
   "catalogued": [
