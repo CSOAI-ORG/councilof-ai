@@ -25,11 +25,11 @@ describe("paneCrumbs — the OS pane trail", () => {
     expect(crumbs[0].tab?.id).toBe("home");
   });
 
-  it("in-pane navigation derives segment crumbs and only links real destinations", () => {
+  it("in-pane navigation appends only the segments the tab crumb does not already cover", () => {
     const crumbs = paneCrumbs(tab("results"), "/benchmarks/some-report");
-    expect(crumbs.map((c) => c.label)).toEqual(["Home", "Benchmarkers", "benchmarks", "some-report"]);
-    // /benchmarks IS the results tab — its crumb links by tab, never by route.
-    expect(crumbs[2].tab?.id).toBe("results");
+    // NOT "Benchmarkers › benchmarks › some-report" — the tab crumb IS /benchmarks.
+    expect(crumbs.map((c) => c.label)).toEqual(["Home", "Benchmarkers", "some-report"]);
+    expect(crumbs[1].tab?.id).toBe("results");
     // Where you are is never a link.
     const last = crumbs[crumbs.length - 1];
     expect(last.current).toBe(true);

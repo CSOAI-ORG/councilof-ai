@@ -67,16 +67,24 @@ export function paneCrumbs(tab: LobbyTab, panePath: string, override = false): C
   if (onHome) return crumbs;
 
   // The owning tab — unless an override route bypassed the rail.
+  let acc = "";
+  let rest = path;
   if (!override) {
     const atTabRoot = !path || path === norm(tab.path);
     crumbs.push({ label: tab.label, tab: atTabRoot ? undefined : tab, current: atTabRoot });
     if (atTabRoot) return crumbs;
+    // The tab's crumb already covers its own path — "Benchmarkers › benchmarks"
+    // would print the same destination twice, so deeper segments start after it.
+    const tabPath = norm(tab.path);
+    if (tabPath !== "/" && path.startsWith(`${tabPath}/`)) {
+      acc = tabPath;
+      rest = path.slice(tabPath.length);
+    }
   }
 
   // The framed path, one segment at a time. Intermediates link only when the
   // accumulated path is a destination this app really registers.
-  const segments = path.split("/").filter(Boolean);
-  let acc = "";
+  const segments = rest.split("/").filter(Boolean);
   segments.forEach((seg, i) => {
     acc += `/${seg}`;
     const last = i === segments.length - 1;
