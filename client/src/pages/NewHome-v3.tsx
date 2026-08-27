@@ -15,8 +15,9 @@ import {
 import { industriesForGrid } from "../data/industries";
 import { useEstateFacts } from "@/lib/estateFacts";
 import FaqBlock from "@/components/FaqBlock";
-import StoryWorld from "@/components/home/StoryWorld";
+import { StoryWorldHero, StoryWorldRest } from "@/components/home/StoryWorld";
 import LivingStages from "@/components/home/LivingStages";
+import ToolStack from "@/components/home/ToolStack";
 import {
   Shield, CheckCircle, Users, Building2,
   Zap, ChevronRight, BarChart3, Gamepad2, TrendingUp,
@@ -160,40 +161,6 @@ function Section({
 
 // ── living GSPC grid (honest empties stay empty) ─────────────────────────
 
-// ── problem we fix ─────────────────────────────────────
-function ProblemStrip() {
-  return (
-    <Section
-      id="problem"
-      title="The problem we fix"
-      subtitle="Assertions are cheap. Proof is not. Buyers and regulators are asked to trust a PDF."
-      tone="raised"
-    >
-      <div className="grid gap-5 md:grid-cols-2 md:gap-6">
-        <div className="rounded-2xl border border-rose-500/25 bg-rose-500/[0.06] p-6 sm:p-8">
-          <p className="t-kicker text-rose-600 dark:text-rose-300">What they sell you</p>
-          <h3 className="mt-3 text-xl font-black leading-tight tracking-tight text-foreground sm:text-2xl">A claim you cannot recompute</h3>
-          <ul className="t-body mt-5 space-y-3 text-muted-foreground">
-            <li>A vendor says the model is safe, aligned, or compliant.</li>
-            <li>The evidence is a slide, a badge, or a private report.</li>
-            <li>You cannot run the same test. You cannot see what was left unmeasured.</li>
-            <li>Six months later the model has changed and the PDF has not.</li>
-          </ul>
-        </div>
-        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.07] p-6 sm:p-8">
-          <p className="t-kicker text-emerald-700 dark:text-emerald-300">What we issue</p>
-          <h3 className="mt-3 text-xl font-black leading-tight tracking-tight text-foreground sm:text-2xl">A card anyone can check</h3>
-          <ul className="t-body mt-5 space-y-3 text-muted-foreground">
-            <li>We run the system on frozen, published instruments.</li>
-            <li>We sign the result. You keep the card — under a kilobyte, yours to hold.</li>
-            <li>Unmeasured slots stay empty. No invented scores.</li>
-            <li>Re-attest is a new record, never an edit of the old one.</li>
-          </ul>
-        </div>
-      </div>
-    </Section>
-  );
-}
 
 const USPS = [
   { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, under a kilobyte: axis, model, accuracy, issuer, date and the previous card's hash. Verify stays free and loginless. A grade is never sold.", href: "/assess" },
@@ -702,8 +669,16 @@ export default function NewHomeV3() {
        meet, the tone alternation does the work. */
     <main className="surface-base">
 
-      <StoryWorld />
-      <ProblemStrip />
+      <StoryWorldHero />
+      {/* The opening used to be the scroll-world followed by ProblemStrip — one
+          abstract statement of "the problem we fix" and no list of what a reader
+          could actually DO here. ToolStack replaces it with nine, one per tool,
+          each naming its own pain and opening its own tool inside Council OS.
+          ProblemStrip's two columns are not lost: every line of them is now said
+          on the tile of the tool that does it. */}
+      <ToolStack />
+      {/* …and only then the rest of the story. */}
+      <StoryWorldRest />
       {/* The board first — "what is measured right now" is the claim everything
           else rests on, so it precedes anything sellable. */}
       <AxesGrid />

@@ -437,12 +437,37 @@ function HeroSection({ slide }: { slide: Slide }) {
   );
 }
 
-export default function StoryWorld() {
+/**
+ * THE STORY IS SPLIT IN TWO ON PURPOSE.
+ *
+ * Rendered as one block, the hero is followed immediately by twelve full-height
+ * story bands — roughly eleven thousand pixels of scroll before a reader reaches
+ * anything they can DO. So the homepage renders the hero, then the nine tool
+ * sections (components/home/ToolStack.tsx), then the rest of the story. The slide
+ * array is untouched and the alternation counters in ScrollWorld still run over the
+ * whole array, so nothing about the story's rhythm changes — only where the reader
+ * meets the tools.
+ */
+export function StoryWorldHero() {
+  return <HeroSection slide={STORY[0]} />;
+}
+
+export function StoryWorldRest() {
   return (
     <ScrollWorld
       slides={STORY}
-      renderHero={(slide) => <HeroSection slide={slide} />}
+      // Slide 0 is rendered above by StoryWorldHero; here it renders as nothing.
+      renderHero={() => null}
       renderFigure={(index) => <Infographic index={index} />}
     />
+  );
+}
+
+export default function StoryWorld() {
+  return (
+    <>
+      <StoryWorldHero />
+      <StoryWorldRest />
+    </>
   );
 }

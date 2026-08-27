@@ -63,7 +63,9 @@ export type LobbyTaskId =
   | "browse-crosswalk"
   | "regulation-feed"
   | "browse-methodology"
-  | "browse-hive";
+  | "browse-hive"
+  | "insurer-rail"
+  | "specialist-registers";
 
 export interface LobbyTask {
   pane: LobbyTabId;
@@ -256,6 +258,25 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
     label: "Open the methodology",
     prompt: () =>
       "How is a figure graded — gold labels, minimum n, and what stays out of the verdict?",
+  },
+  // Two front-door tools whose destination is a live PAGE rather than a rail pane.
+  // The pane is "home" and the route is framed in the centre pane, which is the only
+  // sanctioned way to open an arbitrary route inside the OS: the URL contract carries
+  // no ?route= param on purpose, so a route reaches the pane through this registry
+  // where its wording stays reviewable in one place.
+  "insurer-rail": {
+    pane: "home",
+    route: "/insurers",
+    label: "Open the insurer evidence rail",
+    prompt: () =>
+      "What does an underwriter actually get from a measurement card, and which cells on it are explicitly empty?",
+  },
+  "specialist-registers": {
+    pane: "home",
+    route: "/registers",
+    label: "Open the specialist registers",
+    prompt: () =>
+      "What do the specialist registers publish per axis — the instrument, the item count, and which rows are UNMEASURED?",
   },
   "browse-hive": {
     pane: "home",
