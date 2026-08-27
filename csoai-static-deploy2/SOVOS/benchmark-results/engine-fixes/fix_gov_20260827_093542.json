@@ -1,0 +1,29 @@
+{
+  "before": {
+    "axis": "gov",
+    "label": "Governance/GovBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 237,
+    "n_models": 19,
+    "sha256": "fd4fe1c41ec9",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "gov",
+    "delta": "gov (Governance/GovBench): weakest model qwen2.5:0.5b-instruct at 0.279 vs best sov6-embodiment-v3-light at 0.700 (spread 0.422, n_models=19, 237 bank items). No prior fix and no parse-noise flag in diagnose, so 0.279 is a genuine capability floor, not transport noise. Honest fix: (1) compute the majority-class baseline on the 237-item bank and check whether 0.279 sits at or below it; if below-baseline, document as a scale-limited floor not a scored competency; (2) separate scale-limited from instruction-limited by re-measuring the weakest model with an explicit 3-shot label-definition prefix plus a same-family larger-model transport check; (3) keep any below-majority result QUOTED as a documented floor, never re-bucketed into MEASURED without the baseline test.",
+    "gaps_before": [
+      "spread best\u2192worst 0.700\u21920.279 (n_models=19)"
+    ],
+    "applied_at": "2026-08-27T09:35:42.672780+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "lFushbz4nPG/dzIeYAoNkp3HPtjmBPV4zBHo2EmQ0+Gz6WtqTHOxcqe3wEcTjqRTx2LzMQRh/0L6vvh5iffnAw==",
+    "body_sha256": "8d44214cfbf65358972bc80952092a8f421b39c8765a63f41e9ae58947a5e37f",
+    "pubkey": "xjXEC2qL8Vbv276CGtCMxcYUTRnKvOBmafjP4TF4SVU=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}
