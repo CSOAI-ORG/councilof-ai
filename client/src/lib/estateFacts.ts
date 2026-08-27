@@ -47,7 +47,9 @@ export interface EstateFacts {
   withheld: number;
   /** Of those, the ones a published card's signed body names as `prev`. */
   withheldAttested: number;
-  /** True only if /signed/chain.json carries a signature of its own. It does not. */
+  /** True only if /signed/chain.json's card-shaped envelope VERIFIED under the pinned
+   *  key at derivation time (derive-chain-facts.mjs) — presence of a signature field
+   *  alone never sets this. */
   manifestSigned: boolean;
   /** Render-ready. Never emits `withheld` without `withheldAttested`. */
   withheldSentence: string;
@@ -61,10 +63,13 @@ function withheldSentenceOf(withheld: number, attested: number, manifestSigned: 
   return (
     `${withheld} card bodies are withheld because their signed bodies carry an internal identifier — ` +
     `disclosed, not deleted, and each keeps its position in the chain. Of those, ${attested} ` +
-    `${attested === 1 ? "is" : "are"} cryptographically attested by a published card's signed parent ` +
-    `link; the rest appear only in a manifest that ` +
-    `${manifestSigned ? "is signed" : "carries no signature of its own"}, so their existence rests on ` +
-    `our word rather than on a signature.`
+    `${attested === 1 ? "is" : "are"} independently attested by a published card's signed parent ` +
+    `link; the rest appear ` +
+    (manifestSigned
+      ? `inside the signed chain manifest — non-repudiable as a list, but still our own ` +
+        `attestation of our own list rather than an independent signature.`
+      : `only in a manifest that carries no signature of its own, so their existence rests on ` +
+        `our word rather than on a signature.`)
   );
 }
 

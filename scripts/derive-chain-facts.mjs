@@ -14,14 +14,14 @@
  * here, committed as an artifact, and served through /api/state.
  *
  * THE ONE THAT MATTERS: `withheld_attested_by_published_parent`.
- * /signed/chain.json lists all 335 positions and says a withheld card is "visible,
- * counted and ordered" rather than absent. That is true of the MANIFEST. But the
- * manifest carries no signature of its own, so a reader who trusts only signatures
- * gets a much smaller guarantee: a withheld id is cryptographically attested only
- * when some PUBLISHED card's signed body names it as `prev`. That is a different
- * number and it is computed here rather than assumed. Saying "the chain proves the
- * withheld cards existed" without this number would be exactly the estate's
- * signature defect — a manifest standing where a signature belongs.
+ * /signed/chain.json lists every position and says a withheld card is "visible,
+ * counted and ordered" rather than absent. Since 2026-08-27 the manifest is itself
+ * signed (card-shaped envelope, pinned key) — and that signature is VERIFIED here,
+ * never assumed from the presence of a `signature` field. Independently of it, a
+ * withheld id is cryptographically attested by a PUBLISHED card's signed body
+ * naming it as `prev`; that is a different number and it is still computed here,
+ * because the envelope signature binds the list as a whole while the parent links
+ * bind individual withheld ids to signed bodies.
  *
  * Run:  node scripts/derive-chain-facts.mjs
  * Out:  public/signed/chain-facts.json   (derived; safe to regenerate any time)
@@ -35,7 +35,12 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const signedDir = join(root, "public", "signed");
 const cardsDir = join(signedDir, "cards");
 
-const chain = JSON.parse(readFileSync(join(signedDir, "chain.json"), "utf8"));
+const chainDoc = JSON.parse(readFileSync(join(signedDir, "chain.json"), "utf8"));
+// Card-shaped since 2026-08-27: {body: manifest, id, pubkey, signature}. The manifest
+// facts are read from the body; the envelope is verified below with the SHIPPED verifier.
+const chain = chainDoc && typeof chainDoc === "object" && chainDoc.body && typeof chainDoc.body === "object"
+  ? chainDoc.body
+  : chainDoc;
 const index = JSON.parse(readFileSync(join(signedDir, "card_index.json"), "utf8"));
 
 // ── every published body, verified with the SHIPPED verifier ────────────────
@@ -60,11 +65,24 @@ const withheld = links.filter((l) => l.body_published === false).map((l) => l.id
 const published = links.filter((l) => l.body_published !== false).length;
 const withheldAttested = withheld.filter((id) => signedParents.has(id));
 
-// A top-level signature over the manifest is what would make the ORDER itself
-// attested. There is none, and that absence is published rather than glossed.
-const manifestSigned = ["sig", "signature", "custody_attestation", "jws"].some(
-  (k) => chain[k] !== undefined,
-);
+// A signature over the manifest is what makes the ORDER itself attested. Since
+// 2026-08-27 the manifest is card-shaped and signed by the pinned card-attestation
+// key. PRESENCE IS NOT PROOF: manifest_signed is true only when the envelope
+// VERIFIES under the shipped verifier — three states, never two.
+//   VALID   → manifest_signed: true
+//   INVALID → this script exits non-zero: a manifest whose signature FAILS is worse
+//             than an unsigned one, and no facts file may bless it.
+//   ABSENT / UNCHECKABLE → manifest_signed: false, with the state published.
+let manifestSigState = "ABSENT";
+if (chainDoc !== chain) {
+  const r = await verifyCard(chainDoc);
+  manifestSigState = r.state; // VALID | INVALID | UNCHECKABLE
+  if (r.state === "INVALID") {
+    console.error(`chain-facts: /signed/chain.json envelope is INVALID (${r.reason}) — refusing to emit facts over it`);
+    process.exit(1);
+  }
+}
+const manifestSigned = manifestSigState === "VALID";
 
 const indexRows = Array.isArray(index.cards) ? index.cards : [];
 const indexResolves = indexRows.filter((r) =>
@@ -105,10 +123,16 @@ const out = {
     bodies_published: published,
     bodies_withheld: withheld.length,
     manifest_signed: manifestSigned,
-    manifest_signed_note:
-      "false means /signed/chain.json carries no signature of its own. Each LINK carries a " +
-      "signature, but the list — the ordering, and the assertion that nothing was dropped — is " +
-      "unsigned. Do not describe the manifest as proof that no card was removed.",
+    manifest_signature_state: manifestSigState,
+    manifest_signed_note: manifestSigned
+      ? "true means the card-shaped envelope of /signed/chain.json was VERIFIED here by the " +
+        "shipped verifier (public/signed/verify-card.mjs) under the pinned card-attestation " +
+        "key — the ordering and the no-silent-drop claim are now signature-attested. This " +
+        "makes the published set non-repudiable; it still does not prove the set was not chosen."
+      : "false means /signed/chain.json carries no verifiable signature of its own " +
+        `(state: ${manifestSigState}). Each LINK carries a signature, but the list — the ` +
+        "ordering, and the assertion that nothing was dropped — is unsigned. Do not describe " +
+        "the manifest as proof that no card was removed.",
   },
 
   withheld: {
@@ -116,11 +140,17 @@ const out = {
     attested_by_published_parent: withheldAttested.length,
     attested_ids: withheldAttested,
     what_this_means:
-      "A withheld id is cryptographically attested only when a PUBLISHED card's signed body names " +
-      "it as `prev` — the signature then covers the reference. For the rest, the id and signature " +
-      "appear only in an unsigned manifest, so their existence rests on our word. Both numbers must " +
-      "travel together; quoting only the count of withheld positions would present a disclosure as " +
-      "a proof.",
+      "A withheld id is INDEPENDENTLY attested when a PUBLISHED card's signed body names it as " +
+      "`prev` — that signature covers the reference from outside the manifest. For the rest, the " +
+      "id and per-link signature appear inside the manifest" +
+      (manifestSigned
+        ? ", whose envelope is itself signature-attested: the list is non-repudiable, but it is " +
+          "still our own attestation of our own list, which is a weaker bind than a published " +
+          "parent's signed body."
+        : " only, which carries no verifiable signature of its own, so their existence rests on " +
+          "our word.") +
+      " Both numbers must travel together; quoting only the count of withheld positions would " +
+      "present a disclosure as a proof.",
     why_withheld:
       "The signed body carries an internal identifier we do not publish. The body is what the " +
       "signature is over, so it cannot be redacted without invalidating its id.",
@@ -131,11 +161,17 @@ const out = {
     rows_header: index.n_cards ?? null,
     header_agrees: index.n_cards === indexRows.length,
     rows_resolving_to_a_published_body: indexResolves,
+    // Derived, not typed: say what the bytes show. The old text asserted "a SUBSET index
+    // frozen at the verifiable floor" even after the owner ruling made the index list
+    // every verifying published card — a typed claim drifting from the data beside it.
     relationship_note:
-      "card_index.json is a SUBSET index frozen at the verifiable floor (BOARD-RULING.md), not a " +
-      "count of the published card store. Its rows all resolve to published bodies. Quoting the " +
-      "index row count as 'cards published' understates the store; quoting the store as the index " +
-      "overstates the index. They are two different facts and both are published here.",
+      indexRows.length === files.length
+        ? "card_index.json lists every published card body on disk (rows == files), and every " +
+          "row resolves to a published body. The chain manifest is the larger set: it also " +
+          "carries the positions whose body is withheld."
+        : "card_index.json is a SUBSET of the published card store (rows != files). Quoting the " +
+          "index row count as 'cards published' understates the store; quoting the store as the " +
+          "index overstates the index. They are two different facts and both are published here.",
   },
 };
 

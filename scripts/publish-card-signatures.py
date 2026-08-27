@@ -207,6 +207,15 @@ if isinstance(idx_blob, dict):
         "id_rule": "id == sha256(preimage).hexdigest()",
         "howto": "/signed/HOW-TO-VERIFY.md",
     }
+    # chain.json states what it proves AND what it does not; the index owed its readers the
+    # same honesty. Nothing here is a number — counts are derived, never typed (facts-gate).
+    idx_blob["what_this_does_not_establish"] = (
+        "That this set is complete: a card never published leaves no trace here, and an index "
+        "can only list what its publisher chose to list. That the withheld positions were not "
+        "chosen: /signed/chain.json discloses every withheld position, which constrains "
+        "selection but does not prove innocence. That a measurement absent from this index "
+        "did not happen. Each row can be verified in full; the boundary of the set cannot."
+    )
 INDEX.write_text(json.dumps(idx_blob, indent=2, sort_keys=True) + "\n")
 
 keys = {src["pubkey"] for src in verified.values()}
@@ -296,6 +305,32 @@ curl -s https://councilof.ai/signed/card_index.json -o index.json
 ```
 
 Fetch each `card_url`, then run step 4 against every one with the same pinned key.
+
+## 6. Verifying the chain manifest
+
+`/signed/chain.json` is card-shaped: `{{body, id, alg, preimage_rule, pubkey, signature}}`
+where `body` is the full chain manifest — every position head→genesis, including the ones
+whose body is withheld. It is signed by the SAME pinned card-attestation key under the SAME
+preimage rule as every card, so the published verifier checks it unchanged:
+
+```bash
+curl -s https://councilof.ai/signed/chain.json -o chain.json
+node verify-card.mjs chain.json
+```
+
+Three states, never two — the same contract as any card:
+
+- **VALID** — the manifest body reproduces its `id` and the signature verifies under the
+  pinned key. The LIST itself (ordering; nothing silently dropped) is now attested, not
+  merely asserted. Then walk `prev` from `body.head` to `body.genesis_prev`.
+- **INVALID** — the manifest fails the rule. Do not walk it; a chain read off an unverified
+  manifest inherits the manifest's trust, which is now zero.
+- **UNCHECKABLE** — the check itself could not complete (no Ed25519 in the runtime, a
+  malformed file). "Could not check" is a different claim from "forged" — report it as
+  such, never as a pass and never as a failure.
+
+A VALID manifest makes the published set non-repudiable — we cannot later disown it. It
+still does not prove the set was not chosen: see `body.what_this_does_not_prove`.
 
 ## What this does and does not prove
 

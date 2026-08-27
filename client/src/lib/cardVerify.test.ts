@@ -126,6 +126,53 @@ describe("failure modes stay distinct", () => {
   });
 });
 
+describe("the trust anchor is pinned — no key resolution at check time", () => {
+  const sample = () => readJson(resolve(CARD_DIR, cardFiles[0]));
+
+  it("a genuine card verifies with NO live anchors at all (network-free verdict)", async () => {
+    const v = await verifyCard(sample(), []);
+    expect(v.valid).toBe(true);
+    const anchor = v.checks.find((c) => c.label === "Trust anchor");
+    expect(anchor?.ok).toBe(true);
+    expect(anchor?.detail).toMatch(/pinned/);
+    // and the cross-check row says it could not run, without deciding anything
+    const xc = v.checks.find((c) => c.label === "Live anchor cross-check");
+    expect(xc?.ok).toBeNull();
+    expect(xc?.code).toBe("live_anchor_unavailable");
+  });
+
+  it("a card re-signed with a stranger's key FAILS even when did.json is unreachable", async () => {
+    // The hole this closes: before 2026-08-27, anchors=[] made the anchor check
+    // ok:null without failing the verdict, so an attacker-keyed card verified
+    // whenever did.json could not be fetched. Fail-open is not a trust anchor.
+    const card = sample();
+    card.pubkey = "00".repeat(32);
+    const v = await verifyCard(card, []);
+    expect(v.valid).toBe(false);
+    expect(v.reasons).toContain("untrusted_signer");
+  });
+});
+
+describe("the chain manifest is card-shaped and signed", () => {
+  const chainDoc = readJson(resolve(ROOT, "public/signed/chain.json"));
+
+  it("is a gspc.measurement-card-shaped envelope over the manifest body", () => {
+    expect(detectFamily(chainDoc)).toBe("gspc.measurement-card");
+    expect(Array.isArray(chainDoc.body.links)).toBe(true);
+    expect(chainDoc.body.length).toBe(chainDoc.body.links.length);
+  });
+
+  it("verifies under the pinned card-attestation key with no live anchors", async () => {
+    const v = await verifyCard(chainDoc, []);
+    expect(v.valid).toBe(true);
+    expect(chainDoc.pubkey).toBe(CARD_ATTESTATION_HEX);
+  });
+
+  it("its body states what the signature does NOT prove — non-repudiable is not unchosen", () => {
+    expect(chainDoc.body.what_this_does_not_prove).toMatch(/did not\s+choose/);
+  });
+});
+
 describe("content_id card families are recognised, not rejected", () => {
   const signalFiles = readdirSync(SIGNAL_DIR).filter((f) => f.endsWith(".signed.json"));
 

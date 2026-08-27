@@ -257,15 +257,11 @@ async function verifyCardThreeState(args: Record<string, unknown>, origin: strin
   if (error) {
     return { state: "UNCHECKABLE", reason: error, not_a_certification: true };
   }
+  // The deciding trust anchors are pinned inside cardVerify (PINNED_ANCHORS), so an
+  // unreachable did.json no longer makes the verdict UNCHECKABLE — verification
+  // succeeds for a party holding the record and this code, with no key resolution at
+  // check time. The live fetch feeds only the labelled cross-check row.
   const anchors = await loadAnchors(origin);
-  if (!anchors.length) {
-    return {
-      state: "UNCHECKABLE",
-      reason: "did.json unreachable — the signer could not be pinned",
-      not_a_certification: true,
-      note: "'Could not check' is a different claim from 'forged'.",
-    };
-  }
   const v = await verifyCard(card, anchors);
   const c = card as Record<string, unknown>;
   return {
@@ -426,9 +422,10 @@ async function handleVerify(id: unknown, args: Record<string, unknown>, origin: 
     // them is what told an outside auditor a published key was missing.
     reasons: v.reasons,
     checks: v.checks.map((c) => ({ check: c.label, ok: c.ok, code: c.code, detail: c.detail })),
-    trust_anchors_consulted: anchors.length
+    trust_anchor: "pinned in the verifier's source (functions/_lib/cardVerify.ts PINNED_ANCHORS) — no key resolution at check time",
+    live_did_crosscheck: anchors.length
       ? anchors.map((a) => a.id)
-      : "did.json unreachable — the signer could not be pinned",
+      : "did.json unreachable — cross-check skipped; the verdict is unaffected",
     not_a_certification: true,
     rule: "https://councilof.ai/signed/HOW-TO-VERIFY.md",
   };

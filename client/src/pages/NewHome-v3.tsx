@@ -425,10 +425,12 @@ function AxesGrid() {
 // verifier we ship. Nothing on this page types a count.
 //
 // The load-bearing pair is withheld / withheldAttested. Publishing "22 withheld,
-// every position accounted for" alone would present a DISCLOSURE as a PROOF: the
-// chain manifest carries no signature of its own, so only the withheld ids that a
-// published card's SIGNED body names as `prev` are actually attested. That is one
-// of the twenty-two, and the copy says one.
+// every position accounted for" alone would present a DISCLOSURE as a PROOF. Since
+// 2026-08-27 the chain manifest is itself signed (card-shaped envelope, verified at
+// derivation time — manifest_signed), which makes the LIST non-repudiable; but a
+// withheld id is INDEPENDENTLY attested only when a published card's SIGNED body
+// names it as `prev`. The copy reads both facts off estateFacts and words them
+// with exactly that distinction — nothing here types a count or a claim.
 function CardChainBand() {
   const f = useEstateFacts();
   return (

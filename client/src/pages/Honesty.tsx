@@ -209,13 +209,12 @@ export default function Honesty() {
           <p className="mt-2">
             We publish that distinction because the alternative is letting a complete-looking
             manifest do work a signature has not done — which is the exact class of defect this
-            estate keeps finding in itself. The full position manifest{" "}
-            <code>/signed/chain.json</code> is <strong>not currently published</strong> — it was
-            withdrawn with the 335-position merge (see <code>BOARD-RULING.md</code>) and the
-            build no longer emits it, so this page names what does ship rather than a URL that
-            404s: the derived counts are at <code>/signed/chain-facts.json</code>, each one
-            recomputed from the bytes, and the derivation behind these two numbers is at{" "}
-            <code>GET /api/state → card_chain</code>.
+            estate keeps finding in itself. The full position manifest is published at{" "}
+            <code>/signed/chain.json</code> as a card-shaped, Ed25519-signed envelope — verify
+            it yourself with <code>/signed/verify-card.mjs</code>, unchanged, under the same
+            pinned key as every card. The derived counts are at{" "}
+            <code>/signed/chain-facts.json</code>, each one recomputed from the bytes, and the
+            derivation behind these two numbers is at <code>GET /api/state → card_chain</code>.
           </p>
         </div>
         <p className="mt-4 leading-relaxed text-slate-700">

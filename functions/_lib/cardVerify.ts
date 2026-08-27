@@ -40,6 +40,32 @@ export const CARD_ATTESTATION_KID = "did:web:csoai.org#card-attestation-1";
 export const CARD_ATTESTATION_HEX =
   "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38";
 
+/**
+ * PINNED TRUST ANCHORS — the deciding anchor set, fixed in this verifier's source.
+ *
+ * These are the Ed25519 verification methods published in the did:web:csoai.org DID
+ * document, pinned here so that VERIFICATION NEEDS NO NETWORK: a party in possession
+ * of a card and this verifier can reach a verdict with no service contact at check
+ * time — no key resolution included. That is the property the estate argues in public
+ * (agentproto), so its own verifier embodies it.
+ *
+ * Until 2026-08-27 this module took its ONLY anchors from a live fetch of
+ * /.well-known/did.json — and when that fetch failed, the anchor check reported
+ * "could not be checked" (ok: null) WITHOUT failing the verdict, so a
+ * gspc.measurement-card signed by an attacker's key could come back valid:true
+ * whenever did.json was unreachable. The pinned set closes that hole: an unpinned
+ * signer now fails as untrusted_signer regardless of what the network did.
+ *
+ * A live did.json fetch remains useful as a LABELLED CROSS-CHECK (has the published
+ * document drifted from this pin?) — callers pass it as `anchors`; it never decides.
+ */
+export const PINNED_ANCHORS: Anchor[] = [
+  { id: "did:web:csoai.org#site-release-1", hex: "d3783d97e75534654401555642b254f5a2ed9184cddee011779d8fec312afbc8" },
+  { id: "did:web:csoai.org#estate-chain-1", hex: "33472e026871db20cdbd99e76c47532ebfcf84b37abed5b260dae3589df5696d" },
+  { id: "did:web:csoai.org#board-attestation-1", hex: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170" },
+  { id: CARD_ATTESTATION_KID, hex: CARD_ATTESTATION_HEX },
+];
+
 /* ------------------------------------------------------------------ canonical */
 
 /**
@@ -301,9 +327,10 @@ const FAMILY_LABEL: Record<Family, string> = {
 };
 
 /**
- * Verify one card. `anchors` are the trust anchors published in did.json; pass an
- * empty array and the anchor check reports "could not be checked" rather than
- * silently claiming the signer is untrusted.
+ * Verify one card. The DECIDING trust anchors are PINNED_ANCHORS, fixed in this
+ * module's source — the verdict never depends on a network fetch. `anchors` are the
+ * live did.json anchors, used ONLY for the labelled cross-check row; pass an empty
+ * array and the cross-check reports itself unavailable while the verdict stands.
  */
 export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardVerdict> {
   const family = detectFamily(rec);
@@ -391,7 +418,7 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
         `This says nothing about which key signed it.`,
   });
 
-  /* ---- 2. is the signer a key published in did.json? ---- */
+  /* ---- 2. is the signer a pinned published key? (decided WITHOUT the network) ---- */
   const keyBytes = keyRaw ? decodeKey(keyRaw) : null;
   const keyHex = keyBytes ? bytesToHex(keyBytes) : null;
   let anchorId: string | null = null;
@@ -403,22 +430,20 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
       detail: "The card carries no readable public key.",
     });
     fail("key_malformed");
-  } else if (anchors.length === 0) {
-    checks.push({
-      label: "Trust anchor",
-      ok: null,
-      code: "anchor_unavailable",
-      detail: "did.json could not be fetched, so the signer could not be checked against a published anchor.",
-    });
   } else {
-    const hit = anchors.find((a) => a.hex === keyHex);
-    if (hit) {
-      anchorId = hit.id;
+    // The DECIDING anchor is the set pinned in this verifier's source. No key is
+    // resolved over the network at check time — the live did.json fetch below is a
+    // labelled cross-check and never changes the verdict.
+    const pinnedHit = PINNED_ANCHORS.find((a) => a.hex === keyHex);
+    if (pinnedHit) {
+      anchorId = pinnedHit.id;
       checks.push({
         label: "Trust anchor",
         ok: true,
         code: "anchor_match",
-        detail: `${keyHex.slice(0, 8)}… is published as ${hit.id}.`,
+        detail:
+          `${keyHex.slice(0, 8)}… is published as ${pinnedHit.id} — matched against the anchor ` +
+          `set pinned in this verifier's source, so no key was looked up at check time.`,
       });
       if (family === "gspc.measurement-card" && keyHex !== CARD_ATTESTATION_HEX) {
         fail("wrong_anchor_for_family");
@@ -436,9 +461,36 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
         ok: false,
         code: "untrusted_signer",
         detail:
-          `${keyHex.slice(0, 8)}… is NOT among the keys published at did:web:csoai.org. ` +
-          `A card that carries its own key proves only self-consistency — anyone can mint one. ` +
-          `The signature check below is reported separately.`,
+          `${keyHex.slice(0, 8)}… is NOT among the keys published at did:web:csoai.org and pinned ` +
+          `in this verifier. A card that carries its own key proves only self-consistency — anyone ` +
+          `can mint one. The signature check below is reported separately.`,
+      });
+    }
+    // Live did.json cross-check — informational only (ok: null), stated as such. A
+    // disagreement is worth surfacing (key rotation, or a tampered live document),
+    // but the pinned set above already decided.
+    if (anchors.length > 0) {
+      const liveHit = anchors.find((a) => a.hex === keyHex);
+      const agrees = !!liveHit === !!pinnedHit;
+      checks.push({
+        label: "Live anchor cross-check",
+        ok: null,
+        code: agrees ? "live_anchor_agrees" : "live_anchor_disagrees",
+        detail: agrees
+          ? "The live did.json agrees with the pinned anchor set for this key. Cross-check only — the pinned set decided."
+          : `The live did.json ${liveHit ? "lists" : "does not list"} this key while the pinned set ` +
+            `${pinnedHit ? "also does" : "does not"} — the published document has drifted from this ` +
+            `verifier's pin. The pinned set decided the verdict above; treat the drift as a reason to ` +
+            `re-fetch this verifier, not to re-fetch the key.`,
+      });
+    } else {
+      checks.push({
+        label: "Live anchor cross-check",
+        ok: null,
+        code: "live_anchor_unavailable",
+        detail:
+          "did.json was not consulted or could not be fetched. The verdict is unaffected: the trust " +
+          "anchor is pinned in this verifier's source, and the live document is only ever a cross-check.",
       });
     }
   }

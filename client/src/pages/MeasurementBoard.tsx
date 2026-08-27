@@ -596,7 +596,9 @@ function CustodyPanel() {
         .then(set)
         .catch(() => set(null));
     grab("/signed/card_index.json", setIndex);
-    grab("/signed/chain.json", setChain);
+    // chain.json is card-shaped since 2026-08-27 ({body: manifest, id, pubkey,
+    // signature}) so the manifest itself is signed; the counts live in the body.
+    grab("/signed/chain.json", (j) => setChain(j?.body && typeof j.body === "object" ? j.body : j));
     grab("/signed/card-matrix.json", setMatrix);
   }, []);
 

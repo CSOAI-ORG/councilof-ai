@@ -9,7 +9,13 @@
  *
  * Both are fixed by delegating to functions/_lib/cardVerify.ts, the single shared
  * implementation of the published rule, which the MCP `verify` tool uses too.
- * Trust anchors are read live from /.well-known/did.json — never hard-coded here.
+ *
+ * TRUST ANCHOR (changed 2026-08-27): the deciding anchor set is PINNED in
+ * cardVerify.ts's source, so a verdict needs no network — no key resolution at
+ * check time. The live /.well-known/did.json fetch below is kept as a labelled
+ * cross-check row only; when it fails, the verdict is unaffected and the
+ * cross-check says so, instead of the old behavior where an unreachable did.json
+ * left the signer effectively unchecked.
  */
 
 import { verifyCard, anchorsFromDid, type Anchor, type CardVerdict } from "../../../functions/_lib/cardVerify";

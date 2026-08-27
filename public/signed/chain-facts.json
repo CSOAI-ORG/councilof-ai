@@ -24,8 +24,9 @@
     "header_agrees": true,
     "bodies_published": 313,
     "bodies_withheld": 22,
-    "manifest_signed": false,
-    "manifest_signed_note": "false means /signed/chain.json carries no signature of its own. Each LINK carries a signature, but the list — the ordering, and the assertion that nothing was dropped — is unsigned. Do not describe the manifest as proof that no card was removed."
+    "manifest_signed": true,
+    "manifest_signature_state": "VALID",
+    "manifest_signed_note": "true means the card-shaped envelope of /signed/chain.json was VERIFIED here by the shipped verifier (public/signed/verify-card.mjs) under the pinned card-attestation key — the ordering and the no-silent-drop claim are now signature-attested. This makes the published set non-repudiable; it still does not prove the set was not chosen."
   },
   "withheld": {
     "count": 22,
@@ -33,14 +34,14 @@
     "attested_ids": [
       "b77fde240e060ab02670c6b3bac7729da56c8f74d990a3ea4db04630b553d7b2"
     ],
-    "what_this_means": "A withheld id is cryptographically attested only when a PUBLISHED card's signed body names it as `prev` — the signature then covers the reference. For the rest, the id and signature appear only in an unsigned manifest, so their existence rests on our word. Both numbers must travel together; quoting only the count of withheld positions would present a disclosure as a proof.",
+    "what_this_means": "A withheld id is INDEPENDENTLY attested when a PUBLISHED card's signed body names it as `prev` — that signature covers the reference from outside the manifest. For the rest, the id and per-link signature appear inside the manifest, whose envelope is itself signature-attested: the list is non-repudiable, but it is still our own attestation of our own list, which is a weaker bind than a published parent's signed body. Both numbers must travel together; quoting only the count of withheld positions would present a disclosure as a proof.",
     "why_withheld": "The signed body carries an internal identifier we do not publish. The body is what the signature is over, so it cannot be redacted without invalidating its id."
   },
   "index": {
-    "rows": 150,
-    "rows_header": 150,
+    "rows": 313,
+    "rows_header": 313,
     "header_agrees": true,
-    "rows_resolving_to_a_published_body": 150,
-    "relationship_note": "card_index.json is a SUBSET index frozen at the verifiable floor (BOARD-RULING.md), not a count of the published card store. Its rows all resolve to published bodies. Quoting the index row count as 'cards published' understates the store; quoting the store as the index overstates the index. They are two different facts and both are published here."
+    "rows_resolving_to_a_published_body": 313,
+    "relationship_note": "card_index.json lists every published card body on disk (rows == files), and every row resolves to a published body. The chain manifest is the larger set: it also carries the positions whose body is withheld."
   }
 }

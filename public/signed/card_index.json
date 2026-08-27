@@ -3457,5 +3457,6 @@
     "howto": "/signed/HOW-TO-VERIFY.md",
     "id_rule": "id == sha256(preimage).hexdigest()",
     "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')"
-  }
+  },
+  "what_this_does_not_establish": "That this set is complete: a card never published leaves no trace here, and an index can only list what its publisher chose to list. That the withheld positions were not chosen: /signed/chain.json discloses every withheld position, which constrains selection but does not prove innocence. That a measurement absent from this index did not happen. Each row can be verified in full; the boundary of the set cannot."
 }

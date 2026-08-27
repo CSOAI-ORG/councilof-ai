@@ -71,7 +71,15 @@
 <script>
 (function () {
   var DEFAULT_CARD = "/signals/cross-border-card.signed.json";
-  var TRUST_ANCHOR = "/signed/board_living.json"; // publishes the living-board signer key
+  // THE DECIDING TRUST ANCHOR IS PINNED IN THIS SOURCE — like /signed/verify-card.mjs
+  // pins the card-attestation key. Until 2026-08-27 the only anchor was fetched from
+  // /signed/board_living.json at check time; fetching the key you verify against, at
+  // the moment you verify, is key resolution at verification time — the exact property
+  // this estate argues against on the agentproto list. The live fetch is kept below as
+  // an ADDITIONAL labelled cross-check; it never decides the verdict.
+  // This hex is the living-board signer that signs every /signals/*.signed.json.
+  var PINNED_SIGNER_HEX = "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912";
+  var LIVE_ANCHOR = "/signed/board_living.json"; // cross-check only — publishes the same signer key
 
   function q(id){ return document.getElementById(id); }
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
@@ -173,24 +181,38 @@
           : "Does NOT verify — altered, or signed by a different key.");
     }
 
-    // 3. Trust anchor — is the signing key the published living-board signer?
-    var anchorOk = null;
+    // 3. Trust anchor — decided against the key PINNED in this widget's source.
+    //    No network is consulted to reach this verdict: a party holding the card and
+    //    this widget can verify with no service contact at check time.
+    var pubHex = "";
+    try { pubHex = hex(b64ToBytes(sig.pubkey||"")); } catch(e){ /* malformed key already reported above */ }
+    var anchorOk = pubHex.toLowerCase() === PINNED_SIGNER_HEX;
+    row(anchorOk ? "✓":"✗", anchorOk ? "ok":"bad", "Published key (pinned)",
+      anchorOk
+        ? "The signing key is the Council of AI living-board signer, pinned in this widget's source — no key lookup at check time."
+        : "The card's key (<code>"+esc(pubHex.slice(0,16))+"…</code>) is NOT the pinned living-board signer. A card that names its own key proves only self-consistency; anyone can mint one.");
+
+    // 3b. Live cross-check — ADDITIONAL, labelled, never the deciding anchor. If it
+    //     cannot be fetched, the verdict above stands and this row says so.
     try {
-      var pubHex = hex(b64ToBytes(sig.pubkey||""));
-      var ares = await fetch(TRUST_ANCHOR);
+      var ares = await fetch(LIVE_ANCHOR);
       if (ares.ok){
         var anchor = await ares.json();
-        anchorOk = typeof anchor.signer === "string" && anchor.signer.toLowerCase() === pubHex.toLowerCase();
-        row(anchorOk ? "✓":"○", anchorOk ? "ok":"na", "Published key",
-          anchorOk
-            ? "The signing key is the Council of AI living-board signer published at <code>/signed/board_living.json</code> — not just the key the card names itself."
-            : "The card's key was not matched to the published living-board signer on this deploy. Signature validity above still holds for the key on the card.");
+        var liveMatch = typeof anchor.signer === "string" && anchor.signer.toLowerCase() === pubHex.toLowerCase();
+        row("○","na","Live key cross-check",
+          liveMatch
+            ? "The signer published live at <code>/signed/board_living.json</code> agrees with the pinned key. Cross-check only — the pinned key decided."
+            : "The signer published live at <code>/signed/board_living.json</code> does NOT match this card's key. The pinned key decided the verdict above; a drift here means fetch a fresh copy of this widget, not a fresh key.");
+      } else {
+        row("○","na","Live key cross-check", "<code>/signed/board_living.json</code> answered HTTP "+esc(ares.status)+" — cross-check skipped; the pinned-key verdict above is unaffected.");
       }
-    } catch(e){ /* anchor cross-check is best-effort */ }
+    } catch(e){
+      row("○","na","Live key cross-check", "Could not be fetched — cross-check skipped; the pinned-key verdict above is unaffected.");
+    }
 
     q("meta").innerHTML = "Card: <code>"+esc(card.schema||src)+"</code>" + (card.title ? " — "+esc(card.title) : "");
 
-    if (integrity && sigOk && (anchorOk !== false)){
+    if (integrity && sigOk && anchorOk){
       setVerdict("ok", "✓ signature verified");
     } else if (!edSupported){
       setVerdict("wait", "Content intact — signature not checkable here");

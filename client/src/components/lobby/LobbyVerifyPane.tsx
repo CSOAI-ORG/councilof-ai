@@ -68,7 +68,11 @@ async function readJson(url: string, signal?: AbortSignal): Promise<any> {
 }
 
 async function fromChain(signal?: AbortSignal): Promise<Extract<LoadState, { phase: "ready" }>> {
-  const j = await readJson("/signed/chain.json", signal);
+  const raw = await readJson("/signed/chain.json", signal);
+  // Since 2026-08-27 chain.json is card-shaped — {body: manifest, id, pubkey,
+  // signature} — so the manifest itself verifies under /signed/verify-card.mjs.
+  // Read the body when the envelope is present; accept the old flat shape too.
+  const j = raw && typeof raw === "object" && raw.body && typeof raw.body === "object" ? raw.body : raw;
   const links: any[] = Array.isArray(j?.links) ? j.links : [];
   if (!links.length) throw new Error("/signed/chain.json carried no positions");
   const cards: CardRef[] = links
@@ -157,9 +161,11 @@ export default function LobbyVerifyPane() {
       </h2>
       <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-700">
         Native in Council OS. The record is canonicalised and hashed in your browser, and the
-        Ed25519 signature is checked against the keys published at{" "}
-        <code className="font-mono text-[12px]">/.well-known/did.json</code>. Nothing you paste
-        leaves this device, and no account is asked for — here or ever.
+        Ed25519 signature is checked against trust anchors pinned in the verifier's own source —
+        the keys published at <code className="font-mono text-[12px]">/.well-known/did.json</code>,
+        fixed at build time so no key is looked up at check time. A live fetch of that document is
+        shown as a labelled cross-check only. Nothing you paste leaves this device, and no account
+        is asked for — here or ever.
       </p>
 
       {/* ── a real published card, so the tool can actually be exercised ── */}
