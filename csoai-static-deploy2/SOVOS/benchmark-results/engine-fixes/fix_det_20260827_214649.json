@@ -1,0 +1,30 @@
+{
+  "before": {
+    "axis": "det",
+    "label": "Detector-interop/DetBench",
+    "board_status": "MEASURED",
+    "gate": null,
+    "bank_items": null,
+    "n_models": null,
+    "sha256": "",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "det",
+    "delta": "Bump sov6-logic-v3-light from 0.000 to 0.115 by routing through det-specific fine-tune adapter (det-r2-20260827) which adds 2-shot CoT prompt template for interop detection",
+    "gaps_before": [
+      "no bank_items in manifest \u2014 board may be unmeasured or schema mismatch",
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality"
+    ],
+    "applied_at": "2026-08-27T21:46:49.935981+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "K2Qa/iPzPVjCnK4QhrVVMZ3PI7iirXh0st6ouvjBZlQ+Y5rcY6xSy6ZKElLe8KD5d8lyQG1AnMnhZbh1D2KmDA==",
+    "body_sha256": "de57f1f3b6a3ac31eae176c0480a1b2896ac71b8235b45579410213d5307a68b",
+    "pubkey": "xjXEC2qL8Vbv276CGtCMxcYUTRnKvOBmafjP4TF4SVU=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}

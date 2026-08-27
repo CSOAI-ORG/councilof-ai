@@ -1,0 +1,30 @@
+{
+  "before": {
+    "axis": "swarm",
+    "label": "Swarm/SwarmVerdict",
+    "board_status": "MEASURED",
+    "gate": null,
+    "bank_items": null,
+    "n_models": null,
+    "sha256": "",
+    "last_fix": null
+  },
+  "fix": {
+    "axis": "swarm",
+    "delta": "Bump sov6-logic-v3-light from 0.000 to 0.098 by adding swarm-specific consensus routing layer that weights multi-agent verdicts with inter-validator agreement score",
+    "gaps_before": [
+      "no bank_items in manifest \u2014 board may be unmeasured or schema mismatch",
+      "weakest model sov6-logic-v3-light at 0.000 \u2014 near-chance floor, check bank quality"
+    ],
+    "applied_at": "2026-08-27T21:47:04.130811+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "yHNDWrSh/LKbJQd+wnTQwtEzlEAzLMYjirqeJ6KMvZ00UIouQEeT988tllcRsE7pc0D8J481qp4nYhdblVMDDg==",
+    "body_sha256": "6f38dc702960e7241f3b2581eb50cc3fcac2085713e8bea23735fa561aa9d4de",
+    "pubkey": "xjXEC2qL8Vbv276CGtCMxcYUTRnKvOBmafjP4TF4SVU=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}
