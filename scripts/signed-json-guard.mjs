@@ -260,7 +260,7 @@ if (process.argv.includes("--selftest")) process.exit(selftest());
 const dist = process.argv[2] || "dist/client";
 const { files, failures, missingDir } = auditSignedTree(dist);
 if (missingDir) { console.log(`signed-json-guard: no ${join(dist, "signed")} directory — nothing to guard`); process.exit(0); }
-<if (failures.length) {
+if (failures.length) {
   console.error(`✖ signed-json-guard: ${failures.length} broken signed artifact(s) — DEPLOY BLOCKED:\n`);
   for (const f of failures) console.error(`  ${f}`);
   console.error(`\nThe public /signed/ tree is consumed by verifiers. A broken file here is a lie with a signature on it.`);
