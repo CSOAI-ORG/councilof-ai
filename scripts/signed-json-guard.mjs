@@ -186,12 +186,21 @@ export function auditSignedTree(dist) {
 function selftest() {
   const root = mkdtempSync(join(tmpdir(), "signed-json-guard-"));
   const SIG = "ab".repeat(64); // 128 hex chars
+  /**
+   * How many rows the fixtures build. Deliberately NOT RULED_CARD_COUNT: the owner's
+   * 313 ruling set that to null ("no clamp"), every fixture became 0 cards long, and
+   * this selftest crashed on `null.toString()` before it reached a single control. A
+   * test harness whose size follows a policy constant breaks the moment the policy
+   * moves — and a crashing selftest is worse than none, because it proves nothing
+   * while looking like it ran.
+   */
+  const FIXTURE_N = 150;
   const build = (mutate) => {
     const dist = mkdtempSync(join(root, "dist-"));
     const dir = join(dist, "signed");
     mkdirSync(join(dir, "cards"), { recursive: true });
     const cards = [];
-    for (let i = 0; i < RULED_CARD_COUNT; i++) {
+    for (let i = 0; i < FIXTURE_N; i++) {
       const id = i.toString(16).padStart(64, "0");
       cards.push({ card: id, axis: "selftest", ts: "2026-08-26T00:00:00Z", signed: true, kid: "card-attestation-1" });
       writeFileSync(join(dir, "cards", `${id}.json`),
@@ -211,9 +220,16 @@ function selftest() {
   const cases = [
     ["honest tree is NOT flagged (positive control)", (i) => i, true],
     ["header lies about the list under it", (i) => { i.n_cards = 335; }],
-    ["truncated board with the header moved to match", (i) => { i.cards = i.cards.slice(0, 50); i.n_cards = 50; i.n_cells = 50; }],
+    // Only a violation while an exact count is RULED. With the clamp lifted (owner
+    // ruling 313 -> RULED_CARD_COUNT null) a smaller-but-consistent board is not by
+    // itself dishonest; truncation is then caught by the size floor and by the
+    // row-to-body binding below. Asserted both ways so this control keeps biting
+    // whichever way the ruling goes, instead of silently becoming decorative.
+    ["truncated board with the header moved to match",
+      (i) => { i.cards = i.cards.slice(0, 50); i.n_cards = 50; i.n_cells = 50; },
+      RULED_CARD_COUNT === null],
     ["a 335-card board is refused even when internally consistent", (i, dir) => {
-      for (let n = RULED_CARD_COUNT; n < FABRICATED_CARD_COUNT; n++) {
+      for (let n = FIXTURE_N; n < FABRICATED_CARD_COUNT; n++) {
         const id = ("f" + n.toString(16)).padStart(64, "0");
         i.cards.push({ card: id, axis: "selftest", ts: "2026-08-26T00:00:00Z", signed: true, kid: "card-attestation-1" });
         writeFileSync(join(dir, "cards", `${id}.json`),
