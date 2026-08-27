@@ -120,7 +120,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "count = signed measurement cards in the living registry plus cross-border East-West card when published. " +
       "kid identifies the signing key; signed=true means the card carries a signature — it does NOT mean anyone " +
       "has checked it. Read board.signature.verification_state: the living board's stamp is UNVERIFIABLE (it does " +
-      "not reproduce under any published rule and its signer is not in did.json). The 150 cards in this index DO " +
+      "not reproduce under any published rule and its signer is not in did.json). The 313 cards in this index DO " +
       "verify against did:web:csoai.org#card-attestation-1 — see /signed/HOW-TO-VERIFY.md.",
   });
 };

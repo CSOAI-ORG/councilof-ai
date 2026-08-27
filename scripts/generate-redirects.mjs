@@ -176,9 +176,9 @@ const EXISTING = [
 const STOREFRONT = [
   "/catalog.json  /catalog.json     200",
   "/claimguard    /claimguard.html  200",
-  "/claimguard/   /claimguard       308",
+  "/claimguard/   /claimguard.html  200",
   "/ras           /ras.html         200",
-  "/ras/          /ras              308",
+  "/ras/          /ras.html         200",
 ];
 
 const PERSONA_SLASH = [
