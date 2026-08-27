@@ -1,18 +1,14 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- No board count in this <head>. The arenas listed below are their own set and
-     are NOT the GSPC board's axis count (the board's is derived, live, from
-     GET /api/gspc — see #board-count in the body). The title used to lead with a
-     typed axis count, which read as a board count; the retired figure is
-     DESCRIBED rather than reprinted, so the stale number is not put back on a
-     public surface. -->
-<title>GSPC Training Arenas — practise AI-governance judgement | CSOAI</title>
-<meta name="description" content="Practise AI-governance judgement on real frozen benchmark items, marked against a published key, scored against measured AI models. Training, not certification.">
-<link rel="canonical" href="https://csoai.org/arena/">
+<!-- /arena product face: the ONE quotable room. Prior measurement runs with TIE
+     verdicts or caveats are archived below, not shipped as the product. -->
+<title>Council Space Arena — measured governance instruments | CSOAI</title>
+<meta name="description" content="Measured governance instruments. GovBench n=237 is the only quotable room today. Training, not certification.">
+<link rel="canonical" href="https://councilof.ai/arena/">
 <style>
-:root{--fg:#111;--mut:#5a5a5a;--bd:#dcdcdc;--bg:#fff;--acc:#12457a}
-@media(prefers-color-scheme:dark){:root{--fg:#eaeaea;--mut:#9d9d9d;--bd:#333;--bg:#0d0d0d;--acc:#6fa8dc}}
+:root{--fg:#111;--mut:#5a5a5a;--bd:#dcdcdc;--bg:#fff;--acc:#12457a;--warn:#8a6d3b}
+@media(prefers-color-scheme:dark){:root{--fg:#eaeaea;--mut:#9d9d9d;--bd:#333;--bg:#0d0d0d;--acc:#6fa8dc;--warn:#d9a429}}
 body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 main{max-width:48rem;margin:0 auto;padding:2rem 1.1rem 4rem}
 table{border-collapse:collapse;width:100%;margin:1.2rem 0}
@@ -22,62 +18,95 @@ a{color:var(--acc)}
 .banner{border:1px solid var(--bd);border-left:3px solid var(--acc);padding:.7rem .9rem;margin:1.2rem 0;color:var(--mut);font-size:.93rem;border-radius:4px}
 .sep{color:#2f8f5b;font-weight:600}
 .tie{color:var(--mut)}
+.quotable{background:rgba(47,143,91,0.08);border-left:3px solid #2f8f5b}
+.archive-section{margin-top:3rem;padding-top:1.5rem;border-top:2px solid var(--bd)}
+.archive-label{display:inline-block;background:var(--warn);color:#fff;font-size:.7rem;font-weight:700;padding:.15rem .4rem;border-radius:3px;margin-left:.4rem;vertical-align:middle}
+.draft-label{display:inline-block;background:var(--mut);color:#fff;font-size:.65rem;font-weight:600;padding:.1rem .35rem;border-radius:2px;margin-left:.3rem}
 footer{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--bd);color:var(--mut);font-size:.85rem}
+.empty-state{text-align:center;padding:2rem;border:1px dashed var(--bd);border-radius:8px;margin:1.5rem 0}
+.empty-state h3{margin:0 0 .5rem;color:var(--fg)}
+.empty-state p{margin:0;color:var(--mut)}
 </style></head><body><main>
-<h1>GSPC Training Arenas</h1>
-<p>One arena per axis, for the axes listed below. Each arena serves the <strong>real frozen items</strong>
-from the published benchmark, marks against the <strong>published key</strong>, shows you the
-provision behind every answer, and scores you against the AI models we measured on the identical
-items.</p>
-<p style="font-size:.93rem;color:var(--mut)">The arenas below are a training set, not the board.
-The board&rsquo;s own count is <strong><span id="board-count">read live from /api/gspc</span></strong> —
-a slot count and a measured count are different numbers and both travel together. See
-<a href="https://councilof.ai/gspc-scoreboard">the board</a>.</p>
+<h1>Council Space Arena</h1>
+<p>Measured governance instruments. Each room serves <strong>real frozen items</strong>
+from a published benchmark, marks against a <strong>published key</strong>, and scores
+against measured AI models on identical items.</p>
+
 <div class="banner"><strong>Training, not certification.</strong> CSOAI is an independent
-measurement body and does not accredit anyone. Completing an arena confers no status and is not
+measurement body and does not accredit anyone. Completing a room confers no status and is not
 a conformity assessment.</div>
-<p style="font-size:.93rem;color:var(--mut)">Every axis in the table below was measured on the same 19-model
-board (2026-08-12, per-item rows, 0 transport errors). That is a statement about these rows only —
-it is not a claim that every axis on the board has been measured, and several have not. "Board leader" is the highest point estimate —
-whoever leads, ours or a base model. <span class="sep">SEPARATED</span> means the lead is statistically
-real (McNemar p&lt;0.05 on discordant items); <span class="tie">TIE</span> means it is not. A tie is not a win.</p>
+
+<h2>Quotable Rooms</h2>
+<p style="font-size:.93rem;color:var(--mut)">A room is quotable when the measurement is
+<span class="sep">SEPARATED</span> (McNemar p&lt;0.05 on discordant items) and has no
+outstanding caveats. One room meets this bar today.</p>
+
 <table>
-<thead><tr><th>Arena</th><th>What you decide</th><th>Items</th><th>Board leader (2026-08-12)</th><th>Verdict</th></tr></thead>
+<thead><tr><th>Room</th><th>What you decide</th><th>Items</th><th>Board leader (2026-08-12)</th><th>Status</th></tr></thead>
 <tbody>
-<tr><td><a href="/arena/governance.html">GovBench</a></td><td>EU AI Act risk tier</td><td class="n">237</td><td class="n">council specialist 0.700 [0.639, 0.755]</td><td class="sep">SEPARATED</td></tr>
+<tr class="quotable"><td><a href="/arena/governance.html">GovBench</a></td><td>EU AI Act risk tier</td><td class="n">237</td><td class="n">council specialist 0.700 [0.639, 0.755]</td><td class="sep">SEPARATED</td></tr>
+</tbody></table>
+
+<p style="font-size:.93rem;color:var(--mut)">The board&rsquo;s own count is
+<strong><span id="board-count">read live from /api/gspc</span></strong>.
+See <a href="https://councilof.ai/gspc-scoreboard">the board</a>.</p>
+
+<div class="empty-state">
+<h3>Additional rooms coming</h3>
+<p>Other rooms require separation from baseline or resolution of caveats before they become quotable.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     ARCHIVED ROOMS — prior measurement runs, kept for history but not the product.
+     These rows have TIE verdicts or caveats that prevent board-quotable status.
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<div class="archive-section">
+<h2>Archived Rooms <span class="archive-label">LEFTOVER</span></h2>
+<p style="font-size:.93rem;color:var(--mut)">Prior measurement runs. These rooms have
+<span class="tie">TIE</span> verdicts (not statistically separated) or caveats that
+prevent quotable status. Kept for historical reference — not shipped as product.</p>
+
+<table>
+<thead><tr><th>Room</th><th>What you decide</th><th>Items</th><th>Board leader (2026-08-12)</th><th>Status</th></tr></thead>
+<tbody>
 <tr><td><a href="/arena/safety.html">DefBench</a></td><td>calibrated refusal</td><td class="n">36</td><td class="n">base model 0.944 [0.819, 0.985]</td><td class="tie">TIE</td></tr>
 <tr><td><a href="/arena/provenance.html">ProvBench</a></td><td>C2PA manifest survival</td><td class="n">32</td><td class="n">council specialist 0.781 [0.612, 0.890]</td><td class="tie">TIE</td></tr>
 <tr><td><a href="/arena/continuity.html">PQCBench</a></td><td>post-quantum continuity</td><td class="n">33</td><td class="n">council specialist 0.606 [0.437, 0.753]</td><td class="tie">TIE</td></tr>
 <tr><td><a href="/arena/conformance.html">MCPBench</a></td><td>tool-contract conformance</td><td class="n">35</td><td class="n">council specialist 0.743 [0.579, 0.858]</td><td class="tie">TIE</td></tr>
 <tr><td><a href="/arena/openness.html">OSSBench</a></td><td>licence vs intended use</td><td class="n">32</td><td class="n">council specialist 0.875 [0.719, 0.950]</td><td class="tie">TIE</td></tr>
-<tr><td>MachBench</td><td>machinery safety-function scope</td><td class="n">33</td><td class="n">base model 0.545 [0.380, 0.702]</td><td class="tie">TIE</td></tr>
-<tr><td>CareBench</td><td>care-cost under paired conduct</td><td class="n">199</td><td class="n">council specialist 0.535 [0.466, 0.603]</td><td class="sep">SEPARATED*</td></tr>
-<tr><td>XRAIV</td><td>agent action authority</td><td class="n">32</td><td class="n">base model 0.812 [0.647, 0.911]</td><td class="tie">TIE</td></tr>
-<tr><td>DetBench</td><td>cross-detector watermark interop</td><td class="n">33</td><td class="n">base model 0.879 [0.727, 0.952]</td><td class="tie">TIE</td></tr>
-<tr><td>Art5Bench</td><td>Article 5 prohibited-practice trip</td><td class="n">36</td><td class="n">council specialist 0.972 [0.858, 0.995]</td><td class="tie">TIE</td></tr>
-<tr><td>SwarmBench</td><td>multi-agent coordination safety</td><td class="n">40†</td><td class="n">base model 0.975 (no interval †)</td><td class="tie">TIE</td></tr>
-<tr><td>AffectBench</td><td>emotional &amp; embodied safety</td><td class="n">41</td><td class="n">council specialist 0.878 [0.745, 0.947]</td><td class="sep">SEPARATED‡</td></tr>
+<tr><td>MachBench <span class="draft-label">SPEC</span></td><td>machinery safety-function scope</td><td class="n">33</td><td class="n">base model 0.545 [0.380, 0.702]</td><td class="tie">TIE</td></tr>
+<tr><td>CareBench <span class="draft-label">CAVEAT</span></td><td>care-cost under paired conduct</td><td class="n">199</td><td class="n">council specialist 0.535 [0.466, 0.603]</td><td class="tie">*not clear of baseline</td></tr>
+<tr><td>XRAIV <span class="draft-label">SPEC</span></td><td>agent action authority</td><td class="n">32</td><td class="n">base model 0.812 [0.647, 0.911]</td><td class="tie">TIE</td></tr>
+<tr><td>DetBench <span class="draft-label">SPEC</span></td><td>cross-detector watermark interop</td><td class="n">33</td><td class="n">base model 0.879 [0.727, 0.952]</td><td class="tie">TIE</td></tr>
+<tr><td>Art5Bench <span class="draft-label">SPEC</span></td><td>Article 5 prohibited-practice trip</td><td class="n">36</td><td class="n">council specialist 0.972 [0.858, 0.995]</td><td class="tie">TIE</td></tr>
+<tr><td>SwarmBench <span class="draft-label">PROTOCOL</span></td><td>multi-agent coordination safety</td><td class="n">40†</td><td class="n">base model 0.975 (no interval †)</td><td class="tie">TIE †</td></tr>
+<tr><td>AffectBench <span class="draft-label">COUNSEL-PENDING</span></td><td>emotional &amp; embodied safety</td><td class="n">41</td><td class="n">council specialist 0.878 [0.745, 0.947]</td><td class="tie">‡ counsel-pending</td></tr>
 </tbody></table>
-<p style="color:var(--mut);font-size:.9rem">* CareBench is separated from base models but NOT clear of the
-majority-class baseline — quoted accordingly. † SwarmBench is a protocol bank (3 unique prompts, 40
-scored instances); instances are not independent, so no interval is shown. ‡ AffectBench gold labels and
-severity bases are <strong>counsel-pending</strong>: measurements of model behaviour against a
-counsel-pending key, not legal verdicts. Full numbers, intervals and per-axis caveats:
-<a href="/api/gspc">/api/gspc</a>.</p>
-<p>Every item set listed above is public on <a href="https://huggingface.co/csoai">Hugging Face</a>
-(org account), with the scoring code, so you can disagree with any key rather than take it on trust.
-On <a href="https://www.kaggle.com/nicktempleman">Kaggle</a> our presence is currently partial —
-DefBench live, MCPBench deprecated — under a personal account; org mirrors are owed and dated here
-(2026-08-13) rather than claimed. Measured results:
-<a href="/benchmarks">/benchmarks</a>.</p>
+
+<p style="color:var(--mut);font-size:.85rem">
+<strong>Status key:</strong> <span class="tie">TIE</span> = not statistically separated (McNemar p≥0.05).
+* CareBench is separated from base models but NOT clear of the majority-class baseline.
+† SwarmBench instances are not independent (protocol bank), so no interval is shown.
+‡ AffectBench gold labels are counsel-pending — measurements of model behaviour, not legal verdicts.</p>
+
+<p style="color:var(--mut);font-size:.85rem">
+<strong>Labels:</strong> <span class="draft-label">SPEC</span> = protocol-only specification.
+<span class="draft-label">PROTOCOL</span> = protocol bank (non-independent instances).
+<span class="draft-label">CAVEAT</span> = measurement caveat prevents quotable status.
+<span class="draft-label">COUNSEL-PENDING</span> = awaiting legal review of gold labels.</p>
+</div>
+
+<p style="margin-top:2rem">Every item set is public on <a href="https://huggingface.co/csoai">Hugging Face</a>
+with scoring code — disagree with any key rather than take it on trust.
+Measured results: <a href="/benchmarks">/benchmarks</a>.</p>
+
 <footer>CSOAI Ltd (UK 16939677) · items Apache-2.0 · measurement, not certification</footer>
 </main>
 <script>
 /* The BOARD's axis count, derived from the signed board — never typed here
- * (ADR-001). This page's arenas are a different, smaller set and are not
- * reconciled to it; showing the board's own sentence is what stops a reader
- * mistaking the arena list for the board. Both of the board's numbers travel
- * together. On failure the pointer stands; no count is ever invented. */
+ * (ADR-001). Showing the board's own sentence stops a reader mistaking the
+ * arena list for the board. Both of the board's numbers travel together. On
+ * failure the pointer stands; no count is ever invented. */
 (function(){
   var el=document.getElementById("board-count");
   if(!el) return;
