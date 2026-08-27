@@ -172,7 +172,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 259 | Oracle-fleet docs: opinion vs price feed | `docs/ORACLE_FLEET.md` · ✅ |
 | 260 | DSH parity checklist for every new card | `DSH_PARITY_NEW_SURFACES.md` · ✅ |
 | 261 | Cursor cloud env: docs paths in README | README · ✅ · fleet paste `docs/MASTER_CONNECT.md` · ✅ |
-| 262 | cursor-guide / agent-runbook sync | docs · ✅ |
+| 262 | cursor-guide / agent-runbook sync | docs · ✅ · harmony `docs/COUNCIL_OS_HARMONY.md` · ✅ |
 | 263 | Stack honesty row for three indices | STACK_HONESTY · ✅ |
 | 264 | Production checklist tick new surfaces | PRODUCTION_CHECKLIST · ✅ |
 | 265 | Demo readiness: indices = empty OK | DEMO_READINESS · ✅ |

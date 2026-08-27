@@ -3,7 +3,7 @@
 **Paste block for agents (DSH, Cursor, Grok, Claude).**  
 Endpoints verified at time of writing. RunPod SSH ports **move** when a pod restarts — re-resolve via API; never assume the pod is dead.
 
-Full ops crosswalk: `docs/ESTATE_CROSSWALK.md` · ownership register: `docs/NEXT_300_MOVES.md`
+Full ops crosswalk: `docs/ESTATE_CROSSWALK.md` · ownership register: `docs/NEXT_300_MOVES.md` · Council OS harmony: `docs/COUNCIL_OS_HARMONY.md`
 
 ---
 
@@ -25,7 +25,7 @@ Full ops crosswalk: `docs/ESTATE_CROSSWALK.md` · ownership register: `docs/NEXT
 ```bash
 K=$(grep -oE '[a-zA-Z0-9_-]{20,}' ~/.runpod/config.toml | head -1)
 curl -s "https://api.runpod.io/graphql?api_key=$K" -H 'Content-Type: application/json' \
-  -d '{"query":"query{myself{pods{name desiredStatus runtime{ports{ip isIpPublic privatePort publicPort}}}}}}"}'
+  -d '{"query":"query{myself{pods{name desiredStatus runtime{ports{ip isIpPublic privatePort publicPort}}}}}"}'
 ```
 
 Example pods (ports as of 2026-08-27 — **will move**):

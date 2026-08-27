@@ -74,6 +74,8 @@ Signed-in teams: `https://councilof.ai/dashboard` — same Layer 0 destinations 
 
 **EAT parity:** competitor and RWA measurement cards use the same rule. Indices stay **UNMEASURED** on both OS and DSH — never invent labour/economy scores.
 
+**Fleet + harmony:** `docs/MASTER_CONNECT.md` · `docs/COUNCIL_OS_HARMONY.md` · lane claims `council-os/LANES.md`
+
 ## Verify
 
 https://councilof.ai/gspc-verify — recompute hash, check Ed25519 offline.

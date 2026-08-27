@@ -1,8 +1,17 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { fetchAxes, publicCaption, quotable } from "./gspcAxes";
+import { AXES, COUNTS, fetchAxes, publicCaption, quotable } from "./gspcAxes";
 
 afterEach(() => {
   vi.unstubAllGlobals();
+});
+
+describe("AXES offline snapshot", () => {
+  it("includes jail as slot 14 (14 board rows, not 13)", () => {
+    expect(AXES.length).toBe(14);
+    expect(COUNTS.total).toBe(14);
+    expect(AXES.some((a) => a.axis === "jail")).toBe(true);
+    expect(AXES.filter(quotable).length).toBeGreaterThanOrEqual(13);
+  });
 });
 
 describe("publicCaption", () => {
