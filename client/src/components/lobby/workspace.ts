@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { LEFT_KEY, RIGHT_KEY } from "./rails";
 import type { LobbyTabId } from "./tabs";
 
 /**
@@ -42,16 +43,15 @@ export function writeWorkspaceName(name: string): void {
 /**
  * Every localStorage key the OS writes. Kept as ONE list so "forget this
  * browser's OS preferences" cannot silently miss a key another file added.
- * (rails.ts owns the two rail keys; they are named here, not re-derived,
- * because the constants live in a file this one must not import cyclically.)
+ * The rail keys come from rails.ts, which owns them.
  */
 export const OS_PREF_KEYS = [
   WORKSPACE_KEY,
   "coai.lobby.alpha",
   "coai.lobby.tab",
   "coai.lobby.size",
-  "coai.lobby.rail.left",
-  "coai.lobby.rail.right",
+  LEFT_KEY,
+  RIGHT_KEY,
   "coai.lobby.audience",
 ] as const;
 
@@ -100,8 +100,11 @@ export function useActivity(): ActivityEntry[] {
   return useSyncExternalStore(subscribe, snapshot, snapshot);
 }
 
-/** Test seam. */
+/** Test seams. */
 export function clearActivityForTest(): void {
   entries = [];
   listeners.forEach((fn) => fn());
+}
+export function activitySnapshotForTest(): readonly ActivityEntry[] {
+  return entries;
 }
