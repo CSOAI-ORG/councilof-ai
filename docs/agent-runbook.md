@@ -54,6 +54,7 @@ Do **not** cite: ~~568 repos~~ (use **291 MCP servers**), ~~30-framework~~ (use 
 | `GET /api/instruments` | Eunomia router index |
 | `GET /api/indices` | Labour / AI-economy indices (UNMEASURED) |
 | `GET /api/indices/:slug` | Per-index honesty shape (`measured_score: null`) |
+| `GET /api/mcp` | MCP fleet catalogue (291 registry entries; 6 measured tools on POST JSON-RPC) |
 | `GET /api/finance/anatomy` | Engine axis map |
 | `GET /api/finance/bond-crossing` | Axis 18 synthetic crossing |
 | `POST /api/finance/settle` | Settlement envelope (stub until wired) |
@@ -75,6 +76,8 @@ Signed-in teams: `https://councilof.ai/dashboard` — same Layer 0 destinations 
 **EAT parity:** competitor and RWA measurement cards use the same rule. Indices stay **UNMEASURED** on both OS and DSH — never invent labour/economy scores.
 
 **Fleet + harmony:** `docs/MASTER_CONNECT.md` · `docs/COUNCIL_OS_HARMONY.md` · lane claims `council-os/LANES.md`
+
+**Local dev (`npm run dev`):** vite `:43125` proxies `/api/*` → `scripts/dev-honesty-api.mjs` `:3001` — indices, RWA, and MCP registry (`GET /api/mcp` from `mcpRegistry.json`, register REPORTED).
 
 ## Verify
 
