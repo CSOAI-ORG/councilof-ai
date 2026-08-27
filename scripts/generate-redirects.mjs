@@ -171,6 +171,12 @@ const EXISTING = [
 
   // JA-D2: keep edge alias without shipping the slug in the client bundle
   // (App.tsx route removed; string stays only in this edge map).
+
+  // SEO cleanup 2026-08-27: /fabric/* was a leftover product tree never wired in
+  // this repo. Google indexed /fabric/agent-incident-reporter-mcp; send it to the
+  // live MCP registry door. csoai.org has the same leftover but is a different
+  // Pages project (csoai-site), so that redirect belongs in its own deploy.
+  "/fabric/agent-incident-reporter-mcp  /mcps/  308",
 ];
 
 const STOREFRONT = [
