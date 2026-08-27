@@ -11,6 +11,14 @@ hf auth whoami  # must show csoai org admin
 
 MCP OAuth (`hf_whoami`) may read Hub but **CLI write** still needs `hf auth login` or `HF_TOKEN`.
 
+## Pre-upload verify (no token required)
+
+```bash
+npm run verify:staged-hf   # assert measured_score null in staged JSON
+```
+
+Hub repos are **missing** until upload succeeds (`hf_fs stat hf://datasets/csoai/labour-economy-unmeasured` → not found).
+
 ## #139 — `csoai/labour-economy-unmeasured`
 
 ```bash

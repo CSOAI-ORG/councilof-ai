@@ -41,7 +41,7 @@ Canon: `docs/MASTER_CONNECT.md` · `docs/ESTATE_CROSSWALK.md` · `council-os/GAM
 | Council Space console sim | PARTIAL | Gateway banner; narrated ≠ MEASURED |
 | SovOS games arcade | 1 live + 5 DESIGN | Slots 2–6 registered with DESIGN panels |
 | MCP fleet page | REAL (dev) | Live list via `/api/mcp` — registry in dev, gateway in prod |
-| Training / flywheel | PARTIAL | Needs `/flywheel/*.json` on deploy |
+| Training / flywheel | REAL (branch) | `public/flywheel/board.json` + `sim-board.json` on branch deploy |
 | Dashboard framework % | FIXED | UNMEASURED until org assessment |
 | 9 product SKUs (GPAI, INS, COBOL…) | MIXED | See `/products` + `engine-axis.ts` |
 | HF living datasets | 🔄 | `npm run hf:upload-staged` when write token |
@@ -77,6 +77,7 @@ See `/products` and `client/src/data/productsCatalog.ts`. Each must:
 
 ```bash
 npm run dev   # :3001 honesty API + vite :43125
+npm run smoke:dev-honesty   # :3001 indices / RWA / MCP registry
 npx vitest run client/src/data/labourIndices.test.ts
 BASE_URL=http://127.0.0.1:43125 npm run crawl:honesty
 npx playwright test e2e/tests/indices-products-axe.spec.ts --project=chromium
