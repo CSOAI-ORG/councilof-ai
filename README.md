@@ -91,7 +91,7 @@ Generated `public/ecosystem.json`, `public/sitemap.xml`, and `client/src/data/ro
 - [RunPod policy](docs/RUNPOD_POLICY.md) — GPU for model axes; not RWA churn or invented labour scores
 - [HF dataset plan](docs/HF_DATASET_PLAN.md) — honesty dumps; UNMEASURED stub first
 - [HF upload runbook](docs/HF_UPLOAD_RUNBOOK.md) — staged packs #139/#186 when `hf auth login` works
-- [Regulator indices one-pager](docs/REGULATOR_INDICES_ONE_PAGER.md) — UNMEASURED brief (markdown source; PDF owner)
+- [Regulator indices one-pager](docs/REGULATOR_INDICES_ONE_PAGER.md) — UNMEASURED brief · print [`/regulator-indices-one-pager.html`](public/regulator-indices-one-pager.html) · PDF [`/regulator-indices-one-pager.pdf`](public/regulator-indices-one-pager.pdf) (`npm run pdf:regulator-indices`)
 - [Oracle fleet](docs/ORACLE_FLEET.md) — infra status only; not a grade/price oracle
 - [Dataset freshness crons](docs/DATASET_FRESHNESS_CRONS.md) — ops designs; no invented MEASURED
 - [REPORTED labour/economy citations](docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md) — dated links, no scores
