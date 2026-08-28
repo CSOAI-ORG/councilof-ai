@@ -1,1 +1,1 @@
-PLACEHOLDER_LOAD_FROM_/tmp/dock_only_content.tsx
+LOAD_FROM_FILE:/tmp/CONTENT_FOR_MCP.tsx
