@@ -1,112 +1,56 @@
 import { useEffect, useState } from "react";
-import { fetchAxes, quotable, type AxesState, type Axis } from "@/lib/gspcAxes";
-import { industries, type Industry } from "@/data/industries";
+import { fetchAxes, type AxesState } from "@/lib/gspcAxes";
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
 
 /**
  * LobbyMatrixPane — Industry × Regulation matrix inside Council OS.
  *
- * A visual grid: rows are industry sectors, columns are published regimes.
- * Each cell is MEASURED / UNMEASURED / REPORTED from the living board.
+ * Wraps the leftover RelevanceMap visual ("INDUSTRY → CSOAI BRIDGES → FRAMEWORKS")
+ * as the OS pane chrome. Archive honesty: leftover six industries / 12 bridges,
+ * not the living 15. Living drivers (GET /api/gspc, GET /api/regulation) sit
+ * beside it, not as a fork.
  *
  * Authority: GET /api/gspc. If this pane disagrees with the API, the API wins.
  * This is a printer of the living board, not a simulation, not certification.
  */
 
-type CellStatus = "MEASURED" | "UNMEASURED" | "REPORTED" | "EMPTY";
-
-interface Regime {
-  id: string;
-  name: string;
-  short: string;
-}
-
-const REGIMES: Regime[] = [
-  { id: "eu", name: "EU AI Act", short: "EU" },
-  { id: "uk", name: "UK/DRCF", short: "UK" },
-  { id: "us-il", name: "Illinois SB 315", short: "IL" },
-  { id: "cn", name: "TC260", short: "CN" },
-  { id: "nist", name: "NIST/ISO", short: "NIST" },
+type Bridge = { id: string; label: string; industries: string[]; frameworks: string[] };
+const BRIDGES: Bridge[] = [
+  { id: "iso20022", label: "iso20022-bridge", industries: ["Finance"], frameworks: ["DORA", "NIS2", "GDPR"] },
+  { id: "swift", label: "swift-bridge", industries: ["Finance"], frameworks: ["DORA", "AML/CFT", "GDPR"] },
+  { id: "fix", label: "fix-bridge", industries: ["Finance"], frameworks: ["MiFID II", "DORA"] },
+  { id: "cobol", label: "cobol-bridge", industries: ["Finance", "Government"], frameworks: ["DORA", "SOX"] },
+  { id: "hl7", label: "hl7-fhir-bridge", industries: ["Healthcare"], frameworks: ["HIPAA", "EU AI Act Annex III", "GDPR"] },
+  { id: "dicom", label: "dicom-bridge", industries: ["Healthcare"], frameworks: ["HIPAA", "MDR"] },
+  { id: "scada", label: "scada-bridge", industries: ["Energy & Infrastructure", "Manufacturing"], frameworks: ["NIS2", "IEC 62443"] },
+  { id: "modbus", label: "modbus-bridge", industries: ["Energy & Infrastructure", "Manufacturing"], frameworks: ["IEC 62443", "NIS2"] },
+  { id: "opcua", label: "opcua-bridge", industries: ["Manufacturing"], frameworks: ["IEC 62443", "EU AI Act"] },
+  { id: "xroad", label: "x-road-bridge", industries: ["Government"], frameworks: ["eIDAS", "GDPR"] },
+  { id: "ldap", label: "ldap-bridge", industries: ["Government", "Enterprise"], frameworks: ["GDPR", "NIS2"] },
+  { id: "edi", label: "edifact-bridge", industries: ["Manufacturing", "Enterprise"], frameworks: ["GDPR", "Customs/UCC"] },
 ];
 
-const CROSSWALK_CONTROLS: Record<string, string[]> = {
-  eu: ["Risk management", "Data governance", "Documentation & records", "Transparency & disclosure", "Human oversight", "Security & resilience"],
-  uk: ["Security & resilience", "Transparency & disclosure", "Bias & fairness", "Accountability & governance", "Human oversight"],
-  "us-il": ["Risk management", "Documentation & records", "Bias & fairness", "Security & resilience"],
-  cn: ["Transparency & disclosure", "Data governance", "Human oversight", "Risk management"],
-  nist: ["Govern", "Map", "Measure", "Manage"],
+const INDUSTRIES = ["Finance", "Healthcare", "Energy & Infrastructure", "Government", "Manufacturing", "Enterprise"];
+
+const REGION_TAGS: Record<string, string[]> = {
+  EU: ["EU AI Act", "GDPR", "DORA", "NIS2", "MDR", "eIDAS", "CRA", "Data Act", "MiCA", "PSD2", "CSRD", "MiFID"],
+  US: ["SEC", "HIPAA", "NIST", "FDA", "CCPA", "GLBA", "SOX", "FERPA", "COPPA", "FTC", "NAIC", "CFTC"],
+  Global: ["ISO", "IEC", "OECD", "UNESCO", "Basel", "SWIFT", "PCI"],
 };
 
-const SELECTED_INDUSTRIES: string[] = [
-  "insurance",
-  "government",
-  "care",
-  "defence",
-  "critical-infrastructure",
-  "media",
-  "agent-rails",
-];
+const REGIONS = ["All", "EU", "US", "Global"];
 
-function getIndustriesForMatrix(): Industry[] {
-  return SELECTED_INDUSTRIES
-    .map((slug) => industries.find((i) => i.slug === slug))
-    .filter((i): i is Industry => i !== undefined);
-}
-
-function getCellStatus(
-  industry: Industry,
-  regime: Regime,
-  axes: Axis[],
-): CellStatus {
-  const industryAxes = industry.axes;
-  const axisLookup = new Map(axes.map((a) => [a.axis, a]));
-  
-  const crosswalkControls = CROSSWALK_CONTROLS[regime.id] ?? [];
-  if (crosswalkControls.length === 0) return "EMPTY";
-
-  let hasMeasured = false;
-  let hasUnmeasured = false;
-
-  for (const axisName of industryAxes) {
-    const axis = axisLookup.get(axisName);
-    if (axis) {
-      if (quotable(axis)) {
-        hasMeasured = true;
-      } else {
-        hasUnmeasured = true;
-      }
-    }
-  }
-
-  if (hasMeasured) return "MEASURED";
-  if (hasUnmeasured) return "UNMEASURED";
-  if (crosswalkControls.length > 0 && regime.id !== "nist") return "REPORTED";
-  return "EMPTY";
-}
-
-function StatusBadge({ status }: { status: CellStatus }) {
-  const styles: Record<CellStatus, string> = {
-    MEASURED: "bg-emerald-100 text-emerald-800 border-emerald-200",
-    UNMEASURED: "bg-slate-100 text-slate-600 border-slate-200",
-    REPORTED: "bg-amber-50 text-amber-700 border-amber-200",
-    EMPTY: "bg-white text-slate-400 border-slate-100",
-  };
-  const labels: Record<CellStatus, string> = {
-    MEASURED: "MEASURED",
-    UNMEASURED: "UNMEASURED",
-    REPORTED: "REPORTED",
-    EMPTY: "—",
-  };
-  return (
-    <span
-      className={`rounded-md border px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide ${styles[status]}`}
-    >
-      {labels[status]}
-    </span>
-  );
+function inRegion(frameworks: string[], region: string) {
+  if (region === "All") return true;
+  const tags = REGION_TAGS[region] || [];
+  return frameworks.some(function (f) {
+    return tags.some(function (t) { return f.toUpperCase().indexOf(t.toUpperCase()) > -1; });
+  });
 }
 
 export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: string) => void }) {
+  const [industry, setIndustry] = useState<string | null>(null);
+  const [region, setRegion] = useState<string>("All");
   const [state, setState] = useState<Pick<AxesState, "axes" | "source" | "loading" | "publicCount">>({
     axes: [],
     source: "snapshot",
@@ -120,13 +64,21 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
     return () => ac.abort();
   }, []);
 
-  const matrixIndustries = getIndustriesForMatrix();
+  const bridges = industry ? BRIDGES.filter((b) => b.industries.includes(industry) && inRegion(b.frameworks, region)) : [];
+  const frameworks = Array.from(new Set(bridges.flatMap((b) => b.frameworks)));
+
+  const W = 920, rowH = 60, padTop = 40;
+  const H = Math.max(bridges.length, frameworks.length, 1) * rowH + padTop + 40;
+  const bx = 250, fx = 670, cx = 60;
+  const by = (i: number) => padTop + 30 + i * ((H - padTop - 60) / Math.max(bridges.length, 1)) ;
+  const fy = (i: number) => padTop + 30 + i * ((H - padTop - 60) / Math.max(frameworks.length, 1));
+  const cyMid = H / 2;
 
   return (
     <section aria-labelledby="coai-matrix-h" className={`${SP.panel} h-full overflow-y-auto`}>
       <p className={TYPE.section}>Industry × Regulation</p>
       <h2 id="coai-matrix-h" className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
-        The living matrix
+        What governs what
       </h2>
       
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>
@@ -145,83 +97,90 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
               : "Offline fallback — this build's snapshot"}
       </p>
 
-      <div className="mt-6 overflow-x-auto">
-        <table className="w-full min-w-[600px] border-collapse text-[12px]">
-          <thead>
-            <tr className="border-b border-slate-200">
-              <th className="px-3 py-2 text-left font-mono text-[10px] uppercase tracking-wider text-slate-500">
-                Industry / Sector
-              </th>
-              {REGIMES.map((r) => (
-                <th
-                  key={r.id}
-                  className="px-2 py-2 text-center font-mono text-[10px] uppercase tracking-wider text-slate-500"
-                  title={r.name}
-                >
-                  {r.short}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {matrixIndustries.map((industry) => (
-              <tr
-                key={industry.slug}
-                className="border-b border-slate-100 transition hover:bg-slate-50/50"
-              >
-                <td className="px-3 py-3">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-semibold text-slate-900">{industry.name}</span>
-                    <span className={`${TYPE.fine} line-clamp-1`}>{industry.short}</span>
-                  </div>
-                </td>
-                {REGIMES.map((regime) => {
-                  const status = getCellStatus(industry, regime, state.axes);
-                  return (
-                    <td key={regime.id} className="px-2 py-3 text-center">
-                      <StatusBadge status={status} />
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50/50 px-3 py-2">
+        <p className="text-[11px] font-semibold text-amber-800">Archive visual</p>
+        <p className="text-[10px] text-amber-700">
+          This is the leftover relevance map — six industries / 12 bridges from the archive, not the living 15.
+          The living board count is reported above from GET /api/gspc.
+        </p>
       </div>
 
-      <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-        <p className={TYPE.section}>Legend</p>
-        <div className="mt-2 flex flex-wrap gap-4 text-[11px]">
-          <div className="flex items-center gap-2">
-            <StatusBadge status="MEASURED" />
-            <span className="text-slate-600">Axis measured with live data</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <StatusBadge status="UNMEASURED" />
-            <span className="text-slate-600">Declared slot, no run yet</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <StatusBadge status="REPORTED" />
-            <span className="text-slate-600">Crosswalk mapped, not scored</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <StatusBadge status="EMPTY" />
-            <span className="text-slate-600">Empty — no data</span>
-          </div>
+      <div className="mt-6">
+        <div className="flex flex-wrap gap-2">
+          {INDUSTRIES.map((ind) => (
+            <button
+              key={ind}
+              onClick={() => setIndustry(ind === industry ? null : ind)}
+              className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold transition-colors ${
+                industry === ind
+                  ? "border-emerald-400 bg-emerald-100 text-emerald-900"
+                  : "border-slate-200 text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              {ind}
+            </button>
+          ))}
+        </div>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          <span className="text-[10px] uppercase tracking-wider text-slate-400">Region</span>
+          {REGIONS.map((r) => (
+            <button
+              key={r}
+              onClick={() => setRegion(r)}
+              className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
+                region === r
+                  ? "border-teal-300 bg-teal-100 text-teal-800"
+                  : "border-slate-200 text-slate-500 hover:bg-slate-50"
+              }`}
+            >
+              {r}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50/50 p-4">
-        <p className={`${TYPE.section} text-emerald-800`}>Published crosswalk</p>
-        <p className={`mt-1 ${TYPE.muted}`}>
-          The east-west crosswalk at <code className="font-mono text-[10px]">/crosswalk/east-west-v1.json</code>{" "}
-          maps four regimes (EU, UK, Illinois SB 315, TC260). NIST/ISO coverage is described, not
-          crosswalked — this page says which is which.
-        </p>
-        <p className={`mt-2 ${TYPE.fine}`}>
-          Determination stays with authorities. Crosswalk maps obligations; it is not a conformity
-          opinion, certificate, or legal verdict.
-        </p>
+      <div className="mt-5 overflow-x-auto rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-2">
+        {!industry ? (
+          <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-400 text-sm">
+            Pick an industry above — the relevance map renders here on click.
+          </div>
+        ) : (
+          <>
+            <div className="mb-3 flex flex-wrap items-center gap-2 px-2">
+              <span className="font-semibold text-slate-900 text-sm">{industry}</span>
+              <span className="rounded-lg bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">{bridges.length} bridges</span>
+              <span className="rounded-lg bg-sky-50 px-2 py-0.5 text-[10px] font-semibold text-sky-700">{frameworks.length} frameworks</span>
+            </div>
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ minWidth: 600 }}>
+              {bridges.map((b, i) => (
+                <line key={"l" + b.id} x1={cx + 80} y1={cyMid} x2={bx} y2={by(i)} stroke="#34d399" strokeWidth={1.5} opacity={0.5} />
+              ))}
+              {bridges.map((b, i) => b.frameworks.map((f) => {
+                const fi = frameworks.indexOf(f);
+                return <line key={"bl" + b.id + f} x1={bx + 150} y1={by(i)} x2={fx} y2={fy(fi)} stroke="#94a3b8" strokeWidth={1} opacity={0.4} />;
+              }))}
+              <g>
+                <rect x={cx} y={cyMid - 22} width={150} height={44} rx={12} fill="#065f46" />
+                <text x={cx + 75} y={cyMid + 5} textAnchor="middle" fill="#fff" fontSize={13} fontWeight={700}>{industry.length > 16 ? industry.slice(0, 15) + "…" : industry}</text>
+              </g>
+              {bridges.map((b, i) => (
+                <g key={b.id}>
+                  <rect x={bx} y={by(i) - 18} width={150} height={36} rx={9} fill="#ecfdf5" stroke="#34d399" />
+                  <text x={bx + 75} y={by(i) + 4} textAnchor="middle" fill="#047857" fontSize={12} fontWeight={600}>{b.label}</text>
+                </g>
+              ))}
+              {frameworks.map((f, i) => (
+                <g key={f}>
+                  <rect x={fx} y={fy(i) - 16} width={190} height={32} rx={8} fill="#f8fafc" stroke="#cbd5e1" />
+                  <text x={fx + 95} y={fy(i) + 4} textAnchor="middle" fill="#334155" fontSize={11.5} fontWeight={600}>{f}</text>
+                </g>
+              ))}
+              <text x={cx + 75} y={20} textAnchor="middle" fill="#64748b" fontSize={11} fontWeight={700}>INDUSTRY</text>
+              <text x={bx + 75} y={20} textAnchor="middle" fill="#64748b" fontSize={11} fontWeight={700}>CSOAI BRIDGES</text>
+              <text x={fx + 95} y={20} textAnchor="middle" fill="#64748b" fontSize={11} fontWeight={700}>FRAMEWORKS</text>
+            </svg>
+          </>
+        )}
       </div>
 
       <div className="mt-6 rounded-xl border border-sky-200 bg-sky-50/50 p-4">
@@ -252,10 +211,16 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
 
       <div className="mt-6 flex flex-wrap gap-3">
         <a
+          href="/map"
+          className={`${SURFACE} rounded-lg px-4 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-100 ${FOCUS}`}
+        >
+          Full relevance map →
+        </a>
+        <a
           href="/crosswalk"
           className={`${SURFACE} rounded-lg px-4 py-2 text-[12px] font-semibold text-slate-700 transition hover:bg-slate-100 ${FOCUS}`}
         >
-          Open full crosswalk →
+          Open crosswalk →
         </a>
         <a
           href="/gspc-arena"

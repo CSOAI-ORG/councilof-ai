@@ -981,7 +981,7 @@ function App() {
                   <Route path="/frequently-asked-questions" component={FAQ} />
                   <Route path="/glossary" component={Glossary} />
                   <Route path="/ai-glossary" component={Glossary} />
-                  <Route path="/readiness-assessment" component={ReadinessAssessment} />
+                  <Route path="/readiness-assessment">{() => <Redirect to="/assess" />}</Route>
                   <Route path="/assessment" component={ReadinessAssessment} />
                   <Route path="/industry-solutions" component={IndustrySolutions} />
                   <Route path="/industries" component={IndustrySolutions} />
