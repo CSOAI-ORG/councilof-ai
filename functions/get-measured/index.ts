@@ -1,12 +1,12 @@
 /**
- * GET /get-measured/ - 308 to Council OS measured door.
- * Slash variant. Do not 308 onto itself.
+ * GET /get-measured/ — 308 to Council OS Assess door.
+ * Do not 308 onto /get-measured/. Home is marketing, not the OS.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/?lobby=measured&task=get-measured",
+      location: "/os?lobby=assess&task=get-measured",
       "cache-control": "public, max-age=300",
     },
   });

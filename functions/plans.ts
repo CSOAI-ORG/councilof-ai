@@ -1,13 +1,13 @@
 /**
- * GET /plans and /plans/ - 308 to the pricing lobby door.
- * _redirects only maps /plans (no slash) to /pricing; /plans/ still serves the SPA.
- * Do not 308 onto /plans/ or /pricing/.
+ * GET /plans and /plans/ — 308 to Council OS Assess door.
+ * Do not 308 onto /plans/ or /pricing/. Do not type public prices.
+ * Home is marketing, not the OS.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/?lobby=measured&task=pricing-overview",
+      location: "/os?lobby=assess&task=pricing-overview",
       "cache-control": "public, max-age=300",
     },
   });
