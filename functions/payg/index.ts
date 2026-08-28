@@ -1,9 +1,11 @@
-/** GET /payg/ - 308 to the pricing lobby. No public prices. */
+/**
+ * GET /payg/ — 308 to Council OS Assess door. No public prices.
+ */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/?lobby=measured&task=pricing-overview",
+      location: "/os?lobby=assess&task=pricing-overview",
       "cache-control": "public, max-age=300",
     },
   });
