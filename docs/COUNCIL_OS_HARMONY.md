@@ -79,6 +79,7 @@ See `/products` and `client/src/data/productsCatalog.ts`. Each must:
 ```bash
 npm run dev   # :3001 honesty API + vite :43125
 npm run smoke:dev-honesty   # :3001 indices / RWA / MCP registry
+npm run smoke:personas      # persona entry routes + API honesty
 npx vitest run client/src/data/labourIndices.test.ts
 BASE_URL=http://127.0.0.1:43125 npm run crawl:honesty
 npx playwright test e2e/tests/indices-products-axe.spec.ts --project=chromium

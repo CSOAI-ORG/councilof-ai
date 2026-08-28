@@ -7,7 +7,7 @@ import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 
 /**
  * OsLauncher — crawlable /os page. The operable OS is the Council OS overlay
- * (Enter Council OS). This page keeps the town / arena / axes for readers and
+ * (Enter Council OS). This page keeps the town / arena / board for readers and
  * crawlers; it no longer hosts a second chat. `/console` and `/council-os`
  * alias to the overlay.
  *
@@ -29,7 +29,9 @@ const NAV: NavGroup[] = [
   {
     label: "Measure",
     items: [
-      { name: "GSPC axes", href: "#axes", note: "living board · counts from /api/gspc" },
+      { name: "GSPC board", href: "#axes", note: "14-slot living board · counts from /api/gspc" },
+      { name: "Products", href: "/products", note: "nine rails · honest registers" },
+      { name: "Indices", href: "/indices", note: "UNMEASURED labour / AI-economy" },
       { name: "Benchmarks", href: "/benchmarks", note: "every result" },
       { name: "Verify a card", href: "/gspc-verify", note: "offline check" },
       { name: "Methodology", href: "/methodology", note: "how we grade" },
@@ -269,14 +271,14 @@ export default function OsLauncher() {
             </div>
           </section>
 
-          {/* Zone 4 — the GSPC axes */}
+          {/* Zone 4 — the GSPC board */}
           <section id="axes" className="scroll-mt-8">
             <AxisPanel />
           </section>
 
           <footer className="border-t border-slate-100 pt-6 text-[12px] text-slate-400">
-            One measured surface — the game, the arena, the axes and the Council together. Scores appear only where an
-            axis has earned one; the Council refuses rather than guess.
+            One measured surface — the game, the arena, the board and the Council together. Scores appear only where a
+            measurement slot has earned one; the Council refuses rather than guess.
           </footer>
         </main>
       </div>
