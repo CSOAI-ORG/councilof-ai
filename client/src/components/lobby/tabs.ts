@@ -229,7 +229,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "ras",
     label: "Readiness assessment",
     blurb: "The guided readiness route — structured questions, human-readable output.",
-    path: "/assess",
+    path: "/readiness-assessment",
     cues: /\b(ras|readiness assessment|booking|human.?rail)\b/i,
   },
   {
