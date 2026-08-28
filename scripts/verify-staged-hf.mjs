@@ -13,11 +13,13 @@ const PACKS = [
     move: "139/253",
     dir: "datasets/labour-economy-unmeasured",
     files: ["README.md", "labour-economy-unmeasured.json"],
+    requireTags: ["unmeasured"],
   },
   {
     move: "186",
     dir: "datasets/rwa-testnet-unmeasured",
     files: ["README.md", "catalog.json"],
+    requireTags: ["unmeasured", "testnet"],
   },
 ];
 
@@ -31,6 +33,23 @@ function assertNoMeasuredScore(obj, path) {
     }
   };
   walk(obj, path);
+}
+
+function assertReadmeCard(text, path, requireTags) {
+  if (!text.startsWith("---")) {
+    throw new Error(`${path} missing YAML dataset-card frontmatter`);
+  }
+  const end = text.indexOf("\n---", 3);
+  if (end < 0) throw new Error(`${path} unclosed YAML frontmatter`);
+  const yaml = text.slice(3, end).toLowerCase();
+  for (const tag of requireTags) {
+    if (!yaml.includes(tag)) {
+      throw new Error(`${path} frontmatter must mention tag/label '${tag}'`);
+    }
+  }
+  if (/measured-index/i.test(text) && !/unmeasured/i.test(text)) {
+    throw new Error(`${path} must not present MEASURED product register without UNMEASURED`);
+  }
 }
 
 let ok = true;
@@ -50,6 +69,15 @@ for (const pack of PACKS) {
       continue;
     }
     console.log(`  OK    ${f}`);
+    if (f === "README.md") {
+      try {
+        assertReadmeCard(readFileSync(fp, "utf8"), `${pack.dir}/${f}`, pack.requireTags);
+        console.log(`  OK    ${f} — dataset-card YAML + UNMEASURED tags`);
+      } catch (e) {
+        console.error(`  FAIL  ${f} — ${e.message}`);
+        ok = false;
+      }
+    }
     if (f.endsWith(".json")) {
       try {
         const j = JSON.parse(readFileSync(fp, "utf8"));
@@ -64,4 +92,9 @@ for (const pack of PACKS) {
 }
 
 if (!ok) process.exit(1);
-console.log("\nverify-staged-hf OK — run npm run hf:upload-staged when HF write token works.");
+const hasToken = !!(process.env.HF_TOKEN && process.env.HF_TOKEN.length > 8);
+console.log(
+  hasToken
+    ? "\nverify-staged-hf OK — HF_TOKEN present; run npm run hf:upload-staged"
+    : "\nverify-staged-hf OK — packs staged; HF_TOKEN missing (Hub upload deferred)",
+);
