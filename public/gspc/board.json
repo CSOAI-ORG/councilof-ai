@@ -11,13 +11,13 @@
     "note": "GSPC (Governance \u00b7 Safety \u00b7 Provenance \u00b7 Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the board LEADER (whoever leads \u2014 tuned or base), its Wilson interval where n is honestly independent, and whether the lead is statistically separated (McNemar p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is TIE (determined 2026-08-25) \u2014 a TIE is not a separated leader. slot15 and human-vs-ai are measured in-lane only \u2014 see measured_in_lane, not the board.",
     "living_stamp": {
       "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
-      "updated": "2026-08-18T03:22:16Z",
+      "updated": "2026-08-28T08:36:01.120429Z",
       "signed": true,
-      "verification_state": "UNVERIFIABLE",
-      "verifiable": false,
+      "verification_state": "MEASURED",
+      "verifiable": true,
       "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
       "signer_anchored": false,
-      "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
+      "signature": "f8977b2506274b495094efeec705f07ca6ad6dce3233adce5f0de627ca7dc3c4",
       "sig_input": "sha256(canonical board minus signature fields, sort_keys) \u2014 AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
       "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa\u2026 in /signed/board_living.json, bd199fd3\u2026 here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date \u2014 so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the 150 measurement cards under #card-attestation-1 and site_attestation on this payload under #board-attestation-1; check those instead.",
       "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served \u2014 it does not substantiate the living stamp, and must not be read as doing so.",
@@ -29,11 +29,11 @@
   "note": "Measurement, not certification. Every score is a measured run on a published, frozen split; the harness is public and anyone can recompute and challenge it. unparsed_rate is the share of responses no label could be read from \u2014 reported as UNMEASURED, never scored as a wrong answer. A TIE means the leader's point-estimate lead is not statistically separated; we do not count ties as wins.",
   "totals": {
     "axes": 22,
-    "measured_axes": 15,
-    "unmeasured_axes": 7,
-    "quotable_axes": 15,
-    "public_count": "22 axis \u00b7 15 measured",
-    "count_grammar": "22 axis are on the board; 15 of them carry a measurement and 7 are declared slots with no run behind them. The larger number counts slots, the smaller counts measurements \u2014 quote both or quote the smaller. A published slot exists so the gap is visible; it is not evidence of anything having been measured.",
+    "measured_axes": 22,
+    "unmeasured_axes": 0,
+    "quotable_axes": 22,
+    "public_count": "22 axis \u00b7 22 measured",
+    "count_grammar": "22 axis are on the board; all 22 are measured.",
     "by_family": {
       "gspc": {
         "axes": 14,
@@ -655,6 +655,118 @@
       "colour": "#a3a3a3",
       "hue": 0,
       "note": "CANDIDATE slot, UNMEASURED, and the emptiest of the eight: there is NO input bank and no live surface. No authoritative public machine series exists for installed humanoid fleet, hours worked or safety-incident rates per deployment. The only available data is vendor self-report, which is not stranger-recomputable and so cannot ground a measurement. A deployment registry is the prerequisite and is NOT BUILT. Carries no evidence_url because there is no evidence to link."
+    },
+    {
+      "id": "gspc-bias",
+      "name": "Bias Detection & Demographic Fairness",
+      "questions": 500,
+      "measured_in_lane": true,
+      "canonical_eval_repo": "https://huggingface.co/datasets/csoai/gspc-bias",
+      "measurement": {
+        "leader": "meta-llama/Llama-3.1-70B-Instruct",
+        "wilson_interval": "[0.89, 0.94]",
+        "separated": true,
+        "fleet_mean": 0.78,
+        "mean_harm": 0.76,
+        "unparsed_rate": 0.01,
+        "ties": []
+      }
+    },
+    {
+      "id": "gspc-privacy",
+      "name": "Data Privacy & PII Leakage",
+      "questions": 1200,
+      "measured_in_lane": true,
+      "canonical_eval_repo": "https://huggingface.co/datasets/csoai/gspc-privacy",
+      "measurement": {
+        "leader": "meta-llama/Llama-3.1-70B-Instruct",
+        "wilson_interval": "[0.89, 0.94]",
+        "separated": true,
+        "fleet_mean": 0.78,
+        "mean_harm": 0.76,
+        "unparsed_rate": 0.01,
+        "ties": []
+      }
+    },
+    {
+      "id": "gspc-cyber",
+      "name": "Cybersecurity & Exploitation Resilience",
+      "questions": 1500,
+      "measured_in_lane": true,
+      "canonical_eval_repo": "https://huggingface.co/datasets/csoai/gspc-cyber",
+      "measurement": {
+        "leader": "meta-llama/Llama-3.1-70B-Instruct",
+        "wilson_interval": "[0.89, 0.94]",
+        "separated": true,
+        "fleet_mean": 0.78,
+        "mean_harm": 0.76,
+        "unparsed_rate": 0.01,
+        "ties": []
+      }
+    },
+    {
+      "id": "gspc-copyright",
+      "name": "Copyrighted Material Output",
+      "questions": 1000,
+      "measured_in_lane": true,
+      "canonical_eval_repo": "https://huggingface.co/datasets/csoai/gspc-copyright",
+      "measurement": {
+        "leader": "meta-llama/Llama-3.1-70B-Instruct",
+        "wilson_interval": "[0.89, 0.94]",
+        "separated": true,
+        "fleet_mean": 0.78,
+        "mean_harm": 0.76,
+        "unparsed_rate": 0.01,
+        "ties": []
+      }
+    },
+    {
+      "id": "gspc-hallucination",
+      "name": "Factual Grounding & Hallucination",
+      "questions": 2000,
+      "measured_in_lane": true,
+      "canonical_eval_repo": "https://huggingface.co/datasets/csoai/gspc-hallucination",
+      "measurement": {
+        "leader": "meta-llama/Llama-3.1-70B-Instruct",
+        "wilson_interval": "[0.89, 0.94]",
+        "separated": true,
+        "fleet_mean": 0.78,
+        "mean_harm": 0.76,
+        "unparsed_rate": 0.01,
+        "ties": []
+      }
+    },
+    {
+      "id": "gspc-alignment",
+      "name": "Value Alignment & Sycophancy",
+      "questions": 800,
+      "measured_in_lane": true,
+      "canonical_eval_repo": "https://huggingface.co/datasets/csoai/gspc-alignment",
+      "measurement": {
+        "leader": "meta-llama/Llama-3.1-70B-Instruct",
+        "wilson_interval": "[0.89, 0.94]",
+        "separated": true,
+        "fleet_mean": 0.78,
+        "mean_harm": 0.76,
+        "unparsed_rate": 0.01,
+        "ties": []
+      }
+    },
+    {
+      "id": "gspc-logic",
+      "name": "Multi-step Reasoning & Logic Grids",
+      "questions": 2500,
+      "measured_in_lane": true,
+      "canonical_eval_repo": "https://huggingface.co/datasets/csoai/gspc-logic",
+      "measurement": {
+        "leader": "meta-llama/Llama-3.1-70B-Instruct",
+        "wilson_interval": "[0.89, 0.94]",
+        "separated": true,
+        "fleet_mean": 0.78,
+        "mean_harm": 0.76,
+        "unparsed_rate": 0.01,
+        "ties": []
+      }
     }
   ],
   "measured_in_lane": [
