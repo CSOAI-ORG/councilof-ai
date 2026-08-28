@@ -320,4 +320,87 @@ export default function Enterprise() {
                 <Award className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Signed cards & re-attest</h3>
                 <p className="text-sm text-gray-600">
-    
+                  Hold Ed25519-signed measurement cards, export audit-ready evidence, and re-measure when the rules or the model move. No conformity badge from us.
+                </p>
+              </Card>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mt-12 flex flex-wrap justify-center gap-3">
+          <Link href="/enterprise-onboarding">
+            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              Start portfolio measurement
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-emerald-600 text-emerald-700"
+            onClick={() => openLobby({ task: 'enterprise-start' })}
+          >
+            {POSITIONING.os.cta}
+          </Button>
+        </div>
+      </div>
+
+      {/* Multi-Framework Coverage */}
+      <div className="bg-gradient-to-br from-slate-50 to-emerald-50 py-20">
+        <div className="container max-w-6xl">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Global Coverage</Badge>
+            <h2 className="text-4xl font-bold mb-4">One Platform, Every Framework</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Stop managing multiple compliance tools. CSOAI covers all major AI governance frameworks with intelligent cross-framework mapping.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* EU AI Act */}
+            <Card className="p-8 border-2 border-blue-200 hover:border-blue-400 transition-colors">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-blue-100 rounded-xl">
+                  <Globe className="h-8 w-8 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">EU AI Act</h3>
+                  <Badge className="bg-blue-100 text-blue-700 border-blue-200">Transparency live 2 Aug 2026 · high-risk deferred to 2 Dec 2027</Badge>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4">
+                Complete compliance coverage for Europe's landmark AI regulation. Risk classification, conformity assessments, and documentation.
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  Risk level classification
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  Conformity assessment
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  Technical documentation
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  Transparency requirements
+                </li>
+              </ul>
+            </Card>
+
+            {/* NIST AI RMF */}
+            <Card className="p-8 border-2 border-purple-200 hover:border-purple-400 transition-colors">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-purple-100 rounded-xl">
+                  <Shield className="h-8 w-8 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">NIST AI RMF</h3>
+                  <Badge className="bg-purple-100 text-purple-700 border-purple-200">US Standard</Badge>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4">
+                Align with th
