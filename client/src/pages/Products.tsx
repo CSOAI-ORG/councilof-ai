@@ -43,7 +43,14 @@ const FREE_RAIL = [
   { name: "The method", href: "/methodology", what: "The frozen rules every number above is computed under." },
 ];
 
-const PRODUCTS = [
+const PRODUCTS: {
+  name: string;
+  href: string;
+  tag: string;
+  what: string;
+  /** Static HTML / non-SPA destinations — use a real navigation, not wouter Link. */
+  external?: boolean;
+}[] = [
   {
     name: "Risk classification",
     href: "/assess",
@@ -87,10 +94,48 @@ const PRODUCTS = [
     what: "A record that a course was completed. It attests learning, never conformity, carries no regulatory status, and is not an accreditation.",
   },
   {
+    name: "Compliance Training World",
+    href: "/compliance-training-world/catalog.html",
+    tag: "Training",
+    what: "Industry quests — Art 50(2), bank, insurance, equity, bond, cross-border — graded in-browser. A pass is a training attestation, never a conformity mark.",
+    external: true,
+  },
+  {
     name: "Council OS",
-    href: "/?lobby=home",
+    href: "/os",
     tag: "The workspace",
     what: "One glass over the whole rail — board, verify, models, library, workbench — with a concierge that answers from published measurement or refuses.",
+  },
+  {
+    name: "Insurer evidence pack",
+    href: "/insurers",
+    tag: "INS",
+    what: "Price AI risk on signed measurement — four-class underwriter evidence, regulators free forever.",
+  },
+  {
+    name: "Regulator findings",
+    href: "/regulator-findings",
+    tag: "R8-free",
+    what: "EU AI Act obligation grades from the signed board — worst measured gap per article, sector filters, verify=1 recompute.",
+  },
+  {
+    name: "ClaimGuard",
+    href: "/claimguard",
+    tag: "Honesty gate",
+    what: "Publish gate that blocks invented counts and banned strings before anything ships — open tooling, static surface.",
+    external: true,
+  },
+  {
+    name: "XRPL attest",
+    href: "/xrpl-attest",
+    tag: "RWA / ledger",
+    what: "Permissionless ledger attach for represented-not-distributed coverage — UNMEASURED / devnet stated first.",
+  },
+  {
+    name: "EUNOMIA registers",
+    href: "/registers",
+    tag: "Financial",
+    what: "Signed financial-axis register — stranger re-derivable, not a credit rating.",
   },
 ];
 
@@ -178,12 +223,9 @@ export default function Products() {
       <section aria-labelledby="family-h" className="mt-12">
         <h2 id="family-h" className="text-xl font-bold text-emerald-300">The family</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {PRODUCTS.map((p) => (
-            <li key={p.href}>
-              <Link
-                href={p.href}
-                className="block h-full rounded-2xl border border-slate-100/10 bg-white/[0.03] p-5 transition hover:border-emerald-400/40 hover:bg-white/[0.05]"
-              >
+          {PRODUCTS.map((p) => {
+            const body = (
+              <>
                 <div className="flex items-baseline justify-between gap-3">
                   <span className="text-lg font-bold text-slate-100">{p.name}</span>
                   <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-emerald-300">
@@ -191,9 +233,24 @@ export default function Products() {
                   </span>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{p.what}</p>
-              </Link>
-            </li>
-          ))}
+              </>
+            );
+            const cls =
+              "block h-full rounded-2xl border border-slate-100/10 bg-white/[0.03] p-5 transition hover:border-emerald-400/40 hover:bg-white/[0.05]";
+            return (
+              <li key={p.href}>
+                {p.external ? (
+                  <a href={p.href} className={cls}>
+                    {body}
+                  </a>
+                ) : (
+                  <Link href={p.href} className={cls}>
+                    {body}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </section>
 
