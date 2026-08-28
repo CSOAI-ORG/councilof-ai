@@ -31,7 +31,7 @@
  *   - Logic Duel, Swarm Clash, Humans vs Humanoids — no live routes, do not mint URLs.
  *
  * LOCAL-ONLY (not on councilof.ai):
- *   - Munder-Difflin harness: /Users/nicholas/munder-difflin-harness, :4100 health only.
+ *   - Munder-Difflin harness: local only, no public route. Public must NOT say Six-axis.
  */
 
 export type CatalogKind = "play" | "deck" | "printer" | "leftover";
