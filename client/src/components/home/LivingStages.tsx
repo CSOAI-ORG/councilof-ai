@@ -258,7 +258,7 @@ function Body({ children }: { children: ReactNode }) {
   return <p className="t-lede measure mt-5 font-medium text-gray-700">{children}</p>;
 }
 
-/* ─── 1 · independence ──────────────────────────────────────────────────── */
+/* ─── 1 · independence ───────────────────────────────────────────────────── */
 
 function Independence() {
   return (
@@ -296,7 +296,7 @@ function Independence() {
       <Cta
         // /pricing is an ARCHIVED path (library-ia REPLACEMENTS maps it forward), so this CTA
         // was landing a front-door reader on a page carrying the "reference / archive" banner.
-        href="/?lobby=measured&task=pricing-overview"
+        href="/os?lobby=assess&task=pricing-overview"
         label="How the free rail works"
         secondary={{ href: "/about", label: "Who we are" }}
       />
@@ -348,7 +348,7 @@ function Boundary() {
   );
 }
 
-/* ─── 3 · verify it yourself ────────────────────────────────────────────── */
+/* ─── 3 · verify it yourself ────────────────────────────────────────── */
 
 const VERIFY_STEPS = [
   {
@@ -423,7 +423,7 @@ function VerifyYourself() {
   );
 }
 
-/* ─── 4 · we publish our own errors ─────────────────────────────────────── */
+/* ─── 4 · we publish our own errors ───────────────────────────────────── */
 
 function OwnErrors() {
   const corr = useJson<Corrections>("/api/corrections");
@@ -541,7 +541,7 @@ function LivingLaw() {
   );
 }
 
-/* ─── 6 · the live board, with humans beside it ─────────────────────────── */
+/* ─── 6 · the live board, with humans beside it ───────────────────────── */
 
 function LiveBoard() {
   const gspc = useJson<Gspc>("/api/gspc");
