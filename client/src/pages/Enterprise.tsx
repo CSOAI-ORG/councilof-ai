@@ -1,1 +1,1 @@
-PLACEHOLDER_LOAD_FROM_/tmp/ENT_CONTENT.tsx
+__LOAD_FILE__/workspace/client/src/pages/Enterprise.tsx
