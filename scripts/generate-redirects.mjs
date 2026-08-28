@@ -127,6 +127,10 @@ const EXISTING = [
   //     file), AND both names are PATH_BANNED internal codenames in scripts/brand-gate.mjs.
   //     They were shipping banned codenames in a public edge config.
   "/verify/                /gspc-verify/                308",
+  "/badges                 /badge                       308",
+  "/badges/                /badge                       308",
+  "/verify-certificate     /gspc-verify/                308",
+  "/verify-certificate/    /gspc-verify/                308",
   "/enterprise             /os?lobby=assess&task=enterprise-start  308",
   "/enterprise/            /os?lobby=assess&task=enterprise-start  308",
   "/enterprises            /os?lobby=assess&task=enterprise-start  308",

@@ -183,7 +183,7 @@ function discover() {
     "/gspc/human-labour-index", "/gspc/humanoid-labour-index",
     // Sitemap-listed routes that fell through to the homepage shell (E2E RETEST #2):
     // both have real pages in App.tsx but were never in the snapshot queue.
-    "/badges", "/verify-certificate",
+    "/badge",
     // Benchmark surfaces (2026-08-23 audit: 404'd live — heuristic discovery misses
     // route-manifest paths). Council OS layer URLs carry ?view= query strings that
     // heuristic discovery never sees; snapshot each so the static host serves them

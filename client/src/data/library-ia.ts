@@ -44,7 +44,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
   // Products — the family, and who it is for
   "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
-  "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",
+  "/distribution-integrity", "/embed", "/white-label", "/badge", "/cobolbridge",
+  "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
   // Commercial comparison + audience surfaces. These were live routes that no
   // PRIMARY_PATHS entry covered, so every one of them shipped under the
