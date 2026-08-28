@@ -40,7 +40,7 @@ const PRIORITY = new Map([
   ["/gspc-gap-map", P_HIGH],
   ["/live-ledger", P_HIGH],
   ["/instrument", P_HIGH],
-  ["/tour", P_HIGH],
+  ["/cloud", P_HIGH],
   ["/learn", P_HIGH],
   ["/article-50", P_HIGH],
   ["/benchmarks", P_HIGH],
@@ -218,6 +218,9 @@ const MACHINE_PATHS = [
   ["/.well-known/agent-card.json", "daily", "0.6"],
   ["/.well-known/did.json", "daily", "0.6"],
   ["/.well-known/scitt.json", "daily", "0.6"],
+  // NEXT_300 #149 — static regulator brief (not App Route; print + PDF)
+  ["/regulator-indices-one-pager.html", "monthly", "0.7"],
+  ["/regulator-indices-one-pager.pdf", "monthly", "0.6"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
@@ -267,11 +270,13 @@ const REQUIRED = [
   "/refutation-ledger",
   "/instrument",
   "/live-ledger",
-  "/tour",
+  "/cloud",
   "/indices",
   "/products",
   "/powered-by",
   "/api/indices",
+  "/regulator-indices-one-pager.html",
+  "/regulator-indices-one-pager.pdf",
 ];
 const missing = REQUIRED.filter((r) => !seen.has(r) || isJunk(r));
 if (missing.length) {
