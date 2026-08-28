@@ -73,12 +73,12 @@ console.log("\n## AG-UI → Council OS\n");
 const agui = await fetch(HOST + "/ag-ui", { redirect: "manual", headers: { "user-agent": UA } });
 const agLoc = agui.headers.get("location") || "";
  if (agui.status === 308 && agLoc.includes("lobby=home")) pass("/ag-ui 308 → lobby=home");
-else fail(`/ag-ui must 308 to /?lobby=home (got ${agui.status} ${agLoc})`);
+else fail(`/ag-ui must 308 to /os?lobby=home (got ${agui.status} ${agLoc})`);
 
 const aguiAlias = await fetch(HOST + "/agui", { redirect: "manual", headers: { "user-agent": UA } });
 const loc = aguiAlias.headers.get("location") || "";
  if (aguiAlias.status === 308 && loc.includes("lobby=home")) pass("/agui 308 → lobby=home");
-else fail(`/agui must 308 to /?lobby=home (got ${aguiAlias.status} ${loc})`);
+else fail(`/agui must 308 to /os?lobby=home (got ${aguiAlias.status} ${loc})`);
 
 // ── 4. MCP tools (measure, verify, jail, arena) ──
 console.log("\n## MCP catalog\n");
@@ -96,4 +96,4 @@ console.log("");
   console.error(`INTEGRATION-STACK: FAIL — ${fails} check(s)`);
   process.exit(1);
 }
-console.log("INTEGRATION-STACK: PASS — lobby, board, one-door AG-UI, MCP aligned.");
+console.log("INTEGRATION-STACK: PASS — lobby, board, one-door AG-UI, MCP aligned.\n");

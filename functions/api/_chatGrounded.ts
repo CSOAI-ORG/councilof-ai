@@ -43,7 +43,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   if (refused) return refused;
 
   if (/\b(pricing|plans?|how much|grade cost|is (it|verify|verification) free)\b/i.test(q)) {
-    return `No SaaS tiers. Measurement and verification are free forever. See GET /api/gspc, /gspc-verify/, /assess/, or the lobby door /?lobby=measured&task=pricing-overview.\n\n_Grounded in the published free rail, not by a model._`;
+    return `No SaaS tiers. Measurement and verification are free forever. See GET /api/gspc, /gspc-verify/, /assess/, or the lobby door /os?lobby=assess&task=pricing-overview.\n\n_Grounded in the published free rail, not by a model._`;
   }
 
   if (

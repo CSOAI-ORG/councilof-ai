@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LOBBY_TASKS, lobbyTaskHref, resolveIntent } from "./lobbyLink";
+import { LOBBY_TASKS, lobbyHref, lobbyTaskHref, resolveIntent } from "./lobbyLink";
 
 describe("lobbyLink — demographic task registry", () => {
   const demographicTasks = [
@@ -23,6 +23,11 @@ describe("lobbyLink — demographic task registry", () => {
     const href = lobbyTaskHref("sector-brief", { ctx: "finance", path: "/for/finance" });
     expect(href).toContain("task=sector-brief");
     expect(href).toContain("ctx=finance");
+  });
+
+  it("defaults crawlable hrefs onto /os, not the marketing dump", () => {
+    expect(lobbyHref({ pane: "board" })).toMatch(/^\/os\?/);
+    expect(lobbyHref({ pane: "board" })).not.toMatch(/^\/\?lobby=/);
   });
 
   it("resolves regulator brief with context", () => {
