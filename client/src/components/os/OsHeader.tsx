@@ -15,7 +15,7 @@
  * measured remains a supported alias for assess.
  */
 
-import { Link, useSearch } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { User, LogOut, Settings, BookOpen, BarChart3, Award } from "lucide-react";
 import {
@@ -63,7 +63,7 @@ const DOOR_TO_LOBBY: Record<DoorId, string> = {
 };
 
 export default function OsHeader() {
-  const [, setLocation] = useLocationSafe();
+  const [, setLocation] = useLocation();
   const search = useSearch();
   const { user, logout } = useAuth();
 
@@ -222,9 +222,4 @@ export default function OsHeader() {
       </nav>
     </header>
   );
-}
-
-function useLocationSafe(): [string, (to: string) => void] {
-  const { useLocation } = require("wouter") as typeof import("wouter");
-  return useLocation();
 }
