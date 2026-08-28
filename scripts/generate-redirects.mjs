@@ -51,6 +51,8 @@ const EXISTING = [
   "/sov-space/*    /gspc-arena             308",
   "/sovereign-space /gspc-arena            308",
   "/simulate       /gspc-arena             308",
+  "/play           /gspc-arena             308",
+  "/play/          /gspc-arena             308",
   "/sovereign-town /gspc-arena?view=towns  308",
   "/towns          /gspc-arena?view=towns  308",
   "/globe          /globe3d.html           308",
@@ -130,7 +132,7 @@ const EXISTING = [
   "/colosseum              /coliseum/                   308",
   // /for is an index with no page of its own — send it to the default audience. The
   // trailing-slash form needs its own rule: it used to be swallowed by a Pages Function
-  // at functions/for/index.ts (deleted with the rest of the /for/* suppression), and
+  //   at functions/for/index.ts (deleted with the rest of the /for/* suppression), and
   // without a rule here it falls through the catch-all to the SPA shell instead.
   "/for                    /for/enterprise/             308",
   "/for/                   /for/enterprise/             308",
