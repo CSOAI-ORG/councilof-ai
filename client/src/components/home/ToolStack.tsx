@@ -63,6 +63,8 @@ interface Tool {
   door: Door;
 }
 
+const PRIMARY_TOOL_IDS = new Set(["tool-verify", "tool-measured", "tool-gpai"]);
+
 const TOOLS: Tool[] = [
   {
     id: "tool-os",
@@ -303,28 +305,31 @@ export default function ToolStack() {
   return (
     <section id="what-we-fix" aria-labelledby="what-we-fix-title" className="surface-sunken section-y">
       <div className="section-shell">
-        <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Nine problems, nine tools</p>
+        <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Three tools</p>
         <h2 id="what-we-fix-title" className="t-section mt-4 text-center text-foreground">
-          What we actually do, in nine tools
+          Verify. Get measured. Pack.
         </h2>
         <p className="t-lede measure measure-center mt-5 text-center text-muted-foreground">
-          We are an independent measurement body for AI behaviour: we run AI systems against frozen,
-          published tests, sign the result, and publish what we could not measure alongside what we
-          could. These nine are the tools that come out of that; everything further down this page is
-          the evidence behind them. Each tile names a problem, names the tool that removes it, and
-          opens that tool inside Council OS — the workspace, not a brochure for it.
+          Independent measurement body. We run AI systems against frozen published tests, sign the
+          result, and leave empty cells empty. Embed, insurance, registers, and incident intake live
+          one click deeper.
         </p>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {TOOLS.map((t) => (
+          {TOOLS.filter((t) => PRIMARY_TOOL_IDS.has(t.id)).map((t) => (
             <Tile key={t.id} tool={t} figure={figures[t.id]} />
           ))}
         </div>
 
         <p className="t-body measure measure-center mt-10 text-center text-muted-foreground">
-          What is missing from this band is missing on purpose. A surface with no destination a
-          stranger can reach today does not get a tile, and where a tool is real but conditional the
-          condition is printed on its own face.
+          Deeper instruments:{" "}
+          <a href="/embed" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">embed</a>
+          {" · "}
+          <a href="/insurers" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">insurance</a>
+          {" · "}
+          <a href="/registers" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">registers</a>
+          {" · "}
+          <a href="/report" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">incident</a>
         </p>
       </div>
     </section>
