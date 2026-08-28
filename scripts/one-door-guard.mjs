@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 /**
- * Source-level one-door guard. AG UI is Council OS (`/?lobby=home`).
+ * Source-level one-door guard. AG UI is Council OS (`/os?lobby=home`).
+ *
+ * 2026-08-28: hops go to /os?lobby=… not /?lobby=home. Lean homepage (832)
+ * ate the lobby panes; /?lobby=home crashes. /os is the AG-UI host now.
  *
  * Fails if:
  *   · AgUiBridge iframes csoai-site.pages.dev (the #365 / #372 regression)
- *   · AgUiBridge or SovOS is not a Redirect to `/?lobby=home`
+ *   · AgUiBridge or SovOS is not a Redirect to `/os?lobby=home`
  *   · generate-redirects / public/_redirects send /ag-ui or /agui to /ag-ui,
- *     or /sov-os to /sov-os/, instead of the lobby
+ *     or /sov-os to /sov-os/, instead of the lobby at /os
  *
  * A comment that names the iframe host is fine. An iframe src is not.
  *
@@ -40,16 +43,16 @@ if (agui) {
   if (iframeHost) fail("AgUiBridge iframes csoai-site.pages.dev — AG UI is Council OS");
   else pass("AgUiBridge does not iframe csoai-site");
 
-  if (!/<Redirect to="\/\?lobby=home"\s*\/>/.test(agui)) {
-    fail('AgUiBridge default export must be <Redirect to="/?lobby=home" />');
-  } else pass("AgUiBridge Redirect → /?lobby=home");
+  if (!/<Redirect to="\/os\?lobby=home"\s*\/>/.test(agui)) {
+    fail('AgUiBridge default export must be <Redirect to="/os?lobby=home" />');
+  } else pass("AgUiBridge Redirect → /os?lobby=home");
 }
 
 const sov = read("client/src/pages/SovOS.tsx");
 if (sov) {
-  if (!/<Redirect to="\/\?lobby=home"\s*\/>/.test(sov)) {
-    fail('SovOS must Redirect to /?lobby=home');
-  } else pass("SovOS Redirect → /?lobby=home");
+  if (!/<Redirect to="\/os\?lobby=home"\s*\/>/.test(sov)) {
+    fail('SovOS must Redirect to /os?lobby=home');
+  } else pass("SovOS Redirect → /os?lobby=home");
   const sovCode = sov.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
   if (/dockview/i.test(sovCode)) fail("SovOS still ships a dockview OS");
   else pass("SovOS is not a second dock");
@@ -59,21 +62,21 @@ for (const rel of ["scripts/generate-redirects.mjs", "public/_redirects"]) {
   const src = read(rel);
   if (!src) continue;
   const badAg = /\/ag-ui\s+\/ag-ui\s+308/.test(src) || /\/agui\s+\/ag-ui\s+308/.test(src);
-  const goodAg = /\/ag-ui\s+\/\?lobby=home\s+308/.test(src) && /\/agui\s+\/\?lobby=home\s+308/.test(src);
-  if (badAg || !goodAg) fail(`${rel} must 308 /ag-ui and /agui to /?lobby=home`);
-  else pass(`${rel} /ag-ui /agui → /?lobby=home`);
+  const goodAg = /\/ag-ui\s+\/os\?lobby=home\s+308/.test(src) && /\/agui\s+\/os\?lobby=home\s+308/.test(src);
+  if (badAg || !goodAg) fail(`${rel} must 308 /ag-ui and /agui to /os?lobby=home`);
+  else pass(`${rel} /ag-ui /agui → /os?lobby=home`);
 
   const badSov = /\/sov-os\s+\/sov-os\/\s+308/.test(src);
-  const goodSov = /\/sov-os\s+\/\?lobby=home\s+308/.test(src);
-  if (badSov || !goodSov) fail(`${rel} must 308 /sov-os to /?lobby=home (not /sov-os/)`);
-  else pass(`${rel} /sov-os → /?lobby=home`);
+  const goodSov = /\/sov-os\s+\/os\?lobby=home\s+308/.test(src);
+  if (badSov || !goodSov) fail(`${rel} must 308 /sov-os to /os?lobby=home (not /sov-os/)`);
+  else pass(`${rel} /sov-os → /os?lobby=home`);
 
-  if (!/\/chat\s+\/\?lobby=home\s+308/.test(src)) fail(`${rel} must 308 /chat to /?lobby=home`);
-  else pass(`${rel} /chat → /?lobby=home`);
+  if (!/\/chat\s+\/os\?lobby=home\s+308/.test(src)) fail(`${rel} must 308 /chat to /os?lobby=home`);
+  else pass(`${rel} /chat → /os?lobby=home`);
 
-  if (!/\/enterprise\s+\/\?lobby=measured&task=enterprise-start\s+308/.test(src)) {
-    fail(`${rel} must 308 /enterprise to /?lobby=measured&task=enterprise-start`);
-  } else pass(`${rel} /enterprise → lobby get-measured`);
+  if (!/\/enterprise\s+\/os\?lobby=assess&task=enterprise-start\s+308/.test(src)) {
+    fail(`${rel} must 308 /enterprise to /os?lobby=assess&task=enterprise-start`);
+  } else pass(`${rel} /enterprise → /os assess door`);
 }
 
 console.log("");
