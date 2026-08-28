@@ -30,4 +30,8 @@ describe("embed.js escapes (shipped public/embed.js)", () => {
   it("does not assign innerHTML in paint", () => {
     assert.equal(/innerHTML\s*=/.test(src), false);
   });
+  it("mounts on body when the script tag is in head", () => {
+    assert.match(src, /name !== "HEAD"/);
+    assert.match(src, /document\.body\.appendChild\(host\)/);
+  });
 });

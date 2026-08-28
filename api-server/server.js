@@ -80,14 +80,15 @@ function pingTcp(urlLike) {
   });
 }
 
-// ---------------------------------------------------------------- health
+// ---------------------------------------------------------------- health (liveness)
+// Tokens/webhooks are in-memory Maps. Postgres/Redis are composed beside us
+// but this process does not open them yet — their own healthchecks cover them.
+// A down store is reported; it does not take the API out of rotation.
 app.get("/api/health", async (_req, res) => {
-  const out = { ok: true, service: "csoai-api", ts: new Date().toISOString() };
+  const out = { ok: true, service: "csoai-api", storage: "memory", ts: new Date().toISOString() };
   if (process.env.DATABASE_URL) out.postgres = await pingTcp(process.env.DATABASE_URL);
   if (process.env.REDIS_URL) out.redis = await pingTcp(process.env.REDIS_URL);
-  const deps = [out.postgres, out.redis].filter(Boolean);
-  if (deps.some((d) => d.ok === false)) out.ok = false;
-  res.status(out.ok ? 200 : 503).json(out);
+  res.status(200).json(out);
 });
 
 // ---------------------------------------------------------------- GitHub OAuth

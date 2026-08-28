@@ -5,7 +5,7 @@ import { setMetaDescription } from "@/lib/utils";
 /**
  * /badge — one-line human kit. Full kit remains /embed (eaten, not duplicated).
  */
-const SNIPPET = `<script async defer src="https://councilof.ai/embed.js"
+const SNIPPET = `<script src="https://councilof.ai/embed.js"
         data-org="Your organisation"
         data-brand="#0B3D91"
         data-size="md"></script>`;
@@ -31,7 +31,9 @@ export default function BadgeKit() {
           The script fetches <code className="text-emerald-300">GET /api/gspc</code> and
           paints the board’s own <code className="text-emerald-300">public_count</code>.
           If the board cannot be read it says unavailable — it never fabricates a
-          number. Partner colour does not change the evidence.
+          number. Partner colour does not change the evidence. Put the tag in
+          the body, where the badge should appear — not in <code className="text-emerald-300">&lt;head&gt;</code>.
+          If it does land in head, the script mounts on the body.
         </p>
 
         <pre className="mt-8 overflow-x-auto rounded-xl border border-emerald-500/20 bg-[#05140d] p-4 font-mono text-[12px] leading-relaxed text-emerald-100/90">

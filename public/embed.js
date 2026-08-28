@@ -3,11 +3,12 @@
    live count from GET /api/gspc (never typed), "unavailable" on failure,
    never "certified". Partner branding does not change the evidence.
 
-   Usage:
-   <script async defer src="https://councilof.ai/embed.js"
+   Usage — put the tag in the body, where the badge should appear:
+   <script src="https://councilof.ai/embed.js"
            data-org="ClientCo" data-brand="#0B3D91"
            data-label="" data-verify="https://councilof.ai/gspc-verify"
            data-size="md"></script>
+   If the tag is in <head>, the badge mounts on document.body instead.
 */
 function escHtml(s) {
   return String(s)
@@ -48,7 +49,22 @@ function safeHref(s) {
   var host = document.createElement("div");
   host.setAttribute("class", "coai-embed");
   host.setAttribute("role", "complementary");
-  (s.parentNode || document.body).insertBefore(host, s);
+  function place() {
+    var parent = s.parentNode;
+    var name = parent && parent.nodeName;
+    if (parent && name !== "HEAD" && name !== "HTML") {
+      parent.insertBefore(host, s);
+      return;
+    }
+    if (document.body) {
+      document.body.appendChild(host);
+      return;
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.appendChild(host);
+    });
+  }
+  place();
 
   function paint(label, note) {
     host.setAttribute("aria-label", String(label));

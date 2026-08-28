@@ -78,6 +78,15 @@ describe("Pages Functions no longer shadow the new doors", () => {
   });
 });
 
+describe("API liveness does not die on unused stores", () => {
+  const src = read("api-server/server.js");
+  it("health stays 200; postgres/redis are advisory", () => {
+    assert.equal(/status\(out\.ok \? 200 : 503\)/.test(src), false);
+    assert.match(src, /res\.status\(200\)\.json\(out\)/);
+    assert.match(src, /storage: "memory"/);
+  });
+});
+
 describe("new product surfaces", () => {
   const blob = [
     read("client/src/pages/Products.tsx"),

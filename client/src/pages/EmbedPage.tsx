@@ -115,14 +115,16 @@ export default function EmbedPage() {
         <section>
           <h2 className="text-2xl font-bold text-emerald-50">0 · One script tag</h2>
           <p className="mt-2 max-w-3xl text-[14px] text-emerald-100/75 leading-relaxed">
-            Drop this on any page. It fetches the live board and paints the board&apos;s own
-            public count. Partner colour is yours; the evidence is not. If the board cannot
-            be read it says unavailable — it never fabricates a number.
+            Drop this in the body, where the badge should appear — not in{" "}
+            <code className="text-emerald-300">&lt;head&gt;</code>. It fetches the live board
+            and paints the board&apos;s own public count. Partner colour is yours; the
+            evidence is not. If the board cannot be read it says unavailable — it never
+            fabricates a number. If the tag lands in head, the script mounts on the body.
           </p>
           <div className="mt-5 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
             <Snippet
               code={
-                `<script async defer src="${ORIGIN}/embed.js"\n` +
+                `<script src="${ORIGIN}/embed.js"\n` +
                 `        data-org="Your organisation" data-brand="#0B3D91" data-size="md"></script>`
               }
             />
