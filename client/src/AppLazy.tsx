@@ -331,6 +331,7 @@ export const StatusPage = lazy(() => import("./pages/StatusPage"));
 export const Distribution = lazy(() => import("./pages/Distribution"));
 export const McpFleet = lazy(() => import("./pages/McpFleet"));
 export const Gone = lazy(() => import("./pages/Gone"));
+export const NotFound = lazy(() => import("./pages/NotFound"));
 import { frameworksdata } from "./data/frameworks-content";
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
