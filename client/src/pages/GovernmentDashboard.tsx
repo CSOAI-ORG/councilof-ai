@@ -133,7 +133,7 @@ const complianceFrameworks = [
 ];
 
 // Regional panels: no live national registry feeds exist yet, so figures are
-// withheld ("\u2014") rather than invented. Structure stays so panels render.
+// withheld ("—") rather than invented. Structure stays so panels render.
 const regionalData = [
   {
     id: "europe",
@@ -185,7 +185,7 @@ const regionalData = [
   },
 ];
 
-// DEMONSTRATION DATA \u2014 illustrative only. Not real systems, companies, fines,
+// DEMONSTRATION DATA — illustrative only. Not real systems, companies, fines,
 // investigations, or regulator activities. Covered by the Preview notice strip
 // at the top of this page. [Register purge 2026-08-02]
 const activeIncidents = {
@@ -304,4 +304,10 @@ const councilDesignFeatures = [
     title: "Real-Time Alert System",
     description: "Instant notifications to relevant regulatory bodies when violations are detected, with full audit trail and evidence package.",
     icon: Bell,
-    stats
+    stats: "Real-time alert design target",
+  },
+  {
+    title: "Cross-Border Coordination",
+    description: "Automatic routing of cases to appropriate jurisdictions with built-in mutual recognition of assessments.",
+    icon: Network,
+    stats: "Cross-border routing, designed for mutual recognition",
