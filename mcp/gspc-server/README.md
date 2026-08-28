@@ -26,24 +26,17 @@ transport your client speaks; the contracts are identical.
 
 ## Install
 
-This package is **not yet published to npm** (checked 2026-08-27). Until it is,
-install from a checkout of the repo — the server is a single file with no
-dependencies, so "install" is just pointing your client at it:
+Published on npm as `csoai-gspc-mcp`. No checkout required:
 
 ```sh
-git clone https://github.com/CSOAI-ORG/councilof-ai.git
-# the server is at councilof-ai/mcp/gspc-server/index.mjs — no npm install needed
+npx -y csoai-gspc-mcp
 ```
-
-Below, replace `/ABS/PATH/TO/councilof-ai` with where you cloned it.
 
 ### Claude Code
 
 ```sh
-claude mcp add gspc -- node /ABS/PATH/TO/councilof-ai/mcp/gspc-server/index.mjs
+claude mcp add gspc -- npx -y csoai-gspc-mcp
 ```
-
-Once published to npm this becomes `claude mcp add gspc -- npx -y csoai-gspc-mcp`.
 
 ### Claude Desktop
 
@@ -55,8 +48,8 @@ Add to `claude_desktop_config.json` (macOS:
 {
   "mcpServers": {
     "gspc": {
-      "command": "node",
-      "args": ["/ABS/PATH/TO/councilof-ai/mcp/gspc-server/index.mjs"]
+      "command": "npx",
+      "args": ["-y", "csoai-gspc-mcp"]
     }
   }
 }
@@ -70,16 +63,24 @@ Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json` globally):
 {
   "mcpServers": {
     "gspc": {
-      "command": "node",
-      "args": ["/ABS/PATH/TO/councilof-ai/mcp/gspc-server/index.mjs"]
+      "command": "npx",
+      "args": ["-y", "csoai-gspc-mcp"]
     }
   }
 }
 ```
 
+### Grok Build
+
+```toml
+[mcp_servers.gspc-npm]
+command = "npx"
+args = ["-y", "csoai-gspc-mcp"]
+```
+
 ### Any other stdio MCP client (Grok Bot, DSH harness, your own agent)
 
-Spawn `node /ABS/PATH/TO/councilof-ai/mcp/gspc-server/index.mjs` and speak
+Spawn `npx -y csoai-gspc-mcp` and speak
 newline-delimited JSON-RPC 2.0 on its stdin/stdout (stderr is logs only):
 
 1. send `{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"you","version":"0"}}}`
