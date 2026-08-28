@@ -13,11 +13,10 @@ const fadeInUp = {
 };
 
 const membershipTiers = [
-  { tier: "Startup", revenue: "<£1M", fee: "Free (Year 1)", highlight: true },
-  { tier: "SME", revenue: "£1M - £50M", fee: "£2,500" },
-  { tier: "Enterprise", revenue: "£50M - £500M", fee: "£10,000" },
-  { tier: "Large Enterprise", revenue: "£500M - £5B", fee: "£25,000" },
-  { tier: "Global", revenue: ">£5B", fee: "£50,000" }
+  { tier: "Community & Open Source", description: "Independent developers, researchers, and public evaluators", fee: "Open / Free", highlight: true },
+  { tier: "Academic & Research", description: "Universities, standards contributors, and public research institutes", fee: "Open / Free", highlight: true },
+  { tier: "Enterprise Auditor", description: "Commercial organizations deploying verified models and compliance tooling", fee: "By Inquiry", highlight: false },
+  { tier: "Institutional & Sovereign", description: "Regulatory observers, industry consortia, and standards bodies", fee: "By Inquiry", highlight: false }
 ];
 
 const incidentTimelines = [
@@ -103,15 +102,15 @@ export default function MembershipAgreement() {
                     <thead>
                       <tr className="border-b">
                         <th className="text-left py-3 px-4 font-semibold">Tier</th>
-                        <th className="text-left py-3 px-4 font-semibold">Annual Revenue</th>
-                        <th className="text-left py-3 px-4 font-semibold">Annual Fee</th>
+                        <th className="text-left py-3 px-4 font-semibold">Scope & Participation</th>
+                        <th className="text-left py-3 px-4 font-semibold">Access Structure</th>
                       </tr>
                     </thead>
                     <tbody>
                       {membershipTiers.map((tier, index) => (
                         <tr key={index} className={`border-b ${tier.highlight ? 'bg-green-50 dark:bg-green-950/20' : ''}`}>
                           <td className="py-3 px-4 font-medium">{tier.tier}</td>
-                          <td className="py-3 px-4 text-muted-foreground">{tier.revenue}</td>
+                          <td className="py-3 px-4 text-muted-foreground">{tier.description}</td>
                           <td className="py-3 px-4">
                             {tier.highlight ? (
                               <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">

@@ -19,8 +19,8 @@ const licenseTiers = [
     examples: "Spam filters, basic recommendation",
     frequency: "Annual self-assessment",
     color: "bg-green-500",
-    baseFee: "Included",
-    perSystem: "£500"
+    complianceTrack: "Self-Attestation (Open)",
+    verification: "Automated SHA256 Preimage"
   },
   {
     tier: "Tier 2",
@@ -28,8 +28,8 @@ const licenseTiers = [
     examples: "Customer service bots, content moderation",
     frequency: "Annual + random audits",
     color: "bg-blue-500",
-    baseFee: "Included",
-    perSystem: "£2,000"
+    complianceTrack: "Standard Council Audit",
+    verification: "Ed25519 Signed Card"
   },
   {
     tier: "Tier 3",
@@ -37,17 +37,17 @@ const licenseTiers = [
     examples: "Healthcare AI, financial decisions, hiring",
     frequency: "Quarterly review",
     color: "bg-orange-500",
-    baseFee: "Included",
-    perSystem: "£10,000"
+    complianceTrack: "High-Risk Audit (EU AI Act)",
+    verification: "BFT Multi-Agent Consensus"
   },
   {
     tier: "Tier 4",
     risk: "Critical",
-    examples: "Autonomous vehicles, infrastructure, weapons",
+    examples: "Autonomous vehicles, infrastructure, frontier systems",
     frequency: "Continuous monitoring",
     color: "bg-red-500",
-    baseFee: "Included",
-    perSystem: "£25,000+"
+    complianceTrack: "Continuous Telemetry",
+    verification: "Real-Time Watchdog Anchor"
   }
 ];
 
@@ -313,13 +313,13 @@ export default function LicensingAgreement() {
             </Card>
           </motion.section>
 
-          {/* Section 7: Fees */}
+          {/* Section 7: Open Governance & Verification Model */}
           <motion.section {...fadeInUp} transition={{ delay: 0.5 }}>
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="h-5 w-5 text-primary" />
-                  7. Licensing Fees (Annual)
+                  <Shield className="h-5 w-5 text-primary" />
+                  7. Open Governance & Attestation Standards
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -328,8 +328,8 @@ export default function LicensingAgreement() {
                     <thead>
                       <tr className="border-b">
                         <th className="text-left py-3 px-4 font-semibold">Tier</th>
-                        <th className="text-left py-3 px-4 font-semibold">Base Fee</th>
-                        <th className="text-left py-3 px-4 font-semibold">Per-System Fee</th>
+                        <th className="text-left py-3 px-4 font-semibold">Compliance Track</th>
+                        <th className="text-left py-3 px-4 font-semibold">Verification Standard</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -341,8 +341,8 @@ export default function LicensingAgreement() {
                               <span className="font-medium">{tier.tier}</span>
                             </div>
                           </td>
-                          <td className="py-3 px-4 text-muted-foreground">{tier.baseFee}</td>
-                          <td className="py-3 px-4 font-medium">{tier.perSystem}</td>
+                          <td className="py-3 px-4 text-muted-foreground">{tier.complianceTrack}</td>
+                          <td className="py-3 px-4 font-medium">{tier.verification}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -351,16 +351,16 @@ export default function LicensingAgreement() {
 
                 <div className="grid md:grid-cols-3 gap-4">
                   <div className="p-4 rounded-lg bg-muted">
-                    <h4 className="font-semibold mb-2">Initial Assessment</h4>
-                    <p className="text-sm text-muted-foreground">Included in first year</p>
+                    <h4 className="font-semibold mb-2">Public Telemetry</h4>
+                    <p className="text-sm text-muted-foreground">Open, unpaywalled, and recomputable</p>
                   </div>
                   <div className="p-4 rounded-lg bg-muted">
-                    <h4 className="font-semibold mb-2">Re-assessment</h4>
-                    <p className="text-sm text-muted-foreground">£2,500 (major changes)</p>
+                    <h4 className="font-semibold mb-2">Signed Cards</h4>
+                    <p className="text-sm text-muted-foreground">Ed25519 cryptographic receipts included</p>
                   </div>
                   <div className="p-4 rounded-lg bg-muted">
-                    <h4 className="font-semibold mb-2">Expedited</h4>
-                    <p className="text-sm text-muted-foreground">+50% premium</p>
+                    <h4 className="font-semibold mb-2">Enterprise Inquiry</h4>
+                    <p className="text-sm text-muted-foreground">Custom deployment reviews by inquiry</p>
                   </div>
                 </div>
               </CardContent>

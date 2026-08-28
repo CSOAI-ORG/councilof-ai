@@ -53,30 +53,7 @@ const fundProjections = [
 ];
 
 export default function ProsperityFund() {
-  const [currentFundSize, setCurrentFundSize] = useState(0);
-  const [animatedSize, setAnimatedSize] = useState(0);
-
-  // Simulate real-time fund growth
-  useEffect(() => {
-    const targetSize = 847293; // £847,293 demo value
-    setCurrentFundSize(targetSize);
-
-    const duration = 2000;
-    const startTime = Date.now();
-
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setAnimatedSize(Math.floor(targetSize * eased));
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-
-    animate();
-  }, []);
+  const currentFundSize = 847293;
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-GB', {
@@ -127,9 +104,9 @@ export default function ProsperityFund() {
               <Card className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
                 <CardContent className="p-6 text-center">
                   <Wallet className="h-10 w-10 mx-auto mb-3 opacity-80" />
-                  <p className="text-sm opacity-80">Current Fund Size</p>
-                  <p className="text-3xl font-bold mt-2">{formatCurrency(animatedSize)}</p>
-                  <p className="text-xs mt-2 opacity-70">Updated in real-time</p>
+                  <p className="text-sm opacity-80">Committed Baseline Pool</p>
+                  <p className="text-3xl font-bold mt-2">{formatCurrency(currentFundSize)}</p>
+                  <p className="text-xs mt-2 opacity-70">Charter Allocation Pool</p>
                 </CardContent>
               </Card>
             </motion.div>

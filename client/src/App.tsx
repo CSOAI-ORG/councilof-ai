@@ -351,6 +351,9 @@ function App() {
                   <Route path="/product" component={CSOAIProduct} />
                   <Route path="/meok" component={CSOAIMeok} />
                   <Route path="/sovereign-os" component={CSOAISovereignOS} />
+                  <Route path="/os" component={SovereignOSPage} />
+                  <Route path="/council-os" component={SovereignOSPage} />
+                  <Route path="/cockpit" component={SovereignOSPage} />
                   <Route path="/command-center" component={CSOAICommandCenter} />
                   <Route path="/all-pages" component={CSOAIAllPages} />
                   <Route path="/world" component={CSOAIWorld} />
