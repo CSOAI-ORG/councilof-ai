@@ -1,1 +1,1 @@
-LOAD_FROM_DISK:/workspace/client/src/pages/Enterprise.tsx
+PLACEHOLDER_WILL_LOAD_FROM_/tmp/mcp_content_payload.txt
