@@ -1,1 +1,22 @@
-PLACEHOLDER
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import NotFound from "@/pages/NotFound";
+import { Route, Switch, useLocation, Redirect } from "wouter";
+import { useEffect, lazy, Suspense } from "react";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { SectionLoader } from "./components/PageLoader";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { AnalyticsProvider } from "./components/Analytics";
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
+import { BottomEstateNav } from "./components/BottomEstateNav";
+import WidgetLayout from "./components/widget/WidgetLayout";
+import WidgetCourses from "./components/widget/WidgetCourses";
+import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
+import { SkipNavigation } from "./components/SkipNavigation";
+import CouncilLobby from "./components/lobby/CouncilLobby";
+import PageSchema from "./components/PageSchema";
+import ArchivedBanner from "./components/ArchivedBanner";
+import DemoTour from "./components/DemoTour";
+import CookieConsent from "./components/CookieConsent";
