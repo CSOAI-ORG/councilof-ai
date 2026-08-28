@@ -2000,7 +2000,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/sovereign-town",
   "comp": "Redirect",
-  "title": "Sovereign Town"
+  "title": "Council Space"
  },
  {
   "path": "/sovereign-twin",

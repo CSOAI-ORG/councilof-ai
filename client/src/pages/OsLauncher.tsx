@@ -56,6 +56,21 @@ export const LOBBY_TO_DOOR: Record<string, DoorId> = {
   harness: "harness",
 };
 
+const TASK_TO_DOOR: Record<string, DoorId> = {
+  "pricing-overview": "assess",
+  "enterprise-start": "assess",
+  "get-measured": "assess",
+};
+
+function doorFromSearch(search: string): DoorId {
+  const params = new URLSearchParams(search);
+  const lobby = params.get("lobby");
+  if (lobby && LOBBY_TO_DOOR[lobby]) return LOBBY_TO_DOOR[lobby];
+  const task = params.get("task");
+  if (task && TASK_TO_DOOR[task]) return TASK_TO_DOOR[task];
+  return "board";
+}
+
 const VerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
 
 function BoardDoor() {
@@ -78,7 +93,63 @@ function VerifyDoor() {
   );
 }
 
+/** Fallback tool blurbs when the live probe has not returned yet (or fails). */
+const HARNESS_TOOLS_FALLBACK: { name: string; blurb: string }[] = [
+  { name: "board_totals", blurb: "live axis counts" },
+  { name: "get_axis", blurb: "single axis detail" },
+  { name: "list_cards", blurb: "published signed-card index" },
+  { name: "verify", blurb: "check a signed card" },
+  { name: "verify_card", blurb: "gspc.measurement-card rule" },
+  { name: "measure", blurb: "measurement contract for a subject" },
+  { name: "enter-arena", blurb: "self-enrol an external agent" },
+  { name: "jail-probe", blurb: "jail-probe verdict contract" },
+];
+
+type McpProbe =
+  | { status: "checking" }
+  | { status: "live"; tools: { name: string; blurb: string }[]; ms: number }
+  | { status: "down"; error: string };
+
 function HarnessDoor() {
+  const [probe, setProbe] = useState<McpProbe>({ status: "checking" });
+
+  useEffect(() => {
+    let cancelled = false;
+    const t0 = performance.now();
+    (async () => {
+      try {
+        const res = await fetch("/mcp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const tools = ((data?.result?.tools as { name?: string; description?: string }[]) || [])
+          .filter((t) => t?.name)
+          .map((t) => ({
+            name: String(t.name),
+            blurb: String(t.description || "").split(".")[0].slice(0, 72) || "MCP tool",
+          }));
+        if (cancelled) return;
+        if (!tools.length) throw new Error("tools/list returned no tools");
+        setProbe({ status: "live", tools, ms: Math.round(performance.now() - t0) });
+      } catch (e) {
+        if (cancelled) return;
+        setProbe({
+          status: "down",
+          error: e instanceof Error ? e.message : "unreachable",
+        });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const tools =
+    probe.status === "live" ? probe.tools : HARNESS_TOOLS_FALLBACK;
+
   return (
     <div className="space-y-5">
       <div>
@@ -88,28 +159,62 @@ function HarnessDoor() {
         </p>
       </div>
 
+      <div
+        className={`flex flex-wrap items-center gap-3 rounded-xl border px-4 py-3 text-sm ${
+          probe.status === "live"
+            ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+            : probe.status === "down"
+              ? "border-amber-200 bg-amber-50 text-amber-950"
+              : "border-slate-200 bg-slate-50 text-slate-700"
+        }`}
+        role="status"
+        aria-live="polite"
+      >
+        <span
+          className={`h-2 w-2 rounded-full ${
+            probe.status === "live"
+              ? "bg-emerald-500"
+              : probe.status === "down"
+                ? "bg-amber-500"
+                : "animate-pulse bg-slate-400"
+          }`}
+          aria-hidden="true"
+        />
+        {probe.status === "checking" && <span>Probing MCP endpoint…</span>}
+        {probe.status === "live" && (
+          <span>
+            MCP live · {probe.tools.length} tools · {probe.ms} ms
+          </span>
+        )}
+        {probe.status === "down" && (
+          <span>
+            MCP probe failed ({probe.error}). Showing last-known tool names — try again from your client.
+          </span>
+        )}
+        <a
+          href="/api/mcp"
+          className={`ml-auto font-medium underline-offset-2 hover:underline ${FOCUS}`}
+        >
+          Fleet registry →
+        </a>
+      </div>
+
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         <h3 className="font-semibold text-slate-900">MCP endpoint</h3>
         <code className="mt-2 block rounded-lg bg-slate-100 px-3 py-2 font-mono text-sm text-slate-800">
           https://councilof.ai/mcp
         </code>
         <ul className="mt-4 space-y-2 text-sm text-slate-700">
-          <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <code className="font-mono text-slate-600">board_totals</code> — live axis counts
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <code className="font-mono text-slate-600">get_axis</code> — single axis detail
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <code className="font-mono text-slate-600">verify</code> — check a signed card
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <code className="font-mono text-slate-600">record_output</code> — write unsigned evidence
-          </li>
+          {tools.map((t) => (
+            <li key={t.name} className="flex items-start gap-2">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+              <span>
+                <code className="font-mono text-slate-600">{t.name}</code>
+                {" — "}
+                {t.blurb}
+              </span>
+            </li>
+          ))}
         </ul>
       </div>
 
@@ -122,15 +227,17 @@ function HarnessDoor() {
           <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?lobby=board</div>
           <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?lobby=verify</div>
           <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?lobby=assess</div>
-          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?task=get-measured</div>
+          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?lobby=harness</div>
+          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?task=enterprise-start</div>
         </div>
       </div>
 
       <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-5">
         <h3 className="font-semibold text-slate-800">For GPAI clients</h3>
         <p className="mt-1 text-sm text-slate-600">
-          Use the same MCP tools as measurement input. The harness records outputs;
-          you write unsigned evidence back. Signing happens on the measurement node.
+          Call the same MCP tools for board reads and card verify. Measurement contracts
+          come from <code className="font-mono text-xs">measure</code>; signing stays on the
+          measurement node — this rail does not invent unsigned write tools.
         </p>
       </div>
 
@@ -218,22 +325,14 @@ function AssessDoor() {
 
 export default function OsLauncher() {
   const search = useSearch();
-  const [door, setDoor] = useState<DoorId>(() => {
-    const params = new URLSearchParams(search);
-    const lobby = params.get("lobby");
-    return lobby && LOBBY_TO_DOOR[lobby] ? LOBBY_TO_DOOR[lobby] : "board";
-  });
+  const [door, setDoor] = useState<DoorId>(() => doorFromSearch(search));
 
   useEffect(() => {
     document.title = "Council OS | councilof.ai";
   }, []);
 
   useEffect(() => {
-    const params = new URLSearchParams(search);
-    const lobby = params.get("lobby");
-    if (lobby && LOBBY_TO_DOOR[lobby]) {
-      setDoor(LOBBY_TO_DOOR[lobby]);
-    }
+    setDoor(doorFromSearch(search));
   }, [search]);
 
   return (
