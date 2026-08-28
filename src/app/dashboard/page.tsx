@@ -44,7 +44,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <div className="p-6 rounded-xl border border-border bg-card">
+        <div className="p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-md shadow-sm hover:shadow-md hover:border-brand-500/30 transition-all">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-lg">Active Plan</h3>
             <Shield className={`w-5 h-5 ${user.tier === 'pro' || user.tier === 'enterprise' ? 'text-green-500' : 'text-muted-foreground'}`} />
@@ -59,7 +59,7 @@ export default function DashboardPage() {
           )}
         </div>
 
-        <div className="p-6 rounded-xl border border-border bg-card">
+        <div className="p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-md shadow-sm hover:shadow-md hover:border-brand-500/30 transition-all">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-lg">API Requests</h3>
             <BarChart3 className="w-5 h-5 text-brand-400" />
@@ -70,7 +70,7 @@ export default function DashboardPage() {
           <div className="text-sm text-muted-foreground">Requests this billing cycle</div>
         </div>
 
-        <div className="p-6 rounded-xl border border-border bg-card">
+        <div className="p-6 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-md shadow-sm hover:shadow-md hover:border-brand-500/30 transition-all">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-lg">Evaluations</h3>
             <Cpu className="w-5 h-5 text-purple-400" />
@@ -82,7 +82,7 @@ export default function DashboardPage() {
 
       <div className="grid md:grid-cols-2 gap-8">
         {/* API Keys */}
-        <div className="border border-border rounded-xl bg-card overflow-hidden">
+        <div className="border border-border/50 rounded-2xl bg-card/50 backdrop-blur-md shadow-sm overflow-hidden">
           <div className="p-6 border-b border-border flex items-center justify-between">
             <div>
               <h3 className="font-bold text-lg flex items-center gap-2"><Key className="w-4 h-4" /> Production API Keys</h3>
@@ -152,7 +152,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Evaluation History */}
-        <div className="border border-border rounded-xl bg-card overflow-hidden">
+        <div className="border border-border/50 rounded-2xl bg-card/50 backdrop-blur-md shadow-sm overflow-hidden">
           <div className="p-6 border-b border-border">
             <h3 className="font-bold text-lg flex items-center gap-2"><FileText className="w-4 h-4" /> Compliance Runs</h3>
             <p className="text-sm text-muted-foreground mt-1">Recent model evaluations and generated certificates.</p>

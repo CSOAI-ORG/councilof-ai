@@ -288,7 +288,7 @@ export default function HomePage() {
           {pillars.map((pillar) => (
             <div
               key={pillar.id}
-              className="group rounded-2xl bg-card border border-border overflow-hidden hover:border-brand-500/50 transition-all shadow-md flex flex-col justify-between"
+              className="group rounded-3xl bg-card/60 backdrop-blur-xl border border-border/50 overflow-hidden hover:border-brand-500/50 hover:shadow-2xl hover:shadow-brand-500/10 hover:-translate-y-1 transition-all duration-500 flex flex-col justify-between"
             >
               <div>
                 <div className="relative h-48 overflow-hidden bg-slate-900">
@@ -400,7 +400,7 @@ export default function HomePage() {
       {/* SECTION 5: XRPL 16-INSTRUMENT ON-CHAIN RWA TELEMETRY DEEP DIVE */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <div className="rounded-3xl bg-card border border-border p-8 shadow-xl space-y-6">
+        <div className="rounded-3xl bg-card/80 backdrop-blur-2xl border border-border/50 p-8 shadow-2xl space-y-6 hover:shadow-brand-500/5 transition-all duration-700">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
             <div className="space-y-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
@@ -472,7 +472,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* SECTION 6: ENTERPRISE OUTCOMES & REPUTATIONAL IMMUNITY */}
       {/* ========================================================================= */}
-      <section className="py-16 bg-card border-y border-border">
+      <section className="py-24 bg-card/50 backdrop-blur-md border-y border-border/50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="text-3xl font-bold">Tangible Outcomes for Enterprise Teams</h2>

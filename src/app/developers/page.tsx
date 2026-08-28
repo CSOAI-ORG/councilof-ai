@@ -49,7 +49,7 @@ export default function DevelopersPage() {
 
       <div className="grid md:grid-cols-2 gap-8 mb-16">
         {/* Python SDK */}
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
           <div className="p-6 border-b border-border flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[#3776AB]/10 flex items-center justify-center">
               <span className="text-xl font-bold text-[#3776AB]">Py</span>
@@ -59,7 +59,7 @@ export default function DevelopersPage() {
               <p className="text-sm text-muted-foreground">For backend compliance automation.</p>
             </div>
           </div>
-          <div className="p-6 bg-[#0d1117]">
+          <div className="p-6 bg-[#0d1117] border-t border-border/30">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-muted-foreground font-mono">Installation</span>
               <button onClick={() => copyToClipboard('pip install csoai', 'py-install')} className="text-muted-foreground hover:text-white">
@@ -87,7 +87,7 @@ export default function DevelopersPage() {
         </div>
 
         {/* Node.js SDK */}
-        <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="bg-card/60 backdrop-blur-xl border border-border/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
           <div className="p-6 border-b border-border flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-[#339933]/10 flex items-center justify-center">
               <span className="text-xl font-bold text-[#339933]">JS</span>
@@ -97,7 +97,7 @@ export default function DevelopersPage() {
               <p className="text-sm text-muted-foreground">For Next.js / Node.js web applications.</p>
             </div>
           </div>
-          <div className="p-6 bg-[#0d1117]">
+          <div className="p-6 bg-[#0d1117] border-t border-border/30">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-muted-foreground font-mono">Installation</span>
               <button onClick={() => copyToClipboard('npm install @meok-labs/ai-sdk', 'js-install')} className="text-muted-foreground hover:text-white">
@@ -126,17 +126,17 @@ export default function DevelopersPage() {
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        <a href="/api/gspc" className="p-6 rounded-xl border border-border bg-card hover:border-brand-500/50 transition-colors group">
+        <a href="/api/gspc" className="p-6 rounded-2xl border border-border/50 bg-card/60 backdrop-blur-md hover:border-brand-500/50 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
           <Server className="w-8 h-8 text-brand-400 mb-4 group-hover:scale-110 transition-transform" />
           <h3 className="font-bold text-lg mb-2">REST API Reference</h3>
           <p className="text-sm text-muted-foreground">Raw JSON endpoints for the GSPC canonical board and live estate state.</p>
         </a>
-        <a href="https://pypi.org/project/proofof-ai-mcp/" target="_blank" className="p-6 rounded-xl border border-border bg-card hover:border-brand-500/50 transition-colors group">
+        <a href="https://pypi.org/project/proofof-ai-mcp/" target="_blank" className="p-6 rounded-2xl border border-border/50 bg-card/60 backdrop-blur-md hover:border-brand-500/50 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
           <Terminal className="w-8 h-8 text-purple-400 mb-4 group-hover:scale-110 transition-transform" />
           <h3 className="font-bold text-lg mb-2">FastMCP Mesh</h3>
           <p className="text-sm text-muted-foreground">Integrate Council OS logic directly into Claude Desktop or Cursor.</p>
         </a>
-        <a href="/verify" className="p-6 rounded-xl border border-border bg-card hover:border-brand-500/50 transition-colors group">
+        <a href="/verify" className="p-6 rounded-2xl border border-border/50 bg-card/60 backdrop-blur-md hover:border-brand-500/50 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group">
           <Shield className="w-8 h-8 text-green-500 mb-4 group-hover:scale-110 transition-transform" />
           <h3 className="font-bold text-lg mb-2">WebCrypto Verifier</h3>
           <p className="text-sm text-muted-foreground">Client-side offline verification of Ed25519 payload signatures.</p>

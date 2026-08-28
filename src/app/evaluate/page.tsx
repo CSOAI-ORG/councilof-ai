@@ -28,7 +28,7 @@ export default function EvaluatePage() {
         </p>
       </div>
 
-      <div className="max-w-3xl mx-auto bg-card border border-border rounded-2xl p-6 md:p-8 mb-12 shadow-lg">
+      <div className="max-w-3xl mx-auto bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl p-6 md:p-8 mb-12 shadow-2xl hover:shadow-brand-500/10 transition-all duration-500">
         <div className="flex flex-col md:flex-row gap-4 mb-6">
           <div className="flex-1 relative">
             <Search className="w-5 h-5 text-muted-foreground absolute left-3 top-3.5" />
@@ -37,7 +37,7 @@ export default function EvaluatePage() {
               placeholder="e.g. meta-llama/Llama-3-70b-instruct or https://api.your-model.com/v1"
               value={modelUrl}
               onChange={(e) => setModelUrl(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50"
+              className="w-full pl-10 pr-4 py-3 bg-background/50 backdrop-blur-sm border border-border/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/50 shadow-inner transition-colors focus:bg-background"
             />
           </div>
           <button 
@@ -144,15 +144,15 @@ export default function EvaluatePage() {
       
       {/* Competitor Compare Section */}
       <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto opacity-70 hover:opacity-100 transition-opacity">
-        <div className="p-5 border border-border rounded-xl">
+        <div className="p-6 border border-border/50 bg-card/50 backdrop-blur-sm rounded-xl hover:-translate-y-1 hover:shadow-lg hover:border-brand-500/30 transition-all duration-300">
           <h4 className="font-semibold mb-2">vs LMSYS Arena</h4>
           <p className="text-sm text-muted-foreground">We measure cryptographic compliance against statutory frameworks (EU AI Act), not just crowdsourced vibes.</p>
         </div>
-        <div className="p-5 border border-border rounded-xl">
+        <div className="p-6 border border-border/50 bg-card/50 backdrop-blur-sm rounded-xl hover:-translate-y-1 hover:shadow-lg hover:border-brand-500/30 transition-all duration-300">
           <h4 className="font-semibold mb-2">vs Scale SEAL</h4>
           <p className="text-sm text-muted-foreground">Open, verifiable evaluation sets with no black-box vendor lock-in. Recompute our results locally.</p>
         </div>
-        <div className="p-5 border border-border rounded-xl">
+        <div className="p-6 border border-border/50 bg-card/50 backdrop-blur-sm rounded-xl hover:-translate-y-1 hover:shadow-lg hover:border-brand-500/30 transition-all duration-300">
           <h4 className="font-semibold mb-2">vs Patronus AI</h4>
           <p className="text-sm text-muted-foreground">Built for sovereign, air-gapped deployments using Council OS runtime and deterministic BFT consensus.</p>
         </div>
