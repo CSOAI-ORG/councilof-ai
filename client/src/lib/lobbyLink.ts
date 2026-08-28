@@ -321,6 +321,40 @@ function currentPath(): string {
   return "/os";
 }
 
+/** OsLauncher doors. ?lobby= / assess ?task= on /os are the product frame, not the overlay. */
+export const OS_DOOR_LOBBIES = new Set([
+  "home",
+  "board",
+  "verify",
+  "space",
+  "measured",
+  "ras",
+  "assess",
+  "harness",
+]);
+
+export const OS_ASSESS_TASKS = new Set([
+  "pricing-overview",
+  "enterprise-start",
+  "get-measured",
+]);
+
+export function isOsDoorPath(path: string): boolean {
+  return path === "/os" || path.startsWith("/os/");
+}
+
+/** True when /os should keep the query and leave the overlay closed. */
+export function osKeepsDoorQuery(path: string, search: string): boolean {
+  if (!isOsDoorPath(path)) return false;
+  const p = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+  if (p.has(ASK_PARAM)) return false;
+  const lobby = p.get(LOBBY_PARAM);
+  const task = p.get(TASK_PARAM);
+  if (lobby && OS_DOOR_LOBBIES.has(lobby)) return true;
+  if (task && OS_ASSESS_TASKS.has(task)) return true;
+  return false;
+}
+
 /**
  * Build an href that opens the lobby. Use it as a real `href` so the control is
  * copyable, middle-clickable and crawlable; pair it with `openLobby` on click to
@@ -384,9 +418,10 @@ export function openLobby(opts: Omit<LobbyLinkOptions, "path"> = {}): void {
   window.dispatchEvent(new CustomEvent(LOBBY_EVENT, { detail: intent }));
 }
 
-/** Strip the lobby params so a refresh does not re-open the lobby. */
+/** Strip lobby params on marketing paths so a refresh does not re-open the overlay. */
 function clearLobbyParams(): void {
   if (typeof window === "undefined") return;
+  if (isOsDoorPath(window.location.pathname || "/")) return;
   const url = new URL(window.location.href);
   let touched = false;
   for (const k of [LOBBY_PARAM, ASK_PARAM, CTX_PARAM, TASK_PARAM]) {
@@ -410,8 +445,9 @@ function readSearch(search: string): LobbyIntent | null {
 
 /**
  * The lobby's end of the contract. Returns the latest intent — from the URL on
- * arrival, or from an in-page openLobby() call — and clears the URL params the
- * moment it has read them, so a refresh does not re-trigger.
+ * arrival, or from an in-page openLobby() call. On marketing paths it clears
+ * the URL params after read so a refresh does not re-trigger the overlay.
+ * On /os, door hops (?lobby=assess&task=…) stay in the URL for OsLauncher.
  *
  * Mounted once, inside CouncilLobby. It does not open anything itself; the lobby
  * decides what to do with the intent.
@@ -426,6 +462,9 @@ export function useLobbyDeepLink(): LobbyIntent | null {
     seen.current = search;
     const found = readSearch(search);
     if (!found) return;
+    const path = typeof window !== "undefined" ? window.location.pathname || "/" : "/os";
+    // /os?lobby=assess&task=pricing-overview is OsLauncher's door, not the overlay.
+    if (osKeepsDoorQuery(path, search)) return;
     clearLobbyParams();
     setIntent(found);
   }, [search]);

@@ -56,6 +56,21 @@ export const LOBBY_TO_DOOR: Record<string, DoorId> = {
   harness: "harness",
 };
 
+const TASK_TO_DOOR: Record<string, DoorId> = {
+  "pricing-overview": "assess",
+  "enterprise-start": "assess",
+  "get-measured": "assess",
+};
+
+function doorFromSearch(search: string): DoorId {
+  const params = new URLSearchParams(search);
+  const lobby = params.get("lobby");
+  if (lobby && LOBBY_TO_DOOR[lobby]) return LOBBY_TO_DOOR[lobby];
+  const task = params.get("task");
+  if (task && TASK_TO_DOOR[task]) return TASK_TO_DOOR[task];
+  return "board";
+}
+
 const VerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
 
 function BoardDoor() {
@@ -310,22 +325,14 @@ function AssessDoor() {
 
 export default function OsLauncher() {
   const search = useSearch();
-  const [door, setDoor] = useState<DoorId>(() => {
-    const params = new URLSearchParams(search);
-    const lobby = params.get("lobby");
-    return lobby && LOBBY_TO_DOOR[lobby] ? LOBBY_TO_DOOR[lobby] : "board";
-  });
+  const [door, setDoor] = useState<DoorId>(() => doorFromSearch(search));
 
   useEffect(() => {
     document.title = "Council OS | councilof.ai";
   }, []);
 
   useEffect(() => {
-    const params = new URLSearchParams(search);
-    const lobby = params.get("lobby");
-    if (lobby && LOBBY_TO_DOOR[lobby]) {
-      setDoor(LOBBY_TO_DOOR[lobby]);
-    }
+    setDoor(doorFromSearch(search));
   }, [search]);
 
   return (
