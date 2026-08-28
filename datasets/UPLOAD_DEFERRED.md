@@ -37,5 +37,6 @@ Owner tracker: https://github.com/CSOAI-ORG/councilof-ai/issues/887
 | 2026-08-28 ~21:20–22:30 | missing | unset | stacked timer rechecks; tip honesty ships |
 | 2026-08-28 ~23:38 | missing | unset | CI [33221090655](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/33221090655) verify ✅ · upload **skipped**; tip `20c572f9` |
 | 2026-08-28 ~23:39 | missing | unset | full route smoke 200; tip-health OK; vitest labourIndices 8/8; agent work blocked only on `HF_TOKEN` |
+| 2026-08-28 ~23:50 | missing | unset | recheck: tip `0df18859`; MCP OAuth admin/`contribute-repos` but `hf_fs` read-only; Hub both missing; tip-health OK; vitest 8/8; routes 200; requested Cloud `HF_TOKEN` + Actions secret |
 
 As-of: 2026-08-28
