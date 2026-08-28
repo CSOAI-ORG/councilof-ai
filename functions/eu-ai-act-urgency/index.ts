@@ -1,12 +1,12 @@
 /**
- * GET /eu-ai-act-urgency/ - 308 leftover cert + public-price page.
- * Slash variant. Do not 308 onto itself.
+ * GET /eu-ai-act-urgency/ — 308 to Council OS Assess door.
+ * Home is marketing, not the OS.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/?lobby=measured&task=get-measured",
+      location: "/os?lobby=assess&task=get-measured",
       "cache-control": "public, max-age=300",
     },
   });
