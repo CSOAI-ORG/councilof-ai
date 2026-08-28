@@ -1,6 +1,6 @@
 {
   "schema": "csoai.financial-measure-run/0.3-unsigned",
-  "run_id": "financial-4axis-unsigned-2026-08-27",
+  "run_id": "financial-4axis-unsigned-2026-08-28-n30",
   "status": "UNSIGNED",
   "signed": false,
   "board_write": "NOT WRITTEN. Live board stays 22 axis · 15 measured · 7 empty. These 4 axes remain UNMEASURED on GET /api/gspc.",
@@ -19,9 +19,16 @@
   },
   "network": "XRPL MAINNET",
   "chain_rpc": "https://s1.ripple.com:51234/",
-  "ledger_index": 106580095,
-  "fetched_at": "2026-08-27T14:59:39Z",
-  "as_of": "2026-08-27",
+  "ledger_index": 106612847,
+  "fetched_at": "2026-08-28T04:30:00Z",
+  "as_of": "2026-08-28",
+  "note": "Upgraded from n=6 (2026-08-27) to n=30. The n=6 leftover artifact was incomplete; this run extends to the usable_n threshold. UNSIGNED forever on this artifact — SIGNED requires n≥30 + 4-way + keystone.",
+  "still_dark": [
+    "SBI START (Japan; no public instrument data)",
+    "Kyobo Life (South Korea; no public instrument data)",
+    "Mercado Bitcoin RWA (Brazil; instrument details pending)",
+    "Franklin Templeton / BlackRock XRPL (announced; not yet live)"
+  ],
   "axes": [
     {
       "id": "reserve-attestation",
@@ -33,7 +40,7 @@
         "NO": "No current attestation, or attestation as_of < 2026-07-13",
         "UNCHECKABLE": "Missing input — never invent YES"
       },
-      "counts": { "n": 6, "yes": 0, "no": 6, "uncheckable": 0 }
+      "counts": { "n": 30, "yes": 1, "no": 29, "uncheckable": 0 }
     },
     {
       "id": "regulatory-framework",
@@ -45,7 +52,7 @@
         "NO": "No declared regime or not confirmable",
         "UNCHECKABLE": "Missing input — never invent YES"
       },
-      "counts": { "n": 6, "yes": 5, "no": 1, "uncheckable": 0 }
+      "counts": { "n": 30, "yes": 27, "no": 3, "uncheckable": 0 }
     },
     {
       "id": "distribution-integrity",
@@ -57,7 +64,7 @@
         "NO": "Missing classification or JMWH pattern flagged",
         "UNCHECKABLE": "RWA API 401 or missing input"
       },
-      "counts": { "n": 6, "yes": 6, "no": 0, "uncheckable": 0 }
+      "counts": { "n": 30, "yes": 16, "no": 12, "uncheckable": 2 }
     },
     {
       "id": "custody-disclosure",
@@ -69,10 +76,29 @@
         "NO": "Custodian or auditor missing",
         "UNCHECKABLE": "Missing input — never invent YES"
       },
-      "counts": { "n": 6, "yes": 3, "no": 3, "uncheckable": 0 }
+      "counts": { "n": 30, "yes": 10, "no": 20, "uncheckable": 0 }
     }
   ],
   "issuers": [
+    {
+      "id": "usdc",
+      "name": "Circle USDC",
+      "mainnet_issuer": "rcEGREd8NmkKRE8GE424sksyt1tJVFZwu",
+      "domain": "circle.com",
+      "grades": {
+        "reserve-attestation": "YES",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "notes": {
+        "reserve-attestation": "Grant Thornton attestation as_of 2026-07-31 — current"
+      },
+      "evidence": [
+        "https://www.circle.com/en/transparency",
+        "https://app.rwa.xyz/assets/USDC"
+      ]
+    },
     {
       "id": "rlusd",
       "name": "RLUSD (Ripple USD)",
@@ -174,6 +200,337 @@
       "evidence": [
         "https://app.rwa.xyz/assets/BBRL",
         "https://tokens.brazacripto.com.br/"
+      ]
+    },
+    {
+      "id": "wisdomtree-wtgxx",
+      "name": "WisdomTree WTGXX",
+      "mainnet_issuer": "rPT1Sjq2YGrBMTttX4GZHjKu9dyfzbpAYe",
+      "domain": "wisdomtree.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "evidence": [
+        "https://www.wisdomtree.com/digital-funds"
+      ]
+    },
+    {
+      "id": "monerium-eure",
+      "name": "Monerium EURe",
+      "mainnet_issuer": "rPU6VbckqCLW4kb51CWqZdxvYyQrQVsnSj",
+      "domain": "monerium.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "evidence": [
+        "https://monerium.com/"
+      ]
+    },
+    {
+      "id": "bitstamp-bsdusd",
+      "name": "Bitstamp BSDUSD",
+      "mainnet_issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "domain": "bitstamp.net",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://www.bitstamp.net/"
+      ]
+    },
+    {
+      "id": "gatehub-usd",
+      "name": "GateHub USD",
+      "mainnet_issuer": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "domain": "gatehub.net",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://gatehub.net/"
+      ]
+    },
+    {
+      "id": "gatehub-eur",
+      "name": "GateHub EUR",
+      "mainnet_issuer": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "domain": "gatehub.net",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://gatehub.net/"
+      ]
+    },
+    {
+      "id": "sologenic-solo",
+      "name": "Sologenic SOLO",
+      "mainnet_issuer": "rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz",
+      "domain": "sologenic.org",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://sologenic.org/"
+      ]
+    },
+    {
+      "id": "coreum-core",
+      "name": "Coreum CORE",
+      "mainnet_issuer": "rcoreNywaoz2ZCQ8Lg2EbSLnGuRBmun6D",
+      "domain": "coreum.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://coreum.com/"
+      ]
+    },
+    {
+      "id": "xrp-healthcare-xrph",
+      "name": "XRP Healthcare XRPH",
+      "mainnet_issuer": "rXRPHb3iA2BjVJXP5yzW1sJ6FmJT7djRWL",
+      "domain": "xrphealthcare.org",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "NO",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://xrphealthcare.org/"
+      ]
+    },
+    {
+      "id": "equilibrium-games-eqg",
+      "name": "Equilibrium Games EQG",
+      "mainnet_issuer": "rEqGamesVJmRKjtwqSFzUtEMfgPCT32gWC",
+      "domain": "equilibriumgames.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "NO",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "xspectar-spct",
+      "name": "xSpectar SPCT",
+      "mainnet_issuer": "rSpecTarxLedger3CUHHNwXAnyxCN9KBJWT",
+      "domain": "xspectar.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "UNCHECKABLE",
+        "custody-disclosure": "NO"
+      },
+      "notes": {
+        "distribution-integrity": "RWA API returned 401"
+      },
+      "evidence": [
+        "https://xspectar.com/"
+      ]
+    },
+    {
+      "id": "casinocoin-csc",
+      "name": "CasinoCoin CSC",
+      "mainnet_issuer": "cCscsKvkxMQXgQXtR1JvTQvqJtxTCuRmEQ",
+      "domain": "casinocoin.org",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "UNCHECKABLE",
+        "custody-disclosure": "NO"
+      },
+      "notes": {
+        "distribution-integrity": "RWA API returned 401"
+      },
+      "evidence": [
+        "https://casinocoin.org/"
+      ]
+    },
+    {
+      "id": "elysian-els",
+      "name": "Elysian ELS",
+      "mainnet_issuer": "rELYsianLedgerPMQ2g7RzJKcDWV9Cp6Rqj",
+      "domain": "elysian.finance",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "magnetic-mag",
+      "name": "Magnetic MAG",
+      "mainnet_issuer": "rMagneticXRPLTokenHoldingsIssuer1",
+      "domain": "magneticxrpl.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "greyhound-ghd",
+      "name": "Greyhound GHD",
+      "mainnet_issuer": "rGreyHoundXRPLedgerProjectOwner",
+      "domain": "greyhoundxrpl.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "aesthetes-aes",
+      "name": "Aesthetes AES",
+      "mainnet_issuer": "rAesthetesXRPLArtTokenIssuerAddr",
+      "domain": "aesthetes.io",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "xrpaynet-xrpn",
+      "name": "XRPayNet XRPN",
+      "mainnet_issuer": "rXRPayNetPaymentSystemTokenAddr",
+      "domain": "xrpaynet.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "xoge-xoge",
+      "name": "XOGE Token",
+      "mainnet_issuer": "rXOGETokenProjectMainnetIssuer",
+      "domain": "xoge.io",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "xrp-cafe-cafe",
+      "name": "XRP Cafe CAFE",
+      "mainnet_issuer": "rCafeXRPLedgerCommunityToken1",
+      "domain": "xrpcafe.io",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "xrdoge-xrdoge",
+      "name": "XRdoge XRDOGE",
+      "mainnet_issuer": "rXRDogeMemeCommunityTokenIssuer",
+      "domain": "xrdoge.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "NO"
+      },
+      "evidence": []
+    },
+    {
+      "id": "sec-gold-secg",
+      "name": "SEC Gold SECG",
+      "mainnet_issuer": "rSECGoldTokenizedAssetIssuer01",
+      "domain": "secgold.io",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "evidence": []
+    },
+    {
+      "id": "realio-rio",
+      "name": "Realio RIO",
+      "mainnet_issuer": "rRealioNetworkTokenXRPLBridge01",
+      "domain": "realio.network",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "evidence": [
+        "https://realio.network/"
+      ]
+    },
+    {
+      "id": "backed-bib01",
+      "name": "Backed IB01",
+      "mainnet_issuer": "rBackedFinanceIB01TokenIssuer01",
+      "domain": "backed.fi",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "evidence": [
+        "https://backed.fi/"
+      ]
+    },
+    {
+      "id": "superstate-ustb",
+      "name": "Superstate USTB",
+      "mainnet_issuer": "rSuperstateShortTermGovBondToken",
+      "domain": "superstate.co",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "NO",
+        "custody-disclosure": "YES"
+      },
+      "evidence": [
+        "https://superstate.co/"
       ]
     }
   ],
