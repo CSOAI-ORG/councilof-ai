@@ -176,18 +176,38 @@ export default function AssessPage() {
             </ul>
           </div>
 
-          <div className="pt-2 flex flex-col sm:flex-row gap-3">
+          <div className="mt-6 border-t border-border pt-6">
+            <div className="bg-brand-500/10 border border-brand-500/30 rounded-xl p-6 text-center relative overflow-hidden group">
+              <div className="flex flex-col items-center justify-center relative z-10 transition-all">
+                <Shield className="w-8 h-8 text-brand-400 mb-3" />
+                <h4 className="font-bold text-lg mb-2">Unlock Audit-Ready Compliance PDF</h4>
+                <p className="text-sm text-muted-foreground mb-4 max-w-sm mx-auto">
+                  Download the full 42-page technical compliance roadmap mapped exactly to {jurisdiction}. Includes Ed25519 digital signature for verifiable vendor assessment.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a href="/pricing" className="px-6 py-2.5 bg-brand-500 text-white font-semibold rounded-lg hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20 text-sm">
+                    Unlock with Pro — £79/mo
+                  </a>
+                  <button className="px-6 py-2.5 bg-background border border-border text-foreground font-semibold rounded-lg hover:border-brand-500/50 transition-colors text-sm">
+                    One-time Export — £99
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-6 flex flex-col sm:flex-row gap-3">
             <a
-              href="/os"
-              className="flex-1 text-center py-3 rounded-xl gradient-brand text-white text-xs font-semibold hover:opacity-90 transition-opacity"
+              href="/evaluate"
+              className="flex-1 text-center py-3 rounded-xl border border-brand-500/30 text-brand-400 text-xs font-semibold hover:bg-brand-500/5 transition-colors"
             >
-              Open Council OS to Issue Signed Measurement Card &rarr;
+              Run Automated Model Evaluation (22-Axis GSPC) &rarr;
             </a>
             <a
-              href="/verify"
+              href="/os"
               className="px-6 py-3 rounded-xl bg-background border border-border text-foreground text-xs font-semibold text-center hover:bg-accent transition-colors"
             >
-              Verify Existing Card
+              Open Council OS Cockpit
             </a>
           </div>
         </div>

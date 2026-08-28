@@ -28,55 +28,20 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 } },
 };
 
+import { Providers } from './Providers';
+import { Navigation } from './components/Navigation';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen bg-background text-foreground antialiased flex flex-col">
-        <Navigation />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <Providers>
+          <Navigation />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
-  );
-}
-
-function Navigation() {
-  return (
-    <header className="sticky top-0 z-50 bg-background/90 backdrop-blur border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg gradient-brand flex items-center justify-center text-white shadow-md">
-              <Shield className="w-5 h-5" />
-            </div>
-            <a href="/" className="text-lg font-bold">
-              <span className="text-brand-400">Council</span>
-              <span className="text-foreground">Of</span>
-              <span className="text-brand-300">.AI</span>
-            </a>
-          </div>
-
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <a href="/os" className="text-brand-400 hover:text-brand-300 transition-colors flex items-center gap-1.5 font-semibold">
-              <Cpu className="w-4 h-4" /> Council OS
-            </a>
-            <a href="/assess" className="text-muted-foreground hover:text-foreground transition-colors">Assessment</a>
-            <a href="/verify" className="text-muted-foreground hover:text-foreground transition-colors">Verify Card</a>
-            <a href="/catalogue" className="text-muted-foreground hover:text-foreground transition-colors">Catalogue</a>
-            <a href="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
-            <a href="https://csoai.org" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1">
-              csoai.org <ExternalLink className="w-3 h-3" />
-            </a>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <a href="/os" className="inline-flex items-center px-4 py-2 text-xs font-semibold rounded-lg gradient-brand text-white hover:opacity-90 transition-opacity shadow-sm">
-              Launch OS
-            </a>
-          </div>
-        </div>
-      </div>
-    </header>
   );
 }
 
