@@ -12,7 +12,7 @@ const BAD = /PLACEHOLDER_WILL_LOAD|LOAD_FROM_TMP|LOAD_FROM_DISK|^LOAD_ME$|TRUNCA
 const GUARDS = [
   { path: "client/src/pages/NewHome-v3.tsx", bytes: 35406 },
   { path: "client/src/AppMainRoutes.tsx", bytes: 847 },
-  { path: "client/src/AppLazy.tsx", bytes: 24241 },
+  { path: "client/src/AppLazy.tsx", bytes: 24305 },
 ];
 const MIN_PAGE_BYTES = {
   // Enterprise may be a thin Redirect into Council OS chat — still ban stubs.
