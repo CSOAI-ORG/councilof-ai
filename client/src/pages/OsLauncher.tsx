@@ -168,24 +168,48 @@ function SpaceDoor() {
   );
 }
 
+function assessCopy(task: string | null) {
+  if (task === "pricing-overview") {
+    return {
+      title: "How the free rail works",
+      lead: "Verify is free forever. A grade is never sold. There are no public prices and no SaaS tiers.",
+      body: "Start a signed assessment. What it finds is what it reports. Empty cells stay empty.",
+      cta: "Start a free assessment →",
+    };
+  }
+  if (task === "enterprise-start") {
+    return {
+      title: "Measure an enterprise system",
+      lead: "Deterministic checks against the rules that govern your system.",
+      body: "The card records what the model did, not an approval. We do not remediate and we do not certify.",
+      cta: "Start assessment →",
+    };
+  }
+  return {
+    title: "Get measured",
+    lead: "Run an assessment against the rules that govern your system.",
+    body: "Deterministic checks against frozen provisions. What it finds is what it reports.",
+    cta: "Start assessment →",
+  };
+}
+
 function AssessDoor() {
+  const search = useSearch();
+  const task = new URLSearchParams(search).get("task");
+  const copy = assessCopy(task);
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-slate-900">Get measured</h2>
-        <p className="mt-1 text-sm text-slate-600">
-          Run an assessment against the rules that govern your system.
-        </p>
+        <h2 className="text-xl font-bold text-slate-900">{copy.title}</h2>
+        <p className="mt-1 text-sm text-slate-600">{copy.lead}</p>
       </div>
       <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <p className="text-sm text-slate-600">
-          Deterministic checks against frozen provisions. What it finds is what it reports.
-        </p>
+        <p className="text-sm text-slate-600">{copy.body}</p>
         <Link
           href="/assess"
           className={`mt-4 inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800 ${FOCUS}`}
         >
-          Start assessment →
+          {copy.cta}
         </Link>
       </div>
     </div>
