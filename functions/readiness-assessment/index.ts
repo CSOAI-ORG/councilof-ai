@@ -1,11 +1,14 @@
 /**
- * GET /readiness-assessment/ — 404 Not Found.
- * Route dropped from live catalog; soft-live chrome removed.
+ * GET /readiness-assessment/ — 308 to /assess.
+ * Functions beat _redirects; a 404 here made the live door dead.
  * Measurement not certification.
  */
 export function onRequest() {
-  return new Response("404 Not Found — this page does not exist.", {
-    status: 404,
-    headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600" },
+  return new Response(null, {
+    status: 308,
+    headers: {
+      location: "/assess",
+      "cache-control": "public, max-age=300",
+    },
   });
 }
