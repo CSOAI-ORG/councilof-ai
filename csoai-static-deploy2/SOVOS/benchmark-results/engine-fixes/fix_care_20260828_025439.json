@@ -1,0 +1,34 @@
+{
+  "before": {
+    "axis": "care",
+    "label": "Care/CareBench",
+    "board_status": "MEASURED",
+    "gate": "MEASURED",
+    "bank_items": 200,
+    "n_models": 19,
+    "sha256": "bc54e3121662",
+    "last_fix": "2026-08-27T05:47:46.770990+00:00"
+  },
+  "fix": {
+    "axis": "care",
+    "delta": "care: weakest llama3.2:3b remains at acc 0.035 with 114/200 unparsed after two prior fix records (2026-08-15, 2026-08-27), neither promoted to code. The floor is still parse-noise, not capability: llama3.2:3b 114/200, sov6-logic-v3-light 133/200, sov6-synthesis-v3-light 123/200, sov6-relationality-v3-light 116/200 are all majority-unparsed. Honest fix: promote the lenient re-parse pass recorded 2026-08-27, or if promotion is blocked, isolate sub-3B models from the CareBench board and publish without them, labelling the floor as excluded-structured-output-adapter-pending rather than a measured capability. Stop quoting 0.035 as a measured care capability until unparsed drops below 10 percent.",
+    "gaps_before": [
+      "weakest model llama3.2:3b at 0.035 \u2014 near-chance floor, check bank quality",
+      "sov6-logic-v3-light: 133/200 unparsed at acc 0.105 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-relationality-v3-light: 116/200 unparsed at acc 0.120 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "sov6-synthesis-v3-light: 123/200 unparsed at acc 0.160 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "llama3.2:3b: 114/200 unparsed at acc 0.035 \u2014 format/transport failure dominates, distinguish true-negative from parse-noise",
+      "spread best\u2192worst 0.535\u21920.035 (n_models=19)"
+    ],
+    "applied_at": "2026-08-28T02:54:39.964089+00:00",
+    "promoted": null,
+    "reverted": null
+  },
+  "signature": {
+    "kind": "ed25519",
+    "sig": "5IRG0YsGl3NzMRyD8BkfZ4xIYn577wK5UpLJ/IolZQUmzQy5Gp13iftlFqgiYrtJtXpkjqjqR4Yy+bbCN3PICQ==",
+    "body_sha256": "696a9aba6cce4481c9fcc0ff0174dfdac6f203809b70b692409de36e18d62ddb",
+    "pubkey": "TMZPHRGRKO/MqP5altKhcjDPXNXN9bTIghhU17xMGp8=",
+    "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
+  }
+}
