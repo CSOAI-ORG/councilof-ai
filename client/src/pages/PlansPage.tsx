@@ -50,7 +50,7 @@ export default function PlansPage() {
           page — never access to the rail.
         </p>
         <div className="relative mt-6 flex flex-wrap justify-center gap-3">
-          <a href="/?lobby=measured&task=get-measured" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get measured →</a>
+          <a href="/os?lobby=assess&task=get-measured" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get measured →</a>
           <a href="/gspc-verify" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-bold text-emerald-100 hover:bg-white/5">Verify a card →</a>
         </div>
       </section>
@@ -111,9 +111,9 @@ export default function PlansPage() {
               ))}
               <tr>
                 <td className="px-4 py-4"></td>
-                <td className="px-4 py-4 text-center"><a href="/?lobby=measured&task=get-measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
-                <td className="px-4 py-4 text-center"><a href="/?lobby=measured&task=get-measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
-                <td className="px-4 py-4 text-center"><a href="/?lobby=measured&task=enterprise-start" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
+                <td className="px-4 py-4 text-center"><a href="/os?lobby=assess&task=get-measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
+                <td className="px-4 py-4 text-center"><a href="/os?lobby=assess&task=get-measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
+                <td className="px-4 py-4 text-center"><a href="/os?lobby=assess&task=enterprise-start" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
                 <td className="px-4 py-4 text-center"><a href="/contact" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Talk to us</a></td>
               </tr>
             </tbody>
