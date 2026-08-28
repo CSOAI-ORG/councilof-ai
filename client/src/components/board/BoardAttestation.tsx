@@ -2,6 +2,9 @@
  * BoardAttestation — living tables showing Ed25519 signature, SHA-256 hash,
  * XRPL ledger status, and progress visualization from the live board.
  *
+ * Click-through: every row opens a deep page with interactive graphs, traces,
+ * logs. RWA.xyz-class or better.
+ *
  * Fetches from /api/gspc at render time. No hardcoded scores. Empty fields
  * render as UNMEASURED with an honest reason.
  *
@@ -13,7 +16,10 @@
  * - Never certify. Verify stays free and loginless.
  */
 
+import { useState } from "react";
 import { Link } from "wouter";
+import { ChevronRight } from "lucide-react";
+import AttestationDeepDive, { type DeepDiveKind } from "./AttestationDeepDive";
 
 interface SiteAttestation {
   attests?: string;
@@ -100,6 +106,8 @@ export default function BoardAttestation({
   showInLane = true,
   compact = false,
 }: BoardAttestationProps) {
+  const [deepDive, setDeepDive] = useState<{ kind: DeepDiveKind; extra?: any } | null>(null);
+  
   const dark = variant === "dark";
   const att = data?.site_attestation;
   const stamp = data?.measured_on?.living_stamp;
@@ -116,16 +124,25 @@ export default function BoardAttestation({
   const textMuted = dark ? "text-emerald-100/70" : "text-gray-600";
   const textPrimary = dark ? "text-emerald-50" : "text-gray-900";
   const labelCls = `text-[11px] font-bold uppercase tracking-wider ${dark ? "text-emerald-300/60" : "text-emerald-700/70"}`;
+  const hoverCls = `cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md ${dark ? "hover:border-emerald-400/40" : "hover:border-emerald-500/40"}`;
+  const clickHintCls = `ml-auto shrink-0 ${dark ? "text-emerald-400/50" : "text-emerald-600/40"}`;
 
   return (
+    <>
     <div className={`rounded-2xl border ${borderCls} ${bgCls} p-5 space-y-5`}>
       {/* ATTESTATION TABLE */}
       <div>
-        <h3 className={`${labelCls} mb-3`}>Attestation · live from GET /api/gspc</h3>
+        <h3 className={`${labelCls} mb-3`}>Attestation · live from GET /api/gspc · click any row for traces</h3>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {/* Ed25519 Signature */}
-          <div className={`rounded-lg border ${borderCls} p-3`}>
-            <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Ed25519 Signature</p>
+          <button
+            onClick={() => setDeepDive({ kind: "ed25519" })}
+            className={`rounded-lg border ${borderCls} p-3 text-left ${hoverCls}`}
+          >
+            <div className="flex items-center">
+              <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Ed25519 Signature</p>
+              <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
+            </div>
             {att?.sig ? (
               <p className={`mt-1 font-mono text-[12px] ${textPrimary} break-all`} title={att.sig}>
                 {truncateSig(att.sig, 20)}
@@ -138,11 +155,17 @@ export default function BoardAttestation({
             {att?.alg && (
               <p className={`mt-1 text-[10px] ${textMuted}`}>alg: {att.alg}</p>
             )}
-          </div>
+          </button>
 
           {/* SHA-256 / Content Hash */}
-          <div className={`rounded-lg border ${borderCls} p-3`}>
-            <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Content Integrity</p>
+          <button
+            onClick={() => setDeepDive({ kind: "sha256" })}
+            className={`rounded-lg border ${borderCls} p-3 text-left ${hoverCls}`}
+          >
+            <div className="flex items-center">
+              <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Content Integrity</p>
+              <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
+            </div>
             {att?.sig_input ? (
               <>
                 <p className={`mt-1 text-[12px] ${textPrimary}`}>
@@ -158,11 +181,17 @@ export default function BoardAttestation({
                 Empty — no sig_input rule in payload
               </p>
             )}
-          </div>
+          </button>
 
           {/* XRPL Ledger Height */}
-          <div className={`rounded-lg border ${borderCls} p-3`}>
-            <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>XRPL Ledger Height</p>
+          <button
+            onClick={() => setDeepDive({ kind: "xrpl" })}
+            className={`rounded-lg border ${borderCls} p-3 text-left ${hoverCls}`}
+          >
+            <div className="flex items-center">
+              <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>XRPL Ledger Height</p>
+              <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
+            </div>
             <p className={`mt-1 text-[12px] font-semibold ${dark ? "text-amber-300" : "text-amber-700"}`}>
               PLANNED — not live
             </p>
@@ -170,13 +199,19 @@ export default function BoardAttestation({
               Issuer facts: MAINNET reads. Attestations: DEVNET carrier.
               Mainnet attestation is roadmap, not wired. /api/xrpl is 404.
             </p>
-          </div>
+          </button>
         </div>
 
         {/* Signer / Verification Method */}
         {att?.signer && (
-          <div className={`mt-3 rounded-lg border ${borderCls} p-3`}>
-            <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Verification Method</p>
+          <button
+            onClick={() => setDeepDive({ kind: "ed25519" })}
+            className={`mt-3 rounded-lg border ${borderCls} p-3 w-full text-left ${hoverCls}`}
+          >
+            <div className="flex items-center">
+              <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Verification Method</p>
+              <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
+            </div>
             <p className={`mt-1 font-mono text-[12px] ${textPrimary} break-all`}>
               {att.signer}
             </p>
@@ -186,16 +221,9 @@ export default function BoardAttestation({
               </p>
             )}
             <p className={`mt-2 text-[11px] ${textMuted}`}>
-              Fetch{" "}
-              <a
-                href="/.well-known/did.json"
-                className={dark ? "text-emerald-300 underline" : "text-emerald-700 underline"}
-              >
-                /.well-known/did.json
-              </a>{" "}
-              → verify sig over canonical(payload minus site_attestation).
+              Fetch /.well-known/did.json → verify sig over canonical(payload minus site_attestation).
             </p>
-          </div>
+          </button>
         )}
 
         {/* Living Stamp Warning */}
@@ -223,30 +251,36 @@ export default function BoardAttestation({
         <div className={`border-t ${borderCls} pt-5`}>
           <h3 className={`${labelCls} mb-3`}>Progress · {totals.public_count || `${axes} axis · ${measured} measured`}</h3>
           
-          <div className="flex items-center gap-4">
-            {/* Progress Bar */}
-            <div className="flex-1">
-              <div className={`h-3 rounded-full ${dark ? "bg-emerald-900/40" : "bg-gray-200"} overflow-hidden`}>
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
-                  style={{ width: `${progressPct}%` }}
-                />
+          <button
+            onClick={() => setDeepDive({ kind: "progress" })}
+            className={`w-full rounded-lg border ${borderCls} p-4 text-left ${hoverCls}`}
+          >
+            <div className="flex items-center gap-4">
+              {/* Progress Bar */}
+              <div className="flex-1">
+                <div className={`h-3 rounded-full ${dark ? "bg-emerald-900/40" : "bg-gray-200"} overflow-hidden`}>
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
+                    style={{ width: `${progressPct}%` }}
+                  />
+                </div>
+                <div className="mt-2 flex justify-between text-[11px]">
+                  <span className={textMuted}>{measured} measured</span>
+                  <span className={dark ? "text-amber-300/70" : "text-amber-700"}>{unmeasured} empty (visible)</span>
+                  <span className={textMuted}>{axes} total</span>
+                </div>
               </div>
-              <div className="mt-2 flex justify-between text-[11px]">
-                <span className={textMuted}>{measured} measured</span>
-                <span className={dark ? "text-amber-300/70" : "text-amber-700"}>{unmeasured} empty (visible)</span>
-                <span className={textMuted}>{axes} total</span>
+              
+              {/* Numbers */}
+              <div className="text-right">
+                <p className={`text-2xl font-black ${textPrimary}`}>
+                  {measured}<span className={textMuted}>/</span>{axes}
+                </p>
+                <p className={`text-[10px] ${textMuted}`}>measured axis</p>
               </div>
+              <ChevronRight className={`h-4 w-4 ${clickHintCls}`} />
             </div>
-            
-            {/* Numbers */}
-            <div className="text-right">
-              <p className={`text-2xl font-black ${textPrimary}`}>
-                {measured}<span className={textMuted}>/</span>{axes}
-              </p>
-              <p className={`text-[10px] ${textMuted}`}>measured axis</p>
-            </div>
-          </div>
+          </button>
 
           {/* Count Grammar */}
           {!compact && totals.count_grammar && (
@@ -257,17 +291,26 @@ export default function BoardAttestation({
 
           {/* Separation Summary */}
           {totals.comparison_axes !== undefined && totals.separated_leads !== undefined && (
-            <div className={`mt-3 flex flex-wrap gap-3 text-[11px]`}>
-              <span className={`rounded-full border ${dark ? "border-emerald-500/30 bg-emerald-900/30" : "border-emerald-300 bg-emerald-50"} px-2.5 py-1 font-semibold ${dark ? "text-emerald-300" : "text-emerald-800"}`}>
-                {totals.separated_leads} SEPARATED
-              </span>
-              <span className={`rounded-full border ${dark ? "border-amber-500/30 bg-amber-900/30" : "border-amber-300 bg-amber-50"} px-2.5 py-1 font-semibold ${dark ? "text-amber-300" : "text-amber-800"}`}>
-                {totals.ties ?? 0} TIE
-              </span>
-              <span className={textMuted}>
-                of {totals.comparison_axes} model-comparison axis (McNemar p&lt;0.05)
-              </span>
-            </div>
+            <button
+              onClick={() => setDeepDive({ kind: "separation" })}
+              className={`mt-3 w-full rounded-lg border ${borderCls} p-3 text-left ${hoverCls}`}
+            >
+              <div className="flex items-center">
+                <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>Separation Summary</p>
+                <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
+              </div>
+              <div className="mt-2 flex flex-wrap gap-3 text-[11px]">
+                <span className={`rounded-full border ${dark ? "border-emerald-500/30 bg-emerald-900/30" : "border-emerald-300 bg-emerald-50"} px-2.5 py-1 font-semibold ${dark ? "text-emerald-300" : "text-emerald-800"}`}>
+                  {totals.separated_leads} SEPARATED
+                </span>
+                <span className={`rounded-full border ${dark ? "border-amber-500/30 bg-amber-900/30" : "border-amber-300 bg-amber-50"} px-2.5 py-1 font-semibold ${dark ? "text-amber-300" : "text-amber-800"}`}>
+                  {totals.ties ?? 0} TIE
+                </span>
+                <span className={textMuted}>
+                  of {totals.comparison_axes} model-comparison axis (McNemar p&lt;0.05)
+                </span>
+              </div>
+            </button>
           )}
         </div>
       )}
@@ -275,9 +318,17 @@ export default function BoardAttestation({
       {/* IN-LANE / UNSIGNED PATH */}
       {showInLane && inLane && inLane.length > 0 && (
         <div className={`border-t ${borderCls} pt-5`}>
-          <h3 className={`${labelCls} mb-3`}>
-            In-Lane · measured but not board-quotable
-          </h3>
+          <div className="flex items-center mb-3">
+            <h3 className={labelCls}>
+              In-Lane · measured but not board-quotable
+            </h3>
+            <button
+              onClick={() => setDeepDive({ kind: "in-lane" })}
+              className={`ml-2 text-[10px] ${dark ? "text-emerald-400" : "text-emerald-700"} hover:underline`}
+            >
+              view all traces →
+            </button>
+          </div>
           <p className={`text-[11px] ${textMuted} mb-3`}>
             These axes are measured on a smaller fleet with no separation test.
             Published as <code className="text-[10px]">measured_in_lane</code> on GET /api/gspc.
@@ -286,9 +337,10 @@ export default function BoardAttestation({
           
           <div className="grid gap-2 sm:grid-cols-2">
             {inLane.map((axis) => (
-              <div
+              <button
                 key={axis.axis}
-                className={`rounded-lg border ${borderCls} p-3`}
+                onClick={() => setDeepDive({ kind: "axis", extra: { selectedAxis: axis } })}
+                className={`rounded-lg border ${borderCls} p-3 text-left ${hoverCls}`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
@@ -315,15 +367,22 @@ export default function BoardAttestation({
                     Path to signed: needs n≥30 + 4-way separation test + keystone
                   </p>
                 )}
-              </div>
+                <ChevronRight className={`absolute right-3 top-1/2 -translate-y-1/2 h-3 w-3 ${clickHintCls} opacity-0 group-hover:opacity-100`} />
+              </button>
             ))}
           </div>
 
           {/* Unsigned-to-Signed Path */}
-          <div className={`mt-4 rounded-lg border ${dark ? "border-emerald-500/20 bg-emerald-900/20" : "border-emerald-200 bg-emerald-50/50"} p-3`}>
-            <p className={`text-[11px] font-semibold ${dark ? "text-emerald-300" : "text-emerald-800"}`}>
-              Unsigned → Signed path (honest)
-            </p>
+          <button
+            onClick={() => setDeepDive({ kind: "in-lane" })}
+            className={`mt-4 w-full rounded-lg border ${dark ? "border-emerald-500/20 bg-emerald-900/20" : "border-emerald-200 bg-emerald-50/50"} p-3 text-left ${hoverCls}`}
+          >
+            <div className="flex items-center">
+              <p className={`text-[11px] font-semibold ${dark ? "text-emerald-300" : "text-emerald-800"}`}>
+                Unsigned → Signed path (honest)
+              </p>
+              <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
+            </div>
             <ul className={`mt-2 text-[11px] ${textMuted} space-y-1`}>
               <li>• n ≥ 30 usable items (current: {inLane.map(a => a.n ?? 0).join(", ") || "—"})</li>
               <li>• 4-way separation test (McNemar on discordant items)</li>
@@ -334,7 +393,7 @@ export default function BoardAttestation({
               No fake close: these axes are not marked signed, no completion date is invented,
               and no path is painted as complete.
             </p>
-          </div>
+          </button>
         </div>
       )}
 
@@ -368,5 +427,15 @@ export default function BoardAttestation({
         </div>
       )}
     </div>
+    
+    {/* Deep Dive Modal */}
+    {deepDive && (
+      <AttestationDeepDive
+        kind={deepDive.kind}
+        data={{ ...data, ...(deepDive.extra || {}) }}
+        onClose={() => setDeepDive(null)}
+      />
+    )}
+    </>
   );
 }
