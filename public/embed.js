@@ -52,30 +52,31 @@ function safeHref(s) {
 
   function paint(label, note) {
     host.setAttribute("aria-label", String(label));
-    host.innerHTML =
-      '<div style="border:1px solid ' +
-      escColor(brand) +
-      ";border-radius:12px;padding:14px;font-family:-apple-system,Segoe UI,sans-serif;max-width:" +
-      w +
-      'px;background:#fff;color:#111">' +
-      '<div style="color:' +
-      escColor(brand) +
-      ';font-weight:700;font-size:13px">' +
-      escHtml(org) +
-      "</div>" +
-      '<div style="margin:6px 0;font-size:14px;color:' +
-      escColor(brand) +
-      '">' +
-      escHtml(label) +
-      "</div>" +
-      '<a href="' +
-      escHtml(verify) +
-      '" target="_blank" rel="noopener" style="display:block;font-size:11px;color:' +
-      escColor(brand) +
-      ';text-decoration:none">Verify the evidence — recompute it yourself →</a>' +
-      '<div style="font-size:10px;color:#666;margin-top:6px">' +
-      escHtml(note || "Measurement, not certification. Council of AI is not a notified body.") +
-      "</div></div>";
+    host.textContent = "";
+    var card = document.createElement("div");
+    var color = escColor(brand);
+    card.style.cssText =
+      "border:1px solid " + color + ";border-radius:12px;padding:14px;font-family:-apple-system,Segoe UI,sans-serif;max-width:" + w + "px;background:#fff;color:#111";
+    var orgEl = document.createElement("div");
+    orgEl.style.cssText = "color:" + color + ";font-weight:700;font-size:13px";
+    orgEl.textContent = org;
+    var labEl = document.createElement("div");
+    labEl.style.cssText = "margin:6px 0;font-size:14px;color:" + color;
+    labEl.textContent = label;
+    var a = document.createElement("a");
+    a.setAttribute("href", verify);
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener");
+    a.style.cssText = "display:block;font-size:11px;color:" + color + ";text-decoration:none";
+    a.textContent = "Verify the evidence — recompute it yourself →";
+    var noteEl = document.createElement("div");
+    noteEl.style.cssText = "font-size:10px;color:#666;margin-top:6px";
+    noteEl.textContent = note || "Measurement, not certification. Council of AI is not a notified body.";
+    card.appendChild(orgEl);
+    card.appendChild(labEl);
+    card.appendChild(a);
+    card.appendChild(noteEl);
+    host.appendChild(card);
   }
 
   if (labelOverride) {

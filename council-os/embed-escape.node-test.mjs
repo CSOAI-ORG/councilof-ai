@@ -27,4 +27,7 @@ describe("embed.js escapes (shipped public/embed.js)", () => {
   it("rejects javascript: verify URLs", () => {
     assert.equal(ctx.safeHref("javascript:alert(1)"), "https://councilof.ai/gspc-verify");
   });
+  it("does not assign innerHTML in paint", () => {
+    assert.equal(/innerHTML\s*=/.test(src), false);
+  });
 });
