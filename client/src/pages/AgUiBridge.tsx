@@ -7,8 +7,8 @@ import { Redirect } from "wouter";
  * Do not iframe csoai-site.pages.dev/ag-ui. #365 and #372 restored that
  * second console; this file must stay a Redirect.
  *
- * 2026-08-28: Redirect to /os?lobby= instead of /?lobby=home. The homepage
- * no longer mounts the lobby panes (832 lean homepage), so /?lobby=home
+ * 2026-08-28: Redirect to /os?lobby= instead of /os?lobby=home. The homepage
+ * no longer mounts the lobby panes (832 lean homepage), so /os?lobby=home
  * crashes with removeChild NotFoundError. /os is the AG-UI host now.
  */
 export default function AgUiBridge() {
