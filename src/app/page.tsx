@@ -26,7 +26,10 @@ import {
   Network,
   Users,
   Eye,
-  AlertTriangle
+  AlertTriangle,
+  Package,
+  Copy,
+  Check
 } from "lucide-react";
 import CouncilOSPage from "./os/page";
 
@@ -34,7 +37,13 @@ export default function HomePage() {
   // Slider states for Interactive Risk & Capability Tuner
   const [modelWeight, setModelWeight] = useState(75);
   const [riskTolerance, setRiskTolerance] = useState(15);
-  const [selectedPillar, setSelectedPillar] = useState<number>(0);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleCopy = (id: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   const pillars = [
     {
@@ -106,6 +115,13 @@ export default function HomePage() {
     { name: "Archax x abrdn MMF", issuer: "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q", allowlist: false, freeze: true, domain: "archax.com", status: "VERIFIED" },
     { name: "Braza Bank USDB", issuer: "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc", allowlist: false, freeze: true, domain: "tokens.brazacripto.com.br", status: "VERIFIED" },
     { name: "Braza Bank BBRL", issuer: "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt", allowlist: false, freeze: true, domain: "tokens.brazacripto.com.br", status: "VERIFIED" }
+  ];
+
+  const developerPackages = [
+    { id: "p1", name: "inspect-signed-receipt", cmd: "pip install inspect-signed-receipt", desc: "Offline Ed25519 card digest & preimage verifier", pypi: "https://pypi.org/project/inspect-signed-receipt/" },
+    { id: "p2", name: "csoai", cmd: "pip install csoai", desc: "Python SDK for GSPC benchmark harness and BFT voting", pypi: "https://pypi.org/project/csoai/" },
+    { id: "p3", name: "proofof-ai-mcp", cmd: "pip install proofof-ai-mcp", desc: "FastMCP compliance server for Claude & Cursor IDEs", pypi: "https://pypi.org/project/proofof-ai-mcp/" },
+    { id: "p4", name: "@meok-labs/ai-sdk", cmd: "npm install @meok-labs/ai-sdk", desc: "TypeScript library for BFT consensus & on-chain XRPL reads", pypi: "https://github.com/CSOAI-ORG" }
   ];
 
   return (
@@ -309,7 +325,69 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 4: XRPL 16-INSTRUMENT ON-CHAIN RWA TELEMETRY DEEP DIVE */}
+      {/* SECTION 4: PACKAGED DEVELOPER TOOLING & SDK ECOSYSTEM */}
+      {/* ========================================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="text-center max-w-3xl mx-auto space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold">
+            <Package className="w-3.5 h-3.5" />
+            Open-Source Toolchain
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-black">
+            Packaged Tooling & SDK Ecosystem
+          </h2>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Install and integrate our offline verification CLIs, Python evaluation SDKs, and FastMCP servers directly into your CI/CD pipelines and IDEs.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {developerPackages.map((pkg) => (
+            <div key={pkg.id} className="p-5 rounded-2xl bg-card border border-border space-y-3 shadow-sm hover:border-brand-500/40 transition-all flex flex-col justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-sm text-foreground">{pkg.name}</span>
+                  <Package className="w-4 h-4 text-brand-400" />
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">{pkg.desc}</p>
+              </div>
+
+              <div className="space-y-2 pt-2">
+                <div className="flex items-center justify-between p-2 rounded-lg bg-background border border-border font-mono text-[11px]">
+                  <span className="truncate mr-1 text-slate-300">{pkg.cmd}</span>
+                  <button
+                    onClick={() => handleCopy(pkg.id, pkg.cmd)}
+                    className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                    title="Copy install command"
+                  >
+                    {copiedId === pkg.id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+                <a
+                  href={pkg.pypi}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] font-semibold text-brand-400 hover:text-brand-300 inline-flex items-center gap-1"
+                >
+                  View Documentation <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center pt-2">
+          <a
+            href="/catalogue"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-card border border-border text-foreground text-xs font-semibold hover:bg-accent transition-colors shadow-sm"
+          >
+            Explore Full Package Catalogue & FastMCP Mesh &rarr;
+          </a>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SECTION 5: XRPL 16-INSTRUMENT ON-CHAIN RWA TELEMETRY DEEP DIVE */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         <div className="rounded-3xl bg-card border border-border p-8 shadow-xl space-y-6">
@@ -382,7 +460,7 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 5: ENTERPRISE OUTCOMES & REPUTATIONAL IMMUNITY */}
+      {/* SECTION 6: ENTERPRISE OUTCOMES & REPUTATIONAL IMMUNITY */}
       {/* ========================================================================= */}
       <section className="py-16 bg-card border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
