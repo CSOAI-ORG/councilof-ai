@@ -28,7 +28,7 @@ async function hubExists(repo) {
   try {
     const res = await fetch(url, { headers: { "User-Agent": "csoai-hf-status" } });
     if (res.status === 200) return "exists";
-    if (res.status === 401 || res.status === 403) return `auth-${res.status}`;
+    if (res.status === 401 || res.status === 403) return "missing-or-private (unauthenticated)";
     if (res.status === 404) return "missing";
     return `http-${res.status}`;
   } catch (e) {
