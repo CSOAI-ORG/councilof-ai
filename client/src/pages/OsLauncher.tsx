@@ -58,6 +58,11 @@ const NAV: NavGroup[] = [
 
 function NavLink({ item }: { item: NavGroup["items"][number] }) {
   const isAnchor = item.href.startsWith("#");
+  const seedChat = () => {
+    openLobby({
+      prompt: `Walk me through ${item.name}${item.note ? ` (${item.note})` : ""} — what is MEASURED here, and what can I control from Council OS chat?`,
+    });
+  };
   const inner = (
     <span className="flex items-center gap-2">
       <span className="flex-1 truncate">{item.name}</span>
@@ -72,14 +77,22 @@ function NavLink({ item }: { item: NavGroup["items"][number] }) {
     "group block rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-emerald-50 hover:text-emerald-700";
   if (isAnchor) {
     return (
-      <a href={item.href} className={cls}>
+      <a
+        href={item.href}
+        className={cls}
+        onClick={() => seedChat()}
+      >
         {inner}
         {item.note && <span className="block text-[11px] font-normal text-slate-400 group-hover:text-emerald-600/70">{item.note}</span>}
       </a>
     );
   }
   return (
-    <Link href={item.href} className={cls}>
+    <Link
+      href={item.href}
+      className={cls}
+      onClick={() => seedChat()}
+    >
       {inner}
       {item.note && <span className="block text-[11px] font-normal text-slate-400 group-hover:text-emerald-600/70">{item.note}</span>}
     </Link>
@@ -141,11 +154,50 @@ export default function OsLauncher() {
                 Enter Council OS
               </a>
               <div className="flex flex-wrap gap-3 text-sm">
-                <a href="/products" className="font-semibold text-emerald-700 hover:underline">Products</a>
-                <a href="/indices" className="font-semibold text-emerald-700 hover:underline">Indices (UNMEASURED)</a>
-                <a href="/mcp-fleet" className="font-semibold text-emerald-700 hover:underline">MCP fleet</a>
-                <a href="/engine-axis" className="font-semibold text-emerald-700 hover:underline">Engine Axis</a>
-                <a href="/dashboard" className="font-semibold text-emerald-700 hover:underline">DSH / dashboard</a>
+                <Link
+                  href="/products"
+                  className="font-semibold text-emerald-700 hover:underline"
+                  onClick={() => openLobby({ task: "products-catalog" })}
+                >
+                  Products
+                </Link>
+                <Link
+                  href="/indices"
+                  className="font-semibold text-emerald-700 hover:underline"
+                  onClick={() => openLobby({ task: "indices-hub" })}
+                >
+                  Indices (UNMEASURED)
+                </Link>
+                <Link
+                  href="/mcp-fleet"
+                  className="font-semibold text-emerald-700 hover:underline"
+                  onClick={() =>
+                    openLobby({
+                      pane: "mcp",
+                      prompt: "List MCP fleet tools I can call — gspc_board, indices_catalog, rwa_attestation_catalog.",
+                    })
+                  }
+                >
+                  MCP fleet
+                </Link>
+                <Link
+                  href="/engine-axis"
+                  className="font-semibold text-emerald-700 hover:underline"
+                  onClick={() => openLobby({ task: "engine-axis-brief" })}
+                >
+                  Engine Axis
+                </Link>
+                <Link
+                  href="/dashboard"
+                  className="font-semibold text-emerald-700 hover:underline"
+                  onClick={() =>
+                    openLobby({
+                      prompt: "Open the DSH dashboard — same evidence as Council OS. What is MEASURED vs UNMEASURED?",
+                    })
+                  }
+                >
+                  DSH / dashboard
+                </Link>
               </div>
               <GameBar />
             </div>
