@@ -91,6 +91,9 @@ const SEARCH_INDEX: SearchResult[] = [
   // ===== PAGES (68+ routes) =====
   // Main Pages
   { id: 'home', title: 'Home', description: 'Council of AI — independent, signed measurement of AI systems', category: 'pages', href: '/', icon: Home, keywords: ['main', 'landing', 'start'] },
+  { id: 'council-os', title: 'Council OS', description: 'The product workspace — board, verify, space, assess, harness in one frame', category: 'pages', href: '/os', icon: Play, keywords: ['os', 'lobby', 'workspace', 'desktop', 'ag-ui'] },
+  { id: 'os-play', title: 'Play gallery', description: 'Local play surfaces inside Council OS — quests you grade in-browser', category: 'pages', href: '/os?lobby=play', icon: Play, keywords: ['play', 'quests', 'gallery', 'arena'] },
+  { id: 'gspc-quests', title: 'GSPC Quests', description: 'Six frozen axis-scoped quests with the same deterministic grader used on models', category: 'pages', href: '/gspc-quests.html', icon: Award, keywords: ['quests', 'grader', 'gspc', 'playable'] },
   { id: 'dashboard', title: 'Dashboard', description: 'Your personal AI compliance dashboard', category: 'pages', href: '/dashboard', icon: BarChart3, keywords: ['overview', 'stats', 'progress'] },
   { id: 'login', title: 'Sign In', description: 'Access your CSOAI account', category: 'pages', href: '/login', icon: Users, keywords: ['login', 'account', 'signin'] },
   { id: 'signup', title: 'Get Started', description: 'Create a new CSOAI account', category: 'pages', href: '/signup', icon: Plus, keywords: ['register', 'create account', 'join'] },
@@ -128,7 +131,7 @@ const SEARCH_INDEX: SearchResult[] = [
   // Enterprise
   { id: 'enterprise', title: 'Enterprise Solutions', description: 'AI compliance solutions for organizations', category: 'pages', href: '/enterprise', icon: Building2, keywords: ['business', 'organization', 'corporate'] },
   { id: 'enterprise-dashboard', title: 'Enterprise Dashboard', description: 'CISO compliance hub for enterprises', category: 'pages', href: '/enterprise-dashboard', icon: BarChart3, keywords: ['ciso', 'compliance', 'hub'] },
-  { id: 'pricing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/?lobby=measured&task=pricing-overview', icon: DollarSign, keywords: ['plans', 'cost', 'subscription', 'pricing'] },
+  { id: 'pricing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/os?lobby=measured&task=pricing-overview', icon: DollarSign, keywords: ['plans', 'cost', 'subscription', 'pricing'] },
   { id: 'enterprise-onboarding', title: 'Enterprise Onboarding', description: 'Get started with enterprise features', category: 'pages', href: '/enterprise-onboarding', icon: Zap, keywords: ['setup', 'onboard', 'start'] },
 
   // Government & Regulator
@@ -156,7 +159,7 @@ const SEARCH_INDEX: SearchResult[] = [
 
   // Settings & Account
   { id: 'settings', title: 'Settings', description: 'Account and application settings', category: 'pages', href: '/settings', icon: Settings, keywords: ['preferences', 'account', 'config'] },
-  { id: 'billing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/?lobby=measured&task=pricing-overview', icon: DollarSign, keywords: ['payment', 'subscription', 'invoice', 'pricing'] },
+  { id: 'billing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/os?lobby=measured&task=pricing-overview', icon: DollarSign, keywords: ['payment', 'subscription', 'invoice', 'pricing'] },
   { id: 'notifications', title: 'Notification Settings', description: 'Configure notification preferences', category: 'pages', href: '/settings/notifications', icon: Settings, keywords: ['alerts', 'email', 'notifications'] },
 
   // Feature Pages
@@ -286,7 +289,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'faq-4', title: 'How does the Prosperity Fund work?', description: 'AI companies contribute 1-3% revenue to fund UBI for all', category: 'faq', href: '/prosperity', icon: HelpCircle, keywords: ['prosperity', 'fund', 'ubi'] },
   { id: 'faq-5', title: 'What is the Council\'s designed multi-provider oversight?', description: 'A multi-provider oversight system for continuous safety oversight', category: 'faq', href: '/byzantine', icon: HelpCircle, keywords: ['byzantine', '33', 'council'] },
   { id: 'faq-6', title: 'How do I register my AI system?', description: 'Use the AI Systems Registry to register and classify your AI', category: 'faq', href: '/ai-systems', icon: HelpCircle, keywords: ['register', 'ai system', 'how'] },
-  { id: 'faq-7', title: 'Is verify free?', description: 'Verify is free forever. A grade is never sold. No public prices.', category: 'faq', href: '/?lobby=measured&task=pricing-overview', icon: HelpCircle, keywords: ['pricing', 'plans', 'cost'] },
+  { id: 'faq-7', title: 'Is verify free?', description: 'Verify is free forever. A grade is never sold. No public prices.', category: 'faq', href: '/os?lobby=measured&task=pricing-overview', icon: HelpCircle, keywords: ['pricing', 'plans', 'cost'] },
   { id: 'faq-8', title: 'How do I become a Watchdog analyst?', description: 'Complete Watchdog training and apply for analyst positions', category: 'faq', href: '/watchdog-signup', icon: HelpCircle, keywords: ['watchdog', 'analyst', 'become'] },
   { id: 'faq-9', title: 'When does the Charter take effect?', description: 'The Partnership Charter launches January 15, 2026 at 09:00 GMT', category: 'faq', href: '/charter', icon: HelpCircle, keywords: ['charter', 'effective', 'date'] },
   { id: 'faq-10', title: 'How do I join as a Founding Member?', description: 'Apply to be one of the first 100 founding members', category: 'faq', href: '/founding-members', icon: HelpCircle, keywords: ['founding', 'member', 'join'] },

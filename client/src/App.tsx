@@ -512,12 +512,12 @@ function App() {
     return <WidgetRouter />;
   }
   // /council-os is NOT handled here. public/_redirects sends it 308 -> /os (the
-  // crawlable launcher) while this branch sent it to /?lobby=home (the overlay),
+  // crawlable launcher) while this branch sent it to /os?lobby=home (the overlay),
   // so the same URL resolved to two different destinations depending on whether
   // Cloudflare Pages or the SPA answered it — 308 in production, client redirect
   // on an in-app navigation. Production is the authority; the SPA now agrees by
   // not claiming the path at all, and wouter falls through to the /os route.
-  // /console and /sov-os both 308 -> /?lobby=home, which is what this branch does.
+  // /console and /sov-os both 308 -> /os?lobby=home, which is what this branch does.
   if (location === '/demo' || location === '/os-demo') {
     return (
       <ErrorBoundary>
