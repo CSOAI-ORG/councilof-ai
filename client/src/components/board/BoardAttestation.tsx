@@ -276,7 +276,7 @@ export default function BoardAttestation({
                 <p className={`text-2xl font-black ${textPrimary}`}>
                   {measured}<span className={textMuted}>/</span>{axes}
                 </p>
-                <p className={`text-[10px] ${textMuted}`}>measured axis</p>
+                <p className={`text-[10px] ${textMuted}`}>axis</p>
               </div>
               <ChevronRight className={`h-4 w-4 ${clickHintCls}`} />
             </div>
