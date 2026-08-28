@@ -1,1 +1,1 @@
-LOADING_FROM_/tmp/mcp_cou_dash_FINAL.json
+FILE_CONTENT_FROM:/tmp/gd_22k.txt
