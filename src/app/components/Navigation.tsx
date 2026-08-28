@@ -1,10 +1,12 @@
 "use client";
 
-import { Shield, Cpu, ExternalLink, LayoutDashboard } from 'lucide-react';
+import { Shield, Cpu, ExternalLink, LayoutDashboard, Menu, X } from 'lucide-react';
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 export function Navigation() {
   const { user } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-background/90 backdrop-blur border-b border-border">
@@ -31,7 +33,7 @@ export function Navigation() {
             <a href="/simulator" className="text-brand-400 hover:text-brand-300 transition-colors flex items-center gap-1.5 font-semibold">
               <Shield className="w-4 h-4" /> Simulator
             </a>
-            <a href="/evaluate" className="text-muted-foreground hover:text-foreground transition-colors">Evaluate</a>
+            <a href="/catalogue" className="text-muted-foreground hover:text-foreground transition-colors">Agent Catalogue</a>
             <a href="/verify" className="text-muted-foreground hover:text-foreground transition-colors">Verify</a>
             <a href="/assess" className="text-muted-foreground hover:text-foreground transition-colors">Assessment</a>
             <a href="/developers" className="text-muted-foreground hover:text-foreground transition-colors">Developers</a>
@@ -57,8 +59,31 @@ export function Navigation() {
                </a>
             )}
           </div>
+        
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-foreground p-2">
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Navigation */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-border bg-background">
+          <div className="px-4 pt-2 pb-6 space-y-1">
+            <a href="/leaderboard" className="block px-3 py-3 rounded-md text-base font-bold text-red-500 hover:bg-muted">Live Leaderboards</a>
+            <a href="/os" className="block px-3 py-3 rounded-md text-base font-semibold text-brand-500 hover:bg-muted">Council OS</a>
+            <a href="/simulator" className="block px-3 py-3 rounded-md text-base font-semibold text-brand-500 hover:bg-muted">Simulator</a>
+            <a href="/catalogue" className="block px-3 py-3 rounded-md text-base font-medium text-foreground hover:bg-muted">Agent Catalogue</a>
+            <a href="/verify" className="block px-3 py-3 rounded-md text-base font-medium text-foreground hover:bg-muted">Verify</a>
+            <a href="/assess" className="block px-3 py-3 rounded-md text-base font-medium text-foreground hover:bg-muted">Assessment</a>
+            <a href="/developers" className="block px-3 py-3 rounded-md text-base font-medium text-foreground hover:bg-muted">Developers</a>
+            <a href="/pricing" className="block px-3 py-3 rounded-md text-base font-medium text-foreground hover:bg-muted">Pricing</a>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
