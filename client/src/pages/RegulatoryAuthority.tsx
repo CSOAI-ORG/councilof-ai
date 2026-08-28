@@ -371,7 +371,7 @@ export default function RegulatoryAuthority() {
               Join CSOAI as we build independent measurement for AI governance. Whether you're an enterprise, regulator, or analyst, there's a role for you.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/?lobby=measured&task=enterprise-start">
+              <Link href="/os?lobby=assess&task=enterprise-start">
                 <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100">
                   Enterprise lobby
                 </Button>
