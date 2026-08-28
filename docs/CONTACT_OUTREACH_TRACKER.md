@@ -2,7 +2,9 @@
 
 Human **send** only. Template: `docs/CONTACT_OUTREACH_TEMPLATE.md`. **No cold email harvest in-repo.**
 
-Public artifacts wired from `docs/ISSUER_PUBLIC_ARTIFACT_REFRESHES.md` + adapters (as-of 2026-08-26). Re-verify explorer links before any send. Never claim MEASURED labour scores.
+Public artifacts wired from `docs/ISSUER_PUBLIC_ARTIFACT_REFRESHES.md` + adapters. Re-verify explorer links before any send. Never claim MEASURED labour scores.
+
+**As-of 2026-08-28:** tip has designed regulator HTML/PDF + `/powered-by` + badge SVG. Prod `councilof.ai` may 404 branch-only paths until owner merge (#370) — cite tip paths or wait for master. Explorer URLs below are public-artifact targets (bot blocks ≠ dead contracts).
 
 | Slot | Class | Public artifact | Ask | Status |
 |------|-------|-----------------|-----|--------|
@@ -18,9 +20,9 @@ Public artifacts wired from `docs/ISSUER_PUBLIC_ARTIFACT_REFRESHES.md` + adapter
 | 10 | Fund disclosure | Franklin BENJI / FOBXX disclosures (cite Etherscan) | REPORTED cite only | artifact ✅ · send ☐ |
 | 11 | Fund disclosure | [Ondo](https://ondo.finance/) primary pages + OUSG XRPScan | REPORTED cite only | artifact ✅ · send ☐ |
 | 12 | Fund disclosure | Apollo / Securitize ACRED (Etherscan + securitize.io) | REPORTED cite only | artifact ✅ · send ☐ |
-| 13 | Regulator | https://councilof.ai/gspc-verify · `/gspc-verify` | verify free forever · no account | artifact ✅ · send ☐ |
-| 14 | Regulator | `/regulator-indices-one-pager.html` · `.pdf` · `docs/REGULATOR_INDICES_ONE_PAGER.md` | UNMEASURED indices honesty brief | artifact ✅ · send ☐ |
-| 15 | Option A prospect | https://councilof.ai/powered-by · `/powered-by` | design partner — not grade sales | artifact ✅ · send ☐ |
-| 16 | Option A prospect | `/badges/powered-by-council-os.svg` | attestation license — not tokenization | artifact ✅ · send ☐ |
+| 13 | Regulator | https://councilof.ai/gspc-verify · `/gspc-verify` | verify free forever · no account | artifact ✅ · prod live · send ☐ |
+| 14 | Regulator | tip `/regulator-indices-one-pager.html` · `.pdf` · `docs/REGULATOR_INDICES_ONE_PAGER.md` | UNMEASURED indices honesty brief | artifact ✅ on tip · prod pending #370 · send ☐ |
+| 15 | Option A prospect | tip `/powered-by` (prod may 404 until merge) | design partner — not grade sales | artifact ✅ on tip · prod pending #370 · send ☐ |
+| 16 | Option A prospect | tip `/badges/powered-by-council-os.svg` | attestation license — not tokenization | artifact ✅ on tip · send ☐ |
 
 Do not claim MEASURED scores in outreach. Attestation ≠ tokenization ≠ ownership.

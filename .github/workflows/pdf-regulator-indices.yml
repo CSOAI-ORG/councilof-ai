@@ -27,9 +27,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+
+      - name: Install deps (playwright package for pdf script)
+        run: npm ci
 
       - name: Install Playwright Chromium
-        run: npx --yes playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Serve public + print PDF
         run: |
