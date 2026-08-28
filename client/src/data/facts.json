@@ -126,6 +126,14 @@
         ]
       },
       "surface_matching": "Each entry may carry `surface` (one path) or `surfaces` (a list). An entry ending in '/*' matches by prefix, for a route family such as the 26 /gspc/:axis pages. Trailing '/index' is stripped before matching.",
+      "unsigned_interop_scoping": {
+        "status": "live",
+        "rule": "Unsigned run artifacts in /interop/ are a DIFFERENT INSTRUMENT from the public board. They legitimately report their own axis counts when measuring subsets (e.g. 4 financial axes on 6 issuers). Comparing 'N axes' in an unsigned run against the board total of 22 is a category error: the run is not claiming to be the board.",
+        "triggers": "A file is scoped (exempt from board-count comparison) when BOTH conditions hold: (1) it lives under interop/, AND (2) it carries unsigned markers: \"signed\": false OR \"status\": \"UNSIGNED\" OR board_write contains 'NOT WRITTEN'.",
+        "why_not_all_interop": "Signed interop files ARE checked against the board. A signed artifact has passed review; if it contradicts the board's totals, that contradiction should be flagged.",
+        "regression_this_fixed": "#841 — financial-4axis-unsigned.json said 'These 4 axes remain UNMEASURED' and facts-gate flagged it as 4 ≠ 22. The file is an unsigned run measuring 4 axes on 6 issuers; it was never a claim about the board. #851 patched it with a fragile weld ('4 unsigned financial slots'); this rule makes the scoping durable.",
+        "selftest_case": "unsigned interop file: 4 axes is scoped (reproduces #841)"
+      },
       "financial_axes_register": {
         "authority": "/interop/financial-axes.json — the register for the 8 financial/domain axes",
         "status": "live",

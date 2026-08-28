@@ -102,6 +102,30 @@ function ruleBoundary(facts, file, text, add) {
 const COUNT_RE =
   /\b(\d{1,3})\s+(canonical\s+|public\s+|measured\s+|quotable\s+)?(axes|axis|slots)\b/gi;
 
+// ---------------------------------------------------------------- unsigned interop scoping
+// Unsigned run artifacts in /interop/ are a DIFFERENT INSTRUMENT from the public board.
+// They measure subsets of axes on specific populations (e.g. 4 financial axes on 6 issuers)
+// and legitimately report their own counts. Comparing "4 axes" in an UNSIGNED run against
+// the board total of 22 is a category error: the run is not claiming to be the board.
+//
+// A file is scoped (exempt from board-count comparison) when BOTH conditions hold:
+//   1. It lives under interop/ (the machine-readable export directory)
+//   2. It carries explicit unsigned markers: "signed": false OR "status": "UNSIGNED"
+//      OR board_write contains "NOT WRITTEN"
+//
+// Signed interop files ARE compared against the board: a signed artifact has passed
+// review and should not contradict the board's totals without explanation.
+const UNSIGNED_MARKERS = [
+  /"signed"\s*:\s*false/,
+  /"status"\s*:\s*"UNSIGNED"/i,
+  /board_write[^}]*NOT WRITTEN/i,
+];
+
+function isUnsignedInteropFile(file, rawContent) {
+  if (!file.startsWith("interop/") && !file.includes("/interop/")) return false;
+  return UNSIGNED_MARKERS.some((re) => re.test(rawContent));
+}
+
 // A published correction QUOTES the number it is correcting. Exonerate that.
 // Widened 2026-08-26: coverage-register.json carries a field explaining "This field
 // previously read '… 14 axes …'", and the gate flagged it for quoting the very text it
@@ -119,8 +143,13 @@ const BREAKDOWN_BEFORE = /\b(?:\d+\s+of|the other|remaining|only|another)\s+$/i;
 // "13 axis signals", "5 axis lens" — the noun is qualified; not a board count.
 const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?)\b/i;
 
-function ruleAxisCount(facts, file, text, add, liveCount) {
+function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
   if (liveCount == null) return;
+
+  // Unsigned interop files are scoped to their own instrument and not compared
+  // against the board total. See facts.json counts.unsigned_interop_scoping.
+  if (isUnsignedInteropFile(file, rawContent || text)) return;
+
   const ns = facts.counts?.namespaces || {};
   // Surfaces that legitimately carry their own instrument's count.
   //
@@ -381,7 +410,7 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured) {
     const raw = readFileSync(f, "utf8");
     const text = contentOf(f, raw);
     ruleBoundary(facts, rel, text, add);
-    ruleAxisCount(facts, rel, text, add, liveCount);
+    ruleAxisCount(facts, rel, text, add, liveCount, raw);
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
   }
@@ -404,6 +433,9 @@ function report(violations) {
 }
 
 // ---------------------------------------------------------------- selftest
+// Selftest cases: [name, html, shouldFail] OR [name, html, shouldFail, filePath]
+// When filePath is provided, the test simulates a file at that path with the given content.
+// This allows testing file-path-based scoping rules (e.g. unsigned interop files).
 const SELFTEST_CASES = [
   // [name, html, shouldFail]
   ["negation: we do not certify", "<p>We measure. We do not certify, accredit or approve anything.</p>", false],
@@ -432,6 +464,18 @@ const SELFTEST_CASES = [
   ["VIOLATION: ERC-3643 asserted live", "<p>We issue ERC-3643 credentials; issuance runs on the trusted-issuer bridge.</p>", true],
   ["VIOLATION: XRPL mainnet carrier", "<p>Our attestations are published to XRPL mainnet in production.</p>", true],
   ["honest XRPL devnet", "<p>Network: XRPL DEVNET · evidence card 82994353b8f94337…</p>", false],
+  // ── unsigned interop scoping (#841 regression) ────────────────────────────────
+  // An unsigned run artifact in /interop/ is a DIFFERENT INSTRUMENT from the board.
+  // It legitimately says "4 axes" when measuring 4 axes on its own population.
+  // Comparing that against the board total of 22 is a category error.
+  // This case reproduces the #841 failure: financial-4axis-unsigned.json said
+  // "These 4 axes remain UNMEASURED" and the gate flagged it as 4 ≠ 22.
+  [
+    "unsigned interop file: 4 axes is scoped (reproduces #841)",
+    '{"signed": false, "status": "UNSIGNED", "board_write": "NOT WRITTEN. These 4 axes remain UNMEASURED."}',
+    false,
+    "interop/test-unsigned-run.json",
+  ],
 ];
 
 async function selftest(facts) {
@@ -440,14 +484,16 @@ async function selftest(facts) {
   let pass = 0;
   let fail = 0;
   console.log(`facts-gate --selftest  (live axis count = ${liveCount})\n`);
-  for (const [name, html, shouldFail] of SELFTEST_CASES) {
+  for (const testCase of SELFTEST_CASES) {
+    const [name, html, shouldFail, filePath] = testCase;
+    const file = filePath || "selftest";
     const violations = [];
     const add = (v) => violations.push(v);
     const text = textOf(html);
-    ruleBoundary(facts, "selftest", text, add);
-    ruleAxisCount(facts, "selftest", text, add, liveCount);
-    ruleMeasuredOverclaim(facts, "selftest", text, add, liveMeasured);
-    ruleCapabilityTense(facts, "selftest", text, add);
+    ruleBoundary(facts, file, text, add);
+    ruleAxisCount(facts, file, text, add, liveCount, html);
+    ruleMeasuredOverclaim(facts, file, text, add, liveMeasured);
+    ruleCapabilityTense(facts, file, text, add);
     const didFail = violations.length > 0;
     const ok = didFail === shouldFail;
     if (ok) pass++;
