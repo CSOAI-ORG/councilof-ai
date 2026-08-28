@@ -141,12 +141,9 @@ export default function LiveLeaderboard({
                   aria-expanded={expanded}
                   className="rounded-full border border-primary/30 bg-card px-5 py-2.5 text-sm font-bold text-primary transition hover:bg-primary/10"
                 >
-                  {expanded ? `Show top ${DEFAULT_ROWS}` : `Show all ${rows.length} slots`}
-                  {!expanded && hidden > 0 && (
-                    <span className="ml-1.5 font-normal text-primary/70">
-                      (+{hidden} more)
-                    </span>
-                  )}
+                  {expanded
+                    ? `Show top ${DEFAULT_ROWS}`
+                    : `Show all ${rows.length} slots`}
                 </button>
               )}
 

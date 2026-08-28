@@ -26,24 +26,15 @@ transport your client speaks; the contracts are identical.
 
 ## Install
 
-This package is **not yet published to npm** (checked 2026-08-27). Until it is,
-install from a checkout of the repo — the server is a single file with no
-dependencies, so "install" is just pointing your client at it:
+Published as `csoai-gspc-mcp` on npm.
 
 ```sh
-git clone https://github.com/CSOAI-ORG/councilof-ai.git
-# the server is at councilof-ai/mcp/gspc-server/index.mjs — no npm install needed
+npx -y csoai-gspc-mcp
+# or
+claude mcp add gspc -- npx -y csoai-gspc-mcp
 ```
 
-Below, replace `/ABS/PATH/TO/councilof-ai` with where you cloned it.
-
-### Claude Code
-
-```sh
-claude mcp add gspc -- node /ABS/PATH/TO/councilof-ai/mcp/gspc-server/index.mjs
-```
-
-Once published to npm this becomes `claude mcp add gspc -- npx -y csoai-gspc-mcp`.
+From a checkout of the repo the server is `mcp/gspc-server/index.mjs` (no extra install).
 
 ### Claude Desktop
 
