@@ -16,10 +16,11 @@ import DenseBoard from "@/components/board/DenseBoard";
  *   ?lobby=space  → space
  *   ?lobby=measured → assess
  *   ?lobby=harness → harness
- * /ag-ui, /chat, /console all 308 to /os?lobby=home now.
+ * /ag-ui, /chat, /console, /sov-os all land on /os?lobby=home now.
  *
- * CLEAN HEADER. OpenRouter-style: logo + doors + one control. No KPI dump,
- * no debug chrome, no Fleet/Chain/CardIndex/api-state labels, no pane toggles.
+ * NO INLINE HEADER. OsHeader (in App.tsx) provides the product-frame header
+ * with OpenRouter-style nav, user account, and door tabs. This component only
+ * renders the door content.
  *
  * SAME BOARD AS HOMEPAGE. The Board door renders DenseBoard — THE SAME
  * component the homepage uses. One component, two surfaces. Counts come from
@@ -34,9 +35,9 @@ import DenseBoard from "@/components/board/DenseBoard";
  * Public names only: Council OS, Council Space, GSPC.
  */
 
-type DoorId = "board" | "verify" | "harness" | "space" | "assess";
+export type DoorId = "board" | "verify" | "harness" | "space" | "assess";
 
-const DOORS: { id: DoorId; label: string }[] = [
+export const DOORS: { id: DoorId; label: string }[] = [
   { id: "board", label: "Board" },
   { id: "verify", label: "Verify" },
   { id: "space", label: "Space" },
@@ -44,7 +45,7 @@ const DOORS: { id: DoorId; label: string }[] = [
   { id: "harness", label: "Harness" },
 ];
 
-const LOBBY_TO_DOOR: Record<string, DoorId> = {
+export const LOBBY_TO_DOOR: Record<string, DoorId> = {
   home: "board",
   board: "board",
   verify: "verify",
@@ -210,46 +211,12 @@ export default function OsLauncher() {
   }, [search]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-xs font-bold text-white">C</span>
-              <span className="text-sm font-semibold text-slate-900">Council OS</span>
-            </Link>
-            <nav className="flex gap-1">
-              {DOORS.map((d) => (
-                <button
-                  key={d.id}
-                  onClick={() => setDoor(d.id)}
-                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${FOCUS} ${
-                    door === d.id
-                      ? "bg-emerald-100 text-emerald-900"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                  }`}
-                >
-                  {d.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-          <a
-            href="/gspc-verify"
-            className={`rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 ${FOCUS}`}
-          >
-            Verify free
-          </a>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        {door === "board" && <BoardDoor />}
-        {door === "verify" && <VerifyDoor />}
-        {door === "harness" && <HarnessDoor />}
-        {door === "space" && <SpaceDoor />}
-        {door === "assess" && <AssessDoor />}
-      </main>
-    </div>
+    <main className="mx-auto max-w-5xl px-4 py-8">
+      {door === "board" && <BoardDoor />}
+      {door === "verify" && <VerifyDoor />}
+      {door === "harness" && <HarnessDoor />}
+      {door === "space" && <SpaceDoor />}
+      {door === "assess" && <AssessDoor />}
+    </main>
   );
 }
