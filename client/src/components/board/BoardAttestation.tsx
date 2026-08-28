@@ -320,7 +320,7 @@ export default function BoardAttestation({
         <div className={`border-t ${borderCls} pt-5`}>
           <div className="flex items-center mb-3">
             <h3 className={labelCls}>
-              In-Lane · measured but not board-quotable
+              Unsigned Financial Slots · not board rows
             </h3>
             <button
               onClick={() => setDeepDive({ kind: "in-lane" })}
@@ -330,9 +330,10 @@ export default function BoardAttestation({
             </button>
           </div>
           <p className={`text-[11px] ${textMuted} mb-3`}>
-            These axes are measured on a smaller fleet with no separation test.
+            {inLane.length} unsigned financial slots measured on a smaller fleet with no separation test.
             Published as <code className="text-[10px]">measured_in_lane</code> on GET /api/gspc.
-            NOT counted in totals.public_count. Separation status: UNTESTED.
+            NOT stamped onto the board 15. public_count stays 22 axis · 15 measured.
+            Fetched from /interop/ as unsigned leftover only.
           </p>
           
           <div className="grid gap-2 sm:grid-cols-2">

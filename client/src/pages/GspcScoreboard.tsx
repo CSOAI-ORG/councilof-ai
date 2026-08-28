@@ -592,9 +592,10 @@ export default function GspcScoreboard() {
 
         {data && Array.isArray(data.measured_in_lane) && data.measured_in_lane.length > 0 && (
           <div className="mt-10 rounded-2xl border border-dashed border-emerald-600/25 bg-emerald-50/40 p-6">
-            <h2 className="text-lg font-bold text-gray-900">In-lane — not board rows</h2>
+            <h2 className="text-lg font-bold text-gray-900">Unsigned financial slots — not board rows</h2>
             <p className="mt-1 text-sm text-gray-600">
-              Published as <code>measured_in_lane</code> on GET /api/gspc. Not counted in totals.public_count.
+              {data.measured_in_lane.length} unsigned financial slots. Published as <code>measured_in_lane</code> on GET /api/gspc.
+              NOT stamped onto the board 15. public_count stays 22 axis · 15 measured.
               Click any card for traces + graphs.
             </p>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">

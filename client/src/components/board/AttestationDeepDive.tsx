@@ -494,12 +494,14 @@ function InLanePanel({ data, onClose }: { data: any; onClose: () => void }) {
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-violet-700">
         <Clock className="h-5 w-5" />
-        <h3 className="text-lg font-bold">In-Lane Axes — Unsigned Path</h3>
+        <h3 className="text-lg font-bold">Unsigned Financial Slots — Not Board Rows</h3>
       </div>
 
       <div className="rounded-lg border border-violet-200 bg-violet-50 p-4">
         <p className="text-sm text-violet-800 mb-2">
-          Measured on a smaller fleet with no separation test. Published as <code className="text-xs">measured_in_lane</code> — NOT counted in totals.
+          {inLane.length} unsigned financial slots measured on a smaller fleet with no separation test.
+          Published as <code className="text-xs">measured_in_lane</code> — NOT counted in board totals.
+          Board stays 22 axis · 15 measured. These slots are unsigned leftover only.
         </p>
         <p className="text-xs text-violet-700">
           Status: <strong>UNTESTED</strong> — path to signed requires n≥30 + 4-way separation + keystone attestation
