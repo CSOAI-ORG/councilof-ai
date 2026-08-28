@@ -62,8 +62,10 @@ const EXISTING = [
   "/consensus            /council   308",
   "/jewels               /          308",
   "/crown-jewels         /          308",
-  "/plans                /pricing   308",
-  "/enterprise-plans     /pricing   308",
+  // Pricing lives in Council OS Assess (functions/pricing.ts). Do not chain
+  // through /pricing — that is itself a 308 door hop.
+  "/plans                /os?lobby=assess&task=pricing-overview   308",
+  "/enterprise-plans     /os?lobby=assess&task=pricing-overview   308",
   "/council-space  /gspc-arena             308",
   "/city           /gspc-arena?view=towns  308",
   // Living-measurement / product short doors. Destinations already exist.
@@ -206,7 +208,8 @@ const STOREFRONT = [
 ];
 
 const PERSONA_SLASH = [
-  "pricing", "honesty", "library", "regulators", "start", "insurers",
+  // pricing is a Functions door hop → /os Assess — do not emit /pricing → /pricing/
+  "honesty", "library", "regulators", "start", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
   "models", "tools", "api-docs",
