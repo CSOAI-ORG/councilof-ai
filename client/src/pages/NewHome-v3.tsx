@@ -1,33 +1,41 @@
 /**
- * NewHome-v3 — councilof.ai Homepage (LEAN v2 2026-08-28)
+ * NewHome-v3 — councilof.ai Homepage (LEAN v3 2026-08-28)
  *
- * Structure: short intro + OpenRouter-style dense table of ALL 22 axes + three doors
+ * Structure: institutional first-paint + OpenRouter-style living 22-row table + doors
+ *
+ * DESIGN INTENT:
+ * - OpenRouter leaderboard: dense, sortable, every row visible, every number live
+ * - Moody's measurement house: institution chrome, measurement credential language
+ * - Row click → deep pane with progress (measured vs unmeasured), axis detail
+ * - Never certify. Never sell a grade. UNMEASURED is first-class.
  *
  * WHAT WAS CUT:
  * - Fat UNMEASURED card stack (replaced with dense table)
- * - StoryWorldRest scroll-world slides
- * - ToolStack "Nine problems, nine tools" brochure
  * - Industries/demographics/buyer grids
  * - FAQ accordion (lives on /faq per PR 833)
- * - CardChainBand (too much detail for first paint)
- * - Repeated pain/benefit blocks
  *
  * WHAT STAYS:
- * - Short intro: who we are, one line
- * - Dense table of ALL 22 axes (OpenRouter-style: every row visible, no teaser)
+ * - Short intro: who we are (independent measurement body), one line
+ * - Dense table of ALL axes (OpenRouter-style: every row visible, no teaser)
  * - Three doors: verify (free), OS, Space
  * - Products / refusals below the fold
  */
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode, useCallback } from "react";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import {
-  fetchAxes, quotable,
+  fetchAxes, quotable, wilson, hasInterval, hasMacroF1,
   type Axis,
 } from "../lib/gspcAxes";
 import {
   ChevronRight,
   Ban,
+  X,
+  BarChart3,
+  ExternalLink,
+  Activity,
+  CheckCircle2,
+  Circle,
 } from "lucide-react";
 
 // ── data ───────────────────────────────────────────────────
@@ -71,6 +79,16 @@ const PRODUCT_FAMILY = [
   },
 ];
 
+// ── mini-nav for Council OS panes ─────────────────────────────
+const OS_PANES = [
+  { label: "Board", href: "/?lobby=board", pane: "board" },
+  { label: "Verify", href: "/?lobby=verify", pane: "verify" },
+  { label: "Space", href: "/?lobby=space", pane: "space" },
+  { label: "Models", href: "/?lobby=models", pane: "models" },
+  { label: "News", href: "/blog", pane: null },
+  { label: "Progress", href: "/methodology", pane: null },
+] as const;
+
 const REFUSALS = [
   { no: "We do not certify", why: "No conformity mark, no badge, no seal, no accreditation chain. We are not a notified body under the EU AI Act or anything else." },
   { no: "We do not sell a grade", why: "Nobody on the board pays for their place on it, their score, or their removal from either. Verification is free forever and needs no account." },
@@ -104,45 +122,300 @@ function Section({
   );
 }
 
-// ── hero: short intro, not a scroll-world ───────────────────
+// ── hero: institutional first-paint ───────────────────
 function HeroIntro() {
   return (
-    <section className="surface-ink py-16 sm:py-20">
-      <div className="section-shell text-center">
-        <h1 className="text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
+    <section className="surface-ink py-16 sm:py-20 lg:py-24">
+      <div className="section-shell">
+        {/* Institution badge */}
+        <div className="mb-6 flex justify-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-emerald-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            Independent Measurement Body
+          </span>
+        </div>
+
+        <h1 className="text-center text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
           Council of AI
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-emerald-100/90">
-          Independent measurement body for AI behaviour. We run AI systems against frozen,
-          published tests, sign the result, and publish what we could not measure alongside
-          what we could. Measurement, not certification.
+
+        <p className="mx-auto mt-5 max-w-2xl text-center text-lg leading-relaxed text-emerald-100/90">
+          We run AI systems against frozen, published tests, sign the result with Ed25519,
+          and publish what we could not measure alongside what we could. Measurement credential,
+          not certification. Verification is free forever.
         </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
+
+        {/* Key facts row */}
+        <div className="mx-auto mt-8 flex max-w-xl flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-emerald-200/80">
+          <span className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            Ed25519-signed
+          </span>
+          <span className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            Verify free forever
+          </span>
+          <span className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            No login required
+          </span>
+          <span className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            UNMEASURED is first-class
+          </span>
+        </div>
+
+        {/* Primary CTAs */}
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
           <a
             href="/gspc-verify"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-400"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-400 hover:shadow-emerald-400/30"
           >
             Verify a card — free <ChevronRight className="h-4 w-4" />
           </a>
           <a
             href="/os"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/5 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/10"
           >
             Open Council OS
           </a>
           <a
             href="/gspc-arena"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/10"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/5 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/10"
           >
             Council Space
           </a>
         </div>
+
+        {/* Doctrine statement */}
+        <p className="mx-auto mt-10 max-w-xl text-center text-xs leading-relaxed text-emerald-200/60">
+          We measure; we never certify. No conformity mark, no badge, no seal, no accreditation chain.
+          A grade is never sold; nobody on the board pays for their place on it. Empty cells stay
+          visible — an invented number is exactly the behaviour this instrument exists to catch.
+        </p>
       </div>
     </section>
   );
 }
 
-// ── dense board: OpenRouter-style sortable leaderboard of ALL 22 axes ──────
+// ── axis detail pane: row-click deep view ──────────────────────────────
+function AxisDetailPane({
+  axis,
+  onClose,
+}: {
+  axis: Axis | null;
+  onClose: () => void;
+}) {
+  if (!axis) return null;
+  const isMeasured = axis.status === "MEASURED";
+  const q = quotable(axis);
+  const showInterval = hasInterval(axis);
+  const interval = showInterval && q ? wilson(axis.accuracy!, axis.n) : null;
+  const showMacro = hasMacroF1(axis);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative mx-4 w-full max-w-2xl rounded-2xl border border-border bg-card shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+          aria-label="Close"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
+        <div className="p-6 sm:p-8">
+          {/* Header */}
+          <div className="flex items-start gap-4">
+            <div
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+              style={{ backgroundColor: `${axis.colour}20`, color: axis.colour }}
+            >
+              <BarChart3 className="h-6 w-6" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-xl font-bold text-foreground">{axis.axis}</h2>
+              <p className="mt-0.5 text-sm text-muted-foreground">{axis.bench}</p>
+            </div>
+          </div>
+
+          {/* Status badge row */}
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${
+                isMeasured
+                  ? "bg-emerald-500/15 text-emerald-700"
+                  : "bg-slate-500/10 text-slate-500"
+              }`}
+            >
+              {isMeasured ? (
+                <CheckCircle2 className="h-3.5 w-3.5" />
+              ) : (
+                <Circle className="h-3.5 w-3.5" />
+              )}
+              {axis.status}
+            </span>
+            {axis.instrument && (
+              <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                {axis.instrument}
+              </span>
+            )}
+          </div>
+
+          {/* Task description */}
+          {axis.task && (
+            <p className="mt-4 text-sm leading-relaxed text-foreground">
+              <strong className="font-semibold">Measurement task:</strong> {axis.task}
+            </p>
+          )}
+
+          {/* Metrics grid */}
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="rounded-xl border border-border bg-muted/30 p-4">
+              <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                Sample (n)
+              </div>
+              <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-foreground">
+                {axis.n > 0 ? axis.n : "—"}
+              </div>
+            </div>
+            <div className="rounded-xl border border-border bg-muted/30 p-4">
+              <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                Accuracy
+              </div>
+              <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-foreground">
+                {q ? `${((axis.accuracy ?? 0) * 100).toFixed(1)}%` : "—"}
+              </div>
+            </div>
+            {showMacro && (
+              <div className="rounded-xl border border-border bg-muted/30 p-4">
+                <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                  Macro F1
+                </div>
+                <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-foreground">
+                  {(axis.macro_f1! * 100).toFixed(1)}%
+                </div>
+              </div>
+            )}
+            <div className="rounded-xl border border-border bg-muted/30 p-4">
+              <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                Unparsed
+              </div>
+              <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-foreground">
+                {axis.unparsed_rate > 0 ? `${(axis.unparsed_rate * 100).toFixed(1)}%` : "0%"}
+              </div>
+            </div>
+          </div>
+
+          {/* Confidence interval visualization */}
+          {interval && (
+            <div className="mt-6">
+              <div className="mb-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                95% Wilson Interval
+              </div>
+              <div className="relative h-8 overflow-hidden rounded-lg bg-muted">
+                <div
+                  className="absolute top-0 h-full bg-emerald-500/30"
+                  style={{
+                    left: `${interval[0] * 100}%`,
+                    width: `${(interval[1] - interval[0]) * 100}%`,
+                  }}
+                />
+                <div
+                  className="absolute top-0 h-full w-0.5 bg-emerald-600"
+                  style={{ left: `${(axis.accuracy ?? 0) * 100}%` }}
+                />
+                <div className="absolute inset-0 flex items-center justify-between px-3 text-[10px] font-mono text-muted-foreground">
+                  <span>{(interval[0] * 100).toFixed(0)}%</span>
+                  <span className="font-bold text-foreground">
+                    {((axis.accuracy ?? 0) * 100).toFixed(1)}%
+                  </span>
+                  <span>{(interval[1] * 100).toFixed(0)}%</span>
+                </div>
+              </div>
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                n≥30 required. Interval is withheld below that threshold.
+              </p>
+            </div>
+          )}
+
+          {/* Progress bar: measured vs unmeasured visual */}
+          <div className="mt-6">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+                Measurement Progress
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {isMeasured ? "Measured" : "UNMEASURED — slot declared, no run behind it"}
+              </span>
+            </div>
+            <div className="h-3 overflow-hidden rounded-full bg-muted">
+              <div
+                className={`h-full transition-all ${
+                  isMeasured ? "bg-emerald-500" : "bg-slate-300"
+                }`}
+                style={{ width: isMeasured ? "100%" : "0%" }}
+              />
+            </div>
+          </div>
+
+          {/* Note */}
+          {axis.note && (
+            <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-800">
+              <strong className="font-semibold">Note:</strong> {axis.note}
+            </p>
+          )}
+
+          {/* Actions */}
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            {isMeasured && (
+              <a
+                href={`/gspc-verify?axis=${encodeURIComponent(axis.axis)}`}
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90"
+              >
+                Verify this axis <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            )}
+            <a
+              href={`/gspc-scoreboard?axis=${encodeURIComponent(axis.axis)}`}
+              className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
+            >
+              View on scoreboard
+            </a>
+            {axis.dataset_url && (
+              <a
+                href={axis.dataset_url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+              >
+                Dataset <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="border-t border-border bg-muted/30 px-6 py-4 sm:px-8">
+          <p className="text-[11px] leading-relaxed text-muted-foreground">
+            <strong>Measurement credential, not certification.</strong> This axis is a measurement —
+            we run AI systems against frozen, published tests and sign the result. We issue no
+            conformity mark, no badge, no seal. UNMEASURED slots stay visible: an empty cell is
+            honest, a fabricated number is not. Verification is free forever.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── dense board: OpenRouter-style sortable leaderboard of ALL axes ──────
 type SortKey = "axis" | "status" | "n" | "score";
 type SortDir = "asc" | "desc";
 
@@ -153,6 +426,7 @@ function DenseBoard() {
   const [loading, setLoading] = useState(true);
   const [sortKey, setSortKey] = useState<SortKey>("status");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [selectedAxis, setSelectedAxis] = useState<Axis | null>(null);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -206,6 +480,13 @@ function DenseBoard() {
     return days;
   })();
 
+  const measuredCount = axes.filter((a) => a.status === "MEASURED").length;
+  const emptyCount = axes.length - measuredCount;
+
+  const handleRowClick = useCallback((axis: Axis) => {
+    setSelectedAxis(axis);
+  }, []);
+
   const SortIcon = ({ k }: { k: SortKey }) => (
     <span className="ml-1 inline-block opacity-60">
       {sortKey === k ? (sortDir === "asc" ? "↑" : "↓") : "⇅"}
@@ -215,25 +496,58 @@ function DenseBoard() {
   return (
     <section className="surface-sunken section-y">
       <div className="section-shell">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-              The GSPC Board
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Live from <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">GET /api/gspc</code>
-              {publicCount && <span className="ml-2 font-semibold text-foreground">{publicCount}</span>}
-            </p>
+        {/* Institutional header */}
+        <div className="mb-6 rounded-xl border border-emerald-200/50 bg-gradient-to-r from-emerald-50/80 to-transparent p-4 sm:p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                <Activity className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-black tracking-tight text-foreground sm:text-2xl">
+                  The Living Board
+                </h2>
+                <p className="mt-0.5 text-sm text-muted-foreground">
+                  {publicCount ? (
+                    <span className="font-medium text-emerald-700">{publicCount}</span>
+                  ) : (
+                    <>
+                      {axes.length} axis · {measuredCount} measured · {emptyCount} empty
+                    </>
+                  )}
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">
+                Live from GET /api/gspc
+              </span>
+              <a
+                href="/gspc-scoreboard"
+                className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-bold text-white transition hover:bg-emerald-800"
+              >
+                Full scoreboard <ChevronRight className="h-4 w-4" />
+              </a>
+            </div>
           </div>
-          <a
-            href="/gspc-scoreboard"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Full scoreboard <ChevronRight className="h-4 w-4" />
-          </a>
         </div>
 
-        <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card">
+        {/* Mini-nav for Council OS panes */}
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs">
+          <span className="font-bold uppercase tracking-wide text-muted-foreground">Open in OS:</span>
+          {OS_PANES.map((p) => (
+            <a
+              key={p.label}
+              href={p.href}
+              className="rounded-md border border-border bg-card px-2.5 py-1 font-medium text-foreground transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
+            >
+              {p.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Dense table */}
+        <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
           <table className="w-full min-w-[44rem] text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/50 text-left text-xs font-bold uppercase tracking-wide text-muted-foreground">
@@ -269,7 +583,10 @@ function DenseBoard() {
               {loading ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                    Loading…
+                    <span className="inline-flex items-center gap-2">
+                      <Activity className="h-4 w-4 animate-pulse" />
+                      Fetching live board…
+                    </span>
                   </td>
                 </tr>
               ) : (
@@ -279,47 +596,63 @@ function DenseBoard() {
                   return (
                     <tr
                       key={a.axis}
-                      className="border-b border-border last:border-0 hover:bg-muted/30"
+                      className="cursor-pointer border-b border-border last:border-0 transition-colors hover:bg-emerald-50/50"
+                      onClick={() => handleRowClick(a)}
+                      tabIndex={0}
+                      onKeyDown={(e) => e.key === "Enter" && handleRowClick(a)}
+                      role="button"
+                      aria-label={`View details for ${a.axis}`}
                     >
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-2.5">
                         <span className="font-semibold text-foreground">{a.axis}</span>
+                        {a.task && (
+                          <span className="ml-2 hidden text-xs text-muted-foreground sm:inline">
+                            {a.task.slice(0, 40)}…
+                          </span>
+                        )}
                       </td>
-                      <td className="px-4 py-2 text-center">
+                      <td className="px-4 py-2.5 text-center">
                         <span
-                          className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                          className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                             isMeasured
-                              ? "bg-primary/15 text-primary"
-                              : "bg-muted text-muted-foreground"
+                              ? "bg-emerald-500/15 text-emerald-700"
+                              : "bg-slate-100 text-slate-500"
                           }`}
                         >
+                          {isMeasured ? (
+                            <CheckCircle2 className="h-3 w-3" />
+                          ) : (
+                            <Circle className="h-3 w-3" />
+                          )}
                           {a.status}
                         </span>
                       </td>
-                      <td className="px-4 py-2 text-right font-mono tabular-nums text-muted-foreground">
+                      <td className="px-4 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
                         {typeof a.n === "number" && a.n > 0 ? a.n : "—"}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono tabular-nums">
+                      <td className="px-4 py-2.5 text-right font-mono tabular-nums">
                         {q ? (
-                          <span className="font-bold text-primary">
+                          <span className="font-bold text-emerald-700">
                             {((a.accuracy ?? 0) * 100).toFixed(0)}%
                           </span>
                         ) : (
-                          <span className="text-muted-foreground">—</span>
+                          <span className="text-slate-400">—</span>
                         )}
                       </td>
-                      <td className="px-4 py-2 text-center font-mono text-xs text-muted-foreground">
+                      <td className="px-4 py-2.5 text-center font-mono text-xs text-muted-foreground">
                         {isMeasured && stampAge !== null ? `${stampAge}d` : "—"}
                       </td>
-                      <td className="px-4 py-2 text-center">
+                      <td className="px-4 py-2.5 text-center">
                         {isMeasured ? (
                           <a
                             href={`/gspc-verify?axis=${encodeURIComponent(a.axis)}`}
-                            className="text-xs font-bold text-primary hover:underline"
+                            className="text-xs font-bold text-emerald-600 hover:underline"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             verify
                           </a>
                         ) : (
-                          <span className="text-xs text-muted-foreground">—</span>
+                          <span className="text-xs text-slate-400">—</span>
                         )}
                       </td>
                     </tr>
@@ -329,7 +662,19 @@ function DenseBoard() {
             </tbody>
           </table>
         </div>
+
+        {/* Footer note */}
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          Click any row for axis detail. Empty cells stay visible — UNMEASURED is honest.
+          <span className="mx-1">·</span>
+          <a href="/methodology" className="font-medium text-emerald-600 hover:underline">
+            How we measure
+          </a>
+        </p>
       </div>
+
+      {/* Detail pane */}
+      <AxisDetailPane axis={selectedAxis} onClose={() => setSelectedAxis(null)} />
     </section>
   );
 }
