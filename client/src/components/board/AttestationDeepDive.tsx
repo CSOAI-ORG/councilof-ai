@@ -562,6 +562,30 @@ function InLanePanel({ data, onClose }: { data: any; onClose: () => void }) {
 }
 
 function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () => void }) {
+  const [tab, setTab] = useState<"current" | "history">("current");
+  const [history, setHistory] = useState<any[] | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
+
+  useEffect(() => {
+    if (tab === "history" && history === null && !historyLoading) {
+      setHistoryLoading(true);
+      fetch(`/api/gspc/history/${encodeURIComponent(axis?.axis || "")}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null)
+        .then((d) => {
+          setHistory(d?.records || []);
+          setHistoryLoading(false);
+        });
+    }
+  }, [tab, axis?.axis, history, historyLoading]);
+
+  const tabCls = (active: boolean) =>
+    `px-4 py-2 text-sm font-semibold rounded-t-lg transition-colors ${
+      active
+        ? "bg-white text-emerald-700 border-t border-x border-slate-200"
+        : "text-slate-500 hover:text-slate-700"
+    }`;
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-emerald-700">
@@ -569,61 +593,154 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
         <h3 className="text-lg font-bold">{axis?.axis || "Axis"}</h3>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-lg border border-slate-200 p-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Bench</p>
-          <p className="font-medium">{axis?.bench || "—"}</p>
-          <p className="text-xs text-slate-600 mt-1">{axis?.task || "—"}</p>
-        </div>
-        <div className="rounded-lg border border-slate-200 p-3">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Sample</p>
-          <p className="text-2xl font-bold font-mono">{axis?.n || "—"}</p>
-          <p className="text-xs text-slate-600">{axis?.n_unit || "items"}</p>
-        </div>
+      {/* Tabs */}
+      <div className="flex gap-1 border-b border-slate-200">
+        <button onClick={() => setTab("current")} className={tabCls(tab === "current")}>
+          Current
+        </button>
+        <button onClick={() => setTab("history")} className={tabCls(tab === "history")}>
+          History
+        </button>
       </div>
 
-      {axis?.accuracy !== undefined && (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs text-emerald-600">Leader accuracy</p>
-              <p className="text-3xl font-bold text-emerald-800">{(axis.accuracy * 100).toFixed(1)}%</p>
+      {tab === "current" && (
+        <>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-lg border border-slate-200 p-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Bench</p>
+              <p className="font-medium">{axis?.bench || "—"}</p>
+              <p className="text-xs text-slate-600 mt-1">{axis?.task || "—"}</p>
             </div>
-            {axis.interval && (
-              <div className="text-right">
-                <p className="text-xs text-emerald-600">Wilson 95%</p>
-                <p className="font-mono text-emerald-800">
-                  {(axis.interval[0] * 100).toFixed(1)}–{(axis.interval[1] * 100).toFixed(1)}%
-                </p>
+            <div className="rounded-lg border border-slate-200 p-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Sample</p>
+              <p className="text-2xl font-bold font-mono">{axis?.n || "—"}</p>
+              <p className="text-xs text-slate-600">{axis?.n_unit || "items"}</p>
+            </div>
+          </div>
+
+          {axis?.accuracy !== undefined && (
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs text-emerald-600">Leader accuracy</p>
+                  <p className="text-3xl font-bold text-emerald-800">{(axis.accuracy * 100).toFixed(1)}%</p>
+                </div>
+                {axis.interval && (
+                  <div className="text-right">
+                    <p className="text-xs text-emerald-600">Wilson 95%</p>
+                    <p className="font-mono text-emerald-800">
+                      {(axis.interval[0] * 100).toFixed(1)}–{(axis.interval[1] * 100).toFixed(1)}%
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <p className="text-xs text-emerald-700 mt-2">Leader: {axis.leader}</p>
-        </div>
+              <p className="text-xs text-emerald-700 mt-2">Leader: {axis.leader}</p>
+            </div>
+          )}
+
+          {axis?.separation && (
+            <div className={`rounded-lg border p-3 ${axis.separation === "SEPARATED" ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"}`}>
+              <div className="flex items-center justify-between">
+                <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${axis.separation === "SEPARATED" ? "bg-emerald-200 text-emerald-800" : "bg-amber-200 text-amber-800"}`}>
+                  {axis.separation}
+                </span>
+                {axis.separation_p !== undefined && (
+                  <span className="font-mono text-sm">p={axis.separation_p.toFixed(4)}</span>
+                )}
+              </div>
+              <p className="text-xs mt-2 text-slate-700">
+                {axis.separation === "SEPARATED"
+                  ? "The leader's edge is statistically separated (McNemar p<0.05)"
+                  : "Point-estimate lead is not statistically separated — a tie is not a win"}
+              </p>
+            </div>
+          )}
+
+          {axis?.dataset_url && (
+            <a href={axis.dataset_url} target="_blank" rel="noreferrer" className={`inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline ${FOCUS}`}>
+              Frozen gold bank (Hugging Face) <ExternalLink className="h-3 w-3" />
+            </a>
+          )}
+        </>
       )}
 
-      {axis?.separation && (
-        <div className={`rounded-lg border p-3 ${axis.separation === "SEPARATED" ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"}`}>
-          <div className="flex items-center justify-between">
-            <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${axis.separation === "SEPARATED" ? "bg-emerald-200 text-emerald-800" : "bg-amber-200 text-amber-800"}`}>
-              {axis.separation}
-            </span>
-            {axis.separation_p !== undefined && (
-              <span className="font-mono text-sm">p={axis.separation_p.toFixed(4)}</span>
-            )}
-          </div>
-          <p className="text-xs mt-2 text-slate-700">
-            {axis.separation === "SEPARATED"
-              ? "The leader's edge is statistically separated (McNemar p<0.05)"
-              : "Point-estimate lead is not statistically separated — a tie is not a win"}
-          </p>
-        </div>
-      )}
+      {tab === "history" && (
+        <div className="space-y-4">
+          {historyLoading && (
+            <p className="text-sm text-slate-500">Loading history…</p>
+          )}
 
-      {axis?.dataset_url && (
-        <a href={axis.dataset_url} target="_blank" rel="noreferrer" className={`inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline ${FOCUS}`}>
-          Frozen gold bank (Hugging Face) <ExternalLink className="h-3 w-3" />
-        </a>
+          {!historyLoading && history && history.length > 0 && (
+            <>
+              <p className="text-xs text-slate-600">
+                Historical records for this axis. Each row is a past measurement run.
+              </p>
+              
+              {/* History chart */}
+              <div className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={history.map((h: any) => ({
+                    date: h.measured_at?.slice(0, 10) || h.date || "—",
+                    accuracy: h.accuracy ? h.accuracy * 100 : null,
+                    n: h.n || 0,
+                  }))}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                    <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
+                    <Tooltip formatter={(v: number) => v?.toFixed(1) + "%"} />
+                    <Legend />
+                    <Line type="monotone" dataKey="accuracy" stroke="#10b981" name="Accuracy %" dot={{ r: 3 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* History table */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-slate-600">
+                      <th className="py-2 pr-3">Date</th>
+                      <th className="py-2 px-3">Leader</th>
+                      <th className="py-2 px-3">Accuracy</th>
+                      <th className="py-2 px-3">n</th>
+                      <th className="py-2 px-3">Separation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {history.map((h: any, i: number) => (
+                      <tr key={i} className="border-b border-slate-100">
+                        <td className="py-2 pr-3 font-mono text-xs">{h.measured_at?.slice(0, 10) || h.date || "—"}</td>
+                        <td className="py-2 px-3 text-xs">{h.leader || "—"}</td>
+                        <td className="py-2 px-3 font-mono">{h.accuracy ? (h.accuracy * 100).toFixed(1) + "%" : "—"}</td>
+                        <td className="py-2 px-3 font-mono">{h.n || "—"}</td>
+                        <td className="py-2 px-3">
+                          {h.separation && (
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${h.separation === "SEPARATED" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+                              {h.separation}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+
+          {!historyLoading && (!history || history.length === 0) && (
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="text-sm text-slate-600 font-semibold">No history available</p>
+              <p className="text-xs text-slate-500 mt-1">
+                History endpoint returned empty. This axis may be newly measured, or
+                historical records are not yet published at <code className="text-[10px]">/api/gspc/history/{axis?.axis}</code>.
+              </p>
+              <p className="text-xs text-slate-400 mt-2">
+                Empty stays visible — we do not invent historical data.
+              </p>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
