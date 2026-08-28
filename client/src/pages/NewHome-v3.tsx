@@ -142,21 +142,75 @@ function HeroIntro() {
   );
 }
 
-// ── dense board: OpenRouter-style table of ALL 22 axes ──────
+// ── dense board: OpenRouter-style sortable leaderboard of ALL 22 axes ──────
+type SortKey = "axis" | "status" | "n" | "score";
+type SortDir = "asc" | "desc";
+
 function DenseBoard() {
   const [axes, setAxes] = useState<Axis[]>([]);
   const [publicCount, setPublicCount] = useState("");
+  const [measuredOn, setMeasuredOn] = useState("");
   const [loading, setLoading] = useState(true);
+  const [sortKey, setSortKey] = useState<SortKey>("status");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
 
   useEffect(() => {
     const ac = new AbortController();
     fetchAxes(ac.signal).then((r) => {
       setAxes(r.axes);
       setPublicCount(r.publicCount || "");
+      setMeasuredOn(r.measuredOn || "");
       setLoading(false);
     });
     return () => ac.abort();
   }, []);
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir(key === "axis" ? "asc" : "desc");
+    }
+  };
+
+  const sorted = [...axes].sort((a, b) => {
+    const dir = sortDir === "asc" ? 1 : -1;
+    switch (sortKey) {
+      case "axis":
+        return dir * a.axis.localeCompare(b.axis);
+      case "status": {
+        const aM = a.status === "MEASURED" ? 1 : 0;
+        const bM = b.status === "MEASURED" ? 1 : 0;
+        return dir * (bM - aM) || a.axis.localeCompare(b.axis);
+      }
+      case "n":
+        return dir * ((a.n || 0) - (b.n || 0));
+      case "score": {
+        const aS = quotable(a) ? (a.accuracy ?? 0) : -1;
+        const bS = quotable(b) ? (b.accuracy ?? 0) : -1;
+        return dir * (aS - bS);
+      }
+      default:
+        return 0;
+    }
+  });
+
+  const stampAge = (() => {
+    if (!measuredOn) return null;
+    const match = measuredOn.match(/\d{4}-\d{2}-\d{2}/);
+    if (!match) return null;
+    const d = new Date(match[0]);
+    const now = new Date();
+    const days = Math.floor((now.getTime() - d.getTime()) / 86400000);
+    return days;
+  })();
+
+  const SortIcon = ({ k }: { k: SortKey }) => (
+    <span className="ml-1 inline-block opacity-60">
+      {sortKey === k ? (sortDir === "asc" ? "↑" : "↓") : "⇅"}
+    </span>
+  );
 
   return (
     <section className="surface-sunken section-y">
@@ -180,25 +234,46 @@ function DenseBoard() {
         </div>
 
         <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card">
-          <table className="w-full min-w-[40rem] text-sm">
+          <table className="w-full min-w-[44rem] text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/50 text-left text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                <th className="px-4 py-3">Axis</th>
-                <th className="px-4 py-3">Instrument</th>
-                <th className="px-4 py-3 text-right">Figure</th>
-                <th className="px-4 py-3 text-right">n</th>
-                <th className="px-4 py-3 text-center">Status</th>
+                <th
+                  className="cursor-pointer select-none px-4 py-3 hover:text-foreground"
+                  onClick={() => toggleSort("axis")}
+                >
+                  Axis<SortIcon k="axis" />
+                </th>
+                <th
+                  className="cursor-pointer select-none px-4 py-3 text-center hover:text-foreground"
+                  onClick={() => toggleSort("status")}
+                >
+                  Status<SortIcon k="status" />
+                </th>
+                <th
+                  className="cursor-pointer select-none px-4 py-3 text-right hover:text-foreground"
+                  onClick={() => toggleSort("n")}
+                >
+                  n<SortIcon k="n" />
+                </th>
+                <th
+                  className="cursor-pointer select-none px-4 py-3 text-right hover:text-foreground"
+                  onClick={() => toggleSort("score")}
+                >
+                  Score<SortIcon k="score" />
+                </th>
+                <th className="px-4 py-3 text-center">Age</th>
+                <th className="px-4 py-3 text-center">Verify</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
-                    Loading from GET /api/gspc…
+                  <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                    Loading…
                   </td>
                 </tr>
               ) : (
-                axes.map((a) => {
+                sorted.map((a) => {
                   const q = quotable(a);
                   const isMeasured = a.status === "MEASURED";
                   return (
@@ -206,25 +281,10 @@ function DenseBoard() {
                       key={a.axis}
                       className="border-b border-border last:border-0 hover:bg-muted/30"
                     >
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-2">
                         <span className="font-semibold text-foreground">{a.axis}</span>
                       </td>
-                      <td className="px-4 py-2.5 text-muted-foreground">
-                        {a.bench || "—"}
-                      </td>
-                      <td className="px-4 py-2.5 text-right font-mono tabular-nums">
-                        {q ? (
-                          <span className="font-bold text-primary">
-                            {(a.accuracy * 100).toFixed(0)}%
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">—</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-2.5 text-right font-mono tabular-nums text-muted-foreground">
-                        {typeof a.n === "number" && a.n > 0 ? a.n : "—"}
-                      </td>
-                      <td className="px-4 py-2.5 text-center">
+                      <td className="px-4 py-2 text-center">
                         <span
                           className={`inline-block rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                             isMeasured
@@ -234,6 +294,33 @@ function DenseBoard() {
                         >
                           {a.status}
                         </span>
+                      </td>
+                      <td className="px-4 py-2 text-right font-mono tabular-nums text-muted-foreground">
+                        {typeof a.n === "number" && a.n > 0 ? a.n : "—"}
+                      </td>
+                      <td className="px-4 py-2 text-right font-mono tabular-nums">
+                        {q ? (
+                          <span className="font-bold text-primary">
+                            {((a.accuracy ?? 0) * 100).toFixed(0)}%
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 text-center font-mono text-xs text-muted-foreground">
+                        {isMeasured && stampAge !== null ? `${stampAge}d` : "—"}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {isMeasured ? (
+                          <a
+                            href={`/gspc-verify?axis=${encodeURIComponent(a.axis)}`}
+                            className="text-xs font-bold text-primary hover:underline"
+                          >
+                            verify
+                          </a>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">—</span>
+                        )}
                       </td>
                     </tr>
                   );
