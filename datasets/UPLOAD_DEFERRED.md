@@ -9,6 +9,7 @@
 | `hf_fs stat hf://datasets/csoai/rwa-testnet-unmeasured` | missing |
 | Shell `HF_TOKEN` / `hf auth login` | unset |
 | MCP `hf_whoami` | OAuth read + `contribute-repos` — **no upload tool** |
+| Linked Cursor environment | null (secrets cannot inject until env linked) |
 
 When write auth works:
 
@@ -22,5 +23,12 @@ CI: `.github/workflows/hf-upload-staged.yml` runs verify always; uploads only wh
 Then confirm Hub `stat`, update `docs/HF_ORG_DATASET_INDEX.md`, and tick #139/#186/#253 in `docs/NEXT_300_MOVES.md` only after repos exist.
 
 Never invent MEASURED labour scores. Per-slot cards (`csoai/gspc-*-labour-index`, `gspc-ai-economy-index`) are **not** substitutes for these unified packs.
+
+## Overnight recheck log
+
+| When (UTC) | Hub | Token | Notes |
+|------------|-----|-------|-------|
+| 2026-08-28 | missing | unset | packs verified; CI workflow on tip |
+| 2026-08-28 ~21:20 | missing | unset | tip `9dfbe772`; tip-health OK; vite `:43125` smoke 200; vitest labourIndices 8/8; requested env secret + GH Actions secret |
 
 As-of: 2026-08-28
