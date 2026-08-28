@@ -147,7 +147,7 @@ export default function WorldGlobe() {
   const [acted, setActed] = useState("");
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const globe3dRef = useRef<HTMLIFrameElement | null>(null);
-  // ── The Sovereign tour ─────────────────────────────────────────────────────
+  // ── The Sovereign tour ────────────────────────────────────────────────────────────
   // Watch the Council assistant work the Layer-0 estate, one persona at a time. Every stop is a real
   // node with the status it has earned (LIVE by proven fetch / UNKNOWN said honestly /
   // CANDIDATE not yet earned) — the tour is the node registry made visible, not a promo reel.
@@ -285,7 +285,7 @@ export default function WorldGlobe() {
           ))}
           <span className="hidden text-emerald-100/40 md:inline">{COUNTS.live} LIVE · {COUNTS.unknown} UNKNOWN · {COUNTS.candidate} candidate</span>
           <a href="/instrument" className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-200 hover:bg-emerald-500/30">Instrument</a>
-          <a href="/?lobby=home" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
+          <a href="/os?lobby=home" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
         </div>
       </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
