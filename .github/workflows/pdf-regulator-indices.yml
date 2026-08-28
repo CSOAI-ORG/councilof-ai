@@ -1,0 +1,62 @@
+# NEXT_300 #149 — regenerate designed regulator PDF (binary) on tip when HTML changes.
+# MCP text pushes cannot safely ship Playwright PDF bytes; Actions commits the binary.
+name: pdf-regulator-indices
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cursor/instruments-catalog-7fb8
+      - main
+      - master
+    paths:
+      - "public/regulator-indices-one-pager.html"
+      - "scripts/pdf-regulator-indices.mjs"
+      - ".github/workflows/pdf-regulator-indices.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Playwright Chromium
+        run: npx --yes playwright install --with-deps chromium
+
+      - name: Serve public + print PDF
+        run: |
+          npx --yes serve public -l 43125 &
+          for i in $(seq 1 30); do
+            curl -sf "http://127.0.0.1:43125/regulator-indices-one-pager.html" >/dev/null && break
+            sleep 1
+          done
+          BASE_URL=http://127.0.0.1:43125 npm run pdf:regulator-indices
+          test -s public/regulator-indices-one-pager.pdf
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("public/regulator-indices-one-pager.pdf")
+          assert p.read_bytes()[:5] == b"%PDF-", p
+          assert p.stat().st_size > 10000, p.stat().st_size
+          print("pdf ok", p.stat().st_size)
+          PY
+
+      - name: Commit PDF if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/regulator-indices-one-pager.pdf
+          if git diff --staged --quiet; then
+            echo "PDF unchanged"
+          else
+            git commit -m "chore(pdf): regenerate designed regulator-indices one-pager (#149)"
+            git push
+          fi
