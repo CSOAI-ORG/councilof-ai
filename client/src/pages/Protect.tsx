@@ -69,12 +69,12 @@ export default function Protect() {
           <div className="mt-2 flex flex-wrap gap-2">
             <button onClick={doSign} disabled={busy} className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{busy && !sig ? "Signing…" : sig ? "↻ Re-sign" : "🛡 Sign as me"}</button>
             {sig && <button onClick={() => check(false)} disabled={busy} className="rounded-xl border border-emerald-400/40 px-4 py-2 text-sm font-bold text-emerald-100 hover:bg-white/5">✅ Verify it's me</button>}
-            {sig && <button onClick={() => check(true)} disabled={busy} className="rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-2 text-sm font-bold text-rose-100 hover:bg-rose-500/20">🎭 Deepfake test</button>}
+            {sig && <button onClick={() => check(true)} disabled={busy} className="rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-2 text-sm font-bold text-rose-100 hover:bg-rose-500/20">🎮 Deepfake test</button>}
           </div>
           {sig && <div className="mt-3 rounded-lg border border-emerald-500/15 bg-black/30 p-3 font-mono text-[11px] break-all"><div className="text-emerald-300/80">your seal <span className="text-emerald-100">{sig.fingerprint}</span></div><div className="mt-1 text-emerald-300/50">signature {String(sig.signature).slice(0, 80)}…</div></div>}
           {result && (
             <div className={"mt-3 rounded-xl border p-4 " + (result.ok ? "border-emerald-400/50 bg-emerald-500/10" : "border-rose-400/50 bg-rose-500/10")}>
-              <div className={"text-lg font-black " + (result.ok ? "text-emerald-200" : "text-rose-200")}>{result.mode === "deepfake" ? (result.ok ? "unexpected: fake passed" : "🎭 Deepfake → REJECTED") : (result.ok ? "✅ Verified — authentically you" : "✗ rejected")}</div>
+              <div className={"text-lg font-black " + (result.ok ? "text-emerald-200" : "text-rose-200")}>{result.mode === "deepfake" ? (result.ok ? "unexpected: fake passed" : "🎮 Deepfake → REJECTED") : (result.ok ? "✅ Verified — authentically you" : "✗ rejected")}</div>
               <div className="mt-1 text-[13px] text-emerald-100/80">{result.msg}{result.mode === "deepfake" && !result.ok ? " — words you never signed don't carry your seal. That's how impersonation dies." : ""}</div>
             </div>
           )}
@@ -97,7 +97,7 @@ export default function Protect() {
           <div className="mt-3 flex flex-wrap justify-center gap-2">
             <a href="/system-card" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">See how signing works</a>
             <a href="/safe-space" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">The safe space</a>
-            <a href="/?lobby=measured&task=pricing-overview" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">How the free rail works</a>
+            <a href="/os?lobby=assess&task=pricing-overview" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">How the free rail works</a>
           </div>
         </div>
       </section>
