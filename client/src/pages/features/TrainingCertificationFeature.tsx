@@ -272,9 +272,9 @@ export default function TrainingCertificationFeature() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4">Why Get Certified?</h2>
+            <h2 className="text-3xl font-bold mb-4">Why get a training record?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Stand out in the rapidly growing AI safety field with recognized credentials.
+              Demonstrate completed learning with a signed, verifiable record — measurement, not certification.
             </p>
           </motion.div>
 

@@ -51,7 +51,7 @@ export const AXES_B: AxisScore[] = [
     note: "UNGATED by owner ruling 2026-08-19: the first CI-resolved ordering on this axis. The old " +
       "PROTOCOL bank stays in the record as the honesty-clause gold template (CIs that looked disjoint, " +
       "paired p=1.0 — why McNemar-primary exists). Jail (slot 14) separation was determined 2026-08-25 " +
-      "(TIE); live public_count is 14 measured of 14 quotable — cite totals.public_count.",
+      "(TIE). For the live board count, cite totals.public_count from GET /api/gspc.",
   },
   {
     axis: "affect", family: "gspc", kind: "model-comparison", bench: "AffectBench", task: "emotional & embodied safety (manipulation / disclosure / vulnerability)",
