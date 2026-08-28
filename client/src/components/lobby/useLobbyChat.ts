@@ -238,10 +238,11 @@ export function useLobbyChat(): LobbyChat {
           role: "council",
           text:
             `Opening Council Space in PRACTICE mode.\n\n` +
-            `**Unsigned training. Never quoted. Not a measurement.**\n\n` +
+            `**Unsigned training. Never quoted. Not a measurement. Not legal advice. Not a conformity mark.**\n\n` +
             `Practice runs are for learning and testing only. They do not produce signed cards, ` +
             `are not recorded on the board, and must never be cited as evidence. ` +
-            `The arena opened — use it freely, knowing the results stay unsigned.`,
+            `When law actually changes, the living-law path is re-measure + delta card — the old card stays. ` +
+            `The simulation is not that path.`,
           state: "deterministic",
           signature: "practice mode · unsigned",
         });

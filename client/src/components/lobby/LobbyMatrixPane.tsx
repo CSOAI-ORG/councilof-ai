@@ -224,6 +224,32 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
         </p>
       </div>
 
+      <div className="mt-6 rounded-xl border border-sky-200 bg-sky-50/50 p-4">
+        <p className={`${TYPE.section} text-sky-800`}>For regulators</p>
+        <p className={`mt-2 ${TYPE.body}`}>
+          Regulators can <strong>aim</strong> a draft rule against this matrix. They cannot get a verdict from it.
+        </p>
+        <ul className={`mt-3 space-y-2 ${TYPE.muted}`}>
+          <li>
+            <strong>Matrix cells</strong> — MEASURED / UNMEASURED / REPORTED from GET /api/gspc + existing crosswalk.
+            Empty stays empty.
+          </li>
+          <li>
+            <strong>Draft provisions</strong> — may open PRACTICE / unsigned sim only.
+            <span className="mt-1 block rounded border border-amber-300 bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-900">
+              Unsigned training. Never quoted. Not a measurement. Not legal advice. Not a conformity mark.
+            </span>
+          </li>
+          <li>
+            <strong>When law changes</strong> — the living-law path is re-measure + delta card. The old card stays.
+            The simulation is not that path.
+          </li>
+        </ul>
+        <p className={`mt-3 ${TYPE.fine}`}>
+          We do not certify. We do not predict. We do not tell a regulator what to write.
+        </p>
+      </div>
+
       <div className="mt-6 flex flex-wrap gap-3">
         <a
           href="/crosswalk"
