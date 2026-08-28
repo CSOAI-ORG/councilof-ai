@@ -52,7 +52,7 @@ const UA = "Mozilla/5.0 (compatible; GPTBot/1.0; +https://openai.com/gptbot)";
 
 // Living documents a crawler should read. Leftover /pricing and /certification
 // are 308 hops (Assess / honesty), not pages — do not demand they self-canonical.
-const ROUTES = ["/", "/os", "/honesty", "/crosswalks", "/compare",
+const ROUTES = ["/", "/honesty", "/insurers", "/crosswalks", "/compare",
                 "/article-50", "/about", "/eu-ai-act"];
 
 const ABSENT_URL = "/this-route-should-not-exist-crawler-gate-probe";

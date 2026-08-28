@@ -22,8 +22,8 @@
 /consensus            /council   308
 /jewels               /          308
 /crown-jewels         /          308
-/plans                /pricing   308
-/enterprise-plans     /pricing   308
+/plans                /os?lobby=assess&task=pricing-overview   308
+/enterprise-plans     /os?lobby=assess&task=pricing-overview   308
 /council-space  /gspc-arena             308
 /city           /gspc-arena?view=towns  308
 /ins            /insurers/              308
@@ -129,7 +129,6 @@
 /stack/                 /stack/index.json        308
 
 # --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---
-/pricing  /pricing/  308
 /honesty  /honesty/  308
 /library  /library/  308
 /regulators  /regulators/  308
@@ -176,7 +175,7 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- storefront static pages: served directly ---
+# --- storefront static pages: served directly, trailing slash 308→slashless ---
 /catalog.json  /catalog.json     200
 
 # ================= DYNAMIC (splat) RULES — 100 MAX, NOTHING BELOW THE CATCH-ALL =================

@@ -59,7 +59,10 @@ const P_LOW = 0.4; // legal / policy pages
 
 const PRIORITY = new Map([
   ["/", 1.0],
-  ["/pricing", P_TOP],
+  // /pricing and /certification are Functions door hops (OS Assess / honesty).
+  // Rank the live destinations, not the hop URLs.
+  ["/os", P_TOP],
+  ["/honesty", P_TOP],
   ["/gspc-arena", P_TOP],
   ["/layer0", P_TOP],
   ["/refutation-ledger", P_TOP],
@@ -70,7 +73,7 @@ const PRIORITY = new Map([
   ["/gspc-gap-map", P_HIGH],
   ["/live-ledger", P_HIGH],
   ["/instrument", P_HIGH],
-  ["/tour", P_HIGH],
+  ["/cloud", P_HIGH],
   ["/learn", P_HIGH],
   ["/article-50", P_HIGH],
   ["/benchmarks", P_HIGH],
@@ -370,7 +373,7 @@ const REQUIRED = [
   "/refutation-ledger",
   "/instrument",
   "/live-ledger",
-  "/tour",
+  "/cloud",
   // The six audience pages. They were redirect-suppressed for two days and nothing
   // failed, because nothing asserted they should be reachable. Now something does.
   ...FOR_PATHS,
