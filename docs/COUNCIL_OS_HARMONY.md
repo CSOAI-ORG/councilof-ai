@@ -53,7 +53,7 @@ Canon: `docs/MASTER_CONNECT.md` · `docs/ESTATE_CROSSWALK.md` · `council-os/GAM
 
 ## Nine products (HO.2 catalog)
 
-See `/products` and `client/src/data/productsCatalog.ts`. Each must:
+See `/products` (`client/src/pages/Products.tsx` — catalog inline on the page). Each must:
 
 1. State MEASURED / UNMEASURED / DESIGN honestly  
 2. Link verify path where signed  

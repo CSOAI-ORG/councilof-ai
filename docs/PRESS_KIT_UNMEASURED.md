@@ -20,6 +20,6 @@
 
 - Live board: `GET https://councilof.ai/api/gspc`
 - Indices honesty: `GET https://councilof.ai/api/indices` · `/indices`
-- Regulator brief (markdown): `docs/REGULATOR_INDICES_ONE_PAGER.md`
+- Regulator brief: `docs/REGULATOR_INDICES_ONE_PAGER.md` · `/regulator-indices-one-pager.html` · `/regulator-indices-one-pager.pdf`
 - Method: `docs/SOVOS/INDEX-METHOD-0.1.md`
 - Issuer: CSOAI Ltd · UK Companies House **16939677**
