@@ -1,1 +1,1 @@
-{{file:/workspace/.lobby-header}}
+PLACEHOLDER
