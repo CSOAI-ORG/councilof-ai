@@ -22,6 +22,7 @@
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
+    "test:planned-ready": "node --test council-os/planned-ready.lock.test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:cypress": "cypress run",
