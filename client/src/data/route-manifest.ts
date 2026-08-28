@@ -779,8 +779,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/faq",
-  "comp": "FAQ",
-  "title": "FAQ"
+  "comp": "FaqPage",
+  "title": "Faq Page"
  },
  {
   "path": "/features/33-agent-council",
@@ -909,8 +909,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/frequently-asked-questions",
-  "comp": "FAQ",
-  "title": "FAQ"
+  "comp": "FaqPage",
+  "title": "Faq Page"
  },
  {
   "path": "/global-ai-regulation",
