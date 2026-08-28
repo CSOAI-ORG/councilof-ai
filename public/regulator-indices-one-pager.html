@@ -11,77 +11,126 @@
       --muted: #3d5a4c;
       --rule: #c5d4cb;
       --accent: #0f6b4c;
-      --paper: #f7faf8;
+      --accent-soft: #d8ebe2;
+      --paper: #f4f9f6;
+      --warn: #5c3d1e;
+      --warn-bg: #f3ebe1;
     }
     * { box-sizing: border-box; }
+    @page { margin: 14mm; size: A4; }
     body {
       margin: 0;
-      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+      font-family: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
       color: var(--ink);
-      background: linear-gradient(165deg, #e8f2ec 0%, var(--paper) 40%, #f0f5f2 100%);
+      background:
+        radial-gradient(ellipse 80% 50% at 10% -10%, #d5ebe0 0%, transparent 55%),
+        linear-gradient(168deg, #e4f0e9 0%, var(--paper) 42%, #eef5f1 100%);
       line-height: 1.45;
     }
     .sheet {
       max-width: 720px;
       margin: 0 auto;
-      padding: 2.5rem 1.75rem 3rem;
+      padding: 2.25rem 1.75rem 2.75rem;
+    }
+    .mast {
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.85rem;
+      margin-bottom: 1.1rem;
     }
     .brand {
-      font-size: 1.65rem;
-      letter-spacing: 0.02em;
+      font-family: "Archivo", "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+      font-size: 1.85rem;
+      letter-spacing: -0.02em;
       font-weight: 700;
       color: var(--accent);
-      margin: 0 0 0.25rem;
+      margin: 0 0 0.2rem;
     }
     .meta {
       font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--muted);
-      margin: 0 0 1.25rem;
+      margin: 0;
     }
     h1 {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       font-weight: 600;
-      margin: 0 0 0.75rem;
-      line-height: 1.25;
+      margin: 0 0 0.55rem;
+      line-height: 1.22;
+      letter-spacing: -0.01em;
     }
+    .lede {
+      margin: 0 0 1rem;
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 38em;
+    }
+    .callout {
+      background: var(--warn-bg);
+      border-left: 3px solid var(--warn);
+      padding: 0.65rem 0.85rem;
+      margin: 0 0 1.15rem;
+      font-size: 0.9rem;
+      color: var(--warn);
+    }
+    .callout strong { color: var(--ink); }
     h2 {
-      font-size: 0.95rem;
+      font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.78rem;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       color: var(--accent);
       border-top: 1px solid var(--rule);
       padding-top: 0.85rem;
       margin: 1.35rem 0 0.55rem;
+      font-weight: 600;
     }
     p, li { font-size: 0.95rem; color: var(--ink); }
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.88rem;
-      margin: 0.5rem 0 0.75rem;
+      margin: 0.45rem 0 0.7rem;
     }
     th, td {
       text-align: left;
-      padding: 0.4rem 0.5rem;
+      padding: 0.45rem 0.5rem;
       border-bottom: 1px solid var(--rule);
       vertical-align: top;
     }
-    th { color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    th {
+      color: var(--muted);
+      font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .reg {
+      display: inline-block;
+      font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.12rem 0.4rem;
+      border-radius: 2px;
+    }
+    .reg-measured { background: var(--accent-soft); color: var(--accent); }
+    .reg-empty { background: #e8ecea; color: var(--muted); }
     code, .mono {
       font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
       font-size: 0.82em;
     }
     .actions {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.65rem;
       flex-wrap: wrap;
-      margin: 1rem 0 1.5rem;
+      margin: 0.85rem 0 0.35rem;
     }
     .actions a, .actions button {
-      font-family: ui-sans-serif, system-ui, sans-serif;
-      font-size: 0.85rem;
-      padding: 0.45rem 0.9rem;
+      font-family: "Archivo", ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.82rem;
+      padding: 0.45rem 0.85rem;
       border: 1px solid var(--accent);
       background: var(--accent);
       color: #fff;
@@ -93,34 +142,41 @@
       background: transparent;
       color: var(--accent);
     }
-    ul { padding-left: 1.2rem; margin: 0.4rem 0; }
+    ul { padding-left: 1.15rem; margin: 0.35rem 0; }
+    li { margin: 0.2rem 0; }
     footer {
-      margin-top: 1.75rem;
+      margin-top: 1.6rem;
       padding-top: 0.75rem;
       border-top: 1px solid var(--rule);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--muted);
     }
     @media print {
       body { background: #fff; }
       .sheet { padding: 0; max-width: none; }
       .actions { display: none; }
+      .callout { break-inside: avoid; }
       a { color: inherit; text-decoration: none; }
     }
   </style>
 </head>
 <body>
   <main class="sheet">
-    <p class="brand">Council of AI</p>
-    <p class="meta">CSOAI Ltd · UK Companies House 16939677 · Measurement, not certification · NEXT_300 #149</p>
+    <header class="mast">
+      <p class="brand">Council of AI</p>
+      <p class="meta">CSOAI Ltd · UK Companies House 16939677 · Measurement, not certification · NEXT_300 #149</p>
+    </header>
+
     <h1>Regulator brief — labour &amp; AI-economy indices remain UNMEASURED</h1>
-    <p>Not a compliance determination. Scores are never sold. Regulators verify free forever (HO.2).</p>
+    <p class="lede">Not a compliance determination. Scores are never sold. Regulators verify free forever (HO.2).</p>
+
+    <p class="callout"><strong>Honesty rule:</strong> empty product cells are intentional. Absence is not zero — do not treat Hub experiment files as permission to invent MEASURED labour scores.</p>
 
     <div class="actions">
       <button type="button" onclick="window.print()">Print / Save as PDF</button>
       <a class="secondary" href="/regulator-indices-one-pager.pdf">Download PDF</a>
       <a class="secondary" href="/indices">Open /indices</a>
-      <a class="secondary" href="/government">Government dashboard</a>
+      <a class="secondary" href="/government">Ask Council OS</a>
     </div>
 
     <h2>What we publish today</h2>
@@ -129,10 +185,26 @@
         <tr><th>Surface</th><th>Register</th><th><span class="mono">measured_score</span></th></tr>
       </thead>
       <tbody>
-        <tr><td>GSPC scoreboard (<span class="mono">GET /api/gspc</span>)</td><td><strong>MEASURED</strong> (13 of 14 axes)</td><td>Per-axis, signed Ed25519</td></tr>
-        <tr><td>AI Economy Index</td><td><strong>UNMEASURED</strong></td><td><span class="mono">null</span></td></tr>
-        <tr><td>Human Labour Index</td><td><strong>UNMEASURED</strong></td><td><span class="mono">null</span></td></tr>
-        <tr><td>Humanoid Labour Index</td><td><strong>UNMEASURED</strong></td><td><span class="mono">null</span></td></tr>
+        <tr>
+          <td>GSPC scoreboard (<span class="mono">GET /api/gspc</span>)</td>
+          <td><span class="reg reg-measured">Measured</span> · 13 of 14 axes</td>
+          <td>Per-axis, signed Ed25519</td>
+        </tr>
+        <tr>
+          <td>AI Economy Index</td>
+          <td><span class="reg reg-empty">Unmeasured</span></td>
+          <td><span class="mono">null</span></td>
+        </tr>
+        <tr>
+          <td>Human Labour Index</td>
+          <td><span class="reg reg-empty">Unmeasured</span></td>
+          <td><span class="mono">null</span></td>
+        </tr>
+        <tr>
+          <td>Humanoid Labour Index</td>
+          <td><span class="reg reg-empty">Unmeasured</span></td>
+          <td><span class="mono">null</span></td>
+        </tr>
       </tbody>
     </table>
     <p>Catalog API: <span class="mono">GET /api/indices</span> — <span class="mono">register: UNMEASURED</span>, all scores <span class="mono">null</span>.</p>
@@ -145,7 +217,7 @@
     </ul>
 
     <h2>Why empty cells are honest</h2>
-    <p>Absence is not zero. Until INDEX-METHOD-0.1 freezes an input bank and usable n, the product stays UNMEASURED. Contextual citations may appear as REPORTED labels only — never as MEASURED inputs.</p>
+    <p>Until INDEX-METHOD-0.1 freezes an input bank and usable n, the product stays UNMEASURED. Contextual citations may appear as REPORTED labels only — never as MEASURED inputs.</p>
 
     <h2>Verify without an account</h2>
     <ul>
@@ -158,7 +230,7 @@
     <p>Some Hugging Face <span class="mono">csoai/*</span> experiment files may label <span class="mono">MEASURED-INDEX-v0.1</span>. The Council OS product surface remains UNMEASURED. See correction <span class="mono">C-2026-0826-01</span>.</p>
 
     <footer>
-      Print-ready HTML for #149 · designed PDF layout / counsel sign-off remain owner gates · public artifacts only.
+      Designed print one-pager for #149 · counsel sign-off of index disclaimers remains ⛔ · public artifacts only · regenerate PDF: <span class="mono">npm run pdf:regulator-indices</span>
     </footer>
   </main>
 </body>
