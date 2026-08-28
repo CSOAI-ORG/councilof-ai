@@ -1,1 +1,1 @@
-__LOAD_FILE__/workspace/client/src/pages/Enterprise.tsx
+@/tmp/ENT_RAW.tsx
