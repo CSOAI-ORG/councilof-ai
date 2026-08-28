@@ -483,4 +483,38 @@ export default function Enterprise() {
                   Data governance
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  Algorithm auditing
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  Compliance reporting
+                </li>
+              </ul>
+            </Card>
+
+            {/* Cross-Framework Mapping */}
+            <Card className="p-8 border-2 border-orange-200 hover:border-orange-400 transition-colors md:col-span-2 lg:col-span-2">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-orange-100 rounded-xl">
+                  <RefreshCw className="h-8 w-8 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">Cross-Framework Mapping</h3>
+                  <Badge className="bg-orange-100 text-orange-700 border-orange-200">Intelligent Sync</Badge>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4">
+                CSOAI automatically maps compliance requirements across frameworks. Meet EU AI Act requirements and see how they align with NIST, ISO, and TC260—reducing duplicate work and ensuring consistent governance.
+              </p>
+              <div className="grid md:grid-cols-3 gap-4 mt-6">
+                <div className="bg-orange-50 p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-orange-600">85%</div>
+                  <div className="text-sm text-gray-600">Requirement Overlap</div>
+                </div>
+                <div className="bg-orange-50 p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-orange-600">1 Assessment</div>
+                  <div className="text-sm text-gray-600">Multiple Frameworks</div>
+                </div>
+                <div className="bg-orange-50 p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-orange-600">Real-time</di
