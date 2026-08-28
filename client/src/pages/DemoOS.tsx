@@ -301,7 +301,7 @@ export default function DemoOS() {
                   ))}
                 </div>
               </div>
-              <a href="/?lobby=home" className="mt-3 block rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-emerald-500">Enter Council OS →</a>
+              <a href="/os?lobby=home" className="mt-3 block rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-emerald-500">Enter Council OS →</a>
             </div>
           </div>
         </div>
@@ -364,8 +364,8 @@ export default function DemoOS() {
               <div className="grid grid-cols-2 gap-2">
                 <a href="/world" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Scan my area</a>
                 <a href="/gspc-arena" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Run a live scenario</a>
-                <a href="/?lobby=home" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Show governance</a>
-                <a href="/?lobby=home" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
+                <a href="/os?lobby=home" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Show governance</a>
+                <a href="/os?lobby=home" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
               </div>
             ) : !paused ? (
               <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "Just speak - I'm listening" : "Interrupt & ask")}</button>

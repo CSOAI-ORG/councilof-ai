@@ -364,6 +364,8 @@ console.log(
 
 // Flagship sanity check — these MUST be present.
 const REQUIRED = [
+  "/os",
+  "/honesty",
   "/gspc-arena",
   "/gspc-verify",
   "/gspc-anchors",
