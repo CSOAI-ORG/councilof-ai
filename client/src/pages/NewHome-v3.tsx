@@ -78,13 +78,14 @@ const PRODUCT_FAMILY = [
 ];
 
 // ── mini-nav for Council OS panes ─────────────────────────────
+// All links load INSIDE Council OS (not outbound tabs). Empty panes hidden until they exist.
+// News loads /blog/ inside OS via Library pane. Vote/OTEL panes hidden (404 until live).
 const OS_PANES = [
-  { label: "Board", href: "/?lobby=board", pane: "board" },
-  { label: "Verify", href: "/?lobby=verify", pane: "verify" },
-  { label: "Space", href: "/?lobby=space", pane: "space" },
-  { label: "Models", href: "/?lobby=models", pane: "models" },
-  { label: "News", href: "/blog", pane: null },
-  { label: "Progress", href: "/methodology", pane: null },
+  { label: "Board", href: "/?lobby=board" },         // living GET, 22 axis
+  { label: "Verify", href: "/?lobby=verify" },       // Ed25519/SHA-256
+  { label: "Space", href: "/?lobby=space" },         // graphs, Wilson/McNemar
+  { label: "Models", href: "/?lobby=models" },       // measured models
+  { label: "News", href: "/?lobby=library" },        // /blog/ inside OS (Company > Blog)
 ] as const;
 
 const REFUSALS = [
