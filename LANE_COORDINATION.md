@@ -351,3 +351,15 @@ OWNER RULING (2026-08-27, supersedes the 150 freeze): index = 313 cards; 150 ver
 against did:web:csoai.org#card-attestation-1; INDEX 313 != 313 VERIFIED. No agent clamps
 the index to any constant. K3's earlier 150-references (count grammar, runway, catalog)
 are superseded — corrected in the runway doc, append-only. No relitigation.
+
+## 2026-08-28 · K3 AUDIT — board_living.json stale + invalid sig (finding + fix)
+
+Finding (bytes): public/signed/board_living.json on master = 14-axis, public_count
+"14 measured of 14 quotable", signer 8f9a00a2… — signature INVALID under the style-A
+canonical (content edited post-sign again, or re-signed under a different canonical).
+The LIVE board is gspc-board-22axis-2026 (22·15·7, /api/state cross-check TRUE, sig
+0c7e8510…). board_living.json is therefore SUPERSEDED.
+Fix (queued for the owning lane): retire/repoint board_living.json consumers
+(claimguard fixture, catalog entry, docs) to gspc-board.signed.json; re-derive
+board_living from the 22-axis snapshot ONLY with a fresh sign; until then quote
+/api/state (already the only quotable authority).
