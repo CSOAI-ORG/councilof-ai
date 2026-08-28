@@ -67,7 +67,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 146 | Corrections path for index method errata | `C-2026-0825-01` · ✅ |
 | 147 | Refutation ledger row type for index claims | `kind: index-claim` · ✅ |
 | 148 | Public FAQ: why empty indices | `/indices` FaqBlock · ✅ |
-| 149 | Regulator-facing one-pager PDF | markdown ✅ · print HTML ✅ `/regulator-indices-one-pager.html` · print PDF ✅ `/regulator-indices-one-pager.pdf` · bespoke design ☐ optional |
+| 149 | Regulator-facing one-pager PDF | markdown ✅ · print HTML ✅ `/regulator-indices-one-pager.html` · print PDF ✅ `/regulator-indices-one-pager.pdf` · bespoke design ✅ |
 | 150 | Counsel review of index disclaimers | ⛔ |
 | 151–160 | Ten REPORTED citation captures (dated, linked, no scores) | `docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md` · ✅ |
 
