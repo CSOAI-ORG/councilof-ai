@@ -38,7 +38,7 @@ export default function EngineAxis() {
   return (
     <CouncilOsPageShell
       title="Engine axis"
-      subtitle="Financial axes 18–25 — bond, insurance, COBOL, east-west crossings"
+      subtitle="Financial slots 18–25 — bond, insurance, COBOL, east-west crossings"
       className="min-h-screen bg-[#04070d] text-slate-200"
     >
       <header className="border-b border-white/8 bg-[#080c14]">
@@ -56,7 +56,7 @@ export default function EngineAxis() {
               GSPC {GSPC_COUNTS.measured}/{GSPC_COUNTS.total} measured
             </Badge>
             <Badge variant="outline" className="border-violet-500/30 text-violet-300">
-              +{FINANCIAL_AXES.length} financial axes (slots 18–25)
+              +{FINANCIAL_AXES.length} financial slots (18–25)
             </Badge>
             <Badge variant="outline" className="border-amber-500/30 text-amber-300">
               {STACK_STATS.mcpServers} MCP servers · {STACK_STATS.hiveFrameworks} hive frameworks
@@ -81,7 +81,7 @@ export default function EngineAxis() {
           </div>
           <div className="mt-8">
             <StackHonestyBanner
-              note="Financial axes 18–25 and bridge repos are mostly PLANNED/SPEC. GSPC core axes 1–13 are the only MEASURED finance-adjacent evidence today."
+              note="Financial slots 18–25 and bridge repos are mostly PLANNED/SPEC. GSPC core slots 1–13 are the only MEASURED finance-adjacent evidence today."
             />
           </div>
         </div>
@@ -117,9 +117,9 @@ export default function EngineAxis() {
 
       {/* Financial axes 18-25 */}
       <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <h2 className="text-lg font-bold text-white mb-2">Financial axes — slots 18–25 (the new nerves)</h2>
+        <h2 className="text-lg font-bold text-white mb-2">Financial slots — 18–25 (the new nerves)</h2>
         <p className="text-sm text-slate-500 mb-6">
-          Core GSPC axes 1–{GSPC_COUNTS.total} are frozen measurement instruments. These extend the engine into
+          Core GSPC slots 1–{GSPC_COUNTS.total} are frozen measurement instruments. These extend the engine into
           markets — honest status until banks and insurers publish frozen banks.
         </p>
         <div className="overflow-x-auto rounded-xl border border-white/10">

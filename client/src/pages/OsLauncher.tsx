@@ -138,6 +138,13 @@ export default function OsLauncher() {
               >
                 Enter Council OS
               </a>
+              <div className="flex flex-wrap gap-3 text-sm">
+                <a href="/products" className="font-semibold text-emerald-700 hover:underline">Products</a>
+                <a href="/indices" className="font-semibold text-emerald-700 hover:underline">Indices (UNMEASURED)</a>
+                <a href="/mcp-fleet" className="font-semibold text-emerald-700 hover:underline">MCP fleet</a>
+                <a href="/engine-axis" className="font-semibold text-emerald-700 hover:underline">Engine Axis</a>
+                <a href="/dashboard" className="font-semibold text-emerald-700 hover:underline">DSH / dashboard</a>
+              </div>
               <GameBar />
             </div>
           </section>
