@@ -34,6 +34,12 @@ import { LayoutWrapper } from './LayoutWrapper';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+        <link rel="icon" type="image/svg+xml" href="/csoai-icon.svg" />
+      </head>
       <body className="min-h-screen bg-background text-foreground antialiased flex flex-col">
         <Providers>
           <LayoutWrapper footer={<Footer />}>
@@ -48,79 +54,62 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 function Footer() {
   return (
     <footer className="border-t border-border bg-card">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-3">Platform & Tools</h4>
-            <div className="space-y-2 text-xs text-muted-foreground">
-              <a href="/os" className="block hover:text-brand-400">Council OS Cockpit</a>
-              <a href="/assess" className="block hover:text-brand-400">AI Readiness Assessment</a>
-              <a href="/verify" className="block hover:text-brand-400">Card Cryptographic Verifier</a>
-              <a href="/catalogue" className="block hover:text-brand-400">Agent Catalogue</a>
-            </div>
+            <h3 className="font-bold text-emerald-900 mb-4">Measurement</h3>
+            <ul className="space-y-3">
+              <li><a href="/os" className="text-muted-foreground hover:text-emerald-700 text-sm">Council OS Workspace</a></li>
+              <li><a href="/?lobby=board" className="text-muted-foreground hover:text-emerald-700 text-sm">Live Board (GET /api/gspc)</a></li>
+              <li><a href="/?lobby=verify" className="text-muted-foreground hover:text-emerald-700 text-sm">Verify a 3KB Card</a></li>
+              <li><a href="/?lobby=measured" className="text-muted-foreground hover:text-emerald-700 text-sm">Request Measurement</a></li>
+            </ul>
           </div>
-
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-3">Verified Ecosystem</h4>
-            <div className="space-y-2 text-xs text-muted-foreground">
-              <a href="https://github.com/CSOAI-ORG" target="_blank" rel="noopener noreferrer" className="block hover:text-brand-400">GitHub · CSOAI-ORG ↗</a>
-              <a href="https://huggingface.co/csoai" target="_blank" rel="noopener noreferrer" className="block hover:text-brand-400">Hugging Face · csoai ↗</a>
-              <a href="https://pypi.org/project/inspect-signed-receipt/" target="_blank" rel="noopener noreferrer" className="block hover:text-brand-400">PyPI · inspect-signed-receipt ↗</a>
-              <a href="https://doi.org/10.5281/zenodo.21991104" target="_blank" rel="noopener noreferrer" className="block hover:text-brand-400">Zenodo DOI 10.5281 ↗</a>
-            </div>
+            <h3 className="font-bold text-emerald-900 mb-4">Regulation (EU)</h3>
+            <ul className="space-y-3">
+              <li><a href="/?lobby=evidence" className="text-muted-foreground hover:text-emerald-700 text-sm">GPAI Evidence Pack</a></li>
+              <li><a href="/?task=art5-rail" className="text-muted-foreground hover:text-emerald-700 text-sm">Article 5 Rail</a></li>
+              <li><a href="/?task=insurer-rail" className="text-muted-foreground hover:text-emerald-700 text-sm">Underwriting Evidence</a></li>
+              <li><a href="/?task=vendor-dsh" className="text-muted-foreground hover:text-emerald-700 text-sm">Vendor Procurement</a></li>
+            </ul>
           </div>
-
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-3">Legal & Governance</h4>
-            <div className="space-y-2 text-xs text-muted-foreground">
-              <a href="/legal" className="block hover:text-brand-400">Open Attestation Terms</a>
-              <a href="/privacy" className="block hover:text-brand-400">Privacy Policy</a>
-              <div className="pt-2 text-[11px] text-muted-foreground/80">
-                CSOAI Ltd (GB) &bull; Companies House #16939677
-              </div>
-            </div>
+            <h3 className="font-bold text-emerald-900 mb-4">Integrations</h3>
+            <ul className="space-y-3">
+              <li><a href="/?lobby=embed" className="text-muted-foreground hover:text-emerald-700 text-sm">Embed / White-label</a></li>
+              <li><a href="/github-action" className="text-muted-foreground hover:text-emerald-700 text-sm">GitHub Action</a></li>
+              <li><a href="https://pypi.org/project/csoai/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-emerald-700 text-sm">PyPI (csoai)</a></li>
+              <li><a href="https://pypi.org/project/proofof-ai-mcp/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-emerald-700 text-sm">MCP (Model Context Protocol)</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-bold text-emerald-900 mb-4">Company</h3>
+            <ul className="space-y-3">
+              <li><a href="/methodology" className="text-muted-foreground hover:text-emerald-700 text-sm">Methodology</a></li>
+              <li><a href="/legal" className="text-muted-foreground hover:text-emerald-700 text-sm">Terms of Service</a></li>
+              <li><a href="/privacy" className="text-muted-foreground hover:text-emerald-700 text-sm">Privacy Policy</a></li>
+              <li><a href="/ai-transparency" className="text-muted-foreground hover:text-emerald-700 text-sm">AI Transparency (Art. 50)</a></li>
+            </ul>
           </div>
         </div>
 
-        {/* Framework Logos Row */}
-        <div className="pt-8 border-t border-border">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-4 text-center">Measured Frameworks</h4>
-          <div className="flex flex-wrap justify-center gap-6 md:gap-12 opacity-80 grayscale hover:grayscale-0 transition-all">
-            <div className="flex items-center gap-2">
-              <Shield className="w-6 h-6 text-blue-600" />
-              <span className="font-bold text-sm text-foreground">EU AI Act</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Lock className="w-6 h-6 text-emerald-600" />
-              <span className="font-bold text-sm text-foreground">NIST AI RMF</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Award className="w-6 h-6 text-indigo-600" />
-              <span className="font-bold text-sm text-foreground">ISO 42001</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Scale className="w-6 h-6 text-amber-600" />
-              <span className="font-bold text-sm text-foreground">DORA</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Database className="w-6 h-6 text-rose-600" />
-              <span className="font-bold text-sm text-foreground">NIS2</span>
-            </div>
-          </div>
+        <div className="border-t border-border mt-8 pt-8">
+          <p className="text-muted-foreground text-xs text-center max-w-4xl mx-auto mb-2">
+            This site uses AI systems, including the Council assistant. Every AI surface is disclosed at first interaction under EU AI Act Article 50 and classified publicly on <a href="/ai-transparency" className="text-emerald-700 underline">/ai-transparency</a>.
+          </p>
+          <p className="text-muted-foreground text-xs text-center max-w-4xl mx-auto mb-2">
+            Human oversight applies to every governed action on this platform (Article 14): measurements are machine-run, judgements are human-owned. Our public artefacts carry signed provenance.
+          </p>
         </div>
 
-        {/* Standards & Memberships Bar */}
-        <div className="border-t border-border pt-6 flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="font-semibold text-foreground">Participating Standards:</span>
-            <span className="px-2 py-0.5 rounded bg-background border border-border">C2PA Contributor</span>
-            <span className="px-2 py-0.5 rounded bg-background border border-border">Open Invention Network</span>
-            <span className="px-2 py-0.5 rounded bg-background border border-border">DIF Identity Foundation</span>
-            <span className="px-2 py-0.5 rounded bg-background border border-border">Linux Foundation Project</span>
-          </div>
-          <div className="text-[11px]">
-            &copy; 2026 CouncilOf.AI &bull; Measurement, not certification. All signatures Ed25519 verified.
-          </div>
+        <div className="border-t border-border mt-8 pt-8">
+          <p className="text-muted-foreground text-xs text-center max-w-4xl mx-auto mb-2">
+            CSOAI is an independent organization with no financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor. Our only incentive is public safety and workforce development.
+          </p>
+          <p className="text-muted-foreground text-xs text-center">
+            Council of AI — CSOAI Ltd, UK Companies House 16939677, London. Professional Indemnity Insurance up to £5,000,000. Contact: press@councilof.ai.
+          </p>
         </div>
       </div>
     </footer>
