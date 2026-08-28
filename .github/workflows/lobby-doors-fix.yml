@@ -1,0 +1,117 @@
+name: lobby-doors-fix
+# One-shot: restore corrupted lobby CTA files and point leftover /?lobby= at /os.
+# Triggered by pushing this workflow onto cursor/os-lobby-doors-ff6e (MCP cannot git-push).
+on:
+  push:
+    branches: [cursor/os-lobby-doors-ff6e]
+    paths: [.github/workflows/lobby-doors-fix.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/os-lobby-doors-ff6e
+          fetch-depth: 0
+      - name: Apply lobby door fixes
+        run: |
+          set -euo pipefail
+          # Restore DemoOS from master (exact want: /os?lobby=)
+          git checkout origin/master -- client/src/pages/DemoOS.tsx
+          # Restore LivingStages from last good functional commit on this branch
+          git checkout 659370d7454ddeb2836f8182f801a53518e0a790 -- client/src/components/home/LivingStages.tsx
+          # Simple /?lobby= → /os?lobby= for remaining pages/components
+          for f in \
+            client/src/pages/WorldGlobe.tsx \
+            client/src/pages/About.tsx \
+            client/src/App.tsx \
+            client/src/components/Header.tsx \
+            client/src/components/GlobalSearch.tsx
+          do
+            if [ -f "$f" ]; then
+              sed -i 's|/?lobby=|/os?lobby=|g' "$f"
+            fi
+          done
+          # Header: insert Play gallery + GSPC Quests after Library entry
+          python3 <<'PY'
+          from pathlib import Path
+          p = Path("client/src/components/Header.tsx")
+          t = p.read_text()
+          needle = "      { name: 'Library', href: '/os?lobby=library', description: 'Everything we have published, in the workspace' },\n"
+          insert = needle + (
+            "      { name: 'Play gallery', href: '/os?lobby=play', description: 'Local play surfaces — quests you can grade in-browser; in-build cards stay honest and unlinked' },\n"
+            "      { name: 'GSPC Quests', href: '/gspc-quests.html', description: 'Six frozen axis-scoped quests with the same deterministic grader used on models — not the living board' },\n"
+          )
+          if "Play gallery" not in t and needle in t:
+            t = t.replace(needle, insert, 1)
+            p.write_text(t)
+            print("Header: inserted Play + Quests")
+          else:
+            print("Header: skip", "Play gallery" in t, needle in t)
+          PY
+          # GlobalSearch: insert OS/Play/Quests after Home entry
+          python3 <<'PY'
+          from pathlib import Path
+          p = Path("client/src/components/GlobalSearch.tsx")
+          t = p.read_text()
+          if "council-os" in t:
+            print("GlobalSearch: already present")
+          else:
+            lines = t.splitlines(keepends=True)
+            out = []
+            done = False
+            for line in lines:
+              out.append(line)
+              if (not done) and "{ id: 'home'" in line and "Council of AI" in line:
+                out.append(
+                  "  { id: 'council-os', title: 'Council OS', description: 'The product workspace — board, verify, space, assess, harness in one frame', category: 'pages', href: '/os', icon: Play, keywords: ['os', 'lobby', 'workspace', 'desktop', 'ag-ui'] },\n"
+                )
+                out.append(
+                  "  { id: 'os-play', title: 'Play gallery', description: 'Local play surfaces inside Council OS — quests you grade in-browser', category: 'pages', href: '/os?lobby=play', icon: Play, keywords: ['play', 'quests', 'gallery', 'arena'] },\n"
+                )
+                out.append(
+                  "  { id: 'gspc-quests', title: 'GSPC Quests', description: 'Six frozen axis-scoped quests with the same deterministic grader used on models', category: 'pages', href: '/gspc-quests.html', icon: Award, keywords: ['quests', 'grader', 'gspc', 'playable'] },\n"
+                )
+                done = True
+            if not done:
+              print("GlobalSearch: home needle not found")
+              raise SystemExit(1)
+            p.write_text("".join(out))
+            print("GlobalSearch: inserted OS/Play/Quests")
+          PY
+          # Remove MCP probe
+          rm -f client/src/lib/lobbyDoorsProbe.ts
+          # Sanity: no leftover /?lobby= in touched paths; no placeholders
+          if grep -R --include='*.tsx' --include='*.ts' -n '/?lobby=' \
+            client/src/pages/DemoOS.tsx \
+            client/src/pages/WorldGlobe.tsx \
+            client/src/pages/About.tsx \
+            client/src/App.tsx \
+            client/src/components/Header.tsx \
+            client/src/components/GlobalSearch.tsx \
+            client/src/components/home/LivingStages.tsx; then
+            echo "FAIL: /?lobby= still present" >&2
+            exit 1
+          fi
+          if grep -R -n 'PLACEHOLDER\|__LOAD_FROM_FILE__\|@file:' \
+            client/src/pages/DemoOS.tsx \
+            client/src/components/home/LivingStages.tsx; then
+            echo "FAIL: placeholder content" >&2
+            exit 1
+          fi
+          echo "OK: lobby door transforms applied"
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "fix(os): point leftover lobby CTAs at /os, not the lean homepage"
+          git push origin HEAD:cursor/os-lobby-doors-ff6e
