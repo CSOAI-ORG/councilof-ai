@@ -154,27 +154,89 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Framework wordmarks */}
+        {/* Framework logos — self-hosted badge art; links to the real framework home */}
         <div className="border-t border-border pt-6 mb-6">
           <p className="text-muted-foreground text-xs text-center uppercase tracking-wider mb-4">
             Framework alignment
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <span className="rounded-full border border-emerald-600/30 bg-emerald-600/10 px-3 py-1.5 text-xs font-semibold text-emerald-700">EU AI Act</span>
-            <span className="rounded-full border border-emerald-600/30 bg-emerald-600/10 px-3 py-1.5 text-xs font-semibold text-emerald-700">NIST AI RMF</span>
-            <span className="rounded-full border border-emerald-600/30 bg-emerald-600/10 px-3 py-1.5 text-xs font-semibold text-emerald-700">ISO 42001</span>
-            <span className="rounded-full border border-emerald-600/30 bg-emerald-600/10 px-3 py-1.5 text-xs font-semibold text-emerald-700">DORA</span>
-            <span className="rounded-full border border-emerald-600/30 bg-emerald-600/10 px-3 py-1.5 text-xs font-semibold text-emerald-700">C2PA</span>
-            <span className="rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">OIN</span>
-            <span className="rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">LOT Network</span>
-            <span className="rounded-full border border-slate-300 bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600">DIF</span>
-          </div>
+          <ul className="flex flex-wrap items-center justify-center gap-2.5 list-none p-0 m-0">
+            {[
+              {
+                src: '/images/badges/frameworks/eu-ai-act.svg',
+                alt: 'EU AI Act',
+                href: 'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai',
+                title: 'EU Artificial Intelligence Act — framework we measure against',
+              },
+              {
+                src: '/images/badges/frameworks/nist-ai-rmf.svg',
+                alt: 'NIST AI RMF',
+                href: 'https://www.nist.gov/itl/ai-risk-management-framework',
+                title: 'NIST AI Risk Management Framework — alignment, not certification',
+              },
+              {
+                src: '/images/badges/frameworks/iso-42001.svg',
+                alt: 'ISO/IEC 42001',
+                href: 'https://www.iso.org/standard/81230.html',
+                title: 'ISO/IEC 42001 AI management systems — we align; we are not certified',
+              },
+              {
+                src: '/images/badges/frameworks/dora.svg',
+                alt: 'DORA',
+                href: 'https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en',
+                title: 'Digital Operational Resilience Act — financial-axis alignment',
+              },
+              {
+                src: '/images/badges/frameworks/c2pa.svg',
+                alt: 'C2PA',
+                href: 'https://c2pa.org/',
+                title: 'C2PA Content Credentials — contributor member',
+              },
+              {
+                src: '/images/badges/frameworks/oin.svg',
+                alt: 'Open Invention Network',
+                href: 'https://openinventionnetwork.com/',
+                title: 'Open Invention Network — member',
+              },
+              {
+                src: '/images/badges/frameworks/lot-network.svg',
+                alt: 'LOT Network',
+                href: 'https://lotnet.org/',
+                title: 'LOT Network — application submitted (membership pending)',
+              },
+              {
+                src: '/images/badges/frameworks/dif.svg',
+                alt: 'Decentralized Identity Foundation',
+                href: 'https://identity.foundation/',
+                title: 'Decentralized Identity Foundation — did:web trust root',
+              },
+            ].map((b) => (
+              <li key={b.alt}>
+                <a
+                  href={b.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={b.title}
+                  className="block rounded-lg border border-border bg-background p-1 shadow-sm transition hover:border-emerald-600/40 hover:shadow"
+                >
+                  <img
+                    src={b.src}
+                    alt={b.alt}
+                    width={160}
+                    height={40}
+                    className="h-9 w-auto sm:h-10"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
           <p className="text-muted-foreground text-xs text-center mt-4 font-medium">
             We are not certified to SOC 2 or ISO 42001. Measurement credential, never certification.
           </p>
         </div>
 
-        {/* Find us / verify us — chips for every probed-live platform presence */}
+        {/* Find us / verify us — live platform logos + listings */}
         <FooterVerifyStrip />
 
         {/* Bottom bar */}
