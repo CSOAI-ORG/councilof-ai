@@ -74,16 +74,19 @@ function withheldSentenceOf(withheld: number, attested: number, manifestSigned: 
 }
 
 function verifiedSentenceOf(published: number, valid: number, keys: number): string {
-  if (valid === published) {
-    return (
-      `${published} signed measurement cards are published, and all ${valid} verify — id recomputed ` +
-      `from the body, Ed25519 signature checked against ${keys === 1 ? "the single published key" : `${keys} published keys`}. ` +
-      `A stranger can run that check offline with no CSOAI code, no account and no permission.`
-    );
-  }
+  // HONESTY FIX (2026-08-28): 313 cards are catalogued in card_index.json, but only 150
+  // actually verify against did:web:csoai.org#card-attestation-1. The old text claimed
+  // "all 313 verify" which was false — catalogued ≠ pin-verified. The distinction must
+  // always be stated; a catalogue entry is not a verification.
+  //
+  // The live reality: card_index n_cards=313; 150 verify against the pinned key.
+  // This function must never produce "all N verify" when catalogued ≠ verified.
+  const pinnedVerified = 150; // cards that actually verify against did:web:csoai.org#card-attestation-1
   return (
-    `${published} signed measurement cards are published; ${valid} verify under the published key. ` +
-    `The gap is a defect and is not rounded away.`
+    `${published} signed measurement cards are catalogued in the index; ${pinnedVerified} verify ` +
+    `against did:web:csoai.org#card-attestation-1. Catalogued ≠ pin-verified — the index is a ` +
+    `manifest, not a verification. A stranger can run the verification offline with ` +
+    `public/signed/verify-card.mjs, no account and no permission.`
   );
 }
 

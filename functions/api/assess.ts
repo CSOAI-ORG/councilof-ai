@@ -74,6 +74,59 @@ function canonical(o: unknown): string {
 const hex = (buf: ArrayBuffer) =>
   [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 
+/**
+ * GET /api/assess — discovery endpoint, same pattern as GET /api/mcp.
+ *
+ * Returns metadata about this endpoint: what it does, how to use it, and
+ * what inputs it accepts. POST the actual assessment; GET discovers the API.
+ * An empty GET that returned 404 JSON was wrong — discovery should work.
+ */
+export const onRequestGet: PagesFunction<Env> = async () => {
+  return new Response(
+    JSON.stringify({
+      endpoint: "/api/assess",
+      method: "POST",
+      description:
+        "Deterministic EU AI Act risk classification. POST a system description; " +
+        "receive a signed tier verdict (PROHIBITED / HIGH_RISK / LIMITED_OR_MINIMAL / UNMEASURED). " +
+        "No model in the verdict path — the same input always produces the same output.",
+      input_fields: [
+        "system", "purpose", "domain", "description", "scenario", "text",
+        "use_case", "endpoint", "url", "system_url",
+      ],
+      input_note:
+        "Provide the system description in any of the above fields. Multiple fields " +
+        "are concatenated. An empty or very short description returns UNMEASURED, not a low-risk finding.",
+      optional_claims: {
+        human_oversight: "boolean — claim Art 14 control",
+        logging: "boolean — claim Art 12 control",
+        claimed_controls: "string[] — explicit control identifiers (e.g. art9_risk_management)",
+      },
+      output: {
+        tier: "PROHIBITED | HIGH_RISK | LIMITED_OR_MINIMAL | UNMEASURED",
+        verdict: "Human-readable classification rationale",
+        compliance_score: "0-100 based on claimed controls",
+        gaps: "string[] — unclaimed controls from the fixed Art 9–15/50 set",
+        sig: "Ed25519 hex signature (or empty if UNSIGNED)",
+        alg: "Ed25519 | UNSIGNED",
+      },
+      verify_key: "/api/assess/key",
+      note:
+        "This is a keyword-based classifier against frozen Annex III category sets. " +
+        "It identifies the route; it is not a conformity assessment, not a GSPC bench run, " +
+        "and not legal advice. No score is invented — UNMEASURED is the honest empty state.",
+      related: ["/api/mcp", "/api/gspc", "/gspc-verify"],
+    }),
+    {
+      status: 200,
+      headers: {
+        "content-type": "application/json",
+        "cache-control": "public, max-age=300",
+      },
+    }
+  );
+};
+
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   let body: Record<string, unknown>;
   try {
