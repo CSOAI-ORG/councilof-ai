@@ -121,4 +121,134 @@ export default function Enterprise() {
         <Card className="p-8 max-w-md text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Failed to Load Content</h2>
-      
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <CouncilOsInnerNav title="Enterprise" subtitle="Portfolio measurement — training loop, not certification" />
+      {/* Hero Section - CISO Focused */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+        <div className="container max-w-6xl">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+                For CISOs · insurers · boards — {POSITIONING.router.short} + {POSITIONING.harness.short}
+              </Badge>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                Prove how your AI behaves — before the €35M question lands.
+              </h1>
+              <p className="text-xl text-gray-300 leading-relaxed mb-4">
+                {POSITIONING.subhead} Portfolio measurement across EU AI Act, NIST AI RMF, ISO 42001
+                controls, and TC260 — signed cards you can re-check. Measurement, not certification.
+              </p>
+              <p className="text-sm text-gray-400 leading-relaxed mb-8">
+                Embed signed verdicts under{" "}
+                <Link href="/powered-by" className="text-emerald-300 underline hover:text-emerald-200">
+                  Option A — Powered by Council OS
+                </Link>
+                ; white-label licensing stays in the opinion/measurement lane.
+              </p>
+
+              {/* Key Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">€35M</div>
+                  <div className="text-sm text-gray-300">Max EU AI Act Fine</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">4+</div>
+                  <div className="text-sm text-gray-300">Frameworks Supported</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">14</div>
+                  <div className="text-sm text-gray-300">Board slots, 13 measured</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">Free</div>
+                  <div className="text-sm text-gray-300">Verification, no account</div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <EnterpriseMeasureCta label="Start measurement in Council OS" className="inline-flex items-center justify-center" />
+                <Link href="/workspace">
+                  <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                    My systems workspace
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/enterprise-onboarding">
+                  <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                    Request Demo
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/pricing">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                    View Pricing
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            <Card className="p-8 bg-white/10 backdrop-blur-sm border-white/20">
+              <div className="flex items-center gap-3 mb-6">
+                <Shield className="h-8 w-8 text-emerald-400" />
+                <h3 className="text-2xl font-bold text-white">Measurement portfolio</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-emerald-500/20 rounded-lg">
+                  <span className="text-gray-200">EU AI Act instruments</span>
+                  <Badge className="bg-emerald-500 text-white">MEASURED</Badge>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-emerald-500/20 rounded-lg">
+                  <span className="text-gray-200">NIST AI RMF map</span>
+                  <Badge className="bg-emerald-500 text-white">ROUTED</Badge>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-emerald-500/20 rounded-lg">
+                  <span className="text-gray-200">ISO 42001 controls</span>
+                  <Badge className="bg-emerald-500 text-white">EVIDENCE</Badge>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-yellow-500/20 rounded-lg">
+                  <span className="text-gray-200">TC260</span>
+                  <Badge className="bg-yellow-500 text-white">PARTIAL</Badge>
+                </div>
+                <div className="pt-4 border-t border-white/20">
+                  <div className="text-sm text-gray-400 mb-2">GSPC board (live)</div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 bg-white/10 rounded-full h-3">
+                      <div className="bg-emerald-500 h-3 rounded-full" style={{ width: '93%' }}></div>
+                    </div>
+                    <span className="text-emerald-400 font-bold">13/14 measured</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="mt-4 w-full rounded-lg bg-emerald-600 px-3 py-2 text-sm font-bold text-white hover:bg-emerald-500"
+                    onClick={() => openLobby({ task: 'enterprise-start' })}
+                  >
+                    {POSITIONING.os.cta}
+                  </button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* How It Works Section */}
+      <div className="container py-20 max-w-6xl">
+        <div className="text-center mb-16">
+          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">How It Works</Badge>
+          <h2 className="text-4xl font-bold mb-4">Enterprise AI Compliance in 5 Steps</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            From registration to certification, CSOAI guides your organization through every step of AI compliance.
+          </p>
+        </div>
+
+        <div className="relative">
+          {/* Conne
