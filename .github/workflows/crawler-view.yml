@@ -1,27 +1,58 @@
 name: crawler-view-gate
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
   schedule:
     - cron: "17 6 * * *"   # daily — deploys can regress this without a code change
+
 jobs:
-  crawler-view:
+  # Selftest proves the gate can fail before trusting it to pass. Always required.
+  selftest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      # Prove the gate can fail before trusting it to pass.
       - name: Gate selftest
         run: node scripts/crawler-view-gate.mjs --selftest
+
+  # Production check — ADVISORY on PRs, BLOCKING after merge and on schedule.
+  #
+  # WHY ADVISORY ON PRs: The PR's code is not deployed yet. Crawling production
+  # tests the CURRENT live site, not the PR's fix. This caused PRs 820-827 (all
+  # fixing leftover chrome) to fail because they were judged by the very defect
+  # they exist to fix. A PR gate must test the PR, not the site the PR will heal.
+  #
+  # After merge (push to main/master) and on schedule, the production check is
+  # BLOCKING because the gated deploy has shipped and regressions matter.
+  crawler-view-production:
+    runs-on: ubuntu-latest
+    needs: selftest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
       # Test the CANONICAL alias, not the live apex: the apex oscillates on the
       # AG-UI/DEFONEOS lane's direct deploys every few minutes, so a PR would fail
       # on a clobber window (thin shell / 404) that is not the PR's fault. The
       # production alias is the GHA-owned canonical build and is stable.
       - name: Crawler view of the canonical build
+        id: production
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
         run: node scripts/crawler-view-gate.mjs --host https://production.councilof-ai.pages.dev
+      - name: Explain advisory result on PRs
+        if: github.event_name == 'pull_request' && steps.production.outcome == 'failure'
+        run: |
+          echo "::warning::CRAWLER-VIEW: Production check failed (advisory on PRs)"
+          echo ""
+          echo "This PR has not been deployed yet, so the production site was tested."
+          echo "The failure reflects the CURRENT live site, not this PR's changes."
+          echo "If this PR fixes the issue, it will go green after merge + deploy."
+          echo ""
+          echo "This is advisory on PRs to avoid blocking fixes for live-site defects."
       - name: Crawler view of the live apex (informational, non-blocking)
         continue-on-error: true
         run: node scripts/crawler-view-gate.mjs --host https://councilof.ai
