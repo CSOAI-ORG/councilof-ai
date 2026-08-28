@@ -73,7 +73,7 @@ const PRIORITY = new Map([
   ["/gspc-gap-map", P_HIGH],
   ["/live-ledger", P_HIGH],
   ["/instrument", P_HIGH],
-  ["/council", P_HIGH],
+  ["/tour", P_HIGH],
   ["/learn", P_HIGH],
   ["/article-50", P_HIGH],
   ["/benchmarks", P_HIGH],
@@ -373,7 +373,7 @@ const REQUIRED = [
   "/refutation-ledger",
   "/instrument",
   "/live-ledger",
-  "/council",
+  "/tour",
   // The six audience pages. They were redirect-suppressed for two days and nothing
   // failed, because nothing asserted they should be reachable. Now something does.
   ...FOR_PATHS,
