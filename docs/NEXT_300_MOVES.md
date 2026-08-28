@@ -210,7 +210,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 322 | Pricing page: no grade SKUs | HO.2 | ✅ |
 | 323 | Enterprise page cites Option A | copy | ✅ |
 | 324 | Insurers page cites RWA input posture | copy | ✅ |
-| 325 | Government page: regulators free forever | copy | ✅ |
+| 325 | Government page: regulators free forever | copy · `/government` → OS `regulator-brief` ✅ · brief HTML/PDF ✅ |
 | 326 | Academy: measurement credential language | copy | ✅ |
 | 327 | Live training outcomes ≠ certificates | already · ✅ |
 | 328 | Compare page vs incumbents (Wilson moat) | /compare | ✅ |
