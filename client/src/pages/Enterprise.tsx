@@ -56,4 +56,44 @@ const faqData = [
     answer: "Enterprise engagements use encrypted transport and agreed residency. We do not train models on your systems. Measurement evidence is yours to hold; verify stays free."
   },
   {
-    question: "Can I use CSOAI
+    question: "Can I use CSOAI for ISO 42001 certification?",
+    answer: "No — we are not a certification body and we do not speak for any auditor. We measure ISO-aligned controls and issue signed evidence your auditor (or insurer) can recompute. Gap analysis and documentation support that work; the certificate comes from them, not us."
+  },
+  {
+    question: "What if measurement shows gaps?",
+    answer: "You get a signed card with per-axis results, sample sizes, and intervals — then you choose who fixes. Per the firewall charter we never operate the fixer. Re-attest after remediation; the delta card is append-only history."
+  },
+  {
+    question: "How does ongoing monitoring work?",
+    answer: "Corpus-watch and scheduled re-measure keep evidence current as law and models move. Subscription tiers buy re-attest cadence and portfolio workspace — not a conformity badge that quietly goes stale."
+  },
+  {
+    question: "What do we receive?",
+    answer: "Signed measurement cards, executive summaries, technical axis detail, risk heat from measured cells only, and API/JSON export. No framework 'compliance certificates' from CSOAI — that would be a lie about our register."
+  },
+  {
+    question: "How do we register multiple AI systems?",
+    answer: "Enterprise workspace supports CSV/JSON bulk import and API. Each system gets its own measurement profile; batch re-attest keeps the portfolio honest without fusing scores."
+  }
+];
+
+export default function Enterprise() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const toggleFaq = (index: number) => {
+    setExpandedFaq(expandedFaq === index ? null : index);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="bg-gradi
