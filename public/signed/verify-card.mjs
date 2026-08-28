@@ -88,6 +88,57 @@ const hex = (buf) =>
 const unhex = (s) => Uint8Array.from(s.match(/../g).map((b) => parseInt(b, 16)));
 
 /**
+ * JCS (RFC 8785) canonicaliser — the v2 preimage rule. A card carrying
+ * `preimage_rule: "jcs-rfc8785"` is hashed over THIS form, NOT the v1 CPython form.
+ * Differences from v1 (canonical above):
+ *   1. No FLOAT_FIELDS: every integral float renders as an integer ("0", not "0.0").
+ *   2. ensure_ascii=False: non-ASCII stays literal (JS JSON.stringify does this), whereas
+ *      v1 escapes to \\uXXXX (CPython ensure_ascii=True).
+ *   3. Same key-sort + compact separators + escape of quote/backslash/control chars.
+ * Matches harness/arena/jcs.py (Python) and the conformance corpus in
+ * harness/arena/jcs_conformance.py (18/18 ordinary cases agree cross-language).
+ */
+function canonicalJcs(value, key = null) {
+  if (value === null) return "null";
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (typeof value === "number") {
+    if (!Number.isFinite(value)) throw new Error(`non-finite number at ${key}`);
+    // JCS/ECMAScript: integral floats in [10^-6, 10^21) emit as integers; -0 -> "0".
+    if (Number.isInteger(value) && value !== 0) {
+      const av = Math.abs(value);
+      if (av >= 1e-6 && av < 1e21) return String(value);
+    }
+    if (value === 0) return "0"; // covers -0.0
+    return String(value);
+  }
+  if (typeof value === "string") return jcsString(value);
+  if (Array.isArray(value)) return "[" + value.map((v) => canonicalJcs(v, key)).join(",") + "]";
+  if (typeof value === "object") {
+    const keys = Object.keys(value).sort();
+    return "{" + keys.map((k) => jcsString(k) + ":" + canonicalJcs(value[k], k)).join(",") + "}";
+  }
+  throw new Error(`unserialisable value at ${key}`);
+}
+
+/** JCS string escaping: quote/backslash/control-char escapes, non-ASCII stays LITERAL. */
+function jcsString(s) {
+  let out = '"';
+  for (const ch of s) {
+    const c = ch.codePointAt(0);
+    if (ch === '"') out += '\\"';
+    else if (ch === "\\") out += "\\\\";
+    else if (ch === "\b") out += "\\b";
+    else if (ch === "\f") out += "\\f";
+    else if (ch === "\n") out += "\\n";
+    else if (ch === "\r") out += "\\r";
+    else if (ch === "\t") out += "\\t";
+    else if (c < 0x20) out += "\\u" + c.toString(16).padStart(4, "0");
+    else out += ch; // non-ASCII literal (ensure_ascii=False)
+  }
+  return out + '"';
+}
+
+/**
  * Three outcomes, never two: VALID, INVALID (with the reason), or UNCHECKABLE.
  * A verifier that cannot complete its path must say so rather than returning false —
  * "I could not check" is not the same claim as "this is forged".
@@ -103,7 +154,11 @@ export async function verifyCard(card) {
 
   let preimage;
   try {
-    preimage = new TextEncoder().encode(canonical(card.body));
+    // Preimage-rule dispatch (roadmap item 1): absent = legacy CPython v1; "jcs-rfc8785" = JCS v2.
+    // Never re-sign v1 cards — the verifier dispatches on the field.
+    const rule = card.preimage_rule || card.canon || "cpython-v1";
+    const fn = rule === "jcs-rfc8785" ? canonicalJcs : canonical;
+    preimage = new TextEncoder().encode(fn(card.body));
   } catch (e) {
     return { state: "UNCHECKABLE", reason: `cannot canonicalise: ${e.message}` };
   }
