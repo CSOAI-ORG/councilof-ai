@@ -6,6 +6,7 @@ import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
 import { BOARD_COUNT_OBSERVED, boardCountFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
+import BoardAttestation from "@/components/board/BoardAttestation";
 
 /**
  * /gspc-scoreboard — the live board, honestly displayed (NEXT-100 #2).
@@ -556,6 +557,19 @@ export default function GspcScoreboard() {
                 })}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {/* BOARD ATTESTATION CHROME — Ed25519, SHA-256, XRPL, Progress */}
+        {data && (
+          <div className="mt-10">
+            <BoardAttestation
+              data={data}
+              variant="light"
+              showProgress={true}
+              showInLane={false}
+              compact={false}
+            />
           </div>
         )}
 

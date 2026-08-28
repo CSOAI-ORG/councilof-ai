@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { VerifyButton } from "@/components/gspc/VerifyButton";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import { CHAIN_STATUS } from "@/data/chain";
+import BoardAttestation from "@/components/board/BoardAttestation";
 
 /**
  * /gspc-verify — recompute the chain yourself.
@@ -16,9 +17,24 @@ import { CHAIN_STATUS } from "@/data/chain";
  */
 
 export default function GSPCVerify() {
+  const [boardData, setBoardData] = useState<any>(null);
+
   useEffect(() => {
     document.title = "Verify the chain — recompute it yourself, client-side | CSOAI";
     setMetaDescription("Verify a Council of AI measurement card client-side: recompute the Ed25519 signature chain in your browser against the published public key. No account, no server trust.");
+  }, []);
+
+  useEffect(() => {
+    const ac = new AbortController();
+    fetch("/api/gspc", { signal: ac.signal, headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then((d) => {
+        if (d && typeof d === "object" && Array.isArray(d.axes)) {
+          setBoardData(d);
+        }
+      })
+      .catch(() => { /* verification page still works without the board data */ });
+    return () => ac.abort();
   }, []);
 
   return (
@@ -108,6 +124,26 @@ export default function GSPCVerify() {
             </p>
           </div>
         </section>
+
+        {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
+        {boardData && (
+          <section>
+            <h2 className="text-2xl font-bold text-emerald-50">Living attestation — from GET /api/gspc</h2>
+            <p className="mt-1 text-[13px] text-emerald-100/60">
+              Ed25519 signature, SHA-256 hash, and XRPL status fetched at render time. No hardcoded
+              scores. Empty fields show exactly why they are empty.
+            </p>
+            <div className="mt-4">
+              <BoardAttestation
+                data={boardData}
+                variant="dark"
+                showProgress={true}
+                showInLane={true}
+                compact={false}
+              />
+            </div>
+          </section>
+        )}
 
         {/* WHAT THIS DOES NOT DO */}
         <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
