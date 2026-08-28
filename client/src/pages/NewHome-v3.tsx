@@ -3,18 +3,22 @@
  *
  * LOCKED ORDER:
  * 1. Hero = Council OS door (one sentence, one filled CTA, one ghost CTA, OS visual)
- * 2. 9-product grid (ToolStack — existing component with 9 tiles)
- * 3. Living 22-row GET /api/gspc table (OpenRouter-class instrument, not the hero)
+ * 2. 9 catalog products from LIVE catalog.json (not ToolStack, not /products family)
+ * 3. Living 22-row GET /api/gspc table (below hero, not the hero)
  * 4. Refusals + Trust
+ *
+ * 9 CATALOG PRODUCTS (from https://councilof.ai/catalog.json):
+ * ClaimGuard, GSPC MCP Tools, East-West, GSPC Verify, GSPC Arena,
+ * Signed Per-Axis Leaderboard, Article 50 Evidence Pack, GSPC Benchmarks, MCP Fleet
+ * RAS and COBOL Bridge stay drafts — not shown.
  *
  * DOCTRINE:
  * - Never certify. Never sell a grade. UNMEASURED is first-class.
- * - Empty stays empty. No invented scores. Verification free forever.
- * - Primary OS CTA appears THREE times: hero, after products, above footer.
+ * - Empty stays empty (7 UNMEASURED visible). No invented scores.
+ * - Verification free forever. Primary OS CTA appears THREE times.
  */
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import ToolStack from "../components/home/ToolStack";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import {
@@ -27,7 +31,86 @@ import {
   Activity,
   CheckCircle2,
   Circle,
+  Shield,
+  Cpu,
+  Scale,
+  FileCheck,
+  Swords,
+  Trophy,
+  FileText,
+  BarChart3,
+  Server,
 } from "lucide-react";
+
+// ── 9 CATALOG PRODUCTS from live catalog.json ───────────────────────────────
+// Exact list: ClaimGuard, GSPC MCP Tools, East-West, GSPC Verify, GSPC Arena,
+// Signed Per-Axis Leaderboard, Article 50 Evidence Pack, GSPC Benchmarks, MCP Fleet
+// RAS and COBOL Bridge are drafts — not shown on homepage.
+const CATALOG_PRODUCTS = [
+  {
+    id: "claimguard",
+    name: "ClaimGuard",
+    href: "/claimguard",
+    icon: Shield,
+    what: "Deterministic claim-vs-signed-artifact checking.",
+  },
+  {
+    id: "gspc-mcp",
+    name: "GSPC MCP Tools",
+    href: "/.well-known/mcp.json",
+    icon: Cpu,
+    what: "MCP tools: measure, verify, jail-probe, enter-arena.",
+  },
+  {
+    id: "east-west",
+    name: "East-West",
+    href: "/api/east-west-bench",
+    icon: Scale,
+    what: "East-vs-West pair-gap context rail, not a grade.",
+  },
+  {
+    id: "gspc-verify",
+    name: "GSPC Verify",
+    href: "/gspc-verify",
+    icon: FileCheck,
+    what: "Signed measurement verification — free forever.",
+  },
+  {
+    id: "gspc-arena",
+    name: "GSPC Arena",
+    href: "/gspc-arena",
+    icon: Swords,
+    what: "Live measurement scoreboard — model vs model.",
+  },
+  {
+    id: "arena-scoreboard",
+    name: "Signed Per-Axis Leaderboard",
+    href: "/arena-scoreboard",
+    icon: Trophy,
+    what: "Signed per-axis rankings from the living board.",
+  },
+  {
+    id: "article-50-pack",
+    name: "Article 50 Evidence Pack",
+    href: "/packs/eu-article-50",
+    icon: FileText,
+    what: "Signed C2PA durability attestation for EU AI Act.",
+  },
+  {
+    id: "benchmarks",
+    name: "GSPC Benchmarks",
+    href: "/benchmarks",
+    icon: BarChart3,
+    what: "Deterministic predicate benchmarks — recomputable.",
+  },
+  {
+    id: "mcp-fleet",
+    name: "MCP Fleet",
+    href: "/mcp-fleet",
+    icon: Server,
+    what: "MCP server registry for the measurement estate.",
+  },
+];
 
 // ── refusals ───────────────────────────────────────────────────
 const REFUSALS = [
@@ -375,6 +458,67 @@ function RefusalBand() {
   );
 }
 
+// ── 9 Catalog Products Grid ───────────────────────────────
+function CatalogProductsGrid() {
+  return (
+    <section className="surface-raised section-y">
+      <div className="section-shell">
+        <h2 className="t-section text-center text-foreground">What you can use today</h2>
+        <p className="t-lede measure measure-center mt-4 text-center text-muted-foreground">
+          Nine live products from the measurement estate. Verification is free forever.
+          Measurement, not certification.
+        </p>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {CATALOG_PRODUCTS.map((p) => (
+            <a
+              key={p.id}
+              href={p.href}
+              className="card-quiet group flex flex-col p-5 sm:p-6"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                  <p.icon className="h-5 w-5" />
+                </div>
+                <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-primary">
+                  {p.name}
+                </h3>
+              </div>
+              <p className="mt-3 flex-1 text-sm text-muted-foreground">{p.what}</p>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+                Open <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Verify Door (free forever) ───────────────────────────────
+function VerifyDoor() {
+  return (
+    <section className="surface-sunken py-12 sm:py-16">
+      <div className="section-shell">
+        <div className="mx-auto max-w-2xl rounded-2xl border border-emerald-200 bg-white p-8 text-center shadow-sm">
+          <FileCheck className="mx-auto h-10 w-10 text-emerald-600" />
+          <h3 className="mt-4 text-xl font-bold text-foreground">Verify a card — free forever</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Paste a signed measurement record. Your browser recomputes the hash and checks
+            the Ed25519 signature. Nothing is sent to us. No account, no fee, permanently.
+          </p>
+          <a
+            href="/gspc-verify"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-emerald-700"
+          >
+            Open verifier <ChevronRight className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── export ───────────────────────────────
 export default function NewHomeV3() {
   return (
@@ -382,14 +526,17 @@ export default function NewHomeV3() {
       {/* 1. Hero = Council OS door (one filled CTA + one ghost) */}
       <HeroCouncilOS />
 
-      {/* 2. 9-product grid (ToolStack — existing component) */}
-      <ToolStack />
+      {/* 2. 9 catalog products grid */}
+      <CatalogProductsGrid />
 
       {/* Primary CTA #2: after products */}
       <PrimaryCtaBand id="cta-after-products" />
 
-      {/* 3. Living 22-row GET /api/gspc table */}
+      {/* 3. Living 22-row GET /api/gspc table (below hero, not the hero) */}
       <DenseBoard />
+
+      {/* Verify door — free forever */}
+      <VerifyDoor />
 
       {/* 4. Doctrine: what we refuse to do */}
       <RefusalBand />
@@ -407,14 +554,21 @@ export default function NewHomeV3() {
       {/* Primary CTA #3: above footer */}
       <PrimaryCtaBand id="cta-footer" />
 
-      {/* FAQ link */}
+      {/* FAQ link — full FAQ on /faq, News on /blog/ */}
       <section className="surface-raised py-8">
-        <div className="section-shell text-center">
+        <div className="section-shell flex flex-wrap items-center justify-center gap-4 text-sm">
           <a
             href="/faq"
-            className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
+            className="inline-flex items-center gap-2 font-bold text-primary hover:underline"
           >
             Questions? See all FAQs <ChevronRight className="h-4 w-4" />
+          </a>
+          <span className="text-muted-foreground">·</span>
+          <a
+            href="/blog"
+            className="inline-flex items-center gap-2 font-bold text-primary hover:underline"
+          >
+            News <ChevronRight className="h-4 w-4" />
           </a>
         </div>
       </section>
