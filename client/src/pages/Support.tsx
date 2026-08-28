@@ -72,7 +72,7 @@ Would you like me to connect you with a human support agent for further assistan
 • **Get measured** at /assess — a deterministic EU AI Act keyword classifier. Not a certificate. We do not remediate.
 • **Verify** any signed record at /gspc-verify/
 • **Living board** at GET /api/gspc
-• **Lobby door** /?lobby=measured&task=pricing-overview
+• **Lobby door** /os?lobby=assess&task=pricing-overview
 
 If you have a signed report_id and no datastore is bound yet, email nicholas@csoai.org with that id.
 
@@ -306,7 +306,7 @@ Is there anything else I can help you with in the meantime?`,
     },
     {
       question: 'Is Get measured free?',
-      answer: 'Yes. Measurement and verification are free forever. There are no SaaS tiers and no public prices. Start at /assess or the lobby door /?lobby=measured&task=get-measured.',
+      answer: 'Yes. Measurement and verification are free forever. There are no SaaS tiers and no public prices. Start at /assess or the lobby door /os?lobby=assess&task=get-measured.',
     },
     {
       question: 'What does the assessment actually run?',
