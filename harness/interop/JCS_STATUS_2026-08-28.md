@@ -17,3 +17,13 @@ Current state (honest):
 - NEXT (queued): library-based re-run of the same gate → target 100% → then the
   dispatch (`canon` field) lands in verify_signed.py + action-verify-attestation +
   verify-card.mjs. Until then: no JCS dispatch, no re-signs, v1 preimage unchanged.
+
+## UPDATE (same day, append-only): dispatch SHIPPED (roadmap #1, gated)
+- Decision pinned: canonical bytes for NEW cards (canon:"jcs-rfc8785") = Python
+  rfc8785.dumps output (estate signing stack). Legacy cards untouched; never re-sign.
+- Divergence classes from the corpus diagnosis: charset/escape, float-precision
+  (repr vs shortest-round-trip), structural — the 100% corpus gate stays OFF (legacy
+  corpus stays v1); NEW cards verify through the dispatch.
+- scripts/verify_signed.py now dispatches on the field (rfc8785 required for jcs cards;
+  refuses to guess otherwise). Round-trip fixture: harness/interop/jcs-fixture-card.json
+  (VALID via dispatch). JS/action + verify-card.mjs dispatch = queued (same field rule).

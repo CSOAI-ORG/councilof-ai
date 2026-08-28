@@ -21,6 +21,16 @@ SIG_FIELDS = ("signature", "signer", "signed", "sig_input")
 
 
 def canonical(obj, compact=False):
+    # Roadmap #1 (RFC 8785): v2 cards carry canon:"jcs-rfc8785" — pinned canonical bytes
+    # = Python rfc8785.dumps output (the estate signing stack). Legacy cards (absent field)
+    # use the v1 rules below. NEVER re-sign v1 cards; dispatch on the field only.
+    if isinstance(obj, dict) and obj.get("canon") == "jcs-rfc8785":
+        try:
+            from rfc8785 import dumps as jcs
+            return (jcs(obj).decode() if isinstance(jcs(obj), bytes) else jcs(obj)).encode()
+        except ImportError:
+            raise SystemExit("GATE: card declares canon:jcs-rfc8785 but verifier lacks "
+                             "the rfc8785 library (pip install rfc8785) — refusing to guess.")
     if compact:  # style B (signals/cards): emit_signals canonical
         return json.dumps(obj, sort_keys=True, separators=(",", ":"),
                           ensure_ascii=False).encode()
