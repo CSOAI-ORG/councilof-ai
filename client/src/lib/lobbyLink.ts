@@ -304,7 +304,7 @@ export interface LobbyLinkOptions {
   prompt?: string;
   ctx?: string;
   task?: LobbyTaskId;
-  /** Path the link points at. Defaults to the current page — the lobby is global. */
+  /** Path the link points at. Defaults to /os — marketing pages must not emit /?lobby=* on /. */
   path?: string;
 }
 
@@ -315,8 +315,10 @@ const isTask = (v: unknown): v is LobbyTaskId =>
   typeof v === "string" && Object.prototype.hasOwnProperty.call(LOBBY_TASKS, v);
 
 function currentPath(): string {
-  if (typeof window === "undefined") return "/";
-  return window.location.pathname || "/";
+  if (typeof window === "undefined") return "/os";
+  const p = window.location.pathname || "/";
+  if (p === "/os" || p.startsWith("/os/")) return p;
+  return "/os";
 }
 
 /**
