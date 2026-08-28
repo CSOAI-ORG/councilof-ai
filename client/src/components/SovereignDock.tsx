@@ -16,8 +16,8 @@ import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, per
 type Msg = { role: "you" | "sov"; text: string };
 
 const ROUTES: { re: RegExp; href: string; label: string }[] = [
-  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/?lobby=home", label: "the Governance Graph" },
-  { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/?lobby=home", label: "the Governance Graph" },
+  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/os?lobby=home", label: "the Governance Graph" },
+  { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/os?lobby=home", label: "the Governance Graph" },
   { re: /framework|crosswalk|\biso\b|\bnist\b|tc260|eu ai act/i, href: "/crosswalks", label: "Framework crosswalks" },
   { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/gspc-arena", label: "Council Space" },
   { re: /sovereign town|\btown\b|incident/i, href: "/gspc-arena?view=towns", label: "the Towns layer of Council Space" },
@@ -30,7 +30,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /risk|heatmap/i, href: "/risk-heatmap", label: "Risk Heatmap" },
   { re: /oscal|fedramp/i, href: "/oscal", label: "OSCAL Studio" },
   { re: /model|bias|fairness/i, href: "/models", label: "Model Registry" },
-  { re: /price|pricing|plan|cost/i, href: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
+  { re: /price|pricing|plan|cost/i, href: "/os?lobby=measured&task=pricing-overview", label: "How the free rail works" },
   { re: /media|image|photo|creative commons/i, href: "/commons", label: "Open Commons media" },
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
@@ -39,7 +39,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /council network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Council network" },
   { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
-  { re: /\bos\b|launch|grid|everything/i, href: "/?lobby=home", label: "the OS launcher" },
+  { re: /\bos\b|launch|grid|everything/i, href: "/os?lobby=home", label: "the OS launcher" },
 ];
 
 const KNOWLEDGE: { re: RegExp; a: string }[] = [
@@ -48,12 +48,12 @@ const KNOWLEDGE: { re: RegExp; a: string }[] = [
 ];
 
 const QUICK: { label: string; href: string }[] = [
-  { label: "Governance Graph", href: "/?lobby=home" },
+  { label: "Governance Graph", href: "/os?lobby=home" },
   { label: "Council Space", href: "/gspc-arena" },
   { label: "Open Commons", href: "/commons" },
-  { label: "Free rail", href: "/?lobby=measured&task=pricing-overview" },
+  { label: "Free rail", href: "/os?lobby=measured&task=pricing-overview" },
   { label: "Status", href: "/status" },
-  { label: "Full OS", href: "/?lobby=home" },
+  { label: "Full OS", href: "/os?lobby=home" },
 ];
 
 const GW = "/api";
@@ -75,13 +75,13 @@ async function askGovern(q: string): Promise<any | null> {
 // SOV3 shared brain: /orchestrate returns {say, actions}. The Sovereign SEES the
 // page (getScreenContext), THINKS via the measurement API, then ACTS - opening OS surfaces.
 const APP_ROUTES: Record<string, string> = {
-  revenue: "/?lobby=measured&task=pricing-overview", pricing: "/?lobby=measured&task=pricing-overview", plans: "/?lobby=measured&task=pricing-overview", billing: "/?lobby=measured&task=pricing-overview",
+  revenue: "/os?lobby=measured&task=pricing-overview", pricing: "/os?lobby=measured&task=pricing-overview", plans: "/os?lobby=measured&task=pricing-overview", billing: "/os?lobby=measured&task=pricing-overview",
   king: "/try", council: "/try", try: "/try", vote: "/try", bft: "/try",
   setup: "/start", onboard: "/start", start: "/start", welcome: "/start",
-  graph: "/?lobby=home", knowledge: "/?lobby=home", search: "/?lobby=home",
+  graph: "/os?lobby=home", knowledge: "/os?lobby=home", search: "/os?lobby=home",
   space: "/gspc-arena", sim: "/gspc-arena", simulation: "/gspc-arena", experiment: "/gspc-arena", sovspace: "/gspc-arena",
   tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
-  status: "/status", system: "/status", os: "/?lobby=home", home: "/?lobby=home", grid: "/?lobby=home",
+  status: "/status", system: "/status", os: "/os?lobby=home", home: "/os?lobby=home", grid: "/os?lobby=home",
   twin: "/me",
   certification: "/academy", cert: "/academy", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
@@ -98,7 +98,7 @@ function routeForAction(a: any): string | null {
   if (!a || !a.command) return null;
   if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url);
   if (a.command === "open_app" && a.args && a.args.id) return APP_ROUTES[String(a.args.id).toLowerCase()] || null;
-  if (a.command === "govern") return "/?lobby=home";
+  if (a.command === "govern") return "/os?lobby=home";
   return null;
 }
 async function orchestrate(message: string, context: any): Promise<{ say: string; actions: any[] } | null> {
@@ -295,7 +295,7 @@ export default function SovereignDock() {
             <AISystemNotice route="/sovereign-dock" />
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-            {msgs.map((m, i) => (<div key={i} className={m.role === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[90%] whitespace-pre-wrap rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.text}</div>))}
+            {msgs.map((m, i) => (<div key={i} className={m.role === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[90%] whitespace-pre-wrap rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90">{m.text}</div>))}
             <div ref={endRef} />
           </div>
           <div className="border-t border-emerald-500/15 p-3">
