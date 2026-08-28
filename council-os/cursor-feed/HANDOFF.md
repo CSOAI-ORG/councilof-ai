@@ -6,7 +6,11 @@ Consolidated work products + brand directives so you can push them live, branded
 - **Emerald Green `#10B981`** + **Stark White `#FFFFFF`** + deep emerald shadow `#065F46`. No gold/gray/MEOK.
 - Typeface: Avenir Next (Demi Bold headers, Regular body). Font: `/System/Library/Fonts/Supplemental/Avenir Next.ttc` (index 3 = Demi Bold).
 - Cards: `#0e1118` panel, `rgba(16,185,129,.25)` border, radius 16, subtle emerald radial glow, `border-emerald-500/20 bg-white/5` glassmorphism.
-- Grammar (binding): cite live `totals.public_count` — **14 measured of 14 quotable** (jail MEASURED · separation TIE, 2026-08-25) · measurement ≠ certification (we CONFORM, never "certified") · signed · measured · sovereign. Do not invent 22 axes.
+- Grammar (binding): cite live `GET /api/gspc` → `totals.public_count` —
+  **22 axis · 15 measured · 7 UNMEASURED** (jail MEASURED · separation TIE).
+  Measurement ≠ certification. Card chain after #876 = **335/335 VALID**; the
+  150-row board is a subset of that chain, not a second set. Do not restore
+  14-of-14. Do not clamp the index. Do not invent a number.
 
 ## 2. WHAT TO PUSH (paths in this repo)
 | Surface | Path | Render as (AG-UI card / route) |

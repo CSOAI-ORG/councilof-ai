@@ -16,8 +16,10 @@ canonical runbook — where things live, what gates hold, who may touch what.
 6. **Publish** — repo `public/` (Pages deploy) + HF mirror (data assets) +
    machine surface (api/agent.json/interop).
 7. **Attest** — CI gates: `claimguard-publish-gate` (claims support),
-   `signed-json-guard` (no stubs / parse / floors), `protect-verified-335`
-   (card-index hash gate), `conflict-guard`, Claims E2E, crawler-view-gate.
+   `signed-json-guard` (no stubs / parse / leftover `n_cells` floors),
+   `conflict-guard`, Claims E2E, crawler-view-gate. The old 150-restore
+   bots (`honest-board-floor`, `reject-335-board`) now run the guard only —
+   they do not revert the index. PR #876.
 8. **Improve** — corrections **appended, never edited**; supersession chain;
    audit each round for overclaims.
 
@@ -28,17 +30,23 @@ canonical runbook — where things live, what gates hold, who may touch what.
 - No LLM judge in measurement path (CI hook — queued)
 
 ## 3. Surfaces (where truth is served)
-- **Site/API:** councilof.ai + /api/gspc (14 of 14 measured of 14 quotable), /api/cards, /signals/*
+- **Site/API:** councilof.ai + /api/gspc (**22 axis · 15 measured · 7 UNMEASURED** —
+  cite `totals.public_count`, never type it), /api/cards, /signals/*
 - **Living data:** `public/signed/` (board_living, gspc-measurement, card_index) · `public/interop/` (rwa corpus, measure runs, sbom) · `public/signals/` (signed signals)
 - **HF mirrors:** csoai/gspc-* (boards/bench results) · **csoai/rwa-attest** (this week)
 - **Machine faces:** .well-known/agent.json/mcp.json, os-production (Cursor feed)
 
-## 4. Lanes (one spine, no overlapping edits)
-- **K3/DSH (this lane):** measurement + signing + interop + docs + CI rules.
-- **Claude lane:** council-os spine, content integration, jail/board wiring.
-- **Cursor lane:** Council OS front-end (AG-UI pages/menus) — works off `os-production`;
-  E2E runs failing ~20s = environment issue (flagged in notes, not content).
-- **Bots:** card-index automations (335/150) — both hash-gated now; publish-rule = owner.
+## 4. Lanes (one spine, no overlapping edits) — aligned 2026-08-28
+- **Grok (harness-measurement):** `harness/`, signed cards, Inspect gate, scoreboard
+  HEAD, living-door aliases. Card chain = **335 verifying** (PR #876). Do not
+  clamp to 150.
+- **K3/DSH:** measurement + signing + interop + docs + CI rules (EAT loop).
+- **Claude:** products, MCP, lobby/play, **single dist builder**. Close stale
+  150-floor PRs. Do not counter-push #876.
+- **Cursor:** Council OS / AG-UI / doors / e2e. Quote live 22·15·7. Do not
+  edit `public/signed/card_index.json`. Do not restore 14-of-14.
+- **Bots:** floor/reject no longer restore 150. `signed-json-guard` is the gate.
+- **Owner:** merge-to-master if required; insurance; grants; secrets; I-D.
 
 ## 5. Cadence
 - Every round: declare → measure → sign → publish → verify → improve.
