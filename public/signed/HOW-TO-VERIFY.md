@@ -3,7 +3,7 @@
 You do not need our code, our permission, or our word for any of this. Everything below runs
 against the published bytes.
 
-**Cards published:** 313 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
+**Cards published:** 335 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
 
 ## 1. Pin the key first — this step is not optional
 
@@ -33,7 +33,7 @@ Every published card MUST carry that exact `pubkey`. If one does not, stop.
 
 The preimage was produced by CPython's `json.dumps`, which renders a float of integral value
 as **`0.0`**. ECMAScript `JSON.stringify`, Go's `encoding/json`, and RFC 8785 (JCS) all render
-the same value as **`0`**. 116 of our 313 cards contain such a value, so a
+the same value as **`0`**. Integral-float cards in this set do the same, so a
 naive JavaScript or Go verifier computes a different preimage and reports a **false failure**
 on roughly a third of the set.
 
@@ -53,7 +53,7 @@ const canon = (v) => Array.isArray(v) ? "[" + v.map(canon).join(",") + "]"
 at runtime — both are the same IEEE-754 double. A JS verifier therefore needs the schema to
 tell it which fields are floats. The fields that are floats in our cards are `accuracy` and
 any field ending `_ci_low` / `_ci_high`. A future card format should use JCS so this note is
-unnecessary; these 150 cannot be migrated without invalidating their ids.
+unnecessary; these cards cannot be migrated without invalidating their ids. The 150-row floor previously published is a subset of this 335-card chain, not a second measurement.
 
 ## 4. Check one card
 
@@ -117,6 +117,7 @@ card-attestation key and have not been altered since. **It does not prove the me
 correct** — that rests on the published method, the gold labels and the rows, all separately
 available. A signature is an integrity claim, not a truth claim.
 
-**It also does not prove the set is complete.** The index declares a chain head that is not
-among these 313 cards: they are a prefix of a longer chain. Each card verifies
-individually; completeness does not.
+**It also does not prove the set is complete.** Each card verifies individually;
+an index can only list what its publisher chose to list. The 150-row floor that
+used to ship beside this chain is a subset of these 335 cards, not a second
+measurement.
