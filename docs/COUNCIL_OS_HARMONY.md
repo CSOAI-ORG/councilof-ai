@@ -41,6 +41,7 @@ Canon: `docs/MASTER_CONNECT.md` · `docs/ESTATE_CROSSWALK.md` · `council-os/GAM
 | Council Space console sim | REAL (honest) | Gateway banner live/offline; narrated sim labelled ≠ MEASURED |
 | SovOS games arcade | 1 live + 5 DESIGN | Slots 2–6 registered with DESIGN panels |
 | MCP fleet page | REAL (dev) | Live list via `/api/mcp` — registry in dev, gateway in prod |
+| AG-UI control rail | REAL (branch) | Control chips seed Ask without site nav (dock stays open) · freeform Prefill Ask · consent lock |
 | Training / flywheel | REAL (branch) | `public/flywheel/board.json` + `sim-board.json` on branch deploy |
 | Dashboard framework % | FIXED | UNMEASURED until org assessment |
 | 9 product SKUs (GPAI, INS, COBOL…) | LIVE catalog | `/products` lists all nine with honest registers |

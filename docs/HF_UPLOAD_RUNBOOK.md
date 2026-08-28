@@ -45,4 +45,4 @@ Label in README: **TESTNET** · `measured_score: null`.
 
 - Update `docs/HF_ORG_DATASET_INDEX.md` with repo URLs.
 - If Hub `csoai/rwa-attest` MEASURED-INDEX files conflict with OS UNMEASURED product, keep `C-2026-0826-01` live.
-- Tick #139/#186 in `docs/NEXT_300_MOVES.md` only after `hf_fs` stat shows repos exist.
+- Tick #139/#186 in `docs/NEXT_300_MOVES.md` only after `hf_fs stat` shows repos exist.
