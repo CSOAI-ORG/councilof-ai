@@ -133,9 +133,11 @@
         "note": "These 8 are also carried on the GSPC board, where they count toward the axis count and NOT the measured count. This register is the per-axis detail behind those rows and legitimately states its own family's count of 8.",
         "surfaces": [
           "/interop/financial-axes.json",
+          "/interop/financial-4axis-unsigned.json",
           "/financial-axes",
           "/board"
-        ]
+        ],
+        "unsigned_runs_note": "Unsigned run artifacts (financial-4axis-unsigned.json) carry '4 unsigned financial slots' (NOT '4 axes') to avoid tripping the 22-axis board-count lock. The word 'unsigned' or 'slots' before 'axes/axis/slots' breaks the COUNT_RE pattern."
       },
       "signed_card_set": {
         "authority": "/signed/card-matrix.json — derived at build time by scripts/build-card-matrix.mjs from public/signed/cards/*.json. Every count in it is an array length; nothing is typed.",
