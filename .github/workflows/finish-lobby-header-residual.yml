@@ -1,0 +1,47 @@
+name: finish-lobby-header-residual
+on:
+  workflow_dispatch:
+  push:
+    branches: [cursor/os-lobby-header-play-ff6e]
+    paths:
+      - ops/logs/lobby-header-assemble/FINISH
+permissions:
+  contents: write
+jobs:
+  finish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/os-lobby-header-play-ff6e
+          fetch-depth: 0
+      - name: Copy About + GlobalSearch from doors tip
+        run: |
+          set -euo pipefail
+          # Correct blobs already on cursor/os-lobby-doors-ff6e (#878)
+          git fetch origin cursor/os-lobby-doors-ff6e
+          git checkout origin/cursor/os-lobby-doors-ff6e -- \
+            client/src/pages/About.tsx \
+            client/src/components/GlobalSearch.tsx
+          python3 - <<'PY'
+          import hashlib
+          checks = {
+            "client/src/pages/About.tsx": "884cdd524d3fca0a70251857ab1d34b4bada7904",
+            "client/src/components/GlobalSearch.tsx": "e74499879e6894d6449cc82c825f9fe08d61c923",
+          }
+          for path, want in checks.items():
+            c = open(path, "rb").read()
+            blob = hashlib.sha1(b"blob %d\0" % len(c) + c).hexdigest()
+            print(path, len(c), blob)
+            assert blob == want, (path, blob, want)
+          PY
+          # Clean leftover assemble workflow if still present
+          rm -f .github/workflows/assemble-lobby-header.yml
+          rm -f .github/workflows/finish-lobby-header-residual.yml
+          rm -rf ops/logs/lobby-header-assemble
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git status
+          git commit -m "fix(os): finish Header mega-menu + Play door onto /os host"
+          git push origin HEAD:cursor/os-lobby-header-play-ff6e
