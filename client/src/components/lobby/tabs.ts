@@ -1,1 +1,1 @@
-@file:///tmp/push-tabs.ts
+PLACEHOLDER_LOAD_FROM_FILE
