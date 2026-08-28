@@ -1,9 +1,22 @@
 /**
- * NewHome-v3 — councilof.ai Homepage
- * Structure: scroll-world hero → living GSPC slots → industries → demographics →
- *   arena→ blog → upsells → enterprise trust
- * White/green palette. AEO-optimised: answer-first blocks, FAQPage schema,
- * H1 in raw HTML. Every section explains what we do for which end-user.
+ * NewHome-v3 — councilof.ai Homepage (LEAN rebuild 2026-08-28)
+ *
+ * Structure: hero with three doors → ONE living board → products → below the fold
+ *
+ * WHAT WAS CUT:
+ * - StoryWorldRest (13 slides that repeated the same value props)
+ * - Duplicate living board (AxesGrid + LiveLeaderboard = shown twice)
+ * - ToolStack "Nine problems, nine tools" brochure wall
+ * - Industries/demographics/buyer grids (marketing, not product)
+ * - Repeated pain/benefit blocks
+ *
+ * WHAT STAYS:
+ * - Hero with honest measurement claim + three doors a stranger can use
+ * - ONE living board (AxesGrid), link to /gspc-scoreboard for full grid
+ * - Products matching live SKUs
+ * - Refusals (doctrine is product)
+ * - FAQ below the fold
+ * - EnterpriseTrust / RegionBanner
  */
 import { useEffect, useState, type ReactNode } from "react";
 import EnterpriseTrust from "../components/EnterpriseTrust";
@@ -12,65 +25,55 @@ import {
   fetchAxes, hasInterval, quotable, wilson, publicCaption,
   type Axis, type InLaneAxis,
 } from "../lib/gspcAxes";
-import { industriesForGrid } from "../data/industries";
 import { useEstateFacts } from "@/lib/estateFacts";
 import FaqBlock from "@/components/FaqBlock";
-import { StoryWorldHero, StoryWorldRest } from "@/components/home/StoryWorld";
-import LivingStages from "@/components/home/LivingStages";
-import ToolStack from "@/components/home/ToolStack";
+import { StoryWorldHero } from "@/components/home/StoryWorld";
 import {
-  Shield, CheckCircle, Users, Building2,
-  Zap, ChevronRight, BarChart3, Gamepad2, TrendingUp,
-  Eye, FileCheck, RefreshCw, Ban, Landmark, Scale,
+  ChevronRight, BarChart3,
+  Eye, FileCheck, RefreshCw, Ban, Scale,
 } from "lucide-react";
 
 // ── data ───────────────────────────────────────────────────
-const FOUR_BUYERS = [
-  { icon: Shield, who: "Insurers", tagline: "Price AI risk on measured evidence", cta: "Start measuring", href: "/insurers", desc: "Underwrite AI deployment policies with measurement cards. The living GSPC board is signed; empty cells stay empty. Verify at GET councilof.ai/api/gspc." },
-  { icon: Building2, who: "Regulators", tagline: "Check behaviour against the law", cta: "Crosswalk your framework", href: "/regulators", desc: "Map any AI regulation (EU AI Act, DORA, NIS2, NIST) to a single deterministic instrument set — every provision traceable." },
-  { icon: Users, who: "Enterprises", tagline: "Prove your AI before you ship", cta: "Get measured", href: "/?lobby=measured&task=enterprise-start", desc: "Sign, ship, re-attest. No model in the verdict path. Provenance today is Ed25519 over a hash chain — C2PA conformance is not yet available (we are a Contributor member; see /claims-register CR-012). The board includes the axis that catches our own models." },
-  { icon: Zap, who: "Developers", tagline: "Verify a signed card — free forever", cta: "Verify a card", href: "/gspc-verify", desc: "Call the signed measurement tools from CI: gate a release, re-check a card, track a run. Counts stay on GET /api/gspc." },
-];
-
 // The product family, mirrored from /products (the packaging page) so the two cannot
-// state different things about the same product. Six product pages + the hub.
+// state different things about the same product. Live SKUs only.
 // No prices here or there: verification is free forever and a grade is never sold.
+// Live SKUs only: verify, board, OS, Space, embed, assess
 const PRODUCT_FAMILY = [
   {
-    name: "GPAI Evidence Pack",
-    href: "/gpai-evidence",
-    tag: "EU AI Act",
-    what: "Independent third-party evidence a GPAI provider can hand the AI Office. Evidence, never a conformity mark — GPAI duties have been live since 2 August 2025.",
+    name: "Verify a card",
+    href: "/gspc-verify",
+    tag: "Free forever",
+    what: "Paste a signed measurement card. Your browser recomputes the hash and checks the Ed25519 signature. Nothing is sent to us. No account, no fee.",
   },
   {
-    name: "CRA Readiness Kit",
-    href: "/cra-readiness",
-    tag: "Cyber Resilience Act",
-    what: "The 24h / 72h / 14-day ENISA reporting runbook and the signed SBOM workflow we run on ourselves. Template and tooling — not legal advice.",
+    name: "The living board",
+    href: "/gspc-scoreboard",
+    tag: "GSPC",
+    what: "Every slot we publish about AI behaviour. Measured cells carry a figure; empty cells stay honestly empty. Live from GET /api/gspc.",
   },
   {
-    name: "Financial axis",
-    href: "/financial-axes",
-    tag: "Declared slots",
-    what: "The declared financial slots of the register. Measured where measured, UNMEASURED and stated where not. Never a credit rating.",
+    name: "Council OS",
+    href: "/os",
+    tag: "The workspace",
+    what: "One window that opens every surface here — board, verifier, assessment, evidence pack — without a second tab or login.",
   },
   {
-    name: "Distribution integrity",
-    href: "/distribution-integrity",
-    tag: "Coverage first",
-    what: "Represented is not distributed. The committed-versus-distributed spread as a declared axis — coverage stated before any number, currently UNMEASURED.",
+    name: "Council Space",
+    href: "/gspc-arena",
+    tag: "The contest",
+    what: "Model versus model on frozen instruments. Every match is evidence, not a brochure. Ties stay ties.",
   },
   {
-    name: "Verify embed / white-label",
+    name: "Embed badge",
     href: "/embed",
     tag: "For your site",
-    what: "A self-verifying badge: WebCrypto checks the Ed25519 signature in the reader's own browser. Green only when the bytes are true. Free forever.",
+    what: "A self-verifying badge: WebCrypto checks the signature in each reader's own browser. Green only when the bytes are true. Free forever.",
   },
   {
-    name: "Legacy modernization on-ramp",
-    href: "/cobolbridge",
-    tag: "CobolBridge",
-    what: "COBOL migration lineage under DORA · Basel · SOX · Solvency II, carried into signed continuous evidence. Pathway status: UNMEASURED, and it says so.",
+    name: "Get measured",
+    href: "/assess",
+    tag: "Your system",
+    what: "We run your system against frozen, published tests and hand you a signed card — the scores, the sample sizes, and the slots we could not fill.",
   },
 ];
 
@@ -85,43 +88,7 @@ const REFUSALS = [
   { no: "We do not edit history", why: "Re-attestation issues a new signed record; the old one stands. Corrections are appended in public at /api/corrections, never silently applied." },
 ];
 
-// The Council OS lobby panes. Each `?lobby=<id>` is a real destination that frames the
-// live page — the lobby reimplements nothing, so a pane cannot drift from the page it
-// shows. Ids are the LobbyTabId union in components/lobby/tabs.ts.
-const OS_PANES = [
-  { name: "Live board", href: "/?lobby=board", what: "Every published axis, with in-lane measurements beside it" },
-  { name: "Verify a card", href: "/?lobby=verify", what: "The offline verifier, inside the workspace" },
-  { name: "Get measured", href: "/?lobby=measured", what: "Start a signed assessment of your own system" },
-  { name: "Council Space", href: "/?lobby=space", what: "The continuous contest, model against model" },
-  { name: "Models", href: "/?lobby=models", what: "What we measured, and what it scored" },
-  { name: "Tools", href: "/?lobby=tools", what: "The published MCP surface, runnable" },
-  { name: "Report an incident", href: "/?lobby=watchdog", what: "The public intake for behaviour that looks wrong" },
-  { name: "Honesty gate", href: "/?lobby=claimguard", what: "What we cannot yet measure, published" },
-  { name: "Readiness assessment", href: "/?lobby=ras", what: "Which duties bind you, before you measure" },
-  { name: "Library", href: "/?lobby=library", what: "Everything published, dated and sectored" },
-];
 
-
-// STALE UNTIL 2026-08-26. Every card here carried a June headline and linked to
-// "/blog/" — the index — so six distinct titles all dumped the reader on the same
-// list page, and none of those six slugs is a prerendered page (they serve the SPA
-// shell titled "Blog | CSOAI"). Meanwhile the 24 posts that ARE prerendered, several
-// from this week, had no link from the front door at all.
-//
-// The six below are prerendered under dist/client/blog/<slug>/. Title, description
-// and date are read from client/src/data/blog-content.ts (the date from each post's
-// own JSON-LD datePublished) — nothing here is typed from memory. This list is short
-// and hand-picked on purpose: importing blogdata to derive it would pull a ~500KB
-// chunk into the home bundle.
-interface Post { title: string; date: string; desc: string; href: string; }
-const RECENT: Post[] = [
-  { title: "AI Governance Benchmarking Is Broken. Here Is the Signed, Reproducible Fix.", date: "2026-08-25", desc: "Three independent sources validated the thesis this year: governance benchmarks are fragmented, non-reproducible and unsigned. Here is the signed, CI-bounded fix.", href: "/blog/governance-benchmarking-is-broken-signed-fix" },
-  { title: "Verified Measurement Credential: What It Means and How to Verify", date: "2026-08-25", desc: "A signed, auditable assertion that a specific measurement was taken at a specific time by a specific instrument — and has not been altered since.", href: "/blog/verified-measurement-credential-how-to-verify" },
-  { title: "What Is Monitored Containment? The Council of AI Measurement Framework", date: "2026-08-25", desc: "Deploy inside observable boundaries, and let continuous measurement replace trust. The framework, stated plainly — including where it stops.", href: "/blog/what-is-monitored-containment" },
-  { title: "EU AI Act Article 50(2): Machine-Readable Marking of AI Output", date: "2026-08-24", desc: "Providers of AI systems generating synthetic content must mark outputs machine-readably and detectably. What that actually requires, and by when.", href: "/blog/eu-ai-act-article-50-machine-readable-marking" },
-  { title: "EU AI Act High-Risk Provider Obligations: What a Credential Answers", date: "2026-08-24", desc: "Regulation 2024/1689 layers duties on high-risk providers — Art. 11 documentation, Art. 12 records, Art. 13 transparency. Which of them evidence can actually address.", href: "/blog/eu-ai-act-high-risk-provider-obligations" },
-  { title: "SCITT and AI Supply Chain Transparency: Why the IETF Standard Matters", date: "2026-08-24", desc: "Supply Chain Integrity, Transparency and Trust — the IETF work standardising how claims are registered and verified across organisational boundaries.", href: "/blog/scitt-ai-supply-chain-transparency" },
-];
 
 // ── sections ───────────────────────────────────────────────
 /**
@@ -159,50 +126,13 @@ function Section({
   );
 }
 
-// ── living GSPC grid (honest empties stay empty) ─────────────────────────
-
-
-const USPS = [
-  { icon: FileCheck, title: "Signed measurement card", body: "Ed25519-signed, under a kilobyte: axis, model, accuracy, issuer, date and the previous card's hash. Verify stays free and loginless. A grade is never sold.", href: "/assess" },
-  { icon: Eye, title: "Anyone can check", body: "The verify path is public. We do not put it behind an account or a fee.", href: "/gspc-verify" },
-  { icon: Scale, title: "Honest living board", body: "Empty cells stay empty. Jail is a measured floor when the stamp says so. Live counts: GET /api/gspc.", href: "/gspc-scoreboard" },
-  { icon: Gamepad2, title: "Council Space", body: "The live contest. Model versus model. Every round is evidence, not a brochure.", href: "/gspc-arena" },
-  { icon: Landmark, title: "Council City", body: "A live view over the same signed records the board is built from — a different window on the measurements, not a second source of them.", href: "/gspc-arena?view=towns" },
-  { icon: RefreshCw, title: "Re-attest, never edit", body: "A new signed record. History stays. Drift is visible.", href: "/methodology" },
-  { icon: Ban, title: "No money from what we rank", body: "We do not sell ratings and we do not take a cut from anything on the board.", href: "/methodology" },
-  { icon: Shield, title: "Measurement credential", body: "Not a certification. Not a notified body. We measure, sign, and keep the evidence.", href: "/gspc-verify" },
-];
-
-function UspGrid() {
-  return (
-    <Section
-      id="usps"
-      title="What you actually get"
-      subtitle="The product is the stack: measure, sign, live contest, living layer. The scoreboard is how people cite it."
-      tone="raised"
-    >
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {USPS.map(u => (
-          <a key={u.title} href={u.href} className="card-quiet group flex flex-col p-5 sm:p-6">
-            <u.icon className="mb-4 h-7 w-7 text-primary" />
-            <h3 className="t-card text-foreground transition-colors group-hover:text-primary">{u.title}</h3>
-            <p className="t-body mt-2 flex-1 text-muted-foreground">{u.body}</p>
-          </a>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
 // ── the product family ─────────────────────────────────
-// The six product pages shipped without a single link from the front door: they were
-// reachable only from /products and from four-items-deep inside a nav dropdown.
 function ProductBand() {
   return (
     <Section
       id="products"
-      title="What you can actually get"
-      subtitle="Six products, one engine: Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md), three-state verdicts (pass / fail / UNMEASURED), every public number recomputable from a live API. Verification is free forever, a grade is never sold, and there are no public prices."
+      title="What you can use today"
+      subtitle="Ed25519 over canonical JSON, three-state verdicts (pass / fail / UNMEASURED), every public number recomputable from a live API. Verification is free forever and a grade is never sold."
       tone="raised"
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -216,14 +146,6 @@ function ProductBand() {
             </span>
           </a>
         ))}
-      </div>
-      <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
-        <a href="/products" className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-extrabold text-primary-foreground transition-opacity hover:opacity-90">
-          All products, one page <ChevronRight className="h-4 w-4" />
-        </a>
-        <a href="/assess" className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/40 px-6 py-3.5 text-sm font-extrabold text-primary transition-colors hover:bg-primary/10">
-          Get a free signed assessment
-        </a>
       </div>
     </Section>
   );
@@ -258,74 +180,6 @@ function RefusalBand() {
   );
 }
 
-// ── Council OS + ledger: ONE ink region, not two competing darks ───────────
-//
-// These two bands used to be `bg-slate-950` (#020617, a BLUE-black) stacked
-// directly on `bg-emerald-900` (#064e3b, a muddy mid-green). Two unrelated dark
-// hues touching each other, neither of them the ink the rest of the estate uses
-// (#04120c, which is what EnterpriseTrust and the deck heroes already ship).
-// That is the "black sections don't match branding" complaint, exactly.
-//
-// They are now one continuous `.surface-ink` region divided by an emerald
-// hairline, so the page reads as ONE dark chapter between two light ones
-// instead of two clashing slabs.
-function CouncilOsBand() {
-  return (
-    <section className="section-y surface-ink">
-      <div className="section-shell">
-        <p className="t-kicker ink-kicker text-center">Council OS</p>
-        <h2 className="t-section mt-4 text-center">One workspace over the whole rail</h2>
-        <p className="t-lede measure measure-center ink-muted mt-4 text-center">
-          The OS does not reimplement any page — each pane frames the live one, so a pane can
-          never drift from the surface it shows. The concierge answers from published
-          measurement or it refuses.
-        </p>
-        {/* 10 panes. A 3-column grid left a ragged 1-of-3 final row and a slab of
-            dead space under it; 5 columns resolves to two clean rows of five. */}
-        <div className="mt-10 grid gap-3 sm:mt-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-          {OS_PANES.map(t => (
-            <a key={t.href} href={t.href} className="ink-card group flex flex-col rounded-2xl p-4 sm:p-5">
-              <h3 className="text-sm font-extrabold leading-snug transition-colors group-hover:text-emerald-300">{t.name}</h3>
-              <p className="ink-muted mt-1.5 text-xs leading-relaxed">{t.what}</p>
-            </a>
-          ))}
-        </div>
-        <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
-          <a href="/os" className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-6 py-3.5 text-sm font-extrabold text-[#04120c] transition-colors hover:bg-emerald-300">
-            Open Council OS <ChevronRight className="h-4 w-4" />
-          </a>
-          <a href="/?lobby=home" className="inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-400/35 px-6 py-3.5 text-sm font-extrabold text-emerald-100 transition-colors hover:bg-emerald-400/10">
-            Start in the lobby
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── ledger attestation / evidence-that-travels ────────────────
-function LedgerAttestBand() {
-  return (
-    <section className="section-y-sm surface-ink border-t" style={{ borderColor: "var(--ink-border)" }}>
-      <div className="section-shell flex flex-col items-start gap-7 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
-        <div className="measure">
-          <p className="t-kicker ink-kicker">Interop — evidence that travels</p>
-          <h3 className="mt-3 text-2xl font-black leading-tight tracking-tight sm:text-3xl">Attach a signed card to a public ledger</h3>
-          <p className="t-body ink-muted mt-3">
-            Permissionless attach: we bind signed measurement evidence to accounts we do not control,
-            so a stranger can verify it without us. A devnet-proven capability — never a rating, never an investment.
-          </p>
-        </div>
-        <a
-          href="/xrpl-attest"
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-400 px-6 py-3.5 text-sm font-extrabold text-[#04120c] transition-colors hover:bg-emerald-300 sm:text-base"
-        >
-          Attestation on the ledger <ChevronRight className="h-4 w-4" />
-        </a>
-      </div>
-    </section>
-  );
-}
 
 function AxesGrid() {
   const [axes, setAxes] = useState<Axis[]>([]);
@@ -438,7 +292,7 @@ function CardChainBand() {
       id="chain"
       title="What you can check without asking us"
       subtitle="The board says what we measured. This says what we published, and exactly how far the cryptography reaches."
-      bg="bg-gray-50"
+      tone="sunken"
     >
       <div className="grid gap-5 lg:grid-cols-3">
         <div className="rounded-2xl border border-emerald-200 bg-white p-6 lg:col-span-2">
@@ -475,101 +329,6 @@ function CardChainBand() {
   );
 }
 
-// ── demographics ───────────────────────────────────
-function BuyerCards() {
-  return (
-    <Section title="Built for the people who get audited" subtitle="One instrument, four audiences. Pick your path — every CTA leads to the same measurement, signed." tone="raised">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {FOUR_BUYERS.map(b => (
-          <a key={b.who} href={b.href} className="card-quiet group flex flex-col p-5 sm:p-6">
-            <b.icon className="mb-4 h-7 w-7 text-primary" />
-            <h3 className="text-lg font-extrabold tracking-tight text-foreground">{b.who}</h3>
-            <p className="mt-1 text-sm font-semibold text-primary">{b.tagline}</p>
-            <p className="t-body mt-2.5 flex-1 text-muted-foreground">{b.desc}</p>
-            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
-              {b.cta} <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          </a>
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-// ── industries ───────────────────────────────────
-// This grid used to hardcode seven sectors (Health, Finance, Transport, Retail,
-// Education, Energy) that are NOT the canonical set, link them at legacy content
-// slugs, and then advertise "5 more sectors" and "all 12 sectors" — two typed counts
-// that disagreed with each other AND with the data. It now renders the canonical
-// array and derives every count from its length.
-function IndustryGrid() {
-  const shown = industriesForGrid.slice(0, 7);
-  const rest = industriesForGrid.length - shown.length;
-  return (
-    <Section title="One instrument, every industry" subtitle="The same living GSPC instrument applies — whether you build autonomous machinery, underwrite insurance, or run agents that transact. Measure once, evidence everywhere." tone="sunken">
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {shown.map(i => (
-          <a key={i.slug} href={`/industries/${i.slug}`} className="card-quiet group flex flex-col p-5">
-            <h4 className="t-card text-foreground transition-colors group-hover:text-primary">{i.name}</h4>
-            <p className="mt-1.5 flex-1 text-xs leading-relaxed text-muted-foreground">{i.short}</p>
-            {/* UNMEASURED must stay as visible as a measured figure — same size,
-                same weight, same slot. It is a published status, not an absence. */}
-            <span className="mt-4 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              {/* `numbers` was removed from industries.ts deliberately — the sector data file
-                  is not allowed to carry a typed n. This reads what the file DOES carry: the
-                  bench, and the axis count from the axes array. Neither is typed by hand. */}
-              {/* "spans N board axis", not "N axis": the count IS derived (axes.length), but
-                  facts-gate cannot tell derived from typed — it flags any bare "N axis" that
-                  is not the live board total, and it is right to: the reader cannot tell
-                  either. The wording change keeps the derived number and removes the
-                  ambiguity about which set it counts. */}
-              {i.bench ? `${i.bench} · spans ${i.axes.length} board ${i.axes.length === 1 ? "axis" : "axis"}` : "UNMEASURED"}
-            </span>
-          </a>
-        ))}
-        {rest > 0 && (
-          <a href="/industries" className="group flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/40 p-5 text-center transition-colors hover:border-primary/40 hover:bg-muted/70">
-            <span className="text-3xl leading-none text-muted-foreground">+</span>
-            <h4 className="t-card mt-3 text-foreground">{rest} more sectors</h4>
-            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              {industriesForGrid.slice(7).map(i => i.name).join(", ")}
-            </p>
-          </a>
-        )}
-      </div>
-      <div className="mt-10 text-center">
-        <a href="/sectors" className="text-sm font-bold text-primary hover:underline">
-          Sector tooling — regulator, insurer, bond, legacy, vendor →
-        </a>
-      </div>
-    </Section>
-  );
-}
-
-// ── blog strip ───────────────────────────────
-function BlogStrip() {
-  return (
-    <Section title="Latest insights" subtitle="Short, regulatory, zero-marketing reads. One AEO-answer per post." tone="sunken">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {RECENT.slice(0, 6).map(p => (
-          <a key={p.href} href={p.href} className="card-quiet group flex flex-col p-5 sm:p-6">
-            <span className="text-[10px] font-semibold uppercase tracking-wide tabular-nums text-primary">{p.date}</span>
-            <h4 className="mt-2.5 text-base font-extrabold leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary">{p.title}</h4>
-            <p className="t-body mt-2 line-clamp-3 flex-1 text-muted-foreground">{p.desc}</p>
-            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
-              Read <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          </a>
-        ))}
-      </div>
-      <div className="mt-10 text-center">
-        <a href="/blog" className="text-sm font-bold text-primary hover:underline">All posts →</a>
-      </div>
-    </Section>
-  );
-}
-
-// ── upsells ────────────────────────────
 
 // ── FAQ — 21 answers, the whole proposition in plain English ──────────
 // AEO/GEO: FaqBlock renders these as a native <details> accordion (crawlable
@@ -678,51 +437,38 @@ const HOME_FAQ = [
 // ── export ───────────────────────────────
 export default function NewHomeV3() {
   return (
-    /* Surface rhythm: raised → sunken → raised → sunken, so each band is
-       separated by a ground change rather than by a stray hairline <div>.
-       The old `border-b border-gray-100` spacers sat BETWEEN sections that
-       often shared a background, which read as an arbitrary line across an
-       otherwise continuous field. They are gone; where two same-tone bands
-       meet, the tone alternation does the work. */
+    /* LEAN HOMEPAGE (2026-08-28):
+       Hero → ONE board → products → refusals → trust → FAQ
+       Cut: ToolStack brochure, StoryWorldRest slides, duplicate board,
+       demographics/industries/blog strips. */
     <main className="surface-base">
 
+      {/* Hero with honest measurement claim + three doors */}
       <StoryWorldHero />
-      {/* The opening used to be the scroll-world followed by ProblemStrip — one
-          abstract statement of "the problem we fix" and no list of what a reader
-          could actually DO here. ToolStack replaces it with nine, one per tool,
-          each naming its own pain and opening its own tool inside Council OS.
-          ProblemStrip's two columns are not lost: every line of them is now said
-          on the tile of the tool that does it. */}
-      <ToolStack />
-      {/* …and only then the rest of the story. */}
-      <StoryWorldRest />
-      {/* The board first — "what is measured right now" is the claim everything
-          else rests on, so it precedes anything sellable. */}
-      <AxesGrid />
-      <CardChainBand />
-      <ProductBand />
-      <RefusalBand />
-      <UspGrid />
-      <CouncilOsBand />
-      <LedgerAttestBand />
-      <BuyerCards />
-      <IndustryGrid />
-      <LivingStages />
-      <BlogStrip />
 
-      {/* existing trust strip with C2PA/OIN/LOT badges */}
+      {/* ONE living board — the claim everything else rests on */}
+      <AxesGrid />
+
+      {/* Chain transparency: what can be verified without us */}
+      <CardChainBand />
+
+      {/* Products matching live SKUs only */}
+      <ProductBand />
+
+      {/* Doctrine is product: what we refuse to do */}
+      <RefusalBand />
+
+      {/* Trust badges (C2PA/OIN/LOT) */}
       <EnterpriseTrust />
-      {/* Keep the region-detection banner — but ON the ink ground it was designed
-          for. It is a dark-styled card (emerald-100 type, black/40 pills) and it
-          was floating on the light page with a stray 143px gap above it, reading
-          as an orphan. It now continues the trust band's ink region. */}
+
+      {/* Region detection banner on ink ground */}
       <div className="surface-ink pb-12 sm:pb-16">
         <div className="section-shell">
           <RegionBanner />
         </div>
       </div>
 
-      {/* FAQ — 21 answers, native <details> accordion + FAQPage JSON-LD (AEO) */}
+      {/* FAQ below the fold — full proposition in plain English */}
       <FaqBlock
         title="Questions people ask"
         intro={`${HOME_FAQ.length} plain-English answers: what we measure, what we refuse to claim, and how to check any of it yourself.`}

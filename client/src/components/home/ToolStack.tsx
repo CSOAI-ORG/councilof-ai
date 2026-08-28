@@ -124,7 +124,7 @@ const TOOLS: Tool[] = [
     what:
       "Builds the evidence index for one general-purpose AI system: the live rows that exist, the published banks they resolve to, and the gaps, named rather than skipped.",
     pain:
-      "GPAI duties have been in force since 2 August 2026, and most providers have only their own paperwork to show for them.",
+      "GPAI duties have been in force since 2 August 2025, and most providers have only their own paperwork to show for them.",
     note: "Independent evidence. Not a conformity mark, and not legal advice.",
     image: "/images/method/ast.png",
     alt: "A block of carved statute breaking apart into a branching tree of true/false conditions",
