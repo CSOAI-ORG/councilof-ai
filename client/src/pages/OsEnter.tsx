@@ -204,13 +204,13 @@ export default function OsEnter() {
               <p className="mt-1 text-sm text-emerald-50/70">Council Town, the real-world globe, frameworks, the Council. Discovery, vision, flow.</p>
             </a>
           </div>
-          <a href="/?lobby=home" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\u2192"}</a>
+          <a href="/os?lobby=home" className="mt-8 rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5 transition">Or open the full OS {"\u2192"}</a>
           <div className="mt-6 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/40">Council Town is learning {"\u00b7"} accumulating {"\u00b7"} spawning {"\u00b7"} on one signed Layer 0 floor</div>
         </div>
       )}
 
       {phase < 2 && (
-        <a href="/?lobby=home" className="absolute bottom-5 right-6 z-20 font-mono text-[11px] text-emerald-300/50 hover:text-emerald-300">skip {"\u2192"}</a>
+        <a href="/os?lobby=home" className="absolute bottom-5 right-6 z-20 font-mono text-[11px] text-emerald-300/50 hover:text-emerald-300">skip {"\u2192"}</a>
       )}
     </div>
   );
