@@ -30,7 +30,7 @@ const SIGNAL_LEGS: {
     leg: "Measured AI board",
     register: "MEASURED",
     source: "GET /api/gspc",
-    blurb: "13 core axes on frozen bank — deterministic grader, Ed25519-signed cells",
+    blurb: "13 core measurement slots on frozen bank — deterministic grader, Ed25519-signed cells",
   },
   {
     leg: "Human baseline context",
@@ -200,7 +200,7 @@ export default function ArenaHarness() {
           <p className="mt-4 max-w-3xl text-slate-400 leading-relaxed">
             {POSITIONING.subhead} Stripe bought the LLM highway (REPORTED). We build the crash-test facility,
             signed traces, and insurance layer downstream.{" "}
-            {STACK_STATS.mcpServers} MCP rules catalogued; {STACK_STATS.gspcAxesMeasured} GSPC core axes MEASURED on the
+            {STACK_STATS.mcpServers} MCP rules catalogued; {STACK_STATS.gspcAxesMeasured} GSPC core slots MEASURED on the
             frozen bank. Wilson 95% intervals apply only on frozen banks (GSPC today; future frozen RWA banks after
             custody + counsel) — never on live contract churn or UNMEASURED labour/economy indices (
             <a href="/indices" className="text-amber-300/90 underline">/indices</a>).
