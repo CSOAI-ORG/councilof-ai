@@ -302,4 +302,66 @@ export default function Enterprise() {
               <Card className="p-6 text-center h-full border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
                 <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold relative z-10">
                   4
-                <
+                </div>
+                <Eye className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
+                <h3 className="font-bold text-lg mb-2">Ongoing Monitoring</h3>
+                <p className="text-sm text-gray-600">
+                  Council continuously monitors compliance status and alerts you to regulatory changes.
+                </p>
+              </Card>
+            </div>
+
+            {/* Step 5 */}
+            <div className="relative">
+              <Card className="p-6 text-center h-full border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold relative z-10">
+                  5
+                </div>
+                <Award className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
+                <h3 className="font-bold text-lg mb-2">Signed cards & re-attest</h3>
+                <p className="text-sm text-gray-600">
+                  Hold Ed25519-signed measurement cards, export audit-ready evidence, and re-measure when the rules or the model move. No conformity badge from us.
+                </p>
+              </Card>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center mt-12 flex flex-wrap justify-center gap-3">
+          <Link href="/enterprise-onboarding">
+            <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              Start portfolio measurement
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-emerald-600 text-emerald-700"
+            onClick={() => openLobby({ task: 'enterprise-start' })}
+          >
+            {POSITIONING.os.cta}
+          </Button>
+        </div>
+      </div>
+
+      {/* Multi-Framework Coverage */}
+      <div className="bg-gradient-to-br from-slate-50 to-emerald-50 py-20">
+        <div className="container max-w-6xl">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Global Coverage</Badge>
+            <h2 className="text-4xl font-bold mb-4">One Platform, Every Framework</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Stop managing multiple compliance tools. CSOAI covers all major AI governance frameworks with intelligent cross-framework mapping.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* EU AI Act */}
+            <Card className="p-8 border-2 border-blue-200 hover:border-blue-400 transition-colors">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-blue-100 rounded-xl">
+                  <Globe className="h-8 w-8 text-blue-600" />
+                </div>
+                <div>
+                  <h
