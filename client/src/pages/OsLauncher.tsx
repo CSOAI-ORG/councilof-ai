@@ -15,6 +15,8 @@ import DenseBoard from "@/components/board/DenseBoard";
  *   ?lobby=verify → verify
  *   ?lobby=space  → space
  *   ?lobby=measured → assess
+ *   ?lobby=assess → assess
+ *   ?lobby=ras → assess
  *   ?lobby=harness → harness
  * /ag-ui, /chat, /console, /sov-os all land on /os?lobby=home now.
  *
@@ -52,6 +54,7 @@ export const LOBBY_TO_DOOR: Record<string, DoorId> = {
   space: "space",
   measured: "assess",
   ras: "assess",
+  assess: "assess",
   harness: "harness",
 };
 
