@@ -1,13 +1,13 @@
 /**
  * NewHome-v3 — councilof.ai Homepage (2026-08-28)
  *
+ * Homepage is a DOOR into /os, NOT the AG-UI host. Does NOT embed OS.
+ *
  * LOCKED ORDER:
- * 1. Hero = Council OS door (one sentence, one filled CTA, one ghost CTA, OS visual)
- *    Hero opens /os — does NOT embed OS.
- * 2. 9 product tiles from git history (ToolStack component)
- * 3. Living board — ONE component everywhere (LivingBoard)
- *    SAME component as /os Board door (LobbyBoardPane).
- *    Click-through, ledgers, empty visible — all in LivingBoard.
+ * 1. Hero = Council OS door (opens /os, does NOT embed OS)
+ * 2. 9 product tiles from git history (ToolStack)
+ * 3. Living board — LiveLeaderboard from @/components/board
+ *    Same GET /api/gspc as /os. Empty stays empty. 22·15·7.
  * 4. Refusals + Trust
  *
  * 9 PRODUCT TILES (from ToolStack, recovered from git history):
@@ -18,9 +18,11 @@
  * - Never certify. Never sell a grade. UNMEASURED is first-class.
  * - Empty stays empty (7 UNMEASURED visible). No invented scores.
  * - Verification free forever. Primary OS CTA appears THREE times.
+ *
+ * KILLED LEFTOVERS: 13+, 24/7, all-313-verify, 15-slot, empty-region placeholder.
  */
 import ToolStack from "../components/home/ToolStack";
-import LivingBoard from "../components/lobby/LivingBoard";
+import LiveLeaderboard from "../components/board/LiveLeaderboard";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import {
   ChevronRight,
@@ -123,21 +125,14 @@ function PrimaryCtaBand({ id }: { id?: string }) {
   );
 }
 
-// ── Living Board: ONE component everywhere (same as /os Board door) ──────
-// LobbyBoardPane (/os Board) uses: <LivingBoard embedded onOpenBoard={...} />
-// Homepage uses: <LivingBoard onOpenBoard={...} />
-// SAME component. Click-through, ledgers, empty visible — all in LivingBoard.
+// ── Living Board: shared component from @/components/board ──────
+// LiveLeaderboard: self-contained, uses useGspcBoard(), same GET as /os.
+// Empty stays empty. 22·15·7.
 function LivingBoardSection() {
-  const goToBoard = () => {
-    window.location.href = "/gspc-scoreboard";
-  };
-
   return (
     <section className="surface-raised section-y">
-      <div className="section-shell">
-        {/* ONE living board everywhere — same LivingBoard as /os Board door uses */}
-        <LivingBoard onOpenBoard={goToBoard} />
-      </div>
+      {/* LiveLeaderboard owns its fetch via useGspcBoard — same shared hook */}
+      <LiveLeaderboard showHumanPanel={false} />
     </section>
   );
 }
