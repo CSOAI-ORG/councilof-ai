@@ -1,13 +1,12 @@
 /**
- * GET /training and /training/ - 308 to the lobby.
- * Still mounts leftover attestation-exam / competitor-price copy after hydrate.
- * Measurement, not certification. Do not 308 onto /training/.
+ * GET /training — 308 leftover training door onto Council OS.
+ * Home is marketing, not the OS.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/?lobby=home",
+      location: "/os?lobby=home",
       "cache-control": "public, max-age=300",
     },
   });
