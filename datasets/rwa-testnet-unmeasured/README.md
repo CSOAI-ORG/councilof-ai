@@ -18,5 +18,6 @@ Staging pack for NEXT_300 **#186**. Mirrors `GET /api/rwa-attestation` honesty (
 - Related indices pack: `csoai/labour-economy-unmeasured` (#139 / #253) — labour/economy stay UNMEASURED
 - JMWH remains **DEMO ONLY** in the catalog fixture
 - Firewall: never fuse labour/economy into GSPC grading inputs
+- Tip probe 2026-08-28: fixture verified; Hub upload waits on write `HF_TOKEN`
 
 Do **not** publish as `MEASURED-INDEX`. Upload when write token works: `npm run hf:upload-staged`.
