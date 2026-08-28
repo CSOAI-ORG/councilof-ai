@@ -88,7 +88,7 @@ const PRODUCTS = [
   },
   {
     name: "Council OS",
-    href: "/?lobby=home",
+    href: "/os?lobby=home",
     tag: "The workspace",
     what: "One glass over the whole rail — board, verify, models, library, workbench — with a concierge that answers from published measurement or refuses.",
   },
