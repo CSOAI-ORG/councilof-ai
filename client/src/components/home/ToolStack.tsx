@@ -15,8 +15,8 @@ import type { LobbyTabId } from "@/components/lobby/tabs";
  * pain it removes stated in the reader's words, and a door that opens the tool.
  *
  * EVERY DOOR OPENS INSIDE COUNCIL OS. Each tile's href is a real, copyable,
- * crawlable URL (`/?lobby=<pane>` or `/?task=<task>`) — the deep-link contract in
- * lib/lobbyLink.ts — and the click handler calls openLobby() so an in-page click
+ * crawlable URL (`/os?lobby=<pane>` or `/os?lobby=assess&task=<task>`) — the
+ * deep-link contract in lib/lobbyLink.ts — and the click handler calls openLobby() so an in-page click
  * opens the pane in place instead of navigating away. Two tiles reach a live PAGE
  * rather than a rail pane; they go through the LOBBY_TASKS registry (which carries a
  * `route`), because the URL contract deliberately has no ?route= param and a route
@@ -187,7 +187,27 @@ const TOOLS: Tool[] = [
 
 function hrefFor(door: Door): string {
   if (door.kind === "route") return door.path;
-  return door.kind === "pane" ? `/?lobby=${door.pane}` : `/?task=${door.task}`;
+  if (door.kind === "pane") {
+    const lobby =
+      door.pane === "measured" || door.pane === "ras"
+        ? "assess"
+        : door.pane === "board" ||
+            door.pane === "verify" ||
+            door.pane === "space" ||
+            door.pane === "harness" ||
+            door.pane === "assess"
+          ? door.pane
+          : "home";
+    return `/os?lobby=${lobby}`;
+  }
+  if (
+    door.task === "pricing-overview" ||
+    door.task === "enterprise-start" ||
+    door.task === "get-measured"
+  ) {
+    return `/os?lobby=assess&task=${door.task}`;
+  }
+  return `/os?lobby=home&task=${door.task}`;
 }
 
 /** The live figure a tile is entitled to show, or null when it has none. */
