@@ -15,11 +15,11 @@ export const onRequestGet: PagesFunction = async (context) => {
     { axis: "eunomia-token", bench: "eunomia-energy-currency", labels: ["COMPLIANT","NON_COMPLIANT"], n: 10, strong: { acc: 0.778, ci: [0.453, 0.937] }, baseline: { acc: 0.5, ci: [0.237, 0.763] }, status: "MEASURED" },
     { axis: "climate-transition", bench: "eunomia-climate-transition", labels: ["COMPLIANT","NON_COMPLIANT"], n: 10, strong: { acc: 1.0, ci: [0.722, 1.0] }, baseline: { acc: 0.6, ci: [0.313, 0.832] }, status: "MEASURED" },
     { axis: "privacy-risk", bench: "eunomia-privacy-risk", labels: ["COMPLIANT","NON_COMPLIANT"], n: 10, strong: { acc: 1.0, ci: [0.722, 1.0] }, baseline: { acc: 0.6, ci: [0.313, 0.832] }, status: "MEASURED" },
-    // Aspirational index axes — NOT yet measured. Declared UNMEASURED first (honest JL.5);
-    // x402 is data-only, never scores; a stranger re-derives a row only once it is signed.
-    { axis: "ai-economy-index", bench: "eunomia-ai-agentcommerce-index", labels: ["REAL","GAMIFIED"], n: 0, strong: null, baseline: null, status: "UNMEASURED" },
-    { axis: "human-labour", bench: "eunomia-human-labour-index", labels: ["COMPLIANT","NON_COMPLIANT"], n: 0, strong: null, baseline: null, status: "UNMEASURED" },
-    { axis: "humanoid-labour", bench: "eunomia-humanoid-labour-index", labels: ["COMPLIANT","NON_COMPLIANT"], n: 0, strong: null, baseline: null, status: "UNMEASURED" },
+    // Aspirational index axes — now MEASURED (frozen gold sets graded 2026-08-28, qwen2.5:7b strong /
+    // qwen2.5:0.5b baseline, n=10, Wilson 95% CI). Exact-label; stranger re-derives from the frozen items.
+    { axis: "ai-economy-index", bench: "eunomia-ai-agentcommerce-index", labels: ["REAL","GAMIFIED"], n: 10, strong: { acc: 0.6, ci: [0.313, 0.832] }, baseline: { acc: 0.9, ci: [0.596, 0.982] }, status: "MEASURED" },
+    { axis: "human-labour", bench: "eunomia-human-labour-index", labels: ["COMPLIANT","NON_COMPLIANT"], n: 10, strong: { acc: 1.0, ci: [0.723, 1.0] }, baseline: { acc: 0.5, ci: [0.237, 0.763] }, status: "MEASURED" },
+    { axis: "humanoid-labour", bench: "eunomia-humanoid-labour-index", labels: ["COMPLIANT","NON_COMPLIANT"], n: 10, strong: { acc: 1.0, ci: [0.723, 1.0] }, baseline: { acc: 0.5, ci: [0.237, 0.763] }, status: "MEASURED" },
   ];
   return new Response(JSON.stringify({
     schema: "csoai.eunomia-registers/0.1",
