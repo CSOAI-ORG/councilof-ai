@@ -87,6 +87,7 @@ const EunomiaData = lazy(() => import("./pages/EunomiaData"));
 const Eunomia = lazy(() => import("./pages/Eunomia"));
 const EunomiaCatalog = lazy(() => import("./pages/EunomiaCatalog"));
 const EunomiaCrosswalk = lazy(() => import("./pages/EunomiaCrosswalk"));
+const EunomiaIndices = lazy(() => import("./pages/EunomiaIndices"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
@@ -720,6 +721,7 @@ function App() {
                   <Route path="/eunomia" component={Eunomia} />
                   <Route path="/eunomia-catalog" component={EunomiaCatalog} />
                   <Route path="/eunomia-crosswalk" component={EunomiaCrosswalk} />
+                  <Route path="/eunomia-indices" component={EunomiaIndices} />
                   <Route path="/careers" component={Careers} />
                   <Route path="/charter" component={Charter} />
                   <Route path="/maternal-covenant" component={MaternalCovenant} />

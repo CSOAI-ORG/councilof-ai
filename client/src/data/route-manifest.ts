@@ -768,6 +768,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eunomia Data"
  },
  {
+  "path": "/eunomia-indices",
+  "comp": "EunomiaIndices",
+  "title": "Eunomia Indices"
+ },
+ {
   "path": "/evidence",
   "comp": "EvidenceHub",
   "title": "Evidence Hub"
