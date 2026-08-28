@@ -1,4 +1,7 @@
-/** GET /agent-council/ - 308 to honesty. Retracted 33-agent guarantee. */
+/**
+ * GET /claimguard — 308 to honesty.
+ * Functions beat _redirects on live. Home is marketing, not the OS.
+ */
 export function onRequest() {
   return new Response(null, {
     status: 308,

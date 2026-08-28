@@ -1,12 +1,12 @@
 /**
- * GET /agent-council - 308 to honesty.
- * Retracted 33-agent guarantee. Do not 308 onto /agent-council/.
+ * GET /stack — 308 to published stack index.
+ * Functions beat _redirects on live. Home is marketing, not the OS.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/honesty/",
+      location: "/stack/index.json",
       "cache-control": "public, max-age=300",
     },
   });
