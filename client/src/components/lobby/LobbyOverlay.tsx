@@ -133,11 +133,10 @@ export default function LobbyOverlay({
     if (!intent) return;
     setMinimised(false);
     setRightOpen(true);
-    const next = tabById(intent.pane);
     setTabId(intent.pane);
-    // Local panes often still carry a site path — open it beside the dock.
-    if (next.path) setLocation(next.path);
-  }, [intent?.nonce, intent?.pane, setLocation]);
+    // Pane highlight only — do not setLocation here. Intent is the Ask seed
+    // (consent lock). Explicit path navigation stays on menu / "Open … →".
+  }, [intent?.nonce, intent?.pane]);
 
   const go = useCallback(
     (t: LobbyTab) => {
@@ -259,7 +258,7 @@ export default function LobbyOverlay({
           </div>
 
           <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-            <div className={`relative min-h-0 overflow-y-auto ${chatActive ? "max-h-[45%]" : "flex-1"}`}>
+            <div className={`relative min-h-0 overflow-y-auto ${chatActive ? "max-h-[45%]" : "flex-1"`}>
               {showWorkspace ? (
                 <LobbyWorkspace
                   tab={tab}
