@@ -262,6 +262,7 @@ const ComplianceCommandCenter = lazy(() => import("./pages/ComplianceCommandCent
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
 const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
 const OsLauncher = lazy(() => import("./pages/OsLauncher"));
+const OsHeader = lazy(() => import("./components/os/OsHeader"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
 const SovereignTour = lazy(() => import("./pages/SovereignTour"));
 const SovereignAcademy = lazy(() => import("./pages/SovereignAcademy"));
@@ -517,20 +518,6 @@ function App() {
   // on an in-app navigation. Production is the authority; the SPA now agrees by
   // not claiming the path at all, and wouter falls through to the /os route.
   // /console and /sov-os both 308 -> /?lobby=home, which is what this branch does.
-  if (path === '/sov-os') {
-    return (
-      <ErrorBoundary>
-        <ThemeProvider defaultTheme="dark">
-          <TooltipProvider>
-            <Suspense fallback={<div className="grid h-[100dvh] place-items-center bg-[#04070d]"><SectionLoader /></div>}>
-              <SovOS />
-            </Suspense>
-            <Toaster position="top-right" />
-          </TooltipProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
-    );
-  }
   if (location === '/demo' || location === '/os-demo') {
     return (
       <ErrorBoundary>
@@ -539,6 +526,41 @@ function App() {
             <DemoOS />
             <Toaster position="top-right" />
           </TooltipProvider>
+        </ThemeProvider>
+      </ErrorBoundary>
+    );
+  }
+  // /os and its hops (/ag-ui, /chat, /console, /sov-os) are ONE PRODUCT FRAME —
+  // they do NOT render inside the marketing site's Header/Footer chrome. The OS
+  // has its own compact OpenRouter-style header with inner nav (Board / Verify /
+  // Space / Assess / Harness) and user account controls. The CouncilLobby (overlay)
+  // is still mounted for the full workspace experience; this just strips the
+  // marketing wrapper. All hops land on /os?lobby=home.
+  if (path === '/os' || path === '/ag-ui' || path === '/chat' || path === '/console' || path === '/sov-os') {
+    return (
+      <ErrorBoundary>
+        <ThemeProvider defaultTheme="light">
+          <AuthProvider>
+            <AnalyticsProvider>
+              <TooltipProvider>
+                <div className="flex min-h-screen flex-col bg-white">
+                  <ScrollToTop />
+                  <RouteTitle />
+                  <RouteAnnouncer />
+                  <Suspense fallback={null}>
+                    <OsHeader />
+                  </Suspense>
+                  <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
+                    <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center"><SectionLoader /></div>}>
+                      <OsLauncher />
+                    </Suspense>
+                  </main>
+                  <Suspense fallback={null}><CouncilLobby /></Suspense>
+                </div>
+                <Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} />
+              </TooltipProvider>
+            </AnalyticsProvider>
+          </AuthProvider>
         </ThemeProvider>
       </ErrorBoundary>
     );
