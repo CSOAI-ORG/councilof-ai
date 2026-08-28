@@ -96,4 +96,83 @@ export default function Enterprise() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white">
-        <div className="bg-gradi
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+          <div className="container max-w-6xl space-y-4">
+            <Skeleton className="h-8 w-48 bg-white/10" />
+            <Skeleton className="h-16 w-full bg-white/10" />
+            <Skeleton className="h-24 w-3/4 bg-white/10" />
+          </div>
+        </div>
+        <div className="container py-20 space-y-12">
+          <Skeleton className="h-96 w-full" />
+          <div className="grid md:grid-cols-3 gap-8">
+            <Skeleton className="h-64" />
+            <Skeleton className="h-64" />
+            <Skeleton className="h-64" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
+        <Card className="p-8 max-w-md text-center">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold mb-2">Failed to Load Content</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      <CouncilOsInnerNav title="Enterprise" subtitle="Portfolio measurement — training loop, not certification" />
+      {/* Hero Section - CISO Focused */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+        <div className="container max-w-6xl">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+                For CISOs · insurers · boards — {POSITIONING.router.short} + {POSITIONING.harness.short}
+              </Badge>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                Prove how your AI behaves — before the €35M question lands.
+              </h1>
+              <p className="text-xl text-gray-300 leading-relaxed mb-4">
+                {POSITIONING.subhead} Portfolio measurement across EU AI Act, NIST AI RMF, ISO 42001
+                controls, and TC260 — signed cards you can re-check. Measurement, not certification.
+              </p>
+              <p className="text-sm text-gray-400 leading-relaxed mb-8">
+                Embed signed verdicts under{" "}
+                <Link href="/powered-by" className="text-emerald-300 underline hover:text-emerald-200">
+                  Option A — Powered by Council OS
+                </Link>
+                ; white-label licensing stays in the opinion/measurement lane.
+              </p>
+
+              {/* Key Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">€35M</div>
+                  <div className="text-sm text-gray-300">Max EU AI Act Fine</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">4+</div>
+                  <div className="text-sm text-gray-300">Frameworks Supported</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">14</div>
+                  <div className="text-sm text-gray-300">Board slots, 13 measured</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">Free</div>
+                  <div className="text-sm text-gray-300">Verification, no account</div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <EnterpriseMeasur
