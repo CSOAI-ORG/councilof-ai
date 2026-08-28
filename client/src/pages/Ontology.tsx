@@ -5,7 +5,7 @@ import { useEffect } from "react";
 // AI governance: every governed object, how they relate, and the actions you can take on them.
 
 const OBJECTS = [
-  { g: "◊", n: "AI systems & agents", d: "every model, agent and humanoid under governance" },
+  { g: "◈", n: "AI systems & agents", d: "every model, agent and humanoid under governance" },
   { g: "▤", n: "Frameworks & law", d: "EU AI Act, NIST, ISO 42001, GDPR, cyber (CRA/NIS2/DORA)…" },
   { g: "▦", n: "Organisations", d: "Fortune 500/100, suppliers, public bodies" },
   { g: "❖", n: "Governments & regulators", d: "AI authorities and jurisdictions" },
