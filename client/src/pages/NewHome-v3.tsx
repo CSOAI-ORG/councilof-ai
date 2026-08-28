@@ -3,14 +3,13 @@
  *
  * LOCKED ORDER:
  * 1. Hero = Council OS door (one sentence, one filled CTA, one ghost CTA, OS visual)
- * 2. 9 catalog products from LIVE catalog.json (not ToolStack, not /products family)
+ * 2. 9 product tiles from git history (ToolStack component)
  * 3. Living 22-row GET /api/gspc table (below hero, not the hero)
  * 4. Refusals + Trust
  *
- * 9 CATALOG PRODUCTS (from https://councilof.ai/catalog.json):
- * ClaimGuard, GSPC MCP Tools, East-West, GSPC Verify, GSPC Arena,
- * Signed Per-Axis Leaderboard, Article 50 Evidence Pack, GSPC Benchmarks, MCP Fleet
- * RAS and COBOL Bridge stay drafts — not shown.
+ * 9 PRODUCT TILES (from ToolStack, recovered from git history):
+ * Council OS, The living board, Verify a card, Get measured, GPAI evidence pack,
+ * Embed and white-label kit, Insurance evidence rail, Specialist registers, Report an incident
  *
  * DOCTRINE:
  * - Never certify. Never sell a grade. UNMEASURED is first-class.
@@ -19,6 +18,7 @@
  */
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import ToolStack from "../components/home/ToolStack";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import {
@@ -31,86 +31,8 @@ import {
   Activity,
   CheckCircle2,
   Circle,
-  Shield,
-  Cpu,
-  Scale,
   FileCheck,
-  Swords,
-  Trophy,
-  FileText,
-  BarChart3,
-  Server,
 } from "lucide-react";
-
-// ── 9 CATALOG PRODUCTS from live catalog.json ───────────────────────────────
-// Exact list: ClaimGuard, GSPC MCP Tools, East-West, GSPC Verify, GSPC Arena,
-// Signed Per-Axis Leaderboard, Article 50 Evidence Pack, GSPC Benchmarks, MCP Fleet
-// RAS and COBOL Bridge are drafts — not shown on homepage.
-const CATALOG_PRODUCTS = [
-  {
-    id: "claimguard",
-    name: "ClaimGuard",
-    href: "/claimguard",
-    icon: Shield,
-    what: "Deterministic claim-vs-signed-artifact checking.",
-  },
-  {
-    id: "gspc-mcp",
-    name: "GSPC MCP Tools",
-    href: "/.well-known/mcp.json",
-    icon: Cpu,
-    what: "MCP tools: measure, verify, jail-probe, enter-arena.",
-  },
-  {
-    id: "east-west",
-    name: "East-West",
-    href: "/api/east-west-bench",
-    icon: Scale,
-    what: "East-vs-West pair-gap context rail, not a grade.",
-  },
-  {
-    id: "gspc-verify",
-    name: "GSPC Verify",
-    href: "/gspc-verify",
-    icon: FileCheck,
-    what: "Signed measurement verification — free forever.",
-  },
-  {
-    id: "gspc-arena",
-    name: "GSPC Arena",
-    href: "/gspc-arena",
-    icon: Swords,
-    what: "Live measurement scoreboard — model vs model.",
-  },
-  {
-    id: "arena-scoreboard",
-    name: "Signed Per-Axis Leaderboard",
-    href: "/arena-scoreboard",
-    icon: Trophy,
-    what: "Signed per-axis rankings from the living board.",
-  },
-  {
-    id: "article-50-pack",
-    name: "Article 50 Evidence Pack",
-    href: "/packs/eu-article-50",
-    icon: FileText,
-    what: "Signed C2PA durability attestation for EU AI Act.",
-  },
-  {
-    id: "benchmarks",
-    name: "GSPC Benchmarks",
-    href: "/benchmarks",
-    icon: BarChart3,
-    what: "Deterministic predicate benchmarks — recomputable.",
-  },
-  {
-    id: "mcp-fleet",
-    name: "MCP Fleet",
-    href: "/mcp-fleet",
-    icon: Server,
-    what: "MCP server registry for the measurement estate.",
-  },
-];
 
 // ── refusals ───────────────────────────────────────────────────
 const REFUSALS = [
@@ -458,42 +380,6 @@ function RefusalBand() {
   );
 }
 
-// ── 9 Catalog Products Grid ───────────────────────────────
-function CatalogProductsGrid() {
-  return (
-    <section className="surface-raised section-y">
-      <div className="section-shell">
-        <h2 className="t-section text-center text-foreground">What you can use today</h2>
-        <p className="t-lede measure measure-center mt-4 text-center text-muted-foreground">
-          Nine live products from the measurement estate. Verification is free forever.
-          Measurement, not certification.
-        </p>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {CATALOG_PRODUCTS.map((p) => (
-            <a
-              key={p.id}
-              href={p.href}
-              className="card-quiet group flex flex-col p-5 sm:p-6"
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
-                  <p.icon className="h-5 w-5" />
-                </div>
-                <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-primary">
-                  {p.name}
-                </h3>
-              </div>
-              <p className="mt-3 flex-1 text-sm text-muted-foreground">{p.what}</p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
-                Open <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ── Verify Door (free forever) ───────────────────────────────
 function VerifyDoor() {
@@ -526,8 +412,8 @@ export default function NewHomeV3() {
       {/* 1. Hero = Council OS door (one filled CTA + one ghost) */}
       <HeroCouncilOS />
 
-      {/* 2. 9 catalog products grid */}
-      <CatalogProductsGrid />
+      {/* 2. 9 product tiles from git history (ToolStack) */}
+      <ToolStack />
 
       {/* Primary CTA #2: after products */}
       <PrimaryCtaBand id="cta-after-products" />
