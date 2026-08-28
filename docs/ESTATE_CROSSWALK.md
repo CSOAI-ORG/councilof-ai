@@ -154,10 +154,11 @@ Already: `/api/signal` legs, East-West, hive crosswalk, geo-hint desks.
 |-------|----------------------------------|
 | ESTATE_CROSSWALK / EAT / Option A `/powered-by` page | Yes (docs + page) |
 | RWA stubs + adapters seed | Partial (stubs yes; churn engine not here) |
-| `/products` catalog LIVE | **Not on this tip** — treat as other-deploy until ported |
+| `/products` catalog LIVE | Yes — `client/src/pages/Products.tsx` · `/products` |
+| `/indices` UNMEASURED hub + APIs | Yes — `/indices` · `GET /api/indices` · `measured_score: null` |
 | `compliance/key-custody-decision.md` | Added under `compliance/` here |
 | `batch_signal_run` / EXECUTION-PLAN / CURSOR-JOBS | **Absent** — job specs only |
-| App.tsx full router | **Must restore** (tip had PLACEHOLDER stubs; split modules) |
+| App shell / tip-health | Green — `npm run lint:tip-health` (NewHome / AppMainRoutes / AppLazy exact sizes; no LOAD_FROM stubs) |
 
 ### P0 — gates & honesty
 1. Custody: AWS KMS **or** Turnkey (both secp256k1 + Ed25519); did:web key provenance; Shamir cold backup only.  
