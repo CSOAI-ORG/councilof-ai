@@ -230,57 +230,59 @@ export default function CouncilOSPage() {
       </header>
 
       {/* Workspace Tabs */}
-      <div className="border-b border-slate-800 bg-slate-900/40 px-6 flex overflow-x-auto gap-2">
-        <button
-          onClick={() => setActiveTab("probe")}
-          className={`px-4 py-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors ${
-            activeTab === "probe"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          <Play className="w-3.5 h-3.5" /> Model Probe
-        </button>
-        <button
-          onClick={() => setActiveTab("card")}
-          className={`px-4 py-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors ${
-            activeTab === "card"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          <Award className="w-3.5 h-3.5" /> Card Issuer
-        </button>
-        <button
-          onClick={() => setActiveTab("verifier")}
-          className={`px-4 py-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors ${
-            activeTab === "verifier"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          <Lock className="w-3.5 h-3.5" /> Cryptographic Verifier
-        </button>
-        <button
-          onClick={() => setActiveTab("dsh")}
-          className={`px-4 py-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors ${
-            activeTab === "dsh"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          <ExternalLink className="w-3.5 h-3.5" /> DSH Harness Bridge
-        </button>
-        <button
-          onClick={() => setActiveTab("standards")}
-          className={`px-4 py-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors ${
-            activeTab === "standards"
-              ? "border-indigo-500 text-indigo-400"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
-        >
-          <Scale className="w-3.5 h-3.5" /> Regulatory Clock
-        </button>
+      <div className="border-b border-slate-800 bg-slate-900/40 px-6 py-2 overflow-x-auto">
+        <div className="flex gap-2 p-1 bg-slate-950/50 border border-slate-800 rounded-xl inline-flex">
+          <button
+            onClick={() => setActiveTab("probe")}
+            className={`px-5 py-2 text-xs font-bold rounded-lg flex items-center gap-2 transition-all ${
+              activeTab === "probe"
+                ? "bg-indigo-500/20 text-indigo-300 shadow-sm"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            }`}
+          >
+            <Play className="w-4 h-4" /> BFT Probe
+          </button>
+          <button
+            onClick={() => setActiveTab("card")}
+            className={`px-5 py-2 text-xs font-bold rounded-lg flex items-center gap-2 transition-all ${
+              activeTab === "card"
+                ? "bg-indigo-500/20 text-indigo-300 shadow-sm"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            }`}
+          >
+            <FileCode className="w-4 h-4" /> Cryptographic Card
+          </button>
+          <button
+            onClick={() => setActiveTab("verifier")}
+            className={`px-5 py-2 text-xs font-bold rounded-lg flex items-center gap-2 transition-all ${
+              activeTab === "verifier"
+                ? "bg-indigo-500/20 text-indigo-300 shadow-sm"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            }`}
+          >
+            <Shield className="w-4 h-4" /> Local Verifier
+          </button>
+          <button
+            onClick={() => setActiveTab("dsh")}
+            className={`px-5 py-2 text-xs font-bold rounded-lg flex items-center gap-2 transition-all ${
+              activeTab === "dsh"
+                ? "bg-indigo-500/20 text-indigo-300 shadow-sm"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            }`}
+          >
+            <Zap className="w-4 h-4 text-amber-400" /> DSH :3090
+          </button>
+          <button
+            onClick={() => setActiveTab("standards")}
+            className={`px-5 py-2 text-xs font-bold rounded-lg flex items-center gap-2 transition-all ${
+              activeTab === "standards"
+                ? "bg-indigo-500/20 text-indigo-300 shadow-sm"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            }`}
+          >
+            <Scale className="w-4 h-4" /> Legal Hooks
+          </button>
+        </div>
       </div>
 
       {/* Main Workspace */}

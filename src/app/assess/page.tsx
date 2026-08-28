@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, CheckCircle2, AlertTriangle, Scale, Lock, ArrowRight, RefreshCw, FileText, Check, Copy } from "lucide-react";
+import { Shield, CheckCircle2, AlertTriangle, Scale, Lock, ArrowRight, RefreshCw, FileText, Check, FileCheck, Search, Activity } from "lucide-react";
+import Link from "next/link";
 
 export default function AssessPage() {
   const [systemName, setSystemName] = useState("Enterprise LLM Gateway");
@@ -37,181 +38,175 @@ export default function AssessPage() {
         ]
       });
       setIsEvaluating(false);
-    }, 600);
+    }, 1200);
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-medium mb-3">
-          <Shield className="w-4 h-4" />
-          CSOAI Readiness & Conformance Suite
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-black mb-2">AI Readiness & Risk Assessment</h1>
-        <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-          Evaluate your AI systems against EU AI Act, NIST AI RMF, and ISO 42001 requirements in real time.
-        </p>
-      </div>
-
-      <div className="rounded-2xl bg-card border border-border p-6 shadow-sm space-y-6">
-        <div className="grid md:grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1 block">
-              System Identifier / Name
-            </label>
-            <input
-              type="text"
-              value={systemName}
-              onChange={(e) => setSystemName(e.target.value)}
-              className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-brand-500"
-            />
+    <div className="min-h-screen bg-slate-950 font-sans text-slate-200">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold tracking-widest uppercase mb-6">
+            <Shield className="w-4 h-4" />
+            CSOAI Internal Audit Tool
           </div>
-          <div>
-            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1 block">
-              Target Regulatory Regime
-            </label>
-            <select
-              value={jurisdiction}
-              onChange={(e) => setJurisdiction(e.target.value)}
-              className="w-full bg-background border border-border rounded-xl px-3 py-2 text-sm text-foreground focus:outline-none focus:border-brand-500"
-            >
-              <option value="EU">European Union (EU AI Act)</option>
-              <option value="US">United States (NIST AI RMF 1.0)</option>
-              <option value="UK">United Kingdom (DSIT / JSP 936)</option>
-              <option value="GLOBAL">Global (ISO/IEC 42001)</option>
-            </select>
-          </div>
+          <h1 className="text-4xl sm:text-5xl font-black mb-4 text-white">AI Readiness Assessment</h1>
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+            Run a deterministic gap analysis against the EU AI Act, NIST AI RMF, and ISO 42001. Find out exactly where you stand before the auditors arrive.
+          </p>
         </div>
 
-        <div className="space-y-3 pt-2">
-          <label className="flex items-center gap-3 p-3 rounded-xl bg-background border border-border cursor-pointer hover:border-brand-500/40 transition-colors">
-            <input
-              type="checkbox"
-              checked={isHighRiskDomain}
-              onChange={(e) => setIsHighRiskDomain(e.target.checked)}
-              className="w-4 h-4 rounded text-brand-500 focus:ring-brand-400"
-            />
-            <div>
-              <div className="text-sm font-medium">Critical / High-Consequence Domain</div>
-              <div className="text-xs text-muted-foreground">Applies to hiring, credit underwriting, biometrics, education, or essential infrastructure.</div>
-            </div>
-          </label>
+        <div className="grid lg:grid-cols-[1fr_400px] gap-8">
+          
+          {/* Assessment Form */}
+          <div className="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-2xl space-y-8">
+            <div className="space-y-6">
+              <div>
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block flex items-center gap-2">
+                  <Search className="w-4 h-4" /> System Identifier / Name
+                </label>
+                <input
+                  type="text"
+                  value={systemName}
+                  onChange={(e) => setSystemName(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                />
+              </div>
 
-          <label className="flex items-center gap-3 p-3 rounded-xl bg-background border border-border cursor-pointer hover:border-brand-500/40 transition-colors">
-            <input
-              type="checkbox"
-              checked={hasHumanOversight}
-              onChange={(e) => setHasHumanOversight(e.target.checked)}
-              className="w-4 h-4 rounded text-brand-500 focus:ring-brand-400"
-            />
-            <div>
-              <div className="text-sm font-medium">Active Human-in-the-Loop Oversight (Article 14)</div>
-              <div className="text-xs text-muted-foreground">Decisions undergo human review or have real-time human override mechanisms.</div>
-            </div>
-          </label>
-        </div>
-
-        <button
-          onClick={runAssessment}
-          disabled={isEvaluating}
-          className="w-full py-3.5 rounded-xl gradient-brand text-white font-semibold flex items-center justify-center gap-2 hover:opacity-95 transition-opacity shadow-lg shadow-brand-500/25"
-        >
-          {isEvaluating ? (
-            <>
-              <RefreshCw className="w-4 h-4 animate-spin" /> Evaluating Conformance Rubrics...
-            </>
-          ) : (
-            <>
-              <Scale className="w-4 h-4" /> Run Deterministic Readiness Assessment
-            </>
-          )}
-        </button>
-      </div>
-
-      {assessmentResult && (
-        <div className="mt-8 rounded-2xl bg-card border border-brand-500/30 p-6 shadow-md space-y-6 animate-in fade-in-50 duration-300">
-          <div className="flex flex-wrap items-center justify-between border-b border-border pb-4 gap-2">
-            <div>
-              <span className="text-xs text-muted-foreground">Assessment Result for</span>
-              <h3 className="text-xl font-bold text-foreground">{assessmentResult.system_name}</h3>
-            </div>
-            <div className="text-right">
-              <span className="text-xs text-muted-foreground block">Readiness Score</span>
-              <span className="text-2xl font-black text-brand-400">{assessmentResult.readiness_score}/100</span>
-            </div>
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-background border border-border">
-              <span className="text-xs text-muted-foreground block">Assessed Risk Classification</span>
-              <span className="text-sm font-bold text-foreground mt-1 block">{assessmentResult.risk_tier}</span>
-            </div>
-            <div className="p-4 rounded-xl bg-background border border-border">
-              <span className="text-xs text-muted-foreground block">Key Enforcement Milestone</span>
-              <span className="text-sm font-bold text-brand-400 mt-1 block">{assessmentResult.next_deadline}</span>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Applicable Legal Obligations</h4>
-            <div className="space-y-1.5">
-              {assessmentResult.applicable_articles.map((art: string, idx: number) => (
-                <div key={idx} className="flex items-center gap-2 text-xs text-foreground p-2 rounded-lg bg-background border border-border">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                  <span>{art}</span>
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block flex items-center gap-2">
+                    <Scale className="w-4 h-4" /> Target Regime
+                  </label>
+                  <select
+                    value={jurisdiction}
+                    onChange={(e) => setJurisdiction(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors appearance-none"
+                  >
+                    <option value="EU">European Union (EU AI Act)</option>
+                    <option value="US">United States (NIST AI RMF)</option>
+                    <option value="UK">United Kingdom (JSP 936)</option>
+                    <option value="Global">Global (ISO/IEC 42001)</option>
+                  </select>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recommended Conformance Steps</h4>
-            <ul className="space-y-2 text-xs text-muted-foreground">
-              {assessmentResult.recommended_actions.map((act: string, idx: number) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <span className="text-brand-400 font-bold">&bull;</span>
-                  <span>{act}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="mt-6 border-t border-border pt-6">
-            <div className="bg-brand-500/10 border border-brand-500/30 rounded-xl p-6 text-center relative overflow-hidden group">
-              <div className="flex flex-col items-center justify-center relative z-10 transition-all">
-                <Shield className="w-8 h-8 text-brand-400 mb-3" />
-                <h4 className="font-bold text-lg mb-2">Unlock Audit-Ready Compliance PDF</h4>
-                <p className="text-sm text-muted-foreground mb-4 max-w-sm mx-auto">
-                  Download the full 42-page technical compliance roadmap mapped exactly to {jurisdiction}. Includes Ed25519 digital signature for verifiable vendor assessment.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a href="/pricing" className="px-6 py-2.5 bg-brand-500 text-white font-semibold rounded-lg hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20 text-sm">
-                    Unlock with Pro — £79/mo
-                  </a>
-                  <button className="px-6 py-2.5 bg-background border border-border text-foreground font-semibold rounded-lg hover:border-brand-500/50 transition-colors text-sm">
-                    One-time Export — £99
-                  </button>
+                
+                <div>
+                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block flex items-center gap-2">
+                    <Activity className="w-4 h-4" /> Model Architecture
+                  </label>
+                  <select
+                    value={modelType}
+                    onChange={(e) => setModelType(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors appearance-none"
+                  >
+                    <option value="frontier">GPAI / Frontier API (GPT-4, Claude)</option>
+                    <option value="opensource">Open Source Self-Hosted (Llama, Qwen)</option>
+                    <option value="narrow">Narrow ML (Predictive, Classical)</option>
+                  </select>
                 </div>
               </div>
+
+              <div className="space-y-3 pt-4 border-t border-slate-800">
+                <label className="flex items-center gap-3 p-4 rounded-xl border border-slate-800 bg-slate-950/50 cursor-pointer hover:bg-slate-900 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={isHighRiskDomain}
+                    onChange={(e) => setIsHighRiskDomain(e.target.checked)}
+                    className="w-5 h-5 rounded border-slate-700 text-indigo-500 focus:ring-indigo-500/20 bg-slate-900"
+                  />
+                  <div>
+                    <div className="font-semibold text-white text-sm">Operates in a High-Risk Domain (Annex III)</div>
+                    <div className="text-xs text-slate-400 mt-0.5">E.g., Biometrics, Employment, Healthcare, Credit scoring.</div>
+                  </div>
+                </label>
+                
+                <label className="flex items-center gap-3 p-4 rounded-xl border border-slate-800 bg-slate-950/50 cursor-pointer hover:bg-slate-900 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={hasHumanOversight}
+                    onChange={(e) => setHasHumanOversight(e.target.checked)}
+                    className="w-5 h-5 rounded border-slate-700 text-indigo-500 focus:ring-indigo-500/20 bg-slate-900"
+                  />
+                  <div>
+                    <div className="font-semibold text-white text-sm">Human Oversight (Article 14) Implemented</div>
+                    <div className="text-xs text-slate-400 mt-0.5">A human reviews and can override high-consequence system outputs.</div>
+                  </div>
+                </label>
+              </div>
             </div>
+
+            <button
+              onClick={runAssessment}
+              disabled={isEvaluating}
+              className="w-full py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isEvaluating ? (
+                <><RefreshCw className="w-5 h-5 animate-spin" /> Simulating Audit...</>
+              ) : (
+                <><FileCheck className="w-5 h-5" /> Generate Gap Analysis</>
+              )}
+            </button>
           </div>
 
-          <div className="pt-6 flex flex-col sm:flex-row gap-3">
-            <a
-              href="/evaluate"
-              className="flex-1 text-center py-3 rounded-xl border border-brand-500/30 text-brand-400 text-xs font-semibold hover:bg-brand-500/5 transition-colors"
-            >
-              Run Automated Model Evaluation (22-Axis GSPC) &rarr;
-            </a>
-            <a
-              href="/os"
-              className="px-6 py-3 rounded-xl bg-background border border-border text-foreground text-xs font-semibold text-center hover:bg-accent transition-colors"
-            >
-              Open Council OS Cockpit
-            </a>
+          {/* Results Panel */}
+          <div className="h-full">
+            {assessmentResult ? (
+              <div className="rounded-3xl bg-slate-900 border border-slate-800 p-8 shadow-2xl h-full flex flex-col animate-in fade-in slide-in-from-right-4 duration-500">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="font-bold text-white text-lg">Audit Profile</h3>
+                  <div className={`px-3 py-1 rounded-full text-xs font-bold ${assessmentResult.readiness_score > 80 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                    Score: {assessmentResult.readiness_score}/100
+                  </div>
+                </div>
+
+                <div className="space-y-6 flex-1">
+                  <div>
+                    <div className="text-xs text-slate-500 font-bold uppercase mb-1">Risk Classification</div>
+                    <div className="text-sm font-semibold text-indigo-400">{assessmentResult.risk_tier}</div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs text-slate-500 font-bold uppercase mb-1">Enforcement Deadline</div>
+                    <div className="text-sm font-mono text-slate-300">{assessmentResult.next_deadline}</div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs text-slate-500 font-bold uppercase mb-2">Required Capabilities (Missing/Present)</div>
+                    <ul className="space-y-2">
+                      {assessmentResult.applicable_articles.map((article: string, idx: number) => (
+                        <li key={idx} className="flex items-start gap-2 text-xs text-slate-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+                          {hasHumanOversight || article.includes("Transparency") ? (
+                            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                          ) : (
+                            <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                          )}
+                          {article}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-800">
+                  <Link href="/pricing" className="w-full block text-center py-3 rounded-lg bg-white text-slate-900 font-bold text-sm hover:bg-slate-200 transition-colors">
+                    Lock In Compliance Setup
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-3xl bg-slate-900/50 border border-slate-800 border-dashed p-8 h-full flex flex-col items-center justify-center text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center">
+                  <FileText className="w-8 h-8 text-slate-600" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-300 mb-2">Awaiting Assessment</h3>
+                  <p className="text-xs text-slate-500 max-w-[250px] mx-auto">Fill out your system parameters to generate a deterministic compliance profile.</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

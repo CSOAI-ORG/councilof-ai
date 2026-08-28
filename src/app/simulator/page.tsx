@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { Shield, Crosshair, AlertOctagon, CheckCircle2, ChevronRight, Play, Award, Zap, Brain } from 'lucide-react';
+import { Shield, Crosshair, AlertOctagon, CheckCircle2, ChevronRight, Play, Award, Zap, Brain, Hexagon, XCircle, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
 
 const SCENARIOS = [
   {
@@ -10,9 +11,9 @@ const SCENARIOS = [
     context: "Your enterprise is deploying an LLM to automatically screen inbound resumes, score candidates 1-10, and reject the bottom 50% without human review.",
     question: "Under the EU AI Act (Annex III), what risk tier does this fall under?",
     options: [
-      { text: "Minimal Risk", correct: false, explanation: "Incorrect. Employment sorting is highly regulated." },
-      { text: "High Risk (Annex III)", correct: true, explanation: "Correct! Biometric identification and employment screening are strictly classified as High Risk." },
-      { text: "Unacceptable Risk", correct: false, explanation: "Incorrect. It is not an outright banned practice (like social scoring), but it is High Risk." }
+      { text: "Minimal Risk", correct: false, explanation: "Employment sorting is highly regulated." },
+      { text: "High Risk (Annex III)", correct: true, explanation: "Biometric identification and employment screening are strictly classified as High Risk." },
+      { text: "Unacceptable Risk", correct: false, explanation: "It is not an outright banned practice (like social scoring), but it is High Risk." }
     ]
   },
   {
@@ -21,9 +22,20 @@ const SCENARIOS = [
     context: "A generative AI chatbot handling tier-1 customer complaints for an e-commerce store. It has no access to credit data and cannot make hiring decisions.",
     question: "What is the primary Article 50 obligation for this system?",
     options: [
-      { text: "Transparency (Users must know they are talking to AI)", correct: true, explanation: "Correct! Article 50 mandates users must be informed they are interacting with an AI." },
-      { text: "CE Marking & Conformity Assessment", correct: false, explanation: "Incorrect. Only High-Risk systems require CE marking." },
-      { text: "Human-in-the-loop for every message", correct: false, explanation: "Incorrect. Not required for basic tier-1 chatbots." }
+      { text: "Transparency Notification", correct: true, explanation: "Article 50 mandates users must be informed they are interacting with an AI." },
+      { text: "CE Marking", correct: false, explanation: "Only High-Risk systems require full CE marking." },
+      { text: "Human-in-the-loop", correct: false, explanation: "Not required for basic tier-1 conversational agents." }
+    ]
+  },
+  {
+    id: 3,
+    title: "Subliminal Manipulation Engine",
+    context: "A mobile game uses an AI to subliminally alter audio frequencies to cause users to unknowingly purchase more microtransactions.",
+    question: "How does the EU AI Act classify this system?",
+    options: [
+      { text: "High Risk", correct: false, explanation: "It goes beyond high risk due to the psychological manipulation." },
+      { text: "Prohibited (Article 5)", correct: true, explanation: "Subliminal techniques that materially distort behavior are strictly banned." },
+      { text: "Unregulated", correct: false, explanation: "Absolutely not." }
     ]
   }
 ];
@@ -34,134 +46,158 @@ export default function SimulatorPage() {
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
 
+  const scenario = SCENARIOS[currentScenario];
+  const isFinished = currentScenario >= SCENARIOS.length;
+
   const handleSelect = (index: number) => {
     if (showResult) return;
     setSelectedOption(index);
     setShowResult(true);
-    if (SCENARIOS[currentScenario].options[index].correct) {
-      setScore(prev => prev + 100);
+    if (scenario.options[index].correct) {
+      setScore(s => s + 100);
     }
   };
 
-  const handleNext = () => {
+  const nextScenario = () => {
     setSelectedOption(null);
     setShowResult(false);
-    if (currentScenario < SCENARIOS.length - 1) {
-      setCurrentScenario(prev => prev + 1);
-    } else {
-      setCurrentScenario(-1); // End of simulator
-    }
+    setCurrentScenario(c => c + 1);
   };
 
-  const scenario = SCENARIOS[currentScenario];
+  const restart = () => {
+    setCurrentScenario(0);
+    setSelectedOption(null);
+    setShowResult(false);
+    setScore(0);
+  };
+
+  if (isFinished) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-center font-sans">
+        <div className="w-24 h-24 bg-brand-500/20 rounded-full flex items-center justify-center mb-6 border border-brand-500/40 shadow-[0_0_50px_-12px_rgba(var(--brand-500),0.5)]">
+          <Award className="w-12 h-12 text-brand-400" />
+        </div>
+        <h1 className="text-4xl font-black text-white mb-4">Simulation Complete</h1>
+        <p className="text-slate-400 text-lg mb-2">Final Metrology Score</p>
+        <div className="text-6xl font-black text-brand-400 font-mono mb-8">{score}</div>
+        
+        <div className="flex gap-4">
+          <button onClick={restart} className="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center gap-2 transition-colors">
+            <RefreshCw className="w-5 h-5" /> Play Again
+          </button>
+          <Link href="/assess" className="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold flex items-center gap-2 transition-colors shadow-lg shadow-brand-500/20">
+            <Shield className="w-5 h-5" /> Audit Your Real System
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-[80vh]">
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs font-semibold mb-4">
-          <Brain className="w-4 h-4" /> Pillar 6: Gamified Literacy Lab
+    <div className="min-h-screen bg-slate-950 font-sans py-12 px-4 sm:px-6 lg:px-8 flex flex-col">
+      <div className="max-w-4xl mx-auto w-full flex-1 flex flex-col">
+        
+        {/* Header HUD */}
+        <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+              <Brain className="w-5 h-5" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-white leading-tight">Risk Literacy Lab</h1>
+              <div className="text-xs text-slate-500 font-mono uppercase tracking-wider">Live Simulation Environment</div>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <div className="text-right">
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Scenario</div>
+              <div className="font-mono text-lg text-slate-200">{currentScenario + 1} / {SCENARIOS.length}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Score</div>
+              <div className="font-mono text-lg text-brand-400">{score}</div>
+            </div>
+          </div>
         </div>
-        <h1 className="text-4xl font-black mb-4">AI Risk <span className="text-brand-400">Simulator</span></h1>
-        <p className="text-muted-foreground">Train your compliance intuition. Test your reflexes against real EU AI Act deployment scenarios.</p>
-      </div>
 
-      {currentScenario >= 0 ? (
-        <div className="grid md:grid-cols-[1fr_300px] gap-8">
-          {/* Main Game Screen */}
-          <div className="bg-card/80 backdrop-blur border border-border/50 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-border/50">
-              <div className="h-full bg-brand-500 transition-all duration-500" style={{ width: `${((currentScenario) / SCENARIOS.length) * 100}%` }} />
-            </div>
-
-            <div className="flex items-center gap-2 text-sm text-brand-400 font-bold tracking-widest uppercase mb-6">
-              <Crosshair className="w-4 h-4" /> Scenario 0{scenario.id}
-            </div>
-
-            <h2 className="text-2xl font-bold mb-4">{scenario.title}</h2>
-            <div className="p-4 rounded-xl bg-background/50 border border-border/50 text-muted-foreground mb-8 text-sm leading-relaxed">
-              {scenario.context}
-            </div>
-
-            <h3 className="font-semibold mb-6 text-foreground">{scenario.question}</h3>
-
-            <div className="space-y-3">
-              {scenario.options.map((opt, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSelect(i)}
-                  disabled={showResult}
-                  className={`w-full text-left p-4 rounded-xl border transition-all duration-300 flex items-center justify-between ${
-                    showResult 
-                      ? opt.correct 
-                        ? 'bg-green-500/10 border-green-500/50 text-green-400'
-                        : selectedOption === i 
-                          ? 'bg-red-500/10 border-red-500/50 text-red-400' 
-                          : 'bg-background/30 border-border/30 opacity-50'
-                      : 'bg-card border-border/50 hover:border-brand-500/50 hover:bg-brand-500/5'
-                  }`}
-                >
-                  <span className="font-medium text-sm">{opt.text}</span>
-                  {showResult && opt.correct && <CheckCircle2 className="w-5 h-5 text-green-500" />}
-                  {showResult && selectedOption === i && !opt.correct && <AlertOctagon className="w-5 h-5 text-red-500" />}
-                </button>
-              ))}
-            </div>
-
-            {showResult && (
-              <div className="mt-8 p-4 rounded-xl bg-background border border-border/50 animate-in fade-in slide-in-from-bottom-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="text-sm">
-                  <strong className={scenario.options[selectedOption!].correct ? "text-green-400" : "text-red-400"}>
-                    {scenario.options[selectedOption!].correct ? "Target Identified." : "Violation Detected."}
-                  </strong>
-                  <p className="text-muted-foreground mt-1">{scenario.options[selectedOption!].explanation}</p>
-                </div>
-                <button 
-                  onClick={handleNext}
-                  className="shrink-0 px-6 py-2 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
-                >
-                  Next Scenario <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+        {/* Scenario Card */}
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden flex-1 flex flex-col">
+          <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+            <Hexagon className="w-64 h-64 text-indigo-500" />
           </div>
 
-          {/* Player Stats Panel */}
-          <div className="space-y-6">
-            <div className="bg-card/80 backdrop-blur border border-border/50 rounded-3xl p-6 shadow-xl">
-              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Player Telemetry</h3>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/30 mb-3">
-                <span className="text-sm text-muted-foreground flex items-center gap-2"><Zap className="w-4 h-4 text-amber-400" /> Score</span>
-                <span className="font-mono font-bold text-xl">{score}</span>
-              </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-background/50 border border-border/30">
-                <span className="text-sm text-muted-foreground flex items-center gap-2"><Shield className="w-4 h-4 text-brand-400" /> Status</span>
-                <span className="text-xs font-bold text-brand-400 bg-brand-500/10 px-2 py-1 rounded">CADET</span>
-              </div>
+          <div className="relative z-10 flex-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-slate-800 text-slate-300 text-xs font-bold mb-6 font-mono">
+              <AlertOctagon className="w-4 h-4 text-amber-500" /> MISSION BRIEFING
             </div>
             
-            <div className="bg-brand-500/5 border border-brand-500/20 rounded-3xl p-6 text-center">
-              <Award className="w-8 h-8 text-brand-400 mx-auto mb-3" />
-              <h4 className="font-bold text-sm mb-2">CSOAI Watchdog Certification</h4>
-              <p className="text-xs text-muted-foreground mb-4">Pass all 33 scenarios to earn your verifiable on-chain analyst badge.</p>
-              <button disabled className="w-full py-2 bg-background border border-border rounded-lg text-xs font-semibold opacity-50">Locked</button>
+            <h2 className="text-3xl font-black text-white mb-4">{scenario.title}</h2>
+            <p className="text-slate-300 text-lg leading-relaxed mb-8 bg-slate-950/50 p-6 rounded-xl border border-slate-800/50">
+              {scenario.context}
+            </p>
+            
+            <div className="text-lg font-bold text-indigo-300 mb-6">
+              Q: {scenario.question}
+            </div>
+
+            <div className="space-y-4">
+              {scenario.options.map((option, idx) => {
+                const isSelected = selectedOption === idx;
+                const isCorrect = option.correct;
+                let bgClass = "bg-slate-950 hover:bg-slate-800 border-slate-800";
+                
+                if (showResult) {
+                  if (isSelected && isCorrect) bgClass = "bg-emerald-950/40 border-emerald-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]";
+                  if (isSelected && !isCorrect) bgClass = "bg-red-950/40 border-red-500";
+                  if (!isSelected && isCorrect) bgClass = "bg-emerald-950/20 border-emerald-500/50";
+                  if (!isSelected && !isCorrect) bgClass = "bg-slate-950 border-slate-800 opacity-50";
+                }
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleSelect(idx)}
+                    disabled={showResult}
+                    className={`w-full text-left p-5 rounded-2xl border transition-all duration-300 flex items-start gap-4 ${bgClass}`}
+                  >
+                    <div className="mt-0.5">
+                      {showResult && isCorrect ? (
+                        <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                      ) : showResult && isSelected && !isCorrect ? (
+                        <XCircle className="w-5 h-5 text-red-500" />
+                      ) : (
+                        <div className="w-5 h-5 rounded-full border-2 border-slate-700" />
+                      )}
+                    </div>
+                    <div>
+                      <div className={`font-bold ${showResult && isCorrect ? 'text-emerald-400' : showResult && isSelected && !isCorrect ? 'text-red-400' : 'text-slate-200'}`}>
+                        {option.text}
+                      </div>
+                      {showResult && (isSelected || isCorrect) && (
+                        <div className="text-sm text-slate-400 mt-2 animate-in fade-in slide-in-from-top-2">
+                          {option.explanation}
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
+
+          {showResult && (
+            <div className="mt-8 pt-6 border-t border-slate-800 flex justify-end animate-in fade-in">
+              <button
+                onClick={nextScenario}
+                className="px-8 py-4 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-200 transition-colors flex items-center gap-2"
+              >
+                Proceed to Next Briefing <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="max-w-2xl mx-auto bg-card/80 backdrop-blur border border-border/50 rounded-3xl p-12 shadow-2xl text-center animate-in zoom-in-95">
-          <Award className="w-16 h-16 text-brand-400 mx-auto mb-6" />
-          <h2 className="text-3xl font-black mb-4">Simulation Complete</h2>
-          <p className="text-muted-foreground mb-8">You scored <strong className="text-foreground">{score}</strong> points in the foundational module.</p>
-          <div className="flex justify-center gap-4">
-            <button onClick={() => { setCurrentScenario(0); setScore(0); }} className="px-6 py-3 bg-background border border-border hover:border-brand-500/50 rounded-xl font-semibold transition-all">
-              Restart Sim
-            </button>
-            <a href="/pricing" className="px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white rounded-xl font-semibold transition-all flex items-center gap-2">
-              Unlock All 33 Modules <Play className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
