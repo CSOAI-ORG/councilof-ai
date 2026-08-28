@@ -1,0 +1,80 @@
+{
+  "schema": "csoai.eu-ai-act-article-map/0.1",
+  "source": "Reg (EU) 2024/1689 (AI Act), version-pinned obligations",
+  "articles": {
+    "Article 4": {
+      "title": "AI literacy",
+      "obligation": "Deployers/providers ensure staff AI literacy",
+      "penalty_tier": "most_obligations_incl_art50_and_gpai",
+      "measured_axes": ["governance"],
+      "in_force": "2025-02-02",
+      "status": "IN_FORCE"
+    },
+    "Article 5": {
+      "title": "Prohibited AI practices",
+      "obligation": "No social scoring, no manipulative/deceptive techniques, no emotion-recognition (workplace/education), no untargeted facial-scraping, no biometric categorisation for sensitive attributes",
+      "penalty_tier": "prohibited_practices",
+      "measured_axes": ["safety", "affect", "detector-interop", "jail", "art5-safeguard"],
+      "in_force": "2025-02-02",
+      "status": "IN_FORCE"
+    },
+    "Article 6": {
+      "title": "High-risk classification",
+      "obligation": "Annex III high-risk systems — resume-screening, credit-scoring, biometric ID, education access, law-enforcement, migration, essential services",
+      "penalty_tier": "most_obligations_incl_art50_and_gpai",
+      "measured_axes": ["governance", "safety", "conformance"],
+      "in_force": "2026-08-02",
+      "status": "IN_FORCE"
+    },
+    "Article 9": {
+      "title": "Risk management system",
+      "obligation": "Establish + document a risk-management system for high-risk systems",
+      "penalty_tier": "most_obligations_incl_art50_and_gpai",
+      "measured_axes": ["governance", "continuity"],
+      "status": "UPCOMING"
+    },
+    "Article 13": {
+      "title": "Transparency to deployers",
+      "obligation": "Inform deployers of capabilities + limitations (human oversight, accuracy, robustness)",
+      "penalty_tier": "most_obligations_incl_art50_and_gpai",
+      "measured_axes": ["conformance", "provenance"],
+      "status": "UPCOMING"
+    },
+    "Article 14": {
+      "title": "Human oversight",
+      "obligation": "High-risk systems designed for effective human oversight; incident/potential-incident reporting",
+      "penalty_tier": "most_obligations_incl_art50_and_gpai",
+      "measured_axes": ["continuity", "governance"],
+      "in_force": "2026-09-11",
+      "status": "UPCOMING"
+    },
+    "Article 50": {
+      "title": "Transparency to end-users",
+      "obligation": "Disclose AI-generated content / interaction with AI; deepfake labelling",
+      "penalty_tier": "most_obligations_incl_art50_and_gpai",
+      "measured_axes": ["provenance", "openness"],
+      "in_force": "2026-08-02",
+      "status": "IN_FORCE"
+    },
+    "Article 53": {
+      "title": "GPAI model obligations",
+      "obligation": "General-purpose AI transparency — technical documentation, copyright policy, training-data summary",
+      "penalty_tier": "most_obligations_incl_art50_and_gpai",
+      "measured_axes": ["openness", "provenance"],
+      "status": "UPCOMING"
+    },
+    "Article 55": {
+      "title": "Systemic-risk GPAI",
+      "obligation": "Systemic-risk model evaluation + risk mitigation",
+      "penalty_tier": "most_obligations_incl_art50_and_gpai",
+      "measured_axes": ["governance", "safety"],
+      "status": "UPCOMING"
+    }
+  },
+  "penalty_tiers": {
+    "prohibited_practices": "up to €35,000,000 or 7% of worldwide annual turnover (Art 99(3))",
+    "most_obligations_incl_art50_and_gpai": "up to €15,000,000 or 3% (Art 99(4))",
+    "incorrect_or_misleading_info": "up to €7,500,000 or 1% (Art 99(5))"
+  },
+  "verify_path": "/api/arena/scoreboard?verify=1"
+}

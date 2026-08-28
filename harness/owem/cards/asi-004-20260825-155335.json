@@ -1,0 +1,91 @@
+{
+  "card": {
+    "kind": "measurement-card",
+    "version": "0.1",
+    "subject_digest": "sha256:75e9d0a6e633df2a735604b24c8523ec90db702a03ee74cd29116324e132482c",
+    "env_commitment": {
+      "network": "measurement",
+      "bench": "unavailable",
+      "model": "sov33-unified:latest",
+      "source": "register-cached"
+    },
+    "replay_root": "sha256:register-seed",
+    "body": {
+      "axis": "asi",
+      "ts": "2026-08-25T15:53:35Z",
+      "score_vector": {
+        "axis": "asi",
+        "sov_score": 0.0,
+        "ci95": null,
+        "n": 0,
+        "n_unmeasured": 0
+      },
+      "method": "behavior-class judge (REFUSE/ENGAGE/KEYWORD-recall/CLASSIFY); UNMEASURED never 0",
+      "what_it_never_proves": "quality verdict, compliance determination, or investment relevance (JI.4)"
+    },
+    "signer": "csoai-owem-measure-worker",
+    "alg": "Ed25519",
+    "signal_alg": "SHA-256",
+    "measured_on_estate": "https://councilof.ai",
+    "signature": {
+      "alg": "Ed25519",
+      "kid": "csoai-measure-worker-d0c9fe3654",
+      "public_key": "0x361c3169c94081a6d566825acacbdd7cd1802ea59d5c9c5d53493ffa79756980",
+      "sig_hex": "0xd86cabb16195579f4e74622e2d480d4915bea99de8a9ebd050e18f1f8d003e5bff2f6ad99c084f1ae3223dd2ff72805fe6c69bb58defd2e105a941451f56900f",
+      "content_id": "62be0cc6d5ad74969e010f2063e83f181fc8e374a484cce79ff6e36b54d40d53",
+      "kind": "ed25519",
+      "pubkey": "NhwxaclAgabVZoJaysvdfNGALqWdXJxdU0k/+nl1aYA=",
+      "sig": "b7BeN2LbxbVTSvXPDOyQkl9et7Rg+nj2BEShedWha9F/Ttm4lp+5qW/XavcNXeGggcmZJGHprOobIUZB4BJfDA==",
+      "body_sha256": "7cfc7c55a41d1fe51f3f8eb96f1fb763ae6eb531cd9102dfc2eba1df809d965a",
+      "sig_hex_preimage": "json of the card WITHOUT `signature`, keys recursively sorted, separators (',',':'), ensure_ascii=True; content_id = sha256 of it",
+      "sig_preimage": "json of the card WITHOUT top-level `signature`/`sha256`/`sig`, keys in INSERTION order, integral floats written as ints, separators (',',':'), ensure_ascii=False; body_sha256 = sha256 of it",
+      "preimage_note": "Both preimages exclude the `signature` object, so naming them here changes neither signature. Verify with harness/owem/verify_cards.py.",
+      "trust_level": "worker-measurement",
+      "signing_pod": "did:web:csoai.org#board-attestation-1"
+    }
+  },
+  "sim_delta": {
+    "kind": "csoai.sim-delta-row/0.1",
+    "axis": "asi",
+    "label": "SYNTHETIC-SIM",
+    "live": {
+      "sov_score": 0.0,
+      "n_scored": 0,
+      "n_unmeasured": 0,
+      "bank_hash": "register-seed",
+      "model": "sov33-unified:latest",
+      "bench": "unavailable",
+      "source": "register-cached",
+      "cached": true
+    },
+    "sim": {
+      "sov_score": 0.0,
+      "n_scored": 0,
+      "n_unmeasured": 0,
+      "bank_hash": "register-seed",
+      "model": "sov33-unified:latest",
+      "bench": "unavailable",
+      "source": "register-cached",
+      "cached": true
+    },
+    "delta": 0.0,
+    "grammar": "measured in simulation, never proven in reality (IY Wall 2, ECON 211/237)",
+    "ts": "2026-08-25T15:53:35Z",
+    "signature": {
+      "alg": "Ed25519",
+      "kid": "csoai-measure-worker-d0c9fe3654",
+      "public_key": "0x361c3169c94081a6d566825acacbdd7cd1802ea59d5c9c5d53493ffa79756980",
+      "sig_hex": "0x7eef1b5c38f948d4716758443a3b36bfe30791ac4caa068980c5df796d58f4d909ef50aee0737e7b361894a0d45f0089f137319af77845e7352997beb3b3fd06",
+      "content_id": "ecb5940b22d7f0e9ef2130be50a2ade9c519322a321f4eb1bf5cd8f12a983edb",
+      "kind": "ed25519",
+      "pubkey": "NhwxaclAgabVZoJaysvdfNGALqWdXJxdU0k/+nl1aYA=",
+      "sig": "7vK26g3w0V2Nvf80sfwkDJZpd7L0BYfEeCImh23rKKyJiLN0qRjj9VWYUZhkNImj7Bkw8C6TWCRasj2eSZ42Aw==",
+      "body_sha256": "f86949f9e1324e86522526d1640bf7c293ea1796f80a72e1a58f9d5b2ae20f59",
+      "sig_hex_preimage": "json of the card WITHOUT `signature`, keys recursively sorted, separators (',',':'), ensure_ascii=True; content_id = sha256 of it",
+      "sig_preimage": "json of the card WITHOUT top-level `signature`/`sha256`/`sig`, keys in INSERTION order, integral floats written as ints, separators (',',':'), ensure_ascii=False; body_sha256 = sha256 of it",
+      "preimage_note": "Both preimages exclude the `signature` object, so naming them here changes neither signature. Verify with harness/owem/verify_cards.py.",
+      "trust_level": "worker-measurement",
+      "signing_pod": "did:web:csoai.org#board-attestation-1"
+    }
+  }
+}
