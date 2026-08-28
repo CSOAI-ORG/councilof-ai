@@ -15,23 +15,21 @@ Rules (doctrine):
 
 Status: DECISION recorded (fleet paste); adoption doc this file; gate + fixtures queued.
 
-## Executable contract (already landed)
+## Executable contract (landed)
 
-`harness/arena/measurement_card.py` implements the signed-MEASUREMENT card format this
-note describes: it binds `instrument` (name + version, e.g. `inspect_ai@0.3.47`),
-`config_digest` (sha256 of the run-config JSON), and `rows_digest` (the bank/rows hash)
-into a JCS-v2 (`preimage_rule: "jcs-rfc8785"`) preimage, and signs the canonical body
-bytes exactly as `public/signed/verify-card.mjs` checks them. Verified end-to-end:
-emitted cards verify VALID via the dispatch, a tamper returns INVALID with the hash
-mismatch shown, and stripping the preimage rule returns INVALID (dispatch is load-bearing).
+`harness/arena/measurement_card.py` implements this signed-MEASUREMENT format: it binds
+`instrument` (name + version, e.g. `inspect_ai@0.3.47`), `config_digest` (sha256 of the run
+config JSON), and `rows_digest` (bank/rows hash) into a JCS-v2
+(`preimage_rule: "jcs-rfc8785"`) preimage, signed over the canonical body bytes exactly as
+`public/signed/verify-card.mjs` checks. Verified: emitted cards verify VALID via the
+dispatch, tamper returns INVALID with the hash mismatch shown, stripping the preimage rule
+returns INVALID (dispatch is load-bearing).
 
-Usage:
 ```
 python3 harness/arena/measurement_card.py --config <run-config.json> \
     --rows-digest <sha256 of rows> --instrument inspect_ai --instrument-version <v> \
     --axis <axis> --n <n> --accuracy <acc> --key <ed25519> --out card.json
 ```
 
-Gate (queued): cross-verify Inspect AI output against the gold-run pipeline with the
-10-fixture corpus before Inspect becomes the default runner — the verifier above is the
-stranger-checkable half of that gate.
+The adoption gate (10-fixture cross-verify vs the gold-run pipeline) uses this verifier as
+its stranger-checkable half.
