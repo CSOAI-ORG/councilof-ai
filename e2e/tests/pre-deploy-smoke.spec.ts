@@ -40,6 +40,8 @@ const CRITICAL_PAGES = [
   '/east-west/desks/eu',
   '/indices',
   '/indices/ai-economy',
+  '/indices/human-labour',
+  '/indices/humanoid-labour',
   '/products',
   '/powered-by',
 ];

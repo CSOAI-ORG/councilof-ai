@@ -6,7 +6,7 @@
 
 `e2e/tests/indices-products-smoke.spec.ts` covers:
 
-- `/indices`, `/indices/ai-economy`, `/products`, `/powered-by` — UNMEASURED / HO.2 copy
+- `/indices`, `/indices/ai-economy`, `/indices/human-labour`, `/indices/humanoid-labour`, `/products`, `/powered-by` — UNMEASURED / HO.2 copy
 - Mobile viewport (375×812) for `/indices` and `/products` (#220)
 
 Related: `pre-deploy-smoke.spec.ts`, broken-link crawl `scripts/broken-link-crawl.mjs` (#221–230), catalog lint `npm run lint:evm-catalog` (#303–308), axe CI `e2e/tests/indices-products-axe.spec.ts` (#219).

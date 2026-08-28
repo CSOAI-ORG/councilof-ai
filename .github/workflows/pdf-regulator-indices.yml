@@ -15,6 +15,10 @@ on:
       - "scripts/pdf-regulator-indices.mjs"
       - ".github/workflows/pdf-regulator-indices.yml"
 
+concurrency:
+  group: pdf-regulator-indices-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -60,5 +64,6 @@ jobs:
             echo "PDF unchanged"
           else
             git commit -m "chore(pdf): regenerate designed regulator-indices one-pager (#149)"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
             git push
           fi
