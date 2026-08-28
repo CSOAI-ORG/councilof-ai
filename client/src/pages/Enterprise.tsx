@@ -403,4 +403,42 @@ export default function Enterprise() {
                 </div>
               </div>
               <p className="text-gray-600 mb-4">
-                Align with th
+                Align with the US National Institute of Standards and Technology's AI Risk Management Framework for federal contracts and best practices.
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  GOVERN function mapping
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  MAP function analysis
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  MEASURE assessments
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  MANAGE recommendations
+                </li>
+              </ul>
+            </Card>
+
+            {/* ISO 42001 */}
+            <Card className="p-8 border-2 border-emerald-200 hover:border-emerald-400 transition-colors">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-emerald-100 rounded-xl">
+                  <Award className="h-8 w-8 text-emerald-600" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold">ISO 42001</h3>
+                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">Measured evidence</Badge>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4">
+                Control-language measurement and gap evidence your auditor can recompute. We prepare the signed record — we do not issue the certificate.
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-
