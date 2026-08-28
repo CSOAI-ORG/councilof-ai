@@ -1,0 +1,45 @@
+# One-shot: regenerate public/sitemap.xml with indices slug URLs, then self-delete.
+name: regenerate-sitemap-once
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cursor/instruments-catalog-7fb8
+    paths:
+      - ".github/workflows/regenerate-sitemap-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  regen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Regenerate sitemap
+        run: node scripts/generate-sitemap.mjs
+
+      - name: Assert indices slugs present
+        run: |
+          for p in /indices/ai-economy /indices/human-labour /indices/humanoid-labour; do
+            grep -F "<loc>https://councilof.ai${p}</loc>" public/sitemap.xml
+          done
+
+      - name: Commit sitemap and remove this workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/sitemap.xml
+          git rm -f .github/workflows/regenerate-sitemap-once.yml || true
+          if git diff --staged --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "chore(sitemap): regenerate with indices slug URLs"
+          git push
