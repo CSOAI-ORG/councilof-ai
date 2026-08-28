@@ -27,13 +27,15 @@ Never invent MEASURED labour scores. Per-slot cards (`csoai/gspc-*-labour-index`
 
 Owner tracker: https://github.com/CSOAI-ORG/councilof-ai/issues/887
 
+**Agent-shipable tip honesty outside HF is exhausted** (tip `20c572f9`: sitemap+slugs, tip-honesty CI, designed regulator PDF, PDF CI npm ci + rebase, pre-deploy index slugs). Remaining open NEXT_300 rows are ⛔ custody/counsel/merge, freeze ☐, human send ☐, or this HF upload 🔄.
+
 ## Overnight recheck log
 
 | When (UTC) | Hub | Token | Notes |
 |------------|-----|-------|-------|
 | 2026-08-28 | missing | unset | packs verified; CI workflow on tip |
-| 2026-08-28 ~21:20 | missing | unset | tip-health OK; vite `:43125`; vitest labourIndices 8/8 |
-| 2026-08-28 ~21:22 | missing | unset | CI [33212232562](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/33212232562) verify ✅ · upload **skipped** |
-| 2026-08-28 21:30–22:30 | missing | unset | three stacked timer rechecks; tip `f0f390cd` green (designed PDF + sitemap honesty); Hub still missing; re-requested env + Actions `HF_TOKEN` |
+| 2026-08-28 ~21:20–22:30 | missing | unset | stacked timer rechecks; tip honesty ships |
+| 2026-08-28 ~23:38 | missing | unset | CI [33221090655](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/33221090655) verify ✅ · upload **skipped**; tip `20c572f9` |
+| 2026-08-28 ~23:39 | missing | unset | full route smoke 200; tip-health OK; vitest labourIndices 8/8; agent work blocked only on `HF_TOKEN` |
 
 As-of: 2026-08-28
