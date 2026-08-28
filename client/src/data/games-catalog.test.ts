@@ -19,6 +19,7 @@ import {
   FROZEN_SURFACES,
   IN_BUILD_CARDS,
   LOCAL_ONLY_HARNESSES,
+  NOT_LIVE_SURFACES,
   FORBIDDEN_GAME_NAMES,
   isForbiddenGame,
 } from "./games-catalog";
@@ -156,12 +157,66 @@ describe("games-catalog", () => {
       expect(munderDifflin?.note).toContain("No public route");
     });
 
+    it("Munder-Difflin has the five known titles", () => {
+      const mdf = LOCAL_ONLY_HARNESSES.find((h) => h.name === "Munder-Difflin");
+      expect(mdf?.titles).toContain("The Boss's Chair");
+      expect(mdf?.titles).toContain("Governance City");
+      expect(mdf?.titles).toContain("Unseal a Report (x402)");
+      expect(mdf?.titles).toContain("Arena battle");
+      expect(mdf?.titles).toContain("Colosseum Duel");
+    });
+
+    it("Munder-Difflin notes site/play.html as MISSING", () => {
+      const mdf = LOCAL_ONLY_HARNESSES.find((h) => h.name === "Munder-Difflin");
+      expect(mdf?.missing).toContain("site/play.html");
+    });
+
+    it("Munder-Difflin warning says public must not say Six-axis", () => {
+      const mdf = LOCAL_ONLY_HARNESSES.find((h) => h.name === "Munder-Difflin");
+      expect(mdf?.warning).toContain("must NOT say Six-axis");
+    });
+
     it("local harnesses are not in PLAY_SURFACES", () => {
       for (const harness of LOCAL_ONLY_HARNESSES) {
         const inPlay = PLAY_SURFACES.find(
           (p) => p.name.toLowerCase() === harness.name.toLowerCase()
         );
         expect(inPlay).toBeUndefined();
+      }
+    });
+
+    it("Munder-Difflin titles are not catalogued as apex routes", () => {
+      const mdf = LOCAL_ONLY_HARNESSES.find((h) => h.name === "Munder-Difflin");
+      for (const title of mdf?.titles || []) {
+        const inCatalog = GAMES_CATALOG.find(
+          (g) => g.name.toLowerCase() === title.toLowerCase()
+        );
+        expect(inCatalog).toBeUndefined();
+      }
+    });
+  });
+
+  describe("not-live surfaces", () => {
+    it("TrainingHub 9 titles is listed as 404", () => {
+      const th = NOT_LIVE_SURFACES.find((s) => s.name === "TrainingHub 9 titles");
+      expect(th).toBeDefined();
+      expect(th?.status).toBe("404");
+    });
+
+    it("City game design is listed as draft (not shipped)", () => {
+      const city = NOT_LIVE_SURFACES.find((s) => s.name === "City game design");
+      expect(city).toBeDefined();
+      expect(city?.status).toBe("draft");
+      expect(city?.note).toContain("Not shipped");
+    });
+
+    it("not-live surfaces are not minted as play surfaces", () => {
+      const notLiveNames = NOT_LIVE_SURFACES.map((s) => s.name.toLowerCase());
+      for (const playEntry of PLAY_SURFACES) {
+        const matchesNotLive = notLiveNames.some(
+          (name) => playEntry.name.toLowerCase() === name
+        );
+        expect(matchesNotLive).toBe(false);
       }
     });
   });

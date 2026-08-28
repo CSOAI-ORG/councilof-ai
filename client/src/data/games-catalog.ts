@@ -20,6 +20,8 @@
  *   - /murder, /difflin, /mundrr — 404, no JS
  *   - /arena (12-room leftover) — PR 824 holds
  *   - Town/XP on /os — PR 823 holds
+ *   - TrainingHub 9 titles — all 404
+ *   - City game design — Downloads draft only (13 Aug), not shipped
  *
  * FROZEN LEFTOVERS (playable but not the living board):
  *   - /gspc-quests.html: six frozen quests, v1 governance (24-item), NOT living n=237.
@@ -158,6 +160,7 @@ export const IN_BUILD_CARDS = [
 /**
  * LOCAL-ONLY HARNESSES (not on councilof.ai, no public route).
  * Catalogued for reference; these are NOT play surfaces.
+ * DO NOT mint these as apex routes.
  */
 export const LOCAL_ONLY_HARNESSES = [
   {
@@ -166,6 +169,33 @@ export const LOCAL_ONLY_HARNESSES = [
     files: ["site/games.html", "site/governance-city.html", "visuals/arena-game.html"],
     healthEndpoint: ":4100",
     note: "Local harness only. No public route on councilof.ai.",
+    titles: [
+      "The Boss's Chair",
+      "Governance City",
+      "Unseal a Report (x402)",
+      "Arena battle",
+      "Colosseum Duel",
+    ],
+    missing: ["site/play.html"],
+    warning:
+      "Internal MDF still references 6-axis + local 16-axis card. Public catalog must NOT say Six-axis — living board is 22 axis from GET /api/gspc.",
+  },
+];
+
+/**
+ * NOT LIVE — do not catalog as working surfaces.
+ * Listed for honesty so future agents don't re-invent them.
+ */
+export const NOT_LIVE_SURFACES = [
+  {
+    name: "TrainingHub 9 titles",
+    status: "404",
+    note: "All 9 titles return 404. Do not catalog as live.",
+  },
+  {
+    name: "City game design",
+    status: "draft",
+    note: "Exists only as Downloads draft (13 Aug). Not shipped. Do not catalog as live.",
   },
 ];
 
