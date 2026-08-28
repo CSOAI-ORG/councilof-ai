@@ -25,15 +25,17 @@ export function Navigation() {
             <a href="/os" className="text-brand-400 hover:text-brand-300 transition-colors flex items-center gap-1.5 font-semibold">
               <Cpu className="w-4 h-4" /> Council OS
             </a>
+            <a href="/evaluate" className="text-muted-foreground hover:text-foreground transition-colors">Evaluate</a>
+            <a href="/verify" className="text-muted-foreground hover:text-foreground transition-colors">Verify</a>
             <a href="/assess" className="text-muted-foreground hover:text-foreground transition-colors">Assessment</a>
-            <a href="/catalogue" className="text-muted-foreground hover:text-foreground transition-colors">Catalogue</a>
+            <a href="/developers" className="text-muted-foreground hover:text-foreground transition-colors">Developers</a>
             <a href="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">Pricing</a>
             {user && (
               <a href="/dashboard" className="text-brand-400 hover:text-brand-300 transition-colors flex items-center gap-1">
                 <LayoutDashboard className="w-4 h-4" /> Dashboard
               </a>
             )}
-            <a href="https://csoai.org" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1">
+            <a href="https://csoai.org" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 ml-2 border-l border-border pl-4">
               csoai.org <ExternalLink className="w-3 h-3" />
             </a>
           </nav>
