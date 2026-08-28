@@ -321,6 +321,18 @@ export default function NewHomeV3() {
           <RegionBanner />
         </div>
       </div>
+
+      {/* FAQ link — full FAQ lives on /faq */}
+      <section className="surface-raised py-12">
+        <div className="section-shell text-center">
+          <a
+            href="/faq"
+            className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:underline"
+          >
+            Questions? See all FAQs <ChevronRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
     </main>
   );
 }
