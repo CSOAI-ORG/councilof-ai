@@ -21,7 +21,10 @@ export function Navigation() {
             </a>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            <a href="/leaderboard" className="text-red-400 hover:text-red-300 transition-colors flex items-center gap-1.5 font-bold tracking-wider">
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div> Live Leaderboards
+            </a>
             <a href="/os" className="text-brand-400 hover:text-brand-300 transition-colors flex items-center gap-1.5 font-semibold">
               <Cpu className="w-4 h-4" /> Council OS
             </a>
