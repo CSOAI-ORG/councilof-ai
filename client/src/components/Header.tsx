@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { GlobalSearch, GlobalSearchTrigger } from '@/components/GlobalSearch';
+import LivingPagesMenu from '@/components/LivingPagesMenu';
 
 // ---------------------------------------------------------------------------
 // MASTER NAVIGATION — the lean canonical IA.
@@ -388,6 +389,9 @@ export function Header() {
 
           {/* Right Side Actions — flex-nowrap + shrink-0 prevents vertical-letter collapse on 1280-1400px viewports */}
           <div className="hidden xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
+            {/* Living Pages Mini-Menu */}
+            <LivingPagesMenu variant="header" />
+
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
@@ -516,6 +520,11 @@ export function Header() {
               >
                 Chat
               </a>
+
+              {/* Living Pages Mini-Menu (mobile) */}
+              <div className="px-4 py-3 border-t border-border mt-2">
+                <LivingPagesMenu variant="inline" />
+              </div>
 
               {navigation.map((item) => (
                 <div key={item.name} className="space-y-1">
