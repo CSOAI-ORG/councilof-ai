@@ -43,7 +43,7 @@ jobs:
       - name: Sitemap must list indices hub + slugs
         run: |
           for p in /indices /indices/ai-economy /indices/human-labour /indices/humanoid-labour /products /powered-by; do
-            rg -F "<loc>https://councilof.ai${p}</loc>" public/sitemap.xml
+            grep -F "<loc>https://councilof.ai${p}</loc>" public/sitemap.xml
           done
 
       - name: Vitest labourIndices firewall

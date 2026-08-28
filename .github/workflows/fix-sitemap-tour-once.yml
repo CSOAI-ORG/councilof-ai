@@ -1,0 +1,64 @@
+# One-shot: restore /tour (not /cloud) in generate-sitemap REQUIRED/PRIORITY, then self-delete.
+name: fix-sitemap-tour-once
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cursor/instruments-catalog-7fb8
+    paths:
+      - ".github/workflows/fix-sitemap-tour-once.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Replace mistaken /cloud with /tour in sitemap generator
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("scripts/generate-sitemap.mjs")
+          text = p.read_text()
+          if "/cloud" not in text and "/tour" in text:
+              print("already tour-correct")
+          else:
+              fixed = text.replace("/cloud", "/tour")
+              assert fixed.count("/tour") >= 2, fixed.count("/tour")
+              assert "/cloud" not in fixed
+              p.write_text(fixed)
+              print("fixed cloud -> tour")
+          PY
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Regenerate sitemap with indices slugs
+        run: node scripts/generate-sitemap.mjs
+
+      - name: Assert indices slugs + tour
+        run: |
+          grep -F '"/tour"' scripts/generate-sitemap.mjs
+          ! grep -F '"/cloud"' scripts/generate-sitemap.mjs
+          for p in /indices/ai-economy /indices/human-labour /indices/humanoid-labour; do
+            grep -F "<loc>https://councilof.ai${p}</loc>" public/sitemap.xml
+          done
+
+      - name: Commit fix, sitemap; remove one-shots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/generate-sitemap.mjs public/sitemap.xml
+          git rm -f .github/workflows/fix-sitemap-tour-once.yml || true
+          git rm -f .github/workflows/regenerate-sitemap-once.yml || true
+          if git diff --staged --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "fix(sitemap): restore /tour required path; regenerate indices slugs"
+          git push
