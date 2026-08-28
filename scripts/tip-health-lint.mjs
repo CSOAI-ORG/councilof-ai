@@ -38,6 +38,7 @@ for (const g of GUARDS) {
 
 function walk(dir) {
   for (const name of readdirSync(dir)) {
+    if (name === ".restore-tmp" || name.startsWith(".")) continue;
     const fp = join(dir, name);
     const st = statSync(fp);
     if (st.isDirectory()) walk(fp);
