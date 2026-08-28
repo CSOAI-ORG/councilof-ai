@@ -37,7 +37,8 @@ import type { LobbyTabId } from "@/components/lobby/tabs";
 
 type Door =
   | { kind: "pane"; pane: LobbyTabId }
-  | { kind: "task"; task: LobbyTaskId };
+  | { kind: "task"; task: LobbyTaskId }
+  | { kind: "route"; path: string };
 
 interface Tool {
   id: string;
@@ -73,7 +74,7 @@ const TOOLS: Tool[] = [
       "Otherwise each answer lives on a different page, and nothing you find on one is usable on the next.",
     image: "/images/band/hardened.png",
     alt: "A field of pale solids joined by a lattice of green light",
-    door: { kind: "pane", pane: "home" },
+    door: { kind: "route", path: "/os" },
   },
   {
     id: "tool-board",
@@ -185,6 +186,7 @@ const TOOLS: Tool[] = [
 ];
 
 function hrefFor(door: Door): string {
+  if (door.kind === "route") return door.path;
   return door.kind === "pane" ? `/?lobby=${door.pane}` : `/?task=${door.task}`;
 }
 
@@ -225,6 +227,8 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           // Plain left-click opens the pane in place. Modified clicks (new tab,
           // new window, download) are left entirely alone — the href is real.
           if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+          // Route doors navigate directly — do not open lobby on homepage.
+          if (tool.door.kind === "route") return;
           e.preventDefault();
           if (tool.door.kind === "pane") openLobby({ pane: tool.door.pane });
           else openLobby({ task: tool.door.task });
