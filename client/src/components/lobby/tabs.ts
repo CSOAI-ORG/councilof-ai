@@ -117,7 +117,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "Industry × regulation grid — living data from GET /api/gspc. Printer of the board, not a simulation.",
     path: "",
     kind: "native",
-    cues: /\b(matrix|industry|sector|regulation|crosswalk|east.?west|compliance grid)\b/i,
+    cues: /\b(matrix|industry|sector|regulation|east.?west|compliance grid)\b/i,
   },
   {
     id: "results",
@@ -229,7 +229,9 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "ras",
     label: "Readiness assessment",
     blurb: "The guided readiness route — structured questions, human-readable output.",
-    path: "/assess",
+    // Unique rail path: /readiness-assessment hops to /assess (see App redirects).
+    // Keeping /assess only on "Get measured" so one destination has one owner.
+    path: "/readiness-assessment",
     cues: /\b(ras|readiness assessment|booking|human.?rail)\b/i,
   },
   {
