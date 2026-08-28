@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT
 /**
  * verify-card.mjs — verify a Council of AI measurement card from JavaScript.
  *
