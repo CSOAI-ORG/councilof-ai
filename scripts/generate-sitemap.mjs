@@ -40,7 +40,7 @@ const PRIORITY = new Map([
   ["/gspc-gap-map", P_HIGH],
   ["/live-ledger", P_HIGH],
   ["/instrument", P_HIGH],
-  ["/tour", P_HIGH],
+  ["/cloud", P_HIGH],
   ["/learn", P_HIGH],
   ["/article-50", P_HIGH],
   ["/benchmarks", P_HIGH],
@@ -54,6 +54,9 @@ const PRIORITY = new Map([
   ["/contact", P_HIGH],
   ["/blog", P_HIGH],
   ["/indices", P_HIGH],
+  ["/indices/ai-economy", P_HIGH],
+  ["/indices/human-labour", P_HIGH],
+  ["/indices/humanoid-labour", P_HIGH],
   ["/products", P_HIGH],
   ["/powered-by", P_HIGH],
 ]);
@@ -205,6 +208,11 @@ for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance
   const lp = `/library/${s}`;
   if (!seen.has(lp)) { seen.add(lp); paths.push(lp); }
 }
+// Indices UNMEASURED pages are /indices/:slug (param route) — list hub children explicitly (#215).
+for (const slug of ["ai-economy", "human-labour", "humanoid-labour"]) {
+  const ip = `/indices/${slug}`;
+  if (!seen.has(ip)) { seen.add(ip); paths.push(ip); }
+}
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 
 // --- Machine contracts (audit rec 5, lane d971a38) — not App.tsx routes, but
@@ -270,8 +278,11 @@ const REQUIRED = [
   "/refutation-ledger",
   "/instrument",
   "/live-ledger",
-  "/tour",
+  "/cloud",
   "/indices",
+  "/indices/ai-economy",
+  "/indices/human-labour",
+  "/indices/humanoid-labour",
   "/products",
   "/powered-by",
   "/api/indices",

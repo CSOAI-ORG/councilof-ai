@@ -1,5 +1,6 @@
-# NEXT_300 #149 — land designed regulator PDF on tip.
-# Prefer decode of MCP-safe .b64 sidecar; Playwright regen is optional fallback.
+# NEXT_300 #149 — regenerate designed regulator PDF from print HTML (Playwright).
+# Designed PDF already on tip; this keeps it in sync when HTML changes.
+# Do not invent MEASURED labour scores.
 name: pdf-regulator-indices
 
 on:
@@ -11,9 +12,6 @@ on:
       - master
     paths:
       - "public/regulator-indices-one-pager.html"
-      - "public/regulator-indices-one-pager.pdf.b64"
-      - "public/regulator-indices-one-pager.pdf.b64.part*"
-      - "scripts/decode-regulator-pdf.mjs"
       - "scripts/pdf-regulator-indices.mjs"
       - ".github/workflows/pdf-regulator-indices.yml"
 
@@ -30,20 +28,17 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Decode MCP-safe PDF sidecar
+      - name: Install Playwright Chromium
+        run: npx --yes playwright install --with-deps chromium
+
+      - name: Serve public + print PDF
         run: |
-          if [ -f public/regulator-indices-one-pager.pdf.b64 ] || compgen -G "public/regulator-indices-one-pager.pdf.b64.part*" > /dev/null; then
-            node scripts/decode-regulator-pdf.mjs
-          else
-            echo "No .b64 sidecar — installing Playwright for HTML print"
-            npx --yes playwright install --with-deps chromium
-            python3 -m http.server 43125 --directory public &
-            for i in $(seq 1 40); do
-              curl -sf "http://127.0.0.1:43125/regulator-indices-one-pager.html" >/dev/null && break
-              sleep 1
-            done
-            BASE_URL=http://127.0.0.1:43125 npm run pdf:regulator-indices
-          fi
+          python3 -m http.server 43125 --directory public &
+          for i in $(seq 1 40); do
+            curl -sf "http://127.0.0.1:43125/regulator-indices-one-pager.html" >/dev/null && break
+            sleep 1
+          done
+          BASE_URL=http://127.0.0.1:43125 npm run pdf:regulator-indices
           python3 - <<'PY'
           from pathlib import Path
           p = Path("public/regulator-indices-one-pager.pdf")
@@ -60,6 +55,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "PDF unchanged"
           else
-            git commit -m "chore(pdf): land designed regulator-indices one-pager (#149)"
+            git commit -m "chore(pdf): regenerate designed regulator-indices one-pager (#149)"
             git push
           fi

@@ -1,0 +1,53 @@
+# Tip guards for instruments-catalog overnight work — never invent MEASURED labour scores.
+name: tip-honesty
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cursor/instruments-catalog-7fb8
+    paths:
+      - "client/**"
+      - "public/sitemap.xml"
+      - "scripts/tip-health-lint.mjs"
+      - "scripts/generate-sitemap.mjs"
+      - "scripts/verify-staged-hf.mjs"
+      - "client/src/data/labourIndices.ts"
+      - "client/src/data/labourIndices.test.ts"
+      - "package.json"
+      - ".github/workflows/tip-honesty.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  tip-honesty:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Tip-health (NewHome / AppMainRoutes / AppLazy exact sizes)
+        run: npm run lint:tip-health
+
+      - name: Sitemap regenerate + flagship asserts
+        run: node scripts/generate-sitemap.mjs
+
+      - name: Sitemap must list indices hub + slugs
+        run: |
+          for p in /indices /indices/ai-economy /indices/human-labour /indices/humanoid-labour /products /powered-by; do
+            rg -F "<loc>https://councilof.ai${p}</loc>" public/sitemap.xml
+          done
+
+      - name: Vitest labourIndices firewall
+        run: npx vitest run client/src/data/labourIndices.test.ts
+
+      - name: Verify staged HF packs (no token)
+        run: npm run verify:staged-hf
