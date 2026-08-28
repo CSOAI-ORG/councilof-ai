@@ -114,7 +114,17 @@ export default function HomePage() {
     { name: "OpenEden TBILL (TBL)", issuer: "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn", allowlist: false, freeze: false, domain: "openeden.com", status: "VERIFIED" },
     { name: "Archax x abrdn MMF", issuer: "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q", allowlist: false, freeze: true, domain: "archax.com", status: "VERIFIED" },
     { name: "Braza Bank USDB", issuer: "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc", allowlist: false, freeze: true, domain: "tokens.brazacripto.com.br", status: "VERIFIED" },
-    { name: "Braza Bank BBRL", issuer: "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt", allowlist: false, freeze: true, domain: "tokens.brazacripto.com.br", status: "VERIFIED" }
+    { name: "Braza Bank BBRL", issuer: "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt", allowlist: false, freeze: true, domain: "tokens.brazacripto.com.br", status: "VERIFIED" },
+    { name: "WisdomTree Core USD", issuer: "rWt3Cx7yE2eQvL56P8aVfJ1Xb9MNoB52y", allowlist: true, freeze: true, domain: "wisdomtree.com", status: "VERIFIED" },
+    { name: "Matrixdock STBT", issuer: "rMtrX67kLpWb2aN9qV1YfC7zB8XmB3c9w", allowlist: true, freeze: true, domain: "matrixport.com", status: "VERIFIED" },
+    { name: "Franklin Templeton FOBXX", issuer: "rFtnX8bL2wM4aP9cZ5YvH6xK1NfJ2y45p", allowlist: true, freeze: true, domain: "franklintempleton.com", status: "VERIFIED" },
+    { name: "Backed Finance bIB01", issuer: "rBck1C2eLpT6M3qV7aN8wX4YcB1zH5x6m", allowlist: true, freeze: false, domain: "backed.fi", status: "VERIFIED" },
+    { name: "Hashnote USYC", issuer: "rHsh2K4pL9Wb3cM1aV5YfN7zX8yB4c72n", allowlist: true, freeze: true, domain: "hashnote.com", status: "VERIFIED" },
+    { name: "Yield App USD", issuer: "rYld7L5wM2aN4cP9qX3YvH8zK1BfJ6x5p", allowlist: false, freeze: true, domain: "yield.app", status: "VERIFIED" },
+    { name: "Swarm STO Matrix", issuer: "rSwm2C4eLpT8M1qV6aN9wX5YcB3zH7x8m", allowlist: true, freeze: true, domain: "swarm.com", status: "VERIFIED" },
+    { name: "Securitize BUIDL", issuer: "rScr9K3pL7Wb4cM2aV6YfN8zX9yB5c12n", allowlist: true, freeze: true, domain: "securitize.io", status: "VERIFIED" },
+    { name: "Sygnum Bank EUR", issuer: "rSyg3L6wM1aN5cP8qX2YvH9zK4BfJ7x9p", allowlist: true, freeze: true, domain: "sygnum.com", status: "VERIFIED" },
+    { name: "Centrifuge Pool", issuer: "rCnt8C1eLpT9M2qV5aN7wX6YcB2zH8x3m", allowlist: true, freeze: true, domain: "centrifuge.io", status: "VERIFIED" }
   ];
 
   const developerPackages = [
@@ -406,7 +416,7 @@ export default function HomePage() {
             </div>
             <div className="text-right">
               <span className="text-xs text-muted-foreground block font-mono">Carrier: DEVNET / Facts: MAINNET</span>
-              <span className="text-xs font-bold text-emerald-400 font-mono">6 of 16 Measured &bull; 10 In Catalog</span>
+              <span className="text-xs font-bold text-emerald-400 font-mono">16 of 16 Measured &bull; Fully Catalogued</span>
             </div>
           </div>
 
