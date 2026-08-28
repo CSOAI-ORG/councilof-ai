@@ -67,6 +67,18 @@ const PAGES = [
   "/disclaimers",
 ];
 
+// Functions-first leftover hops (not necessarily in public/_redirects).
+const LIVE_HOPS = [
+  ["/pricing", "/os?lobby=assess&task=pricing-overview"],
+  ["/plans", "/os?lobby=assess&task=pricing-overview"],
+  ["/enterprise-plans", "/os?lobby=assess&task=pricing-overview"],
+  ["/enterprise", "/os?lobby=assess&task=enterprise-start"],
+  ["/get-measured", "/os?lobby=assess&task=get-measured"],
+  ["/overlay", "/os?lobby=home"],
+  ["/certification", "/honesty/"],
+  ["/claimguard", "/honesty/"],
+];
+
 let failed = 0;
 function pass(name, detail = "") {
   console.log(`PASS  ${name}${detail ? " — " + detail : ""}`);
@@ -130,6 +142,21 @@ for (const [from, to] of ALIASES) {
   }
 }
 
+for (const [from, to] of LIVE_HOPS) {
+  try {
+    const res = await fetchHead(from);
+    const loc = res.headers.get("location") || "";
+    const destOk = loc.includes(to) || loc.endsWith(to);
+    if ((res.status === 301 || res.status === 302 || res.status === 308) && destOk) {
+      pass(`live hop ${from} ${res.status} → ${loc}`);
+    } else {
+      fail(`live hop ${from} expected 308 ${to}`, `${res.status} ${loc}`);
+    }
+  } catch (e) {
+    fail(`live hop ${from}`, String(e).slice(0, 120));
+  }
+}
+
 for (const path of MUST_RESOLVE) {
   try {
     const { res, text } = await fetchText(path);
@@ -178,6 +205,37 @@ try {
   }
 } catch (e) {
   fail("lobby chunk check", String(e).slice(0, 120));
+}
+
+try {
+  const { res, text } = await fetchText("/sitemap.xml");
+  if (!res.ok) fail("sitemap.xml", `HTTP ${res.status}`);
+  else {
+    const hasOs = text.includes("<loc>https://councilof.ai/os</loc>") || text.includes("<loc>https://councilof.ai/os/</loc>");
+    const hasHonesty = text.includes("councilof.ai/honesty");
+    const hasCloud = /<loc>https:\/\/councilof\.ai\/cloud\/?<\/loc>/.test(text);
+    (hasOs ? pass : fail)("sitemap lists /os");
+    (hasHonesty ? pass : fail)("sitemap lists /honesty");
+    (hasCloud ? fail : pass)("sitemap does not list leftover /cloud 404", hasCloud ? "flagship 404" : "absent");
+  }
+} catch (e) {
+  fail("sitemap.xml", String(e).slice(0, 120));
+}
+
+try {
+  const { text: osHtml } = await fetchText("/os");
+  const osAsset = (osHtml.match(/assets\/OsLauncher[^"'\s]+/) || [])[0];
+  if (!osAsset) fail(" /os references OsLauncher chunk");
+  else {
+    const { text: osJs } = await fetchText("/" + osAsset);
+    if (osJs.includes("How the free rail works") && osJs.includes("Measure an enterprise system")) {
+      pass("Assess door honours task= copy", osAsset);
+    } else {
+      fail("Assess door task= copy missing", osAsset);
+    }
+  }
+} catch (e) {
+  fail("OsLauncher assessCopy", String(e).slice(0, 120));
 }
 
 if (failed) {

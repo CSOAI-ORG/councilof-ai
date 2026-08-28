@@ -73,7 +73,7 @@ const PRIORITY = new Map([
   ["/gspc-gap-map", P_HIGH],
   ["/live-ledger", P_HIGH],
   ["/instrument", P_HIGH],
-  ["/cloud", P_HIGH],
+  ["/tour", P_HIGH],
   ["/learn", P_HIGH],
   ["/article-50", P_HIGH],
   ["/benchmarks", P_HIGH],
@@ -364,6 +364,8 @@ console.log(
 
 // Flagship sanity check — these MUST be present.
 const REQUIRED = [
+  "/os",
+  "/honesty",
   "/gspc-arena",
   "/gspc-verify",
   "/gspc-anchors",
@@ -373,7 +375,8 @@ const REQUIRED = [
   "/refutation-ledger",
   "/instrument",
   "/live-ledger",
-  "/cloud",
+  // Living SovereignTour. /cloud is not an App route (live 404) — do not require it.
+  "/tour",
   // The six audience pages. They were redirect-suppressed for two days and nothing
   // failed, because nothing asserted they should be reachable. Now something does.
   ...FOR_PATHS,
