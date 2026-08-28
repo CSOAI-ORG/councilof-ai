@@ -43,7 +43,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   if (refused) return refused;
 
   if (/\b(pricing|plans?|how much|grade cost|is (it|verify|verification) free)\b/i.test(q)) {
-    return `No SaaS tiers. Measurement and verification are free forever. See GET /api/gspc, /gspc-verify/, /assess/, or the lobby door /?lobby=measured&task=pricing-overview.\n\n_Grounded in the published free rail, not by a model._`;
+    return `No SaaS tiers. Measurement and verification are free forever. See GET /api/gspc, /gspc-verify/, /assess/, or the lobby door /os?lobby=assess&task=pricing-overview.\n\n_Grounded in the published free rail, not by a model._`;
   }
 
   if (
@@ -167,7 +167,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
       `The **Council of AI** is an independent measurement instrument: it measures how AI systems behave against the rules that govern them, signs each result with Ed25519, and publishes what it cannot yet measure. It does **not** certify and issues no conformity mark.\n\n` +
       `The GSPC board publishes **${canon.publicCount}**` +
       (canon.unmeasured !== null && canon.slots !== null
-        ? ` \u2014 ${canon.unmeasured} of its ${canon.slots} slots carry no number, and say so`
+        ? ` \\u2014 ${canon.unmeasured} of its ${canon.slots} slots carry no number, and say so`
         : ``) +
       ` (${openNames.slice(0, 6).join(", ")}${openNames.length > 6 ? ", ..." : ""}). Verification is free forever; a grade is never sold.\n\n` +
       `Ask me a named axis, the method, Article 5, or how to get measured.\n\n_Grounded in the published board, not by a model._`
