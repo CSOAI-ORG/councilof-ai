@@ -17,6 +17,8 @@ npm run verify:staged-hf
 npm run hf:upload-staged
 ```
 
+CI: `.github/workflows/hf-upload-staged.yml` runs verify always; uploads only when org/repo secret `HF_TOKEN` is set (`workflow_dispatch` or pack-path pushes).
+
 Then confirm Hub `stat`, update `docs/HF_ORG_DATASET_INDEX.md`, and tick #139/#186/#253 in `docs/NEXT_300_MOVES.md` only after repos exist.
 
 Never invent MEASURED labour scores. Per-slot cards (`csoai/gspc-*-labour-index`, `gspc-ai-economy-index`) are **not** substitutes for these unified packs.

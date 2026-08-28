@@ -17,6 +17,8 @@ MCP OAuth (`hf_whoami`) may show **admin** on `csoai` and scopes including `cont
 
 Until a write token is in the environment, keep packs staged and leave #139/#186/#253 as 🔄. See `datasets/UPLOAD_DEFERRED.md`.
 
+CI helper: `.github/workflows/hf-upload-staged.yml` — set repository/org secret `HF_TOKEN`, then `workflow_dispatch` or push pack paths.
+
 ## Pre-upload verify (no token required)
 
 ```bash

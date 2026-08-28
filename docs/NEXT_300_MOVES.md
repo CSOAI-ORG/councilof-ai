@@ -4,7 +4,7 @@
 Measurement, not certification · UNMEASURED is honest · scores never sold · DSH = OS  
 Playbook: `docs/EAT_PLAYBOOK.md` · Crosswalk: `docs/ESTATE_CROSSWALK.md`
 
-Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
+Status legend: ✅ done · 🔄 in flight · ☐ open · 🚫 owner gate
 
 ---
 
@@ -41,7 +41,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 127 | DSH dashboard tile for indices | `/dashboard/measurement` | ✅ |
 | 128 | E2E smoke: /indices /products /powered-by | `e2e/tests/` | ✅ |
 | 129 | Vitest: labourIndices firewall constants | unit test | ✅ |
-| 130 | Merge-gate note: branch ≠ master prod | owner | ⛔ |
+| 130 | Merge-gate note: branch ≠ master prod | owner | 🚫 |
 
 ---
 
@@ -68,7 +68,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 147 | Refutation ledger row type for index claims | `kind: index-claim` · ✅ |
 | 148 | Public FAQ: why empty indices | `/indices` FaqBlock · ✅ |
 | 149 | Regulator-facing one-pager PDF | markdown ✅ · print HTML ✅ `/regulator-indices-one-pager.html` · print PDF ✅ `/regulator-indices-one-pager.pdf` · bespoke design ✅ |
-| 150 | Counsel review of index disclaimers | ⛔ |
+| 150 | Counsel review of index disclaimers | 🚫 |
 | 151–160 | Ten REPORTED citation captures (dated, linked, no scores) | `docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md` · ✅ |
 
 ---
@@ -85,8 +85,8 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 166 | Aviva-on-ledger gate check | corpus · ✅ |
 | 167 | Demo-play hard refuse in publisher | publishers | ✅ |
 | 168 | Publisher `--publish` requires `CSOAI_KEY_CUSTODY` | publishers | ✅ |
-| 169 | Custody decision: KMS vs Turnkey chosen | ⛔ |
-| 170 | KMS both-curves or Turnkey wired | ⛔ |
+| 169 | Custody decision: KMS vs Turnkey chosen | 🚫 |
+| 170 | KMS both-curves or Turnkey wired | 🚫 |
 | 171 | Testnet Memo pointer format frozen | RECEIPT-SPEC | ✅ |
 | 172 | EAS indexer compose (read-only) | infra · ✅ |
 | 173 | W3C VC 2.0 mapping draft for cards | `docs/W3C_VC_2_0_MEASUREMENT_CARD_MAPPING.md` · ✅ |
@@ -96,9 +96,9 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 177 | No AUM invented as MEASURED | `scripts/aum-not-measured-lint.mjs` · ✅ |
 | 178 | Option A child API keys design | `/powered-by` | ✅ |
 | 179 | White-label badge SVG | public | ✅ |
-| 180 | Securities counsel pack sent | ⛔ |
-| 181 | Counsel written OK for named securities | ⛔ |
-| 182 | First testnet signed RWA card | Stage 2 · unsigned TESTNET fixture ✅ · signed card ⛔ custody |
+| 180 | Securities counsel pack sent | 🚫 |
+| 181 | Counsel written OK for named securities | 🚫 |
+| 182 | First testnet signed RWA card | Stage 2 · unsigned TESTNET fixture ✅ · signed card 🚫 custody |
 | 183 | Verify path for RWA pack | `/gspc-verify` · ✅ |
 | 184 | OS Lobby card for RWA tool | MeasuredToolCard | ✅ |
 | 185 | DSH same card | dashboard | ✅ |
@@ -144,7 +144,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | # | Move | Field |
 |---|------|-------|
 | 231 | Keep attestation language template current | compliance | ✅ |
-| 232 | Custody decision doc owner-signed | ⛔ |
+| 232 | Custody decision doc owner-signed | 🚫 |
 | 233 | No Stripe-as-grade assert in CI | `scripts/no-stripe-as-grade-lint.mjs` · ✅ |
 | 234 | Payg/products copy audit HO.2 | copy | ✅ |
 | 235 | Privacy: surface-hits path-only | already · ✅ |
@@ -153,7 +153,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 238 | NRSRO / CRA disclaimer footer shared component | NrsroDisclaimer · ✅ |
 | 239 | UK 16939677 on products footer | Products · ✅ |
 | 240 | Export control note if any | legal · ✅ |
-| 241–250 | Counsel Qs 1–4 cleared (template §) | ⛔ |
+| 241–250 | Counsel Qs 1–4 cleared (template §) | 🚫 |
 
 ---
 
@@ -163,7 +163,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 |---|------|-------|
 | 251 | HF org `csoai` dataset index page | HF · org live ✅ (`csoai/*` datasets) |
 | 252 | Upload GSPC MEASURED snapshot (existing) | HF · ✅ existing `csoai/gspc-boards` (MEASURED boards) |
-| 253 | Upload indices UNMEASURED manifest | HF · local fixture ✅ · verify ✅ · upload 🔄 blocked on `HF_TOKEN` · `docs/HF_UPLOAD_RUNBOOK.md` · `datasets/UPLOAD_DEFERRED.md` |
+| 253 | Upload indices UNMEASURED manifest | HF · local fixture ✅ · verify ✅ · upload 🔄 blocked on `HF_TOKEN` · CI `hf-upload-staged.yml` ✅ · `docs/HF_UPLOAD_RUNBOOK.md` · `datasets/UPLOAD_DEFERRED.md` |
 | 254 | Upload RWA corpus REPORTED (no fake scores) | HF · ✅ existing `csoai/rwa-attest` (REPORTED corpus) |
 | 255 | Kaggle notebook: verify Ed25519 offline | `notebooks/kaggle/ed25519_offline_verify.py` · ✅ |
 | 256 | Kaggle: refuse labour MEASURED claims | `notebooks/kaggle/refuse_labour_measured.md` · ✅ |
@@ -197,7 +197,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 291 | Fail closed on custody miss | publishers | ✅ |
 | 292 | Fail closed on demo play | publishers | ✅ |
 | 293 | Public corrections for any bad card | ledger · ✅ |
-| 294 | Mainnet first clean play (post-counsel) | ⛔ |
+| 294 | Mainnet first clean play (post-counsel) | 🚫 |
 | 295–320 | Twenty-six clean-play refreshes | Stage 3 · catalog #303–308 ✅ · ops #313–314/#318 N/A ✅ · signed mainnet ☐ custody+counsel |
 
 ---
@@ -232,17 +232,17 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 364 | Press kit: UNMEASURED honesty | `docs/PRESS_KIT_UNMEASURED.md` · ✅ |
 | 365 | HF paper card for methodology | HF · draft ✅ `docs/HF_METHOD_PAPER_CARD_DRAFT.md` · publish ☐ freeze |
 | 366 | Kaggle competition? only if method frozen | later · gate ✅ `docs/METHOD_FREEZE_GATE.md` · competition ☐ freeze |
-| 367 | Partner Option A first design partner | sales ⛔ |
-| 368 | Child keys issued | eng ⛔ |
+| 367 | Partner Option A first design partner | sales 🚫 |
+| 368 | Child keys issued | eng 🚫 |
 | 369 | Public status page: indices UNMEASURED | StatusPage · ✅ |
-| 370 | Branch merge to master (owner) | ⛔ |
+| 370 | Branch merge to master (owner) | 🚫 |
 | 371 | Cloudflare Pages prod smoke | ops | ✅ |
 | 372 | Rollback plan if App truncate | ops | ✅ |
 | 373 | MCP push_files size discipline | AGENT_COORDINATION · ✅ |
 | 374 | Single-writer tip policy | AGENT_COORDINATION · ✅ |
 | 375–390 | Sixteen contact outreach (public artifacts only) | distro · template ✅ · tracker artifacts wired ✅ `docs/CONTACT_OUTREACH_TRACKER.md` · human send ☐ |
 | 391–399 | Nine quarterly freshness reviews | ops · ✅ |
-| 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta · ✅ code/docs ≥80%; remainder ⛔/🔄/human |
+| 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta · ✅ code/docs ≥80%; remainder 🚫/🔄/human |
 
 ---
 

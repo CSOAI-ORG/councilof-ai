@@ -1,0 +1,55 @@
+# NEXT_300 #139 / #186 / #253 — upload staged UNMEASURED HF packs when HF_TOKEN is set.
+# Never invent MEASURED labour scores. Skips cleanly when the org secret is absent.
+name: hf-upload-staged
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cursor/instruments-catalog-7fb8
+      - main
+      - master
+    paths:
+      - "datasets/labour-economy-unmeasured/**"
+      - "datasets/rwa-testnet-unmeasured/**"
+      - "scripts/hf-upload-staged.mjs"
+      - "scripts/verify-staged-hf.mjs"
+      - ".github/workflows/hf-upload-staged.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify staged packs (no token required)
+        run: npm run verify:staged-hf
+
+      - name: Check HF_TOKEN
+        id: auth
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "HF_TOKEN secret missing — packs stay staged (see datasets/UPLOAD_DEFERRED.md)"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Hugging Face CLI
+        if: steps.auth.outputs.present == 'true'
+        run: pip install -U "huggingface_hub[cli]"
+
+      - name: Upload staged UNMEASURED packs
+        if: steps.auth.outputs.present == 'true'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: npm run hf:upload-staged
