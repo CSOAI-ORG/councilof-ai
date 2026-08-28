@@ -20,7 +20,7 @@ export default function SovereignTwin() {
   async function mintPassport() {
     const holder = (pName || "").trim(); if (!holder) return;
     setMinting(true); setPassport(null);
-    const canonical = "CSOAI Personalisation Record \u00b7 " + pKind + " \u00b7 holder: " + holder + " \u00b7 issued " + new Date().toISOString();
+    const canonical = "CSOAI Personalisation Record · " + pKind + " · holder: " + holder + " · issued " + new Date().toISOString();
     try {
       const r = await fetch(EMG_GW + "/sign", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ message: canonical }) });
       if (r.ok) { const d = await r.json(); setPassport({ fingerprint: d.fingerprint, signature: d.signature, publicKey: d.publicKey, canonical: d.canonical || canonical }); }
@@ -62,7 +62,7 @@ export default function SovereignTwin() {
       <section className="relative">
         <canvas ref={cv} className="block h-[72vh] w-full" />
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-end pb-10 text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS \u00b7 your Council assistant Twin (DESIGN)</p>
+          <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · your Council assistant Twin (DESIGN)</p>
           <h1 className="mt-2 text-4xl sm:text-4xl font-black tracking-tight">{personalised ? "Your Council assistant Twin is personalised." : "Your Council assistant Twin."}</h1>
           <p className="mt-2 max-w-xl px-6 text-sm text-emerald-100/70">{personalised ? "Your personalisation record is signed. The Twin reflects your Council assistant's view of the world — it does not make behavioural claims." : "An illustrative mirror of Earth — day, night, every connector lit. Use the OS to personalise. No claims about emergent behaviour."}</p>
           <div className="pointer-events-auto mt-4 flex flex-wrap items-center justify-center gap-3 px-6">
@@ -78,7 +78,7 @@ export default function SovereignTwin() {
           <div className="text-sm font-bold text-emerald-200">Your Twin personalises as you use the OS.</div>
           <p className="mt-1 text-sm text-emerald-100/70">Every question in the <b className="text-emerald-200">Council dock</b>, every <b className="text-emerald-200">Governance Graph</b> query, every <b className="text-emerald-200">Council Space</b> experiment and <b className="text-emerald-200">Council</b> verdict updates your personalisation record.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <a href="/?lobby=home" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Ask the Governance Graph +6%</a>
+            <a href="/os?lobby=home" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Ask the Governance Graph +6%</a>
             <a href="/gspc-arena" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Run a Council Space experiment +10%</a>
             <a href="/try" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Convene the Council +10%</a>
           </div>
@@ -93,15 +93,15 @@ export default function SovereignTwin() {
             <select value={pKind} onChange={(e) => setPKind(e.target.value)} className="rounded-lg border border-emerald-500/25 bg-black/30 px-2 py-2 text-sm text-emerald-50">
               <option>Council twin</option><option>Enterprise agent</option><option>Government agent</option><option>Humanoid / robot</option>
             </select>
-            <button onClick={mintPassport} disabled={minting} className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{minting ? "Signing\u2026" : "Mint signed passport"}</button>
+            <button onClick={mintPassport} disabled={minting} className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-60">{minting ? "Signing…" : "Mint signed passport"}</button>
           </div>
           {passport && (
             <div className="mt-3 rounded-xl border border-emerald-500/20 bg-black/30 p-3 font-mono text-[11px] text-emerald-100/85">
-              <div className="text-emerald-300/80">\u2726 {pKind} \u00b7 {pName}</div>
+              <div className="text-emerald-300/80">✦ {pKind} · {pName}</div>
               {passport.fingerprint ? (<>
                 <div className="mt-1 break-all">seal <span className="text-emerald-200">{passport.fingerprint}</span></div>
-                <div className="mt-0.5 break-all text-emerald-300/60">sig {String(passport.signature).slice(0, 88)}\u2026</div>
-                <div className="mt-1 text-emerald-300/70">Ed25519-signed \u00b7 offline-verifiable via <a href="/protect" className="underline">proofof.ai</a> \u00b7 anchored to Layer 0.</div>
+                <div className="mt-0.5 break-all text-emerald-300/60">sig {String(passport.signature).slice(0, 88)}…</div>
+                <div className="mt-1 text-emerald-300/70">Ed25519-signed · offline-verifiable via <a href="/protect" className="underline">proofof.ai</a> · anchored to Layer 0.</div>
               </>) : (<div className="mt-1 text-amber-200/80">Signing service unavailable right now — the passport is issued once the Council assistant backend is reachable. Your details never leave your browser.</div>)}
             </div>
           )}
