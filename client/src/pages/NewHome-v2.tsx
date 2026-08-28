@@ -1541,7 +1541,7 @@ export default function NewHomeV2() {
               {
                 title: "AI Governance Readiness Assessment",
                 description: "Take our free 5-minute assessment to evaluate your organization's AI governance maturity and get personalized recommendations.",
-                href: "/readiness-assessment",
+                href: "/assess",
                 icon: Target,
                 color: "bg-blue-500",
                 badge: "Free Tool",

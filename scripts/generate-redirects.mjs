@@ -177,14 +177,20 @@ const EXISTING = [
   // live MCP registry door. csoai.org has the same leftover but is a different
   // Pages project (csoai-site), so that redirect belongs in its own deploy.
   "/fabric/agent-incident-reporter-mcp  /mcps/  308",
+
+  // 2026-08-28: /readiness-assessment was a 404 (no edge redirect, SPA catch-all
+  // inert). The live page is /assess. /ras was 200→ras.html (STOREFRONT) but the
+  // user requests a 308→/assess to kill the self-loop and unify the door.
+  "/readiness-assessment   /assess  308",
+  "/readiness-assessment/  /assess  308",
+  "/ras                    /assess  308",
+  "/ras/                   /assess  308",
 ];
 
 const STOREFRONT = [
   "/catalog.json  /catalog.json     200",
   "/claimguard    /claimguard.html  200",
   "/claimguard/   /claimguard.html  200",
-  "/ras           /ras.html         200",
-  "/ras/          /ras.html         200",
 ];
 
 const PERSONA_SLASH = [
