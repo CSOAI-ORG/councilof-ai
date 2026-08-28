@@ -1,1 +1,1 @@
-LOAD_FROM_DISK
+@file:///tmp/councilof-ai/scripts/crawler-view-gate.mjs
