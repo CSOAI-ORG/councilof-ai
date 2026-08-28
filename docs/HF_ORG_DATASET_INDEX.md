@@ -26,3 +26,5 @@ Pre-upload: `npm run verify:staged-hf` · runbook: `docs/HF_UPLOAD_RUNBOOK.md`
 | `datasets/rwa-testnet-unmeasured/` | `csoai/rwa-testnet-unmeasured` | #186 |
 
 Hub `stat` (2026-08-28): both target repos **missing**. Per-slot UNMEASURED README cards above are **not** a substitute for the unified staged manifests — upload when write token works (`npm run hf:upload-staged`).
+
+See also `datasets/UPLOAD_DEFERRED.md` (overnight batch status).
