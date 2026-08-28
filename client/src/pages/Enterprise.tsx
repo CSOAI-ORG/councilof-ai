@@ -517,4 +517,46 @@ export default function Enterprise() {
                   <div className="text-sm text-gray-600">Multiple Frameworks</div>
                 </div>
                 <div className="bg-orange-50 p-4 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-orange-600">Real-time</di
+                  <div className="text-2xl font-bold text-orange-600">Real-time</div>
+                  <div className="text-sm text-gray-600">Sync Updates</div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Integration Section */}
+      <div className="container py-20 max-w-6xl">
+        <div className="text-center mb-16">
+          <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Enterprise Integration</Badge>
+          <h2 className="text-4xl font-bold mb-4">Built for Enterprise Workflows</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Seamlessly integrate AI compliance into your existing infrastructure with our enterprise-grade tools.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* API Access */}
+          <Card className="p-8 border-2 border-slate-200 hover:border-emerald-300 transition-colors">
+            <Server className="h-12 w-12 text-emerald-600 mb-4" />
+            <h3 className="text-2xl font-bold mb-3">API Access</h3>
+            <p className="text-gray-600 leading-relaxed mb-4">
+              RESTful API with comprehensive documentation. Integrate compliance checks directly into your CI/CD pipeline, automate assessments, and retrieve reports programmatically.
+            </p>
+            <div className="bg-slate-900 text-emerald-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
+              <code>POST /api/v1/assessments</code><br />
+              <code>GET /api/v1/systems/:id/compliance</code><br />
+              <code>GET /api/v1/reports/export</code>
+            </div>
+            <Link href="/api-docs">
+              <Button variant="outline" className="mt-4">
+                View API Docs
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </Card>
+
+          {/* Bulk Import */}
+          <Card className="p-8 border-2 border-slate-200 hover:border-emerald-300 transition-colors">
+      
