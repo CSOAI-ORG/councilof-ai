@@ -7,6 +7,8 @@ import { BOARD_COUNT_OBSERVED, boardCountFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import BoardAttestation from "@/components/board/BoardAttestation";
+import AttestationDeepDive from "@/components/board/AttestationDeepDive";
+import { Activity } from "lucide-react";
 
 /**
  * /gspc-scoreboard — the live board, honestly displayed (NEXT-100 #2).
@@ -254,6 +256,7 @@ const FIN_CHIP: Record<string, string> = {
 export default function GspcScoreboard() {
   const [data, setData] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [axisDeepDive, setAxisDeepDive] = useState<Axis | null>(null);
   const [, axisParams] = useRoute("/gspc/:axis");
   const rawAxis = axisParams?.axis?.toLowerCase() ?? null;
   const wantAxis = rawAxis ? (AXIS_ALIAS[rawAxis] ?? rawAxis) : null;
@@ -309,6 +312,7 @@ export default function GspcScoreboard() {
   }, []);
 
   return (
+    <>
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(DATASET_LD) }} />
       <div className="mx-auto max-w-5xl px-6 py-14">
@@ -488,6 +492,7 @@ export default function GspcScoreboard() {
                   <th className="p-3 whitespace-nowrap">Leader accuracy</th>
                   <th className="p-3 whitespace-nowrap">95% CI</th>
                   <th className="p-3 whitespace-nowrap">Separation</th>
+                  <th className="p-3 whitespace-nowrap w-10" title="Open traces / graphs"></th>
                 </tr>
               </thead>
               <tbody>
@@ -552,6 +557,16 @@ export default function GspcScoreboard() {
                           <span className="ml-2 whitespace-nowrap font-mono text-[11px] text-gray-600">p={a.separation_p}</span>
                         )}
                       </td>
+                      <td className="p-3">
+                        <button
+                          onClick={() => setAxisDeepDive(a)}
+                          className="rounded-lg p-1.5 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
+                          title="Open traces / graphs"
+                          aria-label={`Open deep dive for ${a.axis}`}
+                        >
+                          <Activity className="h-4 w-4" />
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -580,20 +595,29 @@ export default function GspcScoreboard() {
             <h2 className="text-lg font-bold text-gray-900">In-lane — not board rows</h2>
             <p className="mt-1 text-sm text-gray-600">
               Published as <code>measured_in_lane</code> on GET /api/gspc. Not counted in totals.public_count.
+              Click any card for traces + graphs.
             </p>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {data.measured_in_lane.map((r: any) => (
-                <li key={r.axis} className="rounded-xl border border-emerald-600/10 bg-white p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-gray-900">{r.axis}</span>
-                    <span className="font-mono text-[10px] uppercase tracking-wide text-gray-600">{r.status}</span>
-                  </div>
-                  <p className="mt-1 text-xs text-gray-600">{r.bench || r.task}</p>
-                  {typeof r.n === "number" && (
-                    <p className="mt-2 font-mono text-sm tabular-nums text-gray-700">
-                      {typeof r.accuracy === "number" ? (r.accuracy * 100).toFixed(0) : "—"} · n={r.n}
-                    </p>
-                  )}
+                <li key={r.axis}>
+                  <button
+                    onClick={() => setAxisDeepDive(r)}
+                    className="w-full rounded-xl border border-emerald-600/10 bg-white p-4 text-left transition-all hover:border-emerald-400/40 hover:shadow-md"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-gray-900">{r.axis}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[10px] uppercase tracking-wide text-gray-600">{r.status}</span>
+                        <Activity className="h-3.5 w-3.5 text-emerald-600" />
+                      </div>
+                    </div>
+                    <p className="mt-1 text-xs text-gray-600">{r.bench || r.task}</p>
+                    {typeof r.n === "number" && (
+                      <p className="mt-2 font-mono text-sm tabular-nums text-gray-700">
+                        {typeof r.accuracy === "number" ? (r.accuracy * 100).toFixed(0) : "—"}% · n={r.n}
+                      </p>
+                    )}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -623,5 +647,15 @@ export default function GspcScoreboard() {
         </p>
       </div>
     </div>
+
+    {/* Axis Deep Dive Modal */}
+    {axisDeepDive && (
+      <AttestationDeepDive
+        kind="axis"
+        data={{ ...data, selectedAxis: axisDeepDive }}
+        onClose={() => setAxisDeepDive(null)}
+      />
+    )}
+    </>
   );
 }
