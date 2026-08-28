@@ -13,9 +13,11 @@ interface LeaderboardEntry {
 }
 
 interface Axis {
-  id: string;
-  name: string;
-  questions: number;
+  axis: string;
+  id?: string;
+  name?: string;
+  n?: number;
+  questions?: number;
   tags: string[];
   leaderboard: LeaderboardEntry[];
 }
@@ -110,15 +112,15 @@ export default function LeaderboardPage() {
 
       <div className="space-y-16">
         {axes.map((axis) => (
-          <div key={axis.id} className="bg-card/60 backdrop-blur-md border border-border/50 rounded-3xl overflow-hidden hover:shadow-2xl hover:border-brand-500/30 transition-all duration-500 group">
+          <div key={axis.id || axis.axis} className="bg-card/60 backdrop-blur-md border border-border/50 rounded-3xl overflow-hidden hover:shadow-2xl hover:border-brand-500/30 transition-all duration-500 group">
             <div className="p-6 md:p-8 bg-gradient-to-r from-background to-transparent border-b border-border/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h2 className="text-2xl font-bold flex items-center gap-3">
-                  {axis.name}
+                  {axis.name || axis.axis}
                 </h2>
                 <div className="flex items-center gap-3 mt-3">
                   <span className="text-xs font-mono text-muted-foreground bg-background/50 px-2 py-1 rounded border border-border/30">ID: {axis.id}</span>
-                  <span className="text-xs font-mono text-muted-foreground bg-background/50 px-2 py-1 rounded border border-border/30">Queries: {axis.questions}</span>
+                  <span className="text-xs font-mono text-muted-foreground bg-background/50 px-2 py-1 rounded border border-border/30">Queries: {axis.questions || axis.n}</span>
                   {axis.tags && axis.tags.map(t => (
                     <span key={t} className="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/20">{t}</span>
                   ))}
@@ -126,7 +128,7 @@ export default function LeaderboardPage() {
               </div>
               <div className="text-right shrink-0">
                 <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">HuggingFace Sync</div>
-                <a href="#" className="text-sm font-semibold text-brand-400 hover:text-brand-300 flex items-center gap-1 justify-end">csoai/{axis.id} <ArrowUpRight className="w-3 h-3" /></a>
+                <a href="#" className="text-sm font-semibold text-brand-400 hover:text-brand-300 flex items-center gap-1 justify-end">csoai/{axis.id || axis.axis} <ArrowUpRight className="w-3 h-3" /></a>
               </div>
             </div>
 
