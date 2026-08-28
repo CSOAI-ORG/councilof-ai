@@ -29,7 +29,7 @@ export const SECTION_TITLES: Record<string, RotatingTitle> = {
     after: "— live, and recomputable.",
   },
   arena: {
-    before: "Model versus model, 24/7 —",
+    before: "Model versus model —",
     words: ["graded by fixed rules", "never by another model", "ties stay ties", "every round signable"],
     after: "",
   },

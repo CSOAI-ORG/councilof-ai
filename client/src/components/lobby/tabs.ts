@@ -36,6 +36,7 @@
 export type LobbyTabId =
   | "home"
   | "board"
+  | "matrix"
   | "results"
   | "models"
   | "tools"
@@ -109,6 +110,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "/gspc-scoreboard",
     kind: "native",
     cues: /\b(board|scoreboard|score|axes|axis|gspc|leaderboard)\b/i,
+  },
+  {
+    id: "matrix",
+    label: "Regulation matrix",
+    blurb: "Industry × regulation grid — living data from GET /api/gspc. Printer of the board, not a simulation.",
+    path: "",
+    kind: "native",
+    cues: /\b(matrix|industry|sector|regulation|crosswalk|east.?west|compliance grid)\b/i,
   },
   {
     id: "results",

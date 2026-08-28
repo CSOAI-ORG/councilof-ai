@@ -11,6 +11,7 @@ import { personaSpeak, stopVoice } from "../lib/sovPersona";
 import { useLedger, type DecisionRecord } from "../hooks/useLedger";
 import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
 import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } from "../components/CouncilGalaxy";
+import ArenaDoorPanel from "../components/gspc/ArenaDoorPanel";
 
 // SOV SPACE is the container OS — the arena, the globe and the towns live
 // INSIDE it as layers, not as separate products (Nick's unification law,
@@ -695,6 +696,11 @@ export default function CouncilSpace() {
             <div ref={endRef} />
           </div>
         </div>
+      </section>
+
+      {/* Arena Door Panel — the living door mechanic from GET /api/gspc */}
+      <section className="mx-auto max-w-6xl px-6 pb-8">
+        <ArenaDoorPanel />
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-8">

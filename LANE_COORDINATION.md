@@ -329,3 +329,18 @@ rewrote the historical entries (corrections-register discipline). Fleet/owner fl
   Access (20k GPU hrs, no deadline); sign-ups = stage-only for agents, Nick submits
   (fleet paste honesty boundary). Sink port 55664, A100-measurement 13440 (14-model
   ollama fleet) — updated in this notice for all lanes.
+
+## 2026-08-28 · K3 AUTO-BATCH audit findings (append)
+
+1. crawler-view-gate FAIL root-caused (3 branches incl. k3/runway): the probe route
+   /this-route-should-not-exist-crawler-gate-probe returns 404 WITH a 284-char body —
+   the gate flags the soft-404. Fix = deploy lane: make the probe route a HARD 404
+   (empty/standard body per the gate contract) in public/_redirects or the 404 handler.
+   NOT a content failure — doc-only PRs hit it identically.
+2. JS/action JCS dispatch SHIPPED (canon:jcs-rfc8785, pinned semantics) — python +
+   JS both dispatch now; verify-card.mjs = last (queued).
+3. XRPL location attempt #4: no keyless issuer source (CoinPaprika list, xrpl.org
+   static) — final honest status: 10 issuers remain declared not-located; method set.
+4. Inspect AI adoption note: primary harness choice confirmed (MIT, UK AISI);
+   preimage = config-digest + instrument version for measurement runs (doctrine:
+   "measured with Inspect AI", never "Inspect-certified"). Doc queued.

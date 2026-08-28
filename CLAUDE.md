@@ -23,7 +23,9 @@ Shared working agreement for ALL agents on this repo. Read this first.
 - **UNMEASURED is first-class** — never claim MEASURED before it is measured, and never invent a number.
 - No public $ prices. Verification is free forever; a grade is never sold.
 - Banned public strings are enforced by `scripts/brand-gate.mjs` (incl. internal codenames).
-- Board card index is **frozen at the verifiable floor of 150** — see `BOARD-RULING.md`.
+- Board card index is **313 cards** (OWNER RULING 2026-08-27, supersedes the 150 freeze) — see `BOARD-RULING.md`.
+  150 of those verify against `did:web:csoai.org#card-attestation-1`. Index 313 ≠ 313 verified.
+  No agent may clamp the index to any constant.
 
 ## How we work (see council-os/PLAYBOOK.md for the evidence)
 - **One lane = one writer = one branch/worktree.** Never a shared checkout. Claim in council-os/LANES.md.
@@ -33,27 +35,28 @@ Shared working agreement for ALL agents on this repo. Read this first.
 - **Bytes adjudicate.** Verify the underlying bytes, not the structure or the commit message.
 
 ## The OS ('OpenGridWorks OS')
-- Home: client/src/pages/OsLauncher.tsx -> route /os. 18 app tiles + hero 'Get certified' CTA + live Sovereign Town heartbeat + Layer 0 readiness ring.
+- Home: client/src/pages/OsLauncher.tsx -> route /os. 18 app tiles + hero CTA + live Sovereign Town heartbeat + Layer 0 readiness ring.
 - Header: client/src/components/Header.tsx has the front-door link 'Open OS' -> /os (desktop + mobile).
 - Tile routes (all exist): /sovereign-town /command-center /mcp-fleet /layer0 /global-regulations /readiness-assessment /crosswalks /oscal /evidence /models /framework-catalog /policy-generator /risk-heatmap /webhooks /certification /pricing + /globe.html /globe3d.html
+- **Language note:** UI may say "Get certified" but doctrine is MEASURE / SIGN / RE-ATTEST, never "certify". Do not add new "certify" copy.
 
 ## Recent PRs (all merged to master + LIVE)
 - #18 OS front-door 'Open OS' CTA in Header
 - #19 Four governance flagship tiles (Layer 0 Protocol, Regulation Atlas, Readiness Check, Framework Crosswalks)
-- #20 Hero 'Get certified' CTA + Get Certified / Pricing tiles
+- #20 Hero CTA + Pricing tiles
 
 ## RELIABLE editing of the GitHub web editor (CodeMirror 6) — IMPORTANT
 Clipboard + cmd+v paste is UNRELIABLE in the browser-automation env. Do NOT rely on it. Instead drive CM6 directly:
 1. Find the EditorView: scan DOM (.cm-editor/.cm-content/.cm-line) for a property node[k].view where v.state.doc and v.dispatch exist. On GitHub it is the .cm-line node's cmTile.view.
 2. Replace whole doc: view.dispatch({changes:{from:0, to:view.state.doc.length, insert:NEWCONTENT}})
 3. Trip GitHub's dirty-detector so 'Commit changes' enables: document.querySelector('.cm-content').dispatchEvent(new InputEvent('input',{bubbles:true}))
-4. VERIFY view.state.doc.toString() === NEWCONTENT before committing. Then Commit -> new branch -> PR -> wait Vercel checks green -> Merge.
+4. VERIFY view.state.doc.toString() === NEWCONTENT before committing. Then Commit -> new branch -> PR -> wait GHA checks green -> Merge.
 Note: screenshot scale vs CSS coords drifts (1139 vs 1027 wide) — compute click coords from window.innerWidth, or read element rects live.
 
 ## Guardrails
 - GitHub MCP token is DEAD ('Bad credentials'). Edit via the authenticated browser only (or a fresh PAT if the owner provides one — that makes edits instant via the API).
 - Never break/redirect the static csoai.org revenue apex without explicit owner OK.
-- client/ changes: branch -> PR -> build-verify (Vercel csoai-v2-app green) -> merge. api-server/ and packages/ are inert (no deploy wired) — safe to commit direct.
+- client/ changes: branch -> PR -> build-verify (GHA deploy.yml green) -> merge. api-server/ and packages/ are inert (no deploy wired) — safe to commit direct.
 - VITE_API_BASE switches the front-end tools from demo to live backend. api-server/ must be deployed to the GCP VM (OWNER action) to light up /api/mcp (216 servers), real evidence, webhooks and the A2A gateway.
 
 ## Division of work — CLAIM a lane before editing (avoid collisions)

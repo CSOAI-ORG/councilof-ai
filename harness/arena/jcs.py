@@ -34,17 +34,21 @@ __all__ = ["canonicalize", "JCS"]
 
 def _float_to_js(value: float) -> str:
     """ECMAScript Number::toString for a finite float (the only case JCS serializes as a
-    number). Integral floats -> integer string (no '.0'); otherwise shortest round-trip."""
+    number). Integral floats within JS's no-exponent window [10^-6, 10^21) emit as a decimal
+    integer (no '.0'); at or beyond 1e21 JS switches to exponent form. -0.0 -> "0".
+    repr() gives the shortest round-trip; JS Number::toString uses the same shortest form
+    with the same exponent threshold, so repr() is the correct cross-language match for the
+    finite range."""
     if math.isnan(value) or math.isinf(value):
         # JCS rejects non-finite numbers; RFC 8785 spec says such inputs are invalid.
         raise ValueError("JCS: non-finite number not canonicalizable")
-    if value.is_integer():
-        # Integral float: emit as integer (no trailing .0). Guard against -0.0 -> "0".
-        if value == 0:
-            return "0"
+    if value == 0:
+        return "0"  # covers -0.0 -> "0" (JCS normalizes negative zero)
+    if value.is_integer() and 1e-6 <= abs(value) < 1e21:
+        # JS emits integral floats in this window as decimal integers, no '.0'.
         return str(int(value))
-    # Non-integral: shortest round-trip via repr (Python repr is shortest round-trip for
-    # floats, matching JS Number::toString for the finite non-integral range in practice).
+    # >=1e21 or <1e-6: JS uses exponent form; repr() already emits shortest exponent form
+    # (e.g. repr(1e21) == '1e+21', matching JSON.stringify(1e21) == '1e+21').
     return repr(value)
 
 

@@ -37,7 +37,7 @@ describe("fetchAxes", () => {
       ok: true,
       headers: { get: () => "application/json" },
       json: async () => ({
-        totals: { public_count: "14 measured of 14 quotable" },
+        totals: { public_count: "22 axes · 15 measured" },
         measured_on: { date: "2026-08-25" },
         axes: [
           { axis: "governance", bench: "GovBench", n: 237, accuracy: 0.7, status: "MEASURED" },
@@ -51,7 +51,7 @@ describe("fetchAxes", () => {
 
     const r = await fetchAxes();
     expect(r.source).toBe("wire");
-    expect(r.publicCount).toBe("14 measured of 14 quotable");
+    expect(r.publicCount).toBe("22 axes · 15 measured");
     expect(r.axes.map((a) => a.axis)).toEqual(["governance", "jail"]);
     expect(r.axes.every((a) => a.axis !== "slot15")).toBe(true);
     expect(r.inLane.map((a) => a.axis)).toEqual(["slot15"]);

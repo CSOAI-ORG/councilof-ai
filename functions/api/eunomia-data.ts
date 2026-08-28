@@ -6,8 +6,8 @@
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const key = url.searchParams.has("key") ? "keyed" : "public";
-  const wantsGate = url.searchParams.get("x402") === "1";
-  const paid = url.searchParams.get("x402") === "paid" || context.request.headers.get("x-payment") != null;
+  // x-payment header is the only accepted payment proof; ?x402=paid is NOT payment.
+  const paid = context.request.headers.get("x-payment") != null;
   const origin = url.origin;
   const fines = [
     { actor: "Clearview AI", jurisdiction: "EU/UK/IT", regime: "GDPR", amount: ">€100M", status: "cumulative (multi-MSA)" },
@@ -27,12 +27,13 @@ export const onRequestGet: PagesFunction = async (context) => {
     kind: "x402",
     price_usd: 0.02,
     per: "query",
-    pay_url: `${origin}/api/eunomia-data?x402=1`,
+    pay_url: `${origin}/api/eunomia-data`,
     settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
     data_only: true,
   };
 
-  if (wantsGate && !paid) {
+  // Default: return 402 with gate info. Only paid requests (x-payment header) get data.
+  if (!paid) {
     return new Response(
       JSON.stringify({
         lane: "commercial-data",
@@ -40,7 +41,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         gate,
         payment_required: {
           amount_usd: 0.02,
-          instruction: "Complete x402 settlement via settle_mcp, then retry with ?x402=paid",
+          instruction: "Complete x402 settlement via settle_mcp, then retry with x-payment header.",
         },
       }, null, 2),
       {
@@ -55,18 +56,11 @@ export const onRequestGet: PagesFunction = async (context) => {
       lane: "commercial-data",
       schema: "csoai.eunomia-data/0.1",
       note: "x402 DATA product — never scores, never ranked. Regulators/public free (R8) via /first-fine-watch.",
-      // This response is NOT signed. It previously advertised
-      // `signer: did:web:csoai.org#estate-chain-1`, which invites a reader to conclude the
-      // payload is signed by that key — it is signed by nothing. A signer field on an
-      // unsigned body is the same defect as `"signed": true` with no signature bytes:
-      // a field asserting cryptographic provenance that does not exist. State the absence
-      // and name where the signed form lives instead.
       signed: false,
       signature_absent: "This endpoint returns unsigned data. The signed First-Fine Watch feed is /api/fines, signed with did:web:csoai.org#board-attestation-1.",
       key_mode: key,
       gate,
-      data: paid || !wantsGate ? { fines, deadlines } : undefined,
-      preview: !paid && !wantsGate,
+      data: { fines, deadlines },
     }, null, 2),
     {
       headers: { "content-type": "application/json", "access-control-allow-origin": "*", "cache-control": "public, max-age=300" },

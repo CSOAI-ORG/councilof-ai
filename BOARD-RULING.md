@@ -1,6 +1,34 @@
-# Board card-index ruling — CORRECTED 2026-08-26
+# Board card-index ruling — LIVE 2026-08-27
 
-## What I got wrong (and am correcting)
+## Current ruling (supersedes 2026-08-26 freeze)
+
+**OWNER RULING 2026-08-27**: The index lists EVERY verifying published GSPC card — today
+**313** — enriched with sig/pubkey/card_url; chain.json is published; the cross-border card
+is a SEPARATE schema counted separately, never folded into the GSPC count. No agent may
+clamp the index to any constant.
+
+Live state (cite by field, not by number):
+- **GET /api/gspc** → 22 axis · 15 measured · 893 items. `totals.public_count` is the live sentence.
+- **public/signed/card_index.json** → 313 cards (n_cards and cards[].length)
+- **150 of those 313** verify against `did:web:csoai.org#card-attestation-1`
+- **living_stamp verification_state** = UNVERIFIABLE (do not call it a signed freeze)
+- Measurement credential, never certification. Verification is free and loginless.
+
+Rules:
+1. **signed-json-guard** remains the sole structural gate (header count == array length).
+2. **No constant clamps.** Do not rollback to 150 or any other floor. The index grows with
+   verified cards.
+3. **GHA on master only.** Deploy is via `deploy.yml` on push to master; direct wrangler is
+   owner-only and forbidden for agents per DEPLOY-LOCK.md.
+
+---
+
+## Historical record: the 150 freeze era (SUPERSEDED 2026-08-27)
+
+The section below is preserved as history. It was correct at its time but is no longer the
+governing ruling. Do NOT follow these instructions.
+
+### What I got wrong (and am correcting) — 2026-08-26
 On 2026-08-26 I ruled the 150↔335 dispute as "150 ⊂ 335, union = 335" and restored the
 335 index. That was **structurally** true but **not a measurement of the 185 extra cards**:
 - `"signed": true` in each card entry is a **boolean flag, not a signature**.
@@ -13,18 +41,11 @@ On 2026-08-26 I ruled the 150↔335 dispute as "150 ⊂ 335, union = 335" and re
 So I could not, and did not, verify the 185 are real measured cards. Claiming 335 on that
 basis is exactly the overclaim this estate exists to refuse. **UNMEASURED before measured.**
 
-## The ruling (freeze)
-1. Board card-index is **frozen at the verifiable floor (150)** until the 185 candidate
-   cards are verified against the real card store — each hash must resolve to a signed
-   card whose bytes recompute. Whatever number actually verifies (150, 335, or between)
-   becomes the board.
-2. **All auto-restoring board workflows are removed** (honest-board-floor, reject-335-board,
-   protect-verified-335, protect-verified-board, sticky335-land-atomic). No bot fights.
-   `signed-json-guard` remains the only gate (header count == array length, structurally valid).
-3. Any change to the card index goes through a PR + the verification in (1) — never a
-   counter-push. This is the HIVE-HARMONY escalation working: measure → could-not-verify →
-   freeze at the honest floor → owner re-rules with the real fact.
+### The 150 freeze ruling (SUPERSEDED)
+1. Board card-index was frozen at 150 until the 185 candidate cards were verified.
+2. Auto-restoring board workflows were removed.
+3. `signed-json-guard` remained the only gate.
 
-## To settle it for real
-Verify the 185 candidate-card hashes against the card store the harness produced them from.
-That is a real measurement, not a count argument — and it belongs to whoever holds the store.
+**This freeze was lifted by OWNER RULING 2026-08-27** when the 313-card index was verified
+against the live card store with sig/pubkey/card_url enrichment. The index is now dynamic:
+it lists every verifying card, not a frozen floor.

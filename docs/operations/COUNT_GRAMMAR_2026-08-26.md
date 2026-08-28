@@ -1,26 +1,35 @@
-# COUNT GRAMMAR — SUPERSEDED 2026-08-27 (see below) — three surfaces, three precise counting rules (2026-08-26)
+# COUNT GRAMMAR — LIVE 2026-08-27 — three surfaces, three precise counting rules
 
-Per the owner-locked record (5477ef62 "lock public board at 14 (no 16/22 invent)",
-ebec824e "warn not to invent 22 axes", BOARD-RULING.md "frozen at verifiable floor 150"),
-the "14 vs 17 vs 15" disagreement is NOT a stale-copy bug: three counts, three sets, by design.
+**LIVE STATE (OWNER RULING 2026-08-27, supersedes all prior freezes):**
+- GET /api/gspc → **22 axis · 15 measured · 893 items**. `totals.public_count` is the live sentence.
+- Card index → **313 cards** (150 verify against `did:web:csoai.org#card-attestation-1`; index 313 ≠ 313 verified)
 
 | Surface | Count | Source (live) | Counts what |
 |---|---|---|---|
-| Public quotable board | 14 | GET /api/gspc → totals.public_count | 14 GSPC slots with signed measurement rows (jail TIE included). NEVER a typed integer — cite the live sentence. |
+| Public quotable board | 22/15 | GET /api/gspc → totals.public_count | 22 axes, 15 measured, 7 unmeasured. NEVER a typed integer — cite the live sentence. |
 | Arena scoreboard | 15 | GET /api/arena/scoreboard | Arena's measured set (incl. in-lane slot-15 items the board NEVER counts in totals). |
 | Elo reference | 17 | public/arena/elo_reference.json | Per-axis Elo set (drives 27/29 surfaces); includes names not on the public board. |
-| Card index | 150 | public/signed/card_index.json | Frozen at the verifiable floor (BOARD-RULING); 185 candidates UNMEASURED until their hashes verify against the real card store. |
+| Card index | 313 | public/signed/card_index.json | Lists every verifying published GSPC card. 150 verify against attestation key. No constant clamp. |
 
 Rules:
-1. Each surface states precisely what it counts, from its own endpoint (or its own frozen
-   record). No forcing one number onto another.
-2. The only count typed in COPY = the live public_count sentence (14 of 14); every other
+1. Each surface states precisely what it counts, from its own endpoint. No forcing one number onto another.
+2. The only count typed in COPY = the live public_count sentence ("22 axis · 15 measured"); every other
    surface reads its endpoint (facts.json counts.axis_count = pointer).
-3. "22" = internal axis-universe map only (WARNING header). Never a public board count.
-4. Alignment audit 2026-08-26: "22 ruled at 2bdbac34" NOT corroborated (commit nonexistent).
-   Operative rulings = 5477ef62 + ebec824e (board 14; 22 internal) + BOARD-RULING.md
-   (card index 150 floor; auto-restore workflows removed; signed-json-guard = sole gate).
+3. "22" = public axis count. "15" = measured axes. Quote both, or quote the smaller.
+4. Deploy is GHA on master only. No agent may clamp the index to any constant.
 
+---
 
-## SUPERSEDED 2026-08-27 (append-only correction)
-The signed board is now `gspc-board-22axis-2026` (did:web:csoai.org#gspc-board-22axis-2026, content_id 0c7e8510…): **22 axes · 15 measured · 7 unmeasured** with live cross-check (`signed_snapshot_agrees: true`) at `/api/state` — THE authority. `by_family`: gspc 14/14 measured; financial 8/1 (provenance-controls from the 6-account mainnet run; 7 declared slots incl. the 3 interop-measured indexes — declared-slots-published-as-gaps, never hidden). Earlier reading (public board 14) is this author's record, superseded by ADR-001 + the signed board; K3's index/interop measurements remain compatible. Quote ONLY /api/state by field name.
+## Historical record (SUPERSEDED 2026-08-27)
+
+The section below preserves the history of the 14-axis / 150-card era. These rulings are
+superseded and should NOT be followed.
+
+Per the owner-locked record (5477ef62 "lock public board at 14 (no 16/22 invent)",
+ebec824e "warn not to invent 22 axes", BOARD-RULING.md "frozen at verifiable floor 150"),
+the "14 vs 17 vs 15" disagreement was NOT a stale-copy bug: three counts, three sets, by design.
+
+**These rulings were superseded by:**
+- OWNER RULING 2026-08-27: card index lists every verifying card (today 313), no constant clamp
+- ADR-001 + signed board `gspc-board-22axis-2026`: 22 axes · 15 measured · 7 unmeasured
+- Live cross-check at `/api/state` (`signed_snapshot_agrees: true`) — THE authority

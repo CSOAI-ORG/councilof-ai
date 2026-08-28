@@ -72,31 +72,31 @@ export const STORY: Slide[] = [
   {
     // 05 Council Space — heavy, AI vs AI
     kicker: "Council Space",
-    title: "AI versus AI, 24/7",
+    title: "AI versus AI",
     body: "Models face the same frozen tests, head to head. Each match is two systems and one instrument, and the verdict is a fixed rule — never one AI grading another. Any round can become a signed card.",
     points: [
       { tag: "pain", text: "Leaderboards run on vibes and vote-brigading" },
       { tag: "benefit", text: "Every match is a fixed pass/fail rule you can audit" },
       { tag: "benefit", text: "Ties are ties — never counted as a win" },
       { tag: "usp", text: "No model ever judges another — grading is deterministic" },
-      { tag: "usp", text: "Runs 24/7, so coverage never depends on who is awake" },
+      { tag: "usp", text: "Coverage is measured when a run exists — empty is stated, never hidden" },
     ],
     href: "/gspc-arena",
     cta: "Watch Council Space",
     bg: { src: "/images/coliseum_swarm_clash.jpg", alt: "A swarm of green shards clashing with clay scientists raising shields" },
   },
   {
-    // 06 Colosseum — heavy, Human vs AI
+    // 06 Colosseum — REMOVED: Citizen/Mayor/Red modes 404. Replaced with honest claim.
     kicker: "Colosseum",
     title: "You versus the AI",
-    body: "Step in and probe a system live in three modes — Citizen, Mayor, Red. Signed runs count; practice runs stay practice and are never quoted.",
+    body: "Step in and probe a system live. Signed runs count; practice runs stay practice and are never quoted.",
     points: [
       { tag: "pain", text: "You never get to stress-test the AI yourself" },
-      { tag: "benefit", text: "Three hands-on modes to push a system live" },
+      { tag: "benefit", text: "Probe a system with real questions, live" },
       { tag: "usp", text: "Only measured runs are ever quoted — practice stays practice" },
     ],
     href: "/gspc-arena",
-    cta: "Enter the colosseum",
+    cta: "Enter the arena",
     image: { src: "/images/coliseum_logic_duel.jpg", alt: "A human and an AI facing each other across a chessboard in the arena" },
   },
   {
@@ -114,17 +114,17 @@ export const STORY: Slide[] = [
     video: { src: "/videos/csoai-architecture.mp4", poster: "/videos/csoai-architecture.jpg", title: "The architecture of measurement — how a signed card is made" },
   },
   {
-    // 08 Council City — heavy, living layer
+    // 08 Council City — HONEST: City is a view over signed records, not a walkable world
     kicker: "Council City",
-    title: "A place you can walk, not a pitch",
-    body: "Signed results feed a living layer — cities, towns and sims you can explore. Every scene traces back to a real receipt, so learning how the system behaves is something you do, not something you’re told.",
+    title: "A view over the measurements",
+    body: "Council City is a window on the same signed records the board is built from — a different view of the measurements, not a second source of them. Every tile links to a signed card.",
     points: [
       { tag: "pain", text: "Governance sites are walls of text nobody reads" },
-      { tag: "benefit", text: "Explore how AI behaves through a world, not a whitepaper" },
-      { tag: "usp", text: "Every scene traces back to a signed event — nothing is decorative" },
+      { tag: "benefit", text: "See the measurements as a map, not a table" },
+      { tag: "usp", text: "Every tile links to a signed card — nothing is decorative" },
     ],
     href: "/gspc-arena?view=towns",
-    cta: "Enter the city",
+    cta: "Open City view",
     bg: { src: "/images/literacy_training_arena.jpg", alt: "People learning how AI behaves inside a training arena" },
   },
   {
