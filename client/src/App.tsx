@@ -237,7 +237,7 @@ const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 const ServiceLevelAgreement = lazy(() => import("./pages/legal/ServiceLevelAgreement"));
 const Council = lazy(() => import("./pages/Council"));
 const GlobalRegulationTracker = lazy(() => import("./pages/GlobalRegulationTracker"));
-const FAQ = lazy(() => import("./pages/FAQ"));
+const FaqPage = lazy(() => import("./pages/FaqPage"));
 const Glossary = lazy(() => import("./pages/Glossary"));
 const ReadinessAssessment = lazy(() => import("./pages/ReadinessAssessment"));
 const IndustrySolutions = lazy(() => import("./pages/IndustrySolutions"));
@@ -979,8 +979,9 @@ function App() {
                   <Route path="/legal/sla" component={ServiceLevelAgreement} />
                   <Route path="/global-regulations" component={GlobalRegulationTracker} />
                   <Route path="/regulation-tracker" component={GlobalRegulationTracker} />
-                  <Route path="/faq" component={FAQ} />
-                  <Route path="/frequently-asked-questions" component={FAQ} />
+                  <Route path="/faq" component={FaqPage} />
+                  <Route path="/faqs"><Redirect to="/faq" /></Route>
+                  <Route path="/frequently-asked-questions" component={FaqPage} />
                   <Route path="/glossary" component={Glossary} />
                   <Route path="/ai-glossary" component={Glossary} />
                   <Route path="/readiness-assessment">{() => <Redirect to="/assess" />}</Route>
