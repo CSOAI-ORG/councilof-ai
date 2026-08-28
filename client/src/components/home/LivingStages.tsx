@@ -1,1 +1,1 @@
-@file:/tmp/mcp_contents/living.tsx
+PLACEHOLDER_WILL_FAIL
