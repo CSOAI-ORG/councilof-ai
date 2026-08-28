@@ -12,6 +12,7 @@ on:
     paths:
       - "public/regulator-indices-one-pager.html"
       - "public/regulator-indices-one-pager.pdf.b64"
+      - "public/regulator-indices-one-pager.pdf.b64.part*"
       - "scripts/decode-regulator-pdf.mjs"
       - "scripts/pdf-regulator-indices.mjs"
       - ".github/workflows/pdf-regulator-indices.yml"
@@ -31,7 +32,7 @@ jobs:
 
       - name: Decode MCP-safe PDF sidecar
         run: |
-          if [ -f public/regulator-indices-one-pager.pdf.b64 ]; then
+          if [ -f public/regulator-indices-one-pager.pdf.b64 ] || compgen -G "public/regulator-indices-one-pager.pdf.b64.part*" > /dev/null; then
             node scripts/decode-regulator-pdf.mjs
           else
             echo "No .b64 sidecar — installing Playwright for HTML print"
