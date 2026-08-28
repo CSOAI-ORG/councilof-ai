@@ -49,7 +49,7 @@ function Footer() {
   return (
     <footer className="border-t border-border bg-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-3">Platform & Tools</h4>
             <div className="space-y-2 text-xs text-muted-foreground">
@@ -57,18 +57,6 @@ function Footer() {
               <a href="/assess" className="block hover:text-brand-400">AI Readiness Assessment</a>
               <a href="/verify" className="block hover:text-brand-400">Card Cryptographic Verifier</a>
               <a href="/catalogue" className="block hover:text-brand-400">Agent Catalogue</a>
-              <a href="/pricing" className="block hover:text-brand-400">Tier Plans & Support</a>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-3">Regulatory Anchors</h4>
-            <div className="space-y-2 text-xs text-muted-foreground">
-              <a href="/assess" className="block hover:text-brand-400">EU AI Act (Articles 5, 50, Annex III)</a>
-              <a href="/assess" className="block hover:text-brand-400">NIST AI RMF 1.0 / Agent Standards</a>
-              <a href="/assess" className="block hover:text-brand-400">UK MoD JSP 936 Defence AI</a>
-              <a href="/assess" className="block hover:text-brand-400">ISO/IEC 42001 Management</a>
-              <a href="/assess" className="block hover:text-brand-400">DORA ICT & Model Resilience</a>
             </div>
           </div>
 
@@ -79,7 +67,6 @@ function Footer() {
               <a href="https://huggingface.co/csoai" target="_blank" rel="noopener noreferrer" className="block hover:text-brand-400">Hugging Face · csoai ↗</a>
               <a href="https://pypi.org/project/inspect-signed-receipt/" target="_blank" rel="noopener noreferrer" className="block hover:text-brand-400">PyPI · inspect-signed-receipt ↗</a>
               <a href="https://doi.org/10.5281/zenodo.21991104" target="_blank" rel="noopener noreferrer" className="block hover:text-brand-400">Zenodo DOI 10.5281 ↗</a>
-              <a href="https://csoai.org/.well-known/did.json" target="_blank" rel="noopener noreferrer" className="block hover:text-brand-400">did:web Trust Root ↗</a>
             </div>
           </div>
 
@@ -88,10 +75,36 @@ function Footer() {
             <div className="space-y-2 text-xs text-muted-foreground">
               <a href="/legal" className="block hover:text-brand-400">Open Attestation Terms</a>
               <a href="/privacy" className="block hover:text-brand-400">Privacy Policy</a>
-              <a href="/terms" className="block hover:text-brand-400">Terms of Service</a>
               <div className="pt-2 text-[11px] text-muted-foreground/80">
                 CSOAI Ltd (GB) &bull; Companies House #16939677
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Framework Logos Row */}
+        <div className="pt-8 border-t border-border">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-4 text-center">Measured Frameworks</h4>
+          <div className="flex flex-wrap justify-center gap-6 md:gap-12 opacity-80 grayscale hover:grayscale-0 transition-all">
+            <div className="flex items-center gap-2">
+              <Shield className="w-6 h-6 text-blue-600" />
+              <span className="font-bold text-sm text-foreground">EU AI Act</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Lock className="w-6 h-6 text-emerald-600" />
+              <span className="font-bold text-sm text-foreground">NIST AI RMF</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="w-6 h-6 text-indigo-600" />
+              <span className="font-bold text-sm text-foreground">ISO 42001</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Scale className="w-6 h-6 text-amber-600" />
+              <span className="font-bold text-sm text-foreground">DORA</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Database className="w-6 h-6 text-rose-600" />
+              <span className="font-bold text-sm text-foreground">NIS2</span>
             </div>
           </div>
         </div>
