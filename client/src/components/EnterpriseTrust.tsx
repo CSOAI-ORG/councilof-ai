@@ -62,7 +62,7 @@ export default function EnterpriseTrust() {
           </a>
           <p className="ink-muted measure measure-center text-center text-[12px] leading-relaxed">
             We show what is verifiable, not badges we do not hold. We are not certified to
-            SOC 2 or ISO/IEC 42001 and we do not claim to be. <a href="/?lobby=measured&task=pricing-overview" className="underline underline-offset-2 hover:text-emerald-200">How the free rail works</a>.
+            SOC 2 or ISO/IEC 42001 and we do not claim to be. <a href="/os?lobby=assess&task=pricing-overview" className="underline underline-offset-2 hover:text-emerald-200">How the free rail works</a>.
           </p>
         </div>
       </div>

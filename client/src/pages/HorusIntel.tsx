@@ -20,7 +20,7 @@ export default function HorusIntel() {
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/assess" className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get measured -&gt;</a>
-            <a href="/?lobby=measured&task=enterprise-start" className="rounded-xl border border-emerald-300/60 px-6 py-3 text-sm font-bold text-emerald-50 hover:bg-white/10">Enterprise lobby -&gt;</a>
+            <a href="/os?lobby=assess&task=enterprise-start" className="rounded-xl border border-emerald-300/60 px-6 py-3 text-sm font-bold text-emerald-50 hover:bg-white/10">Enterprise lobby -&gt;</a>
             <a href="/gspc-verify" className="rounded-xl border border-emerald-300/60 px-6 py-3 text-sm font-bold text-emerald-50 hover:bg-white/10">Verify a record -&gt;</a>
           </div>
         </div>
