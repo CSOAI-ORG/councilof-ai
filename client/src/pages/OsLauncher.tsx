@@ -5,7 +5,6 @@ import AxisPanel from "@/components/os/AxisPanel";
 import CityPanel from "@/components/os/CityPanel";
 import { lobbyHref, openLobby } from "@/lib/lobbyLink";
 import { FOCUS } from "@/components/lobby/glass";
-import LivingPagesMenu from "@/components/LivingPagesMenu";
 
 /**
  * OsLauncher — crawlable /os page. The operable OS is the Council OS overlay
@@ -181,10 +180,6 @@ export default function OsLauncher() {
               <a href={lobbyHref({ pane: "home" })} onClick={(e) => { e.preventDefault(); openLobby({ pane: "home" }); }} className={`inline-flex min-h-[44px] items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 ${FOCUS}`}>Enter Council OS</a>
               <GameBar />
             </div>
-          </section>
-          {/* Living Pages + News — shared header mini-menu rendered inline */}
-          <section className="rounded-2xl border border-slate-200 bg-white p-6">
-            <LivingPagesMenu variant="inline" />
           </section>
           <section id="council-town" className="scroll-mt-8">
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-emerald-50/60 to-white">
