@@ -1,11 +1,11 @@
 /**
- * GET /ceasai — retracted certification door onto Council OS.
+ * GET /ceasai — retracted certification door. Honesty, not a product.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/os?lobby=home",
+      location: "/honesty/",
       "cache-control": "public, max-age=300",
     },
   });

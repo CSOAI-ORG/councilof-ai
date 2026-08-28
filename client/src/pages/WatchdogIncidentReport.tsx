@@ -5,5 +5,5 @@ import { Redirect } from "wouter";
  * The public door is Council OS Home. Deep-link stays ?lobby= &task=.
  */
 export default function WatchdogIncidentReport() {
-  return <Redirect to="/?lobby=home" />;
+  return <Redirect to="/os?lobby=home" />;
 }

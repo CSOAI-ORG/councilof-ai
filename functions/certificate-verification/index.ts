@@ -1,9 +1,9 @@
-/** GET /certificate-verification/ - 308 to the lobby. Measurement, not certification. */
+/** GET /certificate-verification/ - 308 to honesty. Measurement, not certification. */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/?lobby=home",
+      location: "/honesty/",
       "cache-control": "public, max-age=300",
     },
   });

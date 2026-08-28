@@ -5,5 +5,5 @@ import { Redirect } from "wouter";
  * The public door is Council OS Get measured. Deep-link stays ?lobby= &task=.
  */
 export default function Enterprise() {
-  return <Redirect to="/?lobby=measured&task=enterprise-start" />;
+  return <Redirect to="/os?lobby=assess&task=enterprise-start" />;
 }
