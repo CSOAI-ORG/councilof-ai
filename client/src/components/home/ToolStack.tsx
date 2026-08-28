@@ -15,7 +15,7 @@ import type { LobbyTabId } from "@/components/lobby/tabs";
  * pain it removes stated in the reader's words, and a door that opens the tool.
  *
  * EVERY DOOR OPENS INSIDE COUNCIL OS. Each tile's href is a real, copyable,
- * crawlable URL (`/?lobby=<pane>` or `/?task=<task>`) — the deep-link contract in
+ * crawlable URL (`/os?lobby=<pane>` or `/os?task=<task>`) — the deep-link contract in
  * lib/lobbyLink.ts — and the click handler calls openLobby() so an in-page click
  * opens the pane in place instead of navigating away. Two tiles reach a live PAGE
  * rather than a rail pane; they go through the LOBBY_TASKS registry (which carries a
@@ -187,7 +187,7 @@ const TOOLS: Tool[] = [
 
 function hrefFor(door: Door): string {
   if (door.kind === "route") return door.path;
-  return door.kind === "pane" ? `/?lobby=${door.pane}` : `/?task=${door.task}`;
+  return door.kind === "pane" ? `/os?lobby=${door.pane}` : `/os?task=${door.task}`;
 }
 
 /** The live figure a tile is entitled to show, or null when it has none. */
