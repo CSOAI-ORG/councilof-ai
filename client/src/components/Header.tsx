@@ -1,1 +1,1 @@
-Ly8gcHJvYmUK
+{{file:/workspace/.lobby-header}}
