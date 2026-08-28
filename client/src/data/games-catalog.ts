@@ -161,13 +161,14 @@ export const IN_BUILD_CARDS = [
  * LOCAL-ONLY HARNESSES (not on councilof.ai, no public route).
  * Catalogued for reference; these are NOT play surfaces.
  * DO NOT mint these as apex routes.
+ *
+ * NOTE: Filesystem paths and local ports are intentionally omitted from
+ * this file — they must not ship in the public client bundle. Test-only
+ * fixtures in games-catalog.test.ts hold those details.
  */
 export const LOCAL_ONLY_HARNESSES = [
   {
     name: "Munder-Difflin",
-    localPath: "/Users/nicholas/munder-difflin-harness",
-    files: ["site/games.html", "site/governance-city.html", "visuals/arena-game.html"],
-    healthEndpoint: ":4100",
     note: "Local harness only. No public route on councilof.ai.",
     titles: [
       "The Boss's Chair",
@@ -176,11 +177,15 @@ export const LOCAL_ONLY_HARNESSES = [
       "Arena battle",
       "Colosseum Duel",
     ],
-    missing: ["site/play.html"],
-    warning:
-      "Internal MDF still references 6-axis + local 16-axis card. Public catalog must NOT say Six-axis — living board is 22 axis from GET /api/gspc.",
   },
 ];
+
+/**
+ * HONESTY RULE: Internal MDF still references 6-axis + local 16-axis card.
+ * Public catalog must NOT say Six-axis — living board is 22 axis from GET /api/gspc.
+ */
+export const MDF_PUBLIC_WARNING =
+  "Munder-Difflin is local-only. Public copy must NOT say Six-axis.";
 
 /**
  * NOT LIVE — do not catalog as working surfaces.

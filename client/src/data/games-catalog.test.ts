@@ -19,10 +19,22 @@ import {
   FROZEN_SURFACES,
   IN_BUILD_CARDS,
   LOCAL_ONLY_HARNESSES,
+  MDF_PUBLIC_WARNING,
   NOT_LIVE_SURFACES,
   FORBIDDEN_GAME_NAMES,
   isForbiddenGame,
 } from "./games-catalog";
+
+/**
+ * TEST-ONLY FIXTURES — details that must NOT ship in the public bundle.
+ * These are here for test assertions only; pages/hooks/components do not import this file.
+ */
+const MDF_TEST_FIXTURE = {
+  localPath: "/Users/nicholas/munder-difflin-harness",
+  healthEndpoint: ":4100",
+  files: ["site/games.html", "site/governance-city.html", "visuals/arena-game.html"],
+  missing: ["site/play.html"],
+};
 import { PRIMARY_PATHS } from "./library-ia";
 
 describe("games-catalog", () => {
@@ -166,14 +178,8 @@ describe("games-catalog", () => {
       expect(mdf?.titles).toContain("Colosseum Duel");
     });
 
-    it("Munder-Difflin notes site/play.html as MISSING", () => {
-      const mdf = LOCAL_ONLY_HARNESSES.find((h) => h.name === "Munder-Difflin");
-      expect(mdf?.missing).toContain("site/play.html");
-    });
-
-    it("Munder-Difflin warning says public must not say Six-axis", () => {
-      const mdf = LOCAL_ONLY_HARNESSES.find((h) => h.name === "Munder-Difflin");
-      expect(mdf?.warning).toContain("must NOT say Six-axis");
+    it("MDF_PUBLIC_WARNING says public must not say Six-axis", () => {
+      expect(MDF_PUBLIC_WARNING).toContain("Six-axis");
     });
 
     it("local harnesses are not in PLAY_SURFACES", () => {
@@ -193,6 +199,33 @@ describe("games-catalog", () => {
         );
         expect(inCatalog).toBeUndefined();
       }
+    });
+
+    it("LOCAL_ONLY_HARNESSES does not contain filesystem paths", () => {
+      const json = JSON.stringify(LOCAL_ONLY_HARNESSES);
+      expect(json).not.toContain("/Users/");
+      expect(json).not.toContain("/home/");
+      expect(json).not.toContain("localPath");
+    });
+
+    it("LOCAL_ONLY_HARNESSES does not contain local ports", () => {
+      const json = JSON.stringify(LOCAL_ONLY_HARNESSES);
+      expect(json).not.toContain(":4100");
+      expect(json).not.toContain("healthEndpoint");
+    });
+  });
+
+  describe("test-only MDF fixture (not in public bundle)", () => {
+    it("fixture has localPath for test reference", () => {
+      expect(MDF_TEST_FIXTURE.localPath).toContain("munder-difflin");
+    });
+
+    it("fixture notes site/play.html as MISSING", () => {
+      expect(MDF_TEST_FIXTURE.missing).toContain("site/play.html");
+    });
+
+    it("fixture has health endpoint for test reference", () => {
+      expect(MDF_TEST_FIXTURE.healthEndpoint).toBe(":4100");
     });
   });
 
