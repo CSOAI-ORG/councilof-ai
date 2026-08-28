@@ -169,11 +169,11 @@ export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
   "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/how-it-works": { path: "/methodology", label: "Methodology" },
-  "/roi-calculator": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
+  "/roi-calculator": { path: "/os?lobby=measured&task=pricing-overview", label: "How the free rail works" },
   "/our-difference": { path: "/about", label: "About" },
   // Added by the site-alignment pass 2026-08-20 — each of these had a current
   // equivalent in the new six-group nav but no forward link.
-  "/pricing": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
+  "/pricing": { path: "/os?lobby=measured&task=pricing-overview", label: "How the free rail works" },
   "/global-ai-regulation": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/global-regulations": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/training-hub": { path: "/academy", label: "Council Academy" },
