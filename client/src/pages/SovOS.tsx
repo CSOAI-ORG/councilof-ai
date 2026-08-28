@@ -1,5 +1,5 @@
 // Public /sov-os door is Council OS at /os. Not a second dockview OS.
-// 2026-08-28: Lean homepage (832) ate the lobby panes; /?lobby=home crashes.
+// 2026-08-28: Lean homepage (832) ate the lobby panes; /os?lobby=home crashes.
 // /os is the AG-UI host now.
 import { Redirect } from "wouter";
 
