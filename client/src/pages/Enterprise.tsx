@@ -140,4 +140,39 @@ export default function Enterprise() {
                 For CISOs · insurers · boards — {POSITIONING.router.short} + {POSITIONING.harness.short}
               </Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Prove how your AI behaves — before the €35M question la
+                Prove how your AI behaves — before the €35M question lands.
+              </h1>
+              <p className="text-xl text-gray-300 leading-relaxed mb-4">
+                {POSITIONING.subhead} Portfolio measurement across EU AI Act, NIST AI RMF, ISO 42001
+                controls, and TC260 — signed cards you can re-check. Measurement, not certification.
+              </p>
+              <p className="text-sm text-gray-400 leading-relaxed mb-8">
+                Embed signed verdicts under{" "}
+                <Link href="/powered-by" className="text-emerald-300 underline hover:text-emerald-200">
+                  Option A — Powered by Council OS
+                </Link>
+                ; white-label licensing stays in the opinion/measurement lane.
+              </p>
+
+              {/* Key Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">€35M</div>
+                  <div className="text-sm text-gray-300">Max EU AI Act Fine</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">4+</div>
+                  <div className="text-sm text-gray-300">Frameworks Supported</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">14</div>
+                  <div className="text-sm text-gray-300">Board slots, 13 measured</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                  <div className="text-3xl font-bold text-emerald-400">Free</div>
+                  <div className="text-sm text-gray-300">Verification, no account</div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <EnterpriseMeasur
