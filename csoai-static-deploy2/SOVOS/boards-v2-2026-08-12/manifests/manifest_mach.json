@@ -1,14 +1,6 @@
 {
-  "kind": "gspc.board",
   "axis": "mach",
   "bank_items": 33,
-  "canaries_excluded": 1,
-  "labels": [
-    "NOT_SAFETY_FUNCTION",
-    "OUT_OF_SCOPE",
-    "PART_A"
-  ],
-  "majority_baseline": 0.3636,
   "models": [
     {
       "model": "sov6-ethics-v3-light",
@@ -258,16 +250,13 @@
       "note": null
     }
   ],
-  "best": "llama3.2:3b",
   "status": "MEASURED",
-  "status_note": null,
-  "per_item_count": 627,
-  "method": "unparsed counted incorrect \u00b7 transport failures excluded as ours \u00b7 canaries excluded \u00b7 deterministic exact-label grading, no model judges another model \u00b7 nothing quoted below usable n>=30",
+  "source_file": "board_mach.json",
   "signature": {
     "kind": "ed25519",
-    "sig": "xFBFO3628DBZDn2ThmtG+WotCQIxyyCYRsvHKHzHh7iNRWdWZUVKQupKumWK9ScSlnwyY3S6BoEcoLoBXYMSCg==",
-    "body_sha256": "83897d0e9d5f44ea6c02a25665ce7cb87718a46c89ecce671a21358e95b48760",
-    "pubkey": "3VgaoW2HDTtRC7lKbm388OvRxHVLJ9QXfva5NBljq7A=",
+    "sig": "t1vixKFc3e4WPB8bB8ampMiG/96VZwbLIGpXrcB2ik7d1usmgjUqbd6KcAkgnq3SlqYduGXPvRupwU7vbiIUDA==",
+    "body_sha256": "7a679fdf7b1d2ad35866105f01147a3f22ea3136f0b992a4d2a1d866b8fa02d7",
+    "pubkey": "xjXEC2qL8Vbv276CGtCMxcYUTRnKvOBmafjP4TF4SVU=",
     "note": "Ed25519 over the canonical body; verify with sign.py --verify. PQC upgrade: ML-DSA-65 via liboqs \u2014 same body, swap the primitive."
   }
 }
