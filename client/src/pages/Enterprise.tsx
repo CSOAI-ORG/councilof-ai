@@ -261,9 +261,6 @@ export default function Enterprise() {
                 <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold relative z-10">
                   1
                 </div>
-                <ClipboardCheck className="h-10 w-10 text-emerald-600 mx-auto mb-4 text-xl font-bold relative z-10">
-                  1
-                </div>
                 <ClipboardCheck className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
                 <h3 className="font-bold text-lg mb-2">Register AI Systems</h3>
                 <p className="text-sm text-gray-600">
@@ -406,84 +403,4 @@ export default function Enterprise() {
                 </div>
               </div>
               <p className="text-gray-600 mb-4">
-                Align with the US National Institute of Standards and Technology's AI Risk Management Framework for federal contracts and best practices.
-              </p>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  GOVERN function mapping
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  MAP function analysis
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  MEASURE assessments
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  MANAGE recommendations
-                </li>
-              </ul>
-            </Card>
-
-            {/* ISO 42001 */}
-            <Card className="p-8 border-2 border-emerald-200 hover:border-emerald-400 transition-colors">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-emerald-100 rounded-xl">
-                  <Award className="h-8 w-8 text-emerald-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold">ISO 42001</h3>
-                  <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">Measured evidence</Badge>
-                </div>
-              </div>
-              <p className="text-gray-600 mb-4">
-                Control-language measurement and gap evidence your auditor can recompute. We prepare the signed record — we do not issue the certificate.
-              </p>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Gap analysis reports
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Control implementation
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Documentation templates
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Audit preparation
-                </li>
-              </ul>
-            </Card>
-
-            {/* TC260 */}
-            <Card className="p-8 border-2 border-red-200 hover:border-red-400 transition-colors">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-red-100 rounded-xl">
-                  <FileCheck className="h-8 w-8 text-red-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold">TC260</h3>
-                  <Badge className="bg-red-100 text-red-700 border-red-200">China Standard</Badge>
-                </div>
-              </div>
-              <p className="text-gray-600 mb-4">
-                Coverage for China's National Information Security Standardization Technical Committee AI governance requirements.
-              </p>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Security assessments
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  Data governance
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w
+                Align with th
