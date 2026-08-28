@@ -85,7 +85,7 @@ function HeroCouncilOS() {
             </div>
           </div>
 
-          {/* Right: real OS visual (screenshot or iframe embed) */}
+          {/* Right: static OS screenshot (NOT a live embed — /os one-frame is separate PR) */}
           <div className="relative mx-auto w-full max-w-xl lg:mx-0">
             <div className="overflow-hidden rounded-2xl border border-emerald-500/20 bg-slate-900/50 shadow-2xl shadow-emerald-900/30">
               {/* OS header bar mockup */}
@@ -95,10 +95,10 @@ function HeroCouncilOS() {
                 <span className="h-3 w-3 rounded-full bg-emerald-400/70" />
                 <span className="ml-3 text-xs font-medium text-slate-400">Council OS · councilof.ai/os</span>
               </div>
-              {/* Screenshot of the OS — uses actual screenshot from public/images */}
+              {/* Static screenshot — hero is a DOOR to /os, not a live embed */}
               <img
                 src="/images/band/hardened.png"
-                alt="Council OS workspace showing the board, verifier, and evidence tools"
+                alt="Council OS workspace"
                 className="w-full"
                 loading="eager"
               />
