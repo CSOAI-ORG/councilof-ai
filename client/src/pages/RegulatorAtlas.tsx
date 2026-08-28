@@ -9,7 +9,7 @@ import AISystemNotice from "../components/AISystemNotice";
 // regime, its top-7 tools, and its next-7 movements — with the live Council
 // assistant giving a current read on any of them.
 //
-// ── HIVE LINKS ARE RESOLVED, NOT ASSUMED (fixed 2026-08-26) ───────────────────
+// ── HIVE LINKS ARE RESOLVED, NOT ASSUMED (fixed 2026-08-26) ──────────────────
 // This page used to render `<a href={"/hive/" + r.hiveSlug}>` for any regime that
 // carried a hiveSlug, with nothing checking that the Hive page existed. Five of
 // them did not: Colorado, China, UK, Canada and Singapore — every non-EU
@@ -97,7 +97,7 @@ function RegCard({ r }: { r: Regime }) {
           </span>
         )}
         <a href="/hive" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Browse the Hive →</a>
-        <a href="/?lobby=home" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern a case →</a>
+        <a href="/os?lobby=home" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern a case →</a>
       </div>
       {ans && <div className="mt-3 whitespace-pre-wrap rounded-lg bg-black/30 p-3 text-[13px] text-emerald-50/90">{ans}</div>}
     </div>
