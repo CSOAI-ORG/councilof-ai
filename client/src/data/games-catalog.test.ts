@@ -3,9 +3,10 @@
  *
  * Enforced invariants:
  *   1. Every catalogued path is in PRIMARY_PATHS.
- *   2. FORBIDDEN games (Murder, Difflin, Town, etc.) are NOT in the catalog as play surfaces.
+ *   2. FORBIDDEN games (Murder, Difflin, Mundrr) are NOT in the catalog as play surfaces.
  *   3. No typed board counts anywhere in the catalog.
  *   4. Play surfaces claim to use live board (usesLiveBoard: true).
+ *   5. Broken surfaces are marked broken: true.
  */
 
 import { describe, it, expect } from "vitest";
@@ -13,9 +14,11 @@ import {
   GAMES_CATALOG,
   CATALOG_PATHS,
   PLAY_SURFACES,
+  WORKING_SURFACES,
+  LEFTOVER_SURFACES,
+  LOCAL_ONLY_HARNESSES,
   FORBIDDEN_GAME_NAMES,
   isForbiddenGame,
-  type CatalogEntry,
 } from "./games-catalog";
 import { PRIMARY_PATHS } from "./library-ia";
 
@@ -54,25 +57,11 @@ describe("games-catalog", () => {
       expect(mundrr).toBeUndefined();
     });
 
-    it("Town is not a catalogued play surface", () => {
-      const town = PLAY_SURFACES.find(
-        (g) => g.name.toLowerCase() === "town" || g.name.toLowerCase() === "council town"
-      );
-      expect(town).toBeUndefined();
-    });
-
-    it("Munder-Difflin is not a catalogued play surface", () => {
-      const munderDifflin = PLAY_SURFACES.find(
-        (g) => g.name.toLowerCase().includes("munder")
-      );
-      expect(munderDifflin).toBeUndefined();
-    });
-
     it("isForbiddenGame correctly identifies forbidden names", () => {
       expect(isForbiddenGame("Murder")).toBe(true);
       expect(isForbiddenGame("murder")).toBe(true);
       expect(isForbiddenGame("Difflin")).toBe(true);
-      expect(isForbiddenGame("Town")).toBe(true);
+      expect(isForbiddenGame("Mundrr")).toBe(true);
       expect(isForbiddenGame("Council Space")).toBe(false);
       expect(isForbiddenGame("Coliseum")).toBe(false);
     });
@@ -138,6 +127,37 @@ describe("games-catalog", () => {
         expect(entry.kind).toBeTruthy();
         expect(entry.description).toBeTruthy();
         expect(typeof entry.usesLiveBoard).toBe("boolean");
+      }
+    });
+
+    it("broken surfaces are marked with broken: true", () => {
+      for (const entry of LEFTOVER_SURFACES) {
+        expect(entry.broken).toBe(true);
+      }
+    });
+
+    it("working surfaces do not have broken: true", () => {
+      for (const entry of WORKING_SURFACES) {
+        expect(entry.broken).toBeFalsy();
+      }
+    });
+  });
+
+  describe("local-only harnesses", () => {
+    it("Munder-Difflin is catalogued as local-only harness", () => {
+      const munderDifflin = LOCAL_ONLY_HARNESSES.find(
+        (h) => h.name === "Munder-Difflin"
+      );
+      expect(munderDifflin).toBeDefined();
+      expect(munderDifflin?.note).toContain("No public route");
+    });
+
+    it("local harnesses are not in PLAY_SURFACES", () => {
+      for (const harness of LOCAL_ONLY_HARNESSES) {
+        const inPlay = PLAY_SURFACES.find(
+          (p) => p.name.toLowerCase() === harness.name.toLowerCase()
+        );
+        expect(inPlay).toBeUndefined();
       }
     });
   });
