@@ -52,6 +52,9 @@ export const PRIMARY_PATHS = new Set<string>([
   "/compare", "/competitors", "/vs", "/for",
   // Council OS
   "/os", "/workbench", "/start",
+  // Council OS Games catalog — every game path must be here (enforced by test).
+  // /gspc-arena is already above in Measure; /os is already above. Add only new paths.
+  "/coliseum",
   // The Council OS RAIL TABS and Home desktop tiles. A permanent destination in the OS
   // rail cannot also be an archive page: the OS presents it as live, and the embed hides
   // the "Reference / archive" strip, so the reader was shown a current surface while the
