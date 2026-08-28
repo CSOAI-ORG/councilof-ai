@@ -159,7 +159,7 @@ export default function SystemCard() {
           <div className="mt-4 flex flex-wrap gap-2">
             <a href="/hive" className="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-emerald-500/20">See the framework hive →</a>
             <a href="/assess" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Get measured</a>
-            <a href="/?lobby=measured&task=enterprise-start" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Enterprise lobby →</a>
+            <a href="/os?lobby=measured&task=enterprise-start" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Enterprise lobby →</a>
           </div>
           <p className="mt-4 text-[11px] text-emerald-300/50">Demo card data is synthetic; the signing and verification are genuinely real, on the CSOAI measurement signing backend. For a named engagement the card is issued under your own signing key.</p>
         </div>
