@@ -17,7 +17,7 @@
  * - Verification free forever. Primary OS CTA appears THREE times.
  */
 import ToolStack from "../components/home/ToolStack";
-import AxisPanel from "../components/os/AxisPanel";
+import LivingBoard from "../components/lobby/LivingBoard";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import {
   ChevronRight,
@@ -120,21 +120,17 @@ function PrimaryCtaBand({ id }: { id?: string }) {
   );
 }
 
-// ── Living Board: SAME component as /os uses (AxisPanel) ──────
+// ── Living Board: SAME component as lobby (LivingBoard from 849 chrome) ──────
 function LivingBoardSection() {
+  const goToBoard = () => {
+    window.location.href = "/gspc-scoreboard";
+  };
+
   return (
     <section className="surface-raised section-y">
       <div className="section-shell">
-        {/* The shared AxisPanel component — same one /os Board door uses */}
-        <AxisPanel />
-        <div className="mt-6 text-center">
-          <a
-            href="/gspc-scoreboard"
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800"
-          >
-            Full scoreboard <ChevronRight className="h-4 w-4" />
-          </a>
-        </div>
+        {/* The shared LivingBoard component — same one the lobby board pane uses */}
+        <LivingBoard onOpenBoard={goToBoard} />
       </div>
     </section>
   );
