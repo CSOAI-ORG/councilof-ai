@@ -51,6 +51,15 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/readiness-assessment',
+        destination: '/assess',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

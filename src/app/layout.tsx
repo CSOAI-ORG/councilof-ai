@@ -29,16 +29,16 @@ export const metadata: Metadata = {
 };
 
 import { Providers } from './Providers';
-import { Navigation } from './components/Navigation';
+import { LayoutWrapper } from './LayoutWrapper';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen bg-background text-foreground antialiased flex flex-col">
         <Providers>
-          <Navigation />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <LayoutWrapper footer={<Footer />}>
+            {children}
+          </LayoutWrapper>
         </Providers>
       </body>
     </html>

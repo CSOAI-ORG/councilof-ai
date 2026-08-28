@@ -1,4 +1,4 @@
-import { ArrowRight, Shield, Cpu, ExternalLink, Activity, Database, Server, Layers, CheckCircle2, Lock, Coins, Search, Zap, Code, Terminal, FileCheck, Play } from "lucide-react";
+import { ArrowRight, Shield, Cpu, ExternalLink, Activity, Database, Server, Layers, CheckCircle2, Lock, Coins, Search, Zap, Code, Terminal, FileCheck, Play, Scale, AlertCircle, Award } from "lucide-react";
 import Link from 'next/link';
 
 export default function Home() {
@@ -116,32 +116,28 @@ export default function Home() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 2: THE COUNCIL OS VIDEO SHOWCASE */}
+      {/* SECTION 2: COUNCIL OS IN-FRAME */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 border-b border-border/30">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h2 className="text-3xl md:text-5xl font-black leading-tight">The Architecture of Trust.</h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Council OS is not just a dashboard. It is a sovereign operating system that forces AI models into Byzantine Fault-Tolerant deliberation. See how 33 independent agents arrive at mathematical consensus in real-time.
-            </p>
-            <div className="flex gap-4 pt-4">
-              <Link href="/os" className="px-6 py-3 rounded-lg bg-background border border-border hover:border-brand-500/50 transition-colors font-semibold flex items-center gap-2">
-                Launch OS <ExternalLink className="w-4 h-4" />
-              </Link>
-            </div>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-5xl font-black leading-tight mb-4">Independent Measurement Body</h2>
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            The workspace that opens the board, verifier, assessment, and evidence pack in one window — loginless and free.
+          </p>
+        </div>
+        
+        <div className="rounded-3xl overflow-hidden border border-border/50 shadow-2xl bg-slate-950 backdrop-blur h-[800px] relative group">
+          <div className="absolute top-0 left-0 w-full h-12 bg-slate-900 border-b border-slate-800 flex items-center px-4 gap-2 z-10">
+            <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+            <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
+            <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+            <div className="ml-4 px-3 py-1 rounded bg-slate-800/50 text-xs font-mono text-slate-400 flex-1 flex justify-center">councilof.ai/os</div>
           </div>
-          <div className="rounded-3xl overflow-hidden border border-border/50 shadow-2xl bg-card/50 backdrop-blur">
-            <video 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              className="w-full h-auto"
-            >
-              <source src="/videos/council_os.mp4" type="video/mp4" />
-            </video>
-          </div>
+          <iframe 
+            src="/os" 
+            className="w-full h-full pt-12 border-none bg-slate-950"
+            title="Council OS Interactive Frame"
+          />
         </div>
       </section>
 
@@ -328,20 +324,58 @@ export default function Home() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SECTION 7: OUTCOMES & CTA */}
+      {/* SECTION 7: BUILT FOR AUDIT (OUTCOMES) */}
       {/* ========================================================================= */}
-      <section className="py-24 text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <h2 className="text-4xl md:text-5xl font-black">Ready to prove your compliance?</h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Stop gambling with €35M EU AI Act fines. Generate audit-ready cryptographic proof today.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
-            <Link href="/pricing" className="px-8 py-4 rounded-xl gradient-brand text-white font-bold text-lg hover:shadow-lg hover:shadow-brand-500/25 hover:-translate-y-1 transition-all">
-              View Enterprise Plans
-            </Link>
-            <Link href="/developers" className="px-8 py-4 rounded-xl bg-card border border-border hover:border-brand-500/50 hover:bg-brand-500/5 text-foreground font-bold text-lg transition-all flex items-center justify-center gap-2">
-              <Code className="w-5 h-5" /> Read the SDK Docs
+      <section className="py-24 bg-card/50 border-t border-border/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-4xl md:text-5xl font-black">Built for the people who get audited.</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              We show what is verifiable, not badges we do not hold.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+            <a href="/os" className="block p-6 rounded-2xl bg-background border border-border hover:border-brand-500/50 hover:bg-brand-500/5 transition-all group">
+              <Lock className="w-6 h-6 text-brand-400 mb-4" />
+              <h3 className="font-bold mb-2 group-hover:text-brand-400 transition-colors">Ed25519 · Layer 0</h3>
+              <p className="text-sm text-muted-foreground">Every decision cryptographically signed.</p>
+            </a>
+            
+            <a href="/leaderboard" className="block p-6 rounded-2xl bg-background border border-border hover:border-brand-500/50 hover:bg-brand-500/5 transition-all group">
+              <Scale className="w-6 h-6 text-brand-400 mb-4" />
+              <h3 className="font-bold mb-2 group-hover:text-brand-400 transition-colors">Multi-provider measurement</h3>
+              <p className="text-sm text-muted-foreground">No single vendor grades itself. Fleet size is live on GET /api/gspc.</p>
+            </a>
+            
+            <a href="/assess" className="block p-6 rounded-2xl bg-background border border-border hover:border-brand-500/50 hover:bg-brand-500/5 transition-all group">
+              <Shield className="w-6 h-6 text-brand-400 mb-4" />
+              <h3 className="font-bold mb-2 group-hover:text-brand-400 transition-colors">Aligned to published frameworks</h3>
+              <p className="text-sm text-muted-foreground">EU AI Act · NIST · ISO 42001 · DORA · NIS2</p>
+            </a>
+            
+            <a href="https://github.com/CSOAI-ORG" className="block p-6 rounded-2xl bg-background border border-border hover:border-brand-500/50 hover:bg-brand-500/5 transition-all group">
+              <Code className="w-6 h-6 text-brand-400 mb-4" />
+              <h3 className="font-bold mb-2 group-hover:text-brand-400 transition-colors">Open source · MIT</h3>
+              <p className="text-sm text-muted-foreground">Open measurement tooling, inspectable.</p>
+            </a>
+            
+            <a href="/legal" className="block p-6 rounded-2xl bg-background border border-border hover:border-brand-500/50 hover:bg-brand-500/5 transition-all group">
+              <AlertCircle className="w-6 h-6 text-brand-400 mb-4" />
+              <h3 className="font-bold mb-2 group-hover:text-brand-400 transition-colors">Coordinated disclosure</h3>
+              <p className="text-sm text-muted-foreground">Published security.txt + CVD policy.</p>
+            </a>
+            
+            <a href="/about" className="block p-6 rounded-2xl bg-background border border-border hover:border-brand-500/50 hover:bg-brand-500/5 transition-all group">
+              <Award className="w-6 h-6 text-brand-400 mb-4" />
+              <h3 className="font-bold mb-2 group-hover:text-brand-400 transition-colors">CSOAI Ltd · UK</h3>
+              <p className="text-sm text-muted-foreground">Companies House 16939677</p>
+            </a>
+          </div>
+
+          <div className="flex justify-center">
+            <Link href="/assess" className="px-8 py-4 rounded-xl gradient-brand text-white font-bold text-lg hover:shadow-lg hover:shadow-brand-500/25 hover:-translate-y-1 transition-all flex items-center gap-2">
+              Get your first signed measurement — free <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </div>
