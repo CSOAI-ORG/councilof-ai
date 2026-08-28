@@ -17,7 +17,7 @@ Human execution only. Template: `docs/CONTACT_OUTREACH_TEMPLATE.md`. **No cold e
 | 11 | Fund disclosure | Ondo primary pages | REPORTED cite only | ☐ |
 | 12 | Fund disclosure | Apollo / Securitize ACRED | REPORTED cite only | ☐ |
 | 13 | Regulator | `/gspc-verify` | verify free forever · no account | ☐ |
-| 14 | Regulator | `docs/REGULATOR_INDICES_ONE_PAGER.md` | UNMEASURED indices honesty brief | ☐ |
+| 14 | Regulator | `/regulator-indices-one-pager.html` · `.pdf` · `docs/REGULATOR_INDICES_ONE_PAGER.md` | UNMEASURED indices honesty brief | artifact ✅ · send ☐ |
 | 15 | Option A prospect | `/powered-by` | design partner — not grade sales | ☐ |
 | 16 | Option A prospect | white-label badge SVG | attestation license — not tokenization | ☐ |
 

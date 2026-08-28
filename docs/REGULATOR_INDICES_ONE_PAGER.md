@@ -1,8 +1,14 @@
 # Regulator brief — labour & AI-economy indices (UNMEASURED)
 
-**NEXT_300 #149** · Markdown source for PDF layout · **Not a compliance determination**
+**NEXT_300 #149** · Markdown source · **Not a compliance determination**
 
 CSOAI Ltd · UK Companies House **16939677** · Measurement, not certification
+
+**Live artifacts**
+
+- Print HTML (designed): `/regulator-indices-one-pager.html`
+- PDF: `/regulator-indices-one-pager.pdf` · regenerate with `npm run pdf:regulator-indices`
+- Council OS Ask door: `/government` → `regulator-brief`
 
 ---
 
@@ -39,6 +45,6 @@ Some Hugging Face `csoai/*` experiment files may label `MEASURED-INDEX-v0.1`. Th
 
 ## Contact
 
-Public artifacts only — no cold harvest. Outreach template: `docs/CONTACT_OUTREACH_TEMPLATE.md`.
+Public artifacts only — no cold harvest. Outreach template: `docs/CONTACT_OUTREACH_TEMPLATE.md` · tracker slot 14: `docs/CONTACT_OUTREACH_TRACKER.md`.
 
-**PDF layout / counsel sign-off:** owner gate. Print-ready HTML (browser Print → PDF): `/regulator-indices-one-pager.html`. This markdown remains the source text.
+**Counsel sign-off of index disclaimers:** ⛔ (#150).

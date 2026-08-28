@@ -11,7 +11,7 @@ Do not invent MEASURED labour/economy scores to unblock these moves.
 | Method promotion | INDEX-METHOD-0.1 → frozen bank + owner sign-off | ☐ SPEC |
 | Input banks | REPORTED citation tables dated + linked | ✅ `docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md` |
 | Firewall | Never fuse into GSPC cells | ✅ lint + `/api/indices` |
-| HF UNMEASURED manifest | `csoai/labour-economy-unmeasured` live | 🔄 #139 write token |
+| HF UNMEASURED manifest | `csoai/labour-economy-unmeasured` live | 🔄 fixture+verify ✅ · Hub missing · #139/#253 need `HF_TOKEN` |
 
 ## Move register
 

@@ -1,10 +1,22 @@
-# rwa-testnet-unmeasured (local pack)
+---
+license: mit
+tags:
+  - council-of-ai
+  - unmeasured
+  - testnet
+  - rwa
+  - measurement-not-certification
+pretty_name: CSOAI RWA testnet catalog (UNMEASURED)
+---
 
-**NEXT_300 #186** · Label: **TESTNET** · status: **UNMEASURED**
+# csoai/rwa-testnet-unmeasured
 
-Staging pack for HF upload when a write-capable token is available. REPORTED contact catalog only — no invented MEASURED scores; no fake AUM/TVL as grades.
+**Label: TESTNET** · **Register: UNMEASURED.** No invented MEASURED scores; no fake AUM/TVL as grades.
 
-- `catalog.json` — mirrors `GET /api/rwa-attestation` honesty shape (`measured_score: null`)
-- Related: `datasets/labour-economy-unmeasured/` (indices stay UNMEASURED)
+Staging pack for NEXT_300 **#186**. Mirrors `GET /api/rwa-attestation` honesty (`measured_score: null`). Unsigned clean-play rows only until custody unlocks signed cards.
 
-Do not publish as MEASURED-INDEX. INDEX-METHOD firewall: never fuse labour/economy into GSPC grading inputs.
+- Related indices pack: `csoai/labour-economy-unmeasured` (#139 / #253) — labour/economy stay UNMEASURED
+- JMWH remains **DEMO ONLY** in the catalog fixture
+- Firewall: never fuse labour/economy into GSPC grading inputs
+
+Do **not** publish as `MEASURED-INDEX`. Upload when write token works: `npm run hf:upload-staged`.
