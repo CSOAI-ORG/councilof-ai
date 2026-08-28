@@ -251,4 +251,55 @@ export default function Enterprise() {
         </div>
 
         <div className="relative">
-          {/* Conne
+          {/* Connection Line */}
+          <div className="hidden lg:block absolute top-24 left-[10%] right-[10%] h-1 bg-gradient-to-r from-emerald-200 via-emerald-400 to-emerald-200 rounded-full" />
+
+          <div className="grid md:grid-cols-5 gap-6">
+            {/* Step 1 */}
+            <div className="relative">
+              <Card className="p-6 text-center h-full border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold relative z-10">
+                  1
+                </div>
+                <ClipboardCheck className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
+                <h3 className="font-bold text-lg mb-2">Register AI Systems</h3>
+                <p className="text-sm text-gray-600">
+                  Import your AI systems via dashboard, CSV, or API. Define system purpose, risk level, and data flows.
+                </p>
+              </Card>
+            </div>
+
+            {/* Step 2 */}
+            <div className="relative">
+              <Card className="p-6 text-center h-full border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold relative z-10">
+                  2
+                </div>
+                <Zap className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
+                <h3 className="font-bold text-lg mb-2">Automated Assessment</h3>
+                <p className="text-sm text-gray-600">
+                  A designed multi-provider Council of AI evaluates your systems against selected compliance frameworks.
+                </p>
+              </Card>
+            </div>
+
+            {/* Step 3 */}
+            <div className="relative">
+              <Card className="p-6 text-center h-full border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold relative z-10">
+                  3
+                </div>
+                <FileText className="h-10 w-10 text-emerald-600 mx-auto mb-3" />
+                <h3 className="font-bold text-lg mb-2">Get Recommendations</h3>
+                <p className="text-sm text-gray-600">
+                  Receive prioritized action items, remediation guidance, and implementation templates.
+                </p>
+              </Card>
+            </div>
+
+            {/* Step 4 */}
+            <div className="relative">
+              <Card className="p-6 text-center h-full border-2 border-emerald-100 hover:border-emerald-300 transition-colors">
+                <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold relative z-10">
+                  4
+                <
