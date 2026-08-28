@@ -20,19 +20,17 @@
  * - Three doors: verify (free), OS, Space
  * - Products / refusals below the fold
  */
-import { useEffect, useState, type ReactNode, useCallback } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { useLocation } from "wouter";
 import EnterpriseTrust from "../components/EnterpriseTrust";
 import RegionBanner from "../components/RegionBanner";
 import {
-  fetchAxes, quotable, wilson, hasInterval, hasMacroF1,
+  fetchAxes, quotable,
   type Axis,
 } from "../lib/gspcAxes";
 import {
   ChevronRight,
   Ban,
-  X,
-  BarChart3,
-  ExternalLink,
   Activity,
   CheckCircle2,
   Circle,
@@ -198,235 +196,19 @@ function HeroIntro() {
   );
 }
 
-// ── axis detail pane: row-click deep view ──────────────────────────────
-function AxisDetailPane({
-  axis,
-  onClose,
-}: {
-  axis: Axis | null;
-  onClose: () => void;
-}) {
-  if (!axis) return null;
-  const isMeasured = axis.status === "MEASURED";
-  const q = quotable(axis);
-  const showInterval = hasInterval(axis);
-  const interval = showInterval && q ? wilson(axis.accuracy!, axis.n) : null;
-  const showMacro = hasMacroF1(axis);
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="relative mx-4 w-full max-w-2xl rounded-2xl border border-border bg-card shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
-          aria-label="Close"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
-        <div className="p-6 sm:p-8">
-          {/* Header */}
-          <div className="flex items-start gap-4">
-            <div
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
-              style={{ backgroundColor: `${axis.colour}20`, color: axis.colour }}
-            >
-              <BarChart3 className="h-6 w-6" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h2 className="text-xl font-bold text-foreground">{axis.axis}</h2>
-              <p className="mt-0.5 text-sm text-muted-foreground">{axis.bench}</p>
-            </div>
-          </div>
-
-          {/* Status badge row */}
-          <div className="mt-6 flex flex-wrap items-center gap-2">
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${
-                isMeasured
-                  ? "bg-emerald-500/15 text-emerald-700"
-                  : "bg-slate-500/10 text-slate-500"
-              }`}
-            >
-              {isMeasured ? (
-                <CheckCircle2 className="h-3.5 w-3.5" />
-              ) : (
-                <Circle className="h-3.5 w-3.5" />
-              )}
-              {axis.status}
-            </span>
-            {axis.instrument && (
-              <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-                {axis.instrument}
-              </span>
-            )}
-          </div>
-
-          {/* Task description */}
-          {axis.task && (
-            <p className="mt-4 text-sm leading-relaxed text-foreground">
-              <strong className="font-semibold">Measurement task:</strong> {axis.task}
-            </p>
-          )}
-
-          {/* Metrics grid */}
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <div className="rounded-xl border border-border bg-muted/30 p-4">
-              <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                Sample (n)
-              </div>
-              <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-foreground">
-                {axis.n > 0 ? axis.n : "—"}
-              </div>
-            </div>
-            <div className="rounded-xl border border-border bg-muted/30 p-4">
-              <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                Accuracy
-              </div>
-              <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-foreground">
-                {q ? `${((axis.accuracy ?? 0) * 100).toFixed(1)}%` : "—"}
-              </div>
-            </div>
-            {showMacro && (
-              <div className="rounded-xl border border-border bg-muted/30 p-4">
-                <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                  Macro F1
-                </div>
-                <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-foreground">
-                  {(axis.macro_f1! * 100).toFixed(1)}%
-                </div>
-              </div>
-            )}
-            <div className="rounded-xl border border-border bg-muted/30 p-4">
-              <div className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                Unparsed
-              </div>
-              <div className="mt-1 font-mono text-2xl font-bold tabular-nums text-foreground">
-                {axis.unparsed_rate > 0 ? `${(axis.unparsed_rate * 100).toFixed(1)}%` : "0%"}
-              </div>
-            </div>
-          </div>
-
-          {/* Confidence interval visualization */}
-          {interval && (
-            <div className="mt-6">
-              <div className="mb-2 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                95% Wilson Interval
-              </div>
-              <div className="relative h-8 overflow-hidden rounded-lg bg-muted">
-                <div
-                  className="absolute top-0 h-full bg-emerald-500/30"
-                  style={{
-                    left: `${interval[0] * 100}%`,
-                    width: `${(interval[1] - interval[0]) * 100}%`,
-                  }}
-                />
-                <div
-                  className="absolute top-0 h-full w-0.5 bg-emerald-600"
-                  style={{ left: `${(axis.accuracy ?? 0) * 100}%` }}
-                />
-                <div className="absolute inset-0 flex items-center justify-between px-3 text-[10px] font-mono text-muted-foreground">
-                  <span>{(interval[0] * 100).toFixed(0)}%</span>
-                  <span className="font-bold text-foreground">
-                    {((axis.accuracy ?? 0) * 100).toFixed(1)}%
-                  </span>
-                  <span>{(interval[1] * 100).toFixed(0)}%</span>
-                </div>
-              </div>
-              <p className="mt-1 text-[11px] text-muted-foreground">
-                n≥30 required. Interval is withheld below that threshold.
-              </p>
-            </div>
-          )}
-
-          {/* Progress bar: measured vs unmeasured visual */}
-          <div className="mt-6">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-                Measurement Progress
-              </span>
-              <span className="text-xs text-muted-foreground">
-                {isMeasured ? "Measured" : "UNMEASURED — slot declared, no run behind it"}
-              </span>
-            </div>
-            <div className="h-3 overflow-hidden rounded-full bg-muted">
-              <div
-                className={`h-full transition-all ${
-                  isMeasured ? "bg-emerald-500" : "bg-slate-300"
-                }`}
-                style={{ width: isMeasured ? "100%" : "0%" }}
-              />
-            </div>
-          </div>
-
-          {/* Note */}
-          {axis.note && (
-            <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs leading-relaxed text-amber-800">
-              <strong className="font-semibold">Note:</strong> {axis.note}
-            </p>
-          )}
-
-          {/* Actions */}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            {isMeasured && (
-              <a
-                href={`/gspc-verify?axis=${encodeURIComponent(axis.axis)}`}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90"
-              >
-                Verify this axis <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            )}
-            <a
-              href={`/gspc-scoreboard?axis=${encodeURIComponent(axis.axis)}`}
-              className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
-            >
-              View on scoreboard
-            </a>
-            {axis.dataset_url && (
-              <a
-                href={axis.dataset_url}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-              >
-                Dataset <ExternalLink className="h-3 w-3" />
-              </a>
-            )}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="border-t border-border bg-muted/30 px-6 py-4 sm:px-8">
-          <p className="text-[11px] leading-relaxed text-muted-foreground">
-            <strong>Measurement credential, not certification.</strong> This axis is a measurement —
-            we run AI systems against frozen, published tests and sign the result. We issue no
-            conformity mark, no badge, no seal. UNMEASURED slots stay visible: an empty cell is
-            honest, a fabricated number is not. Verification is free forever.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ── dense board: OpenRouter-style sortable leaderboard of ALL axes ──────
+// Row click navigates to the existing board/OS deep pages (graphs, OTEL, logs, traces)
 type SortKey = "axis" | "status" | "n" | "score";
 type SortDir = "asc" | "desc";
 
 function DenseBoard() {
+  const [, navigate] = useLocation();
   const [axes, setAxes] = useState<Axis[]>([]);
   const [publicCount, setPublicCount] = useState("");
   const [measuredOn, setMeasuredOn] = useState("");
   const [loading, setLoading] = useState(true);
   const [sortKey, setSortKey] = useState<SortKey>("status");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
-  const [selectedAxis, setSelectedAxis] = useState<Axis | null>(null);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -483,9 +265,10 @@ function DenseBoard() {
   const measuredCount = axes.filter((a) => a.status === "MEASURED").length;
   const emptyCount = axes.length - measuredCount;
 
-  const handleRowClick = useCallback((axis: Axis) => {
-    setSelectedAxis(axis);
-  }, []);
+  const goToAxis = (axis: Axis) => {
+    // Navigate to the existing board deep page: /gspc/:axis (graphs, OTEL, logs, traces)
+    navigate(`/gspc/${encodeURIComponent(axis.axis)}`);
+  };
 
   const SortIcon = ({ k }: { k: SortKey }) => (
     <span className="ml-1 inline-block opacity-60">
@@ -597,11 +380,11 @@ function DenseBoard() {
                     <tr
                       key={a.axis}
                       className="cursor-pointer border-b border-border last:border-0 transition-colors hover:bg-emerald-50/50"
-                      onClick={() => handleRowClick(a)}
+                      onClick={() => goToAxis(a)}
                       tabIndex={0}
-                      onKeyDown={(e) => e.key === "Enter" && handleRowClick(a)}
+                      onKeyDown={(e) => e.key === "Enter" && goToAxis(a)}
                       role="button"
-                      aria-label={`View details for ${a.axis}`}
+                      aria-label={`Open ${a.axis} deep page`}
                     >
                       <td className="px-4 py-2.5">
                         <span className="font-semibold text-foreground">{a.axis}</span>
@@ -665,16 +448,13 @@ function DenseBoard() {
 
         {/* Footer note */}
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          Click any row for axis detail. Empty cells stay visible — UNMEASURED is honest.
+          Click any row → deep page (graphs, traces, evidence). Empty cells stay visible.
           <span className="mx-1">·</span>
           <a href="/methodology" className="font-medium text-emerald-600 hover:underline">
             How we measure
           </a>
         </p>
       </div>
-
-      {/* Detail pane */}
-      <AxisDetailPane axis={selectedAxis} onClose={() => setSelectedAxis(null)} />
     </section>
   );
 }
