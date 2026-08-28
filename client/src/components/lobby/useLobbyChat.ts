@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { matchRoute, matchTab, type LobbyTab } from "./tabs";
+import { AXES, quotable } from "@/lib/gspcAxes";
 
 /**
  * useLobbyChat — the lobby's chat state, lifted out of the bar.
@@ -60,6 +61,77 @@ function offlineHelp(reason: string): string {
     `left of this lobby. The pages themselves fetch their own live data and will tell you if ` +
     `they cannot reach it either.`
   );
+}
+
+/**
+ * Axis/Space open command detection.
+ *
+ * Returns an object describing what the user asked for:
+ * - axis: the matching axis from the board (if found)
+ * - isPractice: true if this is explicitly a practice/training request
+ * - isSpace: true if the user asked for Council Space/arena generally
+ */
+function matchAxisOrSpace(text: string): {
+  axis: typeof AXES[number] | null;
+  isPractice: boolean;
+  isSpace: boolean;
+} {
+  const t = text.toLowerCase();
+  const isNavCommand = /\b(show|open|go|take me|switch|jump|load|view|bring up|let me|enter)\b/i.test(text);
+  if (!isNavCommand) return { axis: null, isPractice: false, isSpace: false };
+
+  const isPractice = /\b(practice|training|train|practice mode|unsigned|test run)\b/i.test(t);
+  const isSpace = /\b(arena|space|council space|coliseum)\b/i.test(t);
+
+  const axisNames = AXES.map((a) => a.axis.toLowerCase());
+  const axisAliases: Record<string, string> = {
+    gov: "governance",
+    governing: "governance",
+    "risk tier": "governance",
+    safe: "safety",
+    refusal: "safety",
+    prov: "provenance",
+    marking: "provenance",
+    c2pa: "provenance",
+    cont: "continuity",
+    pqc: "continuity",
+    mcp: "conformance",
+    tool: "conformance",
+    oss: "openness",
+    licence: "openness",
+    license: "openness",
+    mach: "machinery-conformity",
+    machinery: "machinery-conformity",
+    xr: "cross-reality",
+    immersive: "cross-reality",
+    det: "detector-interop",
+    watermark: "detector-interop",
+    art5: "art5-safeguard",
+    "article 5": "art5-safeguard",
+    prohibited: "art5-safeguard",
+    emotion: "affect",
+    affective: "affect",
+    multi: "swarm",
+    coordination: "swarm",
+  };
+
+  let foundAxis: typeof AXES[number] | null = null;
+  for (const [alias, canonical] of Object.entries(axisAliases)) {
+    if (t.includes(alias)) {
+      foundAxis = AXES.find((a) => a.axis === canonical) ?? null;
+      if (foundAxis) break;
+    }
+  }
+  if (!foundAxis) {
+    for (const axisName of axisNames) {
+      if (t.includes(axisName)) {
+        foundAxis = AXES.find((a) => a.axis.toLowerCase() === axisName) ?? null;
+        if (foundAxis) break;
+      }
+    }
+  }
+
+  return { axis: foundAxis, isPractice, isSpace };
 }
 
 export interface LobbyChat {
@@ -151,6 +223,67 @@ export function useLobbyChat(): LobbyChat {
             `That was a local pane switch, not a measurement. Whatever the pane shows, it fetched itself.`,
           state: "deterministic",
           signature: `local command · ${extra.path}`,
+        });
+        return;
+      }
+
+      // Lane 1.5 — axis/Space navigation. Opens Council Space for measured axes,
+      // refuses for unmeasured, handles practice mode.
+      const axisMatch = matchAxisOrSpace(question);
+      if (axisMatch.isPractice) {
+        if (onOpenRoute) {
+          onOpenRoute("/gspc-arena", "Council Space — Practice");
+        }
+        push({
+          role: "council",
+          text:
+            `Opening Council Space in PRACTICE mode.\n\n` +
+            `**Unsigned training. Never quoted. Not a measurement.**\n\n` +
+            `Practice runs are for learning and testing only. They do not produce signed cards, ` +
+            `are not recorded on the board, and must never be cited as evidence. ` +
+            `The arena opened — use it freely, knowing the results stay unsigned.`,
+          state: "deterministic",
+          signature: "practice mode · unsigned",
+        });
+        return;
+      }
+      if (axisMatch.axis && onOpenRoute) {
+        const axis = axisMatch.axis;
+        const isMeasured = quotable(axis);
+        if (isMeasured) {
+          onOpenRoute("/gspc-arena", `Council Space — ${axis.axis}`);
+          push({
+            role: "council",
+            text:
+              `Opened Council Space for the "${axis.axis}" axis.\n\n` +
+              `This axis is **MEASURED** — accuracy ${(axis.accuracy! * 100).toFixed(1)}%, n=${axis.n}. ` +
+              `The arena shows the measured rounds. Council Space fetches its own live data from GET /api/gspc.`,
+            state: "deterministic",
+            signature: `axis open · ${axis.axis} · measured`,
+          });
+        } else {
+          push({
+            role: "council",
+            text:
+              `The "${axis.axis}" axis is **UNMEASURED** — it is a declared slot on the board with no run behind it.\n\n` +
+              `Council Space cannot open a floor for an axis that has no measurement. ` +
+              `Empty cells stay empty. Check GET /api/gspc for the current board state.`,
+            state: "deterministic",
+            signature: `axis closed · ${axis.axis} · unmeasured`,
+          });
+        }
+        return;
+      }
+      if (axisMatch.isSpace && onOpenRoute) {
+        onOpenRoute("/gspc-arena", "Council Space");
+        push({
+          role: "council",
+          text:
+            `Opened Council Space — the governed arena.\n\n` +
+            `Rounds are graded deterministically, never by a model jury. The arena shows what was measured. ` +
+            `To open a specific axis, say "open governance" or "show the care axis".`,
+          state: "deterministic",
+          signature: "local command · /gspc-arena",
         });
         return;
       }

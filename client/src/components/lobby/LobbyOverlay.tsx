@@ -11,6 +11,7 @@ import LobbyCardsPane from "./LobbyCardsPane";
 import LobbyStatePane from "./LobbyStatePane";
 import LobbyEvidencePane from "./LobbyEvidencePane";
 import LobbyEmbedPane from "./LobbyEmbedPane";
+import LobbyMatrixPane from "./LobbyMatrixPane";
 import LobbyPlay from "./LobbyPlay";
 import LobbyHome from "./LobbyHome";
 import { useLobbyChat } from "./useLobbyChat";
@@ -516,6 +517,8 @@ export default function LobbyOverlay({
                   <LobbyPlay onOpenRoute={openRoute} />
                 ) : nativePane && tab.id === "board" ? (
                   <LobbyBoardPane />
+                ) : nativePane && tab.id === "matrix" ? (
+                  <LobbyMatrixPane onOpenSpace={(axis) => openRoute("/gspc-arena", "Council Space")} />
                 ) : nativePane && tab.id === "verify" ? (
                   <LobbyVerifyPane />
                 ) : nativePane && tab.id === "cards" ? (
