@@ -1,23 +1,18 @@
 {
   "e2e": {
-    "passed": true,
-    "output": "py has valid Python syntax\n  \u2705 Training data benchmark-results/sovereign_synth_50k.jsonl exists\n  \u2705 Training data benchmark-results/sov5_training_dataset.jsonl exists\n  \u2705 Training data benchmark-results/sovereign_corpus_e2e.jsonl exists\n\n============================================================\nRESULTS: 124 passed, 0 failed, 0 warnings\nPAGES: 42 HTML files, 42 passing 8/8 signals\nLINKS: 391 checked, 0 broken\n============================================================\n\n\u2705 ALL 124 TESTS PASSED\n"
+    "passed": false,
+    "output": "synth_50k.jsonl not found (may be gitignored)\n  \u26a0\ufe0f  Training data benchmark-results/sov5_training_dataset.jsonl not found (may be gitignored)\n  \u26a0\ufe0f  Training data benchmark-results/sovereign_corpus_e2e.jsonl not found (may be gitignored)\n\n============================================================\nRESULTS: 101 passed, 11 failed, 13 warnings\nPAGES: 406 HTML files, 139 passing 8/8 signals\nLINKS: 3443 checked, 0 broken\n============================================================\n\n\u274c 11 TESTS FAILED\n"
   },
   "batch_verifier": {
-    "passed": true,
-    "output": "BATCH SUMMARY\n========================================================================\n  Pages:                  53\n  Capability contracts:  8/8 pass, 0 fail\n  Passing full check:     53 (100.0%)\n  Failing full check:     0\n  Stale art50 banners:    0\n  Hub inbound:            53 (100.0%)\n  Registry:               PASS\n  Capability contracts: 8/8 (100%)\n\n  MCP inventory:\n    Live:   27\n    Stage:  5\n    Total:  33 MCPs, 111 tools\n\n  \u2713 BATCH PASSED \u2014 estate is consistent with the canonical frame\n"
+    "passed": false,
+    "output": "========================\n  BATCH SUMMARY\n========================================================================\n  Pages:                  424\n  Capability contracts:  8/8 pass, 0 fail\n  Passing full check:     0 (0.0%)\n  Failing full check:     424\n  Stale art50 banners:    2\n  Hub inbound:            159 (37.5%)\n  Registry:               PASS\n  Capability contracts: 8/8 (100%)\n\n  MCP inventory:\n    Live:   27\n    Stage:  5\n    Total:  33 MCPs, 111 tools\n\n  \u2717 BATCH FAILED \u2014 see failures above\n"
   },
   "training_data": {
-    "passed": true
-  },
-  "benchmark": {
-    "passed": true,
-    "output": "run_ollama_benchmark: stub \u2014 model=qwen2.5:0.5b suite=sovereign_compliance limit=10\n"
+    "passed": false
   },
   "runpod": {
-    "status": "available",
-    "output": ""
+    "status": "unavailable"
   },
-  "timestamp": "2026-07-27T12:08:33.686778+00:00",
-  "sigil": "9d52b92f35815aa6601eea2176677db312f6e3284ff3632c6bd77f39ee66f77c"
+  "timestamp": "2026-08-27T20:09:23.745796+00:00",
+  "sigil": "c4cd20c18a0008aa605cf5fef3c23c414cc245b515c0622cf7cd81185ea9134d"
 }
