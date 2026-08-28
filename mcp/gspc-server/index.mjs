@@ -31,7 +31,7 @@ import { createInterface } from "node:readline";
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 const ORIGIN = process.env.GSPC_ORIGIN || "https://councilof.ai";
 const FETCH_TIMEOUT_MS = 15000;
 
