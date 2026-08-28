@@ -147,7 +147,7 @@ export default function WorldGlobe() {
   const [acted, setActed] = useState("");
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const globe3dRef = useRef<HTMLIFrameElement | null>(null);
-  // ── The Sovereign tour ─────────────────────────────────────────────────────────
+  // ── The Sovereign tour ─────────────────────────────────────────────────────
   // Watch the Council assistant work the Layer-0 estate, one persona at a time. Every stop is a real
   // node with the status it has earned (LIVE by proven fetch / UNKNOWN said honestly /
   // CANDIDATE not yet earned) — the tour is the node registry made visible, not a promo reel.
@@ -294,7 +294,7 @@ export default function WorldGlobe() {
         <h1 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">AI governance, layered on the world</h1>
         <p className="mt-2 max-w-2xl text-emerald-50/80">Every framework lives where it is made. Spin the globe, toggle the layers, click any node to see what it governs and jump straight into the OS.</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button onClick={() => setMode((m) => (m === "3d" ? "2d" : "3d"))} className="rounded-full border border-sky-400/50 bg-sky-500/10 px-4 py-1.5 text-sm font-bold text-sky-200 hover:bg-sky-500/20">{mode === "3d" ? "◉ 3D globe" : "◌ 2D classic"}</button>
+          <button onClick={() => setMode((m) => (m === "3d" ? "2d" : "3d"))} className="rounded-full border border-sky-400/50 bg-sky-500/10 px-4 py-1.5 text-sm font-bold text-sky-200 hover:bg-sky-500/20">{mode === "3d" ? "◉ 3D globe" : "◍ 2D classic"}</button>
           <button onClick={() => setLayers((l) => ({ ...l, fw: !l.fw }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.fw ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Frameworks</button>
           <button onClick={() => setLayers((l) => ({ ...l, council: !l.council }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.council ? "border-emerald-400 bg-emerald-600 text-white" : "border-white/20 text-white/60")}>Council of AI</button>
           <button onClick={() => setLayers((l) => ({ ...l, watchdog: !l.watchdog }))} className={"rounded-full border px-4 py-1.5 text-sm font-bold " + (layers.watchdog ? "border-amber-400 bg-amber-500 text-black" : "border-white/20 text-white/60")}>Watchdog heat</button>
