@@ -78,7 +78,7 @@ export default function SovereignTwin() {
           <div className="text-sm font-bold text-emerald-200">Your Twin personalises as you use the OS.</div>
           <p className="mt-1 text-sm text-emerald-100/70">Every question in the <b className="text-emerald-200">Council dock</b>, every <b className="text-emerald-200">Governance Graph</b> query, every <b className="text-emerald-200">Council Space</b> experiment and <b className="text-emerald-200">Council</b> verdict updates your personalisation record.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <a href="/?lobby=home" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Ask the Governance Graph +6%</a>
+            <a href="/os?lobby=home" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Ask the Governance Graph +6%</a>
             <a href="/gspc-arena" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Run a Council Space experiment +10%</a>
             <a href="/try" className="rounded-full border border-emerald-400/30 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-emerald-500/15">Convene the Council +10%</a>
           </div>
