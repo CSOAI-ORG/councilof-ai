@@ -4,16 +4,18 @@
  * A compact utility bar that owns the /os product frame:
  * - The mark and Council OS name
  * - Inner nav doors: Board / Verify / Space / Assess / Harness
+ * - Visible Exit OS control back to marketing home
  * - User account controls (Sign in or user menu if authenticated)
  *
  * This header is mounted ONLY on /os and its hops (/ag-ui /chat /console /sov-os).
  * It replaces the marketing site header — one product frame, not marketing chrome.
  *
  * Navigation uses URL params (?lobby=board, etc.) which OsLauncher reads.
- * Assess → /os?lobby=measured → /assess (never /readiness-assessment).
+ * Assess → /os?lobby=assess → /assess (never /readiness-assessment).
+ * measured remains a supported alias for assess.
  */
 
-import { Link, useLocation, useSearch } from "wouter";
+import { Link, useSearch } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { User, LogOut, Settings, BookOpen, BarChart3, Award } from "lucide-react";
 import {
@@ -56,12 +58,12 @@ const DOOR_TO_LOBBY: Record<DoorId, string> = {
   board: "board",
   verify: "verify",
   space: "space",
-  assess: "measured",
+  assess: "assess",
   harness: "harness",
 };
 
 export default function OsHeader() {
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocationSafe();
   const search = useSearch();
   const { user, logout } = useAuth();
 
@@ -77,10 +79,9 @@ export default function OsHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md">
       <nav className="mx-auto flex h-12 max-w-5xl items-center justify-between px-4">
-        {/* Logo + name */}
         <div className="flex items-center gap-6">
           <Link
-            href="/"
+            href="/os?lobby=home"
             className="flex items-center gap-2 transition hover:opacity-90"
           >
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
@@ -89,7 +90,6 @@ export default function OsHeader() {
             <span className="text-sm font-semibold text-slate-900">Council OS</span>
           </Link>
 
-          {/* Door tabs — desktop */}
           <nav
             aria-label="Council OS sections"
             className="hidden items-center gap-1 sm:flex"
@@ -113,9 +113,13 @@ export default function OsHeader() {
           </nav>
         </div>
 
-        {/* Right side — account */}
         <div className="flex items-center gap-2">
-          {/* Verify free link */}
+          <Link
+            href="/"
+            className={`hidden rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 sm:inline-flex ${FOCUS}`}
+          >
+            Exit OS
+          </Link>
           <a
             href="/gspc-verify"
             className={`hidden rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 sm:inline-flex ${FOCUS}`}
@@ -123,7 +127,6 @@ export default function OsHeader() {
             Verify free
           </a>
 
-          {/* User account */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -190,7 +193,6 @@ export default function OsHeader() {
         </div>
       </nav>
 
-      {/* Mobile door tabs */}
       <nav
         aria-label="Council OS sections (mobile)"
         className="flex items-center gap-1 overflow-x-auto border-t border-slate-100 px-4 py-2 sm:hidden"
@@ -211,7 +213,18 @@ export default function OsHeader() {
             </button>
           );
         })}
+        <Link
+          href="/"
+          className={`ml-auto shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 ${FOCUS}`}
+        >
+          Exit OS
+        </Link>
       </nav>
     </header>
   );
+}
+
+function useLocationSafe(): [string, (to: string) => void] {
+  const { useLocation } = require("wouter") as typeof import("wouter");
+  return useLocation();
 }
