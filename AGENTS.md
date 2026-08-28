@@ -7,4 +7,4 @@ are GENERATED MIRRORS from this monorepo.
 - Measurement credentials, never certification
 - Package rename: sovos-* → csoai-* (e.g. sovos_core → csoai_core)
 - Never git add -A (multi-lane)
-- Deploy: build site → wrangler pages deploy
+- Deploy: **GHA on master only** (push to master triggers `deploy.yml`; direct wrangler is owner-only per DEPLOY-LOCK.md)
