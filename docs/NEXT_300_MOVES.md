@@ -240,7 +240,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 372 | Rollback plan if App truncate | ops | ✅ |
 | 373 | MCP push_files size discipline | AGENT_COORDINATION · ✅ |
 | 374 | Single-writer tip policy | AGENT_COORDINATION · ✅ |
-| 375–390 | Sixteen contact outreach (public artifacts only) | distro · template ✅ · tracker ✅ `docs/CONTACT_OUTREACH_TRACKER.md` · human send ☐ |
+| 375–390 | Sixteen contact outreach (public artifacts only) | distro · template ✅ · tracker artifacts wired ✅ `docs/CONTACT_OUTREACH_TRACKER.md` · human send ☐ |
 | 391–399 | Nine quarterly freshness reviews | ops · ✅ |
 | 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta · ✅ code/docs ≥80%; remainder ⛔/🔄/human |
 

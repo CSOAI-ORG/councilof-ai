@@ -1,24 +1,26 @@
 # Contact outreach tracker (NEXT_300 #375–390)
 
-Human execution only. Template: `docs/CONTACT_OUTREACH_TEMPLATE.md`. **No cold email harvest in-repo.**
+Human **send** only. Template: `docs/CONTACT_OUTREACH_TEMPLATE.md`. **No cold email harvest in-repo.**
+
+Public artifacts wired from `docs/ISSUER_PUBLIC_ARTIFACT_REFRESHES.md` + adapters (as-of 2026-08-26). Re-verify explorer links before any send. Never claim MEASURED labour scores.
 
 | Slot | Class | Public artifact | Ask | Status |
 |------|-------|-----------------|-----|--------|
-| 1 | XRPL issuer | Ondo OUSG XRPScan | confirm `public_id` for Stage 2 testnet pointer | ☐ |
-| 2 | XRPL issuer | RLUSD issuer page | confirm settlement rail cite | ☐ |
-| 3 | XRPL issuer | Aviva / Licuido public pages | confirm issuer when on-ledger | ☐ |
-| 4 | XRPL issuer | Archax × abrdn XRPScan | confirm MMF issuer row | ☐ |
-| 5 | EVM token | BUIDL Etherscan | contract still authoritative | ☐ |
-| 6 | EVM token | BENJI Etherscan | contract still authoritative | ☐ |
-| 7 | EVM token | ACRED Etherscan | Securitize fund page still primary | ☐ |
-| 8 | EVM token | Zeconomy / Guggenheim public pages | caution play — issuer TBD | ☐ |
-| 9 | Fund disclosure | Securitize BUIDL PDFs | REPORTED cite only | ☐ |
-| 10 | Fund disclosure | Franklin BENJI disclosures | REPORTED cite only | ☐ |
-| 11 | Fund disclosure | Ondo primary pages | REPORTED cite only | ☐ |
-| 12 | Fund disclosure | Apollo / Securitize ACRED | REPORTED cite only | ☐ |
-| 13 | Regulator | `/gspc-verify` | verify free forever · no account | ☐ |
+| 1 | XRPL issuer | [Ondo OUSG XRPScan](https://xrpscan.com/account/rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p) | confirm `public_id` for Stage 2 testnet pointer | artifact ✅ · send ☐ |
+| 2 | XRPL issuer | [RLUSD XRPScan](https://xrpscan.com/account/rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De) | confirm settlement rail cite | artifact ✅ · send ☐ |
+| 3 | XRPL issuer | Aviva / Licuido public pages (issuer TBD on XRPScan) | confirm issuer when on-ledger | artifact ☐ · send ☐ |
+| 4 | XRPL issuer | [Archax × abrdn XRPScan](https://xrpscan.com/account/rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q) | confirm MMF issuer row | artifact ✅ · send ☐ |
+| 5 | EVM token | [BUIDL Etherscan](https://etherscan.io/address/0x7712c34205737192402172409a8f7ccef8aa2aec) | contract still authoritative | artifact ✅ · send ☐ |
+| 6 | EVM token | [BENJI Etherscan](https://etherscan.io/address/0x3DDc84940Ab509C11B20B76B466933f40b750dc9) | contract still authoritative | artifact ✅ · send ☐ |
+| 7 | EVM token | [ACRED Etherscan](https://etherscan.io/address/0x17418038ecF73BA4026c4f428547BF099706F27B) · [Securitize](https://securitize.io/) | contract / fund page still primary | artifact ✅ · send ☐ |
+| 8 | EVM token | Zeconomy / Guggenheim public pages (`public_id` null) | caution play — issuer TBD | artifact ☐ · send ☐ |
+| 9 | Fund disclosure | Securitize BUIDL pages (cite Etherscan + Securitize) | REPORTED cite only | artifact ✅ · send ☐ |
+| 10 | Fund disclosure | Franklin BENJI / FOBXX disclosures (cite Etherscan) | REPORTED cite only | artifact ✅ · send ☐ |
+| 11 | Fund disclosure | [Ondo](https://ondo.finance/) primary pages + OUSG XRPScan | REPORTED cite only | artifact ✅ · send ☐ |
+| 12 | Fund disclosure | Apollo / Securitize ACRED (Etherscan + securitize.io) | REPORTED cite only | artifact ✅ · send ☐ |
+| 13 | Regulator | https://councilof.ai/gspc-verify · `/gspc-verify` | verify free forever · no account | artifact ✅ · send ☐ |
 | 14 | Regulator | `/regulator-indices-one-pager.html` · `.pdf` · `docs/REGULATOR_INDICES_ONE_PAGER.md` | UNMEASURED indices honesty brief | artifact ✅ · send ☐ |
-| 15 | Option A prospect | `/powered-by` | design partner — not grade sales | ☐ |
-| 16 | Option A prospect | white-label badge SVG | attestation license — not tokenization | ☐ |
+| 15 | Option A prospect | https://councilof.ai/powered-by · `/powered-by` | design partner — not grade sales | artifact ✅ · send ☐ |
+| 16 | Option A prospect | `/badges/powered-by-council-os.svg` | attestation license — not tokenization | artifact ✅ · send ☐ |
 
 Do not claim MEASURED scores in outreach. Attestation ≠ tokenization ≠ ownership.

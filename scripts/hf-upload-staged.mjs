@@ -26,6 +26,7 @@ const PACKS = [
 ];
 
 function hfAuthOk() {
+  if (process.env.HF_TOKEN && process.env.HF_TOKEN.length > 8) return true;
   const r = spawnSync("hf", ["auth", "whoami"], { encoding: "utf8" });
   return r.status === 0 && !/not logged in/i.test(r.stdout + r.stderr);
 }

@@ -8,6 +8,6 @@ Public-artifact-only outreach. **No cold email harvest in-repo.** Sixteen slots 
 | 5–8 | EVM security tokens | Etherscan | confirm contract still authoritative |
 | 9–12 | Fund disclosures | Securitize / issuer PDFs | REPORTED cite only |
 | 13–14 | Regulators | verify URL | remind verify free forever |
-| 15–16 | Option A prospects | `/powered-by` | design partner — not grade sales |
+| 15–16 | Option A prospects | `/powered-by` · `/badges/powered-by-council-os.svg` | design partner — not grade sales |
 
 Do not claim MEASURED scores in outreach. Attestation ≠ tokenization ≠ ownership.

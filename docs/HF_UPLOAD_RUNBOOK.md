@@ -9,7 +9,12 @@ hf auth login   # write token with contribute-repos
 hf auth whoami  # must show csoai org admin
 ```
 
-MCP OAuth (`hf_whoami`) may **read** Hub (`contribute-repos` scope) but **CLI write** still needs `hf auth login` or `HF_TOKEN` in the environment. `hf_fs` MCP has no upload command — use `npm run hf:upload-staged` once the write token is present.
+MCP OAuth (`hf_whoami`) may show **admin** on `csoai` and scopes including `contribute-repos`, but:
+
+- `hf_fs` MCP is **read-only** (ls/cat/stat/search — no upload).
+- Shell `hf` / `huggingface_hub` still need `HF_TOKEN` or `hf auth login`.
+
+Until a write token is in the environment, keep packs staged and leave #139/#186/#253 as 🔄.
 
 ## Pre-upload verify (no token required)
 
