@@ -304,7 +304,7 @@ export interface LobbyLinkOptions {
   prompt?: string;
   ctx?: string;
   task?: LobbyTaskId;
-  /** Path the link points at. Defaults to the current page — the lobby is global. */
+  /** Path the link points at. Defaults to `/os` — the AG-UI host after the lean homepage. */
   path?: string;
 }
 
@@ -313,11 +313,6 @@ const isPane = (v: unknown): v is LobbyTabId =>
 
 const isTask = (v: unknown): v is LobbyTaskId =>
   typeof v === "string" && Object.prototype.hasOwnProperty.call(LOBBY_TASKS, v);
-
-function currentPath(): string {
-  if (typeof window === "undefined") return "/";
-  return window.location.pathname || "/";
-}
 
 /**
  * Build an href that opens the lobby. Use it as a real `href` so the control is
@@ -337,7 +332,9 @@ export function lobbyHref(opts: LobbyLinkOptions = {}): string {
   if (opts.prompt) q.set(ASK_PARAM, opts.prompt);
 
   const s = q.toString();
-  const path = opts.path ?? currentPath();
+  // Default host is Council OS. The lean homepage no longer mounts lobby panes;
+  // minting /?lobby=* from whichever page you are on was a dead door.
+  const path = opts.path ?? "/os";
   if (!s) return path;
   return `${path}${path.includes("?") ? "&" : "?"}${s}`;
 }
