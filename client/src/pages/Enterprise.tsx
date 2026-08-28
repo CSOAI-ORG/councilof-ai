@@ -364,4 +364,21 @@ export default function Enterprise() {
                   <Globe className="h-8 w-8 text-blue-600" />
                 </div>
                 <div>
-                  <h
+                  <h3 className="text-xl font-bold">EU AI Act</h3>
+                  <Badge className="bg-blue-100 text-blue-700 border-blue-200">Transparency live 2 Aug 2026 · high-risk deferred to 2 Dec 2027</Badge>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4">
+                Complete compliance coverage for Europe's landmark AI regulation. Risk classification, conformity assessments, and documentation.
+              </p>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  Risk level classification
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  Conformity assessment
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 classN
