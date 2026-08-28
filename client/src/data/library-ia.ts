@@ -70,7 +70,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // path and every LOBBY_ROUTES path, so the next tab someone adds cannot reintroduce
   // the trap silently.
   "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
-  "/benchmark-quality", "/mcp-fleet", "/mcp", "/mcps", "/feed",
+  "/benchmark-quality", "/mcp-fleet", "/mcps", "/feed",
   // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
   // registered here so it can never ship flagged "archived".
   "/report",
