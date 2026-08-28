@@ -9,7 +9,7 @@ hf auth login   # write token with contribute-repos
 hf auth whoami  # must show csoai org admin
 ```
 
-MCP OAuth (`hf_whoami`) may read Hub but **CLI write** still needs `hf auth login` or `HF_TOKEN`.
+MCP OAuth (`hf_whoami`) may **read** Hub (`contribute-repos` scope) but **CLI write** still needs `hf auth login` or `HF_TOKEN` in the environment. `hf_fs` MCP has no upload command — use `npm run hf:upload-staged` once the write token is present.
 
 ## Pre-upload verify (no token required)
 
@@ -45,4 +45,4 @@ Label in README: **TESTNET** · `measured_score: null`.
 
 - Update `docs/HF_ORG_DATASET_INDEX.md` with repo URLs.
 - If Hub `csoai/rwa-attest` MEASURED-INDEX files conflict with OS UNMEASURED product, keep `C-2026-0826-01` live.
-- Tick #139/#186 in `docs/NEXT_300_MOVES.md` only after `hf_fs stat` shows repos exist.
+- Tick #139/#186 in `docs/NEXT_300_MOVES.md` only after `hf_fs` stat shows repos exist.
