@@ -15,11 +15,13 @@ const GUARDS = [
   { path: "client/src/AppLazy.tsx", bytes: 24241 },
 ];
 const MIN_PAGE_BYTES = {
-  "Enterprise.tsx": 40000,
+  // Enterprise may be a thin Redirect into Council OS chat — still ban stubs.
+  "Enterprise.tsx": 200,
   "Insurers.tsx": 15000,
   "GovernmentDashboard.tsx": 40000,
   "SovOS.tsx": 30000,
 };
+const BAN_LITERAL = /FILE_CONTENT_FROM:|PLACEHOLDER_WILL_LOAD|TRUNCATED_FOR_BREVITY/;
 
 let failed = false;
 
@@ -42,7 +44,7 @@ function walk(dir) {
     else if (/\.(tsx|ts|jsx|js)$/.test(name)) {
       const text = readFileSync(fp, "utf8");
       const rel = fp.replace(root + "/", "");
-      if (BAD.test(text) || st.size < 80) {
+      if (BAD.test(text) || BAN_LITERAL.test(text) || st.size < 80) {
         console.error(`  FAIL  stub/corrupt ${rel} bytes=${st.size}`);
         failed = true;
       }
