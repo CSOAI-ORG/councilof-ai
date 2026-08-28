@@ -32,7 +32,8 @@ Owner tracker: https://github.com/CSOAI-ORG/councilof-ai/issues/887
 | When (UTC) | Hub | Token | Notes |
 |------------|-----|-------|-------|
 | 2026-08-28 | missing | unset | packs verified; CI workflow on tip |
-| 2026-08-28 ~21:20 | missing | unset | tip-health OK; vite `:43125`; vitest labourIndices 8/8; requested env + Actions secret |
-| 2026-08-28 ~21:22 | missing | unset | CI run [33212232562](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/33212232562) verify ✅ · upload **skipped** (no Actions `HF_TOKEN`) · tip `77986283` |
+| 2026-08-28 ~21:20 | missing | unset | tip-health OK; vite `:43125`; vitest labourIndices 8/8 |
+| 2026-08-28 ~21:22 | missing | unset | CI [33212232562](https://github.com/CSOAI-ORG/councilof-ai/actions/runs/33212232562) verify ✅ · upload **skipped** |
+| 2026-08-28 21:30–22:30 | missing | unset | three stacked timer rechecks; tip `f0f390cd` green (designed PDF + sitemap honesty); Hub still missing; re-requested env + Actions `HF_TOKEN` |
 
 As-of: 2026-08-28
