@@ -476,4 +476,58 @@ export default function GovernmentDashboard() {
       blue: { bg: "bg-blue-600", text: "text-blue-600", border: "border-blue-600", light: "bg-blue-50" },
       emerald: { bg: "bg-emerald-600", text: "text-emerald-600", border: "border-emerald-600", light: "bg-emerald-50" },
       violet: { bg: "bg-violet-600", text: "text-violet-600", border: "border-violet-600", light: "bg-violet-50" },
-      amber: { bg: "bg-amber-600", text: "text-amber-600", border: "border-amber-600", light:
+      amber: { bg: "bg-amber-600", text: "text-amber-600", border: "border-amber-600", light: "bg-amber-50" },
+    };
+    return colors[color] || colors.blue;
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-emerald-900 via-emerald-800 to-green-900 text-white py-20 relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        </div>
+
+        <div className="container max-w-7xl relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <Badge className="mb-4 bg-white/20 text-white border-white/30 hover:bg-white/30">
+                <Landmark className="h-3 w-3 mr-1" />
+                Government & Regulator Portal
+              </Badge>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                Global AI Compliance
+                <span className="text-emerald-300"> Monitoring</span>
+              </h1>
+              <p className="text-xl text-emerald-100 mb-4 leading-relaxed max-w-xl">
+                Real-time oversight capabilities for government regulators. Monitor AI systems
+                across jurisdictions, enforce compliance, and protect citizens with unprecedented
+                transparency and coordination.
+              </p>
+              <p className="text-sm text-emerald-200/90 mb-4 leading-relaxed max-w-xl">
+                Regulators may verify any published measurement card offline — verification stays
+                free forever, with no account. Labour/economy indices are declared{" "}
+                <Link href="/indices" className="underline text-white font-medium">
+                  UNMEASURED
+                </Link>{" "}
+                (`measured_score: null`). Brief:{" "}
+                <a
+                  href="/regulator-indices-one-pager.html"
+                  className="underline text-white font-medium"
+                >
+                  print-ready one-pager
+                </a>
+                {" · "}
+                <a
+                  href="/regulator-indices-one-pager.pdf"
+                  className="underline text-white font-medium"
+                >
+                  PDF
+                </a>
+                {" · "}
+                <Link href="/products" className="underline text-white font-medium">
+                  p
