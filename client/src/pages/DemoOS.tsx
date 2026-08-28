@@ -195,13 +195,13 @@ export default function DemoOS() {
 
       {booting && (
         <div className="absolute inset-0 z-40 flex flex-col items-center justify-center px-6" style={{ background: "#03080f", backgroundImage: "radial-gradient(1100px 720px at 50% 40%, rgba(16,185,129,.22), transparent 68%), radial-gradient(700px 500px at 50% 42%, rgba(56,189,248,.12), transparent 70%), radial-gradient(1.6px 1.6px at 20% 30%, rgba(125,211,252,.7), transparent), radial-gradient(1.6px 1.6px at 70% 60%, rgba(167,243,208,.65), transparent), radial-gradient(1.2px 1.2px at 40% 80%, rgba(255,255,255,.5), transparent), radial-gradient(1.6px 1.6px at 85% 25%, rgba(125,211,252,.6), transparent), radial-gradient(1.2px 1.2px at 55% 15%, rgba(255,255,255,.45), transparent)" }}>
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/10 text-3xl text-emerald-300" style={{ boxShadow: "0 0 44px rgba(16,185,129,.4)" }}>{"\u25c9"}</div>
-          <div className="font-mono text-[11px] uppercase tracking-[4px] text-emerald-300/70">CSOAI {"\u00b7"} Council {"\u00b7"} Governance {"\u00b7"} Layer 0</div>
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/10 text-3xl text-emerald-300" style={{ boxShadow: "0 0 44px rgba(16,185,129,.4)" }}>{"◉"}</div>
+          <div className="font-mono text-[11px] uppercase tracking-[4px] text-emerald-300/70">CSOAI {"·"} Council {"·"} Governance {"·"} Layer 0</div>
           <div className="mt-6 w-full max-w-sm space-y-1.5 font-mono text-xs">
-            {BOOT.map((l, k) => (<div key={k} className={"flex items-center justify-between " + (k < bootN ? "text-emerald-200" : "text-emerald-300/25")}><span>{l}</span><span>{k < bootN ? "\u2713" : "\u2026"}</span></div>))}
+            {BOOT.map((l, k) => (<div key={k} className={"flex items-center justify-between " + (k < bootN ? "text-emerald-200" : "text-emerald-300/25")}><span>{l}</span><span>{k < bootN ? "✓" : "…"}</span></div>))}
           </div>
           <div className="absolute bottom-6 left-0 w-full">
-            <div className="mb-1.5 text-center font-mono text-[10px] uppercase tracking-[3px] text-emerald-300/50">Aligned to global frameworks {"\u00b7"} built on open source {"\u00b7"} verifiable</div>
+            <div className="mb-1.5 text-center font-mono text-[10px] uppercase tracking-[3px] text-emerald-300/50">Aligned to global frameworks {"·"} built on open source {"·"} verifiable</div>
             <TrustMarquee variant="strip" dark speed={65} />
           </div>
         </div>
@@ -219,14 +219,14 @@ export default function DemoOS() {
             <button onClick={allowVoice} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Allow &amp; continue</button>
             <button onClick={() => setGate(false)} className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Continue silently</button>
           </div>
-          <div className="mt-3 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">No private cameras {"\u00b7"} no facial recognition {"\u00b7"} no tracking {"\u00b7"} no data selling</div>
+          <div className="mt-3 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">No private cameras {"·"} no facial recognition {"·"} no tracking {"·"} no data selling</div>
         </div>
       )}
 
       {mode === null && i === -1 && !booting && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#03080e]/55 backdrop-blur-sm px-6 text-center">
           <div className="h-12 w-12 animate-pulse rounded-full border border-emerald-300/40 bg-emerald-500/10" style={{ boxShadow: "0 0 40px rgba(16,185,129,.4)" }} />
-          <p className="mt-5 font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Your Council assistant is taking over\u2026</p>
+          <p className="mt-5 font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Your Council assistant is taking over…</p>
           <p className="mt-2 text-sm text-emerald-100/70">Speak or tap any time to interrupt.</p>
         </div>
       )}
@@ -241,11 +241,11 @@ export default function DemoOS() {
         </div>
       )}
 
-      {geoLabel && (<div className="absolute left-1/2 top-20 z-30 -translate-x-1/2 rounded-full border border-emerald-400/30 bg-black/50 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-200/90 backdrop-blur">\u25ce {geoLabel}</div>)}
+      {geoLabel && (<div className="absolute left-1/2 top-20 z-30 -translate-x-1/2 rounded-full border border-emerald-400/30 bg-black/50 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[2px] text-emerald-200/90 backdrop-blur">◎ {geoLabel}</div>)}
 
       {mode !== null && !booting && (
         <button onClick={() => setDrawer(true)} title="All tools & layers" className="absolute right-4 top-4 z-40 flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold text-gray-900 shadow-lg hover:bg-gray-100">
-          <span className="text-base leading-none">\u2630</span> Menu <span className="ml-1 rounded bg-gray-200 px-1 py-0.5 font-mono text-[9px] text-gray-500">\u2318K</span>
+          <span className="text-base leading-none">☰</span> Menu <span className="ml-1 rounded bg-gray-200 px-1 py-0.5 font-mono text-[9px] text-gray-500">⌘K</span>
         </button>
       )}
 
@@ -254,11 +254,11 @@ export default function DemoOS() {
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
           <div onClick={(e) => e.stopPropagation()} className="absolute right-0 top-0 h-screen w-[360px] max-w-[92vw] overflow-y-auto bg-white text-gray-900 shadow-2xl">
             <div className="sticky top-0 flex items-center gap-2 border-b border-gray-200 bg-white px-4 py-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white">\u25c9</span>
-              <span className="font-bold">CSOAI \u00b7 AI OS</span>
-              <button onClick={() => setDrawer(false)} className="ml-auto rounded-lg px-2 py-1 text-gray-400 hover:bg-gray-100">\u2715</button>
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white">◉</span>
+              <span className="font-bold">CSOAI · AI OS</span>
+              <button onClick={() => setDrawer(false)} className="ml-auto rounded-lg px-2 py-1 text-gray-400 hover:bg-gray-100">✕</button>
             </div>
-            <div className="sticky top-[53px] z-10 border-b border-gray-100 bg-white px-4 py-2"><input value={drawerQ} onChange={(e) => setDrawerQ(e.target.value)} placeholder="Search tools & layers\u2026" className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-800 placeholder-gray-400 focus:border-emerald-400 focus:outline-none" /></div>
+            <div className="sticky top-[53px] z-10 border-b border-gray-100 bg-white px-4 py-2"><input value={drawerQ} onChange={(e) => setDrawerQ(e.target.value)} placeholder="Search tools & layers…" className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm text-gray-800 placeholder-gray-400 focus:border-emerald-400 focus:outline-none" /></div>
             <div className="p-4">
               {NAV_GROUPS.map((grp) => { const items = grp.items.filter((it) => !drawerQ.trim() || it.n.toLowerCase().includes(drawerQ.trim().toLowerCase())); if (!items.length) return null; return (
                 <div key={grp.g} className="mb-4">
@@ -267,7 +267,7 @@ export default function DemoOS() {
                     {items.map((it) => (
                       <div key={it.src} className="flex items-stretch gap-1">
                         <button onClick={() => openTool(it.n, it.src)} className="flex-1 rounded-lg border border-gray-200 px-2.5 py-2 text-left text-[12px] font-semibold text-gray-800 hover:border-emerald-400 hover:bg-emerald-50" title="Open docked in the OS">{it.n}</button>
-                        <button onClick={() => window.open(it.src, "_blank")} title="Open in a new tab" className="rounded-lg border border-gray-200 px-1.5 text-[13px] leading-none text-gray-400 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-600">\u2197</button>
+                        <button onClick={() => window.open(it.src, "_blank")} title="Open in a new tab" className="rounded-lg border border-gray-200 px-1.5 text-[13px] leading-none text-gray-400 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-600">↗</button>
                       </div>
                     ))}
                   </div>
@@ -287,9 +287,9 @@ export default function DemoOS() {
                 <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Council network <span className="rounded-full border border-emerald-200 px-1.5 text-[9px] text-emerald-500">{NET_DOMAINS.length} signed</span></div>
                 <div className="flex flex-wrap gap-1.5">
                   {nd.map((x) => (
-                    <a key={x.d} href={"https://" + x.d} target="_blank" rel="noreferrer" title={x.d} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-700 hover:border-emerald-400 hover:bg-emerald-50">{x.n} <span className="text-gray-400">\u2197</span></a>
+                    <a key={x.d} href={"https://" + x.d} target="_blank" rel="noreferrer" title={x.d} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-700 hover:border-emerald-400 hover:bg-emerald-50">{x.n} <span className="text-gray-400">↗</span></a>
                   ))}
-                  <a href="/network" className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-100">Full directory \u2192</a>
+                  <a href="/network" className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-100">Full directory →</a>
                 </div>
               </div>
               ); })()}
@@ -301,7 +301,7 @@ export default function DemoOS() {
                   ))}
                 </div>
               </div>
-              <a href="/os?lobby=home" className="mt-3 block rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-emerald-500">Enter Council OS \u2192</a>
+              <a href="/os?lobby=home" className="mt-3 block rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-emerald-500">Enter Council OS →</a>
             </div>
           </div>
         </div>
@@ -325,7 +325,7 @@ export default function DemoOS() {
 
       {mode !== null && chatMin && (
         <button onClick={() => setChatMin(false)} title="Open the Council assistant" className="absolute right-3 top-3 z-40 flex items-center gap-2 rounded-full border border-emerald-400/40 bg-[#04120c]/90 px-3 py-2 text-sm font-bold text-emerald-100 shadow-2xl backdrop-blur-xl hover:bg-[#04120c]">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">\u25c9</span> Council
+          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">◉</span> Council
           {listening && <span className="h-2 w-2 rounded-full bg-rose-400 animate-pulse" />}
         </button>
       )}
@@ -338,21 +338,21 @@ export default function DemoOS() {
                 <span className="h-2.5 w-2.5 rounded-full bg-rose-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
                 {wins.length > 1 ? (
                   <div className="ml-1 flex flex-1 gap-1 overflow-x-auto">
-                    {wins.map((w, k) => (<button key={k} onClick={() => { setWinTab(k); setWinMin(false); }} className={"whitespace-nowrap rounded-md px-2 py-0.5 text-[10px] font-bold " + (winTab === k ? "bg-emerald-500/25 text-emerald-100" : "text-emerald-300/60 hover:bg-white/5")}>{w.title.replace(/^[\u25c9]\s*/, "").slice(0, 16)}</button>))}
+                    {wins.map((w, k) => (<button key={k} onClick={() => { setWinTab(k); setWinMin(false); }} className={"whitespace-nowrap rounded-md px-2 py-0.5 text-[10px] font-bold " + (winTab === k ? "bg-emerald-500/25 text-emerald-100" : "text-emerald-300/60 hover:bg-white/5")}>{w.title.replace(/^[◉]\s*/, "").slice(0, 16)}</button>))}
                   </div>
                 ) : (<span className="ml-1 flex-1 truncate text-xs font-bold text-emerald-100">{wins[0].title}</span>)}
-                <button onClick={() => setWinMin((m) => !m)} title={winMin ? "Restore" : "Minimize"} className="rounded px-1.5 text-emerald-300/70 hover:bg-white/5">{winMin ? "\u25a2" : "\u2014"}</button>
-                <button onClick={() => setWins([])} title="Close" className="rounded px-1.5 text-emerald-300/70 hover:bg-white/5">\u2715</button>
+                <button onClick={() => setWinMin((m) => !m)} title={winMin ? "Restore" : "Minimize"} className="rounded px-1.5 text-emerald-300/70 hover:bg-white/5">{winMin ? "▢" : "—"}</button>
+                <button onClick={() => setWins([])} title="Close" className="rounded px-1.5 text-emerald-300/70 hover:bg-white/5">✕</button>
               </div>
               {!winMin && <iframe key={(wins[winTab] || wins[0]).src} src={(wins[winTab] || wins[0]).src} title={(wins[winTab] || wins[0]).title} className="w-full flex-1 border-0 bg-[#03110b]" />}
               {!winMin && <div onPointerDown={startResize} title="Drag to resize" className="flex h-2 cursor-row-resize items-center justify-center bg-emerald-500/15 hover:bg-emerald-400/40"><span className="h-0.5 w-8 rounded bg-emerald-300/50" /></div>}
             </div>
           )}
           <div className="flex items-center gap-1.5 border-b border-emerald-500/15 px-3 py-1.5">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">{"\u25c9"}</div>
+            <div className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">{"◉"}</div>
             <div className="truncate text-[13px] font-bold text-emerald-100">Council {geoCity && <span className="font-mono text-[9px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
-            <button onClick={() => setHandsFree((h) => { const n = !h; if (n) startRec(); else stopRec(); return n; })} title={handsFree ? "Hands-free on" : "Hands-free off"} className={"ml-auto rounded-full px-1.5 py-0.5 text-[11px] " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/45 hover:bg-white/5")}>{handsFree ? "\u23fa" : ""}</button>
-            <button onClick={() => setChatMin(true)} title="Collapse chat" className="rounded px-1.5 py-0.5 text-[13px] text-emerald-300/60 hover:bg-white/5">\u00bb</button>
+            <button onClick={() => setHandsFree((h) => { const n = !h; if (n) startRec(); else stopRec(); return n; })} title={handsFree ? "Hands-free on" : "Hands-free off"} className={"ml-auto rounded-full px-1.5 py-0.5 text-[11px] " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/45 hover:bg-white/5")}>{handsFree ? "⏺" : ""}</button>
+            <button onClick={() => setChatMin(true)} title="Collapse chat" className="rounded px-1.5 py-0.5 text-[13px] text-emerald-300/60 hover:bg-white/5">»</button>
             <button onClick={stop} title="End tour" className="rounded px-1.5 py-0.5 text-[11px] text-emerald-300/60 hover:bg-white/5">End</button>
           </div>
           <div className="flex-1 space-y-2 overflow-y-auto px-4 py-3">
@@ -365,12 +365,12 @@ export default function DemoOS() {
                 <a href="/world" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Scan my area</a>
                 <a href="/gspc-arena" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Run a live scenario</a>
                 <a href="/os?lobby=home" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Show governance</a>
-                <a href="/os?lobby=home" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS \u25b6</a>
+                <a href="/os?lobby=home" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
               </div>
             ) : !paused ? (
-              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening\u2026" : (handsFree ? "Just speak - I'm listening" : "Interrupt & ask")}</button>
+              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "Just speak - I'm listening" : "Interrupt & ask")}</button>
             ) : (
-              <button onClick={resume} className="w-full rounded-xl bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Resume tour \u25b6</button>
+              <button onClick={resume} className="w-full rounded-xl bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Resume tour ▶</button>
             )}
           </div>
         </div>
