@@ -1,43 +1,85 @@
 /**
- * NewHome-v3 — councilof.ai Homepage (2026-08-28)
+ * NewHome-v3 — councilof.ai Homepage (OWNER STACK 2026-08-28)
  *
- * Homepage is a DOOR into /os, NOT the AG-UI host. Does NOT embed OS.
+ * Structure: Council OS hero (arena image) + HeroSlides + products + outcomes
+ * + living board as printer + slim USP.
  *
- * LOCKED ORDER:
- * 1. Hero = Council OS door (opens /os, does NOT embed OS)
- * 2. 9 product tiles from git history (ToolStack)
- * 3. Living board — LiveLeaderboard from @/components/board
- *    Same GET /api/gspc as /os. Empty stays empty. 22·15·7.
- * 4. Refusals + Trust
+ * Owner hypothesis: strangers land on OS door, not the board table. Products and
+ * outcomes are visible, the board is a fluid printer, not the hero.
  *
- * 9 PRODUCT TILES (from ToolStack, recovered from git history):
- * Council OS, The living board, Verify a card, Get measured, GPAI evidence pack,
- * Embed and white-label kit, Insurance evidence rail, Specialist registers, Report an incident
+ * LIVE LOCK: GET /api/gspc is 22 axis · 15 MEASURED · 7 UNMEASURED.
+ * Never "22 measured". Empty stays empty. Never certify. Never invent scores.
  *
- * DOCTRINE:
- * - Never certify. Never sell a grade. UNMEASURED is first-class.
- * - Empty stays empty (7 UNMEASURED visible). No invented scores.
- * - Verification free forever. Primary OS CTA appears THREE times.
- *
- * KILLED LEFTOVERS: 13+, 24/7, all-313-verify, 15-slot, empty-region placeholder.
+ * NOTE: Council OS is a DOOR (arena image + CTAs), not a live embed.
+ * Embedding the full LobbyOverlay would conflict with the standalone /os route.
+ * The arena image serves as the visual preview; click opens the real OS.
  */
 import ToolStack from "../components/home/ToolStack";
 import LiveLeaderboard from "../components/board/LiveLeaderboard";
-import EnterpriseTrust from "../components/EnterpriseTrust";
+import HeroSlides from "../components/HeroSlides";
 import {
   ChevronRight,
-  Ban,
   FileCheck,
+  Monitor,
+  BarChart3,
+  Shield,
+  Gamepad2,
+  Cpu,
+  Link2,
 } from "lucide-react";
 
-// ── refusals ───────────────────────────────────────────────────
-const REFUSALS = [
-  { no: "We do not certify", why: "No conformity mark, no badge, no seal, no accreditation chain. We are not a notified body under the EU AI Act or anything else." },
-  { no: "We do not sell a grade", why: "Nobody on the board pays for their place on it, their score, or their removal from either. Verification is free forever and needs no account." },
-  { no: "We do not publish a number we did not measure", why: "UNMEASURED is a first-class state. An empty cell stays empty — inventing one is the exact behaviour this instrument exists to catch." },
-  { no: "We do not let a model judge a model", why: "Every verdict is deterministic code against pre-written gold labels. An AI grading an AI is a correlated error, not an audit." },
-  { no: "We do not promote a lead into a win", why: "Where a lead is not statistically separated we call it a tie — including when the model in front is one of ours." },
-  { no: "We do not edit history", why: "Re-attestation issues a new signed record; the old one stands. Corrections are appended in public at /api/corrections, never silently applied." },
+// ── End-user outcomes — real surfaces, owned images ───────────────────────
+const OUTCOMES: {
+  title: string;
+  desc: string;
+  href: string;
+  image?: string;
+  icon: typeof Monitor;
+  status?: string;
+}[] = [
+  {
+    title: "Humans vs AI arena",
+    desc: "Step in, probe a system, get a signed result. Practice runs stay practice; measured runs count.",
+    href: "/gspc-arena",
+    image: "/images/coliseum_humans_vs_humanoids.jpg",
+    icon: Gamepad2,
+  },
+  {
+    title: "Living GSPC board",
+    desc: "Every axis we publish, live from GET /api/gspc. Measured cells show a figure; empty cells stay empty.",
+    href: "/gspc-scoreboard",
+    image: "/images/coliseum_logic_duel.jpg",
+    icon: BarChart3,
+  },
+  {
+    title: "XRPL attestation",
+    desc: "Devnet-proven ledger attestation. Cards anchored to XRP Ledger for tamper-evident history.",
+    href: "/xrpl-attest",
+    image: "/images/secure_evidence_vault.jpg",
+    icon: Link2,
+    status: "devnet",
+  },
+  {
+    title: "OpenTelemetry harness",
+    desc: "OTEL-instrumented measurement runs. Every call traced, every verdict reproducible.",
+    href: "/benchmarks",
+    image: "/images/liveness_drift_engine.jpg",
+    icon: Cpu,
+  },
+  {
+    title: "MCP tool fleet",
+    desc: "Governed MCP servers: crosswalk, risk-check, evidence-pack. Inspect on /mcp-fleet.",
+    href: "/mcp-fleet",
+    image: "/images/public_watchdog_intake.jpg",
+    icon: Shield,
+  },
+  {
+    title: "Training arenas",
+    desc: "Six arenas serving frozen items, marked by the same published key. You vs the AI, scored.",
+    href: "/arena",
+    image: "/images/literacy_training_arena.jpg",
+    icon: Monitor,
+  },
 ];
 
 // ── Hero: Council OS door ───────────────────
@@ -81,21 +123,13 @@ function HeroCouncilOS() {
             </div>
           </div>
 
-          {/* Right: static OS screenshot (NOT a live embed — /os one-frame is separate PR) */}
+          {/* Right: arena image — the Council OS measurement space */}
           <div className="relative mx-auto w-full max-w-xl lg:mx-0">
-            <div className="overflow-hidden rounded-2xl border border-emerald-500/20 bg-slate-900/50 shadow-2xl shadow-emerald-900/30">
-              {/* OS header bar mockup */}
-              <div className="flex items-center gap-2 border-b border-white/10 bg-slate-800/80 px-4 py-2.5">
-                <span className="h-3 w-3 rounded-full bg-rose-400/70" />
-                <span className="h-3 w-3 rounded-full bg-amber-400/70" />
-                <span className="h-3 w-3 rounded-full bg-emerald-400/70" />
-                <span className="ml-3 text-xs font-medium text-slate-400">Council OS · councilof.ai/os</span>
-              </div>
-              {/* Static screenshot — hero is a DOOR to /os, not a live embed */}
+            <div className="overflow-hidden rounded-2xl shadow-2xl shadow-emerald-900/30">
               <img
-                src="/images/band/hardened.png"
-                alt="Council OS workspace"
-                className="w-full"
+                src="/images/coliseum_hero_arena.jpg"
+                alt="White arena with humans in green and white facing humanoid robots - the Council OS measurement space"
+                className="w-full object-cover"
                 loading="eager"
               />
             </div>
@@ -137,26 +171,91 @@ function LivingBoardSection() {
   );
 }
 
-// ── refusals ───────────────────────────────────────
-function RefusalBand() {
+// ── outcomes: what you actually get ───────────────────────────────────────
+function OutcomesBand() {
   return (
     <section className="surface-sunken section-y">
       <div className="section-shell">
-        <h2 className="t-section text-center text-foreground">What we refuse to do</h2>
+        <h2 className="t-section text-center text-foreground">What you get</h2>
         <p className="t-lede measure measure-center mt-4 text-center text-muted-foreground">
-          The limits are the product. An instrument that will say anything measures nothing.
+          Real surfaces, real images, real links. Empty cells stay empty. Every figure from a live API.
         </p>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {REFUSALS.map(r => (
-            <div key={r.no} className="card-quiet p-5 sm:p-6">
-              <div className="flex items-start gap-2.5">
-                <Ban className="mt-0.5 h-5 w-5 shrink-0 text-rose-500" aria-hidden />
-                <h3 className="t-card text-foreground">{r.no}</h3>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {OUTCOMES.map((o) => (
+            <a
+              key={o.title}
+              href={o.href}
+              className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-shadow hover:shadow-lg"
+            >
+              {o.image && (
+                <div className="relative aspect-[16/9] overflow-hidden">
+                  <img
+                    src={o.image}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  {o.status && (
+                    <span className="absolute right-3 top-3 rounded-full bg-amber-500/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                      {o.status}
+                    </span>
+                  )}
+                </div>
+              )}
+              <div className="flex flex-1 flex-col p-5">
+                <div className="flex items-start gap-3">
+                  <o.icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden />
+                  <h3 className="text-base font-bold leading-snug text-foreground group-hover:text-primary">
+                    {o.title}
+                  </h3>
+                </div>
+                <p className="mt-2.5 flex-1 text-sm text-muted-foreground">{o.desc}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                  Open <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </span>
               </div>
-              <p className="t-body mt-3 text-muted-foreground">{r.why}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── USP strip: what makes this different ───────────────────────────────────
+function USPStrip() {
+  const SIGNALS = [
+    { icon: "✶", label: "Ed25519 signed", sub: "Every card cryptographically signed" },
+    { icon: "⚖", label: "Live axis counts", sub: "GET /api/gspc — never typed" },
+    { icon: "◫", label: "Framework alignment", sub: "EU AI Act · NIST · ISO 42001 · DORA" },
+    { icon: "🔓", label: "Verification free forever", sub: "No account, no fee" },
+  ];
+
+  return (
+    <section className="section-y-sm surface-ink border-y" style={{ borderColor: "var(--ink-border)" }}>
+      <div className="section-shell">
+        <p className="t-kicker ink-kicker text-center font-mono">Measurement, not certification</p>
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {SIGNALS.map((s) => (
+            <div key={s.label} className="ink-card flex flex-col items-center rounded-xl px-3 py-5 text-center">
+              <span className="text-xl leading-none text-emerald-300/90" aria-hidden>{s.icon}</span>
+              <span className="mt-2.5 text-[13px] font-bold leading-snug">{s.label}</span>
+              <span className="ink-muted mt-1.5 text-[11px] leading-snug">{s.sub}</span>
             </div>
           ))}
         </div>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <span className="text-xs text-emerald-100/60">Aligned to:</span>
+          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">EU AI Act</span>
+          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">NIST AI RMF</span>
+          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">ISO 42001</span>
+          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">DORA</span>
+          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">C2PA</span>
+        </div>
+        <p className="ink-muted mt-5 text-center text-[11px]">
+          We are not certified to SOC 2 or ISO 42001. Measurement credential, never certification.
+        </p>
       </div>
     </section>
   );
@@ -191,29 +290,29 @@ function VerifyDoor() {
 export default function NewHomeV3() {
   return (
     <main className="surface-base">
-      {/* 1. Hero = Council OS door (one filled CTA + one ghost) */}
+      {/* 1. Hero = Council OS door with arena image */}
       <HeroCouncilOS />
 
-      {/* 2. 9 product tiles from git history (ToolStack) */}
+      {/* 2. HeroSlides carousel — instruments, council, refutations */}
+      <HeroSlides />
+
+      {/* 3. 9 product tiles from git history (ToolStack) */}
       <ToolStack />
 
-      {/* Primary CTA #2: after products */}
+      {/* Primary CTA after products */}
       <PrimaryCtaBand id="cta-after-products" />
 
-      {/* 3. Living 22-row GET /api/gspc table (below hero, not the hero) */}
+      {/* 4. End-user outcomes with real images (replaces refusals) */}
+      <OutcomesBand />
+
+      {/* 5. Living board as a printer (below products) */}
       <LivingBoardSection />
 
       {/* Verify door — free forever */}
       <VerifyDoor />
 
-      {/* 4. Doctrine: what we refuse to do */}
-      <RefusalBand />
-
-      {/* 5. Trust badges */}
-      <EnterpriseTrust />
-
-      {/* Primary CTA #3: above footer */}
-      <PrimaryCtaBand id="cta-footer" />
+      {/* 6. USP strip with framework alignment (replaces EnterpriseTrust) */}
+      <USPStrip />
 
       {/* FAQ link — full FAQ on /faq, News on /blog/ */}
       <section className="surface-raised py-8">
