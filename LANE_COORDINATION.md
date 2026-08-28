@@ -344,3 +344,10 @@ rewrote the historical entries (corrections-register discipline). Fleet/owner fl
 4. Inspect AI adoption note: primary harness choice confirmed (MIT, UK AISI);
    preimage = config-digest + instrument version for measurement runs (doctrine:
    "measured with Inspect AI", never "Inspect-certified"). Doc queued.
+
+## 2026-08-28 · K3 record — card index ruling 2026-08-27 adopted (append)
+
+OWNER RULING (2026-08-27, supersedes the 150 freeze): index = 313 cards; 150 verify
+against did:web:csoai.org#card-attestation-1; INDEX 313 != 313 VERIFIED. No agent clamps
+the index to any constant. K3's earlier 150-references (count grammar, runway, catalog)
+are superseded — corrected in the runway doc, append-only. No relitigation.
