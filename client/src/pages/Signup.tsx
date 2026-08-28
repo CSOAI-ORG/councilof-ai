@@ -163,7 +163,7 @@ export default function Signup() {
               <div className={"rounded-lg p-4 border " + (PLAN_INFO[plan].accent === 'amber' ? 'bg-amber-50 border-amber-300' : 'bg-emerald-50 border-emerald-300')}>
                 <div className="flex items-center justify-between">
                   <h3 className={"font-bold " + (PLAN_INFO[plan].accent === 'amber' ? 'text-amber-900' : 'text-emerald-900')}>Selected plan: {PLAN_INFO[plan].label}</h3>
-                  <a href="/?lobby=measured&task=pricing-overview" className="text-xs text-gray-500 hover:underline">how the free rail works</a>
+                  <a href="/os?lobby=measured&task=pricing-overview" className="text-xs text-gray-500 hover:underline">how the free rail works</a>
                 </div>
                 <p className={"mt-1 text-sm " + (PLAN_INFO[plan].accent === 'amber' ? 'text-amber-800' : 'text-emerald-800')}>{PLAN_INFO[plan].blurb}</p>
                 <p className="mt-2 text-xs text-gray-500">Create your account first — you'll confirm billing on the next step. No charge today.</p>
