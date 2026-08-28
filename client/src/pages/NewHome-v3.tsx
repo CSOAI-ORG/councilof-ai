@@ -3,8 +3,11 @@
  *
  * LOCKED ORDER:
  * 1. Hero = Council OS door (one sentence, one filled CTA, one ghost CTA, OS visual)
+ *    Hero opens /os — does NOT embed OS.
  * 2. 9 product tiles from git history (ToolStack component)
- * 3. Living 22-row GET /api/gspc table (below hero, not the hero)
+ * 3. Living board — ONE component everywhere (LivingBoard)
+ *    SAME component as /os Board door (LobbyBoardPane).
+ *    Click-through, ledgers, empty visible — all in LivingBoard.
  * 4. Refusals + Trust
  *
  * 9 PRODUCT TILES (from ToolStack, recovered from git history):
@@ -120,7 +123,10 @@ function PrimaryCtaBand({ id }: { id?: string }) {
   );
 }
 
-// ── Living Board: SAME component as lobby (LivingBoard from 849 chrome) ──────
+// ── Living Board: ONE component everywhere (same as /os Board door) ──────
+// LobbyBoardPane (/os Board) uses: <LivingBoard embedded onOpenBoard={...} />
+// Homepage uses: <LivingBoard onOpenBoard={...} />
+// SAME component. Click-through, ledgers, empty visible — all in LivingBoard.
 function LivingBoardSection() {
   const goToBoard = () => {
     window.location.href = "/gspc-scoreboard";
@@ -129,7 +135,7 @@ function LivingBoardSection() {
   return (
     <section className="surface-raised section-y">
       <div className="section-shell">
-        {/* The shared LivingBoard component — same one the lobby board pane uses */}
+        {/* ONE living board everywhere — same LivingBoard as /os Board door uses */}
         <LivingBoard onOpenBoard={goToBoard} />
       </div>
     </section>
