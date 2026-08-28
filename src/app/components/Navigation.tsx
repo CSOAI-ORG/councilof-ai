@@ -35,24 +35,24 @@ export function Navigation() {
             <div className="flex items-center gap-1 2xl:gap-3">
               <Link href="/" className="px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap text-emerald-700 bg-emerald-50">Home</Link>
               
-              <button className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
-                Measure <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-              <button className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
-                Products <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-              <button className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
-                Regulation <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-              <Link href="/os" className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
-                Council OS <ChevronDown className="h-3.5 w-3.5" />
+              <Link href="/leaderboard" className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
+                Measure
               </Link>
-              <button className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
-                Evidence <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-              <button className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
-                Company <ChevronDown className="h-3.5 w-3.5" />
-              </button>
+              <Link href="/catalogue" className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
+                Products
+              </Link>
+              <Link href="/gpai" className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
+                Regulation
+              </Link>
+              <Link href="/os" className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
+                Council OS
+              </Link>
+              <Link href="/verify" className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
+                Evidence
+              </Link>
+              <Link href="/methodology" className="px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap text-muted-foreground hover:text-emerald-700 hover:bg-muted">
+                Company
+              </Link>
             </div>
           </div>
 
