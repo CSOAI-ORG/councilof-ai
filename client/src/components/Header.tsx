@@ -81,6 +81,7 @@ const navigation: NavGroup[] = [
       { name: 'EUNOMIA data (commercial)', href: '/eunomia-data', description: 'x402 data-only lane — enforcement record + deadline calendar, never scores' },
       { name: 'EUNOMIA catalog', href: '/eunomia-catalog', description: 'Every surface, API, HF mirror, A2A card and MCP tool — catalogued and linked' },
       { name: 'EU AI Act × CRA watch', href: '/eunomia-crosswalk', description: 'Statute → axis → requirement → exposure, with live source links' },
+      { name: 'EUNOMIA indices', href: '/eunomia-indices', description: 'The aspirational index axes — now measured (frozen gold sets, Wilson CI)' },
     ],
   },
   {

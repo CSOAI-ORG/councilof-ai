@@ -38,7 +38,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/models", "/tools", "/report",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
-  "/eunomia-catalog", "/eunomia-crosswalk",
+  "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
