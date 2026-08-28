@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { tabById, type LobbyTab, type LobbyTabId } from "./tabs";
 import { CONTROL, FOCUS, SP, SURFACE, TYPE, panelStyle } from "./glass";
 import { COUNCIL_OS_LEFT_MENU, type SideMenuItem } from "@/data/councilOsSideMenu";
+import { openLobby } from "@/lib/lobbyLink";
 
 export const PANEL_ID = "coai-lobby-panel";
 export const tabDomId = (id: LobbyTabId | string) => `coai-lobby-tab-${id}`;
@@ -92,17 +93,34 @@ export default function LobbyPaneRail({
     }
   };
 
+  /** Every master-menu click seeds the centre composer (consent lock). */
   const activate = (item: SideMenuItem) => {
     if (item.kind === "pane") {
-      onSelect(tabById(item.pane));
+      const tab = tabById(item.pane);
+      onSelect(tab);
+      if (item.task) {
+        openLobby({ pane: item.pane, task: item.task });
+      } else {
+        openLobby({
+          pane: item.pane,
+          prompt: `Open ${item.label} — what is published here, and what can I control by asking?`,
+        });
+      }
+      if (tab.path && onOpenRoute) onOpenRoute(tab.path, tab.label);
       return;
     }
     if (item.external) {
       window.open(item.href, "_blank", "noopener,noreferrer");
+      openLobby({
+        prompt: `What does the external surface “${item.label}” publish, and how does it relate to Council OS measurement?`,
+      });
       return;
     }
     if (onOpenRoute) onOpenRoute(item.href, item.label);
     else window.location.href = item.href;
+    openLobby({
+      prompt: `Walk me through ${item.label} at ${item.href} — what can I measure or control from Council OS chat?`,
+    });
   };
 
   const isActive = (item: SideMenuItem) => {
@@ -161,7 +179,7 @@ export default function LobbyPaneRail({
                         aria-selected={on}
                         aria-controls={PANEL_ID}
                         tabIndex={on ? 0 : -1}
-                        title={item.hint}
+                        title={`${item.hint} · seeds chat`}
                         onClick={() => activate(item)}
                         className={
                           `flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition motion-reduce:transition-none ${FOCUS} ` +
@@ -187,7 +205,8 @@ export default function LobbyPaneRail({
 
       <div className="mt-2 shrink-0 space-y-1 border-t border-slate-900/10 pt-2">
         <p className={`px-1 ${TYPE.fine}`}>
-          <kbd className="rounded bg-slate-100 px-1">[</kbd> toggle menu · <kbd className="rounded bg-slate-100 px-1">]</kbd> reports
+          Every item seeds Ask · <kbd className="rounded bg-slate-100 px-1">[</kbd> menu ·{" "}
+          <kbd className="rounded bg-slate-100 px-1">]</kbd> AG-UI rail
         </p>
       </div>
     </nav>

@@ -12,10 +12,16 @@ export default function LobbyToolingRail({
     if (item.kind !== "route") return;
     if (item.external) {
       window.open(item.href, "_blank", "noopener,noreferrer");
+      openLobby({
+        prompt: `What does “${item.label}” publish externally, and how should Council OS chat treat it?`,
+      });
       return;
     }
     if (onOpenRoute) onOpenRoute(item.href, item.label);
     else window.location.href = item.href;
+    openLobby({
+      prompt: `Walk me through ${item.label} at ${item.href} — measure, control, or verify from chat.`,
+    });
   };
 
   return (

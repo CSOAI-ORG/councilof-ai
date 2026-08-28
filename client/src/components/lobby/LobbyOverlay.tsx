@@ -23,9 +23,10 @@ import {
  *   header   Council OS bar (site header while open)
  *   left     Grouped sidebar — measurement, tooling, surfaces
  *   centre   Board / models / routes / MCP / chat — never a web page iframe
- *   right    Reports · tasks · chats
+ *   right    AG-UI control · reports · tasks · chats · tooling
  *
  * Surfaces with a path navigate the real site column (footer stays visible).
+ * Every master-menu / control-chip click seeds the centre Ask composer.
  */
 
 const ALPHA_KEY = "coai.lobby.alpha";
@@ -131,15 +132,17 @@ export default function LobbyOverlay({
   useEffect(() => {
     if (!intent) return;
     setMinimised(false);
+    setRightOpen(true);
     const next = tabById(intent.pane);
     setTabId(intent.pane);
-    if (next.kind === "route" && next.path) setLocation(next.path);
+    // Local panes often still carry a site path — open it beside the dock.
+    if (next.path) setLocation(next.path);
   }, [intent?.nonce, intent?.pane, setLocation]);
 
   const go = useCallback(
     (t: LobbyTab) => {
       setTabId(t.id);
-      if (t.kind === "route" && t.path) setLocation(t.path);
+      if (t.path) setLocation(t.path);
     },
     [setLocation],
   );
@@ -288,7 +291,7 @@ export default function LobbyOverlay({
         </main>
 
         {rightOpen && (
-          <div className="hidden w-64 shrink-0 border-l border-slate-900/10 lg:block xl:w-72">
+          <div className="absolute inset-y-0 right-0 z-10 w-[min(100%,20rem)] border-l border-slate-900/10 bg-white shadow-xl sm:static sm:z-auto sm:w-64 sm:shadow-none xl:w-72">
             <LobbySideRail chat={chat} onOpenRoute={openRoute} onMinimise={() => setRightOpen(false)} />
           </div>
         )}
