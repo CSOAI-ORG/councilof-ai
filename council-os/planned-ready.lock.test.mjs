@@ -3,7 +3,7 @@
  * (worktree has no node_modules; vitest companions exist for full npm test).
  */
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -62,6 +62,19 @@ describe("Council OS compose (shipped docker-compose.yml)", () => {
       const end = rest.length ? body.indexOf(`  ${rest[0]}:`) : body.length;
       assert.match(body.slice(start, end), /healthcheck:/);
     }
+  });
+});
+
+describe("Pages Functions no longer shadow the new doors", () => {
+  it("does not 308 /council-licensing to /honesty", () => {
+    assert.equal(existsSync(join(root, "functions/council-licensing.ts")), false);
+    assert.equal(existsSync(join(root, "functions/council-licensing/index.ts")), false);
+  });
+  it("sends /badges to /badge and /verify-certificate to the verifier", () => {
+    assert.match(read("functions/badges.ts"), /location: "\/badge"/);
+    assert.match(read("functions/verify-certificate.ts"), /location: "\/gspc-verify\//);
+    assert.equal(/os\?lobby=home/.test(read("functions/badges.ts")), false);
+    assert.equal(/honesty/.test(read("functions/verify-certificate.ts")), false);
   });
 });
 

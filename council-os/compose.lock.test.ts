@@ -13,6 +13,7 @@ describe("Council OS compose (shipped docker-compose.yml)", () => {
     const body = src.split(/^services:\s*$/m)[1]?.split(/^volumes:/m)[0] ?? "";
     const names = [...body.matchAll(/^  ([a-z0-9-]+):\s*$/gm)].map((m) => m[1]);
     expect(names).toEqual(["postgres", "redis", "api", "nginx"]);
+    expect(src).not.toMatch(/--protected-mode", "yes"/);
     for (const name of names) {
       const start = body.indexOf(`  ${name}:`);
       const rest = names.slice(names.indexOf(name) + 1);

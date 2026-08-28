@@ -21,7 +21,9 @@ services:
   redis:
     image: redis:7-alpine
     user: redis
-    command: ["redis-server", "--appendonly", "no", "--protected-mode", "yes"]
+    # Private compose network only (not published). protected-mode would
+    # accept the TCP handshake from api then refuse every command.
+    command: ["redis-server", "--appendonly", "no", "--protected-mode", "no"]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s

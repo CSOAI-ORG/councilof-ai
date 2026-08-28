@@ -9,13 +9,33 @@
            data-label="" data-verify="https://councilof.ai/gspc-verify"
            data-size="md"></script>
 */
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+function escColor(s) {
+  return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(String(s)) ? String(s) : "#059669";
+}
+function safeHref(s) {
+  try {
+    var u = new URL(String(s), "https://councilof.ai");
+    if (u.protocol !== "https:" && u.protocol !== "http:") return "https://councilof.ai/gspc-verify";
+    return u.href;
+  } catch (e) {
+    return "https://councilof.ai/gspc-verify";
+  }
+}
 (function () {
   var s = document.currentScript;
   if (!s) return;
   var org = s.getAttribute("data-org") || "Council of AI";
-  var brand = s.getAttribute("data-brand") || "#059669";
+  var brand = escColor(s.getAttribute("data-brand") || "#059669");
   var labelOverride = s.getAttribute("data-label");
-  var verify = s.getAttribute("data-verify") || "https://councilof.ai/gspc-verify";
+  var verify = safeHref(s.getAttribute("data-verify") || "https://councilof.ai/gspc-verify");
   var size = s.getAttribute("data-size") || "md";
   var w = { sm: 180, md: 260, lg: 340 }[size] || 260;
   var origin = "https://councilof.ai";
@@ -31,30 +51,30 @@
   (s.parentNode || document.body).insertBefore(host, s);
 
   function paint(label, note) {
-    host.setAttribute("aria-label", label);
+    host.setAttribute("aria-label", String(label));
     host.innerHTML =
       '<div style="border:1px solid ' +
-      brand +
+      escColor(brand) +
       ";border-radius:12px;padding:14px;font-family:-apple-system,Segoe UI,sans-serif;max-width:" +
       w +
       'px;background:#fff;color:#111">' +
       '<div style="color:' +
-      brand +
+      escColor(brand) +
       ';font-weight:700;font-size:13px">' +
-      org +
+      escHtml(org) +
       "</div>" +
       '<div style="margin:6px 0;font-size:14px;color:' +
-      brand +
+      escColor(brand) +
       '">' +
-      label +
+      escHtml(label) +
       "</div>" +
       '<a href="' +
-      verify +
+      escHtml(verify) +
       '" target="_blank" rel="noopener" style="display:block;font-size:11px;color:' +
-      brand +
+      escColor(brand) +
       ';text-decoration:none">Verify the evidence — recompute it yourself →</a>' +
       '<div style="font-size:10px;color:#666;margin-top:6px">' +
-      (note || "Measurement, not certification. Council of AI is not a notified body.") +
+      escHtml(note || "Measurement, not certification. Council of AI is not a notified body.") +
       "</div></div>";
   }
 
