@@ -9,8 +9,9 @@ Canon: `docs/EAT_DSH_ALIGNMENT.md` · `docs/EAT_PLAYBOOK.md` · `docs/agent-runb
 
 | Surface | OS / site path | DSH / dashboard path | API |
 |---------|----------------|----------------------|-----|
-| Labour / AI-economy indices | `/indices`, `/indices/:slug` | measurement hub tile or deep-link to same hub | `GET /api/indices`, `GET /api/indices/:slug` |
-| Products catalog (HO.2) | `/products` | hub link / catalog entry | — |
+| Labour / AI-economy indices | `/indices`, `/indices/:slug` | Layer 0 tile on `/dashboard` → same hub | `GET /api/indices`, `GET /api/indices/:slug` |
+| Products catalog (HO.2) | `/products` | Layer 0 tile on `/dashboard` → `/products` | — |
+| MCP fleet | `/mcp-fleet` · `GET /api/mcp` | Layer 0 tile on `/dashboard` → `/mcp-fleet` | `GET/POST /api/mcp` |
 | Option A white-label | `/powered-by` | enterprise / RAS path | — |
 | GSPC board | `/gspc-scoreboard` + Lobby board | `/dashboard/measurement` | `GET /api/gspc` |
 | RWA EAT corpus | `/competitors` | same cards | adapters → publishers |

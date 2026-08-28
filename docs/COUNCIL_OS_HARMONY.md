@@ -43,9 +43,10 @@ Canon: `docs/MASTER_CONNECT.md` · `docs/ESTATE_CROSSWALK.md` · `council-os/GAM
 | MCP fleet page | REAL (dev) | Live list via `/api/mcp` — registry in dev, gateway in prod |
 | Training / flywheel | REAL (branch) | `public/flywheel/board.json` + `sim-board.json` on branch deploy |
 | Dashboard framework % | FIXED | UNMEASURED until org assessment |
-| 9 product SKUs (GPAI, INS, COBOL…) | MIXED | See `/products` + `engine-axis.ts` |
+| 9 product SKUs (GPAI, INS, COBOL…) | LIVE catalog | `/products` lists all nine with honest registers |
 | HF living datasets | 🔄 | `npm run hf:upload-staged` when write token |
 | Real MCP in all AI platforms | PARTIAL | `POST /api/mcp` on branch + dev-honesty (indices/RWA tools); full fleet on Pages |
+| DSH parity (indices / products / MCP) | REAL (branch) | `LAYER0_LINKS` on `/dashboard` → same OS paths |
 
 ---
 

@@ -50,6 +50,19 @@ export const LAYER0_LINKS: Layer0Link[] = [
     lobbyPrompt:
       "What are the three labour/AI-economy indices, why are they UNMEASURED, and why must they never fuse into GSPC grades?",
   },
+  {
+    label: "Products catalog",
+    blurb: "HO.2 living catalog — MEASURED / UNMEASURED / DESIGN honest. Scores never sold.",
+    path: "/products",
+    lobbyPrompt:
+      "List Council OS products that are MEASURED versus UNMEASURED — and confirm grades are never sold.",
+  },
+  {
+    label: "MCP fleet",
+    blurb: "291 registry servers · GET /api/mcp · Layer 0 wrapped.",
+    path: "/mcp-fleet",
+    lobbyPrompt: "What does GET /api/mcp return in local vs production, and how do indices_catalog tools stay UNMEASURED?",
+  },
 ];
 
 /** Trust floor surfaces — shared infra links (not finance-specific). */
