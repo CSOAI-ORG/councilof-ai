@@ -168,7 +168,7 @@ export const STORY: Slide[] = [
       { tag: "benefit", text: "One signed result every side can rely on" },
       { tag: "usp", text: "Independent of all of them — we take no money from anything we rank" },
     ],
-    href: "/?lobby=measured&task=get-measured",
+    href: "/os?lobby=measured&task=get-measured",
     cta: "Prove your AI",
     video: { src: "/videos/trust-ecosystem.mp4", poster: "/videos/trust-ecosystem.jpg", title: "The trust lobby — who the measurement is for" },
   },
@@ -210,7 +210,7 @@ const PERSONAS: { who: string; hook: string; href: string }[] = [
   // behind it. The hero door should open the audience page, not a sector leaf.
   { who: "Insurers", hook: "price AI risk on signed evidence", href: "/insurers" },
   { who: "Regulators", hook: "check behaviour against the law", href: "/regulators" },
-  { who: "Enterprises", hook: "prove your AI before you ship", href: "/?lobby=measured&task=enterprise-start" },
+  { who: "Enterprises", hook: "prove your AI before you ship", href: "/os?lobby=measured&task=enterprise-start" },
   { who: "Developers", hook: "verify a signed card — free forever", href: "/gspc-verify" },
 ];
 
@@ -291,7 +291,7 @@ function HeroActions() {
       <LiveCoverage />
       <div className="mt-9 grid w-full max-w-md grid-cols-1 gap-3 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center">
         <a
-          href="/?lobby=measured&task=get-measured"
+          href="/os?lobby=measured&task=get-measured"
           className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3.5 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
         >
           Get measured
