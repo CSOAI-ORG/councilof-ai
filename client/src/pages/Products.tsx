@@ -123,6 +123,66 @@ const PRODUCTS: { group: string; rows: ProductRow[] }[] = [
     ],
   },
   {
+    group: "Nine product rails (GPAI · INS · COBOL · EVM · XRPL · OS)",
+    rows: [
+      {
+        name: "GPAI / GSPC measurement",
+        path: "/gspc-scoreboard",
+        register: "MEASURED",
+        blurb: "14-slot board · 13 measured of 14 · jail UNTESTED separation",
+        monetize: "Verify free forever · grades never sold",
+      },
+      {
+        name: "INS · insurers evidence",
+        path: "/insurers",
+        register: "LIVE",
+        blurb: "Wilson intervals + n as underwriting inputs — not certificates",
+      },
+      {
+        name: "COBOL / legacy bridge",
+        path: "/legacy",
+        register: "PARTIAL",
+        blurb: "Wrap mainframe batch — SPEC vs MEASURED crossings on Engine Axis",
+      },
+      {
+        name: "EVM attestation adapters",
+        path: "/competitors",
+        register: "PARTIAL",
+        blurb: "Stage 3 catalog · TESTNET UNMEASURED until custody + counsel",
+      },
+      {
+        name: "XRPL attestation adapters",
+        path: "/competitors",
+        register: "PARTIAL",
+        blurb: "Stage 3 XRPL targets · same honesty rail as EVM",
+      },
+      {
+        name: "SovOS / Council OS workspace",
+        path: "/sov-os",
+        register: "LIVE",
+        blurb: "Dockable board · globe · games · flywheel — wire-first",
+      },
+      {
+        name: "GSPC Arena / Council Space",
+        path: "/gspc-arena?view=arena",
+        register: "LIVE",
+        blurb: "Arena fixture + narrated console labelled ≠ MEASURED",
+      },
+      {
+        name: "MCP fleet + agent card",
+        path: "/mcp-fleet",
+        register: "LIVE",
+        blurb: "GET/POST /api/mcp · agent-card.json · indices/RWA tools UNMEASURED",
+      },
+      {
+        name: "Games arcade (SovOS)",
+        path: "/sov-os",
+        register: "DESIGN",
+        blurb: "Council Town gated · five DESIGN slots registered honestly",
+      },
+    ],
+  },
+  {
     group: "Workspace & agents",
     rows: [
       {
