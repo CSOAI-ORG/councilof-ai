@@ -16,6 +16,8 @@ import {
   PLAY_SURFACES,
   WORKING_SURFACES,
   LEFTOVER_SURFACES,
+  FROZEN_SURFACES,
+  IN_BUILD_CARDS,
   LOCAL_ONLY_HARNESSES,
   FORBIDDEN_GAME_NAMES,
   isForbiddenGame,
@@ -106,7 +108,7 @@ describe("games-catalog", () => {
       expect(PLAY_SURFACES.length).toBeGreaterThan(0);
     });
 
-    it("Council Space is the only play surface", () => {
+    it("Council Space is the only live play surface", () => {
       expect(PLAY_SURFACES.length).toBe(1);
       expect(PLAY_SURFACES[0].name).toBe("Council Space");
       expect(PLAY_SURFACES[0].path).toBe("/gspc-arena");
@@ -131,7 +133,9 @@ describe("games-catalog", () => {
     });
 
     it("broken surfaces are marked with broken: true", () => {
-      for (const entry of LEFTOVER_SURFACES) {
+      const broken = LEFTOVER_SURFACES.filter((e) => e.broken);
+      expect(broken.length).toBeGreaterThan(0);
+      for (const entry of broken) {
         expect(entry.broken).toBe(true);
       }
     });
@@ -156,6 +160,53 @@ describe("games-catalog", () => {
       for (const harness of LOCAL_ONLY_HARNESSES) {
         const inPlay = PLAY_SURFACES.find(
           (p) => p.name.toLowerCase() === harness.name.toLowerCase()
+        );
+        expect(inPlay).toBeUndefined();
+      }
+    });
+  });
+
+  describe("frozen surfaces", () => {
+    it("GSPC Quests is catalogued as frozen leftover", () => {
+      const quests = FROZEN_SURFACES.find((f) => f.id === "gspc-quests");
+      expect(quests).toBeDefined();
+      expect(quests?.frozen).toBe(true);
+      expect(quests?.path).toBe("/gspc-quests.html");
+    });
+
+    it("frozen surfaces do not claim to use live board", () => {
+      for (const entry of FROZEN_SURFACES) {
+        expect(entry.usesLiveBoard).toBe(false);
+      }
+    });
+
+    it("GSPC Quests description mentions v1 governance (not living n=237)", () => {
+      const quests = FROZEN_SURFACES.find((f) => f.id === "gspc-quests");
+      expect(quests?.description).toContain("v1");
+      expect(quests?.description).toContain("NOT the living");
+    });
+  });
+
+  describe("in-build cards", () => {
+    it("Logic Duel is listed as in-build (no route)", () => {
+      const duel = IN_BUILD_CARDS.find((c) => c.id === "logic-duel");
+      expect(duel).toBeDefined();
+    });
+
+    it("Swarm Clash is listed as in-build (no route)", () => {
+      const swarm = IN_BUILD_CARDS.find((c) => c.id === "swarm-clash");
+      expect(swarm).toBeDefined();
+    });
+
+    it("Humans vs Humanoids is listed as in-build (no route)", () => {
+      const hvh = IN_BUILD_CARDS.find((c) => c.id === "humans-vs-humanoids");
+      expect(hvh).toBeDefined();
+    });
+
+    it("in-build cards are not in PLAY_SURFACES", () => {
+      for (const card of IN_BUILD_CARDS) {
+        const inPlay = PLAY_SURFACES.find(
+          (p) => p.id === card.id
         );
         expect(inPlay).toBeUndefined();
       }

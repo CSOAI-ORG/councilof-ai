@@ -1,16 +1,17 @@
 /**
  * games-catalog.ts — the living Council OS Games catalog.
  *
- * This is the single source of truth for what play surfaces exist in the estate.
- * Each entry is a surface that EXISTS. Broken/leftover entries are marked honestly.
+ * This file extends the play gallery in components/lobby/play.ts with board-level
+ * metadata (door mechanic, live board consumption). It does NOT create a parallel
+ * catalog — the authoritative play gallery is play.ts/LobbyPlay.tsx.
  *
  * HONESTY RULES:
  *   - "play" means interactive gameplay with live board gating.
  *   - "deck" means a slide/card presentation (not interactive play).
  *   - "printer" means a live data display (not a game).
- *   - "leftover" means broken/dead surface catalogued for honesty.
- *   - Every entry.path must be in PRIMARY_PATHS (enforced by test).
- *   - No typed board counts — games read from GET /api/gspc.
+ *   - "leftover" means frozen/broken surface catalogued for honesty.
+ *   - Every path must be in PRIMARY_PATHS (enforced by test).
+ *   - No typed board counts — live surfaces read from GET /api/gspc.
  *   - Counts: 22 axis · 15 measured · 7 empty (from GET /api/gspc).
  *
  * WHAT DOES NOT EXIST (verified, never catalog as working):
@@ -20,9 +21,15 @@
  *   - /arena (12-room leftover) — PR 824 holds
  *   - Town/XP on /os — PR 823 holds
  *
+ * FROZEN LEFTOVERS (playable but not the living board):
+ *   - /gspc-quests.html: six frozen quests, v1 governance (24-item), NOT living n=237.
+ *     In-browser grader with XP. Do not present as living 22-axis board.
+ *
+ * IN-BUILD (no routes, from play.ts):
+ *   - Logic Duel, Swarm Clash, Humans vs Humanoids — no live routes, do not mint URLs.
+ *
  * LOCAL-ONLY (not on councilof.ai):
- *   - Munder-Difflin harness: /Users/nicholas/munder-difflin-harness site/games.html,
- *     governance-city.html, visuals/arena-game.html. :4100 health only. No public route.
+ *   - Munder-Difflin harness: /Users/nicholas/munder-difflin-harness, :4100 health only.
  */
 
 export type CatalogKind = "play" | "deck" | "printer" | "leftover";
@@ -37,14 +44,16 @@ export interface CatalogEntry {
   usesLiveBoard: boolean;
   /** External URL if the surface lives outside councilof.ai. */
   externalUrl?: string;
-  /** Badge to show (e.g. "live", "deck", "broken"). */
+  /** Badge to show (e.g. "live", "deck", "frozen"). */
   badge?: string;
   /** True if the surface is known broken. */
   broken?: boolean;
+  /** True if the surface is frozen (playable but not live board). */
+  frozen?: boolean;
 }
 
 /**
- * The living catalog. Every entry is a verified surface (working or honestly broken).
+ * The board-level catalog. Extends play.ts with live-board metadata.
  * Tests enforce that each path is registered in PRIMARY_PATHS.
  */
 export const GAMES_CATALOG: CatalogEntry[] = [
@@ -57,6 +66,17 @@ export const GAMES_CATALOG: CatalogEntry[] = [
       "The governed arena. Model versus model on frozen benchmarks. Room doors from GET /api/gspc: open only MEASURED model-comparison axes except jail. Empty stays empty. Jail is floor, never a scored door.",
     usesLiveBoard: true,
     badge: "live",
+  },
+  {
+    id: "gspc-quests",
+    name: "GSPC Quests",
+    path: "/gspc-quests.html",
+    kind: "leftover",
+    description:
+      "Six frozen axis-scoped quests with in-browser grader. Governance quest is retired v1 (24-item), NOT the living n=237. Your answers are graded by the same deterministic regex used to measure models. Playable but frozen — NOT the living 22-axis board.",
+    usesLiveBoard: false,
+    badge: "frozen",
+    frozen: true,
   },
   {
     id: "coliseum-deck",
@@ -104,6 +124,7 @@ export const LIVE_BOARD_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => g
 
 /**
  * Play surfaces only (excludes decks, printers, and leftovers).
+ * NOTE: Only Council Space is live play. GSPC Quests is frozen leftover.
  */
 export const PLAY_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => g.kind === "play");
 
@@ -115,7 +136,24 @@ export const WORKING_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => !g.b
 /**
  * Broken/leftover surfaces catalogued for honesty.
  */
-export const LEFTOVER_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => g.broken);
+export const LEFTOVER_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter(
+  (g) => g.kind === "leftover"
+);
+
+/**
+ * Frozen surfaces — playable but not the living board.
+ */
+export const FROZEN_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => g.frozen);
+
+/**
+ * IN-BUILD cards from play.ts (no routes, do not mint URLs).
+ * Listed for reference only — the authoritative list is in play.ts.
+ */
+export const IN_BUILD_CARDS = [
+  { id: "logic-duel", name: "Logic Duel", note: "In build — no live match route" },
+  { id: "swarm-clash", name: "Swarm Clash", note: "In build — arena wrapper is local preview only" },
+  { id: "humans-vs-humanoids", name: "Humans vs Humanoids", note: "No playable route" },
+];
 
 /**
  * LOCAL-ONLY HARNESSES (not on councilof.ai, no public route).
