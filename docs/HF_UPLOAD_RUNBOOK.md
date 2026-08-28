@@ -13,8 +13,9 @@ MCP OAuth (`hf_whoami`) may show **admin** on `csoai` and scopes including `cont
 
 - `hf_fs` MCP is **read-only** (ls/cat/stat/search — no upload).
 - Shell `hf` / `huggingface_hub` still need `HF_TOKEN` or `hf auth login`.
+- Optional token files: `/run/secrets/HF_TOKEN`, `.hf_token`, `.secrets/HF_TOKEN`.
 
-Until a write token is in the environment, keep packs staged and leave #139/#186/#253 as 🔄.
+Until a write token is in the environment, keep packs staged and leave #139/#186/#253 as 🔄. See `datasets/UPLOAD_DEFERRED.md`.
 
 ## Pre-upload verify (no token required)
 

@@ -57,7 +57,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 136 | n≥ threshold for any future Wilson on indices | method § · ✅ |
 | 137 | JSON Schema for index snapshot | `/.well-known/schemas/labour-economy-index.schema.json` · ✅ |
 | 138 | Empty snapshot fixtures (all null scores) | `scripts/index-fixtures/` · ✅ |
-| 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF · fixture ✅ · verify ✅ `npm run verify:staged-hf` · upload 🔄 |
+| 139 | HF dataset stub `csoai/labour-economy-unmeasured` | HF · fixture ✅ · verify ✅ `npm run verify:staged-hf` · upload 🔄 blocked on `HF_TOKEN` |
 | 140 | HF README: UNMEASURED doctrine | `datasets/labour-economy-unmeasured/README.md` · ✅ staged |
 | 141 | Kaggle mirror policy (REPORTED only) | docs · ✅ in HF plan |
 | 142 | Oracle-fleet adjacency note (not grade oracle) | `docs/ORACLE_FLEET.md` · ✅ |
@@ -102,7 +102,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 183 | Verify path for RWA pack | `/gspc-verify` · ✅ |
 | 184 | OS Lobby card for RWA tool | MeasuredToolCard | ✅ |
 | 185 | DSH same card | dashboard | ✅ |
-| 186 | HF dump of testnet cards (labeled TESTNET) | HF · local pack ✅ · verify ✅ · upload 🔄 |
+| 186 | HF dump of testnet cards (labeled TESTNET) | HF · local pack ✅ · verify ✅ · upload 🔄 blocked on `HF_TOKEN` |
 | 187 | Agent-card RWA tool entry | well-known | ✅ |
 | 188 | MCP `rwa_attestation_catalog` | mcp | ✅ |
 | 189 | JMWH remains demo-only in CI assert | test | ✅ |
@@ -163,7 +163,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 |---|------|-------|
 | 251 | HF org `csoai` dataset index page | HF · org live ✅ (`csoai/*` datasets) |
 | 252 | Upload GSPC MEASURED snapshot (existing) | HF · ✅ existing `csoai/gspc-boards` (MEASURED boards) |
-| 253 | Upload indices UNMEASURED manifest | HF · local fixture ✅ · verify ✅ · upload 🔄 `docs/HF_UPLOAD_RUNBOOK.md` |
+| 253 | Upload indices UNMEASURED manifest | HF · local fixture ✅ · verify ✅ · upload 🔄 blocked on `HF_TOKEN` · `docs/HF_UPLOAD_RUNBOOK.md` · `datasets/UPLOAD_DEFERRED.md` |
 | 254 | Upload RWA corpus REPORTED (no fake scores) | HF · ✅ existing `csoai/rwa-attest` (REPORTED corpus) |
 | 255 | Kaggle notebook: verify Ed25519 offline | `notebooks/kaggle/ed25519_offline_verify.py` · ✅ |
 | 256 | Kaggle: refuse labour MEASURED claims | `notebooks/kaggle/refuse_labour_measured.md` · ✅ |

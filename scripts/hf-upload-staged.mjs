@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
  * Upload staged UNMEASURED HF packs (#139, #186, #253).
- * Requires HF_TOKEN env or `hf auth login` (write / contribute-repos).
+ * Requires HF_TOKEN env, secret file, or `hf auth login`.
  * Never invent MEASURED scores — uploads local fixtures only.
  */
 import { execSync, spawnSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = new URL("..", import.meta.url).pathname;
@@ -25,6 +25,24 @@ const PACKS = [
   },
 ];
 
+const TOKEN_FILES = [
+  "/run/secrets/HF_TOKEN",
+  join(root, ".hf_token"),
+  join(root, ".secrets/HF_TOKEN"),
+];
+
+function loadTokenFromFiles() {
+  for (const fp of TOKEN_FILES) {
+    if (!existsSync(fp)) continue;
+    const t = readFileSync(fp, "utf8").trim();
+    if (t.length > 8) {
+      process.env.HF_TOKEN = t;
+      return fp;
+    }
+  }
+  return null;
+}
+
 function hfAuthOk() {
   if (process.env.HF_TOKEN && process.env.HF_TOKEN.length > 8) return true;
   const r = spawnSync("hf", ["auth", "whoami"], { encoding: "utf8" });
@@ -32,16 +50,22 @@ function hfAuthOk() {
 }
 
 function run(cmd, opts = {}) {
-  execSync(cmd, { stdio: "inherit", ...opts });
+  execSync(cmd, { stdio: "inherit", env: process.env, ...opts });
 }
 
 function main() {
-  if (!process.env.HF_TOKEN && !hfAuthOk()) {
+  const fromFile = loadTokenFromFiles();
+  if (fromFile) console.log(`hf-upload-staged: loaded token from ${fromFile}`);
+
+  if (!hfAuthOk()) {
     console.error("hf-upload-staged: no HF write auth.");
-    console.error("  Set HF_TOKEN or run: hf auth login");
+    console.error("  Set HF_TOKEN, place it in /run/secrets/HF_TOKEN, or: hf auth login");
     console.error("  MCP OAuth (read-mcp) cannot push — see docs/HF_UPLOAD_RUNBOOK.md");
     process.exit(2);
   }
+
+  // Preflight honesty gate
+  run("node scripts/verify-staged-hf.mjs");
 
   for (const pack of PACKS) {
     const dir = join(root, pack.local);
@@ -52,7 +76,7 @@ function main() {
     console.log(`\n=== NEXT_300 #${pack.move} → ${pack.repo} ===`);
     run(`hf repos create ${pack.repo} --type dataset --exist-ok`);
     run(
-      `hf upload ${pack.repo} ${pack.local} --repo-type dataset --commit-message "${pack.message}"`,
+      `hf upload ${pack.repo} ${dir} --repo-type dataset --commit-message "${pack.message}"`,
     );
     console.log(`Uploaded ${pack.repo}`);
   }
