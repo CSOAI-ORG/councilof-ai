@@ -1,12 +1,12 @@
 /**
- * GET /chat/ — 308 to Council OS home.
- * Do not 308 onto the homepage — Home is marketing, not the OS.
+ * GET /play/ — 308 to Council Space arena.
+ * Space family: /simulate already hops here. Do not invent /os?lobby=play.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/os?lobby=home",
+      location: "/gspc-arena",
       "cache-control": "public, max-age=300",
     },
   });

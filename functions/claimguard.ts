@@ -1,12 +1,12 @@
 /**
- * GET /chat/ — 308 to Council OS home.
- * Do not 308 onto the homepage — Home is marketing, not the OS.
+ * GET /claimguard — 308 to /honesty/.
+ * Do not 308 onto /claimguard.html.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/os?lobby=home",
+      location: "/honesty/",
       "cache-control": "public, max-age=300",
     },
   });
