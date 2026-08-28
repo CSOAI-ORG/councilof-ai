@@ -95,7 +95,6 @@ const CHANGEFREQ = new Map([
   ["/", "weekly"],
 ]);
 
-// --- Junk / legacy / non-indexable filters --------------------------------
 const EXCLUDE_EXACT = new Set([
   "/404",
   "/login",
@@ -130,7 +129,6 @@ const EXCLUDE_EXACT = new Set([
   "/marketing",
   "/brief",
   "/public",
-  // 2026-08-13 Part CJ: legacy sovereign-class redirects — sitemap lists canonical URLs only
   "/sovereign",
   "/sovereign-network",
   "/gspc-arena?view=towns",
@@ -147,20 +145,17 @@ const EXCLUDE_EXACT = new Set([
   "/about-ceasai",
   "/ceasai-training",
   "/simulate",
-  // legacy / shadow surfaces
   "/old-home",
   "/landing",
   "/legacy",
   "/pricing-legacy",
   "/poc",
   "/humanoids-poc",
-  // internal-codename pages, not for index
   "/gods-eye",
   "/horus",
   "/dragonfly",
   "/maternal-covenant",
   "/covenant",
-  // Audit 2026-08-14 kills/redirects — these paths are now 308s, must NOT be in the sitemap.
   "/byzantine",
   "/byzantine-consensus",
   "/bft",
@@ -186,7 +181,6 @@ function isJunk(path) {
 
 function priorityFor(path) {
   if (PRIORITY.has(path)) return PRIORITY.get(path);
-  // The six audience pages and the industry pages are entry surfaces, not archive.
   if (path.startsWith("/for/") || path.startsWith("/industries/")) return P_HIGH;
   if (path.startsWith("/legal/") || /privacy|terms|cookie|disclaimer|sla|dpa|agreement/.test(path))
     return P_LOW;
@@ -199,7 +193,6 @@ function changefreqFor(path) {
   return "weekly";
 }
 
-// --- Parse routes ---------------------------------------------------------
 const src = readFileSync(APP_TSX, "utf8");
 const routeRe = /<Route\b[^>]*?\bpath="([^"]+)"/g;
 const seen = new Set();
@@ -222,23 +215,11 @@ while ((m = routeRe.exec(src)) !== null) {
   }
   paths.push(p);
 }
-// Library IA: the /library/:sector pages are dynamic routes (skipped above as :param) but are
-// prime AEO citation surface — one sector-organized archive index each. List them explicitly.
 for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance", "product", "company"]) {
   const lp = `/library/${s}`;
   if (!seen.has(lp)) { seen.add(lp); paths.push(lp); }
 }
 
-// --- Dynamic route families the :param filter above drops on the floor ------
-//
-// The parser skips any path containing ":", which is correct — a sitemap cannot list a
-// pattern. But it means EVERY dynamic family silently vanishes unless something enumerates
-// it. Three families were missing entirely from the emitted sitemap: /for/:persona,
-// /industries/:slug and /vs/:slug. The /for pages had also been suppressed behind redirect
-// Functions, so their absence looked deliberate rather than mechanical; it was mechanical.
-//
-// Each family below is DERIVED from the module that owns its slugs, never typed here, so a
-// slug added to the source lands in the sitemap on the next build instead of drifting.
 const derived = (label, file, re, prefix) => {
   const out = [];
   const src = readFileSync(file, "utf8");
@@ -254,8 +235,6 @@ const derived = (label, file, re, prefix) => {
   return out;
 };
 
-// /for/:persona — the six audience pages. Slugs are the `key` union in PersonaRouter's
-// Persona type, which is the single place the set is declared.
 const PERSONA_KEYS = (() => {
   const src = readFileSync(PERSONA_TSX, "utf8");
   const m = src.match(/key:\s*((?:"[a-z-]+"\s*\|\s*)+"[a-z-]+")/);
@@ -266,13 +245,7 @@ const PERSONA_KEYS = (() => {
   return [...m[1].matchAll(/"([a-z-]+)"/g)].map((x) => x[1]);
 })();
 const FOR_PATHS = PERSONA_KEYS.map((k) => `/for/${k}`);
-
-// /industries/:slug — the canonical industry pages, from the data module IndustryTemplate reads.
 const INDUSTRY_PATHS = derived("industry", INDUSTRIES_TS, /^\s*slug:\s*"([a-z0-9-]+)"/gm, "/industries/");
-
-// /vs/:slug — one canonical page per named competitor. Compare.tsx's FOCUS map carries an
-// ALIAS ("credo" and "credo-ai" both resolve to Credo AI); listing both would put two URLs
-// with identical content in the sitemap, so only canonical slugs are emitted.
 const VS_PATHS = ["/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust"];
 
 for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS, ...VS_PATHS]) {
@@ -280,8 +253,6 @@ for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS, ...VS_PATHS]) {
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 
-// --- Machine contracts (audit rec 5, lane d971a38) — not App.tsx routes, but
-// prime agent/AEO citation surface. Kept here so regeneration never drops them.
 const MACHINE_PATHS = [
   ["/api/gspc", "daily", "0.8"],
   ["/api/feed.xml", "daily", "0.7"],
@@ -297,10 +268,6 @@ for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
 }
 
-// Every blog article that is actually reachable. /blog/:slug is a :param route (skipped
-// above), and the previous hand-maintained list of 22 slugs left 26 real articles out of
-// the sitemap entirely. Read the dataset instead; skip any slug that _redirects sends
-// elsewhere, because a sitemap URL that 308s away is exactly the defect being fixed.
 const BLOG_TS = join(ROOT, "client/src/data/blog-content.ts");
 let blogSlugs = [];
 try {
@@ -316,7 +283,6 @@ for (const slug of blogSlugs) {
   if (!seen.has(bp)) { seen.add(bp); paths.push(bp); }
 }
 
-// --- Emit XML ---------------------------------------------------------------
 const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
@@ -362,8 +328,9 @@ console.log(
     `${blogSlugs.length - blogSkipped} blog articles; lastmod=${today})`
 );
 
-// Flagship sanity check — these MUST be present.
 const REQUIRED = [
+  "/os",
+  "/honesty",
   "/gspc-arena",
   "/gspc-verify",
   "/gspc-anchors",
@@ -374,8 +341,6 @@ const REQUIRED = [
   "/instrument",
   "/live-ledger",
   "/tour",
-  // The six audience pages. They were redirect-suppressed for two days and nothing
-  // failed, because nothing asserted they should be reachable. Now something does.
   ...FOR_PATHS,
 ];
 const missing = REQUIRED.filter((r) => !seen.has(r) || isJunk(r));
