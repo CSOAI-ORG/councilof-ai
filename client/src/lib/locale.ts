@@ -22,7 +22,7 @@ export const REGIONS: Record<string, RegionProfile> = {
   SG: { code: "SG", label: "Singapore", frameworks: ["Model AI Governance Framework", "MAS FEAT (finance)", "ISO/IEC 42001"], note: "Singapore leads with voluntary, practical frameworks — the Model AI Governance Framework and AI Verify testing toolkit.", globe: [103.8, 1.35] },
   CA: { code: "CA", label: "Canada", frameworks: ["Voluntary AI code of conduct", "PIPEDA (privacy)", "NIST AI RMF (de-facto)"], note: "Canada's AIDA (Bill C-27) lapsed in Jan 2025 — a voluntary code applies while new legislation is reconsidered.", globe: [-96.0, 56.0] },
   IN: { code: "IN", label: "India", frameworks: ["MeitY AI advisories", "DPDP Act (privacy)", "ISO/IEC 42001"], note: "India regulates through MeitY advisories and the DPDP Act — a light-touch, sectoral approach while a broader framework develops.", globe: [79.0, 22.0] },
-  GLOBAL: { code: "GLOBAL", label: "your region", frameworks: ["EU AI Act", "NIST AI RMF", "ISO/IEC 42001"], note: "CSOAI crosswalks 13+ global frameworks to one control set — comply once, evidence everywhere.", globe: [10.0, 25.0] },
+  GLOBAL: { code: "GLOBAL", label: "Global", frameworks: ["EU AI Act", "NIST AI RMF", "ISO/IEC 42001"], note: "CSOAI crosswalks global frameworks to one control set — comply once, evidence everywhere.", globe: [10.0, 25.0] },
 };
 
 // Short greeting in the region's primary language (accurate, human-checked phrasing).
