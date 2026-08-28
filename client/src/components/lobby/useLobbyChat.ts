@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { matchRoute, matchTab, type LobbyTab } from "./tabs";
+import { LOBBY_TABS, matchRoute, matchTab, type LobbyTab } from "./tabs";
 import { AXES, quotable } from "@/lib/gspcAxes";
 
 /**
@@ -23,6 +23,9 @@ import { AXES, quotable } from "@/lib/gspcAxes";
  * is EXPLICITLY labelled deterministic. We never dress a local string up as a
  * live answer, and this lane never writes a compliance verdict.
  */
+
+/** The space pane from LOBBY_TABS — the existing contract for opening Council Space. */
+const SPACE_TAB = LOBBY_TABS.find((t) => t.id === "space")!;
 
 export type Turn = {
   role: "user" | "council";
@@ -227,13 +230,12 @@ export function useLobbyChat(): LobbyChat {
         return;
       }
 
-      // Lane 1.5 — axis/Space navigation. Opens Council Space for measured axes,
-      // refuses for unmeasured, handles practice mode.
+      // Lane 1.5 — axis-specific navigation. Uses the existing space pane contract.
+      // General "open arena" / "open space" already handled by matchTab above.
+      // This lane handles individual axis names: MEASURED opens space, UNMEASURED refuses.
       const axisMatch = matchAxisOrSpace(question);
       if (axisMatch.isPractice) {
-        if (onOpenRoute) {
-          onOpenRoute("/gspc-arena", "Council Space — Practice");
-        }
+        onNavigate(SPACE_TAB);
         push({
           role: "council",
           text:
@@ -248,11 +250,11 @@ export function useLobbyChat(): LobbyChat {
         });
         return;
       }
-      if (axisMatch.axis && onOpenRoute) {
+      if (axisMatch.axis) {
         const axis = axisMatch.axis;
         const isMeasured = quotable(axis);
         if (isMeasured) {
-          onOpenRoute("/gspc-arena", `Council Space — ${axis.axis}`);
+          onNavigate(SPACE_TAB);
           push({
             role: "council",
             text:
@@ -273,19 +275,6 @@ export function useLobbyChat(): LobbyChat {
             signature: `axis closed · ${axis.axis} · unmeasured`,
           });
         }
-        return;
-      }
-      if (axisMatch.isSpace && onOpenRoute) {
-        onOpenRoute("/gspc-arena", "Council Space");
-        push({
-          role: "council",
-          text:
-            `Opened Council Space — the governed arena.\n\n` +
-            `Rounds are graded deterministically, never by a model jury. The arena shows what was measured. ` +
-            `To open a specific axis, say "open governance" or "show the care axis".`,
-          state: "deterministic",
-          signature: "local command · /gspc-arena",
-        });
         return;
       }
 
