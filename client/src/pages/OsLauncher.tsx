@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
-import GameBar from "@/components/os/GameBar";
 import AxisPanel from "@/components/os/AxisPanel";
 import CityPanel from "@/components/os/CityPanel";
 import { lobbyHref, openLobby } from "@/lib/lobbyLink";
@@ -23,31 +22,34 @@ type NavGroup = {
 
 const NAV: NavGroup[] = [
   {
-    label: "Play",
-    items: [
-      { name: "Council Town", href: "#council-town", note: "the agent-town game", badge: "live" },
-      { name: "The Arena", href: "/gspc-arena", note: "model vs model", pane: "space" },
-      { name: "Live demo & tour", href: "/demo", note: "watch it run" },
-    ],
-  },
-  {
-    label: "City",
+    label: "Board",
     items: [
       { name: "Council City", href: "#city", note: "living printer of the public board" },
-      { name: "Living board", href: "#city", note: "counts from GET /api/gspc" },
-      { name: "Paper District", href: "https://councilof.ai/paper-district", note: "research library" },
-      { name: "Council Space", href: "/gspc-arena", note: "the governed arena", pane: "space" },
+      { name: "GSPC axis", href: "#axis", note: "counts from GET /api/gspc" },
+      { name: "Live board", href: "/gspc-scoreboard", note: "signed scores", pane: "board" },
+      { name: "Models", href: "/models", note: "ranked by signed scores", pane: "models" },
     ],
   },
   {
-    label: "Measure",
+    label: "Arena",
     items: [
-      { name: "GSPC axis", href: "#axis", note: "living board · counts from /api/gspc" },
-      { name: "Live board", href: "/gspc-scoreboard", note: "signed scores", pane: "board" },
+      { name: "The Arena", href: "/gspc-arena", note: "model vs model", pane: "space" },
+      { name: "Council Space", href: "/gspc-arena", note: "the governed arena", pane: "space" },
       { name: "Results", href: "/benchmarks", note: "every artefact-bound figure", pane: "results" },
-      { name: "Models", href: "/models", note: "ranked by signed scores", pane: "models" },
+    ],
+  },
+  {
+    label: "Verify",
+    items: [
       { name: "Verify a card", href: "/gspc-verify", note: "offline check", pane: "verify" },
       { name: "Methodology", href: "/methodology", note: "how we grade", task: "browse-methodology" },
+    ],
+  },
+  {
+    label: "Explore",
+    items: [
+      { name: "Paper District", href: "https://councilof.ai/paper-district", note: "research library" },
+      { name: "Live demo & tour", href: "/demo", note: "watch it run" },
     ],
   },
   {
@@ -176,42 +178,11 @@ export default function OsLauncher() {
               The living GSPC board, verify, Council Space, and the ask bar — one workspace.
               Counts come from GET /api/gspc. Empty cells stay empty.
             </p>
-            <div className="mt-6 space-y-4">
+            <div className="mt-6">
               <a href={lobbyHref({ pane: "home" })} onClick={(e) => { e.preventDefault(); openLobby({ pane: "home" }); }} className={`inline-flex min-h-[44px] items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 ${FOCUS}`}>Enter Council OS</a>
-              <GameBar />
             </div>
           </section>
-          <section id="council-town" className="scroll-mt-8">
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-emerald-50/60 to-white">
-              <div className="grid gap-6 p-6 md:grid-cols-[1.3fr_1fr] md:p-8">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-700">Center stage · the game</span>
-                    <span className="rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-emerald-700">Client live</span>
-                  </div>
-                  <h2 className="mt-2 text-2xl font-bold text-slate-900">Council Town</h2>
-                  <p className="mt-2 max-w-md text-[14px] leading-relaxed text-slate-600">Our estate-branded open-world town where AI agent clans deliberate — the living exhibit in the Council OS Games arcade.</p>
-                  <div className="mt-5 flex flex-wrap gap-3">
-                    <a href="https://council-town.pages.dev" target="_blank" rel="noreferrer" className={`inline-flex min-h-[44px] items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 ${FOCUS}`}>Open Council Town ↗</a>
-                    <a href={lobbyHref({ pane: "home" })} onClick={(e) => { e.preventDefault(); openLobby({ pane: "home" }); }} className={`inline-flex min-h-[44px] items-center rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 ${FOCUS}`}>Open Council OS</a>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center rounded-xl border border-emerald-200 bg-white/80 p-6 text-center">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-xl font-bold text-emerald-800">C</div>
-                  <div className="mt-3 text-sm font-semibold text-slate-900">Client deployed · world owner-gated</div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section>
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
-              <h2 className="text-2xl font-bold text-slate-900">The Arena</h2>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <Link href="/gspc-arena" className={`inline-flex min-h-[44px] items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 ${FOCUS}`}>Open the full Arena →</Link>
-                <Link href="/methodology" className={`inline-flex min-h-[44px] items-center text-sm font-semibold text-emerald-700 hover:text-emerald-800 ${FOCUS}`}>How it is graded — no LLM-as-judge</Link>
-              </div>
-            </div>
-          </section>
+          {/* Living board first — the measurement surface, not gamification chrome */}
           <section id="city" className="scroll-mt-8">
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-emerald-50/40 to-white">
               <div className="p-6 md:p-8">
@@ -229,7 +200,17 @@ export default function OsLauncher() {
             </div>
           </section>
           <section id="axis" className="scroll-mt-8"><AxisPanel /></section>
-          <footer className="border-t border-slate-100 pt-6 text-[12px] text-slate-500">One measured surface — the game, the arena, the axis and the Council together.</footer>
+          <section>
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
+              <h2 className="text-2xl font-bold text-slate-900">The Arena</h2>
+              <p className="mt-2 text-[14px] text-slate-600">Model vs model — measured head-to-head on frozen provisions. Every cell is signed evidence.</p>
+              <div className="mt-4 flex flex-wrap items-center gap-4">
+                <Link href="/gspc-arena" className={`inline-flex min-h-[44px] items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 ${FOCUS}`}>Open the full Arena →</Link>
+                <Link href="/methodology" className={`inline-flex min-h-[44px] items-center text-sm font-semibold text-emerald-700 hover:text-emerald-800 ${FOCUS}`}>How it is graded — no LLM-as-judge</Link>
+              </div>
+            </div>
+          </section>
+          <footer className="border-t border-slate-100 pt-6 text-[12px] text-slate-500">The living board, the axis, and the arena — one measured surface.</footer>
         </main>
       </div>
     </div>
