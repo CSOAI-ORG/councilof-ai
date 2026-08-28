@@ -67,7 +67,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 146 | Corrections path for index method errata | `C-2026-0825-01` · ✅ |
 | 147 | Refutation ledger row type for index claims | `kind: index-claim` · ✅ |
 | 148 | Public FAQ: why empty indices | `/indices` FaqBlock · ✅ |
-| 149 | Regulator-facing one-pager PDF | owner · markdown ✅ · print HTML ✅ `/regulator-indices-one-pager.html` · designed PDF ☐ |
+| 149 | Regulator-facing one-pager PDF | owner · markdown ✅ · print HTML ✅ `/regulator-indices-one-pager.html` (Print/Save as PDF) · designed layout PDF ☐ |
 | 150 | Counsel review of index disclaimers | ⛔ |
 | 151–160 | Ten REPORTED citation captures (dated, linked, no scores) | `docs/REPORTED_CITATIONS_LABOUR_ECONOMY.md` · ✅ |
 
@@ -121,7 +121,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 204 | PRODUCT_TABS add Products | productNav · ✅ |
 | 205 | PRODUCT_TABS add Indices | productNav · ✅ |
 | 206 | Bottom estate bar includes new links | BottomEstateNav · ✅ |
-| 207 | Lobby sidebar group “Indices” | councilOsSideMenu · ✅ |
+| 207 | Lobby sidebar + AG-UI Control rail | councilOsSideMenu · `LobbySideRail` Control chips seed Ask (consent lock, no auto-nav) · ✅ |
 | 208 | GlobalSearch entries | GlobalSearch · ✅ |
 | 209 | Homepage hero CTA unchanged; below-fold indices strip | NewHomeV3 · ✅ |
 | 210 | MarketingHome alignment check | MarketingHome | ✅ |
