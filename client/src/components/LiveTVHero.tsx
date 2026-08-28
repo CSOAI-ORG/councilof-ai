@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 
 /**
- * LiveTVHero — TV-optimised hero for the SOV Channel portal.
+ * LiveTVHero — TV-optimised hero for the Council Channel portal.
  *
  * Renders a 1920x1080 hero section that:
  * - Pulls live GSPC from sov-gateway
  * - Streams live events from the measurement flywheel
  * - Cycles through the 5 channels
  * - Falls back to a graceful 0/0/0 mock if sov-gateway is offline
- * - Connects to the SOV Town oracle state server (when reachable) for live ticks
+ * - Connects to the Council Space oracle state server (when reachable) for live ticks
  *
  * The hero is the first thing a user sees on a TV — it must be legible
  * from 10 feet away. All text is large, all UI is high-contrast, all
@@ -20,7 +20,7 @@ const CHANNELS = [
   { id: "security",   icon: "🛡️", label: "Security",   badge: "Rainbow 7-Layer" },
   { id: "honey",      icon: "🐝", label: "Honey Flow", badge: "Family Contributions" },
   { id: "arena",      icon: "⚔️", label: "Swarm Arena", badge: "Daily Quest" },
-  { id: "sovtown",    icon: "🌍", label: "SovTown",     badge: "Regional" },
+  { id: "space",      icon: "🌍", label: "Council Space", badge: "Regional" },
 ];
 
 const TICKER_TEMPLATES = [
@@ -162,7 +162,7 @@ export default function LiveTVHero() {
                 className="text-2xl font-bold tracking-widest uppercase"
                 style={{ color: "#ecfdf5" }}
               >
-                SOV Channel
+                Council Channel
               </h1>
               <p
                 className="text-xs tracking-[4px] uppercase font-mono"
