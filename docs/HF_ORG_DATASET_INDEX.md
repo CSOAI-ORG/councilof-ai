@@ -1,21 +1,28 @@
 # HF org `csoai` dataset index (NEXT_300 #251)
 
-Observed Hub repos (2026-08-26), admin: Nicholastempleman:
+Observed Hub (2026-08-28), admin: Nicholastempleman. Product surface on councilof.ai for labour/economy indices remains **UNMEASURED** (`GET /api/indices`). Never invent MEASURED labour scores. See `docs/HF_LABOUR_INDEX_HONESTY.md`.
+
+## Live honesty / gap surfaces
 
 | Dataset | Role |
 |---------|------|
 | `csoai/gspc-boards` | MEASURED board dumps |
-| `csoai/rwa-attest` | RWA REPORTED/attest corpus + labour index *experiments* |
+| `csoai/gspc-ai-economy-index` | UNMEASURED empty-slot card (README only) |
+| `csoai/gspc-human-labour-index` | UNMEASURED empty-slot card (README only) |
+| `csoai/gspc-humanoid-labour-index` | UNMEASURED empty-slot card (README only) |
+| `csoai/gspc-gap-index` | Weekly UNSIGNED gap tape (`current.json`) |
+| `csoai/rwa-attest` | RWA REPORTED/attest corpus (+ experimental index JSON — not product MEASURED) |
+| `csoai/rwa-onchain-measurement` | On-chain RWA measurement notes |
 | `csoai/measured-vs-reported` | Register honesty |
-| others (`gspc-*`, `signed-fleet-*`) | axis/corpus/fleet |
+| others (`gspc-*`, `signed-fleet-*`, `living-catalog`) | axis/corpus/fleet/catalog |
 
-**Labour/economy product surface** on councilof.ai remains **UNMEASURED** (`GET /api/indices`). See `docs/HF_LABOUR_INDEX_HONESTY.md` — Hub `MEASURED-INDEX-v0.1` files must not be read as GSPC cells or permission to invent labour MEASURED product scores.
+## Staged dedicated packs (upload 🔄 — needs `HF_TOKEN`)
 
-Still 🔄: dedicated uploads when write token available — see `docs/HF_UPLOAD_RUNBOOK.md`.
+Pre-upload: `npm run verify:staged-hf` · runbook: `docs/HF_UPLOAD_RUNBOOK.md`
 
-Pre-upload (no token): `npm run verify:staged-hf`
+| Staged pack | Target repo | NEXT_300 |
+|-------------|-------------|----------|
+| `datasets/labour-economy-unmeasured/` | `csoai/labour-economy-unmeasured` | #139, #253 |
+| `datasets/rwa-testnet-unmeasured/` | `csoai/rwa-testnet-unmeasured` | #186 |
 
-| Staged pack | Target repo |
-|-------------|-------------|
-| `datasets/labour-economy-unmeasured/` | `csoai/labour-economy-unmeasured` (#139, #253) |
-| `datasets/rwa-testnet-unmeasured/` | `csoai/rwa-testnet-unmeasured` (#186) |
+Hub `stat` (2026-08-28): both target repos **missing**. Per-slot UNMEASURED README cards above are **not** a substitute for the unified staged manifests — upload when write token works (`npm run hf:upload-staged`).
