@@ -28,7 +28,7 @@ import {
   Link2,
 } from "lucide-react";
 
-// ── End-user outcomes — real surfaces, owned images ───────────────────────
+// ── End-user outcomes — real surfaces, owned images ─────────────────────────
 const OUTCOMES: {
   title: string;
   desc: string;
@@ -70,19 +70,19 @@ const OUTCOMES: {
     title: "MCP tool fleet",
     desc: "Governed MCP servers: crosswalk, risk-check, evidence-pack. Inspect on /mcp-fleet.",
     href: "/mcp-fleet",
-    image: "/images/public_watchdog_intake.jpg",
+    image: "/images/public_watchdog_upvote.jpg",
     icon: Shield,
   },
   {
-    title: "Training arenas",
-    desc: "Six arenas serving frozen items, marked by the same published key. You vs the AI, scored.",
-    href: "/arena",
+    title: "Compliance Training World",
+    desc: "Industry quests graded in-browser — Art 50(2), bank, insurance, equity, bond, cross-border. Training attests completion, never certification.",
+    href: "/compliance-training-world/catalog.html",
     image: "/images/literacy_training_arena.jpg",
     icon: Monitor,
   },
 ];
 
-// ── Hero: Council OS door ───────────────────
+// ── Hero: Council OS door ───────────────────────────────────────────────────
 function HeroCouncilOS() {
   return (
     <section className="surface-ink py-16 sm:py-20 lg:py-24">
@@ -140,7 +140,7 @@ function HeroCouncilOS() {
   );
 }
 
-// ── Primary CTA band (repeated after products and above footer) ───────────────────
+// ── Primary CTA band (repeated after products and above footer) ──────────────
 function PrimaryCtaBand({ id }: { id?: string }) {
   return (
     <section id={id} className="surface-raised py-10 sm:py-12">
@@ -159,7 +159,7 @@ function PrimaryCtaBand({ id }: { id?: string }) {
   );
 }
 
-// ── Living Board: shared component from @/components/board ──────
+// ── Living Board: shared component from @/components/board ──────────────────
 // LiveLeaderboard: self-contained, uses useGspcBoard(), same GET as /os.
 // Empty stays empty. 22·15·7.
 function LivingBoardSection() {
@@ -171,7 +171,7 @@ function LivingBoardSection() {
   );
 }
 
-// ── outcomes: what you actually get ───────────────────────────────────────
+// ── outcomes: what you actually get ─────────────────────────────────────────
 function OutcomesBand() {
   return (
     <section className="surface-sunken section-y">
@@ -223,7 +223,7 @@ function OutcomesBand() {
   );
 }
 
-// ── USP strip: what makes this different ───────────────────────────────────
+// ── USP strip: what makes this different ────────────────────────────────────
 function USPStrip() {
   const SIGNALS = [
     { icon: "✶", label: "Ed25519 signed", sub: "Every card cryptographically signed" },
@@ -262,7 +262,7 @@ function USPStrip() {
 }
 
 
-// ── Verify Door (free forever) ───────────────────────────────
+// ── Verify Door (free forever) ──────────────────────────────────────────────
 function VerifyDoor() {
   return (
     <section className="surface-sunken py-12 sm:py-16">
@@ -286,7 +286,7 @@ function VerifyDoor() {
   );
 }
 
-// ── export ───────────────────────────────
+// ── export ──────────────────────────────────────────────────────────────────
 export default function NewHomeV3() {
   return (
     <main className="surface-base">
