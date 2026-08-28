@@ -1,17 +1,17 @@
 /**
  * rails — persisted open/closed state for the two Council OS sidebars.
  *
- * Left is Destinations (the pane list). Right is Reports / Tasks / Chats.
- * Both can be hidden so the centre pane and the ask bar take the workspace.
- * First visit: left open (you need to find a pane), right closed (the centre
- * should read first). After that, the last choice is restored.
+ * Left is the master menu (panes + site routes). Right is the AG-UI control
+ * rail (talk-to-drive chips, reports, tasks, chats, tooling). Both can hide
+ * so the centre Ask bar owns the workspace. First visit: both open so end
+ * users see Control chips immediately. After that, the last choice restores.
  */
 
 export const LEFT_KEY = "coai.lobby.left";
 export const RIGHT_KEY = "coai.lobby.right";
 
 export const LEFT_DEFAULT = true;
-export const RIGHT_DEFAULT = false;
+export const RIGHT_DEFAULT = true;
 
 export function readOpen(key: string, fallback: boolean): boolean {
   try {

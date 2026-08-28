@@ -16,9 +16,9 @@ describe("Council OS sidebars", () => {
     vi.unstubAllGlobals();
   });
 
-  it("opens Destinations and hides the right rail on a first visit", () => {
+  it("opens Destinations and the AG-UI control rail on a first visit", () => {
     expect(readOpen(LEFT_KEY, LEFT_DEFAULT)).toBe(true);
-    expect(readOpen(RIGHT_KEY, RIGHT_DEFAULT)).toBe(false);
+    expect(readOpen(RIGHT_KEY, RIGHT_DEFAULT)).toBe(true);
   });
 
   it("remembers a hide and a restore", () => {
