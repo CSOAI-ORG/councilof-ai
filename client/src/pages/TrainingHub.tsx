@@ -574,7 +574,7 @@ export default function TrainingHub() {
               { icon: Gamepad2, step: "1", title: "Pick a Game", desc: "Choose the style you enjoy. City builder, explorer, detective, card game — all teach AI governance." },
               { icon: Play, step: "2", title: "Play & Learn", desc: "Every decision you make maps to real compliance actions. You're learning without knowing it." },
               { icon: Brain, step: "3", title: "Data Flows", desc: "Your gameplay generates data — governance decisions, risk assessments, framework knowledge. The flywheel grows." },
-              { icon: Trophy, step: "4", title: "Get Certified", desc: "Your game scores feed your GSPC axes. Pass the certification exam. Living cert auto-updates." },
+              { icon: Trophy, step: "4", title: "Get your record", desc: "Your game scores feed your GSPC axes. Complete the course and receive a signed training record — attests learning, never conformity." },
             ].map(item => (
               <Card key={item.step} className="bg-slate-800/30 border-slate-700/20 text-center">
                 <CardContent className="p-6">
