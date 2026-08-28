@@ -129,7 +129,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 212 | API docs page lists /api/indices | ApiDocs · ✅ |
 | 213 | Agent runbook curl examples | agent-runbook · ✅ |
 | 214 | OpenAPI stub fragment | `public/openapi/indices.yaml` · ✅ |
-| 215 | Sitemap.xml new paths | generate-sitemap · ✅ |
+| 215 | Sitemap.xml new paths | generate-sitemap · ✅ hub + `/indices/{ai-economy,human-labour,humanoid-labour}` · tip-honesty CI |
 | 216 | robots allow | robots.txt · ✅ |
 | 217 | OG cards for /indices /products | setOgMeta · ✅ |
 | 218 | i18n keys if used | i18n · N/A OpenGridWorks-scoped · `docs/I18N_INDICES_NOTE.md` ✅ |
