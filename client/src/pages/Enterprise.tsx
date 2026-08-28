@@ -365,7 +365,7 @@ export default function Enterprise() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">EU AI Act</h3>
-                  <Badge className="bg-blue-100 text-blue-700 border-blue-200">Transparency live 2 Aug 2026 · high-risk deferred to 2 Aug 2027</Badge>
+                  <Badge className="bg-blue-100 text-blue-700 border-blue-200">Transparency live 2 Aug 2026 · high-risk deferred to 2 Dec 2027</Badge>
                 </div>
               </div>
               <p className="text-gray-600 mb-4">
