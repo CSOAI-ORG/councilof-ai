@@ -17,37 +17,64 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: cursor/site-os-carryon-ff6e
+          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Decode staged gzip+base64 files
+      - name: Assemble Header + copy About/GlobalSearch from lobby branch
         run: |
           set -euo pipefail
           STAGING=tmp/carryon-assemble
           test -f "$STAGING/manifest.json"
 
-          # Concatenate Header parts if present
-          if ls "$STAGING"/client__src__components__Header.tsx.gz.b64.part* >/dev/null 2>&1; then
-            cat "$STAGING"/client__src__components__Header.tsx.gz.b64.part* > "$STAGING/client__src__components__Header.tsx.gz.b64"
-            rm -f "$STAGING"/client__src__components__Header.tsx.gz.b64.part*
-          fi
+          # Concatenate any *.gz.b64.part* files into their base .gz.b64
+          python3 <<'CONCAT'
+          from pathlib import Path
+          staging = Path("tmp/carryon-assemble")
+          parts = sorted(staging.glob("*.gz.b64.part*"))
+          by_base = {}
+          for p in parts:
+              base = p.name.rsplit(".part", 1)[0]
+              by_base.setdefault(base, []).append(p)
+          for base, plist in by_base.items():
+              out = staging / base
+              out.write_text("".join(x.read_text() for x in sorted(plist)))
+              for x in plist:
+                  x.unlink()
+              print(f"concat {base} bytes={out.stat().st_size}")
+          CONCAT
+
+          # Decode Header from staged gzip+base64; About/GS from known-good lobby branch
+          git fetch origin cursor/os-lobby-header-play-ff6e --depth=1
+          mkdir -p client/src/components client/src/pages
+          git show origin/cursor/os-lobby-header-play-ff6e:client/src/pages/About.tsx > client/src/pages/About.tsx
+          git show origin/cursor/os-lobby-header-play-ff6e:client/src/components/GlobalSearch.tsx > client/src/components/GlobalSearch.tsx
 
           python3 <<'PY'
           import base64, gzip, hashlib, json, pathlib, sys
           staging = pathlib.Path("tmp/carryon-assemble")
           manifest = json.loads((staging / "manifest.json").read_text())
-          for entry in manifest["files"]:
-              b64_name = entry["b64"]
-              dest = pathlib.Path(entry["path"])
-              expected = entry["sha256"]
-              b64_path = staging / b64_name
-              raw = gzip.decompress(base64.b64decode(b64_path.read_text().encode("ascii")))
-              got = hashlib.sha256(raw).hexdigest()
-              if got != expected:
-                  print(f"HASH MISMATCH {dest}: got={got} expected={expected}", file=sys.stderr)
+          # Only decode Header from staging; verify About/GS hashes from lobby copy
+          expected = {e["path"]: e["sha256"] for e in manifest["files"]}
+
+          # Header from b64
+          header_entry = next(e for e in manifest["files"] if e["path"].endswith("Header.tsx"))
+          b64_path = staging / header_entry["b64"]
+          raw = gzip.decompress(base64.b64decode(b64_path.read_text().encode("ascii")))
+          got = hashlib.sha256(raw).hexdigest()
+          if got != header_entry["sha256"]:
+              print(f"HASH MISMATCH Header: got={got} expected={header_entry['sha256']}", file=sys.stderr)
+              sys.exit(1)
+          pathlib.Path(header_entry["path"]).write_bytes(raw)
+          print(f"OK {header_entry['path']} sha256={got[:12]} bytes={len(raw)}")
+
+          for path in ["client/src/pages/About.tsx", "client/src/components/GlobalSearch.tsx"]:
+              data = pathlib.Path(path).read_bytes()
+              got = hashlib.sha256(data).hexdigest()
+              exp = expected[path]
+              if got != exp:
+                  print(f"HASH MISMATCH {path}: got={got} expected={exp}", file=sys.stderr)
                   sys.exit(1)
-              dest.parent.mkdir(parents=True, exist_ok=True)
-              dest.write_bytes(raw)
-              print(f"OK {dest} sha256={got[:12]} bytes={len(raw)}")
+              print(f"OK {path} sha256={got[:12]} bytes={len(data)}")
           PY
 
       - name: Remove staging + one-shot workflow + probes
@@ -56,6 +83,7 @@ jobs:
           rm -rf tmp/carryon-assemble
           rm -f .github/workflows/carryon-assemble-site-files.yml
           rm -f tmp/size-probe-30k.txt tmp/file-ref-probe.txt
+          # drop leftover GS large parts if any naming remains
           git add -A
           if git diff --cached --quiet; then
             echo "Nothing to commit"
