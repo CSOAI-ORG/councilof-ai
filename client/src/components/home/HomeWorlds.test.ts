@@ -45,4 +45,9 @@ describe("HomeWorlds — named OS doors, not leftover tiles", () => {
     expect(src).toContain("/video/measure.mp4");
     expect(src).toContain("/video/verify.mp4");
   });
+
+  it("does not autoplay worlds when prefers-reduced-motion is set", () => {
+    expect(src).toContain('prefers-reduced-motion: reduce');
+    expect(src).toContain("!reduceMotion");
+  });
 });

@@ -7,7 +7,7 @@
  * Posters are images this repo already ships. Optional `/video/measure.mp4` and
  * `/video/verify.mp4` play when present; a missing file falls back to the poster.
  */
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 
 export const OS_DOORS = [
@@ -30,9 +30,17 @@ function WorldScrim({
   children: ReactNode;
 }) {
   const [videoOk, setVideoOk] = useState(!!videoSrc);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReduceMotion(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
   return (
     <section className="relative isolate min-h-[100svh] overflow-hidden">
-      {videoOk && videoSrc ? (
+      {videoOk && videoSrc && !reduceMotion ? (
         <video
           className="absolute inset-0 h-full w-full object-cover"
           autoPlay
