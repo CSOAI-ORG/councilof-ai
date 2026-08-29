@@ -1,13 +1,15 @@
-name: carryon-assemble-site-files
+name: Carry-on assemble site files
+
 on:
   push:
     branches: [cursor/site-os-carryon-ff6e]
     paths:
       - 'tmp/carryon-assemble/**'
-      - '.github/workflows/carryon-assemble-site-files.yml'
   workflow_dispatch:
+
 permissions:
   contents: write
+
 jobs:
   assemble:
     runs-on: ubuntu-latest
@@ -16,33 +18,50 @@ jobs:
         with:
           ref: cursor/site-os-carryon-ff6e
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Decode and write carry-on files
+
+      - name: Decode staged gzip+base64 files
         run: |
-          python3 << 'PY'
-          import gzip, base64, hashlib, json, pathlib, os
-          manifest = json.load(open('tmp/carryon-assemble/manifest.json'))
-          for item in manifest:
-              b64 = open(item['b64_path']).read().strip()
-              raw = gzip.decompress(base64.b64decode(b64))
+          set -euo pipefail
+          STAGING=tmp/carryon-assemble
+          test -f "$STAGING/manifest.json"
+
+          # Concatenate Header parts if present
+          if ls "$STAGING"/client__src__components__Header.tsx.gz.b64.part* >/dev/null 2>&1; then
+            cat "$STAGING"/client__src__components__Header.tsx.gz.b64.part* > "$STAGING/client__src__components__Header.tsx.gz.b64"
+            rm -f "$STAGING"/client__src__components__Header.tsx.gz.b64.part*
+          fi
+
+          python3 <<'PY'
+          import base64, gzip, hashlib, json, pathlib, sys
+          staging = pathlib.Path("tmp/carryon-assemble")
+          manifest = json.loads((staging / "manifest.json").read_text())
+          for entry in manifest["files"]:
+              b64_name = entry["b64"]
+              dest = pathlib.Path(entry["path"])
+              expected = entry["sha256"]
+              b64_path = staging / b64_name
+              raw = gzip.decompress(base64.b64decode(b64_path.read_text().encode("ascii")))
               got = hashlib.sha256(raw).hexdigest()
-              assert got == item['sha256'], (item['path'], got, item['sha256'])
-              pathlib.Path(item['path']).parent.mkdir(parents=True, exist_ok=True)
-              pathlib.Path(item['path']).write_bytes(raw)
-              print('wrote', item['path'], len(raw), got[:12])
+              if got != expected:
+                  print(f"HASH MISMATCH {dest}: got={got} expected={expected}", file=sys.stderr)
+                  sys.exit(1)
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              dest.write_bytes(raw)
+              print(f"OK {dest} sha256={got[:12]} bytes={len(raw)}")
           PY
-      - name: Remove assemble staging + this one-shot workflow
+
+      - name: Remove staging + one-shot workflow + probes
         run: |
+          set -euo pipefail
           rm -rf tmp/carryon-assemble
           rm -f .github/workflows/carryon-assemble-site-files.yml
-          rm -f tmp/size-probe-30k.txt tmp/file-ref-probe.txt || true
-      - name: Commit restored files
-        run: |
-          git config user.name "Nicholas Templeman"
-          git config user.email "nicholas@csoai.org"
+          rm -f tmp/size-probe-30k.txt tmp/file-ref-probe.txt
           git add -A
           if git diff --cached --quiet; then
-            echo "No changes"
+            echo "Nothing to commit"
             exit 0
           fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "feat(site): training world + footer logos + Header/Play onto /os"
           git push origin HEAD:cursor/site-os-carryon-ff6e
