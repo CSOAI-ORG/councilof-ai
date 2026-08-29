@@ -242,7 +242,7 @@ Status legend: ✅ done · 🔄 in flight · ☐ open · ⛔ owner gate
 | 374 | Single-writer tip policy | AGENT_COORDINATION · ✅ |
 | 375–390 | Sixteen contact outreach (public artifacts only) | distro · template ✅ · tracker artifacts wired ✅ `docs/CONTACT_OUTREACH_TRACKER.md` · human send ☐ |
 | 391–399 | Nine quarterly freshness reviews | ops · ✅ |
-| 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta · ✅ code/docs ≥80%; remainder ⛔/🔄/human |
+| 400 | Re-open next-300 when 101–399 ≥80% ✅ | meta · ✅ code/docs ≥80%; remainder ⛔ custody/counsel/merge · ☐ freeze/human |
 
 ---
 
