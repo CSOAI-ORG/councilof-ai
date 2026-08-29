@@ -43,23 +43,14 @@ export default function GSPCVerify() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Chain verification · client-side · no server involved
+            Verify · nothing sent · no account
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
-            Don&apos;t take our word for it.{" "}
-            <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
-              Recompute the chain.
-            </span>
+            Paste a signed card.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            If a record was edited after signing, the recomputed hash will not match the stored
-            one — and that row is reported as <strong className="text-red-300">BROKEN</strong>,
-            visibly, with the row identified. The button below proves it, including what happens
-            when a record is deliberately tampered with.
-          </p>
-          <p className="mt-3 text-[13px] text-emerald-200/70">
-            Privacy: verification runs entirely in your browser. Nothing you check is sent to us,
-            logged, or stored — and it never will be. No login, no fee, forever.
+            VALID · INVALID · UNCHECKABLE. Nothing is sent. This is not a certificate, and it is
+            not a training record.
           </p>
         </div>
       </section>

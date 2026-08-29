@@ -131,6 +131,15 @@ export default function CertificateVerification() {
           </p>
         </div>
 
+        <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-800">
+          <strong>This is a training record.</strong> Council Academy completion — not a GSPC
+          measurement card. To check a signed measurement, use{" "}
+          <a href="/gspc-verify" className="font-medium text-emerald-800 hover:underline">
+            /gspc-verify
+          </a>
+          .
+        </div>
+
         {/* Honest capability notice */}
         <div className="mb-8 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
           <strong>Lookup temporarily offline.</strong> Completion record lookup is down while the

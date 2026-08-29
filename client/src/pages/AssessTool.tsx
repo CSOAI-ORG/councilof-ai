@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { ShieldCheck, AlertTriangle, Loader2, BadgeCheck, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DashboardLayout from "@/components/DashboardLayout";
+
 
 // Same-origin by default: /api/assess is a Pages Function on this deployment. The old
 // default, https://api.csoai.org, was a hostname with NO DNS record — every click on the
@@ -73,17 +73,15 @@ export default function AssessTool() {
   }
 
   return (
-    <DashboardLayout>
+    <>
       <div className="max-w-3xl mx-auto px-4 py-10">
         <div className="flex items-center gap-3 mb-2">
           <ShieldCheck className="h-7 w-7 text-emerald-600" />
           <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
         <p className="text-muted-foreground mb-8">
-          Describe the system — text, and optionally an endpoint URL we record but do not probe.
-          We classify against frozen EU AI Act keywords and return a signed report you can
-          recompute. This is a measurement, not a GSPC bench run, not a conformity assessment,
-          and not a certification. No signup.
+          Free. No account. The card is yours. Empty means we have not measured that system —
+          we do not guess. Not a certificate.
         </p>
 
         <Card className="mb-6">
@@ -170,6 +168,6 @@ export default function AssessTool() {
           </motion.div>
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 }

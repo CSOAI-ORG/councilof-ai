@@ -1,51 +1,88 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
+import { liveCountLine } from "@/components/os/osChat";
 import { setMetaDescription } from "@/lib/utils";
 
-/**
- * Front door for a stranger who was emailed a PDF and has no Claude.
- * Plugin/MCP is Council OS for people already in a tool. This page is verify.
- */
 export default function HomeVerify() {
+  const [strip, setStrip] = useState("Reading the board…");
+
   useEffect(() => {
-    document.title = "Verify an AI claim | councilof.ai";
+    document.title = "Check an AI claim | councilof.ai";
     setMetaDescription(
-      "Check an AI claim in your browser. Empty means we have not measured it — we do not guess. Free, no account. Not a certificate.",
+      "Check an AI claim. Or measure your system. Empty means not measured. Not a certificate. Free, no account.",
     );
+  }, []);
+
+  useEffect(() => {
+    let live = true;
+    fetch("/api/gspc", { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((j) => {
+        if (live) setStrip(liveCountLine(j?.totals ?? {}));
+      })
+      .catch(() => {
+        if (live) setStrip("Board is unreachable right now. Empty stays empty.");
+      });
+    return () => {
+      live = false;
+    };
   }, []);
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-16 sm:py-20" data-testid="home-verify">
       <h1 className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
-        Check an AI claim in your browser. Or measure your own system.
+        Check an AI claim. Or measure your system.
       </h1>
       <p className="mt-4 text-lg text-slate-600">
-        Empty means we have not measured it — we do not guess.
+        Empty means not measured. Not a certificate. Free, no account.
       </p>
-      <p className="mt-2 text-sm text-slate-500">Free. No account. Nothing you paste is sent to us.</p>
 
-      <section className="mt-10" aria-labelledby="home-verify-h">
+      <div className="mt-8 flex flex-wrap gap-3">
+        <Link
+          href="/gspc-verify"
+          data-testid="home-btn-verify"
+          className="inline-flex rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
+        >
+          Verify a card
+        </Link>
+        <Link
+          href="/assess"
+          data-testid="home-btn-assess"
+          className="inline-flex rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+        >
+          Get measured
+        </Link>
+      </div>
+
+      <p className="mt-4 text-[13px] font-semibold text-emerald-800" data-testid="os-live-strip">
+        {strip}
+      </p>
+
+      <p className="mt-3">
+        <Link href="/tools" className="text-sm text-slate-500 underline-offset-2 hover:underline">
+          Use this in Claude / Cursor
+        </Link>
+      </p>
+
+      <section className="mt-14" aria-labelledby="home-verify-h">
         <h2 id="home-verify-h" className="text-xl font-bold text-slate-900">
           Verify a signed card
         </h2>
         <p className="mt-1 text-sm text-slate-600">
-          Paste it here. Three states: VALID, INVALID, UNCHECKABLE. Not a certificate.
+          Paste it here. Nothing is sent. VALID · INVALID · UNCHECKABLE.
         </p>
         <div className="mt-4">
           <RecordVerifyForm variant="light" />
         </div>
+        <p className="mt-6 text-sm text-slate-600">
+          How we grade: no model in the verdict.{" "}
+          <a href="/methodology" className="font-semibold text-emerald-800 hover:underline">
+            Methodology
+          </a>
+          .
+        </p>
       </section>
-
-      <p className="mt-12 text-sm text-slate-600">
-        Already in Claude, Cursor, Kimi, or Grok? Add <code className="rounded bg-slate-100 px-1 font-mono text-[13px]">gspc</code>{" "}
-        in that tool — that is Council OS for you. Four tools. No 23rd axis.
-      </p>
-      <p className="mt-2 text-sm text-slate-500">
-        MCP: <code className="rounded bg-slate-100 px-1 font-mono text-[13px]">https://councilof.ai/mcp</code>
-        {" · "}
-        <code className="rounded bg-slate-100 px-1 font-mono text-[13px]">grok plugin install CSOAI-ORG/council-of-ai-grok</code>
-        {" — consent first; MCP stays off until you trust it."}
-      </p>
     </main>
   );
 }

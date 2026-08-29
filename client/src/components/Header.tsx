@@ -58,6 +58,13 @@ export { HOME_NAV };
 interface NavItem { name: string; href: string; description: string; external?: boolean; section?: string }
 interface NavGroup { name: string; href: string; icon: typeof Globe2; description: string; submenu: NavItem[] }
 
+const PRIMARY_LINKS: { name: string; href: string }[] = [
+  { name: "Verify", href: "/gspc-verify" },
+  { name: "Get measured", href: "/assess" },
+  { name: "Board", href: "/gspc-scoreboard" },
+  { name: "Tools", href: "/tools" },
+];
+
 const navigation: NavGroup[] = [
   {
     name: 'Measure',
@@ -284,21 +291,23 @@ export function Header() {
             <span className="text-xl 2xl:text-2xl font-bold text-emerald-700 tracking-tight whitespace-nowrap">Council of AI</span>
           </a>
 
-          {/* Desktop Navigation — xl breakpoint: below 1280px the mega menu
-              cannot fit without mid-word wrapping, so the mobile menu takes over. */}
-          <div className="hidden xl:flex items-center" ref={dropdownRef}>
+          {/* Desktop Navigation — Logo · Verify · Get measured · Board · Tools. Rest is footer /library. */}
+          <div className="hidden md:flex items-center" ref={dropdownRef}>
             <div className="flex items-center gap-1 2xl:gap-3">
-              <a
-                href="/"
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                  location === '/'
-                    ? 'text-emerald-700 bg-emerald-50'
-                    : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
-                }`}
-              >
-                Home
-              </a>
-              {navigation.map((item) => (
+              {PRIMARY_LINKS.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                    isActive(item.href)
+                      ? 'text-emerald-700 bg-emerald-50'
+                      : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
+                  }`}
+                >
+                  {item.name}
+                </a>
+              ))}
+              {null && navigation.map((item) => (
                 <div
                   key={item.name}
                   className="relative"
@@ -390,7 +399,7 @@ export function Header() {
           </div>
 
           {/* Right Side Actions — flex-nowrap + shrink-0 prevents vertical-letter collapse on 1280-1400px viewports */}
-          <div className="hidden xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
+          <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
             {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
@@ -399,20 +408,7 @@ export function Header() {
             >
               <Search className="h-5 w-5" />
             </button>
-            <a
-              href="/os"
-              onClick={(e) => {
-                if (location === "/" || location === "") {
-                  e.preventDefault();
-                  document.getElementById("os-chat")?.focus();
-                  return;
-                }
-              }}
-              className="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800"
-              title="Chat is Council OS — the AG UI"
-            >
-              Chat
-            </a>
+
 
             {/* "Verify a card" removed from the header 2026-08-21 (owner call): the
                 verify path is already the primary CTA in the hero and in three bands
@@ -486,7 +482,7 @@ export function Header() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="xl:hidden flex items-center gap-2">
+          <div className="md:hidden flex items-center gap-2">
             <button
               onClick={() => setSearchOpen(true)}
               className="p-2 rounded-lg text-muted-foreground hover:bg-muted"
@@ -506,7 +502,7 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="md:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="space-y-1">
               <a
                 href="/"
@@ -517,21 +513,26 @@ export function Header() {
               >
                 Home
               </a>
+              {PRIMARY_LINKS.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`block px-4 py-3 rounded-lg font-medium ${
+                    isActive(item.href) ? "text-emerald-700 bg-emerald-50" : "text-foreground/80"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </a>
+              ))}
               <a
-                href="/os"
-                className="block px-4 py-3 rounded-lg font-medium text-emerald-800 bg-emerald-50"
-                onClick={(e) => {
-                  setMobileMenuOpen(false);
-                  if (location === "/" || location === "") {
-                    e.preventDefault();
-                    document.getElementById("os-chat")?.focus();
-                  }
-                }}
-                title="Chat is Council OS — the AG UI"
+                href="/library"
+                className="block px-4 py-3 rounded-lg font-medium text-foreground/80"
+                onClick={() => setMobileMenuOpen(false)}
               >
-                Chat
+                Library
               </a>
-              {navigation.map((item) => (
+              {false && navigation.map((item) => (
                 <div key={item.name} className="space-y-1">
                   <a
                     href={item.href}

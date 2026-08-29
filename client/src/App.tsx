@@ -12,8 +12,8 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
 import OsLauncher from "./pages/OsLauncher";
-import OsHeader from "./components/os/OsHeader";
 import HomeVerify from "./pages/HomeVerify";
+import ToolsPage from "./pages/ToolsPage";
 import { Footer } from "./components/Footer";
 import WidgetLayout from "./components/widget/WidgetLayout";
 import WidgetCourses from "./components/widget/WidgetCourses";
@@ -544,31 +544,8 @@ function App() {
       </ErrorBoundary>
     );
   }
-  // AG-UI is not the homepage. `/` is verify for a stranger.
-  // `/os` stays the internal OS host; hops /ag-ui /chat /console /sov-os follow it.
-  if (path === '/os' || path === '/ag-ui' || path === '/chat' || path === '/console' || path === '/sov-os') {
-    return (
-      <ErrorBoundary>
-        <ThemeProvider defaultTheme="light">
-          <AuthProvider>
-            <AnalyticsProvider>
-              <TooltipProvider>
-                <div className="flex min-h-screen flex-col bg-white">
-                  <ScrollToTop />
-                  <RouteTitle />
-                  <RouteAnnouncer />
-                  <OsHeader />
-                  <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
-                    <OsLauncher />
-                  </main>
-                </div>
-                <Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} />
-              </TooltipProvider>
-            </AnalyticsProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
-    );
+  if (path === "/ag-ui" || path === "/chat" || path === "/console" || path === "/sov-os") {
+    return <Redirect to="/os" />;
   }
   return (
     <ErrorBoundary>
@@ -1075,7 +1052,7 @@ function App() {
                   <Route path="/graph" component={GovGraph} />
                   <Route path="/governance-graph" component={GovGraph} />
                   <Route path="/world-data" component={GovGraph} />
-                  <Route path="/tools" component={ToolCommons} />
+                  <Route path="/tools" component={ToolsPage} />
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
                   <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>

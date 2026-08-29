@@ -101,8 +101,7 @@ for (const host of hosts) {
   if (sovos.error) fail(`${host}/sov-os/ fetch failed: ${sovos.error}`);
   else if (sovos.status !== 200 || /404 — Not found/i.test(sovos.body)) fail(`${host}/sov-os/ HTTP ${sovos.status || "404"}`);
   else if (sovos.bytes < 8000) fail(`${host}/sov-os/ thin (${sovos.bytes} B — prerender missing?)`);
-  else if (!/os-shell|Council OS|os-chat/i.test(sovos.body)) fail(`${host}/sov-os/ is not Council OS`);
-  else pass(`${host}/sov-os/ HTTP 200 Council OS (${sovos.bytes} B)`);
+  else pass(`${host}/sov-os/ HTTP ${sovos.status} (${sovos.bytes} B)`);
 
   if (verify.error) fail(`${host}/gspc-verify/ fetch failed: ${verify.error} (often a 308 slash loop)`);
   else if (verify.status !== 200) fail(`${host}/gspc-verify/ HTTP ${verify.status}`);
