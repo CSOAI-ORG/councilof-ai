@@ -62,7 +62,6 @@ export default function LiveLeaderboard({
   const shown = expanded ? rows : rows.slice(0, DEFAULT_ROWS);
   const count = countLine(data);
 
-
   return (
     <section className={`w-full ${className}`}>
       <div className="section-shell">
