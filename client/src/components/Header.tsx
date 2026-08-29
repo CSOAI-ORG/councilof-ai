@@ -10,7 +10,7 @@ import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSiteChromeHidden } from '@/lib/osChrome';
-import { lobbyHref, openLobby } from '@/lib/lobbyLink';
+
 
 import {
   DropdownMenu,
@@ -400,8 +400,14 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
             <a
-              href={lobbyHref({ pane: 'home' })}
-              onClick={(e) => { e.preventDefault(); openLobby({ pane: 'home' }); }}
+              href="/os"
+              onClick={(e) => {
+                if (location === "/" || location === "") {
+                  e.preventDefault();
+                  document.getElementById("os-chat")?.focus();
+                  return;
+                }
+              }}
               className="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800"
               title="Chat is Council OS — the AG UI"
             >
@@ -512,9 +518,15 @@ export function Header() {
                 Home
               </a>
               <a
-                href={lobbyHref({ pane: 'home' })}
+                href="/os"
                 className="block px-4 py-3 rounded-lg font-medium text-emerald-800 bg-emerald-50"
-                onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); openLobby({ pane: 'home' }); }}
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  if (location === "/" || location === "") {
+                    e.preventDefault();
+                    document.getElementById("os-chat")?.focus();
+                  }
+                }}
                 title="Chat is Council OS — the AG UI"
               >
                 Chat

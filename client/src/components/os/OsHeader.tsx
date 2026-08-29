@@ -3,7 +3,7 @@
  *
  * A compact utility bar that owns the /os product frame:
  * - The mark and Council OS name
- * - Inner nav doors: Board / Verify / Cards / Harness
+ * - Inner nav doors: Board / Verify / Space / Assess / Harness
  * - User account controls (Sign in or user menu if authenticated)
  *
  * A harness panel (`?embed=1`) keeps the instrument tabs and drops Exit OS,
@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { FOCUS } from "@/components/lobby/glass";
-import { DOORS, LOBBY_TO_DOOR, type DoorId } from "@/pages/OsLauncher";
+import { DOORS, DOOR_TO_LOBBY, LOBBY_TO_DOOR, type DoorId } from "@/components/os/doors";
 import { isEmbedded } from "@/lib/embed";
 import { osDoorHref } from "@/lib/lobbyLink";
 
@@ -56,15 +56,6 @@ function ColiseumGlyph({ className }: { className?: string }) {
     </svg>
   );
 }
-
-const DOOR_TO_LOBBY: Record<DoorId, string> = {
-  board: "board",
-  verify: "verify",
-  cards: "cards",
-  space: "space",
-  assess: "measured",
-  harness: "harness",
-};
 
 export default function OsHeader() {
   const [, setLocation] = useLocation();

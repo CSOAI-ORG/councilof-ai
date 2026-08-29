@@ -3,8 +3,9 @@ import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
 import { BOARD_PANE, DOORS, doorFromSearch, osLeaveForSearch } from "./OsLauncher";
 
 describe("OsLauncher doors", () => {
-  it("keeps the header rail to native instruments plus MCP", () => {
-    expect(DOORS.map((d) => d.id)).toEqual(["board", "verify", "cards", "harness"]);
+  it("keeps the header rail to Board · Verify · Space · Assess · Harness", () => {
+    expect(DOORS.map((d) => d.id)).toEqual(["board", "verify", "space", "assess", "harness"]);
+    expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness"]);
   });
 
   it("maps ?lobby= onto those panes, including a harness panel query", () => {
@@ -17,11 +18,13 @@ describe("OsLauncher doors", () => {
     expect(doorFromSearch("")).toBe("board");
   });
 
-  it("keeps old space/assess deep-links as content, not header doors", () => {
+  it("maps space/assess deep-links onto header doors", () => {
     expect(doorFromSearch("lobby=space")).toBe("space");
     expect(doorFromSearch("lobby=assess")).toBe("assess");
     expect(doorFromSearch("task=pricing-overview")).toBe("assess");
-    expect(DOORS.some((d) => d.id === "space" || d.id === "assess")).toBe(false);
+    expect(doorFromSearch("task=read-the-board")).toBe("board");
+    expect(DOORS.map((d) => d.id)).toContain("space");
+    expect(DOORS.map((d) => d.id)).toContain("assess");
   });
 
   it("mounts LobbyBoardPane for /os?lobby=board — not an iframe", () => {

@@ -1,32 +1,43 @@
 /**
- * NewHome-v3 — councilof.ai Homepage (OWNER STACK 2026-08-28)
+ * NewHome-v3 — councilof.ai Homepage
  *
- * First paint is the instrument: H1 Council of AI, live totals from GET /api/gspc,
- * filled vs hollow cells from the payload, Verify first. OS is tertiary. Empty stays empty.
- *
- * HomeWorlds replaces the small CTA, white verify card, four-pill encore, and
- * XRPL/arena outcome tiles. HeroBoard is untouched.
+ * The homepage IS Council OS (same shell as /os). Chat is the front door.
+ * Below the fold: verify widget + methodology one-liner. No govbench CTA.
  */
-import ToolStack from "../components/home/ToolStack";
-import HeroBoard from "../components/home/HeroBoard";
-import HomeWorlds from "../components/home/HomeWorlds";
-import LiveLeaderboard from "../components/board/LiveLeaderboard";
+import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-
-function LivingBoardSection() {
-  return (
-    <section className="surface-raised section-y">
-      <LiveLeaderboard showHumanPanel={false} />
-    </section>
-  );
-}
+import ToolStack from "../components/home/ToolStack";
+import OsShell from "../components/os/OsShell";
+import { type DoorId } from "../components/os/doors";
+import LobbyVerifyPane from "../components/lobby/LobbyVerifyPane";
 
 export default function NewHomeV3() {
+  const [door, setDoor] = useState<DoorId>("board");
   return (
     <main className="surface-base">
-      <HeroBoard />
-      <HomeWorlds />
-      <LivingBoardSection />
+      <OsShell variant="hero" door={door} onDoor={setDoor} />
+
+      <section className="surface-raised section-y" aria-labelledby="home-verify-h">
+        <div className="section-shell max-w-3xl">
+          <h2 id="home-verify-h" className="text-2xl font-bold tracking-tight text-slate-900">
+            Verify a card
+          </h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Paste never leaves this browser. VALID · INVALID · UNCHECKABLE. Not a certificate.
+          </p>
+          <div className="mt-6">
+            <LobbyVerifyPane />
+          </div>
+          <p className="mt-6 text-sm text-slate-600">
+            How we grade: no model in the verdict.{" "}
+            <a href="/methodology" className="font-semibold text-emerald-800 hover:underline">
+              Methodology
+            </a>
+            .
+          </p>
+        </div>
+      </section>
+
       <ToolStack />
 
       <section className="surface-raised py-8">

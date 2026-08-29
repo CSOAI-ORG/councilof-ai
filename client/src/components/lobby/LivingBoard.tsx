@@ -88,7 +88,9 @@ export default function LivingBoard({
               <button
                 type="button"
                 onClick={onOpenBoard}
-                className={`${SURFACE} ${SP.card} flex h-full w-full flex-col items-start bg-white/85 text-left transition hover:bg-white motion-reduce:transition-none ${FOCUS}`}
+                className={`${SURFACE} ${SP.card} flex h-full w-full flex-col items-start text-left transition hover:bg-white motion-reduce:transition-none ${FOCUS} ${
+                  scored ? "bg-white/85" : "border-dashed bg-transparent"
+                }`}
               >
                 <span className="flex w-full items-center justify-between gap-2">
                   <span className="truncate text-[13px] font-semibold text-slate-900">{a.axis}</span>
@@ -107,7 +109,9 @@ export default function LivingBoard({
                     </span>
                   </span>
                 ) : (
-                  <span className={`mt-2 ${TYPE.fine}`}>no score on this stamp</span>
+                  <span className="mt-2 font-mono text-[13px] font-semibold uppercase tracking-wide text-slate-700">
+                    {a.status}
+                  </span>
                 )}
                 {sep && (
                   <span className={`mt-2 font-mono text-[10px] font-bold uppercase tracking-wide ${
