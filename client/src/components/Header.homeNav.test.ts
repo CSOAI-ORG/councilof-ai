@@ -13,4 +13,8 @@ describe("HOME_NAV", () => {
     expect(blob).not.toContain("start free");
     expect(blob).not.toContain("chat");
   });
+
+  it("OS is a named lobby, not a raw /os iframe target", () => {
+    expect(HOME_NAV.find((i) => i.name === "OS")?.href).toBe("/os?lobby=home");
+  });
 });

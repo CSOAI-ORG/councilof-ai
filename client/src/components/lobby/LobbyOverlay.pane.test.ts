@@ -14,7 +14,7 @@ describe("LobbyOverlay pane loader", () => {
   });
 
   it("delegates embed-nav to handleEmbedNav and never iframes Software", () => {
-    expect(overlaySrc).toMatch(/handleEmbedNav\(e,/);
+    expect(overlaySrc).toMatch(/applyEmbedNav\(e,/);
     expect(overlaySrc).toMatch(/softwareLeavesOs\(t\)/);
     expect(overlaySrc).toMatch(/window\.location\.assign\(SOFTWARE_HREF\)/);
     expect(overlaySrc).toMatch(/setFrameSrc\(""\)/);

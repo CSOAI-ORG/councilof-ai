@@ -160,6 +160,11 @@ export default function ClaimsRegister() {
             </span>
           </h1>
           <p className="mt-4 max-w-3xl leading-relaxed text-slate-700">{register.purpose}</p>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">
+            Time-anchor: <code className="font-mono text-[12px]">tsa.status: err</code>. No
+            OpenTimestamps proof is published on a <code className="font-mono text-[12px]">content_id</code>.
+            Cards verify by Ed25519, not Bitcoin.
+          </p>
 
           <div className="mt-6 flex flex-wrap gap-2">
             {groups.map(({ s, rows }) => (

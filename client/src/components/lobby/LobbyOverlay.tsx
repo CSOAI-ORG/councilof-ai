@@ -23,7 +23,7 @@ import {
 } from "./glass";
 import { LOBBY_TASKS, type LobbyIntent } from "@/lib/lobbyLink";
 import { withEmbed } from "@/lib/embed";
-import { handleEmbedNav } from "./handleEmbedNav";
+import { applyEmbedNav } from "./handleEmbedNav";
 import { setOsOpen } from "@/lib/osChrome";
 import { isLibraried } from "@/data/library-ia";
 import {
@@ -282,7 +282,7 @@ export default function LobbyOverlay({
   // scroll). Lobby-chrome navigation still remounts via loadPane().
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
-      handleEmbedNav(e, {
+      applyEmbedNav(e, {
         assignTop: (href) => window.location.assign(href),
         setFrameSrc,
         setFramePath,

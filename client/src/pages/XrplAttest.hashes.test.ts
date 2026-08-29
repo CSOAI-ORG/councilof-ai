@@ -20,6 +20,9 @@ describe("XRPL hashes — labelled, devnet, not a grade", () => {
     expect(page).toContain("Payment memo");
     expect(page).toContain("XLS-70 CredentialCreate");
     expect(page).toContain("{rec.network}");
+    expect(page).toContain("did:web:csoai.org");
+    expect(page).toContain("not did:xrpl");
+    expect(page).toContain("DepositPreauth is not a product");
     expect(page).toContain("No mainnet mint");
     expect(page).not.toMatch(/mainnet is planned/i);
   });

@@ -63,8 +63,9 @@ export default function XrplAttest() {
           A card&apos;s trust path is Ed25519 over SHA-256, not this ledger. This page is a{" "}
           <strong>devnet pointer</strong>: two transactions that memo or URI-point at signed
           evidence. XLS-70 Credentials are an on-ledger allowlist (who may pay whom), enabled on
-          mainnet. We are not issuing GSPC grades as credentials, and this is not a bond, a
-          rating, or a market.
+          mainnet. We use <strong>did:web:csoai.org</strong>, not did:xrpl (XLS-40).
+          DepositPreauth is not a product. We are not issuing GSPC grades as credentials,
+          and this is not a bond, a rating, or a market.
         </p>
 
         {err && <p className="mt-8 text-red-600">Record fetch failed: {err}</p>}

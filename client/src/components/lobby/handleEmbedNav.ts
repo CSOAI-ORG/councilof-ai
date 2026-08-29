@@ -54,3 +54,5 @@ export function handleEmbedNav(
   apply.setFramePath(d.path);
   apply.setOverride({ path: d.path, label: paneNameFor(e.data.title, d.path) });
 }
+
+export const applyEmbedNav = handleEmbedNav;

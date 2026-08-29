@@ -5,6 +5,7 @@ describe("glass embed snippets", () => {
   it("pastes a compact card iframe that still points at the same verify widget", () => {
     const s = cardSnippet("/signals/cross-border-card.signed.json");
     expect(s).toContain("/embed/verify?card=/signals/cross-border-card.signed.json");
+    expect(s).toContain("Powered by Council of AI");
     expect(s).toContain(`width="${CARD_EMBED_WIDTH}"`);
     expect(s).toContain(`height="${CARD_EMBED_HEIGHT}"`);
     expect(s.length).toBeLessThan(280);
