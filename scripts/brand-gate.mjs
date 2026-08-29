@@ -178,6 +178,10 @@ for (const f of walkAll(DIST)) {
     continue;
   }
   if (f.endsWith(".json")) {
+    // Signed measurement cards / chain / index carry the real model id
+    // (sov33-v7:latest). Renaming them would falsify the Ed25519 record.
+    // Same carve-out as regulator-console — evidence, not marketing display.
+    if (/^\/signed\//.test(rel)) continue;
     let raw = "";
     try { raw = fs.readFileSync(f, "utf8"); } catch { continue; }
     const m = raw.match(PATH_BANNED);
