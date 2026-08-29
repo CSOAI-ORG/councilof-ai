@@ -365,21 +365,21 @@ export default function LicensingAgreement() {
                 <FileCheck className="h-12 w-12 text-emerald-700 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-4">Licence a feed or a corpus</h3>
                 <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-                  Tell us which SKU. We send a manifest. Nothing is a certificate.
-                  Verification stays free.
+                  Tell us which paid arm. We send a manifest. Nothing is a certificate.
+                  Verification stays free. Fee blank until Nick countersigns.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <Link href="/contact">
-                    <Button size="lg">Talk to us</Button>
+                  <Link href="/licence-manifest">
+                    <Button size="lg">Request a manifest</Button>
                   </Link>
                   <Link href="/gspc-verify">
                     <Button variant="outline" size="lg">
                       Verify a card — free
                     </Button>
                   </Link>
-                  <Link href="/products">
+                  <Link href="/contact">
                     <Button variant="outline" size="lg">
-                      The four SKUs
+                      Talk to us
                     </Button>
                   </Link>
                 </div>

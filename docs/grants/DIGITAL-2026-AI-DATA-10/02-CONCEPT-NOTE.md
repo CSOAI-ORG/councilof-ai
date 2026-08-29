@@ -2,7 +2,8 @@
 
 **Call:** DIGITAL-2026-AI-DATA-10-COMPLIANCE  
 **Title (working):** Signed, re-verifiable measurement for automated compliance reporting  
-**Legal:** CSOAI Ltd (UK 16939677) — independent measurement body. Not a certifier. Not a notified body. Scores are not sold.
+**Legal:** CSOAI Ltd (UK 16939677) — independent measurement body. Not a certifier. Not a notified body. Scores are not sold.  
+**Method:** DOI [10.5281/zenodo.21991104](https://doi.org/10.5281/zenodo.21991104).
 
 ## Problem
 
