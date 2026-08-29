@@ -1,1 +1,1 @@
-$include:/tmp/content-ll.tsx
+LOAD_FROM_FILE
