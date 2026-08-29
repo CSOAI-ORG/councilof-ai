@@ -5,25 +5,27 @@ import { hrefFor } from "@/components/home/ToolStack";
 
 const home = readFileSync(resolve(__dirname, "NewHome-v3.tsx"), "utf8");
 
-describe("homepage doors — HomeWorlds, not leftover tiles", () => {
-  it("mounts HomeWorlds and leaves HeroBoard as the doctrine hero", () => {
-    expect(home).toMatch(/import HomeWorlds from "\.\.\/components\/home\/HomeWorlds"/);
-    expect(home).toContain("<HomeWorlds />");
-    expect(home).toMatch(/import HeroBoard from "\.\.\/components\/home\/HeroBoard"/);
-    expect(home).toContain("<HeroBoard />");
+describe("homepage is Council OS, not a poster", () => {
+  it("inlines OsShell as the hero — same product as /os", () => {
+    expect(home).toMatch(/import OsShell from "\.\.\/components\/os\/OsShell"/);
+    expect(home).toContain('<OsShell variant="hero"');
+    expect(home).not.toContain("<HeroBoard");
+    expect(home).not.toContain("<HomeWorlds");
+    expect(home).toContain("<LobbyVerifyPane");
+    expect(home).toContain('href="/methodology"');
   });
 
-  it("does not keep the leftover CTA, white verify card, four-pill encore, or outcome tiles", () => {
+  it("does not keep leftover tiles, lifestyle worlds, or govbench as the primary CTA", () => {
     expect(home).not.toContain("/xrpl-attest");
     expect(home).not.toContain("/mcp-fleet");
     expect(home).not.toContain('href="/arena"');
     expect(home).not.toContain("/gspc-arena");
+    expect(home).not.toContain("/govbench");
     expect(home).not.toContain("HeroSlides");
     expect(home).not.toContain("OutcomesBand");
     expect(home).not.toContain("USPStrip");
-    expect(home).not.toMatch(/href="\/os"/);
     expect(home).not.toMatch(/OpenTelemetry|otel/i);
-    expect(home).toContain("<HomeWorlds />");
+    expect(home).not.toMatch(/measure\.mp4|verify\.mp4/);
   });
 });
 
