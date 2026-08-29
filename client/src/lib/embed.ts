@@ -12,6 +12,7 @@
  */
 import { useEffect } from "react";
 import { isSiteDoor, LOBBY_TABS, type LobbyTab } from "../components/lobby/tabs";
+import { isUnframeable, withoutEmbed } from "./unframeable";
 
 export const EMBED_PARAM = "embed";
 export const EMBED_NAV_TYPE = "coai:embed-nav";
@@ -58,10 +59,12 @@ export function withEmbed(href: string, base = "https://councilof.ai"): string {
   try {
     const url = new URL(href, base);
     const rel = url.pathname + url.search + url.hash;
-    // Never stamp embed=1 onto OS host / DSH / marketing doors. A harness panel
-    // is minted as `/os?embed=1&lobby=board` by osPanelHref(), not by this helper
-    // — stamping /os here would iframe OS inside OS.
-    if (isSiteDoor(url.pathname + url.search)) return /^https?:\/\//i.test(href) ? url.toString() : rel;
+    // Never stamp embed=1 onto unframeable chrome (OS mounts, DSH, demo) or
+    // marketing site doors. A harness panel is minted as `/os?embed=1&lobby=board`
+    // by osPanelHref(), not by this helper — stamping /os here nests OS in OS.
+    if (isUnframeable(url.pathname) || isSiteDoor(url.pathname + url.search)) {
+      return /^https?:\/\//i.test(href) ? url.toString() : rel;
+    }
     url.searchParams.set(EMBED_PARAM, "1");
     if (/^https?:\/\//i.test(href)) return url.toString();
     return url.pathname + url.search + url.hash;
@@ -100,11 +103,53 @@ function currentNav(): EmbedNavMessage {
 
 export function postEmbedNav(): void {
   if (typeof window === "undefined" || !isEmbedded()) return;
+  // Unframeable paths break out; they must not become an override chip.
+  if (isUnframeable(window.location.pathname)) return;
   try {
     window.parent.postMessage(currentNav(), window.location.origin);
   } catch {
     /* parent gone or origin mismatch — the pane still works */
   }
+}
+
+/** Leave the iframe as a top-level page, without `embed=1`. */
+export function breakOutOfFrame(href: string): void {
+  const dest = withoutEmbed(href, typeof window !== "undefined" ? window.location.origin : "https://councilof.ai");
+  try {
+    if (typeof window !== "undefined" && window.top && window.top !== window.self) {
+      window.top.location.assign(dest);
+      return;
+    }
+  } catch {
+    /* cross-origin top — fall through */
+  }
+  if (typeof window !== "undefined") window.location.assign(dest);
+}
+
+export type EmbedNavDecision =
+  | { action: "leave"; href: string }
+  | { action: "follow-route"; tabId: LobbyTab["id"]; path: string }
+  | { action: "drop-iframe"; tabId: LobbyTab["id"] }
+  | { action: "override"; path: string };
+
+/**
+ * Parent treatment of a `coai:embed-nav` ping. Never remounts iframe.src.
+ * Unframeable → leave OS. Route tab → follow the rail. Native/local → drop
+ * the iframe and switch pane. Else override chip (Pricing inside Products).
+ */
+export function decideEmbedNav(path: string, search = ""): EmbedNavDecision {
+  if (isUnframeable(path)) {
+    const raw = `${path}${search || ""}`;
+    return { action: "leave", href: withoutEmbed(raw) };
+  }
+  const matched = tabForPath(path);
+  if (matched) {
+    if (matched.kind === "native" || matched.kind === "local") {
+      return { action: "drop-iframe", tabId: matched.id };
+    }
+    return { action: "follow-route", tabId: matched.id, path };
+  }
+  return { action: "override", path };
 }
 
 function isIgnorableHref(href: string): boolean {
@@ -139,6 +184,13 @@ export function useEmbedNavigation(): void {
   useEffect(() => {
     if (!isEmbedded()) return;
 
+    // Chrome branches and DSH only work with their own nav. Break out before
+    // stamping embed=1 or pinging the parent (a `/` ping must not become an override).
+    if (isUnframeable(window.location.pathname)) {
+      breakOutOfFrame(window.location.pathname + window.location.search + window.location.hash);
+      return;
+    }
+
     const url = new URL(window.location.href);
     if (url.searchParams.get(EMBED_PARAM) !== "1") {
       url.searchParams.set(EMBED_PARAM, "1");
@@ -159,12 +211,24 @@ export function useEmbedNavigation(): void {
       return withEmbed(parsed.pathname + parsed.search + parsed.hash, window.location.origin);
     };
 
+    const orBreakOut = (urlLike: string | URL | null | undefined): boolean => {
+      if (urlLike == null || urlLike === "") return false;
+      const raw = typeof urlLike === "string" ? urlLike : urlLike.toString();
+      if (isIgnorableHref(raw)) return false;
+      const parsed = sameOriginUrl(raw);
+      if (!parsed || !isUnframeable(parsed.pathname)) return false;
+      breakOutOfFrame(parsed.pathname + parsed.search + parsed.hash);
+      return true;
+    };
+
     window.history.pushState = function pushState(state, title, urlLike) {
+      if (orBreakOut(urlLike)) return;
       const ret = origPush(state, title, keep(urlLike) as string);
       postEmbedNav();
       return ret;
     };
     window.history.replaceState = function replaceState(state, title, urlLike) {
+      if (orBreakOut(urlLike)) return;
       const ret = origReplace(state, title, keep(urlLike) as string);
       postEmbedNav();
       return ret;
@@ -196,14 +260,10 @@ export function useEmbedNavigation(): void {
         return;
       }
 
-      // Host doors leave the iframe: /os must not nest, /dashboard is DSH itself.
-      if (isSiteDoor(dest.pathname + dest.search)) {
+      // Unframeable chrome and marketing site doors leave the iframe without embed=1.
+      if (isUnframeable(dest.pathname) || isSiteDoor(dest.pathname + dest.search)) {
         e.preventDefault();
-        try {
-          window.top.location.assign(dest.pathname + dest.search + dest.hash);
-        } catch {
-          window.location.assign(dest.pathname + dest.search + dest.hash);
-        }
+        breakOutOfFrame(dest.pathname + dest.search + dest.hash);
         return;
       }
 

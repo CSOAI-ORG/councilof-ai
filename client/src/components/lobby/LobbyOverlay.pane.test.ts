@@ -13,6 +13,19 @@ describe("LobbyOverlay pane loader", () => {
     expect(overlaySrc).toMatch(/setFrameSrc\(withEmbed\(load\.path\)\)/);
   });
 
+  it("applies decideEmbedNav — unframeable leaves OS, native drops the iframe", () => {
+    expect(overlaySrc).toMatch(/decideEmbedNav\(e\.data\.path/);
+    expect(overlaySrc).toMatch(/d\.action === "leave"/);
+    expect(overlaySrc).toMatch(/d\.action === "drop-iframe"/);
+    expect(overlaySrc).toMatch(/setFrameSrc\(""\)/);
+    expect(overlaySrc).not.toMatch(/setOverride\(\{ path: e\.data\.path/);
+  });
+
+  it("never sets iframe src for an unframeable path in loadPane", () => {
+    expect(overlaySrc).toMatch(/if \(isUnframeable\(path\)\)/);
+    expect(overlaySrc).toMatch(/window\.location\.assign\(withoutEmbed\(path\)\)/);
+  });
+
   it("does not set an iframe src for /, /os, or /dashboard from the start-state loader", () => {
     const frames: string[] = [];
     const assign: string[] = [];
@@ -24,8 +37,10 @@ describe("LobbyOverlay pane loader", () => {
     apply("/");
     apply("/os");
     apply("/dashboard");
+    apply("/ag-ui");
+    apply("/chat");
     apply("/library");
-    expect(assign).toEqual(["/", "/os", "/dashboard"]);
+    expect(assign).toEqual(["/", "/os", "/dashboard", "/ag-ui", "/chat"]);
     expect(frames).toEqual(["/library"]);
   });
 

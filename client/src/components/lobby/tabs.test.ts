@@ -266,8 +266,11 @@ describe("TUI 2 — OS instrument chrome", () => {
     expect(paneLoadFor(software.path)).toEqual({ action: "navigate", path: "/dashboard" });
   });
 
-  it("refuses /, /os, and /dashboard as iframe destinations", () => {
-    for (const path of ["/", "/os", "/os?lobby=board", "/dashboard"]) {
+  it("refuses /, /os, /dashboard, and OS chrome aliases as iframe destinations", () => {
+    for (const path of [
+      "/", "/os", "/os?lobby=board", "/dashboard",
+      "/ag-ui", "/chat", "/console", "/sov-os", "/council-os", "/demo", "/os-demo",
+    ]) {
       expect(paneLoadFor(path).action).toBe("navigate");
       expect(paneLoadFor(path)).toEqual({ action: "navigate", path });
     }

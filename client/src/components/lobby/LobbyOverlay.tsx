@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_TAB, LOBBY_TABS, isOsRailTab, isSiteDoor, paneLoadFor, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
+import { isUnframeable, withoutEmbed } from "@/lib/unframeable";
 import LobbyHeader, { ColiseumGlyph } from "./LobbyHeader";
 import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
 import LobbySideRail from "./LobbySideRail";
@@ -21,7 +22,7 @@ import {
   panelStyle, scrimStyle,
 } from "./glass";
 import { LOBBY_TASKS, type LobbyIntent } from "@/lib/lobbyLink";
-import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
+import { decideEmbedNav, isEmbedNav, withEmbed } from "@/lib/embed";
 import { setOsOpen } from "@/lib/osChrome";
 import { isLibraried } from "@/data/library-ia";
 import {
@@ -137,7 +138,7 @@ export default function LobbyOverlay({
   const [tabId, setTabId] = useState<LobbyTabId>(() => {
     const id = intent?.pane ?? readTab();
     const t = tabById(id);
-    if (!isOsRailTab(id) || (t.path && isSiteDoor(t.path))) return DEFAULT_TAB;
+    if (!isOsRailTab(id) || (t.path && (isUnframeable(t.path) || isSiteDoor(t.path)))) return DEFAULT_TAB;
     return id;
   });
   const [leftOpen, setLeftOpen] = useState(() => readOpen(LEFT_KEY, LEFT_DEFAULT));
@@ -155,13 +156,13 @@ export default function LobbyOverlay({
   const [framePath, setFramePath] = useState<string>(() => {
     const t = intent ? tabById(intent.pane) : tabById(readTab());
     if (t.kind === "local" || t.kind === "native") return "";
-    if (t.path && isSiteDoor(t.path)) return "";
+    if (t.path && (isUnframeable(t.path) || isSiteDoor(t.path))) return "";
     return t.path;
   });
   const [frameSrc, setFrameSrc] = useState<string>(() => {
     const t = intent ? tabById(intent.pane) : tabById(readTab());
     if (t.kind === "local" || t.kind === "native") return "";
-    if (t.path && isSiteDoor(t.path)) return "";
+    if (t.path && (isUnframeable(t.path) || isSiteDoor(t.path))) return "";
     return t.path ? withEmbed(t.path) : "";
   });
 
@@ -235,8 +236,12 @@ export default function LobbyOverlay({
   }, [minimised]);
 
   const loadPane = useCallback((path: string) => {
-    // Instruments are native. Host/marketing doors and everything else open as a
-    // normal page. Only a small document allowlist still iframes (?embed=1).
+    // Never iframe unframeable chrome. Software is `/dashboard` as a full page.
+    // Only the document allowlist still frames (?embed=1).
+    if (isUnframeable(path)) {
+      window.location.assign(withoutEmbed(path));
+      return;
+    }
     const load = paneLoadFor(path);
     if (load.action === "navigate") {
       window.location.assign(load.path);
@@ -268,12 +273,12 @@ export default function LobbyOverlay({
     setOverride(null);
     setTabId(t.id);
     if (t.kind === "local" || t.kind === "native") {
-      // Clear the previous iframe's path so the pane header chip never shows
-      // the last tab's URL under a native/local pane.
+      // Drop the iframe so a leftover src cannot sit under the native pane.
       setFramePath("");
+      setFrameSrc("");
       return;
     }
-    if (t.path && isSiteDoor(t.path)) {
+    if (t.path && (isUnframeable(t.path) || isSiteDoor(t.path))) {
       window.location.assign(t.path);
       return;
     }
@@ -293,19 +298,26 @@ export default function LobbyOverlay({
     const onMsg = (e: MessageEvent) => {
       if (e.origin !== window.location.origin) return;
       if (!isEmbedNav(e.data)) return;
-      const path = e.data.path;
-      if (isSiteDoor(path)) {
-        window.location.assign(path);
+      const d = decideEmbedNav(e.data.path, e.data.search);
+      if (d.action === "leave") {
+        window.location.assign(d.href);
         return;
       }
-      const matched = tabForPath(path);
-      setFramePath(path);
-      if (matched) {
-        setTabId(matched.id);
+      if (d.action === "drop-iframe") {
+        setFrameSrc("");
+        setFramePath("");
+        setTabId(d.tabId);
         setOverride(null);
-      } else {
-        setOverride({ path, label: paneNameFor(e.data.title, path) });
+        return;
       }
+      if (d.action === "follow-route") {
+        setFramePath(d.path);
+        setTabId(d.tabId);
+        setOverride(null);
+        return;
+      }
+      setFramePath(d.path);
+      setOverride({ path: d.path, label: paneNameFor(e.data.title, d.path) });
     };
     window.addEventListener("message", onMsg);
     return () => window.removeEventListener("message", onMsg);

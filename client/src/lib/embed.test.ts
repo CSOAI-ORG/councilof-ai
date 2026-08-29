@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pathOnly, tabForPath, withEmbed, isEmbedNav, EMBED_NAV_TYPE } from "./embed";
+import { pathOnly, tabForPath, withEmbed, isEmbedNav, decideEmbedNav, EMBED_NAV_TYPE } from "./embed";
 
 describe("withEmbed", () => {
   it("adds embed=1 to a bare path", () => {
@@ -28,6 +28,13 @@ describe("withEmbed", () => {
     expect(withEmbed("/os?lobby=board")).toBe("/os?lobby=board");
     expect(withEmbed("/os#council-town")).toBe("/os#council-town");
     expect(withEmbed("/dashboard")).toBe("/dashboard");
+    expect(withEmbed("/ag-ui")).toBe("/ag-ui");
+    expect(withEmbed("/chat")).toBe("/chat");
+    expect(withEmbed("/console")).toBe("/console");
+    expect(withEmbed("/sov-os")).toBe("/sov-os");
+    expect(withEmbed("/council-os")).toBe("/council-os");
+    expect(withEmbed("/demo")).toBe("/demo");
+    expect(withEmbed("/os-demo")).toBe("/os-demo");
   });
 
   it("preserves a hash after the query on a document pane", () => {
@@ -84,5 +91,42 @@ describe("pathOnly / isEmbedNav", () => {
   it("accepts a well-formed nav message", () => {
     expect(isEmbedNav({ type: EMBED_NAV_TYPE, path: "/assess", search: "", title: "x" })).toBe(true);
     expect(isEmbedNav({ type: "nope", path: "/assess" })).toBe(false);
+  });
+});
+
+describe("decideEmbedNav — parent listener branches", () => {
+  it("never promotes path / to an override — leave OS without embed=1", () => {
+    expect(decideEmbedNav("/")).toEqual({ action: "leave", href: "/" });
+    expect(decideEmbedNav("/", "?embed=1")).toEqual({ action: "leave", href: "/" });
+    expect(decideEmbedNav("/os", "?embed=1&lobby=home")).toEqual({
+      action: "leave",
+      href: "/os?lobby=home",
+    });
+    expect(decideEmbedNav("/dashboard")).toEqual({ action: "leave", href: "/dashboard" });
+    expect(decideEmbedNav("/ag-ui")).toEqual({ action: "leave", href: "/ag-ui" });
+    expect(decideEmbedNav("/chat")).toEqual({ action: "leave", href: "/chat" });
+  });
+
+  it("follows a route tab without remounting", () => {
+    expect(decideEmbedNav("/library")).toEqual({
+      action: "follow-route",
+      tabId: "library",
+      path: "/library",
+    });
+    expect(decideEmbedNav("/products")).toEqual({
+      action: "follow-route",
+      tabId: "products",
+      path: "/products",
+    });
+  });
+
+  it("drops the iframe when the path belongs to a native or local pane", () => {
+    expect(decideEmbedNav("/gspc-scoreboard")).toEqual({ action: "drop-iframe", tabId: "board" });
+    expect(decideEmbedNav("/gspc-verify")).toEqual({ action: "drop-iframe", tabId: "verify" });
+  });
+
+  it("sets an override chip for a page no tab owns (Pricing inside Products)", () => {
+    expect(decideEmbedNav("/pricing")).toEqual({ action: "override", path: "/pricing" });
+    expect(decideEmbedNav("/login")).toEqual({ action: "override", path: "/login" });
   });
 });

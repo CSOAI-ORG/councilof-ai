@@ -1,3 +1,5 @@
+import { isUnframeable } from "@/lib/unframeable";
+
 /**
  * The Council Lobby's centre-pane destinations.
  *
@@ -472,11 +474,11 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
 ];
 
 /**
- * Paths Council OS must never iframe.
- *   / /products /honesty /pricing — marketing (HOME_NAV)
- *   /os — this workspace (nesting OS in OS)
- *   /dashboard — DSH is a full window, not DSH-inside-OS
- * Link out, or stay on a native pane. openRoute("/") and openRoute("/os") are forbidden.
+ * Marketing / DSH destinations `go()` and `loadPane` open as a full page.
+ * The unframeable set (client/src/lib/unframeable.ts) is the breakout list —
+ * OS chrome aliases, demo shells, `/dashboard`. SITE_DOORS is the extra
+ * marketing doors (`/products` `/honesty` `/pricing`) that also leave OS
+ * when chosen as a destination. Products may still frame from a route ping.
  */
 export const SITE_DOORS = ["/", "/os", "/dashboard", "/products", "/honesty", "/pricing"] as const;
 
@@ -512,15 +514,18 @@ export function isDocumentFrame(path: string): boolean {
 
 /**
  * Overlay centre-pane loader. Native tabs never call this. Everything else
- * either leaves the workspace or (documents only) iframes. `/`, `/os`, and
- * `/dashboard` are always navigate — never an iframe src.
+ * either leaves the workspace or (documents only) iframes. Unframeable paths
+ * (`/`, `/os`, `/dashboard`, OS chrome aliases) are always navigate — never
+ * an iframe src. Software is `/dashboard` → full page.
  */
 export type PaneLoad =
   | { action: "navigate"; path: string }
   | { action: "iframe"; path: string };
 
 export function paneLoadFor(path: string): PaneLoad {
-  if (isSiteDoor(path) || !isDocumentFrame(path)) return { action: "navigate", path };
+  if (isUnframeable(path) || isSiteDoor(path) || !isDocumentFrame(path)) {
+    return { action: "navigate", path };
+  }
   return { action: "iframe", path };
 }
 
