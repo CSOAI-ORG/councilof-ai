@@ -301,7 +301,11 @@ function publicOwns(route) {
 // Only a rule that lands the visitor on a DIFFERENT page disqualifies a snapshot.
 // The 36 "/pricing -> /pricing/" canonicalisers are the opposite: the 308 exists
 // precisely so the bare path reaches the snapshot, which lives at /pricing/index.html.
-const REDIRECTED_ELSEWHERE = new Set();
+const REDIRECTED_ELSEWHERE = new Set([
+  // Pages Function 308s are not in public/_redirects, so heuristic discovery still
+  // queues them. Snapshotting /pricing-legacy yields 300ch THIN and fails deploy.yml.
+  "/pricing-legacy",
+]);
 try {
   const rf = join(PUBLIC_DIR, "_redirects");
   const norm = (x) => (x.split("?")[0].replace(/\/$/, "") || "/");
