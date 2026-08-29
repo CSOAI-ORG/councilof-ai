@@ -1,9 +1,25 @@
-# NEXT_300 #139 / #186 / #253 — upload staged UNMEASURED HF packs when HF_TOKEN is set.
-# Never invent MEASURED labour scores. Skips cleanly when the org secret is absent.
+# NEXT_300 #139 / #186 / #253 — upload staged UNMEASURED HF packs.
+# Never invent MEASURED labour scores.
+#
+# Auth (either):
+#   1. Repository/org secret HF_TOKEN (can create repos + upload)
+#   2. Hub Trusted Publishers (OIDC) — empty repos must exist first;
+#      configure GitHub Actions publisher on each dataset Settings page
+#      (repository=CSOAI-ORG/councilof-ai, workflow=hf-upload-staged.yml)
 name: hf-upload-staged
 
 on:
   workflow_dispatch:
+    inputs:
+      auth:
+        description: "token | oidc | auto"
+        required: false
+        default: "auto"
+        type: choice
+        options:
+          - auto
+          - token
+          - oidc
   push:
     branches:
       - cursor/instruments-catalog-7fb8
@@ -18,6 +34,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write # Trusted Publisher OIDC exchange
 
 jobs:
   verify-and-upload:
@@ -32,24 +49,65 @@ jobs:
       - name: Verify staged packs (no token required)
         run: npm run verify:staged-hf
 
-      - name: Check HF_TOKEN
+      - name: Resolve auth mode
         id: auth
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          INPUT_AUTH: ${{ github.event.inputs.auth || 'auto' }}
         run: |
-          if [ -z "$HF_TOKEN" ]; then
-            echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "HF_TOKEN secret missing — packs stay staged (see datasets/UPLOAD_DEFERRED.md)"
-          else
-            echo "present=true" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          MODE="$INPUT_AUTH"
+          HAS_TOKEN=false
+          if [ -n "${HF_TOKEN:-}" ]; then HAS_TOKEN=true; fi
+
+          if [ "$MODE" = "auto" ]; then
+            if [ "$HAS_TOKEN" = true ]; then MODE=token
+            else MODE=oidc
+            fi
           fi
 
-      - name: Install Hugging Face CLI
-        if: steps.auth.outputs.present == 'true'
-        run: pip install -U "huggingface_hub[cli]"
+          if [ "$MODE" = "token" ] && [ "$HAS_TOKEN" != true ]; then
+            echo "mode=none" >> "$GITHUB_OUTPUT"
+            echo "HF_TOKEN secret missing — will not attempt token upload"
+            exit 0
+          fi
 
-      - name: Upload staged UNMEASURED packs
-        if: steps.auth.outputs.present == 'true'
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "Resolved upload mode: $MODE (token_secret=$HAS_TOKEN)"
+
+      - name: Install Hugging Face CLI
+        if: steps.auth.outputs.mode == 'token' || steps.auth.outputs.mode == 'oidc'
+        run: |
+          curl -LsSf https://hf.co/cli/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          pip install -U "huggingface_hub[cli]"
+
+      - name: Upload via HF_TOKEN
+        if: steps.auth.outputs.mode == 'token'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_UPLOAD_MODE: token
         run: npm run hf:upload-staged
+
+      - name: Upload via Trusted Publisher OIDC
+        id: oidc
+        if: steps.auth.outputs.mode == 'oidc'
+        continue-on-error: true
+        env:
+          HF_UPLOAD_MODE: oidc
+        run: npm run hf:upload-staged
+
+      - name: OIDC soft-skip notice
+        if: steps.auth.outputs.mode == 'oidc' && steps.oidc.outcome != 'success'
+        run: |
+          echo "::warning::OIDC upload skipped/failed. Configure Hub Trusted Publishers on:"
+          echo "  https://huggingface.co/datasets/csoai/labour-economy-unmeasured/settings"
+          echo "  https://huggingface.co/datasets/csoai/rwa-testnet-unmeasured/settings"
+          echo "Claims: repository=CSOAI-ORG/councilof-ai workflow=hf-upload-staged.yml"
+          echo "Or create empty datasets first, then re-run. Alternate: set Actions secret HF_TOKEN."
+          echo "Packs stay staged — see datasets/UPLOAD_DEFERRED.md"
+
+      - name: No auth configured
+        if: steps.auth.outputs.mode == 'none' || steps.auth.outputs.mode == ''
+        run: |
+          echo "No HF_TOKEN and OIDC not selected — packs stay staged (datasets/UPLOAD_DEFERRED.md)"
