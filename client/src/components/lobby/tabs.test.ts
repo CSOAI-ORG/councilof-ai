@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  DASHBOARD_TABS, isDashboardTab, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, routesIn, tabById,
+  DASHBOARD_TABS, isDashboardTab, isDocumentFrame, isOsRailTab, isSiteDoor, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, OS_RAIL_TABS, paneLoadFor, routesIn, tabById,
 } from "./tabs";
 import { PRIMARY_PATHS } from "../../data/library-ia";
 
@@ -11,15 +11,35 @@ describe("Council OS tabs", () => {
     expect(home.path).toBe("");
   });
 
-  it("still frames the live measurement routes", () => {
-    expect(tabById("board").path).toBe("/gspc-scoreboard");
-    expect(tabById("verify").path).toBe("/gspc-verify");
-    expect(tabById("measured").path).toBe("/assess");
+  it("never iframes /, /os, or /dashboard", () => {
+    expect(isSiteDoor("/")).toBe(true);
+    expect(isSiteDoor("/os")).toBe(true);
+    expect(isSiteDoor("/os?lobby=home")).toBe(true);
+    expect(isSiteDoor("/dashboard")).toBe(true);
+    expect(isSiteDoor("/products")).toBe(true);
+    expect(isSiteDoor("/honesty?x=1")).toBe(true);
+    expect(isSiteDoor("/pricing")).toBe(true);
+    expect(isSiteDoor("/gspc-scoreboard")).toBe(false);
+    expect(isSiteDoor("/gspc-verify")).toBe(false);
+    expect(isSiteDoor("/library")).toBe(false);
   });
 
-  it("frames the signed-in software dashboard", () => {
+  it("keeps the OS rail to instruments plus Home and Play", () => {
+    expect(OS_RAIL_TABS.map((t) => t.id)).toEqual([
+      "home", "board", "verify", "cards", "evidence", "embed", "play",
+    ]);
+    expect(isOsRailTab("software")).toBe(false);
+    expect(isOsRailTab("products")).toBe(false);
     expect(tabById("software").path).toBe("/dashboard");
-    expect(tabById("software").kind).not.toBe("local");
+    expect(isSiteDoor("/dashboard")).toBe(true);
+    expect(isDocumentFrame("/methodology")).toBe(true);
+    expect(isDocumentFrame("/products")).toBe(false);
+  });
+
+  it("keeps board and verify native even though they still name a page", () => {
+    expect(tabById("board").kind).toBe("native");
+    expect(tabById("verify").kind).toBe("native");
+    expect(tabById("measured").path).toBe("/assess");
   });
 
   it("opens Home for an OS command and Play for a game command", () => {
@@ -56,7 +76,7 @@ describe("Council OS tabs", () => {
     expect(matchRoute("show the system card")?.path).toBe("/system-card");
     expect(matchRoute("open the mcp fleet")?.path).toBe("/mcp-fleet");
     expect(matchRoute("show the regulation feed")?.path).toBe("/feed");
-    expect(matchRoute("open the crosswalk")?.path).toBe("/crosswalk");
+    expect(matchTab("open the crosswalk")?.id).toBe("matrix");
     expect(matchRoute("what is the weather")).toBeNull();
   });
 
@@ -73,7 +93,8 @@ describe("Council OS tabs", () => {
     ];
     const seen = new Map<string, number>();
     for (const p of paths) seen.set(p, (seen.get(p) ?? 0) + 1);
-    expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([]);
+    // measured + ras both name /assess (Get-measured vs Readiness). Not on the OS rail.
+    expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([["/assess", 2]]);
   });
 
   it("keeps /honesty on the rail tab only — the audited duplicate is gone", () => {
@@ -215,5 +236,43 @@ describe("the two panes added by the OS-tools sweep", () => {
   it("gives the newly-opened pages a real route to open", () => {
     expect(matchRoute("show rating the raters")?.path).toBe("/rating-the-raters");
     expect(matchRoute("open the first-fine watch")?.path).toBe("/first-fine-watch");
+  });
+});
+
+describe("TUI 2 — OS instrument chrome", () => {
+  it("desktop/rail is board, verify, cards, evidence, embed, plus Play", () => {
+    expect(OS_RAIL_TABS.filter((t) => t.id !== "home").map((t) => t.id)).toEqual([
+      "board", "verify", "cards", "evidence", "embed", "play",
+    ]);
+  });
+
+  it("board, verify, cards, evidence, embed are native — Play is local", () => {
+    for (const id of ["board", "verify", "cards", "evidence", "embed"] as const) {
+      expect(tabById(id).kind).toBe("native");
+    }
+    expect(tabById("play").kind).toBe("local");
+  });
+
+  it("software is a full navigation to /dashboard, never a framed pane", () => {
+    const software = tabById("software");
+    expect(isOsRailTab("software")).toBe(false);
+    expect(software.path).toBe("/dashboard");
+    expect(software.kind).not.toBe("native");
+    expect(paneLoadFor(software.path)).toEqual({ action: "navigate", path: "/dashboard" });
+  });
+
+  it("refuses /, /os, and /dashboard as iframe destinations", () => {
+    for (const path of ["/", "/os", "/os?lobby=board", "/dashboard"]) {
+      expect(paneLoadFor(path).action).toBe("navigate");
+      expect(paneLoadFor(path)).toEqual({ action: "navigate", path });
+    }
+  });
+
+  it("only document allowlist paths still iframe", () => {
+    expect(paneLoadFor("/library")).toEqual({ action: "iframe", path: "/library" });
+    expect(paneLoadFor("/methodology")).toEqual({ action: "iframe", path: "/methodology" });
+    expect(paneLoadFor("/cra-readiness")).toEqual({ action: "iframe", path: "/cra-readiness" });
+    expect(paneLoadFor("/products")).toEqual({ action: "navigate", path: "/products" });
+    expect(paneLoadFor("/gspc-scoreboard")).toEqual({ action: "navigate", path: "/gspc-scoreboard" });
   });
 });

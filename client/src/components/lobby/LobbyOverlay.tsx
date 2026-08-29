@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DEFAULT_TAB, LOBBY_TABS, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
+import { DEFAULT_TAB, LOBBY_TABS, isOsRailTab, isSiteDoor, paneLoadFor, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
 import LobbyHeader, { ColiseumGlyph } from "./LobbyHeader";
 import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
 import LobbySideRail from "./LobbySideRail";
@@ -134,7 +134,12 @@ export default function LobbyOverlay({
 }) {
   const [alpha, setAlpha] = useState<number>(readAlpha);
   // An intent present at mount picks the pane; otherwise the last pane is restored.
-  const [tabId, setTabId] = useState<LobbyTabId>(() => intent?.pane ?? readTab());
+  const [tabId, setTabId] = useState<LobbyTabId>(() => {
+    const id = intent?.pane ?? readTab();
+    const t = tabById(id);
+    if (!isOsRailTab(id) || (t.path && isSiteDoor(t.path))) return DEFAULT_TAB;
+    return id;
+  });
   const [leftOpen, setLeftOpen] = useState(() => readOpen(LEFT_KEY, LEFT_DEFAULT));
   const [rightOpen, setRightOpen] = useState(() => readOpen(RIGHT_KEY, RIGHT_DEFAULT));
   // The composer is opened on demand, and stays open once a conversation exists.
@@ -149,12 +154,15 @@ export default function LobbyOverlay({
    *  seeding a path that is never framed — the header chip lied on arrival). */
   const [framePath, setFramePath] = useState<string>(() => {
     const t = intent ? tabById(intent.pane) : tabById(readTab());
-    return t.kind === "local" || t.kind === "native" ? "" : t.path;
+    if (t.kind === "local" || t.kind === "native") return "";
+    if (t.path && isSiteDoor(t.path)) return "";
+    return t.path;
   });
   const [frameSrc, setFrameSrc] = useState<string>(() => {
     const t = intent ? tabById(intent.pane) : tabById(readTab());
-    const path = t.kind === "local" || t.kind === "native" ? "" : t.path;
-    return path ? withEmbed(path) : "";
+    if (t.kind === "local" || t.kind === "native") return "";
+    if (t.path && isSiteDoor(t.path)) return "";
+    return t.path ? withEmbed(t.path) : "";
   });
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -227,9 +235,16 @@ export default function LobbyOverlay({
   }, [minimised]);
 
   const loadPane = useCallback((path: string) => {
+    // Instruments are native. Host/marketing doors and everything else open as a
+    // normal page. Only a small document allowlist still iframes (?embed=1).
+    const load = paneLoadFor(path);
+    if (load.action === "navigate") {
+      window.location.assign(load.path);
+      return;
+    }
     setFrameLoaded(false);
-    setFramePath(path);
-    setFrameSrc(path ? withEmbed(path) : "");
+    setFramePath(load.path);
+    setFrameSrc(withEmbed(load.path));
   }, []);
 
   // A later intent (an in-page CTA fired while the lobby is already open) moves
@@ -258,6 +273,10 @@ export default function LobbyOverlay({
       setFramePath("");
       return;
     }
+    if (t.path && isSiteDoor(t.path)) {
+      window.location.assign(t.path);
+      return;
+    }
     if (t.path) loadPane(t.path);
   }, [loadPane]);
 
@@ -275,6 +294,10 @@ export default function LobbyOverlay({
       if (e.origin !== window.location.origin) return;
       if (!isEmbedNav(e.data)) return;
       const path = e.data.path;
+      if (isSiteDoor(path)) {
+        window.location.assign(path);
+        return;
+      }
       const matched = tabForPath(path);
       setFramePath(path);
       if (matched) {

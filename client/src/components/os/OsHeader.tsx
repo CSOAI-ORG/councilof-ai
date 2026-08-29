@@ -3,14 +3,17 @@
  *
  * A compact utility bar that owns the /os product frame:
  * - The mark and Council OS name
- * - Inner nav doors: Board / Verify / Space / Assess / Harness
+ * - Inner nav doors: Board / Verify / Cards / Harness
  * - User account controls (Sign in or user menu if authenticated)
+ *
+ * A harness panel (`?embed=1`) keeps the instrument tabs and drops Exit OS,
+ * Sign in, and the marketing logo link so the pane is chrome, not a nested site.
  *
  * This header is mounted ONLY on /os and its hops (/ag-ui /chat /console /sov-os).
  * It replaces the marketing site header — one product frame, not marketing chrome.
  *
  * Navigation uses URL params (?lobby=board, etc.) which OsLauncher reads.
- * Assess → /os?lobby=measured → /assess (never /readiness-assessment).
+ * Door hops preserve embed=1 when already a panel.
  */
 
 import { Link, useLocation, useSearch } from "wouter";
@@ -27,6 +30,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { FOCUS } from "@/components/lobby/glass";
 import { DOORS, LOBBY_TO_DOOR, type DoorId } from "@/pages/OsLauncher";
+import { isEmbedded } from "@/lib/embed";
+import { osDoorHref } from "@/lib/lobbyLink";
 
 function ColiseumGlyph({ className }: { className?: string }) {
   return (
@@ -55,39 +60,47 @@ function ColiseumGlyph({ className }: { className?: string }) {
 const DOOR_TO_LOBBY: Record<DoorId, string> = {
   board: "board",
   verify: "verify",
+  cards: "cards",
   space: "space",
   assess: "measured",
   harness: "harness",
 };
 
 export default function OsHeader() {
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const search = useSearch();
   const { user, logout } = useAuth();
 
   const params = new URLSearchParams(search);
   const lobby = params.get("lobby") || "home";
   const currentDoor = LOBBY_TO_DOOR[lobby] || "board";
+  const panel = isEmbedded();
 
   const navigateToDoor = (doorId: DoorId) => {
-    const lobbyParam = DOOR_TO_LOBBY[doorId];
-    setLocation(`/os?lobby=${lobbyParam}`);
+    setLocation(osDoorHref(DOOR_TO_LOBBY[doorId], search));
   };
+
+  const mark = (
+    <>
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
+        <ColiseumGlyph className="h-4 w-4" />
+      </span>
+      <span className="text-sm font-semibold text-slate-900">Council OS</span>
+    </>
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md">
       <nav className="mx-auto flex h-12 max-w-5xl items-center justify-between px-4">
-        {/* Logo + name */}
+        {/* Logo + name. A harness panel must not break out to marketing /. */}
         <div className="flex items-center gap-6">
-          <Link
-            href="/"
-            className="flex items-center gap-2 transition hover:opacity-90"
-          >
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white">
-              <ColiseumGlyph className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-semibold text-slate-900">Council OS</span>
-          </Link>
+          {panel ? (
+            <span className="flex items-center gap-2">{mark}</span>
+          ) : (
+            <Link href="/" className="flex items-center gap-2 transition hover:opacity-90">
+              {mark}
+            </Link>
+          )}
 
           {/* Door tabs — desktop */}
           <nav
@@ -113,8 +126,10 @@ export default function OsHeader() {
           </nav>
         </div>
 
-        {/* Right side — exit + verify + account */}
+        {/* Right side — exit + verify + account. Hidden on a harness panel. */}
         <div className="flex items-center gap-2">
+          {!panel && (
+          <>
           {/* Exit OS — break deep-link trap; Esc also lands home via LobbyOverlay */}
           <Link
             href="/"
@@ -197,6 +212,8 @@ export default function OsHeader() {
                 Sign in
               </Button>
             </Link>
+          )}
+          </>
           )}
         </div>
       </nav>

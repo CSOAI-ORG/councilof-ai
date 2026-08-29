@@ -10,8 +10,8 @@ describe("withEmbed", () => {
     expect(withEmbed("/gspc-verify?card=abc")).toBe("/gspc-verify?card=abc&embed=1");
   });
 
-  it("does not duplicate embed=1", () => {
-    expect(withEmbed("/os?embed=1")).toBe("/os?embed=1");
+  it("does not duplicate embed=1 on a document pane", () => {
+    expect(withEmbed("/library?embed=1")).toBe("/library?embed=1");
   });
 
   it("leaves hash-only and mailto links alone", () => {
@@ -19,8 +19,19 @@ describe("withEmbed", () => {
     expect(withEmbed("mailto:nicholas@csoai.org")).toBe("mailto:nicholas@csoai.org");
   });
 
-  it("preserves a hash after the query", () => {
-    expect(withEmbed("/os#council-town")).toBe("/os?embed=1#council-town");
+  it("never stamps embed=1 on marketing or host doors (no nested homepage, no /os in /os)", () => {
+    expect(withEmbed("/")).toBe("/");
+    expect(withEmbed("/products")).toBe("/products");
+    expect(withEmbed("/honesty")).toBe("/honesty");
+    expect(withEmbed("/pricing")).toBe("/pricing");
+    expect(withEmbed("/os")).toBe("/os");
+    expect(withEmbed("/os?lobby=board")).toBe("/os?lobby=board");
+    expect(withEmbed("/os#council-town")).toBe("/os#council-town");
+    expect(withEmbed("/dashboard")).toBe("/dashboard");
+  });
+
+  it("preserves a hash after the query on a document pane", () => {
+    expect(withEmbed("/library#axis")).toBe("/library?embed=1#axis");
   });
 });
 

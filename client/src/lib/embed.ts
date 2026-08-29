@@ -11,7 +11,7 @@
  * is the fallback when a framed page drops the query string.
  */
 import { useEffect } from "react";
-import { LOBBY_TABS, type LobbyTab } from "../components/lobby/tabs";
+import { isSiteDoor, LOBBY_TABS, type LobbyTab } from "../components/lobby/tabs";
 
 export const EMBED_PARAM = "embed";
 export const EMBED_NAV_TYPE = "coai:embed-nav";
@@ -57,6 +57,11 @@ export function withEmbed(href: string, base = "https://councilof.ai"): string {
   }
   try {
     const url = new URL(href, base);
+    const rel = url.pathname + url.search + url.hash;
+    // Never stamp embed=1 onto OS host / DSH / marketing doors. A harness panel
+    // is minted as `/os?embed=1&lobby=board` by osPanelHref(), not by this helper
+    // — stamping /os here would iframe OS inside OS.
+    if (isSiteDoor(url.pathname + url.search)) return /^https?:\/\//i.test(href) ? url.toString() : rel;
     url.searchParams.set(EMBED_PARAM, "1");
     if (/^https?:\/\//i.test(href)) return url.toString();
     return url.pathname + url.search + url.hash;
@@ -187,6 +192,17 @@ export function useEmbedNavigation(): void {
         if (el.target === "_parent" || el.target === "_top") {
           e.preventDefault();
           window.open(dest.href, "_blank", "noopener,noreferrer");
+        }
+        return;
+      }
+
+      // Host doors leave the iframe: /os must not nest, /dashboard is DSH itself.
+      if (isSiteDoor(dest.pathname + dest.search)) {
+        e.preventDefault();
+        try {
+          window.top.location.assign(dest.pathname + dest.search + dest.hash);
+        } catch {
+          window.location.assign(dest.pathname + dest.search + dest.hash);
         }
         return;
       }

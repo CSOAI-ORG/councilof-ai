@@ -250,7 +250,7 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "software",
     label: "Software",
-    blurb: "Signed-in dashboard (DSH) — the same destinations as this rail.",
+    blurb: "Signed-in dashboard (DSH) — opens as its own page, not an iframe inside /os.",
     path: "/dashboard",
     cues: /\b(dashboard|software|dsh|signed[- ]in)\b/i,
   },
@@ -470,6 +470,59 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(regulation feed|reg feed)\b/i,
   },
 ];
+
+/**
+ * Paths Council OS must never iframe.
+ *   / /products /honesty /pricing — marketing (HOME_NAV)
+ *   /os — this workspace (nesting OS in OS)
+ *   /dashboard — DSH is a full window, not DSH-inside-OS
+ * Link out, or stay on a native pane. openRoute("/") and openRoute("/os") are forbidden.
+ */
+export const SITE_DOORS = ["/", "/os", "/dashboard", "/products", "/honesty", "/pricing"] as const;
+
+export function isSiteDoor(path: string): boolean {
+  const bare = (path.split("?")[0].split("#")[0].replace(/\/$/, "") || "/");
+  return (SITE_DOORS as readonly string[]).includes(bare);
+}
+
+/** Left rail of Council OS: instruments + Home + Play. Not the sitemap. */
+export const OS_RAIL_IDS: LobbyTabId[] = [
+  "home",
+  "board",
+  "verify",
+  "cards",
+  "evidence",
+  "embed",
+  "play",
+];
+
+export function isOsRailTab(id: LobbyTabId): boolean {
+  return OS_RAIL_IDS.includes(id);
+}
+
+export const OS_RAIL_TABS: LobbyTab[] = LOBBY_TABS.filter((t) => isOsRailTab(t.id));
+
+/** Document pages that may still iframe. Everything else opens as a normal page. */
+export const DOCUMENT_FRAMES = ["/library", "/methodology", "/cra-readiness"] as const;
+
+export function isDocumentFrame(path: string): boolean {
+  const bare = (path.split("?")[0].split("#")[0].replace(/\/$/, "") || "/");
+  return (DOCUMENT_FRAMES as readonly string[]).includes(bare);
+}
+
+/**
+ * Overlay centre-pane loader. Native tabs never call this. Everything else
+ * either leaves the workspace or (documents only) iframes. `/`, `/os`, and
+ * `/dashboard` are always navigate — never an iframe src.
+ */
+export type PaneLoad =
+  | { action: "navigate"; path: string }
+  | { action: "iframe"; path: string };
+
+export function paneLoadFor(path: string): PaneLoad {
+  if (isSiteDoor(path) || !isDocumentFrame(path)) return { action: "navigate", path };
+  return { action: "iframe", path };
+}
 
 export const DEFAULT_TAB: LobbyTabId = "home";
 

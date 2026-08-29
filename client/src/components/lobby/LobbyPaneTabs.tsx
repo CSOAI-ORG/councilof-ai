@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { LOBBY_TABS, type LobbyTab, type LobbyTabId } from "./tabs";
+import { OS_RAIL_TABS, type LobbyTab, type LobbyTabId } from "./tabs";
 import { FOCUS } from "./glass";
 
 /**
@@ -35,8 +35,8 @@ export default function LobbyPaneTabs({
   const horizontal = orientation === "horizontal";
 
   const move = (to: number) => {
-    const i = ((to % LOBBY_TABS.length) + LOBBY_TABS.length) % LOBBY_TABS.length;
-    const next = LOBBY_TABS[i];
+    const i = ((to % OS_RAIL_TABS.length) + OS_RAIL_TABS.length) % OS_RAIL_TABS.length;
+    const next = OS_RAIL_TABS[i];
     onSelect(next);
     setTimeout(() => {
       listRef.current?.querySelector<HTMLButtonElement>(`#${tabDomId(next.id)}`)?.focus();
@@ -44,7 +44,7 @@ export default function LobbyPaneTabs({
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    const at = LOBBY_TABS.findIndex((t) => t.id === tabId);
+    const at = OS_RAIL_TABS.findIndex((t) => t.id === tabId);
     switch (e.key) {
       case "ArrowDown":
       case "ArrowRight":
@@ -66,7 +66,7 @@ export default function LobbyPaneTabs({
         break;
       case "End":
         e.preventDefault();
-        move(LOBBY_TABS.length - 1);
+        move(OS_RAIL_TABS.length - 1);
         break;
       default:
         break;
@@ -87,7 +87,7 @@ export default function LobbyPaneTabs({
       onKeyDown={onKeyDown}
       className={listClass}
     >
-      {LOBBY_TABS.map((t) => {
+      {OS_RAIL_TABS.map((t) => {
         const on = !override && t.id === tabId;
         const gold = t.accent === "gold";
         const chip =
