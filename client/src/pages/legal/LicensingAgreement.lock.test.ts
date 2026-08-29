@@ -18,4 +18,12 @@ describe("commercial legal surface (shipped LicensingAgreement.tsx)", () => {
     expect(src).toMatch(/Measurement licence/);
     expect(src).toMatch(/Nobody ranked pays/);
   });
+
+  it("invoices three paid arms, not a public rank", () => {
+    expect(src).toMatch(/Run \/ re-attest/);
+    expect(src).toMatch(/Council Ledger/);
+    expect(src).toMatch(/Council Data/);
+    expect(src).toMatch(/never a purchased public rank/);
+    expect(src).toMatch(/\/licence-manifest/);
+  });
 });

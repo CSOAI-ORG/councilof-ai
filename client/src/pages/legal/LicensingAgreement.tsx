@@ -27,28 +27,28 @@ const fadeInUp = {
 
 const SKUS = [
   {
-    name: "Council Verify",
+    name: "Verify",
     who: "Anyone",
     term: "Perpetual",
     fee: "Free forever",
     covers:
-      "Browser-side recomputation of a signed card. No account. Nothing is sent to us. The grade is never sold.",
+      "Browser-side recomputation of a signed card. No account. Not on the licence manifest. The grade is never sold.",
   },
   {
-    name: "Council OS",
-    who: "Anyone",
-    term: "Perpetual",
-    fee: "Free to use",
+    name: "Run / re-attest",
+    who: "Vendors, deployers",
+    term: "Per run / loop",
+    fee: "On enquiry",
     covers:
-      "The workspace at /os — board, verifier, assess, evidence panes. Paid only when a feed, a corpus, or a re-attest loop is required.",
+      "We measure a named system again when the law or the model moves. Get measured is the lead. Paid is the re-attest loop — never a public rank.",
   },
   {
     name: "Council Ledger",
-    who: "Insurers, procurement, deployers, GPAI evidence buyers",
+    who: "Insurers, procurement, deployers",
     term: "Annual or per-request",
     fee: "On enquiry",
     covers:
-      "Signed evidence feed and evidence packs (GPAI, CRA, insurer rail). A measurement of a named system the buyer requested — never a purchased public rank.",
+      "Signed evidence feed and packs (GPAI pack and CRA runbook are Ledger modules — evidence, not a mark). Named system the buyer requested — never a purchased public rank.",
   },
   {
     name: "Council Data",
@@ -56,7 +56,7 @@ const SKUS = [
     term: "Per dataset / per term",
     fee: "On enquiry",
     covers:
-      "Licensed signed measurement corpus (traces, preference pairs, safety incidents). The buyer licenses data. The buyer can never license, purchase, or influence a score.",
+      "Licensed signed corpus (traces, preference pairs, safety incidents). Open-access sample stays free. The buyer licenses data, never a score.",
   },
 ];
 
@@ -169,6 +169,7 @@ export default function LicensingAgreement() {
                   and the fee. These standing terms are what that manifest references.
                 </p>
                 <ul className="list-disc pl-5 space-y-1">
+                  <li>Run / re-attest — a named-system measurement or re-attest loop when the law or the model moves.</li>
                   <li>Council Ledger — signed receipts and evidence packs for a named system or a recurring feed.</li>
                   <li>Council Data — Q/A rows, preference pairs, safety incidents, each with provenance back to a measurement card.</li>
                 </ul>
@@ -200,7 +201,7 @@ export default function LicensingAgreement() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Layers className="h-5 w-5 text-primary" />
-                  3. The four SKUs
+                  3. Verify free · three paid arms
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -323,8 +324,9 @@ export default function LicensingAgreement() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Verify and Council OS: perpetual, free. Ledger and Data: as the
-                    countersigned manifest. 60 days’ notice to non-renew a paid term.
+                    Verify is perpetual and free. Run / re-attest, Ledger, and Data: as the
+                    countersigned manifest. 60 days’ notice to non-renew a paid term. The site
+                    is the page, not an invoice SKU.
                   </p>
                 </CardContent>
               </Card>
