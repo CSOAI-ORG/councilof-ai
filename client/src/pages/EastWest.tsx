@@ -31,7 +31,7 @@ export default function EastWest() {
           One signed measurement, <span className="text-emerald-300">every regime it touches, mapped.</span>
         </h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">
-          Cross-jurisdiction governance measurement without selling scores. Regulators read the crosswalk free forever;
+          Cross-jurisdiction governance measurement with no score on the invoice. Regulators read the crosswalk free forever;
           determination stays with authorities. Verify any regime&apos;s evidence without asking us.
         </p>
 

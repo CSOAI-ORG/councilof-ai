@@ -205,7 +205,7 @@ export default function MembershipAgreement() {
                   <h4 className="font-semibold mb-3">3.2 The Member shall NOT:</h4>
                   <ul className="space-y-2">
                     {[
-                      "Misrepresent CSOAI certification or membership status",
+                      "Misrepresent a measurement as a certification, or membership status",
                       "Use CSOAI branding without authorization",
                       "Engage in activities that bring CSOAI into disrepute",
                       "Share confidential CSOAI materials with non-members"

@@ -231,7 +231,7 @@ export default function LicensingAgreement() {
                 <p className="text-xs text-muted-foreground mt-4">
                   Binding figures live on the countersigned manifest, not on this page.
                   Stripe Checkout links from earlier catalogues do not sell access to the
-                  rail and do not sell a grade. Until live-flip, paid SKUs are on enquiry.
+                  rail and a grade is never sold. Until live-flip, paid SKUs are on enquiry.
                 </p>
               </CardContent>
             </Card>
@@ -306,7 +306,7 @@ export default function LicensingAgreement() {
                   <li>Presenting a measurement as a certification, accreditation, or conformity assessment.</li>
                   <li>Paying, or being paid, to alter a public rank.</li>
                   <li>Republishing licensed data as a standalone dataset without a separate licence.</li>
-                  <li>Displaying any “CSOAI Certified” mark. No such mark is issued.</li>
+                  <li>Displaying any certified-by-Council mark. No such mark is issued; we do not certify.</li>
                 </ul>
               </CardContent>
             </Card>

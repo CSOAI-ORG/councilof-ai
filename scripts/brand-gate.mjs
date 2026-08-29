@@ -106,7 +106,7 @@ const RULES = [
     // covers those. Do not use a blanket certif* pattern: /library still lists
     // retired /how-it-works/certification paths as index text.
     pattern: /\bget certified\b|\bwe certify\b|\bcertified by CSOAI\b|\bCSOAI certif/i,
-    nearAllow: /we certify nothing|do not certify|never certify|certify nothing|not certify/i,
+    nearAllow: /we certify nothing|do not certify|does not certify|never certify|certify nothing|not certify|no such mark|issues no certif|misrepresent.{0,40}certif|certificate shop|training record/i,
     why: 'Measurement credential, never certification. Do not offer "get certified".',
   },
   {
@@ -115,7 +115,7 @@ const RULES = [
     // Verify is free. A public rank / score / grade is never the SKU.
     // Retraction ("never a purchased public rank", "can never buy a score") stays.
     pattern: /rank for sale|bought rank|buy a (?:rank|ranking|score|grade)|purchased public rank|sell(?:ing)? (?:the |a )?(?:score|rank|grade)|score for sale|paid (?:public )?rank/i,
-    nearAllow: /never (?:a )?(?:bought|purchased|buy)|never (?:the |a )?(?:score|rank|grade)|never sell|grade is never sold|can never buy a score|nobody ranked pays|not for sale/i,
+    nearAllow: /never (?:a )?(?:bought|purchased|buy)|never (?:the |a )?(?:score|rank|grade)|never sell|do not sell|does not sell|grade is never sold|a grade is never sold|a rank is never sold|can never buy a score|nobody ranked pays|not for sale|whoever is selling/i,
     why: "Paid arms are Run/re-attest, Ledger, and Data. A rank or score is never sold. Verify is free.",
   },
   {

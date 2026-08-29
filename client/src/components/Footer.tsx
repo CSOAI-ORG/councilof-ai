@@ -25,12 +25,14 @@ export function Footer() {
     {
       title: 'Product',
       links: [
-        { name: 'Council OS', href: '/os' },
-        { name: 'Living board', href: '/gspc-scoreboard' },
         { name: 'Verify a card', href: '/gspc-verify' },
-        { name: 'Academy', href: '/academy' },
-        { name: 'Benchmarks', href: '/benchmarks' },
-        { name: 'MCP Fleet', href: '/mcp-fleet' },
+        { name: 'Get measured', href: '/assess' },
+        { name: 'Board', href: '/gspc-scoreboard' },
+        { name: 'Tools — plugin snippet', href: '/tools' },
+        { name: 'Run / re-attest', href: '/assess' },
+        { name: 'Ledger', href: '/contact?arm=ledger' },
+        { name: 'Data', href: '/contact?arm=data' },
+        { name: 'Library', href: '/library' },
       ],
     },
     {

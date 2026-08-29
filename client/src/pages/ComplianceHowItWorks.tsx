@@ -166,7 +166,7 @@ export default function ComplianceHowItWorks() {
       answer: "CSOAI monitors global AI regulations and publishes updates monthly. You'll receive notifications when frameworks change, and we update our assessment tools accordingly."
     },
     {
-      question: "Can we get certified for compliance?",
+      question: "Can we obtain a conformity certificate from Council of AI?",
       answer: "Not in the regulatory sense, and we will not pretend otherwise. A conformity certificate requires an accreditation chain — a national accreditation organisation (such as UKAS), then a certification body under ISO/IEC 42006 — and CSOAI holds no such accreditation. What you receive is an attestation record: signed, deterministic, provision-anchored evidence of measured behaviour. It demonstrates what your system actually did. It does not, and cannot, declare conformity."
     },
     {

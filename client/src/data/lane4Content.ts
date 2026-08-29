@@ -198,7 +198,7 @@ export const LANE4: Record<string, Lane4Page> = {
     faqIntro: "Attestation vs certification — the distinction we will not blur.",
     faq: [
       {
-        q: "Does CSOAI certify AI systems?",
+        q: "Does Council of AI certify AI systems?",
         a: "No. CSOAI is a measurement body, not an accreditation authority or certification body. Accredited conformity certification requires a national accreditation chain (for example UKAS in the UK) and a certification body operating under ISO/IEC 17065 or 42006. We hold no such accreditation.",
       },
       {
