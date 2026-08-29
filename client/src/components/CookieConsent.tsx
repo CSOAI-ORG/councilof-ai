@@ -37,7 +37,7 @@ export default function CookieConsent() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed bottom-0 inset-x-0 z-30 border-t border-border bg-card/95 px-3 py-1.5 text-foreground"
+      className="fixed bottom-0 inset-x-0 z-[80] border-t border-border bg-card/95 px-3 py-1.5 pr-16 text-foreground sm:pr-20"
     >
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2">
       <p className="text-[11px] leading-snug text-muted-foreground">
