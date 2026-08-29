@@ -114,9 +114,10 @@ export const AXES_FIN: AxisScore[] = [
       "from a real Eurostat fetch (isoc_eb_ai, 2026-08-25; all-enterprise adoption 13.48% in 2024). " +
       "Compute-price, AI-investment and sector-output series are BANK GAPS — stated, not filled. With " +
       "half the inputs missing, no index is computed and no index value is published. " +
-      "CORRECTION: the linked v0.1 artifact still carries a status label of MEASURED-INDEX-v0.1. That " +
-      "label was an over-claim, is superseded by this UNMEASURED status, and the board is the " +
-      "authority. Reference components existing is not an index being measured.",
+      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Eurostat components remain " +
+      "as reference inputs (13.48% 2024). This slot stays UNMEASURED until the missing series + " +
+      "formula are published and a NEW signed card exists. Do not restore the v0.1 sticker. " +
+      "Board GET /api/gspc is authority.",
   },
   {
     axis: "human-labour-index", family: "financial", kind: "declared-slot",
@@ -129,8 +130,9 @@ export const AXES_FIN: AxisScore[] = [
       "live from a real fetch (2024: participation 57.58%, unemployment 5.92%). Displacement " +
       "indicators, wage series and worker-hours-by-AI-exposure are BANK GAPS — stated, not filled. No " +
       "index is computed and none is published. " +
-      "CORRECTION: as with ai-economy-index, the linked v0.1 artifact still carries a " +
-      "MEASURED-INDEX-v0.1 status label. That was an over-claim; this UNMEASURED status supersedes it.",
+      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Participation 57.58% and " +
+      "unemployment 5.92% remain as reference inputs. This slot stays UNMEASURED until the missing " +
+      "series + formula are published and a NEW signed card exists. Do not restore the v0.1 sticker.",
   },
   {
     axis: "humanoid-labour-index", family: "financial", kind: "declared-slot",

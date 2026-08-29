@@ -25,7 +25,7 @@ const DIST = path.resolve(REPO, process.argv[2] || "dist/client");
 // context" the audit explicitly carves out). Everything else is a hard fail.
 // TUI 4 weekend checklist — every ship, rendered copy:
 //   certify / CSOAI Certified / sov33 / Inspect model-judge / 2410 stickers /
-//   GPAI Code signature / rank-for-sale / 2 Nov 2026 cliff.
+//   GPAI Code signature / rank-for-sale / 2 Nov 2026 cliff / MEASURED-INDEX-v0.1.
 const RULES = [
   {
     id: "retracted_fault_tolerance",
@@ -146,6 +146,14 @@ const RULES = [
     pattern: /\b2,?410\b(?!\.\d).{0,48}(?:sticker|badge|scores?|leaderboard|VALID cards?)|(?:sticker|badge|scores?|leaderboard).{0,48}\b2,?410\b(?!\.\d)/i,
     nearAllow: /unmeasured|named sites|hub-queue|empty stays empty|status_all|no score/i,
     why: "hub-queue is 2410 named UNMEASURED ids, not 2410 scores or stickers. Empty stays empty.",
+  },
+  {
+    id: "measured_index_sticker",
+    // C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Keep the correction
+    // until NEW signed cards exist. Disclosure of the withdrawn label stays.
+    pattern: /MEASURED-INDEX-v0\.1/i,
+    nearAllow: /over-claim|overclaim|superseded|C-2026-0826-05|withdrawn|do not restore|correction/i,
+    why: "C-2026-0826-05: MEASURED-INDEX-v0.1 is withdrawn. Board GET /api/gspc is UNMEASURED until a new card. Do not restore the sticker.",
   },
   {
     id: "infra_leak",
