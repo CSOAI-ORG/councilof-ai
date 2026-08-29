@@ -58,6 +58,12 @@ export interface Axis {
    *  surface never concatenates its own. Prefer this over `dataset`; fall back only when
    *  the wire has not shipped it yet. */
   dataset_url?: string;
+  /** Wilson 95% interval as published on the wire. Absent means withheld, not computed here. */
+  interval?: [number, number];
+  /** McNemar determination as published: SEPARATED | TIE | UNTESTED. */
+  separation?: string;
+  separation_p?: number;
+  kind?: string;
 }
 
 export const MEASURED_ON = { date: "2026-08-12", model: "Council-34" };
@@ -135,7 +141,28 @@ export const quotable = (a: Axis): boolean =>
 export const hasMacroF1 = (a: Axis): boolean =>
   typeof a.macro_f1 === "number" && Number.isFinite(a.macro_f1);
 
-/** An interval needs usable_n >= 30. Below that we say so instead of drawing one. */
+/** True when THIS axis published a Wilson pair. Never computed locally for display. */
+export function publishedInterval(a: { interval?: [number, number] | null }): [number, number] | null {
+  const iv = a.interval;
+  if (!iv || iv.length !== 2) return null;
+  const lo = iv[0], hi = iv[1];
+  if (typeof lo !== "number" || typeof hi !== "number" || !Number.isFinite(lo) || !Number.isFinite(hi)) return null;
+  return [lo, hi];
+}
+
+export function formatPublishedInterval(iv: [number, number]): string {
+  return `${iv[0].toFixed(3)}–${iv[1].toFixed(3)}`;
+}
+
+export type SeparationMark = "SEPARATED" | "TIE" | "UNTESTED";
+
+export function publishedSeparation(a: { separation?: string | null }): SeparationMark | null {
+  const s = String(a.separation || "").toUpperCase();
+  if (s === "SEPARATED" || s === "TIE" || s === "UNTESTED") return s;
+  return null;
+}
+
+/** Legacy n≥30 heuristic. Prefer publishedInterval for anything a reader sees. */
 export const hasInterval = (a: Axis): boolean => quotable(a) && a.n * (1 - a.unparsed_rate) >= 30;
 
 /** Wilson 95% interval — the same arithmetic the published boards use. */
@@ -187,6 +214,64 @@ export interface InLaneAxis {
   status: string;
   note?: string;
   leader?: string;
+  separation?: string;
+  fleet_mean?: number | null;
+  dataset?: string;
+  /** Own specialist as published under per_model['council-safe'], if present. */
+  specialist?: { name: string; rate: number; n: number } | null;
+}
+
+function pair(v: unknown): [number, number] | undefined {
+  if (!Array.isArray(v) || v.length !== 2) return undefined;
+  const lo = num(v[0]);
+  const hi = num(v[1]);
+  if (lo === undefined || hi === undefined) return undefined;
+  return [lo, hi];
+}
+
+function specialistFrom(w: unknown): InLaneAxis["specialist"] {
+  if (!w || typeof w !== "object") return null;
+  const pm = (w as { per_model?: unknown }).per_model;
+  if (!pm || typeof pm !== "object") return null;
+  const cs = (pm as Record<string, unknown>)["council-safe"];
+  if (!cs || typeof cs !== "object") return null;
+  const row = cs as Record<string, unknown>;
+  const rate = num(row.alignment_rate) ?? num(row.honesty_rate);
+  if (rate === undefined) return null;
+  return { name: "council-safe", rate, n: Number(row.n ?? 0) };
+}
+
+/** Honest in-lane lines from published fields only. Leader 1.0 does not hide council-safe 0.25. */
+export function inLaneFacts(row: InLaneAxis): {
+  separation: SeparationMark | null;
+  specialistLine: string | null;
+  fleetLine: string | null;
+  leaderLine: string | null;
+  nLine: string;
+  datasetLine: string | null;
+} {
+  const sep = publishedSeparation(row);
+  const specialistLine = row.specialist
+    ? `${row.specialist.name} ${row.specialist.rate} (n=${row.specialist.n})`
+    : null;
+  const fleetLine =
+    typeof row.fleet_mean === "number" && Number.isFinite(row.fleet_mean)
+      ? `fleet mean ${row.fleet_mean}`
+      : null;
+  const leaderLine =
+    typeof row.accuracy === "number" && Number.isFinite(row.accuracy) && row.leader
+      ? `leader ${row.leader} ${row.accuracy}`
+      : typeof row.accuracy === "number" && Number.isFinite(row.accuracy)
+        ? `leader ${row.accuracy}`
+        : null;
+  return {
+    separation: sep,
+    specialistLine,
+    fleetLine,
+    leaderLine,
+    nLine: `n=${row.n}`,
+    datasetLine: row.dataset ? row.dataset : null,
+  };
 }
 
 export interface AxesState {
@@ -255,6 +340,10 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
         note: w.note ?? base?.note,
         dataset: w.dataset ?? base?.dataset,
         dataset_url: typeof w.dataset_url === "string" ? w.dataset_url : undefined,
+        interval: pair(w.interval),
+        separation: typeof w.separation === "string" ? w.separation : undefined,
+        separation_p: num(w.separation_p),
+        kind: typeof w.kind === "string" ? w.kind : undefined,
       };
     });
 
@@ -270,6 +359,10 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
         status: String(w.status ?? "UNMEASURED"),
         note: w.note ? String(w.note) : undefined,
         leader: w.leader ? String(w.leader) : undefined,
+        separation: typeof w.separation === "string" ? w.separation : undefined,
+        fleet_mean: num(w.fleet_mean) ?? null,
+        dataset: typeof w.dataset === "string" ? w.dataset : undefined,
+        specialist: specialistFrom(w),
       }));
 
     const publicCount = typeof j?.totals?.public_count === "string"
