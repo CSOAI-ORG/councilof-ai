@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { setMetaDescription } from "@/lib/utils";
 
-/* /xrpl-attest — the permissionless-attach proof, human-readable.
+/* /xrpl-attest — Package 2 pointer, DEVNET only.
  *
- * Renders /interop/xrpl-attest-run.json: a devnet-validated demonstration that
- * Council of AI can attach signed measurement evidence to a public ledger about
- * accounts it does not control. The honesty box is not a footnote — it is the
- * product framing: DEVNET capability proof, never an investment or a rating.
+ * Renders /interop/xrpl-attest-run.json. Two hashes, labelled from a live
+ * JSON-RPC `tx` read 2026-08-29: Payment+memo, and XLS-70 CredentialCreate.
+ * Neither exists on mainnet. CredentialCreate is a pointer, not a GSPC grade.
+ * Glass cards (package 1) stay card-v1 on /gspc-verify; this page is not that.
  */
 
 interface RunRecord {
@@ -18,6 +18,11 @@ interface RunRecord {
   subject_account: string;
   memo_attach_tx: string;
   credential_attach_tx: string;
+  tx_labels?: {
+    checked?: string;
+    memo_attach_tx?: { TransactionType?: string; network?: string; ledger_index?: number; mainnet?: string; note?: string; memo_type?: string };
+    credential_attach_tx?: { TransactionType?: string; network?: string; ledger_index?: number; mainnet?: string; note?: string; CredentialType_ascii?: string; URI?: string };
+  };
   explorer: string[];
   coverage?: {
     xrpl: { instrument: string; issuer: string; status: string; tx: string; explorer: string }[];
@@ -42,9 +47,9 @@ export default function XrplAttest() {
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "Ledger attestation — permissionless attach | Council of AI";
+    document.title = "Ledger attestation — XRPL DEVNET pointer | Council of AI";
     setMetaDescription(
-      "Devnet pointer: memo + optional XLS-70 URI to a card URL. XLS-70 Credentials exist on XRPL mainnet as an allowlist primitive. We are not issuing GSPC grades on-ledger.",
+      "DEVNET pointer only: a Payment memo and an XLS-70 CredentialCreate. Both hashes are txnNotFound on mainnet. XLS-70 exists on mainnet; we are not issuing grades on it.",
     );
     fetch("/interop/xrpl-attest-run.json")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
@@ -58,14 +63,15 @@ export default function XrplAttest() {
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
           Interop — evidence that travels
         </p>
-        <h1 className="mt-3 text-4xl font-black text-gray-900">Attestation on the ledger</h1>
+        <h1 className="mt-3 text-4xl font-black text-gray-900">XRPL DEVNET pointer</h1>
         <p className="mt-4 max-w-3xl text-gray-600">
-          A card&apos;s trust path is Ed25519 over SHA-256, not this ledger. This page is a{" "}
-          <strong>devnet pointer</strong>: two transactions that memo or URI-point at signed
-          evidence. XLS-70 Credentials are an on-ledger allowlist (who may pay whom), enabled on
-          mainnet. We use <strong>did:web:csoai.org</strong>, not did:xrpl (XLS-40).
-          DepositPreauth is not a product. We are not issuing GSPC grades as credentials,
-          and this is not a bond, a rating, or a market.
+          A card&apos;s trust path is Ed25519 over SHA-256 at{" "}
+          <a className="text-emerald-700 underline" href="/gspc-verify">/gspc-verify</a>
+          , not this ledger. Two stranger-readable hashes on <strong>XRPL Devnet</strong>{" "}
+          (Payment memo + CredentialCreate) point at a published card index. Both are
+          txnNotFound on mainnet. We use <strong>did:web:csoai.org</strong>, not did:xrpl
+          (XLS-40). DepositPreauth is not a product. We are not issuing GSPC grades as
+          credentials, and this is not a bond, a rating, or a market.
         </p>
 
         {err && <p className="mt-8 text-red-600">Record fetch failed: {err}</p>}
@@ -115,15 +121,21 @@ export default function XrplAttest() {
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-xl border border-emerald-600/20 bg-white p-5 shadow-sm">
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
-                  Attach 1 — Payment memo
+                  Hash 1 — Payment memo
+                </p>
+                <p className="mt-1 font-mono text-[11px] text-emerald-800">
+                  TransactionType: {rec.tx_labels?.memo_attach_tx?.TransactionType || "Payment"} · network:{" "}
+                  {rec.tx_labels?.memo_attach_tx?.network || "xrpl-devnet"} · mainnet:{" "}
+                  {rec.tx_labels?.memo_attach_tx?.mainnet || "txnNotFound"}
                 </p>
                 <p className="mt-2 text-sm text-gray-600">
-                  A 1-drop payment toward the subject account carrying the SHA-256 of a{" "}
+                  A 1-drop <span className="font-mono text-xs">Payment</span> toward the subject
+                  account. Memo type <span className="font-mono text-xs">{rec.tx_labels?.memo_attach_tx?.memo_type || "csoai/attest"}</span>{" "}
+                  carries the SHA-256 of a{" "}
                   <a className="text-emerald-700 underline" href={rec.evidence.source}>
                     live signed card entry
-                  </a>{" "}
-                  and an Ed25519 signature by the scoped key{" "}
-                  <span className="font-mono text-xs">{rec.evidence.signer_kid}</span>.
+                  </a>
+                  . Pointer, not a score. Re-read {rec.tx_labels?.checked || "2026-08-29"} on Devnet RPC; absent on mainnet.
                 </p>
                 <a className="mt-3 block break-all font-mono text-xs text-emerald-700 underline" href={rec.explorer[0]}>
                   {rec.memo_attach_tx}
@@ -131,13 +143,20 @@ export default function XrplAttest() {
               </div>
               <div className="rounded-xl border border-emerald-600/20 bg-white p-5 shadow-sm">
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
-                  Attach 2 — XLS-70 credential (devnet)
+                  Hash 2 — CredentialCreate (XLS-70, DEVNET)
+                </p>
+                <p className="mt-1 font-mono text-[11px] text-emerald-800">
+                  TransactionType: {rec.tx_labels?.credential_attach_tx?.TransactionType || "CredentialCreate"} · network:{" "}
+                  {rec.tx_labels?.credential_attach_tx?.network || "xrpl-devnet"} · mainnet:{" "}
+                  {rec.tx_labels?.credential_attach_tx?.mainnet || "txnNotFound"}
                 </p>
                 <p className="mt-2 text-sm text-gray-600">
-                  A <span className="font-mono text-xs">CredentialCreate</span> on{" "}
-                  <strong>devnet</strong>. Optional <span className="font-mono text-xs">URI</span>{" "}
-                  may point at a card URL. The ledger object is not the card. Unaccepted credentials
-                  authorize nothing. Mainnet XLS-70 exists; we are not minting a GSPC grade on it.
+                  On-ledger <span className="font-mono text-xs">CredentialCreate</span>. Type name{" "}
+                  <span className="font-mono text-xs">{rec.tx_labels?.credential_attach_tx?.CredentialType_ascii || "CSOAI.GSPC.CARD/0.1"}</span>{" "}
+                  is a pointer label. URI{" "}
+                  <span className="font-mono text-xs">{rec.tx_labels?.credential_attach_tx?.URI || rec.evidence.source}</span>.
+                  Unaccepted, so it authorizes nothing. <strong>Not a GSPC grade.</strong> Not
+                  DepositPreauth. Not CSOAI KYC. Do not mint this on mainnet.
                 </p>
                 <a className="mt-3 block break-all font-mono text-xs text-emerald-700 underline" href={rec.explorer[1]}>
                   {rec.credential_attach_tx}
