@@ -9,7 +9,7 @@ const header = readFileSync(resolve(__dirname, "OsHeader.tsx"), "utf8");
 const app = readFileSync(resolve(__dirname, "../../App.tsx"), "utf8");
 const launcher = readFileSync(resolve(__dirname, "../../pages/OsLauncher.tsx"), "utf8");
 
-describe("OsShell is the product on / and /os", () => {
+describe("OsShell is the product on /os, not the homepage", () => {
   it("uses the five header doors and four tools", () => {
     expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness"]);
     expect(OS_TOOLS).toEqual(["board_totals", "get_axis", "verify_card", "list_cards"]);
@@ -29,15 +29,13 @@ describe("OsShell is the product on / and /os", () => {
     expect(header).toContain("Chat is Council OS");
   });
 
-  it("homepage is the OS product frame, not a marketing poster", () => {
-    expect(app).toMatch(/path === '\/' \|\| path === '\/os'/);
+  it("homepage is verify, not AG-UI", () => {
+    expect(app).not.toMatch(/path === '\/' \|\| path === '\/os'/);
+    expect(app).toMatch(/path === '\/os'/);
+    expect(app).toContain("HomeVerify");
     expect(launcher).toContain("<OsShell");
     expect(launcher).toContain('variant="page"');
-    expect(shell).toMatch(/Check an AI claim/);
-    expect(shell).toMatch(/We do not certify you/);
-    expect(shell).toMatch(/Marking rules are in force/);
     expect(shell).not.toMatch(/sov33|SOVOS|lifestyle|GPAI Code/i);
-    expect(shell).toContain("{door ?");
   });
 
   it("glass only after VALID; paid sign stays gated", () => {

@@ -13,6 +13,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
 import OsLauncher from "./pages/OsLauncher";
 import OsHeader from "./components/os/OsHeader";
+import HomeVerify from "./pages/HomeVerify";
 import { Footer } from "./components/Footer";
 import WidgetLayout from "./components/widget/WidgetLayout";
 import WidgetCourses from "./components/widget/WidgetCourses";
@@ -543,10 +544,9 @@ function App() {
       </ErrorBoundary>
     );
   }
-  // `/` and `/os` (plus hops /ag-ui /chat /console /sov-os) are ONE PRODUCT FRAME.
-  // The homepage IS Council OS — not a marketing poster with a third "Council OS"
-  // button. No marketing Header/Footer. No overlay badge (that is a second UI).
-  if (path === '/' || path === '/os' || path === '/ag-ui' || path === '/chat' || path === '/console' || path === '/sov-os') {
+  // AG-UI is not the homepage. `/` is verify for a stranger.
+  // `/os` stays the internal OS host; hops /ag-ui /chat /console /sov-os follow it.
+  if (path === '/os' || path === '/ag-ui' || path === '/chat' || path === '/console' || path === '/sov-os') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="light">
@@ -586,7 +586,7 @@ function App() {
                 <ArchivedBanner />
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
                   <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
-                  <Route path="/" component={NewHomeV3} />
+                  <Route path="/" component={HomeVerify} />
                   <Route path="/home-v2" component={NewHomeV2} />
                   <Route path="/home-v3" component={NewHomeV3} />
                   <Route path="/motion-lab" component={MotionLab} />

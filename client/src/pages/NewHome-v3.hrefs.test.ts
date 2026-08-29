@@ -5,10 +5,8 @@ import { hrefFor } from "@/components/home/ToolStack";
 
 const home = readFileSync(resolve(__dirname, "NewHome-v3.tsx"), "utf8");
 
-describe("homepage is Council OS, not a poster", () => {
-  it("inlines OsShell as the hero — same product as /os", () => {
-    expect(home).toMatch(/import OsShell from "\.\.\/components\/os\/OsShell"/);
-    expect(home).toContain('<OsShell variant="hero"');
+describe("/home-v3 is not the live homepage", () => {
+  it("does not reintroduce govbench or lifestyle worlds", () => {
     expect(home).not.toContain("<HeroBoard");
     expect(home).not.toContain("<HomeWorlds");
     expect(home).toContain("<LobbyVerifyPane");
