@@ -3,7 +3,7 @@
  *
  * Third parties embed it as:
  *   <iframe src="https://councilof.ai/embed/verify?card=/signals/cross-border-card.signed.json"
- *           width="580" height="420" style="border:0" title="Council of AI — verify signed card"></iframe>
+ *           width="420" height="340" style="border:0" title="Verify a signed measurement card"></iframe>
  *
  * The widget itself lives as a static asset at /embed/verify.html (single source of
  * truth). This function serves those exact bytes at the extension-less path so the

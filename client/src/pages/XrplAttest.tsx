@@ -44,7 +44,7 @@ export default function XrplAttest() {
   useEffect(() => {
     document.title = "Ledger attestation — permissionless attach | Council of AI";
     setMetaDescription(
-      "Devnet-validated proof: Council of AI attaches signed measurement evidence to the XRP Ledger about accounts it does not control — memo + XLS-70 credential, stranger-verifiable.",
+      "Devnet pointer: memo + optional XLS-70 URI to a card URL. XLS-70 Credentials exist on XRPL mainnet as an allowlist primitive. We are not issuing GSPC grades on-ledger.",
     );
     fetch("/interop/xrpl-attest-run.json")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
@@ -60,11 +60,11 @@ export default function XrplAttest() {
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">Attestation on the ledger</h1>
         <p className="mt-4 max-w-3xl text-gray-600">
-          The tokenized-asset market has ratings and compliance data — but every production
-          example flows <em>through</em> the issuer&apos;s cooperation. The missing layer is an{" "}
-          <strong>independent</strong> attestor: signed evidence about assets the attestor does not
-          issue, attached with nobody&apos;s permission, verifiable by anyone. This page is a
-          validated demonstration of exactly that.
+          A card&apos;s trust path is Ed25519 over SHA-256, not this ledger. This page is a{" "}
+          <strong>devnet pointer</strong>: two transactions that memo or URI-point at signed
+          evidence. XLS-70 Credentials are an on-ledger allowlist (who may pay whom), enabled on
+          mainnet. We are not issuing GSPC grades as credentials, and this is not a bond, a
+          rating, or a market.
         </p>
 
         {err && <p className="mt-8 text-red-600">Record fetch failed: {err}</p>}
@@ -96,14 +96,13 @@ export default function XrplAttest() {
               </div>
               <div className="rounded-xl border border-emerald-600/20 bg-white p-5 shadow-sm">
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
-                  Attach 2 — XLS-70 credential
+                  Attach 2 — XLS-70 credential (devnet)
                 </p>
                 <p className="mt-2 text-sm text-gray-600">
-                  An on-ledger <span className="font-mono text-xs">CredentialCreate</span> naming an
-                  account we do not control, type{" "}
-                  <span className="font-mono text-xs">CSOAI.GSPC.CARD/0.1</span>, URI pointing at the
-                  public signed index. Unaccepted credentials authorize nothing — the attach itself
-                  is the demonstration.
+                  A <span className="font-mono text-xs">CredentialCreate</span> on{" "}
+                  <strong>devnet</strong>. Optional <span className="font-mono text-xs">URI</span>{" "}
+                  may point at a card URL. The ledger object is not the card. Unaccepted credentials
+                  authorize nothing. Mainnet XLS-70 exists; we are not minting a GSPC grade on it.
                 </p>
                 <a className="mt-3 block break-all font-mono text-xs text-emerald-700 underline" href={rec.explorer[1]}>
                   {rec.credential_attach_tx}
@@ -156,17 +155,17 @@ export default function XrplAttest() {
             {rec.registry && (
               <div className="mt-8 rounded-xl border border-emerald-600/20 bg-white p-5 shadow-sm">
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
-                  Coverage registry — the full XRPL RWA universe
+                  Coverage registry — named instruments, not a market
                 </p>
                 <p className="mt-2 text-sm text-gray-600">
-                  All <strong>{rec.registry.counts.named}</strong> named XRPL tokenized-RWA
-                  instruments, accounted for honestly:{" "}
+                  The two transactions on this page are <strong>devnet</strong>. Counts below are
+                  the published run record for named XRPL instruments:{" "}
+                  <strong>{rec.registry.counts.named}</strong> named,{" "}
                   <strong>{rec.registry.counts.mainnet_verified_and_attested}</strong>{" "}
-                  mainnet-verified and attested on-ledger,{" "}
+                  listed as mainnet-verified in that record,{" "}
                   <strong>{rec.registry.counts.not_located}</strong> listed but{" "}
                   <em>not attested</em> because no public issuer address was independently
-                  confirmable. Nothing is faked to reach a count — the reference layer earns
-                  trust by what it refuses to assert. Queryable index:{" "}
+                  confirmable. This is coverage accounting, not a bond or a grade. Queryable index:{" "}
                   <a className="text-emerald-700 underline" href={rec.registry.corpus_index}>
                     attestation-corpus.json
                   </a>.
