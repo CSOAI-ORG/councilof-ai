@@ -27,8 +27,9 @@ standards compliance matrix: CRA Regulation (EU) 2024/2847.
   from incident log `docs/incidents/`).
 - **72h:** vulnerability notification (severity, affected products, mitigations).
 - **14d:** final report (root cause, remediation, disclosure).
-- Duty holder: K3 lane (with on-call rotation noted in `docs/incidents/RUNBOOK.md` — to be
-  created before 2026-09-01).
+- Duty holder: K3 lane. Operating procedure: `docs/incidents/RUNBOOK.md`
+  (opened 2026-08-29). Register pattern: `docs/incidents/REGISTER.json`.
+  This is not a conformity assessment.
 
 ## SBOM regeneration
 ```

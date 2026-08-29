@@ -141,6 +141,11 @@ export default function CraReadinessKit() {
         </p>
         <p className="text-zinc-500 text-sm mb-10">
           A template plus tooling — not legal advice, not a conformity assessment.
+          We run the same clocks on ourselves:{" "}
+          <a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/incidents/RUNBOOK.md" className="text-zinc-300 underline underline-offset-2 hover:text-white">
+            docs/incidents/RUNBOOK.md
+          </a>
+          . That file is an operating procedure, not a CE mark.
         </p>
 
         {/* Section: deadline mechanics */}
