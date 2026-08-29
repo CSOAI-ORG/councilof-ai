@@ -122,6 +122,14 @@ export default function OsHeader() {
         <div className="flex items-center gap-2">
           {!panel && (
           <>
+          <button
+            type="button"
+            onClick={() => document.getElementById("os-chat")?.focus()}
+            className={`rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800 ${FOCUS}`}
+            title="Chat is Council OS — the AG UI"
+          >
+            Chat
+          </button>
           {!atHome && (
           <Link
             href="/"

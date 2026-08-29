@@ -5,6 +5,7 @@ import { DOORS } from "./doors";
 import { OS_EMPTY, OS_PROMPT, OS_TOOLS } from "./osChat";
 
 const shell = readFileSync(resolve(__dirname, "OsShell.tsx"), "utf8");
+const header = readFileSync(resolve(__dirname, "OsHeader.tsx"), "utf8");
 const app = readFileSync(resolve(__dirname, "../../App.tsx"), "utf8");
 const launcher = readFileSync(resolve(__dirname, "../../pages/OsLauncher.tsx"), "utf8");
 
@@ -16,6 +17,11 @@ describe("OsShell is the product on / and /os", () => {
     expect(shell).toContain("OS_EMPTY");
     expect(OS_PROMPT).toBe("Paste a card, name an axis, or ask the board.");
     expect(OS_EMPTY).toBe("Free verify. Paste never leaves this browser.");
+    expect(shell).toContain('id="os-chat"');
+    expect(shell).toContain('data-testid="os-tabs"');
+    expect(shell).not.toContain("showTabs");
+    expect(header).toContain('getElementById("os-chat")');
+    expect(header).toContain("Chat is Council OS");
   });
 
   it("homepage is the OS product frame, not a marketing poster", () => {
