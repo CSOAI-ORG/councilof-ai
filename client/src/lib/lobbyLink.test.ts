@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LOBBY_TASKS, lobbyHref, lobbyTaskHref, osKeepsDoorQuery, resolveIntent } from "./lobbyLink";
+import { LOBBY_TASKS, lobbyHref, lobbyTaskHref, osDoorHref, osKeepsDoorQuery, osPanelHref, resolveIntent } from "./lobbyLink";
 
 describe("lobbyLink — demographic task registry", () => {
   const demographicTasks = [
@@ -34,8 +34,21 @@ describe("lobbyLink — demographic task registry", () => {
     expect(osKeepsDoorQuery("/os", "lobby=assess&task=pricing-overview")).toBe(true);
     expect(osKeepsDoorQuery("/os", "lobby=assess&task=enterprise-start")).toBe(true);
     expect(osKeepsDoorQuery("/os", "lobby=verify")).toBe(true);
+    expect(osKeepsDoorQuery("/os", "lobby=cards")).toBe(true);
+    expect(osKeepsDoorQuery("/os", "embed=1&lobby=board")).toBe(true);
     expect(osKeepsDoorQuery("/os", "lobby=home&ask=hello")).toBe(false);
     expect(osKeepsDoorQuery("/", "lobby=assess&task=pricing-overview")).toBe(false);
+  });
+
+  it("mints a harness panel URL without using withEmbed on /os", () => {
+    expect(osPanelHref("board")).toBe("/os?embed=1&lobby=board");
+    expect(osPanelHref("verify")).toBe("/os?embed=1&lobby=verify");
+    expect(osPanelHref("cards")).toBe("/os?embed=1&lobby=cards");
+  });
+
+  it("preserves embed=1 on a door hop and does not invent it", () => {
+    expect(osDoorHref("verify", "embed=1&lobby=board")).toBe("/os?lobby=verify&embed=1");
+    expect(osDoorHref("cards", "lobby=board")).toBe("/os?lobby=cards");
   });
 
   it("resolves regulator brief with context", () => {

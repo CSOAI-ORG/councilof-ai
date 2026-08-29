@@ -103,12 +103,12 @@ export default function FinancialAxes() {
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-600">
           The GSPC board{board.live || board.axes ? ` — ${board.public_count}` : ""} — financial half
         </p>
-        <h1 className="mt-3 text-4xl font-black text-gray-900">Financial axis</h1>
+        <h1 className="mt-3 text-4xl font-black text-gray-900">Financial axis — UNMEASURED first</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
-          The financial and domain axes of the board{familySize === null ? "" : ` — ${familySize} of them, ${measuredCount} measured`}. Same spine, same
-          three-state grammar as the behavioural half: <strong>MEASURED</strong> means a deterministic rubric
-          and real, recomputable data exist and a run is signed; <strong>UNMEASURED</strong> means
-          the slot is declared and public but not yet built. We never claim an axis before it is
+          Empty financial cells stay empty. Most of this half is <strong>UNMEASURED</strong>
+          {familySize === null ? "" : ` (${unmeasuredCount} of ${familySize} slots)`}
+          — declared, public, not built. <strong>MEASURED</strong> means a deterministic rubric
+          and a signed run exist. We never claim an axis before it is
           measured. Read live from{" "}
           <a className="font-semibold text-emerald-700 underline" href="/interop/financial-axes.json">
             /interop/financial-axes.json

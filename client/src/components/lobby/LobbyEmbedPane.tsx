@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { FOCUS, MEASURE, PRIMARY, SP, TYPE } from "./glass";
 import { CopyBlock, PaneHead, WireNotice } from "./paneKit";
 import { quotableWire, stateWord, useBoardWire, useSignalCards } from "./boardWire";
+import { badgeSnippet, cardSnippet, CARD_EMBED_HEIGHT, CARD_EMBED_WIDTH } from "@/lib/embedSnippet";
+import JoinedSpecsFooter from "@/components/JoinedSpecsFooter";
 
 /**
  * LobbyEmbedPane — the white-label embed kit, NATIVE in Council OS.
@@ -58,29 +60,8 @@ export default function LobbyEmbedPane({
     ? `${axis} — measured by Council of AI`
     : "Council of AI — the board's own measured count";
 
-  const badgeSnippet = useMemo(
-    () =>
-      `<!-- Council of AI live status badge. Generated per request from the same\n` +
-      `     data GET /api/gspc serves — it can never show a number the board does not. -->\n` +
-      `<a href="${ORIGIN}/gspc-verify">\n` +
-      `  <img src="${ORIGIN}${badgeSrc}"\n` +
-      `       alt="${badgeAlt}" height="20">\n` +
-      `</a>`,
-    [badgeSrc, badgeAlt],
-  );
-
-  const cardSnippet = useMemo(
-    () =>
-      cardPath
-        ? `<!-- Self-verifying signed card. The visitor's browser recomputes the content\n` +
-          `     hash and checks the Ed25519 signature against the published key. Any edit\n` +
-          `     to the card's bytes breaks the signature and the widget shows it red. -->\n` +
-          `<iframe src="${ORIGIN}/embed/verify?card=${cardPath}"\n` +
-          `        width="580" height="440" loading="lazy" style="border:0;max-width:100%"\n` +
-          `        title="Council of AI — verify a signed measurement card"></iframe>`
-        : "",
-    [cardPath],
-  );
+  const badgePaste = useMemo(() => badgeSnippet(axis, ORIGIN), [axis]);
+  const cardPaste = useMemo(() => (cardPath ? cardSnippet(cardPath, ORIGIN) : ""), [cardPath]);
 
   return (
     <div className={`${SP.panel} h-full overflow-y-auto`}>
@@ -88,6 +69,7 @@ export default function LobbyEmbedPane({
         Pick a live axis or a published signed card. The preview below is the real endpoint, not a
         mock-up — what you see here is what a visitor to your site sees. This is measurement and
         attestation, never a certification or a conformity mark, and verification is free forever.
+        The snippet hashes the same card-v1 bytes. No extra kinds.
       </PaneHead>
 
       <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label="Which embed">
@@ -163,7 +145,7 @@ export default function LobbyEmbedPane({
                   "The overall badge states the board's own derived count — never a typed slot number."
                 )}
               </p>
-              <CopyBlock text={badgeSnippet} label="copy-paste · HTML" />
+              <CopyBlock text={badgePaste} label="copy-paste · HTML" />
             </div>
           </section>
         )
@@ -219,14 +201,14 @@ export default function LobbyEmbedPane({
                     <iframe
                       key={cardPath}
                       src={`/embed/verify.html?card=${cardPath}`}
-                      width={580}
-                      height={440}
+                      width={CARD_EMBED_WIDTH}
+                      height={CARD_EMBED_HEIGHT}
                       loading="lazy"
                       style={{ border: 0, maxWidth: "100%" }}
-                      title="Council of AI — verify a signed measurement card"
+                      title="Verify a signed measurement card"
                       className="mt-3 rounded-xl"
                     />
-                    <CopyBlock text={cardSnippet} label="copy-paste · HTML" />
+                    <CopyBlock text={cardPaste} label="copy-paste · HTML" />
                   </>
                 ) : (
                   <p className={`mt-2 ${MEASURE} ${TYPE.body}`}>
@@ -277,6 +259,7 @@ export default function LobbyEmbedPane({
             Verify a card yourself
           </button>
         </div>
+        <JoinedSpecsFooter />
       </div>
     </div>
   );

@@ -94,6 +94,19 @@ const EXISTING = [
   "/acr-agi        /rating-the-raters/     308",
   "/acr-agi/       /rating-the-raters/     308",
   "/method         /methodology            308",
+  // AEO short doors from LIVE-GAP-AUDIT. Destinations already ship as blog
+  // (or /colorado-ai-act). Do not invent an SS 584 seed page — pin the
+  // existing explainer. After /answers merges, the blog still 200s.
+  "/scitt          /blog/scitt-ai-supply-chain-transparency/  308",
+  "/scitt/         /blog/scitt-ai-supply-chain-transparency/  308",
+  "/colorado       /colorado-ai-act/         308",
+  "/colorado/      /colorado-ai-act/         308",
+  "/ss584          /blog/third-party-ai-audit-standards-ss584-isae3000/  308",
+  "/ss584/         /blog/third-party-ai-audit-standards-ss584-isae3000/  308",
+  "/nist-ai-600    /blog/nist-ai-600-1-profile-mapping/  308",
+  "/nist-ai-600/   /blog/nist-ai-600-1-profile-mapping/  308",
+  "/containment    /blog/what-is-monitored-containment/  308",
+  "/containment/   /blog/what-is-monitored-containment/  308",
   "/legal                  /disclaimers                 308",
   "/vulnerability          /vulnerability-disclosure    308",
   "/gspc                   /gspc-scoreboard             308",

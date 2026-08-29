@@ -17,7 +17,7 @@ describe("Series A SKU lock", () => {
 
   it("keeps Verify free and OS as the workspace", () => {
     expect(SKUS[0].href).toBe("/gspc-verify");
-    expect(SKUS[1].href).toBe("/os");
+    expect(SKUS[1].href).toBe("/os?lobby=home");
     expect(SKUS[0].tag.toLowerCase()).toMatch(/free/);
   });
 });

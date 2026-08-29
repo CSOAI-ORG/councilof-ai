@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { LOBBY_TABS } from "@/components/lobby/tabs";
-import { openLobby, type LobbyTaskId } from "@/lib/lobbyLink";
+import { type LobbyTaskId } from "@/lib/lobbyLink";
 import { useBoardCount } from "@/lib/boardCount";
 import { EUNOMIA_AXES } from "@/data/eunomia";
 import type { LobbyTabId } from "@/components/lobby/tabs";
@@ -14,13 +14,9 @@ import type { LobbyTabId } from "@/components/lobby/tabs";
  * they could DO here. This band answers the other question: nine tools, each with the
  * pain it removes stated in the reader's words, and a door that opens the tool.
  *
- * EVERY DOOR OPENS INSIDE COUNCIL OS. Each tile's href is a real, copyable,
- * crawlable URL (`/os?lobby=<pane>` or `/os?lobby=assess&task=<task>`) — the
- * deep-link contract in lib/lobbyLink.ts — and the click handler calls openLobby() so an in-page click
- * opens the pane in place instead of navigating away. Two tiles reach a live PAGE
- * rather than a rail pane; they go through the LOBBY_TASKS registry (which carries a
- * `route`), because the URL contract deliberately has no ?route= param and a route
- * must be reviewable in one place.
+ * EACH TILE IS A REAL PAGE HREF. Board and OS go to /os?lobby=board or
+ * /os?lobby=home. Verify is /gspc-verify. Assess, evidence, embed, report,
+ * insurers, registers are pages. No /?lobby= dump and no openLobby intercept.
  *
  * NINE, NOT NINE-ISH. Every tile below has a destination a stranger can reach today.
  * A tool with no destination is not on this band at all, and a tool whose destination
@@ -76,7 +72,7 @@ const TOOLS: Tool[] = [
       "Otherwise each answer lives on a different page, and nothing you find on one is usable on the next.",
     image: "/images/band/hardened.png",
     alt: "A field of pale solids joined by a lattice of green light",
-    door: { kind: "route", path: "/os" },
+    door: { kind: "route", path: "/os?lobby=home" },
   },
   {
     id: "tool-board",
@@ -187,29 +183,29 @@ const TOOLS: Tool[] = [
   },
 ];
 
-function hrefFor(door: Door): string {
+export function hrefFor(door: Door): string {
   if (door.kind === "route") return door.path;
   if (door.kind === "pane") {
-    const lobby =
-      door.pane === "measured" || door.pane === "ras"
-        ? "assess"
-        : door.pane === "board" ||
-            door.pane === "verify" ||
-            door.pane === "space" ||
-            door.pane === "harness" ||
-            door.pane === "assess"
-          ? door.pane
-          : "home";
-    return `/os?lobby=${lobby}`;
+    if (door.pane === "verify") return "/gspc-verify";
+    if (door.pane === "measured" || door.pane === "ras" || door.pane === "assess") return "/assess";
+    if (door.pane === "evidence") return "/evidence-rail";
+    if (door.pane === "embed") return "/embed";
+    if (door.pane === "watchdog") return "/report";
+    if (door.pane === "cards" || door.pane === "harness" || door.pane === "space") {
+      return `/os?lobby=${door.pane}`;
+    }
+    return "/os?lobby=board";
   }
+  if (door.task === "insurer-rail") return "/insurers";
+  if (door.task === "specialist-registers") return "/registers";
   if (
     door.task === "pricing-overview" ||
     door.task === "enterprise-start" ||
     door.task === "get-measured"
   ) {
-    return `/os?lobby=assess&task=${door.task}`;
+    return "/assess";
   }
-  return `/os?lobby=home&task=${door.task}`;
+  return "/os?lobby=board";
 }
 
 /** The live figure a tile is entitled to show, or null when it has none. */
@@ -245,16 +241,6 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
     <article id={tool.id} aria-labelledby={`${tool.id}-name`} className="h-full">
       <a
         href={href}
-        onClick={(e) => {
-          // Plain left-click opens the pane in place. Modified clicks (new tab,
-          // new window, download) are left entirely alone — the href is real.
-          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-          // Route doors navigate directly — do not open lobby on homepage.
-          if (tool.door.kind === "route") return;
-          e.preventDefault();
-          if (tool.door.kind === "pane") openLobby({ pane: tool.door.pane });
-          else openLobby({ task: tool.door.task });
-        }}
         className="card-quiet group flex h-full flex-col overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
       >
         <img

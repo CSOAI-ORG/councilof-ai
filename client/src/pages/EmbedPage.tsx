@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
+import { badgeSnippet, cardSnippet, CARD_EMBED_HEIGHT, CARD_EMBED_WIDTH } from "@/lib/embedSnippet";
+import JoinedSpecsFooter from "@/components/JoinedSpecsFooter";
 
 /**
  * /embed — the white-label "Powered by Council of AI" onboarding page.
@@ -48,20 +50,9 @@ export default function EmbedPage() {
     );
   }, []);
 
-  const badgeSnippet =
-    `<!-- Live per-axis status badge — reflects the real board, never a fabricated number -->\n` +
-    `<a href="${ORIGIN}/gspc-verify">\n` +
-    `  <img src="${ORIGIN}/api/badge?axis=governance"\n` +
-    `       alt="governance — measured by Council of AI" height="20">\n` +
-    `</a>`;
-
-  const overallSnippet = `<img src="${ORIGIN}/api/badge" alt="Council of AI — measured axis" height="20">`;
-
-  const iframeSnippet =
-    `<!-- Self-verifying signed card — Ed25519 checked in the visitor's browser -->\n` +
-    `<iframe src="${ORIGIN}/embed/verify?card=/signals/cross-border-card.signed.json"\n` +
-    `        width="580" height="440" loading="lazy" style="border:0;max-width:100%"\n` +
-    `        title="Council of AI — verify a signed measurement card"></iframe>`;
+  const axisBadge = badgeSnippet("governance", ORIGIN);
+  const overallSnippet = badgeSnippet("", ORIGIN);
+  const iframeSnippet = cardSnippet("/signals/cross-border-card.signed.json", ORIGIN);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -82,7 +73,9 @@ export default function EmbedPage() {
             badge and a self-verifying card. The signed verdict travels with its own bytes: your
             visitors recompute the hash and check the Ed25519 signature in their own browser, against
             the published key, without trusting you <em>or</em> us.{" "}
-            <strong className="text-emerald-50">Verification is free forever.</strong>
+            <strong className="text-emerald-50">Verification is free forever.</strong> That is the
+            n-site spray: your origin, our 3kb glass, their visitors checking the same bytes. We do
+            not fork your stack into CSOAI-ORG.
           </p>
         </div>
       </section>
@@ -164,7 +157,7 @@ export default function EmbedPage() {
             </div>
             <div>
               <p className="mb-2 text-[12px] uppercase tracking-wide text-emerald-200/60">Copy-paste — one axis</p>
-              <Snippet code={badgeSnippet} />
+              <Snippet code={axisBadge} />
             </div>
             <div>
               <p className="mb-2 text-[12px] uppercase tracking-wide text-emerald-200/60">Copy-paste — overall count</p>
@@ -191,8 +184,8 @@ export default function EmbedPage() {
               <p className="mb-3 text-[12px] uppercase tracking-wide text-emerald-200/60">Live widget</p>
               <iframe
                 src="/embed/verify.html?card=/signals/cross-border-card.signed.json"
-                width={580}
-                height={440}
+                width={CARD_EMBED_WIDTH}
+                height={CARD_EMBED_HEIGHT}
                 loading="lazy"
                 style={{ border: 0, maxWidth: "100%" }}
                 title="Council of AI — verify a signed measurement card"
@@ -248,7 +241,14 @@ export default function EmbedPage() {
           <Link href="/methodology" className="text-emerald-300 hover:underline">
             Read the methodology →
           </Link>
+          <Link href="/licensing-agreement" className="text-emerald-300 hover:underline">
+            Licence (invoice, not a token) →
+          </Link>
+          <Link href="/distribution-integrity" className="text-emerald-300 hover:underline">
+            Represented is not distributed →
+          </Link>
         </div>
+        <JoinedSpecsFooter variant="dark" />
       </div>
     </div>
   );

@@ -20,11 +20,12 @@
 export const ANCHORING_CLAIM =
   "A card's trust path is an Ed25519 signature over a SHA-256 hash chain, verifiable " +
   "offline against did:web:csoai.org — no blockchain and no timestamp authority sits in " +
-  "that path; our XRP Ledger work is a separate, devnet-proven demonstration of attaching " +
-  "that same signed evidence on-ledger, and mainnet is planned, not live.";
+  "that path. The /xrpl-attest page is a separate DEVNET pointer (memo + optional XLS-70 " +
+  "URI to a card URL). XLS-70 Credentials are live on XRPL mainnet as an allowlist primitive; " +
+  "we are not issuing GSPC grades on-ledger.";
 
 /** Short badge form for nav entries and link descriptions that mention the ledger. */
-export const XRPL_STATUS_LABEL = "devnet-proven; mainnet planned";
+export const XRPL_STATUS_LABEL = "devnet pointer — not a grade";
 
 /**
  * Plain-language disambiguation for the term "Layer 0".

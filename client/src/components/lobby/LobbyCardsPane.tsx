@@ -174,6 +174,7 @@ export default function LobbyCardsPane({
         sha256 of its canonical body, and checks the Ed25519 signature against{" "}
         <code className="font-mono text-[12px]">did:web:csoai.org#card-attestation-1</code> — in your
         browser, with no account. The result is something you established, not something we told you.
+        Card-v1 only — VALID · INVALID · UNCHECKABLE. No attachment table on the card.
       </PaneHead>
 
       {state.phase === "loading" && (

@@ -32,17 +32,17 @@ const REGIMES: { name: string; detail: string }[] = [
 ];
 
 export default function CobolBridge() {
-  useEffect(() => { document.title = "CobolBridge — enterprise on-ramp to signed compliance evidence | CSOAI"; }, []);
+  useEffect(() => { document.title = "CobolBridge — legacy system to signed evidence | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white">
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-20">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(720px 380px at 82% -12%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Enterprise on-ramp · legacy modernization → continuous compliance evidence</p>
-          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">From a COBOL migration to signed, continuous compliance evidence</h1>
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Evidence rail · legacy system → signed evidence — not a market</p>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">From a COBOL copybook to signed evidence — not a bond</h1>
           <p className="mt-5 max-w-3xl text-lg text-emerald-50/90">
-            Banks and insurers modernizing legacy COBOL have to prove data-lineage and control continuity for DORA, Basel III/IV, SOX and Solvency II — exactly while the core systems are changing. The migration itself produces that evidence. <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="underline decoration-emerald-400/60 underline-offset-2 hover:text-white">cobolbridge.ai</a> modernizes the code and emits audit-ready lineage; Council of AI turns that lineage into an independent, signed measurement pack.
+            Banks and insurers modernizing legacy COBOL still need lineage they can show a supervisor. The migration can emit that lineage. <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="underline decoration-emerald-400/60 underline-offset-2 hover:text-white">cobolbridge.ai</a> modernizes the code and records the mapping; Council of AI turns published lineage into an independent, Ed25519-signed measurement pack. Empty financial cells on the board stay empty. This is not a tokenized market and not a rating.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Open cobolbridge.ai →</a>

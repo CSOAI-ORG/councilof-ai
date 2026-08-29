@@ -77,6 +77,8 @@ const Payg = lazy(() => import("./pages/Payg"));
 const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const Blog = lazy(() => import("./pages/Blog"));
+const AnswersIndex = lazy(() => import("./pages/Answers"));
+const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
 const Recommendations = lazy(() => import("./pages/Recommendations"));
 const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
@@ -388,11 +390,12 @@ const ROUTE_TITLES: Record<string, string> = {
   "/badges": "Governance badges — wear your measured status | CSOAI",
   "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
-  "/xrpl-attest": "Ledger attestation — devnet-proven; mainnet planned | Council of AI",
+  "/xrpl-attest": "Ledger attestation — devnet pointer, not a grade | Council of AI",
   "/claims-register": "Claims register — every public claim, its evidence, its status | CSOAI",
   "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
+  "/answers": "Answers — measurement explainers | Council of AI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
   "/refutation-ledger": "Refutation Ledger | CSOAI",
@@ -420,7 +423,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
   "/gpai-evidence": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
   "/cra-readiness": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
-  "/cobolbridge": "CobolBridge — enterprise on-ramp to signed compliance evidence | CSOAI",
+  "/cobolbridge": "CobolBridge — legacy system to signed evidence | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "System Status | CSOAI",
@@ -432,7 +435,10 @@ const ROUTE_TITLES: Record<string, string> = {
   "/globe": "Global Regulation Globe | CSOAI",
   "/tour": "Platform Tour | CSOAI",
   "/demo": "Demo | CSOAI",
-  "/assess": "AI Act Assessment | CSOAI",
+  "/assess": "Get measured — free assessment | Council of AI",
+  "/login": "Sign in | Council of AI",
+  "/dashboard": "Council software | Council of AI",
+  "/os": "Council OS | Council of AI",
   "/enterprise": "Enterprise | CSOAI",
   "/government": "Government | CSOAI",
   "/regulators": "Regulators | CSOAI",
@@ -719,6 +725,8 @@ function App() {
                   <Route path="/chat" component={AgUiBridge} />
                   <Route path="/rankings" component={RankingsBridge} />
                   <Route path="/methodology" component={Methodology} />
+                  <Route path="/answers/:slug" component={AnswerPage} />
+                  <Route path="/answers" component={AnswersIndex} />
                   <Route path="/ai-act-benchmark" component={AiActBenchmark} />
                   <Route path="/provbench" component={ProvBench} />
                   <Route path="/layer0" component={Layer0} />

@@ -27,6 +27,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearch } from "wouter";
 import { LOBBY_TABS, type LobbyTabId } from "@/components/lobby/tabs";
+import { EMBED_PARAM } from "@/lib/embed";
 
 export const LOBBY_PARAM = "lobby";
 export const ASK_PARAM = "ask";
@@ -326,12 +327,39 @@ export const OS_DOOR_LOBBIES = new Set([
   "home",
   "board",
   "verify",
+  "cards",
   "space",
   "measured",
   "ras",
   "assess",
   "harness",
 ]);
+
+/** Native instrument ids a harness panel may open. */
+export const OS_PANEL_LOBBIES = ["board", "verify", "cards", "harness"] as const;
+export type OsPanelLobby = (typeof OS_PANEL_LOBBIES)[number];
+
+/**
+ * Harness AG-UI panel URL. Top-level `/os?embed=1&lobby=board` — native pane,
+ * site chrome off. Not an iframe of /os, and not minted by withEmbed()
+ * (that helper must never stamp embed=1 onto /os, or OS nests inside OS).
+ */
+export function osPanelHref(lobby: OsPanelLobby = "board"): string {
+  return `/os?${EMBED_PARAM}=1&${LOBBY_PARAM}=${lobby}`;
+}
+
+/**
+ * Door hop on /os. Keeps embed=1 when already a harness panel so tab switches
+ * stay in the panel. Never invents embed=1 (that is osPanelHref).
+ */
+export function osDoorHref(lobby: string, currentSearch = ""): string {
+  const next = new URLSearchParams();
+  next.set(LOBBY_PARAM, lobby);
+  const raw = currentSearch.startsWith("?") ? currentSearch.slice(1) : currentSearch;
+  const cur = new URLSearchParams(raw);
+  if (cur.get(EMBED_PARAM) === "1") next.set(EMBED_PARAM, "1");
+  return `/os?${next.toString()}`;
+}
 
 export const OS_ASSESS_TASKS = new Set([
   "pricing-overview",

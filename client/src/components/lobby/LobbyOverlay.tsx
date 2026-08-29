@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DEFAULT_TAB, LOBBY_TABS, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
+import { DEFAULT_TAB, LOBBY_TABS, isOsRailTab, isSiteDoor, paneLoadFor, softwareLeavesOs, SOFTWARE_HREF, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
+import { isUnframeable, withoutEmbed } from "@/lib/unframeable";
 import LobbyHeader, { ColiseumGlyph } from "./LobbyHeader";
 import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
 import LobbySideRail from "./LobbySideRail";
@@ -21,7 +22,8 @@ import {
   panelStyle, scrimStyle,
 } from "./glass";
 import { LOBBY_TASKS, type LobbyIntent } from "@/lib/lobbyLink";
-import { isEmbedNav, tabForPath, withEmbed } from "@/lib/embed";
+import { withEmbed } from "@/lib/embed";
+import { applyEmbedNav } from "./handleEmbedNav";
 import { setOsOpen } from "@/lib/osChrome";
 import { isLibraried } from "@/data/library-ia";
 import {
@@ -101,25 +103,6 @@ function readSize(): "comfortable" | "full" {
   return "full";
 }
 
-/**
- * A readable name for a framed route the rail does not own.
- *
- * It used to be `e.data.title || path` verbatim. A page that has not set its own
- * <title> carries the site's, so opening the Workbench pane signed out (which
- * redirects to /login) put "Council of AI — we measure, we sign, we re-attest"
- * in the pane header as though that were the name of the surface. A title is used
- * only when it looks like a PAGE name: the first segment, short enough to be one,
- * and not the estate's own brand — "Council of AI" names the whole site, so as a
- * pane name it tells the reader strictly less than the path does.
- */
-const SITE_NAMES = /^(council of ai|csoai|councilof\.ai)$/i;
-
-function paneNameFor(title: unknown, path: string): string {
-  const raw = typeof title === "string" ? title.split(/\s[|\u2014]\s/)[0].trim() : "";
-  if (!raw || raw.length > 40 || SITE_NAMES.test(raw)) return path;
-  return raw;
-}
-
 /** Tabbable guard that bounces focus back into the dialog. See useFocusTrap. */
 function FocusSentinel({ onFocus }: { onFocus: () => void }) {
   return <div data-focus-sentinel tabIndex={0} aria-hidden="true" onFocus={onFocus} className="sr-only" />;
@@ -134,7 +117,12 @@ export default function LobbyOverlay({
 }) {
   const [alpha, setAlpha] = useState<number>(readAlpha);
   // An intent present at mount picks the pane; otherwise the last pane is restored.
-  const [tabId, setTabId] = useState<LobbyTabId>(() => intent?.pane ?? readTab());
+  const [tabId, setTabId] = useState<LobbyTabId>(() => {
+    const id = intent?.pane ?? readTab();
+    const t = tabById(id);
+    if (!isOsRailTab(id) || (t.path && (isUnframeable(t.path) || isSiteDoor(t.path)))) return DEFAULT_TAB;
+    return id;
+  });
   const [leftOpen, setLeftOpen] = useState(() => readOpen(LEFT_KEY, LEFT_DEFAULT));
   const [rightOpen, setRightOpen] = useState(() => readOpen(RIGHT_KEY, RIGHT_DEFAULT));
   // The composer is opened on demand, and stays open once a conversation exists.
@@ -149,12 +137,15 @@ export default function LobbyOverlay({
    *  seeding a path that is never framed — the header chip lied on arrival). */
   const [framePath, setFramePath] = useState<string>(() => {
     const t = intent ? tabById(intent.pane) : tabById(readTab());
-    return t.kind === "local" || t.kind === "native" ? "" : t.path;
+    if (t.kind === "local" || t.kind === "native") return "";
+    if (t.path && (isUnframeable(t.path) || isSiteDoor(t.path))) return "";
+    return t.path;
   });
   const [frameSrc, setFrameSrc] = useState<string>(() => {
     const t = intent ? tabById(intent.pane) : tabById(readTab());
-    const path = t.kind === "local" || t.kind === "native" ? "" : t.path;
-    return path ? withEmbed(path) : "";
+    if (t.kind === "local" || t.kind === "native") return "";
+    if (t.path && (isUnframeable(t.path) || isSiteDoor(t.path))) return "";
+    return t.path ? withEmbed(t.path) : "";
   });
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -227,9 +218,20 @@ export default function LobbyOverlay({
   }, [minimised]);
 
   const loadPane = useCallback((path: string) => {
+    // Never iframe unframeable chrome. Software is `/dashboard` as a full page.
+    // Only the document allowlist still frames (?embed=1).
+    if (isUnframeable(path)) {
+      window.location.assign(withoutEmbed(path));
+      return;
+    }
+    const load = paneLoadFor(path);
+    if (load.action === "navigate") {
+      window.location.assign(load.path);
+      return;
+    }
     setFrameLoaded(false);
-    setFramePath(path);
-    setFrameSrc(path ? withEmbed(path) : "");
+    setFramePath(load.path);
+    setFrameSrc(withEmbed(load.path));
   }, []);
 
   // A later intent (an in-page CTA fired while the lobby is already open) moves
@@ -253,9 +255,17 @@ export default function LobbyOverlay({
     setOverride(null);
     setTabId(t.id);
     if (t.kind === "local" || t.kind === "native") {
-      // Clear the previous iframe's path so the pane header chip never shows
-      // the last tab's URL under a native/local pane.
+      // Drop the iframe so a leftover src cannot sit under the native pane.
       setFramePath("");
+      setFrameSrc("");
+      return;
+    }
+    if (softwareLeavesOs(t)) {
+      window.location.assign(SOFTWARE_HREF);
+      return;
+    }
+    if (t.path && (isUnframeable(t.path) || isSiteDoor(t.path))) {
+      window.location.assign(t.path);
       return;
     }
     if (t.path) loadPane(t.path);
@@ -272,17 +282,13 @@ export default function LobbyOverlay({
   // scroll). Lobby-chrome navigation still remounts via loadPane().
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
-      if (e.origin !== window.location.origin) return;
-      if (!isEmbedNav(e.data)) return;
-      const path = e.data.path;
-      const matched = tabForPath(path);
-      setFramePath(path);
-      if (matched) {
-        setTabId(matched.id);
-        setOverride(null);
-      } else {
-        setOverride({ path, label: paneNameFor(e.data.title, path) });
-      }
+      applyEmbedNav(e, {
+        assignTop: (href) => window.location.assign(href),
+        setFrameSrc,
+        setFramePath,
+        setTabId,
+        setOverride,
+      });
     };
     window.addEventListener("message", onMsg);
     return () => window.removeEventListener("message", onMsg);

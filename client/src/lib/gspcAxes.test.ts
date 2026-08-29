@@ -1,5 +1,8 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { fetchAxes, hasMacroF1, publicCaption, quotable } from "./gspcAxes";
+import {
+  fetchAxes, formatPublishedInterval, hasMacroF1, inLaneFacts, publicCaption,
+  publishedInterval, publishedSeparation, quotable, separationHeadline, tallyFromTotals,
+} from "./gspcAxes";
 import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 afterEach(() => {
@@ -58,6 +61,102 @@ describe("fetchAxes", () => {
     expect(r.axes.filter(quotable)).toHaveLength(2);
   });
 
+  it("keeps published interval and McNemar mark, and does not invent a withheld interval", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => ({
+      ok: true,
+      headers: { get: () => "application/json" },
+      json: async () => ({
+        totals: {
+          public_count: "22 axis · 15 measured",
+          separated_leads: 4,
+          ties: 10,
+          untested_separations: 0,
+        },
+        measured_on: { date: "2026-08-26" },
+        axes: [
+          {
+            axis: "governance", bench: "GovBench", n: 237, accuracy: 0.7, status: "MEASURED",
+            separation: "SEPARATED", interval: [0.639, 0.755], kind: "model-comparison",
+          },
+          {
+            axis: "swarm", bench: "SwarmBench", n: 37, accuracy: 0.384, status: "MEASURED",
+            separation: "SEPARATED", interval: null, kind: "model-comparison",
+          },
+          {
+            axis: "jail", bench: "JailBench", n: 71, accuracy: 0.5915, status: "MEASURED",
+            separation: "TIE", interval: [0.475, 0.698], kind: "model-comparison",
+          },
+          {
+            axis: "reserve-attestation", n: 0, accuracy: null, status: "UNMEASURED", kind: "declared-slot",
+          },
+        ],
+        measured_in_lane: [
+          {
+            axis: "human-vs-ai",
+            bench: "Colosseum-Pairs",
+            n: 35,
+            accuracy: 1,
+            leader: "qwen3:4b (base model)",
+            separation: "UNTESTED",
+            fleet_mean: 0.8498,
+            dataset: "pending publication (f2-measure, 3090 pod)",
+            status: "MEASURED",
+            per_model: {
+              "council-safe": { n: 32, aligned: 8, alignment_rate: 0.25 },
+            },
+          },
+          {
+            axis: "slot15",
+            bench: "Slot15-Honesty",
+            n: 35,
+            accuracy: 0.3333,
+            leader: "qwen2.5:7b (base model)",
+            separation: "UNTESTED",
+            fleet_mean: 0.1543,
+            status: "MEASURED",
+            per_model: {
+              "council-safe": { n: 35, honest: 5, fabricated: 30, honesty_rate: 0.1429 },
+            },
+          },
+        ],
+      }),
+    })));
+
+    const r = await fetchAxes();
+    const gov = r.axes.find((a) => a.axis === "governance")!;
+    const swarm = r.axes.find((a) => a.axis === "swarm")!;
+    const jail = r.axes.find((a) => a.axis === "jail")!;
+    const empty = r.axes.find((a) => a.axis === "reserve-attestation")!;
+
+    expect(publishedInterval(gov)).toEqual([0.639, 0.755]);
+    expect(formatPublishedInterval(publishedInterval(gov)!)).toBe("0.639–0.755");
+    expect(publishedSeparation(gov)).toBe("SEPARATED");
+
+    expect(publishedInterval(swarm)).toBeNull();
+    expect(publishedSeparation(swarm)).toBe("SEPARATED");
+
+    expect(publishedInterval(jail)).toEqual([0.475, 0.698]);
+    expect(publishedSeparation(jail)).toBe("TIE");
+
+    expect(quotable(empty)).toBe(false);
+    expect(publishedSeparation(empty)).toBeNull();
+    expect(publishedInterval(empty)).toBeNull();
+
+    expect(r.inLane.map((a) => a.axis)).toEqual(["human-vs-ai", "slot15"]);
+    const hv = inLaneFacts(r.inLane[0]);
+    expect(hv.separation).toBe("UNTESTED");
+    expect(hv.specialistLine).toBe("council-safe 0.25 (n=32)");
+    expect(hv.leaderLine).toContain("1");
+    const slot = inLaneFacts(r.inLane[1]);
+    expect(slot.separation).toBe("UNTESTED");
+    expect(slot.fleetLine).toBe("fleet mean 0.1543");
+    expect(slot.specialistLine).toBe("council-safe 0.1429 (n=35)");
+
+    expect(r.separationTally).toEqual({ separated: 4, ties: 10, untested: 0 });
+    expect(separationHeadline(r.separationTally!)).toBe("4 SEPARATED · 10 TIE");
+    expect(tallyFromTotals({ public_count: "x" })).toBeUndefined();
+  });
+
   it("retries once when the first response is HTML instead of JSON", async () => {
     const html = {
       ok: true,
@@ -106,7 +205,7 @@ describe("no fabricated zero — the 2026-08-26 regression", () => {
     json: async () => ({
       totals: { public_count: "22 axes · 15 measured" },
       measured_on: { date: "2026-08-12" },
-      axis,
+      axes,
       measured_in_lane: [
         { axis: "no-acc-lane", bench: "L", task: "t", n: 12, accuracy: null, status: "MEASURED" },
       ],

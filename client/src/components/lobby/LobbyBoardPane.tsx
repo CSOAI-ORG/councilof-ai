@@ -15,7 +15,8 @@ export default function LobbyBoardPane() {
         Every published axis
       </h2>
       <p className={`mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-700`}>
-        Native in Council OS — same data as GET /api/gspc. Empty cells stay empty.
+        Native in Council OS — GET /api/gspc. Interval and TIE/SEPARATED as
+        published. Empty cells stay empty. In-lane is not a board slot.
       </p>
       <div className="mt-6">
         <LivingBoard embedded onOpenBoard={() => { /* already on board */ }} />

@@ -165,7 +165,7 @@ const navigation: NavGroup[] = [
       { name: 'did:web trust root', href: '/.well-known/did.json', description: 'The published signer — verify a card without us', external: true },
       { name: 'API documentation', href: '/api-docs', description: 'Every endpoint above, documented for agents' },
       { name: 'System status', href: '/status', description: 'What is up, and what is degraded' },
-      { section: 'Interop', name: 'Attestation on a public ledger', href: '/xrpl-attest', description: 'Devnet-proven; mainnet planned. Permissionless attach of signed evidence to accounts we do not control. Never a rating' },
+      { section: 'Interop', name: 'Attestation on a public ledger', href: '/xrpl-attest', description: 'Devnet pointer — not a grade. XLS-70 mainnet exists; we do not issue GSPC grades on it. Never a rating' },
       { name: 'Report an AI incident', href: '/report', description: 'A public intake. What we act on is measured and signed like everything else' },
     ],
   },

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
-  countOf, fetchAxes, hasInterval, publicCaption, quotable,
+  countOf, fetchAxes, formatPublishedInterval, inLaneFacts, publicCaption,
+  publishedInterval, publishedSeparation, quotable, separationHeadline,
   type AxesState, type InLaneAxis,
 } from "@/lib/gspcAxes";
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
@@ -12,7 +13,7 @@ import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
  * the caption is totals.public_count. Empty / unearned cells stay empty.
  */
 
-const EMPTY: Pick<AxesState, "axes" | "source" | "measuredOn" | "publicCount" | "inLane" | "loading"> = {
+const EMPTY: Pick<AxesState, "axes" | "source" | "measuredOn" | "publicCount" | "inLane" | "loading" | "separationTally"> = {
   axes: [],
   source: "snapshot",
   measuredOn: "",
@@ -38,6 +39,7 @@ export default function LivingBoard({
 
   const c = countOf(state.axes);
   const caption = publicCaption(state.publicCount, c.measured, c.total);
+  const sepLine = state.separationTally ? separationHeadline(state.separationTally) : null;
 
   return (
     <section aria-labelledby="coai-living-board-h" className="mb-8">
@@ -47,6 +49,16 @@ export default function LivingBoard({
           <h3 id="coai-living-board-h" className="mt-1 text-[20px] font-semibold tracking-tight text-slate-900">
             Every published axis
           </h3>
+          {sepLine && (
+            <p className="mt-2 font-mono text-[13px] font-semibold tracking-wide text-slate-900">
+              {sepLine}
+            </p>
+          )}
+          {sepLine && (
+            <p className={`mt-1 ${TYPE.muted}`}>
+              A point-estimate lead is not a measured advantage. Empty cells stay empty.
+            </p>
+          )}
           <p className={`mt-2 ${MEASURE} ${TYPE.body}`}>
             {state.loading
               ? "Reading GET /api/gspc…"
@@ -69,6 +81,8 @@ export default function LivingBoard({
       <ul className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
         {state.axes.map((a) => {
           const scored = quotable(a);
+          const iv = publishedInterval(a);
+          const sep = publishedSeparation(a);
           return (
             <li key={a.axis}>
               <button
@@ -87,13 +101,20 @@ export default function LivingBoard({
                 <span className={`mt-1 ${TYPE.fine}`}>{a.bench || a.task}</span>
                 {scored ? (
                   <span className="mt-2 font-mono text-[13px] tabular-nums text-emerald-800">
-                    {(a.accuracy * 100).toFixed(0)}
+                    {((a.accuracy as number) * 100).toFixed(0)}
                     <span className="ml-1 text-[11px] text-slate-600">
-                      n={a.n}{hasInterval(a) ? "" : " · no interval"}
+                      n={a.n}{iv ? ` · ${formatPublishedInterval(iv)}` : " · no interval"}
                     </span>
                   </span>
                 ) : (
                   <span className={`mt-2 ${TYPE.fine}`}>no score on this stamp</span>
+                )}
+                {sep && (
+                  <span className={`mt-2 font-mono text-[10px] font-bold uppercase tracking-wide ${
+                    sep === "SEPARATED" ? "text-emerald-800" : sep === "TIE" ? "text-slate-600" : "text-amber-800"
+                  }`}>
+                    {sep}{a.axis === "jail" && sep === "TIE" ? " · floor" : ""}
+                  </span>
                 )}
               </button>
             </li>
@@ -113,25 +134,36 @@ function InLaneStrip({ rows }: { rows: InLaneAxis[] }) {
     <div className="mt-5 rounded-2xl border border-dashed border-slate-900/15 bg-slate-50/80 p-4">
       <p className={TYPE.section}>In-lane — not board rows</p>
       <p className={`mt-1 ${TYPE.muted}`}>
-        Published beside the board. Not counted in totals.public_count.
+        Published beside the board. Not extra doors. Not counted in totals.public_count.
       </p>
       <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-        {rows.map((r) => (
-          <li key={r.axis} className="rounded-xl border border-slate-900/8 bg-white/90 p-3">
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-[13px] font-semibold text-slate-900">{r.axis}</span>
-              <span className="font-mono text-[9px] font-bold uppercase tracking-wide text-slate-600">{r.status}</span>
-            </div>
-            <p className={`mt-1 ${TYPE.fine}`}>{r.bench || r.task}</p>
-            {r.n > 0 && (
+        {rows.map((r) => {
+          const f = inLaneFacts(r);
+          return (
+            <li key={r.axis} className="rounded-xl border border-slate-900/8 bg-white/90 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[13px] font-semibold text-slate-900">{r.axis}</span>
+                <span className="font-mono text-[9px] font-bold uppercase tracking-wide text-amber-800">
+                  {f.separation || r.status}
+                </span>
+              </div>
+              <p className={`mt-1 ${TYPE.fine}`}>{r.bench || r.task}</p>
               <p className="mt-2 font-mono text-[12px] tabular-nums text-slate-700">
-                {typeof r.accuracy === "number" && Number.isFinite(r.accuracy)
-                  ? (r.accuracy * 100).toFixed(0)
-                  : "unmeasured"} · n={r.n}
+                {f.nLine}
+                {f.specialistLine ? ` · ${f.specialistLine}` : ""}
               </p>
-            )}
-          </li>
-        ))}
+              {f.fleetLine && (
+                <p className="mt-1 font-mono text-[11px] text-slate-600">{f.fleetLine}</p>
+              )}
+              {f.leaderLine && (
+                <p className="mt-1 font-mono text-[11px] text-slate-600">{f.leaderLine}</p>
+              )}
+              {f.datasetLine && (
+                <p className={`mt-1 ${TYPE.fine}`}>{f.datasetLine}</p>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

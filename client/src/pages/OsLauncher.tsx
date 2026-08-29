@@ -1,47 +1,51 @@
 import { useEffect, useState, lazy, Suspense } from "react";
-import { Link, useSearch } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { FOCUS } from "@/components/lobby/glass";
-import DenseBoard from "@/components/board/DenseBoard";
+import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
+import { osDoorHref, osPanelHref } from "@/lib/lobbyLink";
 
 /**
  * OsLauncher — the single-frame Council OS at /os. THE AG-UI HOST.
  *
- * ONE FRAME. Board, verify, Harness, Space, assess swap inside it. Nothing
- * mounts at once; the default door (board) loads first, others lazy-load.
+ * CENTRE PANES are native instruments: board, verify, cards. Same components
+ * a harness panel shows at `/os?embed=1&lobby=board`. MCP is the portable OS;
+ * this page is optional chrome. Never iframe /os inside /os, never iframe
+ * /products here.
  *
  * AG-UI CONTRACT. Reads ?lobby= from the URL (same keys as lobbyLink.ts):
  *   ?lobby=home   → board (home is the board on /os)
  *   ?lobby=board  → board
  *   ?lobby=verify → verify
- *   ?lobby=space  → space
- *   ?lobby=measured | ras | assess → assess
- *   ?lobby=harness → harness
- * /ag-ui, /chat, /console, /sov-os all land on /os?lobby=home now.
+ *   ?lobby=cards  → cards
+ *   ?lobby=harness → harness (MCP endpoint + the four tools)
+ *   ?lobby=space  → space (kept for old deep-links; not a header door)
+ *   ?lobby=measured | ras | assess → assess (old deep-links)
+ * /ag-ui, /chat, /console, /sov-os land on this host. A harness opens
+ * `/os?embed=1&lobby=board` as a panel; embed=1 strips site chrome.
  *
  * NO INLINE HEADER. OsHeader (in App.tsx) provides the product-frame header
- * with OpenRouter-style nav, user account, and door tabs. This component only
- * renders the door content.
+ * with instrument tabs. This component only renders the door content.
  *
- * SAME BOARD AS HOMEPAGE. The Board door renders DenseBoard — THE SAME
- * component the homepage uses. One component, two surfaces. Counts come from
- * GET /api/gspc. Empty stays empty. provenance-controls n=6 stays —. No
- * CityPanel, no AxisPanel, no unnamed slot, no manifesto, no invented scores.
+ * SAME PANE AS THE OVERLAY. The Board door renders LobbyBoardPane — the
+ * native living board GET /api/gspc. Empty stays empty. Not an iframe of
+ * /gspc-scoreboard. provenance-controls n=6 stays —. No invented scores.
  *
- * HARNESS = TOOL. MCP + AG-UI attach for Hermes, DSH, GPAI clients. Not a
- * settings page. Never give away the engine, key, compose, or bank recipe.
+ * HARNESS = TOOL. MCP first (board_totals · get_axis · verify_card · list_cards).
+ * The white-glass overlay is for a human watching. DeepSeek / Hermes / OpenCode
+ * speak the MCP; they do not need this page.
  *
  * LOGINLESS. Verify stays free. No form wall.
  *
  * Public names only: Council OS, Council Space, GSPC.
  */
 
-export type DoorId = "board" | "verify" | "harness" | "space" | "assess";
+export type DoorId = "board" | "verify" | "cards" | "harness" | "space" | "assess";
 
+/** Header rail: native instruments + MCP. Space/assess stay as URL mappings. */
 export const DOORS: { id: DoorId; label: string }[] = [
   { id: "board", label: "Board" },
   { id: "verify", label: "Verify" },
-  { id: "space", label: "Space" },
-  { id: "assess", label: "Assess" },
+  { id: "cards", label: "Cards" },
   { id: "harness", label: "Harness" },
 ];
 
@@ -49,6 +53,7 @@ export const LOBBY_TO_DOOR: Record<string, DoorId> = {
   home: "board",
   board: "board",
   verify: "verify",
+  cards: "cards",
   space: "space",
   measured: "assess",
   ras: "assess",
@@ -62,8 +67,8 @@ const TASK_TO_DOOR: Record<string, DoorId> = {
   "get-measured": "assess",
 };
 
-function doorFromSearch(search: string): DoorId {
-  const params = new URLSearchParams(search);
+export function doorFromSearch(search: string): DoorId {
+  const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
   const lobby = params.get("lobby");
   if (lobby && LOBBY_TO_DOOR[lobby]) return LOBBY_TO_DOOR[lobby];
   const task = params.get("task");
@@ -71,10 +76,21 @@ function doorFromSearch(search: string): DoorId {
   return "board";
 }
 
+/** /os?lobby=software is a hop off the host onto DSH — never an iframe of /dashboard. */
+export function osLeaveForSearch(search: string): string | null {
+  const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+  if (params.get("lobby") === "software") return "/dashboard";
+  return null;
+}
+
 const VerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
+const CardsPane = lazy(() => import("@/components/lobby/LobbyCardsPane"));
+
+/** What /os?lobby=board mounts. Tests pin this identity; do not iframe a scoreboard. */
+export const BOARD_PANE = LobbyBoardPane;
 
 function BoardDoor() {
-  return <DenseBoard showScoreboardLink />;
+  return <BOARD_PANE />;
 }
 
 function VerifyDoor() {
@@ -93,16 +109,32 @@ function VerifyDoor() {
   );
 }
 
-/** Fallback tool blurbs when the live probe has not returned yet (or fails). */
+function CardsDoor() {
+  const search = useSearch();
+  const [, setLocation] = useLocation();
+  return (
+    <div className="space-y-4">
+      <Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Loading…</div>}>
+        <CardsPane
+          onOpenRoute={(path) => {
+            if (path === "/gspc-verify" || path.startsWith("/gspc-verify?")) {
+              setLocation(osDoorHref("verify", search));
+              return;
+            }
+            window.location.assign(path);
+          }}
+        />
+      </Suspense>
+    </div>
+  );
+}
+
+/** Fallback when the live probe has not returned — the four GSPC MCP tools only. */
 const HARNESS_TOOLS_FALLBACK: { name: string; blurb: string }[] = [
   { name: "board_totals", blurb: "live axis counts" },
   { name: "get_axis", blurb: "single axis detail" },
+  { name: "verify_card", blurb: "check a signed card" },
   { name: "list_cards", blurb: "published signed-card index" },
-  { name: "verify", blurb: "check a signed card" },
-  { name: "verify_card", blurb: "gspc.measurement-card rule" },
-  { name: "measure", blurb: "measurement contract for a subject" },
-  { name: "enter-arena", blurb: "self-enrol an external agent" },
-  { name: "jail-probe", blurb: "jail-probe verdict contract" },
 ];
 
 type McpProbe =
@@ -219,25 +251,24 @@ function HarnessDoor() {
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-5">
-        <h3 className="font-semibold text-slate-900">AG-UI deep-link</h3>
+        <h3 className="font-semibold text-slate-900">AG-UI panel (optional chrome)</h3>
         <p className="mt-1 text-sm text-slate-600">
-          Open surfaces from any agent via query params.
+          MCP is the portable OS. Open this page as a harness panel only when a human is watching — never as an iframe of /os or /products.
         </p>
         <div className="mt-3 space-y-1.5 font-mono text-xs">
-          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?lobby=board</div>
-          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?lobby=verify</div>
-          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?lobby=assess</div>
-          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?lobby=harness</div>
-          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">?task=enterprise-start</div>
+          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">{osPanelHref("board")}</div>
+          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">{osPanelHref("verify")}</div>
+          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">{osPanelHref("cards")}</div>
+          <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">{osPanelHref("harness")}</div>
         </div>
       </div>
 
       <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-5">
-        <h3 className="font-semibold text-slate-800">For GPAI clients</h3>
+        <h3 className="font-semibold text-slate-800">For any MCP client</h3>
         <p className="mt-1 text-sm text-slate-600">
-          Call the same MCP tools for board reads and card verify. Measurement contracts
-          come from <code className="font-mono text-xs">measure</code>; signing stays on the
-          measurement node — this rail does not invent unsigned write tools.
+          Speak the four tools. A model that can POST HTTP or stdio can read the board
+          and verify a card. Signing stays on the measurement node — this rail does not
+          invent unsigned write tools, and joining it does not fill an empty cell.
         </p>
       </div>
 
@@ -332,6 +363,11 @@ export default function OsLauncher() {
   }, []);
 
   useEffect(() => {
+    const leave = osLeaveForSearch(search);
+    if (leave) {
+      window.location.assign(leave);
+      return;
+    }
     setDoor(doorFromSearch(search));
   }, [search]);
 
@@ -339,6 +375,7 @@ export default function OsLauncher() {
     <main className="mx-auto max-w-5xl px-4 py-8">
       {door === "board" && <BoardDoor />}
       {door === "verify" && <VerifyDoor />}
+      {door === "cards" && <CardsDoor />}
       {door === "harness" && <HarnessDoor />}
       {door === "space" && <SpaceDoor />}
       {door === "assess" && <AssessDoor />}

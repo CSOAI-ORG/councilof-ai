@@ -23,7 +23,7 @@ export const SKUS = [
   {
     id: "os",
     name: "Council OS",
-    href: "/os",
+    href: "/os?lobby=home",
     tag: "The workspace",
     what: "One window: board, verifier, assess, evidence. This is the product a stranger opens. Paid only when a feed, a corpus, or a re-attest loop is required.",
   },

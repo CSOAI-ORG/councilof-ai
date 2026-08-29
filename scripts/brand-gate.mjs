@@ -50,6 +50,15 @@ const RULES = [
     why: "Internal codename on a public surface. Use the public-canon name (Council / the fine-tune's neutral description).",
   },
   {
+    id: "defoneos_codename",
+    // Blog copy shipped DEFONEOS-SEAL as if it were the public credential
+    // name. The public artifact is the Ed25519-signed GSPC card. Status may
+    // name the 2026-07-31 cross-wired deploy as disclosure, not product copy.
+    pattern: /\bdefoneos\b/i,
+    allowOn: /status|refut|retract|ledger|counter-?canon/i,
+    why: "Internal product name. Public credential is the Ed25519-signed GSPC card.",
+  },
+  {
     id: "cert_overclaim",
     // No trailing \b: CamelCase-derived titles concatenate the brand ("CEASAITraining"
     // shipped on /library because \bCEASAI\b missed it — qa-sweep 2026-08-19).

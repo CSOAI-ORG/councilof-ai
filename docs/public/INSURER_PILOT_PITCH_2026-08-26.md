@@ -16,7 +16,9 @@ conflict**. That is us.
   nothing edited.
 - Three-state verdicts (measured / unmeasured / refused) with disclosed methodology
   (Wilson 95% + significance-gated separation; paper: FAIR TIES).
-- Live board: 14 of 14 axes measured and signed (councilof.ai/api/gspc).
+- Live board: GET https://councilof.ai/api/gspc — quote `totals.public_count`
+  (currently 22 slots · 15 measured · 7 UNMEASURED). Do not freeze the count
+  in this letter; empty financial cells stay empty.
 
 ## Pilot ask
 One named pilot: a signed measurement feed for your model portfolio (metrics +
