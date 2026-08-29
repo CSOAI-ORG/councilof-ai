@@ -126,7 +126,20 @@ export default function OsHeader() {
             <span className="sm:hidden">Exit</span>
           </Link>
 
-          {/* Verify free link */}
+          {/* Play + Train + Verify — product doors inside the OS chrome */}
+          <a
+            href="/os?lobby=play"
+            className={`hidden rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 md:inline-flex ${FOCUS}`}
+          >
+            Play
+          </a>
+          <a
+            href="/compliance-training-world/catalog.html"
+            className={`hidden rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 lg:inline-flex ${FOCUS}`}
+            title="Industry quests — training attestation, never certification"
+          >
+            Train
+          </a>
           <a
             href="/gspc-verify"
             className={`hidden rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 md:inline-flex ${FOCUS}`}
