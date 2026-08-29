@@ -2,7 +2,7 @@
 
 **Call:** DIGITAL-2026-AI-DATA-10-COMPLIANCE  
 **Title (working):** Signed, re-verifiable measurement for automated compliance reporting  
-**Legal:** CSOAI Ltd (UK 16939677) — independent measurement body. Not a certifier. Scores are not sold.
+**Legal:** CSOAI Ltd (UK 16939677) — independent measurement body. Not a certifier. Not a notified body. Scores are not sold.
 
 ## Problem
 
@@ -34,8 +34,8 @@ Minimum three **beneficiaries** in three **eligible** countries. PT + DE need a 
 
 One **public** AI surface (chatbot or similar) under Art. 50: disclose, attach **one C2PA path**, emit a **signed GSPC card of our measurement run** (not “we graded the bank”). Financial cells on the public board stay **UNMEASURED**. Firmographics (e.g. Santander/JPMorgan rows) are public names, not a claim we measured that firm’s models.
 
-Call-sector warning: the fiche lists agri / environment / manufacturing / healthcare / energy. A bank chatbot may fail relevance. Prefer a **healthcare or energy** public chatbot if the coordinator wants fit.
+Call-sector warning: the fiche lists agri / environment / manufacturing / healthcare / energy. A bank chatbot may fail relevance. Prefer a **healthcare or energy** public chatbot if the coordinator wants fit. A separate **FS measurement pilot** (not this call, not a notified-body bid) is `docs/grants/FS-PILOT-CONCEPT.md`.
 
 ## What we will not write in the proposal
 
-Certification · “Art 50 certified” · VRO implementation · XLS-70 as a grade · token / cut · filling empty cells · 10,000 accounts · RFC 8785 as the living card rule (cards are CPython `json.dumps`).
+Certification · notified body / Annex VII · “Art 50 certified” · VRO implementation · XLS-70 as a grade · token / cut · filling empty cells · 10,000 accounts · RFC 8785 as the living card rule (cards are CPython `json.dumps`).

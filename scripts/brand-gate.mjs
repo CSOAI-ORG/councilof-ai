@@ -100,6 +100,41 @@ const RULES = [
     why: "We are not a GPAI Code signatory. Transparency CoP (detection/marking tool) only, if signed. C2PA remains planned until CR-012 is live.",
   },
   {
+    id: "certify_claim",
+    // Product-offer strings only. Retraction copy ("we do not certify", "never
+    // certification", "we certify nothing") must keep shipping — nearAllow
+    // covers those. Do not use a blanket certif* pattern: /library still lists
+    // retired /how-it-works/certification paths as index text.
+    pattern: /\bget certified\b|\bwe certify\b|\bcertified by CSOAI\b|\bCSOAI certif/i,
+    nearAllow: /we certify nothing|do not certify|never certify|certify nothing|not certify/i,
+    why: 'Measurement credential, never certification. Do not offer "get certified".',
+  },
+  {
+    id: "inspect_scorer",
+    // GSPC grade is the estate harness + Ed25519 card. Inspect AI / LLM-as-judge
+    // is not the scorer. Do not trip "Quality inspection", PyPI inspect-signed-receipt,
+    // or honest "no LLM-as-judge" methodology copy.
+    pattern: /inspect[\s_-]?(?:ai\s+)?scorer|\binspect_ai\b.{0,24}scorer|model_graded_fact|llm[\s-]?as[\s-]?judge|model[\s-]?as[\s-]?judge/i,
+    nearAllow: /no llm[\s-]?as[\s-]?judge|not llm[\s-]?as[\s-]?judge|not (?:an? )?inspect|not (?:a )?model[\s-]?as[\s-]?judge|do not wrap|harness is not inspect|no `?model_graded_fact|never .{0,20}llm[\s-]?as[\s-]?judge/i,
+    why: "GSPC grade is the estate harness + signed card, not Inspect / model-judge. Do not wrap a bank in Inspect model_graded_fact.",
+  },
+  {
+    id: "false_art50_nov",
+    // EUR-Lex: Art 50 applied 2 Aug 2026; some marking 2 Dec 2026; Annex III 2 Dec 2027.
+    // "2 Nov 2026" / "November 2026 cliff" is a dead Digital-Omnibus rumour.
+    pattern: /2\s+Nov(?:ember)?\s+2026|November 2026 cliff/i,
+    nearAllow: /not 2 Nov|wrong date|EUR-Lex|2 August 2026|2 Aug 2026/i,
+    why: "EUR-Lex only: Art 50 applied 2 Aug 2026; marking grace 2 Dec 2026; Annex III 2 Dec 2027. There is no 2 Nov 2026 cliff.",
+  },
+  {
+    id: "hub_queue_stickers",
+    // 2410 is the Hub queue length (all UNMEASURED). Do not ship 2410 scores/stickers.
+    // Negative lookahead skips arXiv 2410.07959. nearAllow keeps the honest queue sentence.
+    pattern: /\b2,?410\b(?!\.\d).{0,48}(?:sticker|badge|scores?|leaderboard|VALID cards?)|(?:sticker|badge|scores?|leaderboard).{0,48}\b2,?410\b(?!\.\d)/i,
+    nearAllow: /unmeasured|named sites|hub-queue|empty stays empty|status_all|no score/i,
+    why: "hub-queue is 2410 named UNMEASURED ids, not 2410 scores or stickers. Empty stays empty.",
+  },
+  {
     id: "infra_leak",
     // Any localhost:<port>, not just 4400: prerender binds an OS-assigned port unless --port
     // is passed, so a missed canonical rewrite can now bake ANY port into the shipped HTML.
