@@ -262,6 +262,14 @@ describe("games-catalog", () => {
       expect(quests?.path).toBe("/gspc-quests.html");
     });
 
+    it("Compliance Training World is catalogued as frozen leftover", () => {
+      const training = FROZEN_SURFACES.find((f) => f.id === "compliance-training");
+      expect(training).toBeDefined();
+      expect(training?.frozen).toBe(true);
+      expect(training?.path).toBe("/compliance-training-world/catalog.html");
+      expect(training?.usesLiveBoard).toBe(false);
+    });
+
     it("frozen surfaces do not claim to use live board", () => {
       for (const entry of FROZEN_SURFACES) {
         expect(entry.usesLiveBoard).toBe(false);
