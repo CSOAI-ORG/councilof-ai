@@ -749,7 +749,7 @@ export default function About() {
                   Start Free Training
                 </Button>
               </Link>
-              <Link href="/?lobby=measured&task=enterprise-start">
+              <Link href="/os?lobby=assess&task=enterprise-start">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                   Enterprise lobby
                 </Button>
