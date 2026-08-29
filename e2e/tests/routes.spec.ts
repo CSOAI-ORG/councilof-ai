@@ -67,8 +67,7 @@ test.describe('Homepage', () => {
     // "Measured, not modelled." copy and "Describe an AI system" kicker were
     // removed. "Verify a card" appears multiple times (hero + body + footer),
     // so we use .first() to disambiguate.
-    await expect(page.locator('h1').first()).toContainText(/See how your AI behaves/);
-    await expect(page.locator('h1').first()).toContainText(/Get proof you can trust/);
+    await expect(page.locator('h1').first()).toContainText(/Council of AI/);
     await expect(page.locator('text=Verify a card').first()).toBeVisible();
   });
 
@@ -78,22 +77,21 @@ test.describe('Homepage', () => {
     // gone in the Council OS redesign ("Sovereign" no longer appears anywhere on
     // the homepage). The Honest Board cites live totals.public_count —
     // "14 measured of 14" as of 2026-08-25 (jail MEASURED · separation TIE).
-    await expect(page.getByText(/14 measured of 14/i).first()).toBeVisible();
+    await expect(page.getByTestId('live-strip')).toBeVisible();
   });
 
   test('CTA banners render', async ({ page }) => {
     // The previous "Now Live" / "100% Free Training" banners were removed in the
     // 2026-08-01 hero cleanup (TUI-3). Assert the two focused CTAs that replaced them.
-    await expect(page.locator('text=Get measured')).toBeVisible();
-    await expect(page.locator('text=Try Sov Space')).toBeVisible();
+    await expect(page.locator('text=Verify a card').first()).toBeVisible();
+    await expect(page.locator('text=Open the board').first()).toBeVisible();
   });
 
   test('navigation bar has all sections', async ({ page }) => {
     // The pre-2026-08-01 nav had ~70 sub-items; the 2026-08-01 cleanup trimmed
     // it to ~45 items, and the Council OS redesign further trimmed the top
     // level. Current top-level nav items: Home, Measure, Regulation, Solutions,
-    // Evidence, Academy, Company (plus Sign In / Start free).
-    const navItems = ['Home', 'Measure', 'Regulation', 'Solutions', 'Evidence', 'Academy', 'Company'];
+    const navItems = ['Board', 'Verify', 'OS', 'Pack', 'Company'];
     for (const item of navItems) {
       await expect(page.locator(`nav >> text=${item}`).first()).toBeVisible();
     }
