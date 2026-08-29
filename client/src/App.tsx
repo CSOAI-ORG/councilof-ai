@@ -181,6 +181,7 @@ const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
+const Doctrine = lazy(() => import("./pages/Doctrine"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
 const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
@@ -390,12 +391,13 @@ const ROUTE_TITLES: Record<string, string> = {
   "/badges": "Governance badges — wear your measured status | CSOAI",
   "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
-  "/xrpl-attest": "Ledger attestation — devnet pointer, not a grade | Council of AI",
+  "/xrpl-attest": "XRPL DEVNET pointer — Payment memo + CredentialCreate; not a grade | Council of AI",
   "/claims-register": "Claims register — every public claim, its evidence, its status | CSOAI",
   "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
   "/answers": "Answers — measurement explainers | Council of AI",
+  "/doctrine": "Doctrine — measurement, not certification | Council of AI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
   "/refutation-ledger": "Refutation Ledger | CSOAI",
@@ -687,6 +689,7 @@ function App() {
                   <Route path="/east-west" component={EastWest} />
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
+                  <Route path="/doctrine" component={Doctrine} />
                   <Route path="/board/models" component={MeasuredModels} />
                   <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
