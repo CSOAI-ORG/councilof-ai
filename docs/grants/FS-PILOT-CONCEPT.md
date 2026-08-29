@@ -2,6 +2,8 @@
 
 **Status:** draft. Not a bid. Not a DIGITAL-2026 sector fit. Do not send.
 
+Method: DOI [10.5281/zenodo.21991104](https://doi.org/10.5281/zenodo.21991104).
+
 CSOAI Ltd (UK 16939677) is an independent **measurement** body. We measure public AI surfaces. We are **not** a notified body, not Annex VII, not a conformity-assessment authority, and not a certifier.
 
 ## What this is

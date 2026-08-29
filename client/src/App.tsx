@@ -236,6 +236,7 @@ const WhyCSOAI = lazy(() => import("./pages/WhyCSOAI"));
 const MembershipAgreement = lazy(() => import("./pages/legal/MembershipAgreement"));
 const FoundingCouncilAgreement = lazy(() => import("./pages/legal/FoundingCouncilAgreement"));
 const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement"));
+const LicenceManifest = lazy(() => import("./pages/LicenceManifest"));
 const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
@@ -364,6 +365,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/products": "Council OS — four SKUs, one workspace | Council of AI",
   "/badge": "White-label badge — Council of AI",
   "/licensing-agreement": "Measurement licence — evidence and data | Council of AI",
+  "/licence-manifest": "Licence manifest — request evidence, not a rank | Council of AI",
   "/council-model-card": "Council model card | Council of AI",
   "/council-system-card": "Council system card | Council of AI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
@@ -971,6 +973,7 @@ function App() {
                   <Route path="/legal/founding-council" component={FoundingCouncilAgreement} />
                   <Route path="/licensing-agreement" component={LicensingAgreement} />
                   <Route path="/legal/licensing" component={LicensingAgreement} />
+                  <Route path="/licence-manifest" component={LicenceManifest} />
                   <Route path="/privacy-policy" component={PrivacyPolicy} />
                   <Route path="/privacy" component={PrivacyPolicy} />
                   <Route path="/legal/privacy" component={PrivacyPolicy} />

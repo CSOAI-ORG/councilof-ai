@@ -23,6 +23,9 @@ const DIST = path.resolve(REPO, process.argv[2] || "dist/client");
 // Each rule: a forbidden DISPLAY pattern + WHY. `allowOn` (optional) is a path regex for pages
 // that legitimately QUOTE the term to retract/document it (the "refutation-ledger historical
 // context" the audit explicitly carves out). Everything else is a hard fail.
+// TUI 4 weekend checklist — every ship, rendered copy:
+//   certify / CSOAI Certified / sov33 / Inspect model-judge / 2410 stickers /
+//   GPAI Code signature / rank-for-sale / 2 Nov 2026 cliff.
 const RULES = [
   {
     id: "retracted_fault_tolerance",
@@ -105,6 +108,7 @@ const RULES = [
     // certification", "we certify nothing") must keep shipping — nearAllow
     // covers those. Do not use a blanket certif* pattern: /library still lists
     // retired /how-it-works/certification paths as index text.
+    // Includes "CSOAI Certified" via \bCSOAI certif (no trailing \b — CamelCase).
     pattern: /\bget certified\b|\bwe certify\b|\bcertified by CSOAI\b|\bCSOAI certif/i,
     nearAllow: /we certify nothing|do not certify|does not certify|never certify|certify nothing|not certify|no such mark|issues no certif|misrepresent.{0,40}certif|certificate shop|training record/i,
     why: 'Measurement credential, never certification. Do not offer "get certified".',
