@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { setMetaDescription } from "@/lib/utils";
 
 const HOSTS = [
-  { name: "Claude", how: "claude mcp add gspc -- npx -y csoai-gspc-mcp" },
+  { name: "Claude", how: "Add gspc → https://councilof.ai/mcp" },
   { name: "Cursor", how: "Add gspc in ~/.cursor/mcp.json with the URL below." },
   { name: "Kimi", how: "Add the same MCP URL in the tool’s MCP settings." },
-  { name: "Grok", how: "grok plugin install CSOAI-ORG/council-of-ai-grok" },
+  { name: "Grok", how: "Add the same MCP URL, or grok plugin install CSOAI-ORG/council-of-ai-grok" },
 ] as const;
 
 export default function ToolsPage() {

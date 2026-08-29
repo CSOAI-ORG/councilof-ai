@@ -28,7 +28,7 @@ export default function HomeVerify() {
             Check an AI claim. Or measure your system.
           </h1>
           <p className="mt-3 text-slate-600">
-            Empty cells stay empty. Not a certificate. Free, no account.
+            Empty means not measured. Not a certificate. Free, no account.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">

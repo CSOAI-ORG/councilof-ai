@@ -441,35 +441,16 @@ async function handleVerify(id: unknown, args: Record<string, unknown>, origin: 
   });
 }
 
-/** Rewrite the upstream `verify` tool entry so its description matches this handler. */
+/** Public MCP lists four GSPC tools only. Upstream extras stay callable, not advertised. */
 function patchToolsList(body: unknown): unknown {
-  const tools = (body as { result?: { tools?: { name?: string; description?: string; inputSchema?: unknown }[] } })
-    ?.result?.tools;
-  if (!Array.isArray(tools)) return body;
-  for (const t of tools) {
-    if (t?.name === "measure") { t.description = MEASURE_DESCRIPTION; continue; }
-    if (t?.name === "jail-probe") { t.description = JAIL_DESCRIPTION; continue; }
-    if (t?.name !== "verify") continue;
-    t.description = VERIFY_DESCRIPTION;
-    t.inputSchema = {
-      type: "object",
-      properties: {
-        card: {
-          description:
-            "The signed card: an object, a JSON string, or a councilof.ai / csoai.org URL to one.",
-          anyOf: [{ type: "object" }, { type: "string" }],
-        },
-      },
-      required: ["card"],
-    };
-  }
-  // Append the four shared GSPC tools (board_totals, get_axis, verify_card,
-  // list_cards) from gspc-tools.json — the same definitions the stdio server
-  // serves, so the two transports list identical contracts.
+  const result = (body as { result?: { tools?: { name?: string }[] } })?.result;
+  if (!result || !Array.isArray(result.tools)) return body;
+  const tools = result.tools;
   const present = new Set(tools.map((t) => t?.name));
   for (const t of (GSPC_TOOLS as { tools: { name: string }[] }).tools) {
     if (!present.has(t.name)) tools.push(t as (typeof tools)[number]);
   }
+  result.tools = tools.filter((t) => typeof t?.name === "string" && SHARED_TOOL_NAMES.has(t.name));
   return body;
 }
 

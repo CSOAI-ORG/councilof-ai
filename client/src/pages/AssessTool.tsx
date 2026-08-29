@@ -79,9 +79,15 @@ export default function AssessTool() {
           <ShieldCheck className="h-7 w-7 text-emerald-600" />
           <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
-        <p className="text-muted-foreground mb-8">
+        <p className="text-muted-foreground mb-4">
           Free. No account. The card is yours. Empty means we have not measured that system —
           we do not guess. Not a certificate.
+        </p>
+        <p className="mb-8">
+          <a href="/contact?arm=ledger" className="text-sm font-semibold text-emerald-800 underline-offset-2 hover:underline">
+            Need this for an insurer?
+          </a>
+          <span className="text-sm text-muted-foreground"> — enquiry for a signed pack. Never a bought rank.</span>
         </p>
 
         <Card className="mb-6">
@@ -121,9 +127,9 @@ export default function AssessTool() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="flex items-start gap-2 font-semibold">
-                  {report.tier === "LIMITED_OR_MINIMAL"
+                  {report.alg === "Ed25519" && report.tier === "LIMITED_OR_MINIMAL"
                     ? <><BadgeCheck className="h-5 w-5 text-emerald-600 shrink-0" />{report.verdict}</>
-                    : <><XCircle className="h-5 w-5 text-amber-600 shrink-0" />{report.verdict}</>}
+                    : <><XCircle className="h-5 w-5 text-amber-600 shrink-0" />{report.verdict}{report.alg !== "Ed25519" ? " — UNCHECKABLE until the living stamp ceremony" : ""}</>}
                 </p>
                 <p className="text-sm text-muted-foreground">{report.rationale}</p>
                 {report.gaps.length > 0 && (

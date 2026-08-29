@@ -24,7 +24,7 @@ const PAGES: { name: string; href: string; what: string }[] = [
   { name: "Verify", href: "/gspc-verify", what: "Paste a card. Nothing is sent." },
   { name: "Assess", href: "/assess", what: "Get measured. Free. The card is yours." },
   { name: "Evidence", href: "/methodology", what: "How we grade. No model in the verdict." },
-  { name: "Embed", href: "/embed", what: "Badge and iframe. Measurement, not a mark." },
+  { name: "Embed", href: "/embed", what: "Self-verifying badge. Measurement, not a mark." },
 ];
 
 /** /os is a directory of real pages. Not AG-UI. No iframe of /. */
