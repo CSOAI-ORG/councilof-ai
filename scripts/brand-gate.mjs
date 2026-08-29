@@ -51,11 +51,12 @@ const RULES = [
   },
   {
     id: "defoneos_codename",
-    // Blog copy shipped DEFONEOS-SEAL as if it were the public credential
-    // name. The public artifact is the Ed25519-signed GSPC card. Status may
-    // name the 2026-07-31 cross-wired deploy as disclosure, not product copy.
-    pattern: /\bdefoneos\b/i,
-    allowOn: /status|refut|retract|ledger|counter-?canon/i,
+    // Kill standalone DEFONEOS / DEFONEOS-SEAL as product copy. Do not trip
+    // measured model IDs (clan-defoneos-plain) or published MCP artifact names
+    // (csoai-defoneos-mcp) — renaming those would falsify the record.
+    // /status and /system may name the 2026-07-31 cross-wired deploy.
+    pattern: /(?<![A-Za-z0-9-])defoneos(?:-seal)?(?![A-Za-z0-9-])/i,
+    allowOn: /status|system|refut|retract|ledger|counter-?canon/i,
     why: "Internal product name. Public credential is the Ed25519-signed GSPC card.",
   },
   {
