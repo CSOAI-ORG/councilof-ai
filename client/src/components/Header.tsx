@@ -107,7 +107,7 @@ const navigation: NavGroup[] = [
       { name: 'Industries', href: '/industries', description: 'Sector by sector: the provisions that apply, and when they bite' },
       { name: 'Sector tooling', href: '/sectors', description: 'White-label tooling per sector — regulator, insurer, bond, legacy, vendor' },
       { name: 'Integrations', href: '/integrations', description: 'Wire the measurement into the tools you already run' },
-      { name: 'How the free rail works', href: '/?lobby=measured&task=pricing-overview', description: 'Verify is free. A grade is never sold. There are no public prices' },
+      { name: 'How the free rail works', href: '/os?lobby=assess&task=pricing-overview', description: 'Verify is free. A grade is never sold. There are no public prices' },
     ],
   },
   {
@@ -134,17 +134,17 @@ const navigation: NavGroup[] = [
     description: 'One workspace over the whole rail',
     submenu: [
       { section: 'The workspace', name: 'Open Council OS', href: '/os', description: 'The desktop: every live surface in one place, with a concierge that answers from published measurement or refuses' },
-      { name: 'Lobby home', href: '/?lobby=home', description: 'Chat is the OS. The lobby frames the live page — a pane can never drift from the page it shows' },
-      { section: 'Panes', name: 'Live board', href: '/?lobby=board', description: 'The living GSPC board, with in-lane measurements beside it — never mixed into board totals' },
-      { name: 'Verify a card', href: '/?lobby=verify', description: 'The offline verifier, in the workspace' },
-      { name: 'Get measured', href: '/?lobby=measured', description: 'Start a signed assessment of your own system' },
-      { name: 'Council Space', href: '/?lobby=space', description: 'The continuous contest — model against model on one instrument' },
-      { name: 'Models', href: '/?lobby=models', description: 'What we measured, and what it scored' },
-      { name: 'Tools', href: '/?lobby=tools', description: 'The published MCP surface, runnable' },
-      { name: 'Report an incident', href: '/?lobby=watchdog', description: 'The public intake for AI behaviour that looks wrong' },
-      { name: 'Honesty gate', href: '/?lobby=claimguard', description: 'What we cannot yet measure — published rather than hidden' },
-      { name: 'Readiness assessment', href: '/?lobby=ras', description: 'Work out which duties bind you before you measure' },
-      { name: 'Library', href: '/?lobby=library', description: 'Everything we have published, in the workspace' },
+      { name: 'Lobby home', href: '/os?lobby=home', description: 'Chat is the OS. The lobby frames the live page — a pane can never drift from the page it shows' },
+      { section: 'Panes', name: 'Live board', href: '/os?lobby=board', description: 'The living GSPC board, with in-lane measurements beside it — never mixed into board totals' },
+      { name: 'Verify a card', href: '/os?lobby=verify', description: 'The offline verifier, in the workspace' },
+      { name: 'Get measured', href: '/os?lobby=assess', description: 'Start a signed assessment of your own system' },
+      { name: 'Council Space', href: '/os?lobby=space', description: 'The continuous contest — model against model on one instrument' },
+      { name: 'Models', href: '/models', description: 'What we measured, and what it scored' },
+      { name: 'Tools', href: '/tools', description: 'The published MCP surface, runnable' },
+      { name: 'Report an incident', href: '/watchdog', description: 'The public intake for AI behaviour that looks wrong' },
+      { name: 'Honesty gate', href: '/honesty/', description: 'What we cannot yet measure — published rather than hidden' },
+      { name: 'Readiness assessment', href: '/os?lobby=assess', description: 'Work out which duties bind you before you measure' },
+      { name: 'Library', href: '/library', description: 'Everything we have published, in the workspace' },
       { name: 'Workbench', href: '/workbench', description: 'The signed-in working surface' },
     ],
   },
@@ -197,7 +197,7 @@ export function Header() {
   const hideChrome = useSiteChromeHidden();
 
   // A group href may carry a query (the lobby panes are real destinations, e.g.
-  // "/?lobby=measured&task=..."). Compare on the PATH only — `location` from wouter
+  // "/os?lobby=assess&task=..."). Compare on the PATH only — `location` from wouter
   // never contains the query, so a naive startsWith on the full href always missed
   // and the group could never light up as active.
   const isActive = (href: string) => {
