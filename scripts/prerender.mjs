@@ -165,7 +165,9 @@ function discover() {
     "/legal/licensing", "/legal/privacy", "/legal/terms", "/legal/cookies",
     "/legal/disclaimers", "/legal/dpa", "/legal/founding-council", "/legal/membership",
     "/legal/sla", "/licensing-agreement", "/terms-of-service", "/privacy",
-    "/pricing-legacy", "/council-licensing",
+    // /pricing-legacy is a Pages Function 308 (functions/pricing-legacy.ts). Prerendering
+    // it yields a 300-char THIN snapshot and fails deploy.yml (2026-08-28). Do not prerender redirects.
+    "/council-licensing",
     // Per-axis deep-dive URLs (2026-08-25): the board's axis rows link /gspc/<axis>;
     // production is a static host with an honest 404, so each needs a real snapshot.
     "/gspc/governance", "/gspc/safety", "/gspc/provenance", "/gspc/continuity",
