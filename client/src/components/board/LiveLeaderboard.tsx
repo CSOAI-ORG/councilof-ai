@@ -61,7 +61,6 @@ export default function LiveLeaderboard({
   const rows = orderedRows(data);
   const shown = expanded ? rows : rows.slice(0, DEFAULT_ROWS);
   const count = countLine(data);
-  const hidden = Math.max(0, rows.length - shown.length);
 
   return (
     <section className={`w-full ${className}`}>
@@ -141,12 +140,9 @@ export default function LiveLeaderboard({
                   aria-expanded={expanded}
                   className="rounded-full border border-primary/30 bg-card px-5 py-2.5 text-sm font-bold text-primary transition hover:bg-primary/10"
                 >
-                  {expanded ? `Show top ${DEFAULT_ROWS}` : `Show all ${rows.length} slots`}
-                  {!expanded && hidden > 0 && (
-                    <span className="ml-1.5 font-normal text-primary/70">
-                      (+{hidden} more)
-                    </span>
-                  )}
+                  {expanded
+                    ? `Show top ${DEFAULT_ROWS}`
+                    : `Show all ${rows.length} slots`}
                 </button>
               )}
 
