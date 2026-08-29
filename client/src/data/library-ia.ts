@@ -1,1 +1,280 @@
-FILE:/tmp/content-client_src_data_library-ia.ts
+// Library IA — the "align, don't delete" taxonomy (EU-gov / gov.uk pattern).
+//
+// The primary experience stays lean (PRIMARY_PATHS below). Everything else is not
+// deleted — it is LIBRARIED: kept, dated, sector-organized, schema-marked, and reachable
+// from the footer Library + the /library hub. This is an AEO/A2A growth surface: every
+// archived page is citation surface for an answer engine and a queryable node for an agent.
+//
+// Nothing here rewrites a page. It classifies routes so the Library hub can present them
+// and the ArchivedBanner can mark non-primary pages with a link to their current home.
+
+import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
+
+/** The lean current experience — kept in primary nav, never shown an "archived" banner. */
+// Kept in lockstep with the six master-nav groups in components/Header.tsx
+// (Measure · Products · Regulation · Council OS · Evidence · Company) plus the
+// always-current surfaces the footer and the home page need. A path here renders
+// NO archive banner.
+//
+// THE INVARIANT: every internal href in Header.tsx and on the home page must appear
+// below. It is not decoration — an unregistered path renders the ArchivedBanner
+// ("reference / archive") under a link the primary nav is actively promoting, which
+// tells a reader and an answer engine that a current page is superseded.
+//
+// Audit 2026-08-26 found EIGHT such paths already live in the header and shipping
+// the archive banner: /models /tools /sectors /registers /eunomia /eunomia-data
+// /first-fine-watch /xrpl-attest. They are registered below, along with the
+// surfaces this front-door pass promotes (/report, /workbench, /start).
+export const PRIMARY_PATHS = new Set<string>([
+  "/",
+  // Measure
+  // /board is the navigator ACROSS every axis set — the one route that is allowed
+  // to render more than one set's count, because it labels every count with the set
+  // it belongs to. Registered here or it ships flagged "archived" (see the invariant
+  // above), which would tell a reader the estate's own index page is superseded.
+  "/board", "/board/models",
+  "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
+  "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
+  "/models", "/tools", "/report",
+  // Specialist boards + signed registers (all live in Measure)
+  "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
+  "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
+  // Regulation
+  "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
+  "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
+  // Products — the family, and who it is for
+  "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
+  "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",
+  "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
+  // Commercial comparison + audience surfaces. These were live routes that no
+  // PRIMARY_PATHS entry covered, so every one of them shipped under the
+  // "Reference / archive" banner while being the pages a buyer is sent to.
+  "/compare", "/competitors", "/vs", "/for",
+  // Council OS — the product frame and its hops
+  "/os", "/ag-ui", "/chat", "/console", "/sov-os", "/workbench", "/start",
+  // Council OS Games catalog — every game path must be here (enforced by test).
+  // /gspc-arena is already above in Measure; /os is already above. Add only new paths.
+  "/coliseum",
+  // GSPC Quests — frozen six-axis leftover (v1 governance 24-item, not living n=237).
+  // Playable in-browser grader. NOT the living 22-axis board.
+  "/gspc-quests.html",
+  // Compliance Training World — static industry quests (Art 50(2) + five packs).
+  // Training attestation only — never a conformity mark. Catalogued so /os play
+  // and /products do not ship the archive banner on a live surface.
+  "/compliance-training-world/catalog.html",
+  // ClaimGuard honesty gate (static HTML via _redirects rewrite).
+  "/claimguard",
+  // Regulator findings — signed EU AI Act obligation grades from the board.
+  "/regulator-findings",
+  // The Council OS RAIL TABS and Home desktop tiles. A permanent destination in the OS
+  // rail cannot also be an archive page: the OS presents it as live, and the embed hides
+  // the "Reference / archive" strip, so the reader was shown a current surface while the
+  // site classified it as archived. Verified 2026-08-26 by loading /readiness-assessment
+  // un-embedded and finding that strip.
+  //
+  // THE SAME INVARIANT AS THE HEADER, APPLIED TO THE OS RAIL. Every path the Council OS
+  // rail or the Home desktop opens must appear here, for exactly the reason above: an
+  // unregistered path renders the ArchivedBanner ("a dated reference page… superseded")
+  // under a destination the OS is actively promoting as live. A measured sweep of
+  // client/src/components/lobby/tabs.ts against this set found NINE such paths — the OS
+  // was shipping its own rail tabs and desktop tiles flagged as archived to every reader
+  // and every answer engine.
+  //
+  // client/src/components/lobby/tabs.test.ts asserts this set covers every LOBBY_TABS
+  // path and every LOBBY_ROUTES path, so the next tab someone adds cannot reintroduce
+  // the trap silently.
+  "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
+  "/benchmark-quality", "/mcp-fleet", "/mcps", "/feed",
+  // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
+  // registered here so it can never ship flagged "archived".
+  "/report",
+  // Evidence
+  "/honesty", "/refutation-ledger", "/firewall-charter", "/api-docs", "/status", "/rating-the-raters",
+  "/system-card", "/xrpl-attest", "/claims-register",
+  // Academy (folded into Company in the nav; the pages are still current)
+  "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",
+  // Company
+  "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
+  "/faq",
+  // Who it is for — the six /for/:persona audience pages (PersonaRouter).
+  // These are DYNAMIC routes, so they never appear in ROUTE_MANIFEST and cannot be
+  // registered by the manifest sweep; they have to be listed by hand or every one of
+  // them renders the ArchivedBanner ("reference / archive") on a current page. That is
+  // the known trap this file's header warns about, and it bit these six directly: they
+  // were suppressed behind /for/* redirect Functions on 2026-08-24 and, on restoration,
+  // would have shipped flagged archived. Registered here so they cannot.
+  "/for/regulator", "/for/enterprise", "/for/finance",
+  "/for/healthcare", "/for/startup", "/for/sec-filer",
+]);
+
+/**
+ * Dynamic PRIMARY families. PRIMARY_PATHS is a Set of exact strings, so a
+ * parameterised route (/for/:persona, /industries/:slug, /vs/:slug) could never
+ * be registered in it and every one of those pages rendered the archive banner.
+ * A prefix here means "this whole family is primary" — it is the same decision
+ * PRIMARY_PATHS records, expressed for a route that has no single path.
+ */
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/"];
+
+export function isPrimaryPath(p: string): boolean {
+  return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));
+}
+
+export interface Sector {
+  id: string;
+  title: string;
+  blurb: string;
+  /** Ordered match — first sector whose test() passes owns the route. */
+  test: (path: string, title: string) => boolean;
+}
+
+const rx = (re: RegExp) => (p: string, t: string) => re.test(p) || re.test(t.toLowerCase());
+
+/** The 8 content sectors (front-end canon). Order matters — most specific first. */
+export const SECTORS: Sector[] = [
+  { id: "regulation", title: "EU AI Act & Regulation",
+    blurb: "Article 5, Article 50, Annex III, DORA, NIS2, CRA, GDPR crosswalks, and the government/regulator surfaces — the statute this instrument measures against.",
+    test: rx(/ai-act|article-?50|annex|art-?5|\bgdpr\b|\bdora\b|\bnis2?\b|\bcra\b|digital-omnibus|penalt|conformity|high-risk|gpai|regulat|classifier|checklist|\blaw\b|govern(ment|-)|landscape|fedramp|rfc-0024|soai-pdca|enforce/) },
+  { id: "regions", title: "Regions & Jurisdictions",
+    blurb: "How AI governance is measured across jurisdictions — EU, UK, US states, China (TC260), Canada, and more.",
+    test: rx(/colorado|california|texas|canada|china|\buk-|\beu-|tc260|jurisdiction|country|nation|state-|aida|us-state|australia|region|global-ai-safety/) },
+  { id: "academy", title: "Academy & Training",
+    blurb: "Council Academy — training and course completion. Attests training, not conformity: COAI issues no certificates of conformity.",
+    test: rx(/academy|certif|course|training|exam|ceasai|\blearn\b|curriculum|lesson|module|\bjobs?\b|career/) },
+  { id: "tech", title: "Layer-0, MCP & Verification",
+    blurb: "Compliance MCPs, C2PA / Article-50 watermarking, Ed25519 signature verification, the agent (A2A) API, drift and provenance.",
+    test: rx(/\bmcps?\b|layer-?0|c2pa|watermark|signature|\bverify\b|\bapi\b|distribution|sigstore|attest|did-|ed25519|oscal|\bagents?\b|registry|drift|provenance|\bledger\b|architecture|cobol|integrat|webhook|vulnerabilit|\bscan\b|cyber|deepfake|instrument|systemcard|technolog|\bdocs?\b|ontolog|\bmodels?\b|transparency|\bvoice\b/) },
+  { id: "axes", title: "GSPC Axes & Benchmarks",
+    blurb: "The living GSPC board — the flagship. Counts come from GET /api/gspc. Every number recomputable from its rows; UNMEASURED reported, never hidden.",
+    test: rx(/gspc|benchmark|\barena\b|\bboard\b|leaderboard|provbench|govbench|\baxis\b|\baxes\b|scorecard|\bmeasured?\b|evidence|anchors|gap-map|\bassess/) },
+  { id: "governance", title: "Governance & Frameworks",
+    blurb: "NIST AI RMF, ISO/IEC 42001, OSCAL, readiness, PDCA, sector playbooks — the frameworks crosswalked to the measured axes.",
+    test: rx(/\bnist\b|iso-?42001|\boscal\b|framework|readiness|crosswalk|governance|risk-|policy|maturity|standard|complian|\bpdca\b|playbook|sector|industry-|how-it-works|\bhow\b|knowledge-base|maps?\b|relevance/) },
+  { id: "product", title: "Product, OS & Demo",
+    blurb: "Council OS, the arena, the globe, the watchdog map, live demos — the interactive product surfaces.",
+    test: rx(/\bos\b|\bdemo\b|globe|watchdog|command|dashboard|council|network|\bpoc\b|\bcity\b|\bspace\b|\btour\b|twin|hive|galaxy|world|temple|commons|open-media|graph|minds|opengridworks|real-world|protect|personal-protection|\bei3\b|badges|authorit|\bvoice\b/) },
+  { id: "company", title: "Company, About & Legal",
+    blurb: "Charter, careers, privacy, terms, contact, press, comparisons — who we are and the rules we run on. No public prices.",
+    test: rx(/about|charter|pricing|\bpayg\b|privacy|terms|cookie|legal|contact|company|licens|accreditation|disclaimer|\bsla\b|\bdpa\b|data-processing|advisory|partner|case-stud|compare|comparison|competitor|\bvs\b|our-difference|usp|press|traction|founding|early-access|ecosystem|\bhelp\b|support|\bbrief\b|battlecard|resources|\broi\b|service|recommendation|accessibilit|integrations|assurance/) },
+];
+
+const FALLBACK_SECTOR = SECTORS.find((s) => s.id === "governance")!;
+
+// Canonical replacements — an archived page's current primary home, so the banner can point the
+// reader (and answer engines) forward. Only high-confidence 1:1 supersessions; when a page has no
+// single current equivalent it simply has no replacement link (the sector link still applies).
+export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
+  "/industry-solutions": { path: "/industries", label: "Industries" },
+  "/sector-atlas": { path: "/industries", label: "Industries" },
+  "/sectors": { path: "/industries", label: "Industries" },
+  "/industry-playbooks": { path: "/industries", label: "Industries" },
+  "/about-credential": { path: "/academy", label: "Council Academy" },
+  "/credential-training": { path: "/academy", label: "Council Academy" },
+  "/certification": { path: "/academy", label: "Council Academy" },
+  "/certificate-verification": { path: "/gspc-verify", label: "Verify a card" },
+  "/leaderboard": { path: "/gspc-arena", label: "the arena" },
+  "/eu-ai-act-explained": { path: "/eu-ai-act", label: "the EU AI Act guide" },
+  "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
+  "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
+  "/how-it-works": { path: "/methodology", label: "Methodology" },
+  "/roi-calculator": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
+  "/our-difference": { path: "/about", label: "About" },
+  // Added by the site-alignment pass 2026-08-20 — each of these had a current
+  // equivalent in the new six-group nav but no forward link.
+  "/pricing": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
+  "/global-ai-regulation": { path: "/regulation-tracker", label: "the regulation tracker" },
+  "/global-regulations": { path: "/regulation-tracker", label: "the regulation tracker" },
+  "/training-hub": { path: "/academy", label: "Council Academy" },
+  "/assessment": { path: "/assess", label: "a signed assessment" },
+  "/eu-ai-act-checklist": { path: "/checklist", label: "the readiness checklist" },
+  "/foundation-models": { path: "/gpai", label: "GPAI model duties" },
+  "/eu-ai-act-timeline": { path: "/ai-act-timeline", label: "the AI Act timeline" },
+  "/certification/exam": { path: "/academy", label: "Council Academy" },
+  "/ceasai-training": { path: "/academy", label: "Council Academy" },
+  "/scoreboard": { path: "/gspc-scoreboard", label: "the GSPC board" },
+};
+
+/** The current primary page that supersedes an archived one, if any. */
+export function replacementFor(path: string): { path: string; label: string } | null {
+  return REPLACEMENTS[path.replace(/\/$/, "")] ?? null;
+}
+
+export function classify(path: string, title = ""): Sector {
+  return SECTORS.find((s) => s.test(path, title)) ?? FALLBACK_SECTOR;
+}
+
+// The manifest titles are derived from component names (e.g. "EUAIAct Compliance"). Fix the
+// acronyms generically so the archive reads cleanly without a hand-maintained title map.
+const ACRONYMS: [RegExp, string][] = [
+  [/\bEUAIAct\b/g, "EU AI Act"], [/\bAIAct\b/g, "AI Act"], [/\bEUAct\b/g, "EU Act"],
+  [/\bGspc\b/g, "GSPC"], [/\bCsoai\b/gi, "CSOAI"], [/\bMcps?\b/g, "MCP"], [/\bNist\b/g, "NIST"],
+  [/\bIso\b/g, "ISO"], [/\bApi\b/g, "API"], [/\bFaq\b/g, "FAQ"], [/\bPdca\b/g, "PDCA"],
+  [/\bOscal\b/g, "OSCAL"], [/\bDora\b/g, "DORA"], [/\bNis2?\b/g, "NIS2"], [/\bCra\b/g, "CRA"],
+  [/\bGdpr\b/g, "GDPR"], [/\bTc260\b/g, "TC260"], [/\bC2pa\b/gi, "C2PA"], [/\bRoi\b/g, "ROI"],
+  [/\bAi\b/g, "AI"], [/\bUs\b/g, "US"], [/\bUk\b/g, "UK"], [/\bEu\b/g, "EU"], [/\bOs\b/g, "OS"],
+  [/\bJsp\b/g, "JSP"], [/\bA2a\b/gi, "A2A"], [/\bDpa\b/g, "DPA"], [/\bSla\b/g, "SLA"],
+  [/\bVs\b/g, "vs"],
+];
+// Killed display strings (mirror scripts/brand-gate.mjs RULES). Manifest titles are derived from
+// stale component names (SovereignTour → "Sovereign Tour", AboutCEASAI → "About CEASAI"), so the
+// archive must SCRUB them before display or the Library page ships a forbidden brand string and
+// the deploy gate blocks. The pages' own rendered copy is already de-branded; only these derived
+// titles are stale. Removing the killed word yields a clean label ("Sovereign Tour" → "Tour").
+// NB "ceasai" is matched WITHOUT a trailing word boundary: manifest titles derived from
+// CamelCase component names concatenate it ("CEASAITraining"), which \bceasai\b missed —
+// that title shipped verbatim on /library (qa-sweep 2026-08-19).
+const FORBIDDEN_DISPLAY =
+  /\b(?:sovereign|byzantine|bft|owem|sigil)\b|\bceasai|33[\s-]?agent|fault[\s-]?toleran(?:t|ce)|crown[\s-]?jewels?|goldmines?|black\s+swans?/gi;
+/** True if a path/title carries a killed brand ANYWHERE (non-anchored, non-stateful). A page whose
+ *  URL itself contains a killed brand (e.g. /about-ceasai) must never surface in the archive — the
+ *  path renders as visible text and would trip the deploy gate. */
+export const hasForbiddenBrand = (s: string): boolean =>
+  new RegExp(FORBIDDEN_DISPLAY.source, "i").test(s);
+export function prettifyTitle(t: string): string {
+  let out = t;
+  for (const [re, s] of ACRONYMS) out = out.replace(re, s);
+  out = out.replace(FORBIDDEN_DISPLAY, "");
+  return out.replace(/\s+/g, " ").trim();
+}
+
+export interface LibraryItem extends RouteEntry { sector: string }
+
+// Not surfaced in the Library: (a) app/dev/internal routes, (b) dev-preview homepages, and
+// (c) KILLED mission-era pages + internal codenames. (c) is deliberate: the honesty de-brand
+// removed prosperity-fund / maternal-covenant / sov3 / codename pages from the narrative — the
+// archive keeps the record for SEO, but the public Library must not resurface retracted claims.
+const NOT_LIBRARIED =
+  /^\/(404|login|signup|register|admin|dashboard|api-keys|bulk-import|settings|me\b|my-|ab-testing|widget|egg|hatch|enter|onboard|welcome|start|analytics|outreach|marketing|reports?|brief|public|all|region-settings|regional-analytics|government-dashboard|government-portal|old-home|landing|legacy|home-v[0-9]|stripe|prosperity|maternal-covenant|covenant|sov3|sov-town|sovereign|gods-eye|horus|dragonfly|four-wings|opengridworks|certification|certificate|ceasai|get-certified|pricing|plans|payg|billing|roi)/;
+
+/** Every non-primary, surfaced route, classified — the archive contents. */
+export function libraryItems(): LibraryItem[] {
+  return ROUTE_MANIFEST
+    // A redirect is not a page — never list it in the Library (legacy /sov3-* rows
+    // were rendering their internal-codename titles as archive links).
+    .filter((r) => r.comp !== "Redirect")
+    .filter((r) => !isPrimaryPath(r.path) && !NOT_LIBRARIED.test(r.path) && !hasForbiddenBrand(r.path) && !/\.[a-z]+$/.test(r.path))
+    .filter((r) => !/certification exam|view pricing|paid plans|get certified/i.test(`${r.title} ${r.path}`))
+    .map((r) => ({ ...r, title: prettifyTitle(r.title), sector: classify(r.path, r.title).id }));
+}
+
+export function itemsBySector(): Record<string, LibraryItem[]> {
+  const out: Record<string, LibraryItem[]> = {};
+  for (const s of SECTORS) out[s.id] = [];
+  for (const it of libraryItems()) (out[it.sector] ||= []).push(it);
+  return out;
+}
+
+/** True when a page should show the "reference / archive" banner.
+ *
+ *  Blog posts are excluded (2026-08-26). The banner asserts "a dated reference page,
+ *  superseded by a current home" — which is simply false of a post published this week,
+ *  and every /blog/<slug> was carrying it, including the ones the home page promotes as
+ *  "Latest insights". A post is a dated publication by design; that is not the same thing
+ *  as a superseded page. Note this changes the BANNER only: blog posts stay listed in the
+ *  Library archive (libraryItems below), which is a record of what we have published, not
+ *  a claim that a page is stale. */
+export function isLibraried(path: string): boolean {
+  const p = path.replace(/\/$/, "") || "/";
+  if (p.startsWith("/blog")) return false;
+  return !isPrimaryPath(p) && !p.startsWith("/library") && !NOT_LIBRARIED.test(p) && !hasForbiddenBrand(p) && !/\.[a-z]+$/.test(p);
+}
