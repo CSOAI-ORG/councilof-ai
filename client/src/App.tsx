@@ -373,7 +373,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/academy": "Council Academy — AI governance training | CSOAI",
   "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
   "/models": "AI model registry & scoreboard | CSOAI",
-  "/": "Council of AI — we measure, we sign, we re-attest",
+  "/": "Council OS | Council of AI",
   "/plans": "Plans | CSOAI",
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
@@ -543,13 +543,10 @@ function App() {
       </ErrorBoundary>
     );
   }
-  // /os and its hops (/ag-ui, /chat, /console, /sov-os) are ONE PRODUCT FRAME —
-  // they do NOT render inside the marketing site's Header/Footer chrome. The OS
-  // has its own compact OpenRouter-style header with inner nav (Board / Verify /
-  // Space / Assess / Harness) and user account controls. The CouncilLobby (overlay)
-  // is still mounted for the full workspace experience; this just strips the
-  // marketing wrapper. All hops land on /os?lobby=home.
-  if (path === '/os' || path === '/ag-ui' || path === '/chat' || path === '/console' || path === '/sov-os') {
+  // `/` and `/os` (plus hops /ag-ui /chat /console /sov-os) are ONE PRODUCT FRAME.
+  // The homepage IS Council OS — not a marketing poster with a third "Council OS"
+  // button. No marketing Header/Footer. No overlay badge (that is a second UI).
+  if (path === '/' || path === '/os' || path === '/ag-ui' || path === '/chat' || path === '/console' || path === '/sov-os') {
     return (
       <ErrorBoundary>
         <ThemeProvider defaultTheme="light">
@@ -568,7 +565,6 @@ function App() {
                       <OsLauncher />
                     </Suspense>
                   </main>
-                  <Suspense fallback={null}><CouncilLobby /></Suspense>
                 </div>
                 <Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} />
               </TooltipProvider>

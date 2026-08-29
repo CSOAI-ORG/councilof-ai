@@ -31,7 +31,7 @@ export type { DoorId };
 
 export default function OsLauncher() {
   const search = useSearch();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const [door, setDoor] = useState<DoorId>(() => doorFromSearch(search));
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export default function OsLauncher() {
       door={door}
       onDoor={(id) => {
         setDoor(id);
-        setLocation(osDoorHref(DOOR_TO_LOBBY[id], search));
+        setLocation(osDoorHref(DOOR_TO_LOBBY[id], search, location === "/" ? "/" : "/os"));
       }}
     />
   );

@@ -352,13 +352,14 @@ export function osPanelHref(lobby: OsPanelLobby = "board"): string {
  * Door hop on /os. Keeps embed=1 when already a harness panel so tab switches
  * stay in the panel. Never invents embed=1 (that is osPanelHref).
  */
-export function osDoorHref(lobby: string, currentSearch = ""): string {
+export function osDoorHref(lobby: string, currentSearch = "", hostPath = "/os"): string {
   const next = new URLSearchParams();
   next.set(LOBBY_PARAM, lobby);
   const raw = currentSearch.startsWith("?") ? currentSearch.slice(1) : currentSearch;
   const cur = new URLSearchParams(raw);
   if (cur.get(EMBED_PARAM) === "1") next.set(EMBED_PARAM, "1");
-  return `/os?${next.toString()}`;
+  const base = hostPath === "/" ? "/" : "/os";
+  return `${base}?${next.toString()}`;
 }
 
 export const OS_ASSESS_TASKS = new Set([
@@ -368,7 +369,7 @@ export const OS_ASSESS_TASKS = new Set([
 ]);
 
 export function isOsDoorPath(path: string): boolean {
-  return path === "/os" || path.startsWith("/os/");
+  return path === "/" || path === "/os" || path.startsWith("/os/");
 }
 
 /** True when /os should keep the query and leave the overlay closed. */

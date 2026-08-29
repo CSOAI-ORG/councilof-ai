@@ -63,14 +63,13 @@ export default function OsShell({
       aria-labelledby="os-h1"
     >
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-5 sm:px-6">
-        <h1 id="os-h1" className={variant === "hero" ? "text-2xl font-black tracking-tight text-slate-900" : "sr-only"}>
+        <h1 id="os-h1" className="text-2xl font-black tracking-tight text-slate-900">
           Council OS
         </h1>
-        {variant === "hero" && (
-          <p className="mt-1 text-sm text-slate-600">
-            Chat the board. Paste a card. Empty cells stay empty. Measurement, never certification.
-          </p>
-        )}
+        <p className="mt-1 text-sm text-slate-600">
+          Article 50 is in force (EUR-Lex, 2 August 2026; some marking duties 2 December 2026).
+          We measure marking. We do not certify. Empty cells stay empty.
+        </p>
 
         {showTabs && (
           <nav aria-label="Council OS sections" className="mt-4 flex flex-wrap gap-1">

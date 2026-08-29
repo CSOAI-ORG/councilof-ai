@@ -58,7 +58,7 @@ function ColiseumGlyph({ className }: { className?: string }) {
 }
 
 export default function OsHeader() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const search = useSearch();
   const { user, logout } = useAuth();
 
@@ -66,9 +66,10 @@ export default function OsHeader() {
   const lobby = params.get("lobby") || "home";
   const currentDoor = LOBBY_TO_DOOR[lobby] || "board";
   const panel = isEmbedded();
+  const atHome = location === "/" || location === "";
 
   const navigateToDoor = (doorId: DoorId) => {
-    setLocation(osDoorHref(DOOR_TO_LOBBY[doorId], search));
+    setLocation(osDoorHref(DOOR_TO_LOBBY[doorId], search, atHome ? "/" : "/os"));
   };
 
   const mark = (
@@ -85,7 +86,7 @@ export default function OsHeader() {
       <nav className="mx-auto flex h-12 max-w-5xl items-center justify-between px-4">
         {/* Logo + name. A harness panel must not break out to marketing /. */}
         <div className="flex items-center gap-6">
-          {panel ? (
+          {panel || atHome ? (
             <span className="flex items-center gap-2">{mark}</span>
           ) : (
             <Link href="/" className="flex items-center gap-2 transition hover:opacity-90">
@@ -121,16 +122,17 @@ export default function OsHeader() {
         <div className="flex items-center gap-2">
           {!panel && (
           <>
-          {/* Exit OS — break deep-link trap; Esc also lands home via LobbyOverlay */}
+          {!atHome && (
           <Link
             href="/"
-            aria-label="Exit Council OS"
+            aria-label="Council OS home"
             className={`inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 ${FOCUS}`}
           >
             <DoorOpen className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="hidden sm:inline">Exit OS</span>
-            <span className="sm:hidden">Exit</span>
+            <span className="hidden sm:inline">Home</span>
+            <span className="sm:hidden">Home</span>
           </Link>
+          )}
 
           {/* Verify free link */}
           <a
