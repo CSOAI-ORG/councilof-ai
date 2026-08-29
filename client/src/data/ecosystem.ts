@@ -5,7 +5,14 @@
 // This same dataset feeds the globe, Sov Space, Sovereign and leads.
 
 export type Play = "align" | "absorb" | "integrate" | "displace";
-export type AccountType = "regulator" | "government" | "fortune100" | "fortune500" | "sector";
+export type AccountType =
+  | "regulator"
+  | "government"
+  | "fortune100"
+  | "fortune500"
+  | "global2000"
+  | "finance"
+  | "sector";
 export type Posture = "sets-rules" | "none" | "emerging" | "mature" | "unknown";
 
 export type Account = {
