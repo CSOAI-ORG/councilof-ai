@@ -87,10 +87,10 @@ for (const host of hosts) {
     pass(`${host}/ ${home.bytes} bytes`);
   }
 
-  if (!/data-testid="os-shell"|os-chat|Article 50 is in force/i.test(home.body)) {
-    fail(`${host}/ is not Council OS (missing os-shell)`);
+  if (!/data-testid="home-verify"|Check an AI claim in your browser/i.test(home.body)) {
+    fail(`${host}/ is not verify (missing home-verify)`);
   } else {
-    pass(`${host}/ is Council OS (os-shell)`);
+    pass(`${host}/ is verify (home-verify)`);
   }
 
   if (os.error) fail(`${host}/os/ fetch failed: ${os.error}`);

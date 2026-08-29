@@ -189,10 +189,10 @@ try {
   } else {
     pass("homepage is prerendered", `${home.length} bytes`);
   }
-  if (!/data-testid="os-shell"|os-chat|Article 50 is in force/i.test(home)) {
-    fail("homepage is Council OS (os-shell)");
+  if (!/data-testid="home-verify"|Check an AI claim in your browser/i.test(home)) {
+    fail("homepage is verify (home-verify)");
   } else {
-    pass("homepage is Council OS", "os-shell");
+    pass("homepage is verify", "home-verify");
   }
 } catch (e) {
   fail("lobby chunk check", String(e).slice(0, 120));
