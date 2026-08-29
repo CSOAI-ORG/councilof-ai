@@ -27,6 +27,8 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("GSPC leaderboard");
     expect(src).toContain("https://councilof.ai/mcp");
     expect(src).toContain("HeroSlides");
+    expect(src).toContain("HomeFilms");
+    expect(src).toContain("HomeDemoLoop");
     expect(src).toContain("ToolStack");
     expect(src).toContain("LivingStages");
     expect(src).toContain("Open Council OS");
