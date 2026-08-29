@@ -1,42 +1,12 @@
-import { useEffect, useState } from "react";
-
 /**
- * Paid sign stays hidden while the living stamp is not a verified SIGNED state.
- * Confirm-before-sign is the only path if a stamp ever verifies; this pane
- * does not call the signer.
+ * Paid sign stays hidden until TUI 1 finishes the 2-of-3 key ceremony.
+ * Site-attestation SIGNED is not that ceremony. This pane does not call the signer.
  */
 export default function OsSignGate() {
-  const [state, setState] = useState<"loading" | "UNCHECKABLE" | "SIGNED">("loading");
-
-  useEffect(() => {
-    let live = true;
-    fetch("/api/cards", { headers: { accept: "application/json" } })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
-      .then((j) => {
-        if (!live) return;
-        const v = String(j?.board?.signature?.verification_state ?? "");
-        setState(v === "VALID" || v === "SIGNED" || v === "VERIFIED" ? "SIGNED" : "UNCHECKABLE");
-      })
-      .catch(() => {
-        if (live) setState("UNCHECKABLE");
-      });
-    return () => {
-      live = false;
-    };
-  }, []);
-
-  if (state === "SIGNED") {
-    return (
-      <p className="text-[11px] text-slate-600">
-        Confirm-before-sign would apply here. This pane still does not call the signer.
-      </p>
-    );
-  }
-
   return (
     <p data-testid="os-sign-hidden" className="text-[11px] text-slate-600">
-      Paid sign is hidden — board stamp is {state === "loading" ? "unread" : "UNCHECKABLE"}.
-      We will not sign until the board stamp verifies.
+      Paid sign is hidden. KEY is 2-of-3. Stamp stays UNCHECKABLE until that ceremony.
+      We will not sign from this pane.
     </p>
   );
 }

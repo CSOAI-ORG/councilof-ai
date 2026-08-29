@@ -5,7 +5,7 @@ import { DOORS } from "./doors";
 import { OS_EMPTY, OS_PROMPT, OS_TOOLS } from "./osChat";
 
 const shell = readFileSync(resolve(__dirname, "OsShell.tsx"), "utf8");
-const home = readFileSync(resolve(__dirname, "../../pages/NewHome-v3.tsx"), "utf8");
+const app = readFileSync(resolve(__dirname, "../../App.tsx"), "utf8");
 const launcher = readFileSync(resolve(__dirname, "../../pages/OsLauncher.tsx"), "utf8");
 
 describe("OsShell is the product on / and /os", () => {
@@ -18,13 +18,14 @@ describe("OsShell is the product on / and /os", () => {
     expect(OS_EMPTY).toBe("Free verify. Paste never leaves this browser.");
   });
 
-  it("homepage inlines the shell; /os mounts the same component", () => {
-    expect(home).toContain('<OsShell variant="hero"');
-    expect(launcher).toContain('<OsShell');
+  it("homepage is the OS product frame, not a marketing poster", () => {
+    expect(app).toMatch(/path === '\/' \|\| path === '\/os'/);
+    expect(launcher).toContain("<OsShell");
     expect(launcher).toContain('variant="page"');
-    expect(home).not.toContain("<HeroBoard");
-    expect(home).not.toMatch(/certify/i);
-    expect(shell).not.toMatch(/sov33|SOVOS|lifestyle/i);
+    expect(shell).toMatch(/Article 50 is in force/);
+    expect(shell).toMatch(/We measure marking/);
+    expect(shell).toMatch(/We do not certify/);
+    expect(shell).not.toMatch(/sov33|SOVOS|lifestyle|GPAI Code/i);
   });
 
   it("glass only after VALID; paid sign stays gated", () => {
